@@ -308,7 +308,7 @@ public class FillToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnButton(5);
 		mSolo.sleep(SHORT_SLEEP);
 		closeColorChooserDialog();
-		int fillColor = ((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint")).getColor();
+		int fillColor = ((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "bitmapPaint")).getColor();
 
 		selectTool(ToolType.FILL);
 		openToolOptionsForCurrentTool(ToolType.FILL);

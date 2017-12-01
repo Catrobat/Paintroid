@@ -35,48 +35,47 @@ import static org.catrobat.paintroid.Session.PRIVATE_MODE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
 @RunWith(AndroidJUnit4.class)
 public class SessionTest {
 
-    private SharedPreferences.Editor editor;
-    private Session session;
+	private SharedPreferences.Editor editor;
+	private Session session;
 
-    @Before
-    public void setUp() {
-        Context context = InstrumentationRegistry.getTargetContext();
-        SharedPreferences sharedPreferences = context
-                .getSharedPreferences(PREF_NAME, PRIVATE_MODE);
-        session = new Session(context);
-        editor = sharedPreferences.edit();
-    }
+	@Before
+	public void setUp() {
+		Context context = InstrumentationRegistry.getTargetContext();
+		SharedPreferences sharedPreferences = context
+				.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+		session = new Session(context);
+		editor = sharedPreferences.edit();
+	}
 
-    @Test
-    public void testIsFirstLaunch() throws InterruptedException {
-        editor.putBoolean(IS_FIRST_TIME_LAUNCH, true);
-        editor.commit();
-        assertTrue(session.isFirstTimeLaunch());
-    }
+	@Test
+	public void testIsFirstLaunch() throws InterruptedException {
+		editor.putBoolean(IS_FIRST_TIME_LAUNCH, true);
+		editor.commit();
+		assertTrue(session.isFirstTimeLaunch());
+	}
 
-    @Test
-    public void testNotFirstLaunch() {
-        editor.putBoolean(IS_FIRST_TIME_LAUNCH, false);
-        editor.commit();
-        assertFalse(session.isFirstTimeLaunch());
-    }
+	@Test
+	public void testNotFirstLaunch() {
+		editor.putBoolean(IS_FIRST_TIME_LAUNCH, false);
+		editor.commit();
+		assertFalse(session.isFirstTimeLaunch());
+	}
 
-    @Test
-    public void testSessionSetter () {
-        session.setFirstTimeLaunch(true);
-        assertTrue(session.isFirstTimeLaunch());
+	@Test
+	public void testSessionSetter() {
+		session.setFirstTimeLaunch(true);
+		assertTrue(session.isFirstTimeLaunch());
 
-        session.setFirstTimeLaunch(false);
-        assertFalse(session.isFirstTimeLaunch());
-    }
+		session.setFirstTimeLaunch(false);
+		assertFalse(session.isFirstTimeLaunch());
+	}
 
-    @Test
-    public void testNoSharedPreference() {
-        editor.clear().commit();
-        assertTrue(session.isFirstTimeLaunch());
-    }
+	@Test
+	public void testNoSharedPreference() {
+		editor.clear().commit();
+		assertTrue(session.isFirstTimeLaunch());
+	}
 }

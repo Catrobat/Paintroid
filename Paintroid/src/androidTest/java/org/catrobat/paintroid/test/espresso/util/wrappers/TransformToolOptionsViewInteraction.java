@@ -25,7 +25,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-public class TransformToolOptionsViewInteraction extends CustomViewInteraction {
+public final class TransformToolOptionsViewInteraction extends CustomViewInteraction {
 	private TransformToolOptionsViewInteraction() {
 		super(onView(withId(R.id.main_tool_options)));
 	}

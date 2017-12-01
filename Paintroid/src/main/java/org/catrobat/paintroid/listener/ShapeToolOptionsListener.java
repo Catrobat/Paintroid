@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.listener;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -28,28 +27,21 @@ import android.widget.TextView;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
 
-
 public class ShapeToolOptionsListener {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "ShapeToolDialog has not been initialized. Call init() first!";
-	private Context mContext;
+
 	private static ShapeToolOptionsListener instance;
-	private OnShapeToolOptionsChangedListener mOnShapeToolOptionsChangedListener;
-	private ImageButton mSquareButton;
-	private ImageButton mCircleButton;
-	private ImageButton mHeartButton;
-	private ImageButton mStarButton;
-	private static GeometricFillTool.BaseShape mShape;
+	private static GeometricFillTool.BaseShape shape;
+	private OnShapeToolOptionsChangedListener onShapeToolOptionsChangedListener;
+	private ImageButton squareButton;
+	private ImageButton circleButton;
+	private ImageButton heartButton;
+	private ImageButton starButton;
 
-	public interface OnShapeToolOptionsChangedListener {
-		void setToolType(GeometricFillTool.BaseShape shape);
-	}
-
-
-	public ShapeToolOptionsListener(Context context, View shapeToolOptionsView) {
-		mContext = context;
-		if (mShape == null) {
-			mShape = GeometricFillTool.BaseShape.RECTANGLE;
+	public ShapeToolOptionsListener(View shapeToolOptionsView) {
+		if (shape == null) {
+			shape = GeometricFillTool.BaseShape.RECTANGLE;
 		}
 		initializeListeners(shapeToolOptionsView);
 	}
@@ -61,53 +53,51 @@ public class ShapeToolOptionsListener {
 		return instance;
 	}
 
-	public static void init(Context context, View shapeToolOptionsView) {
-		instance = new ShapeToolOptionsListener(context, shapeToolOptionsView);
+	public static void init(View shapeToolOptionsView) {
+		instance = new ShapeToolOptionsListener(shapeToolOptionsView);
 	}
 
 	private void initializeListeners(final View shapeToolOptionsView) {
-		setShapeActivated(shapeToolOptionsView, mShape);
-		mSquareButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_square_btn);
-		mSquareButton.setOnClickListener(new View.OnClickListener() {
+		setShapeActivated(shapeToolOptionsView, shape);
+		squareButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_square_btn);
+		squareButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mShape = GeometricFillTool.BaseShape.RECTANGLE;
-				mOnShapeToolOptionsChangedListener.setToolType(mShape);
-				setShapeActivated(shapeToolOptionsView, mShape);
-
+				shape = GeometricFillTool.BaseShape.RECTANGLE;
+				onShapeToolOptionsChangedListener.setToolType(shape);
+				setShapeActivated(shapeToolOptionsView, shape);
 			}
 		});
 
-		mCircleButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_circle_btn);
-		mCircleButton.setOnClickListener(new View.OnClickListener() {
+		circleButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_circle_btn);
+		circleButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mShape = GeometricFillTool.BaseShape.OVAL;
-				mOnShapeToolOptionsChangedListener.setToolType(mShape);
-				setShapeActivated(shapeToolOptionsView, mShape);
+				shape = GeometricFillTool.BaseShape.OVAL;
+				onShapeToolOptionsChangedListener.setToolType(shape);
+				setShapeActivated(shapeToolOptionsView, shape);
 			}
 		});
 
-		mHeartButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_heart_btn);
-		mHeartButton.setOnClickListener(new View.OnClickListener() {
+		heartButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_heart_btn);
+		heartButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mShape = GeometricFillTool.BaseShape.HEART;
-				mOnShapeToolOptionsChangedListener.setToolType(mShape);
-				setShapeActivated(shapeToolOptionsView, mShape);
+				shape = GeometricFillTool.BaseShape.HEART;
+				onShapeToolOptionsChangedListener.setToolType(shape);
+				setShapeActivated(shapeToolOptionsView, shape);
 			}
 		});
 
-		mStarButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_star_btn);
-		mStarButton.setOnClickListener(new View.OnClickListener() {
+		starButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_star_btn);
+		starButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mShape = GeometricFillTool.BaseShape.STAR;
-				mOnShapeToolOptionsChangedListener.setToolType(mShape);
-				setShapeActivated(shapeToolOptionsView, mShape);
+				shape = GeometricFillTool.BaseShape.STAR;
+				onShapeToolOptionsChangedListener.setToolType(shape);
+				setShapeActivated(shapeToolOptionsView, shape);
 			}
 		});
-
 	}
 
 	private void resetShapeActivated(View shapeToolOptionsView) {
@@ -144,7 +134,10 @@ public class ShapeToolOptionsListener {
 	}
 
 	public void setOnShapeToolOptionsChangedListener(OnShapeToolOptionsChangedListener listener) {
-		mOnShapeToolOptionsChangedListener = listener;
+		onShapeToolOptionsChangedListener = listener;
 	}
 
+	public interface OnShapeToolOptionsChangedListener {
+		void setToolType(GeometricFillTool.BaseShape shape);
+	}
 }

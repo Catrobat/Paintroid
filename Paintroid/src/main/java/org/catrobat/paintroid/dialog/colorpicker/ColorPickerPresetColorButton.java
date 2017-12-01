@@ -28,9 +28,9 @@ import android.support.v7.widget.AppCompatButton;
 
 public class ColorPickerPresetColorButton extends AppCompatButton {
 
-	private Paint mColorPaint = new Paint();
-	private int mWidth = 0;
-	private int mHeight = 0;
+	private Paint colorPaint = new Paint();
+	private int width = 0;
+	private int height = 0;
 
 	public ColorPickerPresetColorButton(Context context) {
 		this(context, Color.BLACK);
@@ -38,26 +38,25 @@ public class ColorPickerPresetColorButton extends AppCompatButton {
 
 	public ColorPickerPresetColorButton(Context context, int color) {
 		super(context);
-		mColorPaint.setColor(color);
-		mWidth = getWidth();
-		mHeight = getHeight();
+		colorPaint.setColor(color);
+		width = getWidth();
+		height = getHeight();
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
-		Rect colorRect = new Rect(0, 0, mWidth, mHeight);
-		if (ColorPickerDialog.mBackgroundPaint != null) {
-			canvas.drawRect(colorRect, ColorPickerDialog.mBackgroundPaint);
+		Rect colorRect = new Rect(0, 0, width, height);
+		if (ColorPickerDialog.backgroundPaint != null) {
+			canvas.drawRect(colorRect, ColorPickerDialog.backgroundPaint);
 		}
-		canvas.drawRect(colorRect, mColorPaint);
+		canvas.drawRect(colorRect, colorPaint);
 	}
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		mWidth = MeasureSpec.getSize(widthMeasureSpec);
-		mHeight = MeasureSpec.getSize(heightMeasureSpec);
+		width = MeasureSpec.getSize(widthMeasureSpec);
+		height = MeasureSpec.getSize(heightMeasureSpec);
 	}
-
 }

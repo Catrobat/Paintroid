@@ -27,44 +27,47 @@ import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.BitmapCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
-import static org.junit.Assert.*;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class BitmapCommandTest extends CommandTestSetup {
 	@Override
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		mCommandUnderTest = new BitmapCommand(mBitmapUnderTest);
-		mCommandUnderTestNull = new BitmapCommand(null);
-		mCanvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR - 10);
+		commandUnderTest = new BitmapCommand(bitmapUnderTest);
+		commandUnderTestNull = new BitmapCommand(null);
+		canvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR - 10);
 	}
 
 	@Test
 	public void testRunInsertNewBitmap() {
 		Bitmap hasToBeTransparentBitmap = Bitmap.createBitmap(10, 10, Config.ARGB_8888);
 		hasToBeTransparentBitmap.eraseColor(Color.DKGRAY);
-		Bitmap bitmapToCompare = mBitmapUnderTest.copy(Config.ARGB_8888, false);
+		Bitmap bitmapToCompare = bitmapUnderTest.copy(Config.ARGB_8888, false);
 		try {
 
 			assertNull("There should not be a file for a bitmap at the beginning.",
-					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
+					PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest, "fileToStoredBitmap"));
 
-			mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
+			commandUnderTest.run(canvasUnderTest, layerUnderTest);
 
 			assertNull("Bitmap is not cleaned up.",
-					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
-			assertTrue("Bitmaps should be the same", bitmapToCompare.sameAs(mLayerUnderTest.getImage()));
-			File fileToStoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest,
-					"mFileToStoredBitmap");
+					PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest, "bitmap"));
+			assertTrue("Bitmaps should be the same", bitmapToCompare.sameAs(layerUnderTest.getImage()));
+			File fileToStoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest,
+					"fileToStoredBitmap");
 			assertNotNull("Bitmap is not stored to filesystem.", fileToStoredBitmap);
 			assertTrue("There is nothing in the bitmap file.", fileToStoredBitmap.length() > 0);
 
 			assertTrue(fileToStoredBitmap.delete());
-
 		} catch (Exception e) {
 			fail("Failed to replace new bitmap:" + e.toString());
 		} finally {
@@ -78,21 +81,20 @@ public class BitmapCommandTest extends CommandTestSetup {
 
 	@Test
 	public void testRunReplaceBitmapFromFileSystem() {
-		Bitmap bitmapToCompare = mBitmapUnderTest.copy(Config.ARGB_8888, false);
+		Bitmap bitmapToCompare = bitmapUnderTest.copy(Config.ARGB_8888, false);
 		try {
-				assertNull(
+			assertNull(
 					"There should not be a file in the system (hint: check if too many tests crashed and no files were deleted)",
-					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
+					PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest, "fileToStoredBitmap"));
 
-			mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
+			commandUnderTest.run(canvasUnderTest, layerUnderTest);
 			assertNotNull("No file - no restore from file system - no test.",
-					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
+					PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest, "fileToStoredBitmap"));
 
-			mCanvasBitmapUnderTest.eraseColor(Color.TRANSPARENT);
-			mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);// this should load an existing bitmap from file-system
+			canvasBitmapUnderTest.eraseColor(Color.TRANSPARENT);
+			commandUnderTest.run(canvasUnderTest, layerUnderTest); // this should load an existing bitmap from file-system
 
-			PaintroidAsserts.assertBitmapEquals(bitmapToCompare, mLayerUnderTest.getImage());
-
+			PaintroidAsserts.assertBitmapEquals(bitmapToCompare, layerUnderTest.getImage());
 		} catch (Exception e) {
 			fail("Failed to restore bitmap from file system" + e.toString());
 		} finally {
@@ -105,8 +107,8 @@ public class BitmapCommandTest extends CommandTestSetup {
 	@Test
 	public void testBitmapCommand() {
 		try {
-			PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest,
-					(Bitmap) PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+			PaintroidAsserts.assertBitmapEquals(bitmapUnderTest,
+					(Bitmap) PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest, "bitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception:" + e.toString());
 		}

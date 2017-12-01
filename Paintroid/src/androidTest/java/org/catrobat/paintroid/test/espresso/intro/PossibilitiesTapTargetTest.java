@@ -41,31 +41,30 @@ import static org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class PossibilitiesTapTargetTest {
 
-    @Rule
-    public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
+	@Rule
+	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
 
-    @Rule
-    public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@Parameter
+	public ToolType toolType;
 
-    @Before
-    public void setUp() {
-        changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
-    }
+	@Parameters(name = "{0}")
+	public static Iterable<ToolType> data() {
+		return Arrays.asList(
+				ToolType.UNDO,
+				ToolType.REDO,
+				ToolType.LAYER,
+				ToolType.COLORCHOOSER);
+	}
 
-    @Parameters(name = "{0}")
-    public static Iterable<ToolType> data() {
-        return Arrays.asList(
-                ToolType.UNDO,
-                ToolType.REDO,
-                ToolType.LAYER,
-                ToolType.COLORCHOOSER);
-    }
+	@Before
+	public void setUp() {
+		changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
+	}
 
-    @Parameter
-    public ToolType toolType;
-
-    @Test
-    public void testWithoutSequenceTool() {
-        introClickToolAndCheckView(toolType, IntroUtils.IntroSlide.Possibilities);
-    }
+	@Test
+	public void testWithoutSequenceTool() {
+		introClickToolAndCheckView(toolType, IntroUtils.IntroSlide.Possibilities);
+	}
 }

@@ -57,6 +57,7 @@ import static android.support.test.espresso.contrib.DrawerActions.open;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.contrib.NavigationViewActions.navigateTo;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
 import static org.junit.Assert.assertEquals;
@@ -66,7 +67,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 public class BitmapIntegrationTest {
 
-	private static final String PRIVATE_ACCESS_WORKING_BITMAP_NAME  = "mWorkingBitmap";
+	private static final String PRIVATE_ACCESS_WORKING_BITMAP_NAME = "workingBitmap";
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -84,7 +85,7 @@ public class BitmapIntegrationTest {
 	//TODO: Fails now and then, because swipe action is not drawing
 	@Ignore
 	@Test
-	public void centerBitmap_SimulateLoad() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void centerBitmapSimulateLoad() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 
 		onView(withId(R.id.drawer_layout))
 				.check(matches(isClosed(Gravity.LEFT)))
@@ -96,17 +97,17 @@ public class BitmapIntegrationTest {
 		Bitmap currentDrawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface, PRIVATE_ACCESS_WORKING_BITMAP_NAME);
 
 		Point bottomrightCanvasPoint = new Point(
-			currentDrawingSurfaceBitmap.getWidth() - 1,
-			currentDrawingSurfaceBitmap.getHeight() - 1
+				currentDrawingSurfaceBitmap.getWidth() - 1,
+				currentDrawingSurfaceBitmap.getHeight() - 1
 		);
 
 		int widthOverflow = 250;
 		int newBitmapHeight = 30;
 
 		final Bitmap widthOverflowedBitmap = Bitmap.createBitmap(
-			bottomrightCanvasPoint.x + widthOverflow,
-			newBitmapHeight,
-			Bitmap.Config.ALPHA_8
+				bottomrightCanvasPoint.x + widthOverflow,
+				newBitmapHeight,
+				Bitmap.Config.ALPHA_8
 		);
 
 		float surfaceScaleBeforeBitmapCommand = PaintroidApplication.perspective.getScale();
@@ -122,14 +123,14 @@ public class BitmapIntegrationTest {
 		waitMillis(1000);
 
 		onView(withId(R.id.drawingSurfaceView)).perform(
-			actionWithAssertions(
-				new GeneralSwipeAction(
-					Swipe.FAST,
-					GeneralLocation.CENTER,
-					GeneralLocation.BOTTOM_CENTER,
-					Press.FINGER
+				actionWithAssertions(
+						new GeneralSwipeAction(
+								Swipe.FAST,
+								GeneralLocation.CENTER,
+								GeneralLocation.BOTTOM_CENTER,
+								Press.FINGER
+						)
 				)
-			)
 		);
 
 		PointF canvasCenter = new PointF((bottomrightCanvasPoint.x + widthOverflow) / 2, newBitmapHeight / 2);
@@ -138,8 +139,8 @@ public class BitmapIntegrationTest {
 	}
 
 	@Test
-	public void drawingSurface_Bitmap_IsDisplaySize() {
-		final int bitmapWidth  = PaintroidApplication.drawingSurface.getBitmapWidth();
+	public void drawingSurfaceBitmapIsDisplaySize() {
+		final int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 		final int bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
 
 		Display display = launchActivityRule.getActivity().getWindowManager().getDefaultDisplay();
@@ -153,5 +154,4 @@ public class BitmapIntegrationTest {
 		assertEquals("bitmap width should be display width", bitmapWidth, displayWidth);
 		assertEquals("bitmap height should be display height", bitmapHeight, displayHeight);
 	}
-
 }

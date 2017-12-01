@@ -50,6 +50,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDis
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusbarHeight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
@@ -65,12 +66,9 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ToolSelectionIntegrationTest {
-	static private int start = R.id.tools_brush;
-	static private int middle = R.id.tools_pipette;
-	static private int end = R.id.tools_text;
-
-	protected HorizontalScrollView mScrollView;
-	protected LinearLayout mToolsLayout;
+	private static final int START = R.id.tools_brush;
+	private static final int MIDDLE = R.id.tools_pipette;
+	private static final int END = R.id.tools_text;
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -79,6 +77,8 @@ public class ToolSelectionIntegrationTest {
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	private ActivityHelper activityHelper;
+	private HorizontalScrollView scrollView;
+	private LinearLayout toolsLayout;
 
 	@Before
 	public void setUp() {
@@ -86,8 +86,8 @@ public class ToolSelectionIntegrationTest {
 
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
-		mToolsLayout = (LinearLayout) launchActivityRule.getActivity().findViewById(R.id.tools_layout);
-		mScrollView  = (HorizontalScrollView) launchActivityRule.getActivity().findViewById(R.id.bottom_bar_scroll_view);
+		toolsLayout = (LinearLayout) launchActivityRule.getActivity().findViewById(R.id.tools_layout);
+		scrollView = (HorizontalScrollView) launchActivityRule.getActivity().findViewById(R.id.bottom_bar_scroll_view);
 
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
@@ -113,9 +113,9 @@ public class ToolSelectionIntegrationTest {
 		LinearLayout toolsLayout = (LinearLayout) launchActivityRule.getActivity().findViewById(R.id.tools_layout);
 		int toolCount = toolsLayout.getChildCount();
 		int numberOfNotVisibleTools = 0;
-		for(int i = 0; i < toolCount; i++) {
+		for (int i = 0; i < toolCount; i++) {
 			View toolButton = toolsLayout.getChildAt(i);
-			if(!toolButton.isShown()) {
+			if (!toolButton.isShown()) {
 				numberOfNotVisibleTools++;
 			}
 		}
@@ -127,7 +127,7 @@ public class ToolSelectionIntegrationTest {
 
 		for (ToolType toolType : ToolType.values()) {
 			if (toolType.getToolButtonID() == id) {
-				retToolType =  toolType;
+				retToolType = toolType;
 				break;
 			}
 		}
@@ -142,8 +142,8 @@ public class ToolSelectionIntegrationTest {
 		Bitmap currentDrawingSurfaceBitmap = getWorkingBitmap();
 
 		int pixelBefore = currentDrawingSurfaceBitmap.getPixel(
-			currentDrawingSurfaceBitmap.getWidth() / 2,
-			currentDrawingSurfaceBitmap.getHeight() / 2
+				currentDrawingSurfaceBitmap.getWidth() / 2,
+				currentDrawingSurfaceBitmap.getHeight() / 2
 		);
 
 		float posX = activityHelper.getDisplayWidth() / 2.0f;
@@ -152,8 +152,8 @@ public class ToolSelectionIntegrationTest {
 		UiInteractions.touchAt(posX, posY);
 
 		int pixelAfter = currentDrawingSurfaceBitmap.getPixel(
-			currentDrawingSurfaceBitmap.getWidth() / 2,
-			currentDrawingSurfaceBitmap.getHeight() / 2
+				currentDrawingSurfaceBitmap.getWidth() / 2,
+				currentDrawingSurfaceBitmap.getHeight() / 2
 		);
 
 		assertEquals("Drawing Surface should have been deactivated", pixelBefore, pixelAfter);
@@ -174,15 +174,15 @@ public class ToolSelectionIntegrationTest {
 	// TODO: Fails now an then, tool view not visible
 	@Test
 	public void testToolSelectionToolButtonCheckPosition() {
-		int toolCount   = mToolsLayout.getChildCount() - getNumberOfNotVisibleTools();
-		View toolButton = mToolsLayout.getChildAt(toolCount / 2);
+		int toolCount = toolsLayout.getChildCount() - getNumberOfNotVisibleTools();
+		View toolButton = toolsLayout.getChildAt(toolCount / 2);
 
 		ToolType toolInMiddle = getToolTypeByButtonId(toolButton.getId());
 
-		if (mToolsLayout.getWidth() > mScrollView.getWidth() + mToolsLayout.getChildAt(0).getWidth()) {
+		if (toolsLayout.getWidth() > scrollView.getWidth() + toolsLayout.getChildAt(0).getWidth()) {
 			selectTool(toolInMiddle);
 
-			int screenLocation[] = new int[2];
+			int[] screenLocation = new int[2];
 			toolButton.getLocationOnScreen(screenLocation);
 
 			assertEquals("Tool button should be centered", activityHelper.getDisplayWidth() / 2, screenLocation[0] + toolButton.getWidth() / 2);
@@ -191,31 +191,31 @@ public class ToolSelectionIntegrationTest {
 		int scrollRight = 1;
 		int scrollLeft = -1;
 
-		View leftMostButton = mToolsLayout.getChildAt(0);
+		View leftMostButton = toolsLayout.getChildAt(0);
 		ToolType leftMostTool = getToolTypeByButtonId(leftMostButton.getId());
 
 		selectTool(leftMostTool);
 
-		assertFalse("Tool button should be most left", mScrollView.canScrollHorizontally(scrollLeft));
+		assertFalse("Tool button should be most left", scrollView.canScrollHorizontally(scrollLeft));
 
-		View rightMostButton = mToolsLayout.getChildAt(toolCount - 1);
+		View rightMostButton = toolsLayout.getChildAt(toolCount - 1);
 		ToolType rightMostTool = getToolTypeByButtonId(rightMostButton.getId());
 
 		selectTool(rightMostTool);
 
-		assertFalse("Tool button should be most right", mScrollView.canScrollHorizontally(scrollRight));
+		assertFalse("Tool button should be most right", scrollView.canScrollHorizontally(scrollRight));
 	}
 
 	// TODO: how to implement?
 	@Test
 	@Ignore
 	public void testToolSelectionStartAnimation() {
-		int scrollX = mScrollView.getScrollX();
+		int scrollX = scrollView.getScrollX();
 		assertTrue("Scroll position should be > 0 at start", scrollX > 0);
 
 		for (int i = 0; i < 5; i++) {
-			assertTrue(mScrollView.getScrollX() <= scrollX);
-			scrollX = mScrollView.getScrollX();
+			assertTrue(scrollView.getScrollX() <= scrollX);
+			scrollX = scrollView.getScrollX();
 		}
 
 		assertEquals("Animation should be finished after a second", 0, scrollX);
@@ -245,10 +245,9 @@ public class ToolSelectionIntegrationTest {
 				.check(matches(not(isDisplayed())));
 	}
 
-
 	@Test
 	public void testToolSelectionPreviousArrowDisplayedOnEnd() {
-		onView(withId(end))
+		onView(withId(END))
 				.perform(scrollTo());
 		onView(withId(R.id.bottom_previous))
 				.check(matches(isCompletelyDisplayed()));
@@ -258,7 +257,7 @@ public class ToolSelectionIntegrationTest {
 
 	@Test
 	public void testToolSelectionNextArrowNotDisplayedOnEnd() {
-		onView(withId(start))
+		onView(withId(START))
 				.perform(scrollTo());
 		onView(withId(R.id.bottom_previous))
 				.check(matches(not(isDisplayed())));
@@ -268,7 +267,7 @@ public class ToolSelectionIntegrationTest {
 
 	@Test
 	public void previousAndNextDisplayedOnScrollToMiddle() {
-		onView(withId(middle))
+		onView(withId(MIDDLE))
 				.perform(scrollTo());
 		onView(withId(R.id.bottom_previous))
 				.check(matches(isCompletelyDisplayed()));

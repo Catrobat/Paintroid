@@ -51,7 +51,7 @@
     <string name="terms_of_use_and_service_url_text">Terms of Use and Service</string>
     <string name="terms_of_use_and_service_link_template" translatable="false">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
 
-    <string name="about_title">About Pocket Paint&#8230;</string>
+    <string name="about_title">About Pocket Paint…</string>
     <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.\n\n</string>
     <string name="about_license_url_text">Pocket Paint Source Code License</string>
     <string name="about_catroid_url_text">About Catrobat</string>
@@ -69,7 +69,7 @@
     <string name="dialog_tools_title">Tools</string>
     <string name="dialog_save_title">Save Picture</string>
     <string name="dialog_save_text">Input Filename</string>
-    <string name="dialog_load">Loading&#8230;</string>
+    <string name="dialog_load">Loading…</string>
     <string name="dialog_overwrite_text">Overwrite an existing file?</string>
     <string name="dialog_error_save_title">Error load/save File</string>
     <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>

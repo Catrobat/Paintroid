@@ -28,22 +28,22 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class PointCommand extends BaseCommand {
-	protected PointF mPoint;
+	protected PointF point;
 
 	public PointCommand(Paint paint, PointF point) {
 		super(paint);
 		if (point != null) {
-			mPoint = new PointF(point.x, point.y);
+			this.point = new PointF(point.x, point.y);
 		}
 	}
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
-		if (canvas == null || mPoint == null) {
+		if (canvas == null || point == null) {
 			Log.w(PaintroidApplication.TAG,
 					"Object must not be null in PointCommand.");
 			return;
 		}
-		canvas.drawPoint(mPoint.x, mPoint.y, mPaint);
+		canvas.drawPoint(point.x, point.y, paint);
 	}
 }

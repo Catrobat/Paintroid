@@ -35,7 +35,7 @@ public class CustomAndroidJUnitRunner extends AndroidJUnitRunner {
 	@Override
 	protected void waitForActivitiesToComplete() {
 		Log.d(TAG, "......waitForActivitiesToComplete.....");
-		for(int i = 0; i < NUMBER_OF_RETRIES && startedActivityCounter.get() > 0; i++) {
+		for (int i = 0; i < NUMBER_OF_RETRIES && startedActivityCounter.get() > 0; i++) {
 			super.waitForActivitiesToComplete();
 		}
 		Log.d(TAG, "......completed.");
@@ -46,9 +46,9 @@ public class CustomAndroidJUnitRunner extends AndroidJUnitRunner {
 		startedActivityCounter.incrementAndGet();
 		try {
 			super.callActivityOnStart(activity);
-		} catch (RuntimeException re) {
+		} catch (RuntimeException runtimeException) {
 			startedActivityCounter.decrementAndGet();
-			throw re;
+			throw runtimeException;
 		}
 	}
 

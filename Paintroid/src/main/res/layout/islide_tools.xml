@@ -65,10 +65,6 @@
             android:orientation="horizontal"/>
     </LinearLayout>
 
-
-
-
-
     <RelativeLayout
         android:id="@+id/intro_tools_textview"
         android:layout_width="match_parent"
@@ -81,7 +77,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_above="@id/intro_tools_bottom_bar">
-
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -109,12 +104,9 @@
                 android:layout_marginTop="@dimen/intro_margin_top_text"
                 android:text="@string/intro_tool_more_information"/>
 
-
         </RelativeLayout>
 
-
     </RelativeLayout>
-
 
 </RelativeLayout>
 

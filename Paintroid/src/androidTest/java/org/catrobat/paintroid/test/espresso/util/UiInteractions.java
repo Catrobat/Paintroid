@@ -23,7 +23,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.GeneralLocation;
@@ -50,236 +49,237 @@ import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVi
 
 public final class UiInteractions {
 
-    private UiInteractions() {
+	private UiInteractions() {
+	}
 
-    }
+	public static ViewAction unconstrainedScrollTo() {
+		return actionWithAssertions(new UnconstrainedScrollToAction());
+	}
 
-    public static ViewAction unconstrainedScrollTo() {
-        return actionWithAssertions(new UnconstrainedScrollToAction());
-    }
+	public static ViewAction waitFor(final long millis) {
+		return new ViewAction() {
+			@Override
+			public Matcher<View> getConstraints() {
+				return isRoot();
+			}
 
-    private static class UnconstrainedScrollToAction implements ViewAction {
-        private ViewAction action = new ScrollToAction();
+			@Override
+			public String getDescription() {
+				return "Wait for " + millis + " milliseconds.";
+			}
 
-        @Override
-        public Matcher<View> getConstraints() {
-            return withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE);
-        }
+			@Override
+			public void perform(UiController uiController, final View view) {
+				uiController.loopMainThreadForAtLeast(millis);
+			}
+		};
+	}
 
-        @Override
-        public String getDescription() {
-            return action.getDescription();
-        }
+	public static ViewAction setProgress(final int progress) {
+		return new ViewAction() {
 
-        @Override
-        public void perform(UiController uiController, View view) {
-            action.perform(uiController, view);
-        }
-    }
+			@Override
+			public Matcher<View> getConstraints() {
+				return isAssignableFrom(SeekBar.class);
+			}
 
-    public static ViewAction waitFor(final long millis) {
-        return new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return isRoot();
-            }
+			@Override
+			public String getDescription() {
+				return "Set a progress";
+			}
 
-            @Override
-            public String getDescription() {
-                return "Wait for " + millis + " milliseconds.";
-            }
+			@Override
+			public void perform(UiController uiController, View view) {
+				if (!(view instanceof SeekBar)) {
+					return;
+				}
 
-            @Override
-            public void perform(UiController uiController, final View view) {
-                uiController.loopMainThreadForAtLeast(millis);
-            }
-        };
-    }
+				((SeekBar) view).setProgress(progress);
+			}
+		};
+	}
 
-    public static ViewAction setProgress(final int progress) {
-        return new ViewAction() {
+	public static ViewAction clickOutside(final Direction direction) {
+		return actionWithAssertions(
+				new GeneralClickAction(Tap.SINGLE, new CoordinatesProvider() {
+					@Override
+					public float[] calculateCoordinates(View view) {
+						Rect r = new Rect();
+						view.getGlobalVisibleRect(r);
+						switch (direction) {
+							case ABOVE:
+								return new float[]{r.centerX(), r.top - 50};
+							case BELOW:
+								return new float[]{r.centerX(), r.bottom + 50};
+							case LEFT:
+								return new float[]{r.left - 50, r.centerY()};
+							case RIGHT:
+								return new float[]{r.right + 50, r.centerY()};
+						}
+						return null;
+					}
+				}, Press.FINGER, 0, 1)
+		);
+	}
 
-            @Override
-            public Matcher<View> getConstraints() {
-                return isAssignableFrom(SeekBar.class);
-            }
+	public static ViewAction touchAt(final PointF coordinates) {
+		return touchAt(coordinates, Tap.SINGLE);
+	}
 
-            @Override
-            public String getDescription() {
-                return "Set a progress";
-            }
+	public static ViewAction touchAt(final int x, final int y) {
+		return touchAt((float) x, (float) y);
+	}
 
-            @Override
-            public void perform(UiController uiController, View view) {
-                if (!(view instanceof SeekBar)) {
-                    return;
-                }
+	public static ViewAction touchAt(final float x, final float y) {
+		return touchAt(x, y, Tap.SINGLE);
+	}
 
-                ((SeekBar) view).setProgress(progress);
-            }
-        };
-    }
+	public static ViewAction touchLongAt(final PointF coordinates) {
+		return touchAt(coordinates, Tap.LONG);
+	}
 
-    public enum Direction {
-        ABOVE,
-        BELOW,
-        LEFT,
-        RIGHT
-    }
+	public static ViewAction touchLongAt(final float x, final float y) {
+		return touchAt(x, y, Tap.LONG);
+	}
 
-    public static ViewAction clickOutside(final Direction direction) {
-        return actionWithAssertions(
-                new GeneralClickAction(Tap.SINGLE, new CoordinatesProvider() {
-                    @Override
-                    public float[] calculateCoordinates(View view) {
-                        Rect r = new Rect();
-                        view.getGlobalVisibleRect(r);
-                        switch(direction) {
-                            case ABOVE:
-                                return new float[]{r.centerX(), r.top - 50};
-                            case BELOW:
-                                return new float[]{r.centerX(), r.bottom + 50};
-                            case LEFT:
-                                return new float[]{r.left - 50, r.centerY()};
-                            case RIGHT:
-                                return new float[]{r.right + 50, r.centerY()};
-                        }
-                        return null;
-                    }
-                }, Press.FINGER, 0, 1)
-        );
-    }
+	public static ViewAction touchAt(final PointF coordinates, final Tapper tapStyle) {
+		return touchAt(coordinates.x, coordinates.y, tapStyle);
+	}
 
-    public static ViewAction touchAt(final PointF coordinates) {
-        return touchAt(coordinates, Tap.SINGLE);
-    }
+	public static ViewAction touchAt(final float x, final float y, final Tapper tapStyle) {
+		return actionWithAssertions(
+				new GeneralClickAction(tapStyle, new CoordinatesProvider() {
+					@Override
+					public float[] calculateCoordinates(View view) {
+						final int[] screenLocation = new int[2];
+						view.getLocationOnScreen(screenLocation);
 
-    public static ViewAction touchAt(final int x, final int y) {
-        return touchAt((float) x, (float) y);
-    }
+						final float touchX = screenLocation[0] + x;
+						final float touchY = screenLocation[1] + y;
+						float[] coordinates = {touchX, touchY};
 
-    public static ViewAction touchAt(final float x, final float y) {
-        return touchAt(x, y, Tap.SINGLE);
-    }
+						return coordinates;
+					}
+				}, Press.FINGER)
+		);
+	}
 
-    public static ViewAction touchLongAt(final PointF coordinates) {
-        return touchAt(coordinates, Tap.LONG);
-    }
+	public static ViewAction touchCenterLeft() {
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER);
+	}
 
-    public static ViewAction touchLongAt(final float x, final float y) {
-        return touchAt(x, y, Tap.LONG);
-    }
+	public static ViewAction touchCenterMiddle() {
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER, Press.FINGER);
+	}
 
-    public static ViewAction touchAt(final PointF coordinates, final Tapper tapStyle) {
-        return touchAt(coordinates.x, coordinates.y, tapStyle);
-    }
+	public static ViewAction touchCenterRight() {
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER);
+	}
 
-    public static ViewAction touchAt(final float x, final float y, final Tapper tapStyle) {
-        return actionWithAssertions(
-                new GeneralClickAction(tapStyle, new CoordinatesProvider() {
-                    @Override
-                    public float[] calculateCoordinates(View view) {
-                        final int[] screenLocation = new int[2];
-                        view.getLocationOnScreen(screenLocation);
+	public static ViewAction swipe(PointF start, PointF end) {
+		return swipe((int) start.x, (int) start.y, (int) end.x, (int) end.y);
+	}
 
-                        final float touchX = screenLocation[0] + x;
-                        final float touchY = screenLocation[1] + y;
-                        float[] coordinates = {touchX, touchY};
+	public static ViewAction swipe(float startX, float startY, float endX, float endY) {
+		return swipe((int) startX, (int) startY, (int) endX, (int) endY);
+	}
 
-                        return coordinates;
-                    }
-                }, Press.FINGER)
-        );
-    }
+	public static ViewAction swipe(int startX, int startY, int endX, int endY) {
+		return swipe(PositionCoordinatesProvider.at(startX, startY), PositionCoordinatesProvider.at(endX, endY));
+	}
 
-    public static ViewAction touchCenterLeft() {
-        return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER);
-    }
+	public static ViewAction swipe(CoordinatesProvider startCoordinatesProvider, CoordinatesProvider endCoordinatesProvider) {
+		return new GeneralSwipeAction(Swipe.SLOW, startCoordinatesProvider, endCoordinatesProvider, Press.FINGER);
+	}
 
-    public static ViewAction touchCenterMiddle() {
-        return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER, Press.FINGER);
-    }
+	public static ViewAction selectViewPagerPage(final int pos) {
+		return new ViewAction() {
+			@Override
+			public Matcher<View> getConstraints() {
+				return isAssignableFrom(ViewPager.class);
+			}
 
-    public static ViewAction touchCenterRight() {
-        return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER);
-    }
+			@Override
+			public String getDescription() {
+				return "select page in ViewPager";
+			}
 
-    public static ViewAction swipe(PointF start, PointF end) {
-        return swipe((int) start.x, (int) start.y, (int) end.x, (int) end.y);
-    }
+			@Override
+			public void perform(UiController uiController, View view) {
+				((ViewPager) view).setCurrentItem(pos);
+			}
+		};
+	}
 
-    public static ViewAction swipe(float startX, float startY, float endX, float endY) {
-        return swipe((int) startX, (int) startY, (int) endX, (int) endY);
-    }
+	public enum Direction {
+		ABOVE,
+		BELOW,
+		LEFT,
+		RIGHT
+	}
 
-    public static ViewAction swipe(int startX, int startY, int endX, int endY) {
-        return swipe(PositionCoordinatesProvider.at(startX, startY), PositionCoordinatesProvider.at(endX, endY));
-    }
+	private static class UnconstrainedScrollToAction implements ViewAction {
+		private ViewAction action = new ScrollToAction();
 
-    public static ViewAction swipe(CoordinatesProvider startCoordinatesProvider, CoordinatesProvider endCoordinatesProvider) {
-        return new GeneralSwipeAction(Swipe.SLOW, startCoordinatesProvider, endCoordinatesProvider, Press.FINGER);
-    }
+		@Override
+		public Matcher<View> getConstraints() {
+			return withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE);
+		}
 
-    public static ViewAction selectViewPagerPage(final int pos) {
-        return new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return isAssignableFrom(ViewPager.class);
-            }
+		@Override
+		public String getDescription() {
+			return action.getDescription();
+		}
 
-            @Override
-            public String getDescription() {
-                return "select page in ViewPager";
-            }
+		@Override
+		public void perform(UiController uiController, View view) {
+			action.perform(uiController, view);
+		}
+	}
 
-            @Override
-            public void perform(UiController uiController, View view) {
-                ((ViewPager) view).setCurrentItem(pos);
-            }
-        };
-    }
+	public static class DefinedLongTap implements Tapper {
 
+		private int longPressTimeout;
 
-    public static class DefinedLongTap implements Tapper {
+		DefinedLongTap(int longPressTimeout) {
+			this.longPressTimeout = longPressTimeout;
+		}
 
-        private int longPressTimeout;
+		public static Tapper withPressTimeout(final int longPressTimeout) {
+			return new DefinedLongTap(longPressTimeout);
+		}
 
-        DefinedLongTap(int longPressTimeout) {
-            this.longPressTimeout = longPressTimeout;
-        }
+		@Override
+		public Status sendTap(
+				UiController uiController, float[] coordinates, float[] precision, int inputDevice,
+				int buttonState) {
+			MotionEvent downEvent = MotionEvents.sendDown(uiController, coordinates, precision,
+					inputDevice, buttonState).down;
+			try {
+				// Duration before a press turns into a long press.
+				// Factor 1.5 is needed, otherwise a long press is not safely detected.
+				// See android.test.TouchUtils longClickView
+				long longPressTimeout = (long) (this.longPressTimeout * 1.5f);
+				uiController.loopMainThreadForAtLeast(longPressTimeout);
 
-        public static Tapper withPressTimeout(final int longPressTimeout) {
-            return new DefinedLongTap(longPressTimeout);
-        }
+				if (!MotionEvents.sendUp(uiController, downEvent)) {
+					MotionEvents.sendCancel(uiController, downEvent);
+					return Status.FAILURE;
+				}
+			} finally {
+				downEvent.recycle();
+			}
+			return Status.SUCCESS;
+		}
 
-        @Override
-        public Status sendTap(
-                UiController uiController, float[] coordinates, float[] precision, int inputDevice,
-                int buttonState) {
-            MotionEvent downEvent = MotionEvents.sendDown(uiController, coordinates, precision,
-                    inputDevice, buttonState).down;
-            try {
-                // Duration before a press turns into a long press.
-                // Factor 1.5 is needed, otherwise a long press is not safely detected.
-                // See android.test.TouchUtils longClickView
-                long longPressTimeout = (long) (this.longPressTimeout * 1.5f);
-                uiController.loopMainThreadForAtLeast(longPressTimeout);
-
-                if (!MotionEvents.sendUp(uiController, downEvent)) {
-                    MotionEvents.sendCancel(uiController, downEvent);
-                    return Status.FAILURE;
-                }
-            } finally {
-                downEvent.recycle();
-            }
-            return Status.SUCCESS;
-        }
-
-        @Deprecated
-        @Override
-        public Status sendTap(UiController uiController, float[] coordinates, float[] precision) {
-            return sendTap(uiController, coordinates, precision, InputDevice.SOURCE_UNKNOWN,
-                    MotionEvent.BUTTON_PRIMARY);
-        }
-    }
+		/**
+		 * @deprecated use other sendTap instead
+		 */
+		@Deprecated
+		@Override
+		public Status sendTap(UiController uiController, float[] coordinates, float[] precision) {
+			return sendTap(uiController, coordinates, precision, InputDevice.SOURCE_UNKNOWN,
+					MotionEvent.BUTTON_PRIMARY);
+		}
+	}
 }

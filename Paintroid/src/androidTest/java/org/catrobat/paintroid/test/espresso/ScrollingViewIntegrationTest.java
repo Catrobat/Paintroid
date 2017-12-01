@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getActionbarHeight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromSurfacePoint;
@@ -269,12 +270,12 @@ public class ScrollingViewIntegrationTest {
 
 	public void dragAndCheckIfCanvasHasMovedInXAndY(PointF fromPoint, PointF toPoint) {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF startPointCanvas  = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
 		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF endPointCanvas  = getCanvasPointFromSurfacePoint(endPointSurface);
+		PointF endPointCanvas = getCanvasPointFromSurfacePoint(endPointSurface);
 
 		assertTrue("scrolling did not work in x", startPointCanvas.x != endPointCanvas.x);
 		assertTrue("scrolling did not work in y", startPointCanvas.y != endPointCanvas.y);
@@ -282,24 +283,24 @@ public class ScrollingViewIntegrationTest {
 
 	public void dragAndCheckIfCanvasHasMovedInXOrY(PointF fromPoint, PointF toPoint) {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF startPointCanvas  = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
 		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF endPointCanvas  = getCanvasPointFromSurfacePoint(endPointSurface);
+		PointF endPointCanvas = getCanvasPointFromSurfacePoint(endPointSurface);
 
 		assertTrue("scrolling did not work", (startPointCanvas.x != endPointCanvas.x) || (startPointCanvas.y != endPointCanvas.y));
 	}
 
 	public void dragAndCheckIfCanvasHasNotMoved(PointF fromPoint, PointF toPoint) {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF startPointCanvas  = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
 		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF endPointCanvas  = getCanvasPointFromSurfacePoint(endPointSurface);
+		PointF endPointCanvas = getCanvasPointFromSurfacePoint(endPointSurface);
 
 		float delta = 0.5f;
 		assertEquals("view should not scroll but did it in x direction", startPointCanvas.x, endPointCanvas.x, delta);

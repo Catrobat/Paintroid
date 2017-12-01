@@ -19,9 +19,6 @@
 
 package org.catrobat.paintroid.dialog;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -35,6 +32,9 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 
 public class DialogAbout extends AppCompatDialogFragment implements OnClickListener {
 
@@ -84,15 +84,14 @@ public class DialogAbout extends AppCompatDialogFragment implements OnClickListe
 		builder.setPositiveButton(R.string.done, this);
 
 		return builder.create();
-
 	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		switch (which) {
-		case AlertDialog.BUTTON_POSITIVE:
-			dismiss();
-			break;
+			case AlertDialog.BUTTON_POSITIVE:
+				dismiss();
+				break;
 		}
 	}
 }

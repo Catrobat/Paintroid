@@ -28,25 +28,29 @@ public interface CommandManager {
 
 	/**
 	 * Adds the new command (draw path, erase, draw shape) to corresponding layer.
+	 *
 	 * @param bitmapCommand command to commit to layer bitmap.
-	 * @param layerCommand contains layer to which command should be commited.
+	 * @param layerCommand  contains layer to which command should be commited.
 	 */
 	void commitCommandToLayer(LayerCommand layerCommand, Command bitmapCommand);
 
 	/**
 	 * Adds new layer to application.
+	 *
 	 * @param layerCommand contains layer to add.
 	 */
 	void commitAddLayerCommand(LayerCommand layerCommand);
 
 	/**
 	 * Removes corresponding layer from application.
+	 *
 	 * @param layerCommand contains layer to remove.
 	 */
 	void commitRemoveLayerCommand(LayerCommand layerCommand);
 
 	/**
 	 * Merges two layers.
+	 *
 	 * @param layerCommand contains layer to be merged.
 	 */
 	void commitMergeLayerCommand(LayerCommand layerCommand);
@@ -88,5 +92,4 @@ public interface CommandManager {
 	boolean isRedoCommandListEmpty();
 
 	boolean isCommandManagerInitialized();
-
 }

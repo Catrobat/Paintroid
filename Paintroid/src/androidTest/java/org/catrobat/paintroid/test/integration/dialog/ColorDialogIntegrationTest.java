@@ -63,7 +63,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 	protected void setUp() {
 		super.setUp();
 		try {
-			mTopBar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "mTopBar");
+			mTopBar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, getActivity(), "topBar");
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -186,7 +186,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnView(colorTabWidget.getChildAt(RGB_TAB_INDEX), true);
 		mSolo.waitForText(mSolo.getString(R.string.color_red));
 		final Paint originalStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
-				PaintroidApplication.currentTool, "mCanvasPaint");
+				PaintroidApplication.currentTool, "canvasPaint");
 		final int originalPaintColor = originalStrokePaint.getColor();
 		final ArrayList<ProgressBar> currentProgressBars = mSolo.getCurrentViews(ProgressBar.class, (ViewGroup)tabHost.getParent());
 		assertEquals("No progress bars for ARGB :-(", currentProgressBars.size(), 4);
@@ -215,7 +215,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		}
 		mSolo.goBack();
 		final Paint rgbChangedStrokePaint = (Paint) PrivateAccess.getMemberValue(BaseTool.class,
-				PaintroidApplication.currentTool, "mCanvasPaint");
+				PaintroidApplication.currentTool, "canvasPaint");
 		final int rgbChangedPaintColor = rgbChangedStrokePaint.getColor();
 		assertFalse("Alpha value did not change", Color.alpha(rgbChangedPaintColor) == Color.alpha(originalPaintColor));
 		assertFalse("Red value did not change", Color.red(rgbChangedPaintColor) == Color.red(originalPaintColor));

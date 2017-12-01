@@ -27,20 +27,20 @@ import org.catrobat.paintroid.tools.Layer;
 
 public class LoadCommand extends BaseCommand {
 
-	private Bitmap mLoadedImage;
+	private Bitmap loadedImage;
 
 	public LoadCommand(Bitmap newBitmap) {
-		mLoadedImage = newBitmap.copy(Bitmap.Config.ARGB_8888, true);
+		loadedImage = newBitmap.copy(Bitmap.Config.ARGB_8888, true);
 	}
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
 
-		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
-		Bitmap buffer = mLoadedImage.copy(Bitmap.Config.ARGB_8888, mLoadedImage.isMutable());
+		notifyStatus(NotifyStates.COMMAND_STARTED);
+		Bitmap buffer = loadedImage.copy(Bitmap.Config.ARGB_8888, loadedImage.isMutable());
 		PaintroidApplication.drawingSurface.resetBitmap(buffer);
 		layer.setImage(buffer);
 
-		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+		notifyStatus(NotifyStates.COMMAND_DONE);
 	}
 }

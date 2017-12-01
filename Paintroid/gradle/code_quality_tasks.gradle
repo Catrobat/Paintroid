@@ -17,15 +17,36 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.command;
+task checkstyle(type: Checkstyle) {
+    configFile file('config/checkstyle.xml')
+    source '.'
+    include '**/*.java', '**/*.xml', '**/*.gradle'
+    exclude '**/gen/**', '**/build/**', 'libraryProjects/**', '**/.idea/**', '**/test/integration/**'
 
-import android.graphics.Canvas;
+    classpath = files()
 
-import org.catrobat.paintroid.tools.Layer;
+    // needed for console output of warnings/errors
+    showViolations true
+    ignoreFailures false
 
-public interface Command {
+    reports {
+        xml.enabled = true
+        xml.destination "build/reports/checkstyle.xml"
+    }
+}
 
-	void run(Canvas canvas, Layer layer);
+task pmd(type: Pmd) {
+    ruleSets = ['Paintroid/config/pmd.xml']
 
-	void freeResources();
+    source '.'
+    include '**/*.java'
+    exclude '**/gen/**', '**/build/**', '**/res/**', '**/test/integration/**'
+
+    ignoreFailures false
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        xml.destination "build/reports/pmd.xml"
+    }
 }

@@ -19,69 +19,69 @@
 
 package org.catrobat.paintroid.command.implementation;
 
-import org.catrobat.paintroid.FileIO;
-import org.catrobat.paintroid.tools.Layer;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 
+import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.tools.Layer;
+
 public class StampCommand extends BaseCommand {
-	protected final Point mCoordinates;
-	protected final float mBoxWidth;
-	protected final float mBoxHeight;
-	protected final float mBoxRotation;
-	protected final RectF mBoxRect;
+	protected final Point coordinates;
+	protected final float boxWidth;
+	protected final float boxHeight;
+	protected final float boxRotation;
+	protected final RectF boxRect;
 
 	public StampCommand(Bitmap bitmap, Point position, float width,
 			float height, float rotation) {
 		super(new Paint(Paint.DITHER_FLAG));
 
 		if (position != null) {
-			mCoordinates = new Point(position.x, position.y);
+			coordinates = new Point(position.x, position.y);
 		} else {
-			mCoordinates = null;
+			coordinates = null;
 		}
 		if (bitmap != null) {
-			mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
+			this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false);
 		}
-		mBoxWidth = width;
-		mBoxHeight = height;
-		mBoxRotation = rotation;
-		mBoxRect = new RectF(-mBoxWidth / 2f, -mBoxHeight / 2f, mBoxWidth / 2f,
-				mBoxHeight / 2f);
+		boxWidth = width;
+		boxHeight = height;
+		boxRotation = rotation;
+		boxRect = new RectF(-boxWidth / 2f, -boxHeight / 2f, boxWidth / 2f,
+				boxHeight / 2f);
 	}
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
 
-		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
-		if (mFileToStoredBitmap != null) {
-			mBitmap = FileIO.getBitmapFromFile(mFileToStoredBitmap);
+		notifyStatus(NotifyStates.COMMAND_STARTED);
+		if (fileToStoredBitmap != null) {
+			bitmap = FileIO.getBitmapFromFile(fileToStoredBitmap);
 		}
 
-		if (mBitmap == null) {
+		if (bitmap == null) {
 			setChanged();
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+			notifyStatus(NotifyStates.COMMAND_FAILED);
 			return;
 		}
 
 		canvas.save();
-		canvas.translate(mCoordinates.x, mCoordinates.y);
-		canvas.rotate(mBoxRotation);
-		canvas.drawBitmap(mBitmap, null, mBoxRect, mPaint);
+		canvas.translate(coordinates.x, coordinates.y);
+		canvas.rotate(boxRotation);
+		canvas.drawBitmap(bitmap, null, boxRect, paint);
 
 		canvas.restore();
 
-		if (mFileToStoredBitmap == null) {
+		if (fileToStoredBitmap == null) {
 			storeBitmap();
 		} else {
-			mBitmap.recycle();
-			mBitmap = null;
+			bitmap.recycle();
+			bitmap = null;
 		}
 
-		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+		notifyStatus(NotifyStates.COMMAND_DONE);
 	}
 }

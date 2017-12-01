@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -15,17 +16,9 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+-->
+<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.1//EN" "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
-package org.catrobat.paintroid.command;
-
-import android.graphics.Canvas;
-
-import org.catrobat.paintroid.tools.Layer;
-
-public interface Command {
-
-	void run(Canvas canvas, Layer layer);
-
-	void freeResources();
-}
+<suppressions>
+  <suppress id="EllipsesCheck" files=".*[\\/]res[\\/]values-.*[\\/]strings.xml"/>
+</suppressions>

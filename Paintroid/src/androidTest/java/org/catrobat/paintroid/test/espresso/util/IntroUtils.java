@@ -56,6 +56,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getDescendantView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.shouldStartSequence;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
@@ -65,183 +66,186 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
+public final class IntroUtils {
+	private static final int ANIMATION_DELAY = 750;
+	private static final String TT_CLASS_NAME = "com.getkeepsafe.taptargetview.TapTargetView";
 
-public class IntroUtils {
-    private final static int animationDelay = 750;
-    private final static String TT_CLASS_NAME = "com.getkeepsafe.taptargetview.TapTargetView";
+	public static int numberOfVisibleChildren(LinearLayout layout) {
+		int count = 0;
+		for (int i = 0; i < layout.getChildCount(); i++) {
+			if (layout.getChildAt(i).getVisibility() == View.VISIBLE) {
+				count++;
+			}
+		}
+		return count;
+	}
 
-    public static int numberOfVisibleChildren(LinearLayout layout) {
-        int count = 0;
-        for (int i = 0; i < layout.getChildCount(); i++) {
-            if (layout.getChildAt(i).getVisibility() == View.VISIBLE) {
-                count++;
-            }
-        }
-        return count;
-    }
+	private IntroUtils() {
+	}
 
-    public static void introClickToolAndCheckView(ToolType toolType, IntroSlide introSlide) {
-        ViewInteraction tapTargetViewInteraction;
-        ViewInteraction buttonViewInteraction;
-        ViewInteraction fadeViewInteraction;
+	public static void introClickToolAndCheckView(ToolType toolType, IntroSlide introSlide) {
+		ViewInteraction tapTargetViewInteraction;
+		ViewInteraction buttonViewInteraction;
+		ViewInteraction fadeViewInteraction;
 
-        buttonViewInteraction = onView(allOf(withId(toolType.getToolButtonID()),
-                isDescendantOfA(ViewMatchers.withId(introSlide.getToolBarResourceId()))));
+		buttonViewInteraction = onView(allOf(withId(toolType.getToolButtonID()),
+				isDescendantOfA(ViewMatchers.withId(introSlide.getToolBarResourceId()))));
 
-        waitMillis(animationDelay);
+		waitMillis(ANIMATION_DELAY);
 
-        fadeViewInteraction = onView(ViewMatchers.withId(introSlide.getFadeViewResourceId()))
-                .check(matches(isDisplayed()));
+		fadeViewInteraction = onView(ViewMatchers.withId(introSlide.getFadeViewResourceId()))
+				.check(matches(isDisplayed()));
 
-        if (introSlide == IntroSlide.Tools) {
-            buttonViewInteraction.perform(scrollTo());
+		if (introSlide == IntroSlide.Tools) {
+			buttonViewInteraction.perform(scrollTo());
 
-            onView(withText(R.string.intro_tool_more_information))
-                    .check(matches(isDisplayed()));
-        }
+			onView(withText(R.string.intro_tool_more_information))
+					.check(matches(isDisplayed()));
+		}
 
-        buttonViewInteraction
-                .check(matches(isClickable()))
-                .perform(click());
+		buttonViewInteraction
+				.check(matches(isClickable()))
+				.perform(click());
 
-        if (introSlide == IntroSlide.Tools) {
-            onView(withText(R.string.intro_tool_more_information))
-                    .check(matches(not(isDisplayed())));
-        }
+		if (introSlide == IntroSlide.Tools) {
+			onView(withText(R.string.intro_tool_more_information))
+					.check(matches(not(isDisplayed())));
+		}
 
-        onView(withTapTargetTitle(toolType.getNameResource()))
-                .check(matches(isDisplayed()));
-        onView(withTapTargetDescription(toolType.getHelpTextResource()))
-                .check(matches(isDisplayed()));
+		onView(withTapTargetTitle(toolType.getNameResource()))
+				.check(matches(isDisplayed()));
+		onView(withTapTargetDescription(toolType.getHelpTextResource()))
+				.check(matches(isDisplayed()));
 
-        tapTargetViewInteraction = onView(allOf(withClassName(Matchers.is(TT_CLASS_NAME))));
-        tapTargetViewInteraction.check(matches(isDisplayed()));
-        fadeViewInteraction.check(matches(not(isDisplayed())));
-        tapTargetViewInteraction.perform(click()).check(isNotVisible());
-        fadeViewInteraction.check(matches(isDisplayed()));
-    }
+		tapTargetViewInteraction = onView(allOf(withClassName(Matchers.is(TT_CLASS_NAME))));
+		tapTargetViewInteraction.check(matches(isDisplayed()));
+		fadeViewInteraction.check(matches(not(isDisplayed())));
+		tapTargetViewInteraction.perform(click()).check(isNotVisible());
+		fadeViewInteraction.check(matches(isDisplayed()));
+	}
 
-    private static Matcher<View> withTapTargetTitle(final int resourceId) {
-        return new WithTapTargetTextMatcher(resourceId, TapTargetTextType.TITLE);
-    }
+	private static Matcher<View> withTapTargetTitle(final int resourceId) {
+		return new WithTapTargetTextMatcher(resourceId, TapTargetTextType.TITLE);
+	}
 
-    private static Matcher<View> withTapTargetDescription(final int resourceId) {
-        return new WithTapTargetTextMatcher(resourceId, TapTargetTextType.DESCRIPTION);
-    }
+	private static Matcher<View> withTapTargetDescription(final int resourceId) {
+		return new WithTapTargetTextMatcher(resourceId, TapTargetTextType.DESCRIPTION);
+	}
 
-    private enum TapTargetTextType {
-        TITLE,
-        DESCRIPTION
-    }
+	public static int getExpectedRadiusForTapTarget(TapTargetBase tapTargetTopBar) throws NoSuchFieldException, IllegalAccessException {
+		final Context context = InstrumentationRegistry.getTargetContext();
+		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		int radiusOffset = (int) PrivateAccess.getMemberValue(TapTargetBase.class, tapTargetTopBar, "RADIUS_OFFSET");
+		float dimension = context.getResources().getDimension(R.dimen.top_bar_height);
+		return WelcomeActivityHelper.calculateTapTargetRadius(dimension, metrics, radiusOffset);
+	}
 
-    static class WithTapTargetTextMatcher extends BoundedMatcher<View, TapTargetView> {
+	public static LinearLayout getBottomBarFromToolSlide(Activity activity) {
+		return (LinearLayout) getDescendantView(R.id.intro_tools_bottom_bar, R.id.tools_layout, activity);
+	}
 
-        private String text;
-        private final int resourceId;
-        private final TapTargetTextType type;
+	public static LinearLayout getTopBarFromPossibilitiesSlide(Activity activity) {
+		return (LinearLayout) getDescendantView(R.id.intro_possibilites_topbar, R.id.layout_top_bar, activity);
+	}
 
-        WithTapTargetTextMatcher(int resourceId, TapTargetTextType type) {
-            super(TapTargetView.class);
-            this.resourceId = resourceId;
-            this.type = type;
-        }
+	public static TapTargetBottomBar getTapTargetBottomBar(Activity activity) {
+		LinearLayout targetItemView = getBottomBarFromToolSlide(activity);
+		final View fadeView = activity.findViewById(R.id.intro_tools_textview);
+		TapTargetBottomBar tapTargetBottomBar = new TapTargetBottomBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_tools_bottom_bar);
+		return tapTargetBottomBar;
+	}
 
-        @Override
-        protected boolean matchesSafely(TapTargetView item) {
-            if (text == null)
-                text = item.getResources().getString(resourceId);
-            CharSequence actualText = null;
-            try {
-                switch (type) {
-                    case TITLE:
-                        actualText = (CharSequence) PrivateAccess.getMemberValue(TapTargetView.class, item, "title");
-                        break;
-                    case DESCRIPTION:
-                        actualText = (CharSequence) PrivateAccess.getMemberValue(TapTargetView.class, item, "description");
-                        break;
-                }
-                return actualText != null && text.equals(actualText.toString());
-            } catch (Exception e) {
-                return false;
-            }
-        }
+	public static TapTargetTopBar getTapTargetTopBar(Activity activity) throws NoSuchFieldException, IllegalAccessException {
+		final View fadeView = activity.findViewById(R.id.intro_possibilities_textview);
+		LinearLayout targetItemView = getTopBarFromPossibilitiesSlide(activity);
+		TapTargetTopBar tapTargetTopBar = new TapTargetTopBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_possibilities_bottom_bar);
+		shouldStartSequence(tapTargetTopBar, false);
+		return tapTargetTopBar;
+	}
 
-        @Override
-        public void describeTo(Description description) {
-            if (text == null) {
-                description.appendText("with string from resource id: ").appendValue(resourceId);
-            } else {
-                description.appendText("with string value:").appendText(text);
-            }
-        }
-    }
+	public static HashMap<ToolType, TapTarget> getMapFromTapTarget(TapTargetBase tapTarget) throws NoSuchFieldException, IllegalAccessException {
+		Object o = PrivateAccess.getMemberValue(TapTargetBase.class, tapTarget, "tapTargetMap");
+		assertThat("tapTarget member is not a HashMap", o, instanceOf(HashMap.class));
 
-    public static int getExpectedRadiusForTapTarget(TapTargetBase tapTargetTopBar) throws NoSuchFieldException, IllegalAccessException {
-        final Context context = InstrumentationRegistry.getTargetContext();
-        final DisplayMetrics metrics= context.getResources().getDisplayMetrics();
-        int radiusOffset = (int) PrivateAccess.getMemberValue(TapTargetBase.class, tapTargetTopBar, "RADIUS_OFFSET");
-        float dimension = context.getResources().getDimension(R.dimen.top_bar_height);
-        return WelcomeActivityHelper.calculateTapTargetRadius(dimension, metrics, radiusOffset);
-    }
+		return (HashMap<ToolType, TapTarget>) o;
+	}
 
-    public static LinearLayout getBottomBarFromToolSlide(Activity activity) {
-        return (LinearLayout) getDescendantView(R.id.intro_tools_bottom_bar, R.id.tools_layout, activity);
-    }
+	public static int getPageIndexFromLayout(final int[] layouts, final int layoutResource) throws IndexOutOfBoundsException {
+		for (int i = 0; i < layouts.length; i++) {
+			if (layouts[i] == layoutResource) {
+				return i;
+			}
+		}
 
-    public static LinearLayout getTopBarFromPossibilitiesSlide(Activity activity) {
-        return (LinearLayout) getDescendantView(R.id.intro_possibilites_topbar, R.id.layout_top_bar, activity);
-    }
+		throw new IndexOutOfBoundsException("No Index Found");
+	}
 
-    public static TapTargetBottomBar getTapTargetBottomBar(Activity activity) {
-        LinearLayout targetItemView = getBottomBarFromToolSlide(activity);
-        final View fadeView = activity.findViewById(R.id.intro_tools_textview);
-        TapTargetBottomBar tapTargetBottomBar = new TapTargetBottomBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_tools_bottom_bar);
-        return tapTargetBottomBar;
-    }
+	private enum TapTargetTextType {
+		TITLE,
+		DESCRIPTION
+	}
 
-    public static TapTargetTopBar getTapTargetTopBar(Activity activity) throws NoSuchFieldException, IllegalAccessException {
-        final View fadeView = activity.findViewById(R.id.intro_possibilities_textview);
-        LinearLayout targetItemView = getTopBarFromPossibilitiesSlide(activity);
-        TapTargetTopBar tapTargetTopBar = new TapTargetTopBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_possibilities_bottom_bar);
-        shouldStartSequence(tapTargetTopBar, false);
-        return tapTargetTopBar;
-    }
+	public enum IntroSlide {
+		Tools(R.id.intro_tools_textview, R.id.intro_tools_bottom_bar),
+		Possibilities(R.id.intro_possibilities_textview, R.id.intro_possibilites_topbar);
 
-    public static HashMap<ToolType, TapTarget> getMapFromTapTarget(TapTargetBase tapTarget) throws NoSuchFieldException, IllegalAccessException {
-        Object o = PrivateAccess.getMemberValue(TapTargetBase.class, tapTarget, "tapTargetMap");
-        assertThat("tapTarget member is not a HashMap", o, instanceOf(HashMap.class));
+		int fadeViewResourceId;
+		int toolBarResourceId;
 
-        return (HashMap<ToolType, TapTarget>) o;
-    }
+		IntroSlide(int fadeViewResourceId, int toolBarResourceId) {
+			this.fadeViewResourceId = fadeViewResourceId;
+			this.toolBarResourceId = toolBarResourceId;
+		}
 
-    public enum IntroSlide {
-        Tools(R.id.intro_tools_textview, R.id.intro_tools_bottom_bar),
-        Possibilities(R.id.intro_possibilities_textview, R.id.intro_possibilites_topbar);
+		public int getFadeViewResourceId() {
+			return fadeViewResourceId;
+		}
 
-        int fadeViewResourceId;
-        int toolBarResourceId;
+		public int getToolBarResourceId() {
+			return toolBarResourceId;
+		}
+	}
 
-        IntroSlide(int fadeViewResourceId, int toolBarResourceId) {
-            this.fadeViewResourceId = fadeViewResourceId;
-            this.toolBarResourceId = toolBarResourceId;
-        }
+	static class WithTapTargetTextMatcher extends BoundedMatcher<View, TapTargetView> {
 
-        public int getFadeViewResourceId() {
-            return fadeViewResourceId;
-        }
+		private final int resourceId;
+		private final TapTargetTextType type;
+		private String text;
 
-        public int getToolBarResourceId() {
-            return toolBarResourceId;
-        }
+		WithTapTargetTextMatcher(int resourceId, TapTargetTextType type) {
+			super(TapTargetView.class);
+			this.resourceId = resourceId;
+			this.type = type;
+		}
 
-    }
+		@Override
+		protected boolean matchesSafely(TapTargetView item) {
+			if (text == null) {
+				text = item.getResources().getString(resourceId);
+			}
+			CharSequence actualText = null;
+			try {
+				switch (type) {
+					case TITLE:
+						actualText = (CharSequence) PrivateAccess.getMemberValue(TapTargetView.class, item, "title");
+						break;
+					case DESCRIPTION:
+						actualText = (CharSequence) PrivateAccess.getMemberValue(TapTargetView.class, item, "description");
+						break;
+				}
+				return actualText != null && text.equals(actualText.toString());
+			} catch (Exception e) {
+				return false;
+			}
+		}
 
-    public static int getPageIndexFromLayout(final int[] layouts, final int layoutResource) throws IndexOutOfBoundsException {
-        for (int i = 0; i < layouts.length; i++) {
-            if (layouts[i] == layoutResource)
-                return i;
-        }
-
-        throw new IndexOutOfBoundsException("No Index Found");
-    }
+		@Override
+		public void describeTo(Description description) {
+			if (text == null) {
+				description.appendText("with string from resource id: ").appendValue(resourceId);
+			} else {
+				description.appendText("with string value:").appendText(text);
+			}
+		}
+	}
 }

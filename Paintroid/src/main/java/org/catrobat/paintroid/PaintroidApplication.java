@@ -71,18 +71,6 @@ public class PaintroidApplication extends Application {
 	public static String defaultSystemLanguage;
 	public static SharedPreferences languageSharedPreferences;
 
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		applicationContext = getApplicationContext();
-		commandManager = new CommandManagerImplementation();
-
-		defaultSystemLanguage = Locale.getDefault().getLanguage();
-		languageSharedPreferences = getSharedPreferences("For_language", Context.MODE_PRIVATE);
-		updateToChosenLanguage();
-	}
-
 	public static void updateToChosenLanguage() {
 		String languageTag = languageSharedPreferences.getString(LANGUAGE_TAG_KEY, "");
 		if (Arrays.asList(LANGUAGE_CODE).contains(languageTag)) {
@@ -110,5 +98,16 @@ public class PaintroidApplication extends Application {
 					nameNotFoundException);
 		}
 		return versionName;
+	}
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		applicationContext = getApplicationContext();
+		commandManager = new CommandManagerImplementation();
+
+		defaultSystemLanguage = Locale.getDefault().getLanguage();
+		languageSharedPreferences = getSharedPreferences("For_language", Context.MODE_PRIVATE);
+		updateToChosenLanguage();
 	}
 }

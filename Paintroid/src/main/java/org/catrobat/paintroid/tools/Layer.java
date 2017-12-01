@@ -1,88 +1,87 @@
 package org.catrobat.paintroid.tools;
 
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 
 public class Layer {
-	private static final String LAYER_PREFIX = PaintroidApplication.applicationContext.
-			getResources().getString(R.string.layer_prefix);
-	private int mLayerID;
-	private Bitmap mBitmap;
-	private boolean mIsSelected;
-	private String mLayerName;
-	private boolean mIsLocked;
-	private boolean mIsVisible;
-	private int mOpacity;
+	private static final String LAYER_PREFIX = PaintroidApplication.applicationContext
+			.getResources().getString(R.string.layer_prefix);
+	private int layerID;
+	private Bitmap bitmap;
+	private boolean isSelected;
+	private String layerName;
+	private boolean isLocked;
+	private boolean isVisible;
+	private int opacity;
 
-	public Layer(int layer_id, Bitmap image) {
-		mLayerID = layer_id;
-		mBitmap = image;
+	public Layer(int layerId, Bitmap image) {
+		layerID = layerId;
+		bitmap = image;
 		setSelected(false);
-		mLayerName = LAYER_PREFIX + layer_id;
-		mIsLocked = false;
-		mIsVisible = true;
-		mOpacity = 100;
-	}
-
-	public void setSelected(boolean toSet) {
-		mIsSelected = toSet;
+		layerName = LAYER_PREFIX + layerId;
+		isLocked = false;
+		isVisible = true;
+		opacity = 100;
 	}
 
 	public boolean getSelected() {
-		return mIsSelected;
+		return isSelected;
 	}
 
-	public void setOpacity(int newOpacity) {
-		mOpacity = newOpacity;
+	public void setSelected(boolean toSet) {
+		isSelected = toSet;
 	}
 
 	public int getOpacity() {
-		return mOpacity;
+		return opacity;
+	}
+
+	public void setOpacity(int newOpacity) {
+		opacity = newOpacity;
 	}
 
 	public int getScaledOpacity() {
-		return Math.round((mOpacity * 255) / 100);
-	}
-
-	public void setLocked(boolean setTo) {
-		mIsLocked = setTo;
-	}
-
-	public void setVisible(boolean setTo) {
-		mIsVisible = setTo;
+		return Math.round((opacity * 255) / 100);
 	}
 
 	public boolean getLocked() {
-		return mIsLocked;
+		return isLocked;
+	}
+
+	public void setLocked(boolean setTo) {
+		isLocked = setTo;
 	}
 
 	public boolean getVisible() {
-		return mIsVisible;
+		return isVisible;
+	}
+
+	public void setVisible(boolean setTo) {
+		isVisible = setTo;
 	}
 
 	public String getName() {
-		return mLayerName;
+		return layerName;
 	}
 
 	public void setName(String nameTo) {
 		if (nameTo.length() > 0) {
-			mLayerName = nameTo;
+			layerName = nameTo;
 		}
 	}
 
 	public int getLayerID() {
-		return mLayerID;
+		return layerID;
 	}
 
 	public Bitmap getImage() {
-		return mBitmap;
+		return bitmap;
 	}
 
 	public void setImage(Bitmap image) {
-		mBitmap = image;
+		bitmap = image;
 
 		if (getSelected() && PaintroidApplication.drawingSurface != null) {
 			PaintroidApplication.drawingSurface.setBitmap(image);
@@ -92,5 +91,4 @@ public class Layer {
 	public Layer getLayer() {
 		return this;
 	}
-
 }

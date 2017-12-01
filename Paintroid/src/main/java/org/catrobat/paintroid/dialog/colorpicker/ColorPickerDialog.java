@@ -17,9 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- *    This file incorporates work covered by the following copyright and  
- *    permission notice: 
- *    
+ *    This file incorporates work covered by the following copyright and
+ *    permission notice:
+ *
  *        Copyright (C) 2011 Devmil (Michael Lamers) 
  *        Mail: develmil@googlemail.com
  *
@@ -58,24 +58,17 @@ import java.util.ArrayList;
 public final class ColorPickerDialog extends BaseDialog {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "ColorPickerDialog has not been initialized. Call init() first!";
-
-	private ColorPickerView mColorPickerView;
-	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
-	static int mNewColor;
-	private Button mButtonNewColor;
-	private CheckeredTransparentLinearLayout mBaseButtonLayout;
-
-	static Paint mBackgroundPaint = new Paint();
-
+	static int newColor;
+	static Paint backgroundPaint = new Paint();
 	private static ColorPickerDialog instance;
-
-	public interface OnColorPickedListener {
-		void colorChanged(int color);
-	}
+	private ColorPickerView colorPickerView;
+	private ArrayList<OnColorPickedListener> onColorPickedListener;
+	private Button buttonNewColor;
+	private CheckeredTransparentLinearLayout baseButtonLayout;
 
 	private ColorPickerDialog(Context context) {
 		super(context);
-		mOnColorPickedListener = new ArrayList<>();
+		onColorPickedListener = new ArrayList<>();
 	}
 
 	public static ColorPickerDialog getInstance() {
@@ -90,15 +83,15 @@ public final class ColorPickerDialog extends BaseDialog {
 	}
 
 	public void addOnColorPickedListener(OnColorPickedListener listener) {
-		mOnColorPickedListener.add(listener);
+		onColorPickedListener.add(listener);
 	}
 
 	public void removeOnColorPickedListener(OnColorPickedListener listener) {
-		mOnColorPickedListener.remove(listener);
+		onColorPickedListener.remove(listener);
 	}
 
 	public void updateColorChange(int color) {
-		for (OnColorPickedListener listener : mOnColorPickedListener) {
+		for (OnColorPickedListener listener : onColorPickedListener) {
 			listener.colorChanged(color);
 		}
 		PaintroidApplication.colorPickerInitialColor = color;
@@ -115,21 +108,21 @@ public final class ColorPickerDialog extends BaseDialog {
 		BitmapShader mBackgroundShader = new BitmapShader(backgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
 
-		mBackgroundPaint.setShader(mBackgroundShader);
+		backgroundPaint.setShader(mBackgroundShader);
 
-		mBaseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.colorchooser_ok_button_base_layout);
+		baseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.colorchooser_ok_button_base_layout);
 
-		mButtonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
-		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
+		buttonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
+		buttonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				updateColorChange(mNewColor);
+				updateColorChange(newColor);
 				dismiss();
 			}
 		});
 
-		mColorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
-		mColorPickerView
+		colorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
+		colorPickerView
 				.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
 					@Override
 					public void colorChanged(int color) {
@@ -137,27 +130,30 @@ public final class ColorPickerDialog extends BaseDialog {
 						updateColorChange(color);
 					}
 				});
-
 	}
 
 	public void setInitialColor(int color) {
 		updateColorChange(color);
-		if ((mButtonNewColor != null) && (mColorPickerView != null)) {
+		if ((buttonNewColor != null) && (colorPickerView != null)) {
 			changeNewColor(color);
-			mColorPickerView.setSelectedColor(color);
+			colorPickerView.setSelectedColor(color);
 		}
 	}
 
 	private void changeNewColor(int color) {
-		mNewColor = color;
-		mBaseButtonLayout.updateBackground();
+		newColor = color;
+		baseButtonLayout.updateBackground();
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color
 				.green(color)) / 3;
 		if (referenceColor <= 128 && Color.alpha(color) > 5) {
-			mButtonNewColor.setTextColor(Color.WHITE);
+			buttonNewColor.setTextColor(Color.WHITE);
 		} else {
-			mButtonNewColor.setTextColor(Color.BLACK);
+			buttonNewColor.setTextColor(Color.BLACK);
 		}
-		mButtonNewColor.setBackgroundColor(color);
+		buttonNewColor.setBackgroundColor(color);
+	}
+
+	public interface OnColorPickedListener {
+		void colorChanged(int color);
 	}
 }

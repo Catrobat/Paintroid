@@ -39,13 +39,28 @@ import java.util.Locale;
 import static org.catrobat.paintroid.PaintroidApplication.defaultSystemLanguage;
 import static org.catrobat.paintroid.PaintroidApplication.languageSharedPreferences;
 
-
 public class MultilingualActivity extends AppCompatActivity {
 	public static final String LANGUAGE_TAG_KEY = "applicationLanguage";
 	public static final String[] LANGUAGE_CODE = {"az", "bs", "ca", "cs", "sr-rCS", "sr-rSP", "da", "de", "en-rAU", "en-rCA",
 			"en-rGB", "en", "es", "fr", "gl", "hr", "in", "it", "sw", "hu", "mk", "ms", "nl", "no", "pl", "pt-rBR", "pt", "ru",
 			"ro", "sq", "sl", "sk", "sv", "vi", "tr", "ml", "ta", "te", "th", "gu", "hi", "ja", "ko", "zh-rCN", "zh-rTW", "ar",
 			"ur", "fa", "ps", "sd", "iw"};
+
+	public static void updateLocale(Context context, String languageTag, String countryTag) {
+		Locale mLocale;
+		if (countryTag == null) {
+			mLocale = new Locale(languageTag);
+		} else {
+			mLocale = new Locale(languageTag, countryTag);
+		}
+		Resources resources = context.getResources();
+		DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+		Configuration conf = resources.getConfiguration();
+		conf.setLocale(mLocale);
+		Locale.setDefault(mLocale);
+		conf.setLayoutDirection(mLocale);
+		resources.updateConfiguration(conf, displayMetrics);
+	}
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,22 +103,6 @@ public class MultilingualActivity extends AppCompatActivity {
 				}
 			}
 		});
-	}
-
-	public static void updateLocale(Context context, String languageTag, String countryTag) {
-		Locale mLocale;
-		if (countryTag == null) {
-			mLocale = new Locale(languageTag);
-		} else {
-			mLocale = new Locale(languageTag, countryTag);
-		}
-		Resources resources = context.getResources();
-		DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-		Configuration conf = resources.getConfiguration();
-		conf.setLocale(mLocale);
-		Locale.setDefault(mLocale);
-		conf.setLayoutDirection(mLocale);
-		resources.updateConfiguration(conf, displayMetrics);
 	}
 
 	private void setNewLocale(String languageTag, String countryTag) {

@@ -19,7 +19,9 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
-import java.io.File;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Paint;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
@@ -30,28 +32,30 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Paint;
+import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class BaseCommandTest {
 
-	private BaseCommandStub mBaseCommand;
-	private Bitmap mBitmap;
+	private BaseCommandStub baseCommand;
+	private Bitmap bitmap;
 
 	@Before
 	public void setUp() throws Exception {
-		mBaseCommand = new BaseCommandStub();
-		mBitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
-		PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mBitmap", mBitmap);
+		baseCommand = new BaseCommandStub();
+		bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
+		PrivateAccess.setMemberValue(BaseCommand.class, baseCommand, "bitmap", bitmap);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		mBitmap.recycle();
-		mBitmap = null;
+		bitmap.recycle();
+		bitmap = null;
 	}
 
 	@Test
@@ -71,16 +75,17 @@ public class BaseCommandTest {
 		try {
 			assertFalse(storedBitmap.exists());
 
-			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap", storedBitmap);
-			mBaseCommand.freeResources();
-			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
+			PrivateAccess.setMemberValue(BaseCommand.class, baseCommand, "fileToStoredBitmap", storedBitmap);
+			baseCommand.freeResources();
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, baseCommand, "bitmap"));
 
-			File restoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand,
-					"mFileToStoredBitmap");
+			File restoredBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, baseCommand,
+					"fileToStoredBitmap");
 
 			assertFalse("bitmap not deleted", restoredBitmap.exists());
-			if (restoredBitmap.exists())
+			if (restoredBitmap.exists()) {
 				assertTrue(restoredBitmap.delete());
+			}
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
 		}
@@ -88,37 +93,34 @@ public class BaseCommandTest {
 		try {
 			assertTrue(storedBitmap.createNewFile());
 			assertTrue(storedBitmap.exists());
-			mBaseCommand.freeResources();
+			baseCommand.freeResources();
 			assertFalse(storedBitmap.exists());
-			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, baseCommand, "bitmap"));
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
 		}
-
 	}
 
 	@Test
 	public void testStoreBitmap() {
 		File storedBitmap = null;
 		try {
-			PrivateAccess.setMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap", null);
+			PrivateAccess.setMemberValue(BaseCommand.class, baseCommand, "fileToStoredBitmap", null);
 
-			Bitmap bitmapCopy = mBitmap.copy(mBitmap.getConfig(), mBitmap.isMutable());
-			mBaseCommand.storeBitmapStub();
-			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mBitmap"));
+			Bitmap bitmapCopy = bitmap.copy(bitmap.getConfig(), bitmap.isMutable());
+			baseCommand.storeBitmapStub();
+			assertNull(PrivateAccess.getMemberValue(BaseCommand.class, baseCommand, "bitmap"));
 
-			storedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, mBaseCommand, "mFileToStoredBitmap");
+			storedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, baseCommand, "fileToStoredBitmap");
 			assertNotNull(storedBitmap);
 			assertNotNull(storedBitmap.getAbsolutePath());
 			Bitmap restoredBitmap = BitmapFactory.decodeFile(storedBitmap.getAbsolutePath());
 			PaintroidAsserts.assertBitmapEquals("Loaded file doesn't match saved file.", restoredBitmap, bitmapCopy);
-
 		} catch (Exception e) {
 			fail("EXCEPTION: " + e.toString());
 		} finally {
 			assertNotNull("Failed to delete the stored bitmap(0)", storedBitmap);
 			assertTrue("Failed to delete the stored bitmap(1)", storedBitmap.delete());
 		}
-
 	}
 }

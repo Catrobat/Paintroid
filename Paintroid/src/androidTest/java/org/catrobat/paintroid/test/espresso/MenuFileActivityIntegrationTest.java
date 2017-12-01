@@ -67,6 +67,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
@@ -86,13 +87,11 @@ import static org.junit.Assert.assertTrue;
 public class MenuFileActivityIntegrationTest {
 
 	private static ArrayList<File> deletionFileList = null;
-	private PointF screenPoint = null;
-
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
-
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	private PointF screenPoint = null;
 
 	@Before
 	public void setUp() {
@@ -468,7 +467,7 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	private String getRealFilePathFromUri(Uri uri) {
-		String[] fileColumns = { MediaStore.Images.Media.DATA };
+		String[] fileColumns = {MediaStore.Images.Media.DATA};
 
 		Cursor cursor = launchActivityRule.getActivity().getContentResolver().query(uri, fileColumns, null, null, null);
 		assertNotNull(cursor);
@@ -484,5 +483,4 @@ public class MenuFileActivityIntegrationTest {
 	private void addUriToDeletionFileList(Uri uri) {
 		deletionFileList.add(new File(getRealFilePathFromUri(uri)));
 	}
-
 }

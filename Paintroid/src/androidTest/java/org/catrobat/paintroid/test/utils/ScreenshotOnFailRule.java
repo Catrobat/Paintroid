@@ -34,14 +34,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-
 public class ScreenshotOnFailRule extends TestWatcher {
 	private static final String LOG_TAG = ScreenshotOnFailRule.class.getSimpleName();
 
 	private final UiAutomation uiAutomation =
-			Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 ?
-					InstrumentationRegistry.getInstrumentation().getUiAutomation() :
-					null;
+			Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
+					? InstrumentationRegistry.getInstrumentation().getUiAutomation()
+					: null;
 
 	@Override
 	protected void failed(Throwable e, Description description) {
@@ -70,7 +69,6 @@ public class ScreenshotOnFailRule extends TestWatcher {
 
 	private void saveScreenshot(Bitmap screenshot, File path) {
 
-
 		BufferedOutputStream fileStream = null;
 		try {
 			fileStream = new BufferedOutputStream(new FileOutputStream(path));
@@ -83,7 +81,7 @@ public class ScreenshotOnFailRule extends TestWatcher {
 				try {
 					fileStream.close();
 				} catch (IOException ioe) {
-					//
+					Log.e(LOG_TAG, ioe.getMessage());
 				}
 			}
 			screenshot.recycle();

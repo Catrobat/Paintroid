@@ -49,6 +49,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.addNewLayer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeLayerMenu;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.deleteSelectedLayer;
@@ -64,8 +65,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class LayerIntegrationTest {
 
-	public static final String FIELD_NAME_NAVIGATION_VIEW = "mNavigationView";
-	public static final String FIELD_NAME_CONTEXT = "mContext";
+	public static final String FIELD_NAME_NAVIGATION_VIEW = "navigationView";
+	public static final String FIELD_NAME_CONTEXT = "context";
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -97,13 +98,12 @@ public class LayerIntegrationTest {
 		deleteButtonDisabledBitmap = ((BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.icon_layers_delete_disabled)).getBitmap();
 
 		ActivityHelper activityHelper = new ActivityHelper(launchActivityRule.getActivity());
-		displayWidth  = activityHelper.getDisplayWidth();
+		displayWidth = activityHelper.getDisplayWidth();
 		displayHeight = activityHelper.getDisplayHeight();
 	}
 
 	@After
 	public void tearDown() {
-
 	}
 
 	@Test
@@ -189,7 +189,6 @@ public class LayerIntegrationTest {
 		onView(withId(R.id.btn_top_redo)).perform(click());
 		currentLayerHeight = navigationView.getHeight();
 		assertEquals("There should be two Layers after Redo", heightTwoLayer, currentLayerHeight);
-
 	}
 
 	@Test
@@ -250,5 +249,4 @@ public class LayerIntegrationTest {
 		int colorAfterUndo = PaintroidApplication.currentTool.getDrawPaint().getColor();
 		assertEquals("Second layer should be in foreground", colorSecondLayer, colorAfterUndo);
 	}
-
 }

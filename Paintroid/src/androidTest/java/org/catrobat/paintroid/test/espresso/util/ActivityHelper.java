@@ -25,43 +25,43 @@ import android.view.View;
 
 public class ActivityHelper {
 
-    private final Activity activity;
+	private final Activity activity;
 
-    public ActivityHelper(Activity activity) {
-        this.activity = activity;
-    }
+	public ActivityHelper(Activity activity) {
+		this.activity = activity;
+	}
 
-    public Activity getActivity() {
-        return activity;
-    }
+	public Activity getActivity() {
+		return activity;
+	}
 
-    public Point getDisplaySize() {
-        Point displaySize = new Point();
-        activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
-        return displaySize;
-    }
+	public Point getDisplaySize() {
+		Point displaySize = new Point();
+		activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
+		return displaySize;
+	}
 
-    public int getDisplayWidth() {
-        return getDisplaySize().x;
-    }
+	public int getDisplayWidth() {
+		return getDisplaySize().x;
+	}
 
-    public int getDisplayHeight() {
-        return getDisplaySize().y;
-    }
+	public int getDisplayHeight() {
+		return getDisplaySize().y;
+	}
 
-    public String getString(int resId) {
-        return activity.getString(resId);
-    }
+	public String getString(int resId) {
+		return activity.getString(resId);
+	}
 
-    public View findViewById(int id) {
-        return activity.findViewById(id);
-    }
+	public View findViewById(int id) {
+		return activity.findViewById(id);
+	}
 
-    public int getScreenOrientation() {
-        return activity.getRequestedOrientation();
-    }
+	public int getScreenOrientation() {
+		return activity.getRequestedOrientation();
+	}
 
-    public void setScreenOrientation(int orientation) {
-        activity.setRequestedOrientation(orientation);
-    }
+	public void setScreenOrientation(int orientation) {
+		activity.setRequestedOrientation(orientation);
+	}
 }

@@ -19,11 +19,13 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
+import android.graphics.PointF;
+
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
-import org.junit.*;
-
-import android.graphics.PointF;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PointCommandTest extends CommandTestSetup {
 
@@ -31,8 +33,8 @@ public class PointCommandTest extends CommandTestSetup {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		mCommandUnderTest = new PointCommand(mPaintUnderTest, mPointUnderTest);
-		mCommandUnderTestNull = new PointCommand(null, null);
+		commandUnderTest = new PointCommand(paintUnderTest, pointUnderTest);
+		commandUnderTestNull = new PointCommand(null, null);
 	}
 
 	@Override
@@ -43,16 +45,16 @@ public class PointCommandTest extends CommandTestSetup {
 
 	@Test
 	public void testRun() {
-		mBitmapUnderTest.setPixel((int) mPointUnderTest.x, (int) mPointUnderTest.y, mPaintUnderTest.getColor());
-		mCommandUnderTest.run(mCanvasUnderTest, null);
-		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
+		bitmapUnderTest.setPixel((int) pointUnderTest.x, (int) pointUnderTest.y, paintUnderTest.getColor());
+		commandUnderTest.run(canvasUnderTest, null);
+		PaintroidAsserts.assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest);
 	}
 
 	@Test
 	public void testRunOutOfBounds() {
-		mPointUnderTest = new PointF(mCanvasBitmapUnderTest.getHeight() + 1, mCanvasBitmapUnderTest.getWidth() + 1);
-		mCommandUnderTest = new PointCommand(mPaintUnderTest, mPointUnderTest);
-		mCommandUnderTest.run(mCanvasUnderTest, null);
-		PaintroidAsserts.assertBitmapEquals(mBitmapUnderTest, mCanvasBitmapUnderTest);
+		pointUnderTest = new PointF(canvasBitmapUnderTest.getHeight() + 1, canvasBitmapUnderTest.getWidth() + 1);
+		commandUnderTest = new PointCommand(paintUnderTest, pointUnderTest);
+		commandUnderTest.run(canvasUnderTest, null);
+		PaintroidAsserts.assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest);
 	}
 }

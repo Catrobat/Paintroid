@@ -65,8 +65,8 @@ public class ImportToolTest {
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		tool.setBitmapFromFile(bitmap);
 
-		assertEquals(width, tool.mBoxWidth, Float.MIN_VALUE);
-		assertEquals(height, tool.mBoxHeight, Float.MIN_VALUE);
+		assertEquals(width, tool.boxWidth, Float.MIN_VALUE);
+		assertEquals(height, tool.boxHeight, Float.MIN_VALUE);
 	}
 
 	@Test
@@ -78,8 +78,8 @@ public class ImportToolTest {
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		tool.setBitmapFromFile(bitmap);
 
-		assertEquals(minSize, tool.mBoxWidth, Float.MIN_VALUE);
-		assertEquals(minSize, tool.mBoxHeight, Float.MIN_VALUE);
+		assertEquals(minSize, tool.boxWidth, Float.MIN_VALUE);
+		assertEquals(minSize, tool.boxHeight, Float.MIN_VALUE);
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class ImportToolTest {
 		Bitmap bitmap = Bitmap.createBitmap(width + 1, height + 1, Bitmap.Config.ARGB_8888);
 		tool.setBitmapFromFile(bitmap);
 
-		assertEquals(width, tool.mBoxWidth, Float.MIN_VALUE);
-		assertEquals(height, tool.mBoxHeight, Float.MIN_VALUE);
+		assertEquals(width, tool.boxWidth, Float.MIN_VALUE);
+		assertEquals(height, tool.boxHeight, Float.MIN_VALUE);
 	}
 }

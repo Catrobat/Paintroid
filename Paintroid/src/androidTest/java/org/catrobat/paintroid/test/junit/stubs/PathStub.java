@@ -19,10 +19,10 @@
 
 package org.catrobat.paintroid.test.junit.stubs;
 
+import android.graphics.Path;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import android.graphics.Path;
 
 public class PathStub extends Path {
 

@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.ToolType;
 
 public class PipetteTool extends BaseTool {
 
-	private Bitmap mSurfaceBitmap;
+	private Bitmap surfaceBitmap;
 
 	public PipetteTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -58,16 +58,16 @@ public class PipetteTool extends BaseTool {
 	}
 
 	protected boolean setColor(PointF coordinate) {
-		if (coordinate == null || mSurfaceBitmap == null) {
+		if (coordinate == null || surfaceBitmap == null) {
 			return false;
 		}
 
-		if (coordinate.x < 0 || coordinate.y < 0 ||
-				coordinate.x >= mSurfaceBitmap.getWidth() || coordinate.y >= mSurfaceBitmap.getHeight()) {
+		if (coordinate.x < 0 || coordinate.y < 0
+				|| coordinate.x >= surfaceBitmap.getWidth() || coordinate.y >= surfaceBitmap.getHeight()) {
 			return false;
 		}
 
-		int color = mSurfaceBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
+		int color = surfaceBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
 
 		ColorPickerDialog.getInstance().setInitialColor(color);
 		changePaintColor(color);
@@ -75,7 +75,7 @@ public class PipetteTool extends BaseTool {
 	}
 
 	public void updateSurfaceBitmap() {
-		mSurfaceBitmap = LayerListener.getInstance().getBitmapOfAllLayersToSave();
+		surfaceBitmap = LayerListener.getInstance().getBitmapOfAllLayersToSave();
 	}
 
 	@Override
@@ -86,5 +86,4 @@ public class PipetteTool extends BaseTool {
 	@Override
 	public void setupToolOptions() {
 	}
-
 }

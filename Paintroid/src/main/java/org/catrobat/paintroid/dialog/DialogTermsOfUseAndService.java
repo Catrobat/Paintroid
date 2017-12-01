@@ -74,16 +74,14 @@ public class DialogTermsOfUseAndService extends AppCompatDialogFragment implemen
 		builder.setPositiveButton(R.string.done, this);
 
 		return builder.create();
-
 	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		switch (which) {
-		case AlertDialog.BUTTON_POSITIVE:
-			dismiss();
-			break;
+			case AlertDialog.BUTTON_POSITIVE:
+				dismiss();
+				break;
 		}
-
 	}
 }

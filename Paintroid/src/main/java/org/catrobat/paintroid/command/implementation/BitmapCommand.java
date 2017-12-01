@@ -31,17 +31,17 @@ import org.catrobat.paintroid.tools.Layer;
 
 public class BitmapCommand extends BaseCommand {
 
-	private boolean mResetScaleAndTranslation = true;
+	private boolean resetScaleAndTranslation = true;
 
 	public BitmapCommand(Bitmap bitmap) {
 		if (bitmap != null) {
-			mBitmap = Bitmap.createBitmap(bitmap);
+			this.bitmap = Bitmap.createBitmap(bitmap);
 		}
 	}
 
 	public BitmapCommand(Bitmap bitmap, boolean resetScaleAndTranslation) {
 		this(bitmap);
-		mResetScaleAndTranslation = resetScaleAndTranslation;
+		this.resetScaleAndTranslation = resetScaleAndTranslation;
 	}
 
 	@Override
@@ -53,21 +53,21 @@ public class BitmapCommand extends BaseCommand {
 			Log.e("BitmapCommand", "can't get image from layer");
 		}
 
-		if (mBitmap == null && mFileToStoredBitmap != null) {
-			mBitmap = FileIO.getBitmapFromFile(mFileToStoredBitmap);
+		if (this.bitmap == null && fileToStoredBitmap != null) {
+			this.bitmap = FileIO.getBitmapFromFile(fileToStoredBitmap);
 		}
-		if (mBitmap != null) {
+		if (this.bitmap != null) {
 			if (bitmap != null) {
 				bitmap.eraseColor(Color.TRANSPARENT);
 			}
-			layer.setImage(mBitmap.copy(Config.ARGB_8888, true));
+			layer.setImage(this.bitmap.copy(Config.ARGB_8888, true));
 
-			if (mResetScaleAndTranslation
+			if (resetScaleAndTranslation
 					&& PaintroidApplication.perspective != null) {
 				PaintroidApplication.perspective.resetScaleAndTranslation();
 			}
 
-			if (mFileToStoredBitmap == null) {
+			if (fileToStoredBitmap == null) {
 				storeBitmap();
 			}
 		}

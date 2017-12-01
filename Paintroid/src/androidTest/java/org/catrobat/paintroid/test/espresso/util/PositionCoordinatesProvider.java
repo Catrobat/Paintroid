@@ -22,24 +22,21 @@ package org.catrobat.paintroid.test.espresso.util;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.view.View;
 
-/**
- *
- */
 public class PositionCoordinatesProvider implements CoordinatesProvider {
-    private final int x;
-    private final int y;
+	private final int xCoordinate;
+	private final int yCoordinate;
 
-    public PositionCoordinatesProvider(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
+	public PositionCoordinatesProvider(int x, int y) {
+		this.xCoordinate = x;
+		this.yCoordinate = y;
+	}
 
-    @Override
-    public float[] calculateCoordinates(View view) {
-        return new float[]{x, y};
-    }
+	public static CoordinatesProvider at(int x, int y) {
+		return new PositionCoordinatesProvider(x, y);
+	}
 
-    public static CoordinatesProvider at(int x, int y) {
-        return new PositionCoordinatesProvider(x, y);
-    }
+	@Override
+	public float[] calculateCoordinates(View view) {
+		return new float[] {xCoordinate, yCoordinate};
+	}
 }

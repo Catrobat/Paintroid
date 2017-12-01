@@ -27,7 +27,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-public class TopBarViewInteraction extends CustomViewInteraction {
+public final class TopBarViewInteraction extends CustomViewInteraction {
 	private TopBarViewInteraction() {
 		super(onView(withId(R.id.layout_top_bar)));
 	}

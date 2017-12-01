@@ -31,7 +31,6 @@ import android.view.Display;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.LayersDialog;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
@@ -48,9 +47,9 @@ import org.junit.Test;
 @Ignore
 public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 
-	private static final String TOOL_MEMBER_WIDTH = "mBoxWidth";
-	private static final String TOOL_MEMBER_HEIGHT = "mBoxHeight";
-	private static final String TOOL_MEMBER_POSITION = "mToolPosition";
+	private static final String TOOL_MEMBER_WIDTH = "boxWidth";
+	private static final String TOOL_MEMBER_HEIGHT = "boxHeight";
+	private static final String TOOL_MEMBER_POSITION = "toolPosition";
 	private static final String TOOL_MEMBER_RESIZE_BOUND_LEFT = "mResizeBoundWidthXLeft";
 	private static final String TOOL_MEMBER_RESIZE_BOUND_RIGHT = "mResizeBoundWidthXRight";
 	private static final String TOOL_MEMBER_RESIZE_BOUND_TOP = "mResizeBoundHeightYTop";
@@ -1023,7 +1022,6 @@ public class TransformToolIntegrationTest extends BaseIntegrationTestClass {
 				(int) (mCurrentDrawingSurfaceBitmap.getWidth() * BITMAP_DOWNSCALE_FACTOR),
 				(int) (mCurrentDrawingSurfaceBitmap.getHeight() * BITMAP_DOWNSCALE_FACTOR), Config.ARGB_8888);
 		PaintroidApplication.drawingSurface.setBitmap(mCurrentDrawingSurfaceBitmap);
-		LayersDialog.getInstance().getCurrentLayer().setImage(mCurrentDrawingSurfaceBitmap);
 		mSolo.sleep(200);
 		mLineLength = (mCurrentDrawingSurfaceBitmap.getWidth() / 2);
 	}

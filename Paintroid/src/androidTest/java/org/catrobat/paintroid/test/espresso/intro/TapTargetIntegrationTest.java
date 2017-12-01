@@ -44,61 +44,56 @@ import java.util.HashMap;
 import static org.catrobat.paintroid.test.espresso.util.IntroUtils.getPageIndexFromLayout;
 import static org.junit.Assert.assertEquals;
 
-
 @RunWith(AndroidJUnit4.class)
 public class TapTargetIntegrationTest {
 
-    @Rule
-    public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
+	@Rule
+	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
 
-    @Rule
-    public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
-    @Test
-    public void numberTapTargetsBottomBar() throws NoSuchFieldException, IllegalAccessException {
-        EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_tools));
-        LinearLayout targetItemView = IntroUtils.getBottomBarFromToolSlide(activityRule.getActivity());
-        TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
-        tapTargetBottomBar.initTargetView();
-        HashMap<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetBottomBar);
-        Assert.assertEquals("TapTarget doesn't have same size. Tool is missing",
-                IntroUtils.numberOfVisibleChildren(targetItemView), tapTargetMap.size());
+	@Test
+	public void numberTapTargetsBottomBar() throws NoSuchFieldException, IllegalAccessException {
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_tools));
+		LinearLayout targetItemView = IntroUtils.getBottomBarFromToolSlide(activityRule.getActivity());
+		TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
+		tapTargetBottomBar.initTargetView();
+		HashMap<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetBottomBar);
+		Assert.assertEquals("TapTarget doesn't have same size. Tool is missing",
+				IntroUtils.numberOfVisibleChildren(targetItemView), tapTargetMap.size());
+	}
 
-    }
+	@Test
+	public void numberTapTargetsTopBar() throws NoSuchFieldException, IllegalAccessException {
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
+		LinearLayout targetItemView = IntroUtils.getTopBarFromPossibilitiesSlide(activityRule.getActivity());
+		TapTargetTopBar tapTargetTopBar = IntroUtils.getTapTargetTopBar(activityRule.getActivity());
+		tapTargetTopBar.initTargetView();
 
-    @Test
-    public void numberTapTargetsTopBar() throws NoSuchFieldException, IllegalAccessException {
-        EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
-        LinearLayout targetItemView = IntroUtils.getTopBarFromPossibilitiesSlide(activityRule.getActivity());
-        TapTargetTopBar tapTargetTopBar = IntroUtils.getTapTargetTopBar(activityRule.getActivity());
-        tapTargetTopBar.initTargetView();
+		HashMap<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetTopBar);
+		Assert.assertEquals("TapTarget doesn't have same size. Tool is missing",
+				IntroUtils.numberOfVisibleChildren(targetItemView), tapTargetMap.size());
+	}
 
-        HashMap<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetTopBar);
-        Assert.assertEquals("TapTarget doesn't have same size. Tool is missing",
-                IntroUtils.numberOfVisibleChildren(targetItemView), tapTargetMap.size());
+	@Test
+	public void testRadiusTopBar() throws NoSuchFieldException, IllegalAccessException {
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
+		EspressoUtils.waitMillis(200);
+		TapTargetTopBar tapTargetTopBar = IntroUtils.getTapTargetTopBar(activityRule.getActivity());
+		int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget(tapTargetTopBar);
+		int actualRadius = (int) PrivateAccess.getMemberValue(TapTargetBase.class, tapTargetTopBar, "radius");
 
-    }
+		assertEquals("Radius calculated Wrong", expectedRadius, actualRadius);
+	}
 
-    @Test
-    public void testRadiusTopBar() throws NoSuchFieldException, IllegalAccessException {
-        EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
-        EspressoUtils.waitMillis(200);
-        TapTargetTopBar tapTargetTopBar = IntroUtils.getTapTargetTopBar(activityRule.getActivity());
-        int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget(tapTargetTopBar);
-        int actualRadius = (int) PrivateAccess.getMemberValue(TapTargetBase.class, tapTargetTopBar, "radius");
+	@Test
+	public void testRadiusBottomBar() throws NoSuchFieldException, IllegalAccessException {
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_tools));
+		TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
+		int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget(tapTargetBottomBar);
+		int actualRadius = (int) PrivateAccess.getMemberValue(TapTargetBase.class, tapTargetBottomBar, "radius");
 
-        assertEquals("Radius calculated Wrong",expectedRadius, actualRadius);
-    }
-
-    @Test
-    public void testRadiusBottomBar() throws NoSuchFieldException, IllegalAccessException {
-        EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_tools));
-        TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
-        int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget(tapTargetBottomBar);
-        int actualRadius = (int) PrivateAccess.getMemberValue(TapTargetBase.class, tapTargetBottomBar, "radius");
-
-        assertEquals("Radius calculated Wrong",expectedRadius, actualRadius);
-    }
-
-
+		assertEquals("Radius calculated Wrong", expectedRadius, actualRadius);
+	}
 }

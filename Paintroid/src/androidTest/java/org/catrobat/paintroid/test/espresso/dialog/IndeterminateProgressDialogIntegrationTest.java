@@ -43,6 +43,7 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 
 @RunWith(AndroidJUnit4.class)
@@ -91,5 +92,4 @@ public class IndeterminateProgressDialogIntegrationTest {
 				.perform(touchAt(point))
 				.check(matches(isDisplayed()));
 	}
-
 }

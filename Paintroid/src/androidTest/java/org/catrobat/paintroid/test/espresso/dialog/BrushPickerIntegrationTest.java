@@ -44,6 +44,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.DEFAULT_STROKE_WIDTH;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
@@ -79,11 +80,11 @@ public class BrushPickerIntegrationTest {
 	}
 
 	private Paint getCurrentToolBitmapPaint() throws NoSuchFieldException, IllegalAccessException {
-		return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mBitmapPaint");
+		return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "bitmapPaint");
 	}
 
 	private Paint getCurrentToolCanvasPaint() throws NoSuchFieldException, IllegalAccessException {
-		return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "mCanvasPaint");
+		return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "canvasPaint");
 	}
 
 	private void assertStrokePaint(Paint strokePaint, int expectedStrokeWidth, Cap expectedCap) {
@@ -106,9 +107,8 @@ public class BrushPickerIntegrationTest {
 		setStrokeWidth(strokeWidth, strokeWidth);
 	}
 
-
 	@Test
-	public void brushPickerDialog_defaultLayoutAndToolChanges() throws NoSuchFieldException, IllegalAccessException {
+	public void brushPickerDialogDefaultLayoutAndToolChanges() throws NoSuchFieldException, IllegalAccessException {
 		onView(withId(R.id.stroke_width_seek_bar))
 				.check(matches(isDisplayed()))
 				.check(matches(withProgress(DEFAULT_STROKE_WIDTH)));
@@ -143,7 +143,7 @@ public class BrushPickerIntegrationTest {
 	}
 
 	@Test
-	public void brushPickerDialog_keepStrokeOnToolChange() throws NoSuchFieldException, IllegalAccessException {
+	public void brushPickerDialogKeepStrokeOnToolChange() throws NoSuchFieldException, IllegalAccessException {
 		final int newStrokeWidth = 80;
 
 		setStrokeWidth(newStrokeWidth);
@@ -166,7 +166,7 @@ public class BrushPickerIntegrationTest {
 	}
 
 	@Test
-	public void brushPickerDialog_minimumBrushWidth() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void brushPickerDialogMinimumBrushWidth() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		setStrokeWidth(0, MIN_STROKE_WIDTH);
 		setStrokeWidth(MIN_STROKE_WIDTH);
 
@@ -175,7 +175,7 @@ public class BrushPickerIntegrationTest {
 	}
 
 	@Test
-	public void brushPicker_antiAliasingOffAtMinimumBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void brushPickerAntiAliasingOffAtMinimumBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		onView(withId(R.id.stroke_width_seek_bar))
 				.perform(touchCenterLeft());
 
@@ -190,7 +190,7 @@ public class BrushPickerIntegrationTest {
 	}
 
 	@Test
-	public void brushPickerDialog_radioButtonsBehaviour() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void brushPickerDialogRadioButtonsBehaviour() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 		onView(withId(R.id.stroke_rbtn_rect))
 				.check(matches(isNotChecked()));
 		onView(withId(R.id.stroke_rbtn_circle))

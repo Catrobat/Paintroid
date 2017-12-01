@@ -110,9 +110,6 @@ task commandlineAdbRunTests {
 
         executeShellCommand(testPullCommand)
         try {
-
-
-
             executeShellCommand(screenshotsPullCommand)
         } catch (GradleScriptException) {}
     }
@@ -126,7 +123,6 @@ task adbDisableAnimationsGlobally(type:Exec) {
     commandLine android.getAdbExecutable(), 'shell', 'settings', 'put', 'global', 'transition_animation_scale', '0.0'
     commandLine android.getAdbExecutable(), 'shell', 'settings', 'put', 'global', 'animator_duration_scale', '0.0'
 }
-
 
 task adbGrantAnimationScalePermission() {
     description 'Runs "adb shell pm grant" command to grant animation scale permission'
@@ -146,7 +142,6 @@ task adbGrantAnimationScalePermission() {
 
         logger.debug("Grant done.")
     }
-
 }
 
 task verifyAnimationScalePermissionGranted() {

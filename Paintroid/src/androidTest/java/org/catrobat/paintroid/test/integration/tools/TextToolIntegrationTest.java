@@ -441,7 +441,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.sleep(SLEEP_WAIT_FOR_DIALOG_UPDATE_AND_LISTENER);
 		closeColorChooserDialog();
 
-		Paint paint = (Paint) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mTextPaint");
+		Paint paint = (Paint) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "textPaint");
 		int selectedColor = paint.getColor();
 		assertFalse("Paint color should not be black", selectedColor == Color.BLACK);
 		Bitmap bitmap = getToolMemberDrawingBitmap();
@@ -478,7 +478,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	private void checkTextBoxDimensions() throws NoSuchFieldException, IllegalAccessException {
-		int boxOffset = (Integer) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mBoxOffset");
+		int boxOffset = (Integer) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "boxOffset");
 		int textSizeMagnificationFactor = (Integer) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mTextSizeMagnificationFactor");
 		float actualBoxWidth = getToolMemberBoxWidth();
 		float actualBoxHeight = getToolMemberBoxHeight();
@@ -653,15 +653,15 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	protected float getToolMemberBoxWidth() throws NoSuchFieldException, IllegalAccessException {
-		return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mBoxWidth");
+		return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mTextTool, "boxWidth");
 	}
 
 	protected float getToolMemberBoxHeight() throws NoSuchFieldException, IllegalAccessException {
-		return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mBoxHeight");
+		return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mTextTool, "boxHeight");
 	}
 
 	protected PointF getToolMemberBoxPosition() throws NoSuchFieldException, IllegalAccessException {
-		return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mTextTool, "mToolPosition");
+		return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mTextTool, "toolPosition");
 	}
 
 	protected String getToolMemberText() throws NoSuchFieldException, IllegalAccessException {
@@ -693,18 +693,18 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	protected String[] getToolMemberMultilineText() throws NoSuchFieldException, IllegalAccessException {
-		return (String[]) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mMultilineText");
+		return (String[]) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "multilineText");
 	}
 
 	protected void setToolMemberBoxPosition(PointF position) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, mTextTool, "mToolPosition", position);
+		PrivateAccess.setMemberValue(BaseToolWithShape.class, mTextTool, "toolPosition", position);
 	}
 
 	protected void setToolMemberBoxHeight(float height) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mBoxHeight", height);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mTextTool, "boxHeight", height);
 	}
 	protected void setToolMemberBoxWidth(float width) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mBoxWidth", width);
+		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mTextTool, "boxWidth", width);
 	}
 
 	protected String getSelectedItemFromMaterialSpinner(MaterialSpinner materialSpinner) {

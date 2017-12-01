@@ -32,7 +32,6 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 
 public class ColorButton extends AppCompatImageButton {
 
@@ -41,59 +40,60 @@ public class ColorButton extends AppCompatImageButton {
 	private static final int RECT_BORDER_COLOR = Color.LTGRAY;
 	private static final boolean DEFAULT_DRAW_SELECTED_COLOR = true;
 
-	private Paint mColorPaint;
-	private Paint mBorderPaint;
-	private Paint mBackgroundPaint;
+	private Paint colorPaint;
+	private Paint borderPaint;
+	private Paint backgroundPaint;
 
-	private int mHeight;
-	private int mWidth;
+	private int height;
+	private int width;
 
-	private boolean mDrawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
+	private boolean drawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
 
 	public ColorButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		if (!isInEditMode())
-			init(context);
+		if (!isInEditMode()) {
+			init();
+		}
 	}
 
-	private void init(Context context) {
-		mColorPaint = new Paint();
-		mBackgroundPaint = new Paint();
-		mBorderPaint = new Paint();
-		mBorderPaint.setColor(RECT_BORDER_COLOR);
+	private void init() {
+		colorPaint = new Paint();
+		backgroundPaint = new Paint();
+		borderPaint = new Paint();
+		borderPaint.setColor(RECT_BORDER_COLOR);
 
 		Bitmap mBackgroundBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.checkeredbg);
 		BitmapShader backgroundShader = new BitmapShader(mBackgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
-		mBackgroundPaint.setShader(backgroundShader);
-	}
-
-	public void setDrawSelectedColor(boolean drawSelectedColor) {
-		mDrawSelectedColor = drawSelectedColor;
+		backgroundPaint.setShader(backgroundShader);
 	}
 
 	public void resetDrawSelectedColor() {
-		mDrawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
+		drawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
 	}
 
 	public boolean getDrawSelectedColor() {
-		return mDrawSelectedColor;
+		return drawSelectedColor;
+	}
+
+	public void setDrawSelectedColor(boolean drawSelectedColor) {
+		this.drawSelectedColor = drawSelectedColor;
 	}
 
 	public void colorChanged(int color) {
-		mColorPaint.setColor(color);
+		colorPaint.setColor(color);
 		invalidate();
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
 
-		if (!mDrawSelectedColor) {
+		if (!drawSelectedColor) {
 			super.draw(canvas);
 		} else {
-			int rectX = mWidth / 2 - RECT_SIDE_LENGTH / 2;
-			int rectY = mHeight / 2 - RECT_SIDE_LENGTH / 2;
+			int rectX = width / 2 - RECT_SIDE_LENGTH / 2;
+			int rectY = height / 2 - RECT_SIDE_LENGTH / 2;
 			Rect colorRect = new Rect(rectX, rectY, rectX + RECT_SIDE_LENGTH, rectY
 					+ RECT_SIDE_LENGTH);
 			Rect borderRect = new Rect(colorRect.left - RECT_BORDER_SIZE,
@@ -101,9 +101,9 @@ public class ColorButton extends AppCompatImageButton {
 					+ RECT_BORDER_SIZE, colorRect.bottom + RECT_BORDER_SIZE);
 
 			if (!isInEditMode()) {
-				canvas.drawRect(borderRect, mBorderPaint);
-				canvas.drawRect(colorRect, mBackgroundPaint);
-				canvas.drawRect(colorRect, mColorPaint);
+				canvas.drawRect(borderRect, borderPaint);
+				canvas.drawRect(colorRect, backgroundPaint);
+				canvas.drawRect(colorRect, colorPaint);
 			}
 		}
 	}
@@ -111,7 +111,7 @@ public class ColorButton extends AppCompatImageButton {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		mWidth = MeasureSpec.getSize(widthMeasureSpec);
-		mHeight = MeasureSpec.getSize(heightMeasureSpec);
+		width = MeasureSpec.getSize(widthMeasureSpec);
+		height = MeasureSpec.getSize(heightMeasureSpec);
 	}
 }

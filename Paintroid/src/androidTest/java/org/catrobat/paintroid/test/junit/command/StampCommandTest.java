@@ -33,22 +33,24 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 public class StampCommandTest extends CommandTestSetup {
 
-	private Bitmap mStampBitmapUnderTest;
+	private Bitmap stampBitmapUnderTest;
 
 	@Override
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		mStampBitmapUnderTest = mCanvasBitmapUnderTest.copy(Config.ARGB_8888, true);
-		mStampBitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR);
-		mCommandUnderTest = new StampCommand(mStampBitmapUnderTest, new Point(mCanvasBitmapUnderTest.getWidth() / 2,
-				mCanvasBitmapUnderTest.getHeight() / 2), mCanvasBitmapUnderTest.getWidth(),
-				mCanvasBitmapUnderTest.getHeight(), 0);
-		mCommandUnderTestNull = new StampCommand(null, null, 0, 0, 0);
+		stampBitmapUnderTest = canvasBitmapUnderTest.copy(Config.ARGB_8888, true);
+		stampBitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR);
+		commandUnderTest = new StampCommand(stampBitmapUnderTest, new Point(canvasBitmapUnderTest.getWidth() / 2,
+				canvasBitmapUnderTest.getHeight() / 2), canvasBitmapUnderTest.getWidth(),
+				canvasBitmapUnderTest.getHeight(), 0);
+		commandUnderTestNull = new StampCommand(null, null, 0, 0, 0);
 	}
 
 	@Override
@@ -59,36 +61,36 @@ public class StampCommandTest extends CommandTestSetup {
 
 	@Test
 	public void testRun() {
-		mCommandUnderTest.run(mCanvasUnderTest, new Layer(0, Bitmap.createBitmap(1, 1, Config.ARGB_8888)));
-		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
+		commandUnderTest.run(canvasUnderTest, new Layer(0, Bitmap.createBitmap(1, 1, Config.ARGB_8888)));
+		PaintroidAsserts.assertBitmapEquals(stampBitmapUnderTest, canvasBitmapUnderTest);
 
 		try {
 			assertNull("Stamp bitmap not recycled.",
-					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+					PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest, "bitmap"));
 			assertNotNull("Bitmap not stored",
-					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
+					PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest, "fileToStoredBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception " + e.toString());
 		}
-		mCommandUnderTest.run(mCanvasUnderTest, new Layer(0, Bitmap.createBitmap(10, 10, Config.ARGB_8888)));
-		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
+		commandUnderTest.run(canvasUnderTest, new Layer(0, Bitmap.createBitmap(10, 10, Config.ARGB_8888)));
+		PaintroidAsserts.assertBitmapEquals(stampBitmapUnderTest, canvasBitmapUnderTest);
 	}
 
 	@Test
 	public void testRunRotateStamp() {
-		mStampBitmapUnderTest.setPixel(0, 0, Color.GREEN);
-		mCommandUnderTest = new StampCommand(mStampBitmapUnderTest, new Point((int) mPointUnderTest.x,
-				(int) mPointUnderTest.y), mCanvasBitmapUnderTest.getWidth(), mCanvasBitmapUnderTest.getHeight(), 180);
-		mCommandUnderTest.run(mCanvasUnderTest, null);
-		mStampBitmapUnderTest.setPixel(0, 0, Color.CYAN);
-		mStampBitmapUnderTest.setPixel(mStampBitmapUnderTest.getWidth() - 1, mStampBitmapUnderTest.getHeight() - 1,
+		stampBitmapUnderTest.setPixel(0, 0, Color.GREEN);
+		commandUnderTest = new StampCommand(stampBitmapUnderTest, new Point((int) pointUnderTest.x,
+				(int) pointUnderTest.y), canvasBitmapUnderTest.getWidth(), canvasBitmapUnderTest.getHeight(), 180);
+		commandUnderTest.run(canvasUnderTest, null);
+		stampBitmapUnderTest.setPixel(0, 0, Color.CYAN);
+		stampBitmapUnderTest.setPixel(stampBitmapUnderTest.getWidth() - 1, stampBitmapUnderTest.getHeight() - 1,
 				Color.GREEN);
-		PaintroidAsserts.assertBitmapEquals(mStampBitmapUnderTest, mCanvasBitmapUnderTest);
+		PaintroidAsserts.assertBitmapEquals(stampBitmapUnderTest, canvasBitmapUnderTest);
 		try {
 			assertNull("Stamp bitmap not recycled.",
-					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mBitmap"));
+					PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest, "bitmap"));
 			assertNotNull("Bitmap not stored",
-					PrivateAccess.getMemberValue(BaseCommand.class, mCommandUnderTest, "mFileToStoredBitmap"));
+					PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest, "fileToStoredBitmap"));
 		} catch (Exception e) {
 			fail("Failed with exception " + e.toString());
 		}
