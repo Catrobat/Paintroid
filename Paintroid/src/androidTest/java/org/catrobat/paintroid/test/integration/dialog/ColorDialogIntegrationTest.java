@@ -155,6 +155,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 			bitmap = null;
 		}
 
+		presetColors.recycle();
 	}
 
 	public void testColorPickerDialogOnBackPressed() {
@@ -172,6 +173,7 @@ public class ColorDialogIntegrationTest extends BaseIntegrationTestClass {
 		mSolo.clickOnButton(presetColors.length() / 2);
 		mSolo.goBack();
 
+		presetColors.recycle();
 		assertTrue("Waiting for DrawingSurface", mSolo.waitForView(DrawingSurface.class, 1, TIMEOUT));
 		int newColor = getCurrentTool().getDrawPaint().getColor();
 		assertFalse("After choosing new color, color should not be the same as before", oldColor == newColor);

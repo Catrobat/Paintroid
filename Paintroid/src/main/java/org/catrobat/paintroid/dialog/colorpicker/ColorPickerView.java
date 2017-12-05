@@ -39,9 +39,7 @@
 package org.catrobat.paintroid.dialog.colorpicker;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -65,7 +63,6 @@ public class ColorPickerView extends LinearLayout {
 	private int maxViewWidth = 0;
 	private int maxViewHeight = 0;
 
-	private int previousColor = 0;
 	private int selectedColor;
 
 	private OnColorChangedListener listener;
@@ -81,8 +78,7 @@ public class ColorPickerView extends LinearLayout {
 	}
 
 	private static View createTabView(final Context context, final int iconResourceId) {
-		View tabView = LayoutInflater.from(context).inflate(
-				R.layout.tab_image_only, null);
+		View tabView = inflate(context, R.layout.tab_image_only, null);
 		ImageView tabIcon = (ImageView) tabView.findViewById(R.id.tab_icon);
 		tabIcon.setBackgroundResource(iconResourceId);
 		return tabView;
@@ -91,9 +87,6 @@ public class ColorPickerView extends LinearLayout {
 	private void setSelectedColor(int color, View sender) {
 		if (this.selectedColor == color) {
 			return;
-		}
-		if (color == 0) {
-			color = getPreviousColor();
 		}
 		this.selectedColor = color;
 		if (sender != rgbSelectorView) {
@@ -104,9 +97,6 @@ public class ColorPickerView extends LinearLayout {
 		}
 		if (sender != hsvSelectorView) {
 			hsvSelectorView.setSelectedColor(color);
-		}
-		if (Color.alpha(color) < 1) {
-			setPreviousColor(color);
 		}
 		onColorChanged();
 	}
@@ -120,37 +110,11 @@ public class ColorPickerView extends LinearLayout {
 	}
 
 	private void init() {
-		LayoutInflater inflater = (LayoutInflater) getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View tabView = inflater.inflate(R.layout.colorpicker_colorselectview,
-				null);
+		View tabView = inflate(getContext(), R.layout.colorpicker_colorselectview, null);
 		addView(tabView);
 		rgbSelectorView = new RgbSelectorView(getContext());
-		rgbSelectorView
-				.setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
-					@Override
-					public void colorChanged(int color) {
-						setSelectedColor(color);
-					}
-				});
 		preSelectorView = new PresetSelectorView(getContext());
-		preSelectorView
-				.setOnColorChangedListener(new PresetSelectorView.OnColorChangedListener() {
-					@Override
-					public void colorChanged(int color) {
-						setSelectedColor(color);
-					}
-				});
-
 		hsvSelectorView = new HSVSelectorView(getContext());
-		hsvSelectorView.getHsvColorPickerView().setOnColorChangedListener(
-				new HSVColorPickerView.OnColorChangedListener() {
-
-					@Override
-					public void colorChanged(int color) {
-						setSelectedColor(color);
-					}
-				});
 
 		tabHost = (TabHost) tabView.findViewById(R.id.colorview_tabColors);
 		tabHost.setup();
@@ -158,13 +122,15 @@ public class ColorPickerView extends LinearLayout {
 
 		View preTabView = createTabView(getContext(),
 				R.drawable.icon_color_chooser_tab_palette);
-		TabSpec preTab = tabHost.newTabSpec(preTag).setIndicator(preTabView)
+		TabSpec preTab = tabHost.newTabSpec(preTag)
+				.setIndicator(preTabView)
 				.setContent(factory);
 
 		View hsvTabView = createTabView(getContext(),
 				R.drawable.icon_color_chooser_tab_circle);
 		TabSpec hsvTab = tabHost.newTabSpec(circleTag)
-				.setIndicator(hsvTabView).setContent(factory);
+				.setIndicator(hsvTabView)
+				.setContent(factory);
 
 		View rgbTabView = createTabView(getContext(),
 				R.drawable.icon_color_chooser_tab_rgba);
@@ -175,12 +141,39 @@ public class ColorPickerView extends LinearLayout {
 		tabHost.addTab(rgbTab);
 	}
 
-	private int getPreviousColor() {
-		return previousColor;
+	@Override
+	protected void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		preSelectorView
+				.setOnColorChangedListener(new PresetSelectorView.OnColorChangedListener() {
+					@Override
+					public void colorChanged(int color) {
+						setSelectedColor(color, preSelectorView);
+					}
+				});
+		hsvSelectorView.getHsvColorPickerView().setOnColorChangedListener(
+				new HSVColorPickerView.OnColorChangedListener() {
+
+					@Override
+					public void colorChanged(int color) {
+						setSelectedColor(color, hsvSelectorView);
+					}
+				});
+		rgbSelectorView
+				.setOnColorChangedListener(new RgbSelectorView.OnColorChangedListener() {
+					@Override
+					public void colorChanged(int color) {
+						setSelectedColor(color, rgbSelectorView);
+					}
+				});
 	}
 
-	private void setPreviousColor(int color) {
-		previousColor = color;
+	@Override
+	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+		preSelectorView.setOnColorChangedListener(null);
+		hsvSelectorView.getHsvColorPickerView().setOnColorChangedListener(null);
+		rgbSelectorView.setOnColorChangedListener(null);
 	}
 
 	private void onColorChanged() {
@@ -191,10 +184,6 @@ public class ColorPickerView extends LinearLayout {
 
 	public void setOnColorChangedListener(OnColorChangedListener listener) {
 		this.listener = listener;
-	}
-
-	public ColorPickerView getColorPickerView() {
-		return this;
 	}
 
 	@Override

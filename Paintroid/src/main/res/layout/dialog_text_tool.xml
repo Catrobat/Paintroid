@@ -120,8 +120,6 @@
                     app:ms_background_color="@android:color/white"
                     app:ms_text_color="@android:color/black"/>
 
-
-
                 <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/text_tool_dialog_spinner_text_size"
                     android:layout_width="wrap_content"

@@ -40,6 +40,7 @@ package org.catrobat.paintroid.dialog.colorpicker;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -56,7 +57,6 @@ public class PresetSelectorView extends LinearLayout {
 	private static final int COLOR_BUTTON_MARGIN = 2;
 
 	private int selectedColor;
-	private TypedArray presetColors;
 	private TableLayout tableLayout;
 
 	private OnColorChangedListener onColorChangedListener;
@@ -79,15 +79,15 @@ public class PresetSelectorView extends LinearLayout {
 		tableLayout.setStretchAllColumns(true);
 		tableLayout.setShrinkAllColumns(true);
 
-		presetColors = getResources().obtainTypedArray(R.array.preset_colors);
-
 		OnClickListener presetButtonListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				selectedColor = presetColors.getColor(v.getId(), 0);
+				selectedColor = ((ColorPickerPresetColorButton) v).getColor();
 				onColorChanged();
 			}
 		};
+
+		TypedArray presetColors = getResources().obtainTypedArray(R.array.preset_colors);
 
 		TableRow colorButtonsTableRow = new TableRow(context);
 		TableRow.LayoutParams colorButtonLayoutParameters = new TableRow.LayoutParams();
@@ -95,22 +95,23 @@ public class PresetSelectorView extends LinearLayout {
 				COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN);
 		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < presetColors
 				.length(); colorButtonIndexInRow++) {
-			Button colorButton = new ColorPickerPresetColorButton(context,
-					presetColors.getColor(colorButtonIndexInRow, 0));
-			colorButton.setId(colorButtonIndexInRow);
+			int color = presetColors.getColor(colorButtonIndexInRow, Color.TRANSPARENT);
+			Button colorButton = new ColorPickerPresetColorButton(context, color);
 			colorButton.setOnClickListener(presetButtonListener);
-			colorButtonsTableRow.addView(colorButton,
-					colorButtonLayoutParameters);
-			if ((colorButtonIndexInRow + 1)
-					% MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW == 0) {
+			colorButtonsTableRow.addView(colorButton, colorButtonLayoutParameters);
+
+			if ((colorButtonIndexInRow + 1) % MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW == 0) {
 				tableLayout.addView(colorButtonsTableRow);
 				colorButtonsTableRow = new TableRow(context);
 			}
 		}
+
+		presetColors.recycle();
+
 		addView(tableLayout);
 	}
 
-	public int getSelectedColor() {
+	private int getSelectedColor() {
 		return selectedColor;
 	}
 

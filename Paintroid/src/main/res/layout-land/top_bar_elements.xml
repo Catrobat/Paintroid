@@ -31,7 +31,6 @@
     android:paddingEnd="2dp"
     android:layout_below="@id/toolbar">
 
-
     <ImageButton
         android:id="@+id/btn_top_undo"
         android:layout_width="fill_parent"
@@ -78,7 +77,5 @@
         android:layout_weight="1"
         android:background="@color/transparent"
         android:src="@drawable/icon_menu_layers"/>
-
-
 
 </LinearLayout>

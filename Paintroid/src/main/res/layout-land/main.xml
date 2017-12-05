@@ -42,7 +42,6 @@
             <include layout="@layout/top_bar_elements"/>
         </LinearLayout>
 
-
         <org.catrobat.paintroid.ui.DrawingSurface
             android:id="@+id/drawingSurfaceView"
             android:layout_width="wrap_content"
@@ -54,7 +53,6 @@
             android:background="@color/transparent"
             android:layout_toEndOf="@+id/toolbar_container"
             android:layout_toStartOf="@+id/main_bottom_bar" />
-
 
         <LinearLayout
             android:id="@+id/main_tool_options"
@@ -71,7 +69,6 @@
             <include layout="@layout/tool_options"/>
         </LinearLayout>
 
-
         <LinearLayout
             android:id="@+id/main_bottom_bar"
             android:layout_width="wrap_content"
@@ -82,8 +79,6 @@
 
             <include layout="@layout/bottom_bar"/>
         </LinearLayout>
-
-
 
     </RelativeLayout>
 

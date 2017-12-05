@@ -25,7 +25,6 @@
                 android:paddingEnd="@dimen/intro_margin_side"
                 android:paddingTop="@dimen/intro_margin_top">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,8 +41,6 @@
             android:layout_height="wrap_content"
             android:minLines="2"
             android:text="@string/enjoy_pocket_paint"/>
-
-
 
         <TextView
             android:id="@+id/intro_started_text"
@@ -64,6 +61,5 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"/>
     </RelativeLayout>
-
 
 </RelativeLayout>
