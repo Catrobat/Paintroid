@@ -70,7 +70,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.MultilingualActivity.updateLocale;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.selectViewPagerPage;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.unconstrainedScrollTo;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
@@ -410,15 +409,6 @@ public final class EspressoUtils {
 
 	public static void shouldStartSequence(TapTargetTopBar topBar, boolean start) throws NoSuchFieldException, IllegalAccessException {
 		PrivateAccess.setMemberValue(TapTargetTopBar.class, topBar, "firsTimeSequence", start);
-	}
-
-	public static void setRtl(boolean rtl) {
-		Context context = InstrumentationRegistry.getTargetContext();
-		if (rtl) {
-			updateLocale(context, "he", null);
-		} else {
-			updateLocale(context, "", null);
-		}
 	}
 
 	/**

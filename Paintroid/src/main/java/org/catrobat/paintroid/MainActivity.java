@@ -660,6 +660,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 	}
 
 	private void initLocaleConfiguration() {
-		PaintroidApplication.updateToChosenLanguage();
+		MultilingualActivity.setToChosenLanguage(this);
 	}
 }
