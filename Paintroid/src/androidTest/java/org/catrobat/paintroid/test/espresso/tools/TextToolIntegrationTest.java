@@ -29,10 +29,8 @@ import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.ToggleButton;
-
-import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
@@ -60,6 +58,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -108,11 +107,11 @@ public class TextToolIntegrationTest {
 	private IdlingResource dialogWait;
 	private TextTool textTool;
 	private EditText textEditText;
-	private MaterialSpinner fontSpinner;
+	private Spinner fontSpinner;
 	private ToggleButton underlinedToggleButton;
 	private ToggleButton italicToggleButton;
 	private ToggleButton boldToggleButton;
-	private MaterialSpinner textSizeSpinner;
+	private Spinner textSizeSpinner;
 
 	@Before
 	public void setUp() {
@@ -130,11 +129,11 @@ public class TextToolIntegrationTest {
 		textTool = (TextTool) PaintroidApplication.currentTool;
 
 		textEditText = (EditText) activityHelper.findViewById(R.id.text_tool_dialog_input_text);
-		fontSpinner = (MaterialSpinner) activityHelper.findViewById(R.id.text_tool_dialog_spinner_font);
+		fontSpinner = (Spinner) activityHelper.findViewById(R.id.text_tool_dialog_spinner_font);
 		underlinedToggleButton = (ToggleButton) activityHelper.findViewById(R.id.text_tool_dialog_toggle_underlined);
 		italicToggleButton = (ToggleButton) activityHelper.findViewById(R.id.text_tool_dialog_toggle_italic);
 		boldToggleButton = (ToggleButton) activityHelper.findViewById(R.id.text_tool_dialog_toggle_bold);
-		textSizeSpinner = (MaterialSpinner) activityHelper.findViewById(R.id.text_tool_dialog_spinner_text_size);
+		textSizeSpinner = (Spinner) activityHelper.findViewById(R.id.text_tool_dialog_spinner_text_size);
 
 		textTool.resetBoxPosition();
 	}
@@ -163,7 +162,7 @@ public class TextToolIntegrationTest {
 		assertEquals("Wrong default input text", expectedText, actualText);
 
 		String expectedFont = getToolMemberFont();
-		String actualFont = getSelectedItemFromMaterialSpinner(fontSpinner);
+		String actualFont = (String) fontSpinner.getSelectedItem();
 		assertEquals("Wrong default font selected", expectedFont, actualFont);
 
 		boolean expectedUnderlined = getToolMemberUnderlined();
@@ -179,7 +178,7 @@ public class TextToolIntegrationTest {
 		assertEquals("Wrong checked status of bold button", expectedBold, actualBold);
 
 		int expectedTextSize = getToolMemberTextSize();
-		int actualTextSize = Integer.valueOf(getSelectedItemFromMaterialSpinner(textSizeSpinner));
+		int actualTextSize = Integer.valueOf((String) textSizeSpinner.getSelectedItem());
 		assertEquals("Wrong text size selected", expectedTextSize, actualTextSize);
 	}
 
@@ -190,7 +189,7 @@ public class TextToolIntegrationTest {
 
 		selectFormatting(FormattingOptions.SERIF);
 		assertEquals("Tool member has wrong value for font", FONT_SERIF, getToolMemberFont());
-		assertEquals("Wrong current item of font spinner", FONT_SERIF, getSelectedItemFromMaterialSpinner(fontSpinner));
+		assertEquals("Wrong current item of font spinner", FONT_SERIF, fontSpinner.getSelectedItem());
 
 		selectFormatting(FormattingOptions.UNDERLINE);
 		assertTrue("Tool member value for underlined should be true", getToolMemberUnderlined());
@@ -228,7 +227,7 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.SIZE_30);
 		assertEquals("Tool member has wrong value for text size", TEXT_SIZE_30, getToolMemberTextSize());
 		assertEquals("Wrong current item of text size spinner",
-				String.valueOf(TEXT_SIZE_30), getSelectedItemFromMaterialSpinner(textSizeSpinner));
+				String.valueOf(TEXT_SIZE_30), textSizeSpinner.getSelectedItem());
 	}
 
 	@Test
@@ -252,12 +251,12 @@ public class TextToolIntegrationTest {
 		openToolOptionsForCurrentTool();
 
 		assertEquals("Wrong input text after reopen dialog", TEST_TEXT, textEditText.getText().toString());
-		assertEquals("Wrong font selected after reopen dialog", FONT_SANS_SERIF, getSelectedItemFromMaterialSpinner(fontSpinner));
+		assertEquals("Wrong font selected after reopen dialog", FONT_SANS_SERIF, fontSpinner.getSelectedItem());
 		assertEquals("Wrong underline status after reopen dialog", true, underlinedToggleButton.isChecked());
 		assertEquals("Wrong italic status after reopen dialog", true, italicToggleButton.isChecked());
 		assertEquals("Wrong bold status after reopen dialog", true, boldToggleButton.isChecked());
 		assertEquals("Wrong text size selected after reopen dialog",
-				String.valueOf(TEXT_SIZE_40), getSelectedItemFromMaterialSpinner(textSizeSpinner));
+				String.valueOf(TEXT_SIZE_40), textSizeSpinner.getSelectedItem());
 
 		checkTextBoxDimensions();
 		assertEquals("Wrong text box position after reopen dialog", newBoxPosition, getToolMemberBoxPosition());
@@ -517,8 +516,8 @@ public class TextToolIntegrationTest {
 
 		boolean italic = italicToggleButton.isChecked();
 
-		String font = getSelectedItemFromMaterialSpinner(fontSpinner);
-		float textSize = Float.valueOf(getSelectedItemFromMaterialSpinner(textSizeSpinner)) * textSizeMagnificationFactor;
+		String font = (String) fontSpinner.getSelectedItem();
+		float textSize = Float.valueOf((String) textSizeSpinner.getSelectedItem()) * textSizeMagnificationFactor;
 		Paint textPaint = new Paint();
 		textPaint.setAntiAlias(true);
 		textPaint.setTextSize(textSize);
@@ -616,7 +615,7 @@ public class TextToolIntegrationTest {
 			case DUBAI:
 				onView(withId(R.id.text_tool_dialog_spinner_font)).perform(click());
 				onData(allOf(is(instanceOf(String.class)), is(getFontString(format))))
-						.inAdapterView(allOf(withId(R.id.text_tool_dialog_spinner_font), instanceOf(ListView.class)))
+						.inRoot(isPlatformPopup())
 						.perform(click());
 				break;
 			case UNDERLINE:
@@ -630,7 +629,7 @@ public class TextToolIntegrationTest {
 			case SIZE_60:
 				onView(withId(R.id.text_tool_dialog_spinner_text_size)).perform(click());
 				onData(allOf(is(instanceOf(String.class)), is(getFontString(format))))
-						.inAdapterView(allOf(withId(R.id.text_tool_dialog_spinner_text_size), instanceOf(ListView.class)))
+						.inRoot(isPlatformPopup())
 						.perform(click());
 				break;
 			default:
@@ -734,10 +733,6 @@ public class TextToolIntegrationTest {
 
 	protected String[] getToolMemberMultilineText() throws NoSuchFieldException, IllegalAccessException {
 		return (String[]) PrivateAccess.getMemberValue(TextTool.class, textTool, "multilineText");
-	}
-
-	protected String getSelectedItemFromMaterialSpinner(MaterialSpinner materialSpinner) {
-		return materialSpinner.getItems().get(materialSpinner.getSelectedIndex()).toString();
 	}
 
 	private enum FormattingOptions {
