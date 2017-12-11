@@ -20,19 +20,20 @@
 package org.catrobat.paintroid.listener;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Checkable;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.ToggleButton;
-
-import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import org.catrobat.paintroid.R;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class TextToolOptionsListener {
@@ -42,13 +43,8 @@ public final class TextToolOptionsListener {
 	private OnTextToolOptionsChangedListener onTextToolOptionsChangedListener;
 	private Context context;
 	private EditText textEditText;
-	private MaterialSpinner fontSpinner;
-	private ToggleButton underlinedToggleButton;
-	private ToggleButton italicToggleButton;
-	private ToggleButton boldToggleButton;
-	private MaterialSpinner textSizeSpinner;
 
-	public TextToolOptionsListener(Context context, View textToolOptionsView) {
+	private TextToolOptionsListener(Context context, View textToolOptionsView) {
 		this.context = context;
 		initializeListeners(textToolOptionsView);
 	}
@@ -92,61 +88,71 @@ public final class TextToolOptionsListener {
 			}
 		});
 
-		fontSpinner = (MaterialSpinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_font);
-		fontSpinner.setItems(new ArrayList<String>(Arrays.asList(context.getResources().getStringArray(R.array.text_tool_font_array))));
-
-		fontSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+		Spinner fontSpinner = (Spinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_font);
+		ArrayAdapter<String> fontSpinnerAdapter = new ArrayAdapter<>(context,
+				android.R.layout.simple_list_item_activated_1,
+				Arrays.asList(context.getResources().getStringArray(R.array.text_tool_font_array)));
+		fontSpinner.setAdapter(fontSpinnerAdapter);
+		fontSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(MaterialSpinner view, int position, long id, Object font) {
-				onTextToolOptionsChangedListener.setFont(font.toString());
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				String fontString = (String) parent.getItemAtPosition(position);
+				onTextToolOptionsChangedListener.setFont(fontString);
 				hideKeyboard();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
 
-		underlinedToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
-		underlinedToggleButton.setTextOn(Html.fromHtml(
-				"<u>" + context.getResources().getString(R.string.text_tool_dialog_underline_shortcut) + "</u>"));
+		ToggleButton underlinedToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
+		underlinedToggleButton.setPaintFlags(underlinedToggleButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 		underlinedToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean underlined = underlinedToggleButton.isChecked();
+				boolean underlined = ((Checkable) v).isChecked();
 				onTextToolOptionsChangedListener.setUnderlined(underlined);
 				hideKeyboard();
 			}
 		});
 
-		italicToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_italic);
-		italicToggleButton.setTextOn(Html.fromHtml(
-				"<i>" + context.getResources().getString(R.string.text_tool_dialog_italic_shortcut) + "</i>"));
+		ToggleButton italicToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_italic);
 		italicToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean italic = italicToggleButton.isChecked();
+				boolean italic = ((Checkable) v).isChecked();
 				onTextToolOptionsChangedListener.setItalic(italic);
 				hideKeyboard();
 			}
 		});
 
-		boldToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_bold);
-		boldToggleButton.setTextOn(Html.fromHtml(
-				"<b>" + context.getResources().getString(R.string.text_tool_dialog_bold_shortcut) + "</b>"));
+		ToggleButton boldToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_bold);
 		boldToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				boolean bold = boldToggleButton.isChecked();
+				boolean bold = ((Checkable) v).isChecked();
 				onTextToolOptionsChangedListener.setBold(bold);
 				hideKeyboard();
 			}
 		});
 
-		textSizeSpinner = (MaterialSpinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_text_size);
-		textSizeSpinner.setItems(new ArrayList<String>(Arrays.asList(context.getResources().getStringArray(R.array.text_tool_size_array))));
+		Spinner textSizeSpinner = (Spinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_text_size);
+		ArrayAdapter<String> textSizeArrayAdapter = new ArrayAdapter<>(context,
+				android.R.layout.simple_list_item_activated_1,
+				Arrays.asList(context.getResources().getStringArray(R.array.text_tool_size_array)));
+		textSizeSpinner.setAdapter(textSizeArrayAdapter);
 
-		textSizeSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+		textSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(MaterialSpinner view, int position, long id, Object size) {
-				onTextToolOptionsChangedListener.setTextSize(Integer.valueOf(size.toString()));
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				int textSize = Integer.valueOf((String) parent.getItemAtPosition(position));
+				onTextToolOptionsChangedListener.setTextSize(textSize);
 				hideKeyboard();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
 	}
