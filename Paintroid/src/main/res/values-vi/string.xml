@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Điều khoản sử dụng và dịch vụ</string>
   <string name="terms_of_use_and_service_content">Để được phép sử dụng Pocket Code và các chương trình khác được cung cấp bởi dự án Catrobat, bạn phải đồng ý với điều khoản sử dụng của chúng tôi và nghiêm chỉnh thực hiện khi bạn sử dụng Pocket Code và các chương trình khác. Xin vui lòng xem các liên kết dưới đây để biết thêm thông tin.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Điều khoản sử dụng và dịch vụ</string>
-  <string name="about_title">Về Pocket Paint&#8230;</string>
+  <string name="about_title">Về Pocket Paint…</string>
   <string name="about_content">Pocket Paint là công cụ chỉnh sửa hình ảnh và là một phần trong dự án Catrobat.\n\nCatrobat là một ngôn ngữ lập trình ảo và là một công cụ sáng tạo cho điện thoại thông minh, máy tính bảng và trình duyệt điện thoại.\n\nMã nguồn của Pocket Paint chủ yếu được cấp phép dưới %s.\nĐể biết thêm thông tin đầy đủ về giấy phép sử dụng, xin mời xem đường dẫn dưới đây.\n\n</string>
   <string name="about_license_url_text">Giấy phép cho mã nguồn Pocket Paint</string>
   <string name="about_catroid_url_text">Về Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Công cụ</string>
   <string name="dialog_save_title">Lưu hình ảnh</string>
   <string name="dialog_save_text">Tên tập tin đầu vào</string>
-  <string name="dialog_load">Đang tải&#8230;</string>
+  <string name="dialog_load">Đang tải…</string>
   <string name="dialog_overwrite_text">Ghi đè tệp hiện có?</string>
   <string name="dialog_error_save_title">Lỗi tải/lưu tập tin</string>
   <string name="dialog_error_sdcard_text">Kiểm tra hình ảnh hoặc thẻ SD!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Hình dạng</string>
   <string name="dialog_loading_image_failed_title">Lỗi khi tải hình ảnh</string>
   <string name="dialog_loading_image_failed_text">Không phải là một tập tin hình ảnh hợp lệ</string>
-  <string name="dialog_please_wait">Please wait...</string>
+  <string name="dialog_please_wait">Please wait…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

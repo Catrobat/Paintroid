@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.espresso.util;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -53,6 +54,39 @@ import static org.junit.Assert.assertThat;
 public final class UiMatcher {
 
 	private UiMatcher() {
+	}
+
+	public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
+		return new TypeSafeMatcher<View>() {
+			int currentIndex = 0;
+
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("with index: ");
+				description.appendValue(index);
+				matcher.describeTo(description);
+			}
+
+			@Override
+			public boolean matchesSafely(View view) {
+				return matcher.matches(view) && currentIndex++ == index;
+			}
+		};
+	}
+
+	public static Matcher<View> hasTypeFace(final Typeface typeface) {
+		return new TypeSafeMatcher<View>() {
+
+			@Override
+			protected boolean matchesSafely(final View view) {
+				return view instanceof TextView && ((TextView) view).getTypeface() == typeface;
+			}
+
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("the selected TextView doesn't have the TypeFace:" + typeface);
+			}
+		};
 	}
 
 	public static Matcher<View> hasChildPosition(final int position) {

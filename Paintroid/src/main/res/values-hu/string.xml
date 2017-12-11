@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Felhasználási feltételek</string>
   <string name="terms_of_use_and_service_content">A Pocket Code és a Catrobat projekt más projekteinek használatához el kell fogadnia a felhasználási feltételeket, és be kell tartania a benne foglaltakat a Pocket Code és egyéb programjaink használata során. Lásd az alábbi hivatkozást a teljes szöveg megtekintéséhez.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Felhasználási feltételek</string>
-  <string name="about_title">A Pocket Paintről&#8230;</string>
+  <string name="about_title">A Pocket Paintről…</string>
   <string name="about_content">A Pocket Paint egy képszerkesztő, amely része a Catrobat projektnek.\n\nA Catrobat egy vizuális programozási nyelv, és kreatív eszközök halmaza okostelefonokra, tabletekre és mobil böngészőkre.\n\nA Pocket Paint forráskódja javarészt a következő licenc alatt van: %s.\nPontos licencrészletekért lásd az alábbi hivatkozást.\n\n</string>
   <string name="about_license_url_text">A Pocket Paint forráskódjának licence</string>
   <string name="about_catroid_url_text">A Catrobatról</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Eszközők</string>
   <string name="dialog_save_title">Kép mentése</string>
   <string name="dialog_save_text">Bemeneti fájlnév</string>
-  <string name="dialog_load">Betöltés&#8230;</string>
+  <string name="dialog_load">Betöltés…</string>
   <string name="dialog_overwrite_text">Felülírja a meglévő fájlt?</string>
   <string name="dialog_error_save_title">Hiba a fájl betöltése/mentése során</string>
   <string name="dialog_error_sdcard_text">Ellenőrizze a képet vagy az SD-kártyát!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Alakzat</string>
   <string name="dialog_loading_image_failed_title">Hiba a kép betöltése során</string>
   <string name="dialog_loading_image_failed_text">Nem érvényes képfájl</string>
-  <string name="dialog_please_wait">Please wait...</string>
+  <string name="dialog_please_wait">Please wait…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

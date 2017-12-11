@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Условия использования и предоставления услуг</string>
   <string name="terms_of_use_and_service_content">Для того, чтобы иметь возможность использовать Pocket Paint и другие исполняемые файлы, предлагаемые проектом Catrobat, вы должны согласиться с нашими Условиями использования и предоставления услуг и строго следовать их при использовании Pocket Paint и наших других исполняемых файлов. Пожалуйста, перейдите по ссылке ниже для их точной формулировки.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Условия использования и предоставления услуг</string>
-  <string name="about_title">О Pocket Paint&#8230;</string>
+  <string name="about_title">О Pocket Paint…</string>
   <string name="about_content">Pocket Paint - редактор изображений, который является частью проекта Catrobat.\n\nCatrobat - визуальный язык программирования и набор творческих инструментов для смартфонов, планшетов, и мобильных браузеров.\n\nИсходный код Pocket Paint в основном лицензирован под %s.\nДля получения подробностей о лицензии смотрите ссылку.\n\n</string>
   <string name="about_license_url_text">Лицензия исходного кода Pocket Paint</string>
   <string name="about_catroid_url_text">О проекте Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Инструменты</string>
   <string name="dialog_save_title">Сохранить изображение</string>
   <string name="dialog_save_text">Имя файла</string>
-  <string name="dialog_load">Загрузка&#8230;</string>
+  <string name="dialog_load">Загрузка…</string>
   <string name="dialog_overwrite_text">Заменить существующий файл?</string>
   <string name="dialog_error_save_title">Ошибка загрузки/сохранения файла</string>
   <string name="dialog_error_sdcard_text">Проверьте изображение или SD-карту!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Фигура</string>
   <string name="dialog_loading_image_failed_title">Ошибка загрузки изображения</string>
   <string name="dialog_loading_image_failed_text">Недопустимый файл изображения</string>
-  <string name="dialog_please_wait">Please wait...</string>
+  <string name="dialog_please_wait">Please wait…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

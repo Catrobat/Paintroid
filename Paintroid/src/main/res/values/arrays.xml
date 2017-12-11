@@ -67,11 +67,11 @@
         <item>@string/text_tool_dialog_font_arabic_alarabiya</item>
     </string-array>
 
-    <string-array name="text_tool_size_array" translatable="false">
+    <integer-array name="text_tool_size_array" translatable="false">
         <item>20</item>
         <item>30</item>
         <item>40</item>
         <item>60</item>
-    </string-array>
+    </integer-array>
 
 </resources>

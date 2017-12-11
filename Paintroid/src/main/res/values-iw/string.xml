@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">תנאי שימוש ושירות</string>
   <string name="terms_of_use_and_service_content">על מנת להשתמש כיס \' צייר \' הפעלה אחרים המוצעים על ידי הפרויקט Catrobat, עליך להסכים לתנאי השימוש שלנו, שירות ולאחר אך ורק אחריהם כשאתה משתמש כיס קוד הפעלה אחרים שלנו. ראה הקישור להלן לקבלת formulation.\n\n מדויק שלהם \n\n</string>
   <string name="terms_of_use_and_service_url_text">תנאי שימוש ושירות</string>
-  <string name="about_title">אודות תוכנת הציור של פוקטקוד&#8230;</string>
+  <string name="about_title">אודות תוכנת הציור של פוקטקוד…</string>
   <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">רישיון לקוד מקור של פוקט-ציור</string>
   <string name="about_catroid_url_text">אודות Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">כלים</string>
   <string name="dialog_save_title">שמור תמונה</string>
   <string name="dialog_save_text">קלט שם קובץ</string>
-  <string name="dialog_load">טוען&#8230;</string>
+  <string name="dialog_load">טוען…</string>
   <string name="dialog_overwrite_text">האם לדרוס קובץ קיים?</string>
   <string name="dialog_error_save_title">שגיאת טעינה/שמירת קובץ</string>
   <string name="dialog_error_sdcard_text">בדוק את התמונה או כרטיסי SD!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">צורה</string>
   <string name="dialog_loading_image_failed_title">שגיאת בטעינת התמונה</string>
   <string name="dialog_loading_image_failed_text">קובץ תמונה לא תקף</string>
-  <string name="dialog_please_wait">Please wait...</string>
+  <string name="dialog_please_wait">Please wait…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

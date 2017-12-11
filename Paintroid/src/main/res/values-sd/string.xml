@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">خدمت ۽ استعمال جا شرط</string>
   <string name="terms_of_use_and_service_content">ڪيٽروبيٽ پروجيڪٽ جي ذريعي پيش ڪيل پاڪٽ پينٽ ۽ ٻيون پيش ڪيل سهولتون يعني پاڪيٽ ڪوڊ وغيره جي لاءِ اوهان کي اسان جي خدمت ۽ استعمال جي شرطن سان اتفاق ۽ انهن تي سختي سان عمل ڪرڻو پوندو. وڌيڪ وضاحت واسطي هيٺين لنڪ تي ڪلڪ ڪريو</string>
   <string name="terms_of_use_and_service_url_text">خدمت ۽ استعمال جا شرط</string>
-  <string name="about_title">پاڪيٽ پينٽ جي باري ۾&#8230;</string>
+  <string name="about_title">پاڪيٽ پينٽ جي باري ۾…</string>
   <string name="about_content">پاڪيٽ پينٽ تصويرن جو ايڊيٽر آهي جيڪو ڪيٽروبيٽ پروجيڪٽ جو حصو آهي. ڪيٽروبيٽ وزجيوئل پروگرامنگ لينگئج آهي جيڪا سمارٽ فون، ٽيبليٽ ۽ موبائيل برائوزرس جي لاءِ تخليقي اوزار تيار ڪندي آهي. پاڪيٽ پينٽ جو سورس ڪوڊ بنيادي طور تي %sجي تحت لائسنس يافته آهي. \nوڌيڪ وضاحت لاءِ هيٺين لنڪ تي ڪلڪ ڪريو.\n\n</string>
   <string name="about_license_url_text">پاڪيٽ پينٽ سورس ڪوڊ لائسنس</string>
   <string name="about_catroid_url_text">ڪيٽروبيٽ جي باري ۾</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">اوزار</string>
   <string name="dialog_save_title">تصوير محفوظ ڪريو</string>
   <string name="dialog_save_text">فائل جو نالو لکو</string>
-  <string name="dialog_load">لوڊ ٿي رهيو آهي&#8230;</string>
+  <string name="dialog_load">لوڊ ٿي رهيو آهي…</string>
   <string name="dialog_overwrite_text">موجود فائيل جي مٿان ئي محفوظ ڪرڻ چاهيو ٿا?</string>
   <string name="dialog_error_save_title">خامي فائيل آڻڻ/محفوظ ڪرڻ</string>
   <string name="dialog_error_sdcard_text">تصوير يا ڪارڊ چيڪ ڪريو!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">شڪل</string>
   <string name="dialog_loading_image_failed_title">تصوير لوڊ ڪرڻ ۾ نقص</string>
   <string name="dialog_loading_image_failed_text">تصوير موزون ناهي</string>
-  <string name="dialog_please_wait">مهرباني ڪري ترسو...</string>
+  <string name="dialog_please_wait">مهرباني ڪري ترسو…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

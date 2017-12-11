@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Condizioni d\'uso e servizio</string>
   <string name="terms_of_use_and_service_content">Per usare Pocket Paint e altri programmi offerti da Catrobat, si deve prendere visione e accettare i nostri Termini d\'uso e di Servizio e seguirli rigorosamente quando si fa uso di Pocket Code e altri programmi. Seguire il link sotto-riportato per leggere i dettagli.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Condizioni d\'uso e servizio</string>
-  <string name="about_title">Informazioni su Pocket Paint&#8230;</string>
+  <string name="about_title">Informazioni su Pocket Paint…</string>
   <string name="about_content">Pocket Paint è un editor di immagini che fa parte del progetto Catrobat.\n\nCatrobat è un linguaggio di programmazione visuale e un insieme di strumenti per la creatività utilizzabili da smartphone, tablet e altri dispositivi mobili.\n\nIl codice sorgente di Pocket Paint è rilasciato principalmente sotto la licenza %s.\nPer i dettagli della licenza seguire il link sotto-riportato.\n\n</string>
   <string name="about_license_url_text">Licenza per il codice sorgente di Pocket Paint</string>
   <string name="about_catroid_url_text">Su Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Strumenti</string>
   <string name="dialog_save_title">Salva immagine</string>
   <string name="dialog_save_text">Nome del file</string>
-  <string name="dialog_load">Caricamento in corso&#8230;</string>
+  <string name="dialog_load">Caricamento in corso…</string>
   <string name="dialog_overwrite_text">Sovrascrivere il file esistente?</string>
   <string name="dialog_error_save_title">Errore durante il caricamento/salvataggio File</string>
   <string name="dialog_error_sdcard_text">Controllare l\'immagine o l\'SD-Card!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Errore durante il caricamento dell\'immagine</string>
   <string name="dialog_loading_image_failed_text">Non è un file di immagine valido</string>
-  <string name="dialog_please_wait">Attendere prego...</string>
+  <string name="dialog_please_wait">Attendere prego…</string>
   <string name="drawer_open">Apri il menù di navigazione</string>
   <string name="drawer_close">Chiudi il menù di navigazione</string>
   <string name="transform_info_text">Trascina i bordi nella nuova posizione, quindi tocca per ingrandire o ritagliare l\'area dell\'immagine.</string>

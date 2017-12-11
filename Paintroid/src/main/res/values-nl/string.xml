@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Algemene gebruiksvoorwaarden</string>
   <string name="terms_of_use_and_service_content">Om gebruik te mogen maken van Pocket Code en andere uitvoerbare bestanden aangeboden door het Catrobat project, moet je akkoord gaan met onze gebruiksvoorwaarden en deze strikt volgen wanner je gebruikt maakt van Pocket Code en onze andere uitvoerbare bestanden. Zie de link hieronder voor de precieze formulering.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Algemene gebruiksvoorwaarden</string>
-  <string name="about_title">Over Pocket Paint&#8230;</string>
+  <string name="about_title">Over Pocket Paint…</string>
   <string name="about_content">Pocket Paint is een fotobewerker dat deel uitmaakt van het Catrobat project.\n\nCatrobat is een visueel programmeertaal en vol van creativiteit voor op smartphones, tablets en mobiele browsers.\n\nDe broncode van Pocket Paint is voornamelijk gelicenseerd onder de %s.\nVoor precieze details van de licentie, zie de link hieronder.\n\n</string>
   <string name="about_license_url_text">Pocket Paint broncode licentie</string>
   <string name="about_catroid_url_text">Over Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Tools</string>
   <string name="dialog_save_title">Afbeelding opslaan</string>
   <string name="dialog_save_text">Bestandsnaam invoeren</string>
-  <string name="dialog_load">Laden&#8230;</string>
+  <string name="dialog_load">Laden…</string>
   <string name="dialog_overwrite_text">Bestaand bestand overschrijven?</string>
   <string name="dialog_error_save_title">Fout laden/opslaan bestand</string>
   <string name="dialog_error_sdcard_text">Controleer afbeelding of SD kaart!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Vorm</string>
   <string name="dialog_loading_image_failed_title">Fout bij het laden van de afbeelding</string>
   <string name="dialog_loading_image_failed_text">Geen geldige afbeelding</string>
-  <string name="dialog_please_wait">Please wait...</string>
+  <string name="dialog_please_wait">Please wait…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Sleep de randen naar hun nieuwe positie, klik om het gebied van de afbeelding te vergroten of bij te snijden.</string>

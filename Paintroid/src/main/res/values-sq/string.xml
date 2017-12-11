@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Terms of Use and Service</string>
   <string name="terms_of_use_and_service_content">In order to be allowed to use Pocket Paint and other executables offered by the Catrobat project, you must agree to our Terms of Use and Service and strictly follow them when you use Pocket Code and our other executables. Please see the link below for their precise formulation.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Terms of Use and Service</string>
-  <string name="about_title">About Pocket Paint&#8230;</string>
+  <string name="about_title">About Pocket Paint…</string>
   <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">Pocket Paint Source Code License</string>
   <string name="about_catroid_url_text">About Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Tools</string>
   <string name="dialog_save_title">Save Picture</string>
   <string name="dialog_save_text">Input Filename</string>
-  <string name="dialog_load">Loading&#8230;</string>
+  <string name="dialog_load">Loading…</string>
   <string name="dialog_overwrite_text">Overwrite an existing file?</string>
   <string name="dialog_error_save_title">Error load/save File</string>
   <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Shape</string>
   <string name="dialog_loading_image_failed_title">Error on loading image</string>
   <string name="dialog_loading_image_failed_text">Not a valid image file</string>
-  <string name="dialog_please_wait">Ju lutem prisni...</string>
+  <string name="dialog_please_wait">Ju lutem prisni…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

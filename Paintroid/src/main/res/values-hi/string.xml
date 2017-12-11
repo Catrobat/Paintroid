@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">उपयोग की शर्ते और सेवाए</string>
   <string name="terms_of_use_and_service_content">पॉकेट पेंट और अन्य एक्ज़ीक्यूटेबल्स, कैटरोबैट परियोजना के द्वारा उपलब्ध हैं, इनका प्रयोग करने के लिए आपको हमारी शर्ते एवम् सेवा से सहमत रहना होगा और उनके उपयोग के दोहरान आपको उसका कड़ाई से पालन करना होगा । सटीक सूत्र क लिए नीचे लिखे हुए लिंक पर जाए । \n\n</string>
   <string name="terms_of_use_and_service_url_text">उपयोग की शर्ते और सेवाए</string>
-  <string name="about_title">पॉकेट पेंट के बारे में...</string>
+  <string name="about_title">पॉकेट पेंट के बारे में…</string>
   <string name="about_content">पॉकेट पेंट एक तस्वीर संपादक है जो कैटरोबैट परियोजना का हिस्सा हैं|\n\n कैटरोबैट एक दृष्टि प्रोग्रामिंग भाषा है और रचनात्मकता smartphones, गोलियाँ, और मोबाइल browsers.\n\n पॉकेट पेंट का स्रोत कोड %s के लाइसेंस के अंतर्गत आता हैं|\n सटीक विवरण के लिए निम्नलिखित लिंक पर जाए|\n\n</string>
   <string name="about_license_url_text">जेब पेंट स्रोत कोड लाइसेंस</string>
   <string name="about_catroid_url_text">कैटरोबैट के बारे में</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">उपकरण</string>
   <string name="dialog_save_title">चित्र सहेजें</string>
   <string name="dialog_save_text">फ़ाइल का नाम डालें</string>
-  <string name="dialog_load">तैयार हो रहा है&#8230;</string>
+  <string name="dialog_load">तैयार हो रहा है…</string>
   <string name="dialog_overwrite_text">कोई मौजूदा फ़ाइल अधिलेखित करें?</string>
   <string name="dialog_error_save_title">फ़ाइल तैयार करने/सहेजने में त्रुटि</string>
   <string name="dialog_error_sdcard_text">छवि या एसडी कार्ड की जाँच करें!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">आकार</string>
   <string name="dialog_loading_image_failed_title">चित्र तैयार होने में गड़बड़ी हो गयी हैं</string>
   <string name="dialog_loading_image_failed_text">ये उप्युक्त चित्र वाली फाइल नहीं हैं</string>
-  <string name="dialog_please_wait">Please wait...</string>
+  <string name="dialog_please_wait">Please wait…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">도구</string>
   <string name="dialog_save_title">그림 저장</string>
   <string name="dialog_save_text">파일이름 입력</string>
-  <string name="dialog_load">로드중입니다&#8230;</string>
+  <string name="dialog_load">로드중입니다…</string>
   <string name="dialog_overwrite_text">현재 파일에 덮어쓰기 할까요?</string>
   <string name="dialog_error_save_title">파일 로드/저장 오류</string>
   <string name="dialog_error_sdcard_text">이미지 또는 SD 카드를 확인!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">모양</string>
   <string name="dialog_loading_image_failed_title">그림 로딩 중 에러</string>
   <string name="dialog_loading_image_failed_text">사용할 수 없는 이미지 파일</string>
-  <string name="dialog_please_wait">잠시 기다려 주십시오...</string>
+  <string name="dialog_please_wait">잠시 기다려 주십시오…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">새로운 위치로 가장자리를 끌고, 확대하거나 자르려면 탭하세요.</string>

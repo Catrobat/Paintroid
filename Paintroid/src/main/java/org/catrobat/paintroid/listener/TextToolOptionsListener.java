@@ -33,8 +33,13 @@ import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.ui.tools.FontArrayAdapter;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 public final class TextToolOptionsListener {
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "TextToolDialog has not been initialized. Call init() first!";
@@ -89,7 +94,7 @@ public final class TextToolOptionsListener {
 		});
 
 		Spinner fontSpinner = (Spinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_font);
-		ArrayAdapter<String> fontSpinnerAdapter = new ArrayAdapter<>(context,
+		FontArrayAdapter fontSpinnerAdapter = new FontArrayAdapter(context,
 				android.R.layout.simple_list_item_activated_1,
 				Arrays.asList(context.getResources().getStringArray(R.array.text_tool_font_array)));
 		fontSpinner.setAdapter(fontSpinnerAdapter);
@@ -138,9 +143,14 @@ public final class TextToolOptionsListener {
 		});
 
 		Spinner textSizeSpinner = (Spinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_text_size);
+		final List<String> textToolSizeArray = new ArrayList<>();
+		int[] valuesOfSizeArray = context.getResources().getIntArray(R.array.text_tool_size_array);
+		NumberFormat localeNumberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
+		for (int value :valuesOfSizeArray) {
+			textToolSizeArray.add(localeNumberFormat.format(value));
+		}
 		ArrayAdapter<String> textSizeArrayAdapter = new ArrayAdapter<>(context,
-				android.R.layout.simple_list_item_activated_1,
-				Arrays.asList(context.getResources().getStringArray(R.array.text_tool_size_array)));
+				android.R.layout.simple_list_item_activated_1, textToolSizeArray);
 		textSizeSpinner.setAdapter(textSizeArrayAdapter);
 
 		textSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

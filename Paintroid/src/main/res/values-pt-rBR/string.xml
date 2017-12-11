@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Termos de Uso e Serviço</string>
   <string name="terms_of_use_and_service_content">Para que você possa usar o Pocket Paint e outros executáveis oferecidos pelo projeto Catrobat, você precisa concordar com nossos Termos de Uso e Serviço e segui-los estritamente. Por favor, veja o link abaixo para definições exatas.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Termos de Uso e Serviço</string>
-  <string name="about_title">Sobre o Pocket Paint&#8230;</string>
+  <string name="about_title">Sobre o Pocket Paint…</string>
   <string name="about_content">Pocket Paint é um editor de imagens que faz parte do projeto Catrobat.\n\nCatrobat é uma linguagem de programação visual, composto de ferramentas criativas para smartphones, tablets e navegadores móveis.\n\nA fonte do Pocket Paint é licenciada predominantemente sob %s.\nPara maiores detalhes sobre a licença, veja o link abaixo.\n\n</string>
   <string name="about_license_url_text">Licença do Código Fonte do Pocket Paint</string>
   <string name="about_catroid_url_text">Sobre o Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Ferramentas</string>
   <string name="dialog_save_title">Salvar imagem</string>
   <string name="dialog_save_text">Entrar Nome do arquivo</string>
-  <string name="dialog_load">Carregando&#8230;</string>
+  <string name="dialog_load">Carregando…</string>
   <string name="dialog_overwrite_text">Substituir um arquivo existente?</string>
   <string name="dialog_error_save_title">Erro ao carregar/salvar Arquivo</string>
   <string name="dialog_error_sdcard_text">Verifique Imagem ou Cartão SD!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Erro ao carregar imagem</string>
   <string name="dialog_loading_image_failed_text">Este não é um arquivo de imagem válido</string>
-  <string name="dialog_please_wait">Por favor, espere...</string>
+  <string name="dialog_please_wait">Por favor, espere…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Arraste as bordas para a nova posição e, em seguida, toque para ampliar ou cortar a área da imagem.</string>

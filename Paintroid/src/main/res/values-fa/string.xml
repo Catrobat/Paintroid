@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">شرایط استفاده و خدمات</string>
   <string name="terms_of_use_and_service_content">به منظور مجاز بودن به استفاده از پاکت نقاشی و دیگر برنامه های اجرایی ارائه شده توسط پروژه کت ربات، باید با شرایط استفاده و سرویس موافقت کنی و هنگامی که پاکت کد و دیگر برنامه های اجرایی ما را استفاده می کنی باید آنها را دقیقا دنبال کنی. برای فرمول بندی دقیقتر به لینک زیر نگاهی بنداز.\n\n</string>
   <string name="terms_of_use_and_service_url_text">شرایط استفاده و خدمات</string>
-  <string name="about_title">درباره پاکت نقاشی...</string>
+  <string name="about_title">درباره پاکت نقاشی…</string>
   <string name="about_content">پاکت نقاشی یک ویرایشگر عکس است که بخشی از پروژه کت ربات می باشد.\n\n
 کت ربات یک زبان برنامه نویسی دیداری و مجموعه ای از ابزارهای خلاقیت برای گوشی های هوشمند، تبلت و جستجوگرهای گوشی همراه می باشد.\n\n
 کد منبع پاکت نقاشی اساسا تحت نظر %s.\n می باشد.
@@ -69,7 +69,7 @@
   <string name="dialog_tools_title">ابزار</string>
   <string name="dialog_save_title">ذخیره عکس</string>
   <string name="dialog_save_text">نام پرونده را وارد کن</string>
-  <string name="dialog_load">در حال بارگذاری&#8230;</string>
+  <string name="dialog_load">در حال بارگذاری…</string>
   <string name="dialog_overwrite_text">یک پرونده موجود رونویسی شود؟</string>
   <string name="dialog_error_save_title">خطا در بارگذاری یا ذخیره فایل</string>
   <string name="dialog_error_sdcard_text">تصویر یا کارت SD را بررسی کن!</string>
@@ -170,7 +170,7 @@
   <string name="dialog_shape_text">شکل</string>
   <string name="dialog_loading_image_failed_title">خطا در بارگذاری تصویر</string>
   <string name="dialog_loading_image_failed_text">پرونده تصویر معتبر نیست</string>
-  <string name="dialog_please_wait">لطفا صبر کن...</string>
+  <string name="dialog_please_wait">لطفا صبر کن…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

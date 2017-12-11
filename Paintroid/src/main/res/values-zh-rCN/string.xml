@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">工具</string>
   <string name="dialog_save_title">保存图片</string>
   <string name="dialog_save_text">输入文件名</string>
-  <string name="dialog_load">载入中...</string>
+  <string name="dialog_load">载入中…</string>
   <string name="dialog_overwrite_text">覆盖已有文件吗？</string>
   <string name="dialog_error_save_title">加载/保存文件时发生错误</string>
   <string name="dialog_error_sdcard_text">检查图像或 SD 卡 ！</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">形状</string>
   <string name="dialog_loading_image_failed_title">加载图像时出错</string>
   <string name="dialog_loading_image_failed_text">不是有效的图像文件</string>
-  <string name="dialog_please_wait">请等待...</string>
+  <string name="dialog_please_wait">请等待…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">将边缘拖动到新位置，然后点击可放大或裁剪图像。</string>
