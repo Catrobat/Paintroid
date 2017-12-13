@@ -24,6 +24,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.util.LayoutDirection;
 
+import org.catrobat.paintroid.MultilingualActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.Session;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
@@ -84,10 +86,15 @@ public class WelcomeActivityIntentsTestRule extends IntentsTestRule<WelcomeActiv
 
 		try {
 			EspressoUtils.shouldStartSequence(startSequence);
-			EspressoUtils.setRtl(rtl);
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
+
+		String languageTagKey = rtl ? "ar" : "";
+		PaintroidApplication.languageSharedPreferences
+				.edit()
+				.putString(MultilingualActivity.LANGUAGE_TAG_KEY, languageTagKey)
+				.commit();
 
 		Session session = new Session(InstrumentationRegistry.getTargetContext());
 		session.setFirstTimeLaunch(true);
@@ -109,8 +116,9 @@ public class WelcomeActivityIntentsTestRule extends IntentsTestRule<WelcomeActiv
 	protected void afterActivityFinished() {
 		super.afterActivityFinished();
 
-		if (rtl) {
-			EspressoUtils.setRtl(false);
-		}
+		PaintroidApplication.languageSharedPreferences
+				.edit()
+				.remove(MultilingualActivity.LANGUAGE_TAG_KEY)
+				.commit();
 	}
 }

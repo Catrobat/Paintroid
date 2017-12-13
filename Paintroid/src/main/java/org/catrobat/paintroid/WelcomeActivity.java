@@ -123,6 +123,7 @@ public class WelcomeActivity extends AppCompatActivity {
 					| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 		}
 
+		MultilingualActivity.setToChosenLanguage(this);
 		setContentView(R.layout.activity_welcome);
 
 		viewPager = (ViewPager) findViewById(R.id.view_pager);

@@ -39,12 +39,8 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Locale;
-
-import static org.catrobat.paintroid.MultilingualActivity.LANGUAGE_CODE;
-import static org.catrobat.paintroid.MultilingualActivity.LANGUAGE_TAG_KEY;
 
 public class PaintroidApplication extends Application {
 	public static final String TAG = "PAINTROID";
@@ -71,21 +67,6 @@ public class PaintroidApplication extends Application {
 	public static String defaultSystemLanguage;
 	public static SharedPreferences languageSharedPreferences;
 
-	public static void updateToChosenLanguage() {
-		String languageTag = languageSharedPreferences.getString(LANGUAGE_TAG_KEY, "");
-		if (Arrays.asList(LANGUAGE_CODE).contains(languageTag)) {
-			if (languageTag.length() == 2) {
-				MultilingualActivity.updateLocale(applicationContext, languageTag, null);
-			} else {
-				String language = languageTag.substring(0, 2);
-				String country = languageTag.substring(4);
-				MultilingualActivity.updateLocale(applicationContext, language, country);
-			}
-		} else {
-			MultilingualActivity.updateLocale(applicationContext, defaultSystemLanguage, null);
-		}
-	}
-
 	public static String getVersionName(Context context) {
 		String versionName = "unknown";
 		try {
@@ -108,6 +89,5 @@ public class PaintroidApplication extends Application {
 
 		defaultSystemLanguage = Locale.getDefault().getLanguage();
 		languageSharedPreferences = getSharedPreferences("For_language", Context.MODE_PRIVATE);
-		updateToChosenLanguage();
 	}
 }
