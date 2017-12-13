@@ -20,23 +20,17 @@
 package org.catrobat.paintroid.test.espresso;
 
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.widget.ImageButton;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,15 +38,18 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class UndoRedoIntegrationTest {
@@ -81,7 +78,8 @@ public class UndoRedoIntegrationTest {
 
 		activityHelper.setScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-		selectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
@@ -97,70 +95,69 @@ public class UndoRedoIntegrationTest {
 		pointOnCanvasRight = getCanvasPointFromScreenPoint(pointOnScreenRight);
 	}
 
-	@After
-	public void tearDown() {
-		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-	}
-
 	@Test
 	public void testUndoRedoIconsWhenSwitchToLandscapeMode() {
 		assertEquals("Wrong screen orientation",
 				ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, activityHelper.getScreenOrientation());
 
-		ImageButton undoButton = UndoRedoManager.getInstance().getTopBar().getUndoButton();
-		Bitmap undoButtonDisabled = ((BitmapDrawable) undoButton.getDrawable()).getBitmap();
+		onView(withId(R.id.btn_top_undo))
+				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo_disabled), not(isEnabled()))));
+		onView(withId(R.id.btn_top_redo))
+				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo_disabled), not(isEnabled()))));
 
-		ImageButton redoButton = UndoRedoManager.getInstance().getTopBar().getRedoButton();
-		Bitmap redoButtonDisabled = ((BitmapDrawable) redoButton.getDrawable()).getBitmap();
+		onView(isRoot())
+				.perform(touchAt(pointOnScreenLeft.x, pointOnScreenLeft.y));
+		assertPixel(Color.BLACK, pointOnCanvasLeft);
 
-		onView(isRoot()).perform(touchAt(pointOnScreenLeft.x, pointOnScreenLeft.y));
-		assertEquals("Wrong pixel color", Color.BLACK, PaintroidApplication.drawingSurface.getPixel(pointOnCanvasLeft));
+		onView(withId(R.id.btn_top_undo))
+				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo), isEnabled())));
 
-		Bitmap undoButtonEnabled = ((BitmapDrawable) undoButton.getDrawable()).getBitmap();
-		assertNotEquals("Undo button should be enabled", undoButtonEnabled, undoButtonDisabled);
+		onView(isRoot())
+				.perform(touchAt(pointOnScreenMiddle.x, pointOnScreenMiddle.y));
+		assertPixel(Color.BLACK, pointOnCanvasMiddle);
 
-		onView(isRoot()).perform(touchAt(pointOnScreenMiddle.x, pointOnScreenMiddle.y));
-		assertEquals("Wrong pixel color", Color.BLACK, PaintroidApplication.drawingSurface.getPixel(pointOnCanvasMiddle));
+		onView(isRoot())
+				.perform(touchAt(pointOnScreenRight.x, pointOnScreenRight.y));
+		assertPixel(Color.BLACK, pointOnCanvasRight);
 
-		onView(isRoot()).perform(touchAt(pointOnScreenRight.x, pointOnScreenRight.y));
-		assertEquals("Wrong pixel color", Color.BLACK, PaintroidApplication.drawingSurface.getPixel(pointOnCanvasRight));
+		onView(withId(R.id.btn_top_redo))
+				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo_disabled), not(isEnabled()))));
 
-		assertEquals("Redo button should still be disabled",
-				redoButtonDisabled, ((BitmapDrawable) redoButton.getDrawable()).getBitmap());
+		onView(withId(R.id.btn_top_undo))
+				.perform(click());
 
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		Bitmap redoButtonEnabled = ((BitmapDrawable) redoButton.getDrawable()).getBitmap();
-		assertNotEquals("Redo button should be enabled", redoButtonEnabled, redoButtonDisabled);
+		onView(withId(R.id.btn_top_redo))
+				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo), isEnabled())));
 
 		activityHelper.setScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		assertEquals("Wrong screen orientation",
 				ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, activityHelper.getScreenOrientation());
 
-		EspressoUtils.waitForIdleSync();
+		onView(withId(R.id.btn_top_undo))
+				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo), isEnabled())));
+		onView(withId(R.id.btn_top_redo))
+				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo), isEnabled())))
+				.perform(click())
+				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo_disabled), not(isEnabled()))));
 
-		undoButton = UndoRedoManager.getInstance().getTopBar().getUndoButton();
-		redoButton = UndoRedoManager.getInstance().getTopBar().getRedoButton();
+		onView(withId(R.id.btn_top_undo))
+				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo), isEnabled())))
+				.perform(click());
 
-		assertTrue("Undo button should be enabled",
-				undoButtonEnabled.sameAs(((BitmapDrawable) undoButton.getDrawable()).getBitmap()));
-		assertTrue("Redo button should be enabled",
-				redoButtonEnabled.sameAs(((BitmapDrawable) redoButton.getDrawable()).getBitmap()));
+		assertPixel(Color.TRANSPARENT, pointOnCanvasRight);
+		onView(withId(R.id.btn_top_undo))
+				.perform(click());
+		assertPixel(Color.TRANSPARENT, pointOnCanvasMiddle);
+		onView(withId(R.id.btn_top_undo))
+				.perform(click());
+		assertPixel(Color.TRANSPARENT, pointOnCanvasLeft);
 
-		onView(withId(R.id.btn_top_redo)).perform(click());
+		onView(withId(R.id.btn_top_undo))
+				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo_disabled), not(isEnabled()))));
+	}
 
-		assertTrue("Redo button should be disabled",
-				redoButtonDisabled.sameAs(((BitmapDrawable) redoButton.getDrawable()).getBitmap()));
-
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		assertEquals("Wrong pixel color", Color.TRANSPARENT, PaintroidApplication.drawingSurface.getPixel(pointOnCanvasRight));
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		assertEquals("Wrong pixel color", Color.TRANSPARENT, PaintroidApplication.drawingSurface.getPixel(pointOnCanvasMiddle));
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		assertEquals("Wrong pixel color", Color.TRANSPARENT, PaintroidApplication.drawingSurface.getPixel(pointOnCanvasLeft));
-
-		assertTrue("Undo button should be disabled",
-				undoButtonDisabled.sameAs(((BitmapDrawable) undoButton.getDrawable()).getBitmap()));
-
-		activityHelper.setScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	private static void assertPixel(int expectedColor, PointF position) {
+		assertEquals("Wrong pixel color", expectedColor,
+				PaintroidApplication.drawingSurface.getPixel(position));
 	}
 }

@@ -19,8 +19,7 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bg_screen1">
+                android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/intro_tools_top_bar"
@@ -33,10 +32,9 @@
 
     <LinearLayout
         android:id="@+id/intro_tools_bottom_bar"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_bar_height"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@color/custom_background_color">
 
@@ -48,18 +46,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/intro_tools_bottom_bar"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@id/intro_tools_top_bar"
         android:background="@color/light_gray">
 
         <LinearLayout
-            android:id="@+id/introDrawingSurfaceView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="15dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/checkeredbg_repeat"
             android:orientation="horizontal"/>
@@ -74,39 +70,26 @@
         android:paddingStart="@dimen/intro_margin_side"
         android:paddingTop="@dimen/intro_margin_top"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@id/intro_tools_bottom_bar">
+        android:layout_above="@id/intro_tools_bottom_bar"
+        android:orientation="vertical"
+        android:gravity="top">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/intro_tools_head"
+            style="@style/IntroHeader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:gravity="top"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:minLines="2"
+            android:text="@string/dialog_tools_title"/>
 
-            <TextView
-                android:id="@+id/intro_tools_head"
-                style="@style/IntroHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minLines="2"
-                android:text="@string/dialog_tools_title"/>
-
-            <TextView
-                android:id="@+id/intro_tools_text"
-                style="@style/IntroText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/intro_tools_head"
-                android:layout_marginTop="@dimen/intro_margin_top_text"
-                android:text="@string/intro_tool_more_information"/>
-
-        </RelativeLayout>
-
+        <TextView
+            style="@style/IntroText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/intro_tools_head"
+            android:layout_marginTop="@dimen/intro_margin_top_text"
+            android:text="@string/intro_tool_more_information"/>
     </RelativeLayout>
-
 </RelativeLayout>
 

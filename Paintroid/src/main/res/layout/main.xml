@@ -17,30 +17,27 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:openDrawer="start">
+    android:layout_height="match_parent">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/main_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/custom_background_color"
         android:fitsSystemWindows="true">
 
-        <include layout="@layout/top_bar"/>
+        <include layout="@layout/top_bar"
+            android:id="@+id/layout_top_bar" />
 
         <org.catrobat.paintroid.ui.DrawingSurface
             android:id="@+id/drawingSurfaceView"
-            android:layout_below="@+id/toolbar"
-            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/layout_top_bar"
             android:layout_alignParentStart="true"
             android:layout_above="@+id/main_bottom_bar"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -48,21 +45,21 @@
 
         <LinearLayout
             android:id="@+id/main_tool_options"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
             android:layout_alignParentBottom="true"
             android:background="@android:color/background_light">
+
             <include layout="@layout/tool_options"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/main_bottom_bar"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_bar_height"
             android:background="@color/custom_background_color"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
 
             <include layout="@layout/bottom_bar"/>
@@ -87,42 +84,7 @@
         android:layout_gravity="end|center"
         android:background="@color/custom_background_color">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/layer_side_nav_button_add"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="fitCenter"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/icon_layers_new"
-            android:contentDescription="@string/layer_new"/>
-        <ImageButton
-            android:id="@+id/layer_side_nav_button_delete"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="fitCenter"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/icon_layers_delete"
-            android:contentDescription="@string/layer_delete"/>
-
-        </LinearLayout>
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="fill_horizontal"
-            android:scaleType="fitStart"
-            android:id="@+id/nav_layer_list"/>
-
-        </LinearLayout>
+        <include layout="@layout/layer_side_nav_layout" />
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

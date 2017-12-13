@@ -21,6 +21,8 @@ package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.contrib.DrawerActions;
+import android.view.Gravity;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.Layer;
@@ -32,6 +34,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.assertListViewCount;
 import static org.hamcrest.Matchers.instanceOf;
 
 public final class LayerMenuViewInteraction extends CustomViewInteraction {
@@ -55,6 +58,12 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return onView(withId(R.id.nav_layer_list));
 	}
 
+	public LayerMenuViewInteraction checkLayerCount(int count) {
+		onLayerList()
+				.check(assertListViewCount(count));
+		return this;
+	}
+
 	public DataInteraction onLayerAt(int listPosition) {
 		return onData(instanceOf(Layer.class))
 				.inAdapterView(withId(R.id.nav_layer_list))
@@ -70,8 +79,8 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 
 	public LayerMenuViewInteraction performClose() {
 		check(matches(isDisplayed()));
-		onView(withId(R.id.btn_top_layers))
-				.perform(click());
+		onView(withId(R.id.drawer_layout))
+			.perform(DrawerActions.close(Gravity.END));
 		return this;
 	}
 

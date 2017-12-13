@@ -46,7 +46,7 @@ public class EraserTool extends DrawTool {
 
 	private void displayEraserInsteadOfSelectedColor() {
 		colorButton = (ColorButton) ((Activity) context).findViewById(R.id.btn_top_color);
-		colorButton.setImageResource(R.drawable.icon_topbar_eraser);
+		colorButton.setImageResource(R.drawable.icon_menu_eraser);
 
 		colorPickerPalette = ((Activity) context).findViewById(R.id.btn_top_color_palette);
 		colorPickerPalette.setVisibility(View.INVISIBLE);

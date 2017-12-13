@@ -145,7 +145,7 @@ public final class IntroUtils {
 	}
 
 	public static LinearLayout getTopBarFromPossibilitiesSlide(Activity activity) {
-		return (LinearLayout) getDescendantView(R.id.intro_possibilites_topbar, R.id.layout_top_bar, activity);
+		return (LinearLayout) getDescendantView(R.id.intro_possibilites_topbar, R.id.top_bar_buttons, activity);
 	}
 
 	public static TapTargetBottomBar getTapTargetBottomBar(Activity activity) {

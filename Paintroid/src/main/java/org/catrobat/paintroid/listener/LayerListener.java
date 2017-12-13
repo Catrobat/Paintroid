@@ -59,6 +59,8 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	private Layer currentLayer;
 	private NavigationView navigationView;
 	private BrickDragAndDropLayerMenu brickLayer;
+	private ImageButton addButton;
+	private ImageButton delButton;
 
 	private LayerListener(Context context, NavigationView view, Bitmap firstLayer) {
 		setupLayerListener(view, context, firstLayer, false);
@@ -84,7 +86,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		this.context = context;
 
 		if (!orientationChanged) {
-			layersAdapter = new LayersAdapter(context,
+			layersAdapter = new LayersAdapter(
 					firstLayer);
 			initCurrentLayer();
 		}
@@ -125,14 +127,14 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 			}
 		});
 
-		ImageButton addButton = (ImageButton) view.findViewById(R.id.layer_side_nav_button_add);
+		addButton = (ImageButton) view.findViewById(R.id.layer_side_nav_button_add);
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				createLayer();
 			}
 		});
-		ImageButton delButton = (ImageButton) view.findViewById(R.id.layer_side_nav_button_delete);
+		delButton = (ImageButton) view.findViewById(R.id.layer_side_nav_button_delete);
 		delButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -166,7 +168,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	void initCurrentLayer() {
 		if (layersAdapter == null) {
 			Log.d(TAG, "ERROR, initCurrentLayer -> layerAdapter == null");
-			layersAdapter = new LayersAdapter(context,
+			layersAdapter = new LayersAdapter(
 					PaintroidApplication.drawingSurface.getBitmapCopy());
 		}
 		currentLayer = layersAdapter.getLayer(0);
@@ -236,14 +238,8 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	}
 
 	public void updateButtonResource() {
-		ImageButton addButton = (ImageButton) navigationView.findViewById(R.id.layer_side_nav_button_add);
-		int addButtonResource = layersAdapter.getCount() < layersAdapter.MAX_LAYER
-				? R.drawable.icon_layers_new : R.drawable.icon_layers_new_disabled;
-		addButton.setBackgroundResource(addButtonResource);
-		ImageButton deleteButton = (ImageButton) navigationView.findViewById(R.id.layer_side_nav_button_delete);
-		int deleteButtonResource = layersAdapter.getCount() > 1
-				? R.drawable.icon_layers_delete : R.drawable.icon_layers_delete_disabled;
-		deleteButton.setBackgroundResource(deleteButtonResource);
+		addButton.setEnabled(layersAdapter.getCount() < LayersAdapter.MAX_LAYER);
+		delButton.setEnabled(layersAdapter.getCount() > 1);
 	}
 
 	public void createLayer() {
@@ -350,7 +346,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		UndoRedoManager.getInstance().update();
 	}
 
-	public void refreshDrawingSurface() {
+	private void refreshDrawingSurface() {
 		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 }

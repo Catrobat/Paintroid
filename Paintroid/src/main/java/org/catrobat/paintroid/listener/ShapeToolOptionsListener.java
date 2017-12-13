@@ -21,114 +21,96 @@ package org.catrobat.paintroid.listener;
 
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
 
 public class ShapeToolOptionsListener {
-
-	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "ShapeToolDialog has not been initialized. Call init() first!";
-
-	private static ShapeToolOptionsListener instance;
-	private static GeometricFillTool.BaseShape shape;
+	private GeometricFillTool.BaseShape shape;
 	private OnShapeToolOptionsChangedListener onShapeToolOptionsChangedListener;
 	private ImageButton squareButton;
 	private ImageButton circleButton;
 	private ImageButton heartButton;
 	private ImageButton starButton;
+	private TextView shapeToolDialogTitle;
 
 	public ShapeToolOptionsListener(View shapeToolOptionsView) {
-		if (shape == null) {
-			shape = GeometricFillTool.BaseShape.RECTANGLE;
-		}
-		initializeListeners(shapeToolOptionsView);
-	}
-
-	public static ShapeToolOptionsListener getInstance() {
-		if (instance == null) {
-			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
-		}
-		return instance;
-	}
-
-	public static void init(View shapeToolOptionsView) {
-		instance = new ShapeToolOptionsListener(shapeToolOptionsView);
-	}
-
-	private void initializeListeners(final View shapeToolOptionsView) {
-		setShapeActivated(shapeToolOptionsView, shape);
+		shape = GeometricFillTool.BaseShape.RECTANGLE;
 		squareButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_square_btn);
+		circleButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_circle_btn);
+		heartButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_heart_btn);
+		starButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_star_btn);
+		shapeToolDialogTitle = (TextView) shapeToolOptionsView.findViewById(R.id.shape_tool_dialog_title);
+
+		initializeListeners();
+		setShapeActivated(shape);
+	}
+
+	private void initializeListeners() {
 		squareButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				shape = GeometricFillTool.BaseShape.RECTANGLE;
-				onShapeToolOptionsChangedListener.setToolType(shape);
-				setShapeActivated(shapeToolOptionsView, shape);
+				onShapeClicked(GeometricFillTool.BaseShape.RECTANGLE);
 			}
 		});
-
-		circleButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_circle_btn);
 		circleButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				shape = GeometricFillTool.BaseShape.OVAL;
-				onShapeToolOptionsChangedListener.setToolType(shape);
-				setShapeActivated(shapeToolOptionsView, shape);
+				onShapeClicked(GeometricFillTool.BaseShape.OVAL);
 			}
 		});
-
-		heartButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_heart_btn);
 		heartButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				shape = GeometricFillTool.BaseShape.HEART;
-				onShapeToolOptionsChangedListener.setToolType(shape);
-				setShapeActivated(shapeToolOptionsView, shape);
+				onShapeClicked(GeometricFillTool.BaseShape.HEART);
 			}
 		});
-
-		starButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_star_btn);
 		starButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				shape = GeometricFillTool.BaseShape.STAR;
-				onShapeToolOptionsChangedListener.setToolType(shape);
-				setShapeActivated(shapeToolOptionsView, shape);
+				onShapeClicked(GeometricFillTool.BaseShape.STAR);
 			}
 		});
 	}
 
-	private void resetShapeActivated(View shapeToolOptionsView) {
-		LinearLayout shapesContainer = (LinearLayout) shapeToolOptionsView.findViewById(R.id.shapes_container);
-		for (int i = 0; i < shapesContainer.getChildCount(); i++) {
-			shapesContainer.getChildAt(i).setBackgroundResource(R.color.transparent);
+	private void onShapeClicked(GeometricFillTool.BaseShape shape) {
+		if (this.shape == shape) {
+			return;
+		}
+		onShapeToolOptionsChangedListener.setToolType(shape);
+		setShapeActivated(shape);
+		this.shape = shape;
+	}
+
+	private void resetShapeActivated() {
+		View[] buttons = {squareButton, circleButton, heartButton, starButton};
+		for (View button : buttons) {
+			button.setSelected(false);
 		}
 	}
 
-	private void setShapeActivated(View shapeToolOptionsView, GeometricFillTool.BaseShape shape) {
-		resetShapeActivated(shapeToolOptionsView);
-		TextView shapeToolDialogTitle = (TextView) shapeToolOptionsView.findViewById(R.id.shape_tool_dialog_title);
+	private void setShapeActivated(GeometricFillTool.BaseShape shape) {
+		resetShapeActivated();
 		switch (shape) {
 			case RECTANGLE:
-				shapeToolOptionsView.findViewById(R.id.shapes_square_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+				squareButton.setSelected(true);
 				shapeToolDialogTitle.setText(R.string.shape_tool_dialog_rect_title);
 				break;
 			case OVAL:
-				shapeToolOptionsView.findViewById(R.id.shapes_circle_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+				circleButton.setSelected(true);
 				shapeToolDialogTitle.setText(R.string.shape_tool_dialog_ellipse_title);
 				break;
-			case STAR:
-				shapeToolOptionsView.findViewById(R.id.shapes_star_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
-				shapeToolDialogTitle.setText(R.string.shape_tool_dialog_star_title);
-				break;
 			case HEART:
-				shapeToolOptionsView.findViewById(R.id.shapes_heart_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+				heartButton.setSelected(true);
 				shapeToolDialogTitle.setText(R.string.shape_tool_dialog_heart_title);
 				break;
+			case STAR:
+				starButton.setSelected(true);
+				shapeToolDialogTitle.setText(R.string.shape_tool_dialog_star_title);
+				break;
 			default:
-				shapeToolOptionsView.findViewById(R.id.shapes_square_btn).setBackgroundResource(R.color.bottom_bar_button_activated);
+				squareButton.setSelected(true);
 				break;
 		}
 	}

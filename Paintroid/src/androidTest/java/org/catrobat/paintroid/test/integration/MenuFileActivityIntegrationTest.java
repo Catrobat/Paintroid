@@ -55,7 +55,7 @@ public class MenuFileActivityIntegrationTest extends BaseIntegrationTestClass {
 	public void setUp() {
 		super.setUp();
 		screenPoint = new PointF(mScreenWidth / 2, mScreenHeight / 2);
-		deletionFileList = new ArrayList<File>();
+		deletionFileList = new ArrayList<>();
 	}
 
 	@Override

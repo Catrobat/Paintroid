@@ -19,12 +19,12 @@
 
 package org.catrobat.paintroid.ui.button;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,12 +44,10 @@ import java.util.Collections;
 public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	public static final int MAX_LAYER = 4;
 
-	private Context context;
 	private ArrayList<Layer> layerList;
 	private int layerCounter = 0;
 
-	public LayersAdapter(Context context, Bitmap firstLayer) {
-		this.context = context;
+	public LayersAdapter(Bitmap firstLayer) {
 		initLayers(firstLayer);
 	}
 
@@ -161,24 +159,23 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View rowView = convertView;
-		if (rowView == null) {
-			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-			rowView = inflater.inflate(R.layout.layer_button, null);
-			LinearLayout layerButton = (LinearLayout) rowView.findViewById(R.id.layer_button);
+		if (convertView == null) {
+			Context context = parent.getContext();
+			LayoutInflater inflater = LayoutInflater.from(context);
+			convertView = inflater.inflate(R.layout.layer_button, parent, false);
+			LinearLayout layerButton = (LinearLayout) convertView.findViewById(R.id.layer_button);
 
 			if (layerList.get(position).getSelected()) {
 				layerButton.setBackgroundColor(
-						context.getResources().getColor(R.color.color_chooser_blue1));
+						ContextCompat.getColor(context, R.color.color_chooser_blue1));
 			} else {
 				layerButton.setBackgroundColor(
-						context.getResources().getColor(R.color.custom_background_color));
+						ContextCompat.getColor(context, R.color.custom_background_color));
 			}
-			ImageView imageView = (ImageView) rowView
-					.findViewById(R.id.layer_button_image);
+			ImageView imageView = (ImageView) convertView.findViewById(R.id.layer_button_image);
 			imageView.setImageBitmap(layerList.get(position).getImage());
 		}
-		return rowView;
+		return convertView;
 	}
 
 	public Layer clearLayer() {

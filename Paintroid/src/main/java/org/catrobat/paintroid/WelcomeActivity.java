@@ -95,7 +95,7 @@ public class WelcomeActivity extends AppCompatActivity {
 			if (state == ViewPager.SCROLL_STATE_IDLE
 					&& layouts[pos] == R.layout.islide_possibilities) {
 				View layout = findViewById(R.id.intro_possibilites_topbar);
-				LinearLayout view = (LinearLayout) layout.findViewById(R.id.layout_top_bar);
+				LinearLayout view = (LinearLayout) layout.findViewById(R.id.top_bar_buttons);
 				final View fadeView = findViewById(R.id.intro_possibilities_textview);
 
 				TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
@@ -184,7 +184,7 @@ public class WelcomeActivity extends AppCompatActivity {
 			reverseArray(layouts);
 		}
 
-		viewPager.setAdapter(new IntroPageViewAdapter(getBaseContext(), layouts));
+		viewPager.setAdapter(new IntroPageViewAdapter(layouts));
 		viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
 		if (isRTL(this)) {

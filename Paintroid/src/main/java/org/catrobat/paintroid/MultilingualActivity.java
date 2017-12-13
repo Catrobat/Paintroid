@@ -43,10 +43,10 @@ import static org.catrobat.paintroid.PaintroidApplication.languageSharedPreferen
 
 public class MultilingualActivity extends AppCompatActivity {
 	public static final String LANGUAGE_TAG_KEY = "applicationLanguage";
-	public static final String[] LANGUAGE_CODE = {"az", "bg-BG", "bs", "ca", "cs", "sr-CS", "sr-SP",
+	public static final String[] LANGUAGE_CODE = {"az", "bg", "bs", "ca", "cs", "sr-CS", "sr-SP",
 			"da", "de", "el", "en-AU", "en-CA", "en-GB", "en", "es", "fr", "gl", "hr", "in", "it",
 			"sw", "hu", "mk", "ms", "nl", "no", "pl", "pt-BR", "pt", "ru", "ro", "sq", "sl", "sk",
-			"sv", "vi", "tr", "ml", "ta", "te", "th", "gu", "hi", "ja", "ko", "lt-LT", "zh-CN",
+			"sv", "vi", "tr", "ml", "ta", "te", "th", "gu", "hi", "ja", "ko", "lt", "zh-CN",
 			"zh-TW", "ar", "ur", "fa", "ps", "sd", "iw"};
 
 	@Override

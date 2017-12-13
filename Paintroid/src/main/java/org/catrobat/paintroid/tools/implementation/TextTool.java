@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -255,9 +256,10 @@ public class TextTool extends BaseToolWithRectangleShape {
 	protected void drawToolSpecifics(Canvas canvas) {
 	}
 
+	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = LayoutInflater.from(context);
 		textToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
 
 		ToggleButton underlinedButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);

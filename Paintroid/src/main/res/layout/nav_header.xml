@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/color_chooser_white"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingBottom="16dp"
@@ -16,10 +15,9 @@
     android:paddingEnd="16dp">
 
     <ImageView
-        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="150dp"
-        android:src="@drawable/ic_pocket_paint_logo_untereinander"
+        android:src="@drawable/ic_pocket_paint_logo"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

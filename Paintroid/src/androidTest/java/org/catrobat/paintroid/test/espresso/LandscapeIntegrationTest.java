@@ -94,7 +94,7 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testTopBarPosition() {
-		onView(withId(R.id.toolbar_container))
+		onView(withId(R.id.layout_top_bar))
 				.check(matches(isDisplayed()))
 				.check(isCompletelyLeftOf(withId(R.id.drawingSurfaceView)));
 	}
@@ -105,10 +105,10 @@ public class LandscapeIntegrationTest {
 
 		onView(withId(R.id.main_tool_options))
 				.check(matches(isDisplayed()))
-				.check(isCompletelyRightOf(withId(R.id.toolbar_container)))
+				.check(isCompletelyRightOf(withId(R.id.layout_top_bar)))
 				.check(isCompletelyLeftOf(withId(R.id.main_bottom_bar)));
 
-		onView(withId(R.id.toolbar_container))
+		onView(withId(R.id.layout_top_bar))
 				.check(matches(isDisplayed()));
 		onView(withId(R.id.main_bottom_bar))
 				.check(matches(isDisplayed()));

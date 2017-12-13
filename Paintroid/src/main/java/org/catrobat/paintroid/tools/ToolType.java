@@ -39,7 +39,7 @@ public enum ToolType {
 	SHAPE(R.string.button_shape, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
 	TEXT(R.string.button_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text),
 	LAYER(R.string.layers_title, R.string.layers_title, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
-	COLORCHOOSER(R.string.color_chooser_title, R.string.color_chooser_title, true, EnumSet.of(StateChange.ALL), R.id.btn_top_color_frame);
+	COLORCHOOSER(R.string.color_chooser_title, R.string.color_chooser_title, true, EnumSet.of(StateChange.ALL), R.id.btn_top_color);
 
 	private int nameResource;
 	private int helpTextResource;

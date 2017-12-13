@@ -179,20 +179,20 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	private ArrayList<LayerBitmapCommand> convertLayerBitmapCommandToList(LayerBitmapCommand command) {
-		ArrayList<LayerBitmapCommand> result = new ArrayList<LayerBitmapCommand>(1);
+		ArrayList<LayerBitmapCommand> result = new ArrayList<>(1);
 		result.add(command);
 		return result;
 	}
 
 	public ArrayList<LayerBitmapCommand> getLayerBitmapCommands(int layerId) {
-		ArrayList<Integer> ids = new ArrayList<Integer>(1);
+		ArrayList<Integer> ids = new ArrayList<>(1);
 		ids.add(layerId);
 		return getLayerBitmapCommands(ids);
 	}
 
 	private ArrayList<LayerBitmapCommand> getLayerBitmapCommands(ArrayList<Integer> layerIds) {
 		synchronized (drawBitmapCommandsAtLayer) {
-			ArrayList<LayerBitmapCommand> result = new ArrayList<LayerBitmapCommand>();
+			ArrayList<LayerBitmapCommand> result = new ArrayList<>();
 
 			for (LayerBitmapCommand layerBitmapCommand : drawBitmapCommandsAtLayer) {
 				for (int id : layerIds) {

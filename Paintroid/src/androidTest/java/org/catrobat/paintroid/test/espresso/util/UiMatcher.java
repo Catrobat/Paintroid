@@ -26,6 +26,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.Root;
 import android.support.test.espresso.ViewAssertion;
@@ -261,25 +262,30 @@ public final class UiMatcher {
 
 			@Override
 			protected boolean matchesSafely(View target) {
+				Resources resources = target.getContext().getResources();
+				resourceName = resources.getResourceEntryName(resourceId);
+
 				if (!(target instanceof ImageView)) {
 					return false;
 				}
-				ImageView imageView = (ImageView) target;
-				Resources resources = target.getContext().getResources();
+
 				Drawable expectedDrawable = resources.getDrawable(resourceId);
-				resourceName = resources.getResourceEntryName(resourceId);
+				Drawable targetDrawable = target.getBackground();
 
-				if (expectedDrawable == null) {
+				if (expectedDrawable == null || targetDrawable == null) {
 					return false;
 				}
 
-				if (imageView.getBackground() == null) {
-					return false;
-				}
+				Bitmap expectedBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
 
-				Bitmap bitmap = ((BitmapDrawable) imageView.getBackground()).getBitmap();
-				Bitmap otherBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
-				return bitmap.sameAs(otherBitmap);
+				if (targetDrawable instanceof BitmapDrawable) {
+					Bitmap bitmap = ((BitmapDrawable) targetDrawable).getBitmap();
+					return bitmap.sameAs(expectedBitmap);
+				} else if (targetDrawable instanceof StateListDrawable) {
+					Bitmap bitmap = ((BitmapDrawable) targetDrawable.getCurrent()).getBitmap();
+					return bitmap.sameAs(expectedBitmap);
+				}
+				return false;
 			}
 
 			@Override
@@ -398,21 +404,30 @@ public final class UiMatcher {
 
 			@Override
 			protected boolean matchesSafely(View target) {
+				Resources resources = target.getContext().getResources();
+				resourceName = resources.getResourceEntryName(resourceId);
+
 				if (!(target instanceof ImageView)) {
 					return false;
 				}
-				ImageView imageView = (ImageView) target;
-				Resources resources = target.getContext().getResources();
-				Drawable expectedDrawable = resources.getDrawable(resourceId);
-				resourceName = resources.getResourceEntryName(resourceId);
 
-				if (expectedDrawable == null) {
+				Drawable expectedDrawable = resources.getDrawable(resourceId);
+				ImageView targetImageView = (ImageView) target;
+				Drawable targetDrawable = targetImageView.getDrawable();
+
+				if (expectedDrawable == null || targetDrawable == null) {
 					return false;
 				}
 
-				Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-				Bitmap otherBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
-				return bitmap.sameAs(otherBitmap);
+				Bitmap expectedBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
+				if (targetDrawable instanceof BitmapDrawable) {
+					Bitmap targetBitmap = ((BitmapDrawable) targetDrawable).getBitmap();
+					return targetBitmap.sameAs(expectedBitmap);
+				} else if (targetDrawable instanceof StateListDrawable) {
+					Bitmap targetBitmap = ((BitmapDrawable) targetDrawable.getCurrent()).getBitmap();
+					return targetBitmap.sameAs(expectedBitmap);
+				}
+				return false;
 			}
 
 			@Override
@@ -431,11 +446,10 @@ public final class UiMatcher {
 	/**
 	 * Matches {@link Root}s that are toasts (i.e. is not a window of the currently resumed activity).
 	 *
-	 * @see RootMatchers#isDialog()
+	 * @see android.support.test.espresso.matcher.RootMatchers#isDialog()
 	 */
 	public static Matcher<Root> isToast() {
 		return new TypeSafeMatcher<Root>() {
-
 			@Override
 			public void describeTo(Description description) {
 				description.appendText("is toast");
