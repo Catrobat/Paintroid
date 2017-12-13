@@ -36,3 +36,4 @@ Let's start to set up the working environment using the instructions in our  [Wi
 
 # License #
 [License](http://developer.catrobat.org/licenses) of our project (mainly AGPL v3).
+Foo
