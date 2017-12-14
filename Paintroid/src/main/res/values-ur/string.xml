@@ -50,7 +50,7 @@
   <string name="terms_of_use_and_service_content">کیٹروبیٹ منصوبے  کی طرف سے پیش کردہ پاکٹ پینٹ اور دیگر چلنے والے پیشکش یعنی  پاکٹ کوڈ  وغیرہ کے لئے آپ کو ہمارے  سروس اور استعمال کی شرائط سے اتفاق اورسختی سےعمل کرنا ہو گا۔ ِان کے عین مطابق تشکیل کے لئے مندرجہ ذیل لنک پر ملاحظہ کریں.
 </string>
   <string name="terms_of_use_and_service_url_text">سروس اور استعمال کی شرائط</string>
-  <string name="about_title">پاکٹ پینٹ کے بارے میں...</string>
+  <string name="about_title">پاکٹ پینٹ کے بارے میں…</string>
   <string name="about_content">پاکٹ پینٹ ایک تصویر ایڈٖیٹر ہے۔جو کہ کیٹروبیٹ کا حصہ ہے۔ کیٹروبیٹ ایک   ویوژل پروگرامنگ زبان ہے ۔جو اسمارٹ فون،ٹیبلٹ، اور موبائل براوزرکے لئے تحلیق آوزار تیار کرتا ہے۔ پاکٹ پینٹ کا سورس کوڈ بنیادی طور پر لائسنس یافتہ%s.\n  کے تحت۔ لائسنس کے عین مطابق تفصلات کے لیے نیچے دئیے گئے لنک دیکھیں۔ ایک تصویر ایڈٖیٹر ہے۔جو کہ کیٹروبیٹ کا حصہ ہے۔
 
 
@@ -70,7 +70,7 @@
   <string name="dialog_tools_title">اوزار</string>
   <string name="dialog_save_title">تصویر محفوظ کریں</string>
   <string name="dialog_save_text">فائل کا نام درج کریں</string>
-  <string name="dialog_load">لدائی کا عمل ہورہاہے...</string>
+  <string name="dialog_load">لدائی کا عمل ہورہاہے…</string>
   <string name="dialog_overwrite_text">موجودہ فائل کو تبدیل کرنا چا ہتے ہیں ؟ </string>
   <string name="dialog_error_save_title">لادنے کی غلطٖی/فائل محفوظ کریں</string>
   <string name="dialog_error_sdcard_text">تصویر یا SD کارڈ چیک کریں!</string>
@@ -172,7 +172,7 @@
   <string name="dialog_shape_text">شکل</string>
   <string name="dialog_loading_image_failed_title">تصویر لوڈ کرنے میں نقص</string>
   <string name="dialog_loading_image_failed_text">تصویر کی فائل موزوں نہيں</string>
-  <string name="dialog_please_wait">Please wait...</string>
+  <string name="dialog_please_wait">Please wait…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

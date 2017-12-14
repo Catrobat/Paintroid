@@ -64,9 +64,9 @@
   <string name="color_pre">あらかじめ選択されています</string>
   <string name="color_hsv">hsv カラーピッカー</string>
   <string name="dialog_tools_title">ツール</string>
-  <string name="dialog_save_title">画像を保存...</string>
+  <string name="dialog_save_title">画像を保存…</string>
   <string name="dialog_save_text">ファイル名を入力</string>
-  <string name="dialog_load">読み込み中&#8230;</string>
+  <string name="dialog_load">読み込み中…</string>
   <string name="dialog_overwrite_text">既存のファイルを上書きしますか？</string>
   <string name="dialog_error_save_title">読み込み/保存のエラー</string>
   <string name="dialog_error_sdcard_text">イメージまたは SD カードをチェック ！</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">図形</string>
   <string name="dialog_loading_image_failed_title">イメージの読み込みエラー</string>
   <string name="dialog_loading_image_failed_text">有効なイメージ ファイルではありません。</string>
-  <string name="dialog_please_wait">しばらくお待ちください...</string>
+  <string name="dialog_please_wait">しばらくお待ちください…</string>
   <string name="drawer_open">ナビゲーションドロワーを開く</string>
   <string name="drawer_close">ナビゲーションドロワーを閉じる</string>
   <string name="transform_info_text">エッジを新しい位置にドラッグして、その後タップすると、画像領域を拡大したりトリミングします。</string>

@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Podmínky používání a služby</string>
   <string name="terms_of_use_and_service_content">Chcete-li aby bylo umožněno používat Pocket Paint a další spustitelné soubory aplikace Project Catrobat, musíte souhlasit s našema podmínkama používání a službama a striktně jít za nimi, když používáte Pocket Code a naše další spustitelné soubory. Naleznete v odkazu níže pro jejich přesné formulace.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Podmínky používání a služby</string>
-  <string name="about_title">O Pocket Paint...</string>
+  <string name="about_title">O Pocket Paint…</string>
   <string name="about_content">Pocket Paint je editor obrázků, který je součástí Catrobat project.\n\nCatrobat je vizuální programovací jazyk a sada nástrojů tvořivosti pro smartphony, tablety a mobilní vyhledávače.\n\nZdrojový kód Pocket Paint je především licencován pod %s.\nPro přesné podrobnosti o licenci viz odkaz níže.\n\n</string>
   <string name="about_license_url_text">Pocket Paint zdrojový kód licence</string>
   <string name="about_catroid_url_text">O Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Nástroje</string>
   <string name="dialog_save_title">Uložit obrázek</string>
   <string name="dialog_save_text">Vstupní název souboru</string>
-  <string name="dialog_load">Načítání&#8230;</string>
+  <string name="dialog_load">Načítání…</string>
   <string name="dialog_overwrite_text">Přepsat existující soubor?</string>
   <string name="dialog_error_save_title">Chyba načítání/ukládání souboru</string>
   <string name="dialog_error_sdcard_text">Zkontrolujte obrázek nebo SD Kartu!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Tvar</string>
   <string name="dialog_loading_image_failed_title">Chyba při načítání obrázku</string>
   <string name="dialog_loading_image_failed_text">Neplatná složka s obrázkem</string>
-  <string name="dialog_please_wait">Prosím čekejte...</string>
+  <string name="dialog_please_wait">Prosím čekejte…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Přetáhněte okraje do jejich nové pozice, pak klepnutím na položku zvětšit nebo oříznout oblasti obrazu.</string>

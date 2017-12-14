@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Warunki użytkowania i obsługi</string>
   <string name="terms_of_use_and_service_content">Aby móc korzystać z Pocket Paint i innych plików wykonywalnych, oferowanych w ramach projektu Catrobat, musisz zgodzić się na nasze warunki korzystania z serwisu i ściśle ich przestrzegać, gdy korzystasz z Pocket Code i innych naszych plików wykonywalnych. Link poniżej prowadzi do ich precyzyjnego sformułowania.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Warunki użytkowania i obsługi</string>
-  <string name="about_title">O Pocket Paint&#8230;</string>
+  <string name="about_title">O Pocket Paint…</string>
   <string name="about_content">Pocket Paint jest edytorem graficznym, który jest częścią projektu Catrobat.\n\nCatrobat to język programowania wizualnego i zestaw narzędzi twórczych dla smartfonów, tabletów i mobilnych przeglądarek.\n\nKod źródłowy Pocket Paint jest głównie na licencji %s.\nDokładne szczegóły licencji - patrz link poniżej.\n\n</string>
   <string name="about_license_url_text">Licencja kodu źródłowego Pocket Paint</string>
   <string name="about_catroid_url_text">O Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Narzędzia</string>
   <string name="dialog_save_title">Zapisz obraz</string>
   <string name="dialog_save_text">Nazwa pliku wejściowego</string>
-  <string name="dialog_load">Ładowanie&#8230;</string>
+  <string name="dialog_load">Ładowanie…</string>
   <string name="dialog_overwrite_text">Czy zastąpić istniejący plik?</string>
   <string name="dialog_error_save_title">Błąd ładowania/zapisu pliku</string>
   <string name="dialog_error_sdcard_text">Sprawdź obraz lub kartę SD!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Kształt</string>
   <string name="dialog_loading_image_failed_title">Błąd ładowania obrazu</string>
   <string name="dialog_loading_image_failed_text">Nieprawidłowy plik obrazu</string>
-  <string name="dialog_please_wait">Proszę czekać...</string>
+  <string name="dialog_please_wait">Proszę czekać…</string>
   <string name="drawer_open">Otwórz panel nawigacyjny</string>
   <string name="drawer_close">Zamknij panel nawigacyjny</string>
   <string name="transform_info_text">Przeciągnij krawędzie do nowej pozycji, a następnie naciśnij, aby powiększyć lub przyciąć obszar obrazu.</string>

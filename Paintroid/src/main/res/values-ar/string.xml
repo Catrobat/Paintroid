@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">أدوات</string>
   <string name="dialog_save_title">حفظ الصورة</string>
   <string name="dialog_save_text">ادخل إسم الملف</string>
-  <string name="dialog_load">جاري التحميل&#8230;</string>
+  <string name="dialog_load">جاري التحميل…</string>
   <string name="dialog_overwrite_text">الكتابة/الحفظ فوق ملف موجود؟</string>
   <string name="dialog_error_save_title">خطأ في استيراد/حفظ الملف</string>
   <string name="dialog_error_sdcard_text">تحقق من بطاقة الذاكرة SD أو الصورة!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">الشكل</string>
   <string name="dialog_loading_image_failed_title">خطأ في استيراد الصورة</string>
   <string name="dialog_loading_image_failed_text">ليس ملف صورة صالح</string>
-  <string name="dialog_please_wait">يرجى الانتظار...</string>
+  <string name="dialog_please_wait">يرجى الانتظار…</string>
   <string name="drawer_open">فتح قائمة التنقل</string>
   <string name="drawer_close">إغلاق قائمة التنقل</string>
   <string name="transform_info_text">اسحب الحواف إلى المركز الجديد، ثم اضغط للتكبير أو اقتصاص صورة المنطقة.</string>

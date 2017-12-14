@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Kullanım ve Hizmet Koşulları</string>
   <string name="terms_of_use_and_service_content">Pocket Paint ve Catrobat projesi tarafından sunulan diğer uygulamaları kullanabilmek için Kullanım ve Hizmet Koşullarını kabul etmek ve Pocket Code ile diğer uygulamaları kullandığınız esnada bu koşullara uymanız gerekmektedir. Lütfen ayrıntılı bilgi için aşağıdaki bağlantıyı inceleyiniz.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Kullanım ve Hizmet Koşulları</string>
-  <string name="about_title">Pocket Paint Hakkında&#8230;</string>
+  <string name="about_title">Pocket Paint Hakkında…</string>
   <string name="about_content">Pocket Paint resim editörü Catrobat projesinin bir parçasıdır.\n\nCatrobat akıllı telefonlar, tabletler ve mobil tarayıcılar için tasarlanmış bir programlama dili ve tasarım aracıdır.\n\nPocket Paint uygulamasının kaynak kodu temel olarak %s lisansı altında sunulmaktadır.\nLisansın kesin detayları için aşağıdaki bağlantıyı inceleyiniz.\n\n</string>
   <string name="about_license_url_text">Pocket Paint Kaynak Kod Lisansı</string>
   <string name="about_catroid_url_text">Catrobat Hakkında</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Araçlar</string>
   <string name="dialog_save_title">Görüntüyü Kaydet</string>
   <string name="dialog_save_text">Dosya Adı Gir</string>
-  <string name="dialog_load">Yükleniyor&#8230;</string>
+  <string name="dialog_load">Yükleniyor…</string>
   <string name="dialog_overwrite_text">Varolan dosyanın üzerine yazılsın mı?</string>
   <string name="dialog_error_save_title">Dosya yüklenirken/kaydedilirken hata</string>
   <string name="dialog_error_sdcard_text">Resmi veya SD kartı kontrol et!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Şekil</string>
   <string name="dialog_loading_image_failed_title">Resim yüklenirken hata oluştu</string>
   <string name="dialog_loading_image_failed_text">Geçersiz bir resim dosyası</string>
-  <string name="dialog_please_wait">Lütfen bekleyiniz...</string>
+  <string name="dialog_please_wait">Lütfen bekleyiniz…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Kenarları yeni konumlarına sürükle, sonra büyütmek veya resim alanını kırpmak için dokun.</string>

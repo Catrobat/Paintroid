@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">เครื่องมือ</string>
   <string name="dialog_save_title">บันทึกรูปภาพ</string>
   <string name="dialog_save_text">ป้อนชื่อแฟ้ม</string>
-  <string name="dialog_load">กำลังโหลด&#8230;</string>
+  <string name="dialog_load">กำลังโหลด…</string>
   <string name="dialog_overwrite_text">เขียนทับแฟ้มที่มีอยู่หรือไม่?</string>
   <string name="dialog_error_save_title">ข้อผิดพลาดโหลด/บันทึกแฟ้ม</string>
   <string name="dialog_error_sdcard_text">ตรวจสอบอิมเมจหรือการ์ด SD!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">รูปร่าง</string>
   <string name="dialog_loading_image_failed_title">ข้อผิดพลาดในการโหลดภาพ</string>
   <string name="dialog_loading_image_failed_text">ไฟล์รูปภาพไม่ถูกต้อง</string>
-  <string name="dialog_please_wait">Please wait...</string>
+  <string name="dialog_please_wait">Please wait…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">Nutzungsbedingungen und Service</string>
   <string name="terms_of_use_and_service_content">Um Pocket Paint und andere ausführbare Dateien, die durch das Catrobat-Projekt angeboten werden, verwenden zu dürfen, musst du unsere Nutzungsbedingungen und Service strikt befolgen. Für genauere Informationen siehe auf den Link darunter.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Nutzungsbedingungen und Service</string>
-  <string name="about_title">Über Pocket Paint&#8230;</string>
+  <string name="about_title">Über Pocket Paint…</string>
   <string name="about_content">Pocket Paint ist ein Bild-Editor, der Teil des Catrobat Projektes ist.\n\nCatrobat ist eine visuelle Programmiersprache welche kreative Tools für Smartphones, Tablets und mobile Browser bereitstellt.\n\n Der Source-Code von Pocket Paint steht hauptsächlich unter der %s Lizenz.\n Für genaue Angaben zu der Lizenz, beachte den Link unten.\n\n</string>
   <string name="about_license_url_text">Pocket Paint Quellcode-Lizenz</string>
   <string name="about_catroid_url_text">Über Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">Werkzeuge</string>
   <string name="dialog_save_title">Bild speichern</string>
   <string name="dialog_save_text">Dateiname</string>
-  <string name="dialog_load">Lade&#8230;</string>
+  <string name="dialog_load">Lade…</string>
   <string name="dialog_overwrite_text">Eine vorhandene Datei überschreiben?</string>
   <string name="dialog_error_save_title">Fehler Laden/Speichern Datei</string>
   <string name="dialog_error_sdcard_text">Überprüfe das Bild oder die SD-Karte!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">Form</string>
   <string name="dialog_loading_image_failed_title">Fehler beim Laden vom Bild</string>
   <string name="dialog_loading_image_failed_text">Keine gültige Bilddatei</string>
-  <string name="dialog_please_wait">Bitte warten...</string>
+  <string name="dialog_please_wait">Bitte warten…</string>
   <string name="drawer_open">Navigation-Drawer öffnen</string>
   <string name="drawer_close">Navigation-Drawer schließen</string>
   <string name="transform_info_text">Ziehe die Kanten zu ihren neuen Positionen und tipp dann, um den Bildbereich zu vergrößern oder zu verkleinern.</string>

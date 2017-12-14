@@ -49,7 +49,7 @@
   <string name="terms_of_use_and_service_title">使用與服務條款</string>
   <string name="terms_of_use_and_service_content">為了能夠使用Pocket Code和 Catrobat 提供的其他軟體，您必須同意我們的使用與服務條款並且在使用我們的軟體時嚴格遵守，詳細說明請參閱下面的連結。 \n\n</string>
   <string name="terms_of_use_and_service_url_text">使用與服務條款</string>
-  <string name="about_title">關於 Pocket Paint 口袋小畫家...</string>
+  <string name="about_title">關於 Pocket Paint 口袋小畫家…</string>
   <string name="about_content">Pocket Paint 口袋小畫家 是 Catrobat 專案計畫中的一個圖檔編輯軟體。\n\nCatrobat 是專為智慧手機、平板電腦、行動瀏覽器設計的視覺化程式語言及創意工具的集合。\n\nPocket Paint程式碼的授權主要基於 %s 。\n詳細的授權方式參考下列連結。\n\n</string>
   <string name="about_license_url_text">Pocket Paint 口袋小畫家 授權說明</string>
   <string name="about_catroid_url_text">關於 Catrobat</string>
@@ -66,7 +66,7 @@
   <string name="dialog_tools_title">工具</string>
   <string name="dialog_save_title">儲存圖檔</string>
   <string name="dialog_save_text">輸入檔名</string>
-  <string name="dialog_load">載入中&#8230;</string>
+  <string name="dialog_load">載入中…</string>
   <string name="dialog_overwrite_text">覆蓋現有檔案?</string>
   <string name="dialog_error_save_title">載入/存檔錯誤</string>
   <string name="dialog_error_sdcard_text">檢查圖檔或 SD 卡!</string>
@@ -167,7 +167,7 @@
   <string name="dialog_shape_text">形狀</string>
   <string name="dialog_loading_image_failed_title">載入圖檔錯誤</string>
   <string name="dialog_loading_image_failed_text">不是可用的圖檔</string>
-  <string name="dialog_please_wait">Please wait...</string>
+  <string name="dialog_please_wait">Please wait…</string>
   <string name="drawer_open">Open navigation drawer</string>
   <string name="drawer_close">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
