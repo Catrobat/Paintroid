@@ -44,6 +44,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -82,12 +83,12 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 	protected DrawingSurfaceListener drawingSurfaceListener;
 	protected BottomBar bottomBar;
 	protected TopBar topBar;
-	protected boolean toolbarIsVisible = true;
+	protected boolean isFullScreen;
 	ActionBarDrawerToggle actionBarDrawerToggle;
 	DrawerLayout drawerLayout;
 	private NavigationView layerSideNav;
 	private InputMethodManager inputMethodManager;
-	private boolean isKeyboardShown = false;
+	private boolean isKeyboardShown;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -134,11 +135,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.perspective = new Perspective(PaintroidApplication.drawingSurface.getHolder(), metrics.density);
 		drawingSurfaceListener = new DrawingSurfaceListener();
-		BrushPickerView.init(this);
+		BrushPickerView.init((ViewGroup) findViewById(R.id.layout_tool_specific_options));
 		bottomBar = new BottomBar(this);
 		topBar = new TopBar(this);
 		layerSideNav = (NavigationView) findViewById(R.id.nav_view_layer);
-		layersAdapter = new LayersAdapter(this,
+		layersAdapter = new LayersAdapter(
 				PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		int colorPickerBackgroundColor = PaintroidApplication.colorPickerInitialColor;
@@ -300,7 +301,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 			IndeterminateProgressDialog.getInstance().show();
 		}
 
-		BrushPickerView.init(this);
+		BrushPickerView.init((ViewGroup) findViewById(R.id.layout_tool_specific_options));
 
 		setContentView(R.layout.main);
 		View mainView = findViewById(R.id.drawer_layout);
@@ -317,7 +318,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		bottomBar = new BottomBar(this);
 		topBar = new TopBar(this);
 		layerSideNav = (NavigationView) findViewById(R.id.nav_view_layer);
-		layersAdapter = new LayersAdapter(this,
+		layersAdapter = new LayersAdapter(
 				PaintroidApplication.drawingSurface.getBitmapCopy());
 
 		int colorPickerBackgroundColor = PaintroidApplication.colorPickerInitialColor;
@@ -398,7 +399,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 
 	@Override
 	public void onBackPressed() {
-		if (!toolbarIsVisible) {
+		if (isFullScreen) {
 			setFullScreen(false);
 		} else if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
 			drawerLayout.closeDrawer(Gravity.START);
@@ -579,12 +580,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 				supportActionBar.hide();
 			}
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-			if (PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-				LinearLayout mToolbarContainer = (LinearLayout) (findViewById(R.id.toolbar_container));
-				mToolbarContainer.setVisibility(View.GONE);
-			}
+			LinearLayout mToolbarContainer = (LinearLayout) (findViewById(R.id.layout_top_bar));
+			mToolbarContainer.setVisibility(View.GONE);
 			bottomBarLayout.setVisibility(View.GONE);
-			toolbarIsVisible = false;
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
@@ -596,12 +594,9 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 				supportActionBar.show();
 			}
 			LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
-			if (PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-				LinearLayout mToolbarContainer = (LinearLayout) (findViewById(R.id.toolbar_container));
-				mToolbarContainer.setVisibility(View.VISIBLE);
-			}
+			LinearLayout mToolbarContainer = (LinearLayout) (findViewById(R.id.layout_top_bar));
+			mToolbarContainer.setVisibility(View.VISIBLE);
 			bottomBarLayout.setVisibility(View.VISIBLE);
-			toolbarIsVisible = true;
 			getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 			getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -609,6 +604,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 			mNavigationView.getMenu().findItem(R.id.nav_exit_fullscreen_mode).setVisible(false);
 			mNavigationView.getMenu().findItem(R.id.nav_fullscreen_mode).setVisible(true);
 		}
+		this.isFullScreen = isFullScreen;
 	}
 
 	private void initNavigationDrawer() {

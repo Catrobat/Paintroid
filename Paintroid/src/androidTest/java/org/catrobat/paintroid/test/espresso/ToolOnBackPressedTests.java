@@ -45,7 +45,6 @@ import java.io.IOException;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.open;
@@ -53,12 +52,15 @@ import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -338,7 +340,7 @@ public class ToolOnBackPressedTests {
 
 	@Test
 	public void testCloseLayerDialogOnBackPressed() {
-		onView(withId(R.id.drawer_layout)).perform(open(Gravity.RIGHT));
+		onView(withId(R.id.drawer_layout)).perform(open(Gravity.END));
 		onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
 		pressBack();
 		onView(withId(R.id.drawer_layout)).check(matches(isClosed()));
@@ -346,7 +348,7 @@ public class ToolOnBackPressedTests {
 
 	@Test
 	public void testCloseColorPickerDialogOnBackPressed() {
-		onView(withId(R.id.btn_top_color_frame)).perform(click());
+		onView(withId(R.id.btn_top_color)).perform(click());
 		onView(withId(R.id.colorchooser_base_layout)).check(matches(isDisplayed()));
 		pressBack();
 		onView(withId(R.id.colorchooser_base_layout)).check(doesNotExist());
@@ -362,9 +364,16 @@ public class ToolOnBackPressedTests {
 
 	@Test
 	public void testCloseToolOptionsOnUndoPressed() {
-		onView(withId(R.id.tools_text)).perform(scrollTo(), click());
-		onView(withId(R.id.layout_tool_options)).check(matches(isDisplayed()));
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		onView(withId(R.id.layout_tool_options)).check(matches(not(isDisplayed())));
+		onView(isRoot())
+				.perform(click());
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+		onView(withId(R.id.layout_tool_options))
+				.check(matches(isDisplayed()));
+		onView(withId(R.id.btn_top_undo))
+				.check(matches(allOf(isDisplayed(), isEnabled())))
+				.perform(click());
+		onView(withId(R.id.layout_tool_options))
+				.check(matches(not(isDisplayed())));
 	}
 }

@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
     <!-- colors for presets in color picker -->
     <array name="preset_colors">
@@ -46,18 +46,6 @@
         <item name="menu_new_image_empty_image">@string/menu_new_image_empty_image</item>
         <item name="menu_new_image_from_camera">@string/menu_new_image_from_camera</item>
     </array>
-    <array name="edit_layer">
-        <!--<item name="edit_layer_visible">@string/layer_visible</item>-->
-        <!--<item name="edit_layer_lock">@string/layer_lock</item>-->
-        <!--<item name="edit_layer_rename">@string/layer_rename</item>-->
-        <!--<item name="edit_layer_merge">@string/layer_merge</item>-->
-        <!--<item name="edit_layer_delete">@string/layer_delete</item>-->
-        <item name="edit_layer_copy">@string/layer_copy</item>
-        <item name="edit_layer_move_up">@string/layer_move_up</item>
-        <item name="edit_layer_move_down">@string/layer_move_down</item>
-        <item name="edit_layer_move_to_top">@string/layer_move_to_top</item>
-        <item name="edit_layer_move_to_bottom">@string/layer_move_to_bottom</item>
-    </array>
 
     <string-array name="text_tool_font_array">
         <item>@string/text_tool_dialog_font_monospace</item>
@@ -73,5 +61,4 @@
         <item>40</item>
         <item>60</item>
     </integer-array>
-
 </resources>

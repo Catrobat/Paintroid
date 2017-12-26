@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,8 +54,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	private BaseShape baseShape;
 	private ShapeDrawType shapeDrawType;
-	private ShapeToolOptionsListener.OnShapeToolOptionsChangedListener onShapeToolOptionsChangedListener;
-	private View shapeToolOptionView;
+	private ShapeToolOptionsListener shapeToolOptionsListener;
 	private Paint geometricFillCommandPaint;
 
 	public GeometricFillTool(Context context, ToolType toolType) {
@@ -89,18 +89,18 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		createAndSetBitmap();
 	}
 
-	protected void setupOnShapeToolDialogChangedListener() {
-		onShapeToolOptionsChangedListener = new ShapeToolOptionsListener.OnShapeToolOptionsChangedListener() {
-			@Override
-			public void setToolType(BaseShape shape) {
-				baseShape = shape;
-				createAndSetBitmap();
-			}
-		};
-		ShapeToolOptionsListener.getInstance().setOnShapeToolOptionsChangedListener(onShapeToolOptionsChangedListener);
+	private void setupOnShapeToolDialogChangedListener() {
+		shapeToolOptionsListener.setOnShapeToolOptionsChangedListener(
+				new ShapeToolOptionsListener.OnShapeToolOptionsChangedListener() {
+					@Override
+					public void setToolType(BaseShape shape) {
+						baseShape = shape;
+						createAndSetBitmap();
+					}
+				});
 	}
 
-	protected void createAndSetBitmap() {
+	private void createAndSetBitmap() {
 		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
@@ -212,13 +212,14 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	public void resetInternalState() {
 	}
 
+	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		shapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, null);
+		LayoutInflater inflater = LayoutInflater.from(context);
+		View shapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, null);
 
 		toolSpecificOptionsLayout.addView(shapeToolOptionView);
-		ShapeToolOptionsListener.init(shapeToolOptionView);
+		shapeToolOptionsListener = new ShapeToolOptionsListener(shapeToolOptionView);
 		setupOnShapeToolDialogChangedListener();
 		toolSpecificOptionsLayout.post(new Runnable() {
 			@Override

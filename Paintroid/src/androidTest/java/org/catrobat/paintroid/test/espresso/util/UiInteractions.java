@@ -21,8 +21,10 @@ package org.catrobat.paintroid.test.espresso.util;
 
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.test.espresso.action.GeneralClickAction;
 import android.support.test.espresso.action.GeneralLocation;
@@ -38,14 +40,19 @@ import android.support.v4.view.ViewPager;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SeekBar;
 
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+
+import static org.hamcrest.Matchers.is;
 
 public final class UiInteractions {
 
@@ -71,6 +78,20 @@ public final class UiInteractions {
 			@Override
 			public void perform(UiController uiController, final View view) {
 				uiController.loopMainThreadForAtLeast(millis);
+			}
+		};
+	}
+
+	public static ViewAssertion assertListViewCount(final int expectedCount) {
+		return new ViewAssertion() {
+			@Override
+			public void check(View view, NoMatchingViewException noViewFoundException) {
+				if (noViewFoundException != null) {
+					throw noViewFoundException;
+				}
+
+				ListAdapter adapter = ((ListView) view).getAdapter();
+				assertThat(adapter.getCount(), is(expectedCount));
 			}
 		};
 	}

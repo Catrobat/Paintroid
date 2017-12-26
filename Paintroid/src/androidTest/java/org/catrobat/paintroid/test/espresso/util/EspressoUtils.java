@@ -29,8 +29,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.support.annotation.ArrayRes;
 import android.support.annotation.ColorInt;
-import android.support.annotation.IdRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.view.View;
@@ -331,7 +331,7 @@ public final class EspressoUtils {
 	}
 
 	@ColorInt
-	public static int[] getColorArrayFromResource(Context context, @IdRes int id) {
+	public static int[] getColorArrayFromResource(Context context, @ArrayRes int id) {
 		TypedArray typedColors = context.getResources().obtainTypedArray(id);
 		try {
 			@ColorInt

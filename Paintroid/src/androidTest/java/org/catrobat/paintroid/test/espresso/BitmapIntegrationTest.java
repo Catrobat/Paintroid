@@ -88,7 +88,7 @@ public class BitmapIntegrationTest {
 	public void centerBitmapSimulateLoad() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
 
 		onView(withId(R.id.drawer_layout))
-				.check(matches(isClosed(Gravity.LEFT)))
+				.check(matches(isClosed(Gravity.START)))
 				.perform(open());
 
 		onView(withId(R.id.nav_view))

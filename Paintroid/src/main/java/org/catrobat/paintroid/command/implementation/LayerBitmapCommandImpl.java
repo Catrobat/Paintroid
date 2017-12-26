@@ -90,9 +90,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 	@Override
 	public void copyLayerCommands(List<Command> commands) {
-		for (Command command : commands) {
-			commandList.add(command);
-		}
+		commandList.addAll(commands);
 	}
 
 	@Override
@@ -101,7 +99,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 	public synchronized void addCommandToUndoList() {
 		synchronized (commandList) {
-			if (commandList.size() > 0) {
+			if (!commandList.isEmpty()) {
 				Command command = commandList.removeLast();
 				undoCommandList.addFirst(command);
 			}
@@ -111,7 +109,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	public synchronized void addLayerCommandToUndoList(LayerCommand layerCommand) {
 		synchronized (commandList) {
 			synchronized (undoCommandList) {
-				if (commandList.size() > 0) {
+				if (!commandList.isEmpty()) {
 					undoCommandList.addFirst(layerCommand);
 					commandList.remove(layerCommand);
 				}
@@ -123,7 +121,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	public synchronized void redo() {
 		synchronized (undoCommandList) {
 
-			if (undoCommandList.size() != 0) {
+			if (!undoCommandList.isEmpty()) {
 				Command command = undoCommandList.removeFirst();
 				commandList.addLast(command);
 				command.run(PaintroidApplication.drawingSurface.getCanvas(), layer);
@@ -137,7 +135,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 	public Command addCommandToRedoList() {
 		synchronized (undoCommandList) {
 
-			if (undoCommandList.size() != 0) {
+			if (!undoCommandList.isEmpty()) {
 				Command command = undoCommandList.removeFirst();
 				commandList.addLast(command);
 				return command;
@@ -151,7 +149,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 			commandList.addLast(layerCommand);
 		}
 		synchronized (undoCommandList) {
-			if (undoCommandList.size() > 0) {
+			if (!undoCommandList.isEmpty()) {
 				undoCommandList.remove(layerCommand);
 			}
 		}

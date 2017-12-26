@@ -19,11 +19,11 @@
 
 package org.catrobat.paintroid.listener;
 
-import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -43,7 +43,6 @@ public final class BrushPickerView implements View.OnClickListener {
 
 	private View brushPickerView;
 	private ArrayList<BrushPickerView.OnBrushChangedListener> brushChangedListener;
-	private Paint currentPaint;
 	private TextView brushSizeText;
 	private SeekBar brushWidthSeekBar;
 	private RadioButton radioButtonCircle;
@@ -51,11 +50,11 @@ public final class BrushPickerView implements View.OnClickListener {
 	private DrawerPreview drawerPreview;
 	private int strokeWidth;
 
-	private BrushPickerView(Context context) {
+	private BrushPickerView(ViewGroup rootView) {
 		brushChangedListener = new ArrayList<>();
 
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		brushPickerView = inflater.inflate(R.layout.dialog_stroke, null);
+		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
+		brushPickerView = inflater.inflate(R.layout.dialog_stroke, rootView, false);
 
 		ImageButton buttonCircle = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_circle);
 		buttonCircle.setOnClickListener(this);
@@ -90,8 +89,8 @@ public final class BrushPickerView implements View.OnClickListener {
 		return instance;
 	}
 
-	public static void init(Context context) {
-		instance = new BrushPickerView(context);
+	public static void init(ViewGroup view) {
+		instance = new BrushPickerView(view);
 	}
 
 	@Override
@@ -119,13 +118,12 @@ public final class BrushPickerView implements View.OnClickListener {
 	}
 
 	public void setCurrentPaint(Paint currentPaint) {
-		this.currentPaint = currentPaint;
-		if (this.currentPaint.getStrokeCap() == Cap.ROUND) {
+		if (currentPaint.getStrokeCap() == Cap.ROUND) {
 			radioButtonCircle.setChecked(true);
 		} else {
 			radioButtonRect.setChecked(true);
 		}
-		brushWidthSeekBar.setProgress((int) this.currentPaint.getStrokeWidth());
+		brushWidthSeekBar.setProgress((int) currentPaint.getStrokeWidth());
 	}
 
 	public void addBrushChangedListener(OnBrushChangedListener listener) {

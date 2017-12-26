@@ -850,14 +850,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private enum FloatingBoxAction {
-		NONE, MOVE, RESIZE, ROTATE;
+		NONE, MOVE, RESIZE, ROTATE
 	}
 
 	private enum ResizeAction {
-		NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT;
+		NONE, TOP, RIGHT, BOTTOM, LEFT, TOPLEFT, TOPRIGHT, BOTTOMLEFT, BOTTOMRIGHT
 	}
 
 	private enum RotatePosition {
-		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT;
+		TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
 	}
 }

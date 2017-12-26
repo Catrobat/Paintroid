@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public abstract class FileIO {
 	private static final int BUFFER_SIZE = 1024;
@@ -119,14 +120,14 @@ public abstract class FileIO {
 	}
 
 	static String getDefaultFileName() {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-				DEFAULT_FILENAME_TIME_FORMAT);
+		SimpleDateFormat simpleDateFormat =
+				new SimpleDateFormat(DEFAULT_FILENAME_TIME_FORMAT, Locale.US);
 		return simpleDateFormat.format(new Date()) + ENDING;
 	}
 
 	static File createNewEmptyPictureFile(String filename) {
 		if (initialisePaintroidMediaDirectory()) {
-			if (!filename.toLowerCase().endsWith(ENDING.toLowerCase())) {
+			if (!filename.toLowerCase(Locale.US).endsWith(ENDING.toLowerCase(Locale.US))) {
 				filename += ENDING;
 			}
 			return new File(paintroidMediaFile, filename);

@@ -47,6 +47,14 @@
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
     </style>
 
+    <style name="HighlightColorTheme" parent="MyMaterialTheme">
+        <item name="colorControlHighlight">@color/bottom_bar_button_activated</item>
+    </style>
+
+    <style name="SelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/attribute_button_selector</item>
+    </style>
+
     <style name="WhiteDrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">false</item>
         <item name="color">@android:color/white</item>

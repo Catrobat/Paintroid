@@ -45,7 +45,7 @@ public class StatusbarIntegrationTest extends BaseIntegrationTestClass {
 	}
 
 	public void testAllButtonsAreVisible() {
-		ArrayList<Integer> expectedButtons = new ArrayList<Integer>();
+		ArrayList<Integer> expectedButtons = new ArrayList<>();
 		expectedButtons.add(R.id.btn_top_undo);
 		expectedButtons.add(R.id.btn_top_redo);
 		expectedButtons.add(R.id.btn_top_color);

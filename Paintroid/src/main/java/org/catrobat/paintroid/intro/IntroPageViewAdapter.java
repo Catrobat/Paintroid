@@ -19,26 +19,22 @@
 
 package org.catrobat.paintroid.intro;
 
-import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class IntroPageViewAdapter extends PagerAdapter {
-	private Context context;
 	private int[] layouts;
 
-	public IntroPageViewAdapter(Context context, int[] layouts) {
-		this.context = context;
+	public IntroPageViewAdapter(int[] layouts) {
 		this.layouts = new int[layouts.length];
 		System.arraycopy(layouts, 0, this.layouts, 0, this.layouts.length);
 	}
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
-		LayoutInflater layoutInflater =
-				(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater layoutInflater = LayoutInflater.from(container.getContext());
 
 		View view = layoutInflater.inflate(layouts[position], container, false);
 		container.addView(view);

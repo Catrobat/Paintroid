@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -30,7 +31,6 @@ import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -504,42 +504,34 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		}
 	}
 
+	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = LayoutInflater.from(context);
 		transformToolOptionView = inflater.inflate(R.layout.dialog_transform_tool, null);
 		toolSpecificOptionsLayout.addView(transformToolOptionView);
 
-		View.OnTouchListener transformOptionsListener = new View.OnTouchListener() {
+		View.OnClickListener onClickListener = new View.OnClickListener() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-						v.setBackgroundColor(context.getResources().getColor(R.color.bottom_bar_button_activated));
-						return true;
-					case MotionEvent.ACTION_UP:
-						v.setBackgroundColor(context.getResources().getColor(R.color.transparent));
-						switch (v.getId()) {
-							case R.id.transform_auto_crop_btn:
-								autoCrop();
-								return true;
-							case R.id.transform_rotate_left_btn:
-								rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
-								return true;
-							case R.id.transform_rotate_right_btn:
-								rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
-								return true;
-							case R.id.transform_flip_horizontal_btn:
-								flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
-								return true;
-							case R.id.transform_flip_vertical_btn:
-								flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
-								return true;
-							default:
-								return false;
-						}
+			public void onClick(View v) {
+				switch (v.getId()) {
+					case R.id.transform_auto_crop_btn:
+						autoCrop();
+						break;
+					case R.id.transform_rotate_left_btn:
+						rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
+						break;
+					case R.id.transform_rotate_right_btn:
+						rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
+						break;
+					case R.id.transform_flip_horizontal_btn:
+						flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
+						break;
+					case R.id.transform_flip_vertical_btn:
+						flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
+						break;
 					default:
-						return false;
+						break;
 				}
 			}
 		};
@@ -550,7 +542,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 				R.id.transform_flip_horizontal_btn, R.id.transform_flip_vertical_btn};
 
 		for (int id : buttonIdList) {
-			transformToolOptionView.findViewById(id).setOnTouchListener(transformOptionsListener);
+			transformToolOptionView.findViewById(id).setOnClickListener(onClickListener);
 		}
 
 		toolSpecificOptionsLayout.post(new Runnable() {

@@ -123,14 +123,14 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 			mButtonTopRedo = (ImageButton) getActivity().findViewById(R.id.btn_top_redo);
 			mButtonTopColor = (ImageButton) getActivity().findViewById(R.id.btn_top_color);
 			mButtonTopLayer = getActivity().findViewById(R.id.btn_top_layers);
-			mButtonAddLayer = getActivity().findViewById(R.id.mButtonLayerNew);
-			mButtonDeleteLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerDelete);
-			mButtonMergeLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerMerge);
-			mButtonRenameLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerRename);
-			mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-
-			mButtonLockLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerLock);
-			mButtonInvisibleLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerVisible);
+//			mButtonAddLayer = getActivity().findViewById(R.id.mButtonLayerNew);
+//			mButtonDeleteLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerDelete);
+//			mButtonMergeLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerMerge);
+//			mButtonRenameLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerRename);
+//			mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+//
+//			mButtonLockLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerLock);
+//			mButtonInvisibleLayer = (ImageButton) getActivity().findViewById(R.id.mButtonLayerVisible);
 			mScreenWidth = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getWidth();
 			mScreenHeight = mSolo.getCurrentActivity().getWindowManager().getDefaultDisplay().getHeight();
 			Log.d("Paintroid test", "setup" + setup++);
@@ -288,55 +288,55 @@ public class BaseIntegrationTestClass extends ActivityInstrumentationTestCase2<M
 	}
 
 	protected View verticalScrollToToolButton(ToolType toolType) {
-		ScrollView scrollView = (ScrollView) mSolo.getView(R.id.bottom_bar_landscape_scroll_view);
-		int scrollBottom = 1;
-		int scrollTop = -1;
+//		ScrollView scrollView = (ScrollView) mSolo.getView(R.id.bottom_bar_landscape_scroll_view);
+//		int scrollBottom = 1;
+//		int scrollTop = -1;
 		View toolButtonView = null;
-
-		while (scrollView.canScrollVertically(scrollTop)) {
-			scrollToolBarToTop();
-		}
-
-		float scrollPosBottom = scrollView.getY() + scrollView.getHeight();
-		int[] btnLocation = {0, 0};
-		getToolButtonView(toolType).getLocationOnScreen(btnLocation);
-		float btnPos = btnLocation[1] + (getToolButtonView(toolType).getHeight() / 2.0f);
-
-		if (btnPos < scrollPosBottom) {
-			toolButtonView =  getToolButtonView(toolType);
-		}
-		float fromX, toX, fromY, toY = 0;
-		int stepCount = 20;
-		int screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-		int screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-		while (scrollView.canScrollVertically(scrollBottom) && toolButtonView == null) {
-			fromX = screenWidth -  scrollView.getWidth() / 2;
-			toX = fromX;
-			fromY = screenHeight / 2;
-			toY = screenHeight / 4 - screenHeight / 8;
-			mSolo.drag(fromX, toX, fromY, toY, stepCount);
-			getToolButtonView(toolType).getLocationOnScreen(btnLocation);
-			btnPos = btnLocation[1] + (getToolButtonView(toolType).getHeight() / 2.0f);
-			if (btnPos < scrollPosBottom) {
-				toolButtonView = getToolButtonView(toolType);
-				break;
-			}
-		}
+//
+//		while (scrollView.canScrollVertically(scrollTop)) {
+//			scrollToolBarToTop();
+//		}
+//
+//		float scrollPosBottom = scrollView.getY() + scrollView.getHeight();
+//		int[] btnLocation = {0, 0};
+//		getToolButtonView(toolType).getLocationOnScreen(btnLocation);
+//		float btnPos = btnLocation[1] + (getToolButtonView(toolType).getHeight() / 2.0f);
+//
+//		if (btnPos < scrollPosBottom) {
+//			toolButtonView =  getToolButtonView(toolType);
+//		}
+//		float fromX, toX, fromY, toY = 0;
+//		int stepCount = 20;
+//		int screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+//		int screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+//		while (scrollView.canScrollVertically(scrollBottom) && toolButtonView == null) {
+//			fromX = screenWidth -  scrollView.getWidth() / 2;
+//			toX = fromX;
+//			fromY = screenHeight / 2;
+//			toY = screenHeight / 4 - screenHeight / 8;
+//			mSolo.drag(fromX, toX, fromY, toY, stepCount);
+//			getToolButtonView(toolType).getLocationOnScreen(btnLocation);
+//			btnPos = btnLocation[1] + (getToolButtonView(toolType).getHeight() / 2.0f);
+//			if (btnPos < scrollPosBottom) {
+//				toolButtonView = getToolButtonView(toolType);
+//				break;
+//			}
+//		}
 
 		assertNotNull("Tool button not found", toolButtonView);
 		return toolButtonView;
 	}
 
 	private void scrollToolBarToTop() {
-		ScrollView scrollView = (ScrollView) mSolo.getView(R.id.bottom_bar_landscape_scroll_view);
-		int[] screenLocation = {0, 0};
-		scrollView.getLocationOnScreen(screenLocation);
-		int getAwayFromTop = 42;
-		float fromY = screenLocation[1] + getAwayFromTop;
-		float toY = scrollView.getHeight();
-		float xPos = screenLocation[0] + (scrollView.getWidth() / 2.0f);
-
-		mSolo.drag(xPos, xPos, fromY, toY, 1);
+//		ScrollView scrollView = (ScrollView) mSolo.getView(R.id.bottom_bar_landscape_scroll_view);
+//		int[] screenLocation = {0, 0};
+//		scrollView.getLocationOnScreen(screenLocation);
+//		int getAwayFromTop = 42;
+//		float fromY = screenLocation[1] + getAwayFromTop;
+//		float toY = scrollView.getHeight();
+//		float xPos = screenLocation[0] + (scrollView.getWidth() / 2.0f);
+//
+//		mSolo.drag(xPos, xPos, fromY, toY, 1);
 	}
 
 	private void scrollToolBarToLeft() {

@@ -17,9 +17,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true" android:drawable="@color/bottom_bar_button_activated"/>
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/dialog_title_color"/>
+            <solid android:color="#1f000000" />
         </shape>
     </item>
 </selector>

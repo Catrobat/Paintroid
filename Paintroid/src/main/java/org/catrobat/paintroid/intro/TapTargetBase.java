@@ -68,28 +68,25 @@ public abstract class TapTargetBase {
 				bottomBarView.findViewById(R.id.bottom_bar_scroll_view);
 	}
 
-	private static ToolType getToolTypeFromView(View view) {
-		ToolType toolType = null;
-
+	private static ToolTypeViewTuple getToolTypeFromView(View view) {
 		for (ToolType type : ToolType.values()) {
 			if (view.getId() == type.getToolButtonID() && view.getVisibility() == View.VISIBLE) {
-				toolType = type;
-				break;
+				return new ToolTypeViewTuple(type, view);
 			}
 		}
 
-		if (toolType == null && view instanceof ViewGroup) {
+		if (view instanceof ViewGroup) {
 			ViewGroup viewGroup = (ViewGroup) view;
 
 			for (int i = 0; i < viewGroup.getChildCount(); i++) {
-				toolType = getToolTypeFromView(viewGroup.getChildAt(i));
-				if (toolType != null) {
-					return toolType;
+				ToolTypeViewTuple tuple = getToolTypeFromView(viewGroup.getChildAt(i));
+				if (tuple != null) {
+					return tuple;
 				}
 			}
 		}
 
-		return toolType;
+		return null;
 	}
 
 	private void addClickListener(View view, final ToolType toolType) {
@@ -111,13 +108,12 @@ public abstract class TapTargetBase {
 	public void initTargetView() {
 		for (int i = 0; i < targetView.getChildCount(); i++) {
 			View view = targetView.getChildAt(i);
-			ToolType toolType = getToolTypeFromView(view);
-			if (toolType == null) {
+			ToolTypeViewTuple tuple = getToolTypeFromView(view);
+			if (tuple == null) {
 				continue;
 			}
-
-			tapTargetMap.put(toolType, createTapTarget(toolType, view));
-			addClickListener(view, toolType);
+			tapTargetMap.put(tuple.toolType, createTapTarget(tuple.toolType, view));
+			addClickListener(tuple.view, tuple.toolType);
 		}
 
 		setBottomBarListener();
@@ -155,5 +151,15 @@ public abstract class TapTargetBase {
 				.cancelable(true)
 				.outerCircleColor(R.color.custom_background_color)
 				.targetCircleColor(R.color.color_chooser_white);
+	}
+
+	static final class ToolTypeViewTuple {
+		public final ToolType toolType;
+		public final View view;
+
+		ToolTypeViewTuple(ToolType toolType, View view) {
+			this.toolType = toolType;
+			this.view = view;
+		}
 	}
 }
