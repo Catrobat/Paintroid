@@ -39,17 +39,17 @@
 package org.catrobat.paintroid.dialog.colorpicker;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 
 import org.catrobat.paintroid.R;
 
-public class ColorPickerView extends LinearLayout {
+public class ColorPickerView extends LinearLayoutCompat {
 
 	private final String rgbTag = getContext().getString(R.string.color_rgb);
 	private final String preTag = getContext().getString(R.string.color_pre);
