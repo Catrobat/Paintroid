@@ -17,45 +17,38 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <ImageButton
+        android:id="@+id/layer_side_nav_button_add"
+        style="?borderlessButtonStyle"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:contentDescription="@string/layer_new"
+        android:padding="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/layer_new_button_selector"
+        android:theme="@style/HighlightColorTheme" />
 
-        <ImageButton
-            android:id="@+id/layer_side_nav_button_add"
-            style="?borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/layer_new"
-            android:src="@drawable/layer_new_button_selector"
-            android:scaleType="fitXY"
-            android:padding="0dp"
-            android:theme="@style/HighlightColorTheme" />
-
-        <ImageButton
-            android:id="@+id/layer_side_nav_button_delete"
-            style="?borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/layer_delete"
-            android:src="@drawable/layer_delete_button_selector"
-            android:scaleType="fitXY"
-            android:padding="0dp"
-            android:theme="@style/HighlightColorTheme" />
-
-    </LinearLayout>
+    <ImageButton
+        android:id="@+id/layer_side_nav_button_delete"
+        style="?borderlessButtonStyle"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/layer_side_nav_button_add"
+        android:contentDescription="@string/layer_delete"
+        android:padding="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/layer_delete_button_selector"
+        android:theme="@style/HighlightColorTheme" />
 
     <ListView
         android:id="@+id/nav_layer_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="fill_horizontal"
-        android:scaleType="fitStart" />
-</LinearLayout>
+        android:layout_below="@id/layer_side_nav_button_add"
+        tools:listitem="@layout/layer_button" />
+</RelativeLayout>

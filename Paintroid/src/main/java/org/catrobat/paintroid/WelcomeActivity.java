@@ -73,7 +73,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 			if (layouts[position] == R.layout.islide_tools) {
 
-				LinearLayout layout = (LinearLayout) findViewById(R.id.intro_tools_bottom_bar);
+				View layout = findViewById(R.id.intro_tools_bottom_bar);
 				LinearLayout mToolsLayout = (LinearLayout) layout.findViewById(R.id.tools_layout);
 				final View fadeView = findViewById(R.id.intro_tools_textview);
 

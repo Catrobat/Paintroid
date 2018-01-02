@@ -26,6 +26,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.Root;
@@ -167,15 +168,21 @@ public final class UiMatcher {
 		return new TypeSafeMatcher<View>() {
 			@Override
 			protected boolean matchesSafely(View view) {
-				ColorDrawable colorDrawable = ((ColorDrawable) view.getBackground());
+				Drawable background = view.getBackground();
 
-				if (colorDrawable == null) {
+				if (background == null) {
 					return false;
 				}
 
-				int bgColor = colorDrawable.getColor();
-
-				return (bgColor == color);
+				if (background instanceof ColorDrawable) {
+					return color == ((ColorDrawable) background).getColor();
+				} else if (background instanceof LayerDrawable) {
+					LayerDrawable layerDrawable = (LayerDrawable) background;
+					Drawable drawable = layerDrawable.getDrawable(0);
+					return (drawable instanceof ColorDrawable
+							&& color == ((ColorDrawable) drawable).getColor());
+				}
+				return false;
 			}
 
 			@Override
