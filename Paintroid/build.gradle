@@ -17,6 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
