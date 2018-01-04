@@ -40,6 +40,7 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.ToastFactory;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
@@ -187,10 +188,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 	@Override
 	protected void onClickInBox() {
 		if (!readyForPaste) {
-			if (copyHintToast != null) {
-				copyHintToast.cancel();
-			}
-			copyHintToast = Toast.makeText(context, context.getResources().getString(R.string.stamp_tool_copy_hint), Toast.LENGTH_SHORT);
+			copyHintToast = ToastFactory.makeText(context, R.string.stamp_tool_copy_hint, Toast.LENGTH_SHORT);
 			copyHintToast.show();
 		} else if (drawingBitmap != null && !drawingBitmap.isRecycled()) {
 

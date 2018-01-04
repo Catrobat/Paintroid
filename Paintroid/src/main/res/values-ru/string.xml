@@ -92,7 +92,6 @@
   <string name="menu_quit">Выход</string>
   <string name="save_button_text">Сохранить</string>
   <string name="discard_button_text">Сброс</string>
-  <string name="resize_to_resize_tap_text">нажмите, чтобы изменить размер</string>
   <string name="resize_nothing_to_resize">нечего менять</string>
   <string name="resize_max_image_resolution_reached">достигнуто максимальное разрешение изображения</string>
   <string name="text_tool_dialog_input_title">Ваш текст:</string>

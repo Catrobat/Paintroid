@@ -46,6 +46,7 @@ import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
+import org.catrobat.paintroid.ui.ToastFactory;
 
 import java.io.File;
 
@@ -338,10 +339,10 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		protected void onPostExecute(Void Result) {
 			IndeterminateProgressDialog.getInstance().dismiss();
 			if (!PaintroidApplication.saveCopy) {
-				Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG)
+				ToastFactory.makeText(context, R.string.saved, Toast.LENGTH_LONG)
 						.show();
 			} else {
-				Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG)
+				ToastFactory.makeText(context, R.string.copy, Toast.LENGTH_LONG)
 						.show();
 				PaintroidApplication.saveCopy = false;
 			}

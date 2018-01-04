@@ -92,7 +92,6 @@
   <string name="menu_quit">Stoppen</string>
   <string name="save_button_text">Opslaan</string>
   <string name="discard_button_text">Weggooien</string>
-  <string name="resize_to_resize_tap_text">klik om te schalen</string>
   <string name="resize_nothing_to_resize">niets om te schalen</string>
   <string name="resize_max_image_resolution_reached">max beeldresolutie bereikt</string>
   <string name="text_tool_dialog_input_title">Jouw tekst:</string>

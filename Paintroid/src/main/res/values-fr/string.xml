@@ -92,7 +92,6 @@
   <string name="menu_quit">Quit</string>
   <string name="save_button_text">Enregistrer</string>
   <string name="discard_button_text">Discard</string>
-  <string name="resize_to_resize_tap_text">to resize tap</string>
   <string name="resize_nothing_to_resize">nothing to resize</string>
   <string name="resize_max_image_resolution_reached">max image resolution reached</string>
   <string name="text_tool_dialog_input_title">Your text:</string>

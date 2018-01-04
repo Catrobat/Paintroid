@@ -28,6 +28,7 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
+import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.ToastFactory;
 
 import java.util.List;
 import java.util.Observable;
@@ -60,12 +62,17 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private static final boolean RESIZE_POINTS_VISIBLE = false;
 	private static final boolean RESPECT_MAXIMUM_BORDER_RATIO = false;
 	private static final boolean RESPECT_MAXIMUM_BOX_RESOLUTION = true;
-	private static final float MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f;
+	@VisibleForTesting
+	public static final float MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f;
 
-	private float resizeBoundWidthXLeft;
-	private float resizeBoundWidthXRight = 0;
-	private float resizeBoundHeightYTop;
-	private float resizeBoundHeightYBottom = 0;
+	@VisibleForTesting
+	public float resizeBoundWidthXLeft;
+	@VisibleForTesting
+	public float resizeBoundWidthXRight = 0;
+	@VisibleForTesting
+	public float resizeBoundHeightYTop;
+	@VisibleForTesting
+	public float resizeBoundHeightYBottom = 0;
 
 	private boolean cropRunFinished = false;
 	private boolean maxImageResolutionInformationAlreadyShown = false;
@@ -93,7 +100,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 		cropRunFinished = true;
 
-		final DisplayMetrics metrics = this.context.getResources().getDisplayMetrics();
+		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		setMaximumBoxResolution(metrics.widthPixels * metrics.heightPixels
 				* MAXIMUM_BITMAP_SIZE_FACTOR);
 		setRespectMaximumBoxResolution(RESPECT_MAXIMUM_BOX_RESOLUTION);
@@ -354,10 +361,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		resetScaleAndTranslation();
 	}
 
-	protected void displayToastInformation(int stringID) {
-		Toast.makeText(context, stringID, Toast.LENGTH_SHORT).show();
-	}
-
 	protected void executeResizeCommand() {
 		if (cropRunFinished) {
 			cropRunFinished = false;
@@ -378,7 +381,8 @@ public class TransformTool extends BaseToolWithRectangleShape {
 				}
 			} else {
 				cropRunFinished = true;
-				displayToastInformation(R.string.resize_nothing_to_resize);
+				ToastFactory.makeText(context, R.string.resize_nothing_to_resize,
+						Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
@@ -496,7 +500,8 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			float oldPosX, float oldPosY) {
 		super.preventThatBoxGetsTooLarge(oldWidth, oldHeight, oldPosX, oldPosY);
 		if (!maxImageResolutionInformationAlreadyShown) {
-			displayToastInformation(R.string.resize_max_image_resolution_reached);
+			ToastFactory.makeText(context, R.string.resize_max_image_resolution_reached,
+					Toast.LENGTH_SHORT).show();
 			maxImageResolutionInformationAlreadyShown = true;
 		}
 	}
@@ -554,7 +559,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	public void toggleShowToolOptions() {
 		super.toggleShowToolOptions();
 		if (!toolOptionsShown) {
-			Toast.makeText(context, R.string.transform_info_text, Toast.LENGTH_LONG).show();
+			ToastFactory.makeText(context, R.string.transform_info_text, Toast.LENGTH_LONG).show();
 		}
 	}
 }

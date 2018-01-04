@@ -92,7 +92,6 @@
   <string name="menu_quit">退出</string>
   <string name="save_button_text">保存</string>
   <string name="discard_button_text">放弃</string>
-  <string name="resize_to_resize_tap_text">点击调整大小</string>
   <string name="resize_nothing_to_resize">没有什么可调整大小</string>
   <string name="resize_max_image_resolution_reached">达到最大图像分辨率</string>
   <string name="text_tool_dialog_input_title">您的文本：</string>

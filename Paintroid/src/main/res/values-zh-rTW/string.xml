@@ -92,7 +92,6 @@
   <string name="menu_quit">離開</string>
   <string name="save_button_text">存檔</string>
   <string name="discard_button_text">取消</string>
-  <string name="resize_to_resize_tap_text">改變大小</string>
   <string name="resize_nothing_to_resize">沒有改變大小</string>
   <string name="resize_max_image_resolution_reached">到達圖案最大解析度</string>
   <string name="text_tool_dialog_input_title">Your text:</string>

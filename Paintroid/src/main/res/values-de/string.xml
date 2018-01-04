@@ -92,7 +92,6 @@
   <string name="menu_quit">Verlassen</string>
   <string name="save_button_text">Speichern</string>
   <string name="discard_button_text">Verwerfen</string>
-  <string name="resize_to_resize_tap_text">Tippe um die Größe zu ändern</string>
   <string name="resize_nothing_to_resize">nichts zu verändern</string>
   <string name="resize_max_image_resolution_reached">Maximale Bildauflösung erreicht</string>
   <string name="text_tool_dialog_input_title">Dein Text:</string>

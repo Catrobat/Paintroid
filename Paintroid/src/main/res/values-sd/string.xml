@@ -92,7 +92,6 @@
   <string name="menu_quit">بند ڪريو</string>
   <string name="save_button_text">محفوظ</string>
   <string name="discard_button_text">مسترد ڪريو</string>
-  <string name="resize_to_resize_tap_text">سائيز مَٽائڻ لاءِ ٽيپ ڪريو</string>
   <string name="resize_nothing_to_resize">سائيز مَٽائڻ لاءِ ڪجھ ڪونهي</string>
   <string name="resize_max_image_resolution_reached">تصوير جو رزالوشن ان کان مٿي نه ٿيندو</string>
   <string name="text_tool_dialog_input_title">اوهان جو متن:</string>

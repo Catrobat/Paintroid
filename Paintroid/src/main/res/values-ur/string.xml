@@ -96,7 +96,6 @@
   <string name="menu_quit">بند کریں</string>
   <string name="save_button_text">محفوظ </string>
   <string name="discard_button_text">مسترد کریں</string>
-  <string name="resize_to_resize_tap_text">ٹیپ کا سائز تبدیل کریں۔</string>
   <string name="resize_nothing_to_resize">سائز تبدیل نہیں ہوا ہے۔</string>
   <string name="resize_max_image_resolution_reached">زیادہ سے زیادہ تصویر کے  ریسیلیوشن  تک پہنچ گئی
 </string>

@@ -43,8 +43,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -59,10 +57,9 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getToolMem
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isToast;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -237,15 +234,9 @@ public class StampToolIntegrationTest {
 	public void testCopyToastIsShown() throws NoSuchFieldException, IllegalAccessException {
 		selectTool(ToolType.STAMP);
 
-		// TODO: idling resource for toast
-		// Wait until tool name toast disappears (caused by selectTool)
-		waitMillis(3000);
-
 		clickInStampBox(Tap.SINGLE);
 
-		onView(withText(R.string.stamp_tool_copy_hint))
-				.inRoot(isToast())
-				.check(matches(isDisplayed()));
+		waitForToast(withText(R.string.stamp_tool_copy_hint), 3000);
 	}
 
 	private void invokeCreateAndSetBitmap(Object object) throws NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {

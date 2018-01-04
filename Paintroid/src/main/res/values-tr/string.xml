@@ -92,7 +92,6 @@
   <string name="menu_quit">Çık</string>
   <string name="save_button_text">Kaydet</string>
   <string name="discard_button_text">Vazgeç</string>
-  <string name="resize_to_resize_tap_text">yeniden boyutlandırmak için dokun</string>
   <string name="resize_nothing_to_resize">yeniden boyutlandırılacak bir şey yok</string>
   <string name="resize_max_image_resolution_reached">maksimum görüntü çözünürlüğüne ulaşıldı</string>
   <string name="text_tool_dialog_input_title">Metniniz:</string>
