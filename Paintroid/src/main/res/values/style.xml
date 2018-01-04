@@ -36,6 +36,10 @@
         <item name="android:windowMinWidthMinor">0%</item>
     </style>
 
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/launch</item>
+    </style>
+
     <style name="MyMaterialTheme" parent="MyMaterialTheme.Base" />
 
     <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
