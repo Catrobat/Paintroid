@@ -302,14 +302,12 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	protected void drawToolSpecifics(Canvas canvas) {
+	protected void drawToolSpecifics(Canvas canvas, float boxWidth, float boxHeight) {
 		if (cropRunFinished) {
 			linePaint.setColor(primaryShapeColor);
 			linePaint.setStrokeWidth(toolStrokeWidth * 2);
 
 			PointF rightTopPoint = new PointF(-boxWidth / 2, -boxHeight / 2);
-
-			float tempWidth = boxWidth;
 
 			for (int lines = 0; lines < 4; lines++) {
 				float resizeLineLengthHeight = boxHeight / 10;
@@ -335,7 +333,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 				boxHeight = boxWidth;
 				boxWidth = tempHeight;
 			}
-			boxWidth = tempWidth;
 		}
 	}
 

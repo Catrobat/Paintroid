@@ -28,6 +28,7 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.Region;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -100,16 +101,17 @@ public class DrawingSurface extends SurfaceView implements
 			}
 
 			PaintroidApplication.perspective.applyToCanvas(surfaceViewCanvas);
+			surfaceViewCanvas.save();
+			surfaceViewCanvas.clipRect(workingBitmapRect, Region.Op.DIFFERENCE);
 			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
-			surfaceViewCanvas.drawRect(workingBitmapRect,
-					BaseTool.CHECKERED_PATTERN);
+			surfaceViewCanvas.restore();
+			surfaceViewCanvas.drawRect(workingBitmapRect, BaseTool.CHECKERED_PATTERN);
 			surfaceViewCanvas.drawRect(workingBitmapRect, framePaint);
 
 			if (workingBitmap != null && !workingBitmap.isRecycled()
 					&& surfaceCanBeUsed) {
 
 				ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
-				opacityPaint = new Paint();
 
 				for (int i = layers.size() - 1; i >= 0; i--) {
 					surfaceViewCanvas.drawBitmap(layers.get(i).getImage(), 0, 0, opacityPaint);

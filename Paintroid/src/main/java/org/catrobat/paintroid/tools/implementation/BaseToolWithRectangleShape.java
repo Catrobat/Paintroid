@@ -262,37 +262,42 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	public void drawShape(Canvas canvas) {
 		initScaleDependedValues();
 
+		float boxWidth = this.boxWidth;
+		float boxHeight = this.boxHeight;
+		float boxRotation = this.boxRotation;
+		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
+
 		canvas.translate(toolPosition.x, toolPosition.y);
 		canvas.rotate(boxRotation);
 
 		if (backgroundShadowEnabled) {
-			drawBackgroundShadow(canvas);
+			drawBackgroundShadow(canvas, boxWidth, boxHeight, boxRotation, toolPosition);
 		}
 
 		if (resizePointsVisible) {
-			drawResizePoints(canvas);
+			drawResizePoints(canvas, boxWidth, boxHeight);
 		}
 
 		if (drawingBitmap != null && rotationEnabled) {
-			drawRotationArrows(canvas);
+			drawRotationArrows(canvas, boxWidth, boxHeight);
 		}
 
 		if (drawingBitmap != null) {
-			drawBitmap(canvas);
+			drawBitmap(canvas, boxWidth, boxHeight);
 		}
 		if (overlayBitmap != null) {
-			drawOverlayBitmap(canvas);
+			drawOverlayBitmap(canvas, boxWidth, boxHeight);
 		}
 
-		drawRectangle(canvas);
-		drawToolSpecifics(canvas);
+		drawRectangle(canvas, boxWidth, boxHeight);
+		drawToolSpecifics(canvas, boxWidth, boxHeight);
 
 		if (statusIconEnabled) {
 			drawStatus(canvas);
 		}
 	}
 
-	private void drawBackgroundShadow(Canvas canvas) {
+	private void drawBackgroundShadow(Canvas canvas, float boxWidth, float boxHeight, float boxRotation, PointF toolPosition) {
 
 		Paint backgroundPaint = new Paint();
 		backgroundPaint.setColor(Color.argb(128, 0, 0, 0));
@@ -312,7 +317,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.rotate(boxRotation);
 	}
 
-	private void drawResizePoints(Canvas canvas) {
+	private void drawResizePoints(Canvas canvas, float boxWidth, float boxHeight) {
 		float circleRadius = getInverselyProportionalSizeForZoom(RESIZE_CIRCLE_SIZE);
 		Paint circlePaint = new Paint();
 		circlePaint.setAntiAlias(true);
@@ -332,7 +337,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				circlePaint);
 	}
 
-	private void drawRotationArrows(Canvas canvas) {
+	private void drawRotationArrows(Canvas canvas, float boxWidth, float boxHeight) {
 		float arcStrokeWidth = getInverselyProportionalSizeForZoom(ROTATION_ARROW_ARC_STROKE_WIDTH);
 		float arcRadius = getInverselyProportionalSizeForZoom(ROTATION_ARROW_ARC_RADIUS);
 		float arrowSize = getInverselyProportionalSizeForZoom(ROTATION_ARROW_HEAD_SIZE);
@@ -383,8 +388,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 	}
 
-	protected void drawBitmap(Canvas canvas) {
-
+	protected void drawBitmap(Canvas canvas, float boxWidth, float boxHeight) {
 		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
 		canvas.save();
 
@@ -394,15 +398,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				boxWidth / 2, boxHeight / 2), bitmapPaint);
 	}
 
-	private void drawOverlayBitmap(Canvas canvas) {
-
+	private void drawOverlayBitmap(Canvas canvas, float boxWidth, float boxHeight) {
 		Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
 
 		canvas.drawBitmap(overlayBitmap, null, new RectF(-boxWidth / 2, -boxHeight / 2,
 				boxWidth / 2, boxHeight / 2), bitmapPaint);
 	}
 
-	private void drawRectangle(Canvas canvas) {
+	private void drawRectangle(Canvas canvas, float boxWidth, float boxHeight) {
 		linePaint.setStrokeWidth(toolStrokeWidth);
 		linePaint.setColor(secondaryShapeColor);
 		canvas.drawRect(new RectF(-boxWidth / 2, -boxHeight / 2,
@@ -774,7 +777,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	protected abstract void onClickInBox();
 
-	protected abstract void drawToolSpecifics(Canvas canvas);
+	protected void drawToolSpecifics(Canvas canvas, float boxWidth, float boxHeight) {
+	}
 
 	protected void preventThatBoxGetsTooLarge(float oldWidth, float oldHeight,
 			float oldPosX, float oldPosY) {
