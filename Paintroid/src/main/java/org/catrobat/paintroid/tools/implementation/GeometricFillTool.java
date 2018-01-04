@@ -204,11 +204,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	protected void drawToolSpecifics(Canvas canvas) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public void resetInternalState() {
 	}
 
