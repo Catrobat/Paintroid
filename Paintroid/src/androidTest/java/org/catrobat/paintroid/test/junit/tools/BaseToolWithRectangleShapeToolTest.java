@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.junit.tools;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.support.test.annotation.UiThreadTest;
 
@@ -600,6 +601,10 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		@Override
 		protected void onClickInBox() {
 			drawingBitmap = Bitmap.createBitmap(1, 1, Config.ALPHA_8);
+		}
+
+		@Override
+		protected void drawToolSpecifics(Canvas canvas) {
 		}
 	}
 }

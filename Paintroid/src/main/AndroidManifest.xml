@@ -59,7 +59,7 @@
             android:configChanges="orientation|locale"
             android:label="${appName}"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/WelcomeActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

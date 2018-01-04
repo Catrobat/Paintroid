@@ -20,27 +20,32 @@
 package org.catrobat.paintroid.dialog.colorpicker;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.annotation.ColorInt;
-import android.support.v7.appcompat.R;
-import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatButton;
 
-public class ColorPickerPresetColorButton extends AppCompatImageButton {
+public class ColorPickerPresetColorButton extends AppCompatButton {
 
-	@ColorInt
-	int color;
+	private Paint colorPaint = new Paint();
 
 	public ColorPickerPresetColorButton(Context context) {
 		this(context, Color.BLACK);
 	}
 
 	public ColorPickerPresetColorButton(Context context, @ColorInt int color) {
-		super(context, null, R.attr.borderlessButtonStyle);
-		this.color = color;
-		setBackground(ColorPickerDialog.CustomColorDrawable.createDrawable(color));
+		super(context);
+		colorPaint.setColor(color);
+	}
+
+	@Override
+	protected void onDraw(Canvas canvas) {
+		canvas.drawPaint(ColorPickerDialog.backgroundPaint);
+		canvas.drawPaint(colorPaint);
 	}
 
 	public @ColorInt int getColor() {
-		return color;
+		return colorPaint.getColor();
 	}
 }

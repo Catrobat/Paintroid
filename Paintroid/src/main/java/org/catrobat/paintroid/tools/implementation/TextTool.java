@@ -252,6 +252,10 @@ public class TextTool extends BaseToolWithRectangleShape {
 		toolPosition.y = boxHeight / 2.0f + marginTop;
 	}
 
+	@Override
+	protected void drawToolSpecifics(Canvas canvas) {
+	}
+
 	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {

@@ -44,6 +44,7 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -95,7 +96,7 @@ public class PresetSelectorView extends LinearLayout {
 		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < presetColors
 				.length(); colorButtonIndexInRow++) {
 			int color = presetColors.getColor(colorButtonIndexInRow, Color.TRANSPARENT);
-			View colorButton = new ColorPickerPresetColorButton(context, color);
+			Button colorButton = new ColorPickerPresetColorButton(context, color);
 			colorButton.setOnClickListener(presetButtonListener);
 			colorButtonsTableRow.addView(colorButton, colorButtonLayoutParameters);
 
