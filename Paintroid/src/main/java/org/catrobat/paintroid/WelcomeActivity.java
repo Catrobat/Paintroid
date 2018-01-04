@@ -108,6 +108,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(R.style.WelcomeActivityTheme);
 		super.onCreate(savedInstanceState);
 
 		session = new Session(this);
