@@ -39,20 +39,13 @@
 package org.catrobat.paintroid.dialog.colorpicker;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader.TileMode;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.view.View;
 import android.widget.Button;
 
@@ -65,11 +58,13 @@ import java.util.ArrayList;
 public final class ColorPickerDialog extends BaseDialog {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "ColorPickerDialog has not been initialized. Call init() first!";
+	static int newColor;
 	static Paint backgroundPaint = new Paint();
 	private static ColorPickerDialog instance;
 	private ColorPickerView colorPickerView;
 	private ArrayList<OnColorPickedListener> onColorPickedListener;
 	private Button buttonNewColor;
+	private CheckeredTransparentLinearLayout baseButtonLayout;
 
 	private ColorPickerDialog(Context context) {
 		super(context);
@@ -114,6 +109,7 @@ public final class ColorPickerDialog extends BaseDialog {
 				TileMode.REPEAT, TileMode.REPEAT);
 
 		backgroundPaint.setShader(mBackgroundShader);
+		baseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.colorchooser_ok_button_base_layout);
 		buttonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
 		colorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
 	}
@@ -125,6 +121,7 @@ public final class ColorPickerDialog extends BaseDialog {
 		buttonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				updateColorChange(newColor);
 				dismiss();
 			}
 		});
@@ -154,36 +151,16 @@ public final class ColorPickerDialog extends BaseDialog {
 	}
 
 	private void changeNewColor(int color) {
-		buttonNewColor.setBackground(CustomColorDrawable.createDrawable(color));
+		newColor = color;
+		baseButtonLayout.updateBackground(backgroundPaint);
+		buttonNewColor.setBackgroundColor(color);
 
-		int referenceColor = (Color.red(color) + Color.blue(color) + Color.green(color)) / 3;
+		int referenceColor = (Color.red(color) + Color.blue(color) + Color
+				.green(color)) / 3;
 		if (referenceColor <= 128 && Color.alpha(color) > 5) {
 			buttonNewColor.setTextColor(Color.WHITE);
 		} else {
 			buttonNewColor.setTextColor(Color.BLACK);
-		}
-	}
-
-	static final class CustomColorDrawable extends ColorDrawable {
-		private CustomColorDrawable(@ColorInt int color) {
-			super(color);
-		}
-
-		@Override
-		public void draw(Canvas canvas) {
-			if (Color.alpha(getColor()) != 0xff) {
-				canvas.drawRect(getBounds(), backgroundPaint);
-			}
-			super.draw(canvas);
-		}
-
-		static Drawable createDrawable(@ColorInt int color) {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-				return new CustomColorDrawable(color);
-			} else {
-				return new RippleDrawable(ColorStateList.valueOf(Color.WHITE),
-						new CustomColorDrawable(color), null);
-			}
 		}
 	}
 
