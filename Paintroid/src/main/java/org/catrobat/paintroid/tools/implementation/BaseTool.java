@@ -37,6 +37,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -135,6 +136,14 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		toolOptionsLayout = (LinearLayout) ((Activity) context).findViewById(R.id.layout_tool_options);
 		toolSpecificOptionsLayout = (LinearLayout) ((Activity) context).findViewById(R.id.layout_tool_specific_options);
 		resetAndInitializeToolOptions();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle) {
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
 	}
 
 	@Override

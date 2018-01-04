@@ -24,6 +24,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.os.Bundle;
 
 public interface Tool {
 
@@ -60,6 +61,10 @@ public interface Tool {
 	void hide();
 
 	void toggleShowToolOptions();
+
+	void onSaveInstanceState(Bundle bundle);
+
+	void onRestoreInstanceState(Bundle bundle);
 
 	void setupToolOptions();
 

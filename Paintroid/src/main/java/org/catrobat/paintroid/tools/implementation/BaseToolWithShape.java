@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 
@@ -43,6 +44,9 @@ public abstract class BaseToolWithShape extends BaseTool implements
 	protected int secondaryShapeColor = PaintroidApplication.applicationContext
 			.getResources().getColor(R.color.rectangle_secondary_color);
 	protected Paint linePaint;
+
+	private static final String BUNDLE_TOOL_POSITION_X = "TOOL_POSITION_X";
+	private static final String BUNDLE_TOOL_POSITION_Y = "TOOL_POSITION_Y";
 
 	public BaseToolWithShape(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -75,6 +79,22 @@ public abstract class BaseToolWithShape extends BaseTool implements
 		float displayScale = context.getResources().getDisplayMetrics().density;
 		float applicationScale = PaintroidApplication.perspective.getScale();
 		return (defaultSize * displayScale) / applicationScale;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
+
+		bundle.putFloat(BUNDLE_TOOL_POSITION_X, toolPosition.x);
+		bundle.putFloat(BUNDLE_TOOL_POSITION_Y, toolPosition.y);
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
+		super.onRestoreInstanceState(bundle);
+
+		toolPosition.x = bundle.getFloat(BUNDLE_TOOL_POSITION_X, toolPosition.x);
+		toolPosition.y = bundle.getFloat(BUNDLE_TOOL_POSITION_Y, toolPosition.y);
 	}
 
 	@Override

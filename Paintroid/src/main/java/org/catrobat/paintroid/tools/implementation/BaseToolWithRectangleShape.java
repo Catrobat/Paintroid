@@ -34,6 +34,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.ColorRes;
 import android.support.annotation.VisibleForTesting;
@@ -78,6 +79,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private static final int ROTATION_ARROW_OFFSET = getDensitySpecificValue(3);
 
 	private static final int CLICK_TIMEOUT_MILLIS = 150;
+
+	private static final String BUNDLE_BOX_WIDTH = "BOX_WIDTH";
+	private static final String BUNDLE_BOX_HEIGHT = "BOX_HEIGHT";
+	private static final String BUNDLE_BOX_ROTATION = "BOX_ROTATION";
 
 	@VisibleForTesting
 	public float boxWidth;
@@ -847,6 +852,22 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 					viewHeight);
 		}
 		return new Point(0, 0);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
+		bundle.putFloat(BUNDLE_BOX_WIDTH, boxWidth);
+		bundle.putFloat(BUNDLE_BOX_HEIGHT, boxHeight);
+		bundle.putFloat(BUNDLE_BOX_ROTATION, boxRotation);
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
+		super.onRestoreInstanceState(bundle);
+		boxWidth = bundle.getFloat(BUNDLE_BOX_WIDTH, boxWidth);
+		boxHeight = bundle.getFloat(BUNDLE_BOX_HEIGHT, boxHeight);
+		boxRotation = bundle.getFloat(BUNDLE_BOX_ROTATION, boxRotation);
 	}
 
 	@Override

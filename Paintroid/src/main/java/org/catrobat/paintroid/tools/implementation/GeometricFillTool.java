@@ -32,6 +32,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -51,6 +52,9 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private static final boolean ROTATION_ENABLED = true;
 	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 	private static final float SHAPE_OFFSET = 10f;
+
+	private static final String BUNDLE_BASE_SHAPE = "BASE_SHAPE";
+	private static final String BUNDLE_SHAPE_DRAW_TYPE = "SHAPE_DRAW_TYPE";
 
 	private BaseShape baseShape;
 	private ShapeDrawType shapeDrawType;
@@ -160,6 +164,31 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 		createOverlayButton();
 		setBitmap(bitmap);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
+
+		bundle.putSerializable(BUNDLE_BASE_SHAPE, baseShape);
+		bundle.putSerializable(BUNDLE_SHAPE_DRAW_TYPE, shapeDrawType);
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
+		super.onRestoreInstanceState(bundle);
+
+		BaseShape baseShape = (BaseShape) bundle.getSerializable(BUNDLE_BASE_SHAPE);
+		ShapeDrawType shapeDrawType = (ShapeDrawType) bundle.getSerializable(BUNDLE_SHAPE_DRAW_TYPE);
+
+		if (baseShape != null && shapeDrawType != null
+				&& (this.baseShape != baseShape || this.shapeDrawType != shapeDrawType)) {
+			this.baseShape = baseShape;
+			this.shapeDrawType = shapeDrawType;
+
+			shapeToolOptionsListener.setShapeActivated(baseShape);
+			createAndSetBitmap();
+		}
 	}
 
 	private void drawShape(Canvas drawCanvas, RectF shapeRect, Paint drawPaint, int drawableId) {
