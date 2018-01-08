@@ -65,7 +65,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 				Config.ARGB_8888));
 
 		createAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
-		createOverlayButton();
+		createOverlayBitmap();
 	}
 
 	public void setBitmapFromFile(Bitmap bitmap) {

@@ -49,7 +49,7 @@ public class LineTool extends BaseTool {
 			return;
 		}
 
-		changePaintColor(canvasPaint.getColor());
+		setPaintColor(canvasPaint.getColor());
 
 		if (canvasPaint.getAlpha() == 0x00) {
 			canvasPaint.setColor(Color.BLACK);

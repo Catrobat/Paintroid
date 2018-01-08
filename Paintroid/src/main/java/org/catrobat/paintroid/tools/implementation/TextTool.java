@@ -74,13 +74,14 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 		paintInitialized = initializePaint();
 
+		createOverlayBitmap();
 		createAndSetBitmap();
 		resetBoxPosition();
 	}
 
 	public boolean initializePaint() {
 		textPaint = new Paint();
-		textPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+		textPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
 		textPaint.setColor(canvasPaint.getColor());
 		textPaint.setTextSize(textSize * textSizeMagnificationFactor);
@@ -117,7 +118,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 			drawCanvas.drawText(multilineText[i], boxOffset, boxOffset - textAscent + textHeight * i, textPaint);
 		}
 
-		createOverlayButton();
 		setBitmap(bitmap);
 	}
 
@@ -224,7 +224,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		PointF position = new PointF(toolPosition.x, toolPosition.y);
 		textPaint.setColor(canvasPaint.getColor());
 		createAndSetBitmap();
-		toolPosition = position;
+		toolPosition.set(position);
 		boxWidth = width;
 		boxHeight = height;
 	}

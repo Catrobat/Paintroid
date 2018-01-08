@@ -260,7 +260,7 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void draw(Canvas canvas) {
-		changePaintColor(canvasPaint.getColor());
+		setPaintColor(canvasPaint.getColor());
 		if (toolInDrawMode) {
 			if (canvasPaint.getColor() == Color.TRANSPARENT) {
 				canvasPaint.setColor(Color.BLACK);

@@ -13,7 +13,7 @@ public class ImportTool extends StampTool {
 		super(context, toolType);
 		readyForPaste = true;
 		longClickAllowed = false;
-		createOverlayButton();
+		createOverlayBitmap();
 	}
 
 	@Override
@@ -28,6 +28,5 @@ public class ImportTool extends StampTool {
 
 		boxWidth = Math.max(minimumSize, Math.min(maximumBorderRatioWidth, bitmap.getWidth()));
 		boxHeight = Math.max(minimumSize, Math.min(maximumBorderRatioHeight, bitmap.getHeight()));
-		createOverlayButton();
 	}
 }

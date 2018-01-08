@@ -73,6 +73,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 		shapeDrawType = ShapeDrawType.FILL;
 
+		createOverlayBitmap();
 		createAndSetBitmap();
 	}
 
@@ -114,7 +115,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 		Paint drawPaint = new Paint();
 		drawPaint.setColor(canvasPaint.getColor());
-		drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+		drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
 		switch (shapeDrawType) {
 			case FILL:
@@ -138,10 +139,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			int colorWithMaxAlpha = Color.BLACK;
 			geometricFillCommandPaint.setColor(colorWithMaxAlpha);
 			geometricFillCommandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-			geometricFillCommandPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+			geometricFillCommandPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
 			drawPaint.reset();
-			drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+			drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 			drawPaint.setShader(CHECKERED_PATTERN.getShader());
 		}
 
@@ -162,7 +163,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 		}
 
-		createOverlayButton();
 		setBitmap(bitmap);
 	}
 
