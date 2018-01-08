@@ -41,6 +41,7 @@ import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.eventlistener.OnActiveLayerChangedListener;
 import org.catrobat.paintroid.eventlistener.OnRefreshLayerDialogListener;
 import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.button.LayersAdapter;
 import org.catrobat.paintroid.ui.dragndrop.BrickDragAndDropLayerMenu;
 import org.catrobat.paintroid.ui.dragndrop.MyDragShadowBuilder;
@@ -258,6 +259,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 					Toast.LENGTH_LONG).show();
 		}
 		updateButtonResource();
+		PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 		refreshDrawingSurface();
 	}
 
@@ -285,6 +287,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 
 		updateButtonResource();
 		refreshView();
+		PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 		refreshDrawingSurface();
 	}
 
@@ -309,6 +312,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_merged,
 					Toast.LENGTH_LONG).show();
 
+			PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 			refreshDrawingSurface();
 		}
 	}

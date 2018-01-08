@@ -19,13 +19,19 @@
 
 package org.catrobat.paintroid.test.junit.ui;
 
+import android.graphics.Color;
 import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class LayerTest {
 
@@ -39,5 +45,61 @@ public class LayerTest {
 			LayerListener.getInstance().createLayer();
 			LayerListener.getInstance().deleteLayer();
 		}
+	}
+
+	@UiThreadTest
+	@Test
+	public void testMoveLayer() {
+		LayerListener.getInstance().createLayer();
+		int IDLayerOne = LayerListener.getInstance().getAdapter().getLayer(0).getLayerID();
+		int IDLayerTwo = LayerListener.getInstance().getAdapter().getLayer(1).getLayerID();
+		int posLayerOne = LayerListener.getInstance().getAdapter().getPosition(IDLayerOne);
+		int posLayerTwo = LayerListener.getInstance().getAdapter().getPosition(IDLayerTwo);
+
+		assertTrue("Layer One should be at an higher position", posLayerOne < posLayerTwo);
+		LayerListener.getInstance().moveLayer(0, 1);
+
+		posLayerOne = LayerListener.getInstance().getAdapter().getPosition(IDLayerOne);
+		posLayerTwo = LayerListener.getInstance().getAdapter().getPosition(IDLayerTwo);
+		assertTrue("Positions should have been switched", posLayerOne > posLayerTwo);
+	}
+
+	@UiThreadTest
+	@Test
+	public void testMergeLayers() {
+		int idFirstLayer = LayerListener.getInstance().getCurrentLayer().getLayerID();
+		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(1, 1, Color.BLACK);
+		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(1, 2, Color.BLACK);
+		LayerListener.getInstance().createLayer();
+		int idSecondLayer = LayerListener.getInstance().getCurrentLayer().getLayerID();
+		assertFalse("New Layer should be selected", idFirstLayer == idSecondLayer);
+
+		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(1, 1, Color.BLUE);
+		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(2, 1, Color.BLUE);
+		LayerListener.getInstance().mergeLayer(0, 1);
+		int numLayersAfterMerge = LayerListener.getInstance().getAdapter().getCount();
+
+		assertEquals("Only one Layer should exist", 1, numLayersAfterMerge);
+		assertEquals("Color should be black", Color.BLACK, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(1, 2));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(2, 1));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(1, 1));
+
+		UndoRedoManager.getInstance().performUndo();
+		int numLayersAfterUndo = LayerListener.getInstance().getAdapter().getCount();
+
+		assertEquals("Two Layers should exist", 2, numLayersAfterUndo);
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getAdapter().getLayer(0).getImage().getPixel(2, 1));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getAdapter().getLayer(0).getImage().getPixel(1, 1));
+		assertEquals("Color should be black", Color.BLACK, LayerListener.getInstance().getAdapter().getLayer(1).getImage().getPixel(1, 2));
+		assertEquals("Color should be blue", Color.BLACK, LayerListener.getInstance().getAdapter().getLayer(1).getImage().getPixel(1, 1));
+
+		UndoRedoManager.getInstance().performRedo();
+		int numLayersAfterRedo = LayerListener.getInstance().getAdapter().getCount();
+
+		assertEquals("Only one Layer should exist", 1, numLayersAfterRedo);
+		assertEquals("Color should be black", Color.BLACK, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(1, 2));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(2, 1));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(1, 1));
+
 	}
 }
