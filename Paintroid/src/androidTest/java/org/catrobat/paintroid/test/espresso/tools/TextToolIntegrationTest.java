@@ -19,12 +19,14 @@
 
 package org.catrobat.paintroid.test.espresso.tools;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -38,11 +40,8 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.TextTool;
 import org.junit.After;
 import org.junit.Before;
@@ -65,14 +64,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.COLOR_CHOOSER_PRESET_BLACK_BUTTON_ID;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -116,7 +113,7 @@ public class TextToolIntegrationTest {
 	@Before
 	public void setUp() {
 		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
-		Espresso.registerIdlingResources(dialogWait);
+		IdlingRegistry.getInstance().register(dialogWait);
 
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 
@@ -125,7 +122,8 @@ public class TextToolIntegrationTest {
 		resetColorPicker();
 		resetDrawPaintAndBrushPickerView();
 
-		selectTool(ToolType.TEXT);
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
 		textTool = (TextTool) PaintroidApplication.currentTool;
 
 		textEditText = (EditText) activityHelper.findViewById(R.id.text_tool_dialog_input_text);
@@ -140,19 +138,19 @@ public class TextToolIntegrationTest {
 
 	@After
 	public void tearDown() {
-		Espresso.unregisterIdlingResources(dialogWait);
+		IdlingRegistry.getInstance().unregister(dialogWait);
 
 		activityHelper = null;
 	}
 
 	@Test
-	public void testDialogKeyboardTextBoxAppearanceOnStartup() throws NoSuchFieldException, IllegalAccessException {
+	public void testDialogKeyboardTextBoxAppearanceOnStartup() {
 		onView(withId(R.id.text_tool_dialog_input_text)).check(matches(hasFocus()));
 		checkTextBoxDimensionsAndDefaultPosition();
 	}
 
 	@Test
-	public void testDialogDefaultValues() throws NoSuchFieldException, IllegalAccessException {
+	public void testDialogDefaultValues() {
 		String expectedHintText = activityHelper.getString(R.string.text_tool_dialog_input_hint);
 		String actualHintText = textEditText.getHint().toString();
 		assertEquals("Wrong input hint text", expectedHintText, actualHintText);
@@ -183,7 +181,7 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
-	public void testDialogToolInteraction() throws NoSuchFieldException, IllegalAccessException {
+	public void testDialogToolInteraction() {
 		enterTestText();
 		assertEquals("Wrong input text", TEST_TEXT, getToolMemberText());
 
@@ -231,7 +229,7 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
-	public void testDialogAndTextBoxAfterReopenDialog() throws NoSuchFieldException, IllegalAccessException {
+	public void testDialogAndTextBoxAfterReopenDialog() {
 		enterTestText();
 		selectFormatting(FormattingOptions.SANS_SERIF);
 		selectFormatting(FormattingOptions.UNDERLINE);
@@ -239,8 +237,8 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.BOLD);
 		selectFormatting(FormattingOptions.SIZE_40);
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 
 		PointF boxPosition = getToolMemberBoxPosition();
 		PointF newBoxPosition = new PointF(boxPosition.x + 20, boxPosition.y + 20);
@@ -248,7 +246,8 @@ public class TextToolIntegrationTest {
 		setToolMemberBoxHeight(50.0f);
 		setToolMemberBoxWidth(50.0f);
 
-		openToolOptionsForCurrentTool();
+		onToolBarView()
+				.performOpenToolOptions();
 
 		assertEquals("Wrong input text after reopen dialog", TEST_TEXT, textEditText.getText().toString());
 		assertEquals("Wrong font selected after reopen dialog", FONT_SANS_SERIF, fontSpinner.getSelectedItem());
@@ -259,11 +258,39 @@ public class TextToolIntegrationTest {
 				String.valueOf(TEXT_SIZE_40), textSizeSpinner.getSelectedItem());
 
 		checkTextBoxDimensions();
-		assertEquals("Wrong text box position after reopen dialog", newBoxPosition, getToolMemberBoxPosition());
 	}
 
 	@Test
-	public void testCheckBoxSizeAndContentAfterFormatting() throws NoSuchFieldException, IllegalAccessException {
+	public void testStateRestoredAfterOrientationChange() {
+		enterTestText();
+		selectFormatting(FormattingOptions.SANS_SERIF);
+		selectFormatting(FormattingOptions.UNDERLINE);
+		selectFormatting(FormattingOptions.ITALIC);
+		selectFormatting(FormattingOptions.BOLD);
+		selectFormatting(FormattingOptions.SIZE_40);
+
+		final PointF toolMemberBoxPosition = getToolMemberBoxPosition();
+		PointF expectedPosition = new PointF(toolMemberBoxPosition.x, toolMemberBoxPosition.y);
+
+		launchActivityRule.getActivity()
+				.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		textTool = (TextTool) PaintroidApplication.currentTool;
+
+		assertEquals("Wrong input text after reopen dialog", TEST_TEXT, textEditText.getText().toString());
+		assertEquals("Wrong font selected after reopen dialog", FONT_SANS_SERIF, fontSpinner.getSelectedItem());
+		assertEquals("Wrong underline status after reopen dialog", true, underlinedToggleButton.isChecked());
+		assertEquals("Wrong italic status after reopen dialog", true, italicToggleButton.isChecked());
+		assertEquals("Wrong bold status after reopen dialog", true, boldToggleButton.isChecked());
+		assertEquals("Wrong text size selected after reopen dialog",
+				String.valueOf(TEXT_SIZE_40), textSizeSpinner.getSelectedItem());
+
+		assertEquals(expectedPosition, getToolMemberBoxPosition());
+		checkTextBoxDimensions();
+	}
+
+	@Test
+	public void testCheckBoxSizeAndContentAfterFormatting() {
 		enterTestText();
 
 		assertFalse("Underline button should not be pressed", underlinedToggleButton.isChecked());
@@ -326,7 +353,7 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
-	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndAlarabiya() throws NoSuchFieldException, IllegalAccessException {
+	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndAlarabiya() {
 		enterArabicTestText();
 
 		assertFalse("Underline button should not be pressed", underlinedToggleButton.isChecked());
@@ -388,7 +415,7 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
-	public void testInputTextAndFormatByTextSize() throws NoSuchFieldException, IllegalAccessException {
+	public void testInputTextAndFormatByTextSize() {
 		enterTestText();
 
 		ArrayList<FormattingOptions> sizes = new ArrayList<>();
@@ -407,11 +434,11 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
-	public void testCommandUndoAndRedo() throws NoSuchFieldException, IllegalAccessException {
+	public void testCommandUndoAndRedo() {
 		enterMultilineTestText();
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 
 		Bitmap bitmap = getToolMemberDrawingBitmap();
 		int[] pixelsTool = new int[bitmap.getWidth()];
@@ -446,11 +473,11 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
-	public void testChangeTextColor() throws NoSuchFieldException, IllegalAccessException {
+	public void testChangeTextColor() {
 		enterTestText();
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 
 		float newBoxWidth = getToolMemberBoxWidth() * 1.5f;
 		float newBoxHeight = getToolMemberBoxHeight() * 1.5f;
@@ -462,7 +489,7 @@ public class TextToolIntegrationTest {
 
 		selectColorPickerPresetSelectorColor(5);
 
-		Paint paint = (Paint) PrivateAccess.getMemberValue(TextTool.class, textTool, "textPaint");
+		Paint paint = textTool.textPaint;
 		int selectedColor = paint.getColor();
 		assertFalse("Paint color should not be black", selectedColor == Color.BLACK);
 		Bitmap bitmap = getToolMemberDrawingBitmap();
@@ -478,26 +505,26 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
-	public void testChangeToolFromEraser() throws NoSuchFieldException, IllegalAccessException {
+	public void testChangeToolFromEraser() {
 
-		int color = ((Paint) PrivateAccess.getMemberValue(TextTool.class, PaintroidApplication.currentTool, "textPaint")).getColor();
+		int color = textTool.textPaint.getColor();
 
-		selectTool(ToolType.ERASER);
+		onToolBarView()
+				.performSelectTool(ToolType.ERASER)
+				.performSelectTool(ToolType.TEXT);
 
-		selectTool(ToolType.TEXT);
-
-		int newColor = ((Paint) PrivateAccess.getMemberValue(TextTool.class, PaintroidApplication.currentTool, "textPaint")).getColor();
+		int newColor = textTool.textPaint.getColor();
 
 		assertEquals("Initial color should be black", color, Color.BLACK);
 		assertEquals("Color should not have changed after selecting the eraser", color, newColor);
 	}
 
 	@Test
-	public void testMultiLineText() throws NoSuchFieldException, IllegalAccessException {
+	public void testMultiLineText() {
 		enterMultilineTestText();
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 
 		String[] expectedTextSplitUp = {"testing", "multiline", "text", "", "123"};
 		String[] actualTextSplitUp = getToolMemberMultilineText();
@@ -507,9 +534,9 @@ public class TextToolIntegrationTest {
 		checkTextBoxDimensionsAndDefaultPosition();
 	}
 
-	private void checkTextBoxDimensions() throws NoSuchFieldException, IllegalAccessException {
-		int boxOffset = (Integer) PrivateAccess.getMemberValue(TextTool.class, textTool, "boxOffset");
-		int textSizeMagnificationFactor = (Integer) PrivateAccess.getMemberValue(TextTool.class, textTool, "textSizeMagnificationFactor");
+	private void checkTextBoxDimensions() {
+		int boxOffset = TextTool.BOX_OFFSET;
+		int textSizeMagnificationFactor = TextTool.TEXT_SIZE_MAGNIFICATION_FACTOR;
 
 		float actualBoxWidth = getToolMemberBoxWidth();
 		float actualBoxHeight = getToolMemberBoxHeight();
@@ -563,8 +590,8 @@ public class TextToolIntegrationTest {
 		assertEquals("Wrong text box height", expectedBoxHeight, actualBoxHeight, EQUALS_DELTA);
 	}
 
-	private void checkTextBoxDefaultPosition() throws NoSuchFieldException, IllegalAccessException {
-		float marginTop = (Float) PrivateAccess.getMemberValue(TextTool.class, textTool, "marginTop");
+	private void checkTextBoxDefaultPosition() {
+		float marginTop = TextTool.MARGIN_TOP;
 		PointF actualBoxPosition = getToolMemberBoxPosition();
 		float boxHeight = getToolMemberBoxHeight();
 
@@ -575,7 +602,7 @@ public class TextToolIntegrationTest {
 		assertEquals("Wrong text box y position", expectedBoxPositionY, actualBoxPosition.y, EQUALS_DELTA);
 	}
 
-	private void checkTextBoxDimensionsAndDefaultPosition() throws NoSuchFieldException, IllegalAccessException {
+	private void checkTextBoxDimensionsAndDefaultPosition() {
 		checkTextBoxDimensions();
 		checkTextBoxDefaultPosition();
 	}
@@ -669,7 +696,7 @@ public class TextToolIntegrationTest {
 		}
 	}
 
-	protected int countPixelsWithColor(int[] pixels, int color) {
+	private int countPixelsWithColor(int[] pixels, int color) {
 		int count = 0;
 		for (int pixel : pixels) {
 			if (pixel == color) {
@@ -679,60 +706,60 @@ public class TextToolIntegrationTest {
 		return count;
 	}
 
-	protected float getToolMemberBoxWidth() throws NoSuchFieldException, IllegalAccessException {
-		return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, textTool, "boxWidth");
+	private float getToolMemberBoxWidth() {
+		return textTool.boxWidth;
 	}
 
-	protected void setToolMemberBoxWidth(float width) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, textTool, "boxWidth", width);
+	private void setToolMemberBoxWidth(float width) {
+		textTool.boxWidth = width;
 	}
 
-	protected float getToolMemberBoxHeight() throws NoSuchFieldException, IllegalAccessException {
-		return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, textTool, "boxHeight");
+	private float getToolMemberBoxHeight() {
+		return textTool.boxHeight;
 	}
 
-	protected void setToolMemberBoxHeight(float height) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, textTool, "boxHeight", height);
+	private void setToolMemberBoxHeight(float height) {
+		textTool.boxHeight = height;
 	}
 
-	protected PointF getToolMemberBoxPosition() throws NoSuchFieldException, IllegalAccessException {
-		return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, textTool, "toolPosition");
+	private PointF getToolMemberBoxPosition() {
+		return textTool.toolPosition;
 	}
 
-	protected void setToolMemberBoxPosition(PointF position) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, textTool, "toolPosition", position);
+	private void setToolMemberBoxPosition(PointF position) {
+		textTool.toolPosition.set(position);
 	}
 
-	protected String getToolMemberText() throws NoSuchFieldException, IllegalAccessException {
-		return (String) PrivateAccess.getMemberValue(TextTool.class, textTool, "text");
+	private String getToolMemberText() {
+		return textTool.text;
 	}
 
-	protected String getToolMemberFont() throws NoSuchFieldException, IllegalAccessException {
-		return (String) PrivateAccess.getMemberValue(TextTool.class, textTool, "font");
+	private String getToolMemberFont() {
+		return textTool.font;
 	}
 
-	protected boolean getToolMemberItalic() throws NoSuchFieldException, IllegalAccessException {
-		return (Boolean) PrivateAccess.getMemberValue(TextTool.class, textTool, "italic");
+	private boolean getToolMemberItalic() {
+		return textTool.italic;
 	}
 
-	protected boolean getToolMemberUnderlined() throws NoSuchFieldException, IllegalAccessException {
-		return (Boolean) PrivateAccess.getMemberValue(TextTool.class, textTool, "underlined");
+	private boolean getToolMemberUnderlined() {
+		return textTool.underlined;
 	}
 
-	protected boolean getToolMemberBold() throws NoSuchFieldException, IllegalAccessException {
-		return (Boolean) PrivateAccess.getMemberValue(TextTool.class, textTool, "bold");
+	private boolean getToolMemberBold() {
+		return textTool.bold;
 	}
 
-	protected int getToolMemberTextSize() throws NoSuchFieldException, IllegalAccessException {
-		return (Integer) PrivateAccess.getMemberValue(TextTool.class, textTool, "textSize");
+	private int getToolMemberTextSize() {
+		return textTool.textSize;
 	}
 
-	protected Bitmap getToolMemberDrawingBitmap() throws NoSuchFieldException, IllegalAccessException {
-		return (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, textTool, "drawingBitmap");
+	private Bitmap getToolMemberDrawingBitmap() {
+		return textTool.drawingBitmap;
 	}
 
-	protected String[] getToolMemberMultilineText() throws NoSuchFieldException, IllegalAccessException {
-		return (String[]) PrivateAccess.getMemberValue(TextTool.class, textTool, "multilineText");
+	private String[] getToolMemberMultilineText() {
+		return textTool.getMultilineText();
 	}
 
 	private enum FormattingOptions {

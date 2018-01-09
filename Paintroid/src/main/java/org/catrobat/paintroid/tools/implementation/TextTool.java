@@ -27,6 +27,8 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,21 +51,40 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private static final boolean ROTATION_ENABLED = true;
 	private static final boolean RESPECT_IMAGE_BORDERS = false;
 	private static final boolean RESIZE_POINTS_VISIBLE = true;
+	@VisibleForTesting
+	public static final int TEXT_SIZE_MAGNIFICATION_FACTOR = 3;
+	@VisibleForTesting
+	public static final int BOX_OFFSET = 20;
+	@VisibleForTesting
+	public static final float MARGIN_TOP = 50.0f;
+	private static final float ITALIC_TEXT_SKEW = -0.25f;
+	private static final float DEFAULT_TEXT_SKEW = 0.0f;
+	private static final String BUNDLE_TOOL_UNDERLINED = "BUNDLE_TOOL_UNDERLINED";
+	private static final String BUNDLE_TOOL_ITALIC = "BUNDLE_TOOL_ITALIC";
+	private static final String BUNDLE_TOOL_BOLD = "BUNDLE_TOOL_BOLD";
+	private static final String BUNDLE_TOOL_TEXT = "BUNDLE_TOOL_TEXT";
+	private static final String BUNDLE_TOOL_TEXT_SIZE = "BUNDLE_TOOL_TEXT_SIZE";
+	private static final String BUNDLE_TOOL_FONT = "BUNDLE_TOOL_FONT";
 
-	private TextToolOptionsListener.OnTextToolOptionsChangedListener onTextToolOptionsChangedListener;
-	private View textToolOptionsView;
-	private String text = "";
-	private String[] multilineText = {""};
-	private String font = "Monospace";
-	private boolean underlined = false;
-	private boolean italic = false;
-	private boolean bold = false;
-	private int textSize = 20;
-	private int textSizeMagnificationFactor = 3;
-	private int boxOffset = 20;
-	private float marginTop = 50.0f;
-	private Paint textPaint;
-	private boolean paintInitialized = false;
+	@VisibleForTesting
+	public final Paint textPaint;
+	private final Typeface alarabiya;
+	private final Typeface dubai;
+
+	private TextToolOptionsListener textToolOptionsListener;
+
+	@VisibleForTesting
+	public String text = "";
+	@VisibleForTesting
+	public String font = "Monospace";
+	@VisibleForTesting
+	public boolean underlined = false;
+	@VisibleForTesting
+	public boolean italic = false;
+	@VisibleForTesting
+	public boolean bold = false;
+	@VisibleForTesting
+	public int textSize = 20;
 
 	public TextTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -72,153 +93,172 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
-		paintInitialized = initializePaint();
+		alarabiya = Typeface.createFromAsset(context.getAssets(), "Alarabiya.ttf");
+		dubai = Typeface.createFromAsset(context.getAssets(), "Dubai.TTF");
+
+		textPaint = new Paint();
+		initializePaint();
 
 		createOverlayBitmap();
 		createAndSetBitmap();
 		resetBoxPosition();
 	}
 
-	public boolean initializePaint() {
-		textPaint = new Paint();
+	private void initializePaint() {
 		textPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
 		textPaint.setColor(canvasPaint.getColor());
-		textPaint.setTextSize(textSize * textSizeMagnificationFactor);
+		textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
 		textPaint.setUnderlineText(underlined);
 		textPaint.setFakeBoldText(bold);
 
 		updateTypeface();
-		return true;
 	}
 
-	public void createAndSetBitmap() {
+	private void createAndSetBitmap() {
+		String[] multilineText = getMultilineText();
 		float textDescent = textPaint.descent();
 		float textAscent = textPaint.ascent();
 
 		float upperBoxEdge = toolPosition.y - boxHeight / 2.0f;
 		float textHeight = textDescent - textAscent;
-		boxHeight = textHeight * multilineText.length + 2 * boxOffset;
+		boxHeight = textHeight * multilineText.length + 2 * BOX_OFFSET;
 		toolPosition.y = upperBoxEdge + boxHeight / 2.0f;
 
 		float maxTextWidth = 0;
 		for (String str : multilineText) {
-			float textWidth = textPaint.measureText(str);
-			if (textWidth > maxTextWidth) {
-				maxTextWidth = textWidth;
-			}
+			maxTextWidth = Math.max(maxTextWidth, textPaint.measureText(str));
 		}
-		boxWidth = maxTextWidth + 2 * boxOffset;
+		boxWidth = maxTextWidth + 2 * BOX_OFFSET;
 
 		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
 
 		for (int i = 0; i < multilineText.length; i++) {
-			drawCanvas.drawText(multilineText[i], boxOffset, boxOffset - textAscent + textHeight * i, textPaint);
+			drawCanvas.drawText(multilineText[i], BOX_OFFSET, BOX_OFFSET - textAscent + textHeight * i, textPaint);
 		}
 
 		setBitmap(bitmap);
 	}
 
-	protected void setupOnTextToolDialogChangedListener() {
-		onTextToolOptionsChangedListener = new TextToolOptionsListener.OnTextToolOptionsChangedListener() {
-			@Override
-			public void setText(String text) {
-				TextTool.this.text = text;
-				multilineText = TextTool.this.text.split("\n");
-				createAndSetBitmap();
-			}
-
-			@Override
-			public void setFont(String font) {
-				TextTool.this.font = font;
-				updateTypeface();
-				createAndSetBitmap();
-			}
-
-			@Override
-			public void setUnderlined(boolean underlined) {
-				TextTool.this.underlined = underlined;
-				textPaint.setUnderlineText(TextTool.this.underlined);
-				createAndSetBitmap();
-			}
-
-			@Override
-			public void setItalic(boolean italic) {
-				TextTool.this.italic = italic;
-				updateTypeface();
-				createAndSetBitmap();
-			}
-
-			@Override
-			public void setBold(boolean bold) {
-				TextTool.this.bold = bold;
-				textPaint.setFakeBoldText(TextTool.this.bold);
-				createAndSetBitmap();
-			}
-
-			@Override
-			public void setTextSize(int size) {
-				textSize = size;
-				textPaint.setTextSize(textSize * textSizeMagnificationFactor);
-				createAndSetBitmap();
-			}
-		};
-		TextToolOptionsListener.getInstance().setOnTextToolOptionsChangedListener(onTextToolOptionsChangedListener);
+	@Override
+	public void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
+		bundle.putBoolean(BUNDLE_TOOL_UNDERLINED, underlined);
+		bundle.putBoolean(BUNDLE_TOOL_ITALIC, italic);
+		bundle.putBoolean(BUNDLE_TOOL_BOLD, bold);
+		bundle.putString(BUNDLE_TOOL_TEXT, text);
+		bundle.putInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
+		bundle.putString(BUNDLE_TOOL_FONT, font);
 	}
 
-	public void updateTypeface() {
-		int style;
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
+		super.onRestoreInstanceState(bundle);
+		underlined = bundle.getBoolean(BUNDLE_TOOL_UNDERLINED, underlined);
+		italic = bundle.getBoolean(BUNDLE_TOOL_ITALIC, italic);
+		bold = bundle.getBoolean(BUNDLE_TOOL_BOLD, bold);
+		text = bundle.getString(BUNDLE_TOOL_TEXT, text);
+		textSize = bundle.getInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
+		font = bundle.getString(BUNDLE_TOOL_FONT, font);
 
-		if (italic) {
-			style = Typeface.ITALIC;
-		} else {
-			style = Typeface.NORMAL;
-		}
+		textToolOptionsListener.setState(bold, italic, underlined, text, textSize, font);
+		textPaint.setUnderlineText(underlined);
+		textPaint.setFakeBoldText(bold);
+		updateTypeface();
+		createAndSetBitmap();
+	}
 
-		if (font.equals("Sans Serif")) {
-			textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, style));
-		} else if (font.equals("Serif")) {
-			textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
-		} else if (font.equals("Monospace")) {
-			textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
-		} else if (font.equals("Alarabiya")) {
-			try {
-				textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Alarabiya.ttf"));
-				if (style == Typeface.ITALIC) {
-					textPaint.setTextSkewX(-0.25f);
-				} else {
-					textPaint.setTextSkewX(0.0f);
-				}
-			} catch (Exception e) {
-				Log.e("Can't set custom font", "Alarabiya");
-			}
-		} else if (font.equals("Dubai")) {
-			try {
-				textPaint.setTypeface(Typeface.createFromAsset(context.getAssets(), "Dubai.TTF"));
-				if (style == Typeface.ITALIC) {
-					textPaint.setTextSkewX(-0.25f);
-				} else {
-					textPaint.setTextSkewX(0.0f);
-				}
-			} catch (Exception e) {
-				Log.e("Can't set custom font", "Dubai");
-			}
-		}
+	private void setupOnTextToolDialogChangedListener() {
+		TextToolOptionsListener.OnTextToolOptionsChangedListener onTextToolOptionsChangedListener =
+				new TextToolOptionsListener.OnTextToolOptionsChangedListener() {
+					@Override
+					public void setText(String text) {
+						TextTool.this.text = text;
+						createAndSetBitmap();
+					}
+
+					@Override
+					public void setFont(String font) {
+						TextTool.this.font = font;
+						updateTypeface();
+						createAndSetBitmap();
+					}
+
+					@Override
+					public void setUnderlined(boolean underlined) {
+						TextTool.this.underlined = underlined;
+						textPaint.setUnderlineText(TextTool.this.underlined);
+						createAndSetBitmap();
+					}
+
+					@Override
+					public void setItalic(boolean italic) {
+						TextTool.this.italic = italic;
+						updateTypeface();
+						createAndSetBitmap();
+					}
+
+					@Override
+					public void setBold(boolean bold) {
+						TextTool.this.bold = bold;
+						textPaint.setFakeBoldText(TextTool.this.bold);
+						createAndSetBitmap();
+					}
+
+					@Override
+					public void setTextSize(int size) {
+						textSize = size;
+						textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
+						createAndSetBitmap();
+					}
+				};
+		textToolOptionsListener.setOnTextToolOptionsChangedListener(onTextToolOptionsChangedListener);
+	}
+
+	private void updateTypeface() {
+		int style = italic ? Typeface.ITALIC : Typeface.NORMAL;
+		final float textSkewX = italic ? ITALIC_TEXT_SKEW : DEFAULT_TEXT_SKEW;
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-			textPaint.setTextSkewX(0.0f);
 			if (font.equals("Monospace")) {
 				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
-				if (style == Typeface.ITALIC) {
-					textPaint.setTextSkewX(-0.25f);
-				}
 			}
+			textPaint.setTextSkewX(textSkewX);
+			return;
+		}
+
+		switch (font) {
+			case "Sans Serif":
+				textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, style));
+				break;
+			case "Serif":
+				textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
+				break;
+			case "Monospace":
+				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
+				break;
+			case "Alarabiya":
+				try {
+					textPaint.setTypeface(alarabiya);
+					textPaint.setTextSkewX(textSkewX);
+				} catch (Exception e) {
+					Log.e("Can't set custom font", "Alarabiya");
+				}
+				break;
+			case "Dubai":
+				try {
+					textPaint.setTypeface(dubai);
+					textPaint.setTextSkewX(textSkewX);
+				} catch (Exception e) {
+					Log.e("Can't set custom font", "Dubai");
+				}
+				break;
 		}
 	}
 
-	protected void changeTextColor() {
+	private void changeTextColor() {
 		float width = boxWidth;
 		float height = boxHeight;
 		PointF position = new PointF(toolPosition.x, toolPosition.y);
@@ -233,12 +273,17 @@ public class TextTool extends BaseToolWithRectangleShape {
 	protected void resetInternalState() {
 	}
 
+	@VisibleForTesting
+	public String[] getMultilineText() {
+		return text.split("\n");
+	}
+
 	@Override
 	protected void onClickInBox() {
 		highlightBox();
 		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
-		Command command = new TextToolCommand(multilineText, textPaint, boxOffset, boxWidth, boxHeight,
-				toolPosition, boxRotation);
+		Command command = new TextToolCommand(getMultilineText(), textPaint, BOX_OFFSET, boxWidth,
+				boxHeight, toolPosition, boxRotation);
 		((TextToolCommand) command).addObserver(this);
 		IndeterminateProgressDialog.getInstance().show();
 
@@ -249,20 +294,20 @@ public class TextTool extends BaseToolWithRectangleShape {
 	public void resetBoxPosition() {
 		DrawingSurface surface = PaintroidApplication.drawingSurface;
 		toolPosition.x = surface.getBitmapWidth() / 2.0f;
-		toolPosition.y = boxHeight / 2.0f + marginTop;
+		toolPosition.y = boxHeight / 2.0f + MARGIN_TOP;
 	}
 
 	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		textToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
+		View textToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
 
 		ToggleButton underlinedButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
 		underlinedButton.setPaintFlags(underlinedButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 		toolSpecificOptionsLayout.addView(textToolOptionsView);
-		TextToolOptionsListener.init(context, textToolOptionsView);
+		textToolOptionsListener = new TextToolOptionsListener(context, textToolOptionsView);
 		setupOnTextToolDialogChangedListener();
 
 		toolSpecificOptionsLayout.post(new Runnable() {
@@ -276,9 +321,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@Override
 	public void toggleShowToolOptions() {
 		super.toggleShowToolOptions();
-		if (paintInitialized) {
-			createAndSetBitmap();
-		}
+		createAndSetBitmap();
 	}
 
 	@Override
