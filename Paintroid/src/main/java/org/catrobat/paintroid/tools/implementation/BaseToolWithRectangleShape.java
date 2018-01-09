@@ -287,6 +287,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		float boxRotation = this.boxRotation;
 		tempToolPosition.set(this.toolPosition.x, this.toolPosition.y);
 
+		canvas.save();
+
 		canvas.translate(tempToolPosition.x, tempToolPosition.y);
 		canvas.rotate(boxRotation);
 
@@ -315,6 +317,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (statusIconEnabled) {
 			drawStatus(canvas);
 		}
+
+		canvas.restore();
 	}
 
 	private void drawBackgroundShadow(Canvas canvas, float boxWidth, float boxHeight, float boxRotation, PointF toolPosition) {
