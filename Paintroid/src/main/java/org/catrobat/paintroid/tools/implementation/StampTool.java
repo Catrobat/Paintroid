@@ -28,6 +28,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.Toast;
 
@@ -43,9 +44,11 @@ import org.catrobat.paintroid.tools.ToolType;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
-	protected static final boolean ROTATION_ENABLED = true;
-	protected static final boolean RESPECT_IMAGE_BOUNDS = false;
+	private static final boolean ROTATION_ENABLED = true;
+	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 	private static final long LONG_CLICK_THRESHOLD_MILLIS = 1000;
+	private static final String BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP";
+	public static final String BUNDLE_TOOL_READY_FOR_PASTE = "BUNDLE_TOOL_READY_FOR_PASTE";
 
 	protected static CreateAndSetBitmapAsyncTask createAndSetBitmapAsync = null;
 	protected boolean readyForPaste = false;
@@ -242,6 +245,23 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void resetInternalState() {
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
+		bundle.putParcelable(BUNDLE_TOOL_DRAWING_BITMAP, drawingBitmap);
+		bundle.putBoolean(BUNDLE_TOOL_READY_FOR_PASTE, readyForPaste);
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
+		super.onRestoreInstanceState(bundle);
+		readyForPaste = bundle.getBoolean(BUNDLE_TOOL_READY_FOR_PASTE, readyForPaste);
+		Bitmap bitmap = bundle.getParcelable(BUNDLE_TOOL_DRAWING_BITMAP);
+		if (bitmap != null) {
+			drawingBitmap = bitmap;
+		}
 	}
 
 	private boolean canUseOldDrawingBitmap() {

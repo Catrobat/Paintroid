@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.test.espresso.tools;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -33,6 +34,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,9 +45,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.convertFromCanvasToScreen;
@@ -63,8 +67,11 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isToast;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class StampToolIntegrationTest {
@@ -246,6 +253,33 @@ public class StampToolIntegrationTest {
 		onView(withText(R.string.stamp_tool_copy_hint))
 				.inRoot(isToast())
 				.check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testBitmapSavedOnOrientationChange() throws NoSuchFieldException, IllegalAccessException {
+		onView(withId(R.id.drawingSurfaceView))
+				.perform(click());
+
+		onToolBarView()
+				.performSelectTool(ToolType.STAMP);
+
+		Bitmap emptyBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
+				PaintroidApplication.currentTool).drawingBitmap);
+
+		clickInStampBox(tapStampLong);
+
+		Bitmap expectedBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
+				PaintroidApplication.currentTool).drawingBitmap);
+
+		assertFalse(expectedBitmap.sameAs(emptyBitmap));
+
+		launchActivityRule.getActivity()
+				.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		Bitmap actualBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
+				PaintroidApplication.currentTool).drawingBitmap);
+
+		assertTrue(expectedBitmap.sameAs(actualBitmap));
 	}
 
 	private void invokeCreateAndSetBitmap(Object object) throws NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
