@@ -20,10 +20,12 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 
@@ -36,17 +38,26 @@ import org.catrobat.paintroid.tools.ToolWithShape;
 public abstract class BaseToolWithShape extends BaseTool implements
 		ToolWithShape {
 
+	private static final String BUNDLE_TOOL_POSITION_X = "TOOL_POSITION_X";
+	private static final String BUNDLE_TOOL_POSITION_Y = "TOOL_POSITION_Y";
+
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
-	public PointF toolPosition;
-	protected int primaryShapeColor = PaintroidApplication.applicationContext
-			.getResources().getColor(R.color.rectangle_primary_color);
-	protected int secondaryShapeColor = PaintroidApplication.applicationContext
-			.getResources().getColor(R.color.rectangle_secondary_color);
-	protected Paint linePaint;
+	public final PointF toolPosition;
+
+	int primaryShapeColor;
+	int secondaryShapeColor;
+
+	final Paint linePaint;
+	final DisplayMetrics metrics;
 
 	public BaseToolWithShape(Context context, ToolType toolType) {
 		super(context, toolType);
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+
+		final Resources resources = context.getResources();
+		metrics = resources.getDisplayMetrics();
+
+		primaryShapeColor = resources.getColor(R.color.rectangle_primary_color);
+		secondaryShapeColor = resources.getColor(R.color.rectangle_secondary_color);
 		float actionBarHeight = NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT * metrics.density;
 		PointF surfaceToolPosition = new PointF(metrics.widthPixels / 2f, metrics.heightPixels
 				/ 2f - actionBarHeight);
@@ -58,23 +69,31 @@ public abstract class BaseToolWithShape extends BaseTool implements
 	@Override
 	public abstract void drawShape(Canvas canvas);
 
-	protected float getStrokeWidthForZoom(float defaultStrokeWidth,
-			float minStrokeWidth, float maxStrokeWidth) {
-		float displayScale = context.getResources().getDisplayMetrics().density;
-		float strokeWidth = (defaultStrokeWidth * displayScale)
+	float getStrokeWidthForZoom(float defaultStrokeWidth, float minStrokeWidth, float maxStrokeWidth) {
+		float strokeWidth = (defaultStrokeWidth * metrics.density)
 				/ PaintroidApplication.perspective.getScale();
-		if (strokeWidth < minStrokeWidth) {
-			strokeWidth = minStrokeWidth;
-		} else if (strokeWidth > maxStrokeWidth) {
-			strokeWidth = maxStrokeWidth;
-		}
-		return strokeWidth;
+		return Math.min(maxStrokeWidth, Math.max(minStrokeWidth, strokeWidth));
 	}
 
-	protected float getInverselyProportionalSizeForZoom(float defaultSize) {
-		float displayScale = context.getResources().getDisplayMetrics().density;
+	float getInverselyProportionalSizeForZoom(float defaultSize) {
 		float applicationScale = PaintroidApplication.perspective.getScale();
-		return (defaultSize * displayScale) / applicationScale;
+		return (defaultSize * metrics.density) / applicationScale;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
+
+		bundle.putFloat(BUNDLE_TOOL_POSITION_X, toolPosition.x);
+		bundle.putFloat(BUNDLE_TOOL_POSITION_Y, toolPosition.y);
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
+		super.onRestoreInstanceState(bundle);
+
+		toolPosition.x = bundle.getFloat(BUNDLE_TOOL_POSITION_X, toolPosition.x);
+		toolPosition.y = bundle.getFloat(BUNDLE_TOOL_POSITION_Y, toolPosition.y);
 	}
 
 	@Override

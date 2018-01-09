@@ -32,6 +32,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -52,6 +53,9 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 	private static final float SHAPE_OFFSET = 10f;
 
+	private static final String BUNDLE_BASE_SHAPE = "BASE_SHAPE";
+	private static final String BUNDLE_SHAPE_DRAW_TYPE = "SHAPE_DRAW_TYPE";
+
 	private BaseShape baseShape;
 	private ShapeDrawType shapeDrawType;
 	private ShapeToolOptionsListener shapeToolOptionsListener;
@@ -69,6 +73,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 		shapeDrawType = ShapeDrawType.FILL;
 
+		createOverlayBitmap();
 		createAndSetBitmap();
 	}
 
@@ -110,7 +115,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 		Paint drawPaint = new Paint();
 		drawPaint.setColor(canvasPaint.getColor());
-		drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+		drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
 		switch (shapeDrawType) {
 			case FILL:
@@ -134,10 +139,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			int colorWithMaxAlpha = Color.BLACK;
 			geometricFillCommandPaint.setColor(colorWithMaxAlpha);
 			geometricFillCommandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-			geometricFillCommandPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+			geometricFillCommandPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
 			drawPaint.reset();
-			drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+			drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 			drawPaint.setShader(CHECKERED_PATTERN.getShader());
 		}
 
@@ -158,8 +163,32 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 		}
 
-		createOverlayButton();
 		setBitmap(bitmap);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
+
+		bundle.putSerializable(BUNDLE_BASE_SHAPE, baseShape);
+		bundle.putSerializable(BUNDLE_SHAPE_DRAW_TYPE, shapeDrawType);
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
+		super.onRestoreInstanceState(bundle);
+
+		BaseShape baseShape = (BaseShape) bundle.getSerializable(BUNDLE_BASE_SHAPE);
+		ShapeDrawType shapeDrawType = (ShapeDrawType) bundle.getSerializable(BUNDLE_SHAPE_DRAW_TYPE);
+
+		if (baseShape != null && shapeDrawType != null
+				&& (this.baseShape != baseShape || this.shapeDrawType != shapeDrawType)) {
+			this.baseShape = baseShape;
+			this.shapeDrawType = shapeDrawType;
+
+			shapeToolOptionsListener.setShapeActivated(baseShape);
+			createAndSetBitmap();
+		}
 	}
 
 	private void drawShape(Canvas drawCanvas, RectF shapeRect, Paint drawPaint, int drawableId) {

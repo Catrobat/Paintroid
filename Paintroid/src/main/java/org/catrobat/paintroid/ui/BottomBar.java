@@ -27,6 +27,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
@@ -62,20 +63,25 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 
 	public BottomBar(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
+		toolsLayout = (LinearLayout) mainActivity.findViewById(R.id.tools_layout);
 
+		Bundle bundle = new Bundle();
 		if (PaintroidApplication.currentTool == null) {
 			currentToolType = ToolType.BRUSH;
 			PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, currentToolType);
+			PaintroidApplication.currentTool.startTool();
 		} else {
 			currentToolType = PaintroidApplication.currentTool.getToolType();
 			Paint paint = PaintroidApplication.currentTool.getDrawPaint();
+			PaintroidApplication.currentTool.leaveTool();
+			PaintroidApplication.currentTool.onSaveInstanceState(bundle);
 			PaintroidApplication.currentTool = ToolFactory.createTool(mainActivity, currentToolType);
+			PaintroidApplication.currentTool.onRestoreInstanceState(bundle);
+			PaintroidApplication.currentTool.startTool();
 			PaintroidApplication.currentTool.setDrawPaint(paint);
 		}
 
 		getToolButtonByToolType(currentToolType).setSelected(true);
-		toolsLayout = (LinearLayout) mainActivity.findViewById(R.id.tools_layout);
-
 		setBottomBarListener();
 
 		if (ENABLE_START_SCROLL_ANIMATION) {

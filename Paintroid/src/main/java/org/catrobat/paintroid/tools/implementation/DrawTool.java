@@ -51,13 +51,17 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
-		changePaintColor(canvasPaint.getColor());
+		setPaintColor(canvasPaint.getColor());
 
 		if (PaintroidApplication.currentTool.getToolType() == ToolType.ERASER
 				&& canvasPaint.getColor() != Color.TRANSPARENT) {
-			changePaintColor(Color.TRANSPARENT);
+			setPaintColor(Color.TRANSPARENT);
 		}
 
+		canvas.save();
+		canvas.clipRect(0, 0,
+				PaintroidApplication.drawingSurface.getBitmapWidth(),
+				PaintroidApplication.drawingSurface.getBitmapHeight());
 		if (canvasPaint.getColor() == Color.TRANSPARENT) {
 			canvasPaint.setColor(Color.BLACK);
 			canvas.drawPath(pathToDraw, canvasPaint);
@@ -65,6 +69,7 @@ public class DrawTool extends BaseTool {
 		} else {
 			canvas.drawPath(pathToDraw, bitmapPaint);
 		}
+		canvas.restore();
 	}
 
 	@Override
