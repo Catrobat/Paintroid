@@ -38,8 +38,8 @@ public enum ToolType {
 	ERASER(R.string.button_eraser, R.string.help_content_eraser, false, EnumSet.of(StateChange.ALL), R.id.tools_eraser),
 	SHAPE(R.string.button_shape, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
 	TEXT(R.string.button_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text),
-	LAYER(R.string.layers_title, R.string.layers_title, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
-	COLORCHOOSER(R.string.color_chooser_title, R.string.color_chooser_title, true, EnumSet.of(StateChange.ALL), R.id.btn_top_color);
+	LAYER(R.string.layers_title, R.string.help_content_layer, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
+	COLORCHOOSER(R.string.color_chooser_title, R.string.help_content_color_chooser, true, EnumSet.of(StateChange.ALL), R.id.btn_top_color);
 
 	private int nameResource;
 	private int helpTextResource;
