@@ -57,7 +57,7 @@
                 style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:src="@drawable/icon_menu_resize"/>
+                android:src="@drawable/icon_menu_transform"/>
 
             <ImageButton
                 android:id="@+id/tools_line"
