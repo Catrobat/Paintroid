@@ -50,7 +50,6 @@ public class PaintroidApplication extends Application {
 	public static CommandManager commandManager;
 	public static Tool currentTool;
 	public static Perspective perspective;
-	public static boolean openedFromCatroid = false;
 	public static String catroidPicturePath;
 	public static boolean isPlainImage = true;
 	public static Menu menu;

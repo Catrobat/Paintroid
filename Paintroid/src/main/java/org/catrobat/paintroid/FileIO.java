@@ -239,11 +239,11 @@ public abstract class FileIO {
 		return mutableBitmap;
 	}
 
-	public static Bitmap getBitmapFromFile(File bitmapFile) {
+	public static Bitmap getBitmapFromFile(File bitmapFile, boolean openedFromCatroid) {
 
 		BitmapFactory.Options options = new BitmapFactory.Options();
 
-		if (PaintroidApplication.openedFromCatroid) {
+		if (openedFromCatroid) {
 			options.inJustDecodeBounds = false;
 			Bitmap immutableBitmap = BitmapFactory.decodeFile(
 					bitmapFile.getAbsolutePath(), options);

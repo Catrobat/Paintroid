@@ -30,6 +30,7 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -59,6 +60,9 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	protected static final int REQUEST_CODE_LANGUAGE = 5;
 	private static Uri cameraImageUri;
 	protected boolean loadBitmapFailed = false;
+
+	@VisibleForTesting
+	public boolean openedFromCatroid;
 
 	boolean imageHasBeenModified() {
 		return (!(LayerListener.getInstance().getAdapter().getLayers().size() == 1)
@@ -112,7 +116,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	}
 
 	protected void newImage() {
-		if (!imageHasBeenModified() && !PaintroidApplication.openedFromCatroid || imageHasBeenSaved()) {
+		if (!imageHasBeenModified() && !openedFromCatroid || imageHasBeenSaved()) {
 			chooseNewImage();
 		} else {
 
@@ -272,7 +276,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 					getSupportFragmentManager(), "savedialogerror");
 		}
 
-		PaintroidApplication.isSaved = !PaintroidApplication.openedFromCatroid;
+		PaintroidApplication.isSaved = !openedFromCatroid;
 	}
 
 	protected void loadBitmapFromUri(Uri uri) {

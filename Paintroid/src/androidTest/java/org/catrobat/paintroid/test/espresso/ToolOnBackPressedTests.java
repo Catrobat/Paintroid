@@ -287,7 +287,7 @@ public class ToolOnBackPressedTests {
 
 		saveFile = new File(pathToFile);
 
-		PaintroidApplication.openedFromCatroid = true;
+		launchActivityRule.getActivity().openedFromCatroid = true;
 
 		Espresso.pressBack();
 
@@ -318,7 +318,7 @@ public class ToolOnBackPressedTests {
 
 		saveFile = new File(pathToFile);
 
-		PaintroidApplication.openedFromCatroid = true;
+		launchActivityRule.getActivity().openedFromCatroid = true;
 
 		Espresso.pressBack();
 

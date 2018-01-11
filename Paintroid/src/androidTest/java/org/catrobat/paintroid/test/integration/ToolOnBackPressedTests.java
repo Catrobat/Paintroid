@@ -159,7 +159,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		if (fileToReturnToCatroid.exists())
 			fileToReturnToCatroid.delete();
 
-		PaintroidApplication.openedFromCatroid = true;
+//		PaintroidApplication.openedFromCatroid = true;
 		int numberButtonsAtBeginning = mSolo.getCurrentViews(Button.class).size();
 
 		mSolo.goBack();
@@ -200,7 +200,7 @@ public class ToolOnBackPressedTests extends BaseIntegrationTestClass {
 		if (fileToReturnToCatroid.exists())
 			fileToReturnToCatroid.delete();
 
-		PaintroidApplication.openedFromCatroid = true;
+//		PaintroidApplication.openedFromCatroid = true;
 		mSolo.goBack();
 
 		mSolo.waitForText(mSolo.getString(R.string.discard_button_text));

@@ -117,7 +117,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 					+ catroidPicturePath);
 		}
 		if (catroidPicturePath != null) {
-			PaintroidApplication.openedFromCatroid = true;
+			openedFromCatroid = true;
 			if (!catroidPicturePath.equals("")) {
 				PaintroidApplication.catroidPicturePath = catroidPicturePath;
 				PaintroidApplication.scaleImage = false;
@@ -128,7 +128,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 				supportActionBar.setDisplayShowHomeEnabled(true);
 			}
 		} else {
-			PaintroidApplication.openedFromCatroid = false;
+			openedFromCatroid = false;
 		}
 		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
@@ -143,7 +143,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		int colorPickerBackgroundColor = PaintroidApplication.colorPickerInitialColor;
 		ColorPickerDialog.getInstance().setInitialColor(colorPickerBackgroundColor);
 
-		if (PaintroidApplication.openedFromCatroid
+		if (openedFromCatroid
 				&& catroidPicturePath != null
 				&& catroidPicturePath.length() > 0) {
 			initializeWhenOpenedFromCatroid();
@@ -164,17 +164,17 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 									new LayerCommand(LayerListener.getInstance().getCurrentLayer()), command);
 						}
 					});
-		} else if (PaintroidApplication.openedFromCatroid) {
+		} else if (openedFromCatroid) {
 			initializeWhenOpenedFromCatroid();
 		} else {
 			initialiseNewBitmap();
 		}
 
-		if (!PaintroidApplication.openedFromCatroid) {
+		if (!openedFromCatroid) {
 			LayerListener.init(this, layerSideNav, PaintroidApplication.drawingSurface.getBitmapCopy(), false);
 		}
 
-		if (!PaintroidApplication.commandManager.isCommandManagerInitialized() || PaintroidApplication.openedFromCatroid) {
+		if (!PaintroidApplication.commandManager.isCommandManagerInitialized() || openedFromCatroid) {
 			initCommandManager();
 		}
 
@@ -495,7 +495,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 			finish();
 		} else {
 			AlertDialog.Builder builder = new CustomAlertDialogBuilder(this);
-			if (PaintroidApplication.openedFromCatroid) {
+			if (openedFromCatroid) {
 				builder.setTitle(R.string.closing_catroid_security_question_title);
 				builder.setMessage(R.string.closing_security_question);
 				builder.setPositiveButton(R.string.save_button_text,
@@ -616,7 +616,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		NavigationView mNavigationView = (NavigationView) findViewById(R.id.nav_view);
 		mNavigationView.setNavigationItemSelectedListener(this);
 
-		if (!PaintroidApplication.openedFromCatroid) {
+		if (!openedFromCatroid) {
 			mNavigationView.getMenu().removeItem(R.id.nav_back_to_pocket_code);
 			mNavigationView.getMenu().removeItem(R.id.nav_export);
 		} else {

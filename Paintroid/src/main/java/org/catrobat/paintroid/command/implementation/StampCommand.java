@@ -59,7 +59,7 @@ public class StampCommand extends BaseCommand {
 
 		notifyStatus(NotifyStates.COMMAND_STARTED);
 		if (fileToStoredBitmap != null) {
-			bitmap = FileIO.getBitmapFromFile(fileToStoredBitmap);
+			bitmap = FileIO.getBitmapFromFile(fileToStoredBitmap, false);
 		}
 
 		if (bitmap == null) {
