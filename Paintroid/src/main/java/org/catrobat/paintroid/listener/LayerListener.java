@@ -35,8 +35,8 @@ import android.widget.Toast;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
-import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.eventlistener.OnActiveLayerChangedListener;
 import org.catrobat.paintroid.eventlistener.OnRefreshLayerDialogListener;
@@ -244,15 +244,16 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 	}
 
 	public void createLayer() {
+		final CommandManager commandManager = PaintroidApplication.commandManager;
 		if (layersAdapter.getLayerCounter() > LAYER_UNDO_LIMIT) {
-			((CommandManagerImplementation) PaintroidApplication.commandManager).deleteCommandFirstDeletedLayer();
+			commandManager.deleteCommandFirstDeletedLayer();
 		}
 
 		boolean success = layersAdapter.addLayer();
 		if (success) {
 			Layer layer = layersAdapter.getLayer(0);
 			selectLayer(layer);
-			PaintroidApplication.commandManager.commitAddLayerCommand(new LayerCommand(layer));
+			commandManager.commitAddLayerCommand(new LayerCommand(layer));
 			UndoRedoManager.getInstance().update();
 		} else {
 			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_too_many_layers,

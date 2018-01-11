@@ -52,6 +52,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
@@ -179,23 +180,19 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 	}
 
 	private void initCommandManager() {
-		PaintroidApplication.commandManager = new CommandManagerImplementation();
+		CommandManager commandManager = new CommandManagerImplementation();
+		PaintroidApplication.commandManager = commandManager;
 
-		((CommandManagerImplementation) PaintroidApplication.commandManager)
-				.setUpdateTopBarListener(topBar);
+		commandManager.setUpdateTopBarListener(topBar);
+		commandManager.addChangeActiveLayerListener(LayerListener.getInstance());
+		commandManager.setLayerEventListener(LayerListener.getInstance().getAdapter());
 
-		((CommandManagerImplementation) PaintroidApplication.commandManager)
-				.addChangeActiveLayerListener(LayerListener.getInstance());
-
-		((CommandManagerImplementation) PaintroidApplication.commandManager)
-				.setLayerEventListener(LayerListener.getInstance().getAdapter());
-
-		PaintroidApplication.commandManager.commitAddLayerCommand(
+		commandManager.commitAddLayerCommand(
 				new LayerCommand(LayerListener.getInstance().getAdapter().getLayer(0)));
 
 		UndoRedoManager.getInstance().update();
 
-		PaintroidApplication.commandManager.setInitialized(true);
+		commandManager.setInitialized(true);
 	}
 
 	@Override
@@ -325,7 +322,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		initKeyboardIsShownListener();
 		setFullScreen(false);
 
-		((CommandManagerImplementation) PaintroidApplication.commandManager)
+		PaintroidApplication.commandManager
 				.setUpdateTopBarListener(topBar);
 		UndoRedoManager.getInstance().update();
 	}

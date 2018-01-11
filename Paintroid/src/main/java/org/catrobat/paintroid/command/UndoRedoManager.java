@@ -51,9 +51,7 @@ public final class UndoRedoManager {
 	}
 
 	public void performUndo() {
-		final CommandManagerImplementation commandManager =
-				(CommandManagerImplementation) PaintroidApplication.commandManager;
-
+		final CommandManager commandManager = PaintroidApplication.commandManager;
 		synchronized (commandManager.getDrawBitmapCommandsAtLayer()) {
 			final Layer layer = LayerListener.getInstance().getCurrentLayer();
 			LayerCommand layerCommand = new LayerCommand(layer);
@@ -153,13 +151,14 @@ public final class UndoRedoManager {
 	public void performRedo() {
 		final Layer layer = LayerListener.getInstance().getCurrentLayer();
 		LayerCommand layerCommand = new LayerCommand(layer);
-		LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
+		final CommandManager commandManager = PaintroidApplication.commandManager;
+		LayerBitmapCommand layerBitmapCommand = commandManager.getLayerBitmapCommand(layerCommand);
 
 		float scale = PaintroidApplication.perspective.getScale();
 		float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
 		float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
 
-		if (((CommandManagerImplementation) PaintroidApplication.commandManager).getLayerOperationsUndoCommandList().size() == 0
+		if (commandManager.getLayerOperationsUndoCommandList().size() == 0
 				&& layerBitmapCommand.getLayerUndoCommands().size() == 0) {
 			update();
 			return;
@@ -172,28 +171,28 @@ public final class UndoRedoManager {
 			isLayerCommandInstance = true;
 
 			if (((LayerCommand) lastUndoCommand).getLayerCommandType() == CommandManagerImplementation.CommandType.ADD_LAYER) {
-				((CommandManagerImplementation) PaintroidApplication.commandManager).addLayerCommandToDrawBitmapCommandsAtLayer((LayerCommand) lastUndoCommand);
+				commandManager.addLayerCommandToDrawBitmapCommandsAtLayer((LayerCommand) lastUndoCommand);
 
-				((CommandManagerImplementation) PaintroidApplication.commandManager).processLayerRedo((LayerCommand) lastUndoCommand);
-				((CommandManagerImplementation) PaintroidApplication.commandManager).addLayerCommandToRedoList();
+				commandManager.processLayerRedo((LayerCommand) lastUndoCommand);
+				commandManager.addLayerCommandToRedoList();
 			} else if (((LayerCommand) lastUndoCommand).getLayerCommandType() == CommandManagerImplementation.CommandType.REMOVE_LAYER) {
-				ArrayList<LayerBitmapCommand> list = ((CommandManagerImplementation) PaintroidApplication.commandManager)
+				ArrayList<LayerBitmapCommand> list = commandManager
 						.getLayerBitmapCommands(((LayerCommand) lastUndoCommand).getLayer().getLayerID());
 				((LayerCommand) lastUndoCommand).setLayersBitmapCommands(list);
 
-				((CommandManagerImplementation) PaintroidApplication.commandManager).processLayerRedo((LayerCommand) lastUndoCommand);
+				commandManager.processLayerRedo((LayerCommand) lastUndoCommand);
 
-				((CommandManagerImplementation) PaintroidApplication.commandManager)
+				commandManager
 						.addLayerCommandToDrawBitmapCommandsAtLayer((LayerCommand) lastUndoCommand);
 
-				((CommandManagerImplementation) PaintroidApplication.commandManager).addLayerCommandToRedoList();
+				commandManager.addLayerCommandToRedoList();
 			} else if (((LayerCommand) lastUndoCommand).getLayerCommandType() == CommandManagerImplementation.CommandType.MERGE_LAYERS) {
-				((CommandManagerImplementation) PaintroidApplication.commandManager).processLayerRedo((LayerCommand) lastUndoCommand);
+				commandManager.processLayerRedo((LayerCommand) lastUndoCommand);
 
-				((CommandManagerImplementation) PaintroidApplication.commandManager)
+				commandManager
 						.addLayerCommandToDrawBitmapCommandsAtLayer((LayerCommand) lastUndoCommand);
 
-				((CommandManagerImplementation) PaintroidApplication.commandManager).addLayerCommandToRedoList();
+				commandManager.addLayerCommandToRedoList();
 			}
 		} else {
 			isLayerCommandInstance = false;
@@ -256,8 +255,7 @@ public final class UndoRedoManager {
 	}
 
 	private void updateUndoButton(LayerBitmapCommand layerBitmapCommand) {
-		final CommandManagerImplementation commandManager =
-				(CommandManagerImplementation) PaintroidApplication.commandManager;
+		final CommandManager commandManager = PaintroidApplication.commandManager;
 		final boolean enableUndo = layerBitmapCommand.getLayerCommands().size() > 1
 				|| commandManager.getLayerOperationsCommandList().size() > 1;
 		final boolean enableRedo = !layerBitmapCommand.getLayerUndoCommands().isEmpty();
