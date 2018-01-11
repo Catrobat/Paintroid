@@ -32,6 +32,7 @@ import android.graphics.Paint.Cap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -78,12 +79,14 @@ import java.io.File;
 
 public class MainActivity extends NavigationDrawerMenuActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+	@VisibleForTesting
+	public String catroidPicturePath;
 	public LayersAdapter layersAdapter;
-	protected BottomBar bottomBar;
-	protected TopBar topBar;
-	protected boolean isFullScreen;
-	ActionBarDrawerToggle actionBarDrawerToggle;
-	DrawerLayout drawerLayout;
+	private BottomBar bottomBar;
+	@VisibleForTesting
+	public TopBar topBar;
+	private boolean isFullScreen;
+	private DrawerLayout drawerLayout;
 	private NavigationView layerSideNav;
 	private InputMethodManager inputMethodManager;
 	private boolean isKeyboardShown;
@@ -106,20 +109,16 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		initActionBar();
 		inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-		PaintroidApplication.catroidPicturePath = null;
-		String catroidPicturePath = null;
+		String tempPicturePath = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			catroidPicturePath = extras
-					.getString(getString(R.string.extra_picture_path_catroid));
-
-			Log.d(PaintroidApplication.TAG, "catroidPicturePath: "
-					+ catroidPicturePath);
+			tempPicturePath = extras.getString(getString(R.string.extra_picture_path_catroid));
+			Log.d(PaintroidApplication.TAG, "catroidPicturePath: " + tempPicturePath);
 		}
-		if (catroidPicturePath != null) {
+		if (tempPicturePath != null) {
 			openedFromCatroid = true;
-			if (!catroidPicturePath.equals("")) {
-				PaintroidApplication.catroidPicturePath = catroidPicturePath;
+			if (!tempPicturePath.equals("")) {
+				catroidPicturePath = tempPicturePath;
 				PaintroidApplication.scaleImage = false;
 			}
 			ActionBar supportActionBar = getSupportActionBar();
@@ -232,12 +231,14 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 			getSupportActionBar().setHomeButtonEnabled(true);
 		}
 
-		actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
-			public void onDrawerOpened(View drawerView) {
-				super.onDrawerOpened(drawerView);
-				drawerLayout.requestLayout();
-			}
-		};
+		ActionBarDrawerToggle actionBarDrawerToggle =
+				new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open,
+						R.string.drawer_close) {
+					public void onDrawerOpened(View drawerView) {
+						super.onDrawerOpened(drawerView);
+						drawerLayout.requestLayout();
+					}
+				};
 
 		drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
@@ -255,7 +256,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 	protected void onDestroy() {
 		PaintroidApplication.currentTool.changePaintStrokeCap(Cap.ROUND);
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
-		PaintroidApplication.isPlainImage = true;
+		isPlainImage = true;
 		PaintroidApplication.savedPictureUri = null;
 		PaintroidApplication.saveCopy = false;
 
@@ -408,7 +409,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(@RequestCode int requestCode, int resultCode, Intent data) {
 		if (resultCode != Activity.RESULT_OK) {
 			Log.d(PaintroidApplication.TAG,
 					"onActivityResult: result not ok, most likely a dialog hast been canceled");
@@ -442,6 +443,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 				onConfigurationChanged(getResources().getConfiguration());
 				break;
 
+			case REQUEST_CODE_LOAD_PICTURE:
+			case REQUEST_CODE_TAKE_PICTURE:
 			default:
 				super.onActivityResult(requestCode, resultCode, data);
 		}
@@ -539,8 +542,8 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 	private void exitToCatroid() {
 		String pictureFileName = getString(R.string.temp_picture_name);
 
-		if (PaintroidApplication.catroidPicturePath != null) {
-			pictureFileName = PaintroidApplication.catroidPicturePath;
+		if (catroidPicturePath != null) {
+			pictureFileName = catroidPicturePath;
 		} else {
 			Bundle extras = getIntent().getExtras();
 			if (extras != null) {

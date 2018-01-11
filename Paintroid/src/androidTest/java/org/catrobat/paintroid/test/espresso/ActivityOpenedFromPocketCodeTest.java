@@ -120,7 +120,7 @@ public class ActivityOpenedFromPocketCodeTest {
 
 		onView(withText(R.string.save_button_text)).perform(click());
 
-		assertEquals("Catroid picture path not correct", PaintroidApplication.catroidPicturePath, imageFile.getAbsolutePath());
+		assertEquals("Catroid picture path not correct", launchActivityRule.getActivity().catroidPicturePath, imageFile.getAbsolutePath());
 
 		assertThat("Image modification not saved", imageFile.lastModified(), greaterThan(lastModifiedBefore));
 		assertThat("Saved image length not changed", imageFile.length(), greaterThan(fileSizeBefore));

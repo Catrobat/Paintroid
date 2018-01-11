@@ -28,7 +28,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
-import android.view.Menu;
 
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
@@ -50,9 +49,6 @@ public class PaintroidApplication extends Application {
 	public static CommandManager commandManager;
 	public static Tool currentTool;
 	public static Perspective perspective;
-	public static String catroidPicturePath;
-	public static boolean isPlainImage = true;
-	public static Menu menu;
 	public static boolean isSaved = true;
 	public static Uri savedPictureUri = null;
 	public static boolean saveCopy = false;

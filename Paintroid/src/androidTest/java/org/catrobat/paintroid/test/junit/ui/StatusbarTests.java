@@ -25,7 +25,6 @@ import android.support.test.rule.ActivityTestRule;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.TopBar;
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,8 +34,6 @@ import static org.junit.Assert.assertEquals;
 
 // TODO for redesign: check these test
 public class StatusbarTests {
-
-	private static final String PRIVATE_ACCESS_STATUSBAR_NAME = "topBar";
 
 	private CommandManagerStub commandManagerStub;
 
@@ -48,23 +45,23 @@ public class StatusbarTests {
 
 	@UiThreadTest
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		commandManagerStub = new CommandManagerStub();
-		MainActivity mActivity = activityTestRule.getActivity();
-		TopBar mToolbar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, mActivity, PRIVATE_ACCESS_STATUSBAR_NAME);
-		mToolbar.deleteObservers();
+		MainActivity activity = activityTestRule.getActivity();
+		TopBar topBar = activity.topBar;
+		topBar.deleteObservers();
 		PaintroidApplication.commandManager = commandManagerStub;
 	}
 
 	@UiThreadTest
 	@Test
-	public void testRedoShouldBeDisabled() throws Exception {
+	public void testRedoShouldBeDisabled() {
 		assertEquals(0, commandManagerStub.getCallCount("enableRedo"));
 	}
 
 	@UiThreadTest
 	@Test
-	public void testUndoShouldBeDisabled() throws Exception {
+	public void testUndoShouldBeDisabled() {
 		assertEquals(0, commandManagerStub.getCallCount("enableUndo"));
 	}
 }
