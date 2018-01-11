@@ -51,10 +51,7 @@ public class PaintroidApplication extends Application {
 	public static Perspective perspective;
 	public static boolean isSaved = true;
 	public static Uri savedPictureUri = null;
-	public static boolean saveCopy = false;
 	public static boolean scaleImage = true;
-	public static int orientation;
-	public static boolean isRTL = false;
 	public static int colorPickerInitialColor = Color.BLACK;
 	public static LinkedList<LayerCommand> layerOperationsCommandList;
 	public static LinkedList<LayerCommand> layerOperationsUndoCommandList;

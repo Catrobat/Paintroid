@@ -433,7 +433,7 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_load_image)).perform(click());
 
-		assertTrue("Save copy flag not true", PaintroidApplication.saveCopy);
+		assertTrue("Save copy flag not true", launchActivityRule.getActivity().saveCopy);
 
 		openNavigationDrawer();
 

@@ -98,8 +98,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		initLocaleConfiguration();
 		final Resources resources = getApplicationContext().getResources();
 		final DisplayMetrics metrics = resources.getDisplayMetrics();
-		Configuration config = resources.getConfiguration();
-		PaintroidApplication.isRTL = (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
 
 		ColorPickerDialog.init(this);
 		IndeterminateProgressDialog.init(this);
@@ -129,7 +127,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		} else {
 			openedFromCatroid = false;
 		}
-		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.perspective = new Perspective(PaintroidApplication.drawingSurface.getHolder(), metrics.density);
 		BrushPickerView.init((ViewGroup) findViewById(R.id.layout_tool_specific_options));
@@ -258,7 +255,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		PaintroidApplication.currentTool.changePaintStrokeWidth(25);
 		isPlainImage = true;
 		PaintroidApplication.savedPictureUri = null;
-		PaintroidApplication.saveCopy = false;
+		saveCopy = false;
 
 		PaintroidApplication.commandManager.setInitialized(false);
 		PaintroidApplication.commandManager.resetAndClear(false);
@@ -286,7 +283,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		final Resources resources = getApplicationContext().getResources();
 		final DisplayMetrics metrics = resources.getDisplayMetrics();
 		final Configuration config = resources.getConfiguration();
-		PaintroidApplication.isRTL = (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
 
 		ColorPickerDialog.getInstance().dismiss();
 		ColorPickerDialog.init(this);
@@ -302,13 +298,13 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 
 		setContentView(R.layout.main);
 		View mainView = findViewById(R.id.drawer_layout);
-		mainView.setLayoutDirection(PaintroidApplication.isRTL ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
+		boolean isRTL = (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
+		mainView.setLayoutDirection(isRTL ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
 
 		initActionBar();
 		inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		hideKeyboard();
 
-		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.perspective = new Perspective(PaintroidApplication.drawingSurface.getHolder(), metrics.density);
 		bottomBar = new BottomBar(this);
@@ -342,7 +338,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 				showSecurityQuestionBeforeExit();
 				break;
 			case R.id.nav_export:
-				PaintroidApplication.saveCopy = true;
+				saveCopy = true;
 				SaveTask saveExportTask = new SaveTask(this);
 				saveExportTask.execute();
 				break;
@@ -351,7 +347,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 				saveTask.execute();
 				break;
 			case R.id.nav_save_duplicate:
-				PaintroidApplication.saveCopy = true;
+				saveCopy = true;
 				SaveTask saveCopyTask = new SaveTask(this);
 				saveCopyTask.execute();
 				break;
@@ -562,7 +558,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 
 		if (FileIO.saveBitmap(MainActivity.this,
 				LayerListener.getInstance().getBitmapOfAllLayersToSave(),
-				pictureFileName)) {
+				pictureFileName, saveCopy)) {
 			Bundle bundle = new Bundle();
 			bundle.putString(getString(R.string.extra_picture_path_catroid),
 					pictureFileName);

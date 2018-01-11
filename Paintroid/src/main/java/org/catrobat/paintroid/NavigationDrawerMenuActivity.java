@@ -75,7 +75,8 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	Uri cameraImageUri;
 	boolean loadBitmapFailed = false;
 	boolean isPlainImage = true;
-
+	@VisibleForTesting
+	public boolean saveCopy = false;
 	@VisibleForTesting
 	public boolean openedFromCatroid;
 
@@ -204,7 +205,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 			switch (requestCode) {
 				case REQUEST_CODE_LOAD_PICTURE:
 					loadBitmapFromUri(data.getData());
-					PaintroidApplication.saveCopy = true;
+					saveCopy = true;
 					break;
 				case REQUEST_CODE_TAKE_PICTURE:
 					loadBitmapFromUri(cameraImageUri);
@@ -286,7 +287,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	// if needed use Async Task
 	public void saveFile() {
 
-		if (!FileIO.saveBitmap(this, LayerListener.getInstance().getBitmapOfAllLayersToSave())) {
+		if (!FileIO.saveBitmap(this, LayerListener.getInstance().getBitmapOfAllLayersToSave(), null, saveCopy)) {
 			InfoDialog.newInstance(DialogType.WARNING,
 					R.string.dialog_error_sdcard_text,
 					R.string.dialog_error_save_title).show(
@@ -358,13 +359,13 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		@Override
 		protected void onPostExecute(Void Result) {
 			IndeterminateProgressDialog.getInstance().dismiss();
-			if (!PaintroidApplication.saveCopy) {
+			if (!saveCopy) {
 				Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG)
 						.show();
 			} else {
 				Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG)
 						.show();
-				PaintroidApplication.saveCopy = false;
+				saveCopy = false;
 			}
 		}
 	}

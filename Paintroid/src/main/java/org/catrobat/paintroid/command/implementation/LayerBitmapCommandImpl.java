@@ -1,15 +1,13 @@
 package org.catrobat.paintroid.command.implementation;
 
-import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.WindowManager;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
@@ -157,12 +155,11 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 
 	@Override
 	public void clearLayerBitmap() {
-		WindowManager wm = (WindowManager) PaintroidApplication.applicationContext.getSystemService(Context.WINDOW_SERVICE);
-		Display display = wm.getDefaultDisplay();
-		DisplayMetrics dm = new DisplayMetrics();
-		display.getMetrics(dm);
+		Resources resources = PaintroidApplication.applicationContext.getResources();
+		DisplayMetrics dm = resources.getDisplayMetrics();
 		Bitmap bitmap;
-		if (PaintroidApplication.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+		int orientation = resources.getConfiguration().orientation;
+		if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			bitmap = Bitmap.createBitmap(dm.heightPixels, dm.widthPixels, Bitmap.Config.ARGB_8888);
 		} else {
 			bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);

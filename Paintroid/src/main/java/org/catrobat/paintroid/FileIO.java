@@ -29,6 +29,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -57,11 +58,7 @@ public abstract class FileIO {
 		return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 	}
 
-	static boolean saveBitmap(Context context, Bitmap bitmap) {
-		return saveBitmap(context, bitmap, null);
-	}
-
-	static boolean saveBitmap(Context context, Bitmap bitmap, String path) {
+	static boolean saveBitmap(Context context, Bitmap bitmap, @Nullable String path, boolean saveCopy) {
 		if (!initialisePaintroidMediaDirectory()) {
 			return false;
 		}
@@ -78,8 +75,7 @@ public abstract class FileIO {
 			} else if (path != null) {
 				file = new File(path);
 				outputStream = new FileOutputStream(file);
-			} else if (PaintroidApplication.savedPictureUri != null
-					&& !PaintroidApplication.saveCopy) {
+			} else if (PaintroidApplication.savedPictureUri != null && !saveCopy) {
 				outputStream = context.getContentResolver().openOutputStream(
 						PaintroidApplication.savedPictureUri);
 			} else {
