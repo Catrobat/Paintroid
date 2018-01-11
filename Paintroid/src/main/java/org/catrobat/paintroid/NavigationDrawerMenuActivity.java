@@ -75,6 +75,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	Uri cameraImageUri;
 	boolean loadBitmapFailed = false;
 	boolean isPlainImage = true;
+	boolean scaleImage = true;
 	@VisibleForTesting
 	public boolean saveCopy = false;
 	@VisibleForTesting
@@ -254,7 +255,8 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 			public void run() {
 				Bitmap bitmap = null;
 				try {
-					bitmap = FileIO.getBitmapFromUri(uri);
+					bitmap = FileIO.getBitmapFromUri(uri, scaleImage);
+					scaleImage = true;
 				} catch (Exception e) {
 					loadBitmapFailed = true;
 				}

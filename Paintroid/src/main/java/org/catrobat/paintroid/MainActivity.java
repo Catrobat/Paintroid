@@ -117,7 +117,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 			openedFromCatroid = true;
 			if (!tempPicturePath.equals("")) {
 				catroidPicturePath = tempPicturePath;
-				PaintroidApplication.scaleImage = false;
+				scaleImage = false;
 			}
 			ActionBar supportActionBar = getSupportActionBar();
 			if (supportActionBar != null) {

@@ -68,8 +68,6 @@ public class TopBar extends Observable implements View.OnClickListener, OnUpdate
 			onUndoEnabled(!PaintroidApplication.commandManager.isUndoCommandListEmpty());
 			onRedoEnabled(!PaintroidApplication.commandManager.isRedoCommandListEmpty());
 		}
-
-		UndoRedoManager.getInstance().setTopBar(this);
 	}
 
 	private void onUndoClick() {

@@ -157,7 +157,7 @@ public abstract class FileIO {
 		return true;
 	}
 
-	public static Bitmap getBitmapFromUri(Uri bitmapUri) {
+	public static Bitmap getBitmapFromUri(Uri bitmapUri, boolean scaleImage) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 
 //		TODO: special treatment necessary?
@@ -191,7 +191,7 @@ public abstract class FileIO {
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
 
-		if (PaintroidApplication.scaleImage) {
+		if (scaleImage) {
 			DisplayMetrics metrics = new DisplayMetrics();
 			Display display = ((WindowManager) PaintroidApplication.applicationContext
 					.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -205,8 +205,6 @@ public abstract class FileIO {
 				sampleSize *= 2;
 			}
 		}
-		PaintroidApplication.scaleImage = true;
-
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
 
@@ -253,12 +251,9 @@ public abstract class FileIO {
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		Display display = ((WindowManager) PaintroidApplication.applicationContext
-				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		display.getMetrics(metrics);
-		int maxWidth = display.getWidth();
-		int maxHeight = display.getHeight();
+		DisplayMetrics metrics = PaintroidApplication.applicationContext.getResources().getDisplayMetrics();
+		int maxWidth = metrics.widthPixels;
+		int maxHeight = metrics.heightPixels;
 
 		while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
 			tmpWidth /= 2;

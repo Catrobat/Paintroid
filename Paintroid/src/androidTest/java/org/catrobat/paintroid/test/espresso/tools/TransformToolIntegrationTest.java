@@ -31,7 +31,6 @@ import android.widget.ImageButton;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
@@ -224,9 +223,9 @@ public class TransformToolIntegrationTest {
 	@Ignore("Enable with PAINT-192")
 	@Test
 	public void testRotateMultipleLayersUndoRedoWhenRotatingWasNotLastCommand() throws NoSuchFieldException, IllegalAccessException {
-		ImageButton undoButton = UndoRedoManager.getInstance().getTopBar().getUndoButton();
+		ImageButton undoButton = launchActivityRule.getActivity().topBar.getUndoButton();
 		Bitmap undoButtonDisabled = ((BitmapDrawable) undoButton.getDrawable()).getBitmap();
-		ImageButton redoButton = UndoRedoManager.getInstance().getTopBar().getRedoButton();
+		ImageButton redoButton = launchActivityRule.getActivity().topBar.getRedoButton();
 		Bitmap redoButtonDisabled = ((BitmapDrawable) redoButton.getDrawable()).getBitmap();
 
 		ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();

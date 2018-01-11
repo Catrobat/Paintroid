@@ -33,14 +33,12 @@ import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.implementation.TransformTool;
-import org.catrobat.paintroid.ui.TopBar;
 
 import java.util.ArrayList;
 
 public final class UndoRedoManager {
 
 	private static UndoRedoManager instance;
-	private TopBar topBar;
 
 	private UndoRedoManager() {
 	}
@@ -50,14 +48,6 @@ public final class UndoRedoManager {
 			instance = new UndoRedoManager();
 		}
 		return instance;
-	}
-
-	public TopBar getTopBar() {
-		return topBar;
-	}
-
-	public void setTopBar(TopBar topBar) {
-		this.topBar = topBar;
 	}
 
 	public void performUndo() {
