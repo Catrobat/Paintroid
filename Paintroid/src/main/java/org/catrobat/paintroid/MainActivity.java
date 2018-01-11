@@ -63,7 +63,6 @@ import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.listener.BrushPickerView;
-import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
@@ -80,7 +79,6 @@ import java.io.File;
 public class MainActivity extends NavigationDrawerMenuActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 	public LayersAdapter layersAdapter;
-	protected DrawingSurfaceListener drawingSurfaceListener;
 	protected BottomBar bottomBar;
 	protected TopBar topBar;
 	protected boolean isFullScreen;
@@ -135,7 +133,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.perspective = new Perspective(PaintroidApplication.drawingSurface.getHolder(), metrics.density);
-		drawingSurfaceListener = new DrawingSurfaceListener();
 		BrushPickerView.init((ViewGroup) findViewById(R.id.layout_tool_specific_options));
 		bottomBar = new BottomBar(this);
 		topBar = new TopBar(this);
@@ -145,8 +142,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 
 		int colorPickerBackgroundColor = PaintroidApplication.colorPickerInitialColor;
 		ColorPickerDialog.getInstance().setInitialColor(colorPickerBackgroundColor);
-
-		PaintroidApplication.drawingSurface.setOnTouchListener(drawingSurfaceListener);
 
 		if (PaintroidApplication.openedFromCatroid
 				&& catroidPicturePath != null
@@ -315,7 +310,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		PaintroidApplication.orientation = getResources().getConfiguration().orientation;
 		PaintroidApplication.drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.perspective = new Perspective(PaintroidApplication.drawingSurface.getHolder(), metrics.density);
-		drawingSurfaceListener = new DrawingSurfaceListener();
 		bottomBar = new BottomBar(this);
 		topBar = new TopBar(this);
 		layerSideNav = (NavigationView) findViewById(R.id.nav_view_layer);
@@ -324,8 +318,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 
 		int colorPickerBackgroundColor = PaintroidApplication.colorPickerInitialColor;
 		ColorPickerDialog.getInstance().setInitialColor(colorPickerBackgroundColor);
-
-		PaintroidApplication.drawingSurface.setOnTouchListener(drawingSurfaceListener);
 
 		PaintroidApplication.drawingSurface.resetBitmap(LayerListener.getInstance().getCurrentLayer().getImage());
 		PaintroidApplication.perspective.resetScaleAndTranslation();

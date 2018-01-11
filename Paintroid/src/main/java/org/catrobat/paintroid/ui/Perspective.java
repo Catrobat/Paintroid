@@ -130,6 +130,14 @@ public class Perspective implements Serializable {
 		return new PointF(canvasX, canvasY);
 	}
 
+	public synchronized void convertToCanvasFromSurface(PointF surfacePoint) {
+		float canvasX = (surfacePoint.x - surfaceCenterX) / surfaceScale
+				+ surfaceCenterX - surfaceTranslationX;
+		float canvasY = (surfacePoint.y - surfaceCenterY) / surfaceScale
+				+ surfaceCenterY - surfaceTranslationY;
+		surfacePoint.set(canvasX, canvasY);
+	}
+
 	/**
 	 * @deprecated use {@link #getSurfacePointFromCanvasPoint} instead
 	 */
@@ -149,12 +157,12 @@ public class Perspective implements Serializable {
 		return new PointF(surfaceX, surfaceY);
 	}
 
-	public synchronized void setCanvasPointToSurfacePoint(PointF point) {
-		float surfaceX = (point.x + surfaceTranslationX - surfaceCenterX)
+	public synchronized void convertToSurfaceFromCanvas(PointF canvasPoint) {
+		float surfaceX = (canvasPoint.x + surfaceTranslationX - surfaceCenterX)
 				* surfaceScale + surfaceCenterX;
-		float surfaceY = (point.y + surfaceTranslationY - surfaceCenterY)
+		float surfaceY = (canvasPoint.y + surfaceTranslationY - surfaceCenterY)
 				* surfaceScale + surfaceCenterY;
-		point.set(surfaceX, surfaceY);
+		canvasPoint.set(surfaceX, surfaceY);
 	}
 
 	public synchronized void applyToCanvas(Canvas canvas) {

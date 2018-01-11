@@ -37,6 +37,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
@@ -62,6 +63,7 @@ public class DrawingSurface extends SurfaceView implements
 	private boolean lock;
 	private boolean visible;
 	private boolean drawingSurfaceDirtyFlag = false;
+	private DrawingSurfaceListener drawingSurfaceListener;
 
 	public DrawingSurface(Context context, AttributeSet attrSet) {
 		super(context, attrSet);
@@ -152,6 +154,8 @@ public class DrawingSurface extends SurfaceView implements
 		opacityPaint = new Paint();
 		setLock(false);
 		setVisible(true);
+		drawingSurfaceListener = new DrawingSurfaceListener();
+		setOnTouchListener(drawingSurfaceListener);
 	}
 
 	public void refreshDrawingSurface() {
@@ -166,8 +170,7 @@ public class DrawingSurface extends SurfaceView implements
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
 		bundle.putParcelable(BUNDLE_WORKING_BITMAP, workingBitmap);
-		bundle.putSerializable(BUNDLE_PERSPECTIVE,
-				PaintroidApplication.perspective);
+		bundle.putSerializable(BUNDLE_PERSPECTIVE, PaintroidApplication.perspective);
 		return bundle;
 	}
 
