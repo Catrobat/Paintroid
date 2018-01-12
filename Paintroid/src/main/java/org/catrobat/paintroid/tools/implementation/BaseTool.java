@@ -43,7 +43,6 @@ import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -63,53 +62,52 @@ import java.util.Observable;
 import java.util.Observer;
 
 public abstract class BaseTool extends Observable implements Tool, Observer {
-	public static final Paint CHECKERED_PATTERN = new Paint();
+	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
 	public static final float MOVE_TOLERANCE = 5;
-	public static final int SCROLL_TOLERANCE_PERCENTAGE = 10;
-	protected static final PorterDuffXfermode ERASE_XFERMODE = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+	@VisibleForTesting
+	public static final int STROKE_25 = 25;
 	private static final int BACKGROUND_DEACTIVATED_DRAWING_SURFACE = Color.argb(0x80, 0, 0, 0);
+	private static final PorterDuffXfermode ERASE_XFERMODE = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+	private static final int SCROLL_TOLERANCE_PERCENTAGE = 10;
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public static Paint bitmapPaint;
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public static Paint canvasPaint;
-	protected static boolean toolOptionsShown = false;
-	protected static LinearLayout toolSpecificOptionsLayout;
-	protected static LinearLayout toolOptionsLayout;
-	protected static int scrollTolerance;
 
 	static {
-		bitmapPaint = new Paint();
+		bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		bitmapPaint.setColor(Color.BLACK);
-		bitmapPaint.setAntiAlias(true);
-		bitmapPaint.setDither(true);
 		bitmapPaint.setStyle(Paint.Style.STROKE);
 		bitmapPaint.setStrokeJoin(Paint.Join.ROUND);
 		bitmapPaint.setStrokeCap(Paint.Cap.ROUND);
-		bitmapPaint.setStrokeWidth(Tool.STROKE_25);
+		bitmapPaint.setStrokeWidth(STROKE_25);
 		canvasPaint = new Paint(bitmapPaint);
-		Bitmap checkerboard = BitmapFactory.decodeResource(
-				PaintroidApplication.applicationContext.getResources(),
-				R.drawable.checkeredbg);
-		BitmapShader shader = new BitmapShader(checkerboard,
-				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-		CHECKERED_PATTERN.setShader(shader);
-		WindowManager windowManager = (WindowManager) PaintroidApplication.applicationContext
-				.getSystemService(Context.WINDOW_SERVICE);
-		scrollTolerance = windowManager.getDefaultDisplay().getWidth()
-				* SCROLL_TOLERANCE_PERCENTAGE / 100;
 	}
 
-	protected ToolType toolType;
-	protected Context context;
-	protected PointF movedDistance;
-	protected PointF previousEventCoordinate;
+	final Paint checkeredPattern;
+	final int scrollTolerance;
+	final Context context;
+	final ToolType toolType;
 	protected OnColorPickedListener color;
+	boolean toolOptionsShown = false;
+	LinearLayout toolSpecificOptionsLayout;
+	PointF movedDistance;
+	PointF previousEventCoordinate;
 	private OnBrushChangedListener stroke;
+	private LinearLayout toolOptionsLayout;
 
 	public BaseTool(Context context, ToolType toolType) {
 		super();
 		this.toolType = toolType;
 		this.context = context;
+
+		Bitmap checkerboard = BitmapFactory.decodeResource(context.getResources(), R.drawable.checkeredbg);
+		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		checkeredPattern = new Paint();
+		checkeredPattern.setShader(shader);
+
+		scrollTolerance = context.getResources().getDisplayMetrics().widthPixels
+				* SCROLL_TOLERANCE_PERCENTAGE / 100;
 
 		color = new OnColorPickedListener() {
 			@Override
@@ -166,7 +164,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			canvasPaint.setStrokeJoin(bitmapPaint.getStrokeJoin());
 			canvasPaint.setStrokeCap(bitmapPaint.getStrokeCap());
 			canvasPaint.setStrokeWidth(bitmapPaint.getStrokeWidth());
-			canvasPaint.setShader(CHECKERED_PATTERN.getShader());
+			canvasPaint.setShader(checkeredPattern.getShader());
 			canvasPaint.setColor(Color.BLACK);
 			bitmapPaint.setAlpha(0x00);
 			canvasPaint.setAlpha(0x00);
@@ -329,7 +327,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	public void toggleShowToolOptions() {
 		LinearLayout mainToolOptions = (LinearLayout) ((Activity) (context)).findViewById(R.id.main_tool_options);
 		LinearLayout mainBottomBar = (LinearLayout) ((Activity) (context)).findViewById(R.id.main_bottom_bar);
-		int orientation = PaintroidApplication.applicationContext.getResources().getConfiguration().orientation;
+		int orientation = context.getResources().getConfiguration().orientation;
 
 		if (!toolOptionsShown) {
 			mainToolOptions.setY(mainBottomBar.getY() + mainBottomBar.getHeight());

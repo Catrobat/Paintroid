@@ -28,9 +28,6 @@ import android.os.Bundle;
 
 public interface Tool {
 
-	// standard stroke widths in pixels
-	int STROKE_25 = 25;
-
 	boolean handleDown(PointF coordinate);
 
 	boolean handleMove(PointF coordinate);

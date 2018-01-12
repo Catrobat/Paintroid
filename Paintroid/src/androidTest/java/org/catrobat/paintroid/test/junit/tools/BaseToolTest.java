@@ -63,7 +63,7 @@ public abstract class BaseToolTest {
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setStrokeCap(Cap.ROUND);
-		paint.setStrokeWidth(Tool.STROKE_25);
+		paint.setStrokeWidth(BaseTool.STROKE_25);
 		PaintroidApplication.commandManager = commandManagerStub;
 	}
 

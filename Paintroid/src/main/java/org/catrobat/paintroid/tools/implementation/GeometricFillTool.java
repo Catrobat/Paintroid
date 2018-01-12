@@ -143,7 +143,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 			drawPaint.reset();
 			drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
-			drawPaint.setShader(CHECKERED_PATTERN.getShader());
+			drawPaint.setShader(checkeredPattern.getShader());
 		}
 
 		switch (baseShape) {
