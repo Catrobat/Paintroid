@@ -22,13 +22,15 @@ package org.catrobat.paintroid.command.implementation;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class PointCommand extends BaseCommand {
-	protected PointF point;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public PointF point;
 
 	public PointCommand(Paint paint, PointF point) {
 		super(paint);

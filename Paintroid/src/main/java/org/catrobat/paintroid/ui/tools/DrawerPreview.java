@@ -54,8 +54,7 @@ public class DrawerPreview extends View {
 	}
 
 	private void init() {
-		Bitmap checkerboard = BitmapFactory.decodeResource(
-				PaintroidApplication.applicationContext.getResources(),
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(),
 				R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard,
 				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);

@@ -38,20 +38,4 @@ public final class PrivateAccess {
 		field.setAccessible(true);
 		field.set(object, value);
 	}
-
-	public static boolean getMemberValueBoolean(Class<?> classFromObject, Object object, String fieldName)
-			throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		Field field = classFromObject.getDeclaredField(fieldName);
-		field.setAccessible(true);
-
-		return field.getBoolean(object);
-	}
-
-	public static void setMemberValue(Class<?> classFromObject, Object object, String fieldName, boolean value)
-			throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		Field field = classFromObject.getDeclaredField(fieldName);
-		field.setAccessible(true);
-		field.setBoolean(object, value);
-		field.setAccessible(false);
-	}
 }

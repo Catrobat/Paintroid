@@ -26,6 +26,7 @@ import android.graphics.Point;
 import android.graphics.RectF;
 
 import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class StampCommand extends BaseCommand {
@@ -76,7 +77,7 @@ public class StampCommand extends BaseCommand {
 		canvas.restore();
 
 		if (fileToStoredBitmap == null) {
-			storeBitmap();
+			storeBitmap(PaintroidApplication.applicationContext);
 		} else {
 			bitmap.recycle();
 			bitmap = null;

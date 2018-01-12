@@ -3,11 +3,9 @@ package org.catrobat.paintroid.tools;
 import android.graphics.Bitmap;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
 
 public class Layer {
-	private static final String LAYER_PREFIX = PaintroidApplication.applicationContext
-			.getResources().getString(R.string.layer_prefix);
+	private static final String LAYER_PREFIX = "Layer ";
 	private int layerID;
 	private Bitmap bitmap;
 	private boolean isSelected;

@@ -24,10 +24,8 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.view.ViewPager;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.After;
 import org.junit.Before;
@@ -60,13 +58,13 @@ public class ViewPagerIntegrationTest {
 	private IntroPageViewAdapter viewPagerAdapter;
 
 	@Before
-	public void setUp() throws NoSuchFieldException, IllegalAccessException {
-		viewPager = (ViewPager) PrivateAccess.getMemberValue(WelcomeActivity.class, activityRule.getActivity(), "viewPager");
+	public void setUp() {
+		viewPager = activityRule.getActivity().viewPager;
 		viewPagerAdapter = (IntroPageViewAdapter) viewPager.getAdapter();
 	}
 
 	@After
-	public void tearDown() throws NoSuchFieldException, IllegalAccessException {
+	public void tearDown() {
 		shouldStartSequence(false);
 	}
 
@@ -82,13 +80,13 @@ public class ViewPagerIntegrationTest {
 	}
 
 	@Test
-	public void checkSlides() throws NoSuchFieldException, IllegalAccessException {
-		int[] adapterLayouts = (int[]) PrivateAccess.getMemberValue(IntroPageViewAdapter.class, viewPagerAdapter, "layouts");
+	public void checkSlides() {
+		int[] adapterLayouts = viewPagerAdapter.layouts;
 		assertTrue(Arrays.equals(activityRule.getLayouts(), adapterLayouts));
 	}
 
 	@Test
-	public void pressNextAndCheckIndex() throws NoSuchFieldException, IllegalAccessException {
+	public void pressNextAndCheckIndex() {
 		shouldStartSequence(false);
 		for (int i = 0; i < activityRule.getLayouts().length; i++) {
 			assertEquals(i, viewPager.getCurrentItem());

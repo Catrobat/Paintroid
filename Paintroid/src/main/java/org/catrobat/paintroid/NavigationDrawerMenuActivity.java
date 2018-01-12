@@ -255,7 +255,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 			public void run() {
 				Bitmap bitmap = null;
 				try {
-					bitmap = FileIO.getBitmapFromUri(uri, scaleImage);
+					bitmap = FileIO.getBitmapFromUri(NavigationDrawerMenuActivity.this, uri, scaleImage);
 					scaleImage = true;
 				} catch (Exception e) {
 					loadBitmapFailed = true;

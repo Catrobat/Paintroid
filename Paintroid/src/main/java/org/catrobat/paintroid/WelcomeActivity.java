@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -47,11 +48,15 @@ import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.reverseA
 
 public class WelcomeActivity extends AppCompatActivity {
 
-	int colorActive;
-	int colorInactive;
-	private ViewPager viewPager;
+	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+	public int colorActive;
+	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+	public int colorInactive;
+	@VisibleForTesting
+	public ViewPager viewPager;
 	private LinearLayout dotsLayout;
-	private int[] layouts;
+	@VisibleForTesting
+	public int[] layouts;
 	private Button btnSkip;
 	private Button btnNext;
 	ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {

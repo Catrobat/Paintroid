@@ -24,13 +24,15 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class PathCommand extends BaseCommand {
-	protected Path path;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public Path path;
 
 	public PathCommand(Paint paint, Path path) {
 		super(paint);

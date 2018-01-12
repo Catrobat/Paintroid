@@ -27,6 +27,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.annotation.VisibleForTesting;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -46,19 +47,21 @@ public class CursorTool extends BaseToolWithShape {
 	private static final float MAXIMAL_TOOL_STROKE_WIDTH = 10f;
 	private static final int CURSOR_LINES = 4;
 
-	protected Path pathToDraw;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public Path pathToDraw;
 	protected boolean pathInsideBitmap;
 	private int cursorToolPrimaryShapeColor;
-	private int cursorToolSecondaryShapeColor;
-	private boolean toolInDrawMode = false;
+	@VisibleForTesting
+	public int cursorToolSecondaryShapeColor;
+	@VisibleForTesting
+	public boolean toolInDrawMode = false;
 
 	public CursorTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
-		cursorToolPrimaryShapeColor = PaintroidApplication.applicationContext
-				.getResources().getColor(
+		cursorToolPrimaryShapeColor = context.getResources().getColor(
 						R.color.cursor_tool_deactive_primary_color);
 		cursorToolSecondaryShapeColor = Color.LTGRAY;
 		pathInsideBitmap = false;

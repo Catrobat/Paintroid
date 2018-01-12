@@ -21,6 +21,7 @@ package org.catrobat.paintroid.listener;
 
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,8 @@ public final class BrushPickerView implements View.OnClickListener {
 	private static BrushPickerView instance = null;
 
 	private View brushPickerView;
-	private ArrayList<BrushPickerView.OnBrushChangedListener> brushChangedListener;
+	@VisibleForTesting
+	public ArrayList<BrushPickerView.OnBrushChangedListener> brushChangedListener;
 	private TextView brushSizeText;
 	private SeekBar brushWidthSeekBar;
 	private RadioButton radioButtonCircle;

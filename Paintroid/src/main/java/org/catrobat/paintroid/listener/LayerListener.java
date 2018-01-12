@@ -256,7 +256,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 			commandManager.commitAddLayerCommand(new LayerCommand(layer));
 			UndoRedoManager.getInstance().update();
 		} else {
-			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_too_many_layers,
+			Toast.makeText(context, R.string.layer_too_many_layers,
 					Toast.LENGTH_LONG).show();
 		}
 		updateButtonResource();
@@ -282,7 +282,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		selectLayer(layersAdapter.getLayer(newPosition));
 
 		if (layersAdapter.checkAllLayerVisible()) {
-			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_invisible,
+			Toast.makeText(context, R.string.layer_invisible,
 					Toast.LENGTH_LONG).show();
 		}
 
@@ -310,7 +310,7 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 			refreshView();
 
 			PaintroidApplication.commandManager.commitMergeLayerCommand(new LayerCommand(getCurrentLayer(), layerToMergeIds));
-			Toast.makeText(PaintroidApplication.applicationContext, R.string.layer_merged,
+			Toast.makeText(context, R.string.layer_merged,
 					Toast.LENGTH_LONG).show();
 
 			PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);

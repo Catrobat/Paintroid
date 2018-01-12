@@ -31,7 +31,7 @@ public class PointCommandTest extends CommandTestSetup {
 
 	@Override
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		super.setUp();
 		commandUnderTest = new PointCommand(paintUnderTest, pointUnderTest);
 		commandUnderTestNull = new PointCommand(null, null);
@@ -39,7 +39,7 @@ public class PointCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		super.tearDown();
 	}
 

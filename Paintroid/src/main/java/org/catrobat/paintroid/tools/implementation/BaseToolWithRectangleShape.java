@@ -91,7 +91,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public Bitmap drawingBitmap;
 	protected float boxResizeMargin;
-	protected float rotationSymbolDistance;
+	@VisibleForTesting
+	public float rotationSymbolDistance;
 	protected float rotationSymbolWidth;
 	protected float toolStrokeWidth;
 	protected ResizeAction resizeAction;
@@ -100,8 +101,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected Bitmap overlayBitmap;
 	protected float maximumBoxResolution;
 
-	private boolean respectImageBounds;
-	private boolean rotationEnabled;
+	@VisibleForTesting
+	public boolean respectImageBounds;
+	@VisibleForTesting
+	public boolean rotationEnabled;
 	private boolean backgroundShadowEnabled;
 	private boolean resizePointsVisible;
 	private boolean statusIconEnabled;

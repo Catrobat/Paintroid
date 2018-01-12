@@ -25,9 +25,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
@@ -79,12 +77,12 @@ public class BrushPickerIntegrationTest {
 		resetDrawPaintAndBrushPickerView();
 	}
 
-	private Paint getCurrentToolBitmapPaint() throws NoSuchFieldException, IllegalAccessException {
-		return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "bitmapPaint");
+	private Paint getCurrentToolBitmapPaint() {
+		return BaseTool.bitmapPaint;
 	}
 
-	private Paint getCurrentToolCanvasPaint() throws NoSuchFieldException, IllegalAccessException {
-		return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "canvasPaint");
+	private Paint getCurrentToolCanvasPaint() {
+		return BaseTool.canvasPaint;
 	}
 
 	private void assertStrokePaint(Paint strokePaint, int expectedStrokeWidth, Cap expectedCap) {

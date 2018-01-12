@@ -19,21 +19,16 @@
 
 package org.catrobat.paintroid;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,7 +41,6 @@ import java.util.Date;
 import java.util.Locale;
 
 public abstract class FileIO {
-	private static final int BUFFER_SIZE = 1024;
 	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_MM_dd_hhmmss";
 	private static final String ENDING = ".png";
 	private static File paintroidMediaFile = null;
@@ -157,7 +151,7 @@ public abstract class FileIO {
 		return true;
 	}
 
-	public static Bitmap getBitmapFromUri(Uri bitmapUri, boolean scaleImage) {
+	public static Bitmap getBitmapFromUri(Context context, Uri bitmapUri, boolean scaleImage) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 
 //		TODO: special treatment necessary?
@@ -179,8 +173,7 @@ public abstract class FileIO {
 		options.inJustDecodeBounds = true;
 
 		try {
-			InputStream inputStream = PaintroidApplication.applicationContext
-					.getContentResolver().openInputStream(bitmapUri);
+			InputStream inputStream = context.getContentResolver().openInputStream(bitmapUri);
 			BitmapFactory.decodeStream(inputStream, null, options);
 			inputStream.close();
 		} catch (Exception e) {
@@ -192,12 +185,9 @@ public abstract class FileIO {
 		int sampleSize = 1;
 
 		if (scaleImage) {
-			DisplayMetrics metrics = new DisplayMetrics();
-			Display display = ((WindowManager) PaintroidApplication.applicationContext
-					.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-			display.getMetrics(metrics);
-			int maxWidth = display.getWidth();
-			int maxHeight = display.getHeight();
+			DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+			int maxWidth = metrics.widthPixels;
+			int maxHeight = metrics.heightPixels;
 
 			while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
 				tmpWidth /= 2;
@@ -210,8 +200,7 @@ public abstract class FileIO {
 
 		Bitmap immutableBitmap;
 		try {
-			InputStream inputStream = PaintroidApplication.applicationContext
-					.getContentResolver().openInputStream(bitmapUri);
+			InputStream inputStream = context.getContentResolver().openInputStream(bitmapUri);
 			immutableBitmap = BitmapFactory.decodeStream(inputStream, null,
 					options);
 			inputStream.close();
@@ -279,52 +268,5 @@ public abstract class FileIO {
 				tmpHeight);
 
 		return mutableBitmap;
-	}
-
-	public static String createFilePathFromUri(Activity activity, Uri uri) {
-		// Problem here
-		String filepath = null;
-		String[] projection = {MediaStore.Images.Media.DATA};
-		Cursor cursor = activity
-				.managedQuery(uri, projection, null, null, null);
-		if (cursor != null) {
-			int columnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			cursor.moveToFirst();
-			filepath = cursor.getString(columnIndex);
-		}
-
-		if (filepath == null
-				&& Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			String id = uri.getLastPathSegment().split(":")[1];
-			final String[] imageColumns = {MediaStore.Images.Media.DATA};
-			final String imageOrderBy = null;
-
-			String state = Environment.getExternalStorageState();
-			if (!state.equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
-				uri = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
-			}
-			uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-			cursor = activity.managedQuery(uri, imageColumns,
-					MediaStore.Images.Media._ID + "=" + id, null, imageOrderBy);
-
-			if (cursor.moveToFirst()) {
-				filepath = cursor.getString(cursor
-						.getColumnIndex(MediaStore.Images.Media.DATA));
-			}
-		} else if (filepath == null) {
-			filepath = uri.getPath();
-		}
-		return filepath;
-	}
-
-	public static void copyStream(InputStream inputStream,
-			OutputStream outputStream) throws IOException {
-		byte[] buffer = new byte[BUFFER_SIZE];
-		int bytesRead;
-		while ((bytesRead = inputStream.read(buffer)) != -1) {
-			outputStream.write(buffer, 0, bytesRead);
-		}
 	}
 }

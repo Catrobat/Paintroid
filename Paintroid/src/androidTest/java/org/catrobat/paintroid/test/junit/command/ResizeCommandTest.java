@@ -23,7 +23,6 @@ import android.graphics.Bitmap;
 
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +44,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 
 	@Override
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		super.setUp();
 		resizeCoordinateXLeft = 0;
 		resizeCoordinateYTop = 0;
@@ -60,9 +59,8 @@ public class ResizeCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	public void tearDown() throws Exception {
-		File fileToResizedBitmap = (File) PrivateAccess.getMemberValue(BaseCommand.class, commandUnderTest,
-				"fileToStoredBitmap");
+	public void tearDown() {
+		File fileToResizedBitmap = ((BaseCommand) commandUnderTest).fileToStoredBitmap;
 		if (fileToResizedBitmap != null) {
 			assertTrue(fileToResizedBitmap.delete());
 		}
@@ -70,8 +68,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 	}
 
 	@Test
-	public void testIfBitmapIsCropped() throws InterruptedException, SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testIfBitmapIsCropped() {
 		int widthOriginal = bitmapUnderTest.getWidth();
 		int heightOriginal = bitmapUnderTest.getHeight();
 		resizeCoordinateXLeft = 1;
@@ -92,8 +89,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 	}
 
 	@Test
-	public void testIfBitmapIsEnlarged() throws InterruptedException, SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testIfBitmapIsEnlarged() {
 		int widthOriginal = bitmapUnderTest.getWidth();
 		int heightOriginal = bitmapUnderTest.getHeight();
 		resizeCoordinateXLeft = -1;
@@ -114,8 +110,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 	}
 
 	@Test
-	public void testIfBitmapIsShifted() throws InterruptedException, SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testIfBitmapIsShifted() {
 		int widthOriginal = bitmapUnderTest.getWidth();
 		int heightOriginal = bitmapUnderTest.getHeight();
 		resizeCoordinateXLeft = bitmapUnderTest.getWidth() / 2 - 1;
@@ -134,8 +129,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 	}
 
 	@Test
-	public void testIfMaximumResolutionIsRespected() throws InterruptedException, SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testIfMaximumResolutionIsRespected() {
 		int widthOriginal = bitmapUnderTest.getWidth();
 		int heightOriginal = bitmapUnderTest.getHeight();
 		commandUnderTest = new ResizeCommand(0, 0, widthOriginal * 2, heightOriginal * 2, maximumBitmapResolution);
@@ -147,8 +141,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 	}
 
 	@Test
-	public void testIfBitmapIsNotResizedWithInvalidBounds() throws InterruptedException, SecurityException,
-			IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void testIfBitmapIsNotResizedWithInvalidBounds() {
 		Bitmap originalBitmap = layerUnderTest.getImage();
 		commandUnderTest = new ResizeCommand(bitmapUnderTest.getWidth(), 0, bitmapUnderTest.getWidth(),
 				0, maximumBitmapResolution);

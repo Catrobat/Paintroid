@@ -403,12 +403,8 @@ public final class EspressoUtils {
 		onView(withId(viewResourceId)).check(matches(withText(stringResourceId)));
 	}
 
-	public static void shouldStartSequence(boolean start) throws NoSuchFieldException, IllegalAccessException {
-		shouldStartSequence(null, start);
-	}
-
-	public static void shouldStartSequence(TapTargetTopBar topBar, boolean start) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(TapTargetTopBar.class, topBar, "firsTimeSequence", start);
+	public static void shouldStartSequence(boolean start) {
+		TapTargetTopBar.firsTimeSequence = start;
 	}
 
 	/**

@@ -194,7 +194,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private void drawShape(Canvas drawCanvas, RectF shapeRect, Paint drawPaint, int drawableId) {
 		Rect rect = new Rect((int) shapeRect.left, (int) shapeRect.top, (int) shapeRect.right, (int) shapeRect.bottom);
 
-		Bitmap bitmap = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), drawableId);
+		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
 		Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, rect.width(), rect.height(), true);
 		Paint colorChangePaint = new Paint(drawPaint);
 

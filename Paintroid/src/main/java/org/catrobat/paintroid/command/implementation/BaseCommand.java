@@ -19,11 +19,13 @@
 
 package org.catrobat.paintroid.command.implementation;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -37,9 +39,12 @@ import java.util.Observable;
 import java.util.Random;
 
 public abstract class BaseCommand extends Observable implements Command {
-	protected Paint paint;
-	protected Bitmap bitmap;
-	protected File fileToStoredBitmap;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public Paint paint;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public Bitmap bitmap;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public File fileToStoredBitmap;
 
 	public BaseCommand() {
 	}
@@ -72,8 +77,8 @@ public abstract class BaseCommand extends Observable implements Command {
 		}
 	}
 
-	public final void storeBitmap() {
-		File cacheDir = PaintroidApplication.applicationContext.getCacheDir();
+	public final void storeBitmap(Context context) {
+		File cacheDir = context.getCacheDir();
 		Random random = new Random();
 		random.setSeed(System.currentTimeMillis());
 		fileToStoredBitmap = new File(cacheDir.getAbsolutePath(),

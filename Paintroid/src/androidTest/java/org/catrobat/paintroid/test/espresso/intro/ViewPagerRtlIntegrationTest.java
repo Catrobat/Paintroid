@@ -23,10 +23,8 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.view.ViewPager;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Before;
 import org.junit.Rule;
@@ -57,7 +55,7 @@ public class ViewPagerRtlIntegrationTest {
 
 	@Before
 	public void setUp() throws NoSuchFieldException, IllegalAccessException {
-		viewPager = (ViewPager) PrivateAccess.getMemberValue(WelcomeActivity.class, activityRule.getActivity(), "viewPager");
+		viewPager = activityRule.getActivity().viewPager;
 		viewPagerAdapter = (IntroPageViewAdapter) viewPager.getAdapter();
 	}
 
@@ -73,8 +71,8 @@ public class ViewPagerRtlIntegrationTest {
 	}
 
 	@Test
-	public void checkSlides() throws NoSuchFieldException, IllegalAccessException {
-		int[] adapterLayouts = (int[]) PrivateAccess.getMemberValue(IntroPageViewAdapter.class, viewPagerAdapter, "layouts");
+	public void checkSlides() {
+		int[] adapterLayouts = viewPagerAdapter.layouts;
 		assertTrue(Arrays.equals(activityRule.getLayouts(), adapterLayouts));
 	}
 

@@ -53,6 +53,7 @@ import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.widget.Button;
 
@@ -68,7 +69,8 @@ public final class ColorPickerDialog extends BaseDialog {
 	static Paint backgroundPaint = new Paint();
 	private static ColorPickerDialog instance;
 	private ColorPickerView colorPickerView;
-	private ArrayList<OnColorPickedListener> onColorPickedListener;
+	@VisibleForTesting
+	public ArrayList<OnColorPickedListener> onColorPickedListener;
 	private Button buttonNewColor;
 
 	private ColorPickerDialog(Context context) {

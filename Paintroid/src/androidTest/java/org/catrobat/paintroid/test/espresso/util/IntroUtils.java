@@ -62,13 +62,14 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.shouldStar
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isNotVisible;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 
 public final class IntroUtils {
 	private static final int ANIMATION_DELAY = 750;
 	private static final String TT_CLASS_NAME = "com.getkeepsafe.taptargetview.TapTargetView";
+
+	private IntroUtils() {
+	}
 
 	public static int numberOfVisibleChildren(LinearLayout layout) {
 		int count = 0;
@@ -78,9 +79,6 @@ public final class IntroUtils {
 			}
 		}
 		return count;
-	}
-
-	private IntroUtils() {
 	}
 
 	public static void introClickToolAndCheckView(ToolType toolType, IntroSlide introSlide) {
@@ -132,10 +130,10 @@ public final class IntroUtils {
 		return new WithTapTargetTextMatcher(resourceId, TapTargetTextType.DESCRIPTION);
 	}
 
-	public static int getExpectedRadiusForTapTarget(TapTargetBase tapTargetTopBar) throws NoSuchFieldException, IllegalAccessException {
+	public static int getExpectedRadiusForTapTarget() {
 		final Context context = InstrumentationRegistry.getTargetContext();
 		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		int radiusOffset = (int) PrivateAccess.getMemberValue(TapTargetBase.class, tapTargetTopBar, "RADIUS_OFFSET");
+		int radiusOffset = TapTargetBase.RADIUS_OFFSET;
 		float dimension = context.getResources().getDimension(R.dimen.top_bar_height);
 		return WelcomeActivityHelper.calculateTapTargetRadius(dimension, metrics, radiusOffset);
 	}
@@ -151,23 +149,19 @@ public final class IntroUtils {
 	public static TapTargetBottomBar getTapTargetBottomBar(Activity activity) {
 		LinearLayout targetItemView = getBottomBarFromToolSlide(activity);
 		final View fadeView = activity.findViewById(R.id.intro_tools_textview);
-		TapTargetBottomBar tapTargetBottomBar = new TapTargetBottomBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_tools_bottom_bar);
-		return tapTargetBottomBar;
+		return new TapTargetBottomBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_tools_bottom_bar);
 	}
 
-	public static TapTargetTopBar getTapTargetTopBar(Activity activity) throws NoSuchFieldException, IllegalAccessException {
+	public static TapTargetTopBar getTapTargetTopBar(Activity activity) {
 		final View fadeView = activity.findViewById(R.id.intro_possibilities_textview);
 		LinearLayout targetItemView = getTopBarFromPossibilitiesSlide(activity);
 		TapTargetTopBar tapTargetTopBar = new TapTargetTopBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_possibilities_bottom_bar);
-		shouldStartSequence(tapTargetTopBar, false);
+		shouldStartSequence(false);
 		return tapTargetTopBar;
 	}
 
-	public static HashMap<ToolType, TapTarget> getMapFromTapTarget(TapTargetBase tapTarget) throws NoSuchFieldException, IllegalAccessException {
-		Object o = PrivateAccess.getMemberValue(TapTargetBase.class, tapTarget, "tapTargetMap");
-		assertThat("tapTarget member is not a HashMap", o, instanceOf(HashMap.class));
-
-		return (HashMap<ToolType, TapTarget>) o;
+	public static HashMap<ToolType, TapTarget> getMapFromTapTarget(TapTargetBase tapTarget) {
+		return tapTarget.tapTargetMap;
 	}
 
 	public static int getPageIndexFromLayout(final int[] layouts, final int layoutResource) throws IndexOutOfBoundsException {

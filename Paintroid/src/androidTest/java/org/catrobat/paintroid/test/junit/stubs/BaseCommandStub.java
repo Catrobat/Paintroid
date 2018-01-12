@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.junit.stubs;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.test.InstrumentationRegistry;
 
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.tools.Layer;
@@ -52,6 +53,6 @@ public class BaseCommandStub extends BaseCommand {
 	}
 
 	public void storeBitmapStub() {
-		storeBitmap();
+		storeBitmap(InstrumentationRegistry.getTargetContext());
 	}
 }

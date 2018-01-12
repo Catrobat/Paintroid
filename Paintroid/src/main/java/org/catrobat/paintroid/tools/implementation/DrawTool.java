@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.support.annotation.VisibleForTesting;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
@@ -36,7 +37,8 @@ import org.catrobat.paintroid.tools.ToolType;
 
 public class DrawTool extends BaseTool {
 
-	protected final Path pathToDraw;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public Path pathToDraw;
 	protected final PointF drawToolMovedDistance;
 	protected PointF initialEventCoordinate;
 	protected boolean pathInsideBitmap;

@@ -39,6 +39,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,8 +68,10 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	public static final int SCROLL_TOLERANCE_PERCENTAGE = 10;
 	protected static final PorterDuffXfermode ERASE_XFERMODE = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 	private static final int BACKGROUND_DEACTIVATED_DRAWING_SURFACE = Color.argb(0x80, 0, 0, 0);
-	protected static Paint bitmapPaint;
-	protected static Paint canvasPaint;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public static Paint bitmapPaint;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public static Paint canvasPaint;
 	protected static boolean toolOptionsShown = false;
 	protected static LinearLayout toolSpecificOptionsLayout;
 	protected static LinearLayout toolOptionsLayout;
