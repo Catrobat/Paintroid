@@ -79,6 +79,7 @@ import org.catrobat.paintroid.ui.button.LayersAdapter;
 import java.io.File;
 
 public class MainActivity extends NavigationDrawerMenuActivity implements NavigationView.OnNavigationItemSelectedListener {
+	private static final String TAG = MainActivity.class.getSimpleName();
 
 	@VisibleForTesting
 	public String catroidPicturePath;
@@ -112,7 +113,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			tempPicturePath = extras.getString(getString(R.string.extra_picture_path_catroid));
-			Log.d(PaintroidApplication.TAG, "catroidPicturePath: " + tempPicturePath);
+			Log.d(TAG, "catroidPicturePath: " + tempPicturePath);
 		}
 		if (tempPicturePath != null) {
 			openedFromCatroid = true;
@@ -241,7 +242,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 
 	@Override
 	public void onDetachedFromWindow() {
-		Log.d(PaintroidApplication.TAG, "MainActivity onDetachedFromWindow");
+		Log.d(TAG, "MainActivity onDetachedFromWindow");
 		IndeterminateProgressDialog.getInstance().dismiss();
 		super.onDetachedFromWindow();
 	}
@@ -268,11 +269,11 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		Log.d(PaintroidApplication.TAG, "MainActivity onConfigurationChanged");
+		Log.d(TAG, "MainActivity onConfigurationChanged");
 		super.onConfigurationChanged(newConfig);
 
 		if (isFinishing()) {
-			Log.d(PaintroidApplication.TAG, "MainActivity onConfigurationChanged called, but is finishing.");
+			Log.d(TAG, "MainActivity onConfigurationChanged called, but is finishing.");
 			return;
 		}
 
@@ -404,8 +405,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 	@Override
 	public void onActivityResult(@RequestCode int requestCode, int resultCode, Intent data) {
 		if (resultCode != Activity.RESULT_OK) {
-			Log.d(PaintroidApplication.TAG,
-					"onActivityResult: result not ok, most likely a dialog hast been canceled");
+			Log.d(TAG, "onActivityResult: result not ok, most likely a dialog hast been canceled");
 			return;
 		}
 		switch (requestCode) {
@@ -422,8 +422,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 									((ImportTool) PaintroidApplication.currentTool)
 											.setBitmapFromFile(bitmap);
 								} else {
-									Log.e(PaintroidApplication.TAG,
-											"importPngToFloatingBox: Current tool is no ImportTool as required");
+									Log.e(TAG, "importPngToFloatingBox: Current tool is no ImportTool as required");
 								}
 							}
 						});

@@ -43,6 +43,7 @@ import java.util.Locale;
 public abstract class FileIO {
 	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_MM_dd_hhmmss";
 	private static final String ENDING = ".png";
+	private static final String TAG = FileIO.class.getSimpleName();
 	private static File paintroidMediaFile = null;
 
 	private FileIO() {
@@ -64,7 +65,7 @@ public abstract class FileIO {
 
 		try {
 			if (bitmap == null || bitmap.isRecycled()) {
-				Log.e(PaintroidApplication.TAG, "ERROR saving bitmap. ");
+				Log.e(TAG, "ERROR saving bitmap. ");
 				return false;
 			} else if (path != null) {
 				file = new File(path);
@@ -77,9 +78,7 @@ public abstract class FileIO {
 				outputStream = new FileOutputStream(file);
 			}
 		} catch (FileNotFoundException e) {
-			Log.e(PaintroidApplication.TAG,
-					"ERROR writing image file. File not found. Path: " + path,
-					e);
+			Log.e(TAG, "ERROR writing image file. File not found. Path: " + path, e);
 			return false;
 		}
 
@@ -88,7 +87,7 @@ public abstract class FileIO {
 			try {
 				outputStream.close();
 			} catch (IOException e) {
-				Log.e(PaintroidApplication.TAG, e.getMessage());
+				Log.e(TAG, e.getMessage());
 			}
 			if (isSaved) {
 				if (file != null) {
@@ -101,8 +100,7 @@ public abstract class FileIO {
 									contentValues);
 				}
 			} else {
-				Log.e(PaintroidApplication.TAG,
-						"ERROR writing image file. Bitmap compress didn't work. ");
+				Log.e(TAG, "ERROR writing image file. Bitmap compress didn't work. ");
 				return false;
 			}
 		}

@@ -23,10 +23,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.util.Log;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class ResizeCommand extends BaseCommand {
+	private static final String TAG = ResizeCommand.class.getSimpleName();
 
 	private final int resizeCoordinateXLeft;
 	private final int resizeCoordinateYTop;
@@ -52,23 +52,20 @@ public class ResizeCommand extends BaseCommand {
 			Bitmap bitmap = layer.getImage();
 
 			if (resizeCoordinateXRight < resizeCoordinateXLeft) {
-				Log.e(PaintroidApplication.TAG,
-						"coordinate X right must be larger than coordinate X left");
+				Log.e(TAG, "coordinate X right must be larger than coordinate X left");
 
 				notifyStatus(NotifyStates.COMMAND_FAILED);
 				return;
 			}
 			if (resizeCoordinateYBottom < resizeCoordinateYTop) {
-				Log.e(PaintroidApplication.TAG,
-						"coordinate Y bottom must be larger than coordinate Y top");
+				Log.e(TAG, "coordinate Y bottom must be larger than coordinate Y top");
 
 				notifyStatus(NotifyStates.COMMAND_FAILED);
 				return;
 			}
 			if (resizeCoordinateXLeft >= bitmap.getWidth() || resizeCoordinateXRight < 0
 					|| resizeCoordinateYTop >= bitmap.getHeight() || resizeCoordinateYBottom < 0) {
-				Log.e(PaintroidApplication.TAG,
-						"resize coordinates are out of bitmap scope");
+				Log.e(TAG, "resize coordinates are out of bitmap scope");
 
 				notifyStatus(NotifyStates.COMMAND_FAILED);
 				return;
@@ -77,14 +74,14 @@ public class ResizeCommand extends BaseCommand {
 					&& resizeCoordinateXRight == bitmap.getWidth() - 1
 					&& resizeCoordinateYBottom == bitmap.getHeight() - 1
 					&& resizeCoordinateYTop == 0) {
-				Log.e(PaintroidApplication.TAG, " no need to resize ");
+				Log.e(TAG, " no need to resize ");
 
 				notifyStatus(NotifyStates.COMMAND_FAILED);
 				return;
 			}
 			if ((resizeCoordinateXRight + 1 - resizeCoordinateXLeft)
 					* (resizeCoordinateYBottom + 1 - resizeCoordinateYTop) > maximumBitmapResolution) {
-				Log.e(PaintroidApplication.TAG, " image resolution not supported ");
+				Log.e(TAG, " image resolution not supported ");
 
 				notifyStatus(NotifyStates.COMMAND_FAILED);
 				return;
@@ -116,8 +113,7 @@ public class ResizeCommand extends BaseCommand {
 
 			setChanged();
 		} catch (Exception e) {
-			Log.e(PaintroidApplication.TAG,
-					"failed to resize bitmap:" + e.getMessage());
+			Log.e(TAG, "failed to resize bitmap:" + e.getMessage());
 
 			notifyStatus(NotifyStates.COMMAND_FAILED);
 		}

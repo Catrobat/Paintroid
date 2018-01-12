@@ -267,8 +267,7 @@ public class DrawingSurface extends SurfaceView implements
 				return workingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
 			}
 		} catch (IllegalArgumentException e) {
-			Log.w(PaintroidApplication.TAG,
-					"getBitmapColor coordinate out of bounds");
+			Log.w(TAG, "getBitmapColor coordinate out of bounds");
 		}
 		return Color.TRANSPARENT;
 	}

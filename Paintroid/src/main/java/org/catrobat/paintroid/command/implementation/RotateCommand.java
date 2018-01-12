@@ -29,6 +29,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class RotateCommand extends BaseCommand {
+	private static final String TAG = RotateCommand.class.getSimpleName();
 
 	private static final float ANGLE = 90;
 	private RotateDirection rotateDirection;
@@ -54,12 +55,12 @@ public class RotateCommand extends BaseCommand {
 		switch (rotateDirection) {
 			case ROTATE_RIGHT:
 				rotateMatrix.postRotate(ANGLE);
-				Log.i(PaintroidApplication.TAG, "rotate right");
+				Log.i(TAG, "rotate right");
 				break;
 
 			case ROTATE_LEFT:
 				rotateMatrix.postRotate(-ANGLE);
-				Log.i(PaintroidApplication.TAG, "rotate left");
+				Log.i(TAG, "rotate left");
 				break;
 
 			default:

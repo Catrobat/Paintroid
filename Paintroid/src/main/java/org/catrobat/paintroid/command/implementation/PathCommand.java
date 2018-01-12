@@ -27,10 +27,10 @@ import android.graphics.RectF;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class PathCommand extends BaseCommand {
+	private static final String TAG = PathCommand.class.getSimpleName();
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public Path path;
 
@@ -44,8 +44,7 @@ public class PathCommand extends BaseCommand {
 	@Override
 	public void run(Canvas canvas, Layer layer) {
 		if ((canvas == null) || path == null) {
-			Log.w(PaintroidApplication.TAG,
-					"Object must not be null in PathCommand.");
+			Log.w(TAG, "Object must not be null in PathCommand.");
 			return;
 		}
 

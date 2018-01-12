@@ -21,7 +21,6 @@ package org.catrobat.paintroid;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -42,7 +41,7 @@ import java.util.LinkedList;
 import java.util.Locale;
 
 public class PaintroidApplication extends Application {
-	public static final String TAG = "PAINTROID";
+	private static final String TAG = PaintroidApplication.class.getSimpleName();
 
 	public static Context applicationContext;
 	public static DrawingSurface drawingSurface;
@@ -56,7 +55,6 @@ public class PaintroidApplication extends Application {
 	public static LinkedList<LayerCommand> layerOperationsUndoCommandList;
 	public static ArrayList<LayerBitmapCommand> drawBitmapCommandsAtLayer;
 	public static String defaultSystemLanguage;
-	public static SharedPreferences languageSharedPreferences;
 
 	public static String getVersionName(Context context) {
 		String versionName = "unknown";
@@ -66,8 +64,7 @@ public class PaintroidApplication extends Application {
 							PackageManager.GET_META_DATA);
 			versionName = packageInfo.versionName;
 		} catch (NameNotFoundException nameNotFoundException) {
-			Log.e(PaintroidApplication.TAG, "Name not found",
-					nameNotFoundException);
+			Log.e(PaintroidApplication.TAG, "Name not found", nameNotFoundException);
 		}
 		return versionName;
 	}
@@ -79,6 +76,5 @@ public class PaintroidApplication extends Application {
 		commandManager = new CommandManagerImplementation();
 
 		defaultSystemLanguage = Locale.getDefault().getLanguage();
-		languageSharedPreferences = getSharedPreferences("For_language", Context.MODE_PRIVATE);
 	}
 }

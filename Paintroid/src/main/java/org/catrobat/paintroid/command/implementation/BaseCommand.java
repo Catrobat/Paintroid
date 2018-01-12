@@ -28,7 +28,6 @@ import android.graphics.Paint.Cap;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.tools.Layer;
 
@@ -39,6 +38,7 @@ import java.util.Observable;
 import java.util.Random;
 
 public abstract class BaseCommand extends Observable implements Command {
+	private static final String TAG = BaseCommand.class.getSimpleName();
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public Paint paint;
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
@@ -53,9 +53,7 @@ public abstract class BaseCommand extends Observable implements Command {
 		if (paint != null) {
 			this.paint = new Paint(paint);
 		} else {
-			Log.w(PaintroidApplication.TAG,
-					"Object is null falling back to default object in "
-							+ this.toString());
+			Log.w(TAG, "Object is null falling back to default object in " + this.toString());
 			this.paint = new Paint();
 			this.paint.setColor(Color.BLACK);
 			this.paint.setStrokeWidth(1);
@@ -77,7 +75,7 @@ public abstract class BaseCommand extends Observable implements Command {
 		}
 	}
 
-	public final void storeBitmap(Context context) {
+	protected final void storeBitmap(Context context) {
 		File cacheDir = context.getCacheDir();
 		Random random = new Random();
 		random.setSeed(System.currentTimeMillis());
@@ -89,7 +87,7 @@ public abstract class BaseCommand extends Observable implements Command {
 			fos.flush();
 			fos.close();
 		} catch (IOException e) {
-			Log.e(PaintroidApplication.TAG, "Cannot store bitmap. ", e);
+			Log.e(TAG, "Cannot store bitmap. ", e);
 		}
 		bitmap.recycle();
 		bitmap = null;

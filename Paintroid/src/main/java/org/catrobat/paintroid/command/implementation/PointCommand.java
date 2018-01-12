@@ -25,10 +25,10 @@ import android.graphics.PointF;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class PointCommand extends BaseCommand {
+	private static final String TAG = PointCommand.class.getSimpleName();
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public PointF point;
 
@@ -42,8 +42,7 @@ public class PointCommand extends BaseCommand {
 	@Override
 	public void run(Canvas canvas, Layer layer) {
 		if (canvas == null || point == null) {
-			Log.w(PaintroidApplication.TAG,
-					"Object must not be null in PointCommand.");
+			Log.w(TAG, "Object must not be null in PointCommand.");
 			return;
 		}
 		canvas.drawPoint(point.x, point.y, paint);

@@ -54,6 +54,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
+	private static final String TAG = NavigationDrawerMenuActivity.class.getSimpleName();
 
 	public static final float ACTION_BAR_HEIGHT = 50.0f;
 
@@ -301,7 +302,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 
 	protected void loadBitmapFromUri(Uri uri) {
 		if (uri == null || uri.toString().length() < 1) {
-			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
+			Log.e(TAG, "BAD URI: cannot load image");
 			return;
 		}
 
@@ -348,7 +349,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		@Override
 		protected void onPreExecute() {
 			IndeterminateProgressDialog.getInstance().show();
-			Log.d(PaintroidApplication.TAG, "async tast prgDialog isShowing"
+			Log.d(TAG, "async tast prgDialog isShowing"
 					+ IndeterminateProgressDialog.getInstance().isShowing());
 		}
 

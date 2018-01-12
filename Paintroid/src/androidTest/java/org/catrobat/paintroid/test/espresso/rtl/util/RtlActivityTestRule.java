@@ -20,10 +20,10 @@
 package org.catrobat.paintroid.test.espresso.rtl.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MultilingualActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 
 public class RtlActivityTestRule<T extends Activity> extends ActivityTestRule<T> {
 	public RtlActivityTestRule(Class<T> activityClass) {
@@ -34,7 +34,7 @@ public class RtlActivityTestRule<T extends Activity> extends ActivityTestRule<T>
 	protected void afterActivityFinished() {
 		super.afterActivityFinished();
 
-		PaintroidApplication.languageSharedPreferences
+		getActivity().getSharedPreferences(MultilingualActivity.SHARED_PREFERENCES_TAG, Context.MODE_PRIVATE)
 				.edit()
 				.remove(MultilingualActivity.LANGUAGE_TAG_KEY)
 				.commit();
