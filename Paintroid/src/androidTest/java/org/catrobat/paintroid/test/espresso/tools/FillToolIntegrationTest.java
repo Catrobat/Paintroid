@@ -31,6 +31,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.widget.EditText;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
@@ -142,7 +143,7 @@ public class FillToolIntegrationTest {
 	@Test
 	@Ignore
 	public void testFloodFillIfImageLoaded() {
-		PaintroidApplication.savedPictureUri = Uri.fromFile(new File("dummy"));
+		NavigationDrawerMenuActivity.savedPictureUri = Uri.fromFile(new File("dummy"));
 
 		int colorToFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
 
@@ -156,7 +157,7 @@ public class FillToolIntegrationTest {
 		int colorAfterFill = PaintroidApplication.drawingSurface.getPixel(checkCanvasPoint);
 		assertEquals("Pixel color should be the same.", colorToFill, colorAfterFill);
 
-		PaintroidApplication.savedPictureUri = null;
+		NavigationDrawerMenuActivity.savedPictureUri = null;
 	}
 
 	@Test

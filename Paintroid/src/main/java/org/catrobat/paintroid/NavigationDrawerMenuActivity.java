@@ -63,6 +63,8 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	static final int REQUEST_CODE_FINISH = 3;
 	static final int REQUEST_CODE_TAKE_PICTURE = 4;
 	static final int REQUEST_CODE_LANGUAGE = 5;
+	public static boolean isSaved = true;
+	public static Uri savedPictureUri = null;
 
 	@IntDef({REQUEST_CODE_IMPORTPNG,
 			REQUEST_CODE_LOAD_PICTURE,
@@ -88,7 +90,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	}
 
 	boolean imageHasBeenSaved() {
-		return PaintroidApplication.isSaved;
+		return isSaved;
 	}
 
 	protected void onLoadImage() {
@@ -220,16 +222,15 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 			}
 
 			isPlainImage = false;
-			PaintroidApplication.isSaved = false;
-			PaintroidApplication.savedPictureUri = null;
+			isSaved = false;
+			savedPictureUri = null;
 			LayerListener.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
 			LayerListener.getInstance().refreshView();
 		}
 	}
 
 	protected void takePhoto() {
-		File tempFile = FileIO.createNewEmptyPictureFile(
-				FileIO.getDefaultFileName());
+		File tempFile = FileIO.createNewEmptyPictureFile(this, FileIO.getDefaultFileName());
 		if (tempFile != null) {
 			cameraImageUri = Uri.fromFile(tempFile);
 		}
@@ -279,7 +280,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 							"loadbitmapdialogerror");
 				} else {
 					if (!(PaintroidApplication.currentTool instanceof ImportTool)) {
-						PaintroidApplication.savedPictureUri = uri;
+						savedPictureUri = uri;
 					}
 				}
 			}
@@ -297,7 +298,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 					getSupportFragmentManager(), "savedialogerror");
 		}
 
-		PaintroidApplication.isSaved = !openedFromCatroid;
+		isSaved = !openedFromCatroid;
 	}
 
 	protected void loadBitmapFromUri(Uri uri) {
@@ -321,16 +322,15 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		Point size = new Point();
 		display.getSize(size);
 		Log.d("PAINTROID - MFA", "init new bitmap with: w: " + size.x + " h:" + size.y);
-		Bitmap bitmap = Bitmap.createBitmap(size.x, size.y,
-				Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap(size.x, size.y, Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		PaintroidApplication.currentTool
 				.resetInternalState(StateChange.NEW_IMAGE_LOADED);
 		isPlainImage = true;
-		PaintroidApplication.isSaved = false;
-		PaintroidApplication.savedPictureUri = null;
+		isSaved = false;
+		savedPictureUri = null;
 		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 

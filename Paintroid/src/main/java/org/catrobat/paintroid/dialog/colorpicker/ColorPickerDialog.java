@@ -57,7 +57,7 @@ import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.widget.Button;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.BaseDialog;
 
@@ -101,7 +101,7 @@ public final class ColorPickerDialog extends BaseDialog {
 		for (OnColorPickedListener listener : onColorPickedListener) {
 			listener.colorChanged(color);
 		}
-		PaintroidApplication.colorPickerInitialColor = color;
+		MainActivity.colorPickerInitialColor = color;
 	}
 
 	@Override

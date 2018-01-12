@@ -53,6 +53,6 @@ public class BaseCommandStub extends BaseCommand {
 	}
 
 	public void storeBitmapStub() {
-		storeBitmap(InstrumentationRegistry.getTargetContext());
+		storeBitmap(InstrumentationRegistry.getTargetContext().getCacheDir());
 	}
 }

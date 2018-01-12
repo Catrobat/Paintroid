@@ -54,7 +54,7 @@ public abstract class FileIO {
 	}
 
 	static boolean saveBitmap(Context context, Bitmap bitmap, @Nullable String path, boolean saveCopy) {
-		if (!initialisePaintroidMediaDirectory()) {
+		if (!initialisePaintroidMediaDirectory(context)) {
 			return false;
 		}
 
@@ -70,11 +70,11 @@ public abstract class FileIO {
 			} else if (path != null) {
 				file = new File(path);
 				outputStream = new FileOutputStream(file);
-			} else if (PaintroidApplication.savedPictureUri != null && !saveCopy) {
+			} else if (NavigationDrawerMenuActivity.savedPictureUri != null && !saveCopy) {
 				outputStream = context.getContentResolver().openOutputStream(
-						PaintroidApplication.savedPictureUri);
+						NavigationDrawerMenuActivity.savedPictureUri);
 			} else {
-				file = createNewEmptyPictureFile();
+				file = createNewEmptyPictureFile(context);
 				outputStream = new FileOutputStream(file);
 			}
 		} catch (FileNotFoundException e) {
@@ -95,7 +95,7 @@ public abstract class FileIO {
 					contentValues.put(MediaStore.MediaColumns.DATA,
 							file.getAbsolutePath());
 
-					PaintroidApplication.savedPictureUri = context
+					NavigationDrawerMenuActivity.savedPictureUri = context
 							.getContentResolver().insert(getBaseUri(),
 									contentValues);
 				}
@@ -113,8 +113,8 @@ public abstract class FileIO {
 		return simpleDateFormat.format(new Date()) + ENDING;
 	}
 
-	static File createNewEmptyPictureFile(String filename) {
-		if (initialisePaintroidMediaDirectory()) {
+	static File createNewEmptyPictureFile(Context context, String filename) {
+		if (initialisePaintroidMediaDirectory(context)) {
 			if (!filename.toLowerCase(Locale.US).endsWith(ENDING.toLowerCase(Locale.US))) {
 				filename += ENDING;
 			}
@@ -124,18 +124,16 @@ public abstract class FileIO {
 		}
 	}
 
-	private static File createNewEmptyPictureFile() {
-		return createNewEmptyPictureFile(getDefaultFileName());
+	private static File createNewEmptyPictureFile(Context context) {
+		return createNewEmptyPictureFile(context, getDefaultFileName());
 	}
 
-	private static boolean initialisePaintroidMediaDirectory() {
+	private static boolean initialisePaintroidMediaDirectory(Context context) {
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
 			paintroidMediaFile = new File(
-					Environment.getExternalStorageDirectory(),
-					"/"
-							+ PaintroidApplication.applicationContext
-							.getString(R.string.ext_storage_directory_name) + "/");
+					Environment.getExternalStorageDirectory(), File.separatorChar
+					+ context.getString(R.string.ext_storage_directory_name) + File.separatorChar);
 		} else {
 			return false;
 		}
@@ -149,87 +147,64 @@ public abstract class FileIO {
 		return true;
 	}
 
-	public static Bitmap getBitmapFromUri(Context context, Uri bitmapUri, boolean scaleImage) {
-		BitmapFactory.Options options = new BitmapFactory.Options();
+	private static void setInvalidOptions(BitmapFactory.Options options) {
+		options.outWidth = -1;
+		options.outHeight = -1;
+	}
 
-//		TODO: special treatment necessary?
-//		if (PaintroidApplication.openedFromCatroid) {
-//			try {
-//				InputStream inputStream = PaintroidApplication.applicationContext
-//						.getContentResolver().openInputStream(bitmapUri);
-//				Bitmap immutableBitmap = BitmapFactory
-//						.decodeStream(inputStream);
-//				inputStream.close();
-//				return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
-//			} catch (FileNotFoundException e) {
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-
-		options.inJustDecodeBounds = true;
-
+	private static Bitmap decodeBitmapFromUri(Context context, Uri bitmapUri, BitmapFactory.Options options) {
+		Bitmap bitmap;
 		try {
 			InputStream inputStream = context.getContentResolver().openInputStream(bitmapUri);
-			BitmapFactory.decodeStream(inputStream, null, options);
+			if (inputStream == null) {
+				setInvalidOptions(options);
+				return null;
+			}
+			bitmap = BitmapFactory.decodeStream(inputStream, null, options);
 			inputStream.close();
 		} catch (Exception e) {
+			setInvalidOptions(options);
+			return null;
+		}
+		return bitmap;
+	}
+
+	private static int calculateSampleSize(int width, int height, int maxWidth, int maxHeight) {
+		int sampleSize = 1;
+		while (width > maxWidth || height > maxHeight) {
+			width /= 2;
+			height /= 2;
+			sampleSize *= 2;
+		}
+		return sampleSize;
+	}
+
+	static Bitmap getBitmapFromUri(Context context, Uri bitmapUri, boolean scaleImage) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		if (!scaleImage) {
+			options.inMutable = true;
+			return decodeBitmapFromUri(context, bitmapUri, options);
+		}
+
+		options.inJustDecodeBounds = true;
+		decodeBitmapFromUri(context, bitmapUri, options);
+		if (options.outHeight < 0 || options.outWidth < 0) {
 			return null;
 		}
 
-		int tmpWidth = options.outWidth;
-		int tmpHeight = options.outHeight;
-		int sampleSize = 1;
+		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		int sampleSize = calculateSampleSize(options.outWidth, options.outHeight,
+				metrics.widthPixels, metrics.heightPixels);
 
-		if (scaleImage) {
-			DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-			int maxWidth = metrics.widthPixels;
-			int maxHeight = metrics.heightPixels;
-
-			while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
-				tmpWidth /= 2;
-				tmpHeight /= 2;
-				sampleSize *= 2;
-			}
-		}
+		options.inMutable = true;
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
 
-		Bitmap immutableBitmap;
-		try {
-			InputStream inputStream = context.getContentResolver().openInputStream(bitmapUri);
-			immutableBitmap = BitmapFactory.decodeStream(inputStream, null,
-					options);
-			inputStream.close();
-		} catch (Exception e) {
-			return null;
-		}
-
-		tmpWidth = immutableBitmap.getWidth();
-		tmpHeight = immutableBitmap.getHeight();
-		int[] tmpPixels = new int[tmpWidth * tmpHeight];
-		immutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
-				tmpHeight);
-
-		Bitmap mutableBitmap = Bitmap.createBitmap(tmpWidth, tmpHeight,
-				Bitmap.Config.ARGB_8888);
-		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
-				tmpHeight);
-
-		return mutableBitmap;
+		return decodeBitmapFromUri(context, bitmapUri, options);
 	}
 
-	public static Bitmap getBitmapFromFile(File bitmapFile, boolean openedFromCatroid) {
-
+	public static Bitmap getBitmapFromFile(File bitmapFile, int maxWidth, int maxHeight) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
-
-		if (openedFromCatroid) {
-			options.inJustDecodeBounds = false;
-			Bitmap immutableBitmap = BitmapFactory.decodeFile(
-					bitmapFile.getAbsolutePath(), options);
-			return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
-		}
 
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
@@ -238,33 +213,16 @@ public abstract class FileIO {
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
 
-		DisplayMetrics metrics = PaintroidApplication.applicationContext.getResources().getDisplayMetrics();
-		int maxWidth = metrics.widthPixels;
-		int maxHeight = metrics.heightPixels;
-
 		while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
 			tmpWidth /= 2;
 			tmpHeight /= 2;
 			sampleSize *= 2;
 		}
 
+		options.inMutable = true;
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
 
-		Bitmap immutableBitmap = BitmapFactory.decodeFile(
-				bitmapFile.getAbsolutePath(), options);
-
-		tmpWidth = immutableBitmap.getWidth();
-		tmpHeight = immutableBitmap.getHeight();
-		int[] tmpPixels = new int[tmpWidth * tmpHeight];
-		immutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
-				tmpHeight);
-
-		Bitmap mutableBitmap = Bitmap.createBitmap(tmpWidth, tmpHeight,
-				Bitmap.Config.ARGB_8888);
-		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
-				tmpHeight);
-
-		return mutableBitmap;
+		return BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
 	}
 }

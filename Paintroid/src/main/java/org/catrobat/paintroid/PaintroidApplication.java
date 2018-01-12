@@ -24,8 +24,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Color;
-import android.net.Uri;
 import android.util.Log;
 
 import org.catrobat.paintroid.command.CommandManager;
@@ -48,9 +46,6 @@ public class PaintroidApplication extends Application {
 	public static CommandManager commandManager;
 	public static Tool currentTool;
 	public static Perspective perspective;
-	public static boolean isSaved = true;
-	public static Uri savedPictureUri = null;
-	public static int colorPickerInitialColor = Color.BLACK;
 	public static LinkedList<LayerCommand> layerOperationsCommandList;
 	public static LinkedList<LayerCommand> layerOperationsUndoCommandList;
 	public static ArrayList<LayerBitmapCommand> drawBitmapCommandsAtLayer;

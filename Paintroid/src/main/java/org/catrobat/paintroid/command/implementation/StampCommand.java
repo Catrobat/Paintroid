@@ -19,11 +19,13 @@
 
 package org.catrobat.paintroid.command.implementation;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
+import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.PaintroidApplication;
@@ -59,8 +61,10 @@ public class StampCommand extends BaseCommand {
 	public void run(Canvas canvas, Layer layer) {
 
 		notifyStatus(NotifyStates.COMMAND_STARTED);
+		Context context = PaintroidApplication.applicationContext;
 		if (fileToStoredBitmap != null) {
-			bitmap = FileIO.getBitmapFromFile(fileToStoredBitmap, false);
+			DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+			bitmap = FileIO.getBitmapFromFile(fileToStoredBitmap, metrics.widthPixels, metrics.heightPixels);
 		}
 
 		if (bitmap == null) {
@@ -77,7 +81,7 @@ public class StampCommand extends BaseCommand {
 		canvas.restore();
 
 		if (fileToStoredBitmap == null) {
-			storeBitmap(PaintroidApplication.applicationContext);
+			storeBitmap(context.getCacheDir());
 		} else {
 			bitmap.recycle();
 			bitmap = null;

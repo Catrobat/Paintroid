@@ -31,6 +31,7 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.listener.BrushPickerView;
@@ -86,7 +87,7 @@ public class DrawerPreview extends View {
 	}
 
 	private void drawDrawerPreview(Canvas canvas) {
-		int currentColor = PaintroidApplication.colorPickerInitialColor;
+		int currentColor = MainActivity.colorPickerInitialColor;
 		changePaintColor(currentColor);
 
 		int centerX = getLeft() + getWidth() / 2;
@@ -184,7 +185,7 @@ public class DrawerPreview extends View {
 	}
 
 	private void drawLinePreview(Canvas canvas) {
-		int currentColor = PaintroidApplication.colorPickerInitialColor;
+		int currentColor = MainActivity.colorPickerInitialColor;
 		changePaintColor(currentColor);
 
 		int startX = getLeft() + getWidth() / 8;

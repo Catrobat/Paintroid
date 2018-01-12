@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.command.implementation;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -75,8 +74,7 @@ public abstract class BaseCommand extends Observable implements Command {
 		}
 	}
 
-	protected final void storeBitmap(Context context) {
-		File cacheDir = context.getCacheDir();
+	protected final void storeBitmap(File cacheDir) {
 		Random random = new Random();
 		random.setSeed(System.currentTimeMillis());
 		fileToStoredBitmap = new File(cacheDir.getAbsolutePath(),

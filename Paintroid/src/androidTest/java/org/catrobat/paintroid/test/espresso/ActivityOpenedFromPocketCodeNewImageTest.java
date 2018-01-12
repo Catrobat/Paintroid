@@ -26,7 +26,7 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
@@ -90,8 +90,8 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 
 	@After
 	public void tearDown() {
-		PaintroidApplication.savedPictureUri = null;
-		PaintroidApplication.isSaved = false;
+		NavigationDrawerMenuActivity.savedPictureUri = null;
+		NavigationDrawerMenuActivity.isSaved = false;
 
 		if (imageFile != null) {
 			imageFile.delete();
@@ -118,7 +118,8 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 	}
 
 	private File getImageFile(String filename) {
-		File imageFile = new File(Environment.getExternalStorageDirectory(), "/" + activityHelper.getString(R.string.ext_storage_directory_name) + "/" + filename + ".png");
-		return imageFile;
+		return new File(Environment.getExternalStorageDirectory(), File.separatorChar
+				+ activityHelper.getString(R.string.ext_storage_directory_name)
+				+ File.separatorChar + filename + ".png");
 	}
 }

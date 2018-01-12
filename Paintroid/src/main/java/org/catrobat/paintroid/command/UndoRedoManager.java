@@ -23,6 +23,7 @@ import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Looper;
 
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
@@ -137,7 +138,7 @@ public final class UndoRedoManager {
 					update();
 					LayerListener.getInstance().refreshView();
 					PaintroidApplication.drawingSurface.refreshDrawingSurface();
-					PaintroidApplication.isSaved = false;
+					NavigationDrawerMenuActivity.isSaved = false;
 					IndeterminateProgressDialog.getInstance().dismiss();
 				}
 			}.execute();
@@ -235,7 +236,7 @@ public final class UndoRedoManager {
 				update();
 				LayerListener.getInstance().refreshView();
 				PaintroidApplication.drawingSurface.refreshDrawingSurface();
-				PaintroidApplication.isSaved = false;
+				NavigationDrawerMenuActivity.isSaved = false;
 				IndeterminateProgressDialog.getInstance().dismiss();
 			}
 		}.execute();
