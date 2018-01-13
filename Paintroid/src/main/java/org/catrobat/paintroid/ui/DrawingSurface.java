@@ -34,6 +34,7 @@ import android.graphics.Region;
 import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -57,7 +58,8 @@ public class DrawingSurface extends SurfaceView implements
 	private final Object drawingLock = new Object();
 	protected boolean surfaceCanBeUsed;
 	private DrawingSurfaceThread drawingThread;
-	private Bitmap workingBitmap;
+	@VisibleForTesting
+	public Bitmap workingBitmap;
 	private Rect workingBitmapRect;
 	private Canvas workingBitmapCanvas;
 	private Paint framePaint;

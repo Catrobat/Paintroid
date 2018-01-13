@@ -33,6 +33,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -56,7 +57,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private static final String BUNDLE_BASE_SHAPE = "BASE_SHAPE";
 	private static final String BUNDLE_SHAPE_DRAW_TYPE = "SHAPE_DRAW_TYPE";
 
-	private BaseShape baseShape;
+	@VisibleForTesting
+	public BaseShape baseShape;
 	private ShapeDrawType shapeDrawType;
 	private ShapeToolOptionsListener shapeToolOptionsListener;
 	private Paint geometricFillCommandPaint;

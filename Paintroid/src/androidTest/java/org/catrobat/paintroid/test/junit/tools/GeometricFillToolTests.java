@@ -24,8 +24,6 @@ import android.graphics.Paint;
 import android.support.test.annotation.UiThreadTest;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
 import org.junit.Before;
@@ -35,10 +33,10 @@ import static org.junit.Assert.assertEquals;
 
 public class GeometricFillToolTests extends BaseToolTest {
 
-	private Tool rectangleShapeTool;
-	private Tool ovalShapeTool;
-	private Tool heartShapeTool;
-	private Tool starShapeTool;
+	private GeometricFillTool rectangleShapeTool;
+	private GeometricFillTool ovalShapeTool;
+	private GeometricFillTool heartShapeTool;
+	private GeometricFillTool starShapeTool;
 
 	public GeometricFillToolTests() {
 		super();
@@ -49,13 +47,13 @@ public class GeometricFillToolTests extends BaseToolTest {
 	@Before
 	public void setUp() throws Exception {
 		rectangleShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
-		PrivateAccess.setMemberValue(GeometricFillTool.class, rectangleShapeTool, "baseShape", GeometricFillTool.BaseShape.RECTANGLE);
+		rectangleShapeTool.baseShape = GeometricFillTool.BaseShape.RECTANGLE;
 		ovalShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
-		PrivateAccess.setMemberValue(GeometricFillTool.class, ovalShapeTool, "baseShape", GeometricFillTool.BaseShape.OVAL);
+		ovalShapeTool.baseShape = GeometricFillTool.BaseShape.OVAL;
 		heartShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
-		PrivateAccess.setMemberValue(GeometricFillTool.class, heartShapeTool, "baseShape", GeometricFillTool.BaseShape.HEART);
+		heartShapeTool.baseShape = GeometricFillTool.BaseShape.HEART;
 		starShapeTool = new GeometricFillTool(getActivity(), ToolType.SHAPE);
-		PrivateAccess.setMemberValue(GeometricFillTool.class, starShapeTool, "baseShape", GeometricFillTool.BaseShape.STAR);
+		starShapeTool.baseShape = GeometricFillTool.BaseShape.STAR;
 		super.setUp();
 	}
 
@@ -71,13 +69,13 @@ public class GeometricFillToolTests extends BaseToolTest {
 		toolTypeRect = starShapeTool.getToolType();
 		assertEquals(ToolType.SHAPE, toolTypeRect);
 
-		GeometricFillTool.BaseShape rectangleShape = ((GeometricFillTool) rectangleShapeTool).getBaseShape();
+		GeometricFillTool.BaseShape rectangleShape = rectangleShapeTool.getBaseShape();
 		assertEquals(GeometricFillTool.BaseShape.RECTANGLE, rectangleShape);
-		GeometricFillTool.BaseShape ovalShape = ((GeometricFillTool) ovalShapeTool).getBaseShape();
+		GeometricFillTool.BaseShape ovalShape = ovalShapeTool.getBaseShape();
 		assertEquals(GeometricFillTool.BaseShape.OVAL, ovalShape);
-		GeometricFillTool.BaseShape heartShape = ((GeometricFillTool) heartShapeTool).getBaseShape();
+		GeometricFillTool.BaseShape heartShape = heartShapeTool.getBaseShape();
 		assertEquals(GeometricFillTool.BaseShape.HEART, heartShape);
-		GeometricFillTool.BaseShape starShape = ((GeometricFillTool) starShapeTool).getBaseShape();
+		GeometricFillTool.BaseShape starShape = starShapeTool.getBaseShape();
 		assertEquals(GeometricFillTool.BaseShape.STAR, starShape);
 	}
 

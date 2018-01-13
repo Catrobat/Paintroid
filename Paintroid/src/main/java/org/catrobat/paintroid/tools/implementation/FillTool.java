@@ -24,6 +24,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.support.annotation.VisibleForTesting;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -48,7 +49,8 @@ public class FillTool extends BaseTool {
 	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 12;
 	public static final int MAX_ABSOLUTE_TOLERANCE = 510;
 
-	private float colorTolerance;
+	@VisibleForTesting
+	public float colorTolerance;
 	private SeekBar colorToleranceSeekBar;
 	private EditText colorToleranceEditText;
 	private View fillToolOptionsView;

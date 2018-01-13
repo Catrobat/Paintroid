@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.helper;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -30,15 +31,21 @@ public class FillAlgorithm {
 	private static final boolean DOWN = false;
 
 	private Bitmap bitmap;
-	private int[][] pixels;
-	private Point clickedPixel;
-	private int targetColor;
-	private int replacementColor;
-	private int colorToleranceThresholdSquared;
+	@VisibleForTesting
+	public int[][] pixels;
+	@VisibleForTesting
+	public Point clickedPixel;
+	@VisibleForTesting
+	public int targetColor;
+	@VisibleForTesting
+	public int replacementColor;
+	@VisibleForTesting
+	public int colorToleranceThresholdSquared;
 	private boolean considerTolerance;
 	private int width;
 	private int height;
-	private Queue<Range> ranges;
+	@VisibleForTesting
+	public Queue<Range> ranges;
 	private boolean[][] filledPixels;
 
 	public FillAlgorithm(Bitmap bitmap, Point clickedPixel, int targetColor, int replacementColor, float colorToleranceThreshold) {

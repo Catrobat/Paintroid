@@ -36,7 +36,6 @@ import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
@@ -56,9 +55,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_BOX_HEIGHT;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_BOX_WIDTH;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_TOOL_POSITION;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.addNewLayer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeLayerMenu;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
@@ -69,7 +65,6 @@ import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class TransformToolIntegrationTest {
@@ -79,9 +74,10 @@ public class TransformToolIntegrationTest {
 
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-	PointF pointOnScreenLeft;
-	PointF pointOnScreenRight;
-	PointF pointOnScreenMiddle;
+
+	private PointF pointOnScreenLeft;
+	private PointF pointOnScreenRight;
+	private PointF pointOnScreenMiddle;
 	private ActivityHelper activityHelper;
 	private IdlingResource dialogWait;
 
@@ -107,7 +103,7 @@ public class TransformToolIntegrationTest {
 	}
 
 	@Test
-	public void testAutoCrop() throws NoSuchFieldException, IllegalAccessException {
+	public void testAutoCrop() {
 		onView(isRoot()).perform(touchAt(pointOnScreenMiddle));
 		selectTool(ToolType.TRANSFORM);
 		onView(withId(R.id.transform_auto_crop_btn)).perform(click());
@@ -121,7 +117,7 @@ public class TransformToolIntegrationTest {
 	}
 
 	@Test
-	public void testAutoCropOnEmptyBitmap() throws NoSuchFieldException, IllegalAccessException {
+	public void testAutoCropOnEmptyBitmap() {
 		selectTool(ToolType.TRANSFORM);
 
 		float originalWidth = getWorkingBitmap().getWidth();
@@ -140,7 +136,7 @@ public class TransformToolIntegrationTest {
 	}
 
 	@Test
-	public void testAutoCropOnFilledBitmap() throws NoSuchFieldException, IllegalAccessException {
+	public void testAutoCropOnFilledBitmap() {
 		selectTool(ToolType.FILL);
 		onView(isRoot()).perform(touchAt(pointOnScreenMiddle));
 		selectTool(ToolType.TRANSFORM);
@@ -161,7 +157,7 @@ public class TransformToolIntegrationTest {
 	}
 
 	@Test
-	public void testRotateMultipleLayers() throws NoSuchFieldException, IllegalAccessException {
+	public void testRotateMultipleLayers() {
 		ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
 		int bitmapHeightOnStartup = layers.get(0).getImage().getHeight();
 		int bitmapWidthOnStartup = layers.get(0).getImage().getWidth();
@@ -188,7 +184,7 @@ public class TransformToolIntegrationTest {
 	}
 
 	@Test
-	public void testRotateMultipleLayersUndoRedo() throws NoSuchFieldException, IllegalAccessException {
+	public void testRotateMultipleLayersUndoRedo() {
 		ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
 		int bitmapHeightOnStartup = layers.get(0).getImage().getHeight();
 		int bitmapWidthOnStartup = layers.get(0).getImage().getWidth();
@@ -222,7 +218,7 @@ public class TransformToolIntegrationTest {
 
 	@Ignore("Enable with PAINT-192")
 	@Test
-	public void testRotateMultipleLayersUndoRedoWhenRotatingWasNotLastCommand() throws NoSuchFieldException, IllegalAccessException {
+	public void testRotateMultipleLayersUndoRedoWhenRotatingWasNotLastCommand() {
 		ImageButton undoButton = launchActivityRule.getActivity().topBar.getUndoButton();
 		Bitmap undoButtonDisabled = ((BitmapDrawable) undoButton.getDrawable()).getBitmap();
 		ImageButton redoButton = launchActivityRule.getActivity().topBar.getRedoButton();
@@ -285,29 +281,14 @@ public class TransformToolIntegrationTest {
 	}
 
 	private float getBoxWidth() {
-		try {
-			return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool, FIELD_NAME_BOX_WIDTH);
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-		return 0.0f;
+		return ((BaseToolWithRectangleShape) PaintroidApplication.currentTool).boxWidth;
 	}
 
 	private float getBoxHeight() {
-		try {
-			return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, PaintroidApplication.currentTool, FIELD_NAME_BOX_HEIGHT);
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-		return 0.0f;
+		return ((BaseToolWithRectangleShape) PaintroidApplication.currentTool).boxHeight;
 	}
 
 	private PointF getToolPosition() {
-		try {
-			return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool, FIELD_NAME_TOOL_POSITION);
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-		return null;
+		return ((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition;
 	}
 }
