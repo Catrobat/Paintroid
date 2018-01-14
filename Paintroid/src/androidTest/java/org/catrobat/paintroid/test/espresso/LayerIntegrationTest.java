@@ -47,6 +47,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
@@ -71,7 +72,6 @@ public class LayerIntegrationTest {
 
 	private int displayWidth;
 	private int displayHeight;
-
 
 	@Before
 	public void setUp() throws Exception {
@@ -249,7 +249,7 @@ public class LayerIntegrationTest {
 		onView(isRoot()).perform(touchAt(screenPoint));
 		int colorAfterFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
 
-		assertEquals("Color should be black after fill",  Color.BLACK, colorAfterFill);
+		assertEquals("Color should be black after fill", Color.BLACK, colorAfterFill);
 
 		numLayersBefore = LayerListener.getInstance().getAdapter().getCount();
 		onLayerMenuView().performOpen();
@@ -438,7 +438,6 @@ public class LayerIntegrationTest {
 			assertFalse("Bitmap should be cropped - wrong Height", bitmapHeight == layer.getImage().getHeight());
 			assertFalse("Bitmap should be cropped - wrong Width", bitmapWidth == layer.getImage().getWidth());
 		}
-
 	}
 
 	@Test
@@ -639,5 +638,4 @@ public class LayerIntegrationTest {
 			assertEquals("All Bitmaps should have been rotated - wrong width", bitmapHeight, layer.getImage().getWidth());
 		}
 	}
-
 }

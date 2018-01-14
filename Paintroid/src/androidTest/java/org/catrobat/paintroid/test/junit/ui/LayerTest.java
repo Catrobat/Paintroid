@@ -29,8 +29,8 @@ import org.catrobat.paintroid.listener.LayerListener;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class LayerTest {
@@ -51,16 +51,16 @@ public class LayerTest {
 	@Test
 	public void testMoveLayer() {
 		LayerListener.getInstance().createLayer();
-		int IDLayerOne = LayerListener.getInstance().getAdapter().getLayer(0).getLayerID();
-		int IDLayerTwo = LayerListener.getInstance().getAdapter().getLayer(1).getLayerID();
-		int posLayerOne = LayerListener.getInstance().getAdapter().getPosition(IDLayerOne);
-		int posLayerTwo = LayerListener.getInstance().getAdapter().getPosition(IDLayerTwo);
+		int idLayerOne = LayerListener.getInstance().getAdapter().getLayer(0).getLayerID();
+		int idLayerTwo = LayerListener.getInstance().getAdapter().getLayer(1).getLayerID();
+		int posLayerOne = LayerListener.getInstance().getAdapter().getPosition(idLayerOne);
+		int posLayerTwo = LayerListener.getInstance().getAdapter().getPosition(idLayerTwo);
 
 		assertTrue("Layer One should be at an higher position", posLayerOne < posLayerTwo);
 		LayerListener.getInstance().moveLayer(0, 1);
 
-		posLayerOne = LayerListener.getInstance().getAdapter().getPosition(IDLayerOne);
-		posLayerTwo = LayerListener.getInstance().getAdapter().getPosition(IDLayerTwo);
+		posLayerOne = LayerListener.getInstance().getAdapter().getPosition(idLayerOne);
+		posLayerTwo = LayerListener.getInstance().getAdapter().getPosition(idLayerTwo);
 		assertTrue("Positions should have been switched", posLayerOne > posLayerTwo);
 	}
 
@@ -100,6 +100,5 @@ public class LayerTest {
 		assertEquals("Color should be black", Color.BLACK, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(1, 2));
 		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(2, 1));
 		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(1, 1));
-
 	}
 }
