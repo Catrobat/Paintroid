@@ -195,7 +195,7 @@ public class CursorToolTest extends BaseToolTest {
 
 		checkIfInDrawMode = ((CursorTool) toolToTest).toolInDrawMode;
 		assertTrue(checkIfInDrawMode);
-		Paint testmBitmapPaint = CursorTool.bitmapPaint;
+		Paint testmBitmapPaint = CursorTool.BITMAP_PAINT;
 		int testmSecondaryShapeColor = ((CursorTool) toolToTest).cursorToolSecondaryShapeColor;
 
 		assertEquals(testmBitmapPaint.getColor(), testmSecondaryShapeColor);
@@ -205,7 +205,7 @@ public class CursorToolTest extends BaseToolTest {
 
 		checkIfInDrawMode = ((CursorTool) toolToTest).toolInDrawMode;
 		assertFalse(checkIfInDrawMode);
-		testmBitmapPaint = CursorTool.bitmapPaint;
+		testmBitmapPaint = CursorTool.BITMAP_PAINT;
 		testmSecondaryShapeColor = ((CursorTool) toolToTest).cursorToolSecondaryShapeColor;
 		assertTrue(testmBitmapPaint.getColor() != testmSecondaryShapeColor);
 
@@ -215,7 +215,7 @@ public class CursorToolTest extends BaseToolTest {
 
 		checkIfInDrawMode = ((CursorTool) toolToTest).toolInDrawMode;
 		assertTrue(checkIfInDrawMode);
-		Paint testmBitmapPaint2 = CursorTool.bitmapPaint;
+		Paint testmBitmapPaint2 = CursorTool.BITMAP_PAINT;
 		int testmSecondaryShapeColor2 = ((CursorTool) toolToTest).cursorToolSecondaryShapeColor;
 		assertEquals(testmBitmapPaint2.getColor(), testmSecondaryShapeColor2);
 
@@ -224,7 +224,7 @@ public class CursorToolTest extends BaseToolTest {
 
 		checkIfInDrawMode = ((CursorTool) toolToTest).toolInDrawMode;
 		assertFalse(checkIfInDrawMode);
-		testmBitmapPaint2 = CursorTool.bitmapPaint;
+		testmBitmapPaint2 = CursorTool.BITMAP_PAINT;
 		testmSecondaryShapeColor2 = ((CursorTool) toolToTest).cursorToolSecondaryShapeColor;
 		assertTrue(testmBitmapPaint2.getColor() != testmSecondaryShapeColor2);
 
@@ -236,7 +236,7 @@ public class CursorToolTest extends BaseToolTest {
 
 		toolToTest.changePaintColor(Color.CYAN);
 
-		Paint testmBitmapPaint3 = CursorTool.bitmapPaint;
+		Paint testmBitmapPaint3 = CursorTool.BITMAP_PAINT;
 		int testmSecondaryShapeColor3 = ((CursorTool) toolToTest).cursorToolSecondaryShapeColor;
 		assertEquals("If cursor already active and color gets changed, cursortool should change color immediately",
 				testmBitmapPaint3.getColor(), testmSecondaryShapeColor3);

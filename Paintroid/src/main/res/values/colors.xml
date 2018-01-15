@@ -79,5 +79,6 @@
     <color name="dot_inactive">#64ffffff</color>
 
     <color name="navigationDrawerBackground">#FFFFFF</color>
+    <color name="background_deactivated_drawing_surface">#80000000</color>
 
 </resources>

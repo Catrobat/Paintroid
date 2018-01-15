@@ -72,17 +72,17 @@ public abstract class BaseToolTest {
 	public void tearDown() throws Exception {
 		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
 		Thread.sleep(100);
-		BaseTool.canvasPaint.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		BaseTool.canvasPaint.setStrokeCap(DEFAULT_BRUSH_CAP);
-		BaseTool.canvasPaint.setColor(DEFAULT_COLOR);
+		BaseTool.CANVAS_PAINT.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+		BaseTool.CANVAS_PAINT.setStrokeCap(DEFAULT_BRUSH_CAP);
+		BaseTool.CANVAS_PAINT.setColor(DEFAULT_COLOR);
 
-		BaseTool.bitmapPaint.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		BaseTool.bitmapPaint.setStrokeCap(DEFAULT_BRUSH_CAP);
-		BaseTool.bitmapPaint.setColor(DEFAULT_COLOR);
+		BaseTool.BITMAP_PAINT.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+		BaseTool.BITMAP_PAINT.setStrokeCap(DEFAULT_BRUSH_CAP);
+		BaseTool.BITMAP_PAINT.setColor(DEFAULT_COLOR);
 	}
 
 	int getAttributeButtonColor() {
-		return BaseTool.bitmapPaint.getColor();
+		return BaseTool.BITMAP_PAINT.getColor();
 	}
 
 	public Activity getActivity() {

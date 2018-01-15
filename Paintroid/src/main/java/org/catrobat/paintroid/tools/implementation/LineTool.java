@@ -49,22 +49,22 @@ public class LineTool extends BaseTool {
 			return;
 		}
 
-		setPaintColor(canvasPaint.getColor());
+		setPaintColor(CANVAS_PAINT.getColor());
 
 		canvas.save();
 		canvas.clipRect(0, 0,
 				PaintroidApplication.drawingSurface.getBitmapWidth(),
 				PaintroidApplication.drawingSurface.getBitmapHeight());
-		if (canvasPaint.getAlpha() == 0x00) {
-			canvasPaint.setColor(Color.BLACK);
+		if (CANVAS_PAINT.getAlpha() == 0x00) {
+			CANVAS_PAINT.setColor(Color.BLACK);
 			canvas.drawLine(initialEventCoordinate.x,
 					initialEventCoordinate.y, currentCoordinate.x,
-					currentCoordinate.y, canvasPaint);
-			canvasPaint.setColor(Color.TRANSPARENT);
+					currentCoordinate.y, CANVAS_PAINT);
+			CANVAS_PAINT.setColor(Color.TRANSPARENT);
 		} else {
 			canvas.drawLine(initialEventCoordinate.x,
 					initialEventCoordinate.y, currentCoordinate.x,
-					currentCoordinate.y, bitmapPaint);
+					currentCoordinate.y, BITMAP_PAINT);
 		}
 		canvas.restore();
 	}
@@ -106,7 +106,7 @@ public class LineTool extends BaseTool {
 		}
 
 		if (pathInsideBitmap) {
-			Command command = new PathCommand(bitmapPaint, finalPath);
+			Command command = new PathCommand(BITMAP_PAINT, finalPath);
 			Layer layer = LayerListener.getInstance().getCurrentLayer();
 			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		}

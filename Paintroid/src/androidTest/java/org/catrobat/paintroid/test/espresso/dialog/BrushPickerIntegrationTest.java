@@ -78,11 +78,11 @@ public class BrushPickerIntegrationTest {
 	}
 
 	private Paint getCurrentToolBitmapPaint() {
-		return BaseTool.bitmapPaint;
+		return BaseTool.BITMAP_PAINT;
 	}
 
 	private Paint getCurrentToolCanvasPaint() {
-		return BaseTool.canvasPaint;
+		return BaseTool.CANVAS_PAINT;
 	}
 
 	private void assertStrokePaint(Paint strokePaint, int expectedStrokeWidth, Cap expectedCap) {
@@ -183,8 +183,8 @@ public class BrushPickerIntegrationTest {
 		Paint bitmapPaint = getCurrentToolBitmapPaint();
 		Paint canvasPaint = getCurrentToolCanvasPaint();
 
-		assertFalse("bitmapPaint antialiasing should be off", bitmapPaint.isAntiAlias());
-		assertFalse("canvasPaint antialiasing should be off", canvasPaint.isAntiAlias());
+		assertFalse("BITMAP_PAINT antialiasing should be off", bitmapPaint.isAntiAlias());
+		assertFalse("CANVAS_PAINT antialiasing should be off", canvasPaint.isAntiAlias());
 	}
 
 	@Test

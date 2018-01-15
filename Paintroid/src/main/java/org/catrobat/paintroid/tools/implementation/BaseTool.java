@@ -24,6 +24,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -40,6 +41,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -66,34 +68,34 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	public static final float MOVE_TOLERANCE = 5;
 	@VisibleForTesting
 	public static final int STROKE_25 = 25;
-	private static final int BACKGROUND_DEACTIVATED_DRAWING_SURFACE = Color.argb(0x80, 0, 0, 0);
-	private static final PorterDuffXfermode ERASE_XFERMODE = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+	public static final Paint BITMAP_PAINT;
+	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+	public static final Paint CANVAS_PAINT;
+	private static final PorterDuffXfermode ERASE_XFERMODE;
 	private static final int SCROLL_TOLERANCE_PERCENTAGE = 10;
-	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
-	public static Paint bitmapPaint;
-	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
-	public static Paint canvasPaint;
 
 	static {
-		bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		bitmapPaint.setColor(Color.BLACK);
-		bitmapPaint.setStyle(Paint.Style.STROKE);
-		bitmapPaint.setStrokeJoin(Paint.Join.ROUND);
-		bitmapPaint.setStrokeCap(Paint.Cap.ROUND);
-		bitmapPaint.setStrokeWidth(STROKE_25);
-		canvasPaint = new Paint(bitmapPaint);
+		BITMAP_PAINT = new Paint(Paint.ANTI_ALIAS_FLAG);
+		BITMAP_PAINT.setColor(Color.BLACK);
+		BITMAP_PAINT.setStyle(Paint.Style.STROKE);
+		BITMAP_PAINT.setStrokeJoin(Paint.Join.ROUND);
+		BITMAP_PAINT.setStrokeCap(Paint.Cap.ROUND);
+		BITMAP_PAINT.setStrokeWidth(STROKE_25);
+		CANVAS_PAINT = new Paint(BITMAP_PAINT);
+		ERASE_XFERMODE = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 	}
 
 	final Paint checkeredPattern;
 	final int scrollTolerance;
 	final Context context;
-	final ToolType toolType;
-	protected OnColorPickedListener color;
+	final PointF movedDistance;
+	private final ToolType toolType;
+	private final OnColorPickedListener onColorPickedListener;
+	private final OnBrushChangedListener onBrushChangedListener;
 	boolean toolOptionsShown = false;
 	LinearLayout toolSpecificOptionsLayout;
-	PointF movedDistance;
 	PointF previousEventCoordinate;
-	private OnBrushChangedListener stroke;
 	private LinearLayout toolOptionsLayout;
 
 	public BaseTool(Context context, ToolType toolType) {
@@ -101,22 +103,23 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		this.toolType = toolType;
 		this.context = context;
 
-		Bitmap checkerboard = BitmapFactory.decodeResource(context.getResources(), R.drawable.checkeredbg);
+		Resources resources = context.getResources();
+		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPattern = new Paint();
 		checkeredPattern.setShader(shader);
 
-		scrollTolerance = context.getResources().getDisplayMetrics().widthPixels
+		scrollTolerance = resources.getDisplayMetrics().widthPixels
 				* SCROLL_TOLERANCE_PERCENTAGE / 100;
 
-		color = new OnColorPickedListener() {
+		onColorPickedListener = new OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
 				changePaintColor(color);
 			}
 		};
 
-		stroke = new OnBrushChangedListener() {
+		onBrushChangedListener = new OnBrushChangedListener() {
 			@Override
 			public void setCap(Cap cap) {
 				changePaintStrokeCap(cap);
@@ -128,9 +131,9 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			}
 		};
 
-		BrushPickerView.getInstance().addBrushChangedListener(stroke);
-		BrushPickerView.getInstance().setCurrentPaint(bitmapPaint);
-		ColorPickerDialog.getInstance().addOnColorPickedListener(color);
+		BrushPickerView.getInstance().addBrushChangedListener(onBrushChangedListener);
+		BrushPickerView.getInstance().setCurrentPaint(BITMAP_PAINT);
+		ColorPickerDialog.getInstance().addOnColorPickedListener(onColorPickedListener);
 
 		movedDistance = new PointF(0f, 0f);
 		previousEventCoordinate = new PointF(0f, 0f);
@@ -156,31 +159,31 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	}
 
 	void setPaintColor(@ColorInt int color) {
-		bitmapPaint.setColor(color);
+		BITMAP_PAINT.setColor(color);
 		if (Color.alpha(color) == 0x00) {
-			bitmapPaint.setXfermode(ERASE_XFERMODE);
-			canvasPaint.reset();
-			canvasPaint.setStyle(bitmapPaint.getStyle());
-			canvasPaint.setStrokeJoin(bitmapPaint.getStrokeJoin());
-			canvasPaint.setStrokeCap(bitmapPaint.getStrokeCap());
-			canvasPaint.setStrokeWidth(bitmapPaint.getStrokeWidth());
-			canvasPaint.setShader(checkeredPattern.getShader());
-			canvasPaint.setColor(Color.BLACK);
-			bitmapPaint.setAlpha(0x00);
-			canvasPaint.setAlpha(0x00);
+			BITMAP_PAINT.setXfermode(ERASE_XFERMODE);
+			CANVAS_PAINT.reset();
+			CANVAS_PAINT.setStyle(BITMAP_PAINT.getStyle());
+			CANVAS_PAINT.setStrokeJoin(BITMAP_PAINT.getStrokeJoin());
+			CANVAS_PAINT.setStrokeCap(BITMAP_PAINT.getStrokeCap());
+			CANVAS_PAINT.setStrokeWidth(BITMAP_PAINT.getStrokeWidth());
+			CANVAS_PAINT.setShader(checkeredPattern.getShader());
+			CANVAS_PAINT.setColor(Color.BLACK);
+			BITMAP_PAINT.setAlpha(0x00);
+			CANVAS_PAINT.setAlpha(0x00);
 		} else {
-			bitmapPaint.setXfermode(null);
-			canvasPaint.set(bitmapPaint);
+			BITMAP_PAINT.setXfermode(null);
+			CANVAS_PAINT.set(BITMAP_PAINT);
 		}
 	}
 
 	@Override
 	public void changePaintStrokeWidth(int strokeWidth) {
-		bitmapPaint.setStrokeWidth(strokeWidth);
-		canvasPaint.setStrokeWidth(strokeWidth);
+		BITMAP_PAINT.setStrokeWidth(strokeWidth);
+		CANVAS_PAINT.setStrokeWidth(strokeWidth);
 		boolean antiAliasing = (strokeWidth > 1);
-		bitmapPaint.setAntiAlias(antiAliasing);
-		canvasPaint.setAntiAlias(antiAliasing);
+		BITMAP_PAINT.setAntiAlias(antiAliasing);
+		CANVAS_PAINT.setAntiAlias(antiAliasing);
 
 		super.setChanged();
 		super.notifyObservers();
@@ -188,21 +191,21 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void changePaintStrokeCap(Cap cap) {
-		bitmapPaint.setStrokeCap(cap);
-		canvasPaint.setStrokeCap(cap);
+		BITMAP_PAINT.setStrokeCap(cap);
+		CANVAS_PAINT.setStrokeCap(cap);
 		super.setChanged();
 		super.notifyObservers();
 	}
 
 	@Override
 	public Paint getDrawPaint() {
-		return new Paint(bitmapPaint);
+		return new Paint(BITMAP_PAINT);
 	}
 
 	@Override
 	public void setDrawPaint(Paint paint) {
-		bitmapPaint.set(paint);
-		canvasPaint.set(paint);
+		BITMAP_PAINT.set(paint);
+		CANVAS_PAINT.set(paint);
 		super.setChanged();
 		super.notifyObservers();
 	}
@@ -257,7 +260,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		return new Point(deltaX, deltaY);
 	}
 
-	protected boolean checkPathInsideBitmap(PointF coordinate) {
+	boolean checkPathInsideBitmap(PointF coordinate) {
 		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
 		return (coordinate.x < drawingSurface.getBitmapWidth())
 				&& (coordinate.y < drawingSurface.getBitmapHeight())
@@ -279,7 +282,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		});
 	}
 
-	protected void addBrushPickerToToolOptions() {
+	void addBrushPickerToToolOptions() {
 		toolSpecificOptionsLayout.addView(BrushPickerView.getInstance().getBrushPickerView());
 	}
 
@@ -348,16 +351,12 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		}
 	}
 
-	void dimBackground(boolean darken) {
+	private void dimBackground(boolean darken) {
 		View drawingSurfaceView = ((Activity) (context)).findViewById(R.id.drawingSurfaceView);
 		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
-		int colorTo;
-
-		if (darken) {
-			colorTo = BACKGROUND_DEACTIVATED_DRAWING_SURFACE;
-		} else {
-			colorTo = context.getResources().getColor(R.color.transparent);
-		}
+		int colorTo = ContextCompat.getColor(context, darken
+				? R.color.background_deactivated_drawing_surface
+				: R.color.transparent);
 
 		ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(
 				drawingSurfaceView, "backgroundColor", new ArgbEvaluator(), colorFrom, colorTo);
@@ -378,7 +377,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void leaveTool() {
-		ColorPickerDialog.getInstance().removeOnColorPickedListener(color);
-		BrushPickerView.getInstance().removeBrushChangedListener(stroke);
+		ColorPickerDialog.getInstance().removeOnColorPickedListener(onColorPickedListener);
+		BrushPickerView.getInstance().removeBrushChangedListener(onBrushChangedListener);
 	}
 }

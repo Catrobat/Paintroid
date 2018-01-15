@@ -92,11 +92,11 @@ public class FillTool extends BaseTool {
 			return false;
 		}
 
-		if (colorTolerance == 0 && bitmapPaint.getColor() == drawingSurface.getPixel(coordinate)) {
+		if (colorTolerance == 0 && BITMAP_PAINT.getColor() == drawingSurface.getPixel(coordinate)) {
 			return false;
 		}
 
-		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), bitmapPaint, colorTolerance);
+		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), BITMAP_PAINT, colorTolerance);
 		((FillCommand) command).addObserver(this);
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);

@@ -71,7 +71,7 @@ public class CursorTool extends BaseToolWithShape {
 	public void changePaintColor(int color) {
 		super.changePaintColor(color);
 		if (toolInDrawMode) {
-			cursorToolSecondaryShapeColor = bitmapPaint.getColor();
+			cursorToolSecondaryShapeColor = BITMAP_PAINT.getColor();
 		}
 	}
 
@@ -169,7 +169,7 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		float brushStrokeWidth = Math.max((bitmapPaint.getStrokeWidth() / 2f), 1f);
+		float brushStrokeWidth = Math.max((BITMAP_PAINT.getStrokeWidth() / 2f), 1f);
 
 		float strokeWidth = getStrokeWidthForZoom(DEFAULT_TOOL_STROKE_WIDTH,
 				MINIMAL_TOOL_STROKE_WIDTH, MAXIMAL_TOOL_STROKE_WIDTH);
@@ -181,7 +181,7 @@ public class CursorTool extends BaseToolWithShape {
 		linePaint.setColor(cursorToolPrimaryShapeColor);
 		linePaint.setStyle(Style.STROKE);
 		linePaint.setStrokeWidth(strokeWidth);
-		Cap strokeCap = bitmapPaint.getStrokeCap();
+		Cap strokeCap = BITMAP_PAINT.getStrokeCap();
 
 		if (strokeCap.equals(Cap.ROUND)) {
 			canvas.drawCircle(this.toolPosition.x, this.toolPosition.y,
@@ -263,18 +263,18 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void draw(Canvas canvas) {
-		setPaintColor(canvasPaint.getColor());
+		setPaintColor(CANVAS_PAINT.getColor());
 		if (toolInDrawMode) {
 			canvas.save();
 			canvas.clipRect(0, 0,
 					PaintroidApplication.drawingSurface.getBitmapWidth(),
 					PaintroidApplication.drawingSurface.getBitmapHeight());
-			if (canvasPaint.getColor() == Color.TRANSPARENT) {
-				canvasPaint.setColor(Color.BLACK);
-				canvas.drawPath(pathToDraw, canvasPaint);
-				canvasPaint.setColor(Color.TRANSPARENT);
+			if (CANVAS_PAINT.getColor() == Color.TRANSPARENT) {
+				CANVAS_PAINT.setColor(Color.BLACK);
+				canvas.drawPath(pathToDraw, CANVAS_PAINT);
+				CANVAS_PAINT.setColor(Color.TRANSPARENT);
 			} else {
-				canvas.drawPath(pathToDraw, bitmapPaint);
+				canvas.drawPath(pathToDraw, BITMAP_PAINT);
 			}
 			canvas.restore();
 		}
@@ -288,7 +288,7 @@ public class CursorTool extends BaseToolWithShape {
 			return false;
 		}
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		Command command = new PathCommand(bitmapPaint, pathToDraw);
+		Command command = new PathCommand(BITMAP_PAINT, pathToDraw);
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		return true;
 	}
@@ -299,7 +299,7 @@ public class CursorTool extends BaseToolWithShape {
 			return false;
 		}
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		Command command = new PointCommand(bitmapPaint, coordinate);
+		Command command = new PointCommand(BITMAP_PAINT, coordinate);
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		return true;
 	}
@@ -310,7 +310,7 @@ public class CursorTool extends BaseToolWithShape {
 			if (MOVE_TOLERANCE < movedDistance.x
 					|| MOVE_TOLERANCE < movedDistance.y) {
 				addPathCommand(toolPosition);
-				cursorToolSecondaryShapeColor = bitmapPaint.getColor();
+				cursorToolSecondaryShapeColor = BITMAP_PAINT.getColor();
 			} else {
 				Toast.makeText(context, R.string.cursor_draw_inactive, Toast.LENGTH_SHORT).show();
 				toolInDrawMode = false;
@@ -321,7 +321,7 @@ public class CursorTool extends BaseToolWithShape {
 					&& MOVE_TOLERANCE >= movedDistance.y) {
 				Toast.makeText(context, R.string.cursor_draw_active, Toast.LENGTH_SHORT).show();
 				toolInDrawMode = true;
-				cursorToolSecondaryShapeColor = bitmapPaint.getColor();
+				cursorToolSecondaryShapeColor = BITMAP_PAINT.getColor();
 				addPointCommand(toolPosition);
 			}
 		}

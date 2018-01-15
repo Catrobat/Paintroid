@@ -116,7 +116,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				- SHAPE_OFFSET, boxHeight - SHAPE_OFFSET);
 
 		Paint drawPaint = new Paint();
-		drawPaint.setColor(canvasPaint.getColor());
+		drawPaint.setColor(CANVAS_PAINT.getColor());
 		drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
 		switch (shapeDrawType) {
@@ -125,7 +125,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 			case OUTLINE:
 				drawPaint.setStyle(Style.STROKE);
-				float strokeWidth = bitmapPaint.getStrokeWidth();
+				float strokeWidth = BITMAP_PAINT.getStrokeWidth();
 				shapeRect = new RectF(SHAPE_OFFSET + strokeWidth / 2,
 						SHAPE_OFFSET + strokeWidth / 2, boxWidth - SHAPE_OFFSET
 						- strokeWidth / 2, boxHeight - SHAPE_OFFSET - strokeWidth / 2);
@@ -137,7 +137,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		}
 
 		geometricFillCommandPaint = new Paint(Paint.DITHER_FLAG);
-		if (Color.alpha(canvasPaint.getColor()) == 0x00) {
+		if (Color.alpha(CANVAS_PAINT.getColor()) == 0x00) {
 			int colorWithMaxAlpha = Color.BLACK;
 			geometricFillCommandPaint.setColor(colorWithMaxAlpha);
 			geometricFillCommandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
@@ -200,7 +200,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, rect.width(), rect.height(), true);
 		Paint colorChangePaint = new Paint(drawPaint);
 
-		if (Color.alpha(canvasPaint.getColor()) == 0x00) {
+		if (Color.alpha(CANVAS_PAINT.getColor()) == 0x00) {
 			int colorWithMaxAlpha = Color.BLACK;
 			colorChangePaint.setColor(colorWithMaxAlpha);
 		}

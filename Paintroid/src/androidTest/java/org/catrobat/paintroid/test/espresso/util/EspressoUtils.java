@@ -194,7 +194,7 @@ public final class EspressoUtils {
 	}
 
 	public static Paint getCurrentToolPaint() {
-		return BaseTool.canvasPaint;
+		return BaseTool.CANVAS_PAINT;
 	}
 
 	public static float getToolMemberColorTolerance(FillTool fillTool) {

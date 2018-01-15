@@ -88,7 +88,7 @@ public class DrawToolTests extends BaseToolTest {
 	@Test
 	public void testShouldReturnPaint() {
 		toolToTest.setDrawPaint(this.paint);
-		Paint drawPaint = BaseTool.bitmapPaint;
+		Paint drawPaint = BaseTool.BITMAP_PAINT;
 		assertEquals(this.paint.getColor(), drawPaint.getColor());
 		assertEquals(this.paint.getStrokeWidth(), drawPaint.getStrokeWidth(), Double.MIN_VALUE);
 		assertEquals(this.paint.getStrokeCap(), drawPaint.getStrokeCap());

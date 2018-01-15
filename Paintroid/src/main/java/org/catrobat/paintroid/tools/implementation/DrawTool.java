@@ -53,10 +53,10 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
-		setPaintColor(canvasPaint.getColor());
+		setPaintColor(CANVAS_PAINT.getColor());
 
 		if (PaintroidApplication.currentTool.getToolType() == ToolType.ERASER
-				&& canvasPaint.getColor() != Color.TRANSPARENT) {
+				&& CANVAS_PAINT.getColor() != Color.TRANSPARENT) {
 			setPaintColor(Color.TRANSPARENT);
 		}
 
@@ -64,12 +64,12 @@ public class DrawTool extends BaseTool {
 		canvas.clipRect(0, 0,
 				PaintroidApplication.drawingSurface.getBitmapWidth(),
 				PaintroidApplication.drawingSurface.getBitmapHeight());
-		if (canvasPaint.getColor() == Color.TRANSPARENT) {
-			canvasPaint.setColor(Color.BLACK);
-			canvas.drawPath(pathToDraw, canvasPaint);
-			canvasPaint.setColor(Color.TRANSPARENT);
+		if (CANVAS_PAINT.getColor() == Color.TRANSPARENT) {
+			CANVAS_PAINT.setColor(Color.BLACK);
+			canvas.drawPath(pathToDraw, CANVAS_PAINT);
+			CANVAS_PAINT.setColor(Color.TRANSPARENT);
 		} else {
-			canvas.drawPath(pathToDraw, bitmapPaint);
+			canvas.drawPath(pathToDraw, BITMAP_PAINT);
 		}
 		canvas.restore();
 	}
@@ -137,7 +137,7 @@ public class DrawTool extends BaseTool {
 			return false;
 		}
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		Command command = new PathCommand(bitmapPaint, pathToDraw);
+		Command command = new PathCommand(BITMAP_PAINT, pathToDraw);
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		return true;
 	}
@@ -148,7 +148,7 @@ public class DrawTool extends BaseTool {
 			return false;
 		}
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		Command command = new PointCommand(bitmapPaint, coordinate);
+		Command command = new PointCommand(BITMAP_PAINT, coordinate);
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		return true;
 	}
