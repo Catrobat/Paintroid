@@ -41,7 +41,7 @@ public class PathCommandTest extends CommandTestSetup {
 
 	@Override
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		super.setUp();
 		pathUnderTest = new Path();
 		pathUnderTest.moveTo(1, 0);
@@ -51,15 +51,14 @@ public class PathCommandTest extends CommandTestSetup {
 
 	@Override
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		super.tearDown();
 		pathUnderTest.reset();
 		pathUnderTest = null;
 	}
 
 	@Test
-	public void testPathOutOfBounds() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testPathOutOfBounds() {
 		Path path = new Path();
 
 		float left = canvasBitmapUnderTest.getWidth() + 50;

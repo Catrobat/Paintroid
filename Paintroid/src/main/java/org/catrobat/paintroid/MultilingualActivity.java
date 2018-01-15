@@ -27,6 +27,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -39,11 +40,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import static org.catrobat.paintroid.PaintroidApplication.languageSharedPreferences;
-
 public class MultilingualActivity extends AppCompatActivity {
+	@VisibleForTesting
 	public static final String LANGUAGE_TAG_KEY = "applicationLanguage";
-	public static final String[] LANGUAGE_CODE = {"az", "bg", "bs", "ca", "cs", "sr-CS", "sr-SP",
+	@VisibleForTesting
+	public static final String SHARED_PREFERENCES_TAG = "For_language";
+	private static final String[] LANGUAGE_CODE = {"az", "bg", "bs", "ca", "cs", "sr-CS", "sr-SP",
 			"da", "de", "el", "en-AU", "en-CA", "en-GB", "en", "es", "fr", "gl", "hr", "in", "it",
 			"sw", "hu", "mk", "ms", "nl", "no", "pl", "pt-BR", "pt", "ru", "ro", "sq", "sl", "sk",
 			"sv", "vi", "tr", "ml", "ta", "te", "th", "gu", "hi", "ja", "ko", "lt", "zh-CN",
@@ -52,6 +54,7 @@ public class MultilingualActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setToChosenLanguage(this);
 
 		setContentView(R.layout.activity_multilingual);
@@ -94,7 +97,9 @@ public class MultilingualActivity extends AppCompatActivity {
 	}
 
 	public static void setToChosenLanguage(Activity activity) {
-		String languageTag = languageSharedPreferences.getString(LANGUAGE_TAG_KEY, "");
+		SharedPreferences sharedPreferences = activity
+				.getSharedPreferences(SHARED_PREFERENCES_TAG, Context.MODE_PRIVATE);
+		String languageTag = sharedPreferences.getString(LANGUAGE_TAG_KEY, "");
 		Locale locale = Arrays.asList(LANGUAGE_CODE).contains(languageTag)
 				? getLocaleFromLanguageTag(languageTag)
 				: new Locale(PaintroidApplication.defaultSystemLanguage);
@@ -125,13 +130,14 @@ public class MultilingualActivity extends AppCompatActivity {
 	}
 
 	private void setLanguageSharedPreference(String value) {
-		SharedPreferences.Editor editor = languageSharedPreferences.edit();
+		SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_TAG, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
 		if (value == null) {
 			editor.remove(LANGUAGE_TAG_KEY);
 		} else {
 			editor.putString(LANGUAGE_TAG_KEY, value);
 		}
-		editor.commit();
+		editor.apply();
 	}
 
 	@Override

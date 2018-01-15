@@ -27,7 +27,6 @@ import android.graphics.Point;
 import android.support.test.annotation.UiThreadTest;
 
 import org.catrobat.paintroid.command.implementation.FillCommand;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
@@ -67,7 +66,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillToolAlgorithmMembers() throws NoSuchFieldException, IllegalAccessException {
+	public void testFillToolAlgorithmMembers() {
 		int width = 10;
 		int height = 20;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -77,27 +76,27 @@ public class FillToolTests extends BaseToolTest {
 
 		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
 
-		int[][] algorithmPixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "pixels");
+		int[][] algorithmPixels = fillAlgorithm.pixels;
 		assertEquals("Wrong array size", height, algorithmPixels.length);
 		assertEquals("Wrong array size", width, algorithmPixels[0].length);
 
-		int algorithmTargetColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "targetColor");
-		int algorithmReplacementColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "replacementColor");
-		int algorithmColorTolerance = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "colorToleranceThresholdSquared");
+		int algorithmTargetColor = fillAlgorithm.targetColor;
+		int algorithmReplacementColor = fillAlgorithm.replacementColor;
+		int algorithmColorTolerance = fillAlgorithm.colorToleranceThresholdSquared;
 		assertEquals("Wrong target color", targetColor, algorithmTargetColor);
 		assertEquals("Wrong replacement color", replacementColor, algorithmReplacementColor);
 		assertEquals("Wrong color tolerance", (int) (HALF_TOLERANCE * HALF_TOLERANCE), algorithmColorTolerance);
 
-		Point algorithmClickedPixel = (Point) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "clickedPixel");
+		Point algorithmClickedPixel = fillAlgorithm.clickedPixel;
 		assertEquals("Wrong point for clicked pixel", clickedPixel, algorithmClickedPixel);
 
-		Queue algorithmRanges = (Queue) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "ranges");
+		Queue algorithmRanges = fillAlgorithm.ranges;
 		assertTrue("Queue for ranges should be empty", algorithmRanges.isEmpty());
 	}
 
 	@UiThreadTest
 	@Test
-	public void testFillingOnEmptyBitmap() throws NoSuchFieldException, IllegalAccessException {
+	public void testFillingOnEmptyBitmap() {
 		int width = 10;
 		int height = 20;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -123,7 +122,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillingOnNotEmptyBitmap() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingOnNotEmptyBitmap() {
 		int width = 6;
 		int height = 8;
 		Point clickedPixel = new Point(width / 2, height / 2);
@@ -162,7 +161,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillingWithMaxColorTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingWithMaxColorTolerance() {
 		int width = 6;
 		int height = 8;
 		Point clickedPixel = new Point(width / 2, height / 2);
@@ -195,7 +194,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillingWhenOutOfTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingWhenOutOfTolerance() {
 		int width = 6;
 		int height = 8;
 		Point clickedPixel = new Point(width / 2, height / 2);
@@ -232,7 +231,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testEqualTargetAndReplacementColorWithTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testEqualTargetAndReplacementColorWithTolerance() {
 		int width = 8;
 		int height = 8;
 		Point clickedPixel = new Point(width / 2, height / 2);
@@ -267,7 +266,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillingWhenTargetColorIsWithinTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingWhenTargetColorIsWithinTolerance() {
 		int targetColor = 0xFFAAEEAA;
 		int boundaryColor = 0xFFFF0000;
 		int replacementColor = 0xFFFFFFFF;
@@ -306,7 +305,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillingWithSpiral() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingWithSpiral() {
 		int targetColor = 0xFFAAEEAA;
 		int boundaryColor = 0xFFFF0000;
 		int replacementColor = 0xFFFFFFFF;
@@ -337,7 +336,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testComplexDrawing() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testComplexDrawing() {
 		int targetColor = 0xFFAAEEAA;
 		int boundaryColor = 0xFFFF0000;
 		int replacementColor = 0xFFFFFFFF;
@@ -381,7 +380,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testSkipPixelsInCheckRangesFunction() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testSkipPixelsInCheckRangesFunction() {
 		int targetColor = 0xFFAAEEAA;
 		int boundaryColor = 0xFFFF0000;
 		int replacementColor = 0xFFFFFFFF;

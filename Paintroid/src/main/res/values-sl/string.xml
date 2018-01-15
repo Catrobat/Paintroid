@@ -43,7 +43,6 @@
   <string name="about_license_url_text">Licenca</string>
   <string name="about_catroid_url_text">O Catrobat</string>
   <string name="about_version">Verzija:</string>
-  <string name="stroke_title">"Nastavitve za orodja"</string>
   <string name="color_chooser_title">Izbirnik barv</string>
   <string name="color_rgb">rdečo zeleno modro (RGB)</string>
   <string name="color_red">Rdeče</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">Prekini</string>
   <string name="save_button_text">Shrani</string>
   <string name="discard_button_text">Zavrzi</string>
-  <string name="resize_to_resize_tap_text">za spremembo velikosti</string>
   <string name="resize_nothing_to_resize">ni česa spreminjati</string>
   <string name="resize_max_image_resolution_reached">max ločljivost že dosežena</string>
   <string name="text_tool_dialog_input_title">Your text:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">Delete Layer</string>
   <string name="layer_too_many_layers">Too many layers</string>
   <string name="layer_invisible">All layers invisible</string>
-  <string name="layer_prefix">Layer </string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

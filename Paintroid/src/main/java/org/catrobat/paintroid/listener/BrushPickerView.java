@@ -21,6 +21,7 @@ package org.catrobat.paintroid.listener;
 
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,60 +38,44 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public final class BrushPickerView implements View.OnClickListener {
-	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "BrushPickerView has not been initialized. Call init() first!";
 	private static final int MIN_BRUSH_SIZE = 1;
-	private static BrushPickerView instance = null;
 
-	private View brushPickerView;
-	private ArrayList<BrushPickerView.OnBrushChangedListener> brushChangedListener;
-	private TextView brushSizeText;
-	private SeekBar brushWidthSeekBar;
-	private RadioButton radioButtonCircle;
-	private RadioButton radioButtonRect;
-	private DrawerPreview drawerPreview;
-	private int strokeWidth;
+	@VisibleForTesting
+	public ArrayList<BrushPickerView.OnBrushChangedListener> brushChangedListener;
+	private final TextView brushSizeText;
+	private final SeekBar brushWidthSeekBar;
+	private final RadioButton radioButtonCircle;
+	private final RadioButton radioButtonRect;
+	private final DrawerPreview drawerPreview;
+	private final ColorPickerDialog.OnColorPickedListener onColorPickedListener;
 
-	private BrushPickerView(ViewGroup rootView) {
+	public BrushPickerView(ViewGroup rootView) {
 		brushChangedListener = new ArrayList<>();
 
 		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
-		brushPickerView = inflater.inflate(R.layout.dialog_stroke, rootView, false);
+		View brushPickerView = inflater.inflate(R.layout.dialog_stroke, rootView, true);
 
 		ImageButton buttonCircle = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_circle);
-		buttonCircle.setOnClickListener(this);
-
 		ImageButton buttonRect = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_rect);
-		buttonRect.setOnClickListener(this);
-
 		radioButtonCircle = (RadioButton) brushPickerView.findViewById(R.id.stroke_rbtn_circle);
-		radioButtonCircle.setOnClickListener(this);
-
 		radioButtonRect = (RadioButton) brushPickerView.findViewById(R.id.stroke_rbtn_rect);
-		radioButtonRect.setOnClickListener(this);
-
 		brushWidthSeekBar = (SeekBar) brushPickerView.findViewById(R.id.stroke_width_seek_bar);
 		brushWidthSeekBar.setOnSeekBarChangeListener(new BrushPickerView.OnBrushChangedWidthSeekBarListener());
-
 		brushSizeText = (TextView) brushPickerView.findViewById(R.id.stroke_width_width_text);
-
 		drawerPreview = (DrawerPreview) brushPickerView.findViewById(R.id.drawer_preview);
-		ColorPickerDialog.getInstance().addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+
+		buttonCircle.setOnClickListener(this);
+		buttonRect.setOnClickListener(this);
+		radioButtonCircle.setOnClickListener(this);
+		radioButtonRect.setOnClickListener(this);
+
+		onColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
 				drawerPreview.invalidate();
 			}
-		});
-	}
-
-	public static BrushPickerView getInstance() {
-		if (instance == null) {
-			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
-		}
-		return instance;
-	}
-
-	public static void init(ViewGroup view) {
-		instance = new BrushPickerView(view);
+		};
+		ColorPickerDialog.getInstance().addOnColorPickedListener(onColorPickedListener);
 	}
 
 	@Override
@@ -134,29 +119,20 @@ public final class BrushPickerView implements View.OnClickListener {
 		brushChangedListener.remove(listener);
 	}
 
+	public void removeListeners() {
+		ColorPickerDialog.getInstance().removeOnColorPickedListener(onColorPickedListener);
+	}
+
 	private void updateStrokeChange(int strokeWidth) {
 		for (OnBrushChangedListener listener : brushChangedListener) {
 			listener.setStroke(strokeWidth);
 		}
-		this.strokeWidth = strokeWidth;
 	}
 
 	private void updateStrokeCap(Cap cap) {
 		for (OnBrushChangedListener listener : brushChangedListener) {
 			listener.setCap(cap);
 		}
-	}
-
-	public View getBrushPickerView() {
-		return brushPickerView;
-	}
-
-	public int getStrokeWidth() {
-		return strokeWidth;
-	}
-
-	public DrawerPreview getDrawerPreview() {
-		return drawerPreview;
 	}
 
 	public interface OnBrushChangedListener {

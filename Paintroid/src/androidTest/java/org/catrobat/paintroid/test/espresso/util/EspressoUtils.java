@@ -41,19 +41,16 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.intro.TapTargetTopBar;
-import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction;
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction;
 import org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction;
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.button.ColorButton;
 
@@ -78,11 +75,7 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawe
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.fail;
 
-/**
- * TODO: move PrivateAccess methods and constants to another class?
- */
 public final class EspressoUtils {
 
 	public static final Paint.Cap DEFAULT_STROKE_CAP = Paint.Cap.ROUND;
@@ -94,62 +87,6 @@ public final class EspressoUtils {
 	public static final String EXTRA_CATROID_PICTURE_NAME_NAME = "org.catrobat.extra.PAINTROID_PICTURE_NAME";
 
 	public static final int COLOR_CHOOSER_PRESET_BLACK_BUTTON_ID = 16;
-
-	/**
-	 * Field name for surface width of {@link Perspective} class. Use {@link #getSurfaceHeight()} to
-	 * get the value
-	 */
-	public static final String FIELD_NAME_SURFACE_WIDTH = "surfaceWidth";
-
-	/**
-	 * Field name for surface height of {@link Perspective} class. Use {@link #getSurfaceHeight()} to
-	 * get the value
-	 */
-	public static final String FIELD_NAME_SURFACE_HEIGHT = "surfaceHeight";
-
-	/**
-	 * Field name for current working bitmap {@link Bitmap} class. Use {@link #getWorkingBitmap()} to
-	 * get the value
-	 */
-	public static final String FIELD_NAME_WORKING_BITMAP = "workingBitmap";
-
-	/**
-	 * Field name for {@link BaseTool} canvas {@link Paint} class. Use {@link #getCurrentToolPaint()} to
-	 * get the value
-	 */
-	public static final String FIELD_NAME_CANVAS_PAINT = "canvasPaint";
-
-	/**
-	 * Field name for {@link FillTool} tolerance value. Use {@link #getCurrentToolPaint()} to
-	 * get the value
-	 */
-	public static final String FIELD_NAME_COLOR_TOLERANCE = "colorTolerance";
-
-	/**
-	 * Field name for {@link PointF} tool position. Use {@link #getToolMemberBoxPosition()}  to
-	 * get the value
-	 */
-	public static final String FIELD_NAME_TOOL_POSITION = "toolPosition";
-
-	/**
-	 * Field name for float surface x value. Use {@link #getSurfaceCenterX()}  to
-	 * get the value
-	 */
-	public static final String FIELD_NAME_SURFACE_CENTER_X = "surfaceCenterX";
-
-	/**
-	 * Field name for float surface y value. Use {@link #getSurfaceCenterY()}  to
-	 * get the value
-	 */
-	public static final String FIELD_NAME_SURFACE_CENTER_Y = "surfaceCenterY";
-
-	public static final String FIELD_NAME_BOX_WIDTH = "boxWidth";
-
-	public static final String FIELD_NAME_BOX_HEIGHT = "boxHeight";
-
-	public static final String FIELD_NAME_DRAWING_BITMAP = "drawingBitmap";
-
-	public static final String FIELD_NAME_COLOR_BUTTON = "colorButton";
 
 	public static final int GREEN_COLOR_PICKER_BUTTON_POSITION = 2;
 	public static final int BLACK_COLOR_PICKER_BUTTON_POSITION = 16;
@@ -210,7 +147,6 @@ public final class EspressoUtils {
 	public static void resetDrawPaintAndBrushPickerView() {
 		PaintroidApplication.currentTool.changePaintStrokeWidth(DEFAULT_STROKE_WIDTH);
 		PaintroidApplication.currentTool.changePaintStrokeCap(DEFAULT_STROKE_CAP);
-		BrushPickerView.getInstance().setCurrentPaint(PaintroidApplication.currentTool.getDrawPaint());
 	}
 
 	/**
@@ -243,50 +179,40 @@ public final class EspressoUtils {
 		waitMillis(500);
 	}
 
-	public static float getSurfaceWidth() throws NoSuchFieldException, IllegalAccessException {
-		return (float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, FIELD_NAME_SURFACE_WIDTH);
+	public static float getSurfaceWidth() {
+		return PaintroidApplication.perspective.surfaceWidth;
 	}
 
-	public static float getSurfaceHeight() throws NoSuchFieldException, IllegalAccessException {
-		return (float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, FIELD_NAME_SURFACE_HEIGHT);
+	public static float getSurfaceHeight() {
+		return PaintroidApplication.perspective.surfaceHeight;
 	}
 
-	public static Bitmap getWorkingBitmap() throws NoSuchFieldException, IllegalAccessException {
-		return (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class, PaintroidApplication.drawingSurface, FIELD_NAME_WORKING_BITMAP);
+	public static Bitmap getWorkingBitmap() {
+		return PaintroidApplication.drawingSurface.workingBitmap;
 	}
 
-	public static Paint getCurrentToolPaint() throws NoSuchFieldException, IllegalAccessException {
-		return (Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, FIELD_NAME_CANVAS_PAINT);
+	public static Paint getCurrentToolPaint() {
+		return BaseTool.CANVAS_PAINT;
 	}
 
-	public static float getToolMemberColorTolerance(FillTool fillTool) throws NoSuchFieldException, IllegalAccessException {
-		return (float) PrivateAccess.getMemberValue(FillTool.class, fillTool, FIELD_NAME_COLOR_TOLERANCE);
+	public static float getToolMemberColorTolerance(FillTool fillTool) {
+		return fillTool.colorTolerance;
 	}
 
-	public static ColorButton getToolMemberColorButton(EraserTool eraserTool) throws NoSuchFieldException, IllegalAccessException {
-		return (ColorButton) PrivateAccess.getMemberValue(EraserTool.class, eraserTool, FIELD_NAME_COLOR_BUTTON);
+	public static ColorButton getToolMemberColorButton(EraserTool eraserTool) {
+		return eraserTool.colorButton;
 	}
 
-	public static PointF getToolMemberBoxPosition() throws NoSuchFieldException, IllegalAccessException {
-		return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, PaintroidApplication.currentTool, FIELD_NAME_TOOL_POSITION);
+	public static PointF getToolMemberBoxPosition() {
+		return ((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition;
 	}
 
 	public static float getSurfaceCenterX() {
-		try {
-			return (float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, FIELD_NAME_SURFACE_CENTER_X);
-		} catch (Exception e) {
-			fail("Getting member mSurfaceCenterX failed");
-		}
-		return 0f;
+		return PaintroidApplication.perspective.surfaceCenterX;
 	}
 
 	public static float getSurfaceCenterY() {
-		try {
-			return (float) PrivateAccess.getMemberValue(Perspective.class, PaintroidApplication.perspective, FIELD_NAME_SURFACE_CENTER_Y);
-		} catch (Exception e) {
-			fail("Getting member mSurfaceCenterY failed");
-		}
-		return 0f;
+		return PaintroidApplication.perspective.surfaceCenterY;
 	}
 
 	/**
@@ -403,12 +329,8 @@ public final class EspressoUtils {
 		onView(withId(viewResourceId)).check(matches(withText(stringResourceId)));
 	}
 
-	public static void shouldStartSequence(boolean start) throws NoSuchFieldException, IllegalAccessException {
-		shouldStartSequence(null, start);
-	}
-
-	public static void shouldStartSequence(TapTargetTopBar topBar, boolean start) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(TapTargetTopBar.class, topBar, "firsTimeSequence", start);
+	public static void shouldStartSequence(boolean start) {
+		TapTargetTopBar.firsTimeSequence = start;
 	}
 
 	/**

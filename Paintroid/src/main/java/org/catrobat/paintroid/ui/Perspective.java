@@ -22,6 +22,7 @@ package org.catrobat.paintroid.ui;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.support.annotation.VisibleForTesting;
 import android.view.SurfaceHolder;
 
 import org.catrobat.paintroid.NavigationDrawerMenuActivity;
@@ -38,18 +39,26 @@ public class Perspective implements Serializable {
 	private static final float ACTION_BAR_HEIGHT = NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT;
 
 	private final float screenDensity;
-	private float surfaceWidth;
-	private float surfaceHeight;
-	private float surfaceCenterX;
-	private float surfaceCenterY;
-	private float surfaceScale;
-	private float surfaceTranslationX;
-	private float surfaceTranslationY;
+	@VisibleForTesting
+	public float surfaceWidth;
+	@VisibleForTesting
+	public float surfaceHeight;
+	@VisibleForTesting
+	public float surfaceCenterX;
+	@VisibleForTesting
+	public float surfaceCenterY;
+	@VisibleForTesting
+	public float surfaceScale;
+	@VisibleForTesting
+	public float surfaceTranslationX;
+	@VisibleForTesting
+	public float surfaceTranslationY;
 	private float bitmapWidth;
 	private float bitmapHeight;
 	private boolean isFullscreen;
 	private float initialTranslationX;
-	private float initialTranslationY;
+	@VisibleForTesting
+	public float initialTranslationY;
 
 	public Perspective(SurfaceHolder holder, float screenDensity) {
 		setSurfaceHolder(holder);
@@ -130,6 +139,14 @@ public class Perspective implements Serializable {
 		return new PointF(canvasX, canvasY);
 	}
 
+	public synchronized void convertToCanvasFromSurface(PointF surfacePoint) {
+		float canvasX = (surfacePoint.x - surfaceCenterX) / surfaceScale
+				+ surfaceCenterX - surfaceTranslationX;
+		float canvasY = (surfacePoint.y - surfaceCenterY) / surfaceScale
+				+ surfaceCenterY - surfaceTranslationY;
+		surfacePoint.set(canvasX, canvasY);
+	}
+
 	/**
 	 * @deprecated use {@link #getSurfacePointFromCanvasPoint} instead
 	 */
@@ -149,12 +166,12 @@ public class Perspective implements Serializable {
 		return new PointF(surfaceX, surfaceY);
 	}
 
-	public synchronized void setCanvasPointToSurfacePoint(PointF point) {
-		float surfaceX = (point.x + surfaceTranslationX - surfaceCenterX)
+	public synchronized void convertToSurfaceFromCanvas(PointF canvasPoint) {
+		float surfaceX = (canvasPoint.x + surfaceTranslationX - surfaceCenterX)
 				* surfaceScale + surfaceCenterX;
-		float surfaceY = (point.y + surfaceTranslationY - surfaceCenterY)
+		float surfaceY = (canvasPoint.y + surfaceTranslationY - surfaceCenterY)
 				* surfaceScale + surfaceCenterY;
-		point.set(surfaceX, surfaceY);
+		canvasPoint.set(surfaceX, surfaceY);
 	}
 
 	public synchronized void applyToCanvas(Canvas canvas) {

@@ -43,7 +43,6 @@
   <string name="about_license_url_text">رخصة النص الأصلي لبرنامج بوكت بينت</string>
   <string name="about_catroid_url_text">حول كاتروبات</string>
   <string name="about_version">الإصدار</string>
-  <string name="stroke_title">"إعدادات الأداة"</string>
   <string name="color_chooser_title">مُنتقي اللون</string>
   <string name="color_rgb">أحمر, أخضر ,أزرق (RGB)</string>
   <string name="color_red">أحمر</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">إنهاء/خروج</string>
   <string name="save_button_text">حفظ</string>
   <string name="discard_button_text">تجاهل</string>
-  <string name="resize_to_resize_tap_text">لتغيير الحجم أُنقر</string>
   <string name="resize_nothing_to_resize">لا يوجد شيء لتغيير حجمه</string>
   <string name="resize_max_image_resolution_reached">الوصول الى الحد الأقصى لدقة الشاشة</string>
   <string name="text_tool_dialog_input_title">النص الخاص بك:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">حذف الطبقة</string>
   <string name="layer_too_many_layers">طبقات عديدة</string>
   <string name="layer_invisible">كل الطبقات غير مرئية</string>
-  <string name="layer_prefix">طبقة </string>
   <string name="layer_merged">تم دمج الطبقات</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

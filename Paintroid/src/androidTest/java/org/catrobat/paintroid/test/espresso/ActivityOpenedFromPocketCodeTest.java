@@ -28,7 +28,7 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
@@ -96,8 +96,8 @@ public class ActivityOpenedFromPocketCodeTest {
 
 	@After
 	public void tearDown() {
-		PaintroidApplication.savedPictureUri = null;
-		PaintroidApplication.isSaved = false;
+		NavigationDrawerMenuActivity.savedPictureUri = null;
+		NavigationDrawerMenuActivity.isSaved = false;
 
 		if (imageFile != null && imageFile.exists()) {
 			imageFile.delete();
@@ -120,7 +120,7 @@ public class ActivityOpenedFromPocketCodeTest {
 
 		onView(withText(R.string.save_button_text)).perform(click());
 
-		assertEquals("Catroid picture path not correct", PaintroidApplication.catroidPicturePath, imageFile.getAbsolutePath());
+		assertEquals("Catroid picture path not correct", launchActivityRule.getActivity().catroidPicturePath, imageFile.getAbsolutePath());
 
 		assertThat("Image modification not saved", imageFile.lastModified(), greaterThan(lastModifiedBefore));
 		assertThat("Saved image length not changed", imageFile.length(), greaterThan(fileSizeBefore));

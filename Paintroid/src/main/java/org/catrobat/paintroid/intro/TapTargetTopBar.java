@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.intro;
 
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -32,7 +33,8 @@ import org.catrobat.paintroid.intro.listener.IntroTargetSequence;
 import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeOut;
 
 public class TapTargetTopBar extends TapTargetBase {
-	private static boolean firsTimeSequence = true;
+	@VisibleForTesting
+	public static boolean firsTimeSequence = true;
 	private TapTargetSequence sequence;
 
 	public TapTargetTopBar(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,

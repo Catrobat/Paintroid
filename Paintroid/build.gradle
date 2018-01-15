@@ -118,8 +118,6 @@ dependencies {
     compile 'com.android.support:design:25.4.0'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
 
-    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.3'
-
     androidTestCompile 'com.android.support.test:runner:1.0.0'
     androidTestCompile 'com.android.support.test:rules:1.0.0'
 

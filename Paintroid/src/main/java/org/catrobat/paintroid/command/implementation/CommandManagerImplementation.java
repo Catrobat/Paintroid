@@ -60,10 +60,12 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		initialized = false;
 	}
 
+	@Override
 	public void setUpdateTopBarListener(OnUpdateTopBarListener listener) {
 		updateTopBarListener = listener;
 	}
 
+	@Override
 	public void addChangeActiveLayerListener(OnActiveLayerChangedListener listener) {
 		if (changeActiveLayerListener == null) {
 			changeActiveLayerListener = new ArrayList<>();
@@ -72,6 +74,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		changeActiveLayerListener.add(listener);
 	}
 
+	@Override
 	public void setLayerEventListener(OnLayerEventListener listener) {
 		onLayerEventListener = listener;
 	}
@@ -88,10 +91,6 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 
 		drawingSurfaceRedraw();
-	}
-
-	@Override
-	public void addCommandToList(LayerCommand layerCommand, Command command) {
 	}
 
 	@Override
@@ -184,6 +183,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		return result;
 	}
 
+	@Override
 	public ArrayList<LayerBitmapCommand> getLayerBitmapCommands(int layerId) {
 		ArrayList<Integer> ids = new ArrayList<>(1);
 		ids.add(layerId);
@@ -260,6 +260,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 	}
 
+	@Override
 	public void processLayerUndo(LayerCommand command) {
 		switch (command.getLayerCommandType()) {
 			case ADD_LAYER:
@@ -274,6 +275,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 	}
 
+	@Override
 	public void processLayerRedo(LayerCommand command) {
 		switch (command.getLayerCommandType()) {
 			case ADD_LAYER:
@@ -443,24 +445,21 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	@Override
-	public void storeCommandLists() {
-		PaintroidApplication.layerOperationsCommandList = layerOperationsCommandList;
-		PaintroidApplication.layerOperationsUndoCommandList = layerOperationsUndoCommandList;
-		PaintroidApplication.drawBitmapCommandsAtLayer = drawBitmapCommandsAtLayer;
-	}
-
 	public LinkedList<LayerCommand> getLayerOperationsCommandList() {
 		return layerOperationsCommandList;
 	}
 
+	@Override
 	public LinkedList<LayerCommand> getLayerOperationsUndoCommandList() {
 		return layerOperationsUndoCommandList;
 	}
 
+	@Override
 	public ArrayList<LayerBitmapCommand> getDrawBitmapCommandsAtLayer() {
 		return drawBitmapCommandsAtLayer;
 	}
 
+	@Override
 	public void addLayerCommandToUndoList() {
 		synchronized (layerOperationsCommandList) {
 			if (layerOperationsCommandList.size() > 1) {
@@ -470,6 +469,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 	}
 
+	@Override
 	public void addLayerCommandToRedoList() {
 		synchronized (layerOperationsCommandList) {
 			synchronized (layerOperationsUndoCommandList) {
@@ -479,6 +479,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 	}
 
+	@Override
 	public void deleteLayerCommandFromDrawBitmapCommandsAtLayer(LayerCommand layerCommand) {
 		synchronized (drawBitmapCommandsAtLayer) {
 			for (LayerBitmapCommand layerBitmapCommandRunner : drawBitmapCommandsAtLayer) {
@@ -487,6 +488,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 	}
 
+	@Override
 	public void addLayerCommandToDrawBitmapCommandsAtLayer(LayerCommand layerCommand) {
 		synchronized (drawBitmapCommandsAtLayer) {
 			for (LayerBitmapCommand layerBitmapCommandRunner : drawBitmapCommandsAtLayer) {
@@ -495,6 +497,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 		}
 	}
 
+	@Override
 	public void deleteCommandFirstDeletedLayer() {
 		synchronized (layerOperationsCommandList) {
 

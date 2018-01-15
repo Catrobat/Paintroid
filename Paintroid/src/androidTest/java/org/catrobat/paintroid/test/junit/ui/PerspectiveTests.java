@@ -1,20 +1,20 @@
 /**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
- *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.junit.ui;
@@ -28,7 +28,6 @@ import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.junit.stubs.SurfaceHolderStub;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
@@ -39,13 +38,12 @@ import static org.junit.Assert.assertTrue;
 
 public class PerspectiveTests {
 
+	@Rule
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 	private SurfaceHolderStub surfaceHolderStub;
 	private Perspective perspective;
 	private float actualCenterX;
 	private float actualCenterY;
-
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Before
 	public void setUp() throws Exception {
@@ -59,20 +57,19 @@ public class PerspectiveTests {
 	}
 
 	@Test
-	public void testShouldInitializeCorrectly() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldInitializeCorrectly() {
 
-		float surfaceWidth = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "surfaceWidth");
-		float surfaceHeight = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "surfaceHeight");
+		float surfaceWidth = perspective.surfaceWidth;
+		float surfaceHeight = perspective.surfaceHeight;
 		assertEquals(SurfaceHolderStub.WIDTH, surfaceWidth, Double.MIN_VALUE);
 		assertEquals(SurfaceHolderStub.HEIGHT, surfaceHeight, Double.MIN_VALUE);
 
-		float surfaceCenterX = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "surfaceCenterX");
-		float surfaceCenterY = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "surfaceCenterY");
+		float surfaceCenterX = perspective.surfaceCenterX;
+		float surfaceCenterY = perspective.surfaceCenterY;
 		assertEquals(actualCenterX, surfaceCenterX, Double.MIN_VALUE);
 		assertEquals(actualCenterY, surfaceCenterY, Double.MIN_VALUE);
 
-		float surfaceScale = (Float) PrivateAccess.getMemberValue(Perspective.class, perspective, "surfaceScale");
+		float surfaceScale = perspective.surfaceScale;
 		assertEquals(1f, surfaceScale, Double.MIN_VALUE);
 
 		assertTrue("x translation should not be 0", 0f != getSurfaceTranslationX());
@@ -80,8 +77,7 @@ public class PerspectiveTests {
 	}
 
 	@Test
-	public void testShouldScaleCorrectly() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testShouldScaleCorrectly() {
 		Matrix controlMatrix = new Matrix();
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
@@ -96,8 +92,7 @@ public class PerspectiveTests {
 	}
 
 	@Test
-	public void testShouldNotScaleBelowMinimum() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldNotScaleBelowMinimum() {
 		Matrix controlMatrix = new Matrix();
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
@@ -115,8 +110,7 @@ public class PerspectiveTests {
 	}
 
 	@Test
-	public void testShouldNotScaleAboveMaximum() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldNotScaleAboveMaximum() {
 		Matrix controlMatrix = new Matrix();
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
@@ -133,8 +127,7 @@ public class PerspectiveTests {
 	}
 
 	@Test
-	public void testShouldRespectBoundaries() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testShouldRespectBoundaries() {
 		Matrix controlMatrix = new Matrix();
 		Canvas canvas = surfaceHolderStub.getCanvas();
 		assertEquals(controlMatrix, canvas.getMatrix());
@@ -147,15 +140,11 @@ public class PerspectiveTests {
 		assertEquals(controlMatrix, canvas.getMatrix());
 	}
 
-	private float getSurfaceTranslationX() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-		return ((float) (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"surfaceTranslationX"));
+	private float getSurfaceTranslationX() {
+		return perspective.surfaceTranslationX;
 	}
 
-	private float getSurfaceTranslationY() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
-		return ((float) (Float) PrivateAccess.getMemberValue(Perspective.class, perspective,
-				"surfaceTranslationY"));
+	private float getSurfaceTranslationY() {
+		return perspective.surfaceTranslationY;
 	}
 }

@@ -24,6 +24,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 
 import org.catrobat.paintroid.R;
@@ -32,7 +33,8 @@ import org.catrobat.paintroid.ui.button.ColorButton;
 
 public class EraserTool extends DrawTool {
 
-	private ColorButton colorButton;
+	@VisibleForTesting
+	public ColorButton colorButton;
 	private View colorPickerPalette;
 	@ColorInt
 	private int previousColor;

@@ -20,11 +20,23 @@
 package org.catrobat.paintroid.command;
 
 import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.eventlistener.OnActiveLayerChangedListener;
+import org.catrobat.paintroid.eventlistener.OnLayerEventListener;
+import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Describes undo/redo command manager responsible for applications layer management.
  */
 public interface CommandManager {
+
+	void setUpdateTopBarListener(OnUpdateTopBarListener listener);
+
+	void addChangeActiveLayerListener(OnActiveLayerChangedListener listener);
+
+	void setLayerEventListener(OnLayerEventListener listener);
 
 	/**
 	 * Adds the new command (draw path, erase, draw shape) to corresponding layer.
@@ -65,6 +77,8 @@ public interface CommandManager {
 	 */
 	void redo();
 
+	ArrayList<LayerBitmapCommand> getLayerBitmapCommands(int layerId);
+
 	/**
 	 * Clears manager command lists.
 	 */
@@ -77,13 +91,9 @@ public interface CommandManager {
 	 */
 	boolean checkIfDrawn();
 
-	void addCommandToList(LayerCommand layerCommand, Command command);
-
 	void enableUndo(boolean enable);
 
 	void enableRedo(boolean enable);
-
-	void storeCommandLists();
 
 	void setInitialized(boolean value);
 
@@ -91,5 +101,25 @@ public interface CommandManager {
 
 	boolean isRedoCommandListEmpty();
 
+	void processLayerUndo(LayerCommand command);
+
+	void processLayerRedo(LayerCommand command);
+
 	boolean isCommandManagerInitialized();
+
+	LinkedList<LayerCommand> getLayerOperationsCommandList();
+
+	LinkedList<LayerCommand> getLayerOperationsUndoCommandList();
+
+	ArrayList<LayerBitmapCommand> getDrawBitmapCommandsAtLayer();
+
+	void addLayerCommandToUndoList();
+
+	void addLayerCommandToRedoList();
+
+	void deleteLayerCommandFromDrawBitmapCommandsAtLayer(LayerCommand layerCommand);
+
+	void addLayerCommandToDrawBitmapCommandsAtLayer(LayerCommand layerCommand);
+
+	void deleteCommandFirstDeletedLayer();
 }

@@ -29,6 +29,7 @@ import android.view.View.OnTouchListener;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.util.EnumSet;
@@ -36,7 +37,6 @@ import java.util.EnumSet;
 public class DrawingSurfaceListener implements OnTouchListener {
 	private static final int BLOCKING_TIME = 250 * 1000 * 1000;
 
-	private Perspective perspective;
 	private float pointerDistance;
 	private PointF pointerMean;
 	private TouchMode touchMode;
@@ -44,7 +44,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private MoveThread moveThread;
 
 	public DrawingSurfaceListener() {
-		perspective = PaintroidApplication.perspective;
 		pointerMean = new PointF(0, 0);
 		touchMode = TouchMode.DRAW;
 	}
@@ -63,10 +62,11 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		perspective = PaintroidApplication.perspective;
+		DrawingSurface drawingSurface = (DrawingSurface) view;
+		Perspective perspective = PaintroidApplication.perspective;
 		PointF touchPoint = perspective
 				.getCanvasPointFromSurfacePoint(new PointF(event.getX(), event.getY()));
-		if (PaintroidApplication.drawingSurface.getLock()) {
+		if (drawingSurface.getLock()) {
 			touchMode = TouchMode.LOCK;
 		}
 		switch (event.getAction()) {
@@ -137,7 +137,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				pointerMean.set(0, 0);
 				break;
 		}
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+		drawingSurface.refreshDrawingSurface();
 		return true;
 	}
 
@@ -162,14 +162,14 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private EnumSet<ToolType> ignoredTools = EnumSet.of(ToolType.PIPETTE,
 				ToolType.FILL, ToolType.TRANSFORM);
 
-		protected MoveThread() {
+		MoveThread() {
 			threadStartTime = System.nanoTime();
 			running = !ignoredTools.contains(PaintroidApplication.currentTool
 					.getToolType());
 			scrolling = false;
 		}
 
-		protected void setCalculationVariables(float pointX, float pointY, int width, int height) {
+		void setCalculationVariables(float pointX, float pointY, int width, int height) {
 			this.pointX = pointX;
 			this.pointY = pointY;
 			this.width = width;
@@ -185,16 +185,17 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			super.start();
 		}
 
-		protected void kill() {
+		void kill() {
 			running = false;
 		}
 
-		protected int calculateScrollInterval(float scale) {
+		private int calculateScrollInterval(float scale) {
 			return (int) (SCROLL_INTERVAL_FACTOR / Math.pow(scale, 1 / 3));
 		}
 
 		@Override
 		public void run() {
+			PointF newMovePoint = new PointF();
 			while (running) {
 				Point autoScrollDirection = PaintroidApplication.currentTool
 						.getAutoScrollDirection(pointX, pointY, width, height);
@@ -202,23 +203,20 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				if (autoScrollDirection.x != 0 || autoScrollDirection.y != 0) {
 					scrolling = true;
 
-					PointF newMovePoint = PaintroidApplication.perspective
-							.getCanvasPointFromSurfacePoint(new PointF(pointX,
-									pointY));
+					newMovePoint.set(pointX, pointY);
+					PaintroidApplication.perspective.convertToCanvasFromSurface(newMovePoint);
 
 					if (PaintroidApplication.drawingSurface.isPointOnCanvas(newMovePoint)) {
 
-						PaintroidApplication.perspective.translate(
-								autoScrollDirection.x * step, autoScrollDirection.y
-										* step);
+						PaintroidApplication.perspective.translate(autoScrollDirection.x * step,
+								autoScrollDirection.y * step);
 
 						PaintroidApplication.currentTool.handleMove(newMovePoint);
 					}
 				}
 
 				try {
-					sleep(calculateScrollInterval(PaintroidApplication.perspective
-							.getScale()));
+					sleep(calculateScrollInterval(PaintroidApplication.perspective.getScale()));
 				} catch (InterruptedException e) {
 					Log.e(DrawingSurfaceListener.class.getSimpleName(), e.getMessage());
 				}

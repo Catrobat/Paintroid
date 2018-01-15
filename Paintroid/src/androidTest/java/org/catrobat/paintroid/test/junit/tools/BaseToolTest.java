@@ -32,7 +32,6 @@ import android.support.test.runner.AndroidJUnit4;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.junit.stubs.CommandManagerStub;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.junit.After;
@@ -64,7 +63,7 @@ public abstract class BaseToolTest {
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setStrokeCap(Cap.ROUND);
-		paint.setStrokeWidth(Tool.STROKE_25);
+		paint.setStrokeWidth(BaseTool.STROKE_25);
 		PaintroidApplication.commandManager = commandManagerStub;
 	}
 
@@ -73,26 +72,17 @@ public abstract class BaseToolTest {
 	public void tearDown() throws Exception {
 		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Config.ALPHA_8));
 		Thread.sleep(100);
-		// Bitmap drawingSurfaceBitmap = (Bitmap) PrivateAccess.getMemberValue(DrawingSurface.class,
-		// PaintroidApplication.drawingSurface, "workingBitmap");
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "canvasPaint"))
-				.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "canvasPaint"))
-				.setStrokeCap(DEFAULT_BRUSH_CAP);
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "canvasPaint"))
-				.setColor(DEFAULT_COLOR);
+		BaseTool.CANVAS_PAINT.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+		BaseTool.CANVAS_PAINT.setStrokeCap(DEFAULT_BRUSH_CAP);
+		BaseTool.CANVAS_PAINT.setColor(DEFAULT_COLOR);
 
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "bitmapPaint"))
-				.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "bitmapPaint"))
-				.setStrokeCap(DEFAULT_BRUSH_CAP);
-		((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool, "bitmapPaint"))
-				.setColor(DEFAULT_COLOR);
+		BaseTool.BITMAP_PAINT.setStrokeWidth(DEFAULT_BRUSH_WIDTH);
+		BaseTool.BITMAP_PAINT.setStrokeCap(DEFAULT_BRUSH_CAP);
+		BaseTool.BITMAP_PAINT.setColor(DEFAULT_COLOR);
 	}
 
-	int getAttributeButtonColor() throws NoSuchFieldException, IllegalAccessException {
-		return ((Paint) PrivateAccess.getMemberValue(BaseTool.class, PaintroidApplication.currentTool,
-				"bitmapPaint")).getColor();
+	int getAttributeButtonColor() {
+		return BaseTool.BITMAP_PAINT.getColor();
 	}
 
 	public Activity getActivity() {

@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,6 +32,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -56,7 +56,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private static final String BUNDLE_BASE_SHAPE = "BASE_SHAPE";
 	private static final String BUNDLE_SHAPE_DRAW_TYPE = "SHAPE_DRAW_TYPE";
 
-	private BaseShape baseShape;
+	@VisibleForTesting
+	public BaseShape baseShape;
 	private ShapeDrawType shapeDrawType;
 	private ShapeToolOptionsListener shapeToolOptionsListener;
 	private Paint geometricFillCommandPaint;
@@ -114,7 +115,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				- SHAPE_OFFSET, boxHeight - SHAPE_OFFSET);
 
 		Paint drawPaint = new Paint();
-		drawPaint.setColor(canvasPaint.getColor());
+		drawPaint.setColor(CANVAS_PAINT.getColor());
 		drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
 		switch (shapeDrawType) {
@@ -123,7 +124,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 			case OUTLINE:
 				drawPaint.setStyle(Style.STROKE);
-				float strokeWidth = bitmapPaint.getStrokeWidth();
+				float strokeWidth = BITMAP_PAINT.getStrokeWidth();
 				shapeRect = new RectF(SHAPE_OFFSET + strokeWidth / 2,
 						SHAPE_OFFSET + strokeWidth / 2, boxWidth - SHAPE_OFFSET
 						- strokeWidth / 2, boxHeight - SHAPE_OFFSET - strokeWidth / 2);
@@ -135,7 +136,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		}
 
 		geometricFillCommandPaint = new Paint(Paint.DITHER_FLAG);
-		if (Color.alpha(canvasPaint.getColor()) == 0x00) {
+		if (Color.alpha(CANVAS_PAINT.getColor()) == 0x00) {
 			int colorWithMaxAlpha = Color.BLACK;
 			geometricFillCommandPaint.setColor(colorWithMaxAlpha);
 			geometricFillCommandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
@@ -143,7 +144,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 			drawPaint.reset();
 			drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
-			drawPaint.setShader(CHECKERED_PATTERN.getShader());
+			drawPaint.setShader(checkeredPattern.getShader());
 		}
 
 		switch (baseShape) {
@@ -194,11 +195,11 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private void drawShape(Canvas drawCanvas, RectF shapeRect, Paint drawPaint, int drawableId) {
 		Rect rect = new Rect((int) shapeRect.left, (int) shapeRect.top, (int) shapeRect.right, (int) shapeRect.bottom);
 
-		Bitmap bitmap = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), drawableId);
+		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
 		Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, rect.width(), rect.height(), true);
 		Paint colorChangePaint = new Paint(drawPaint);
 
-		if (Color.alpha(canvasPaint.getColor()) == 0x00) {
+		if (Color.alpha(CANVAS_PAINT.getColor()) == 0x00) {
 			int colorWithMaxAlpha = Color.BLACK;
 			colorChangePaint.setColor(colorWithMaxAlpha);
 		}
@@ -236,13 +237,11 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	public void resetInternalState() {
 	}
 
-	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		View shapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, null);
+		View shapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, toolSpecificOptionsLayout);
 
-		toolSpecificOptionsLayout.addView(shapeToolOptionView);
 		shapeToolOptionsListener = new ShapeToolOptionsListener(shapeToolOptionView);
 		setupOnShapeToolDialogChangedListener();
 		toolSpecificOptionsLayout.post(new Runnable() {

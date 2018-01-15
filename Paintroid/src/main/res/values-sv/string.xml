@@ -43,7 +43,6 @@
   <string name="about_license_url_text">Pocket Paint käll kod licens</string>
   <string name="about_catroid_url_text">Om Catrobat</string>
   <string name="about_version">Version:</string>
-  <string name="stroke_title">"Verktygsinställningar"</string>
   <string name="color_chooser_title">Färg Väljare</string>
   <string name="color_rgb">Röd grön blå (RGB)</string>
   <string name="color_red">Röd</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">Avsluta</string>
   <string name="save_button_text">Spara</string>
   <string name="discard_button_text">Kasta</string>
-  <string name="resize_to_resize_tap_text">to resize tap</string>
   <string name="resize_nothing_to_resize">inget att ändra storlek på</string>
   <string name="resize_max_image_resolution_reached">max image resolution reached</string>
   <string name="text_tool_dialog_input_title">Din text:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">Ta bort lager</string>
   <string name="layer_too_many_layers">Too many layers</string>
   <string name="layer_invisible">Alla lager osynliga</string>
-  <string name="layer_prefix">Lager </string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

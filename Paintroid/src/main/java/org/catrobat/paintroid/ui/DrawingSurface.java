@@ -21,6 +21,8 @@ package org.catrobat.paintroid.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -29,17 +31,20 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Region;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
 
 import java.util.ArrayList;
 
@@ -53,15 +58,18 @@ public class DrawingSurface extends SurfaceView implements
 	private final Object drawingLock = new Object();
 	protected boolean surfaceCanBeUsed;
 	private DrawingSurfaceThread drawingThread;
-	private Bitmap workingBitmap;
+	@VisibleForTesting
+	public Bitmap workingBitmap;
 	private Rect workingBitmapRect;
 	private Canvas workingBitmapCanvas;
 	private Paint framePaint;
 	private Paint clearPaint;
 	private Paint opacityPaint;
+	private Paint checkeredPattern;
 	private boolean lock;
 	private boolean visible;
 	private boolean drawingSurfaceDirtyFlag = false;
+	private DrawingSurfaceListener drawingSurfaceListener;
 
 	public DrawingSurface(Context context, AttributeSet attrSet) {
 		super(context, attrSet);
@@ -105,7 +113,7 @@ public class DrawingSurface extends SurfaceView implements
 			surfaceViewCanvas.clipRect(workingBitmapRect, Region.Op.DIFFERENCE);
 			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
 			surfaceViewCanvas.restore();
-			surfaceViewCanvas.drawRect(workingBitmapRect, BaseTool.CHECKERED_PATTERN);
+			surfaceViewCanvas.drawRect(workingBitmapRect, checkeredPattern);
 			surfaceViewCanvas.drawRect(workingBitmapRect, framePaint);
 
 			if (workingBitmap != null && !workingBitmap.isRecycled()
@@ -150,8 +158,15 @@ public class DrawingSurface extends SurfaceView implements
 		clearPaint.setColor(Color.TRANSPARENT);
 		clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 		opacityPaint = new Paint();
+
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
+		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		checkeredPattern = new Paint();
+		checkeredPattern.setShader(shader);
 		setLock(false);
 		setVisible(true);
+		drawingSurfaceListener = new DrawingSurfaceListener();
+		setOnTouchListener(drawingSurfaceListener);
 	}
 
 	public void refreshDrawingSurface() {
@@ -166,8 +181,7 @@ public class DrawingSurface extends SurfaceView implements
 		Bundle bundle = new Bundle();
 		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
 		bundle.putParcelable(BUNDLE_WORKING_BITMAP, workingBitmap);
-		bundle.putSerializable(BUNDLE_PERSPECTIVE,
-				PaintroidApplication.perspective);
+		bundle.putSerializable(BUNDLE_PERSPECTIVE, PaintroidApplication.perspective);
 		return bundle;
 	}
 
@@ -255,8 +269,7 @@ public class DrawingSurface extends SurfaceView implements
 				return workingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
 			}
 		} catch (IllegalArgumentException e) {
-			Log.w(PaintroidApplication.TAG,
-					"getBitmapColor coordinate out of bounds");
+			Log.w(TAG, "getBitmapColor coordinate out of bounds");
 		}
 		return Color.TRANSPARENT;
 	}

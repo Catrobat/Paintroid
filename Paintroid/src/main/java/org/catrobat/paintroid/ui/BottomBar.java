@@ -129,9 +129,11 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 		final ViewGroup scrollView = (ViewGroup) mainActivity.findViewById(R.id.bottom_bar_scroll_view);
 		final int animationDuration = 1000;
 		final Resources resources = mainActivity.getResources();
-		final int orientation = resources.getConfiguration().orientation;
+		final Configuration configuration = resources.getConfiguration();
+		final int orientation = configuration.orientation;
 		final float buttonHeight = resources.getDimension(R.dimen.bottom_bar_landscape_button_height);
 		final float buttonWidth = resources.getDimension(R.dimen.bottom_bar_button_width);
+		final boolean isRTL = (configuration.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
 
 		scrollView.post(new Runnable() {
 			public void run() {
@@ -140,7 +142,7 @@ public class BottomBar implements View.OnClickListener, View.OnLongClickListener
 					int scrollToX = (int) (getToolButtonByToolType(currentToolType).getX()
 							- scrollView.getWidth() / 2.0f
 							+ buttonWidth / 2.0f);
-					int scrollFromX = PaintroidApplication.isRTL
+					int scrollFromX = isRTL
 							? scrollView.getChildAt(0).getLeft()
 							: scrollView.getChildAt(0).getRight();
 					scrollView.setScrollX(scrollFromX);

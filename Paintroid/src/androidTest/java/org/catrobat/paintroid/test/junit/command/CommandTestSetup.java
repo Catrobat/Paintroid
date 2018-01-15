@@ -33,8 +33,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
-
 public abstract class CommandTestSetup {
 
 	static final int BITMAP_BASE_COLOR = Color.GREEN;
@@ -51,7 +49,7 @@ public abstract class CommandTestSetup {
 	Bitmap canvasBitmapUnderTest;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		canvasUnderTest = new Canvas();
 		// !WARNING don't make your test-bitmaps to large width*height*(Config.) byte...
 		// and assume that the garbage collector is rather slow!
@@ -70,7 +68,7 @@ public abstract class CommandTestSetup {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		canvasUnderTest = null;
 		canvasBitmapUnderTest.recycle();
 		canvasBitmapUnderTest = null;
@@ -83,15 +81,11 @@ public abstract class CommandTestSetup {
 
 	@Test
 	public void testRunWithNullParameters() {
-		try {
-			if (commandUnderTestNull != null) {
-				commandUnderTestNull.run(null, null);
-				commandUnderTestNull.run(null, null);
-				commandUnderTestNull.run(canvasUnderTest, null);
-				commandUnderTestNull.run(null, layerUnderTest);
-			}
-		} catch (Exception e) {
-			fail("Failed run test with parameters 'null'");
+		if (commandUnderTestNull != null) {
+			commandUnderTestNull.run(null, null);
+			commandUnderTestNull.run(null, null);
+			commandUnderTestNull.run(canvasUnderTest, null);
+			commandUnderTestNull.run(null, layerUnderTest);
 		}
 	}
 }

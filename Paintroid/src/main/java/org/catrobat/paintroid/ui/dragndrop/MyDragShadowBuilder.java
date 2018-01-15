@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.ui.dragndrop;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -30,7 +29,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.listener.LayerListener;
 
 public class MyDragShadowBuilder extends View.DragShadowBuilder {
@@ -55,8 +53,7 @@ public class MyDragShadowBuilder extends View.DragShadowBuilder {
 	@Override
 	public void onProvideShadowMetrics(Point size, Point touch) {
 		shadowBitmap = mergeBitmaps(greyBitmap, LayerListener.getInstance().getAdapter().getLayer(dragPosition).getImage());
-		final Resources resources = PaintroidApplication.applicationContext.getResources();
-		shadow = new BitmapDrawable(resources, shadowBitmap);
+		shadow = new BitmapDrawable(getView().getResources(), shadowBitmap);
 
 		final View view = getView();
 		final int width = view.getWidth();

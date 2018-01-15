@@ -43,7 +43,6 @@
   <string name="about_license_url_text">ポケットペイント ソースコード ライセンス</string>
   <string name="about_catroid_url_text">キャットロバットについて</string>
   <string name="about_version">バージョン：</string>
-  <string name="stroke_title">"ツールの設定"</string>
   <string name="color_chooser_title">色を選択</string>
   <string name="color_rgb">赤緑青 (RGB)</string>
   <string name="color_red">赤</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">終了</string>
   <string name="save_button_text">保存</string>
   <string name="discard_button_text">破棄</string>
-  <string name="resize_to_resize_tap_text">サイズを変更するにはタップします</string>
   <string name="resize_nothing_to_resize">サイズを変更するものはありません</string>
   <string name="resize_max_image_resolution_reached">最大の画像解像度に達しました</string>
   <string name="text_tool_dialog_input_title">テキスト:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">レイヤーを削除</string>
   <string name="layer_too_many_layers">レイヤーが多すぎます</string>
   <string name="layer_invisible">すべてのレイヤーが非表示</string>
-  <string name="layer_prefix">レイヤー </string>
   <string name="layer_merged">レイヤーを統合</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

@@ -43,7 +43,6 @@
   <string name="about_license_url_text">Pocket Paint zdrojový kód licence</string>
   <string name="about_catroid_url_text">O Catrobat</string>
   <string name="about_version">Verze:</string>
-  <string name="stroke_title">"Nastavení nástrojů"</string>
   <string name="color_chooser_title">Výběr barev</string>
   <string name="color_rgb">Červená zelená modrá (RGB)</string>
   <string name="color_red">Červená</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">Ukončit</string>
   <string name="save_button_text">Uložit</string>
   <string name="discard_button_text">Zrušit</string>
-  <string name="resize_to_resize_tap_text">aby jste zmenili velikost poklepání</string>
   <string name="resize_nothing_to_resize">nic pro změnu velikosti</string>
   <string name="resize_max_image_resolution_reached">maximální rozlišení dosaženo</string>
   <string name="text_tool_dialog_input_title">Váš text:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">Odstranit vrstvu</string>
   <string name="layer_too_many_layers">Příliš mnoho vrstev</string>
   <string name="layer_invisible">Všechny vrstvy neviditelné</string>
-  <string name="layer_prefix">Vrstva </string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

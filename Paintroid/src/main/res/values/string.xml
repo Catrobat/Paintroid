@@ -46,7 +46,6 @@
     <string name="about_catroid_url_text">About Catrobat</string>
     <string name="about_link_template" translatable="false">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
     <string name="about_version">Version:</string>
-    <string name="stroke_title">"Tool Settings"</string>
     <string name="color_chooser_title">Color Chooser</string>
     <string name="color_rgb">Red Green Blue (RGB)</string>
     <string name="color_red">Red</string>
@@ -100,7 +99,6 @@
     <string name="save_button_text">Save</string>
     <string name="discard_button_text">Discard</string>
 
-    <string name="resize_to_resize_tap_text">to resize tap</string>
     <string name="resize_nothing_to_resize">nothing to resize</string>
     <string name="resize_max_image_resolution_reached">max image resolution reached</string>
 
@@ -135,7 +133,6 @@
     <string name="layer_delete">Delete Layer</string>
     <string name="layer_too_many_layers">Too many layers</string>
     <string name="layer_invisible">All layers invisible</string>
-    <string name="layer_prefix">Layer </string>
     <string name="layer_merged">Layers merged</string>
 
     <!-- Extras -->

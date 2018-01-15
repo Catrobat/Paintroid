@@ -26,10 +26,10 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class FlipCommand extends BaseCommand {
+	private static final String TAG = FlipCommand.class.getSimpleName();
 
 	private FlipDirection flipDirection;
 
@@ -54,12 +54,12 @@ public class FlipCommand extends BaseCommand {
 			case FLIP_HORIZONTAL:
 				flipMatrix.setScale(1, -1);
 				flipMatrix.postTranslate(0, bitmap.getHeight());
-				Log.i(PaintroidApplication.TAG, "flip horizontal");
+				Log.i(TAG, "flip horizontal");
 				break;
 			case FLIP_VERTICAL:
 				flipMatrix.setScale(-1, 1);
 				flipMatrix.postTranslate(bitmap.getWidth(), 0);
-				Log.i(PaintroidApplication.TAG, "flip vertical");
+				Log.i(TAG, "flip vertical");
 				break;
 			default:
 

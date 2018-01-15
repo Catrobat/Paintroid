@@ -21,6 +21,7 @@ package org.catrobat.paintroid.intro;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,14 +46,17 @@ import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.isRTL;
 
 public abstract class TapTargetBase {
 	protected static final String TAG = "TapTarget";
-	private static final int RADIUS_OFFSET = 2;
+	@VisibleForTesting
+	public static final int RADIUS_OFFSET = 2;
 	protected final Context context;
 	protected final WelcomeActivity activity;
-	final HashMap<ToolType, TapTarget> tapTargetMap = new LinkedHashMap<>();
+	@VisibleForTesting
+	public final HashMap<ToolType, TapTarget> tapTargetMap = new LinkedHashMap<>();
 	final View fadeView;
 	private final LinearLayout targetView;
 	protected BottomBarHorizontalScrollView bottomScrollBar;
-	private int radius;
+	@VisibleForTesting
+	public int radius;
 	private View bottomBarView;
 
 	TapTargetBase(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,

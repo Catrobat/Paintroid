@@ -43,7 +43,6 @@
   <string name="about_license_url_text">Leseni ya chanzo cha msimbo wa Mfuko Rangi</string>
   <string name="about_catroid_url_text">Kuhusu Catrobat</string>
   <string name="about_version">Toleo la:</string>
-  <string name="stroke_title">"Zana Vipimo"</string>
   <string name="color_chooser_title">Kichagua rangi</string>
   <string name="color_rgb">Nyekundu Kijani Bluu (NKB)</string>
   <string name="color_red">Nyekundu</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">Aga</string>
   <string name="save_button_text">Hifadhi</string>
   <string name="discard_button_text">Tupa</string>
-  <string name="resize_to_resize_tap_text">kubadilisha ukubwa bonyeza</string>
   <string name="resize_nothing_to_resize">hakuna kubadilisha ukubwa</string>
   <string name="resize_max_image_resolution_reached">kikomo cha muonekano wa picha kimefikiwa</string>
   <string name="text_tool_dialog_input_title">Maandishi yako:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">Futa tabaka</string>
   <string name="layer_too_many_layers">Safu nyingi sana</string>
   <string name="layer_invisible">Safu zote hazionekani</string>
-  <string name="layer_prefix">Tabaka/Safu </string>
   <string name="layer_merged">Safu zilizounganishwa</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

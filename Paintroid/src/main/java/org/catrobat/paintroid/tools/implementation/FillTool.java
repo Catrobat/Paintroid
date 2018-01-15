@@ -19,11 +19,11 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.support.annotation.VisibleForTesting;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -48,7 +48,8 @@ public class FillTool extends BaseTool {
 	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 12;
 	public static final int MAX_ABSOLUTE_TOLERANCE = 510;
 
-	private float colorTolerance;
+	@VisibleForTesting
+	public float colorTolerance;
 	private SeekBar colorToleranceSeekBar;
 	private EditText colorToleranceEditText;
 	private View fillToolOptionsView;
@@ -90,11 +91,11 @@ public class FillTool extends BaseTool {
 			return false;
 		}
 
-		if (colorTolerance == 0 && bitmapPaint.getColor() == drawingSurface.getPixel(coordinate)) {
+		if (colorTolerance == 0 && BITMAP_PAINT.getColor() == drawingSurface.getPixel(coordinate)) {
 			return false;
 		}
 
-		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), bitmapPaint, colorTolerance);
+		Command command = new FillCommand(new Point((int) coordinate.x, (int) coordinate.y), BITMAP_PAINT, colorTolerance);
 		((FillCommand) command).addObserver(this);
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
@@ -110,18 +111,15 @@ public class FillTool extends BaseTool {
 	public void draw(Canvas canvas) {
 	}
 
-	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		fillToolOptionsView = inflater.inflate(R.layout.dialog_fill_tool, null);
+		fillToolOptionsView = inflater.inflate(R.layout.dialog_fill_tool, toolSpecificOptionsLayout);
 
 		colorToleranceSeekBar = (SeekBar) fillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
 		colorToleranceEditText = (EditText) fillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
 		initializeFillOptionsListener();
 		updateColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);
-
-		toolSpecificOptionsLayout.addView(fillToolOptionsView);
 	}
 
 	private void initializeFillOptionsListener() {

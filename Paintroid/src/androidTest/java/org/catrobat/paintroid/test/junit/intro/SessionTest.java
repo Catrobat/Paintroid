@@ -38,29 +38,29 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class SessionTest {
 
-	private SharedPreferences.Editor editor;
+	private SharedPreferences sharedPreferences;
 	private Session session;
 
 	@Before
 	public void setUp() {
 		Context context = InstrumentationRegistry.getTargetContext();
-		SharedPreferences sharedPreferences = context
-				.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+		sharedPreferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
 		session = new Session(context);
-		editor = sharedPreferences.edit();
 	}
 
 	@Test
 	public void testIsFirstLaunch() throws InterruptedException {
-		editor.putBoolean(IS_FIRST_TIME_LAUNCH, true);
-		editor.commit();
+		sharedPreferences.edit()
+				.putBoolean(IS_FIRST_TIME_LAUNCH, true)
+				.commit();
 		assertTrue(session.isFirstTimeLaunch());
 	}
 
 	@Test
 	public void testNotFirstLaunch() {
-		editor.putBoolean(IS_FIRST_TIME_LAUNCH, false);
-		editor.commit();
+		sharedPreferences.edit()
+				.putBoolean(IS_FIRST_TIME_LAUNCH, false)
+				.commit();
 		assertFalse(session.isFirstTimeLaunch());
 	}
 
@@ -75,7 +75,9 @@ public class SessionTest {
 
 	@Test
 	public void testNoSharedPreference() {
-		editor.clear().commit();
+		sharedPreferences.edit()
+				.clear()
+				.commit();
 		assertTrue(session.isFirstTimeLaunch());
 	}
 }

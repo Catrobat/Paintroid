@@ -19,13 +19,15 @@
 
 package org.catrobat.paintroid.intro;
 
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class IntroPageViewAdapter extends PagerAdapter {
-	private int[] layouts;
+	@VisibleForTesting
+	public int[] layouts;
 
 	public IntroPageViewAdapter(int[] layouts) {
 		this.layouts = new int[layouts.length];

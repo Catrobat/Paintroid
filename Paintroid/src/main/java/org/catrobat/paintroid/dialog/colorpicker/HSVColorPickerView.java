@@ -36,9 +36,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
 
 public class HSVColorPickerView extends View {
 
@@ -124,9 +122,8 @@ public class HSVColorPickerView extends View {
 		hueTrackerPaint.setStrokeWidth(2f * density);
 		hueTrackerPaint.setAntiAlias(true);
 
-		checkeredPaint = new Paint(BaseTool.CHECKERED_PATTERN);
-		Bitmap checkerboard = BitmapFactory.decodeResource(
-				PaintroidApplication.applicationContext.getResources(), R.drawable.checkeredbg);
+		checkeredPaint = new Paint();
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
 		BitmapShader checkeredShader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPaint.setShader(checkeredShader);
 

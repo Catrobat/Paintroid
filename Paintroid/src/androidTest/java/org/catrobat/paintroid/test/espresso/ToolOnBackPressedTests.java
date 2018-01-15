@@ -29,6 +29,7 @@ import android.view.Gravity;
 import android.widget.Button;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
@@ -225,7 +226,7 @@ public class ToolOnBackPressedTests {
 
 		saveFile = new File(pathToFile);
 
-		PaintroidApplication.savedPictureUri = Uri.fromFile(saveFile);
+		NavigationDrawerMenuActivity.savedPictureUri = Uri.fromFile(saveFile);
 		long oldFileSize = saveFile.length();
 
 		onView(withId(R.id.drawingSurfaceView)).perform(touchCenterMiddle());
@@ -287,7 +288,7 @@ public class ToolOnBackPressedTests {
 
 		saveFile = new File(pathToFile);
 
-		PaintroidApplication.openedFromCatroid = true;
+		launchActivityRule.getActivity().openedFromCatroid = true;
 
 		Espresso.pressBack();
 
@@ -318,7 +319,7 @@ public class ToolOnBackPressedTests {
 
 		saveFile = new File(pathToFile);
 
-		PaintroidApplication.openedFromCatroid = true;
+		launchActivityRule.getActivity().openedFromCatroid = true;
 
 		Espresso.pressBack();
 

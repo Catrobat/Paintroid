@@ -30,6 +30,8 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.annotation.IntDef;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -48,26 +50,47 @@ import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 
 import java.io.File;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
+	private static final String TAG = NavigationDrawerMenuActivity.class.getSimpleName();
 
 	public static final float ACTION_BAR_HEIGHT = 50.0f;
-	protected static final int REQUEST_CODE_IMPORTPNG = 1;
-	protected static final int REQUEST_CODE_LOAD_PICTURE = 2;
-	protected static final int REQUEST_CODE_FINISH = 3;
-	protected static final int REQUEST_CODE_TAKE_PICTURE = 4;
-	protected static final int REQUEST_CODE_LANGUAGE = 5;
-	private static Uri cameraImageUri;
-	protected boolean loadBitmapFailed = false;
+
+	static final int REQUEST_CODE_IMPORTPNG = 1;
+	static final int REQUEST_CODE_LOAD_PICTURE = 2;
+	static final int REQUEST_CODE_FINISH = 3;
+	static final int REQUEST_CODE_TAKE_PICTURE = 4;
+	static final int REQUEST_CODE_LANGUAGE = 5;
+	public static boolean isSaved = true;
+	public static Uri savedPictureUri = null;
+
+	@IntDef({REQUEST_CODE_IMPORTPNG,
+			REQUEST_CODE_LOAD_PICTURE,
+			REQUEST_CODE_FINISH,
+			REQUEST_CODE_TAKE_PICTURE,
+			REQUEST_CODE_LANGUAGE})
+	@Retention(RetentionPolicy.SOURCE)
+	@interface RequestCode {
+	}
+
+	Uri cameraImageUri;
+	boolean loadBitmapFailed = false;
+	boolean isPlainImage = true;
+	boolean scaleImage = true;
+	@VisibleForTesting
+	public boolean saveCopy = false;
+	@VisibleForTesting
+	public boolean openedFromCatroid;
 
 	boolean imageHasBeenModified() {
 		return (!(LayerListener.getInstance().getAdapter().getLayers().size() == 1)
-				|| !PaintroidApplication.isPlainImage
-				|| PaintroidApplication.commandManager.checkIfDrawn());
+				|| !isPlainImage || PaintroidApplication.commandManager.checkIfDrawn());
 	}
 
 	boolean imageHasBeenSaved() {
-		return PaintroidApplication.isSaved;
+		return isSaved;
 	}
 
 	protected void onLoadImage() {
@@ -112,7 +135,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	}
 
 	protected void newImage() {
-		if (!imageHasBeenModified() && !PaintroidApplication.openedFromCatroid || imageHasBeenSaved()) {
+		if (!imageHasBeenModified() && !openedFromCatroid || imageHasBeenSaved()) {
 			chooseNewImage();
 		} else {
 
@@ -176,7 +199,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(@RequestCode int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == Activity.RESULT_OK) {
@@ -186,26 +209,28 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 			switch (requestCode) {
 				case REQUEST_CODE_LOAD_PICTURE:
 					loadBitmapFromUri(data.getData());
-					PaintroidApplication.saveCopy = true;
+					saveCopy = true;
 					break;
 				case REQUEST_CODE_TAKE_PICTURE:
 					loadBitmapFromUri(cameraImageUri);
 					break;
+				case REQUEST_CODE_FINISH:
+				case REQUEST_CODE_IMPORTPNG:
+				case REQUEST_CODE_LANGUAGE:
 				default:
 					return;
 			}
 
-			PaintroidApplication.isPlainImage = false;
-			PaintroidApplication.isSaved = false;
-			PaintroidApplication.savedPictureUri = null;
+			isPlainImage = false;
+			isSaved = false;
+			savedPictureUri = null;
 			LayerListener.getInstance().getCurrentLayer().setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
 			LayerListener.getInstance().refreshView();
 		}
 	}
 
 	protected void takePhoto() {
-		File tempFile = FileIO.createNewEmptyPictureFile(
-				FileIO.getDefaultFileName());
+		File tempFile = FileIO.createNewEmptyPictureFile(this, FileIO.getDefaultFileName());
 		if (tempFile != null) {
 			cameraImageUri = Uri.fromFile(tempFile);
 		}
@@ -232,7 +257,8 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 			public void run() {
 				Bitmap bitmap = null;
 				try {
-					bitmap = FileIO.getBitmapFromUri(uri);
+					bitmap = FileIO.getBitmapFromUri(NavigationDrawerMenuActivity.this, uri, scaleImage);
+					scaleImage = true;
 				} catch (Exception e) {
 					loadBitmapFailed = true;
 				}
@@ -254,7 +280,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 							"loadbitmapdialogerror");
 				} else {
 					if (!(PaintroidApplication.currentTool instanceof ImportTool)) {
-						PaintroidApplication.savedPictureUri = uri;
+						savedPictureUri = uri;
 					}
 				}
 			}
@@ -265,19 +291,19 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	// if needed use Async Task
 	public void saveFile() {
 
-		if (!FileIO.saveBitmap(this, LayerListener.getInstance().getBitmapOfAllLayersToSave())) {
+		if (!FileIO.saveBitmap(this, LayerListener.getInstance().getBitmapOfAllLayersToSave(), null, saveCopy)) {
 			InfoDialog.newInstance(DialogType.WARNING,
 					R.string.dialog_error_sdcard_text,
 					R.string.dialog_error_save_title).show(
 					getSupportFragmentManager(), "savedialogerror");
 		}
 
-		PaintroidApplication.isSaved = !PaintroidApplication.openedFromCatroid;
+		isSaved = !openedFromCatroid;
 	}
 
 	protected void loadBitmapFromUri(Uri uri) {
 		if (uri == null || uri.toString().length() < 1) {
-			Log.e(PaintroidApplication.TAG, "BAD URI: cannot load image");
+			Log.e(TAG, "BAD URI: cannot load image");
 			return;
 		}
 
@@ -296,16 +322,15 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		Point size = new Point();
 		display.getSize(size);
 		Log.d("PAINTROID - MFA", "init new bitmap with: w: " + size.x + " h:" + size.y);
-		Bitmap bitmap = Bitmap.createBitmap(size.x, size.y,
-				Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap(size.x, size.y, Config.ARGB_8888);
 		bitmap.eraseColor(Color.TRANSPARENT);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		PaintroidApplication.currentTool
 				.resetInternalState(StateChange.NEW_IMAGE_LOADED);
-		PaintroidApplication.isPlainImage = true;
-		PaintroidApplication.isSaved = false;
-		PaintroidApplication.savedPictureUri = null;
+		isPlainImage = true;
+		isSaved = false;
+		savedPictureUri = null;
 		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
@@ -324,7 +349,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		@Override
 		protected void onPreExecute() {
 			IndeterminateProgressDialog.getInstance().show();
-			Log.d(PaintroidApplication.TAG, "async tast prgDialog isShowing"
+			Log.d(TAG, "async tast prgDialog isShowing"
 					+ IndeterminateProgressDialog.getInstance().isShowing());
 		}
 
@@ -337,13 +362,13 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 		@Override
 		protected void onPostExecute(Void Result) {
 			IndeterminateProgressDialog.getInstance().dismiss();
-			if (!PaintroidApplication.saveCopy) {
+			if (!saveCopy) {
 				Toast.makeText(context, R.string.saved, Toast.LENGTH_LONG)
 						.show();
 			} else {
 				Toast.makeText(context, R.string.copy, Toast.LENGTH_LONG)
 						.show();
-				PaintroidApplication.saveCopy = false;
+				saveCopy = false;
 			}
 		}
 	}
