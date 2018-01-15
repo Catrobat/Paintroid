@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -297,16 +296,14 @@ public class TextTool extends BaseToolWithRectangleShape {
 		toolPosition.y = boxHeight / 2.0f + MARGIN_TOP;
 	}
 
-	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		View textToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, null);
+		View textToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, toolSpecificOptionsLayout);
 
 		ToggleButton underlinedButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
 		underlinedButton.setPaintFlags(underlinedButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-		toolSpecificOptionsLayout.addView(textToolOptionsView);
 		textToolOptionsListener = new TextToolOptionsListener(context, textToolOptionsView);
 		setupOnTextToolDialogChangedListener();
 

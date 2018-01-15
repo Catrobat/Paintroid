@@ -29,6 +29,7 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
+import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
@@ -38,6 +39,7 @@ public class LineTool extends BaseTool {
 	protected PointF initialEventCoordinate;
 	protected PointF currentCoordinate;
 	protected boolean pathInsideBitmap;
+	private BrushPickerView brushPickerView;
 
 	public LineTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -122,6 +124,20 @@ public class LineTool extends BaseTool {
 
 	@Override
 	public void setupToolOptions() {
-		addBrushPickerToToolOptions();
+		brushPickerView = new BrushPickerView(toolSpecificOptionsLayout);
+		brushPickerView.setCurrentPaint(BITMAP_PAINT);
+	}
+
+	@Override
+	public void startTool() {
+		super.startTool();
+		brushPickerView.addBrushChangedListener(onBrushChangedListener);
+	}
+
+	@Override
+	public void leaveTool() {
+		super.leaveTool();
+		brushPickerView.removeBrushChangedListener(onBrushChangedListener);
+		brushPickerView.removeListeners();
 	}
 }

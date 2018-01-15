@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -238,13 +237,11 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	public void resetInternalState() {
 	}
 
-	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		View shapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, null);
+		View shapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, toolSpecificOptionsLayout);
 
-		toolSpecificOptionsLayout.addView(shapeToolOptionView);
 		shapeToolOptionsListener = new ShapeToolOptionsListener(shapeToolOptionView);
 		setupOnShapeToolDialogChangedListener();
 		toolSpecificOptionsLayout.post(new Runnable() {

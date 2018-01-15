@@ -54,7 +54,6 @@ import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
-import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.BrushPickerView.OnBrushChangedListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
@@ -92,7 +91,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	final PointF movedDistance;
 	private final ToolType toolType;
 	private final OnColorPickedListener onColorPickedListener;
-	private final OnBrushChangedListener onBrushChangedListener;
+	final OnBrushChangedListener onBrushChangedListener;
 	boolean toolOptionsShown = false;
 	LinearLayout toolSpecificOptionsLayout;
 	PointF previousEventCoordinate;
@@ -131,8 +130,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			}
 		};
 
-		BrushPickerView.getInstance().addBrushChangedListener(onBrushChangedListener);
-		BrushPickerView.getInstance().setCurrentPaint(BITMAP_PAINT);
 		ColorPickerDialog.getInstance().addOnColorPickedListener(onColorPickedListener);
 
 		movedDistance = new PointF(0f, 0f);
@@ -282,10 +279,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		});
 	}
 
-	void addBrushPickerToToolOptions() {
-		toolSpecificOptionsLayout.addView(BrushPickerView.getInstance().getBrushPickerView());
-	}
-
 	@Override
 	public boolean handleTouch(PointF coordinate, int motionEventType) {
 		if (coordinate == null) {
@@ -371,13 +364,11 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void startTool() {
-		BrushPickerView.getInstance().getDrawerPreview().invalidate();
 		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
 	@Override
 	public void leaveTool() {
 		ColorPickerDialog.getInstance().removeOnColorPickedListener(onColorPickedListener);
-		BrushPickerView.getInstance().removeBrushChangedListener(onBrushChangedListener);
 	}
 }

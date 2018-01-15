@@ -355,8 +355,9 @@ public class DrawToolTests extends BaseToolTest {
 	@UiThreadTest
 	@Test
 	public void testShouldChangePaintFromBrushPicker() throws NoSuchFieldException, IllegalAccessException {
+		toolToTest.setupToolOptions();
 		toolToTest.setDrawPaint(this.paint);
-		BrushPickerView brushPicker = BrushPickerView.getInstance();
+		BrushPickerView brushPicker = ((DrawTool) toolToTest).brushPickerView;
 		ArrayList<BrushPickerView.OnBrushChangedListener> brushPickerListener = brushPicker.brushChangedListener;
 
 		for (BrushPickerView.OnBrushChangedListener onBrushChangedListener : brushPickerListener) {

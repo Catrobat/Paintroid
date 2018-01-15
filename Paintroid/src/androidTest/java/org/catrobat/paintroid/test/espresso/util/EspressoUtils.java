@@ -41,7 +41,6 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.intro.TapTargetTopBar;
-import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction;
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction;
 import org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction;
@@ -148,7 +147,6 @@ public final class EspressoUtils {
 	public static void resetDrawPaintAndBrushPickerView() {
 		PaintroidApplication.currentTool.changePaintStrokeWidth(DEFAULT_STROKE_WIDTH);
 		PaintroidApplication.currentTool.changePaintStrokeCap(DEFAULT_STROKE_CAP);
-		BrushPickerView.getInstance().setCurrentPaint(PaintroidApplication.currentTool.getDrawPaint());
 	}
 
 	/**

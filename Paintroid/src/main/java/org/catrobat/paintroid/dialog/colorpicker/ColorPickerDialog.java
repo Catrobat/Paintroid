@@ -97,7 +97,7 @@ public final class ColorPickerDialog extends BaseDialog {
 		onColorPickedListener.remove(listener);
 	}
 
-	public void updateColorChange(int color) {
+	private void updateColorChange(int color) {
 		for (OnColorPickedListener listener : onColorPickedListener) {
 			listener.colorChanged(color);
 		}

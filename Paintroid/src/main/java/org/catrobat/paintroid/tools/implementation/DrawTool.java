@@ -31,6 +31,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.command.implementation.PointCommand;
+import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
@@ -42,6 +43,8 @@ public class DrawTool extends BaseTool {
 	protected final PointF drawToolMovedDistance;
 	protected PointF initialEventCoordinate;
 	protected boolean pathInsideBitmap;
+	@VisibleForTesting
+	public BrushPickerView brushPickerView;
 
 	public DrawTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -162,6 +165,19 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public void setupToolOptions() {
-		addBrushPickerToToolOptions();
+		brushPickerView = new BrushPickerView(toolSpecificOptionsLayout);
+		brushPickerView.setCurrentPaint(BITMAP_PAINT);
+	}
+
+	public void startTool() {
+		super.startTool();
+		brushPickerView.addBrushChangedListener(onBrushChangedListener);
+	}
+
+	@Override
+	public void leaveTool() {
+		super.leaveTool();
+		brushPickerView.removeBrushChangedListener(onBrushChangedListener);
+		brushPickerView.removeListeners();
 	}
 }

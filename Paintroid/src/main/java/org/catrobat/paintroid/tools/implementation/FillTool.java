@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
@@ -112,18 +111,15 @@ public class FillTool extends BaseTool {
 	public void draw(Canvas canvas) {
 	}
 
-	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		fillToolOptionsView = inflater.inflate(R.layout.dialog_fill_tool, null);
+		fillToolOptionsView = inflater.inflate(R.layout.dialog_fill_tool, toolSpecificOptionsLayout);
 
 		colorToleranceSeekBar = (SeekBar) fillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
 		colorToleranceEditText = (EditText) fillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
 		initializeFillOptionsListener();
 		updateColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);
-
-		toolSpecificOptionsLayout.addView(fillToolOptionsView);
 	}
 
 	private void initializeFillOptionsListener() {

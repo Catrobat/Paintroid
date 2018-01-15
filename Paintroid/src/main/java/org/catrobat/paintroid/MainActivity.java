@@ -45,7 +45,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -64,7 +63,6 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.InfoDialog.DialogType;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
@@ -135,7 +133,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		drawingSurface = (DrawingSurface) findViewById(R.id.drawingSurfaceView);
 		PaintroidApplication.drawingSurface = drawingSurface;
 		PaintroidApplication.perspective = new Perspective(drawingSurface.getHolder(), metrics.density);
-		BrushPickerView.init((ViewGroup) findViewById(R.id.layout_tool_specific_options));
 		bottomBar = new BottomBar(this);
 		topBar = new TopBar(this);
 		layerSideNav = (NavigationView) findViewById(R.id.nav_view_layer);
@@ -294,8 +291,6 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		if (isShowing) {
 			IndeterminateProgressDialog.getInstance().show();
 		}
-
-		BrushPickerView.init((ViewGroup) findViewById(R.id.layout_tool_specific_options));
 
 		setContentView(R.layout.main);
 		View mainView = findViewById(R.id.drawer_layout);
@@ -471,7 +466,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		}
 
 		Tool currentTool = PaintroidApplication.currentTool;
-		Paint tempPaint = new Paint(currentTool.getDrawPaint());
+		Paint tempPaint = currentTool.getDrawPaint();
 
 		currentTool.leaveTool();
 		if (currentTool.getToolType() == tool.getToolType()) {

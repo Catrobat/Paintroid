@@ -34,7 +34,6 @@ import android.view.View;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.tools.ToolType;
 
 public class DrawerPreview extends View {
@@ -55,8 +54,7 @@ public class DrawerPreview extends View {
 	}
 
 	private void init() {
-		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(),
-				R.drawable.checkeredbg);
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard,
 				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPattern.setShader(shader);
@@ -64,8 +62,9 @@ public class DrawerPreview extends View {
 	}
 
 	private void changePaintColor(int color) {
-		int strokeWidth = BrushPickerView.getInstance().getStrokeWidth();
-		Paint.Cap strokeCap = PaintroidApplication.currentTool.getDrawPaint().getStrokeCap();
+		Paint drawPaint = PaintroidApplication.currentTool.getDrawPaint();
+		float strokeWidth = drawPaint.getStrokeWidth();
+		Paint.Cap strokeCap = drawPaint.getStrokeCap();
 		if (Color.alpha(color) == 0x00) {
 			canvasPaint.reset();
 			canvasPaint.setStyle(Paint.Style.STROKE);
@@ -121,8 +120,9 @@ public class DrawerPreview extends View {
 
 	private void drawBorder(Canvas canvas) {
 		Paint borderPaint = new Paint();
-		int strokeWidth = BrushPickerView.getInstance().getStrokeWidth();
-		Paint.Cap strokeCap = PaintroidApplication.currentTool.getDrawPaint().getStrokeCap();
+		Paint drawPaint = PaintroidApplication.currentTool.getDrawPaint();
+		float strokeWidth = drawPaint.getStrokeWidth();
+		Paint.Cap strokeCap = drawPaint.getStrokeCap();
 		int startX;
 		int startY;
 		int endX;

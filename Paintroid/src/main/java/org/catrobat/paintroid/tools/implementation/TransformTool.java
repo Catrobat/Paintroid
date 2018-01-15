@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -363,12 +362,10 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		}
 	}
 
-	@SuppressLint("InflateParams")
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		transformToolOptionView = inflater.inflate(R.layout.dialog_transform_tool, null);
-		toolSpecificOptionsLayout.addView(transformToolOptionView);
+		transformToolOptionView = inflater.inflate(R.layout.dialog_transform_tool, toolSpecificOptionsLayout);
 
 		View.OnClickListener onClickListener = new View.OnClickListener() {
 			@Override
