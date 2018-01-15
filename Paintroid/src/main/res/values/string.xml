@@ -114,7 +114,7 @@
     <string name="text_tool_dialog_font_serif" translatable="false">Serif</string>
     <string name="text_tool_dialog_font_sans_serif" translatable="false">Sans Serif</string>
     <string name="text_tool_dialog_font_dubai" translatable="false">Dubai</string>
-    <string name="text_tool_dialog_font_arabic_alarabiya" translatable="false">Alarabiya</string>
+    <string name="text_tool_dialog_font_arabic_stc" translatable="false">STC</string>
 
     <string name="shape_tool_dialog_rect_title">Rectangle</string>
     <string name="shape_tool_dialog_ellipse_title">Ellipse</string>

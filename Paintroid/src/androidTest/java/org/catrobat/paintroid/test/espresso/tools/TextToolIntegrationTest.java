@@ -87,7 +87,7 @@ public class TextToolIntegrationTest {
 	private static final String FONT_MONOSPACE = "Monospace";
 	private static final String FONT_SERIF = "Serif";
 	private static final String FONT_SANS_SERIF = "Sans Serif";
-	private static final String FONT_ALARABIYA = "Alarabiya";
+	private static final String FONT_STC = "STC";
 	private static final String FONT_DUBAI = "Dubai";
 
 	private static final int TEXT_SIZE_20 = 20;
@@ -353,7 +353,7 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
-	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndAlarabiya() {
+	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndStc() {
 		enterArabicTestText();
 
 		assertFalse("Underline button should not be pressed", underlinedToggleButton.isChecked());
@@ -361,7 +361,7 @@ public class TextToolIntegrationTest {
 		assertFalse("Bold button should not be pressed", underlinedToggleButton.isChecked());
 
 		ArrayList<FormattingOptions> fonts = new ArrayList<>();
-		fonts.add(FormattingOptions.ALARABIYA);
+		fonts.add(FormattingOptions.STC);
 		fonts.add(FormattingOptions.DUBAI);
 
 		for (FormattingOptions font : fonts) {
@@ -390,7 +390,7 @@ public class TextToolIntegrationTest {
 			selectFormatting(FormattingOptions.ITALIC);
 			assertTrue("Italic button should be pressed", underlinedToggleButton.isChecked());
 			if (font != FormattingOptions.DUBAI) {
-				assertTrue("Text box width should be smaller when text is italic", getToolMemberBoxWidth() < boxWidth);
+				assertTrue("Text box width should be same when text is italic", getToolMemberBoxWidth() == boxWidth);
 			} else {
 				assertEquals("Wrong value of tool member italic", true, getToolMemberItalic());
 			}
@@ -558,8 +558,8 @@ public class TextToolIntegrationTest {
 			case FONT_SERIF:
 				textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
 				break;
-			case FONT_ALARABIYA:
-				textPaint.setTypeface(Typeface.createFromAsset(launchActivityRule.getActivity().getAssets(), "Alarabiya.ttf"));
+			case FONT_STC:
+				textPaint.setTypeface(Typeface.createFromAsset(launchActivityRule.getActivity().getAssets(), "STC.otf"));
 				break;
 			case FONT_DUBAI:
 				textPaint.setTypeface(Typeface.createFromAsset(launchActivityRule.getActivity().getAssets(), "Dubai.TTF"));
@@ -638,7 +638,7 @@ public class TextToolIntegrationTest {
 			case MONOSPACE:
 			case SERIF:
 			case SANS_SERIF:
-			case ALARABIYA:
+			case STC:
 			case DUBAI:
 				onView(withId(R.id.text_tool_dialog_spinner_font)).perform(click());
 				onData(allOf(is(instanceOf(String.class)), is(getFontString(format))))
@@ -672,8 +672,8 @@ public class TextToolIntegrationTest {
 				return FONT_SERIF;
 			case SANS_SERIF:
 				return FONT_SANS_SERIF;
-			case ALARABIYA:
-				return FONT_ALARABIYA;
+			case STC:
+				return FONT_STC;
 			case DUBAI:
 				return FONT_DUBAI;
 			case UNDERLINE:
@@ -763,6 +763,6 @@ public class TextToolIntegrationTest {
 	}
 
 	private enum FormattingOptions {
-		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, ALARABIYA, DUBAI, SIZE_20, SIZE_30, SIZE_40, SIZE_60
+		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, STC, DUBAI, SIZE_20, SIZE_30, SIZE_40, SIZE_60
 	}
 }
