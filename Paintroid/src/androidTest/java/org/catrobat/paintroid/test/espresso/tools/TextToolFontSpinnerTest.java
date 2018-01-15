@@ -68,7 +68,7 @@ public class TextToolFontSpinnerTest {
 	private Typeface sansSerifFontFace = Typeface.create(Typeface.SANS_SERIF, normalStyle);
 	private Typeface serifFontFace = Typeface.create(Typeface.SERIF, normalStyle);
 	private Typeface defaultFontFace = Typeface.create(Typeface.MONOSPACE, normalStyle);
-	private Typeface alArabiyaFontFace = Typeface.createFromAsset(context.getResources().getAssets(), "Alarabiya.ttf");
+	private Typeface stcFontFace = Typeface.createFromAsset(context.getResources().getAssets(), "STC.otf");
 	private Typeface dubaiFontFace = Typeface.createFromAsset(context.getResources().getAssets(), "Dubai.TTF");
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
@@ -106,7 +106,7 @@ public class TextToolFontSpinnerTest {
 				.check(matches(hasTypeFace(dubaiFontFace)));
 
 		onView(withIndex(withId(android.R.id.text1), 4))
-				.check(matches(hasTypeFace(alArabiyaFontFace)));
+				.check(matches(hasTypeFace(stcFontFace)));
 	}
 
 	@Test
@@ -131,6 +131,6 @@ public class TextToolFontSpinnerTest {
 				.check(matches(hasTypeFace(dubaiFontFace)));
 
 		onView(withIndex(withId(android.R.id.text1), 4))
-				.check(matches(hasTypeFace(alArabiyaFontFace)));
+				.check(matches(hasTypeFace(stcFontFace)));
 	}
 }

@@ -38,12 +38,10 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.integration.BaseIntegrationTestClass;
 import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.Utils;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.TextTool;
-import org.catrobat.paintroid.ui.TopBar;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -60,7 +58,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	private static final String FONT_MONOSPACE = "Monospace";
 	private static final String FONT_SERIF = "Serif";
 	private static final String FONT_SANS_SERIF = "Sans Serif";
-	private static final String FONT_ALARABIYA = "Alarabiya";
+	private static final String FONT_STC = "STC";
 	private static final String FONT_DUBAI ="Dubai";
 	private static final int TEXT_SIZE_20 = 20;
 	private static final int TEXT_SIZE_30 = 30;
@@ -78,7 +76,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 	private Spinner mTextSizeSpinner;
 
 	private enum FormattingOptions {
-		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF,ALARABIYA,DUBAI, SIZE_20, SIZE_30, SIZE_40, SIZE_60
+		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, STC,DUBAI, SIZE_20, SIZE_30, SIZE_40, SIZE_60
 	}
 
 	public TextToolIntegrationTest() throws Exception {
@@ -288,7 +286,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		}
 	}
 	@Test
-	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndAlarabiya() throws NoSuchFieldException, IllegalAccessException {
+	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndStc() throws NoSuchFieldException, IllegalAccessException {
 		selectTextTool();
 		enterArabicTestText();
 
@@ -297,7 +295,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 		assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
 
 		ArrayList<FormattingOptions> fonts = new ArrayList<>();
-		fonts.add(FormattingOptions.ALARABIYA);
+		fonts.add(FormattingOptions.STC);
 		fonts.add(FormattingOptions.DUBAI);
 
 		for (FormattingOptions font : fonts) {
@@ -503,8 +501,8 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 			case "Serif":
 				textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
 				break;
-			case "Alarabiya":
-				textPaint.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Alarabiya.ttf"));
+			case "STC":
+				textPaint.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "STC.otf"));
 				break;
 			case "Dubai":
 				textPaint.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "Dubai.TTF"));
@@ -587,7 +585,7 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 			case MONOSPACE:
 			case SERIF:
 			case SANS_SERIF:
-			case ALARABIYA:
+			case STC:
 			case DUBAI:
 				mSolo.clickOnView(mFontSpinner);
 				mSolo.clickOnMenuItem(getFontString(format), true);
@@ -616,8 +614,8 @@ public class TextToolIntegrationTest extends BaseIntegrationTestClass {
 				return FONT_SERIF;
 			case SANS_SERIF:
 				return FONT_SANS_SERIF;
-			case ALARABIYA:
-				return FONT_ALARABIYA;
+			case STC:
+				return FONT_STC;
 			case DUBAI:
 				return FONT_DUBAI;
 			case UNDERLINE:

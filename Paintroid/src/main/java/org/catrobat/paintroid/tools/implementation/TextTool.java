@@ -68,7 +68,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 	@VisibleForTesting
 	public final Paint textPaint;
-	private final Typeface alarabiya;
+	private final Typeface stc;
 	private final Typeface dubai;
 
 	private TextToolOptionsListener textToolOptionsListener;
@@ -93,7 +93,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
-		alarabiya = Typeface.createFromAsset(context.getAssets(), "Alarabiya.ttf");
+		stc = Typeface.createFromAsset(context.getAssets(), "STC.otf");
 		dubai = Typeface.createFromAsset(context.getAssets(), "Dubai.TTF");
 
 		textPaint = new Paint();
@@ -239,12 +239,12 @@ public class TextTool extends BaseToolWithRectangleShape {
 			case "Monospace":
 				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
 				break;
-			case "Alarabiya":
+			case "STC":
 				try {
-					textPaint.setTypeface(alarabiya);
+					textPaint.setTypeface(stc);
 					textPaint.setTextSkewX(textSkewX);
 				} catch (Exception e) {
-					Log.e("Can't set custom font", "Alarabiya");
+					Log.e("Can't set custom font", "STC");
 				}
 				break;
 			case "Dubai":

@@ -35,7 +35,7 @@ public class FontArrayAdapter extends ArrayAdapter<String> {
 	private Typeface sansSerifFontFace = Typeface.create(Typeface.SANS_SERIF, normalStyle);
 	private Typeface serifFontFace = Typeface.create(Typeface.SERIF, normalStyle);
 	private Typeface defaultFontFace = Typeface.create(Typeface.MONOSPACE, normalStyle);
-	private Typeface alArabiyaFontFace = Typeface.createFromAsset(getContext().getResources().getAssets(), "Alarabiya.ttf");
+	private Typeface stcFontFace = Typeface.createFromAsset(getContext().getResources().getAssets(), "STC.otf");
 	private Typeface dubaiFontFace = Typeface.createFromAsset(getContext().getResources().getAssets(), "Dubai.TTF");
 
 	public FontArrayAdapter(@NonNull Context context, int resource, @NonNull List<String> objects) {
@@ -56,7 +56,7 @@ public class FontArrayAdapter extends ArrayAdapter<String> {
 				spinnerText.setTypeface(dubaiFontFace);
 				break;
 			case 4:
-				spinnerText.setTypeface(alArabiyaFontFace);
+				spinnerText.setTypeface(stcFontFace);
 				break;
 			default:
 				spinnerText.setTypeface(defaultFontFace);
@@ -80,7 +80,7 @@ public class FontArrayAdapter extends ArrayAdapter<String> {
 				spinnerText.setTypeface(dubaiFontFace);
 				break;
 			case 4:
-				spinnerText.setTypeface(alArabiyaFontFace);
+				spinnerText.setTypeface(stcFontFace);
 				break;
 			default:
 				spinnerText.setTypeface(defaultFontFace);
