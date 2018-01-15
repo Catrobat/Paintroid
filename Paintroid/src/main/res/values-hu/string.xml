@@ -43,7 +43,6 @@
   <string name="about_license_url_text">A Pocket Paint forráskódjának licence</string>
   <string name="about_catroid_url_text">A Catrobatról</string>
   <string name="about_version">Verzió:</string>
-  <string name="stroke_title">"Eszközbeállítások"</string>
   <string name="color_chooser_title">Színválasztó</string>
   <string name="color_rgb">Vörös Zöld Kék (RGB)</string>
   <string name="color_red">Vörös</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">Kilépés</string>
   <string name="save_button_text">Mentés</string>
   <string name="discard_button_text">Elvetés</string>
-  <string name="resize_to_resize_tap_text">átméretezéshez koppints</string>
   <string name="resize_nothing_to_resize">nincs átméretezendő elem</string>
   <string name="resize_max_image_resolution_reached">elérte a maximális képfelbontást</string>
   <string name="text_tool_dialog_input_title">A szöveged:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">Delete Layer</string>
   <string name="layer_too_many_layers">Too many layers</string>
   <string name="layer_invisible">All layers invisible</string>
-  <string name="layer_prefix">Layer </string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

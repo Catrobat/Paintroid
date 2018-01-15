@@ -43,7 +43,6 @@
   <string name="about_license_url_text">포켓 페인트 소스 코드 라이센스</string>
   <string name="about_catroid_url_text">Catrobat에 대하여</string>
   <string name="about_version">버전 정보</string>
-  <string name="stroke_title">"도구 설정"</string>
   <string name="color_chooser_title">색상 선택기</string>
   <string name="color_rgb">빨강 녹색 파랑 (RGB)</string>
   <string name="color_red">빨강</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">종료</string>
   <string name="save_button_text">저장</string>
   <string name="discard_button_text">저장 안함</string>
-  <string name="resize_to_resize_tap_text">탭 크기를 조정하려면</string>
   <string name="resize_nothing_to_resize">크기 변경 없음</string>
   <string name="resize_max_image_resolution_reached">최고 이미지 해상도</string>
   <string name="text_tool_dialog_input_title">텍스트:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">레이어 삭제</string>
   <string name="layer_too_many_layers">너무 많은 레이어</string>
   <string name="layer_invisible">보이지 않는 모든 레이어</string>
-  <string name="layer_prefix">레이어</string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

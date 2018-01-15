@@ -43,7 +43,6 @@
   <string name="about_license_url_text">Pocket Paint Kaynak Kod Lisansı</string>
   <string name="about_catroid_url_text">Catrobat Hakkında</string>
   <string name="about_version">Sürüm:</string>
-  <string name="stroke_title">"Araç Seçenekleri"</string>
   <string name="color_chooser_title">Renk Seçici</string>
   <string name="color_rgb">Kırmızı Yeşil Mavi (RGB)</string>
   <string name="color_red">Kırmızı</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">Çık</string>
   <string name="save_button_text">Kaydet</string>
   <string name="discard_button_text">Vazgeç</string>
-  <string name="resize_to_resize_tap_text">yeniden boyutlandırmak için dokun</string>
   <string name="resize_nothing_to_resize">yeniden boyutlandırılacak bir şey yok</string>
   <string name="resize_max_image_resolution_reached">maksimum görüntü çözünürlüğüne ulaşıldı</string>
   <string name="text_tool_dialog_input_title">Metniniz:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">Katmanı Sil</string>
   <string name="layer_too_many_layers">Çok fazla katman</string>
   <string name="layer_invisible">Tüm katmanlar görünmez</string>
-  <string name="layer_prefix">Katman </string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

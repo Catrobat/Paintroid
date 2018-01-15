@@ -43,7 +43,6 @@
   <string name="about_license_url_text">Giấy phép cho mã nguồn Pocket Paint</string>
   <string name="about_catroid_url_text">Về Catrobat</string>
   <string name="about_version">Phiên bản:</string>
-  <string name="stroke_title">"Cài đặt công cụ"</string>
   <string name="color_chooser_title">Bộ chọn màu</string>
   <string name="color_rgb">Màu đỏ, xanh lá cây, xanh da trời(RGB)</string>
   <string name="color_red">Đỏ</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">Thoát</string>
   <string name="save_button_text">Lưu</string>
   <string name="discard_button_text">Loại bỏ</string>
-  <string name="resize_to_resize_tap_text">để thay đổi kích cỡ tap</string>
   <string name="resize_nothing_to_resize">không có gì để thay đổi kích cỡ</string>
   <string name="resize_max_image_resolution_reached">hình ảnh đã đạt độ phân giải tối đa</string>
   <string name="text_tool_dialog_input_title">Your text:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">Delete Layer</string>
   <string name="layer_too_many_layers">Too many layers</string>
   <string name="layer_invisible">All layers invisible</string>
-  <string name="layer_prefix">Layer </string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

@@ -43,7 +43,6 @@
   <string name="about_license_url_text">Pocket Paint broncode licentie</string>
   <string name="about_catroid_url_text">Over Catrobat</string>
   <string name="about_version">Versie:</string>
-  <string name="stroke_title">"Tool instellingen"</string>
   <string name="color_chooser_title">Kleurkiezer</string>
   <string name="color_rgb">Rood groen blauw (RGB)</string>
   <string name="color_red">Rood</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">Stoppen</string>
   <string name="save_button_text">Opslaan</string>
   <string name="discard_button_text">Weggooien</string>
-  <string name="resize_to_resize_tap_text">klik om te schalen</string>
   <string name="resize_nothing_to_resize">niets om te schalen</string>
   <string name="resize_max_image_resolution_reached">max beeldresolutie bereikt</string>
   <string name="text_tool_dialog_input_title">Jouw tekst:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">Verwijder laag</string>
   <string name="layer_too_many_layers">Te veel lagen</string>
   <string name="layer_invisible">Alle lagen onzichtbaar</string>
-  <string name="layer_prefix">Laag </string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

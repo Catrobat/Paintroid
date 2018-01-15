@@ -43,7 +43,6 @@
   <string name="about_license_url_text">پاڪيٽ پينٽ سورس ڪوڊ لائسنس</string>
   <string name="about_catroid_url_text">ڪيٽروبيٽ جي باري ۾</string>
   <string name="about_version">ورشن:</string>
-  <string name="stroke_title">"اوزارن جون ترتيبون"</string>
   <string name="color_chooser_title">رنگ چونڊڻو</string>
   <string name="color_rgb">ڳاڙهوسائو نيرو (RGB)</string>
   <string name="color_red">ڳاڙهو</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">بند ڪريو</string>
   <string name="save_button_text">محفوظ</string>
   <string name="discard_button_text">مسترد ڪريو</string>
-  <string name="resize_to_resize_tap_text">سائيز مَٽائڻ لاءِ ٽيپ ڪريو</string>
   <string name="resize_nothing_to_resize">سائيز مَٽائڻ لاءِ ڪجھ ڪونهي</string>
   <string name="resize_max_image_resolution_reached">تصوير جو رزالوشن ان کان مٿي نه ٿيندو</string>
   <string name="text_tool_dialog_input_title">اوهان جو متن:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">ليير ڊاهيو</string>
   <string name="layer_too_many_layers">تمام گهڻا ليير ٿي ويا آهن</string>
   <string name="layer_invisible">سڀ ليير لڪل آهن</string>
-  <string name="layer_prefix">ليير </string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->

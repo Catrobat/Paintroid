@@ -43,7 +43,6 @@
   <string name="about_license_url_text">Licença do Código Fonte do Pocket Paint</string>
   <string name="about_catroid_url_text">Sobre o Catrobat</string>
   <string name="about_version">Versão:</string>
-  <string name="stroke_title">"Configurações de Ferramenta"</string>
   <string name="color_chooser_title">Seletor de cores</string>
   <string name="color_rgb">Red Green Blue (RGB)</string>
   <string name="color_red">Vermelho</string>
@@ -92,7 +91,6 @@
   <string name="menu_quit">Sair</string>
   <string name="save_button_text">Salvar</string>
   <string name="discard_button_text">Descartar</string>
-  <string name="resize_to_resize_tap_text">para redimensionar, toque</string>
   <string name="resize_nothing_to_resize">nada há nada para ser redimensionado</string>
   <string name="resize_max_image_resolution_reached">resolução máxima de imagem alcançada</string>
   <string name="text_tool_dialog_input_title">Your text:</string>
@@ -115,7 +113,6 @@
   <string name="layer_delete">Delete Layer</string>
   <string name="layer_too_many_layers">Too many layers</string>
   <string name="layer_invisible">All layers invisible</string>
-  <string name="layer_prefix">Layer </string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
