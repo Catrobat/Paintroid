@@ -50,7 +50,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -73,8 +72,10 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInte
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -251,9 +252,9 @@ public class TextToolIntegrationTest {
 
 		assertEquals("Wrong input text after reopen dialog", TEST_TEXT, textEditText.getText().toString());
 		assertEquals("Wrong font selected after reopen dialog", FONT_SANS_SERIF, fontSpinner.getSelectedItem());
-		assertEquals("Wrong underline status after reopen dialog", true, underlinedToggleButton.isChecked());
-		assertEquals("Wrong italic status after reopen dialog", true, italicToggleButton.isChecked());
-		assertEquals("Wrong bold status after reopen dialog", true, boldToggleButton.isChecked());
+		assertTrue("Wrong underline status after reopen dialog", underlinedToggleButton.isChecked());
+		assertTrue("Wrong italic status after reopen dialog", italicToggleButton.isChecked());
+		assertTrue("Wrong bold status after reopen dialog", boldToggleButton.isChecked());
 		assertEquals("Wrong text size selected after reopen dialog",
 				String.valueOf(TEXT_SIZE_40), textSizeSpinner.getSelectedItem());
 
@@ -279,9 +280,9 @@ public class TextToolIntegrationTest {
 
 		assertEquals("Wrong input text after reopen dialog", TEST_TEXT, textEditText.getText().toString());
 		assertEquals("Wrong font selected after reopen dialog", FONT_SANS_SERIF, fontSpinner.getSelectedItem());
-		assertEquals("Wrong underline status after reopen dialog", true, underlinedToggleButton.isChecked());
-		assertEquals("Wrong italic status after reopen dialog", true, italicToggleButton.isChecked());
-		assertEquals("Wrong bold status after reopen dialog", true, boldToggleButton.isChecked());
+		assertTrue("Wrong underline status after reopen dialog", underlinedToggleButton.isChecked());
+		assertTrue("Wrong italic status after reopen dialog", italicToggleButton.isChecked());
+		assertTrue("Wrong bold status after reopen dialog", boldToggleButton.isChecked());
 		assertEquals("Wrong text size selected after reopen dialog",
 				String.valueOf(TEXT_SIZE_40), textSizeSpinner.getSelectedItem());
 
@@ -330,7 +331,7 @@ public class TextToolIntegrationTest {
 			if (font != FormattingOptions.MONOSPACE) {
 				assertTrue("Text box width should be smaller when text is italic", getToolMemberBoxWidth() < boxWidth);
 			} else {
-				assertEquals("Wrong value of tool member italic", true, getToolMemberItalic());
+				assertTrue("Wrong value of tool member italic", getToolMemberItalic());
 			}
 
 			pixelsBefore = new int[bitmap.getWidth()];
@@ -390,9 +391,9 @@ public class TextToolIntegrationTest {
 			selectFormatting(FormattingOptions.ITALIC);
 			assertTrue("Italic button should be pressed", underlinedToggleButton.isChecked());
 			if (font != FormattingOptions.DUBAI) {
-				assertTrue("Text box width should be same when text is italic", getToolMemberBoxWidth() == boxWidth);
+				assertEquals("Text box width should be same when text is italic", getToolMemberBoxWidth(), boxWidth, Float.MIN_VALUE);
 			} else {
-				assertEquals("Wrong value of tool member italic", true, getToolMemberItalic());
+				assertTrue("Wrong value of tool member italic", getToolMemberItalic());
 			}
 
 			pixelsBefore = new int[bitmap.getWidth()];
@@ -491,11 +492,11 @@ public class TextToolIntegrationTest {
 
 		Paint paint = textTool.textPaint;
 		int selectedColor = paint.getColor();
-		assertFalse("Paint color should not be black", selectedColor == Color.BLACK);
+		assertNotEquals("Paint color should not be black", selectedColor, Color.BLACK);
 		Bitmap bitmap = getToolMemberDrawingBitmap();
 		int[] pixels = new int[bitmap.getWidth()];
 		bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
-		assertTrue("There should not be any black pixels", countPixelsWithColor(pixels, Color.BLACK) == 0);
+		assertEquals("There should not be any black pixels", countPixelsWithColor(pixels, Color.BLACK), 0);
 		assertTrue("There should be some pixels with the selected color", countPixelsWithColor(pixels, selectedColor) > 0);
 
 		assertEquals("Text box position x should stay the same after color change", boxPositionX, getToolMemberBoxPosition().x, EQUALS_DELTA);
@@ -529,7 +530,7 @@ public class TextToolIntegrationTest {
 		String[] expectedTextSplitUp = {"testing", "multiline", "text", "", "123"};
 		String[] actualTextSplitUp = getToolMemberMultilineText();
 
-		assertTrue("Splitting text by newline failed", Arrays.equals(expectedTextSplitUp, actualTextSplitUp));
+		assertArrayEquals("Splitting text by newline failed", expectedTextSplitUp, actualTextSplitUp);
 
 		checkTextBoxDimensionsAndDefaultPosition();
 	}

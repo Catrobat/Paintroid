@@ -250,7 +250,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	protected void loadBitmapFromUriAndRun(final Uri uri, final RunnableWithBitmap runnable) {
 		String loadMessge = getResources().getString(R.string.dialog_load);
 		final ProgressDialog dialog = ProgressDialog.show(
-				NavigationDrawerMenuActivity.this, "", loadMessge, true);
+				this, "", loadMessge, true);
 
 		Thread thread = new Thread("loadBitmapFromUriAndRun") {
 			@Override

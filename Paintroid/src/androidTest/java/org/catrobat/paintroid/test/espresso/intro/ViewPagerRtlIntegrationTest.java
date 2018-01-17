@@ -31,15 +31,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Arrays;
-
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ViewPagerRtlIntegrationTest {
@@ -73,7 +71,7 @@ public class ViewPagerRtlIntegrationTest {
 	@Test
 	public void checkSlides() {
 		int[] adapterLayouts = viewPagerAdapter.layouts;
-		assertTrue(Arrays.equals(activityRule.getLayouts(), adapterLayouts));
+		assertArrayEquals(activityRule.getLayouts(), adapterLayouts);
 	}
 
 	@Test

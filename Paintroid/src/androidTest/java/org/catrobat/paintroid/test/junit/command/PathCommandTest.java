@@ -33,7 +33,7 @@ import org.junit.Test;
 import java.util.Observable;
 import java.util.Observer;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PathCommandTest extends CommandTestSetup {
 
@@ -73,7 +73,7 @@ public class PathCommandTest extends CommandTestSetup {
 		commandManagerMockup.testCommand(commandUnderTest);
 		commandUnderTest.run(canvasUnderTest, null);
 
-		assertEquals("Pathcommand should have failed but didnt get deleted", commandManagerMockup.gotDeleted, true);
+		assertTrue("PathCommand should have failed but didn't get deleted", commandManagerMockup.gotDeleted);
 	}
 
 	@Test

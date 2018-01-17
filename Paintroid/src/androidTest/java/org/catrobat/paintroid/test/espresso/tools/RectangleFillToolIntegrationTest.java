@@ -59,6 +59,7 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColo
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -107,8 +108,8 @@ public class RectangleFillToolIntegrationTest {
 		float rectHeight = rectangleFillTool.boxHeight;
 		PointF rectPosition = rectangleFillTool.toolPosition;
 
-		assertTrue("Width should not be zero", rectWidth != 0.0f);
-		assertTrue("Width should not be zero", rectHeight != 0.0f);
+		assertNotEquals("Width should not be zero", rectWidth, 0.0f);
+		assertNotEquals("Height should not be zero", rectHeight, 0.0f);
 		assertNotNull("Position should not be NULL", rectPosition);
 	}
 
@@ -174,7 +175,7 @@ public class RectangleFillToolIntegrationTest {
 		selectColorPickerPresetSelectorColor(colorButtonPosition);
 
 		int colorPickerColorAfterChange = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertTrue("Colors should not be the same", colorPickerColorAfterChange != colorPickerColorBeforeChange);
+		assertNotEquals("Colors should not be the same", colorPickerColorAfterChange, colorPickerColorBeforeChange);
 
 		selectTool(ToolType.SHAPE);
 
@@ -215,8 +216,8 @@ public class RectangleFillToolIntegrationTest {
 
 		int colorInRectangleAfter = drawingBitmapAfter.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
 
-		assertTrue("Colors should have changed", colorInRectangle != colorInRectangleAfter);
-		assertTrue("Colors should have changed", colorInRectangleTool != colorInRectangleToolAfter);
+		assertNotEquals("Colors should have changed", colorInRectangle, colorInRectangleAfter);
+		assertNotEquals("Colors should have changed", colorInRectangleTool, colorInRectangleToolAfter);
 		assertEquals("Colors should be equal", colorInRectangleTool, colorInRectangle);
 	}
 

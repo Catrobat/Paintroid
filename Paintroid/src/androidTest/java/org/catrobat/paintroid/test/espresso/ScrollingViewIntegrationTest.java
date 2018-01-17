@@ -277,8 +277,8 @@ public class ScrollingViewIntegrationTest {
 		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
 		PointF endPointCanvas = getCanvasPointFromSurfacePoint(endPointSurface);
 
-		assertTrue("scrolling did not work in x", startPointCanvas.x != endPointCanvas.x);
-		assertTrue("scrolling did not work in y", startPointCanvas.y != endPointCanvas.y);
+		assertNotEquals("scrolling did not work in x", startPointCanvas.x, endPointCanvas.x);
+		assertNotEquals("scrolling did not work in y", startPointCanvas.y, endPointCanvas.y);
 	}
 
 	public void dragAndCheckIfCanvasHasMovedInXOrY(PointF fromPoint, PointF toPoint) {

@@ -552,7 +552,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 
 		Intent resultIntent = new Intent();
 
-		if (FileIO.saveBitmap(MainActivity.this,
+		if (FileIO.saveBitmap(this,
 				LayerListener.getInstance().getBitmapOfAllLayersToSave(),
 				pictureFileName, saveCopy)) {
 			Bundle bundle = new Bundle();

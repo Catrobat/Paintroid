@@ -34,7 +34,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotEquals;
 
 public class PerspectiveTests {
 
@@ -72,8 +72,8 @@ public class PerspectiveTests {
 		float surfaceScale = perspective.surfaceScale;
 		assertEquals(1f, surfaceScale, Double.MIN_VALUE);
 
-		assertTrue("x translation should not be 0", 0f != getSurfaceTranslationX());
-		assertTrue("y translation should not be 0", 0f != getSurfaceTranslationY());
+		assertNotEquals("x translation should not be 0", getSurfaceTranslationX(), 0);
+		assertNotEquals("y translation should not be 0", getSurfaceTranslationY(), 0);
 	}
 
 	@Test

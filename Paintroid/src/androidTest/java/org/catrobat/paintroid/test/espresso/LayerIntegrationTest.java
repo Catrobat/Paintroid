@@ -58,8 +58,8 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInter
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertSame;
 
 @RunWith(AndroidJUnit4.class)
 public class LayerIntegrationTest {
@@ -100,7 +100,7 @@ public class LayerIntegrationTest {
 		onLayerMenuView().performAddLayer();
 		onLayerMenuView().performClose();
 		int numLayersAfter = LayerListener.getInstance().getAdapter().getCount();
-		assertTrue("One Layer should have been added", numLayersBefore + 1 == numLayersAfter);
+		assertSame("One Layer should have been added", numLayersBefore + 1, numLayersAfter);
 	}
 
 	@Test
@@ -218,12 +218,12 @@ public class LayerIntegrationTest {
 		onLayerMenuView().performOpen();
 		onLayerMenuView().performAddLayer();
 		int numLayersAfter = LayerListener.getInstance().getAdapter().getCount();
-		assertTrue("One Layer should have been added", numLayersBefore + 1 == numLayersAfter);
+		assertEquals("One Layer should have been added", numLayersBefore + 1, numLayersAfter);
 
 		numLayersBefore = LayerListener.getInstance().getAdapter().getCount();
 		onLayerMenuView().performDeleteLayer();
 		numLayersAfter = LayerListener.getInstance().getAdapter().getCount();
-		assertTrue("One Layer should have been deleted", numLayersBefore - 1 == numLayersAfter);
+		assertEquals("One Layer should have been deleted", numLayersBefore - 1, numLayersAfter);
 	}
 
 	@Test
@@ -233,7 +233,7 @@ public class LayerIntegrationTest {
 		onLayerMenuView().performAddLayer();
 		onLayerMenuView().performClose();
 		int numLayersAfter = LayerListener.getInstance().getAdapter().getCount();
-		assertTrue("One Layer should have been added", numLayersBefore + 1 == numLayersAfter);
+		assertSame("One Layer should have been added", numLayersBefore + 1, numLayersAfter);
 
 		PointF screenPoint = new PointF(displayWidth / 2 - 10, displayHeight / 2 - 5);
 		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
@@ -256,7 +256,7 @@ public class LayerIntegrationTest {
 		onLayerMenuView().performDeleteLayer();
 		onLayerMenuView().performClose();
 		numLayersAfter = LayerListener.getInstance().getAdapter().getCount();
-		assertTrue("One Layer should have been deleted", numLayersBefore - 1 == numLayersAfter);
+		assertEquals("One Layer should have been deleted", numLayersBefore - 1, numLayersAfter);
 
 		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
 		onView(isRoot()).perform(touchAt(screenPoint));
@@ -380,22 +380,22 @@ public class LayerIntegrationTest {
 		onView(isRoot()).perform(touchAt(screenPoint));
 
 		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertFalse("Bitmap should be cropped - wrong Height", bitmapHeight == layer.getImage().getHeight());
-			assertFalse("Bitmap should be cropped - wrong Width", bitmapWidth == layer.getImage().getWidth());
+			assertNotEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
+			assertNotEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
 		}
 
 		onView(withId(R.id.btn_top_undo)).perform(click());
 
 		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertTrue("Bitmap should be cropped - wrong Height", bitmapHeight == layer.getImage().getHeight());
-			assertTrue("Bitmap should be cropped - wrong Width", bitmapWidth == layer.getImage().getWidth());
+			assertEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
+			assertEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
 		}
 
 		onView(withId(R.id.btn_top_redo)).perform(click());
 
 		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertFalse("Bitmap should be cropped - wrong Height", bitmapHeight == layer.getImage().getHeight());
-			assertFalse("Bitmap should be cropped - wrong Width", bitmapWidth == layer.getImage().getWidth());
+			assertNotEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
+			assertNotEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
 		}
 
 		onLayerMenuView().performOpen();
@@ -404,8 +404,8 @@ public class LayerIntegrationTest {
 		onView(withId(R.id.btn_top_undo)).perform(click());
 
 		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertTrue("Bitmap should be cropped - wrong Height", bitmapHeight == layer.getImage().getHeight());
-			assertTrue("Bitmap should be cropped - wrong Width", bitmapWidth == layer.getImage().getWidth());
+			assertEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
+			assertEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
 		}
 
 		onLayerMenuView().performOpen();
@@ -414,8 +414,8 @@ public class LayerIntegrationTest {
 		onView(withId(R.id.btn_top_redo)).perform(click());
 
 		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertFalse("Bitmap should be cropped - wrong Height", bitmapHeight == layer.getImage().getHeight());
-			assertFalse("Bitmap should be cropped - wrong Width", bitmapWidth == layer.getImage().getWidth());
+			assertNotEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
+			assertNotEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
 		}
 
 		onLayerMenuView().performOpen();
@@ -428,15 +428,15 @@ public class LayerIntegrationTest {
 		onView(withId(R.id.btn_top_undo)).perform(click());
 
 		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertTrue("Bitmap should be cropped - wrong Height", bitmapHeight == layer.getImage().getHeight());
-			assertTrue("Bitmap should be cropped - wrong Width", bitmapWidth == layer.getImage().getWidth());
+			assertEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
+			assertEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
 		}
 
 		onView(withId(R.id.btn_top_redo)).perform(click());
 
 		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertFalse("Bitmap should be cropped - wrong Height", bitmapHeight == layer.getImage().getHeight());
-			assertFalse("Bitmap should be cropped - wrong Width", bitmapWidth == layer.getImage().getWidth());
+			assertNotEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
+			assertNotEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
 		}
 	}
 

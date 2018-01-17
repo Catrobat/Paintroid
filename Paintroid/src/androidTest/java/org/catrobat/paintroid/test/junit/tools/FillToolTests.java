@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Queue;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class FillToolTests extends BaseToolTest {
@@ -221,7 +222,7 @@ public class FillToolTests extends BaseToolTest {
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				if (row == 0 && col == 0) {
-					assertTrue("Pixel color should not have been replaced", targetColor != pixels[row][col]);
+					assertNotEquals("Pixel color should not have been replaced", targetColor, pixels[row][col]);
 					continue;
 				}
 				assertEquals("Pixel color should have been replaced", targetColor, pixels[row][col]);
@@ -256,7 +257,7 @@ public class FillToolTests extends BaseToolTest {
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				if (row == boundaryPixel.y && col == boundaryPixel.y) {
-					assertTrue("Pixel color should not have been replaced", boundaryColor == pixels[row][col]);
+					assertEquals("Pixel color should not have been replaced", boundaryColor, pixels[row][col]);
 					continue;
 				}
 				assertEquals("Pixel color should have been replaced", targetColor, pixels[row][col]);
