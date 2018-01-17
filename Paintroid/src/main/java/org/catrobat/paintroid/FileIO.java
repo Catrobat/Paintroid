@@ -30,6 +30,8 @@ import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import org.catrobat.paintroid.common.Constants;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -54,7 +56,7 @@ public abstract class FileIO {
 	}
 
 	static boolean saveBitmap(Context context, Bitmap bitmap, @Nullable String path, boolean saveCopy) {
-		if (!initialisePaintroidMediaDirectory(context)) {
+		if (!initialisePaintroidMediaDirectory()) {
 			return false;
 		}
 
@@ -74,7 +76,7 @@ public abstract class FileIO {
 				outputStream = context.getContentResolver().openOutputStream(
 						NavigationDrawerMenuActivity.savedPictureUri);
 			} else {
-				file = createNewEmptyPictureFile(context);
+				file = createNewEmptyPictureFile();
 				outputStream = new FileOutputStream(file);
 			}
 		} catch (FileNotFoundException e) {
@@ -113,8 +115,8 @@ public abstract class FileIO {
 		return simpleDateFormat.format(new Date()) + ENDING;
 	}
 
-	static File createNewEmptyPictureFile(Context context, String filename) {
-		if (initialisePaintroidMediaDirectory(context)) {
+	static File createNewEmptyPictureFile(String filename) {
+		if (initialisePaintroidMediaDirectory()) {
 			if (!filename.toLowerCase(Locale.US).endsWith(ENDING.toLowerCase(Locale.US))) {
 				filename += ENDING;
 			}
@@ -124,16 +126,16 @@ public abstract class FileIO {
 		}
 	}
 
-	private static File createNewEmptyPictureFile(Context context) {
-		return createNewEmptyPictureFile(context, getDefaultFileName());
+	private static File createNewEmptyPictureFile() {
+		return createNewEmptyPictureFile(getDefaultFileName());
 	}
 
-	private static boolean initialisePaintroidMediaDirectory(Context context) {
+	private static boolean initialisePaintroidMediaDirectory() {
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
 			paintroidMediaFile = new File(
 					Environment.getExternalStorageDirectory(), File.separatorChar
-					+ context.getString(R.string.ext_storage_directory_name) + File.separatorChar);
+					+ Constants.EXT_STORAGE_DIRECTORY_NAME + File.separatorChar);
 		} else {
 			return false;
 		}

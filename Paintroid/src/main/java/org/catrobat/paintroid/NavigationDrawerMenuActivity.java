@@ -230,7 +230,7 @@ public abstract class NavigationDrawerMenuActivity extends AppCompatActivity {
 	}
 
 	protected void takePhoto() {
-		File tempFile = FileIO.createNewEmptyPictureFile(this, FileIO.getDefaultFileName());
+		File tempFile = FileIO.createNewEmptyPictureFile(FileIO.getDefaultFileName());
 		if (tempFile != null) {
 			cameraImageUri = Uri.fromFile(tempFile);
 		}

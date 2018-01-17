@@ -56,6 +56,7 @@ import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.LoadCommand;
+import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
 import org.catrobat.paintroid.dialog.DialogAbout;
 import org.catrobat.paintroid.dialog.DialogTermsOfUseAndService;
@@ -75,6 +76,9 @@ import org.catrobat.paintroid.ui.TopBar;
 import org.catrobat.paintroid.ui.button.LayersAdapter;
 
 import java.io.File;
+
+import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_PATH;
+import static org.catrobat.paintroid.common.Constants.TEMP_PICTURE_NAME;
 
 public class MainActivity extends NavigationDrawerMenuActivity implements NavigationView.OnNavigationItemSelectedListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -113,7 +117,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 		String tempPicturePath = null;
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			tempPicturePath = extras.getString(getString(R.string.extra_picture_path_catroid));
+			tempPicturePath = extras.getString(PAINTROID_PICTURE_PATH);
 			Log.d(TAG, "catroidPicturePath: " + tempPicturePath);
 		}
 		if (tempPicturePath != null) {
@@ -530,22 +534,20 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 	}
 
 	private void exitToCatroid() {
-		String pictureFileName = getString(R.string.temp_picture_name);
+		String pictureFileName = TEMP_PICTURE_NAME;
 
 		if (catroidPicturePath != null) {
 			pictureFileName = catroidPicturePath;
 		} else {
 			Bundle extras = getIntent().getExtras();
 			if (extras != null) {
-				String catroidPictureName = extras
-						.getString(getString(R.string.extra_picture_name_catroid));
+				String catroidPictureName = extras.getString(Constants.PAINTROID_PICTURE_NAME);
 				if (catroidPictureName != null
 						&& catroidPictureName.length() > 0) {
 					pictureFileName = catroidPictureName;
 				}
 			}
-			pictureFileName = FileIO.createNewEmptyPictureFile(this, pictureFileName)
-					.getAbsolutePath();
+			pictureFileName = FileIO.createNewEmptyPictureFile(pictureFileName).getAbsolutePath();
 		}
 
 		Intent resultIntent = new Intent();
@@ -554,8 +556,7 @@ public class MainActivity extends NavigationDrawerMenuActivity implements Naviga
 				LayerListener.getInstance().getBitmapOfAllLayersToSave(),
 				pictureFileName, saveCopy)) {
 			Bundle bundle = new Bundle();
-			bundle.putString(getString(R.string.extra_picture_path_catroid),
-					pictureFileName);
+			bundle.putString(Constants.PAINTROID_PICTURE_PATH, pictureFileName);
 			resultIntent.putExtras(bundle);
 			setResult(RESULT_OK, resultIntent);
 		} else {

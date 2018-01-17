@@ -32,6 +32,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
@@ -221,7 +222,7 @@ public class ToolOnBackPressedTests {
 
 		String pathToFile = launchActivityRule.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 				+ File.separator
-				+ launchActivityRule.getActivity().getString(R.string.temp_picture_name)
+				+ Constants.TEMP_PICTURE_NAME
 				+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
@@ -281,9 +282,9 @@ public class ToolOnBackPressedTests {
 
 		String pathToFile =
 				Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-						+ launchActivityRule.getActivity().getString(R.string.ext_storage_directory_name)
+						+ Constants.EXT_STORAGE_DIRECTORY_NAME
 						+ File.separator
-						+ launchActivityRule.getActivity().getString(R.string.temp_picture_name)
+						+ Constants.TEMP_PICTURE_NAME
 						+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
@@ -314,7 +315,7 @@ public class ToolOnBackPressedTests {
 
 		String pathToFile = launchActivityRule.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 				+ File.separator
-				+ launchActivityRule.getActivity().getString(R.string.temp_picture_name)
+				+ Constants.TEMP_PICTURE_NAME
 				+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
