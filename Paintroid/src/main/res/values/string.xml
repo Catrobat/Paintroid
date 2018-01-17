@@ -135,14 +135,6 @@
     <string name="layer_invisible">All layers invisible</string>
     <string name="layer_merged">Layers merged</string>
 
-    <!-- Extras -->
-    <string name="ext_storage_directory_name" translatable="false">Pocket Paint</string>
-    <string name="extra_picture_path_catroid" translatable="false">org.catrobat.extra.PAINTROID_PICTURE_PATH</string>
-    <string name="extra_picture_name_catroid" translatable="false">org.catrobat.extra.PAINTROID_PICTURE_NAME</string>
-    <string name="extra_x_value" translatable="false" tools:ignore="UnusedResources">org.catrobat.extra.PAINTROID_X</string>
-    <string name="extra_y_value" translatable="false" tools:ignore="UnusedResources">org.catrobat.extra.PAINTROID_Y</string>
-    <!-- Return to Catroid -->
-    <string name="temp_picture_name" translatable="false">catroidTemp</string>
     <string name="license_url" translatable="false">http://developer.catrobat.org/licenses</string>
 
     <string name="terms_of_use_and_service_url" translatable="false">http://developer.catrobat.org/terms_of_use_and_service</string>

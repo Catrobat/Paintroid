@@ -81,11 +81,6 @@ public final class EspressoUtils {
 	public static final Paint.Cap DEFAULT_STROKE_CAP = Paint.Cap.ROUND;
 
 	public static final int DEFAULT_STROKE_WIDTH = 25;
-
-	public static final String EXTRA_CATROID_PICTURE_PATH_NAME = "org.catrobat.extra.PAINTROID_PICTURE_PATH";
-
-	public static final String EXTRA_CATROID_PICTURE_NAME_NAME = "org.catrobat.extra.PAINTROID_PICTURE_NAME";
-
 	public static final int COLOR_CHOOSER_PRESET_BLACK_BUTTON_ID = 16;
 
 	public static final int GREEN_COLOR_PICKER_BUTTON_POSITION = 2;
