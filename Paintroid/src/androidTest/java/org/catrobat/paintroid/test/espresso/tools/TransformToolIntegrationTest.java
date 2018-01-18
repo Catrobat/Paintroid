@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.test.espresso.Espresso;
@@ -41,6 +42,7 @@ import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
+import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -59,6 +61,7 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.addNewLaye
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeLayerMenu;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openLayerMenu;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectLayer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
@@ -78,6 +81,10 @@ public class TransformToolIntegrationTest {
 	private PointF pointOnScreenLeft;
 	private PointF pointOnScreenRight;
 	private PointF pointOnScreenMiddle;
+	PointF pointOnTopLeft;
+	PointF pointOnBottomLeft;
+	PointF pointOnBottomRight;
+	PointF pointOnTopRight;
 	private ActivityHelper activityHelper;
 	private IdlingResource dialogWait;
 
@@ -93,6 +100,10 @@ public class TransformToolIntegrationTest {
 		pointOnScreenLeft = new PointF(displayWidth * 0.25f, displayHeight * 0.5f);
 		pointOnScreenRight = new PointF(displayWidth * 0.75f, displayHeight * 0.5f);
 		pointOnScreenMiddle = new PointF(displayWidth * 0.5f, displayHeight * 0.5f);
+		pointOnTopLeft = new PointF(displayWidth * 0.25f, displayHeight * 0.15f);
+		pointOnBottomLeft = new PointF(displayWidth * 0.15f, displayHeight * 0.60f);
+		pointOnBottomRight = new PointF(displayWidth * 0.75f, displayHeight * 0.85f);
+		pointOnTopRight = new PointF(displayWidth * 0.75f, displayHeight * 0.40f);
 	}
 
 	@After
@@ -214,6 +225,146 @@ public class TransformToolIntegrationTest {
 			assertEquals("Wrong bitmap width after redo rotating", bitmapHeightOnStartup, layer.getImage().getWidth());
 			assertEquals("Wrong bitmap height after redo rotating", bitmapWidthOnStartup, layer.getImage().getHeight());
 		}
+	}
+
+	@Test
+	public void testRotateLeft() throws NoSuchFieldException, IllegalAccessException {
+		selectTool(ToolType.SHAPE);
+		onView(withId(R.id.tools_rectangle)).perform(click());
+		selectColorPickerPresetSelectorColor(2);
+		GeometricFillTool geometricFillTool = (GeometricFillTool) PaintroidApplication.currentTool;
+		geometricFillTool.toolPosition.set(pointOnTopLeft);
+		onView(isRoot()).perform(touchAt(pointOnTopLeft));
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_left_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnBottomLeft));
+		int toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_left_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnBottomRight));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_left_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnTopRight));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_left_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnTopLeft));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+	}
+
+	@Test
+	public void testRotateRight() throws NoSuchFieldException, IllegalAccessException {
+		selectTool(ToolType.SHAPE);
+		onView(withId(R.id.tools_rectangle)).perform(click());
+		selectColorPickerPresetSelectorColor(2);
+		GeometricFillTool geometricFillTool = (GeometricFillTool) PaintroidApplication.currentTool;
+		geometricFillTool.toolPosition.set(pointOnTopLeft);
+		onView(isRoot()).perform(touchAt(pointOnTopLeft));
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_right_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnTopRight));
+		int toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_right_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnBottomRight));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_right_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnBottomLeft));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_right_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnTopLeft));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+	}
+
+	@Test
+	public void testRotateMultipleColors() throws NoSuchFieldException, IllegalAccessException {
+		selectTool(ToolType.SHAPE);
+		onView(withId(R.id.tools_rectangle)).perform(click());
+		GeometricFillTool geometricFillTool = (GeometricFillTool) PaintroidApplication.currentTool;
+		geometricFillTool.toolPosition.set(pointOnTopLeft);
+		onView(isRoot()).perform(touchAt(pointOnTopLeft));
+		selectColorPickerPresetSelectorColor(2);
+		geometricFillTool.toolPosition.set(pointOnBottomRight);
+		onView(isRoot()).perform(touchAt(pointOnBottomRight));
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_right_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnTopRight));
+		int toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be black", Color.BLACK, toolColor);
+		onView(isRoot()).perform(touchAt(pointOnBottomLeft));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_right_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnBottomRight));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be black", Color.BLACK, toolColor);
+		onView(isRoot()).perform(touchAt(pointOnTopLeft));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_right_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnBottomLeft));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be black", Color.BLACK, toolColor);
+		onView(isRoot()).perform(touchAt(pointOnTopRight));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
+
+		selectTool(ToolType.TRANSFORM);
+		onView(withId(R.id.transform_rotate_right_btn)).perform(click());
+		onView(withId(R.id.tools_transform)).perform(click());
+		selectTool(ToolType.PIPETTE);
+		onView(isRoot()).perform(touchAt(pointOnTopLeft));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be black", Color.BLACK, toolColor);
+		onView(isRoot()).perform(touchAt(pointOnBottomRight));
+		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Tool color should be green", -16283897, toolColor);
 	}
 
 	@Ignore("Enable with PAINT-192")
