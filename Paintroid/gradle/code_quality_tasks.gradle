@@ -21,7 +21,7 @@ task checkstyle(type: Checkstyle) {
     configFile file('config/checkstyle.xml')
     source '.'
     include '**/*.java', '**/*.xml', '**/*.gradle'
-    exclude '**/gen/**', '**/build/**', 'libraryProjects/**', '**/.idea/**', '**/test/integration/**'
+    exclude '**/gen/**', '**/build/**', 'libraryProjects/**', '**/.idea/**'
 
     classpath = files()
 
@@ -40,7 +40,7 @@ task pmd(type: Pmd) {
 
     source '.'
     include '**/*.java'
-    exclude '**/gen/**', '**/build/**', '**/res/**', '**/test/integration/**'
+    exclude '**/gen/**', '**/build/**', '**/res/**'
 
     ignoreFailures false
 

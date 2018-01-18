@@ -36,6 +36,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -207,7 +208,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertFalse(checkIfInDrawMode);
 		testmBitmapPaint = CursorTool.BITMAP_PAINT;
 		testmSecondaryShapeColor = ((CursorTool) toolToTest).cursorToolSecondaryShapeColor;
-		assertTrue(testmBitmapPaint.getColor() != testmSecondaryShapeColor);
+		assertNotEquals(testmBitmapPaint.getColor(), testmSecondaryShapeColor);
 
 		toolToTest.changePaintColor(Color.GREEN);
 		toolToTest.handleDown(point);
@@ -226,7 +227,7 @@ public class CursorToolTest extends BaseToolTest {
 		assertFalse(checkIfInDrawMode);
 		testmBitmapPaint2 = CursorTool.BITMAP_PAINT;
 		testmSecondaryShapeColor2 = ((CursorTool) toolToTest).cursorToolSecondaryShapeColor;
-		assertTrue(testmBitmapPaint2.getColor() != testmSecondaryShapeColor2);
+		assertNotEquals(testmBitmapPaint2.getColor(), testmSecondaryShapeColor2);
 
 		// test if color also changes if cursor already active
 		toolToTest.handleDown(point);

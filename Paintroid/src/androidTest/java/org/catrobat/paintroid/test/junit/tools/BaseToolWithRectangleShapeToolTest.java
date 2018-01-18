@@ -35,7 +35,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -232,8 +232,8 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		float newHeight = ((BaseToolWithRectangleShape) toolToTest).boxHeight;
 		PointF newPosition = ((BaseToolWithRectangleShape) toolToTest).toolPosition;
 
-		assertTrue("width should be the same", rectWidth == newWidth);
-		assertTrue("height should be the same", rectHeight == newHeight);
+		assertEquals("width should be the same", rectWidth, newWidth, Float.MIN_VALUE);
+		assertEquals("height should be the same", rectHeight, newHeight, Float.MIN_VALUE);
 		assertTrue("position should have moved", (newPosition.x == dragToX) && (newPosition.y == dragToY));
 	}
 
@@ -403,7 +403,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		toolToTest.handleMove(newPosition);
 		toolToTest.handleUp(newPosition);
 		float newRotation = ((BaseToolWithRectangleShape) toolToTest).boxRotation;
-		assertTrue("Rotation value should be 90 degree.", newRotation == 90);
+		assertEquals("Rotation value should be 90 degree.", newRotation, 90, Float.MIN_VALUE);
 
 		currentPosition = newPosition;
 		newPosition = new PointF(bottomRightRotationPoint.x, bottomRightRotationPoint.y);
@@ -411,7 +411,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		toolToTest.handleMove(newPosition);
 		toolToTest.handleUp(newPosition);
 		newRotation = ((BaseToolWithRectangleShape) toolToTest).boxRotation;
-		assertTrue("Rotation value should be 180 degree.", newRotation == 180);
+		assertEquals("Rotation value should be 180 degree.", newRotation, 180, Float.MIN_VALUE);
 
 		currentPosition = newPosition;
 		newPosition = new PointF(bottomLeftRotationPoint.x, bottomLeftRotationPoint.y);
@@ -419,7 +419,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		toolToTest.handleMove(newPosition);
 		toolToTest.handleUp(newPosition);
 		newRotation = ((BaseToolWithRectangleShape) toolToTest).boxRotation;
-		assertTrue("Rotation value should be -90 degree.", newRotation == -90);
+		assertEquals("Rotation value should be -90 degree.", newRotation, -90, Float.MIN_VALUE);
 
 		currentPosition = newPosition;
 		newPosition = new PointF(topLeftRotationPoint.x, topLeftRotationPoint.y);
@@ -427,7 +427,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		toolToTest.handleMove(newPosition);
 		toolToTest.handleUp(newPosition);
 		newRotation = ((BaseToolWithRectangleShape) toolToTest).boxRotation;
-		assertTrue("Rotation value should be 0 degree.", newRotation == 0);
+		assertEquals("Rotation value should be 0 degree.", newRotation, 0, Float.MIN_VALUE);
 	}
 
 	@UiThreadTest
@@ -446,7 +446,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		toolToTest.handleDown(noRotationPoint);
 		toolToTest.handleMove(destinationPoint);
 		float newRotation = ((BaseToolWithRectangleShape) toolToTest).boxRotation;
-		assertTrue("Rectangle should not rotate.", newRotation == 0);
+		assertEquals("Rectangle should not rotate.", newRotation, 0, Float.MIN_VALUE);
 		toolToTest.handleMove(noRotationPoint);
 		toolToTest.handleUp(noRotationPoint);
 
@@ -454,7 +454,7 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 		toolToTest.handleMove(destinationPoint);
 		toolToTest.handleUp(destinationPoint);
 		newRotation = ((BaseToolWithRectangleShape) toolToTest).boxRotation;
-		assertFalse("Rectangle should rotate.", newRotation == 0);
+		assertNotEquals("Rectangle should rotate.", newRotation, 0);
 	}
 
 	private void doResize(float dragFromX, float dragToX, float dragFromY, float dragToY, boolean resizeWidth,
@@ -479,34 +479,34 @@ public class BaseToolWithRectangleShapeToolTest extends BaseToolTest {
 			if (resizeWidth) {
 				assertTrue("new width should be bigger", newWidth > rectWidth);
 			} else {
-				assertTrue("height should not have changed", newWidth == rectWidth);
+				assertEquals("height should not have changed", newWidth, rectWidth, Float.MIN_VALUE);
 			}
 			if (resizeHeight) {
 				assertTrue("new width should be bigger", newHeight > rectHeight);
 			} else {
-				assertTrue("height should not have changed", newHeight == rectHeight);
+				assertEquals("height should not have changed", newHeight, rectHeight, Float.MIN_VALUE);
 			}
 			if (isCorner) {
-				assertTrue("resizing should be in aspect ratio", newHeight == newWidth);
+				assertEquals("resizing should be in aspect ratio", newHeight, newWidth, Float.MIN_VALUE);
 			}
 		} else {
 			if (resizeWidth) {
 				assertTrue("new height should be smaller", newWidth < rectWidth);
 			} else {
-				assertTrue("height should not have changed", newWidth == rectWidth);
+				assertEquals("height should not have changed", newWidth, rectWidth, Float.MIN_VALUE);
 			}
 			if (resizeHeight) {
 				assertTrue("new width should be smaller", newHeight < rectHeight);
 			} else {
-				assertTrue("height should not have changed", newHeight == rectHeight);
+				assertEquals("height should not have changed", newHeight, rectHeight, Float.MIN_VALUE);
 			}
 			if (isCorner) {
-				assertTrue("resizing should be in aspect ratio", newHeight == newWidth);
+				assertEquals("resizing should be in aspect ratio", newHeight, newWidth, Float.MIN_VALUE);
 			}
 		}
 
-		assertTrue("position should be the same", (newPosition.x == rectPosition.x)
-				&& (newPosition.y == rectPosition.y));
+		assertEquals("position should be the same", newPosition.x, rectPosition.x, Float.MIN_VALUE);
+		assertEquals("position should be the same", newPosition.y, rectPosition.y, Float.MIN_VALUE);
 		((BaseToolWithRectangleShape) toolToTest).boxWidth = rectWidth;
 		((BaseToolWithRectangleShape) toolToTest).boxHeight = rectHeight;
 	}

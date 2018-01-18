@@ -174,7 +174,7 @@ public class StampToolIntegrationTest {
 			}
 
 			boolean rotationOk = (rotationPositive + ROTATION_TOLERANCE > angle) && (rotationPositive - ROTATION_TOLERANCE < angle);
-			assertEquals("Wrong rotationvalue was calculated", true, rotationOk);
+			assertTrue("Wrong rotationvalue was calculated", rotationOk);
 		}
 	}
 

@@ -269,7 +269,7 @@ public class DrawToolTests extends BaseToolTest {
 		Command command = (Command) commandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PointCommand);
 		PointF point = ((PointCommand) command).point;
-		assertTrue(tab.equals(point.x, point.y));
+		assertEquals(tab, point);
 		Paint paint = ((BaseCommand) command).paint;
 		assertPaintEquals(this.paint, paint);
 	}
@@ -292,7 +292,7 @@ public class DrawToolTests extends BaseToolTest {
 		Command command = (Command) commandManagerStub.getCall("commitCommandToLayer", 0).get(1);
 		assertTrue(command instanceof PointCommand);
 		PointF point = ((PointCommand) command).point;
-		assertTrue(tab1.equals(point.x, point.y));
+		assertEquals(tab1, point);
 		Paint paint = ((BaseCommand) command).paint;
 		assertPaintEquals(this.paint, paint);
 	}

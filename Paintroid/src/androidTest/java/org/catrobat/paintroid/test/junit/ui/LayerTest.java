@@ -30,7 +30,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class LayerTest {
@@ -72,7 +72,7 @@ public class LayerTest {
 		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(1, 2, Color.BLACK);
 		LayerListener.getInstance().createLayer();
 		int idSecondLayer = LayerListener.getInstance().getCurrentLayer().getLayerID();
-		assertFalse("New Layer should be selected", idFirstLayer == idSecondLayer);
+		assertNotEquals("New Layer should be selected", idFirstLayer, idSecondLayer);
 
 		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(1, 1, Color.BLUE);
 		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(2, 1, Color.BLUE);

@@ -223,7 +223,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 	private void launchHomeScreen() {
 		session.setFirstTimeLaunch(false);
-		Intent mainActivityIntent = new Intent(WelcomeActivity.this, MainActivity.class);
+		Intent mainActivityIntent = new Intent(this, MainActivity.class);
 		mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 		startActivity(mainActivityIntent);
 		finish();
