@@ -99,12 +99,7 @@ public class Perspective implements Serializable {
 	}
 
 	public synchronized void multiplyScale(float factor) {
-		surfaceScale *= factor;
-		if (surfaceScale < MIN_SCALE) {
-			surfaceScale = MIN_SCALE;
-		} else if (surfaceScale > MAX_SCALE) {
-			surfaceScale = MAX_SCALE;
-		}
+		setScale(surfaceScale * factor);
 	}
 
 	public synchronized void translate(float dx, float dy) {
@@ -185,11 +180,7 @@ public class Perspective implements Serializable {
 	}
 
 	public synchronized void setScale(float scale) {
-		if (scale >= MIN_SCALE) {
-			surfaceScale = scale;
-		} else {
-			surfaceScale = MIN_SCALE;
-		}
+		surfaceScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
 	}
 
 	public float getScaleForCenterBitmap() {
