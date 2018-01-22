@@ -86,6 +86,7 @@ public final class EspressoUtils {
 	public static final int DEFAULT_STROKE_WIDTH = 25;
 
 	public static final int GREEN_COLOR_PICKER_BUTTON_POSITION = 2;
+	public static final int BROWN2_COLOR_PICKER_BUTTON_POSITION = 5;
 	public static final int BLACK_COLOR_PICKER_BUTTON_POSITION = 16;
 	public static final int WHITE_COLOR_PICKER_BUTTON_POSITION = 18;
 	public static final int TRANSPARENT_COLOR_PICKER_BUTTON_POSITION = 19;

@@ -22,6 +22,9 @@ package org.catrobat.paintroid.test.espresso.util.wrappers;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.test.InstrumentationRegistry;
+import android.support.v4.content.ContextCompat;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -54,6 +57,11 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 		float[] coordinates = coordinateProvider.calculateCoordinates(drawingSurface);
 		assertEquals(expectedColor, drawingSurface.getPixel(new PointF(coordinates[0], coordinates[1])));
 		return this;
+	}
+
+	public DrawingSurfaceInteraction checkPixelColorResource(@ColorRes int expectedColorRes, BitmapLocationProvider coordinateProvider) {
+		int expectedColor = ContextCompat.getColor(InstrumentationRegistry.getTargetContext(), expectedColorRes);
+		return checkPixelColor(expectedColor, coordinateProvider);
 	}
 
 	public DrawingSurfaceInteraction checkBitmapDimension(int expectedWidth, int expectedHeight) {

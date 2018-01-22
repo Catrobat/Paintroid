@@ -90,6 +90,12 @@ public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 			return calculatePercentageOffset(view, .5f, 1f);
 		}
 	},
+	OUTSIDE_MIDDLE_RIGHT {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, 1.5f, .5f);
+		}
+	},
 	TOOL_POSITION {
 		@Override
 		public float[] calculateCoordinates(View view) {
