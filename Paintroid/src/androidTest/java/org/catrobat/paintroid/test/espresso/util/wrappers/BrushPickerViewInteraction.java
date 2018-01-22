@@ -24,39 +24,30 @@ import android.support.test.espresso.ViewInteraction;
 import org.catrobat.paintroid.R;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-public final class TopBarViewInteraction extends CustomViewInteraction {
-	private TopBarViewInteraction() {
-		super(onView(withId(R.id.layout_top_bar)));
+public final class BrushPickerViewInteraction extends CustomViewInteraction {
+	private BrushPickerViewInteraction() {
+		super(onView(withId(R.id.main_tool_options)));
 	}
 
-	public static TopBarViewInteraction onTopBarView() {
-		return new TopBarViewInteraction();
+	public static BrushPickerViewInteraction onBrushPickerView() {
+		return new BrushPickerViewInteraction();
 	}
 
-	public ViewInteraction onUndoButton() {
-		return onView(withId(R.id.btn_top_undo));
+	public ViewInteraction onStrokeWidthSeekBar() {
+		return onView(withId(R.id.stroke_width_seek_bar));
 	}
 
-	public ViewInteraction onRedoButton() {
-		return onView(withId(R.id.btn_top_redo));
+	public ViewInteraction onStrokeWidthTextView() {
+		return onView(withId(R.id.stroke_width_width_text));
 	}
 
-	public ViewInteraction onPaletteButton() {
-		return onView(withId(R.id.btn_top_color_palette));
+	public ViewInteraction onStrokeCapSquareView() {
+		return onView(withId(R.id.stroke_rbtn_rect));
 	}
 
-	public TopBarViewInteraction performUndo() {
-		onUndoButton()
-				.perform(click());
-		return this;
-	}
-
-	public TopBarViewInteraction performRedo() {
-		onRedoButton()
-				.perform(click());
-		return this;
+	public ViewInteraction onStrokeCapRoundView() {
+		return onView(withId(R.id.stroke_rbtn_circle));
 	}
 }

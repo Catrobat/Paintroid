@@ -20,10 +20,15 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import android.graphics.Bitmap;
+import android.graphics.PointF;
+import android.support.annotation.ColorInt;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
@@ -42,6 +47,13 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 
 	public static DrawingSurfaceInteraction onDrawingSurfaceView() {
 		return new DrawingSurfaceInteraction();
+	}
+
+	public DrawingSurfaceInteraction checkPixelColor(@ColorInt int expectedColor, BitmapLocationProvider coordinateProvider) {
+		DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
+		float[] coordinates = coordinateProvider.calculateCoordinates(drawingSurface);
+		assertEquals(expectedColor, drawingSurface.getPixel(new PointF(coordinates[0], coordinates[1])));
+		return this;
 	}
 
 	public DrawingSurfaceInteraction checkBitmapDimension(int expectedWidth, int expectedHeight) {

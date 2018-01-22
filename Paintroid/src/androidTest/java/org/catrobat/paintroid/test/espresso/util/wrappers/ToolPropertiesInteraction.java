@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
+import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.test.InstrumentationRegistry;
@@ -45,5 +47,17 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 	public ToolPropertiesInteraction checkColorResource(@ColorRes int expectedColorRes) {
 		int expectedColor = ContextCompat.getColor(InstrumentationRegistry.getTargetContext(), expectedColorRes);
 		return checkColor(expectedColor);
+	}
+
+	public ToolPropertiesInteraction checkCap(Cap expectedCap) {
+		Paint strokePaint = PaintroidApplication.currentTool.getDrawPaint();
+		assertEquals(expectedCap, strokePaint.getStrokeCap());
+		return this;
+	}
+
+	public ToolPropertiesInteraction checkStrokeWidth(float expectedStrokeWidth) {
+		Paint strokePaint = PaintroidApplication.currentTool.getDrawPaint();
+		assertEquals(expectedStrokeWidth, strokePaint.getStrokeWidth(), Float.MIN_VALUE);
+		return this;
 	}
 }
