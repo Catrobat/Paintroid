@@ -30,35 +30,53 @@ public enum BitmapLocationProvider implements CoordinatesProvider{
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, .5f, .5f);
 		}
-	}, MIDDLE_RIGHT {
+	},
+	MIDDLE_RIGHT {
 		@Override
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, 1f, .5f);
 		}
-	}, OUTSIDE_MIDDLE_RIGHT {
+	},
+	OUTSIDE_MIDDLE_RIGHT {
 		@Override
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, 1.5f, .5f);
 		}
-	}, HALFWAY_RIGHT_MIDDLE {
+	},
+	HALFWAY_RIGHT_MIDDLE {
 		@Override
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, .75f, .5f);
 		}
-	}, HALFWAY_LEFT_MIDDLE {
+	},
+	HALFWAY_LEFT_MIDDLE {
 		@Override
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, .25f, .5f);
 		}
-	}, HALFWAY_BOTTOM_MIDDLE {
+	},
+	HALFWAY_BOTTOM_MIDDLE {
 		@Override
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, .5f, .75f);
 		}
-	}, HALFWAY_TOP_MIDDLE {
+	},
+	HALFWAY_TOP_MIDDLE {
 		@Override
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, .5f, .25f);
+		}
+	},
+	HALFWAY_TOP_LEFT {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, .25f, .25f);
+		}
+	},
+	HALFWAY_BOTTOM_RIGHT {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, .75f, .75f);
 		}
 	};
 
