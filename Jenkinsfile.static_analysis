@@ -1,0 +1,51 @@
+#!groovy
+
+pipeline {
+	agent {
+		label 'NoDevice'
+	}
+
+	environment {
+		ANDROID_SDK_ROOT = "/home/catroid/android-sdk-tools"
+		ANDROID_SDK_HOME = "${WORKSPACE}"
+		// Needed for compatibiliby to current Jenkins-wide Envs
+		// Can be removed, once all builds are migrated to Pipeline
+		ANDROID_HOME = ""
+		ANDROID_SDK_LOCATION = ""
+	}
+
+	options {
+		timeout(time: 1, unit: 'HOURS')
+		timestamps()
+	}
+
+	stages {
+		stage('Checkout') {
+			steps {
+				checkout scm
+			}
+		}
+
+		stage('Setup Android SDK') {
+			steps {
+				lock('update-android-sdk') {
+					sh "jenkins_android_sdk_installer -g ${WORKSPACE}/Paintroid/build.gradle"
+				}
+			}
+		}
+
+		stage('Static Analysis') {
+			steps {
+				sh "${WORKSPACE}/gradlew pmd checkstyle lint"
+			}
+		}
+
+		stage('Publish Test Results') {
+			steps {
+				pmd         canComputeNew: false, defaultEncoding: '', healthy: '', pattern: 'Paintroid/build/reports/pmd.xml',        unHealthy: ''
+				checkstyle  canComputeNew: false, defaultEncoding: '', healthy: '', pattern: 'Paintroid/build/reports/checkstyle.xml', unHealthy: ''
+				androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: 'Paintroid/build/reports/lint*.xml',      unHealthy: ''
+			}
+		}
+	}
+}
