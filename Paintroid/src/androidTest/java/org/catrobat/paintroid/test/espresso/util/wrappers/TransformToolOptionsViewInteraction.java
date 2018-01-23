@@ -57,4 +57,10 @@ public final class TransformToolOptionsViewInteraction extends CustomViewInterac
 				.perform(click());
 		return this;
 	}
+
+	public TransformToolOptionsViewInteraction performFlipHorizontal() {
+		onView(withId(R.id.transform_flip_horizontal_btn))
+				.perform(click());
+		return this;
+	}
 }
