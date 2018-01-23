@@ -111,14 +111,6 @@ public class TopBar extends Observable implements View.OnClickListener, OnUpdate
 		return PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
 	}
 
-	public ImageButton getUndoButton() {
-		return undoButton;
-	}
-
-	public ImageButton getRedoButton() {
-		return redoButton;
-	}
-
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {

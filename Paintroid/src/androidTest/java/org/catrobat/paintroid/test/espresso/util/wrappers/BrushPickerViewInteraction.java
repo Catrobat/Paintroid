@@ -19,42 +19,35 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
+import android.support.test.espresso.ViewInteraction;
+
 import org.catrobat.paintroid.R;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-public final class TransformToolOptionsViewInteraction extends CustomViewInteraction {
-	private TransformToolOptionsViewInteraction() {
+public final class BrushPickerViewInteraction extends CustomViewInteraction {
+	private BrushPickerViewInteraction() {
 		super(onView(withId(R.id.main_tool_options)));
 	}
 
-	public static TransformToolOptionsViewInteraction onTransformToolOptionsView() {
-		return new TransformToolOptionsViewInteraction();
+	public static BrushPickerViewInteraction onBrushPickerView() {
+		return new BrushPickerViewInteraction();
 	}
 
-	public TransformToolOptionsViewInteraction performAutoCrop() {
-		onView(withId(R.id.transform_auto_crop_btn))
-				.perform(click());
-		return this;
+	public ViewInteraction onStrokeWidthSeekBar() {
+		return onView(withId(R.id.stroke_width_seek_bar));
 	}
 
-	public TransformToolOptionsViewInteraction performRotateClockwise() {
-		onView(withId(R.id.transform_rotate_right_btn))
-				.perform(click());
-		return this;
+	public ViewInteraction onStrokeWidthTextView() {
+		return onView(withId(R.id.stroke_width_width_text));
 	}
 
-	public TransformToolOptionsViewInteraction performRotateCounterClockwise() {
-		onView(withId(R.id.transform_rotate_left_btn))
-				.perform(click());
-		return this;
+	public ViewInteraction onStrokeCapSquareView() {
+		return onView(withId(R.id.stroke_rbtn_rect));
 	}
 
-	public TransformToolOptionsViewInteraction performFlipVertical() {
-		onView(withId(R.id.transform_flip_vertical_btn))
-				.perform(click());
-		return this;
+	public ViewInteraction onStrokeCapRoundView() {
+		return onView(withId(R.id.stroke_rbtn_circle));
 	}
 }

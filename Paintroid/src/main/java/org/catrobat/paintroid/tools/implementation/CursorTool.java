@@ -40,6 +40,7 @@ import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.ToastFactory;
 
 public class CursorTool extends BaseToolWithShape {
 
@@ -314,14 +315,14 @@ public class CursorTool extends BaseToolWithShape {
 				addPathCommand(toolPosition);
 				cursorToolSecondaryShapeColor = BITMAP_PAINT.getColor();
 			} else {
-				Toast.makeText(context, R.string.cursor_draw_inactive, Toast.LENGTH_SHORT).show();
+				ToastFactory.makeText(context, R.string.cursor_draw_inactive, Toast.LENGTH_SHORT).show();
 				toolInDrawMode = false;
 				cursorToolSecondaryShapeColor = Color.LTGRAY;
 			}
 		} else {
 			if (MOVE_TOLERANCE >= movedDistance.x
 					&& MOVE_TOLERANCE >= movedDistance.y) {
-				Toast.makeText(context, R.string.cursor_draw_active, Toast.LENGTH_SHORT).show();
+				ToastFactory.makeText(context, R.string.cursor_draw_active, Toast.LENGTH_SHORT).show();
 				toolInDrawMode = true;
 				cursorToolSecondaryShapeColor = BITMAP_PAINT.getColor();
 				addPointCommand(toolPosition);

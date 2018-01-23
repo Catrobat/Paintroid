@@ -62,7 +62,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.COLOR_CHOOSER_PRESET_BLACK_BUTTON_ID;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.BLACK_COLOR_PICKER_BUTTON_POSITION;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
@@ -502,7 +502,7 @@ public class TextToolIntegrationTest {
 		assertEquals("Text box position x should stay the same after color change", boxPositionX, getToolMemberBoxPosition().x, EQUALS_DELTA);
 		assertEquals("Text box position y should stay the same after color change", boxPositionY, getToolMemberBoxPosition().y, EQUALS_DELTA);
 
-		selectColorPickerPresetSelectorColor(COLOR_CHOOSER_PRESET_BLACK_BUTTON_ID);
+		selectColorPickerPresetSelectorColor(BLACK_COLOR_PICKER_BUTTON_POSITION);
 	}
 
 	@Test

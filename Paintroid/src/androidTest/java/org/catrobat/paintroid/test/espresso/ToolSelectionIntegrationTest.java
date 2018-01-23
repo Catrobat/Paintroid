@@ -56,9 +56,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusbarHeight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.clickOutside;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isToast;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
@@ -225,14 +224,11 @@ public class ToolSelectionIntegrationTest {
 
 	@Test
 	public void testToolSelectionToast() {
-		// Wait for all previous toasts to disappear
-		waitMillis(1000);
-
 		ToolType toolType = ToolType.CURSOR;
 		onToolBarView()
 				.performSelectTool(toolType);
-		onView(withText(toolType.getNameResource())).inRoot(isToast())
-				.check(matches(isDisplayed()));
+
+		waitForToast(withText(toolType.getNameResource()), 1000);
 	}
 
 	@Test

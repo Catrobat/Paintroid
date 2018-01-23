@@ -19,22 +19,21 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PointF;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction;
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction;
+import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
-import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,50 +42,65 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.BLACK_COLOR_PICKER_BUTTON_POSITION;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.GREEN_COLOR_PICKER_BUTTON_POSITION;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.WHITE_COLOR_PICKER_BUTTON_POSITION;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertSame;
 
 @RunWith(AndroidJUnit4.class)
 public class LayerIntegrationTest {
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
-	private int displayWidth;
-	private int displayHeight;
+	private DialogHiddenIdlingResource dialogWait;
+	private int bitmapHeight;
+	private int bitmapWidth;
 
 	@Before
 	public void setUp() throws Exception {
-		ActivityHelper activityHelper = new ActivityHelper(launchActivityRule.getActivity());
-		displayWidth = activityHelper.getDisplayWidth();
-		displayHeight = activityHelper.getDisplayHeight();
+		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
+		IdlingRegistry.getInstance().register(dialogWait);
+
+		Bitmap image = LayerListener.getInstance().getCurrentLayer().getImage();
+		bitmapHeight = image.getHeight();
+		bitmapWidth = image.getWidth();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		IdlingRegistry.getInstance().unregister(dialogWait);
 	}
 
 	@Test
 	public void testShowLayerMenu() {
-		onLayerMenuView().performOpen();
+		onLayerMenuView()
+				.performOpen()
+				.check(matches(isDisplayed()));
 	}
 
 	@Test
 	public void testInitialSetup() {
+		onLayerMenuView()
+				.check(matches(not(isDisplayed())));
 		onLayerMenuView().onButtonAdd()
 				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
 		onLayerMenuView().onButtonDelete()
@@ -95,30 +109,32 @@ public class LayerIntegrationTest {
 
 	@Test
 	public void testAddOneLayer() {
-		int numLayersBefore = LayerListener.getInstance().getAdapter().getCount();
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performClose();
-		int numLayersAfter = LayerListener.getInstance().getAdapter().getCount();
-		assertSame("One Layer should have been added", numLayersBefore + 1, numLayersAfter);
+		onLayerMenuView()
+				.checkLayerCount(1)
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2);
 	}
 
 	@Test
 	public void testTryAddMoreLayersThanLimit() {
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-
-		assertEquals("Only four layers should exist", 4, LayerListener.getInstance().getAdapter().getCount());
+		onLayerMenuView()
+				.checkLayerCount(1)
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.checkLayerCount(4)
+				.performAddLayer()
+				.checkLayerCount(4);
 	}
 
 	@Test
 	public void testButtonsAddOneLayer() {
 		onLayerMenuView()
 				.performOpen()
-				.performAddLayer();
+				.performAddLayer()
+				.checkLayerCount(2);
 
 		onLayerMenuView().onButtonAdd()
 				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
@@ -127,7 +143,8 @@ public class LayerIntegrationTest {
 
 		onLayerMenuView()
 				.performAddLayer()
-				.performAddLayer();
+				.performAddLayer()
+				.checkLayerCount(4);
 
 		onLayerMenuView().onButtonAdd()
 				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_new_disabled))));
@@ -137,7 +154,8 @@ public class LayerIntegrationTest {
 		onLayerMenuView()
 				.performDeleteLayer()
 				.performDeleteLayer()
-				.performDeleteLayer();
+				.performDeleteLayer()
+				.checkLayerCount(1);
 
 		onLayerMenuView().onButtonAdd()
 				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
@@ -152,14 +170,13 @@ public class LayerIntegrationTest {
 				.performAddLayer()
 				.performAddLayer()
 				.performAddLayer()
-				.performClose();
+				.performClose()
+				.checkLayerCount(4);
 
 		onLayerMenuView().onButtonAdd()
 				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_new_disabled))));
 		onLayerMenuView().onButtonDelete()
 				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_delete))));
-		onLayerMenuView()
-				.checkLayerCount(4);
 
 		onNavigationDrawer()
 				.performOpen();
@@ -182,31 +199,18 @@ public class LayerIntegrationTest {
 	public void testUndoRedoLayerAdd() {
 		onLayerMenuView()
 				.performOpen()
-				.performAddLayer();
-
-		onLayerMenuView()
+				.performAddLayer()
+				.performClose()
 				.checkLayerCount(2);
-
-		onLayerMenuView()
-				.performClose();
 
 		onTopBarView()
 				.performUndo();
 
 		onLayerMenuView()
-				.performOpen();
-
-		onLayerMenuView()
 				.checkLayerCount(1);
-
-		onLayerMenuView()
-				.performClose();
 
 		onTopBarView()
 				.performRedo();
-
-		onLayerMenuView()
-				.performOpen();
 
 		onLayerMenuView()
 				.checkLayerCount(2);
@@ -214,306 +218,340 @@ public class LayerIntegrationTest {
 
 	@Test
 	public void testDeleteEmptyLayer() {
-		int numLayersBefore = LayerListener.getInstance().getAdapter().getCount();
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		int numLayersAfter = LayerListener.getInstance().getAdapter().getCount();
-		assertEquals("One Layer should have been added", numLayersBefore + 1, numLayersAfter);
-
-		numLayersBefore = LayerListener.getInstance().getAdapter().getCount();
-		onLayerMenuView().performDeleteLayer();
-		numLayersAfter = LayerListener.getInstance().getAdapter().getCount();
-		assertEquals("One Layer should have been deleted", numLayersBefore - 1, numLayersAfter);
+		onLayerMenuView()
+				.checkLayerCount(1)
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.performDeleteLayer()
+				.checkLayerCount(1);
 	}
 
 	@Test
 	public void testDeleteFilledLayer() {
-		int numLayersBefore = LayerListener.getInstance().getAdapter().getCount();
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performClose();
-		int numLayersAfter = LayerListener.getInstance().getAdapter().getCount();
-		assertSame("One Layer should have been added", numLayersBefore + 1, numLayersAfter);
+		onLayerMenuView()
+				.checkLayerCount(1)
+				.performOpen()
+				.performAddLayer()
+				.performClose();
 
-		PointF screenPoint = new PointF(displayWidth / 2 - 10, displayHeight / 2 - 5);
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		int colorBeforeFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.FILL);
-		final int positionBlackColorButton = 16;
-		selectColorPickerPresetSelectorColor(positionBlackColorButton);
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+		selectColorPickerPresetSelectorColor(BLACK_COLOR_PICKER_BUTTON_POSITION);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		int colorAfterFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.BLACK);
 
-		assertEquals("Color should be black after fill", Color.BLACK, colorAfterFill);
+		onLayerMenuView()
+				.checkLayerCount(2)
+				.performOpen()
+				.performDeleteLayer()
+				.performClose()
+				.checkLayerCount(1);
 
-		numLayersBefore = LayerListener.getInstance().getAdapter().getCount();
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performDeleteLayer();
-		onLayerMenuView().performClose();
-		numLayersAfter = LayerListener.getInstance().getAdapter().getCount();
-		assertEquals("One Layer should have been deleted", numLayersBefore - 1, numLayersAfter);
-
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		int colorAfterDelete = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Black Layer should be deleted", colorBeforeFill, colorAfterDelete);
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
 	}
 
 	@Test
 	public void testTryDeleteOnlyLayer() {
-		int numLayers = LayerListener.getInstance().getAdapter().getCount();
-		assertEquals("Only one Layer should exist", 1, numLayers);
-
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performDeleteLayer();
-		onLayerMenuView().performClose();
-
-		numLayers = LayerListener.getInstance().getAdapter().getCount();
-		assertEquals("Still only one Layer should exist", 1, numLayers);
+		onLayerMenuView()
+				.checkLayerCount(1)
+				.performOpen()
+				.performDeleteLayer()
+				.checkLayerCount(1);
 	}
 
 	@Test
 	public void testSwitchBetweenFilledLayers() {
-		PointF screenPoint = new PointF(displayWidth / 2 - 10, displayHeight / 2 - 5);
-		final int positionWhiteColorButton = 18;
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.BLACK);
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.FILL);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		int colorAfterFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color should be black after fill", Color.BLACK, colorAfterFill);
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performClose();
 
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performClose();
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+		selectColorPickerPresetSelectorColor(WHITE_COLOR_PICKER_BUTTON_POSITION);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.WHITE);
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.FILL);
-		selectColorPickerPresetSelectorColor(positionWhiteColorButton);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		colorAfterFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color should be white after fill", Color.WHITE, colorAfterFill);
-
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performSelectLayer(1);
-		onLayerMenuView().performClose();
-		onView(isRoot()).perform(touchAt(screenPoint));
-		colorAfterFill = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color should still be white after select another Layer", Color.WHITE, colorAfterFill);
+		onLayerMenuView()
+				.performOpen()
+				.performSelectLayer(1)
+				.performClose();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.WHITE);
 	}
 
 	@Test
 	public void testMultipleLayersNewImageDiscardOld() {
-		PointF screenPoint = new PointF(displayWidth / 2 - 10, displayHeight / 2 - 5);
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performClose();
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.checkLayerCount(4)
+				.performClose();
 
-		onView(withId(R.id.toolbar)).perform(click());
-		NavigationDrawerInteraction.onNavigationDrawer().performOpen();
-		onView(withText(R.string.menu_new_image)).perform(click());
-		onView(withText(R.string.discard_button_text)).perform(click());
-		onView(withText(R.string.menu_new_image_empty_image)).perform(click());
+		onNavigationDrawer()
+				.performOpen();
+		onView(withText(R.string.menu_new_image))
+				.perform(click());
+		onView(withText(R.string.discard_button_text))
+				.perform(click());
+		onView(withText(R.string.menu_new_image_empty_image))
+				.perform(click());
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		int colorAfterNewImage = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color should be white after fill", Color.TRANSPARENT, colorAfterNewImage);
-
-		int numLayers = LayerListener.getInstance().getAdapter().getCount();
-		assertEquals("Only one empty Layer should exist", 1, numLayers);
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
+		onLayerMenuView()
+				.checkLayerCount(1);
 	}
 
 	@Test
 	public void testMultipleLayersNewImageSaveOld() {
-		PointF screenPoint = new PointF(displayWidth / 2 - 10, displayHeight / 2 - 5);
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performClose();
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.checkLayerCount(4)
+				.performClose();
 
-		onView(withId(R.id.toolbar)).perform(click());
-		NavigationDrawerInteraction.onNavigationDrawer().performOpen();
-		onView(withText(R.string.menu_new_image)).perform(click());
-		onView(withText(R.string.save_button_text)).perform(click());
-		onView(withText(R.string.menu_new_image_empty_image)).perform(click());
+		onNavigationDrawer()
+				.performOpen();
+		onView(withText(R.string.menu_new_image))
+				.perform(click());
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+		onView(withText(R.string.menu_new_image_empty_image))
+				.perform(click());
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		int colorAfterNewImage = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color should be white after fill", Color.TRANSPARENT, colorAfterNewImage);
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		int numLayers = LayerListener.getInstance().getAdapter().getCount();
-		assertEquals("Only one empty Layer should exist", 1, numLayers);
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
+
+		onLayerMenuView()
+				.checkLayerCount(1);
 	}
 
 	@Test
 	public void testResizingThroughAllLayers() {
-		int bitmapHeight = LayerListener.getInstance().getCurrentLayer().getImage().getHeight();
-		int bitmapWidth = LayerListener.getInstance().getCurrentLayer().getImage().getWidth();
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performClose();
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.performClose();
 
-		PointF screenPoint = new PointF(displayWidth / 2 - 10, displayHeight / 3 - 5);
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.TRANSFORM);
-		onView(withId(R.id.transform_auto_crop_btn)).perform(click());
-		onView(isRoot()).perform(touchAt(screenPoint));
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.performAutoCrop();
+		onToolBarView()
+				.performCloseToolOptions();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertNotEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
-			assertNotEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
-		}
+		onDrawingSurfaceView()
+				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
 
-		onView(withId(R.id.btn_top_undo)).perform(click());
+		onTopBarView()
+				.performUndo();
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
-			assertEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
-		}
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapWidth, bitmapHeight);
 
-		onView(withId(R.id.btn_top_redo)).perform(click());
+		onTopBarView()
+				.performRedo();
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertNotEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
-			assertNotEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
-		}
+		onDrawingSurfaceView()
+				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
 
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performSelectLayer(2);
-		onLayerMenuView().performClose();
-		onView(withId(R.id.btn_top_undo)).perform(click());
+		onLayerMenuView()
+				.performOpen()
+				.performSelectLayer(2)
+				.performClose();
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
-			assertEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
-		}
+		onTopBarView()
+				.performUndo();
 
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performSelectLayer(3);
-		onLayerMenuView().performClose();
-		onView(withId(R.id.btn_top_redo)).perform(click());
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapWidth, bitmapHeight);
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertNotEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
-			assertNotEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
-		}
+		onLayerMenuView()
+				.performOpen()
+				.performSelectLayer(3)
+				.performClose();
 
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performDeleteLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performClose();
+		onTopBarView()
+				.performRedo();
 
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		onView(withId(R.id.btn_top_undo)).perform(click());
+		onDrawingSurfaceView()
+				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
-			assertEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
-		}
+		onLayerMenuView()
+				.performOpen()
+				.performDeleteLayer()
+				.performAddLayer()
+				.performClose();
 
-		onView(withId(R.id.btn_top_redo)).perform(click());
+		onTopBarView()
+				.performUndo()
+				.performUndo()
+				.performUndo();
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertNotEquals("Bitmap should be cropped - wrong Height", bitmapHeight, layer.getImage().getHeight());
-			assertNotEquals("Bitmap should be cropped - wrong Width", bitmapWidth, layer.getImage().getWidth());
-		}
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapWidth, bitmapHeight);
+
+		onTopBarView()
+				.performRedo();
+
+		onDrawingSurfaceView()
+				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
 	}
 
 	@Test
 	public void testRotatingThroughAllLayers() {
-		int bitmapHeight = LayerListener.getInstance().getCurrentLayer().getImage().getHeight();
-		int bitmapWidth = LayerListener.getInstance().getCurrentLayer().getImage().getWidth();
-		PointF screenPoint = new PointF(displayWidth / 2 - 10, displayHeight / 3 - 5);
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.performClose();
 
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performClose();
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.FILL);
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.TRANSFORM);
-		onView(withId(R.id.transform_rotate_right_btn)).perform(click());
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.performRotateClockwise();
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertEquals("Bitmap should have been rotated - wrong height", bitmapWidth, layer.getImage().getHeight());
-			assertEquals("Bitmap should have been rotated - wrong width", bitmapHeight, layer.getImage().getWidth());
-		}
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		int colorAfterRotate = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color should still be black after rotate", Color.BLACK, colorAfterRotate);
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapHeight, bitmapWidth);
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.TRANSFORM);
-		onView(withId(R.id.transform_rotate_left_btn)).perform(click());
-		onView(withId(R.id.transform_rotate_left_btn)).perform(click());
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertEquals("Bitmap should have been rotated - wrong height", bitmapWidth, layer.getImage().getHeight());
-			assertEquals("Bitmap should have been rotated - wrong width", bitmapHeight, layer.getImage().getWidth());
-		}
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		colorAfterRotate = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color should still be black after rotate", Color.BLACK, colorAfterRotate);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolProperties()
+				.checkColor(Color.BLACK);
+
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.performRotateCounterClockwise()
+				.performRotateCounterClockwise();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapHeight, bitmapWidth);
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolProperties()
+				.checkColor(Color.BLACK);
 	}
 
 	@Test
 	public void testReflectingOnlyCurrentLayer() {
-		PointF screenPointLeft = new PointF(displayWidth / 2 - 10, displayHeight / 2 - 5);
-		PointF screenPointRight = new PointF(displayWidth / 2 + 10, displayHeight / 2 - 5);
-		onView(isRoot()).perform(touchAt(screenPointLeft));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE));
 
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performClose();
-		onView(isRoot()).perform(touchAt(screenPointRight));
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performClose();
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.TRANSFORM);
-		try {
-			Thread.sleep(100);
-		} catch (Exception e) {
-			Log.e("LayerIntegrationTest", e.getMessage());
-		}
-		onView(withId(R.id.transform_flip_vertical_btn)).perform(click());
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPointRight));
-		int color = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color should be transparent", Color.TRANSPARENT, color);
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.performFlipVertical();
 
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		onView(isRoot()).perform(touchAt(screenPointRight));
-		color = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color should be black", Color.BLACK, color);
+		onToolBarView().performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
 
-		onView(withId(R.id.btn_top_redo)).perform(click());
-		onView(isRoot()).perform(touchAt(screenPointRight));
-		color = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color should be transparent", Color.TRANSPARENT, color);
+		onTopBarView()
+				.performUndo();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onToolProperties()
+				.checkColor(Color.BLACK);
+
+		onTopBarView()
+				.performRedo();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
 	}
 
 	@Test
@@ -544,8 +582,8 @@ public class LayerIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.FILL);
 
-		onView(isRoot())
-				.perform(click());
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onLayerMenuView()
 				.performOpen()
@@ -553,12 +591,12 @@ public class LayerIntegrationTest {
 				.checkLayerCount(2)
 				.performClose();
 
-		final int buttonPosition = 2;
-		selectColorPickerPresetSelectorColor(buttonPosition);
-		int colorSecondLayer = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		selectColorPickerPresetSelectorColor(GREEN_COLOR_PICKER_BUTTON_POSITION);
+		onToolProperties()
+				.checkColorResource(R.color.color_chooser_green1);
 
-		onView(isRoot())
-				.perform(click());
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onLayerMenuView()
 				.performOpen()
@@ -575,67 +613,62 @@ public class LayerIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.PIPETTE);
-		onView(isRoot())
-				.perform(click());
-		int colorAfterUndo = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Second layer should be in foreground", colorSecondLayer, colorAfterUndo);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColorResource(R.color.color_chooser_green1);
 	}
 
 	@Test
 	public void testUndoRedoLayerRotate() {
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performClose();
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.performClose();
 
-		int bitmapHeight = LayerListener.getInstance().getCurrentLayer().getImage().getHeight();
-		int bitmapWidth = LayerListener.getInstance().getCurrentLayer().getImage().getWidth();
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.performRotateClockwise();
 
-		ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.TRANSFORM);
-		onView(withId(R.id.transform_rotate_right_btn)).perform(click());
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapHeight, bitmapWidth);
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertEquals("All Bitmaps should have been rotated - wrong height", bitmapWidth, layer.getImage().getHeight());
-			assertEquals("All Bitmaps should have been rotated - wrong width", bitmapHeight, layer.getImage().getWidth());
-		}
+		onToolBarView()
+				.performCloseToolOptions();
+		onTopBarView()
+				.performUndo();
 
-		PointF screenPoint = new PointF(displayWidth / 2 - 10, displayHeight / 3 - 5);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		onView(withId(R.id.btn_top_undo)).perform(click());
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapWidth, bitmapHeight);
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertEquals("All Bitmaps should have been rotated back - wrong height", bitmapHeight, layer.getImage().getHeight());
-			assertEquals("All Bitmaps should have been rotated back - wrong width", bitmapWidth, layer.getImage().getWidth());
-		}
+		onTopBarView()
+				.performRedo();
 
-		onView(withId(R.id.btn_top_redo)).perform(click());
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapHeight, bitmapWidth);
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertEquals("All Bitmaps should have been rotated - wrong height", bitmapWidth, layer.getImage().getHeight());
-			assertEquals("All Bitmaps should have been rotated - wrong width", bitmapHeight, layer.getImage().getWidth());
-		}
+		onLayerMenuView()
+				.performOpen()
+				.performDeleteLayer()
+				.performAddLayer()
+				.performSelectLayer(3)
+				.performClose();
 
-		onLayerMenuView().performOpen();
-		onLayerMenuView().performDeleteLayer();
-		onLayerMenuView().performAddLayer();
-		onLayerMenuView().performSelectLayer(3);
-		onLayerMenuView().performClose();
+		onTopBarView()
+				.performUndo()
+				.performUndo()
+				.performUndo();
 
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		onView(withId(R.id.btn_top_undo)).perform(click());
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapWidth, bitmapHeight);
 
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertEquals("All Bitmaps should have been rotated back - wrong height", bitmapHeight, layer.getImage().getHeight());
-			assertEquals("All Bitmaps should have been rotated back - wrong width", bitmapWidth, layer.getImage().getWidth());
-		}
+		onTopBarView()
+				.performRedo();
 
-		onView(withId(R.id.btn_top_redo)).perform(click());
-
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			assertEquals("All Bitmaps should have been rotated - wrong height", bitmapWidth, layer.getImage().getHeight());
-			assertEquals("All Bitmaps should have been rotated - wrong width", bitmapHeight, layer.getImage().getWidth());
-		}
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapHeight, bitmapWidth);
 	}
 }

@@ -19,6 +19,9 @@
 
 package org.catrobat.paintroid.command.implementation;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
@@ -396,16 +399,26 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	@Override
-	public void enableUndo(boolean enable) {
+	public void enableUndo(final boolean enable) {
 		if (updateTopBarListener != null) {
-			updateTopBarListener.onUndoEnabled(enable);
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override
+				public void run() {
+					updateTopBarListener.onUndoEnabled(enable);
+				}
+			});
 		}
 	}
 
 	@Override
-	public void enableRedo(boolean enable) {
+	public void enableRedo(final boolean enable) {
 		if (updateTopBarListener != null) {
-			updateTopBarListener.onRedoEnabled(enable);
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override
+				public void run() {
+					updateTopBarListener.onRedoEnabled(enable);
+				}
+			});
 		}
 	}
 

@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -52,6 +52,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFro
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 
+import static org.catrobat.paintroid.test.espresso.util.CustomSwiper.ACCURATE;
 import static org.hamcrest.Matchers.is;
 
 public final class UiInteractions {
@@ -143,6 +144,11 @@ public final class UiInteractions {
 		);
 	}
 
+	public static ViewAction touchAt(final CoordinatesProvider provider) {
+		return actionWithAssertions(
+				new GeneralClickAction(Tap.SINGLE, provider, Press.FINGER, 0, 0));
+	}
+
 	public static ViewAction touchAt(final PointF coordinates) {
 		return touchAt(coordinates, Tap.SINGLE);
 	}
@@ -169,32 +175,20 @@ public final class UiInteractions {
 
 	public static ViewAction touchAt(final float x, final float y, final Tapper tapStyle) {
 		return actionWithAssertions(
-				new GeneralClickAction(tapStyle, new CoordinatesProvider() {
-					@Override
-					public float[] calculateCoordinates(View view) {
-						final int[] screenLocation = new int[2];
-						view.getLocationOnScreen(screenLocation);
-
-						final float touchX = screenLocation[0] + x;
-						final float touchY = screenLocation[1] + y;
-						float[] coordinates = {touchX, touchY};
-
-						return coordinates;
-					}
-				}, Press.FINGER)
+				new GeneralClickAction(tapStyle, PositionCoordinatesProvider.at(x, y), Press.FINGER, 0, 0)
 		);
 	}
 
 	public static ViewAction touchCenterLeft() {
-		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER);
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER, 0, 0);
 	}
 
 	public static ViewAction touchCenterMiddle() {
-		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER, Press.FINGER);
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER, Press.FINGER, 0, 0);
 	}
 
 	public static ViewAction touchCenterRight() {
-		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER);
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER, 0, 0);
 	}
 
 	public static ViewAction swipe(PointF start, PointF end) {
@@ -210,7 +204,11 @@ public final class UiInteractions {
 	}
 
 	public static ViewAction swipe(CoordinatesProvider startCoordinatesProvider, CoordinatesProvider endCoordinatesProvider) {
-		return new GeneralSwipeAction(Swipe.SLOW, startCoordinatesProvider, endCoordinatesProvider, Press.FINGER);
+		return new GeneralSwipeAction(Swipe.FAST, startCoordinatesProvider, endCoordinatesProvider, Press.FINGER);
+	}
+
+	public static ViewAction swipeAccurate(CoordinatesProvider startCoordinatesProvider, CoordinatesProvider endCoordinatesProvider) {
+		return new GeneralSwipeAction(ACCURATE, startCoordinatesProvider, endCoordinatesProvider, Press.FINGER);
 	}
 
 	public static ViewAction selectViewPagerPage(final int pos) {

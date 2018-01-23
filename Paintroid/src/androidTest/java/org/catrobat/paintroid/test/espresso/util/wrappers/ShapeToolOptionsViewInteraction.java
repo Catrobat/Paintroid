@@ -20,41 +20,40 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-public final class TransformToolOptionsViewInteraction extends CustomViewInteraction {
-	private TransformToolOptionsViewInteraction() {
+public final class ShapeToolOptionsViewInteraction extends CustomViewInteraction {
+	private ShapeToolOptionsViewInteraction() {
 		super(onView(withId(R.id.main_tool_options)));
 	}
 
-	public static TransformToolOptionsViewInteraction onTransformToolOptionsView() {
-		return new TransformToolOptionsViewInteraction();
+	public static ShapeToolOptionsViewInteraction onShapeToolOptionsView() {
+		return new ShapeToolOptionsViewInteraction();
 	}
 
-	public TransformToolOptionsViewInteraction performAutoCrop() {
-		onView(withId(R.id.transform_auto_crop_btn))
-				.perform(click());
-		return this;
-	}
-
-	public TransformToolOptionsViewInteraction performRotateClockwise() {
-		onView(withId(R.id.transform_rotate_right_btn))
-				.perform(click());
-		return this;
-	}
-
-	public TransformToolOptionsViewInteraction performRotateCounterClockwise() {
-		onView(withId(R.id.transform_rotate_left_btn))
-				.perform(click());
-		return this;
-	}
-
-	public TransformToolOptionsViewInteraction performFlipVertical() {
-		onView(withId(R.id.transform_flip_vertical_btn))
-				.perform(click());
+	public ShapeToolOptionsViewInteraction performSelectShape(GeometricFillTool.BaseShape shape) {
+		switch (shape) {
+			case RECTANGLE:
+				onView(withId(R.id.shapes_square_btn))
+						.perform(click());
+				break;
+			case OVAL:
+				onView(withId(R.id.shapes_circle_btn))
+						.perform(click());
+				break;
+			case HEART:
+				onView(withId(R.id.shapes_heart_btn))
+						.perform(click());
+				break;
+			case STAR:
+				onView(withId(R.id.shapes_star_btn))
+						.perform(click());
+				break;
+		}
 		return this;
 	}
 }
