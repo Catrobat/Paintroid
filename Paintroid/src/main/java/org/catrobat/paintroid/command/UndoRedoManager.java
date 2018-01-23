@@ -194,9 +194,9 @@ public final class UndoRedoManager {
 			LayerCommand layerCommand = new LayerCommand(layer);
 			final LayerBitmapCommand layerBitmapCommand = commandManager.getLayerBitmapCommand(layerCommand);
 
-			float scale = PaintroidApplication.perspective.getScale();
-			float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
-			float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
+			final float scale = PaintroidApplication.perspective.getScale();
+			final float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
+			final float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
 
 			if (commandManager.getLayerOperationsCommandList().size() <= 1
 					&& layerBitmapCommand.getLayerCommands().size() <= 1) {
@@ -272,16 +272,17 @@ public final class UndoRedoManager {
 				protected void onPostExecute(Void result) {
 					PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 					update();
+
+					PaintroidApplication.perspective.setScale(scale);
+					PaintroidApplication.perspective.setSurfaceTranslationX(surfaceTranslationX);
+					PaintroidApplication.perspective.setSurfaceTranslationY(surfaceTranslationY);
+
 					LayerListener.getInstance().refreshView();
 					PaintroidApplication.drawingSurface.refreshDrawingSurface();
 					NavigationDrawerMenuActivity.isSaved = false;
 					IndeterminateProgressDialog.getInstance().dismiss();
 				}
 			}.execute();
-
-			PaintroidApplication.perspective.setScale(scale);
-			PaintroidApplication.perspective.setSurfaceTranslationX(surfaceTranslationX);
-			PaintroidApplication.perspective.setSurfaceTranslationY(surfaceTranslationY);
 		}
 	}
 
@@ -291,9 +292,9 @@ public final class UndoRedoManager {
 		final CommandManager commandManager = PaintroidApplication.commandManager;
 		LayerBitmapCommand layerBitmapCommand = commandManager.getLayerBitmapCommand(layerCommand);
 
-		float scale = PaintroidApplication.perspective.getScale();
-		float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
-		float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
+		final float scale = PaintroidApplication.perspective.getScale();
+		final float surfaceTranslationX = PaintroidApplication.perspective.getSurfaceTranslationX();
+		final float surfaceTranslationY = PaintroidApplication.perspective.getSurfaceTranslationY();
 
 		if (commandManager.getLayerOperationsUndoCommandList().size() == 0
 				&& layerBitmapCommand.getLayerUndoCommands().size() == 0) {
@@ -370,16 +371,17 @@ public final class UndoRedoManager {
 			protected void onPostExecute(Void result) {
 				PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 				update();
+
+				PaintroidApplication.perspective.setScale(scale);
+				PaintroidApplication.perspective.setSurfaceTranslationX(surfaceTranslationX);
+				PaintroidApplication.perspective.setSurfaceTranslationY(surfaceTranslationY);
+
 				LayerListener.getInstance().refreshView();
 				PaintroidApplication.drawingSurface.refreshDrawingSurface();
 				NavigationDrawerMenuActivity.isSaved = false;
 				IndeterminateProgressDialog.getInstance().dismiss();
 			}
 		}.execute();
-
-		PaintroidApplication.perspective.setScale(scale);
-		PaintroidApplication.perspective.setSurfaceTranslationX(surfaceTranslationX);
-		PaintroidApplication.perspective.setSurfaceTranslationY(surfaceTranslationY);
 	}
 
 	public void update() {

@@ -43,6 +43,7 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.TransformTool;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -461,6 +462,7 @@ public class TransformToolIntegrationTest {
 				.checkBitmapDimension(initialWidth, initialHeight);
 	}
 
+	@Ignore("This is probably not intended behaviour")
 	@Test
 	public void testCenterBitmapAfterCropAndUndo() {
 		final PointF originalTopLeft = getSurfacePointFromCanvasPoint(new PointF(0, 0));
