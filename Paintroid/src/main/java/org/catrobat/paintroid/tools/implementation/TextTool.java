@@ -220,14 +220,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		int style = italic ? Typeface.ITALIC : Typeface.NORMAL;
 		final float textSkewX = italic ? ITALIC_TEXT_SKEW : DEFAULT_TEXT_SKEW;
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-			if (font.equals("Monospace")) {
-				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
-			}
-			textPaint.setTextSkewX(textSkewX);
-			return;
-		}
-
 		switch (font) {
 			case "Sans Serif":
 				textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, style));
@@ -254,6 +246,13 @@ public class TextTool extends BaseToolWithRectangleShape {
 					Log.e("Can't set custom font", "Dubai");
 				}
 				break;
+		}
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			if (font.equals("Monospace")) {
+				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
+			}
+			textPaint.setTextSkewX(textSkewX);
 		}
 	}
 
