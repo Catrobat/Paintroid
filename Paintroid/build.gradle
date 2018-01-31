@@ -49,8 +49,8 @@ android {
         minSdkVersion 17
         targetSdkVersion 22
         testInstrumentationRunner "org.catrobat.paintroid.test.utils.CustomAndroidJUnitRunner"
-        versionCode 20
-        versionName "2.0.0"
+        versionCode 21
+        versionName "2.0.1"
         manifestPlaceholders += [appName: appName]
         externalNativeBuild.cmake.cppFlags "-fexceptions"
     }
