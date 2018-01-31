@@ -43,7 +43,7 @@
   <string name="about_license_url_text">Pocket Paint Source Code License</string>
   <string name="about_catroid_url_text">About Catrobat</string>
   <string name="about_version">Version:</string>
-  <string name="color_chooser_title">Colour Chooser</string>
+  <string name="color_chooser_title">Color Chooser</string>
   <string name="color_rgb">Red Green Blue (RGB)</string>
   <string name="color_red">Red</string>
   <string name="color_green">Green</string>
@@ -59,11 +59,11 @@
   <string name="dialog_warning_new_image">Save Changes?</string>
   <string name="help_title">Help</string>
   <string name="help_content_eraser">Remove parts of the image like with an eraser.</string>
-  <string name="help_content_brush">Tap on the symbols on the bottom bar to change the colour or the brush size.</string>
-  <string name="help_content_eyedropper">Tap on the image to select a colour.</string>
+  <string name="help_content_brush">Tap on the symbols on the bottom bar to change the color or the brush size.</string>
+  <string name="help_content_eyedropper">Tap on the image to select a color.</string>
   <string name="help_content_undo">Tap to undo your previous action.</string>
   <string name="help_content_redo">Tap to redo an undone action.</string>
-  <string name="help_content_fill">Tap on the image to fill an area with the selected colour.</string>
+  <string name="help_content_fill">Tap on the image to fill an area with the selected color.</string>
   <string name="help_content_cursor">Position the cursor where you want to draw. Tap to activate the cursor. Move your finger to draw. Tap again to deactivate.</string>
   <string name="help_content_transform">Use to transform the image.</string>
   <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and Tap again to stamp.</string>
@@ -133,7 +133,7 @@
   <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">Get started and create a new masterpiece.</string>
   <string name="lets_go">Let\'s Go</string>
-  <string name="next">Next</string>
+  <string name="next">ಮುಂದೆ</string>
   <string name="skip">Skip</string>
   <string name="menu_language">Language</string>
   <string name="device_language">Device Language</string>
