@@ -19,8 +19,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">Pocket Paint</string>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name" tools:ignore="UnusedResources">Pocket Paint</string>
   <string name="button_brush">Štětec</string>
   <string name="button_cursor">Kurzor</string>
   <string name="button_pipette">Pipeta</string>
@@ -39,7 +39,7 @@
   <string name="terms_of_use_and_service_content">Chcete-li aby bylo umožněno používat Pocket Paint a další spustitelné soubory aplikace Project Catrobat, musíte souhlasit s našema podmínkama používání a službama a striktně jít za nimi, když používáte Pocket Code a naše další spustitelné soubory. Naleznete v odkazu níže pro jejich přesné formulace.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Podmínky používání a služby</string>
   <string name="about_title">O Pocket Paint…</string>
-  <string name="about_content">Pocket Paint je editor obrázků, který je součástí Catrobat project.\n\nCatrobat je vizuální programovací jazyk a sada nástrojů tvořivosti pro smartphony, tablety a mobilní vyhledávače.\n\nZdrojový kód Pocket Paint je především licencován pod %s.\nPro přesné podrobnosti o licenci viz odkaz níže.\n\n</string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">Pocket Paint zdrojový kód licence</string>
   <string name="about_catroid_url_text">O Catrobat</string>
   <string name="about_version">Verze:</string>
@@ -58,10 +58,10 @@
   <string name="dialog_brush_width_text">Tloušťka tahu</string>
   <string name="dialog_warning_new_image">Chcete uložit změny?</string>
   <string name="help_title">Nápověda</string>
-  <string name="help_content_eraser">Odebrání části obrazu jako s gumou.</string>
-  <string name="help_content_brush">Klepněte na symboly na spodní liště pro změnu barvy nebo velikosti štětce.</string>
-  <string name="help_content_eyedropper">Klepněte na obrázek pr výběr barvy.</string>
-  <string name="help_content_undo">Klepnutím na tlačítko vrátíte akci.</string>
+  <string name="help_content_eraser">Odeber části obrazu jak gumou.</string>
+  <string name="help_content_brush">Klepni na symboly na spodní liště pro změnu barvy nebo velikosti štětce.</string>
+  <string name="help_content_eyedropper">Klepni na obrázek pro výběr barvy.</string>
+  <string name="help_content_undo">Klepni na tlačítko pro vrácení akce.</string>
   <string name="help_content_redo">Klepnutím na tlačítko Opakovat akci se vrátíte zpět.</string>
   <string name="help_content_fill">Klepněte na obrázek aby jste vyplnil oblast s vybranou barvou.</string>
   <string name="help_content_cursor">Umístěte kurzoru, kam chcete kreslit. Klepnutím aktivujete kurzor. Pohybujte prstem pro kreslení. Klepnutím znovu deaktivovat.</string>
@@ -71,6 +71,8 @@
   <string name="help_content_line">Nakreslete rovnou čáru.</string>
   <string name="help_content_text">Napište text a naformátujte jej. Poté změňte velikost textového pole. Klepněte na Vložit text na obrázek.</string>
   <string name="help_content_shape">Vyberte obrazec a klepněte na něj aby jste vložily vybraný tvar</string>
+  <string name="help_content_layer">Create new layers or modify existing ones</string>
+  <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Ukončit</string>
   <string name="closing_security_question">Chcete uložit změny?</string>
   <string name="closing_catroid_security_question_title">Zpět do Pocket Code</string>
@@ -95,16 +97,13 @@
   <string name="resize_max_image_resolution_reached">maximální rozlišení dosaženo</string>
   <string name="text_tool_dialog_input_title">Váš text:</string>
   <string name="text_tool_dialog_format_options">Možnosti formátu:</string>
-  <string name="text_tool_dialog_underline_shortcut">U</string>
-  <string name="text_tool_dialog_italic_shortcut">I</string>
-  <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Klepnutím sem psát</string>
   <string name="shape_tool_dialog_rect_title">Obdélník</string>
   <string name="shape_tool_dialog_ellipse_title">Elipsa</string>
   <string name="shape_tool_dialog_star_title">Hvězda</string>
   <string name="shape_tool_dialog_heart_title">Srdce</string>
   <string name="fill_tool_dialog_color_tolerance_title">Barevné odchylky</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">Auto přizpůsobení</string>
   <string name="transform_tool_roate_text">Otočit</string>
   <string name="transform_tool_mirror_text">Zrcadlo</string>
   <string name="stamp_tool_copy_hint">Dlouhým stisknutím kopírovat obsah</string>
@@ -113,14 +112,14 @@
   <string name="layer_delete">Odstranit vrstvu</string>
   <string name="layer_too_many_layers">Příliš mnoho vrstev</string>
   <string name="layer_invisible">Všechny vrstvy neviditelné</string>
-  <string name="layer_merged">Layers merged</string>
+  <string name="layer_merged">Vrstvy spojeny</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
   <string name="dialog_shape_text">Tvar</string>
   <string name="dialog_loading_image_failed_title">Chyba při načítání obrázku</string>
   <string name="dialog_loading_image_failed_text">Neplatná složka s obrázkem</string>
-  <string name="drawer_open">Open navigation drawer</string>
-  <string name="drawer_close">Close navigation drawer</string>
+  <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
+  <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
   <string name="transform_info_text">Přetáhněte okraje do jejich nové pozice, pak klepnutím na položku zvětšit nebo oříznout oblasti obrazu.</string>
   <string name="cursor_draw_inactive">Pan k umístění,a pak klepněte aby jste začal malovat.</string>
   <string name="cursor_draw_active">Pan k nakreslení, pak znovu klepněte na zastavit obraz.</string>
@@ -131,11 +130,11 @@
   <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
   <string name="landscape">Na šířku</string>
   <string name="intro_landscape_text">Pocket Paint také podporuje malování v režimu na šířku aby jste měl ten nejlepší zážitek z malby.</string>
-  <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
+  <string name="enjoy_pocket_paint">Vše je hotovo. Užijte si Pocket Code.</string>
   <string name="intro_get_started">Začínáme a vytvoříme nové dílo.</string>
-  <string name="lets_go">Let\'s Go</string>
+  <string name="lets_go">Jdeme na to</string>
   <string name="next">Další</string>
   <string name="skip">Přeskočit</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
+  <string name="menu_language">Jazyk</string>
+  <string name="device_language">Jazyk zařízení</string>
 </resources>

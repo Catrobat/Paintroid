@@ -52,7 +52,7 @@
   <string name="color_pre">preselected</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Tools</string>
-  <string name="dialog_load">లోడ్ అవుతున్నది…</string>
+  <string name="dialog_load">Loading…</string>
   <string name="dialog_error_save_title">Error load/save File</string>
   <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
   <string name="dialog_brush_width_text">Stroke Width</string>
@@ -133,7 +133,7 @@
   <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">Get started and create a new masterpiece.</string>
   <string name="lets_go">Let\'s Go</string>
-  <string name="next">తరువాత</string>
+  <string name="next">ಮುಂದೆ</string>
   <string name="skip">Skip</string>
   <string name="menu_language">Language</string>
   <string name="device_language">Device Language</string>
