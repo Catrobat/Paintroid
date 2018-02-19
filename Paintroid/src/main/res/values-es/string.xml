@@ -19,8 +19,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">Pocket Pintar</string>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name" tools:ignore="UnusedResources">Pocket Pintar</string>
   <string name="button_brush">Pincel</string>
   <string name="button_cursor">Cursor</string>
   <string name="button_pipette">Pipeta</string>
@@ -39,7 +39,7 @@
   <string name="terms_of_use_and_service_content">Para poder utilizar Pocket Code y otros ejecutables ofrecidos por el proyecto Catrobat, debes de estar de acuerdo con nuestros Términos de Uso y seguirlos estrictamente cuando utilizas Pocket Code y nuestros otros ejecutables. Por favor vea el siguiente enlace para tener una formulación más precisa. \n</string>
   <string name="terms_of_use_and_service_url_text">Términos de uso y servicio</string>
   <string name="about_title">Acerca de Pocket Pintar…</string>
-  <string name="about_content">Pocket Paint es un editor de imágenes que es parte del proyecto Catrobat. \n\n Catrobat es un lenguaje de programación visual y un conjunto de herramientas de creatividad para ser utilizado en los teléfonos inteligentes, tabletas y navegadores móviles.\n\n El código fuente de Pocket Pintura está licenciado bajo  %s.\n  Para más detalles de esta licencia vé el link de abajo.\n\n</string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">Licencia de código de fuente para Pocket Pintar</string>
   <string name="about_catroid_url_text">Acerca de Catrobat</string>
   <string name="about_version">Versión:</string>
@@ -56,7 +56,7 @@
   <string name="dialog_error_save_title">Error cargar/guardar archivo</string>
   <string name="dialog_error_sdcard_text">Revisar la imagen del cheque o tarjeta SD!</string>
   <string name="dialog_brush_width_text">Anchura del trazo</string>
-  <string name="dialog_warning_new_image">Guardar Cambios?</string>
+  <string name="dialog_warning_new_image">¿Guardar cambios?</string>
   <string name="help_title">Ayuda</string>
   <string name="help_content_eraser">Quite partes de la imagen como si utilizara una goma de borrar.</string>
   <string name="help_content_brush">Pulse sobre los símbolos de la barra de abajo para cambiar el color o el tamaño del pincel.</string>
@@ -71,6 +71,8 @@
   <string name="help_content_line">Trazar una línea recta.</string>
   <string name="help_content_text">Escribir texto y darle formato. Redimensionar el cuadro de texto más tarde. Pulse para insertar el texto en la imagen.</string>
   <string name="help_content_shape">Elege una forma y pulsa para insertar la forma seleccionada</string>
+  <string name="help_content_layer">Create new layers or modify existing ones</string>
+  <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Salir</string>
   <string name="closing_security_question">Guardar Cambios?</string>
   <string name="closing_catroid_security_question_title">Regresar a Pocket Code</string>
@@ -95,9 +97,6 @@
   <string name="resize_max_image_resolution_reached">resolución de imagen máxima alcanzada</string>
   <string name="text_tool_dialog_input_title">Tu texto:</string>
   <string name="text_tool_dialog_format_options">Opciones de formato:</string>
-  <string name="text_tool_dialog_underline_shortcut">Fecha de actualización</string>
-  <string name="text_tool_dialog_italic_shortcut">I</string>
-  <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Pulsa aquí para escribir</string>
   <string name="shape_tool_dialog_rect_title">Rectángulo</string>
   <string name="shape_tool_dialog_ellipse_title">Elipsis</string>
@@ -119,8 +118,8 @@
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Error en la carga de la imagen</string>
   <string name="dialog_loading_image_failed_text">No es un archivo de imagen válido</string>
-  <string name="drawer_open">Open navigation drawer</string>
-  <string name="drawer_close">Close navigation drawer</string>
+  <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
+  <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
   <string name="transform_info_text">Arrastra los bordes a su nueva posición, luego pulsa para agrandar o recortar el área de imagen.</string>
   <string name="cursor_draw_inactive">Pan a la posición, después pulsa para empezar a pintar.</string>
   <string name="cursor_draw_active">Pan a dibujar, después pulsa y deja de dibujar.</string>
@@ -133,9 +132,9 @@
   <string name="intro_landscape_text">Pocket Paint también soporta dibujo en modo horizontal para darle la mejor experiencia pintando.</string>
   <string name="enjoy_pocket_paint">Ya estás listo/a. Disfruta Pocket Paint.</string>
   <string name="intro_get_started">Empieza y crea una nueva obra maestra.</string>
-  <string name="lets_go">Let\'s Go</string>
+  <string name="lets_go">Vamos</string>
   <string name="next">Siguiente</string>
   <string name="skip">Ignorar</string>
   <string name="menu_language">Idioma</string>
-  <string name="device_language">Device Language</string>
+  <string name="device_language">Idioma del Dispositivo</string>
 </resources>
