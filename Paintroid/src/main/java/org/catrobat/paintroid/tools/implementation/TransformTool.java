@@ -104,7 +104,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		initResizeBounds();
 	}
 
-	static boolean containsNotTransparentPixel(int[][] pixels, int fromX, int fromY, int toX, int toY) {
+	private static boolean containsNotTransparentPixel(int[][] pixels, int fromX, int fromY, int toX, int toY) {
 		for (int y = fromY; y <= toY; y++) {
 			for (int x = fromX; x <= toX; x++) {
 				if (pixels[y][x] != Color.TRANSPARENT) {
@@ -115,6 +115,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		return false;
 	}
 
+	@VisibleForTesting
 	public static Rect cropAlgorithmSnail(Bitmap bitmap) {
 		if (bitmap == null) {
 			Log.e("cropAlgorithmSnail", "bitmap is null!");
@@ -222,7 +223,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		resetScaleAndTranslation();
 	}
 
-	protected void executeResizeCommand() {
+	private void executeResizeCommand() {
 		if (cropRunFinished) {
 			cropRunFinished = false;
 			initResizeBounds();
