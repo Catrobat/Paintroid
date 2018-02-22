@@ -38,7 +38,8 @@ public class LineTool extends BaseTool {
 
 	protected PointF initialEventCoordinate;
 	protected PointF currentCoordinate;
-	protected boolean pathInsideBitmap;
+	protected boolean initialCoordinateInsideBitmap;
+	protected boolean currentCoordinateInsideBitmap;
 	private BrushPickerView brushPickerView;
 
 	public LineTool(Context context, ToolType toolType) {
@@ -76,42 +77,42 @@ public class LineTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		pathInsideBitmap = false;
 
-		pathInsideBitmap = checkPathInsideBitmap(coordinate);
+		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
+
+		initialCoordinateInsideBitmap = checkPathInsideBitmap(coordinate);
+		currentCoordinateInsideBitmap = false;
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
 		currentCoordinate = new PointF(coordinate.x, coordinate.y);
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
-			pathInsideBitmap = true;
-		}
+		currentCoordinateInsideBitmap = checkPathInsideBitmap(coordinate);
 		return true;
 	}
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (initialEventCoordinate == null || previousEventCoordinate == null
-				|| coordinate == null) {
+		if (initialEventCoordinate == null || coordinate == null) {
 			return false;
 		}
+
+		currentCoordinate = new PointF(coordinate.x, coordinate.y);
+		currentCoordinateInsideBitmap = checkPathInsideBitmap(coordinate);
+
 		Path finalPath = new Path();
 		finalPath.moveTo(initialEventCoordinate.x, initialEventCoordinate.y);
-		finalPath.lineTo(coordinate.x, coordinate.y);
+		finalPath.lineTo(currentCoordinate.x, currentCoordinate.y);
 
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
-			pathInsideBitmap = true;
-		}
-
-		if (pathInsideBitmap) {
+		if (initialCoordinateInsideBitmap || currentCoordinateInsideBitmap) {
 			Command command = new PathCommand(BITMAP_PAINT, finalPath);
 			Layer layer = LayerListener.getInstance().getCurrentLayer();
 			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		}
+
+		initialEventCoordinate = null;
+		currentCoordinate = null;
 
 		return true;
 	}
@@ -120,6 +121,8 @@ public class LineTool extends BaseTool {
 	public void resetInternalState() {
 		initialEventCoordinate = null;
 		currentCoordinate = null;
+		initialCoordinateInsideBitmap = false;
+		currentCoordinateInsideBitmap = false;
 	}
 
 	@Override

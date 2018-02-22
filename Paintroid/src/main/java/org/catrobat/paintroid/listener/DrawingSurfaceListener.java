@@ -69,7 +69,8 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		if (drawingSurface.getLock()) {
 			touchMode = TouchMode.LOCK;
 		}
-		switch (event.getAction()) {
+		int action = event.getAction();
+		switch (action) {
 			case MotionEvent.ACTION_DOWN:
 				PaintroidApplication.currentTool.handleTouch(touchPoint, MotionEvent.ACTION_DOWN);
 
@@ -128,7 +129,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					moveThread.kill();
 				}
 				moveThread = null;
-				if (touchMode == TouchMode.DRAW) {
+				if (touchMode == TouchMode.DRAW && action == MotionEvent.ACTION_UP) {
 					PaintroidApplication.currentTool.handleTouch(touchPoint, MotionEvent.ACTION_UP);
 				} else {
 					PaintroidApplication.currentTool.resetInternalState(StateChange.MOVE_CANCELED);
