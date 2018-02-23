@@ -38,13 +38,13 @@
     <string name="terms_of_use_and_service_title">Terms of Use and Service</string>
     <string name="terms_of_use_and_service_content">In order to be allowed to use Pocket Paint and other executables offered by the Catrobat project, you must agree to our Terms of Use and Service and strictly follow them when you use Pocket Code and our other executables. Please see the link below for their precise formulation.\n\n</string>
     <string name="terms_of_use_and_service_url_text">Terms of Use and Service</string>
-    <string name="terms_of_use_and_service_link_template" translatable="false">…a href=\"%1$s\">%2$s…/a></string>
+    <string name="terms_of_use_and_service_link_template" translatable="false">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
 
     <string name="about_title">About Pocket Paint…</string>
     <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
     <string name="about_license_url_text">Pocket Paint Source Code License</string>
     <string name="about_catroid_url_text">About Catrobat</string>
-    <string name="about_link_template" translatable="false">…a href=\"%1$s\">%2$s…/a></string>
+    <string name="about_link_template" translatable="false">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
     <string name="about_version">Version:</string>
     <string name="color_chooser_title">Color Chooser</string>
     <string name="color_rgb">Red Green Blue (RGB)</string>
