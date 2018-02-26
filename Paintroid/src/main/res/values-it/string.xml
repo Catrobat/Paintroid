@@ -127,7 +127,7 @@
   <string name="intro_welcome_text">Con Pocket Paint non ci sono limiti alla tua creatività. Se sei nuovo guarda l\'intro; saltala se hai già familiarità con il programma.</string>
   <string name="intro_tool_more_information">Fai clic su uno strumento per ottenere ulteriori informazioni</string>
   <string name="more_possibilities">Ulteriori possibilità</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Orizzontale</string>
   <string name="intro_landscape_text">Pocket Paint supporta il disegno in modalità orizzontale per una migliore esperienza di disegno.</string>
   <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
