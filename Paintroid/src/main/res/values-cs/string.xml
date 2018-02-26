@@ -127,7 +127,7 @@
   <string name="intro_welcome_text">S Pocket Paint  tady nejsou limity vaší kreativity. Když chcete znova nový intro nebo přeskočit ho když jste již obeznámený s Pocket Paint.</string>
   <string name="intro_tool_more_information">Klepněte na nástroj pro získání více informací</string>
   <string name="more_possibilities">Další možnosti</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Na šířku</string>
   <string name="intro_landscape_text">Pocket Paint také podporuje malování v režimu na šířku aby jste měl ten nejlepší zážitek z malby.</string>
   <string name="enjoy_pocket_paint">Vše je hotovo. Užijte si Pocket Code.</string>
