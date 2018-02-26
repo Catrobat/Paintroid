@@ -47,8 +47,8 @@ public class MultilingualActivity extends AppCompatActivity {
 	public static final String SHARED_PREFERENCES_TAG = "For_language";
 	private static final String[] LANGUAGE_CODE = {"az", "bg", "bs", "ca", "cs", "sr-CS", "sr-SP",
 			"da", "de", "el", "en-AU", "en-CA", "en-GB", "en", "es", "fr", "gl", "hr", "in", "it",
-			"sw", "hu", "mk", "ms", "nl", "no", "pl", "pt-BR", "pt", "ru", "ro", "sq", "sl", "sk",
-			"sv", "vi", "tr", "ml", "ta", "te", "th", "gu", "hi", "ja", "ko", "lt", "zh-CN",
+			"sw", "hu", "lt", "mk", "ms", "nl", "no", "pl", "pt-BR", "pt", "ru", "ro", "sq", "sl",
+			"sk", "sv", "vi", "tr", "ml", "ta", "te", "th", "gu", "hi", "ja", "ko", "zh-CN",
 			"zh-TW", "ar", "ur", "fa", "ps", "sd", "iw"};
 
 	@Override

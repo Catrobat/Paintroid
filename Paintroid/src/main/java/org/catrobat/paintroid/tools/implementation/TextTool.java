@@ -289,6 +289,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 	}
 
+	@VisibleForTesting
 	public void resetBoxPosition() {
 		DrawingSurface surface = PaintroidApplication.drawingSurface;
 		toolPosition.x = surface.getBitmapWidth() / 2.0f;
