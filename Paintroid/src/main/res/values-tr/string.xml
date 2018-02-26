@@ -19,42 +19,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">Pocket Paint</string>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name" tools:ignore="UnusedResources">Pocket Paint</string>
   <string name="button_brush">Fırça</string>
   <string name="button_cursor">İmleç</string>
-  <string name="button_ellipse">Daire/Elips</string>
-  <string name="button_zoom">Yakınlaştır</string>
   <string name="button_pipette">Renk Seçici</string>
   <string name="button_undo">Geri Al</string>
   <string name="button_redo">Yinele</string>
   <string name="button_stamp">Kopyalama Aracı</string>
-  <string name="button_rectangle">Kare/Dikdörtgen</string>
   <string name="button_import_image">Resim Ekle</string>
   <string name="button_eraser">Silgi</string>
-  <string name="button_resize">Yeniden Boyutlandır</string>
   <string name="button_transform">Dönüştür</string>
-  <string name="button_flip">Çevir</string>
   <string name="button_fill">Doldur</string>
-  <string name="button_move">Taşı</string>
-  <string name="button_rotate">Döndür</string>
   <string name="button_line">Çizgi</string>
   <string name="button_text">Metin</string>
   <string name="button_shape">Şekiller</string>
-  <string name="cancel">İptal et</string>
-  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
-  <string name="yes">Evet</string>
-  <string name="no">Hayır</string>
   <string name="done">Tamam</string>
   <string name="terms_of_use_and_service_title">Kullanım ve Hizmet Koşulları</string>
   <string name="terms_of_use_and_service_content">Pocket Paint ve Catrobat projesi tarafından sunulan diğer uygulamaları kullanabilmek için Kullanım ve Hizmet Koşullarını kabul etmek ve Pocket Code ile diğer uygulamaları kullandığınız esnada bu koşullara uymanız gerekmektedir. Lütfen ayrıntılı bilgi için aşağıdaki bağlantıyı inceleyiniz.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Kullanım ve Hizmet Koşulları</string>
-  <string name="about_title">Pocket Paint Hakkında&#8230;</string>
-  <string name="about_content">Pocket Paint resim editörü Catrobat projesinin bir parçasıdır.\n\nCatrobat akıllı telefonlar, tabletler ve mobil tarayıcılar için tasarlanmış bir programlama dili ve tasarım aracıdır.\n\nPocket Paint uygulamasının kaynak kodu temel olarak %s lisansı altında sunulmaktadır.\nLisansın kesin detayları için aşağıdaki bağlantıyı inceleyiniz.\n\n</string>
+  <string name="about_title">Pocket Paint Hakkında…</string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">Pocket Paint Kaynak Kod Lisansı</string>
   <string name="about_catroid_url_text">Catrobat Hakkında</string>
   <string name="about_version">Sürüm:</string>
-  <string name="stroke_title">"Araç Seçenekleri"</string>
   <string name="color_chooser_title">Renk Seçici</string>
   <string name="color_rgb">Kırmızı Yeşil Mavi (RGB)</string>
   <string name="color_red">Kırmızı</string>
@@ -64,17 +52,12 @@
   <string name="color_pre">önceden seçilmiş</string>
   <string name="color_hsv">hsv renk seçici</string>
   <string name="dialog_tools_title">Araçlar</string>
-  <string name="dialog_save_title">Görüntüyü Kaydet</string>
-  <string name="dialog_save_text">Dosya Adı Gir</string>
-  <string name="dialog_load">Yükleniyor&#8230;</string>
-  <string name="dialog_overwrite_text">Varolan dosyanın üzerine yazılsın mı?</string>
+  <string name="dialog_load">Yükleniyor…</string>
   <string name="dialog_error_save_title">Dosya yüklenirken/kaydedilirken hata</string>
   <string name="dialog_error_sdcard_text">Resmi veya SD kartı kontrol et!</string>
   <string name="dialog_brush_width_text">Fırça Genişliği</string>
   <string name="dialog_warning_new_image">Değişiklikler Kaydedilsin mi?</string>
   <string name="help_title">Yardım</string>
-  <string name="help_content_ellipse">Elipse döndürmek için daireyi hareket ettirip yeniden boyutlandır. Şekli resmin üzerine yerleştirmek için dokun.</string>
-  <string name="help_content_flip">Resmi çevimek için alt araç çubuğundaki simgelere dokun.</string>
   <string name="help_content_eraser">Resmin parçalarını silgiyle siliyormuş gibi çıkart.</string>
   <string name="help_content_brush">Renk veya fırça boyutunu değiştirmek için alt araç çubuğundaki sembollere dokun.</string>
   <string name="help_content_eyedropper">Renk seçmek için resme dokun.</string>
@@ -82,15 +65,14 @@
   <string name="help_content_redo">Geri alınan eylemi yinelemek için dokun.</string>
   <string name="help_content_fill">Bir alanı seçili renkle doldurmak için resme dokun.</string>
   <string name="help_content_cursor">İmleci çizmek istediğin yere getir. İmleci etkinleştirmek için dokun. Çizmek için parmağını hareket ettir. Devredışı bırakmak için yeniden dokun.</string>
-  <string name="help_content_resize">Resmi yeniden boyutlandırmak için kullan.</string>
   <string name="help_content_transform">Resmi dönüştürmek için kullan.</string>
   <string name="help_content_stamp">Dikdörtgeni kopyalamak istediğin alanı kapsayacak şekilde hareket ettirp boyutlandır. Alan seçmek için uzun bas. Kopyalamak için hareket ettirip yeniden dokun.</string>
-  <string name="help_content_rectangle">Dikdörtgene döndürmek için kareyi hareket ettirip yeniden boyutlandır. Şekli resmin üzerine yerleştirmek için dokun.</string>
   <string name="help_content_import_png">Kopyalama aracı için galeriden bir resim aktar.</string>
-  <string name="help_content_rotate">Resmi sola veya sağa döndürmek için düğmelere dokun.</string>
   <string name="help_content_line">Düz bir çizgi çiz.</string>
   <string name="help_content_text">Yaz ve biçimlendir. Sonra metin kutusunu yeniden boyutlandır. Metni resme eklemek için dokun.</string>
   <string name="help_content_shape">Bir şekil seç ve eklemek için seçili şekle dokun</string>
+  <string name="help_content_layer">Create new layers or modify existing ones</string>
+  <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Çık</string>
   <string name="closing_security_question">Değişiklikler Kaydedilsin mi?</string>
   <string name="closing_catroid_security_question_title">Pocket Code\'a Geri Dön</string>
@@ -99,12 +81,10 @@
   <string name="menu_save_image">Resmi kaydet</string>
   <string name="menu_save_copy">Kopyasını kaydet</string>
   <string name="menu_new_image_empty_image">Boş resim</string>
-  <string name="menu_item_tools">Araçlar menüsü</string>
   <string name="menu_hide_menu">Tam ekran</string>
   <string name="menu_show_menu">Tam ekrandan çık</string>
   <string name="menu_new_image_from_camera">Kameradan yeni resim</string>
   <string name="menu_terms_of_use_and_service">Kullanım Şartları</string>
-  <string name="more">Daha fazla</string>
   <string name="menu_about">Hakkında</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Dışa aktar</string>
@@ -113,63 +93,33 @@
   <string name="menu_quit">Çık</string>
   <string name="save_button_text">Kaydet</string>
   <string name="discard_button_text">Vazgeç</string>
-  <string name="resize_to_resize_tap_text">yeniden boyutlandırmak için dokun</string>
   <string name="resize_nothing_to_resize">yeniden boyutlandırılacak bir şey yok</string>
   <string name="resize_max_image_resolution_reached">maksimum görüntü çözünürlüğüne ulaşıldı</string>
-  <string name="text_tool_dialog_title">Metin Aracı ayarları</string>
   <string name="text_tool_dialog_input_title">Metniniz:</string>
   <string name="text_tool_dialog_format_options">Format seçenekleri:</string>
-  <string name="text_tool_dialog_underline_shortcut">U</string>
-  <string name="text_tool_dialog_italic_shortcut">I</string>
-  <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Yazmak için buraya dokunun</string>
   <string name="shape_tool_dialog_rect_title">Dikdörtgen</string>
   <string name="shape_tool_dialog_ellipse_title">Elips</string>
   <string name="shape_tool_dialog_star_title">Yıldız</string>
   <string name="shape_tool_dialog_heart_title">Kalp</string>
-  <string name="fill_tool_dialog_title">Doldurma Aracı seçenekleri</string>
   <string name="fill_tool_dialog_color_tolerance_title">Renk toleransı</string>
-  <string name="fill_tool_dialog_input_hint_toast">0-100 arasında bir sayı girin</string>
-  <string name="transform_tool_header_text">Dönüştür</string>
-  <string name="transform_tool_size_text">Boyut</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">Otomatik Ayarla</string>
   <string name="transform_tool_roate_text">Döndür</string>
   <string name="transform_tool_mirror_text">Ayna</string>
-  <string name="transform_tool_angle_text">Açı</string>
   <string name="stamp_tool_copy_hint">İçerik kopyalamak için uzun basın</string>
   <string name="layers_title">Katmanlar</string>
-  <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">Yeni Katman</string>
   <string name="layer_delete">Katmanı Sil</string>
-  <string name="layer_opacity">Saydamlık:</string>
-  <string name="layer_merge">Birleştir</string>
-  <string name="layer_visible">Görünür</string>
-  <string name="layer_lock">Kilitle</string>
-  <string name="layer_rename">Yeniden adlandır</string>
-  <string name="layer_copy">Kopyala</string>
-  <string name="layer_ok">Tamam</string>
-  <string name="layer_cancel">İptal et</string>
-  <string name="layer_rename_title">Yeni katman adı gir</string>
-  <string name="layer_move_up">Yukarı git</string>
-  <string name="layer_move_down">Aşağıya git</string>
-  <string name="layer_move_to_top">En üste taşı</string>
-  <string name="layer_move_to_bottom">En alta taşı</string>
-  <string name="layer_merge_info">Birleştirilecek katmana dokun</string>
   <string name="layer_too_many_layers">Çok fazla katman</string>
   <string name="layer_invisible">Tüm katmanlar görünmez</string>
-  <string name="layer_save_info">Kaydet: katmanlar birleştirilecek</string>
-  <string name="layer_prefix">Katman </string>
-  <string name="layer_merged">Layers merged</string>
+  <string name="layer_merged">Birleştirilmiş Katmanlar</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
-  <string name="dialog_unallowed_chars_title">Yasaklı karakter(ler)</string>
-  <string name="dialog_unallowed_chars_text">Sadece harfler, rakamlar ve \'_\' kullanılabilir.</string>
   <string name="dialog_shape_text">Şekil</string>
   <string name="dialog_loading_image_failed_title">Resim yüklenirken hata oluştu</string>
   <string name="dialog_loading_image_failed_text">Geçersiz bir resim dosyası</string>
-  <string name="dialog_please_wait">Lütfen bekleyiniz...</string>
-  <string name="drawer_open">Open navigation drawer</string>
-  <string name="drawer_close">Close navigation drawer</string>
+  <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
+  <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
   <string name="transform_info_text">Kenarları yeni konumlarına sürükle, sonra büyütmek veya resim alanını kırpmak için dokun.</string>
   <string name="cursor_draw_inactive">Konumlandırmak için kaydır ve çizmeye başlamak için dokun.</string>
   <string name="cursor_draw_active">Çizmek için kaydır ve çizmeyi bırakmak için tekrar dokun.</string>
@@ -177,14 +127,14 @@
   <string name="intro_welcome_text">Pocket Paint ile yaratıcılığınızın sınırı yok. Yeniyseniz tanıtımı başlatın; Pocket Paint\'i biliyorsanız bu kısmı atlayın.</string>
   <string name="intro_tool_more_information">Daha fazla bilgi almak için bir araca tıkla</string>
   <string name="more_possibilities">Daha fazla olanak</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
+  <string name="intro_possibilities_text">Renk değiştirmek için geri al / yinele tuşlarını kullanın. Veya üst çubuğu kullanın.</string>
   <string name="landscape">Yatay</string>
   <string name="intro_landscape_text">En iyi çizim deneyimi için Pocket Paint yatay modda çizimi de destekler.</string>
-  <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
+  <string name="enjoy_pocket_paint">Her şey ayarlandı. Pocket Code\'un keyfini çıkar.</string>
   <string name="intro_get_started">Başla ve yeni bir şaheser yarat.</string>
-  <string name="lets_go">Let\'s Go</string>
-  <string name="next">Sonraki</string>
+  <string name="lets_go">Hadi Gidelim</string>
+  <string name="next">İleri</string>
   <string name="skip">Atla</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
+  <string name="menu_language">Dil</string>
+  <string name="device_language">Aygıt Dili</string>
 </resources>

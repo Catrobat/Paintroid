@@ -21,14 +21,10 @@ package org.catrobat.paintroid;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Color;
-import android.net.Uri;
 import android.util.Log;
-import android.view.Menu;
 
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
@@ -39,64 +35,21 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Locale;
 
-import static org.catrobat.paintroid.MultilingualActivity.LANGUAGE_CODE;
-import static org.catrobat.paintroid.MultilingualActivity.LANGUAGE_TAG_KEY;
-
 public class PaintroidApplication extends Application {
-	public static final String TAG = "PAINTROID";
+	private static final String TAG = PaintroidApplication.class.getSimpleName();
 
 	public static Context applicationContext;
 	public static DrawingSurface drawingSurface;
 	public static CommandManager commandManager;
 	public static Tool currentTool;
 	public static Perspective perspective;
-	public static boolean openedFromCatroid = false;
-	public static String catroidPicturePath;
-	public static boolean isPlainImage = true;
-	public static Menu menu;
-	public static boolean isSaved = true;
-	public static Uri savedPictureUri = null;
-	public static boolean saveCopy = false;
-	public static boolean scaleImage = true;
-	public static int orientation;
-	public static boolean isRTL = false;
-	public static int colorPickerInitialColor = Color.BLACK;
 	public static LinkedList<LayerCommand> layerOperationsCommandList;
 	public static LinkedList<LayerCommand> layerOperationsUndoCommandList;
 	public static ArrayList<LayerBitmapCommand> drawBitmapCommandsAtLayer;
 	public static String defaultSystemLanguage;
-	public static SharedPreferences languageSharedPreferences;
-
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		applicationContext = getApplicationContext();
-		commandManager = new CommandManagerImplementation();
-
-		defaultSystemLanguage = Locale.getDefault().getLanguage();
-		languageSharedPreferences = getSharedPreferences("For_language", Context.MODE_PRIVATE);
-		updateToChosenLanguage();
-	}
-
-	public static void updateToChosenLanguage() {
-		String languageTag = languageSharedPreferences.getString(LANGUAGE_TAG_KEY, "");
-		if (Arrays.asList(LANGUAGE_CODE).contains(languageTag)) {
-			if (languageTag.length() == 2) {
-				MultilingualActivity.updateLocale(applicationContext, languageTag, null);
-			} else {
-				String language = languageTag.substring(0, 2);
-				String country = languageTag.substring(4);
-				MultilingualActivity.updateLocale(applicationContext, language, country);
-			}
-		} else {
-			MultilingualActivity.updateLocale(applicationContext, defaultSystemLanguage, null);
-		}
-	}
 
 	public static String getVersionName(Context context) {
 		String versionName = "unknown";
@@ -106,9 +59,17 @@ public class PaintroidApplication extends Application {
 							PackageManager.GET_META_DATA);
 			versionName = packageInfo.versionName;
 		} catch (NameNotFoundException nameNotFoundException) {
-			Log.e(PaintroidApplication.TAG, "Name not found",
-					nameNotFoundException);
+			Log.e(PaintroidApplication.TAG, "Name not found", nameNotFoundException);
 		}
 		return versionName;
+	}
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		applicationContext = getApplicationContext();
+		commandManager = new CommandManagerImplementation();
+
+		defaultSystemLanguage = Locale.getDefault().getLanguage();
 	}
 }

@@ -19,10 +19,11 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/layout_bottom_bar"
-                android:layout_width="fill_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    tools:showIn="@layout/main">
 
     <org.catrobat.paintroid.ui.BottomBarHorizontalScrollView
         android:id="@+id/bottom_bar_scroll_view"
@@ -39,80 +40,80 @@
 
             <ImageButton
                 android:id="@+id/tools_brush"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_brush"/>
 
             <ImageButton
                 android:id="@+id/tools_rectangle"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_rectangle"/>
 
             <ImageButton
                 android:id="@+id/tools_transform"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_resize"/>
+                android:src="@drawable/icon_menu_transform"/>
 
             <ImageButton
                 android:id="@+id/tools_line"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_straight_line"/>
 
             <ImageButton
                 android:id="@+id/tools_cursor"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_cursor"/>
 
             <ImageButton
                 android:id="@+id/tools_fill"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_bucket"/>
 
             <ImageButton
                 android:id="@+id/tools_pipette"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_pipette"/>
 
 
             <ImageButton
                 android:id="@+id/tools_stamp"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_stamp"/>
 
             <ImageButton
                 android:id="@+id/tools_import"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_import_image"/>
 
             <ImageButton
                 android:id="@+id/tools_eraser"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_eraser"/>
 
             <ImageButton
                 android:id="@+id/tools_text"
+                style="@style/SelectableButton"
                 android:layout_width="@dimen/bottom_bar_button_width"
                 android:layout_height="match_parent"
-                android:background="@color/transparent"
                 android:src="@drawable/icon_menu_text"/>
 
         </LinearLayout>
@@ -124,7 +125,8 @@
         android:layout_width="@dimen/bottom_bar_button_width"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/ic_action_previous_item_background">
+        android:background="@drawable/ic_action_previous_item_background"
+        tools:ignore="RtlHardcoded, InconsistentLayout">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -137,7 +139,8 @@
         android:layout_width="@dimen/bottom_bar_button_width"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:background="@drawable/ic_action_next_item_background">
+        android:background="@drawable/ic_action_next_item_background"
+        tools:ignore="RtlHardcoded, InconsistentLayout">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

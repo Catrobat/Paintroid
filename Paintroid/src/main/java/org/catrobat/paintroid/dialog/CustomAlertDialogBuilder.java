@@ -19,10 +19,10 @@
 
 package org.catrobat.paintroid.dialog;
 
-import org.catrobat.paintroid.R;
-
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
+
+import org.catrobat.paintroid.R;
 
 public class CustomAlertDialogBuilder extends AlertDialog.Builder {
 	public CustomAlertDialogBuilder(Context context) {

@@ -24,52 +24,54 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.os.Bundle;
 
 public interface Tool {
 
-	// standard stroke widths in pixels
-	public static final int stroke25 = 25;
+	boolean handleDown(PointF coordinate);
 
-	public enum StateChange {
-		ALL, RESET_INTERNAL_STATE, NEW_IMAGE_LOADED, MOVE_CANCELED
-	}
+	boolean handleMove(PointF coordinate);
 
-	public boolean handleDown(PointF coordinate);
+	boolean handleUp(PointF coordinate);
 
-	public boolean handleMove(PointF coordinate);
+	boolean handleTouch(PointF coordinate, int motionEventType);
 
-	public boolean handleUp(PointF coordinate);
+	void changePaintColor(int color);
 
-	public boolean handleTouch(PointF coordinate, int motionEventType);
+	void changePaintStrokeWidth(int strokeWidth);
 
-	public void changePaintColor(int color);
+	void changePaintStrokeCap(Cap cap);
 
-	public void changePaintStrokeWidth(int strokeWidth);
+	Paint getDrawPaint();
 
-	public void changePaintStrokeCap(Cap cap);
+	void setDrawPaint(Paint paint);
 
-	public void setDrawPaint(Paint paint);
+	void draw(Canvas canvas);
 
-	public Paint getDrawPaint();
+	ToolType getToolType();
 
-	public void draw(Canvas canvas);
+	void resetInternalState(StateChange stateChange);
 
-	public ToolType getToolType();
-
-	public void resetInternalState(StateChange stateChange);
-
-	public Point getAutoScrollDirection(float pointX, float pointY,
+	Point getAutoScrollDirection(float pointX, float pointY,
 			int screenWidth, int screenHeight);
 
-	public  void hide();
+	void hide();
 
-	public void toggleShowToolOptions();
+	void toggleShowToolOptions();
 
-	public void setupToolOptions();
+	void onSaveInstanceState(Bundle bundle);
 
-	public boolean getToolOptionsAreShown();
+	void onRestoreInstanceState(Bundle bundle);
 
-	public void startTool();
+	void setupToolOptions();
 
-	public void leaveTool();
+	boolean getToolOptionsAreShown();
+
+	void startTool();
+
+	void leaveTool();
+
+	enum StateChange {
+		ALL, RESET_INTERNAL_STATE, NEW_IMAGE_LOADED, MOVE_CANCELED
+	}
 }

@@ -27,7 +27,6 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,8 +38,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+
 import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.checkTextDirection;
 import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.openMultilingualActivity;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeNavigationDrawer;
@@ -48,27 +46,24 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getConfigu
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.StringStartsWith.startsWith;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class MultilingualActivityTest {
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 	private static final Locale ARABICLOCALE = new Locale("ar");
 	private static final String ARABIC_SAVE_IMAGE = "حفظ الصورة";
 	private static final String ARABIC_LOAD_IMAGE = "استيراد صورة";
-
 	private static final Locale URDULOCALE = new Locale("ur");
 	private static final String URDU_NEW_IMAGE = "نئی تصویر";
 	private static final String URDU_FULLSCREEN = "پورا پردہ";
-
 	private static final Locale FARSILOCALE = new Locale("fa");
 	private static final String FARSI_SAVE_COPY = "ذخیره رونوشت";
 	private static final String FARSI_TERMS_OF_USE = "شرایط استفاده";
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class);
-
-	@ClassRule
-	public static final SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Test
 	public void switchLanguageToArabic() throws Exception {

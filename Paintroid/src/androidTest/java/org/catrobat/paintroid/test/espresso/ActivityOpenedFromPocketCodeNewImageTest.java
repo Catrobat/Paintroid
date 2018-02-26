@@ -26,8 +26,9 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
@@ -48,8 +49,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.EXTRA_CATROID_PICTURE_NAME_NAME;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.EXTRA_CATROID_PICTURE_PATH_NAME;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
@@ -59,7 +59,7 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class ActivityOpenedFromPocketCodeNewImageTest {
 
-	private final static String IMAGE_NAME = "Look123";
+	private static final String IMAGE_NAME = "Look123";
 
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
 
@@ -75,8 +75,8 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 	@Before
 	public void setUp() {
 		Intent extras = new Intent();
-		extras.putExtra(EXTRA_CATROID_PICTURE_PATH_NAME, "");
-		extras.putExtra(EXTRA_CATROID_PICTURE_NAME_NAME, IMAGE_NAME);
+		extras.putExtra(Constants.PAINTROID_PICTURE_PATH, "");
+		extras.putExtra(Constants.PAINTROID_PICTURE_NAME, IMAGE_NAME);
 
 		launchActivityRule.launchActivity(extras);
 
@@ -89,8 +89,8 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 
 	@After
 	public void tearDown() {
-		PaintroidApplication.savedPictureUri = null;
-		PaintroidApplication.isSaved = false;
+		NavigationDrawerMenuActivity.savedPictureUri = null;
+		NavigationDrawerMenuActivity.isSaved = false;
 
 		if (imageFile != null) {
 			imageFile.delete();
@@ -117,7 +117,8 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 	}
 
 	private File getImageFile(String filename) {
-		File imageFile = new File(Environment.getExternalStorageDirectory(), "/" + activityHelper.getString(R.string.ext_storage_directory_name) + "/" + filename + ".png");
-		return imageFile;
+		return new File(Environment.getExternalStorageDirectory(), File.separatorChar
+				+ Constants.EXT_STORAGE_DIRECTORY_NAME
+				+ File.separatorChar + filename + ".png");
 	}
 }

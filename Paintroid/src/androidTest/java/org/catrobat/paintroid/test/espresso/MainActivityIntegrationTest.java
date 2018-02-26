@@ -45,6 +45,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.addNewLayer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeLayerMenu;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
@@ -63,22 +64,19 @@ public class MainActivityIntegrationTest {
 
 	public static final int ARRAY_COLOR_RED = -3865074;
 	public static final int ARRAY_POSITION_RED = 12;
-
-	private PointF pointOnScreenMiddle;
-	private ActivityHelper activityHelper;
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	private PointF pointOnScreenMiddle;
+	private ActivityHelper activityHelper;
 
 	@Before
 	public void setUp() {
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
-		int displayWidth  = activityHelper.getDisplayWidth();
+		int displayWidth = activityHelper.getDisplayWidth();
 		int displayHeight = activityHelper.getDisplayHeight();
-		pointOnScreenMiddle = new PointF(displayWidth/2, displayHeight/2);
+		pointOnScreenMiddle = new PointF(displayWidth / 2, displayHeight / 2);
 		selectTool(ToolType.BRUSH);
 	}
 
@@ -87,7 +85,7 @@ public class MainActivityIntegrationTest {
 	}
 
 	@Test
-	public void navigationDrawer_menu_termsOfUseAndServiceTextIsCorrect() {
+	public void navigationDrawerMenuTermsOfUseAndServiceTextIsCorrect() {
 		openNavigationDrawer();
 
 		onView(withText(R.string.menu_terms_of_use_and_service)).perform(click());
@@ -101,7 +99,7 @@ public class MainActivityIntegrationTest {
 	}
 
 	@Test
-	public void navigationDrawer_menu_menuAboutTextIsCorrect() {
+	public void navigationDrawerMenuMenuAboutTextIsCorrect() {
 
 		openNavigationDrawer();
 
@@ -163,7 +161,6 @@ public class MainActivityIntegrationTest {
 		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
 	}
 
-
 	@Test
 	public void testHelpDialogForText() {
 		toolHelpTest(ToolType.TEXT, R.string.help_content_text);
@@ -189,7 +186,6 @@ public class MainActivityIntegrationTest {
 		assertEquals("Color after drawing point has to be black", Color.BLACK, currentColor);
 
 		selectColorPickerPresetSelectorColor(ARRAY_POSITION_RED);
-
 	}
 
 	@Test
@@ -207,7 +203,6 @@ public class MainActivityIntegrationTest {
 		openLayerMenu();
 		selectLayer(0);
 		closeLayerMenu();
-
 	}
 
 	@Test

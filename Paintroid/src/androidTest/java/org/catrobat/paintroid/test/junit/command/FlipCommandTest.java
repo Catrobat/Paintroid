@@ -24,37 +24,36 @@ import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class FlipCommandTest extends CommandTestSetup {
 
-	private int mBitmapHeight;
-	private int mBitmapWidth;
+	private int bitmapHeight;
+	private int bitmapWidth;
 
 	@Override
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		super.setUp();
-		mBitmapHeight = mBitmapUnderTest.getHeight();
-		mBitmapWidth = mBitmapUnderTest.getWidth();
+		bitmapHeight = bitmapUnderTest.getHeight();
+		bitmapWidth = bitmapUnderTest.getWidth();
 	}
 
 	@Test
 	public void testVerticalFlip() {
-		mCommandUnderTest = new FlipCommand(FlipDirection.FLIP_VERTICAL);
-		mBitmapUnderTest.setPixel(0, mBitmapHeight / 2, PAINT_BASE_COLOR);
-		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
-		int pixel = mBitmapUnderTest.getPixel(mBitmapWidth - 1, mBitmapWidth / 2);
+		commandUnderTest = new FlipCommand(FlipDirection.FLIP_VERTICAL);
+		bitmapUnderTest.setPixel(0, bitmapHeight / 2, PAINT_BASE_COLOR);
+		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		int pixel = bitmapUnderTest.getPixel(bitmapWidth - 1, bitmapWidth / 2);
 		assertEquals("pixel should be paint_base_color", PAINT_BASE_COLOR, pixel);
 	}
 
 	@Test
 	public void testHorizontalFlip() {
-		mCommandUnderTest = new FlipCommand(FlipDirection.FLIP_HORIZONTAL);
-		mBitmapUnderTest.setPixel(mBitmapWidth / 2, 0, PAINT_BASE_COLOR);
-		mCommandUnderTest.run(mCanvasUnderTest, mLayerUnderTest);
-		int pixel = mBitmapUnderTest.getPixel(mBitmapWidth / 2, mBitmapWidth - 1);
+		commandUnderTest = new FlipCommand(FlipDirection.FLIP_HORIZONTAL);
+		bitmapUnderTest.setPixel(bitmapWidth / 2, 0, PAINT_BASE_COLOR);
+		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		int pixel = bitmapUnderTest.getPixel(bitmapWidth / 2, bitmapWidth - 1);
 		assertEquals("pixel should be paint_base_color", PAINT_BASE_COLOR, pixel);
 	}
-
 }

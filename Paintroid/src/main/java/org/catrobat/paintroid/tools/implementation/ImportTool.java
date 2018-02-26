@@ -11,9 +11,9 @@ public class ImportTool extends StampTool {
 
 	public ImportTool(Context context, ToolType toolType) {
 		super(context, toolType);
-		mReadyForPaste = true;
-		mLongClickAllowed = false;
-		createOverlayButton();
+		readyForPaste = true;
+		longClickAllowed = false;
+		createOverlayBitmap();
 	}
 
 	@Override
@@ -26,8 +26,7 @@ public class ImportTool extends StampTool {
 
 		final float minimumSize = DEFAULT_BOX_RESIZE_MARGIN;
 
-		mBoxWidth = Math.max(minimumSize, Math.min(maximumBorderRatioWidth, bitmap.getWidth()));
-		mBoxHeight = Math.max(minimumSize, Math.min(maximumBorderRatioHeight, bitmap.getHeight()));
-		createOverlayButton();
+		boxWidth = Math.max(minimumSize, Math.min(maximumBorderRatioWidth, bitmap.getWidth()));
+		boxHeight = Math.max(minimumSize, Math.min(maximumBorderRatioHeight, bitmap.getHeight()));
 	}
 }

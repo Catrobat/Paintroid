@@ -18,107 +18,98 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<LinearLayout android:id="@+id/layout_bottom_bar"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:paddingEnd="2dp"
-              android:paddingLeft="2dp"
-              android:paddingRight="2dp"
-              android:paddingStart="2dp">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_bar_scroll_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:requiresFadingEdge="vertical"
+    android:scrollbars="none"
+    android:fillViewport="true"
+    tools:showIn="@layout/main">
 
-    <ScrollView
-        android:id="@+id/bottom_bar_landscape_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:requiresFadingEdge="vertical"
-        android:scrollbars="none"
-        android:fillViewport="true">
+    <LinearLayout
+        android:id="@+id/tools_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/tools_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/tools_brush"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_brush"/>
 
-            <ImageButton
-                android:id="@+id/tools_brush"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/bottom_bar_button_activated"
-                android:src="@drawable/icon_menu_brush"/>
+        <ImageButton
+            android:id="@+id/tools_rectangle"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_rectangle"/>
 
-            <ImageButton
-                android:id="@+id/tools_rectangle"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_rectangle"/>
+        <ImageButton
+            android:id="@+id/tools_transform"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_transform"/>
 
-            <ImageButton
-                android:id="@+id/tools_transform"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_resize"/>
+        <ImageButton
+            android:id="@+id/tools_line"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_straight_line"/>
 
-            <ImageButton
-                android:id="@+id/tools_line"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_straight_line"/>
+        <ImageButton
+            android:id="@+id/tools_cursor"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_cursor"/>
 
-            <ImageButton
-                android:id="@+id/tools_cursor"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_cursor"/>
+        <ImageButton
+            android:id="@+id/tools_fill"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_bucket"/>
 
-            <ImageButton
-                android:id="@+id/tools_fill"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_bucket"/>
+        <ImageButton
+            android:id="@+id/tools_pipette"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_pipette"/>
 
-            <ImageButton
-                android:id="@+id/tools_pipette"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_pipette"/>
+        <ImageButton
+            android:id="@+id/tools_stamp"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_stamp"/>
 
-            <ImageButton
-                android:id="@+id/tools_stamp"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_stamp"/>
+        <ImageButton
+            android:id="@+id/tools_import"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_import_image"/>
 
-            <ImageButton
-                android:id="@+id/tools_import"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_import_image"/>
+        <ImageButton
+            android:id="@+id/tools_eraser"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_eraser"/>
 
-            <ImageButton
-                android:id="@+id/tools_eraser"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_eraser"/>
+        <ImageButton
+            android:id="@+id/tools_text"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_text"/>
 
-            <ImageButton
-                android:id="@+id/tools_text"
-                android:layout_width="@dimen/bottom_bar_landscape_button_width"
-                android:layout_height="@dimen/bottom_bar_landscape_button_height"
-                android:background="@color/transparent"
-                android:src="@drawable/icon_menu_text"/>
-
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

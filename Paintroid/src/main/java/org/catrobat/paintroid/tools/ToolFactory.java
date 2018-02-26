@@ -33,50 +33,52 @@ import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.tools.implementation.TextTool;
 import org.catrobat.paintroid.tools.implementation.TransformTool;
 
-public class ToolFactory {
+public final class ToolFactory {
+
+	private ToolFactory() {
+	}
 
 	public static Tool createTool(Activity context, ToolType toolType) {
 		Tool tool;
 		switch (toolType) {
-		case BRUSH:
-			tool = new DrawTool(context, toolType);
-			break;
-		case CURSOR:
-			tool = new CursorTool(context, toolType);
-			break;
-		case STAMP:
-			tool = new StampTool(context, toolType);
-			break;
-		case IMPORTPNG:
-			tool = new ImportTool(context, toolType);
-			break;
-		case PIPETTE:
-			tool = new PipetteTool(context, toolType);
-			break;
-		case FILL:
-			tool = new FillTool(context, toolType);
-			break;
-		case TRANSFORM:
-			tool = new TransformTool(context, toolType);
-			break;
-		case SHAPE:
-			tool = new GeometricFillTool(context, toolType);
-			break;
-		case ERASER:
-			tool = new EraserTool(context, toolType);
-			break;
-		case LINE:
-			tool = new LineTool(context, toolType);
-			break;
-		case TEXT:
-			tool = new TextTool(context, toolType);
-			break;
-		default:
-			tool = new DrawTool(context, ToolType.BRUSH);
-			break;
+			case BRUSH:
+				tool = new DrawTool(context, toolType);
+				break;
+			case CURSOR:
+				tool = new CursorTool(context, toolType);
+				break;
+			case STAMP:
+				tool = new StampTool(context, toolType);
+				break;
+			case IMPORTPNG:
+				tool = new ImportTool(context, toolType);
+				break;
+			case PIPETTE:
+				tool = new PipetteTool(context, toolType);
+				break;
+			case FILL:
+				tool = new FillTool(context, toolType);
+				break;
+			case TRANSFORM:
+				tool = new TransformTool(context, toolType);
+				break;
+			case SHAPE:
+				tool = new GeometricFillTool(context, toolType);
+				break;
+			case ERASER:
+				tool = new EraserTool(context, toolType);
+				break;
+			case LINE:
+				tool = new LineTool(context, toolType);
+				break;
+			case TEXT:
+				tool = new TextTool(context, toolType);
+				break;
+			default:
+				tool = new DrawTool(context, ToolType.BRUSH);
+				break;
 		}
 		tool.setupToolOptions();
 		return tool;
 	}
-
 }

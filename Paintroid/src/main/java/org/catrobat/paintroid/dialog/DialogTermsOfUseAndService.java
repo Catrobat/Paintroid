@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -47,6 +48,8 @@ public class DialogTermsOfUseAndService extends AppCompatDialogFragment implemen
 		AlertDialog.Builder builder = new CustomAlertDialogBuilder(getActivity());
 
 		builder.setTitle(R.string.terms_of_use_and_service_title);
+
+		@SuppressLint("InflateParams")
 		View view = inflater.inflate(R.layout.dialog_terms_of_use_and_service, null);
 
 		TextView termsOfUseAndServiceTextView = (TextView) view
@@ -74,16 +77,14 @@ public class DialogTermsOfUseAndService extends AppCompatDialogFragment implemen
 		builder.setPositiveButton(R.string.done, this);
 
 		return builder.create();
-
 	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		switch (which) {
-		case AlertDialog.BUTTON_POSITIVE:
-			dismiss();
-			break;
+			case AlertDialog.BUTTON_POSITIVE:
+				dismiss();
+				break;
 		}
-
 	}
 }

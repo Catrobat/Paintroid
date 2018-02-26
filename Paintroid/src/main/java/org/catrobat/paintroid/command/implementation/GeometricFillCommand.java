@@ -30,57 +30,53 @@ import android.graphics.RectF;
 import org.catrobat.paintroid.tools.Layer;
 
 public class GeometricFillCommand extends BaseCommand {
-	protected final Point mCoordinates;
-	protected final float mBoxWidth;
-	protected final float mBoxHeight;
-	protected final float mBoxRotation;
-	protected final RectF mBoxRect;
+	protected final Point coordinates;
+	protected final float boxWidth;
+	protected final float boxHeight;
+	protected final float boxRotation;
+	protected final RectF boxRect;
 
-	protected Paint mGeometricFillPaint;
+	protected Paint geometricFillPaint;
 
 	public GeometricFillCommand(Bitmap bitmap, Point position, float width, float height,
-	                            float rotation, Paint paint) {
+			float rotation, Paint paint) {
 		super(new Paint(Paint.DITHER_FLAG));
 
-		if (position != null) {
-			mCoordinates = new Point(position.x, position.y);
-		} else {
-			mCoordinates = null;
-		}
+		coordinates = position != null ? new Point(position.x, position.y) : null;
 		if (bitmap != null) {
-			mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+			this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
 		}
-		mBoxWidth = width;
-		mBoxHeight = height;
-		mBoxRotation = rotation;
-		mBoxRect = new RectF(-mBoxWidth / 2f, -mBoxHeight / 2f, mBoxWidth / 2f,
-				mBoxHeight / 2f);
-		mGeometricFillPaint = new Paint(paint);
+		boxWidth = width;
+		boxHeight = height;
+		boxRotation = rotation;
+		boxRect = new RectF(-boxWidth / 2f, -boxHeight / 2f, boxWidth / 2f,
+				boxHeight / 2f);
+		geometricFillPaint = new Paint(paint);
 	}
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
 
-		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
+		notifyStatus(NotifyStates.COMMAND_STARTED);
 
-		if (mBitmap == null) {
+		if (bitmap == null) {
 			setChanged();
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+			notifyStatus(NotifyStates.COMMAND_FAILED);
 			return;
 		}
 
 		canvas.save();
-		canvas.translate(mCoordinates.x, mCoordinates.y);
-		canvas.rotate(mBoxRotation);
+		canvas.translate(coordinates.x, coordinates.y);
+		canvas.rotate(boxRotation);
 
 		Paint testPaint = new Paint();
 		testPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
 		testPaint.setAntiAlias(true);
 
-		canvas.drawBitmap(mBitmap, null, mBoxRect, mGeometricFillPaint);
+		canvas.drawBitmap(bitmap, null, boxRect, geometricFillPaint);
 
 		canvas.restore();
 
-		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+		notifyStatus(NotifyStates.COMMAND_DONE);
 	}
 }

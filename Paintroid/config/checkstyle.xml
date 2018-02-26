@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+  <property name="charset" value="UTF-8" />
+  <property name="severity" value="warning" />
+
+  <module name="TreeWalker">
+    <property name="tabWidth" value="4" />
+
+    <!-- To enable SuppressWithNearbyCommentFilter -->
+    <module name="FileContentsHolder" />
+
+    <!-- Annotations -->
+    <module name="AnnotationLocation">
+      <property name="allowSamelineMultipleAnnotations" value="false" />
+      <property name="allowSamelineSingleParameterlessAnnotation" value="false" />
+      <property name="allowSamelineParameterizedAnnotation" value="false" />
+    </module>
+    <module name="AnnotationUseStyle">
+      <property name="elementStyle" value="compact"/>
+    </module>
+    <module name="MissingDeprecated" />
+    <module name="MissingOverride" />
+    <module name="SuppressWarnings" />
+
+    <!-- Blocks -->
+    <module name="AvoidNestedBlocks" />
+    <module name="EmptyBlock" />
+    <module name="EmptyCatchBlock">
+      <property name="commentFormat" value="This is expected" />
+      <property name="exceptionVariableName" value="expected|ignore|ok" />
+    </module>
+    <module name="LeftCurly" />
+    <module name="NeedBraces" />
+    <module name="RightCurly">
+      <property name="option" value="same" />
+      <property name="tokens" value="LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_DO"/>
+    </module>
+    <module name="RightCurly">
+      <property name="option" value="alone" />
+      <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT" />
+    </module>
+
+    <!-- Coding -->
+    <module name="CovariantEquals" />
+    <module name="DefaultComesLast" />
+    <module name="EmptyStatement" />
+    <module name="EqualsHashCode" />
+    <module name="FallThrough" />
+    <module name="IllegalInstantiation">
+      <property name="classes" value="
+          java.lang.Boolean,
+          java.lang.Byte,
+          java.lang.Character,
+          java.lang.Double,
+          java.lang.Float,
+          java.lang.Integer,
+          java.lang.Long,
+          java.lang.Short,
+          java.lang.String" />
+    </module>
+    <module name="MultipleVariableDeclarations" />
+    <module name="NoFinalizer" />
+    <module name="OneStatementPerLine" />
+    <module name="SimplifyBooleanExpression" />
+    <module name="SimplifyBooleanReturn" />
+    <module name="StringLiteralEquality" />
+    <module name="SuperFinalize" />
+
+    <!-- Design -->
+    <module name="FinalClass" />
+    <module name="HideUtilityClassConstructor" />
+    <module name="InterfaceIsType" />
+    <module name="MutableException" />
+    <module name="OneTopLevelClass" />
+
+    <!-- Javadoc -->
+    <module name="AtclauseOrder" />
+
+    <!-- Miscellaneous -->
+    <module name="ArrayTypeStyle" />
+    <module name="AvoidEscapedUnicodeCharacters" />
+    <module name="Indentation">
+      <property name="basicOffset" value="4" />
+      <property name="braceAdjustment" value="0" />
+      <property name="caseIndent" value="4" />
+      <property name="throwsIndent" value="8" />
+      <property name="lineWrappingIndentation" value="8" />
+      <property name="arrayInitIndent" value="4" />
+    </module>
+    <module name="OuterTypeFilename" />
+    <module name="UpperEll" />
+
+    <!-- Modifiers -->
+    <module name="ModifierOrder" />
+    <module name="RedundantModifier" />
+
+    <!-- Naming -->
+    <module name="ClassTypeParameterName">
+      <message key="name.invalidPattern" value="Class type parameter not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="TypeName">
+      <message key="name.invalidPattern" value="Class name not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="TypeName">
+      <property name="format" value="^(?!I[A-Z])[A-Z][a-zA-Z0-9]*$" />
+      <property name="tokens" value="INTERFACE_DEF" />
+      <message key="name.invalidPattern" value="Interface name not following naming convention and shouldn't have a preceding I - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="PackageName">
+      <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$" />
+      <message key="name.invalidPattern" value="Package name not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="ParameterName">
+      <property name="ignoreOverridden" value="true"/>
+      <message key="name.invalidPattern" value="Parameter name not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="StaticVariableName">
+      <property name="format" value="^(([a-z]{2})|([x-z][A-Z]))[a-zA-Z0-9]*$" />
+      <message key="name.invalidPattern" value="Static member variable not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="MethodTypeParameterName">
+      <message key="name.invalidPattern" value="Method type parameter not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="MethodName">
+      <message key="name.invalidPattern" value="Method name not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="MemberName">
+      <property name="format" value="^(([a-z]{2})|([x-z][A-Z]))[a-zA-Z0-9]*$" />
+      <message key="name.invalidPattern" value="Member name not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="LocalVariableName">
+      <message key="name.invalidPattern" value="Local variable name not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="LocalFinalVariableName">
+      <message key="name.invalidPattern" value="Local final variable name not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="ConstantName">
+      <message key="name.invalidPattern" value="Constant name not following naming convention - Name ''{0}'' must match pattern ''{1}''." />
+    </module>
+    <module name="CatchParameterName" />
+    <module name="InterfaceTypeParameterName" />
+    <module name="AbbreviationAsWordInName">
+      <property name="allowedAbbreviations" value="UUID" />
+    </module>
+
+    <!-- Package and Imports -->
+    <module name="AvoidStarImport" />
+    <module name="ImportOrder">
+      <property name="option" value="bottom" />
+      <property name="groups" value="android,com,cucumber,edu,junit,net,org,java,javax" />
+      <property name="ordered" value="true" />
+      <property name="separated" value="true" />
+    </module>
+    <module name="RedundantImport" />
+    <module name="PackageDeclaration" />
+    <module name="UnusedImports" />
+
+    <!-- Size -->
+    <module name="OuterTypeNumber" />
+
+    <!-- Whitespace -->
+    <module name="EmptyForInitializerPad" />
+    <module name="EmptyForIteratorPad">
+      <property name="option" value="space" />
+    </module>
+    <module name="EmptyLineSeparator">
+      <property name="tokens" value="IMPORT, CLASS_DEF, INTERFACE_DEF"/>
+      <property name="allowNoEmptyLineBetweenFields" value="true"/>
+      <property name="allowMultipleEmptyLines" value="false"/>
+      <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
+    </module>
+    <module name="GenericWhitespace" />
+    <module name="MethodParamPad" />
+    <module name="NoLineWrap" />
+    <module name="NoWhitespaceAfter" />
+    <module name="NoWhitespaceBefore">
+      <property name="allowLineBreaks" value="true"/>
+      <property name="tokens" value="COMMA, SEMI, POST_INC, POST_DEC, DOT, GENERIC_END, ELLIPSIS"/>
+    </module>
+    <module name="OperatorWrap">
+      <property name="option" value="nl"/>
+      <property name="tokens" value="QUESTION, COLON, EQUAL, NOT_EQUAL, DIV, PLUS, MINUS, STAR, MOD, SR, BSR, GE, GT, SL, LE, LT, BXOR, BOR, LOR, BAND, LAND, LITERAL_INSTANCEOF, TYPE_EXTENSION_AND, METHOD_REF"/>
+    </module>
+    <module name="OperatorWrap">
+      <property name="option" value="eol"/>
+      <property name="tokens" value="ASSIGN, DIV_ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, MOD_ASSIGN, SR_ASSIGN, BSR_ASSIGN, SL_ASSIGN, BXOR_ASSIGN, BOR_ASSIGN, BAND_ASSIGN"/>
+    </module>
+    <module name="ParenPad" />
+    <module name="SeparatorWrap">
+      <property name="tokens" value="DOT, AT" />
+      <property name="option" value="nl" />
+    </module>
+    <module name="SeparatorWrap">
+      <property name="tokens" value="COMMA, ELLIPSIS, ARRAY_DECLARATOR, RBRACK" />
+      <property name="option" value="EOL" />
+    </module>
+    <module name="SingleSpaceSeparator" />
+    <module name="TypecastParenPad" />
+    <module name="WhitespaceAfter" />
+    <module name="WhitespaceAround">
+      <property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR, BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, DIV_ASSIGN, DO_WHILE, EQUAL, GE, GT, LAMBDA, LAND, LE, LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF, LITERAL_RETURN, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, LOR, LT, MINUS, MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION, SL, SLIST, SL_ASSIGN, SR, SR_ASSIGN, STAR, STAR_ASSIGN, LITERAL_ASSERT, TYPE_EXTENSION_AND" />
+    </module>
+
+    <module name="RegexpSinglelineJava">
+      <property name="format" value="^\t* " />
+      <property name="ignoreComments" value="true" />
+      <property name="message" value="Spaces aren't allowed for indentation. Tabs only" />
+    </module>
+  </module>
+
+  <module name="NewlineAtEndOfFile">
+    <property name="fileExtensions" value="java,gradle" />
+    <property name="lineSeparator" value="lf_cr_crlf" />
+  </module>
+  <module name="UniqueProperties" />
+
+  <!--<module name="RegexpHeader">-->
+    <!--<property name="headerFile" value="catroid/src/test/res/agpl_license_text.txt" />-->
+    <!--<property name="multiLines" value="1,2" />-->
+  <!--</module>-->
+
+  <module name="RegexpSingleline">
+    <property name="format" value="(\uFFFC|\uFFFD|\uFFFF)" />
+    <property name="message" value="Remove illegal block character FFFC, FFFD or FFFF." />
+  </module>
+
+  <module name="RegexpSingleline">
+    <property name="format" value="^\s*\*\s*@author" />
+    <property name="message" value="Remove author from the comment." />
+  </module>
+
+  <module name="RegexpSingleline">
+    <property name="fileExtensions" value="gradle" />
+    <property name="format" value="^ *\t" />
+    <property name="message" value="Tabs aren't allowed for indentation. Spaces only" />
+  </module>
+
+  <module name="RegexpMultiline">
+    <property name="format" value=".\n{2,}\s*\}" />
+    <property name="message" value="Next line is an unnecessary newline" />
+  </module>
+
+  <module name="RegexpMultiline">
+    <property name="fileExtensions" value="java,gradle" />
+    <property name="format" value=".\n{3,}" />
+    <property name="message" value="Maximum of blank lines is 1" />
+  </module>
+
+  <module name="RegexpMultiline">
+    <property name="fileExtensions" value="xml" />
+    <property name="format" value=".\n{4,}" />
+    <property name="message" value="Maximum of blank lines is 2" />
+  </module>
+
+  <module name="RegexpSingleline">
+    <property name="fileExtensions" value="java,gradle" />
+    <property name="format" value="^\s+$" />
+    <property name="message" value="Empty line contains whitespaces." />
+  </module>
+
+  <module name="RegexpSingleline">
+    <property name="id" value="EllipsesCheck"/>
+    <property name="fileExtensions" value="java,xml" />
+    <property name="format" value="&amp;#8230;" />
+    <property name="message" value="Use ellipses character … instead of &amp;#8230;." />
+  </module>
+
+  <module name="SuppressWithNearbyCommentFilter">
+    <property name="commentFormat" value="CHECKSTYLE DISABLE ([\w\|]+) FOR (-?\d+) LINES" />
+    <property name="checkFormat" value="$1" />
+    <property name="influenceFormat" value="$2" />
+  </module>
+
+  <module name="SuppressionCommentFilter">
+    <property name="offCommentFormat" value="@formatter\:off" />
+    <property name="onCommentFormat" value="@formatter\:on" />
+  </module>
+
+  <module name="SuppressionFilter">
+    <property name="file" value="Paintroid/config/checkstyle_suppressions.xml" />
+  </module>
+
+</module>

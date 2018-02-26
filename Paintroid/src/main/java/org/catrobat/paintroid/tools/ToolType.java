@@ -19,74 +19,61 @@
 
 package org.catrobat.paintroid.tools;
 
-import java.util.EnumSet;
-
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 
+import java.util.EnumSet;
+
 public enum ToolType {
-	PIPETTE(R.string.button_pipette, R.drawable.icon_menu_pipette, R.string.help_content_eyedropper, false, EnumSet.of(StateChange.ALL), R.id.tools_pipette),
-	BRUSH(R.string.button_brush, R.drawable.icon_menu_brush, R.string.help_content_brush, true, EnumSet.of(StateChange.ALL), R.id.tools_brush),
-	UNDO(R.string.button_undo, R.drawable.icon_menu_undo, R.string.help_content_undo, false, EnumSet.of(StateChange.ALL), R.id.btn_top_undo),
-	REDO(R.string.button_redo, R.drawable.icon_menu_redo, R.string.help_content_redo, false, EnumSet.of(StateChange.ALL), R.id.btn_top_redo),
-	FILL(R.string.button_fill, R.drawable.icon_menu_bucket, R.string.help_content_fill, true, EnumSet.of(StateChange.ALL), R.id.tools_fill),
-	STAMP(R.string.button_stamp, R.drawable.icon_menu_stamp, R.string.help_content_stamp, false, EnumSet.of(StateChange.ALL), R.id.tools_stamp),
-	LINE(R.string.button_line, R.drawable.icon_menu_straight_line, R.string.help_content_line, true, EnumSet.of(StateChange.ALL), R.id.tools_line),
-	CURSOR(R.string.button_cursor, R.drawable.icon_menu_cursor, R.string.help_content_cursor, true, EnumSet.of(StateChange.ALL), R.id.tools_cursor),
-	IMPORTPNG(R.string.button_import_image, R.drawable.icon_menu_import_image, R.string.help_content_import_png, false, EnumSet.of(StateChange.ALL), R.id.tools_import),
-	TRANSFORM(R.string.button_transform, R.drawable.icon_menu_resize, R.string.help_content_transform, false, EnumSet.of(StateChange.RESET_INTERNAL_STATE, StateChange.NEW_IMAGE_LOADED), R.id.tools_transform),
-	ERASER(R.string.button_eraser, R.drawable.icon_menu_eraser, R.string.help_content_eraser, false, EnumSet.of(StateChange.ALL), R.id.tools_eraser),
-	SHAPE(R.string.button_shape, R.drawable.icon_menu_rectangle, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
-	TEXT(R.string.button_text, R.drawable.icon_menu_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text),
-	LAYER(R.string.layers_title, R.drawable.icon_menu_layers, R.string.layers_title, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
-	COLORCHOOSER(R.string.color_chooser_title, R.drawable.ic_icon_menu_color, R.string.color_chooser_title, true, EnumSet.of(StateChange.ALL), R.id.btn_top_color_frame);
+	PIPETTE(R.string.button_pipette, R.string.help_content_eyedropper, false, EnumSet.of(StateChange.ALL), R.id.tools_pipette),
+	BRUSH(R.string.button_brush, R.string.help_content_brush, true, EnumSet.of(StateChange.ALL), R.id.tools_brush),
+	UNDO(R.string.button_undo, R.string.help_content_undo, false, EnumSet.of(StateChange.ALL), R.id.btn_top_undo),
+	REDO(R.string.button_redo, R.string.help_content_redo, false, EnumSet.of(StateChange.ALL), R.id.btn_top_redo),
+	FILL(R.string.button_fill, R.string.help_content_fill, true, EnumSet.of(StateChange.ALL), R.id.tools_fill),
+	STAMP(R.string.button_stamp, R.string.help_content_stamp, false, EnumSet.of(StateChange.ALL), R.id.tools_stamp),
+	LINE(R.string.button_line, R.string.help_content_line, true, EnumSet.of(StateChange.ALL), R.id.tools_line),
+	CURSOR(R.string.button_cursor, R.string.help_content_cursor, true, EnumSet.of(StateChange.ALL), R.id.tools_cursor),
+	IMPORTPNG(R.string.button_import_image, R.string.help_content_import_png, false, EnumSet.of(StateChange.ALL), R.id.tools_import),
+	TRANSFORM(R.string.button_transform, R.string.help_content_transform, true, EnumSet.of(StateChange.RESET_INTERNAL_STATE, StateChange.NEW_IMAGE_LOADED), R.id.tools_transform),
+	ERASER(R.string.button_eraser, R.string.help_content_eraser, false, EnumSet.of(StateChange.ALL), R.id.tools_eraser),
+	SHAPE(R.string.button_shape, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
+	TEXT(R.string.button_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text),
+	LAYER(R.string.layers_title, R.string.help_content_layer, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
+	COLORCHOOSER(R.string.color_chooser_title, R.string.help_content_color_chooser, true, EnumSet.of(StateChange.ALL), R.id.btn_top_color);
 
+	private int nameResource;
+	private int helpTextResource;
+	private boolean allowColorChange;
+	private EnumSet<StateChange> stateChangeBehaviour;
+	private int toolButtonID;
 
-
-
-	private int mNameResource;
-	private int mImageResource;
-	private int mHelpTextResource;
-	private boolean mAllowColorChange;
-	private EnumSet<StateChange> mStateChangeBehaviour;
-	private int mToolButtonID;
-
-	ToolType(int nameResource, int imageResource, int helpTextResource, boolean allowColorchange,
-	         EnumSet<StateChange> stateChangeBehaviour, int toolButtonID) {
-		mNameResource = nameResource;
-		mImageResource = imageResource;
-		mHelpTextResource = helpTextResource;
-		mAllowColorChange = allowColorchange;
-		mStateChangeBehaviour = stateChangeBehaviour;
-		mToolButtonID = toolButtonID;
+	ToolType(int nameResource, int helpTextResource, boolean allowColorchange,
+			EnumSet<StateChange> stateChangeBehaviour, int toolButtonID) {
+		this.nameResource = nameResource;
+		this.helpTextResource = helpTextResource;
+		allowColorChange = allowColorchange;
+		this.stateChangeBehaviour = stateChangeBehaviour;
+		this.toolButtonID = toolButtonID;
 	}
 
 	public int getNameResource() {
-		return mNameResource;
-	}
-
-	public void setNameResource(int nameResource) {	mNameResource = nameResource; }
-
-	public int getImageResource() {
-		return mImageResource;
+		return nameResource;
 	}
 
 	public int getHelpTextResource() {
-		return mHelpTextResource;
+		return helpTextResource;
 	}
 
 	public boolean isColorChangeAllowed() {
-		return mAllowColorChange;
+		return allowColorChange;
 	}
 
 	public boolean shouldReactToStateChange(StateChange stateChange) {
-		if (mStateChangeBehaviour.contains(StateChange.ALL)) {
-			return (true);
-		} else return mStateChangeBehaviour.contains(stateChange);
+		return stateChangeBehaviour.contains(StateChange.ALL)
+				|| stateChangeBehaviour.contains(stateChange);
 	}
 
 	public int getToolButtonID() {
-		return mToolButtonID;
+		return toolButtonID;
 	}
-
 }

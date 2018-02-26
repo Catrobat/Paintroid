@@ -21,60 +21,59 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PointF;
 import android.support.annotation.ColorInt;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
-import android.widget.ImageButton;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.button.ColorButton;
 
 public class EraserTool extends DrawTool {
 
-	private ColorButton mColorButton;
-	private View mColorPickerPalette;
-	private @ColorInt int mPreviousColor;
+	@VisibleForTesting
+	public ColorButton colorButton;
+	private View colorPickerPalette;
+	@ColorInt
+	private int previousColor;
 
 	public EraserTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
-		mPreviousColor = Color.MAGENTA;
+		previousColor = Color.MAGENTA;
 		displayEraserInsteadOfSelectedColor();
 	}
 
 	private void displayEraserInsteadOfSelectedColor() {
-		mColorButton = (ColorButton) ((Activity) mContext).findViewById(R.id.btn_top_color);
-		mColorButton.setImageResource(R.drawable.icon_topbar_eraser);
+		colorButton = (ColorButton) ((Activity) context).findViewById(R.id.btn_top_color);
+		colorButton.setImageResource(R.drawable.icon_menu_eraser);
 
-		mColorPickerPalette = ((Activity) mContext).findViewById(R.id.btn_top_color_palette);
-		mColorPickerPalette.setVisibility(View.INVISIBLE);
+		colorPickerPalette = ((Activity) context).findViewById(R.id.btn_top_color_palette);
+		colorPickerPalette.setVisibility(View.INVISIBLE);
 
-		mColorButton.setDrawSelectedColor(false);
+		colorButton.setDrawSelectedColor(false);
 	}
 
 	@Override
 	public Paint getDrawPaint() {
 		Paint paint = super.getDrawPaint();
-		paint.setColor(mPreviousColor);
+		paint.setColor(previousColor);
 		return paint;
 	}
 
 	@Override
 	public void setDrawPaint(Paint paint) {
 		super.setDrawPaint(paint);
-		mPreviousColor = paint.getColor();
+		previousColor = paint.getColor();
 	}
 
 	@Override
 	public void leaveTool() {
 		super.leaveTool();
-		mColorButton.resetDrawSelectedColor();
-		mColorButton.setImageResource(0);
-		mColorPickerPalette.setVisibility(View.VISIBLE);
+		colorButton.resetDrawSelectedColor();
+		colorButton.setImageResource(0);
+		colorPickerPalette.setVisibility(View.VISIBLE);
 	}
 }

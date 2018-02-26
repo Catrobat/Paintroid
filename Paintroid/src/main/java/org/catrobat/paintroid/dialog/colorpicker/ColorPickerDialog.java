@@ -17,9 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- *    This file incorporates work covered by the following copyright and  
- *    permission notice: 
- *    
+ *    This file incorporates work covered by the following copyright and
+ *    permission notice:
+ *
  *        Copyright (C) 2011 Devmil (Michael Lamers) 
  *        Mail: develmil@googlemail.com
  *
@@ -39,17 +39,25 @@
 package org.catrobat.paintroid.dialog.colorpicker;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader.TileMode;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RippleDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.widget.Button;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.BaseDialog;
 
@@ -58,24 +66,16 @@ import java.util.ArrayList;
 public final class ColorPickerDialog extends BaseDialog {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "ColorPickerDialog has not been initialized. Call init() first!";
-
-	private ColorPickerView mColorPickerView;
-	private ArrayList<OnColorPickedListener> mOnColorPickedListener;
-	static int mNewColor;
-	private Button mButtonNewColor;
-	private CheckeredTransparentLinearLayout mBaseButtonLayout;
-
-	static Paint mBackgroundPaint = new Paint();
-
+	static Paint backgroundPaint = new Paint();
 	private static ColorPickerDialog instance;
-
-	public interface OnColorPickedListener {
-		void colorChanged(int color);
-	}
+	private ColorPickerView colorPickerView;
+	@VisibleForTesting
+	public ArrayList<OnColorPickedListener> onColorPickedListener;
+	private Button buttonNewColor;
 
 	private ColorPickerDialog(Context context) {
 		super(context);
-		mOnColorPickedListener = new ArrayList<>();
+		onColorPickedListener = new ArrayList<>();
 	}
 
 	public static ColorPickerDialog getInstance() {
@@ -90,18 +90,18 @@ public final class ColorPickerDialog extends BaseDialog {
 	}
 
 	public void addOnColorPickedListener(OnColorPickedListener listener) {
-		mOnColorPickedListener.add(listener);
+		onColorPickedListener.add(listener);
 	}
 
 	public void removeOnColorPickedListener(OnColorPickedListener listener) {
-		mOnColorPickedListener.remove(listener);
+		onColorPickedListener.remove(listener);
 	}
 
-	public void updateColorChange(int color) {
-		for (OnColorPickedListener listener : mOnColorPickedListener) {
+	private void updateColorChange(int color) {
+		for (OnColorPickedListener listener : onColorPickedListener) {
 			listener.colorChanged(color);
 		}
-		PaintroidApplication.colorPickerInitialColor = color;
+		MainActivity.colorPickerInitialColor = color;
 	}
 
 	@Override
@@ -115,49 +115,81 @@ public final class ColorPickerDialog extends BaseDialog {
 		BitmapShader mBackgroundShader = new BitmapShader(backgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
 
-		mBackgroundPaint.setShader(mBackgroundShader);
+		backgroundPaint.setShader(mBackgroundShader);
+		buttonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
+		colorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
+	}
 
-		mBaseButtonLayout = (CheckeredTransparentLinearLayout) findViewById(R.id.colorchooser_ok_button_base_layout);
+	@Override
+	public void onAttachedToWindow() {
+		super.onAttachedToWindow();
 
-		mButtonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
-		mButtonNewColor.setOnClickListener(new View.OnClickListener() {
+		buttonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				updateColorChange(mNewColor);
 				dismiss();
 			}
 		});
+		colorPickerView.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
+			@Override
+			public void colorChanged(int color) {
+				changeNewColor(color);
+				updateColorChange(color);
+			}
+		});
+	}
 
-		mColorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
-		mColorPickerView
-				.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
-					@Override
-					public void colorChanged(int color) {
-						changeNewColor(color);
-						updateColorChange(color);
-					}
-				});
+	@Override
+	public void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
 
+		buttonNewColor.setOnClickListener(null);
+		colorPickerView.setOnColorChangedListener(null);
 	}
 
 	public void setInitialColor(int color) {
 		updateColorChange(color);
-		if ((mButtonNewColor != null) && (mColorPickerView != null)) {
+		if ((buttonNewColor != null) && (colorPickerView != null)) {
 			changeNewColor(color);
-			mColorPickerView.setSelectedColor(color);
+			colorPickerView.setSelectedColor(color);
 		}
 	}
 
 	private void changeNewColor(int color) {
-		mNewColor = color;
-		mBaseButtonLayout.updateBackground();
-		int referenceColor = (Color.red(color) + Color.blue(color) + Color
-				.green(color)) / 3;
+		buttonNewColor.setBackground(CustomColorDrawable.createDrawable(color));
+
+		int referenceColor = (Color.red(color) + Color.blue(color) + Color.green(color)) / 3;
 		if (referenceColor <= 128 && Color.alpha(color) > 5) {
-			mButtonNewColor.setTextColor(Color.WHITE);
+			buttonNewColor.setTextColor(Color.WHITE);
 		} else {
-			mButtonNewColor.setTextColor(Color.BLACK);
+			buttonNewColor.setTextColor(Color.BLACK);
 		}
-		mButtonNewColor.setBackgroundColor(color);
+	}
+
+	static final class CustomColorDrawable extends ColorDrawable {
+		private CustomColorDrawable(@ColorInt int color) {
+			super(color);
+		}
+
+		@Override
+		public void draw(Canvas canvas) {
+			if (Color.alpha(getColor()) != 0xff) {
+				canvas.drawRect(getBounds(), backgroundPaint);
+			}
+			super.draw(canvas);
+		}
+
+		static Drawable createDrawable(@ColorInt int color) {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+				return new CustomColorDrawable(color);
+			} else {
+				return new RippleDrawable(ColorStateList.valueOf(Color.WHITE),
+						new CustomColorDrawable(color), null);
+			}
+		}
+	}
+
+	public interface OnColorPickedListener {
+		void colorChanged(int color);
 	}
 }

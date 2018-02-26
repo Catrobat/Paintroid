@@ -21,8 +21,6 @@ package org.catrobat.paintroid.test.espresso.rtl.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MultilingualActivity;
@@ -36,11 +34,9 @@ public class RtlActivityTestRule<T extends Activity> extends ActivityTestRule<T>
 	protected void afterActivityFinished() {
 		super.afterActivityFinished();
 
-		SharedPreferences sharedPreferences = InstrumentationRegistry.getTargetContext().getSharedPreferences("For_language", Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(MultilingualActivity.LANGUAGE_TAG_KEY, "");
-		editor.commit();
-
-		MultilingualActivity.updateLocale(getActivity(), "", "");
+		getActivity().getSharedPreferences(MultilingualActivity.SHARED_PREFERENCES_TAG, Context.MODE_PRIVATE)
+				.edit()
+				.remove(MultilingualActivity.LANGUAGE_TAG_KEY)
+				.commit();
 	}
 }

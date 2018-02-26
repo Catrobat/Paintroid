@@ -17,27 +17,17 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_stroke_dialog"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <org.catrobat.paintroid.ui.tools.DrawerPreview
         android:id="@+id/drawer_preview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </org.catrobat.paintroid.ui.tools.DrawerPreview>
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/stroke_width_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:layout_marginLeft="24dip"
-        android:layout_marginRight="16dp"
         android:text="@string/dialog_brush_width_text"
         android:textAllCaps="true"
         android:textColor="@color/dialog_title_color"
@@ -46,7 +36,7 @@
         android:layout_marginStart="24dip" />
 
     <View
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -55,8 +45,8 @@
         android:layout_marginStart="16dp" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:weightSum="5"
         android:orientation="horizontal" >
 
@@ -65,12 +55,10 @@
             android:progressTint="@color/dialog_stroke_element_color"
             android:thumbTint="@color/dialog_stroke_element_color"
             android:layout_width="0dp"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:layout_weight="4"
             android:layout_gravity="center"
             android:layout_marginBottom="5dip"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:max="100"
             android:minHeight="30dip"
@@ -80,7 +68,7 @@
         <TextView
             android:id="@+id/stroke_width_width_text"
             android:layout_width="0dp"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:layout_weight="4"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
@@ -90,12 +78,9 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/stroke_width_shape_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:layout_marginLeft="24dip"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/dialog_shape_text"
         android:textAllCaps="true"
@@ -105,7 +90,7 @@
         android:layout_marginStart="24dip" />
 
     <View
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -114,9 +99,8 @@
         android:layout_marginStart="16dp" />
 
     <RadioGroup
-        android:id="@+id/stroke_rbtn"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="15dp"
@@ -125,16 +109,14 @@
         <RadioButton
             android:id="@+id/stroke_rbtn_rect"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:buttonTint="@color/dialog_stroke_element_color"
-            android:layout_marginRight="5dp"
             android:layout_marginEnd="5dp" />
 
         <ImageButton
             android:id="@+id/stroke_ibtn_rect"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_marginRight="20dp"
+            android:layout_height="match_parent"
             android:background="@color/transparent"
             android:tint="@color/dialog_stroke_element_color"
             android:minHeight="32dip"
@@ -145,9 +127,7 @@
         <RadioButton
             android:id="@+id/stroke_rbtn_circle"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="5dp"
+            android:layout_height="match_parent"
             android:checked="true"
             android:buttonTint="@color/dialog_stroke_element_color"
             android:layout_marginStart="20dp"
@@ -156,7 +136,7 @@
         <ImageButton
             android:id="@+id/stroke_ibtn_circle"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:background="@color/transparent"
             android:tint="@color/dialog_stroke_element_color"
             android:minHeight="32dip"
@@ -164,4 +144,4 @@
             android:src="@drawable/circle" />
     </RadioGroup>
 
-</LinearLayout>
+</merge>

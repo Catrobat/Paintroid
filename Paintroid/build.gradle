@@ -18,10 +18,18 @@
  */
 
 apply plugin: 'com.android.application'
-apply from: 'adb_tasks.gradle'
+apply plugin: 'jacoco-android'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+
+apply from: 'gradle/adb_tasks.gradle'
+apply from: 'gradle/code_quality_tasks.gradle'
 
 def appId = 'org.catrobat.paintroid'
 def appName = '@string/app_name'
+
+check.dependsOn 'checkstyle'
+check.dependsOn 'pmd'
 
 // When -Pindependent was provided on the gradle command the APP name is changed.
 // This allows to have multiple Paintroid versions installed in parallel for testing purposes.
@@ -34,33 +42,23 @@ if (project.hasProperty('independent')) {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    buildToolsVersion '25.0.3'
 
     defaultConfig {
         applicationId appId
         minSdkVersion 17
         targetSdkVersion 22
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 20
-        versionName "2.0.0"
+        testInstrumentationRunner "org.catrobat.paintroid.test.utils.CustomAndroidJUnitRunner"
+        versionCode 21
+        versionName "2.0.1"
         manifestPlaceholders += [appName: appName]
-        externalNativeBuild {
-            cmake {
-                cppFlags "-fexceptions"
-            }
-        }
+        externalNativeBuild.cmake.cppFlags "-fexceptions"
     }
 
     sourceSets {
         main {
-            java {
-                srcDir 'src/main/java'
-            }
-
-            resources {
-                srcDir 'src/main/res'
-            }
-
+            java.srcDir 'src/main/java'
+            resources.srcDir 'src/main/res'
         }
 
         androidTest {
@@ -78,23 +76,22 @@ android {
         }
     }
 
-    externalNativeBuild {
-        cmake {
-            path 'CMakeLists.txt'
-        }
-    }
+    externalNativeBuild.cmake.path 'CMakeLists.txt'
 
     lintOptions {
         // specific ignores should be defined via lint.xml file, all general ignores should be added here
         lintConfig file('config/lint.xml')
         // CommitPrefEdits should be reviewed, if using apply instead of commit is working with our tests
+        // RtlSymmetry/RtlHardcoded should be reviewed
         // GradleDynamicVersion ignored - e.g. according to sdkmanager:gradle-plugin it should be imported this way
         // IconMissingDensityFolder - currently no xxxhdpi icons available
+        // TODO ticket for HandlerLeak
+        // TODO don't know if WrongRegion warning is a false-positive one
         ignore 'ContentDescription', 'InvalidPackage', 'ValidFragment', 'GradleDependency',
                 'ClickableViewAccessibility', 'UnusedAttribute', 'CommitPrefEdits', 'OldTargetApi',
-                'GradleDynamicVersion', 'HandlerLeak', 'IconMissingDensityFolder',
+                'RtlSymmetry', 'GradleDynamicVersion', 'RtlHardcoded', 'HandlerLeak', 'IconMissingDensityFolder',
                 'WrongRegion', 'RelativeOverlap', 'IconColors', 'MissingTranslation', 'ExtraTranslation',
-                'GradleCompatible', 'WifiManagerLeak', 'ApplySharedPref', 'ObsoleteSdkInt',
+                'GradleCompatible', 'WifiManagerLeak', 'ApplySharedPref', 'DefaultLocale', 'ObsoleteSdkInt',
                 'StaticFieldLeak' , 'AppCompatResource'
 
         textReport true
@@ -107,24 +104,30 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.android.support:design:25.4.0'
-    compile 'com.jaredrummler:material-spinner:1.1.0'
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
+    compile 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
 
-    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.3'
+    androidTestCompile 'com.android.support.test:runner:1.0.1'
+    androidTestCompile 'com.android.support.test:rules:1.0.1'
 
-    androidTestCompile 'com.android.support.test:runner:1.0.0'
-    androidTestCompile 'com.android.support.test:rules:1.0.0'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
 
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.0'
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.0'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
 
+    pmd(
+            'net.sourceforge.pmd:pmd-core:5.8.1',
+            'net.sourceforge.pmd:pmd-java:5.8.1'
+    )
+
+    checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
 }
 
 tasks.whenTaskAdded { task ->
-    if(task.name.startsWith('assembleDebugAndroidTest')) {
+    if (!project.hasProperty('jenkins') && task.name.startsWith('assembleDebugAndroidTest')) {
         verifyAnimationScalePermissionGranted.shouldRunAfter adbGrantAnimationScalePermission
 
         task.dependsOn adbGrantAnimationScalePermission

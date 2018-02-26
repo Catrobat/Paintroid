@@ -19,42 +19,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">Pocket Pintar</string>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name" tools:ignore="UnusedResources">Pocket Pintar</string>
   <string name="button_brush">Pincel</string>
   <string name="button_cursor">Cursor</string>
-  <string name="button_ellipse">Círculo/elipse</string>
-  <string name="button_zoom">Aumentar/Disminuir</string>
   <string name="button_pipette">Pipeta</string>
   <string name="button_undo">Deshacer</string>
   <string name="button_redo">Rehacer</string>
   <string name="button_stamp">Estampar</string>
-  <string name="button_rectangle">Cuadrado/ rectángulo</string>
   <string name="button_import_image">Importar Imagen</string>
   <string name="button_eraser">Borrador</string>
-  <string name="button_resize">Cambie el tamaño de la imagen</string>
   <string name="button_transform">Transformar</string>
-  <string name="button_flip">Invertir</string>
   <string name="button_fill">Llenar</string>
-  <string name="button_move">Mover</string>
-  <string name="button_rotate">Rotar</string>
   <string name="button_line">Línea</string>
   <string name="button_text">Texto</string>
   <string name="button_shape">Formas</string>
-  <string name="cancel">Cancelar</string>
-  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
-  <string name="yes">Sí</string>
-  <string name="no">No</string>
   <string name="done">Listo</string>
   <string name="terms_of_use_and_service_title">Términos de uso y servicio</string>
   <string name="terms_of_use_and_service_content">Para poder utilizar Pocket Code y otros ejecutables ofrecidos por el proyecto Catrobat, debes de estar de acuerdo con nuestros Términos de Uso y seguirlos estrictamente cuando utilizas Pocket Code y nuestros otros ejecutables. Por favor vea el siguiente enlace para tener una formulación más precisa. \n</string>
   <string name="terms_of_use_and_service_url_text">Términos de uso y servicio</string>
-  <string name="about_title">Acerca de Pocket Pintar...</string>
-  <string name="about_content">Pocket Paint es un editor de imagenes que es parte del proyecto Catrobat. \n\n Catrobat es un lenguaje de programación visual y un conjunto de herramientas de creatividad para ser utilizado en los teléfonos inteligentes, tabletas y navegadores móviles.\n\n El código fuente de Pocket Pintura está licenciado bajo  %s.\n  Para más detalles de esta licencia vé el link de abajo.\n\n</string>
+  <string name="about_title">Acerca de Pocket Pintar…</string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">Licencia de código de fuente para Pocket Pintar</string>
   <string name="about_catroid_url_text">Acerca de Catrobat</string>
   <string name="about_version">Versión:</string>
-  <string name="stroke_title">"Opciones herramientas"</string>
   <string name="color_chooser_title">Selector de color</string>
   <string name="color_rgb">Rojo, verde, azul (RGB)</string>
   <string name="color_red">Rojo</string>
@@ -64,17 +52,12 @@
   <string name="color_pre">pre-selección</string>
   <string name="color_hsv">hsv selector de color</string>
   <string name="dialog_tools_title">Herramientas</string>
-  <string name="dialog_save_title">Guardar imagen</string>
-  <string name="dialog_save_text">Nombre del archivo de entrada</string>
-  <string name="dialog_load">Cargando&#8230;</string>
-  <string name="dialog_overwrite_text">¿Sobrescribir un archivo existente?</string>
+  <string name="dialog_load">Cargando…</string>
   <string name="dialog_error_save_title">Error cargar/guardar archivo</string>
   <string name="dialog_error_sdcard_text">Revisar la imagen del cheque o tarjeta SD!</string>
   <string name="dialog_brush_width_text">Anchura del trazo</string>
-  <string name="dialog_warning_new_image">Guardar Cambios?</string>
+  <string name="dialog_warning_new_image">¿Guardar cambios?</string>
   <string name="help_title">Ayuda</string>
-  <string name="help_content_ellipse">Mover y cambiar el tamaño del círculo o transformarlo en una elipse. Pulse la imagen para ajustar la forma de la imagen.</string>
-  <string name="help_content_flip">Pulse sobre los símbolos de la barra inferior para voltear la imagen.</string>
   <string name="help_content_eraser">Quite partes de la imagen como si utilizara una goma de borrar.</string>
   <string name="help_content_brush">Pulse sobre los símbolos de la barra de abajo para cambiar el color o el tamaño del pincel.</string>
   <string name="help_content_eyedropper">Pulse sobre la imagen para seleccionar un color.</string>
@@ -82,15 +65,14 @@
   <string name="help_content_redo">Pulse rehacer una acción deshecha.</string>
   <string name="help_content_fill">Pulse sobre la imagen para rellenar un área con el color seleccionado.</string>
   <string name="help_content_cursor">Posicione el cursor donde desea dibujar. Pulse para activar el cursor. Mueve el dedo para dibujar. Presione otra vez para desactivar.</string>
-  <string name="help_content_resize">Úsalo para cambiar el tamaño de la imagen.</string>
   <string name="help_content_transform">Úsalo para cambiar el tamaño de la imagen.</string>
   <string name="help_content_stamp">Mueve y cambie el tamaño del rectángulo para cubrir el área que deseas marcar. Pulsación larga para seleccionar el área. Mueve y pulsa de nuevo para marcar.</string>
-  <string name="help_content_rectangle">Mover y cambiar el tamaño del cuadrado o transformarlo en un rectánguloe. Pulse la imagen para ajustar la forma de la imagen.</string>
   <string name="help_content_import_png">Importe una imagen de la galería a la herramienta Insertar dibujo.</string>
-  <string name="help_content_rotate">Pulse los botones para rotar la imagen hacia la izquierda o derecha.</string>
   <string name="help_content_line">Trazar una línea recta.</string>
   <string name="help_content_text">Escribir texto y darle formato. Redimensionar el cuadro de texto más tarde. Pulse para insertar el texto en la imagen.</string>
   <string name="help_content_shape">Elege una forma y pulsa para insertar la forma seleccionada</string>
+  <string name="help_content_layer">Create new layers or modify existing ones</string>
+  <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Salir</string>
   <string name="closing_security_question">Guardar Cambios?</string>
   <string name="closing_catroid_security_question_title">Regresar a Pocket Code</string>
@@ -99,12 +81,10 @@
   <string name="menu_save_image">Guardar imagen</string>
   <string name="menu_save_copy">Guardar copia</string>
   <string name="menu_new_image_empty_image">Imagen en blanco</string>
-  <string name="menu_item_tools">Menú Herramientas</string>
   <string name="menu_hide_menu">Pantalla Completa</string>
   <string name="menu_show_menu">Salir de pantalla completa</string>
   <string name="menu_new_image_from_camera">Nueva imagen de la cámara</string>
   <string name="menu_terms_of_use_and_service">Términos de Uso</string>
-  <string name="more">Más</string>
   <string name="menu_about">Acerca de</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exportar</string>
@@ -113,63 +93,33 @@
   <string name="menu_quit">Salir</string>
   <string name="save_button_text">Guardar</string>
   <string name="discard_button_text">Ignorar</string>
-  <string name="resize_to_resize_tap_text">toque para cambiar el tamaño</string>
   <string name="resize_nothing_to_resize">nada para cambiar el tamaño</string>
   <string name="resize_max_image_resolution_reached">resolución de imagen máxima alcanzada</string>
-  <string name="text_tool_dialog_title">Ajustes de la Herramienta Texto</string>
   <string name="text_tool_dialog_input_title">Tu texto:</string>
   <string name="text_tool_dialog_format_options">Opciones de formato:</string>
-  <string name="text_tool_dialog_underline_shortcut">Fecha de actualización</string>
-  <string name="text_tool_dialog_italic_shortcut">I</string>
-  <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Pulsa aquí para escribir</string>
   <string name="shape_tool_dialog_rect_title">Rectángulo</string>
   <string name="shape_tool_dialog_ellipse_title">Elipsis</string>
   <string name="shape_tool_dialog_star_title">Estrella</string>
   <string name="shape_tool_dialog_heart_title">Corazón</string>
-  <string name="fill_tool_dialog_title">Ajustes de la Herramienta de Relleno</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolerancia de color</string>
-  <string name="fill_tool_dialog_input_hint_toast">Introduce un número entre 0 y 100</string>
-  <string name="transform_tool_header_text">Transformar</string>
-  <string name="transform_tool_size_text">Tamaño</string>
   <string name="transform_tool_auto_crop_text">Autoajustar</string>
   <string name="transform_tool_roate_text">Rotar</string>
   <string name="transform_tool_mirror_text">Espejo</string>
-  <string name="transform_tool_angle_text">Angulo</string>
   <string name="stamp_tool_copy_hint">Pulsación larga para copiar contenido</string>
   <string name="layers_title">Capas</string>
-  <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">Nueva capa</string>
   <string name="layer_delete">Eliminar capa</string>
-  <string name="layer_opacity">Opacidad:</string>
-  <string name="layer_merge">Mezclar</string>
-  <string name="layer_visible">Visible</string>
-  <string name="layer_lock">Bloquear</string>
-  <string name="layer_rename">Renombrar</string>
-  <string name="layer_copy">Copiar</string>
-  <string name="layer_ok">OK</string>
-  <string name="layer_cancel">Cancelar</string>
-  <string name="layer_rename_title">Introduce el nombre de la nueva capa</string>
-  <string name="layer_move_up">Mover hacia arriba</string>
-  <string name="layer_move_down">Mover hacia abajo</string>
-  <string name="layer_move_to_top">Mover arriba del todo</string>
-  <string name="layer_move_to_bottom">Mover abajo del todo</string>
-  <string name="layer_merge_info">Toca la capa para combinar con</string>
   <string name="layer_too_many_layers">Demasiadas capas</string>
   <string name="layer_invisible">Todas las capas invisibles</string>
-  <string name="layer_save_info">Guardando: las capas se combinarán</string>
-  <string name="layer_prefix">Capa</string>
   <string name="layer_merged">Capas fusionadas</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
-  <string name="dialog_unallowed_chars_title">Caracter(es) no permitido(s)</string>
-  <string name="dialog_unallowed_chars_text">Sólo letras, números y el ´símbolo \'_\'  están permitidos.</string>
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Error en la carga de la imagen</string>
   <string name="dialog_loading_image_failed_text">No es un archivo de imagen válido</string>
-  <string name="dialog_please_wait">Espera...</string>
-  <string name="drawer_open">Open navigation drawer</string>
-  <string name="drawer_close">Close navigation drawer</string>
+  <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
+  <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
   <string name="transform_info_text">Arrastra los bordes a su nueva posición, luego pulsa para agrandar o recortar el área de imagen.</string>
   <string name="cursor_draw_inactive">Pan a la posición, después pulsa para empezar a pintar.</string>
   <string name="cursor_draw_active">Pan a dibujar, después pulsa y deja de dibujar.</string>
@@ -182,9 +132,9 @@
   <string name="intro_landscape_text">Pocket Paint también soporta dibujo en modo horizontal para darle la mejor experiencia pintando.</string>
   <string name="enjoy_pocket_paint">Ya estás listo/a. Disfruta Pocket Paint.</string>
   <string name="intro_get_started">Empieza y crea una nueva obra maestra.</string>
-  <string name="lets_go">Let\'s Go</string>
+  <string name="lets_go">Vamos</string>
   <string name="next">Siguiente</string>
   <string name="skip">Ignorar</string>
   <string name="menu_language">Idioma</string>
-  <string name="device_language">Device Language</string>
+  <string name="device_language">Idioma del Dispositivo</string>
 </resources>

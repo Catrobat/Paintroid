@@ -19,12 +19,15 @@
 
 package org.catrobat.paintroid;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -33,40 +36,35 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import static org.catrobat.paintroid.PaintroidApplication.defaultSystemLanguage;
-import static org.catrobat.paintroid.PaintroidApplication.languageSharedPreferences;
-
-
 public class MultilingualActivity extends AppCompatActivity {
+	@VisibleForTesting
 	public static final String LANGUAGE_TAG_KEY = "applicationLanguage";
-	public static final String[] LANGUAGE_CODE = {"az", "bs", "ca", "cs", "sr-rCS", "sr-rSP", "da", "de", "en-rAU", "en-rCA",
-			"en-rGB", "en", "es", "fr", "gl", "hr", "in", "it", "sw", "hu", "mk", "ms", "nl", "no", "pl", "pt-rBR", "pt", "ru",
-			"ro", "sq", "sl", "sk", "sv", "vi", "tr", "ml", "ta", "te", "th", "gu", "hi", "ja", "ko", "zh-rCN", "zh-rTW", "ar",
-			"ur", "fa", "ps", "sd", "iw"};
+	@VisibleForTesting
+	public static final String SHARED_PREFERENCES_TAG = "For_language";
+	private static final String[] LANGUAGE_CODE = {"az", "bg", "bs", "ca", "cs", "sr-CS", "sr-SP",
+			"da", "de", "el", "en-AU", "en-CA", "en-GB", "en", "es", "fr", "gl", "hr", "in", "it",
+			"sw", "hu", "lt", "mk", "ms", "nl", "no", "pl", "pt-BR", "pt", "ru", "ro", "sq", "sl",
+			"sk", "sv", "vi", "tr", "ml", "ta", "te", "th", "gu", "hi", "ja", "ko", "zh-CN",
+			"zh-TW", "ar", "ur", "fa", "ps", "sd", "iw"};
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		setToChosenLanguage(this);
+
 		setContentView(R.layout.activity_multilingual);
 		setTitle(R.string.menu_language);
 		ListView listview = (ListView) findViewById(R.id.list_languages);
 		final List<String> languagesNames = new ArrayList<>();
 		languagesNames.add(getResources().getString(R.string.device_language));
 		for (String aLanguageCode : LANGUAGE_CODE) {
-			if (aLanguageCode.length() == 2 && !aLanguageCode.equals("sd")) {
-				languagesNames.add(new Locale(aLanguageCode).getDisplayName(new Locale(aLanguageCode)));
-				// the output text of' new Locale("sd").getDisplayName(new Locale("sd")));' is "Sindhi" which is wrong
-				// the correct name of the sindhi language in Sindhi is "سنڌي"
-			} else if (aLanguageCode.length() == 2 && aLanguageCode.equals("sd")) {
-				languagesNames.add("سنڌي");
-			} else {
-				String language = aLanguageCode.substring(0, 2);
-				String country = aLanguageCode.substring(4);
-				languagesNames.add(new Locale(language, country).getDisplayName(new Locale(language, country)));
-			}
+			Locale locale = getLocaleFromLanguageTag(aLanguageCode);
+			languagesNames.add(getDisplayName(locale));
 		}
 		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.multilingual_name_text, R.id.lang_text, languagesNames);
 		listview.setAdapter(adapter);
@@ -74,52 +72,72 @@ public class MultilingualActivity extends AppCompatActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-				if (position == 0) {
-					setLanguageSharedPreference(null);
-					setNewLocale(defaultSystemLanguage, null);
-				} else if (LANGUAGE_CODE[position - 1].length() == 2) {
-					setLanguageSharedPreference(LANGUAGE_CODE[position - 1]);
-					setNewLocale(LANGUAGE_CODE[position - 1], null);
-				} else if (LANGUAGE_CODE[position - 1].length() == 6) {
-					setLanguageSharedPreference(LANGUAGE_CODE[position - 1]);
-					String language = LANGUAGE_CODE[position - 1].substring(0, 2);
-					String country = LANGUAGE_CODE[position - 1].substring(4);
-					setNewLocale(language, country);
-				}
+				String localeString = getLocaleStringFromPosition(position);
+				setLanguageSharedPreference(localeString);
+				setResult(RESULT_OK);
+				finish();
 			}
 		});
 	}
 
-	public static void updateLocale(Context context, String languageTag, String countryTag) {
-		Locale mLocale;
-		if (countryTag == null) {
-			mLocale = new Locale(languageTag);
-		} else {
-			mLocale = new Locale(languageTag, countryTag);
+	private String getDisplayName(Locale locale) {
+		String language = locale.getLanguage();
+		// the output text of 'locale.getDisplayName(locale)' for "sd" is "Sindhi" which is wrong
+		// the correct name of the sindhi language in Sindhi is "سنڌي"
+		if (language.equals("sd")) {
+			return "سنڌي";
+		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP
+				&& language.equals("ps")) {
+			return "پښتو";
+		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP
+				&& language.equals("ur")) {
+			return "اردو";
 		}
+		return locale.getDisplayName(locale);
+	}
+
+	public static void setToChosenLanguage(Activity activity) {
+		SharedPreferences sharedPreferences = activity
+				.getSharedPreferences(SHARED_PREFERENCES_TAG, Context.MODE_PRIVATE);
+		String languageTag = sharedPreferences.getString(LANGUAGE_TAG_KEY, "");
+		Locale locale = Arrays.asList(LANGUAGE_CODE).contains(languageTag)
+				? getLocaleFromLanguageTag(languageTag)
+				: new Locale(PaintroidApplication.defaultSystemLanguage);
+
+		Locale.setDefault(locale);
+		setLocale(activity, locale);
+		setLocale(activity.getApplicationContext(), locale);
+	}
+
+	private static void setLocale(Context context, Locale locale) {
 		Resources resources = context.getResources();
 		DisplayMetrics displayMetrics = resources.getDisplayMetrics();
 		Configuration conf = resources.getConfiguration();
-		conf.setLocale(mLocale);
-		Locale.setDefault(mLocale);
-		conf.setLayoutDirection(mLocale);
+		conf.setLocale(locale);
 		resources.updateConfiguration(conf, displayMetrics);
 	}
 
-	private void setNewLocale(String languageTag, String countryTag) {
-		updateLocale(this, languageTag, countryTag);
-		setResult(RESULT_OK);
-		finish();
+	private static Locale getLocaleFromLanguageTag(String languageTag) {
+		if (languageTag.contains("-")) {
+			String[] tags = languageTag.split("-");
+			return new Locale(tags[0], tags[1]);
+		}
+		return new Locale(languageTag);
+	}
+
+	private String getLocaleStringFromPosition(int position) {
+		return position > 0 ? LANGUAGE_CODE[position - 1] : null;
 	}
 
 	private void setLanguageSharedPreference(String value) {
-		SharedPreferences.Editor editor = languageSharedPreferences.edit();
+		SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_TAG, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
 		if (value == null) {
 			editor.remove(LANGUAGE_TAG_KEY);
 		} else {
 			editor.putString(LANGUAGE_TAG_KEY, value);
 		}
-		editor.commit();
+		editor.apply();
 	}
 
 	@Override

@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.intro;
 
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -26,47 +27,47 @@ import android.widget.LinearLayout;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 
-import org.catrobat.paintroid.intro.listener.IntroTargetSequence;
 import org.catrobat.paintroid.WelcomeActivity;
+import org.catrobat.paintroid.intro.listener.IntroTargetSequence;
 
 import static org.catrobat.paintroid.intro.helper.IntroAnimationHelper.fadeOut;
 
 public class TapTargetTopBar extends TapTargetBase {
-    private static boolean firsTimeSequence = true;
-    private TapTargetSequence sequence;
+	@VisibleForTesting
+	public static boolean firsTimeSequence = true;
+	private TapTargetSequence sequence;
 
-    public TapTargetTopBar(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
-                           int bottomBarResourceId) {
-        super(tapTargetView, fadeView, activity, bottomBarResourceId);
-        sequence = new TapTargetSequence(activity);
-        sequence.continueOnCancel(true);
-        sequence.considerOuterCircleCanceled(true);
-        Log.d(TAG, "Create TapTargetTopBar");
-    }
+	public TapTargetTopBar(LinearLayout tapTargetView, View fadeView, WelcomeActivity activity,
+			int bottomBarResourceId) {
+		super(tapTargetView, fadeView, activity, bottomBarResourceId);
+		sequence = new TapTargetSequence(activity);
+		sequence.continueOnCancel(true);
+		sequence.considerOuterCircleCanceled(true);
+		Log.d(TAG, "Create TapTargetTopBar");
+	}
 
+	public static void resetSequenceState() {
+		firsTimeSequence = true;
+	}
 
-    @Override
-    public void initTargetView() {
-        super.initTargetView();
+	@Override
+	public void initTargetView() {
+		super.initTargetView();
 
-        initSequence();
-        Log.d("Seq", String.valueOf(firsTimeSequence));
-        if (firsTimeSequence) {
-            firsTimeSequence = false;
-            fadeOut(fadeView);
-            sequence.start();
-        }
-    }
+		initSequence();
+		Log.d("Seq", String.valueOf(firsTimeSequence));
+		if (firsTimeSequence) {
+			firsTimeSequence = false;
+			fadeOut(fadeView);
+			sequence.start();
+		}
+	}
 
-    private void initSequence() {
-        for (TapTarget target : tapTargetMap.values()) {
-            sequence.target(target);
-        }
+	private void initSequence() {
+		for (TapTarget target : tapTargetMap.values()) {
+			sequence.target(target);
+		}
 
-        sequence.listener(new IntroTargetSequence(fadeView));
-    }
-
-    public static void resetSequenceState() {
-        firsTimeSequence = true;
-    }
+		sequence.listener(new IntroTargetSequence(fadeView));
+	}
 }

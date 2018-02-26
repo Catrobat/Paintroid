@@ -33,66 +33,59 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public abstract class CommandTestSetup {
 
-	Command mCommandUnderTest;
-	Command mCommandUnderTestNull;// can be used to pass null to constructor
-	Paint mPaintUnderTest;
-	PointF mPointUnderTest;
-	Canvas mCanvasUnderTest;
-	Bitmap mBitmapUnderTest;
-	Layer mLayerUnderTest;
-	Bitmap mCanvasBitmapUnderTest;
 	static final int BITMAP_BASE_COLOR = Color.GREEN;
 	static final int BITMAP_REPLACE_COLOR = Color.CYAN;
 	static final int PAINT_BASE_COLOR = Color.BLUE;
 
+	Command commandUnderTest;
+	Command commandUnderTestNull; // can be used to pass null to constructor
+	Paint paintUnderTest;
+	PointF pointUnderTest;
+	Canvas canvasUnderTest;
+	Bitmap bitmapUnderTest;
+	Layer layerUnderTest;
+	Bitmap canvasBitmapUnderTest;
+
 	@Before
-	public void setUp() throws Exception {
-		mCanvasUnderTest = new Canvas();
+	public void setUp() {
+		canvasUnderTest = new Canvas();
 		// !WARNING don't make your test-bitmaps to large width*height*(Config.) byte...
 		// and assume that the garbage collector is rather slow!
 		// Some tests may also need to copy the original bitmap...
-		mCanvasBitmapUnderTest = Bitmap.createBitmap(80, 80, Config.ARGB_8888);
-		mCanvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR);
-		mBitmapUnderTest = mCanvasBitmapUnderTest.copy(Config.ARGB_8888, true);
-		mLayerUnderTest = new Layer(0, mBitmapUnderTest);
-		mCanvasUnderTest.setBitmap(mCanvasBitmapUnderTest);
-		mPaintUnderTest = new Paint();
-		mPaintUnderTest.setColor(PAINT_BASE_COLOR);
-		mPaintUnderTest.setStrokeWidth(0);
-		mPaintUnderTest.setStyle(Paint.Style.STROKE);
-		mPaintUnderTest.setStrokeCap(Cap.BUTT);
-		mPointUnderTest = new PointF(mCanvasBitmapUnderTest.getWidth() / 2, mCanvasBitmapUnderTest.getHeight() / 2);
+		canvasBitmapUnderTest = Bitmap.createBitmap(80, 80, Config.ARGB_8888);
+		canvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR);
+		bitmapUnderTest = canvasBitmapUnderTest.copy(Config.ARGB_8888, true);
+		layerUnderTest = new Layer(0, bitmapUnderTest);
+		canvasUnderTest.setBitmap(canvasBitmapUnderTest);
+		paintUnderTest = new Paint();
+		paintUnderTest.setColor(PAINT_BASE_COLOR);
+		paintUnderTest.setStrokeWidth(0);
+		paintUnderTest.setStyle(Paint.Style.STROKE);
+		paintUnderTest.setStrokeCap(Cap.BUTT);
+		pointUnderTest = new PointF(canvasBitmapUnderTest.getWidth() / 2, canvasBitmapUnderTest.getHeight() / 2);
 	}
 
 	@After
-	public void tearDown() throws Exception {
-		mCanvasUnderTest = null;
-		mCanvasBitmapUnderTest.recycle();
-		mCanvasBitmapUnderTest = null;
-		mBitmapUnderTest.recycle();
-		mBitmapUnderTest = null;
-		mLayerUnderTest = null;
-		mPaintUnderTest = null;
-		mPointUnderTest = null;
-		System.gc();
+	public void tearDown() {
+		canvasUnderTest = null;
+		canvasBitmapUnderTest.recycle();
+		canvasBitmapUnderTest = null;
+		bitmapUnderTest.recycle();
+		bitmapUnderTest = null;
+		layerUnderTest = null;
+		paintUnderTest = null;
+		pointUnderTest = null;
 	}
 
 	@Test
 	public void testRunWithNullParameters() {
-		try {
-			if (mCommandUnderTestNull != null) {
-				mCommandUnderTestNull.run(null, null);
-				mCommandUnderTestNull.run(null, null);
-				mCommandUnderTestNull.run(mCanvasUnderTest, null);
-				mCommandUnderTestNull.run(null, mLayerUnderTest);
-			}
-		} catch (Exception e) {
-			fail("Failed run test with parameters 'null'");
+		if (commandUnderTestNull != null) {
+			commandUnderTestNull.run(null, null);
+			commandUnderTestNull.run(null, null);
+			commandUnderTestNull.run(canvasUnderTest, null);
+			commandUnderTestNull.run(null, layerUnderTest);
 		}
 	}
-
 }

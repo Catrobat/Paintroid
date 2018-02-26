@@ -19,14 +19,12 @@
 
 package org.catrobat.paintroid.test.espresso.dialog;
 
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
@@ -36,12 +34,8 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
-import org.catrobat.paintroid.test.espresso.util.UiMatcher;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.test.utils.SystemAnimations;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.TopBar;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -53,20 +47,20 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickColorPickerPresetSelectorButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openColorPickerDialog;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withTextColor;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -80,8 +74,8 @@ import static org.junit.Assert.assertNotEquals;
 public class ColorDialogIntegrationTest {
 
 	private static final String TAB_VIEW_PRESET_SELECTOR_CLASS = PresetSelectorView.class.getSimpleName();
-	private static final String TAB_VIEW_HSV_SELECTOR_CLASS    = HSVColorPickerView.class.getSimpleName();
-	private static final String TAB_VIEW_RGBA_SELECTOR_CLASS   = RgbSelectorView.class.getSimpleName();
+	private static final String TAB_VIEW_HSV_SELECTOR_CLASS = HSVColorPickerView.class.getSimpleName();
+	private static final String TAB_VIEW_RGBA_SELECTOR_CLASS = RgbSelectorView.class.getSimpleName();
 
 	private static final String TEXT_RGB_MIN = "0";
 	private static final String TEXT_RGB_MAX = "255";
@@ -90,31 +84,20 @@ public class ColorDialogIntegrationTest {
 	private static final String TEXT_ALPHA_MAX = "100";
 
 	private static final String TEXT_PERCENT_SIGN = "%";
-
-	protected TopBar mTopBar;
-	protected SystemAnimations systemAnimations;
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Before
 	public void setUp() throws NoSuchFieldException, IllegalAccessException {
-		systemAnimations = new SystemAnimations(InstrumentationRegistry.getInstrumentation().getContext());
-		systemAnimations.disableAll();
-
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
-
-		mTopBar = (TopBar) PrivateAccess.getMemberValue(MainActivity.class, launchActivityRule.getActivity(), "mTopBar");
 
 		selectTool(ToolType.BRUSH);
 	}
 
 	@After
 	public void tearDown() {
-		systemAnimations.enableAll();
 
 		IndeterminateProgressDialog.getInstance().dismiss();
 		ColorPickerDialog.getInstance().dismiss();
@@ -149,20 +132,12 @@ public class ColorDialogIntegrationTest {
 
 	@Test
 	public void testColorNewColorButtonChangesStandard() {
-		int numberOfColorsToTest = 20;
 
 		openColorPickerDialog();
 
-		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.preset_colors);
-
-		numberOfColorsToTest = Math.min(numberOfColorsToTest, presetColors.length());
-
-		// ====================================================================================
-		// FIXME: withBackgroundColor check fails for transparent color (last element in array)
-		numberOfColorsToTest--;
-		// ====================================================================================
-
-		for(int counterColors = 0; counterColors < numberOfColorsToTest; counterColors++) {
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.preset_colors);
+		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
 
 			clickColorPickerPresetSelectorButton(counterColors);
 
@@ -171,64 +146,34 @@ public class ColorDialogIntegrationTest {
 
 			assertEquals("Color in array and selected color not the same", arrayColor, selectedColor);
 
-			onView(
-				allOf(
-					withId(R.id.btn_colorchooser_ok),
-					instanceOf(Button.class)
-				)
-			).check(
-				matches(
-					UiMatcher.withBackgroundColor(arrayColor)
-				)
-			);
-
+			onView(allOf(withId(R.id.btn_colorchooser_ok), instanceOf(Button.class)))
+					.check(matches(withBackgroundColor(arrayColor)));
 		}
+		presetColors.recycle();
 	}
 
 	@Test
-	public void buttonText_colorPickerButton_shouldBeDifferentFromBackground() {
-		int numberOfColorsToTest = 20;
-
+	public void buttonTextColorPickerButtonShouldBeDifferentFromBackground() {
 		openColorPickerDialog();
 
-		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.preset_colors);
-
-		numberOfColorsToTest = Math.min(numberOfColorsToTest, presetColors.length());
-
-		// ====================================================================================
-		// FIXME: withBackgroundColor check fails for transparent color (last element in array)
-		numberOfColorsToTest--;
-		// ====================================================================================
-
-		for(int counterColors = 0; counterColors < numberOfColorsToTest; counterColors++) {
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.preset_colors);
+		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
 
 			clickColorPickerPresetSelectorButton(counterColors);
 
 			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
 
-			onView(
-				allOf(
-					withId(R.id.btn_colorchooser_ok),
-					instanceOf(Button.class)
-				)
-			).check(
-				matches(
-					allOf(
-						UiMatcher.withTextColor(anyOf(is(Color.BLACK), is(Color.WHITE))),
-						not(
-							allOf(
-								UiMatcher.withBackgroundColor(arrayColor),
-								UiMatcher.withTextColor(arrayColor)
-							)
-						)
-					)
-				)
-			);
+			onView(allOf(withId(R.id.btn_colorchooser_ok), instanceOf(Button.class)))
+					.check(matches(allOf(withTextColor(anyOf(is(Color.BLACK), is(Color.WHITE))),
+							not(allOf(withBackgroundColor(arrayColor), withTextColor(arrayColor))))
+							));
 		}
+		presetColors.recycle();
 	}
 
 	@Test
-	public void colorPickerDialog_onBackPressed_selectedColorShouldNotChange() {
+	public void colorPickerDialogOnBackPressedSelectedColorShouldNotChange() {
 		int expectedSelectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
 
 		openColorPickerDialog();
@@ -239,6 +184,7 @@ public class ColorDialogIntegrationTest {
 		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.preset_colors);
 		int colorToSelectIndex = presetColors.length() / 2;
 		int colorToSelect = presetColors.getColor(colorToSelectIndex, Color.WHITE);
+		presetColors.recycle();
 
 		assertNotEquals("Selected color should not be the same as the color to select", colorToSelect, expectedSelectedColor);
 
@@ -263,10 +209,10 @@ public class ColorDialogIntegrationTest {
 		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(withId(R.id.color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_red)))));
-		onView(withId(R.id.color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_green)))));
-		onView(withId(R.id.color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_blue)))));
-		onView(withId(R.id.color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), UiMatcher.withTextColor(getColorById(R.color.color_chooser_rgb_alpha)))));
+		onView(withId(R.id.color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), withTextColor(getColorById(R.color.color_chooser_rgb_red)))));
+		onView(withId(R.id.color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), withTextColor(getColorById(R.color.color_chooser_rgb_green)))));
+		onView(withId(R.id.color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), withTextColor(getColorById(R.color.color_chooser_rgb_blue)))));
+		onView(withId(R.id.color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.color_chooser_rgb_alpha)))));
 
 		onView(withId(R.id.color_rgb_seekbar_red)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_rgb_seekbar_green)).check(matches(isDisplayed()));
@@ -285,11 +231,11 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.rgb_green_value)).check(matches(withText(Integer.toString(Color.green(currentSelectColor)))));
 		onView(withId(R.id.rgb_blue_value)).check(matches(withText(Integer.toString(Color.blue(currentSelectColor)))));
 		onView(withId(R.id.rgb_alpha_value)).check(matches(
-			withText(
-				Integer.toString(
-					((int)(Color.alpha(currentSelectColor) / 2.55f))
+				withText(
+						Integer.toString(
+								((int) (Color.alpha(currentSelectColor) / 2.55f))
+						)
 				)
-			)
 		));
 
 		onView(withId(R.id.color_rgb_seekbar_red)).perform(touchCenterLeft());
@@ -311,7 +257,6 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MIN)));
 		onView(withId(R.id.color_rgb_seekbar_alpha)).perform(touchCenterRight());
 		onView(withId(R.id.rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MAX)));
-
 
 		// Select color blue #FF0000FF by using seekbars
 		onView(withId(R.id.color_rgb_seekbar_red)).perform(touchCenterLeft());

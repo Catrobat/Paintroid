@@ -21,74 +21,58 @@ package org.catrobat.paintroid.tools.helper;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.LinkedList;
 import java.util.Queue;
-
 
 public class FillAlgorithm {
 	private static final boolean UP = true;
 	private static final boolean DOWN = false;
 
-	private Bitmap mBitmap;
-	private int[][] mPixels;
-	private Point mClickedPixel;
-	private int mTargetColor;
-	private int mReplacementColor;
-	private int mColorToleranceThresholdSquared;
-	private boolean mConsiderTolerance;
-	private int mWidth;
-	private int mHeight;
-	private Queue<Range> mRanges;
-	private boolean[][] mFilledPixels;
-
-	class Range {
-		public int line;
-		public int start;
-		public int end;
-		public boolean direction;
-
-		public Range(int line, int start, int end, boolean directionUp) {
-			this.line = line;
-			this.start = start;
-			this.end = end;
-			this.direction = directionUp;
-		}
-
-		public Range() {
-			this.line = 0;
-			this.start = 0;
-			this.end = 0;
-			this.direction = false;
-		}
-	}
+	private Bitmap bitmap;
+	@VisibleForTesting
+	public int[][] pixels;
+	@VisibleForTesting
+	public Point clickedPixel;
+	@VisibleForTesting
+	public int targetColor;
+	@VisibleForTesting
+	public int replacementColor;
+	@VisibleForTesting
+	public int colorToleranceThresholdSquared;
+	private boolean considerTolerance;
+	private int width;
+	private int height;
+	@VisibleForTesting
+	public Queue<Range> ranges;
+	private boolean[][] filledPixels;
 
 	public FillAlgorithm(Bitmap bitmap, Point clickedPixel, int targetColor, int replacementColor, float colorToleranceThreshold) {
-		mBitmap = bitmap;
-		mWidth = bitmap.getWidth();
-		mHeight = bitmap.getHeight();
-		mPixels = new int[bitmap.getHeight()][bitmap.getWidth()];
-		for (int i = 0; i < mHeight; i++) {
-			mBitmap.getPixels(mPixels[i], 0, mWidth, 0, i, mWidth, 1);
+		this.bitmap = bitmap;
+		width = bitmap.getWidth();
+		height = bitmap.getHeight();
+		pixels = new int[bitmap.getHeight()][bitmap.getWidth()];
+		for (int i = 0; i < height; i++) {
+			this.bitmap.getPixels(pixels[i], 0, width, 0, i, width, 1);
 		}
-		mFilledPixels = new boolean[bitmap.getHeight()][bitmap.getWidth()];
-		mClickedPixel = clickedPixel;
-		mTargetColor = targetColor;
-		mReplacementColor = replacementColor;
-		mRanges = new LinkedList<Range>();
-		mColorToleranceThresholdSquared = (int)(colorToleranceThreshold*colorToleranceThreshold);
-		mConsiderTolerance = colorToleranceThreshold > 0;
+		filledPixels = new boolean[bitmap.getHeight()][bitmap.getWidth()];
+		this.clickedPixel = clickedPixel;
+		this.targetColor = targetColor;
+		this.replacementColor = replacementColor;
+		ranges = new LinkedList<>();
+		colorToleranceThresholdSquared = (int) (colorToleranceThreshold * colorToleranceThreshold);
+		considerTolerance = colorToleranceThreshold > 0;
 	}
 
-	public void performFilling()
-	{
-		Range range = generateRangeAndReplaceColor(mClickedPixel.y, mClickedPixel.x, UP);
-		mRanges.add(range);
-		mRanges.add(new Range(range.line, range.start, range.end, DOWN));
+	public void performFilling() {
+		Range range = generateRangeAndReplaceColor(clickedPixel.y, clickedPixel.x, UP);
+		ranges.add(range);
+		ranges.add(new Range(range.line, range.start, range.end, DOWN));
 
 		int row;
-		while (!mRanges.isEmpty()) {
-			range = mRanges.poll();
+		while (!ranges.isEmpty()) {
+			range = ranges.poll();
 
 			if (range.direction == UP) {
 				row = range.line - 1;
@@ -97,7 +81,7 @@ public class FillAlgorithm {
 				}
 			} else {
 				row = range.line + 1;
-				if (row < mHeight) {
+				if (row < height) {
 					checkRangeAndGenerateNewRanges(range, row, DOWN);
 				}
 			}
@@ -109,25 +93,25 @@ public class FillAlgorithm {
 		int i;
 		int start;
 
-		mPixels[row][col] = mTargetColor;
-		mFilledPixels[row][col] = true;
+		pixels[row][col] = targetColor;
+		filledPixels[row][col] = true;
 
 		for (i = col - 1; i >= 0; i--) {
-			if (!mFilledPixels[row][i] && (mPixels[row][i] == mReplacementColor ||
-					(mConsiderTolerance && isPixelWithinColorTolerance(mPixels[row][i], mReplacementColor)))) {
-				mPixels[row][i] = mTargetColor;
-				mFilledPixels[row][i] = true;
+			if (!filledPixels[row][i] && (pixels[row][i] == replacementColor
+					|| (considerTolerance && isPixelWithinColorTolerance(pixels[row][i], replacementColor)))) {
+				pixels[row][i] = targetColor;
+				filledPixels[row][i] = true;
 			} else {
 				break;
 			}
 		}
-		start = i+1;
+		start = i + 1;
 
-		for (i = col + 1; i < mWidth; i++) {
-			if (!mFilledPixels[row][i] && (mPixels[row][i] == mReplacementColor ||
-					(mConsiderTolerance && isPixelWithinColorTolerance(mPixels[row][i], mReplacementColor)))) {
-				mPixels[row][i] = mTargetColor;
-				mFilledPixels[row][i] = true;
+		for (i = col + 1; i < width; i++) {
+			if (!filledPixels[row][i] && (pixels[row][i] == replacementColor
+					|| (considerTolerance && isPixelWithinColorTolerance(pixels[row][i], replacementColor)))) {
+				pixels[row][i] = targetColor;
+				filledPixels[row][i] = true;
 			} else {
 				break;
 			}
@@ -135,10 +119,10 @@ public class FillAlgorithm {
 
 		range.line = row;
 		range.start = start;
-		range.end = i-1;
+		range.end = i - 1;
 		range.direction = direction;
-		
-		mBitmap.setPixels(mPixels[row], start, mWidth, start, row, i - start, 1);
+
+		bitmap.setPixels(pixels[row], start, width, start, row, i - start, 1);
 
 		return range;
 	}
@@ -146,16 +130,16 @@ public class FillAlgorithm {
 	private void checkRangeAndGenerateNewRanges(Range range, int row, boolean directionUp) {
 		Range newRange;
 		for (int col = range.start; col <= range.end; col++) {
-			if (!mFilledPixels[row][col] && (mPixels[row][col] == mReplacementColor ||
-					(mConsiderTolerance && isPixelWithinColorTolerance(mPixels[row][col], mReplacementColor)))) {
+			if (!filledPixels[row][col] && (pixels[row][col] == replacementColor
+					|| (considerTolerance && isPixelWithinColorTolerance(pixels[row][col], replacementColor)))) {
 				newRange = generateRangeAndReplaceColor(row, col, directionUp);
-				mRanges.add(newRange);
+				ranges.add(newRange);
 
 				if (newRange.start <= range.start - 2) {
-					mRanges.add(new Range(row, newRange.start, range.start - 2, !directionUp));
+					ranges.add(new Range(row, newRange.start, range.start - 2, !directionUp));
 				}
 				if (newRange.end >= range.end + 2) {
-					mRanges.add(new Range(row, range.end + 2, newRange.end, !directionUp));
+					ranges.add(new Range(row, range.end + 2, newRange.end, !directionUp));
 				}
 
 				if (newRange.end >= range.end - 1) {
@@ -173,8 +157,28 @@ public class FillAlgorithm {
 		int blueDiff = (pixel & 0xFF) - (referenceColor & 0xFF);
 		int alphaDiff = (pixel >>> 24) - (referenceColor >>> 24);
 
-		return redDiff*redDiff + greenDiff*greenDiff + blueDiff*blueDiff + alphaDiff*alphaDiff
-				<= mColorToleranceThresholdSquared;
+		return redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff + alphaDiff * alphaDiff
+				<= colorToleranceThresholdSquared;
 	}
 
+	class Range {
+		public int line;
+		public int start;
+		public int end;
+		public boolean direction;
+
+		Range(int line, int start, int end, boolean directionUp) {
+			this.line = line;
+			this.start = start;
+			this.end = end;
+			this.direction = directionUp;
+		}
+
+		Range() {
+			this.line = 0;
+			this.start = 0;
+			this.end = 0;
+			this.direction = false;
+		}
+	}
 }

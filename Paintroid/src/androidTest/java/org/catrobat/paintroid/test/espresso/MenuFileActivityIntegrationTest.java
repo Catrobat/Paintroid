@@ -33,6 +33,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.MultilingualActivity;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
@@ -67,6 +68,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
@@ -86,13 +88,11 @@ import static org.junit.Assert.assertTrue;
 public class MenuFileActivityIntegrationTest {
 
 	private static ArrayList<File> deletionFileList = null;
-	private PointF screenPoint = null;
-
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
-
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	private PointF screenPoint = null;
 
 	@Before
 	public void setUp() {
@@ -107,8 +107,8 @@ public class MenuFileActivityIntegrationTest {
 
 	@After
 	public void tearDown() throws Exception {
-		PaintroidApplication.savedPictureUri = null;
-		PaintroidApplication.isSaved = false;
+		NavigationDrawerMenuActivity.savedPictureUri = null;
+		NavigationDrawerMenuActivity.isSaved = false;
 		for (File file : deletionFileList) {
 			if (file != null) {
 				boolean deleted = file.delete();
@@ -332,7 +332,7 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
 
-		assertFalse("Image already saved", PaintroidApplication.isSaved);
+		assertFalse("Image already saved", NavigationDrawerMenuActivity.isSaved);
 
 		pressMenuKey();
 
@@ -340,11 +340,11 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 
-		assertTrue("Image not saved", PaintroidApplication.isSaved);
+		assertTrue("Image not saved", NavigationDrawerMenuActivity.isSaved);
 	}
 
 	@Test
@@ -356,15 +356,15 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 	}
 
 	@Test
 	public void testSaveCopy() {
 
-		assertNull("Saved picture uri is not null", PaintroidApplication.savedPictureUri);
+		assertNull("Saved picture uri is not null", NavigationDrawerMenuActivity.savedPictureUri);
 
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
 
@@ -372,11 +372,11 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 
-		File oldFile = new File(PaintroidApplication.savedPictureUri.toString());
+		File oldFile = new File(NavigationDrawerMenuActivity.savedPictureUri.toString());
 
 		final int screenTouchYOffset = 100;
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y + screenTouchYOffset));
@@ -385,13 +385,13 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_copy)).perform(click());
 
-		File newFile = new File(PaintroidApplication.savedPictureUri.toString());
+		File newFile = new File(NavigationDrawerMenuActivity.savedPictureUri.toString());
 
 		assertNotSame("Changes to saved", oldFile, newFile);
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 	}
 
 	@Test
@@ -400,8 +400,8 @@ public class MenuFileActivityIntegrationTest {
 
 		openNavigationDrawer();
 		onView(withText(R.string.menu_save_image)).perform(click());
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
 		pressBack();
@@ -414,7 +414,7 @@ public class MenuFileActivityIntegrationTest {
 
 		// Save new image, stub ACTION_GET_CONTENT intent
 		Intent intent = new Intent();
-		intent.setData(PaintroidApplication.savedPictureUri);
+		intent.setData(NavigationDrawerMenuActivity.savedPictureUri);
 		Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
 
@@ -425,27 +425,27 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 
 		// Load the saved image
 		openNavigationDrawer();
 
 		onView(withText(R.string.menu_load_image)).perform(click());
 
-		assertTrue("Save copy flag not true", PaintroidApplication.saveCopy);
+		assertTrue("Save copy flag not true", launchActivityRule.getActivity().saveCopy);
 
 		openNavigationDrawer();
 
 		// Save copy of image
 		onView(withText(R.string.menu_save_copy)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 
-		File saveFile = new File(getRealFilePathFromUri(PaintroidApplication.savedPictureUri));
+		File saveFile = new File(getRealFilePathFromUri(NavigationDrawerMenuActivity.savedPictureUri));
 
 		final long oldLength = saveFile.length();
 		final long firstModified = saveFile.lastModified();
@@ -458,7 +458,7 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		File actualSaveFile = new File(getRealFilePathFromUri(PaintroidApplication.savedPictureUri));
+		File actualSaveFile = new File(getRealFilePathFromUri(NavigationDrawerMenuActivity.savedPictureUri));
 
 		long newLength = actualSaveFile.length();
 		long lastModified = actualSaveFile.lastModified();
@@ -468,7 +468,7 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	private String getRealFilePathFromUri(Uri uri) {
-		String[] fileColumns = { MediaStore.Images.Media.DATA };
+		String[] fileColumns = {MediaStore.Images.Media.DATA};
 
 		Cursor cursor = launchActivityRule.getActivity().getContentResolver().query(uri, fileColumns, null, null, null);
 		assertNotNull(cursor);
@@ -484,5 +484,4 @@ public class MenuFileActivityIntegrationTest {
 	private void addUriToDeletionFileList(Uri uri) {
 		deletionFileList.add(new File(getRealFilePathFromUri(uri)));
 	}
-
 }

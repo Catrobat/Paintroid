@@ -17,20 +17,14 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/layout_fill_dialog"
-    android:orientation="vertical" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
-        android:id="@+id/fill_tool_dialog_color_tolerance_title"
+        android:id="@+id/fill_tool_dialog_color_tolerance_input_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:layout_marginLeft="24dip"
-        android:layout_marginRight="16dp"
+        android:labelFor="@+id/fill_tool_dialog_color_tolerance_input"
         android:text="@string/fill_tool_dialog_color_tolerance_title"
         android:textAllCaps="true"
         android:textColor="@color/dialog_subtitle"
@@ -39,7 +33,7 @@
         android:layout_marginStart="24dip" />
 
     <View
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -48,8 +42,8 @@
         android:layout_marginStart="16dp" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="28dp"
         android:weightSum="5"
@@ -64,8 +58,6 @@
             android:layout_weight="4"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
             android:max="100"
             android:minHeight="30dip"
@@ -78,12 +70,11 @@
             android:layout_height="match_parent"
             android:inputType="number"
             android:layout_marginBottom="5dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:textCursorDrawable="@null"
             android:layout_weight="1"
-            android:textColor="@color/holo_blue_bright"
-            android:layout_marginEnd="10dp" />
+            android:textColor="@color/holo_blue_bright" />
     </LinearLayout>
 
-</LinearLayout>
+</merge>

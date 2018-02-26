@@ -19,9 +19,7 @@
 
 package org.catrobat.paintroid.dialog;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -36,18 +34,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+
 public class DialogAbout extends AppCompatDialogFragment implements OnClickListener {
 
 	public DialogAbout() {
 	}
 
+	@SuppressLint("InflateParams")
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		AlertDialog.Builder builder = new CustomAlertDialogBuilder(getActivity());
 
-		builder.setTitle(R.string.about_title);
 		View view = inflater.inflate(R.layout.dialog_about, null);
 
 		TextView aboutVersionNameTextView = (TextView) view
@@ -56,8 +56,7 @@ public class DialogAbout extends AppCompatDialogFragment implements OnClickListe
 		aboutVersionNameTextView.setText(R.string.about_version);
 		aboutVersionNameTextView.append(" " + versionName);
 
-		TextView aboutTextView = (TextView) view
-				.findViewById(R.id.about_tview_Text);
+		TextView aboutTextView = (TextView) view.findViewById(R.id.about_tview_Text);
 		String aboutText = String.format(
 				getActivity().getString(R.string.about_content), getActivity()
 						.getString(R.string.license_type_paintroid));
@@ -80,19 +79,19 @@ public class DialogAbout extends AppCompatDialogFragment implements OnClickListe
 		aboutUrlTextView.append(Html.fromHtml(aboutCatroid));
 		aboutUrlTextView.append("\n");
 
-		builder.setView(view);
-		builder.setPositiveButton(R.string.done, this);
-
-		return builder.create();
-
+		AlertDialog.Builder builder = new CustomAlertDialogBuilder(getActivity());
+		return builder.setTitle(R.string.about_title)
+				.setView(view)
+				.setPositiveButton(R.string.done, this)
+				.create();
 	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		switch (which) {
-		case AlertDialog.BUTTON_POSITIVE:
-			dismiss();
-			break;
+			case AlertDialog.BUTTON_POSITIVE:
+				dismiss();
+				break;
 		}
 	}
 }

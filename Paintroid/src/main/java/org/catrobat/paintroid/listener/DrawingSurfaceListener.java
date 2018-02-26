@@ -21,6 +21,7 @@ package org.catrobat.paintroid.listener;
 
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -28,29 +29,23 @@ import android.view.View.OnTouchListener;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.util.EnumSet;
 
 public class DrawingSurfaceListener implements OnTouchListener {
-	static enum TouchMode {
-		DRAW, PINCH, LOCK
-	}
+	private static final int BLOCKING_TIME = 250 * 1000 * 1000;
 
-	private final int BLOCKING_TIME = 250 * 1000 * 1000;
-
-	private  Perspective mPerspective;
-	public static boolean mListenerIsEnabled;
-	private float mPointerDistance;
-	private PointF mPointerMean;
-	private TouchMode mTouchMode;
-	private long mZoomTimeStamp;
+	private float pointerDistance;
+	private PointF pointerMean;
+	private TouchMode touchMode;
+	private long zoomTimeStamp;
 	private MoveThread moveThread;
 
 	public DrawingSurfaceListener() {
-		mPerspective = PaintroidApplication.perspective;
-		mPointerMean = new PointF(0, 0);
-		mTouchMode = TouchMode.DRAW;
+		pointerMean = new PointF(0, 0);
+		touchMode = TouchMode.DRAW;
 	}
 
 	private float calculatePointerDistance(MotionEvent event) {
@@ -67,11 +62,12 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		mPerspective = PaintroidApplication.perspective;
-		PointF touchPoint = mPerspective
+		DrawingSurface drawingSurface = (DrawingSurface) view;
+		Perspective perspective = PaintroidApplication.perspective;
+		PointF touchPoint = perspective
 				.getCanvasPointFromSurfacePoint(new PointF(event.getX(), event.getY()));
-		if (PaintroidApplication.drawingSurface.getLock()) {
-			mTouchMode = TouchMode.LOCK;
+		if (drawingSurface.getLock()) {
+			touchMode = TouchMode.LOCK;
 		}
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
@@ -85,16 +81,15 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				break;
 			case MotionEvent.ACTION_MOVE:
 				if (event.getPointerCount() == 1) {
-					if (System.nanoTime() < (mZoomTimeStamp + BLOCKING_TIME)) {
+					if (System.nanoTime() < (zoomTimeStamp + BLOCKING_TIME)) {
 						break;
 					}
-					mTouchMode = TouchMode.DRAW;
+					touchMode = TouchMode.DRAW;
 					if (moveThread != null) {
 						moveThread.setCalculationVariables(event.getX(),
 								event.getY(), view.getWidth(), view.getHeight());
 					}
 					PaintroidApplication.currentTool.handleTouch(touchPoint, MotionEvent.ACTION_MOVE);
-
 				} else {
 					if (moveThread != null && System.nanoTime() > moveThread.threadStartTime + BLOCKING_TIME) {
 						break;
@@ -109,22 +104,22 @@ public class DrawingSurfaceListener implements OnTouchListener {
 							moveThread = null;
 						}
 					}
-					mTouchMode = TouchMode.PINCH;
+					touchMode = TouchMode.PINCH;
 
-					float pointerDistanceOld = mPointerDistance;
-					mPointerDistance = calculatePointerDistance(event);
+					float pointerDistanceOld = pointerDistance;
+					pointerDistance = calculatePointerDistance(event);
 					if (pointerDistanceOld > 0) {
-						float scale = (mPointerDistance / pointerDistanceOld);
-						mPerspective.multiplyScale(scale);
+						float scale = (pointerDistance / pointerDistanceOld);
+						perspective.multiplyScale(scale);
 					}
 
-					float xOld = mPointerMean.x;
-					float yOld = mPointerMean.y;
-					calculatePointerMean(event, mPointerMean);
+					float xOld = pointerMean.x;
+					float yOld = pointerMean.y;
+					calculatePointerMean(event, pointerMean);
 					if (xOld > 0 || yOld > 0) {
-						mPerspective.translate(mPointerMean.x - xOld, mPointerMean.y - yOld);
+						perspective.translate(pointerMean.x - xOld, pointerMean.y - yOld);
 					}
-					mZoomTimeStamp = System.nanoTime();
+					zoomTimeStamp = System.nanoTime();
 				}
 				break;
 			case MotionEvent.ACTION_UP:
@@ -133,17 +128,21 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					moveThread.kill();
 				}
 				moveThread = null;
-				if (mTouchMode == TouchMode.DRAW) {
+				if (touchMode == TouchMode.DRAW) {
 					PaintroidApplication.currentTool.handleTouch(touchPoint, MotionEvent.ACTION_UP);
 				} else {
 					PaintroidApplication.currentTool.resetInternalState(StateChange.MOVE_CANCELED);
 				}
-				mPointerDistance = 0;
-				mPointerMean.set(0, 0);
+				pointerDistance = 0;
+				pointerMean.set(0, 0);
 				break;
 		}
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+		drawingSurface.refreshDrawingSurface();
 		return true;
+	}
+
+	enum TouchMode {
+		DRAW, PINCH, LOCK
 	}
 
 	private class MoveThread extends Thread {
@@ -163,14 +162,14 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private EnumSet<ToolType> ignoredTools = EnumSet.of(ToolType.PIPETTE,
 				ToolType.FILL, ToolType.TRANSFORM);
 
-		protected MoveThread() {
+		MoveThread() {
 			threadStartTime = System.nanoTime();
 			running = !ignoredTools.contains(PaintroidApplication.currentTool
 					.getToolType());
 			scrolling = false;
 		}
 
-		protected void setCalculationVariables(float pointX, float pointY, int width, int height) {
+		void setCalculationVariables(float pointX, float pointY, int width, int height) {
 			this.pointX = pointX;
 			this.pointY = pointY;
 			this.width = width;
@@ -186,16 +185,17 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			super.start();
 		}
 
-		protected void kill() {
+		void kill() {
 			running = false;
 		}
 
-		protected int calculateScrollInterval(float scale) {
+		private int calculateScrollInterval(float scale) {
 			return (int) (SCROLL_INTERVAL_FACTOR / Math.pow(scale, 1 / 3));
 		}
 
 		@Override
 		public void run() {
+			PointF newMovePoint = new PointF();
 			while (running) {
 				Point autoScrollDirection = PaintroidApplication.currentTool
 						.getAutoScrollDirection(pointX, pointY, width, height);
@@ -203,28 +203,25 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				if (autoScrollDirection.x != 0 || autoScrollDirection.y != 0) {
 					scrolling = true;
 
-					PointF newMovePoint = PaintroidApplication.perspective
-							.getCanvasPointFromSurfacePoint(new PointF(pointX,
-									pointY));
+					newMovePoint.set(pointX, pointY);
+					PaintroidApplication.perspective.convertToCanvasFromSurface(newMovePoint);
 
-					if(PaintroidApplication.drawingSurface.isPointOnCanvas(newMovePoint)) {
+					if (PaintroidApplication.drawingSurface.isPointOnCanvas(newMovePoint)) {
 
-						PaintroidApplication.perspective.translate(
-								autoScrollDirection.x * step, autoScrollDirection.y
-										* step);
+						PaintroidApplication.perspective.translate(autoScrollDirection.x * step,
+								autoScrollDirection.y * step);
 
 						PaintroidApplication.currentTool.handleMove(newMovePoint);
 					}
 				}
 
 				try {
-					sleep(calculateScrollInterval(PaintroidApplication.perspective
-							.getScale()));
+					sleep(calculateScrollInterval(PaintroidApplication.perspective.getScale()));
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Log.e(DrawingSurfaceListener.class.getSimpleName(), e.getMessage());
 				}
 				scrolling = false;
-				mTouchMode = TouchMode.DRAW;
+				touchMode = TouchMode.DRAW;
 			}
 		}
 	}

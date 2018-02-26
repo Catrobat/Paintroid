@@ -18,52 +18,36 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bg_screen1"
-                android:paddingStart="@dimen/intro_margin_side"
-                android:paddingEnd="@dimen/intro_margin_side"
-                android:paddingTop="@dimen/intro_margin_top">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingEnd="@dimen/intro_margin_side"
+    android:paddingStart="@dimen/intro_margin_side"
+    android:paddingTop="@dimen/intro_margin_top">
 
-
-    <RelativeLayout
+    <TextView
+        android:id="@+id/intro_started_head"
+        style="@style/IntroHeader"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="top"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_height="wrap_content"
+        android:minLines="2"
+        android:text="@string/enjoy_pocket_paint"/>
 
-        <TextView
-            android:id="@+id/intro_started_head"
-            style="@style/IntroHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minLines="2"
-            android:text="@string/enjoy_pocket_paint"/>
+    <TextView
+        android:id="@+id/intro_started_text"
+        style="@style/IntroText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/intro_started_head"
+        android:layout_marginTop="@dimen/intro_margin_top_text"
+        android:text="@string/intro_get_started"/>
 
-
-
-        <TextView
-            android:id="@+id/intro_started_text"
-            style="@style/IntroText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/intro_started_head"
-            android:layout_marginTop="@dimen/intro_margin_top_text"
-            android:text="@string/intro_get_started"/>
-
-        <ImageView
-            android:layout_below="@id/intro_started_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/intro_portrait"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/image_getstarded"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"/>
-    </RelativeLayout>
-
-
+    <ImageView
+        android:layout_below="@id/intro_started_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/intro_portrait"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/image_getstarded"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"/>
 </RelativeLayout>

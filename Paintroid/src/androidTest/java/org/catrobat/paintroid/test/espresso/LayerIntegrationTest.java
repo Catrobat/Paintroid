@@ -19,25 +19,20 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.PointF;
-import android.graphics.drawable.BitmapDrawable;
-import android.support.design.widget.NavigationView;
+import android.graphics.Color;
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.content.ContextCompat;
-import android.widget.ImageButton;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.button.LayersAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,218 +41,634 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.addNewLayer;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeLayerMenu;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.deleteSelectedLayer;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openLayerMenu;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
+
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.BLACK_COLOR_PICKER_BUTTON_POSITION;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.GREEN_COLOR_PICKER_BUTTON_POSITION;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.WHITE_COLOR_PICKER_BUTTON_POSITION;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectLayer;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class LayerIntegrationTest {
-
-	public static final String FIELD_NAME_NAVIGATION_VIEW = "mNavigationView";
-	public static final String FIELD_NAME_CONTEXT = "mContext";
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	private NavigationView navigationView;
-	private Context context;
-	private ImageButton newButton;
-	private ImageButton deleteButton;
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
-	private Bitmap newButtonBitmap;
-	private Bitmap newButtonDisabledBitmap;
-	private Bitmap deleteButtonBitmap;
-	private Bitmap deleteButtonDisabledBitmap;
-
-	private int displayWidth;
-	private int displayHeight;
+	private DialogHiddenIdlingResource dialogWait;
+	private int bitmapHeight;
+	private int bitmapWidth;
 
 	@Before
 	public void setUp() throws Exception {
-		navigationView = (NavigationView) PrivateAccess.getMemberValue(LayerListener.class, LayerListener.getInstance(), FIELD_NAME_NAVIGATION_VIEW);
-		context = (Context) PrivateAccess.getMemberValue(LayerListener.class, LayerListener.getInstance(), FIELD_NAME_CONTEXT);
-		newButton = (ImageButton) navigationView.findViewById(R.id.layer_side_nav_button_add);
-		deleteButton = (ImageButton) navigationView.findViewById(R.id.layer_side_nav_button_delete);
+		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
+		IdlingRegistry.getInstance().register(dialogWait);
 
-		newButtonBitmap = ((BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.icon_layers_new)).getBitmap();
-		newButtonDisabledBitmap = ((BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.icon_layers_new_disabled)).getBitmap();
-
-		deleteButtonBitmap = ((BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.icon_layers_delete)).getBitmap();
-		deleteButtonDisabledBitmap = ((BitmapDrawable) ContextCompat.getDrawable(context, R.drawable.icon_layers_delete_disabled)).getBitmap();
-
-		ActivityHelper activityHelper = new ActivityHelper(launchActivityRule.getActivity());
-		displayWidth  = activityHelper.getDisplayWidth();
-		displayHeight = activityHelper.getDisplayHeight();
+		Bitmap image = LayerListener.getInstance().getCurrentLayer().getImage();
+		bitmapHeight = image.getHeight();
+		bitmapWidth = image.getWidth();
 	}
 
 	@After
-	public void tearDown() {
+	public void tearDown() throws Exception {
+		IdlingRegistry.getInstance().unregister(dialogWait);
+	}
 
+	@Test
+	public void testShowLayerMenu() {
+		onLayerMenuView()
+				.performOpen()
+				.check(matches(isDisplayed()));
 	}
 
 	@Test
 	public void testInitialSetup() {
+		onLayerMenuView()
+				.check(matches(not(isDisplayed())));
+		onLayerMenuView().onButtonAdd()
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+		onLayerMenuView().onButtonDelete()
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_delete_disabled))));
+	}
 
-		Bitmap addLayer = ((BitmapDrawable) newButton.getBackground()).getBitmap();
-		Bitmap deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();
+	@Test
+	public void testAddOneLayer() {
+		onLayerMenuView()
+				.checkLayerCount(1)
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2);
+	}
 
-		assertTrue("Add layer button should be enabled", addLayer.sameAs(newButtonBitmap));
-		assertTrue("Delete layer button should be disabled", deleteLayer.sameAs(deleteButtonDisabledBitmap));
+	@Test
+	public void testTryAddMoreLayersThanLimit() {
+		onLayerMenuView()
+				.checkLayerCount(1)
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.checkLayerCount(4)
+				.performAddLayer()
+				.checkLayerCount(4);
 	}
 
 	@Test
 	public void testButtonsAddOneLayer() {
-		openLayerMenu();
-		addNewLayer();
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2);
 
-		Bitmap addLayer = ((BitmapDrawable) newButton.getBackground()).getBitmap();
-		Bitmap deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();
+		onLayerMenuView().onButtonAdd()
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+		onLayerMenuView().onButtonDelete()
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_delete))));
 
-		assertTrue("Add layer button should be enabled", addLayer.sameAs(newButtonBitmap));
-		assertTrue("Delete layer button should be enabled", deleteLayer.sameAs(deleteButtonBitmap));
+		onLayerMenuView()
+				.performAddLayer()
+				.performAddLayer()
+				.checkLayerCount(4);
 
-		EspressoUtils.addNewLayer();
-		addNewLayer();
+		onLayerMenuView().onButtonAdd()
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_new_disabled))));
+		onLayerMenuView().onButtonDelete()
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_delete))));
 
-		addLayer = ((BitmapDrawable) newButton.getBackground()).getBitmap();
-		deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();
-		assertTrue("Add layer button should be disabled", addLayer.sameAs(newButtonDisabledBitmap));
-		assertTrue("Delete layer button should be enabled", deleteLayer.sameAs(deleteButtonBitmap));
+		onLayerMenuView()
+				.performDeleteLayer()
+				.performDeleteLayer()
+				.performDeleteLayer()
+				.checkLayerCount(1);
 
-		deleteSelectedLayer();
-		deleteSelectedLayer();
-		deleteSelectedLayer();
-
-		addLayer = ((BitmapDrawable) newButton.getBackground()).getBitmap();
-		deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();
-		assertTrue("Add layer button should be enabled", addLayer.sameAs(newButtonBitmap));
-		assertTrue("Delete layer button should be disabled", deleteLayer.sameAs(deleteButtonDisabledBitmap));
+		onLayerMenuView().onButtonAdd()
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+		onLayerMenuView().onButtonDelete()
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_delete_disabled))));
 	}
 
 	@Test
 	public void testButtonsAfterNewImage() {
-		openLayerMenu();
-		for (int i = 1; i < LayersAdapter.MAX_LAYER; i++) {
-			addNewLayer();
-		}
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.performClose()
+				.checkLayerCount(4);
 
-		Bitmap addLayer = ((BitmapDrawable) newButton.getBackground()).getBitmap();
-		assertTrue("Add layer button should be disabled", addLayer.sameAs(newButtonDisabledBitmap));
+		onLayerMenuView().onButtonAdd()
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_new_disabled))));
+		onLayerMenuView().onButtonDelete()
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_delete))));
 
-		Bitmap deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();
-		assertTrue("Delete layer button should be enabled", deleteLayer.sameAs(deleteButtonBitmap));
+		onNavigationDrawer()
+				.performOpen();
+		onView(withText(R.string.menu_new_image))
+				.perform(click());
+		onView(withText(R.string.discard_button_text))
+				.perform(click());
+		onView(withText(R.string.menu_new_image_empty_image))
+				.perform(click());
 
-		onView(withId(R.id.toolbar)).perform(click());
-		openNavigationDrawer();
-		onView(withText(R.string.menu_new_image)).perform(click());
-		onView(withText(R.string.discard_button_text)).perform(click());
-		onView(withText(R.string.menu_new_image_empty_image)).perform(click());
-
-		openLayerMenu();
-
-		addLayer = ((BitmapDrawable) newButton.getBackground()).getBitmap();
-		assertTrue("Add layer button should be enabled", addLayer.sameAs(newButtonBitmap));
-
-		deleteLayer = ((BitmapDrawable) deleteButton.getBackground()).getBitmap();
-		assertTrue("Delete layer button should be disabled", deleteLayer.sameAs(deleteButtonDisabledBitmap));
+		onLayerMenuView().onButtonAdd()
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+		onLayerMenuView().onButtonDelete()
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_delete_disabled))));
+		onLayerMenuView()
+				.checkLayerCount(1);
 	}
 
+	@Test
 	public void testUndoRedoLayerAdd() {
-		int heightOneLayer = navigationView.getHeight();
-		openLayerMenu();
-		addNewLayer();
-		closeLayerMenu();
-		int heightTwoLayer = navigationView.getHeight();
-		assertTrue("One Layer should have been added", heightTwoLayer > heightOneLayer);
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performClose()
+				.checkLayerCount(2);
 
-		onView(withId(R.id.btn_top_undo)).perform(click());
+		onTopBarView()
+				.performUndo();
 
-		int currentLayerHeight = navigationView.getHeight();
-		assertEquals("There should be only one Layer after Undo", heightOneLayer, currentLayerHeight);
+		onLayerMenuView()
+				.checkLayerCount(1);
 
-		onView(withId(R.id.btn_top_redo)).perform(click());
-		currentLayerHeight = navigationView.getHeight();
-		assertEquals("There should be two Layers after Redo", heightTwoLayer, currentLayerHeight);
+		onTopBarView()
+				.performRedo();
 
+		onLayerMenuView()
+				.checkLayerCount(2);
+	}
+
+	@Test
+	public void testDeleteEmptyLayer() {
+		onLayerMenuView()
+				.checkLayerCount(1)
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.performDeleteLayer()
+				.checkLayerCount(1);
+	}
+
+	@Test
+	public void testDeleteFilledLayer() {
+		onLayerMenuView()
+				.checkLayerCount(1)
+				.performOpen()
+				.performAddLayer()
+				.performClose();
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
+
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+		selectColorPickerPresetSelectorColor(BLACK_COLOR_PICKER_BUTTON_POSITION);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.BLACK);
+
+		onLayerMenuView()
+				.checkLayerCount(2)
+				.performOpen()
+				.performDeleteLayer()
+				.performClose()
+				.checkLayerCount(1);
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
+	}
+
+	@Test
+	public void testTryDeleteOnlyLayer() {
+		onLayerMenuView()
+				.checkLayerCount(1)
+				.performOpen()
+				.performDeleteLayer()
+				.checkLayerCount(1);
+	}
+
+	@Test
+	public void testSwitchBetweenFilledLayers() {
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.BLACK);
+
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performClose();
+
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+		selectColorPickerPresetSelectorColor(WHITE_COLOR_PICKER_BUTTON_POSITION);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.WHITE);
+
+		onLayerMenuView()
+				.performOpen()
+				.performSelectLayer(1)
+				.performClose();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.WHITE);
+	}
+
+	@Test
+	public void testMultipleLayersNewImageDiscardOld() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.checkLayerCount(4)
+				.performClose();
+
+		onNavigationDrawer()
+				.performOpen();
+		onView(withText(R.string.menu_new_image))
+				.perform(click());
+		onView(withText(R.string.discard_button_text))
+				.perform(click());
+		onView(withText(R.string.menu_new_image_empty_image))
+				.perform(click());
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
+		onLayerMenuView()
+				.checkLayerCount(1);
+	}
+
+	@Test
+	public void testMultipleLayersNewImageSaveOld() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.checkLayerCount(4)
+				.performClose();
+
+		onNavigationDrawer()
+				.performOpen();
+		onView(withText(R.string.menu_new_image))
+				.perform(click());
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+		onView(withText(R.string.menu_new_image_empty_image))
+				.perform(click());
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
+
+		onLayerMenuView()
+				.checkLayerCount(1);
+	}
+
+	@Test
+	public void testResizingThroughAllLayers() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.performClose();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.performAutoCrop();
+		onToolBarView()
+				.performCloseToolOptions();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+
+		onDrawingSurfaceView()
+				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
+
+		onTopBarView()
+				.performUndo();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapWidth, bitmapHeight);
+
+		onTopBarView()
+				.performRedo();
+
+		onDrawingSurfaceView()
+				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
+
+		onLayerMenuView()
+				.performOpen()
+				.performSelectLayer(2)
+				.performClose();
+
+		onTopBarView()
+				.performUndo();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapWidth, bitmapHeight);
+
+		onLayerMenuView()
+				.performOpen()
+				.performSelectLayer(3)
+				.performClose();
+
+		onTopBarView()
+				.performRedo();
+
+		onDrawingSurfaceView()
+				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
+
+		onLayerMenuView()
+				.performOpen()
+				.performDeleteLayer()
+				.performAddLayer()
+				.performClose();
+
+		onTopBarView()
+				.performUndo()
+				.performUndo()
+				.performUndo();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapWidth, bitmapHeight);
+
+		onTopBarView()
+				.performRedo();
+
+		onDrawingSurfaceView()
+				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
+	}
+
+	@Test
+	public void testRotatingThroughAllLayers() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.performClose();
+
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.performRotateClockwise();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapHeight, bitmapWidth);
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolProperties()
+				.checkColor(Color.BLACK);
+
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.performRotateCounterClockwise()
+				.performRotateCounterClockwise();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapHeight, bitmapWidth);
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolProperties()
+				.checkColor(Color.BLACK);
+	}
+
+	@Test
+	public void testReflectingOnlyCurrentLayer() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE));
+
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performClose();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.performFlipVertical();
+
+		onToolBarView().performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
+
+		onTopBarView()
+				.performUndo();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onToolProperties()
+				.checkColor(Color.BLACK);
+
+		onTopBarView()
+				.performRedo();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
 	}
 
 	@Test
 	public void testUndoRedoLayerDelete() {
-		int heightOneLayer = navigationView.getHeight();
-		openLayerMenu();
-		addNewLayer();
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.performDeleteLayer()
+				.checkLayerCount(1)
+				.performClose();
 
-		int heightTwoLayer = navigationView.getHeight();
-		assertTrue("One Layer should have been added", heightTwoLayer > heightOneLayer);
+		onTopBarView()
+				.performUndo();
 
-		deleteSelectedLayer();
-		closeLayerMenu();
-		int currentLayerHeight = navigationView.getHeight();
-		assertEquals("New Layer should be deleted", heightOneLayer, currentLayerHeight);
+		onLayerMenuView()
+				.checkLayerCount(2);
 
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		currentLayerHeight = navigationView.getHeight();
-		assertEquals("There should be two Layers after Undo", heightTwoLayer, currentLayerHeight);
+		onTopBarView()
+				.performRedo();
 
-		onView(withId(R.id.btn_top_redo)).perform(click());
-		currentLayerHeight = navigationView.getHeight();
-		assertEquals("There should be one Layer after Redo", heightOneLayer, currentLayerHeight);
+		onLayerMenuView()
+				.checkLayerCount(1);
 	}
 
 	@Test
 	public void testLayerOrderUndoDelete() {
-		int heightOneLayer = navigationView.getHeight();
-		PointF screenPoint = new PointF(displayWidth / 2 - 10, displayHeight / 2 - 5);
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
 
-		selectTool(ToolType.FILL);
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		openLayerMenu();
-		addNewLayer();
-		int heightTwoLayer = navigationView.getHeight();
-		assertTrue("One Layer should have been added", heightTwoLayer > heightOneLayer);
-		closeLayerMenu();
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.performClose();
 
-		final int buttonPosition = 2;
-		selectColorPickerPresetSelectorColor(buttonPosition);
-		int colorSecondLayer = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		onView(isRoot()).perform(touchAt(screenPoint));
+		selectColorPickerPresetSelectorColor(GREEN_COLOR_PICKER_BUTTON_POSITION);
+		onToolProperties()
+				.checkColorResource(R.color.color_chooser_green1);
 
-		openLayerMenu();
-		selectLayer(1);
-		deleteSelectedLayer();
-		closeLayerMenu();
-		int currentLayerHeight = navigationView.getHeight();
-		assertEquals("One should be deleted", heightOneLayer, currentLayerHeight);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(withId(R.id.btn_top_undo)).perform(click());
-		currentLayerHeight = navigationView.getHeight();
-		assertEquals("There should be two Layers after Undo", heightTwoLayer, currentLayerHeight);
+		onLayerMenuView()
+				.performOpen()
+				.performSelectLayer(1)
+				.performDeleteLayer()
+				.performClose()
+				.checkLayerCount(1);
 
-		selectTool(ToolType.PIPETTE);
-		onView(isRoot()).perform(touchAt(screenPoint));
-		int colorAfterUndo = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Second layer should be in foreground", colorSecondLayer, colorAfterUndo);
+		onTopBarView()
+				.performUndo();
+
+		onLayerMenuView()
+				.checkLayerCount(2);
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColorResource(R.color.color_chooser_green1);
 	}
 
 	@Test
-	public void testCreateManyLayers() {
-		openLayerMenu();
+	public void testUndoRedoLayerRotate() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performAddLayer()
+				.performAddLayer()
+				.performClose();
 
-		for(int i = 0; i < 100; i++) {
-			addNewLayer();
-			deleteSelectedLayer();
-		}
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.performRotateClockwise();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapHeight, bitmapWidth);
+
+		onToolBarView()
+				.performCloseToolOptions();
+		onTopBarView()
+				.performUndo();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapWidth, bitmapHeight);
+
+		onTopBarView()
+				.performRedo();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapHeight, bitmapWidth);
+
+		onLayerMenuView()
+				.performOpen()
+				.performDeleteLayer()
+				.performAddLayer()
+				.performSelectLayer(3)
+				.performClose();
+
+		onTopBarView()
+				.performUndo()
+				.performUndo()
+				.performUndo();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapWidth, bitmapHeight);
+
+		onTopBarView()
+				.performRedo();
+
+		onDrawingSurfaceView()
+				.checkLayerDimensions(bitmapHeight, bitmapWidth);
 	}
 }

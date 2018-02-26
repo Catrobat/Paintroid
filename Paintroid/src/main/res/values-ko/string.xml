@@ -19,42 +19,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">포켓 페인트</string>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name" tools:ignore="UnusedResources">포켓 페인트</string>
   <string name="button_brush">붓</string>
   <string name="button_cursor">커서</string>
-  <string name="button_ellipse">원/타원</string>
-  <string name="button_zoom">줌</string>
   <string name="button_pipette">색 고르기</string>
   <string name="button_undo">취소</string>
   <string name="button_redo">다시 실행</string>
   <string name="button_stamp">스탬프</string>
-  <string name="button_rectangle">사각형</string>
   <string name="button_import_image">그림</string>
   <string name="button_eraser">지우개</string>
-  <string name="button_resize">크기 조절</string>
   <string name="button_transform">변환</string>
-  <string name="button_flip">뒤집기</string>
   <string name="button_fill">채우기</string>
-  <string name="button_move">움직이기</string>
-  <string name="button_rotate">회전하기</string>
   <string name="button_line">선 그리기</string>
   <string name="button_text">텍스트</string>
   <string name="button_shape">모양</string>
-  <string name="cancel">취소</string>
-  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
-  <string name="yes">예</string>
-  <string name="no">아니오</string>
   <string name="done">완료</string>
   <string name="terms_of_use_and_service_title">사용과 서비스 약관</string>
   <string name="terms_of_use_and_service_content">포켓 코드와 Catrobat 프로그램에 의해 제공하는 다른 실행 파일을 사용하도록 허용하려면 우리의 이용 약관에 동의하고 포켓 코드와 우리의 다른 실행 파일을 사용할 때 엄격하게 약관을 따라 해야 합니다. 자세한 세부규정은 아래 링크를 참조하십시오.\n\n</string>
   <string name="terms_of_use_and_service_url_text">사용과 서비스 약관</string>
   <string name="about_title">포켓 코드에 대하여</string>
-  <string name="about_content">포켓 페인트는 Catrobat project의 일부로 그림 편집기입니다.\n\nCatrobat은 시각적인 프로그래밍 언어이며 스마트폰, 태블릿, 모바일 브라우저를 위한 창의적인 도구입니다. \n\n포켓 페인트의 소스 코드는 %s와 라이센스 되어 있습니다.\n이 라이센스에 대한 정확한 세부 사항은 아래 링크를 참조하세요.\n\n</string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">포켓 페인트 소스 코드 라이센스</string>
   <string name="about_catroid_url_text">Catrobat에 대하여</string>
   <string name="about_version">버전 정보</string>
-  <string name="stroke_title">"도구 설정"</string>
   <string name="color_chooser_title">색상 선택기</string>
   <string name="color_rgb">빨강 녹색 파랑 (RGB)</string>
   <string name="color_red">빨강</string>
@@ -64,17 +52,12 @@
   <string name="color_pre">미리 선택</string>
   <string name="color_hsv">hsv 색상 선택기</string>
   <string name="dialog_tools_title">도구</string>
-  <string name="dialog_save_title">그림 저장</string>
-  <string name="dialog_save_text">파일이름 입력</string>
-  <string name="dialog_load">로드중입니다&#8230;</string>
-  <string name="dialog_overwrite_text">현재 파일에 덮어쓰기 할까요?</string>
+  <string name="dialog_load">로드중입니다…</string>
   <string name="dialog_error_save_title">파일 로드/저장 오류</string>
   <string name="dialog_error_sdcard_text">이미지 또는 SD 카드를 확인!</string>
   <string name="dialog_brush_width_text">선 굵기</string>
   <string name="dialog_warning_new_image">변경사항을 저장하시겠습니까?</string>
   <string name="help_title">도움말</string>
-  <string name="help_content_ellipse">원을 움익여서 크기를 바꾸거나 타원으로 변형하세요. 그림에 모양에 색을 칠하려면 터치하세요</string>
-  <string name="help_content_flip">그림을 뒤집으려면 하단 바의 기호를 터치합니다.</string>
   <string name="help_content_eraser">지우개와 같은 것으로 이미지의 부분을 제거합니다.</string>
   <string name="help_content_brush">색 또는 브러시 크기를 변경하려면 하단 바에 기호를 누릅니다.</string>
   <string name="help_content_eyedropper">색상을 선택하려면 이미지를 터치하세요.</string>
@@ -82,15 +65,14 @@
   <string name="help_content_redo">실행 취소한 작업을 다시 실행하려면 터치하세요.</string>
   <string name="help_content_fill">선택된 색상으로 영역을 채우기 위해 이미지를 터치하세요.</string>
   <string name="help_content_cursor">원하는 그림을 그리기 위해 커서를 위치시키세요. 커서를 활성화하려면 터치하세요. 그리기 위해서는 손가락을 이동하세요. 비활성화시키려면 다시 터치하세요.</string>
-  <string name="help_content_resize">이미지를 크기를 조절하려면 사용하세요.</string>
   <string name="help_content_transform">이미지를 변환 하는 데 사용합니다.</string>
   <string name="help_content_stamp">스탬프 찍기를 위해서는 영역을 사각형으로 지정하여 이동하고 크기를 조절하세요. 영역을 터치하세요. 움직여서 스탬프를 찍기위해 또 다시 터치하세요.</string>
-  <string name="help_content_rectangle">정사각형을 직사각형으로 이동하여 크기를 바꾸세요. 이미지의 모양을 칠하려면 터치하세요.</string>
   <string name="help_content_import_png">스탬프 도구를 위해 갤러리에서 이미지를 가져옵니다.</string>
-  <string name="help_content_rotate">이미지를 왼쪽 또는 오른쪽 회전하려면 버튼을 터치하세요.</string>
   <string name="help_content_line">직선을 그립니다.</string>
   <string name="help_content_text">텍스트를 작성 하고 서식을 조정하세요. 나중에 텍스트 상자를 크기를 조정하세요. 이미지에 텍스트를 삽입하려면 터치하세요.</string>
   <string name="help_content_shape">모양을 선택하고 삽입을 누릅니다</string>
+  <string name="help_content_layer">새 레이어를 만들거나 수정</string>
+  <string name="help_content_color_chooser">선택 하거나 색상 조정</string>
   <string name="closing_security_question_title">종료</string>
   <string name="closing_security_question">변경사항을 저장하시겠습니까?</string>
   <string name="closing_catroid_security_question_title">포켓 코드로 다시 돌아가기</string>
@@ -99,12 +81,10 @@
   <string name="menu_save_image">이미지 저장</string>
   <string name="menu_save_copy">복사본 저장</string>
   <string name="menu_new_image_empty_image">빈 그림</string>
-  <string name="menu_item_tools">도구 메뉴</string>
   <string name="menu_hide_menu">전체 화면</string>
   <string name="menu_show_menu">전체 화면 종료</string>
   <string name="menu_new_image_from_camera">카메라에서 새 이미지</string>
   <string name="menu_terms_of_use_and_service">이용 약관</string>
-  <string name="more">자세히</string>
   <string name="menu_about">상세 정보</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">내보내기</string>
@@ -113,63 +93,33 @@
   <string name="menu_quit">종료</string>
   <string name="save_button_text">저장</string>
   <string name="discard_button_text">저장 안함</string>
-  <string name="resize_to_resize_tap_text">탭 크기를 조정하려면</string>
   <string name="resize_nothing_to_resize">크기 변경 없음</string>
   <string name="resize_max_image_resolution_reached">최고 이미지 해상도</string>
-  <string name="text_tool_dialog_title">텍스트 도구 설정</string>
   <string name="text_tool_dialog_input_title">텍스트:</string>
   <string name="text_tool_dialog_format_options">서식 옵션:</string>
-  <string name="text_tool_dialog_underline_shortcut">U</string>
-  <string name="text_tool_dialog_italic_shortcut">나</string>
-  <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">여기를 눌러 텍스트를 추가하세요</string>
   <string name="shape_tool_dialog_rect_title">사각형</string>
   <string name="shape_tool_dialog_ellipse_title">타원</string>
   <string name="shape_tool_dialog_star_title">별</string>
   <string name="shape_tool_dialog_heart_title">하트</string>
-  <string name="fill_tool_dialog_title">채우기 도구 설정</string>
   <string name="fill_tool_dialog_color_tolerance_title">색상 허용 오차</string>
-  <string name="fill_tool_dialog_input_hint_toast">0 ~ 100 사이의 숫자 입력</string>
-  <string name="transform_tool_header_text">변환</string>
-  <string name="transform_tool_size_text">크기</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">자동 조정</string>
   <string name="transform_tool_roate_text">회전하기</string>
   <string name="transform_tool_mirror_text">대칭</string>
-  <string name="transform_tool_angle_text">각도</string>
   <string name="stamp_tool_copy_hint">복사하려면 길게 터치</string>
   <string name="layers_title">레이어</string>
-  <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">새 레이어</string>
   <string name="layer_delete">레이어 삭제</string>
-  <string name="layer_opacity">투명도:</string>
-  <string name="layer_merge">병합</string>
-  <string name="layer_visible">보이기</string>
-  <string name="layer_lock">잠금</string>
-  <string name="layer_rename">이름 바꾸기</string>
-  <string name="layer_copy">복사하기</string>
-  <string name="layer_ok">확인</string>
-  <string name="layer_cancel">취소</string>
-  <string name="layer_rename_title">새 레이어 이름을 입력합니다</string>
-  <string name="layer_move_up">위로 이동</string>
-  <string name="layer_move_down">아래로 이동</string>
-  <string name="layer_move_to_top">맨 위로 이동</string>
-  <string name="layer_move_to_bottom">맨 아래로 이동</string>
-  <string name="layer_merge_info">병합할 레이어를 누릅니다</string>
   <string name="layer_too_many_layers">너무 많은 레이어</string>
   <string name="layer_invisible">보이지 않는 모든 레이어</string>
-  <string name="layer_save_info">저장: 레이어 병합</string>
-  <string name="layer_prefix">레이어</string>
-  <string name="layer_merged">Layers merged</string>
+  <string name="layer_merged">레이어 병합</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
-  <string name="dialog_unallowed_chars_title">사용할 수 없는 문자</string>
-  <string name="dialog_unallowed_chars_text">문자, 숫자, \'_\'만 사용 가능</string>
   <string name="dialog_shape_text">모양</string>
   <string name="dialog_loading_image_failed_title">그림 로딩 중 에러</string>
   <string name="dialog_loading_image_failed_text">사용할 수 없는 이미지 파일</string>
-  <string name="dialog_please_wait">잠시 기다려 주십시오...</string>
-  <string name="drawer_open">Open navigation drawer</string>
-  <string name="drawer_close">Close navigation drawer</string>
+  <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
+  <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
   <string name="transform_info_text">새로운 위치로 가장자리를 끌고, 확대하거나 자르려면 탭하세요.</string>
   <string name="cursor_draw_inactive">위치를 끌어 정하고, 시작하려면 터치하세요.</string>
   <string name="cursor_draw_active">그리려면 끌고, 그리기를 중지하려면 다시 탭하세요.</string>
@@ -177,14 +127,14 @@
   <string name="intro_welcome_text">포켓 페인트를 이용하면 창의력에 아무런 제한이 없습니다. 포켓 페인트를 잘 아시면 경우 생략하고 시작하세요.</string>
   <string name="intro_tool_more_information">더 많은 정보를 얻으려면 도구를 클릭</string>
   <string name="more_possibilities">더 많은 가능성</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
+  <string name="intro_possibilities_text">색상을 변경 하려면, 실행 취소/다시 실행을 사용하가나 레이어 대화 상자를 사용하세요.</string>
   <string name="landscape">가로 보기</string>
   <string name="intro_landscape_text">포켓 페인트는 가로보기 그리기를 지원합니다.</string>
-  <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
+  <string name="enjoy_pocket_paint">모든 설정이 다 되었습니다. 포켓 코드를 즐길 수 있습니다.</string>
   <string name="intro_get_started">시작하고 새로운 작품을 만드세요.</string>
-  <string name="lets_go">Let\'s Go</string>
+  <string name="lets_go">시작하기</string>
   <string name="next">다음</string>
   <string name="skip">건너뛰기</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
+  <string name="menu_language">언어</string>
+  <string name="device_language">장치 언어</string>
 </resources>

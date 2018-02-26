@@ -26,48 +26,44 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Layer;
 
 public class FlipCommand extends BaseCommand {
+	private static final String TAG = FlipCommand.class.getSimpleName();
 
-	private FlipDirection mFlipDirection;
-
-	public static enum FlipDirection {
-		FLIP_HORIZONTAL, FLIP_VERTICAL
-	}
+	private FlipDirection flipDirection;
 
 	public FlipCommand(FlipDirection flipDirection) {
-		mFlipDirection = flipDirection;
+		this.flipDirection = flipDirection;
 	}
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
 		Bitmap bitmap = layer.getImage();
 
-		notifyStatus(NOTIFY_STATES.COMMAND_STARTED);
-		if (mFlipDirection == null) {
+		notifyStatus(NotifyStates.COMMAND_STARTED);
+		if (flipDirection == null) {
 
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+			notifyStatus(NotifyStates.COMMAND_FAILED);
 			return;
 		}
 
 		Matrix flipMatrix = new Matrix();
 
-		switch (mFlipDirection) {
+		switch (flipDirection) {
 			case FLIP_HORIZONTAL:
 				flipMatrix.setScale(1, -1);
 				flipMatrix.postTranslate(0, bitmap.getHeight());
-				Log.i(PaintroidApplication.TAG, "flip horizontal");
+				Log.i(TAG, "flip horizontal");
 				break;
 			case FLIP_VERTICAL:
 				flipMatrix.setScale(-1, 1);
 				flipMatrix.postTranslate(bitmap.getWidth(), 0);
-				Log.i(PaintroidApplication.TAG, "flip vertical");
+				Log.i(TAG, "flip vertical");
 				break;
 			default:
 
-				notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
+				notifyStatus(NotifyStates.COMMAND_FAILED);
 				return;
 		}
 
@@ -77,6 +73,10 @@ public class FlipCommand extends BaseCommand {
 
 		flipCanvas.drawBitmap(bitmapCopy, flipMatrix, new Paint());
 
-		notifyStatus(NOTIFY_STATES.COMMAND_DONE);
+		notifyStatus(NotifyStates.COMMAND_DONE);
+	}
+
+	public enum FlipDirection {
+		FLIP_HORIZONTAL, FLIP_VERTICAL
 	}
 }

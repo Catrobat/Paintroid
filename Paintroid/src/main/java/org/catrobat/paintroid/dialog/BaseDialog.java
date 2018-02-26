@@ -19,15 +19,14 @@
 
 package org.catrobat.paintroid.dialog;
 
-import org.catrobat.paintroid.R;
-
 import android.content.Context;
 import android.support.v7.app.AppCompatDialog;
+
+import org.catrobat.paintroid.R;
 
 public class BaseDialog extends AppCompatDialog {
 
 	public BaseDialog(Context context) {
 		super(context, R.style.CustomAlertDialog);
 	}
-
 }

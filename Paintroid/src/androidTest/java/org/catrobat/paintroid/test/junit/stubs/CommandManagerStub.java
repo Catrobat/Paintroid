@@ -23,12 +23,27 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.eventlistener.OnActiveLayerChangedListener;
+import org.catrobat.paintroid.eventlistener.OnLayerEventListener;
+import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CommandManagerStub extends BaseStub implements CommandManager {
 
+	@Override
+	public void setUpdateTopBarListener(OnUpdateTopBarListener listener) {
+	}
+
+	@Override
+	public void addChangeActiveLayerListener(OnActiveLayerChangedListener listener) {
+	}
+
+	@Override
+	public void setLayerEventListener(OnLayerEventListener listener) {
+	}
 
 	@Override
 	public void commitCommandToLayer(LayerCommand layerCommand, Command bitmapCommand) {
@@ -42,22 +57,18 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	@Override
 	public void commitAddLayerCommand(LayerCommand layerCommand) {
-
 	}
 
 	@Override
 	public void commitRemoveLayerCommand(LayerCommand layerCommand) {
-
 	}
 
 	@Override
 	public void commitMergeLayerCommand(LayerCommand layerCommand) {
-
 	}
 
 	@Override
 	public void resetAndClear(boolean clearLayerBitmapCommandsList) {
-
 	}
 
 	@Override
@@ -67,10 +78,8 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	@Override
 	public boolean checkIfDrawn() {
-
 		return false;
 	}
-
 
 	@Override
 	public void undo() {
@@ -83,29 +92,22 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 		// TODO Auto-generated method stub
 		enableUndo(true);
 	}
-	@Override
-	public void addCommandToList(LayerCommand layerCommand, Command command){
 
+	@Override
+	public ArrayList<LayerBitmapCommand> getLayerBitmapCommands(int layerId) {
+		return null;
 	}
 
 	@Override
 	public void enableUndo(boolean enable) {
-
 	}
 
 	@Override
 	public void enableRedo(boolean enable) {
-
-	}
-
-	@Override
-	public void storeCommandLists() {
-
 	}
 
 	@Override
 	public void setInitialized(boolean value) {
-
 	}
 
 	@Override
@@ -116,8 +118,15 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 
 	@Override
 	public boolean isRedoCommandListEmpty() {
-
 		return false;
+	}
+
+	@Override
+	public void processLayerUndo(LayerCommand command) {
+	}
+
+	@Override
+	public void processLayerRedo(LayerCommand command) {
 	}
 
 	@Override
@@ -125,5 +134,38 @@ public class CommandManagerStub extends BaseStub implements CommandManager {
 		return false;
 	}
 
+	@Override
+	public LinkedList<LayerCommand> getLayerOperationsCommandList() {
+		return null;
+	}
 
+	@Override
+	public LinkedList<LayerCommand> getLayerOperationsUndoCommandList() {
+		return null;
+	}
+
+	@Override
+	public ArrayList<LayerBitmapCommand> getDrawBitmapCommandsAtLayer() {
+		return null;
+	}
+
+	@Override
+	public void addLayerCommandToUndoList() {
+	}
+
+	@Override
+	public void addLayerCommandToRedoList() {
+	}
+
+	@Override
+	public void deleteLayerCommandFromDrawBitmapCommandsAtLayer(LayerCommand layerCommand) {
+	}
+
+	@Override
+	public void addLayerCommandToDrawBitmapCommandsAtLayer(LayerCommand layerCommand) {
+	}
+
+	@Override
+	public void deleteCommandFirstDeletedLayer() {
+	}
 }

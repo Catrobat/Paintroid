@@ -26,92 +26,89 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 
 public class ColorButton extends AppCompatImageButton {
 
-	private static final int RECT_SIDE_LENGTH = 50;
+	private static final int RECT_SIDE_LENGTH = 25;
 	private static final int RECT_BORDER_SIZE = 2;
 	private static final int RECT_BORDER_COLOR = Color.LTGRAY;
 	private static final boolean DEFAULT_DRAW_SELECTED_COLOR = true;
 
-	private Paint mColorPaint;
-	private Paint mBorderPaint;
-	private Paint mBackgroundPaint;
+	private Paint colorPaint;
+	private Paint borderPaint;
+	private Paint backgroundPaint;
 
-	private int mHeight;
-	private int mWidth;
+	private RectF rect;
 
-	private boolean mDrawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
+	private boolean drawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
 
 	public ColorButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		if (!isInEditMode())
-			init(context);
+		init();
 	}
 
-	private void init(Context context) {
-		mColorPaint = new Paint();
-		mBackgroundPaint = new Paint();
-		mBorderPaint = new Paint();
-		mBorderPaint.setColor(RECT_BORDER_COLOR);
+	private void init() {
+		colorPaint = new Paint();
+		backgroundPaint = new Paint();
+		borderPaint = new Paint();
+		borderPaint.setColor(RECT_BORDER_COLOR);
+		borderPaint.setStyle(Paint.Style.STROKE);
+		borderPaint.setStrokeWidth(RECT_BORDER_SIZE);
+
+		rect = new RectF();
 
 		Bitmap mBackgroundBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.checkeredbg);
 		BitmapShader backgroundShader = new BitmapShader(mBackgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
-		mBackgroundPaint.setShader(backgroundShader);
-	}
-
-	public void setDrawSelectedColor(boolean drawSelectedColor) {
-		mDrawSelectedColor = drawSelectedColor;
+		backgroundPaint.setShader(backgroundShader);
 	}
 
 	public void resetDrawSelectedColor() {
-		mDrawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
+		drawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
 	}
 
 	public boolean getDrawSelectedColor() {
-		return mDrawSelectedColor;
+		return drawSelectedColor;
+	}
+
+	public void setDrawSelectedColor(boolean drawSelectedColor) {
+		this.drawSelectedColor = drawSelectedColor;
 	}
 
 	public void colorChanged(int color) {
-		mColorPaint.setColor(color);
+		colorPaint.setColor(color);
 		invalidate();
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
+		super.draw(canvas);
 
-		if (!mDrawSelectedColor) {
-			super.draw(canvas);
-		} else {
-			int rectX = mWidth / 2 - RECT_SIDE_LENGTH / 2;
-			int rectY = mHeight / 2 - RECT_SIDE_LENGTH / 2;
-			Rect colorRect = new Rect(rectX, rectY, rectX + RECT_SIDE_LENGTH, rectY
-					+ RECT_SIDE_LENGTH);
-			Rect borderRect = new Rect(colorRect.left - RECT_BORDER_SIZE,
-					colorRect.top - RECT_BORDER_SIZE, colorRect.right
-					+ RECT_BORDER_SIZE, colorRect.bottom + RECT_BORDER_SIZE);
-
-			if (!isInEditMode()) {
-				canvas.drawRect(borderRect, mBorderPaint);
-				canvas.drawRect(colorRect, mBackgroundPaint);
-				canvas.drawRect(colorRect, mColorPaint);
-			}
+		if (!drawSelectedColor) {
+			return;
 		}
-	}
 
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		mWidth = MeasureSpec.getSize(widthMeasureSpec);
-		mHeight = MeasureSpec.getSize(heightMeasureSpec);
+		float density = getResources().getDisplayMetrics().density;
+		float rectSideLengthDp = RECT_SIDE_LENGTH * density;
+
+		float width = canvas.getWidth();
+		float height = canvas.getHeight();
+
+		float rectX = (width - rectSideLengthDp) / 2;
+		float rectY = (height - rectSideLengthDp) / 2;
+		rect.set(rectX, rectY, rectX + rectSideLengthDp, rectY + rectSideLengthDp);
+
+		if (Color.alpha(colorPaint.getColor()) != 0xff) {
+			canvas.drawRect(rect, backgroundPaint);
+		}
+		canvas.drawRect(rect, colorPaint);
+		canvas.drawRect(rect, borderPaint);
 	}
 }

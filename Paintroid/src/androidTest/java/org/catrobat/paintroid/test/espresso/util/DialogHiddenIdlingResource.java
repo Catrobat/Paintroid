@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.app.Dialog;
@@ -28,31 +27,31 @@ import android.support.test.espresso.IdlingResource;
  */
 public class DialogHiddenIdlingResource implements IdlingResource {
 
-    private Dialog dialog;
-    private ResourceCallback resourceCallback;
+	private Dialog dialog;
+	private ResourceCallback resourceCallback;
 
-    public DialogHiddenIdlingResource(Dialog dialog) {
-        this.dialog = dialog;
-    }
+	public DialogHiddenIdlingResource(Dialog dialog) {
+		this.dialog = dialog;
+	}
 
-    @Override
-    public String getName() {
-        return DialogHiddenIdlingResource.class.getSimpleName();
-    }
+	@Override
+	public String getName() {
+		return DialogHiddenIdlingResource.class.getSimpleName();
+	}
 
-    @Override
-    public boolean isIdleNow() {
-        boolean isIdle = !dialog.isShowing();
+	@Override
+	public boolean isIdleNow() {
+		boolean isIdle = !dialog.isShowing();
 
-        if (isIdle) {
-            resourceCallback.onTransitionToIdle();
-        }
+		if (isIdle) {
+			resourceCallback.onTransitionToIdle();
+		}
 
-        return isIdle;
-    }
+		return isIdle;
+	}
 
-    @Override
-    public void registerIdleTransitionCallback(ResourceCallback callback) {
-        this.resourceCallback = callback;
-    }
+	@Override
+	public void registerIdleTransitionCallback(ResourceCallback callback) {
+		this.resourceCallback = callback;
+	}
 }

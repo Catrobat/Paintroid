@@ -31,6 +31,8 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -40,7 +42,6 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.GeometricFillCommand;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
 import org.catrobat.paintroid.tools.Layer;
@@ -52,23 +53,14 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 	private static final float SHAPE_OFFSET = 10f;
 
-	private BaseShape mBaseShape;
-	private ShapeDrawType mShapeDrawType;
-	private ShapeToolOptionsListener.OnShapeToolOptionsChangedListener mOnShapeToolOptionsChangedListener;
-	private View mShapeToolOptionView;
-	private Paint mGeometricFillCommandPaint;
+	private static final String BUNDLE_BASE_SHAPE = "BASE_SHAPE";
+	private static final String BUNDLE_SHAPE_DRAW_TYPE = "SHAPE_DRAW_TYPE";
 
-	public static enum ShapeDrawType {
-		OUTLINE, FILL
-	}
-
-	public static enum BaseShape {
-		RECTANGLE, OVAL, HEART, STAR
-	}
-
-	public BaseShape getBaseShape() {
-		return mBaseShape;
-	}
+	@VisibleForTesting
+	public BaseShape baseShape;
+	private ShapeDrawType shapeDrawType;
+	private ShapeToolOptionsListener shapeToolOptionsListener;
+	private Paint geometricFillCommandPaint;
 
 	public GeometricFillTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -76,12 +68,18 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
-		if(mBaseShape == null)
-			mBaseShape = BaseShape.RECTANGLE;
+		if (baseShape == null) {
+			baseShape = BaseShape.RECTANGLE;
+		}
 
-		mShapeDrawType = ShapeDrawType.FILL;
+		shapeDrawType = ShapeDrawType.FILL;
 
+		createOverlayBitmap();
 		createAndSetBitmap();
+	}
+
+	public BaseShape getBaseShape() {
+		return baseShape;
 	}
 
 	@Override
@@ -97,39 +95,39 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		createAndSetBitmap();
 	}
 
-	protected void setupOnShapeToolDialogChangedListener() {
-		mOnShapeToolOptionsChangedListener = new ShapeToolOptionsListener.OnShapeToolOptionsChangedListener() {
-			@Override
-			public void setToolType(BaseShape shape) {
-				mBaseShape = shape;
-				createAndSetBitmap();
-			}
-		};
-		ShapeToolOptionsListener.getInstance().setOnShapeToolOptionsChangedListener(mOnShapeToolOptionsChangedListener);
+	private void setupOnShapeToolDialogChangedListener() {
+		shapeToolOptionsListener.setOnShapeToolOptionsChangedListener(
+				new ShapeToolOptionsListener.OnShapeToolOptionsChangedListener() {
+					@Override
+					public void setToolType(BaseShape shape) {
+						baseShape = shape;
+						createAndSetBitmap();
+					}
+				});
 	}
 
-	protected void createAndSetBitmap() {
-		Bitmap bitmap = Bitmap.createBitmap((int) mBoxWidth, (int) mBoxHeight,
+	private void createAndSetBitmap() {
+		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
 
-		RectF shapeRect = new RectF(SHAPE_OFFSET, SHAPE_OFFSET, mBoxWidth
-				- SHAPE_OFFSET, mBoxHeight - SHAPE_OFFSET);
+		RectF shapeRect = new RectF(SHAPE_OFFSET, SHAPE_OFFSET, boxWidth
+				- SHAPE_OFFSET, boxHeight - SHAPE_OFFSET);
 
 		Paint drawPaint = new Paint();
-		drawPaint.setColor(mCanvasPaint.getColor());
-		drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+		drawPaint.setColor(CANVAS_PAINT.getColor());
+		drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
-		switch (mShapeDrawType) {
+		switch (shapeDrawType) {
 			case FILL:
 				drawPaint.setStyle(Style.FILL);
 				break;
 			case OUTLINE:
 				drawPaint.setStyle(Style.STROKE);
-				float strokeWidth = mBitmapPaint.getStrokeWidth();
-				shapeRect = new RectF(SHAPE_OFFSET + (strokeWidth / 2),
-						SHAPE_OFFSET + (strokeWidth / 2), mBoxWidth - SHAPE_OFFSET
-						- (strokeWidth / 2), mBoxHeight - SHAPE_OFFSET - (strokeWidth / 2));
+				float strokeWidth = BITMAP_PAINT.getStrokeWidth();
+				shapeRect = new RectF(SHAPE_OFFSET + strokeWidth / 2,
+						SHAPE_OFFSET + strokeWidth / 2, boxWidth - SHAPE_OFFSET
+						- strokeWidth / 2, boxHeight - SHAPE_OFFSET - strokeWidth / 2);
 				drawPaint.setStrokeWidth(strokeWidth);
 				drawPaint.setStrokeCap(Paint.Cap.BUTT);
 				break;
@@ -137,19 +135,19 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 		}
 
-		mGeometricFillCommandPaint = new Paint(Paint.DITHER_FLAG);
-		if (Color.alpha(mCanvasPaint.getColor()) == 0x00) {
+		geometricFillCommandPaint = new Paint(Paint.DITHER_FLAG);
+		if (Color.alpha(CANVAS_PAINT.getColor()) == 0x00) {
 			int colorWithMaxAlpha = Color.BLACK;
-			mGeometricFillCommandPaint.setColor(colorWithMaxAlpha);
-			mGeometricFillCommandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-			mGeometricFillCommandPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
+			geometricFillCommandPaint.setColor(colorWithMaxAlpha);
+			geometricFillCommandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+			geometricFillCommandPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
 			drawPaint.reset();
-			drawPaint.setAntiAlias(DEFAULT_ANTIALISING_ON);
-			drawPaint.setShader(CHECKERED_PATTERN.getShader());
+			drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
+			drawPaint.setShader(checkeredPattern.getShader());
 		}
 
-		switch (mBaseShape) {
+		switch (baseShape) {
 			case RECTANGLE:
 				drawCanvas.drawRect(shapeRect, drawPaint);
 				break;
@@ -166,18 +164,42 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 		}
 
-		createOverlayButton();
 		setBitmap(bitmap);
 	}
 
-	private void drawShape(Canvas drawCanvas, RectF shapeRect, Paint drawPaint, int drawableId) {
-		Rect rect = new Rect((int)shapeRect.left, (int)shapeRect.top, (int)shapeRect.right, (int)shapeRect.bottom);
+	@Override
+	public void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
 
-		Bitmap bmp = BitmapFactory.decodeResource(PaintroidApplication.applicationContext.getResources(), drawableId);
-		Bitmap scaled_bmp = Bitmap.createScaledBitmap(bmp, rect.width(), rect.height(), true);
+		bundle.putSerializable(BUNDLE_BASE_SHAPE, baseShape);
+		bundle.putSerializable(BUNDLE_SHAPE_DRAW_TYPE, shapeDrawType);
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
+		super.onRestoreInstanceState(bundle);
+
+		BaseShape baseShape = (BaseShape) bundle.getSerializable(BUNDLE_BASE_SHAPE);
+		ShapeDrawType shapeDrawType = (ShapeDrawType) bundle.getSerializable(BUNDLE_SHAPE_DRAW_TYPE);
+
+		if (baseShape != null && shapeDrawType != null
+				&& (this.baseShape != baseShape || this.shapeDrawType != shapeDrawType)) {
+			this.baseShape = baseShape;
+			this.shapeDrawType = shapeDrawType;
+
+			shapeToolOptionsListener.setShapeActivated(baseShape);
+			createAndSetBitmap();
+		}
+	}
+
+	private void drawShape(Canvas drawCanvas, RectF shapeRect, Paint drawPaint, int drawableId) {
+		Rect rect = new Rect((int) shapeRect.left, (int) shapeRect.top, (int) shapeRect.right, (int) shapeRect.bottom);
+
+		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
+		Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, rect.width(), rect.height(), true);
 		Paint colorChangePaint = new Paint(drawPaint);
 
-		if (Color.alpha(mCanvasPaint.getColor()) == 0x00) {
+		if (Color.alpha(CANVAS_PAINT.getColor()) == 0x00) {
 			int colorWithMaxAlpha = Color.BLACK;
 			colorChangePaint.setColor(colorWithMaxAlpha);
 		}
@@ -188,33 +210,27 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		drawCanvas.drawBitmap(checkeredBitmap, shapeRect.left, shapeRect.top, drawPaint);
 
 		colorChangePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP));
-		drawCanvas.drawBitmap(scaled_bmp, shapeRect.left, shapeRect.top, colorChangePaint);
+		drawCanvas.drawBitmap(scaledBitmap, shapeRect.left, shapeRect.top, colorChangePaint);
 	}
 
 	@Override
 	protected void onClickInBox() {
-		Point intPosition = new Point((int) mToolPosition.x, (int) mToolPosition.y);
+		Point intPosition = new Point((int) toolPosition.x, (int) toolPosition.y);
 		int bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
 		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 
-		if (!((mToolPosition.x - mBoxWidth / 2 > bitmapWidth) || (mToolPosition.y - mBoxHeight / 2 > bitmapHeight)
-				|| (mToolPosition.x + mBoxWidth / 2 < 0) || (mToolPosition.y + mBoxHeight / 2 < 0))) {
+		if (!(toolPosition.x - boxWidth / 2 > bitmapWidth || toolPosition.y - boxHeight / 2 > bitmapHeight
+				|| toolPosition.x + boxWidth / 2 < 0 || toolPosition.y + boxHeight / 2 < 0)) {
 
-			Command command = new GeometricFillCommand(mDrawingBitmap, intPosition,
-					mBoxWidth, mBoxHeight, mBoxRotation, mGeometricFillCommandPaint);
+			Command command = new GeometricFillCommand(drawingBitmap, intPosition,
+					boxWidth, boxHeight, boxRotation, geometricFillCommandPaint);
 			((GeometricFillCommand) command).addObserver(this);
 
 			IndeterminateProgressDialog.getInstance().show();
 			Layer layer = LayerListener.getInstance().getCurrentLayer();
 			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 			highlightBox();
-
 		}
-	}
-
-	@Override
-	protected void drawToolSpecifics(Canvas canvas) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -223,13 +239,12 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mShapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, null);
+		LayoutInflater inflater = LayoutInflater.from(context);
+		View shapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, toolSpecificOptionsLayout);
 
-		mToolSpecificOptionsLayout.addView(mShapeToolOptionView);
-		ShapeToolOptionsListener.init(mContext, mShapeToolOptionView);
+		shapeToolOptionsListener = new ShapeToolOptionsListener(shapeToolOptionView);
 		setupOnShapeToolDialogChangedListener();
-		mToolSpecificOptionsLayout.post(new Runnable() {
+		toolSpecificOptionsLayout.post(new Runnable() {
 			@Override
 			public void run() {
 				toggleShowToolOptions();
@@ -237,4 +252,11 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		});
 	}
 
+	public enum ShapeDrawType {
+		OUTLINE, FILL
+	}
+
+	public enum BaseShape {
+		RECTANGLE, OVAL, HEART, STAR
+	}
 }

@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -72,5 +71,4 @@ public class TransformToolTest extends BaseToolTest {
 		Rect bounds = TransformTool.cropAlgorithmSnail(bitmap);
 		assertEquals("Wrong bounds from cropAlgorithmSnail", expectedBounds, bounds);
 	}
-
 }

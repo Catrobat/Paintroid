@@ -27,7 +27,6 @@ import android.graphics.Point;
 import android.support.test.annotation.UiThreadTest;
 
 import org.catrobat.paintroid.command.implementation.FillCommand;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
@@ -38,7 +37,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Queue;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class FillToolTests extends BaseToolTest {
 	private static final float NO_TOLERANCE = 0.0f;
@@ -53,20 +54,20 @@ public class FillToolTests extends BaseToolTest {
 	@Override
 	@Before
 	public void setUp() throws Exception {
-		mToolToTest = new FillTool(getActivity(), ToolType.FILL);
+		toolToTest = new FillTool(getActivity(), ToolType.FILL);
 		super.setUp();
 	}
 
 	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
-		ToolType toolType = mToolToTest.getToolType();
+		ToolType toolType = toolToTest.getToolType();
 		assertEquals(ToolType.FILL, toolType);
 	}
 
 	@UiThreadTest
 	@Test
-	public void testFillToolAlgorithmMembers() throws NoSuchFieldException, IllegalAccessException {
+	public void testFillToolAlgorithmMembers() {
 		int width = 10;
 		int height = 20;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -76,27 +77,27 @@ public class FillToolTests extends BaseToolTest {
 
 		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
 
-		int[][] algorithmPixels = (int[][]) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mPixels");
+		int[][] algorithmPixels = fillAlgorithm.pixels;
 		assertEquals("Wrong array size", height, algorithmPixels.length);
 		assertEquals("Wrong array size", width, algorithmPixels[0].length);
 
-		int algorithmTargetColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mTargetColor");
-		int algorithmReplacementColor = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mReplacementColor");
-		int algorithmColorTolerance = (Integer) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mColorToleranceThresholdSquared");
+		int algorithmTargetColor = fillAlgorithm.targetColor;
+		int algorithmReplacementColor = fillAlgorithm.replacementColor;
+		int algorithmColorTolerance = fillAlgorithm.colorToleranceThresholdSquared;
 		assertEquals("Wrong target color", targetColor, algorithmTargetColor);
 		assertEquals("Wrong replacement color", replacementColor, algorithmReplacementColor);
 		assertEquals("Wrong color tolerance", (int) (HALF_TOLERANCE * HALF_TOLERANCE), algorithmColorTolerance);
 
-		Point algorithmClickedPixel = (Point) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mClickedPixel");
+		Point algorithmClickedPixel = fillAlgorithm.clickedPixel;
 		assertEquals("Wrong point for clicked pixel", clickedPixel, algorithmClickedPixel);
 
-		Queue algorithmRanges = (Queue) PrivateAccess.getMemberValue(FillAlgorithm.class, fillAlgorithm, "mRanges");
+		Queue algorithmRanges = fillAlgorithm.ranges;
 		assertTrue("Queue for ranges should be empty", algorithmRanges.isEmpty());
 	}
 
 	@UiThreadTest
 	@Test
-	public void testFillingOnEmptyBitmap() throws NoSuchFieldException, IllegalAccessException {
+	public void testFillingOnEmptyBitmap() {
 		int width = 10;
 		int height = 20;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -122,7 +123,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillingOnNotEmptyBitmap() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingOnNotEmptyBitmap() {
 		int width = 6;
 		int height = 8;
 		Point clickedPixel = new Point(width / 2, height / 2);
@@ -161,7 +162,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillingWithMaxColorTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingWithMaxColorTolerance() {
 		int width = 6;
 		int height = 8;
 		Point clickedPixel = new Point(width / 2, height / 2);
@@ -194,7 +195,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillingWhenOutOfTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingWhenOutOfTolerance() {
 		int width = 6;
 		int height = 8;
 		Point clickedPixel = new Point(width / 2, height / 2);
@@ -221,7 +222,7 @@ public class FillToolTests extends BaseToolTest {
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				if (row == 0 && col == 0) {
-					assertTrue("Pixel color should not have been replaced", targetColor != pixels[row][col]);
+					assertNotEquals("Pixel color should not have been replaced", targetColor, pixels[row][col]);
 					continue;
 				}
 				assertEquals("Pixel color should have been replaced", targetColor, pixels[row][col]);
@@ -231,7 +232,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testEqualTargetAndReplacementColorWithTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testEqualTargetAndReplacementColorWithTolerance() {
 		int width = 8;
 		int height = 8;
 		Point clickedPixel = new Point(width / 2, height / 2);
@@ -256,7 +257,7 @@ public class FillToolTests extends BaseToolTest {
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				if (row == boundaryPixel.y && col == boundaryPixel.y) {
-					assertTrue("Pixel color should not have been replaced", boundaryColor == pixels[row][col]);
+					assertEquals("Pixel color should not have been replaced", boundaryColor, pixels[row][col]);
 					continue;
 				}
 				assertEquals("Pixel color should have been replaced", targetColor, pixels[row][col]);
@@ -266,7 +267,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillingWhenTargetColorIsWithinTolerance() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingWhenTargetColorIsWithinTolerance() {
 		int targetColor = 0xFFAAEEAA;
 		int boundaryColor = 0xFFFF0000;
 		int replacementColor = 0xFFFFFFFF;
@@ -305,7 +306,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testFillingWithSpiral() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testFillingWithSpiral() {
 		int targetColor = 0xFFAAEEAA;
 		int boundaryColor = 0xFFFF0000;
 		int replacementColor = 0xFFFFFFFF;
@@ -336,7 +337,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testComplexDrawing() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testComplexDrawing() {
 		int targetColor = 0xFFAAEEAA;
 		int boundaryColor = 0xFFFF0000;
 		int replacementColor = 0xFFFFFFFF;
@@ -380,7 +381,7 @@ public class FillToolTests extends BaseToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testSkipPixelsInCheckRangesFunction() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
+	public void testSkipPixelsInCheckRangesFunction() {
 		int targetColor = 0xFFAAEEAA;
 		int boundaryColor = 0xFFFF0000;
 		int replacementColor = 0xFFFFFFFF;
@@ -408,37 +409,36 @@ public class FillToolTests extends BaseToolTest {
 				assertEquals("Wrong pixel color", expectedPixels[row][col], actualPixels[row][col]);
 			}
 		}
-
 	}
 
 	private int[][] createPixelArrayForComplexTest(int backgroundColor, int boundaryColor) {
-		int W = boundaryColor;
+		int w = boundaryColor;
 		int i = backgroundColor;
 
 		int[][] testArray = {
 				{i, i, i, i, i, i, i, i, i, i, i, i, i, i, i, i},
-				{i, i, i, i, i, W, W, W, i, i, i, W, W, W, i, i},
-				{i, i, i, i, i, i, W, i, i, i, W, i, i, i, W, i},
-				{i, i, i, W, i, i, W, i, i, i, W, i, i, i, W, i},
-				{i, i, W, i, i, W, i, W, i, i, i, i, i, i, W, i},
-				{i, i, W, i, i, i, i, W, i, i, i, i, i, W, i, i},
-				{i, i, W, W, W, i, W, i, i, i, W, i, i, i, W, i},
-				{i, i, W, i, i, i, W, i, i, i, W, W, W, W, W, i},
-				{W, i, i, W, W, W, i, i, i, i, i, i, i, i, i, i},
-				{i, W, i, i, i, i, i, i, i, i, i, W, W, W, i, i},
-				{i, i, i, i, i, i, i, i, i, i, i, i, W, i, i, i}};
+				{i, i, i, i, i, w, w, w, i, i, i, w, w, w, i, i},
+				{i, i, i, i, i, i, w, i, i, i, w, i, i, i, w, i},
+				{i, i, i, w, i, i, w, i, i, i, w, i, i, i, w, i},
+				{i, i, w, i, i, w, i, w, i, i, i, i, i, i, w, i},
+				{i, i, w, i, i, i, i, w, i, i, i, i, i, w, i, i},
+				{i, i, w, w, w, i, w, i, i, i, w, i, i, i, w, i},
+				{i, i, w, i, i, i, w, i, i, i, w, w, w, w, w, i},
+				{w, i, i, w, w, w, i, i, i, i, i, i, i, i, i, i},
+				{i, w, i, i, i, i, i, i, i, i, i, w, w, w, i, i},
+				{i, i, i, i, i, i, i, i, i, i, i, i, w, i, i, i}};
 		return testArray;
 	}
 
 	private int[][] createPixelArrayForSkipPixelTest(int backgroundColor, int boundaryColor) {
-		int W = boundaryColor;
+		int w = boundaryColor;
 		int i = backgroundColor;
 
 		int[][] testArray = {
-				{i, i, i, i, W},
-				{i, i, W, i, W},
-				{i, W, i, i, W},
-				{i, i, W, W, i},
+				{i, i, i, i, w},
+				{i, i, w, i, w},
+				{i, w, i, i, w},
+				{i, i, w, w, i},
 				{i, i, i, i, i}};
 		return testArray;
 	}
@@ -487,5 +487,4 @@ public class FillToolTests extends BaseToolTest {
 			bitmap.setPixels(pixels[i], 0, bitmap.getWidth(), 0, i, bitmap.getWidth(), 1);
 		}
 	}
-
 }

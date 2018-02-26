@@ -19,42 +19,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">Pocket Paint</string>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name" tools:ignore="UnusedResources">Pocket Paint</string>
   <string name="button_brush">Borste</string>
   <string name="button_cursor">Pekare</string>
-  <string name="button_ellipse">Cirkel/ellips</string>
-  <string name="button_zoom">Zooma</string>
   <string name="button_pipette">Pipett</string>
   <string name="button_undo">Ångra</string>
   <string name="button_redo">Gör om</string>
   <string name="button_stamp">Stämpel</string>
-  <string name="button_rectangle">Square/Rectangle</string>
   <string name="button_import_image">Importera bild</string>
   <string name="button_eraser">Suddigummi</string>
-  <string name="button_resize">Ändra storlek på bild</string>
   <string name="button_transform">Transform</string>
-  <string name="button_flip">Vänd</string>
   <string name="button_fill">Fyll i</string>
-  <string name="button_move">Flytta</string>
-  <string name="button_rotate">Rotera</string>
   <string name="button_line">Linje</string>
   <string name="button_text">Text</string>
   <string name="button_shape">Former</string>
-  <string name="cancel">Avbryt</string>
-  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
-  <string name="yes">Ja</string>
-  <string name="no">Nej</string>
   <string name="done">Färdigt</string>
   <string name="terms_of_use_and_service_title">Villkor för användning och Service</string>
   <string name="terms_of_use_and_service_content">För att få använda Pocket Paint och andra körbara filer som erbjuds av Catrobat projektet, måste du godkänna våra användarvillkor och Service och strikt följa dem när du använder Pocket Code och våra andra körbara filer. Se länk nedan för deras exakta formulation.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Villkor för användning och Service</string>
-  <string name="about_title">Om Pocket Paint&#8230;</string>
-  <string name="about_content">Pocket Paint är en bildredigerare som är en del av Catrobat projectet.\n\nCatrobat är ett grafiskt programmeringsspråk och kreativa verktyg för smartphones, tabletter och mobila browsers.\n\n källkoden för Pocket Paint är främst licensierat under de exakta detaljerna för %s.\nFör exakta detaljer av licensen se länk nedanför.\n\n</string>
+  <string name="about_title">Om Pocket Paint…</string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">Pocket Paint käll kod licens</string>
   <string name="about_catroid_url_text">Om Catrobat</string>
   <string name="about_version">Version:</string>
-  <string name="stroke_title">"Verktygsinställningar"</string>
   <string name="color_chooser_title">Färg Väljare</string>
   <string name="color_rgb">Röd grön blå (RGB)</string>
   <string name="color_red">Röd</string>
@@ -64,17 +52,12 @@
   <string name="color_pre">förvalt</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">verktyg</string>
-  <string name="dialog_save_title">Spara bild</string>
-  <string name="dialog_save_text">lägg in filnamn</string>
-  <string name="dialog_load">Laddar&#8230;</string>
-  <string name="dialog_overwrite_text">Skriva över en befintlig fil?</string>
+  <string name="dialog_load">Laddar…</string>
   <string name="dialog_error_save_title">Fel ladda/spara filen</string>
   <string name="dialog_error_sdcard_text">Kolla bild eller SD-kort!</string>
   <string name="dialog_brush_width_text">Streckbredd</string>
   <string name="dialog_warning_new_image">Spara ändringar?</string>
   <string name="help_title">Hjälp</string>
-  <string name="help_content_ellipse">Flytta och ändra storlek på cirkeln eller omvandla det till en ellips. Tryck för att måla figuren på bilden</string>
-  <string name="help_content_flip">Klicka på symbolerna i det nedre fältet för att vända på bilden.</string>
   <string name="help_content_eraser">Ta bort delar av bilden t.ex. med ett suddgummi.</string>
   <string name="help_content_brush">Klicka på symbolerna i nedre fältet för att ändra färg eller penselstorlek.</string>
   <string name="help_content_eyedropper">Klicka på bilden för att välja en färg.</string>
@@ -82,15 +65,14 @@
   <string name="help_content_redo">Tryck för att göra om en ångra åtgärd.</string>
   <string name="help_content_fill">tryck på bilden för att fylla ett område med den valda färgen.</string>
   <string name="help_content_cursor">Placera markören där du vill rita. Tryck för att aktivera markören. Flytta ditt finger för att rita. Tryck igen för att avaktivera.</string>
-  <string name="help_content_resize">Use to resize the image.</string>
   <string name="help_content_transform">Use to transform the image.</string>
   <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and Tap again to stamp.</string>
-  <string name="help_content_rectangle">Move and resize the square or transform it to a rectangle. Tap to paint the shape on the image.</string>
   <string name="help_content_import_png">Importera en bild från galleriet till stämpelverktyget.</string>
-  <string name="help_content_rotate">tryck på knapparna för att rotera bilden åt vänster eller höger.</string>
   <string name="help_content_line">Rita en rak linje.</string>
   <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
   <string name="help_content_shape">Choose a shape and tap it to insert the selected shape</string>
+  <string name="help_content_layer">Create new layers or modify existing ones</string>
+  <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Avsluta</string>
   <string name="closing_security_question">Spara ändringar?</string>
   <string name="closing_catroid_security_question_title">Tillbaka till Pocket Code</string>
@@ -99,12 +81,10 @@
   <string name="menu_save_image">Spara bild</string>
   <string name="menu_save_copy">Spara kopia</string>
   <string name="menu_new_image_empty_image">Tom bild</string>
-  <string name="menu_item_tools">Verktyg-menyn</string>
   <string name="menu_hide_menu">Fullskärm</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">Ny bild från kameran</string>
   <string name="menu_terms_of_use_and_service">Användarvillkor</string>
-  <string name="more">Mera</string>
   <string name="menu_about">Om</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exportera</string>
@@ -113,63 +93,33 @@
   <string name="menu_quit">Avsluta</string>
   <string name="save_button_text">Spara</string>
   <string name="discard_button_text">Kasta</string>
-  <string name="resize_to_resize_tap_text">to resize tap</string>
   <string name="resize_nothing_to_resize">inget att ändra storlek på</string>
   <string name="resize_max_image_resolution_reached">max image resolution reached</string>
-  <string name="text_tool_dialog_title">Text Tool settings</string>
   <string name="text_tool_dialog_input_title">Din text:</string>
   <string name="text_tool_dialog_format_options">Format options:</string>
-  <string name="text_tool_dialog_underline_shortcut">U</string>
-  <string name="text_tool_dialog_italic_shortcut">I</string>
-  <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Tap here to write</string>
   <string name="shape_tool_dialog_rect_title">Rectangle</string>
   <string name="shape_tool_dialog_ellipse_title">Ellips</string>
   <string name="shape_tool_dialog_star_title">Stjärna</string>
   <string name="shape_tool_dialog_heart_title">Hjärta</string>
-  <string name="fill_tool_dialog_title">Fill Tool settings</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
-  <string name="fill_tool_dialog_input_hint_toast">Enter a number between 0 to 100</string>
-  <string name="transform_tool_header_text">Transform</string>
-  <string name="transform_tool_size_text">Storlek</string>
   <string name="transform_tool_auto_crop_text">Auto adjust</string>
   <string name="transform_tool_roate_text">Rotera</string>
   <string name="transform_tool_mirror_text">Spegel</string>
-  <string name="transform_tool_angle_text">Vinkel</string>
   <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Lager</string>
-  <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">Nytt lager</string>
   <string name="layer_delete">Ta bort lager</string>
-  <string name="layer_opacity">Opacitet:</string>
-  <string name="layer_merge">Slå ihop</string>
-  <string name="layer_visible">Synlig</string>
-  <string name="layer_lock">Lås</string>
-  <string name="layer_rename">Döp om</string>
-  <string name="layer_copy">Kopiera</string>
-  <string name="layer_ok">Okej</string>
-  <string name="layer_cancel">Avbryt</string>
-  <string name="layer_rename_title">Ange nytt lagernamn</string>
-  <string name="layer_move_up">Flytta upp</string>
-  <string name="layer_move_down">Flytta ner</string>
-  <string name="layer_move_to_top">Flytta till toppen</string>
-  <string name="layer_move_to_bottom">Move to bottom</string>
-  <string name="layer_merge_info">Tap the layer to merge with</string>
   <string name="layer_too_many_layers">Too many layers</string>
   <string name="layer_invisible">Alla lager osynliga</string>
-  <string name="layer_save_info">Saving: layers will be merged</string>
-  <string name="layer_prefix">Lager </string>
   <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
-  <string name="dialog_unallowed_chars_title">otillåtet tecken</string>
-  <string name="dialog_unallowed_chars_text">Bara bokstäver, siffror och \'_\' tillåtet.</string>
   <string name="dialog_shape_text">Form</string>
   <string name="dialog_loading_image_failed_title">Fel vid inläsning av bilden</string>
   <string name="dialog_loading_image_failed_text">Inte en giltig bildfil</string>
-  <string name="dialog_please_wait">Please wait...</string>
-  <string name="drawer_open">Open navigation drawer</string>
-  <string name="drawer_close">Close navigation drawer</string>
+  <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
+  <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
   <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
   <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
@@ -177,7 +127,7 @@
   <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new start the intro or just skip it if you are already familiar with Pocket Paint.</string>
   <string name="intro_tool_more_information">Click on a Tool to get more information</string>
   <string name="more_possibilities">More possibilities</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use the top bar.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Landscape</string>
   <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
   <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>

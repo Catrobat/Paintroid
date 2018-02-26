@@ -19,90 +19,59 @@
 
 package org.catrobat.paintroid.test.espresso.intro;
 
-import android.support.test.filters.LargeTest;
-import android.support.test.runner.AndroidJUnit4;
-
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
 import org.catrobat.paintroid.test.espresso.util.IntroUtils;
-import org.catrobat.paintroid.test.espresso.intro.base.IntroTestBase;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import java.util.Arrays;
 
-@RunWith(AndroidJUnit4.class)
-@LargeTest
-public class ToolsTapTargetTest extends IntroTestBase {
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.changeIntroPage;
+import static org.catrobat.paintroid.test.espresso.util.IntroUtils.getPageIndexFromLayout;
+import static org.catrobat.paintroid.test.espresso.util.IntroUtils.introClickToolAndCheckView;
+import static org.junit.runners.Parameterized.Parameter;
+import static org.junit.runners.Parameterized.Parameters;
 
-    @Before
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        introSlide = IntroUtils.IntroSlide.Tools;
-        super.setUpAndLaunchActivity();
-        EspressoUtils.changeIntroPage(getPageIndexFormLayout(R.layout.islide_tools));
-        EspressoUtils.waitMillis(100);
-    }
+@RunWith(Parameterized.class)
+public class ToolsTapTargetTest {
 
-    @Test
-    public void testToolBrush() {
-        IntroUtils.introClickToolAndCheckView(ToolType.BRUSH, introSlide);
-    }
+	@Rule
+	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule();
 
-    @Test
-    public void testToolShape() {
-        IntroUtils.introClickToolAndCheckView(ToolType.SHAPE, introSlide);
-    }
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@Parameter
+	public ToolType toolType;
 
-    @Test
-    public void testToolTransform() {
-        IntroUtils.introClickToolAndCheckView(ToolType.TRANSFORM, introSlide);
-    }
+	@Parameters(name = "{0}")
+	public static Iterable<ToolType> data() {
+		return Arrays.asList(
+				ToolType.BRUSH,
+				ToolType.SHAPE,
+				ToolType.TRANSFORM,
+				ToolType.LINE,
+				ToolType.CURSOR,
+				ToolType.FILL,
+				ToolType.PIPETTE,
+				ToolType.STAMP,
+				ToolType.IMPORTPNG,
+				ToolType.ERASER,
+				ToolType.TEXT);
+	}
 
-    @Test
-    public void testToolLine() {
-        IntroUtils.introClickToolAndCheckView(ToolType.LINE, introSlide);
-    }
+	@Before
+	public void setUp() {
+		changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_tools));
+	}
 
-    @Test
-    public void testToolCursor() {
-        IntroUtils.introClickToolAndCheckView(ToolType.CURSOR, introSlide);
-    }
-
-    @Test
-    public void testToolFill() {
-        IntroUtils.introClickToolAndCheckView(ToolType.FILL, introSlide);
-    }
-
-    @Test
-    public void testToolPipette() {
-        IntroUtils.introClickToolAndCheckView(ToolType.PIPETTE, introSlide);
-    }
-
-    @Test
-    public void testToolStamp() {
-        IntroUtils.introClickToolAndCheckView(ToolType.STAMP, introSlide);
-    }
-
-    @Test
-    public void testToolImport() {
-        IntroUtils.introClickToolAndCheckView(ToolType.IMPORTPNG, introSlide);
-    }
-
-
-    @Test
-    public void testToolErase() {
-        IntroUtils.introClickToolAndCheckView(ToolType.ERASER, introSlide);
-    }
-
-    @Test
-    public void testToolText() {
-        IntroUtils.introClickToolAndCheckView(ToolType.TEXT, introSlide);
-    }
-
+	@Test
+	public void testTool() {
+		introClickToolAndCheckView(toolType, IntroUtils.IntroSlide.Tools);
+	}
 }

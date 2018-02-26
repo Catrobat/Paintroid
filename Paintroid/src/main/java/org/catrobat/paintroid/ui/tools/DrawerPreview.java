@@ -31,18 +31,17 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.tools.ToolType;
-
 
 public class DrawerPreview extends View {
 
-	private final int BORDER = 2;
+	private static final int BORDER = 2;
 
-	private Paint mCanvasPaint;
-	private Paint CHECKERED_PATTERN = new Paint();
+	private Paint canvasPaint;
+	private Paint checkeredPattern = new Paint();
 
 	public DrawerPreview(Context context) {
 		super(context);
@@ -55,40 +54,39 @@ public class DrawerPreview extends View {
 	}
 
 	private void init() {
-		Bitmap checkerboard = BitmapFactory.decodeResource(
-				PaintroidApplication.applicationContext.getResources(),
-				R.drawable.checkeredbg);
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard,
 				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-		CHECKERED_PATTERN.setShader(shader);
-		mCanvasPaint = new Paint();
+		checkeredPattern.setShader(shader);
+		canvasPaint = new Paint();
 	}
 
 	private void changePaintColor(int color) {
-		int strokeWidth = BrushPickerView.getInstance().getStrokeWidth();
-		Paint.Cap strokeCap = PaintroidApplication.currentTool.getDrawPaint().getStrokeCap();
+		Paint drawPaint = PaintroidApplication.currentTool.getDrawPaint();
+		float strokeWidth = drawPaint.getStrokeWidth();
+		Paint.Cap strokeCap = drawPaint.getStrokeCap();
 		if (Color.alpha(color) == 0x00) {
-			mCanvasPaint.reset();
-			mCanvasPaint.setStyle(Paint.Style.STROKE);
-			mCanvasPaint.setStrokeWidth(strokeWidth);
-			mCanvasPaint.setColor(color);
-			mCanvasPaint.setStrokeCap(strokeCap);
-			mCanvasPaint.setAntiAlias(true);
-			mCanvasPaint.setShader(CHECKERED_PATTERN.getShader());
-			mCanvasPaint.setColor(Color.BLACK);
-			mCanvasPaint.setAlpha(0x00);
+			canvasPaint.reset();
+			canvasPaint.setStyle(Paint.Style.STROKE);
+			canvasPaint.setStrokeWidth(strokeWidth);
+			canvasPaint.setColor(color);
+			canvasPaint.setStrokeCap(strokeCap);
+			canvasPaint.setAntiAlias(true);
+			canvasPaint.setShader(checkeredPattern.getShader());
+			canvasPaint.setColor(Color.BLACK);
+			canvasPaint.setAlpha(0x00);
 		} else {
-			mCanvasPaint.reset();
-			mCanvasPaint.setStyle(Paint.Style.STROKE);
-			mCanvasPaint.setStrokeWidth(strokeWidth);
-			mCanvasPaint.setStrokeCap(strokeCap);
-			mCanvasPaint.setColor(color);
-			mCanvasPaint.setAntiAlias(true);
+			canvasPaint.reset();
+			canvasPaint.setStyle(Paint.Style.STROKE);
+			canvasPaint.setStrokeWidth(strokeWidth);
+			canvasPaint.setStrokeCap(strokeCap);
+			canvasPaint.setColor(color);
+			canvasPaint.setAntiAlias(true);
 		}
 	}
 
 	private void drawDrawerPreview(Canvas canvas) {
-		int currentColor = PaintroidApplication.colorPickerInitialColor;
+		int currentColor = MainActivity.colorPickerInitialColor;
 		changePaintColor(currentColor);
 
 		int centerX = getLeft() + getWidth() / 2;
@@ -107,23 +105,24 @@ public class DrawerPreview extends View {
 		path.cubicTo(startX, startY, x2, y2, centerX, centerY);
 		path.cubicTo(centerX, centerY, x4, y4, endX, endY);
 
-		if (mCanvasPaint.getColor() == Color.WHITE) {
+		if (canvasPaint.getColor() == Color.WHITE) {
 			drawBorder(canvas);
-			canvas.drawPath(path, mCanvasPaint);
+			canvas.drawPath(path, canvasPaint);
 		}
-		if (mCanvasPaint.getColor() == Color.TRANSPARENT) {
-			mCanvasPaint.setColor(Color.BLACK);
-			canvas.drawPath(path, mCanvasPaint);
-			mCanvasPaint.setColor(Color.TRANSPARENT);
+		if (canvasPaint.getColor() == Color.TRANSPARENT) {
+			canvasPaint.setColor(Color.BLACK);
+			canvas.drawPath(path, canvasPaint);
+			canvasPaint.setColor(Color.TRANSPARENT);
 		} else {
-			canvas.drawPath(path, mCanvasPaint);
+			canvas.drawPath(path, canvasPaint);
 		}
 	}
 
 	private void drawBorder(Canvas canvas) {
 		Paint borderPaint = new Paint();
-		int strokeWidth = BrushPickerView.getInstance().getStrokeWidth();
-		Paint.Cap strokeCap = PaintroidApplication.currentTool.getDrawPaint().getStrokeCap();
+		Paint drawPaint = PaintroidApplication.currentTool.getDrawPaint();
+		float strokeWidth = drawPaint.getStrokeWidth();
+		Paint.Cap strokeCap = drawPaint.getStrokeCap();
 		int startX;
 		int startY;
 		int endX;
@@ -181,12 +180,12 @@ public class DrawerPreview extends View {
 		path.cubicTo(startX, startY, x2, y2, centerX, centerY);
 		path.cubicTo(centerX, centerY, x4, y4, endX, endY);
 
-		mCanvasPaint.setColor(Color.BLACK);
-		canvas.drawPath(path, mCanvasPaint);
+		canvasPaint.setColor(Color.BLACK);
+		canvas.drawPath(path, canvasPaint);
 	}
 
 	private void drawLinePreview(Canvas canvas) {
-		int currentColor = PaintroidApplication.colorPickerInitialColor;
+		int currentColor = MainActivity.colorPickerInitialColor;
 		changePaintColor(currentColor);
 
 		int startX = getLeft() + getWidth() / 8;
@@ -194,16 +193,16 @@ public class DrawerPreview extends View {
 		int endX = getRight() - getWidth() / 8;
 		int endY = getTop() + getHeight() / 2;
 
-		if (mCanvasPaint.getColor() == Color.WHITE) {
+		if (canvasPaint.getColor() == Color.WHITE) {
 			drawBorder(canvas);
-			canvas.drawLine(startX, startY, endX, endY, mCanvasPaint);
+			canvas.drawLine(startX, startY, endX, endY, canvasPaint);
 		}
-		if (mCanvasPaint.getColor() == Color.TRANSPARENT) {
-			mCanvasPaint.setColor(Color.BLACK);
-			canvas.drawLine(startX, startY, endX, endY, mCanvasPaint);
-			mCanvasPaint.setColor(Color.TRANSPARENT);
+		if (canvasPaint.getColor() == Color.TRANSPARENT) {
+			canvasPaint.setColor(Color.BLACK);
+			canvas.drawLine(startX, startY, endX, endY, canvasPaint);
+			canvasPaint.setColor(Color.TRANSPARENT);
 		} else {
-			canvas.drawLine(startX, startY, endX, endY, mCanvasPaint);
+			canvas.drawLine(startX, startY, endX, endY, canvasPaint);
 		}
 	}
 
@@ -233,5 +232,4 @@ public class DrawerPreview extends View {
 		int height = (int) (getMeasuredHeight() * 0.2);
 		setMeasuredDimension(widthMeasureSpec, height);
 	}
-
 }

@@ -25,51 +25,52 @@ import android.view.View;
 
 import java.util.Locale;
 
-public class WelcomeActivityHelper {
-    private static int getDpFromDimension(int dimension, DisplayMetrics metrics) {
-        return (int) (dimension / metrics.density);
-    }
+public final class WelcomeActivityHelper {
 
-    private static int getDpFromInt(float dimension, DisplayMetrics metrics) {
-        return (int) (dimension / metrics.density);
-    }
+	private WelcomeActivityHelper() {
+	}
 
-    public static int getSpFromDimension(int dimension, DisplayMetrics metrics) {
-        return (int) (dimension / metrics.scaledDensity);
-    }
+	private static int getDpFromDimension(int dimension, DisplayMetrics metrics) {
+		return (int) (dimension / metrics.density);
+	}
 
-    private static boolean defaultLocaleIsRTL() {
-        Locale locale = Locale.getDefault();
-        if (locale.toString().isEmpty()) {
-            return false;
-        }
-        final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
-        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
-                directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
-    }
+	private static int getDpFromInt(float dimension, DisplayMetrics metrics) {
+		return (int) (dimension / metrics.density);
+	}
 
-    public static boolean isRTL(Context context) {
-        final int layoutDirection = context.getResources().getConfiguration().getLayoutDirection();
-        boolean layoutDirectionIsRTL = (layoutDirection == View.LAYOUT_DIRECTION_RTL);
-        return layoutDirectionIsRTL || defaultLocaleIsRTL();
-    }
+	public static int getSpFromDimension(int dimension, DisplayMetrics metrics) {
+		return (int) (dimension / metrics.scaledDensity);
+	}
 
-    public static void reverseArray(int[] array) {
-        for(int i = 0; i < array.length / 2; i++)
-        {
-            int temp = array[i];
-            array[i] = array[array.length - i - 1];
-            array[array.length - i - 1] = temp;
-        }
-    }
+	private static boolean defaultLocaleIsRTL() {
+		Locale locale = Locale.getDefault();
+		if (locale.toString().isEmpty()) {
+			return false;
+		}
+		final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
+		return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT
+				|| directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
+	}
 
-    public static int calculateTapTargetRadius(int heightInt, DisplayMetrics metrics, int radiusOffset) {
-        return getDpFromInt(heightInt, metrics) / 2 - radiusOffset;
-    }
+	public static boolean isRTL(Context context) {
+		final int layoutDirection = context.getResources().getConfiguration().getLayoutDirection();
+		boolean layoutDirectionIsRTL = (layoutDirection == View.LAYOUT_DIRECTION_RTL);
+		return layoutDirectionIsRTL || defaultLocaleIsRTL();
+	}
 
-    public static int calculateTapTargetRadius(float heightDim, DisplayMetrics metrics, int radiusOffset) {
-        return getDpFromDimension((int) heightDim, metrics) / 2 - radiusOffset;
-    }
+	public static void reverseArray(int[] array) {
+		for (int i = 0; i < array.length / 2; i++) {
+			int temp = array[i];
+			array[i] = array[array.length - i - 1];
+			array[array.length - i - 1] = temp;
+		}
+	}
 
+	public static int calculateTapTargetRadius(int heightInt, DisplayMetrics metrics, int radiusOffset) {
+		return getDpFromInt(heightInt, metrics) / 2 - radiusOffset;
+	}
 
+	public static int calculateTapTargetRadius(float heightDim, DisplayMetrics metrics, int radiusOffset) {
+		return getDpFromDimension((int) heightDim, metrics) / 2 - radiusOffset;
+	}
 }

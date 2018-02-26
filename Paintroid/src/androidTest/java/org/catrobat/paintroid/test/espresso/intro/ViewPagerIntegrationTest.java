@@ -19,85 +19,89 @@
 
 package org.catrobat.paintroid.test.espresso.intro;
 
+import android.support.test.espresso.Espresso;
+import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.view.ViewPager;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
-import org.catrobat.paintroid.test.espresso.intro.base.IntroTestBase;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
+import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
+import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertEquals;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.shouldStartSequence;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-@RunWith(JUnit4.class)
-public class ViewPagerIntegrationTest extends IntroTestBase {
+@RunWith(AndroidJUnit4.class)
+public class ViewPagerIntegrationTest {
 
-    private ViewPager viewPager;
-    private IntroPageViewAdapter viewPagerAdapter;
+	@Rule
+	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
 
-    @Before
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        startSequence = false;
-        super.setUpAndLaunchActivity();
-        viewPager = (ViewPager) PrivateAccess.getMemberValue(WelcomeActivity.class, activity, "viewPager");
-        viewPagerAdapter = (IntroPageViewAdapter) viewPager.getAdapter();
-    }
+	@Rule
+	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
-    @After
-    public void tearDown() throws NoSuchFieldException, IllegalAccessException {
-        shouldStartSequence(false);
-    }
+	private ViewPager viewPager;
+	private IntroPageViewAdapter viewPagerAdapter;
 
-    @Test
-    public void checkStartingIndex() {
-        int currentItem = viewPager.getCurrentItem();
-        assertEquals(0, currentItem);
-    }
+	@Before
+	public void setUp() {
+		viewPager = activityRule.getActivity().viewPager;
+		viewPagerAdapter = (IntroPageViewAdapter) viewPager.getAdapter();
+	}
 
-    @Test
-    public void checkSlideCount() {
-        assertEquals(layouts.length, viewPagerAdapter.getCount());
-    }
+	@After
+	public void tearDown() {
+		shouldStartSequence(false);
+	}
 
-    @Test
-    public void checkSlides() throws NoSuchFieldException, IllegalAccessException {
-        int[] adapterLayouts = (int[]) PrivateAccess.getMemberValue(IntroPageViewAdapter.class, viewPagerAdapter, "layouts");
-        assertEquals(layouts, adapterLayouts);
-    }
+	@Test
+	public void checkStartingIndex() {
+		int currentItem = viewPager.getCurrentItem();
+		assertEquals(0, currentItem);
+	}
 
-    @Test
-    public void pressNextAndCheckIndex() throws NoSuchFieldException, IllegalAccessException {
-        shouldStartSequence(false);
-        for (int i = 0; i < layouts.length; i++) {
-            assertEquals(i, viewPager.getCurrentItem());
-            onView(withId(R.id.btn_next)).perform(click());
-        }
-    }
+	@Test
+	public void checkSlideCount() {
+		assertEquals(activityRule.getLayouts().length, viewPagerAdapter.getCount());
+	}
 
-    @Test
-    public void SwipeAndCheckIndex() {
-        for (int i = 0; i < layouts.length; i++) {
-            assertEquals(i, viewPager.getCurrentItem());
-            onView(isRoot()).perform(swipeLeft());
-        }
-    }
+	@Test
+	public void checkSlides() {
+		int[] adapterLayouts = viewPagerAdapter.layouts;
+		assertArrayEquals(activityRule.getLayouts(), adapterLayouts);
+	}
 
-    @Test
-    public void PressBack() {
-        pressBack();
-    }
+	@Test
+	public void pressNextAndCheckIndex() {
+		shouldStartSequence(false);
+		for (int i = 0; i < activityRule.getLayouts().length; i++) {
+			assertEquals(i, viewPager.getCurrentItem());
+			onView(withId(R.id.btn_next)).perform(click());
+		}
+	}
 
+	@Test
+	public void swipeAndCheckIndex() {
+		for (int i = 0; i < activityRule.getLayouts().length; i++) {
+			assertEquals(i, viewPager.getCurrentItem());
+			onView(isRoot()).perform(swipeLeft());
+		}
+	}
 
+	@Test
+	public void pressBack() {
+		Espresso.pressBack();
+	}
 }
