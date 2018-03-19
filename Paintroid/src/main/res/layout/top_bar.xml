@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
-            <org.catrobat.paintroid.ui.button.ColorButton
+            <org.catrobat.catroid.paintroid.ui.button.ColorButton
                 android:id="@+id/btn_top_color"
                 style="?actionButtonStyle"
                 android:layout_width="match_parent"

@@ -48,7 +48,7 @@ android {
         applicationId appId
         minSdkVersion 17
         targetSdkVersion 22
-        testInstrumentationRunner "org.catrobat.paintroid.test.utils.CustomAndroidJUnitRunner"
+        testInstrumentationRunner "org.catrobat.catroid.common.paintroid.CustomAndroidJUnitRunner"
         versionCode 21
         versionName "2.0.1"
         manifestPlaceholders += [appName: appName]
