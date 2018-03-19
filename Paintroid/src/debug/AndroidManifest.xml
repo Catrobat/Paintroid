@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.catrobat.paintroid"
+    package="org.catrobat.catroid.paintroid"
     android:finishOnTaskLaunch="true"
     android:installLocation="auto">
 

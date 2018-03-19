@@ -25,7 +25,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
+    <org.catrobat.catroid.paintroid.dialog.colorpicker.ColorPickerView
         android:id="@+id/view_colorpicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

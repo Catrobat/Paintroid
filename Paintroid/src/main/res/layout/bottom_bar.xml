@@ -25,7 +25,7 @@
     android:orientation="horizontal"
     tools:showIn="@layout/main">
 
-    <org.catrobat.paintroid.ui.BottomBarHorizontalScrollView
+    <org.catrobat.catroid.paintroid.ui.BottomBarHorizontalScrollView
         android:id="@+id/bottom_bar_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -117,7 +117,7 @@
                 android:src="@drawable/icon_menu_text"/>
 
         </LinearLayout>
-    </org.catrobat.paintroid.ui.BottomBarHorizontalScrollView>
+    </org.catrobat.catroid.paintroid.ui.BottomBarHorizontalScrollView>
 
 
     <FrameLayout

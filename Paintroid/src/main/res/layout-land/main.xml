@@ -33,7 +33,7 @@
         <include layout="@layout/top_bar"
             android:id="@+id/layout_top_bar"/>
 
-        <org.catrobat.paintroid.ui.DrawingSurface
+        <org.catrobat.catroid.paintroid.ui.DrawingSurface
             android:id="@+id/drawingSurfaceView"
             android:layout_width="wrap_content"
             android:layout_alignParentBottom="true"

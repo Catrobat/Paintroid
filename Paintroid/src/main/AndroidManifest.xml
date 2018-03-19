@@ -18,7 +18,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.catrobat.paintroid"
+    package="org.catrobat.catroid.paintroid"
           android:finishOnTaskLaunch="true"
           android:installLocation="auto">
 
