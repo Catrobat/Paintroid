@@ -27,6 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -39,6 +40,8 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
@@ -49,7 +52,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
@@ -76,6 +81,8 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColor
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -83,6 +90,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class MenuFileActivityIntegrationTest {
@@ -406,6 +414,49 @@ public class MenuFileActivityIntegrationTest {
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
 		pressBack();
 		onView(withText(R.string.menu_quit)).check(matches(isDisplayed()));
+	}
+
+	private Uri createTestImageFile() {
+		File imageFile = new File(Environment.getExternalStorageDirectory()
+				+ "/PocketCodePaintTest/", "testfile.jpg");
+		Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+		try {
+			imageFile.getParentFile().mkdirs();
+			imageFile.createNewFile();
+			OutputStream outputStream = new FileOutputStream(imageFile);
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream));
+			outputStream.close();
+		} catch (IOException e) {
+			fail("Picture file could not be created.");
+		}
+		deletionFileList.add(imageFile);
+		return Uri.fromFile(imageFile);
+	}
+
+	@Test
+	public void testLoadImageTransparency() {
+		Uri testImageUri = createTestImageFile();
+
+		Intent intent = new Intent();
+		intent.setData(testImageUri);
+		Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
+
+		onLoadImageProcedure();
+		onView(withText(R.string.discard_button_text))
+				.perform(click());
+
+		onToolBarView()
+				.performSelectTool(ToolType.ERASER);
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 	}
 
 	@Test

@@ -202,7 +202,7 @@ public abstract class FileIO {
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
 
-		return decodeBitmapFromUri(context, bitmapUri, options);
+		return enableAlpha(decodeBitmapFromUri(context, bitmapUri, options));
 	}
 
 	public static Bitmap getBitmapFromFile(File bitmapFile, int maxWidth, int maxHeight) {
@@ -225,6 +225,14 @@ public abstract class FileIO {
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
 
-		return BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
+		return enableAlpha(BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options));
+	}
+
+	private static Bitmap enableAlpha(Bitmap bitmap) {
+		if (bitmap == null) {
+			return null;
+		}
+		bitmap.setHasAlpha(true);
+		return bitmap;
 	}
 }
