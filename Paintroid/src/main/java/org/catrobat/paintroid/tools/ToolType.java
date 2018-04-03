@@ -35,7 +35,7 @@ public enum ToolType {
 	CURSOR(R.string.button_cursor, R.string.help_content_cursor, true, EnumSet.of(StateChange.ALL), R.id.tools_cursor),
 	IMPORTPNG(R.string.button_import_image, R.string.help_content_import_png, false, EnumSet.of(StateChange.ALL), R.id.tools_import),
 	TRANSFORM(R.string.button_transform, R.string.help_content_transform, true, EnumSet.of(StateChange.RESET_INTERNAL_STATE, StateChange.NEW_IMAGE_LOADED), R.id.tools_transform),
-	ERASER(R.string.button_eraser, R.string.help_content_eraser, false, EnumSet.of(StateChange.ALL), R.id.tools_eraser),
+	ERASER(R.string.button_eraser, R.string.help_content_eraser, true, EnumSet.of(StateChange.ALL), R.id.tools_eraser),
 	SHAPE(R.string.button_shape, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
 	TEXT(R.string.button_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text),
 	LAYER(R.string.layers_title, R.string.help_content_layer, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
