@@ -121,9 +121,10 @@
 
     <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
 
-    <string name="transform_tool_auto_crop_text">Auto adjust</string>
-    <string name="transform_tool_roate_text">Rotate</string>
-    <string name="transform_tool_mirror_text">Mirror</string>
+    <string name="transform_tool_auto_crop_text">crop</string>
+    <string name="transform_width_text">Width</string>
+    <string name="transform_height_text">Height</string>
+    <string name="pixel">px</string>
 
 
     <string name="stamp_tool_copy_hint">Long press to copy content</string>

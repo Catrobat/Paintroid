@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">Сердце</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
   <string name="transform_tool_auto_crop_text">Авторегулировка</string>
-  <string name="transform_tool_roate_text">Повернуть</string>
-  <string name="transform_tool_mirror_text">Зеркало</string>
   <string name="stamp_tool_copy_hint">Долгий клик, чтобы скопировать</string>
   <string name="layers_title">Слои</string>
   <string name="layer_new">Новый слой</string>

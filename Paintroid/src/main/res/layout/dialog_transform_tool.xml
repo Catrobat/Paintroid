@@ -17,154 +17,225 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip"
-        android:layout_marginTop="0dp"
-        android:text="@string/transform_tool_auto_crop_text"
-        android:textAllCaps="true"
-        android:textColor="@color/dialog_title_color"
-        android:textStyle="bold" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip"
-        android:background="@color/dialog_subtitle_border" />
-
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_margin="15dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/transform_auto_crop_btn"
-            style="?android:borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:minHeight="0dp"
-            android:padding="2dp"
-            android:src="@drawable/icon_menu_resize_adjust"
-            android:theme="@style/HighlightColorTheme" />
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip"
-        android:layout_marginTop="0dp"
-        android:text="@string/transform_tool_roate_text"
-        android:textAllCaps="true"
-        android:textColor="@color/dialog_title_color"
-        android:textStyle="bold" />
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip"
-        android:background="@color/dialog_subtitle_border" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_margin="15dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/transform_rotate_right_btn"
-            style="?android:borderlessButtonStyle"
-            android:layout_width="50dp"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:minHeight="0dp"
-            android:padding="2dp"
-            android:src="@drawable/icon_menu_rotate_right"
-            android:theme="@style/HighlightColorTheme" />
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dip"
+            android:layout_marginTop="0dp"
+            android:text="@string/transform_tool_auto_crop_text"
+            android:textAllCaps="true"
+            android:textColor="@color/dialog_title_color"
+            android:textStyle="bold" />
 
-        <ImageButton
-            android:id="@+id/transform_rotate_left_btn"
-            style="?android:borderlessButtonStyle"
-            android:layout_width="50dp"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dip"
+            android:background="@color/dialog_subtitle_border" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="5"
+            android:baselineAligned="false">
+
+            <TableRow
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/transform_auto_crop_btn"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:padding="2dp"
+                android:src="@drawable/icon_menu_resize_adjust"
+                android:theme="@style/HighlightColorTheme" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:weightSum="2.5"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/transform_width_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:labelFor="@+id/transform_width_value"
+                    android:layout_weight="1"
+                    android:text="@string/transform_width_text"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/transform_width_value"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:layout_weight="1"
+                    android:textColor="@color/dialog_title_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="14sp"
+                    android:layout_weight="0.5"
+                    android:text="@string/pixel" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:weightSum="2.5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/transform_height_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:labelFor="@+id/transform_height_value"
+                    android:layout_weight="1"
+                    android:text="@string/transform_height_text"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/transform_height_value"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:imeOptions="actionDone"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:textColor="@color/dialog_title_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.5"
+                    android:textSize="14sp"
+                    android:text="@string/pixel" />
+            </TableRow>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:minHeight="0dp"
-            android:padding="2dp"
-            android:src="@drawable/icon_menu_rotate_left"
-            android:theme="@style/HighlightColorTheme" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dip"
+            android:layout_marginTop="5dp"
+            android:text="@string/button_transform"
+            android:textAllCaps="true"
+            android:textColor="@color/dialog_title_color"
+            android:textStyle="bold" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dip"
+            android:background="@color/dialog_subtitle_border" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <ImageButton
+                android:id="@+id/transform_rotate_left_btn"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:padding="2dp"
+                android:src="@drawable/icon_menu_rotate_left"
+                android:theme="@style/HighlightColorTheme" />
+
+            <ImageButton
+                android:id="@+id/transform_rotate_right_btn"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:padding="2dp"
+                android:src="@drawable/icon_menu_rotate_right"
+                android:theme="@style/HighlightColorTheme" />
+
+            <ImageButton
+                android:id="@+id/transform_flip_vertical_btn"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:padding="2dp"
+                android:src="@drawable/icon_menu_flip_vertical"
+                android:theme="@style/HighlightColorTheme" />
+
+            <ImageButton
+                android:id="@+id/transform_flip_horizontal_btn"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:padding="2dp"
+                android:src="@drawable/icon_menu_flip_horizontal"
+                android:theme="@style/HighlightColorTheme" />
+
+
+        </LinearLayout>
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip"
-        android:layout_marginTop="5dp"
-        android:text="@string/transform_tool_mirror_text"
-        android:textAllCaps="true"
-        android:textColor="@color/dialog_title_color"
-        android:textStyle="bold" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip"
-        android:background="@color/dialog_subtitle_border" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_margin="15dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/transform_flip_horizontal_btn"
-            style="?android:borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:minHeight="0dp"
-            android:padding="2dp"
-            android:src="@drawable/icon_menu_flip_horizontal"
-            android:theme="@style/HighlightColorTheme" />
-
-        <ImageButton
-            android:id="@+id/transform_flip_vertical_btn"
-            style="?android:borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:minHeight="0dp"
-            android:padding="2dp"
-            android:src="@drawable/icon_menu_flip_vertical"
-            android:theme="@style/HighlightColorTheme" />
-    </LinearLayout>
-</merge>
+</ScrollView>

@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">Kalp</string>
   <string name="fill_tool_dialog_color_tolerance_title">Renk toleransı</string>
   <string name="transform_tool_auto_crop_text">Otomatik Ayarla</string>
-  <string name="transform_tool_roate_text">Döndür</string>
-  <string name="transform_tool_mirror_text">Ayna</string>
   <string name="stamp_tool_copy_hint">İçerik kopyalamak için uzun basın</string>
   <string name="layers_title">Katmanlar</string>
   <string name="layer_new">Yeni Katman</string>

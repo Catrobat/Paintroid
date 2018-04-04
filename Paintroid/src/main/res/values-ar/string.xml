@@ -105,8 +105,6 @@
   <string name="shape_tool_dialog_heart_title">قلب</string>
   <string name="fill_tool_dialog_color_tolerance_title">تفاوت اللون</string>
   <string name="transform_tool_auto_crop_text">ضبط تلقائي</string>
-  <string name="transform_tool_roate_text">تدوير</string>
-  <string name="transform_tool_mirror_text">مرآة</string>
   <string name="stamp_tool_copy_hint">اضغط مطولاً لنسخ المحتوى</string>
   <string name="layers_title">الطبقات</string>
   <string name="layer_new">طبقة جديدة</string>

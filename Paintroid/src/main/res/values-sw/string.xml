@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">Moyo</string>
   <string name="fill_tool_dialog_color_tolerance_title">Uvumilivu wa rangi</string>
   <string name="transform_tool_auto_crop_text">Rekebisha moja kwa moja</string>
-  <string name="transform_tool_roate_text">Zungusha</string>
-  <string name="transform_tool_mirror_text">Kioo</string>
   <string name="stamp_tool_copy_hint">Bonyeza muda mrefu kunakili maudhui</string>
   <string name="layers_title">Safu</string>
   <string name="layer_new">Tabaka jipya</string>

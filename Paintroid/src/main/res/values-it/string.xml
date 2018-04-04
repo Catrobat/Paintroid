@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">Cuore</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolleranza colore</string>
   <string name="transform_tool_auto_crop_text">Auto adjust</string>
-  <string name="transform_tool_roate_text">Ruota</string>
-  <string name="transform_tool_mirror_text">Specchio</string>
   <string name="stamp_tool_copy_hint">Premi a lungo per copiare il contenuto</string>
   <string name="layers_title">Livelli</string>
   <string name="layer_new">Nuovo livello</string>

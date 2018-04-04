@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">Corazón</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolerancia de color</string>
   <string name="transform_tool_auto_crop_text">Autoajustar</string>
-  <string name="transform_tool_roate_text">Rotar</string>
-  <string name="transform_tool_mirror_text">Espejo</string>
   <string name="stamp_tool_copy_hint">Pulsación larga para copiar contenido</string>
   <string name="layers_title">Capas</string>
   <string name="layer_new">Nueva capa</string>

@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">心形</string>
   <string name="fill_tool_dialog_color_tolerance_title">允许的颜色差异</string>
   <string name="transform_tool_auto_crop_text">自动调整</string>
-  <string name="transform_tool_roate_text">旋转</string>
-  <string name="transform_tool_mirror_text">镜像</string>
   <string name="stamp_tool_copy_hint">长按可复制内容</string>
   <string name="layers_title">图层</string>
   <string name="layer_new">新建图层</string>

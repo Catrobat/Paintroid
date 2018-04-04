@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">Srdce</string>
   <string name="fill_tool_dialog_color_tolerance_title">Barevné odchylky</string>
   <string name="transform_tool_auto_crop_text">Auto přizpůsobení</string>
-  <string name="transform_tool_roate_text">Otočit</string>
-  <string name="transform_tool_mirror_text">Zrcadlo</string>
   <string name="stamp_tool_copy_hint">Dlouhým stisknutím kopírovat obsah</string>
   <string name="layers_title">Vrstvy</string>
   <string name="layer_new">Nová vrstva</string>
