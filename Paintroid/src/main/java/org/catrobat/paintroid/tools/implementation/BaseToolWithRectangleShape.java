@@ -76,12 +76,17 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private static final String BUNDLE_BOX_HEIGHT = "BOX_HEIGHT";
 	private static final String BUNDLE_BOX_ROTATION = "BOX_ROTATION";
 
-	private final int resizeCircleSize;
 	private final int rotationArrowArcStrokeWidth;
 	private final int rotationArrowArcRadius;
 	private final int rotationArrowHeadSize;
 	private final int rotationArrowOffset;
-
+	private final Paint arcPaint;
+	private final Paint arrowPaint;
+	private final Path arcPath;
+	private final Path arrowPath;
+	private final Paint backgroundPaint;
+	private final RectF tempDrawingRectangle;
+	private final PointF tempToolPosition;
 	@VisibleForTesting
 	public float boxWidth;
 	@VisibleForTesting
@@ -90,9 +95,13 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	public float boxRotation; // in degree
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public Bitmap drawingBitmap;
-	protected float boxResizeMargin;
 	@VisibleForTesting
 	public float rotationSymbolDistance;
+	@VisibleForTesting
+	public boolean respectImageBounds;
+	@VisibleForTesting
+	public boolean rotationEnabled;
+	protected float boxResizeMargin;
 	protected float rotationSymbolWidth;
 	protected float toolStrokeWidth;
 	protected ResizeAction resizeAction;
@@ -100,28 +109,13 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected RotatePosition rotatePosition;
 	protected Bitmap overlayBitmap;
 	protected float maximumBoxResolution;
-
-	@VisibleForTesting
-	public boolean respectImageBounds;
-	@VisibleForTesting
-	public boolean rotationEnabled;
 	private boolean backgroundShadowEnabled;
 	private boolean resizePointsVisible;
 	private boolean statusIconEnabled;
 	private boolean respectMaximumBorderRatio;
 	private boolean respectMaximumBoxResolution;
-
 	private boolean isDown = false;
 	private CountDownTimer downTimer;
-
-	private final Paint arcPaint;
-	private final Paint arrowPaint;
-	private final Path arcPath;
-	private final Path arrowPath;
-	private final Paint backgroundPaint;
-	private final Paint circlePaint;
-	private final RectF tempDrawingRectangle;
-	private final PointF tempToolPosition;
 
 	public BaseToolWithRectangleShape(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -144,7 +138,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			boxWidth = PaintroidApplication.drawingSurface.getBitmapWidth() * MAXIMUM_BORDER_RATIO;
 		}
 
-		resizeCircleSize = getDensitySpecificValue(4);
 		rotationArrowArcStrokeWidth = getDensitySpecificValue(2);
 		rotationArrowArcRadius = getDensitySpecificValue(8);
 		rotationArrowHeadSize = getDensitySpecificValue(3);
@@ -181,9 +174,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		backgroundPaint = new Paint();
 		backgroundPaint.setColor(Color.argb(128, 0, 0, 0));
 		backgroundPaint.setStyle(Style.FILL);
-
-		circlePaint = new Paint();
-		circlePaint.setStyle(Style.FILL);
 
 		arcPath = new Path();
 		arrowPath = new Path();
@@ -300,7 +290,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 
 		if (resizePointsVisible) {
-			drawResizePoints(canvas, boxWidth, boxHeight);
+			drawToolSpecifics(canvas, boxWidth, boxHeight);
 		}
 
 		if (drawingBitmap != null && rotationEnabled) {
@@ -336,23 +326,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				PaintroidApplication.drawingSurface.getBitmapWidth(),
 				PaintroidApplication.drawingSurface.getBitmapHeight(), backgroundPaint);
 		canvas.restore();
-	}
-
-	private void drawResizePoints(Canvas canvas, float boxWidth, float boxHeight) {
-		float circleRadius = getInverselyProportionalSizeForZoom(resizeCircleSize);
-		circlePaint.setColor(secondaryShapeColor);
-		canvas.drawCircle(0, -boxHeight / 2, circleRadius, circlePaint);
-		canvas.drawCircle(boxWidth / 2, -boxHeight / 2, circleRadius,
-				circlePaint);
-		canvas.drawCircle(boxWidth / 2, 0, circleRadius, circlePaint);
-		canvas.drawCircle(boxWidth / 2, boxHeight / 2, circleRadius,
-				circlePaint);
-		canvas.drawCircle(0, boxHeight / 2, circleRadius, circlePaint);
-		canvas.drawCircle(-boxWidth / 2, boxHeight / 2, circleRadius,
-				circlePaint);
-		canvas.drawCircle(-boxWidth / 2, 0, circleRadius, circlePaint);
-		canvas.drawCircle(-boxWidth / 2, -boxHeight / 2, circleRadius,
-				circlePaint);
 	}
 
 	private void drawRotationArrows(Canvas canvas, float boxWidth, float boxHeight) {
@@ -773,13 +746,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		this.maximumBoxResolution = maximumBoxResolution;
 	}
 
-	protected abstract void onClickInBox();
-
-	protected void drawToolSpecifics(Canvas canvas, float boxWidth, float boxHeight) {
-	}
-
-	protected void preventThatBoxGetsTooLarge(float oldWidth, float oldHeight,
-			float oldPosX, float oldPosY) {
+	protected void preventThatBoxGetsTooLarge(float oldWidth, float oldHeight, float oldPosX, float oldPosY) {
 		boxWidth = oldWidth;
 		boxHeight = oldHeight;
 		toolPosition.x = oldPosX;
@@ -847,6 +814,39 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	@Override
 	public void setupToolOptions() {
+	}
+
+	@Override
+	protected void drawToolSpecifics(Canvas canvas, float boxWidth, float boxHeight) {
+		linePaint.setColor(primaryShapeColor);
+		linePaint.setStrokeWidth(toolStrokeWidth * 2);
+
+		PointF rightTopPoint = new PointF(-boxWidth / 2, -boxHeight / 2);
+
+		for (int lines = 0; lines < 4; lines++) {
+			float resizeLineLengthHeight = boxHeight / 10;
+			float resizeLineLengthWidth = boxWidth / 10;
+
+			canvas.drawLine(rightTopPoint.x - toolStrokeWidth / 2,
+					rightTopPoint.y, rightTopPoint.x + resizeLineLengthWidth,
+					rightTopPoint.y, linePaint);
+
+			canvas.drawLine(rightTopPoint.x, rightTopPoint.y
+							- toolStrokeWidth / 2, rightTopPoint.x,
+					rightTopPoint.y + resizeLineLengthHeight, linePaint);
+
+			canvas.drawLine(rightTopPoint.x + boxWidth / 2
+							- resizeLineLengthWidth, rightTopPoint.y, rightTopPoint.x
+							+ boxWidth / 2 + resizeLineLengthWidth, rightTopPoint.y,
+					linePaint);
+			canvas.rotate(90);
+			float tempX = rightTopPoint.x;
+			rightTopPoint.x = rightTopPoint.y;
+			rightTopPoint.y = tempX;
+			float tempHeight = boxHeight;
+			boxHeight = boxWidth;
+			boxWidth = tempHeight;
+		}
 	}
 
 	private enum FloatingBoxAction {

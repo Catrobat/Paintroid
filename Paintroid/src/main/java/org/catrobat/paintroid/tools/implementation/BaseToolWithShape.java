@@ -123,4 +123,8 @@ public abstract class BaseToolWithShape extends BaseTool implements
 
 		return new Point(deltaX, deltaY);
 	}
+	protected abstract void onClickInBox();
+
+	protected void drawToolSpecifics(Canvas canvas, float boxWidth, float boxHeight) {
+	}
 }
