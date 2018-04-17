@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso.dialog;
 
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -36,6 +37,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -97,8 +99,6 @@ public class BrushPickerIntegrationTest {
 		onView(withId(R.id.stroke_width_seek_bar))
 				.perform(setProgress(strokeWidth))
 				.check(matches(withProgress(expectedStrokeWidth)));
-		onView(withId(R.id.stroke_width_width_text))
-				.check(matches(withText(Integer.toString(expectedStrokeWidth))));
 	}
 
 	private void setStrokeWidth(int strokeWidth) {
@@ -107,6 +107,8 @@ public class BrushPickerIntegrationTest {
 
 	@Test
 	public void brushPickerDialogDefaultLayoutAndToolChanges() throws NoSuchFieldException, IllegalAccessException {
+		onView(withId(R.id.drawer_preview))
+				.check(matches(isDisplayed()));
 		onView(withId(R.id.stroke_width_seek_bar))
 				.check(matches(isDisplayed()))
 				.check(matches(withProgress(DEFAULT_STROKE_WIDTH)));
@@ -222,5 +224,19 @@ public class BrushPickerIntegrationTest {
 				.performCloseToolOptions();
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), DEFAULT_STROKE_WIDTH, Cap.ROUND);
+	}
+
+	@Test
+	public void brushPickerDialogEditTextBehaviour() {
+		onView(withId(R.id.stroke_width_width_text))
+				.perform(replaceText(String.valueOf(MIDDLE_STROKE_WIDTH)));
+
+		Espresso.closeSoftKeyboard();
+
+		onView(withId(R.id.stroke_width_width_text))
+				.check(matches(withText(String.valueOf(MIDDLE_STROKE_WIDTH))));
+
+		onView(withId(R.id.stroke_width_seek_bar))
+				.check(matches(withProgress(MIDDLE_STROKE_WIDTH)));
 	}
 }

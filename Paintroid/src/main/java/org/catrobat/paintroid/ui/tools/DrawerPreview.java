@@ -229,7 +229,7 @@ public class DrawerPreview extends View {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-		int height = (int) (getMeasuredHeight() * 0.2);
-		setMeasuredDimension(widthMeasureSpec, height);
+		int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+		setMeasuredDimension(widthSize, (int) (widthSize * .25));
 	}
 }
