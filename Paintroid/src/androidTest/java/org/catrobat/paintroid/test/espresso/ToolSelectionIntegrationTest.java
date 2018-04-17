@@ -35,6 +35,7 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
@@ -55,7 +56,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusbarHeight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.clickOutside;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -68,14 +68,17 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class ToolSelectionIntegrationTest {
 	private static final int START = R.id.tools_brush;
-	private static final int MIDDLE = R.id.tools_pipette;
-	private static final int END = R.id.tools_text;
+	private static final int MIDDLE = R.id.tools_cursor;
+	private static final int END = R.id.tools_import;
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	private ActivityHelper activityHelper;
 	private HorizontalScrollView scrollView;
@@ -181,7 +184,7 @@ public class ToolSelectionIntegrationTest {
 		ToolType toolInMiddle = getToolTypeByButtonId(toolButton.getId());
 
 		if (toolsLayout.getWidth() > scrollView.getWidth() + toolsLayout.getChildAt(0).getWidth()) {
-			selectTool(toolInMiddle);
+			onToolBarView().performSelectTool(toolInMiddle);
 
 			int[] screenLocation = new int[2];
 			toolButton.getLocationOnScreen(screenLocation);
@@ -192,17 +195,11 @@ public class ToolSelectionIntegrationTest {
 		int scrollRight = 1;
 		int scrollLeft = -1;
 
-		View leftMostButton = toolsLayout.getChildAt(0);
-		ToolType leftMostTool = getToolTypeByButtonId(leftMostButton.getId());
-
-		selectTool(leftMostTool);
+		onToolBarView().performSelectTool(ToolType.BRUSH);
 
 		assertFalse("Tool button should be most left", scrollView.canScrollHorizontally(scrollLeft));
 
-		View rightMostButton = toolsLayout.getChildAt(toolCount - 1);
-		ToolType rightMostTool = getToolTypeByButtonId(rightMostButton.getId());
-
-		selectTool(rightMostTool);
+		onToolBarView().performSelectTool(ToolType.TRANSFORM);
 
 		assertFalse("Tool button should be most right", scrollView.canScrollHorizontally(scrollRight));
 	}

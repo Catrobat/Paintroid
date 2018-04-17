@@ -42,18 +42,11 @@
             android:src="@drawable/icon_menu_brush"/>
 
         <ImageButton
-            android:id="@+id/tools_rectangle"
+            android:id="@+id/tools_eraser"
             style="@style/SelectableButton"
             android:layout_width="@dimen/bottom_bar_landscape_button_width"
             android:layout_height="@dimen/bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_rectangle"/>
-
-        <ImageButton
-            android:id="@+id/tools_transform"
-            style="@style/SelectableButton"
-            android:layout_width="@dimen/bottom_bar_landscape_button_width"
-            android:layout_height="@dimen/bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_transform"/>
+            android:src="@drawable/icon_menu_eraser"/>
 
         <ImageButton
             android:id="@+id/tools_line"
@@ -63,11 +56,11 @@
             android:src="@drawable/icon_menu_straight_line"/>
 
         <ImageButton
-            android:id="@+id/tools_cursor"
+            android:id="@+id/tools_rectangle"
             style="@style/SelectableButton"
             android:layout_width="@dimen/bottom_bar_landscape_button_width"
             android:layout_height="@dimen/bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_cursor"/>
+            android:src="@drawable/icon_menu_rectangle"/>
 
         <ImageButton
             android:id="@+id/tools_fill"
@@ -84,25 +77,11 @@
             android:src="@drawable/icon_menu_pipette"/>
 
         <ImageButton
-            android:id="@+id/tools_stamp"
+            android:id="@+id/tools_cursor"
             style="@style/SelectableButton"
             android:layout_width="@dimen/bottom_bar_landscape_button_width"
             android:layout_height="@dimen/bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_stamp"/>
-
-        <ImageButton
-            android:id="@+id/tools_import"
-            style="@style/SelectableButton"
-            android:layout_width="@dimen/bottom_bar_landscape_button_width"
-            android:layout_height="@dimen/bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_import_image"/>
-
-        <ImageButton
-            android:id="@+id/tools_eraser"
-            style="@style/SelectableButton"
-            android:layout_width="@dimen/bottom_bar_landscape_button_width"
-            android:layout_height="@dimen/bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_eraser"/>
+            android:src="@drawable/icon_menu_cursor"/>
 
         <ImageButton
             android:id="@+id/tools_text"
@@ -110,6 +89,27 @@
             android:layout_width="@dimen/bottom_bar_landscape_button_width"
             android:layout_height="@dimen/bottom_bar_landscape_button_height"
             android:src="@drawable/icon_menu_text"/>
+
+        <ImageButton
+            android:id="@+id/tools_stamp"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_stamp"/>
+
+        <ImageButton
+            android:id="@+id/tools_transform"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_transform"/>
+
+        <ImageButton
+            android:id="@+id/tools_import"
+            style="@style/SelectableButton"
+            android:layout_width="@dimen/bottom_bar_landscape_button_width"
+            android:layout_height="@dimen/bottom_bar_landscape_button_height"
+            android:src="@drawable/icon_menu_import_image"/>
 
     </LinearLayout>
 </ScrollView>
