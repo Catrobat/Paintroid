@@ -25,12 +25,10 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +40,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.DEFAULT_STROKE_WIDTH;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getToolMemberColorButton;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress;
@@ -52,8 +49,6 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInte
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertFalse;
 
 @RunWith(AndroidJUnit4.class)
 public class EraserToolIntegrationTest {
@@ -267,19 +262,10 @@ public class EraserToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.ERASER);
 		onTopBarView().onPaletteButton()
-				.check(matches(not(isDisplayed())));
+				.check(matches(isDisplayed()));
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
 		onTopBarView().onPaletteButton()
 				.check(matches(isDisplayed()));
-	}
-
-	@Test
-	public void testColorButtonBoolean() throws NoSuchFieldException, IllegalAccessException {
-		onToolBarView()
-				.performSelectTool(ToolType.ERASER);
-		EraserTool eraserTool = (EraserTool) PaintroidApplication.currentTool;
-		boolean eraserSelected = getToolMemberColorButton(eraserTool).getDrawSelectedColor();
-		assertFalse("Value should be false", eraserSelected);
 	}
 }

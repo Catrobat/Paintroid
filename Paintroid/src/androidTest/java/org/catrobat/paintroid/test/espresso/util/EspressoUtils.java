@@ -50,10 +50,8 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
-import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.button.ColorButton;
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -212,10 +210,6 @@ public final class EspressoUtils {
 
 	public static float getToolMemberColorTolerance(FillTool fillTool) {
 		return fillTool.colorTolerance;
-	}
-
-	public static ColorButton getToolMemberColorButton(EraserTool eraserTool) {
-		return eraserTool.colorButton;
 	}
 
 	public static PointF getToolMemberBoxPosition() {

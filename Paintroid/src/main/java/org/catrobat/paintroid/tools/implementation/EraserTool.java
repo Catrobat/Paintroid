@@ -19,41 +19,20 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
-import android.support.annotation.VisibleForTesting;
-import android.view.View;
 
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.button.ColorButton;
 
 public class EraserTool extends DrawTool {
 
-	@VisibleForTesting
-	public ColorButton colorButton;
-	private View colorPickerPalette;
 	@ColorInt
-	private int previousColor;
+	private int previousColor = Color.BLACK;
 
 	public EraserTool(Context context, ToolType toolType) {
 		super(context, toolType);
-
-		previousColor = Color.MAGENTA;
-		displayEraserInsteadOfSelectedColor();
-	}
-
-	private void displayEraserInsteadOfSelectedColor() {
-		colorButton = (ColorButton) ((Activity) context).findViewById(R.id.btn_top_color);
-		colorButton.setImageResource(R.drawable.icon_menu_eraser);
-
-		colorPickerPalette = ((Activity) context).findViewById(R.id.btn_top_color_palette);
-		colorPickerPalette.setVisibility(View.INVISIBLE);
-
-		colorButton.setDrawSelectedColor(false);
 	}
 
 	@Override
@@ -70,10 +49,8 @@ public class EraserTool extends DrawTool {
 	}
 
 	@Override
-	public void leaveTool() {
-		super.leaveTool();
-		colorButton.resetDrawSelectedColor();
-		colorButton.setImageResource(0);
-		colorPickerPalette.setVisibility(View.VISIBLE);
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
+		previousColor = color;
 	}
 }
