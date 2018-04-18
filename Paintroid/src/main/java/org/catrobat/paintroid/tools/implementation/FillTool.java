@@ -25,10 +25,12 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.annotation.VisibleForTesting;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
@@ -41,6 +43,7 @@ import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
 import java.util.Locale;
 
@@ -118,6 +121,7 @@ public class FillTool extends BaseTool {
 
 		colorToleranceSeekBar = (SeekBar) fillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
 		colorToleranceEditText = (EditText) fillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
+		colorToleranceEditText.setFilters(new InputFilter[]{new NumberRangeFilter(0, 100)});
 		initializeFillOptionsListener();
 		updateColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);
 	}
@@ -127,7 +131,10 @@ public class FillTool extends BaseTool {
 		colorToleranceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				updateColorToleranceText(progress);
+				if (fromUser) {
+					updateColorToleranceText(progress);
+					hideKeyboard();
+				}
 				colorToleranceEditText.setCursorVisible(false);
 			}
 
@@ -154,10 +161,6 @@ public class FillTool extends BaseTool {
 			public void afterTextChanged(Editable s) {
 				try {
 					int colorToleranceInPercent = Integer.parseInt(s.toString());
-					if (colorToleranceInPercent > 100) {
-						colorToleranceInPercent = 100;
-						updateColorToleranceText(colorToleranceInPercent);
-					}
 					colorToleranceSeekBar.setProgress(colorToleranceInPercent);
 					updateColorTolerance(colorToleranceInPercent);
 				} catch (NumberFormatException e) {
@@ -168,9 +171,7 @@ public class FillTool extends BaseTool {
 		colorToleranceEditText.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (v.getId() == R.id.fill_tool_dialog_color_tolerance_input) {
 					colorToleranceEditText.setCursorVisible(true);
-				}
 			}
 		});
 		colorToleranceEditText.requestFocus();
@@ -179,5 +180,12 @@ public class FillTool extends BaseTool {
 	private void updateColorToleranceText(int toleranceInPercent) {
 		colorToleranceEditText.setText(String.format(Locale.getDefault(), "%d", toleranceInPercent));
 		colorToleranceEditText.setSelection(colorToleranceEditText.length());
+	}
+
+	private void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) colorToleranceEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (imm != null) {
+			imm.hideSoftInputFromWindow(colorToleranceEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		}
 	}
 }

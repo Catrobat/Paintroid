@@ -51,7 +51,7 @@ import java.io.File;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -191,20 +191,12 @@ public class FillToolIntegrationTest {
 
 		colorToleranceInput.check(matches(withText(Integer.toString(FillTool.DEFAULT_TOLERANCE_IN_PERCENT))));
 
-		colorToleranceInput.perform(typeText(testToleranceText), closeSoftKeyboard());
+		colorToleranceInput.perform(replaceText(testToleranceText), closeSoftKeyboard());
 
 		colorToleranceInput.check(matches(withText(testToleranceText)));
 		colorToleranceSeekBar.check(matches(withProgress(Integer.parseInt(testToleranceText))));
 
 		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(100);
-		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool), TOLERANCE_DELTA);
-
-		int seekBarTestValue = 50;
-		colorToleranceSeekBar.perform(setProgress(seekBarTestValue));
-		colorToleranceSeekBar.check(matches(withProgress(seekBarTestValue)));
-		colorToleranceInput.check(matches(withText(Integer.toString(seekBarTestValue))));
-
-		expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(50);
 		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool), TOLERANCE_DELTA);
 
 		// Close tool options
@@ -221,9 +213,10 @@ public class FillToolIntegrationTest {
 		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.color_tolerance_seek_bar));
 
 		int toleranceInPercent = 50;
-		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
 
-		colorToleranceSeekBar.perform(setProgress(toleranceInPercent));
+		colorToleranceInput.perform(replaceText(String.valueOf(toleranceInPercent)));
+
+		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
 
 		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool), TOLERANCE_DELTA);
 
@@ -257,9 +250,11 @@ public class FillToolIntegrationTest {
 		assertTrue("Cursor should not be visible", colorToleranceEditText.isCursorVisible());
 
 		int toleranceInPercent = 50;
-		colorToleranceSeekBar.perform(setProgress(toleranceInPercent));
+		colorToleranceInput.perform(replaceText(String.valueOf(toleranceInPercent)));
 		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
 		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool), TOLERANCE_DELTA);
+
+		colorToleranceSeekBar.perform(setProgress(toleranceInPercent));
 
 		assertFalse("Cursor should not be visible", colorToleranceEditText.isCursorVisible());
 
@@ -288,8 +283,8 @@ public class FillToolIntegrationTest {
 				.performSelectTool(ToolType.FILL)
 				.performOpenToolOptions();
 
-		onView(withId(R.id.color_tolerance_seek_bar))
-				.perform(setProgress(100));
+		onView(withId(R.id.fill_tool_dialog_color_tolerance_input))
+				.perform(replaceText(String.valueOf(100)));
 
 		onToolBarView()
 				.performCloseToolOptions();
