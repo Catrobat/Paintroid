@@ -44,10 +44,10 @@ public final class BrushPickerViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onStrokeCapSquareView() {
-		return onView(withId(R.id.stroke_rbtn_rect));
+		return onView(withId(R.id.stroke_ibtn_rect));
 	}
 
 	public ViewInteraction onStrokeCapRoundView() {
-		return onView(withId(R.id.stroke_rbtn_circle));
+		return onView(withId(R.id.stroke_ibtn_circle));
 	}
 }
