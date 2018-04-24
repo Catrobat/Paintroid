@@ -19,6 +19,7 @@
 
 #include <jni.h>
 #include <string>
+#include <cstring>
 #include <iostream>
 #include <list>
 

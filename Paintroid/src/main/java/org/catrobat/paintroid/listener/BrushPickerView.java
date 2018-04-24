@@ -22,71 +22,101 @@ package org.catrobat.paintroid.listener;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
+import android.support.annotation.VisibleForTesting;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.implementation.DrawTool;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.ui.tools.DrawerPreview;
+import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class BrushPickerView implements View.OnClickListener {
-	public static final String NOT_INITIALIZED_ERROR_MESSAGE = "BrushPickerView has not been initialized. Call init() first!";
-
-	private static BrushPickerView instance = null;
-	private static View mBrushPickerView;
-
-	private ArrayList<BrushPickerView.OnBrushChangedListener> mBrushChangedListener;
-	private Paint mCurrentPaint;
-	private Context mContext;
-	private TextView mBrushSizeText;
-	private SeekBar mBrushWidthSeekBar;
-	private RadioButton mRbtnCircle;
-	private RadioButton mRbtnRect;
+public final class BrushPickerView implements View.OnClickListener {
 	private static final int MIN_BRUSH_SIZE = 1;
-	private int mStrokeWidth;
+	private static final String TAG = BrushPickerView.class.getSimpleName();
 
+	@VisibleForTesting
+	public ArrayList<BrushPickerView.OnBrushChangedListener> brushChangedListener;
+	private final EditText brushSizeText;
+	private final SeekBar brushWidthSeekBar;
+	private final RadioButton radioButtonCircle;
+	private final RadioButton radioButtonRect;
+	private final DrawerPreview drawerPreview;
+	private final ColorPickerDialog.OnColorPickedListener onColorPickedListener;
 
-	private BrushPickerView(Context context) {
-		mBrushChangedListener = new ArrayList<BrushPickerView.OnBrushChangedListener>();
-		mContext = context;
+	public BrushPickerView(ViewGroup rootView) {
+		brushChangedListener = new ArrayList<>();
 
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mBrushPickerView = inflater.inflate(R.layout.dialog_stroke, null);
+		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
+		View brushPickerView = inflater.inflate(R.layout.dialog_stroke, rootView, true);
 
-		ImageButton btn_circle = (ImageButton) mBrushPickerView.findViewById(R.id.stroke_ibtn_circle);
-		btn_circle.setOnClickListener(this);
+		ImageButton buttonCircle = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_circle);
+		ImageButton buttonRect = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_rect);
+		radioButtonCircle = (RadioButton) brushPickerView.findViewById(R.id.stroke_rbtn_circle);
+		radioButtonRect = (RadioButton) brushPickerView.findViewById(R.id.stroke_rbtn_rect);
+		brushWidthSeekBar = (SeekBar) brushPickerView.findViewById(R.id.stroke_width_seek_bar);
+		brushWidthSeekBar.setOnSeekBarChangeListener(new BrushPickerView.OnBrushChangedWidthSeekBarListener());
+		brushSizeText = (EditText) brushPickerView.findViewById(R.id.stroke_width_width_text);
+		brushSizeText.setFilters(new InputFilter[]{new NumberRangeFilter(1, 100)});
+		drawerPreview = (DrawerPreview) brushPickerView.findViewById(R.id.drawer_preview);
 
-		ImageButton btn_rect = (ImageButton) mBrushPickerView.findViewById(R.id.stroke_ibtn_rect);
-		btn_rect.setOnClickListener(this);
+		buttonCircle.setOnClickListener(this);
+		buttonRect.setOnClickListener(this);
+		radioButtonCircle.setOnClickListener(this);
+		radioButtonRect.setOnClickListener(this);
 
-		mRbtnCircle = (RadioButton) mBrushPickerView.findViewById(R.id.stroke_rbtn_circle);
-		mRbtnCircle.setOnClickListener(this);
+		onColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
+			@Override
+			public void colorChanged(int color) {
+				drawerPreview.invalidate();
+			}
+		};
+		ColorPickerDialog.getInstance().addOnColorPickedListener(onColorPickedListener);
 
-		mRbtnRect = (RadioButton) mBrushPickerView.findViewById(R.id.stroke_rbtn_rect);
-		mRbtnRect.setOnClickListener(this);
+		brushSizeText.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
 
-		mBrushWidthSeekBar = (SeekBar) mBrushPickerView.findViewById(R.id.stroke_width_seek_bar);
-		mBrushWidthSeekBar.setOnSeekBarChangeListener(new BrushPickerView.OnBrushChangedWidthSeekBarListener());
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
 
-		mBrushSizeText = (TextView) mBrushPickerView.findViewById(R.id.stroke_width_width_text);
-	}
-
-	public static BrushPickerView getInstance() {
-		if (instance == null) {
-			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
-		}
-		return instance;
-	}
-
-	public static void init(Context context) {
-		instance = new BrushPickerView(context);
+			@Override
+			public void afterTextChanged(Editable editable) {
+				String sizeText = brushSizeText.getText().toString();
+				int sizeTextInt;
+				try {
+					sizeTextInt = Integer.parseInt(sizeText);
+				} catch (NumberFormatException exp) {
+					Log.d(TAG, exp.getLocalizedMessage());
+					sizeTextInt = MIN_BRUSH_SIZE;
+				}
+				brushWidthSeekBar.setProgress(sizeTextInt);
+			}
+		});
+		brushSizeText.requestFocus();
+		brushSizeText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					hideKeyboard();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -95,20 +125,59 @@ public class BrushPickerView implements View.OnClickListener {
 		switch (v.getId()) {
 			case R.id.stroke_ibtn_circle:
 				updateStrokeCap(Cap.ROUND);
-				mRbtnCircle.setChecked(true);
+				radioButtonCircle.setChecked(true);
+				hideKeyboard();
 				break;
 			case R.id.stroke_ibtn_rect:
 				updateStrokeCap(Cap.SQUARE);
-				mRbtnRect.setChecked(true);
+				radioButtonRect.setChecked(true);
+				hideKeyboard();
 				break;
 			case R.id.stroke_rbtn_circle:
 				updateStrokeCap(Cap.ROUND);
+				hideKeyboard();
 				break;
 			case R.id.stroke_rbtn_rect:
 				updateStrokeCap(Cap.SQUARE);
+				hideKeyboard();
 				break;
 			default:
 				break;
+		}
+		drawerPreview.invalidate();
+	}
+
+	public void setCurrentPaint(Paint currentPaint) {
+		if (currentPaint.getStrokeCap() == Cap.ROUND) {
+			radioButtonCircle.setChecked(true);
+		} else {
+			radioButtonRect.setChecked(true);
+		}
+		brushWidthSeekBar.setProgress((int) currentPaint.getStrokeWidth());
+		brushSizeText.setText(String.format(Locale.getDefault(), "%d", (int) currentPaint.getStrokeWidth()));
+	}
+
+	public void addBrushChangedListener(OnBrushChangedListener listener) {
+		brushChangedListener.add(listener);
+	}
+
+	public void removeBrushChangedListener(OnBrushChangedListener listener) {
+		brushChangedListener.remove(listener);
+	}
+
+	public void removeListeners() {
+		ColorPickerDialog.getInstance().removeOnColorPickedListener(onColorPickedListener);
+	}
+
+	private void updateStrokeChange(int strokeWidth) {
+		for (OnBrushChangedListener listener : brushChangedListener) {
+			listener.setStroke(strokeWidth);
+		}
+	}
+
+	private void updateStrokeCap(Cap cap) {
+		for (OnBrushChangedListener listener : brushChangedListener) {
+			listener.setCap(cap);
 		}
 	}
 
@@ -128,8 +197,12 @@ public class BrushPickerView implements View.OnClickListener {
 				seekBar.setProgress(progress);
 			}
 			updateStrokeChange(progress);
+			if (fromUser) {
+				brushSizeText.setText(String.format(Locale.getDefault(), "%d", progress));
+				hideKeyboard();
+			}
 
-			mBrushSizeText.setText(String.format(Locale.getDefault(),"%d",progress));
+			drawerPreview.invalidate();
 		}
 
 		@Override
@@ -138,51 +211,15 @@ public class BrushPickerView implements View.OnClickListener {
 
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
+			brushSizeText.setText(String.format(Locale.getDefault(), "%d", seekBar.getProgress()));
+			hideKeyboard();
 		}
 	}
 
-	public void setCurrentPaint(Paint currentPaint) {
-		mCurrentPaint = currentPaint;
-		if (mCurrentPaint.getStrokeCap() == Cap.ROUND) {
-			mRbtnCircle.setChecked(true);
-		} else {
-			mRbtnRect.setChecked(true);
+	private void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) brushSizeText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (imm != null) {
+			imm.hideSoftInputFromWindow(brushSizeText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		}
-		mBrushWidthSeekBar.setProgress((int) mCurrentPaint.getStrokeWidth());
-	}
-
-	public void addBrushChangedListener(OnBrushChangedListener listener) {
-		mBrushChangedListener.add(listener);
-	}
-
-	public void removeBrushChangedListener(OnBrushChangedListener listener) {
-		mBrushChangedListener.remove(listener);
-	}
-
-	private void updateStrokeChange(int strokeWidth) {
-		for (OnBrushChangedListener listener : mBrushChangedListener) {
-			if (listener == null) {
-				mBrushChangedListener.remove(listener);
-			}
-			listener.setStroke(strokeWidth);
-			mStrokeWidth = strokeWidth;
-		}
-	}
-
-	private void updateStrokeCap(Cap cap) {
-		for (OnBrushChangedListener listener : mBrushChangedListener) {
-			if (listener == null) {
-				mBrushChangedListener.remove(listener);
-			}
-			listener.setCap(cap);
-		}
-	}
-
-	public View getBrushPickerView () {
-		return mBrushPickerView;
-	}
-
-	public int getStrokeWidth() {
-		return mStrokeWidth;
 	}
 }

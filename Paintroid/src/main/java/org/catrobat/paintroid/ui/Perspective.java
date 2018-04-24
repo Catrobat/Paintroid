@@ -19,189 +19,180 @@
 
 package org.catrobat.paintroid.ui;
 
-import java.io.Serializable;
+import android.graphics.Canvas;
+import android.graphics.PointF;
+import android.graphics.Rect;
+import android.support.annotation.VisibleForTesting;
+import android.view.SurfaceHolder;
 
 import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.SurfaceHolder;
-import android.view.WindowManager;
+import java.io.Serializable;
 
-/**
- * The purpose of this class is to provide an independent interface to
- * manipulate the scale and translation of the DrawingSurface. The direct
- * manipulation of the Canvas is synchronized on the SurfaceHolder on which the
- * DrawingSurface must also synchronize its own drawing.
- */
 public class Perspective implements Serializable {
-	private static final long serialVersionUID = 7742690846128292452L;
-
 	public static final float MIN_SCALE = 0.1f;
 	public static final float MAX_SCALE = 100f;
 	public static final float SCROLL_BORDER = 50f;
+	private static final long serialVersionUID = 7742690846128292452L;
 	private static final float BORDER_ZOOM_FACTOR = 0.95f;
 	private static final float ACTION_BAR_HEIGHT = NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT;
 
-	private float mSurfaceWidth;
-	private float mSurfaceHeight;
-	private float mSurfaceCenterX;
-	private float mSurfaceCenterY;
-	private float mSurfaceScale;
-	private float mSurfaceTranslationX;
-	private float mSurfaceTranslationY;
-	private float mBitmapWidth;
-	private float mBitmapHeight;
-	private float mScreenDensity;
-	private boolean mIsFullscreen;
-	private float mInitialTranslationX;
-	private float mInitialTranslationY;
+	private final float screenDensity;
+	@VisibleForTesting
+	public float surfaceWidth;
+	@VisibleForTesting
+	public float surfaceHeight;
+	@VisibleForTesting
+	public float surfaceCenterX;
+	@VisibleForTesting
+	public float surfaceCenterY;
+	@VisibleForTesting
+	public float surfaceScale;
+	@VisibleForTesting
+	public float surfaceTranslationX;
+	@VisibleForTesting
+	public float surfaceTranslationY;
+	private float bitmapWidth;
+	private float bitmapHeight;
+	private boolean isFullscreen;
+	private float initialTranslationX;
+	@VisibleForTesting
+	public float initialTranslationY;
 
-	public Perspective(SurfaceHolder holder) {
+	public Perspective(SurfaceHolder holder, float screenDensity) {
 		setSurfaceHolder(holder);
-		mSurfaceScale = 1f;
-		DisplayMetrics metrics = new DisplayMetrics();
-		Display display = ((WindowManager) PaintroidApplication.applicationContext
-				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		display.getMetrics(metrics);
-		mScreenDensity = metrics.density;
-		mIsFullscreen = false;
+		this.screenDensity = screenDensity;
+		surfaceScale = 1f;
+		isFullscreen = false;
 	}
 
 	public synchronized void setSurfaceHolder(SurfaceHolder holder) {
 		Rect surfaceFrame = holder.getSurfaceFrame();
-		mSurfaceWidth = surfaceFrame.right;
-		mSurfaceCenterX = surfaceFrame.exactCenterX();
-		mSurfaceHeight = surfaceFrame.bottom;// - ACTION_BAR_HEIGHT *
-												// mScreenDensity;
-		mSurfaceCenterY = surfaceFrame.exactCenterY();
+		surfaceWidth = surfaceFrame.right;
+		surfaceCenterX = surfaceFrame.exactCenterX();
+		surfaceHeight = surfaceFrame.bottom; // - ACTION_BAR_HEIGHT * screenDensity;
+		surfaceCenterY = surfaceFrame.exactCenterY();
 		resetScaleAndTranslation();
 	}
 
 	public synchronized void resetScaleAndTranslation() {
 
-		float actionbarHeight = ACTION_BAR_HEIGHT * mScreenDensity;
-		mBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
-		mBitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
-		mSurfaceScale = 1f;
+		float actionbarHeight = ACTION_BAR_HEIGHT * screenDensity;
+		bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
+		surfaceScale = 1f;
 
-		if (mSurfaceWidth == 0 || mSurfaceHeight == 0) {
-			mSurfaceTranslationX = 0f;
-			mSurfaceTranslationY = -actionbarHeight;
-		}
-
-		else {
-			mSurfaceTranslationX = mSurfaceWidth / 2 - mBitmapWidth / 2;
-			mInitialTranslationX = mSurfaceTranslationX;
-
-			mSurfaceTranslationY = (mSurfaceHeight / 2 - mBitmapHeight / 2);
-			mInitialTranslationY = mSurfaceTranslationY;
-		}
-
-		float zoomFactor = (mIsFullscreen) ? 1.0f : BORDER_ZOOM_FACTOR;
-		mSurfaceScale = getScaleForCenterBitmap() * zoomFactor;
-
-	}
-
-	public synchronized void setScale(float scale) {
-		if (scale >= MIN_SCALE) {
-			mSurfaceScale = scale;
+		if (surfaceWidth == 0 || surfaceHeight == 0) {
+			surfaceTranslationX = 0f;
+			surfaceTranslationY = -actionbarHeight;
 		} else {
-			mSurfaceScale = MIN_SCALE;
+			surfaceTranslationX = surfaceWidth / 2 - bitmapWidth / 2;
+			initialTranslationX = surfaceTranslationX;
+
+			surfaceTranslationY = (surfaceHeight / 2 - bitmapHeight / 2);
+			initialTranslationY = surfaceTranslationY;
 		}
+
+		float zoomFactor = (isFullscreen) ? 1.0f : BORDER_ZOOM_FACTOR;
+		surfaceScale = getScaleForCenterBitmap() * zoomFactor;
 	}
 
 	public synchronized void multiplyScale(float factor) {
-		mSurfaceScale *= factor;
-		if (mSurfaceScale < MIN_SCALE) {
-			mSurfaceScale = MIN_SCALE;
-		} else if (mSurfaceScale > MAX_SCALE) {
-			mSurfaceScale = MAX_SCALE;
-		}
+		setScale(surfaceScale * factor);
 	}
 
 	public synchronized void translate(float dx, float dy) {
-		mSurfaceTranslationX += dx / mSurfaceScale;
-		mSurfaceTranslationY += dy / mSurfaceScale;
+		surfaceTranslationX += dx / surfaceScale;
+		surfaceTranslationY += dy / surfaceScale;
 
-		float xmax = (mBitmapWidth / 2)
-				+ (((mSurfaceWidth / 2) - SCROLL_BORDER) / mSurfaceScale);
-		if (mSurfaceTranslationX > (xmax + mInitialTranslationX)) {
-			mSurfaceTranslationX = xmax + mInitialTranslationX;
-		} else if (mSurfaceTranslationX < (-xmax + mInitialTranslationX)) {
-			mSurfaceTranslationX = -xmax + mInitialTranslationX;
+		float xmax = (bitmapWidth / 2)
+				+ (((surfaceWidth / 2) - SCROLL_BORDER) / surfaceScale);
+		if (surfaceTranslationX > (xmax + initialTranslationX)) {
+			surfaceTranslationX = xmax + initialTranslationX;
+		} else if (surfaceTranslationX < (-xmax + initialTranslationX)) {
+			surfaceTranslationX = -xmax + initialTranslationX;
 		}
 
-		float ymax = (mBitmapHeight / 2)
-				+ (((mSurfaceHeight / 2) - SCROLL_BORDER) / mSurfaceScale);
-		if (mSurfaceTranslationY > (ymax + mInitialTranslationY)) {
-			mSurfaceTranslationY = (ymax + mInitialTranslationY);
-		} else if (mSurfaceTranslationY < (-ymax + mInitialTranslationY)) {
-			mSurfaceTranslationY = -ymax + mInitialTranslationY;
+		float ymax = (bitmapHeight / 2)
+				+ (((surfaceHeight / 2) - SCROLL_BORDER) / surfaceScale);
+		if (surfaceTranslationY > (ymax + initialTranslationY)) {
+			surfaceTranslationY = (ymax + initialTranslationY);
+		} else if (surfaceTranslationY < (-ymax + initialTranslationY)) {
+			surfaceTranslationY = -ymax + initialTranslationY;
 		}
-	}
-
-	@Deprecated
-	public synchronized void convertFromScreenToCanvas(PointF p) {
-		p.x = (p.x - mSurfaceCenterX) / mSurfaceScale + mSurfaceCenterX
-				- mSurfaceTranslationX;
-		p.y = (p.y - mSurfaceCenterY) / mSurfaceScale + mSurfaceCenterY
-				- mSurfaceTranslationY;
 	}
 
 	public synchronized PointF getCanvasPointFromSurfacePoint(
 			PointF surfacePoint) {
 
-		float canvasX = (surfacePoint.x - mSurfaceCenterX) / mSurfaceScale
-				+ mSurfaceCenterX - mSurfaceTranslationX;
-		float canvasY = (surfacePoint.y - mSurfaceCenterY) / mSurfaceScale
-				+ mSurfaceCenterY - mSurfaceTranslationY;
+		float canvasX = (surfacePoint.x - surfaceCenterX) / surfaceScale
+				+ surfaceCenterX - surfaceTranslationX;
+		float canvasY = (surfacePoint.y - surfaceCenterY) / surfaceScale
+				+ surfaceCenterY - surfaceTranslationY;
 
 		return new PointF(canvasX, canvasY);
 	}
 
+	public synchronized void convertToCanvasFromSurface(PointF surfacePoint) {
+		float canvasX = (surfacePoint.x - surfaceCenterX) / surfaceScale
+				+ surfaceCenterX - surfaceTranslationX;
+		float canvasY = (surfacePoint.y - surfaceCenterY) / surfaceScale
+				+ surfaceCenterY - surfaceTranslationY;
+		surfacePoint.set(canvasX, canvasY);
+	}
+
+	/**
+	 * @deprecated use {@link #getSurfacePointFromCanvasPoint} instead
+	 */
 	@Deprecated
 	public synchronized void convertFromCanvasToScreen(PointF p) {
-		p.x = ((p.x + mSurfaceTranslationX - mSurfaceCenterX) * mSurfaceScale + mSurfaceCenterX);
-		p.y = ((p.y + mSurfaceTranslationY - mSurfaceCenterY) * mSurfaceScale + mSurfaceCenterY);
-
+		p.x = ((p.x + surfaceTranslationX - surfaceCenterX) * surfaceScale + surfaceCenterX);
+		p.y = ((p.y + surfaceTranslationY - surfaceCenterY) * surfaceScale + surfaceCenterY);
 	}
 
 	public synchronized PointF getSurfacePointFromCanvasPoint(PointF canvasPoint) {
 
-		float surfaceX = (canvasPoint.x + mSurfaceTranslationX - mSurfaceCenterX)
-				* mSurfaceScale + mSurfaceCenterX;
-		float surfaceY = (canvasPoint.y + mSurfaceTranslationY - mSurfaceCenterY)
-				* mSurfaceScale + mSurfaceCenterY;
+		float surfaceX = (canvasPoint.x + surfaceTranslationX - surfaceCenterX)
+				* surfaceScale + surfaceCenterX;
+		float surfaceY = (canvasPoint.y + surfaceTranslationY - surfaceCenterY)
+				* surfaceScale + surfaceCenterY;
 
 		return new PointF(surfaceX, surfaceY);
 	}
 
+	public synchronized void convertToSurfaceFromCanvas(PointF canvasPoint) {
+		float surfaceX = (canvasPoint.x + surfaceTranslationX - surfaceCenterX)
+				* surfaceScale + surfaceCenterX;
+		float surfaceY = (canvasPoint.y + surfaceTranslationY - surfaceCenterY)
+				* surfaceScale + surfaceCenterY;
+		canvasPoint.set(surfaceX, surfaceY);
+	}
+
 	public synchronized void applyToCanvas(Canvas canvas) {
-		canvas.scale(mSurfaceScale, mSurfaceScale, mSurfaceCenterX,
-				mSurfaceCenterY);
-		canvas.translate(mSurfaceTranslationX, mSurfaceTranslationY);
+		canvas.scale(surfaceScale, surfaceScale, surfaceCenterX,
+				surfaceCenterY);
+		canvas.translate(surfaceTranslationX, surfaceTranslationY);
 	}
 
 	public float getScale() {
-		return mSurfaceScale;
+		return surfaceScale;
+	}
+
+	public synchronized void setScale(float scale) {
+		surfaceScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
 	}
 
 	public float getScaleForCenterBitmap() {
 
 		float ratioDependentScale;
-		float screenSizeRatio = mSurfaceWidth / mSurfaceHeight;
-		float bitmapSizeRatio = mBitmapWidth / mBitmapHeight;
+		float screenSizeRatio = surfaceWidth / surfaceHeight;
+		float bitmapSizeRatio = bitmapWidth / bitmapHeight;
 
 		if (screenSizeRatio > bitmapSizeRatio) {
-			ratioDependentScale = mSurfaceHeight / mBitmapHeight;
+			ratioDependentScale = surfaceHeight / bitmapHeight;
 		} else {
-			ratioDependentScale = mSurfaceWidth / mBitmapWidth;
+			ratioDependentScale = surfaceWidth / bitmapWidth;
 		}
 
 		if (ratioDependentScale > 1f) {
@@ -214,27 +205,28 @@ public class Perspective implements Serializable {
 		return ratioDependentScale;
 	}
 
+	public boolean getFullscreen() {
+		return isFullscreen;
+	}
+
 	public void setFullscreen(boolean isFullscreen) {
-		mIsFullscreen = isFullscreen;
+		this.isFullscreen = isFullscreen;
 		resetScaleAndTranslation();
 	}
 
-	public boolean getFullscreen(){ return mIsFullscreen; }
-
 	public float getSurfaceTranslationX() {
-		return mSurfaceTranslationX;
-	}
-
-	public float getSurfaceTranslationY() {
-		return mSurfaceTranslationY;
+		return surfaceTranslationX;
 	}
 
 	public void setSurfaceTranslationX(float translationX) {
-		mSurfaceTranslationX = translationX;
+		surfaceTranslationX = translationX;
+	}
+
+	public float getSurfaceTranslationY() {
+		return surfaceTranslationY;
 	}
 
 	public void setSurfaceTranslationY(float translationY) {
-		mSurfaceTranslationY = translationY;
+		surfaceTranslationY = translationY;
 	}
-
 }

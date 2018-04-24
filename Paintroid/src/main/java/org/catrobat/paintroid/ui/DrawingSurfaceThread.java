@@ -19,22 +19,15 @@
 
 package org.catrobat.paintroid.ui;
 
-import org.catrobat.paintroid.PaintroidApplication;
-
 import android.util.Log;
 
+import org.catrobat.paintroid.PaintroidApplication;
+
 class DrawingSurfaceThread {
+	private static final String TAG = DrawingSurfaceThread.class.getSimpleName();
 	private Thread internalThread;
 	private Runnable threadRunnable;
 	private boolean running;
-
-	private class InternalRunnable implements Runnable {
-		@Override
-		public void run() {
-			Thread.yield();
-			internalRun();
-		}
-	}
 
 	DrawingSurfaceThread(Runnable runnable) {
 		threadRunnable = runnable;
@@ -55,43 +48,43 @@ class DrawingSurfaceThread {
 	 * alive.
 	 */
 	synchronized void start() {
-		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start");
+		Log.d(TAG, "DrawingSurfaceThread.start");
 		if (running || threadRunnable == null || internalThread == null
 				|| internalThread.getState().equals(Thread.State.TERMINATED)) {
-			Log.d(PaintroidApplication.TAG,
-					"DrawingSurfaceThread.start returning");
+			Log.d(TAG, "DrawingSurfaceThread.start returning");
 			return;
 		}
-		// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.start up");
 		if (!internalThread.isAlive()) {
 			running = true;
 			internalThread.start();
-			// Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.started");
 		}
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
 	synchronized void stop() {
-		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.stop");
+		Log.d(TAG, "DrawingSurfaceThread.stop");
 		running = false;
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 		if (internalThread != null && internalThread.isAlive()) {
-			Log.w(PaintroidApplication.TAG, "DrawingSurfaceThread.join");
+			Log.w(TAG, "DrawingSurfaceThread.join");
 			boolean retry = true;
 			while (retry) {
 				try {
 					internalThread.join();
 					retry = false;
-					Log.d(PaintroidApplication.TAG,
-							"DrawingSurfaceThread.stopped");
+					Log.d(TAG, "DrawingSurfaceThread.stopped");
 				} catch (InterruptedException e) {
-					Log.e(PaintroidApplication.TAG,
-							"Interrupt while joining DrawingSurfaceThread\n", e);
+					Log.e(TAG, "Interrupt while joining DrawingSurfaceThread\n", e);
 				}
 			}
 		}
 	}
 
-	synchronized void setRunnable(Runnable runnable) {
-		Log.d(PaintroidApplication.TAG, "DrawingSurfaceThread.setRunnable");
-		threadRunnable = runnable;
+	private class InternalRunnable implements Runnable {
+		@Override
+		public void run() {
+			Thread.yield();
+			internalRun();
+		}
 	}
 }

@@ -28,8 +28,8 @@ import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import org.catrobat.paintroid.listener.LayerListener;
 
+import org.catrobat.paintroid.listener.LayerListener;
 
 public class MyDragShadowBuilder extends View.DragShadowBuilder {
 
@@ -51,14 +51,13 @@ public class MyDragShadowBuilder extends View.DragShadowBuilder {
 	}
 
 	@Override
-	public void onProvideShadowMetrics (Point size, Point touch) {
+	public void onProvideShadowMetrics(Point size, Point touch) {
 		shadowBitmap = mergeBitmaps(greyBitmap, LayerListener.getInstance().getAdapter().getLayer(dragPosition).getImage());
-		shadow = new BitmapDrawable(shadowBitmap);
+		shadow = new BitmapDrawable(getView().getResources(), shadowBitmap);
 
-		int width, height;
-
-		width = getView().getWidth();
-		height = getView().getHeight();
+		final View view = getView();
+		final int width = view.getWidth();
+		final int height = view.getHeight();
 
 		shadow.setBounds(0, 0, width, height);
 
@@ -82,5 +81,4 @@ public class MyDragShadowBuilder extends View.DragShadowBuilder {
 
 		return bmpOverlay;
 	}
-
 }

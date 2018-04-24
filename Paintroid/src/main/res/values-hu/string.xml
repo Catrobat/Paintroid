@@ -19,42 +19,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">Pocket Paint</string>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name" tools:ignore="UnusedResources">Pocket Paint</string>
   <string name="button_brush">Ecset</string>
   <string name="button_cursor">Kurzor</string>
-  <string name="button_ellipse">Kör/ellipszis</string>
-  <string name="button_zoom">Nagyítás</string>
   <string name="button_pipette">Pipetta</string>
   <string name="button_undo">Visszavonás</string>
   <string name="button_redo">Ismétlés</string>
   <string name="button_stamp">Bélyegző</string>
-  <string name="button_rectangle">Négyzet/téglalap</string>
   <string name="button_import_image">Kép importálása</string>
   <string name="button_eraser">Radír</string>
-  <string name="button_resize">Kép átméretezése</string>
   <string name="button_transform">Transform</string>
-  <string name="button_flip">Tükrözés</string>
   <string name="button_fill">Kitöltés</string>
-  <string name="button_move">Mozgatás</string>
-  <string name="button_rotate">Forgatás</string>
   <string name="button_line">Vonal</string>
   <string name="button_text">Szöveg</string>
   <string name="button_shape">Shapes</string>
-  <string name="cancel">Mégse</string>
-  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
-  <string name="yes">Igen</string>
-  <string name="no">Nem</string>
   <string name="done">Kész</string>
   <string name="terms_of_use_and_service_title">Felhasználási feltételek</string>
   <string name="terms_of_use_and_service_content">A Pocket Code és a Catrobat projekt más projekteinek használatához el kell fogadnia a felhasználási feltételeket, és be kell tartania a benne foglaltakat a Pocket Code és egyéb programjaink használata során. Lásd az alábbi hivatkozást a teljes szöveg megtekintéséhez.\n\n</string>
   <string name="terms_of_use_and_service_url_text">Felhasználási feltételek</string>
-  <string name="about_title">A Pocket Paintről&#8230;</string>
-  <string name="about_content">A Pocket Paint egy képszerkesztő, amely része a Catrobat projektnek.\n\nA Catrobat egy vizuális programozási nyelv, és kreatív eszközök halmaza okostelefonokra, tabletekre és mobil böngészőkre.\n\nA Pocket Paint forráskódja javarészt a következő licenc alatt van: %s.\nPontos licencrészletekért lásd az alábbi hivatkozást.\n\n</string>
+  <string name="about_title">A Pocket Paintről…</string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">A Pocket Paint forráskódjának licence</string>
   <string name="about_catroid_url_text">A Catrobatról</string>
   <string name="about_version">Verzió:</string>
-  <string name="stroke_title">"Eszközbeállítások"</string>
   <string name="color_chooser_title">Színválasztó</string>
   <string name="color_rgb">Vörös Zöld Kék (RGB)</string>
   <string name="color_red">Vörös</string>
@@ -64,17 +52,12 @@
   <string name="color_pre">előre kijelölt</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Eszközők</string>
-  <string name="dialog_save_title">Kép mentése</string>
-  <string name="dialog_save_text">Bemeneti fájlnév</string>
-  <string name="dialog_load">Betöltés&#8230;</string>
-  <string name="dialog_overwrite_text">Felülírja a meglévő fájlt?</string>
+  <string name="dialog_load">Betöltés…</string>
   <string name="dialog_error_save_title">Hiba a fájl betöltése/mentése során</string>
   <string name="dialog_error_sdcard_text">Ellenőrizze a képet vagy az SD-kártyát!</string>
   <string name="dialog_brush_width_text">Tollvastagság</string>
   <string name="dialog_warning_new_image">Változtatások mentése?</string>
   <string name="help_title">Súgó</string>
-  <string name="help_content_ellipse">Mozgasd vagy méretezd át a kört, vagy alakítsd át ellipszissé. Koppints a forma képre festéséhez</string>
-  <string name="help_content_flip">Érintsd meg az alsó eszköztár szimbólumait a kép tükrözéséhez.</string>
   <string name="help_content_eraser">Töröld a kép részeit pont úgy, mint egy radírral.</string>
   <string name="help_content_brush">Érintsd meg az alsó eszköztár szimbólumait az ecset színének módosításához.</string>
   <string name="help_content_eyedropper">Érintsd meg a képet egy szín kiválasztásához.</string>
@@ -82,15 +65,14 @@
   <string name="help_content_redo">Érintsd meg egy visszavont művelet újra elvégzéshez.</string>
   <string name="help_content_fill">Koppints a képre a kiválasztott színnel történő kitöltéshez.</string>
   <string name="help_content_cursor">Helyezd a kurzort oda, ahol rajzolni szeretnél. Koppints a kurzor aktiválásához. Mozgasd az ujjad a rajzoláshoz. Koppints újból a deaktiváláshoz.</string>
-  <string name="help_content_resize">Használd a kép levágására.</string>
   <string name="help_content_transform">Use to transform the image.</string>
   <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and Tap again to stamp.</string>
-  <string name="help_content_rectangle">Mozgasd vagy méretezd át a kört, vagy alakítsd át ellipszissé. Koppints a forma képre festéséhez.</string>
   <string name="help_content_import_png">Importálj egy képet a galériából a bélyegző eszközbe.</string>
-  <string name="help_content_rotate">Koppints a gombokra a kép balra vagy jobbra forgatásához.</string>
   <string name="help_content_line">Húzz egy egyenes vonalat.</string>
   <string name="help_content_text">Írj egy szöveget, majd formázd meg. Ezután átméretezheted a szövegdobozt. Koppints a szöveg képre illesztéséhez.</string>
   <string name="help_content_shape">Choose a shape and tap it to insert the selected shape</string>
+  <string name="help_content_layer">Create new layers or modify existing ones</string>
+  <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Kilépés</string>
   <string name="closing_security_question">Változtatások mentése?</string>
   <string name="closing_catroid_security_question_title">Vissza a Pocket Code-ba</string>
@@ -99,12 +81,10 @@
   <string name="menu_save_image">Kép mentése</string>
   <string name="menu_save_copy">Másolat mentése</string>
   <string name="menu_new_image_empty_image">Üres kép</string>
-  <string name="menu_item_tools">Eszközök menü</string>
   <string name="menu_hide_menu">Teljes képernyő</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">Új kép a kamerával</string>
   <string name="menu_terms_of_use_and_service">Felhasználási feltételek</string>
-  <string name="more">Bővebben</string>
   <string name="menu_about">A programról</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exportálás</string>
@@ -113,63 +93,33 @@
   <string name="menu_quit">Kilépés</string>
   <string name="save_button_text">Mentés</string>
   <string name="discard_button_text">Elvetés</string>
-  <string name="resize_to_resize_tap_text">átméretezéshez koppints</string>
   <string name="resize_nothing_to_resize">nincs átméretezendő elem</string>
   <string name="resize_max_image_resolution_reached">elérte a maximális képfelbontást</string>
-  <string name="text_tool_dialog_title">Szöveg eszköz beállításai</string>
   <string name="text_tool_dialog_input_title">A szöveged:</string>
   <string name="text_tool_dialog_format_options">Formázási lehetőségek:</string>
-  <string name="text_tool_dialog_underline_shortcut">U</string>
-  <string name="text_tool_dialog_italic_shortcut">I</string>
-  <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">Koppintsd ide az íráshoz</string>
-  <string name="text_tool_dialog_font_monospace">Monospace</string>
-  <string name="text_tool_dialog_font_serif">Serif</string>
-  <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
   <string name="shape_tool_dialog_rect_title">Rectangle</string>
   <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
   <string name="shape_tool_dialog_star_title">Star</string>
   <string name="shape_tool_dialog_heart_title">Heart</string>
-  <string name="fill_tool_dialog_title">Fill Tool settings</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
-  <string name="fill_tool_dialog_input_hint_toast">Enter a number between 0 to 100</string>
-  <string name="transform_tool_header_text">Transform</string>
-  <string name="transform_tool_size_text">Méret</string>
+  <string name="transform_tool_auto_crop_text">Auto adjust</string>
   <string name="transform_tool_roate_text">Forgatás</string>
   <string name="transform_tool_mirror_text">Mirror</string>
-  <string name="transform_tool_angle_text">Szög</string>
   <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Layers</string>
-  <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">New Layer</string>
   <string name="layer_delete">Delete Layer</string>
-  <string name="layer_opacity">Opacity:</string>
-  <string name="layer_merge">Merge</string>
-  <string name="layer_visible">Visible</string>
-  <string name="layer_lock">Lock</string>
-  <string name="layer_rename">Átnevezés</string>
-  <string name="layer_copy">Másolás</string>
-  <string name="layer_ok">OK</string>
-  <string name="layer_cancel">Mégse</string>
-  <string name="layer_rename_title">Enter new layer name</string>
-  <string name="layer_move_up">Mozgás felfelé</string>
-  <string name="layer_move_down">Mozgás lefelé</string>
-  <string name="layer_move_to_top">Move to top</string>
-  <string name="layer_move_to_bottom">Move to bottom</string>
-  <string name="layer_merge_info">Tap the layer to merge with</string>
   <string name="layer_too_many_layers">Too many layers</string>
   <string name="layer_invisible">All layers invisible</string>
-  <string name="layer_save_info">Saving: layers will be merged</string>
-  <string name="layer_prefix">Layer </string>
+  <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
-  <string name="dialog_unallowed_chars_title">Nem engedélyezett karakter(ek)</string>
-  <string name="dialog_unallowed_chars_text">Csak betűk, számok és \"_\"  engedélyezett.</string>
   <string name="dialog_shape_text">Alakzat</string>
   <string name="dialog_loading_image_failed_title">Hiba a kép betöltése során</string>
   <string name="dialog_loading_image_failed_text">Nem érvényes képfájl</string>
-  <string name="drawer_open">Open navigation drawer</string>
-  <string name="drawer_close">Close navigation drawer</string>
+  <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
+  <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
   <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
   <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
@@ -177,12 +127,14 @@
   <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new start the intro or just skip it if you are already familiar with Pocket Paint.</string>
   <string name="intro_tool_more_information">Click on a Tool to get more information</string>
   <string name="more_possibilities">More possibilities</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use to top bar.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Landscape</string>
   <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
-  <string name="enjoy_pocket_code">You are all set. Enjoy Pocket Code.</string>
+  <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">Get started and create a new masterpiece.</string>
-  <string name="got_it">Got It</string>
+  <string name="lets_go">Let\'s Go</string>
   <string name="next">Next</string>
   <string name="skip">Átugrás</string>
+  <string name="menu_language">Language</string>
+  <string name="device_language">Device Language</string>
 </resources>

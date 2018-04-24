@@ -19,46 +19,44 @@
 
 package org.catrobat.paintroid.command.implementation;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Cap;
+import android.support.annotation.VisibleForTesting;
+import android.util.Log;
+
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.tools.Layer;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Random;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.tools.Layer;
-
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Paint.Cap;
-import android.util.Log;
-
 public abstract class BaseCommand extends Observable implements Command {
-	protected Paint mPaint;
-	protected Bitmap mBitmap;
-	protected File mFileToStoredBitmap;
-
-	public static enum NOTIFY_STATES {
-		COMMAND_STARTED, COMMAND_DONE, COMMAND_FAILED
-	};
+	private static final String TAG = BaseCommand.class.getSimpleName();
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public Paint paint;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public Bitmap bitmap;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public File fileToStoredBitmap;
 
 	public BaseCommand() {
 	}
 
 	public BaseCommand(Paint paint) {
 		if (paint != null) {
-			mPaint = new Paint(paint);
+			this.paint = new Paint(paint);
 		} else {
-			Log.w(PaintroidApplication.TAG,
-					"Object is null falling back to default object in "
-							+ this.toString());
-			mPaint = new Paint();
-			mPaint.setColor(Color.BLACK);
-			mPaint.setStrokeWidth(1);
-			mPaint.setStrokeCap(Cap.SQUARE);
+			Log.w(TAG, "Object is null falling back to default object in " + this.toString());
+			this.paint = new Paint();
+			this.paint.setColor(Color.BLACK);
+			this.paint.setStrokeWidth(1);
+			this.paint.setStrokeCap(Cap.SQUARE);
 		}
 	}
 
@@ -67,35 +65,38 @@ public abstract class BaseCommand extends Observable implements Command {
 
 	@Override
 	public void freeResources() {
-		if (mBitmap != null && !mBitmap.isRecycled()) {
-			mBitmap.recycle();
-			mBitmap = null;
+		if (bitmap != null && !bitmap.isRecycled()) {
+			bitmap.recycle();
+			bitmap = null;
 		}
-		if (mFileToStoredBitmap != null && mFileToStoredBitmap.exists()) {
-			mFileToStoredBitmap.delete();
+		if (fileToStoredBitmap != null && fileToStoredBitmap.exists()) {
+			fileToStoredBitmap.delete();
 		}
 	}
 
-	public final void storeBitmap() {
-		File cacheDir = PaintroidApplication.applicationContext.getCacheDir();
+	protected final void storeBitmap(File cacheDir) {
 		Random random = new Random();
 		random.setSeed(System.currentTimeMillis());
-		mFileToStoredBitmap = new File(cacheDir.getAbsolutePath(),
+		fileToStoredBitmap = new File(cacheDir.getAbsolutePath(),
 				Long.toString(random.nextLong()));
 		try {
-			FileOutputStream fos = new FileOutputStream(mFileToStoredBitmap);
-			mBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+			FileOutputStream fos = new FileOutputStream(fileToStoredBitmap);
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
 			fos.flush();
 			fos.close();
 		} catch (IOException e) {
-			Log.e(PaintroidApplication.TAG, "Cannot store bitmap. ", e);
+			Log.e(TAG, "Cannot store bitmap. ", e);
 		}
-		mBitmap.recycle();
-		mBitmap = null;
+		bitmap.recycle();
+		bitmap = null;
 	}
 
-	protected void notifyStatus(NOTIFY_STATES state) {
+	protected void notifyStatus(NotifyStates state) {
 		setChanged();
 		notifyObservers(state);
+	}
+
+	public enum NotifyStates {
+		COMMAND_STARTED, COMMAND_DONE, COMMAND_FAILED
 	}
 }

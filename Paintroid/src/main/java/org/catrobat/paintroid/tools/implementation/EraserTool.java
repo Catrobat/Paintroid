@@ -20,64 +20,37 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PointF;
+import android.support.annotation.ColorInt;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.ToolType;
 
 public class EraserTool extends DrawTool {
 
-	protected Paint mPreviousPaint;
+	@ColorInt
+	private int previousColor = Color.BLACK;
 
 	public EraserTool(Context context, ToolType toolType) {
 		super(context, toolType);
-
-		mPreviousPaint = new Paint(
-				PaintroidApplication.currentTool.getDrawPaint());
-
-		changePaintColor(Color.TRANSPARENT);
-
-		mCanvasPaint.setStrokeCap(mPreviousPaint.getStrokeCap());
-		mCanvasPaint.setStrokeWidth(mPreviousPaint.getStrokeWidth());
-
-	}
-
-	@Override
-	public void draw(Canvas canvas) {
-		super.draw(canvas);
-	}
-
-	@Override
-	public boolean handleDown(PointF coordinate) {
-		return (super.handleDown(coordinate));
-	}
-
-	@Override
-	public boolean handleMove(PointF coordinate) {
-		return (super.handleMove(coordinate));
-	}
-
-	@Override
-	public boolean handleUp(PointF coordinate) {
-		return (super.handleUp(coordinate));
-	}
-
-	@Override
-	public void resetInternalState(StateChange stateChange) {
-		super.resetInternalState(stateChange);
 	}
 
 	@Override
 	public Paint getDrawPaint() {
-		return new Paint(this.mPreviousPaint);
+		Paint paint = super.getDrawPaint();
+		paint.setColor(previousColor);
+		return paint;
 	}
 
 	@Override
 	public void setDrawPaint(Paint paint) {
-		changePaintColor(Color.TRANSPARENT);
-		// previous paint object has already been saved in constructor
+		super.setDrawPaint(paint);
+		previousColor = paint.getColor();
+	}
+
+	@Override
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
+		previousColor = color;
 	}
 }

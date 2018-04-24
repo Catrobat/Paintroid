@@ -30,32 +30,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <LinearLayout
-        android:id="@+id/layout_colorbuttons"
+    <Button
+        android:id="@+id/btn_colorchooser_ok"
+        style="?borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="16dp"
-        android:gravity="bottom"
-        android:orientation="vertical">
-
-        <org.catrobat.paintroid.dialog.colorpicker.CheckeredTransparentLinearLayout
-            android:id="@+id/colorchooser_ok_button_base_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:background="@android:color/black">
-
-            <Button
-                android:id="@+id/btn_colorchooser_ok"
-                android:layout_width="fill_parent"
-                android:layout_height="48dp"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:text="@string/done"
-                android:textColor="@color/color_chooser_white"
-                android:textSize="14sp"/>
-        </org.catrobat.paintroid.dialog.colorpicker.CheckeredTransparentLinearLayout>
-    </LinearLayout>
+        android:background="@null"
+        android:text="@string/done"
+        android:textSize="14sp" />
 
 </LinearLayout>
 

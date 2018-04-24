@@ -24,6 +24,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -37,10 +38,13 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -50,74 +54,71 @@ import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
-import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.BrushPickerView.OnBrushChangedListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public abstract class BaseTool extends Observable implements Tool, Observer {
-	public static final Paint CHECKERED_PATTERN = new Paint();
+	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
 	public static final float MOVE_TOLERANCE = 5;
-	public static final int SCROLL_TOLERANCE_PERCENTAGE = 10;
-
-	private static final int BACKGROUND_DEACTIVATED_DRAWING_SURFACE = Color.argb(0x80, 0, 0, 0);
-
-	protected static Paint mBitmapPaint;
-	protected static Paint mCanvasPaint;
-	protected static boolean mToolOptionsShown = false;
-
-	protected static LinearLayout mToolSpecificOptionsLayout;
-	protected static LinearLayout mToolOptionsLayout;
-
-	protected ToolType mToolType;
-	protected Context mContext;
-	protected PointF mMovedDistance;
-	protected PointF mPreviousEventCoordinate;
-	protected static int mScrollTolerance;
-
-	private OnBrushChangedListener mStroke;
-	protected OnColorPickedListener mColor;
-
-	protected static final PorterDuffXfermode eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+	@VisibleForTesting
+	public static final int STROKE_25 = 25;
+	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+	public static final Paint BITMAP_PAINT;
+	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+	public static final Paint CANVAS_PAINT;
+	private static final PorterDuffXfermode ERASE_XFERMODE;
+	private static final int SCROLL_TOLERANCE_PERCENTAGE = 10;
 
 	static {
-		mBitmapPaint = new Paint();
-		mBitmapPaint.setColor(Color.BLACK);
-		mBitmapPaint.setAntiAlias(true);
-		mBitmapPaint.setDither(true);
-		mBitmapPaint.setStyle(Paint.Style.STROKE);
-		mBitmapPaint.setStrokeJoin(Paint.Join.ROUND);
-		mBitmapPaint.setStrokeCap(Paint.Cap.ROUND);
-		mBitmapPaint.setStrokeWidth(Tool.stroke25);
-		mCanvasPaint = new Paint(mBitmapPaint);
-		Bitmap checkerboard = BitmapFactory.decodeResource(
-				PaintroidApplication.applicationContext.getResources(),
-				R.drawable.checkeredbg);
-		BitmapShader shader = new BitmapShader(checkerboard,
-				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-		CHECKERED_PATTERN.setShader(shader);
-		WindowManager windowManager = (WindowManager) PaintroidApplication.applicationContext
-				.getSystemService(Context.WINDOW_SERVICE);
-		mScrollTolerance = windowManager.getDefaultDisplay().getWidth()
-				* SCROLL_TOLERANCE_PERCENTAGE / 100;
+		BITMAP_PAINT = new Paint(Paint.ANTI_ALIAS_FLAG);
+		BITMAP_PAINT.setColor(Color.BLACK);
+		BITMAP_PAINT.setStyle(Paint.Style.STROKE);
+		BITMAP_PAINT.setStrokeJoin(Paint.Join.ROUND);
+		BITMAP_PAINT.setStrokeCap(Paint.Cap.ROUND);
+		BITMAP_PAINT.setStrokeWidth(STROKE_25);
+		CANVAS_PAINT = new Paint(BITMAP_PAINT);
+		ERASE_XFERMODE = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 	}
+
+	final Paint checkeredPattern;
+	final int scrollTolerance;
+	final Context context;
+	final PointF movedDistance;
+	private final ToolType toolType;
+	private final OnColorPickedListener onColorPickedListener;
+	final OnBrushChangedListener onBrushChangedListener;
+	boolean toolOptionsShown = false;
+	LinearLayout toolSpecificOptionsLayout;
+	PointF previousEventCoordinate;
+	private LinearLayout toolOptionsLayout;
 
 	public BaseTool(Context context, ToolType toolType) {
 		super();
-		mToolType = toolType;
-		mContext = context;
+		this.toolType = toolType;
+		this.context = context;
 
-		mColor = new OnColorPickedListener() {
+		Resources resources = context.getResources();
+		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.checkeredbg);
+		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		checkeredPattern = new Paint();
+		checkeredPattern.setShader(shader);
+
+		scrollTolerance = resources.getDisplayMetrics().widthPixels
+				* SCROLL_TOLERANCE_PERCENTAGE / 100;
+
+		onColorPickedListener = new OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
 				changePaintColor(color);
 			}
 		};
 
-		mStroke = new OnBrushChangedListener() {
+		onBrushChangedListener = new OnBrushChangedListener() {
 			@Override
 			public void setCap(Cap cap) {
 				changePaintStrokeCap(cap);
@@ -129,47 +130,57 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			}
 		};
 
-		BrushPickerView.getInstance().addBrushChangedListener(mStroke);
-		BrushPickerView.getInstance().setCurrentPaint(mBitmapPaint);
-		ColorPickerDialog.getInstance().addOnColorPickedListener(mColor);
+		ColorPickerDialog.getInstance().addOnColorPickedListener(onColorPickedListener);
 
-		mMovedDistance = new PointF(0f, 0f);
-		mPreviousEventCoordinate = new PointF(0f, 0f);
+		movedDistance = new PointF(0f, 0f);
+		previousEventCoordinate = new PointF(0f, 0f);
 
-		mToolOptionsLayout = (LinearLayout) ((Activity) context).findViewById(R.id.layout_tool_options);
-		mToolSpecificOptionsLayout = (LinearLayout) ((Activity) context).findViewById(R.id.layout_tool_specific_options);
+		toolOptionsLayout = (LinearLayout) ((Activity) context).findViewById(R.id.layout_tool_options);
+		toolSpecificOptionsLayout = (LinearLayout) ((Activity) context).findViewById(R.id.layout_tool_specific_options);
 		resetAndInitializeToolOptions();
 	}
 
 	@Override
-	public void changePaintColor(int color) {
-		mBitmapPaint.setColor(color);
-		if (Color.alpha(color) == 0x00) {
-			mBitmapPaint.setXfermode(eraseXfermode);
-			mCanvasPaint.reset();
-			mCanvasPaint.setStyle(mBitmapPaint.getStyle());
-			mCanvasPaint.setStrokeJoin(mBitmapPaint.getStrokeJoin());
-			mCanvasPaint.setStrokeCap(mBitmapPaint.getStrokeCap());
-			mCanvasPaint.setStrokeWidth(mBitmapPaint.getStrokeWidth());
-			mCanvasPaint.setShader(CHECKERED_PATTERN.getShader());
-			mCanvasPaint.setColor(Color.BLACK);
-			mBitmapPaint.setAlpha(0x00);
-			mCanvasPaint.setAlpha(0x00);
-		} else {
-			mBitmapPaint.setXfermode(null);
-			mCanvasPaint.set(mBitmapPaint);
-		}
+	public void onSaveInstanceState(Bundle bundle) {
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
+	}
+
+	@Override
+	public void changePaintColor(@ColorInt int color) {
+		setPaintColor(color);
 		super.setChanged();
 		super.notifyObservers();
 	}
 
+	void setPaintColor(@ColorInt int color) {
+		BITMAP_PAINT.setColor(color);
+		if (Color.alpha(color) == 0x00) {
+			BITMAP_PAINT.setXfermode(ERASE_XFERMODE);
+			CANVAS_PAINT.reset();
+			CANVAS_PAINT.setStyle(BITMAP_PAINT.getStyle());
+			CANVAS_PAINT.setStrokeJoin(BITMAP_PAINT.getStrokeJoin());
+			CANVAS_PAINT.setStrokeCap(BITMAP_PAINT.getStrokeCap());
+			CANVAS_PAINT.setStrokeWidth(BITMAP_PAINT.getStrokeWidth());
+			CANVAS_PAINT.setShader(checkeredPattern.getShader());
+			CANVAS_PAINT.setColor(Color.BLACK);
+			BITMAP_PAINT.setAlpha(0x00);
+			CANVAS_PAINT.setAlpha(0x00);
+		} else {
+			BITMAP_PAINT.setXfermode(null);
+			CANVAS_PAINT.set(BITMAP_PAINT);
+		}
+	}
+
 	@Override
 	public void changePaintStrokeWidth(int strokeWidth) {
-		mBitmapPaint.setStrokeWidth(strokeWidth);
-		mCanvasPaint.setStrokeWidth(strokeWidth);
+		BITMAP_PAINT.setStrokeWidth(strokeWidth);
+		CANVAS_PAINT.setStrokeWidth(strokeWidth);
 		boolean antiAliasing = (strokeWidth > 1);
-		mBitmapPaint.setAntiAlias(antiAliasing);
-		mCanvasPaint.setAntiAlias(antiAliasing);
+		BITMAP_PAINT.setAntiAlias(antiAliasing);
+		CANVAS_PAINT.setAntiAlias(antiAliasing);
 
 		super.setChanged();
 		super.notifyObservers();
@@ -177,23 +188,23 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void changePaintStrokeCap(Cap cap) {
-		mBitmapPaint.setStrokeCap(cap);
-		mCanvasPaint.setStrokeCap(cap);
-		super.setChanged();
-		super.notifyObservers();
-	}
-
-	@Override
-	public void setDrawPaint(Paint paint) {
-		mBitmapPaint.set(paint);
-		mCanvasPaint.set(paint);
+		BITMAP_PAINT.setStrokeCap(cap);
+		CANVAS_PAINT.setStrokeCap(cap);
 		super.setChanged();
 		super.notifyObservers();
 	}
 
 	@Override
 	public Paint getDrawPaint() {
-		return new Paint(mBitmapPaint);
+		return new Paint(BITMAP_PAINT);
+	}
+
+	@Override
+	public void setDrawPaint(Paint paint) {
+		BITMAP_PAINT.set(paint);
+		CANVAS_PAINT.set(paint);
+		super.setChanged();
+		super.notifyObservers();
 	}
 
 	@Override
@@ -201,17 +212,16 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public ToolType getToolType() {
-		return this.mToolType;
+		return this.toolType;
 	}
 
 	@Override
 	public void update(Observable observable, Object data) {
-		if (data instanceof BaseCommand.NOTIFY_STATES) {
-			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
-					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				IndeterminateProgressDialog.getInstance().dismiss();
-				observable.deleteObserver(this);
-			}
+		if (data instanceof BaseCommand.NotifyStates
+				&& (BaseCommand.NotifyStates.COMMAND_DONE == data || BaseCommand.NotifyStates.COMMAND_FAILED == data)) {
+
+			IndeterminateProgressDialog.getInstance().dismiss();
+			observable.deleteObserver(this);
 		}
 	}
 
@@ -229,51 +239,44 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		int deltaX = 0;
 		int deltaY = 0;
 
-		if (pointX < mScrollTolerance) {
+		if (pointX < scrollTolerance) {
 			deltaX = 1;
 		}
-		if (pointX > viewWidth - mScrollTolerance) {
+		if (pointX > viewWidth - scrollTolerance) {
 			deltaX = -1;
 		}
 
-		if (pointY < mScrollTolerance) {
+		if (pointY < scrollTolerance) {
 			deltaY = 1;
 		}
 
-		if (pointY > viewHeight - mScrollTolerance) {
+		if (pointY > viewHeight - scrollTolerance) {
 			deltaY = -1;
 		}
 
 		return new Point(deltaX, deltaY);
 	}
 
-	protected boolean checkPathInsideBitmap(PointF coordinate) {
-		if ((coordinate.x < PaintroidApplication.drawingSurface.getBitmapWidth()) &&
-				(coordinate.y < PaintroidApplication.drawingSurface.getBitmapHeight()) &&
-				(coordinate.x > 0) && (coordinate.y > 0)) {
-			return true;
-		}
-		return false;
+	boolean checkPathInsideBitmap(PointF coordinate) {
+		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
+		return (coordinate.x < drawingSurface.getBitmapWidth())
+				&& (coordinate.y < drawingSurface.getBitmapHeight())
+				&& (coordinate.x > 0) && (coordinate.y > 0);
 	}
 
 	private void resetAndInitializeToolOptions() {
-		mToolOptionsShown = false;
-		((Activity)(mContext)).findViewById(R.id.main_tool_options).setVisibility(View.INVISIBLE);
+		toolOptionsShown = false;
+		((Activity) (context)).findViewById(R.id.main_tool_options).setVisibility(View.INVISIBLE);
 		dimBackground(false);
 
-		((Activity)(mContext)).runOnUiThread(new Runnable() {
+		((Activity) (context)).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				mToolSpecificOptionsLayout.removeAllViews();
-				TextView toolOptionsName = (TextView) mToolOptionsLayout.findViewById(R.id.layout_tool_options_name);
-				toolOptionsName.setText(mContext.getResources().getString(mToolType.getNameResource()));
+				toolSpecificOptionsLayout.removeAllViews();
+				TextView toolOptionsName = (TextView) toolOptionsLayout.findViewById(R.id.layout_tool_options_name);
+				toolOptionsName.setText(context.getResources().getString(toolType.getNameResource()));
 			}
 		});
-
-	}
-
-	protected void addBrushPickerToToolOptions() {
-		mToolSpecificOptionsLayout.addView(BrushPickerView.getInstance().getBrushPickerView());
 	}
 
 	@Override
@@ -282,11 +285,11 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			return false;
 		}
 
-		if (mToolOptionsShown) {
+		if (toolOptionsShown) {
 			if (motionEventType == MotionEvent.ACTION_UP) {
 				PointF surfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(coordinate);
-				float toolOptionsOnSurfaceY = ((Activity)mContext).findViewById(R.id.main_tool_options).getY()
-						- ((Activity)mContext).findViewById(R.id.toolbar).getHeight();
+				float toolOptionsOnSurfaceY = ((Activity) context).findViewById(R.id.main_tool_options).getY()
+						- ((Activity) context).findViewById(R.id.toolbar).getHeight();
 				if (surfacePoint.y < toolOptionsOnSurfaceY) {
 					toggleShowToolOptions();
 				}
@@ -309,48 +312,44 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	}
 
 	@Override
-	public void hide(){
-		LinearLayout mainToolOptions = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_tool_options);
+	public void hide() {
+		LinearLayout mainToolOptions = (LinearLayout) ((Activity) (context)).findViewById(R.id.main_tool_options);
 		mainToolOptions.setVisibility(View.GONE);
 		dimBackground(false);
-		mToolOptionsShown = false;
+		toolOptionsShown = false;
 	}
 
 	@Override
 	public void toggleShowToolOptions() {
-		LinearLayout mainToolOptions = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_tool_options);
-		LinearLayout mainBottomBar = (LinearLayout) ((Activity)(mContext)).findViewById(R.id.main_bottom_bar);
-		int orientation = PaintroidApplication.applicationContext.getResources().getConfiguration().orientation;
+		LinearLayout mainToolOptions = (LinearLayout) ((Activity) (context)).findViewById(R.id.main_tool_options);
+		LinearLayout mainBottomBar = (LinearLayout) ((Activity) (context)).findViewById(R.id.main_bottom_bar);
+		int orientation = context.getResources().getConfiguration().orientation;
 
-		if (!mToolOptionsShown) {
+		if (!toolOptionsShown) {
 			mainToolOptions.setY(mainBottomBar.getY() + mainBottomBar.getHeight());
 			mainToolOptions.setVisibility(View.VISIBLE);
 			float yPos = 0;
-			if(orientation == Configuration.ORIENTATION_PORTRAIT)
+			if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 				yPos = mainBottomBar.getY() - mainToolOptions.getHeight();
-			else if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+			} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 				yPos = mainBottomBar.getHeight() - mainToolOptions.getHeight();
+			}
 			mainToolOptions.animate().y(yPos);
 			dimBackground(true);
-			mToolOptionsShown = true;
-
+			toolOptionsShown = true;
 		} else {
 			mainToolOptions.animate().y(mainBottomBar.getY() + mainBottomBar.getHeight());
 			dimBackground(false);
-			mToolOptionsShown = false;
+			toolOptionsShown = false;
 		}
 	}
 
-	void dimBackground(boolean darken) {
-		View drawingSurfaceView = ((Activity)(mContext)).findViewById(R.id.drawingSurfaceView);
+	private void dimBackground(boolean darken) {
+		View drawingSurfaceView = ((Activity) (context)).findViewById(R.id.drawingSurfaceView);
 		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
-		int colorTo;
-
-		if (darken) {
-			colorTo = BACKGROUND_DEACTIVATED_DRAWING_SURFACE;
-		} else {
-			colorTo = mContext.getResources().getColor(R.color.transparent);
-		}
+		int colorTo = ContextCompat.getColor(context, darken
+				? R.color.background_deactivated_drawing_surface
+				: R.color.transparent);
 
 		ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(
 				drawingSurfaceView, "backgroundColor", new ArgbEvaluator(), colorFrom, colorTo);
@@ -360,8 +359,16 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public boolean getToolOptionsAreShown() {
-		return mToolOptionsShown;
+		return toolOptionsShown;
 	}
 
+	@Override
+	public void startTool() {
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+	}
 
+	@Override
+	public void leaveTool() {
+		ColorPickerDialog.getInstance().removeOnColorPickedListener(onColorPickedListener);
+	}
 }

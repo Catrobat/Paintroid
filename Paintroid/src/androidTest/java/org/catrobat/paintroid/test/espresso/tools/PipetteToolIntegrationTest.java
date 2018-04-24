@@ -1,4 +1,4 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -20,34 +20,27 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.TRANSPARENT_COLOR_PICKER_BUTTON_POSITION;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.junit.Assert.assertEquals;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 
 @RunWith(AndroidJUnit4.class)
 public class PipetteToolIntegrationTest {
@@ -58,84 +51,120 @@ public class PipetteToolIntegrationTest {
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
-	private ActivityHelper activityHelper;
-	private PointF screenPoint;
-	private PointF canvasPoint;
-
 	@Before
 	public void setUp() {
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
-
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
-
-		screenPoint = new PointF(activityHelper.getDisplayWidth() / 2, activityHelper.getDisplayHeight() / 2);
-		canvasPoint = getCanvasPointFromScreenPoint(screenPoint);
-
-		selectTool(ToolType.BRUSH);
-		resetColorPicker();
-		resetDrawPaintAndBrushPickerView();
-	}
-
-	@After
-	public void tearDown() {
-		screenPoint = null;
-		canvasPoint = null;
-		activityHelper = null;
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 	}
 
 	@Test
 	public void testEmpty() {
-		int toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Initial Tool color should be black", Color.BLACK, toolColor);
+		onToolProperties()
+				.checkColor(Color.BLACK);
 
-		int colorAtCanvas = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
-		assertEquals("Get transparent background color", Color.TRANSPARENT, colorAtCanvas);
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 
-		selectTool(ToolType.PIPETTE);
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
 
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		toolColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Tool color should be transparent", colorAtCanvas, toolColor);
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
 	}
 
 	@Test
 	public void testPipetteAfterBrushOnSingleLayer() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(isRoot()).perform(touchAt(screenPoint));
-
-		int colorAtCanvas = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
-		assertEquals("After painting black, pixel should be black", Color.BLACK, colorAtCanvas);
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
 		selectColorPickerPresetSelectorColor(TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
-		selectTool(ToolType.PIPETTE);
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
 
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		int pipetteColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Tool color should be black", colorAtCanvas, pipetteColor);
+		onToolProperties()
+				.checkColor(Color.BLACK);
 	}
 
 	@Test
 	public void testPipetteAfterBrushOnMultiLayer() {
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		int colorAtFirstLayer = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
-		assertEquals("After painting black, pixel should be black", Color.BLACK, colorAtFirstLayer);
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
-		onView(withId(R.id.btn_top_layers)).perform(click());
-		onView(withId(R.id.layer_side_nav_button_add)).perform(click());
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performClose();
 
-		int colorAtSecondLayer = PaintroidApplication.drawingSurface.getPixel(canvasPoint);
-		assertEquals("Background color should be transparent on new layer", Color.TRANSPARENT, colorAtSecondLayer);
-
-		onView(isRoot()).perform(click());
 		selectColorPickerPresetSelectorColor(TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
-		selectTool(ToolType.PIPETTE);
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
 
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
 
-		int pipetteColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Tool color should be black", colorAtFirstLayer, pipetteColor);
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolProperties()
+				.checkColor(Color.BLACK);
+	}
+
+	@Test
+	public void testPipetteAfterUndo() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.BLACK);
+
+		onTopBarView()
+				.performUndo();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.TRANSPARENT);
+	}
+
+	@Test
+	public void testPipetteAfterRedo() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.BLACK);
+
+		onTopBarView()
+				.performUndo()
+				.performRedo();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkColor(Color.BLACK);
 	}
 }

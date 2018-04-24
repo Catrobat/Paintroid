@@ -19,17 +19,20 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.PointF;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,34 +42,50 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.addNewLayer;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.closeLayerMenu;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.longClickOnTool;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openLayerMenu;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectLayer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityIntegrationTest {
 
+	public static final int ARRAY_COLOR_RED = -3865074;
+	public static final int ARRAY_POSITION_RED = 12;
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	private PointF pointOnScreenMiddle;
+	private ActivityHelper activityHelper;
 
 	@Before
 	public void setUp() {
+		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
+		int displayWidth = activityHelper.getDisplayWidth();
+		int displayHeight = activityHelper.getDisplayHeight();
+		pointOnScreenMiddle = new PointF(displayWidth / 2, displayHeight / 2);
 		selectTool(ToolType.BRUSH);
 	}
 
 	@After
 	public void tearDown() {
-//		closeNavigationDrawer();
 	}
 
 	@Test
-	public void navigationDrawer_menu_termsOfUseAndServiceTextIsCorrect() {
+	public void navigationDrawerMenuTermsOfUseAndServiceTextIsCorrect() {
 		openNavigationDrawer();
 
 		onView(withText(R.string.menu_terms_of_use_and_service)).perform(click());
@@ -79,9 +98,8 @@ public class MainActivityIntegrationTest {
 		onView(withId(R.id.nav_view)).check(matches(not(isDisplayed())));
 	}
 
-	@SuppressLint("StringFormatInvalid")
 	@Test
-	public void navigationDrawer_menu_menuAboutTextIsCorrect() {
+	public void navigationDrawerMenuMenuAboutTextIsCorrect() {
 
 		openNavigationDrawer();
 
@@ -143,10 +161,84 @@ public class MainActivityIntegrationTest {
 		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
 	}
 
-
 	@Test
 	public void testHelpDialogForText() {
 		toolHelpTest(ToolType.TEXT, R.string.help_content_text);
+	}
+
+	@Test
+	public void testSessionArtefactsHelpTest() {
+		openLayerMenu();
+		addNewLayer();
+		closeLayerMenu();
+		selectTool(ToolType.BRUSH);
+
+		PointF pointOnSurface = getSurfacePointFromScreenPoint(pointOnScreenMiddle);
+		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
+
+		int currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+
+		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, currentColor);
+
+		onView(isRoot()).perform(touchAt(pointOnScreenMiddle));
+
+		currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		assertEquals("Color after drawing point has to be black", Color.BLACK, currentColor);
+
+		selectColorPickerPresetSelectorColor(ARRAY_POSITION_RED);
+	}
+
+	@Test
+	public void testSessionArtefactsReopen() {
+		//testSessionArtefactsHelpTest() should be called first
+
+		int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Color after orientation changed has to be black", Color.BLACK, selectedColor);
+
+		PointF pointOnSurface = getSurfacePointFromScreenPoint(pointOnScreenMiddle);
+		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
+		int currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		assertEquals("Bitmap Point Color after restart has to be transparent", Color.TRANSPARENT, currentColor);
+
+		openLayerMenu();
+		selectLayer(0);
+		closeLayerMenu();
+	}
+
+	@Test
+	public void testSessionArtefactsChangeOrientation() {
+		openLayerMenu();
+		addNewLayer();
+		closeLayerMenu();
+		selectTool(ToolType.BRUSH);
+
+		PointF pointOnSurface = getSurfacePointFromScreenPoint(pointOnScreenMiddle);
+		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
+
+		int currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+
+		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, currentColor);
+
+		onView(isRoot()).perform(touchAt(pointOnScreenMiddle));
+
+		currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		assertEquals("Color after drawing point has to be black", Color.BLACK, currentColor);
+
+		selectColorPickerPresetSelectorColor(ARRAY_POSITION_RED);
+
+		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+		int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		assertEquals("Color after orientation changed has to be red", ARRAY_COLOR_RED, selectedColor);
+
+		currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		assertEquals("Bitmap Point Color after orientation changed has to be black", Color.BLACK, currentColor);
+
+		openLayerMenu();
+		selectLayer(0);
+		selectLayer(1);
+		closeLayerMenu();
 	}
 
 	private void toolHelpTest(ToolType toolToClick, int expectedHelpTextResourceId) {

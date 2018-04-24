@@ -27,7 +27,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.widget.LinearLayout;
+import android.support.annotation.VisibleForTesting;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -36,10 +36,11 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.command.implementation.PointCommand;
-import org.catrobat.paintroid.dialog.LayersDialog;
+import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.ToastFactory;
 
 public class CursorTool extends BaseToolWithShape {
 
@@ -48,21 +49,24 @@ public class CursorTool extends BaseToolWithShape {
 	private static final float MAXIMAL_TOOL_STROKE_WIDTH = 10f;
 	private static final int CURSOR_LINES = 4;
 
-	protected Path pathToDraw;
-	private int mPrimaryShapeColor;
-	private int mSecondaryShapeColor;
-	protected boolean pathInsideBitmap;
-	private boolean toolInDrawMode = false;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public Path pathToDraw;
+	private boolean pathInsideBitmap;
+	private int cursorToolPrimaryShapeColor;
+	@VisibleForTesting
+	public int cursorToolSecondaryShapeColor;
+	@VisibleForTesting
+	public boolean toolInDrawMode = false;
+	private BrushPickerView brushPickerView;
 
 	public CursorTool(Context context, ToolType toolType) {
 		super(context, toolType);
 
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
-		mPrimaryShapeColor = PaintroidApplication.applicationContext
-				.getResources().getColor(
+		cursorToolPrimaryShapeColor = context.getResources().getColor(
 						R.color.cursor_tool_deactive_primary_color);
-		mSecondaryShapeColor = Color.LTGRAY;
+		cursorToolSecondaryShapeColor = Color.LTGRAY;
 		pathInsideBitmap = false;
 	}
 
@@ -70,15 +74,15 @@ public class CursorTool extends BaseToolWithShape {
 	public void changePaintColor(int color) {
 		super.changePaintColor(color);
 		if (toolInDrawMode) {
-			mSecondaryShapeColor = mBitmapPaint.getColor();
+			cursorToolSecondaryShapeColor = BITMAP_PAINT.getColor();
 		}
 	}
 
 	@Override
 	public boolean handleDown(PointF coordinate) {
-		pathToDraw.moveTo(this.mToolPosition.x, this.mToolPosition.y);
-		mPreviousEventCoordinate.set(coordinate);
-		mMovedDistance.set(0, 0);
+		pathToDraw.moveTo(this.toolPosition.x, this.toolPosition.y);
+		previousEventCoordinate.set(coordinate);
+		movedDistance.set(0, 0);
 		pathInsideBitmap = false;
 
 		pathInsideBitmap = checkPathInsideBitmap(coordinate);
@@ -87,13 +91,13 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		final float vectorCX = coordinate.x - mPreviousEventCoordinate.x;
-		final float vectorCY = coordinate.y - mPreviousEventCoordinate.y;
+		final float vectorCX = coordinate.x - previousEventCoordinate.x;
+		final float vectorCY = coordinate.y - previousEventCoordinate.y;
 
-		float newCursorPositionX = this.mToolPosition.x + vectorCX;
-		float newCursorPositionY = this.mToolPosition.y + vectorCY;
+		float newCursorPositionX = this.toolPosition.x + vectorCX;
+		float newCursorPositionY = this.toolPosition.y + vectorCY;
 
-		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 
@@ -126,36 +130,36 @@ public class CursorTool extends BaseToolWithShape {
 			newCursorPositionY = cursorCanvasPosition.y;
 		}
 
-		mToolPosition.set(newCursorPositionX, newCursorPositionY);
+		toolPosition.set(newCursorPositionX, newCursorPositionY);
 
 		if (toolInDrawMode) {
-			final float cx = (this.mToolPosition.x + newCursorPositionX) / 2f;
-			final float cy = (this.mToolPosition.y + newCursorPositionY) / 2f;
+			final float cx = (this.toolPosition.x + newCursorPositionX) / 2f;
+			final float cy = (this.toolPosition.y + newCursorPositionY) / 2f;
 
-			pathToDraw.quadTo(this.mToolPosition.x, this.mToolPosition.y, cx, cy);
+			pathToDraw.quadTo(this.toolPosition.x, this.toolPosition.y, cx, cy);
 			pathToDraw.incReserve(1);
 		}
 
-		mMovedDistance.set(
-				mMovedDistance.x + Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				mMovedDistance.y + Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+		movedDistance.set(
+				movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
+				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 
-		mPreviousEventCoordinate.set(coordinate.x, coordinate.y);
+		previousEventCoordinate.set(coordinate.x, coordinate.y);
 		return true;
 	}
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
 
-		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
 			pathInsideBitmap = true;
 		}
 
-		mMovedDistance.set(
-				mMovedDistance.x
-						+ Math.abs(coordinate.x - mPreviousEventCoordinate.x),
-				mMovedDistance.y
-						+ Math.abs(coordinate.y - mPreviousEventCoordinate.y));
+		movedDistance.set(
+				movedDistance.x
+						+ Math.abs(coordinate.x - previousEventCoordinate.x),
+				movedDistance.y
+						+ Math.abs(coordinate.y - previousEventCoordinate.y));
 
 		handleDrawMode();
 		return true;
@@ -168,7 +172,7 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		float brushStrokeWidth = Math.max((mBitmapPaint.getStrokeWidth() / 2f), 1f);
+		float brushStrokeWidth = Math.max((BITMAP_PAINT.getStrokeWidth() / 2f), 1f);
 
 		float strokeWidth = getStrokeWidthForZoom(DEFAULT_TOOL_STROKE_WIDTH,
 				MINIMAL_TOOL_STROKE_WIDTH, MAXIMAL_TOOL_STROKE_WIDTH);
@@ -177,101 +181,109 @@ public class CursorTool extends BaseToolWithShape {
 		float innerCircleRadius = brushStrokeWidth + (strokeWidth / 2f);
 		float outerCircleRadius = innerCircleRadius + strokeWidth;
 
-		mLinePaint.setColor(mPrimaryShapeColor);
-		mLinePaint.setStyle(Style.STROKE);
-		mLinePaint.setStrokeWidth(strokeWidth);
-		Cap strokeCap = mBitmapPaint.getStrokeCap();
+		linePaint.setColor(cursorToolPrimaryShapeColor);
+		linePaint.setStyle(Style.STROKE);
+		linePaint.setStrokeWidth(strokeWidth);
+		Cap strokeCap = BITMAP_PAINT.getStrokeCap();
 
 		if (strokeCap.equals(Cap.ROUND)) {
-			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y,
-					outerCircleRadius, mLinePaint);
-			mLinePaint.setColor(Color.LTGRAY);
+			canvas.drawCircle(this.toolPosition.x, this.toolPosition.y,
+					outerCircleRadius, linePaint);
+			linePaint.setColor(Color.LTGRAY);
 
-			canvas.drawCircle(this.mToolPosition.x, this.mToolPosition.y,
-					innerCircleRadius, mLinePaint);
+			canvas.drawCircle(this.toolPosition.x, this.toolPosition.y,
+					innerCircleRadius, linePaint);
 
-			mLinePaint.setColor(Color.TRANSPARENT);
-			mLinePaint.setStyle(Style.FILL);
-			canvas.drawCircle(mToolPosition.x, mToolPosition.y,
-					innerCircleRadius - (strokeWidth / 2f), mLinePaint);
+			linePaint.setColor(Color.TRANSPARENT);
+			linePaint.setStyle(Style.FILL);
+			canvas.drawCircle(toolPosition.x, toolPosition.y,
+					innerCircleRadius - (strokeWidth / 2f), linePaint);
 		} else {
 			RectF strokeRect = new RectF(
-					(this.mToolPosition.x - outerCircleRadius),
-					(this.mToolPosition.y - outerCircleRadius),
-					(this.mToolPosition.x + outerCircleRadius),
-					(this.mToolPosition.y + outerCircleRadius));
-			canvas.drawRect(strokeRect, mLinePaint);
-			strokeRect.set((this.mToolPosition.x - innerCircleRadius),
-					(this.mToolPosition.y - innerCircleRadius),
-					(this.mToolPosition.x + innerCircleRadius),
-					(this.mToolPosition.y + innerCircleRadius));
-			mLinePaint.setColor(Color.LTGRAY);
-			canvas.drawRect(strokeRect, mLinePaint);
+					(this.toolPosition.x - outerCircleRadius),
+					(this.toolPosition.y - outerCircleRadius),
+					(this.toolPosition.x + outerCircleRadius),
+					(this.toolPosition.y + outerCircleRadius));
+			canvas.drawRect(strokeRect, linePaint);
+			strokeRect.set((this.toolPosition.x - innerCircleRadius),
+					(this.toolPosition.y - innerCircleRadius),
+					(this.toolPosition.x + innerCircleRadius),
+					(this.toolPosition.y + innerCircleRadius));
+			linePaint.setColor(Color.LTGRAY);
+			canvas.drawRect(strokeRect, linePaint);
 
-			mLinePaint.setColor(Color.TRANSPARENT);
-			mLinePaint.setStyle(Style.FILL);
+			linePaint.setColor(Color.TRANSPARENT);
+			linePaint.setStyle(Style.FILL);
 			strokeRect
-					.set((this.mToolPosition.x - innerCircleRadius + (strokeWidth / 2f)),
-							(this.mToolPosition.y - innerCircleRadius + (strokeWidth / 2f)),
-							(this.mToolPosition.x + innerCircleRadius - (strokeWidth / 2f)),
-							(this.mToolPosition.y + innerCircleRadius - (strokeWidth / 2f)));
-			canvas.drawRect(strokeRect, mLinePaint);
+					.set((this.toolPosition.x - innerCircleRadius + (strokeWidth / 2f)),
+							(this.toolPosition.y - innerCircleRadius + (strokeWidth / 2f)),
+							(this.toolPosition.x + innerCircleRadius - (strokeWidth / 2f)),
+							(this.toolPosition.y + innerCircleRadius - (strokeWidth / 2f)));
+			canvas.drawRect(strokeRect, linePaint);
 		}
 
 		// DRAW outer target lines
-		mLinePaint.setStyle(Style.FILL);
+		linePaint.setStyle(Style.FILL);
 		float startLineLengthAddition = (strokeWidth / 2f);
 		float endLineLengthAddition = cursorPartLength + strokeWidth;
-		for (int line_nr = 0; line_nr < CURSOR_LINES; line_nr++, startLineLengthAddition = (strokeWidth / 2f)
-				+ cursorPartLength * line_nr, endLineLengthAddition = strokeWidth
-				+ cursorPartLength * (line_nr + 1f)) {
-			if ((line_nr % 2) == 0) {
-				mLinePaint.setColor(mSecondaryShapeColor);
-
+		for (int lineNr = 0; lineNr < CURSOR_LINES; lineNr++, startLineLengthAddition = (strokeWidth / 2f)
+				+ cursorPartLength * lineNr, endLineLengthAddition = strokeWidth
+				+ cursorPartLength * (lineNr + 1f)) {
+			if ((lineNr % 2) == 0) {
+				linePaint.setColor(cursorToolSecondaryShapeColor);
 			} else {
-				mLinePaint.setColor(mPrimaryShapeColor);
+				linePaint.setColor(cursorToolPrimaryShapeColor);
 			}
 
 			// LEFT
-			canvas.drawLine(this.mToolPosition.x - outerCircleRadius
-							- startLineLengthAddition, this.mToolPosition.y,
-					this.mToolPosition.x - outerCircleRadius
-							- endLineLengthAddition, this.mToolPosition.y,
-					mLinePaint);
+			canvas.drawLine(this.toolPosition.x - outerCircleRadius
+							- startLineLengthAddition, this.toolPosition.y,
+					this.toolPosition.x - outerCircleRadius
+							- endLineLengthAddition, this.toolPosition.y,
+					linePaint);
 			// RIGHT
-			canvas.drawLine(this.mToolPosition.x + outerCircleRadius
-							+ startLineLengthAddition, this.mToolPosition.y,
-					this.mToolPosition.x + outerCircleRadius
-							+ endLineLengthAddition, this.mToolPosition.y,
-					mLinePaint);
+			canvas.drawLine(this.toolPosition.x + outerCircleRadius
+							+ startLineLengthAddition, this.toolPosition.y,
+					this.toolPosition.x + outerCircleRadius
+							+ endLineLengthAddition, this.toolPosition.y,
+					linePaint);
 
 			// BOTTOM
-			canvas.drawLine(this.mToolPosition.x, this.mToolPosition.y
+			canvas.drawLine(this.toolPosition.x, this.toolPosition.y
 							+ outerCircleRadius + startLineLengthAddition,
-					this.mToolPosition.x, this.mToolPosition.y
+					this.toolPosition.x, this.toolPosition.y
 							+ outerCircleRadius + endLineLengthAddition,
-					mLinePaint);
+					linePaint);
 
 			// TOP
-			canvas.drawLine(this.mToolPosition.x, this.mToolPosition.y
+			canvas.drawLine(this.toolPosition.x, this.toolPosition.y
 							- outerCircleRadius - startLineLengthAddition,
-					this.mToolPosition.x, this.mToolPosition.y
+					this.toolPosition.x, this.toolPosition.y
 							- outerCircleRadius - endLineLengthAddition,
-					mLinePaint);
+					linePaint);
 		}
 	}
 
 	@Override
+	protected void onClickInBox() {
+	}
+
+	@Override
 	public void draw(Canvas canvas) {
-		changePaintColor(mCanvasPaint.getColor());
+		setPaintColor(CANVAS_PAINT.getColor());
 		if (toolInDrawMode) {
-			if (mCanvasPaint.getColor() == Color.TRANSPARENT) {
-				mCanvasPaint.setColor(Color.BLACK);
-				canvas.drawPath(pathToDraw, mCanvasPaint);
-				mCanvasPaint.setColor(Color.TRANSPARENT);
+			canvas.save();
+			canvas.clipRect(0, 0,
+					PaintroidApplication.drawingSurface.getBitmapWidth(),
+					PaintroidApplication.drawingSurface.getBitmapHeight());
+			if (CANVAS_PAINT.getColor() == Color.TRANSPARENT) {
+				CANVAS_PAINT.setColor(Color.BLACK);
+				canvas.drawPath(pathToDraw, CANVAS_PAINT);
+				CANVAS_PAINT.setColor(Color.TRANSPARENT);
 			} else {
-				canvas.drawPath(pathToDraw, mBitmapPaint);
+				canvas.drawPath(pathToDraw, BITMAP_PAINT);
 			}
+			canvas.restore();
 		}
 		this.drawShape(canvas);
 	}
@@ -283,7 +295,7 @@ public class CursorTool extends BaseToolWithShape {
 			return false;
 		}
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		Command command = new PathCommand(mBitmapPaint, pathToDraw);
+		Command command = new PathCommand(BITMAP_PAINT, pathToDraw);
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		return true;
 	}
@@ -294,7 +306,7 @@ public class CursorTool extends BaseToolWithShape {
 			return false;
 		}
 		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		Command command = new PointCommand(mBitmapPaint, coordinate);
+		Command command = new PointCommand(BITMAP_PAINT, coordinate);
 		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
 		return true;
 	}
@@ -302,29 +314,42 @@ public class CursorTool extends BaseToolWithShape {
 	private void handleDrawMode() {
 
 		if (toolInDrawMode) {
-			if (MOVE_TOLERANCE < mMovedDistance.x
-					|| MOVE_TOLERANCE < mMovedDistance.y) {
-				addPathCommand(mToolPosition);
-				mSecondaryShapeColor = mBitmapPaint.getColor();
+			if (MOVE_TOLERANCE < movedDistance.x
+					|| MOVE_TOLERANCE < movedDistance.y) {
+				addPathCommand(toolPosition);
+				cursorToolSecondaryShapeColor = BITMAP_PAINT.getColor();
 			} else {
-				Toast.makeText(mContext, R.string.cursor_draw_inactive, Toast.LENGTH_SHORT).show();
+				ToastFactory.makeText(context, R.string.cursor_draw_inactive, Toast.LENGTH_SHORT).show();
 				toolInDrawMode = false;
-				mSecondaryShapeColor = Color.LTGRAY;
+				cursorToolSecondaryShapeColor = Color.LTGRAY;
 			}
 		} else {
-			if (MOVE_TOLERANCE >= mMovedDistance.x
-					&& MOVE_TOLERANCE >= mMovedDistance.y) {
-				Toast.makeText(mContext, R.string.cursor_draw_active, Toast.LENGTH_SHORT).show();
+			if (MOVE_TOLERANCE >= movedDistance.x
+					&& MOVE_TOLERANCE >= movedDistance.y) {
+				ToastFactory.makeText(context, R.string.cursor_draw_active, Toast.LENGTH_SHORT).show();
 				toolInDrawMode = true;
-				mSecondaryShapeColor = mBitmapPaint.getColor();
-				addPointCommand(mToolPosition);
+				cursorToolSecondaryShapeColor = BITMAP_PAINT.getColor();
+				addPointCommand(toolPosition);
 			}
 		}
 	}
 
 	@Override
 	public void setupToolOptions() {
-		addBrushPickerToToolOptions();
+		brushPickerView = new BrushPickerView(toolSpecificOptionsLayout);
+		brushPickerView.setCurrentPaint(BITMAP_PAINT);
 	}
 
+	@Override
+	public void startTool() {
+		super.startTool();
+		brushPickerView.addBrushChangedListener(onBrushChangedListener);
+	}
+
+	@Override
+	public void leaveTool() {
+		super.leaveTool();
+		brushPickerView.removeBrushChangedListener(onBrushChangedListener);
+		brushPickerView.removeListeners();
+	}
 }

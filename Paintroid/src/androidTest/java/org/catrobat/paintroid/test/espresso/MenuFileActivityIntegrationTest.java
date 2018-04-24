@@ -23,21 +23,25 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.MultilingualActivity;
 import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.WelcomeActivity;
+import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
@@ -48,7 +52,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
@@ -58,23 +64,25 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressMenuKey;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.not;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -82,25 +90,22 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class MenuFileActivityIntegrationTest {
 
 	private static ArrayList<File> deletionFileList = null;
-	private PointF screenPoint = null;
-
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
-
 	@Rule
 	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
-	private ActivityHelper activityHelper;
+	private PointF screenPoint = null;
 
 	@Before
 	public void setUp() {
 
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
+		ActivityHelper activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 
 		selectTool(ToolType.BRUSH);
 
@@ -110,8 +115,8 @@ public class MenuFileActivityIntegrationTest {
 
 	@After
 	public void tearDown() throws Exception {
-		PaintroidApplication.savedPictureUri = null;
-		PaintroidApplication.isSaved = false;
+		NavigationDrawerMenuActivity.savedPictureUri = null;
+		NavigationDrawerMenuActivity.isSaved = false;
 		for (File file : deletionFileList) {
 			if (file != null) {
 				boolean deleted = file.delete();
@@ -146,12 +151,41 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
 
+		onLoadImageProcedure();
+	}
+
+	private void onLoadImageProcedure() {
 		openNavigationDrawer();
 
-		onView(withText(R.string.menu_new_image)).perform(click());
+		onView(withText(R.string.menu_load_image)).perform(click());
 
+		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
+		onView(withText(R.string.dialog_warning_new_image)).check(matches(isDisplayed()));
 		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
 		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testLoadImageDialogWithDiscard() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		Instrumentation.ActivityResult resultCancel = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, new Intent());
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultCancel);
+
+		onLoadImageProcedure();
+		onView(withText(R.string.discard_button_text)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+
+		assertEquals("Image should not change when intent gets cancelled", Color.BLACK, PaintroidApplication.drawingSurface.getPixel(getCanvasPointFromScreenPoint(screenPoint)));
+
+		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, new Intent());
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
+
+		onLoadImageProcedure();
+		onView(withText(R.string.discard_button_text)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+
+		assertEquals("Image should be reset after loading intent returns OK", Color.TRANSPARENT, PaintroidApplication.drawingSurface.getPixel(getCanvasPointFromScreenPoint(screenPoint)));
 	}
 
 	@Test
@@ -165,6 +199,84 @@ public class MenuFileActivityIntegrationTest {
 		pressBack();
 
 		onView(withId(R.id.drawingSurfaceView)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testOnLanguage() {
+		openNavigationDrawer();
+		onView(withText(R.string.menu_language)).perform(click());
+		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
+	}
+
+	@Test
+	public void testImageUnchangedAfterLanguageChange() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
+
+		openNavigationDrawer();
+		onView(withText(R.string.menu_language)).perform(click());
+		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
+		onView(withText("Device Language")).perform(click());
+
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
+	}
+
+	@Test
+	public void testImageUnchangedAfterLanguageAbort() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
+
+		openNavigationDrawer();
+		onView(withText(R.string.menu_language)).perform(click());
+		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
+		pressBack();
+
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
+	}
+
+	@Test
+	public void testOnHelp() {
+		openNavigationDrawer();
+		onView(withText(R.string.help_title)).perform(click());
+		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
+	}
+
+	@Test
+	public void testImageUnchangedAfterHelpSkip() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
+
+		openNavigationDrawer();
+		onView(withText(R.string.help_title)).perform(click());
+		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
+		onView(withText(R.string.skip)).perform(click());
+
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
+	}
+
+	@Test
+	public void testImageUnchangedAfterHelpAbort() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
+
+		openNavigationDrawer();
+		onView(withText(R.string.help_title)).perform(click());
+		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
+		pressBack();
+
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
 	@Test
@@ -228,7 +340,7 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
 
-		assertFalse("Image already saved", PaintroidApplication.isSaved);
+		assertFalse("Image already saved", NavigationDrawerMenuActivity.isSaved);
 
 		pressMenuKey();
 
@@ -236,11 +348,11 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 
-		assertTrue("Image not saved", PaintroidApplication.isSaved);
+		assertTrue("Image not saved", NavigationDrawerMenuActivity.isSaved);
 	}
 
 	@Test
@@ -252,15 +364,15 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 	}
 
 	@Test
 	public void testSaveCopy() {
 
-		assertNull("Saved picture uri is not null", PaintroidApplication.savedPictureUri);
+		assertNull("Saved picture uri is not null", NavigationDrawerMenuActivity.savedPictureUri);
 
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
 
@@ -268,11 +380,11 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 
-		File oldFile = new File(PaintroidApplication.savedPictureUri.toString());
+		File oldFile = new File(NavigationDrawerMenuActivity.savedPictureUri.toString());
 
 		final int screenTouchYOffset = 100;
 		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y + screenTouchYOffset));
@@ -281,13 +393,70 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_copy)).perform(click());
 
-		File newFile = new File(PaintroidApplication.savedPictureUri.toString());
+		File newFile = new File(NavigationDrawerMenuActivity.savedPictureUri.toString());
 
 		assertNotSame("Changes to saved", oldFile, newFile);
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
+	}
+
+	@Test
+	public void testAskForSaveAfterSavedOnce() {
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+
+		openNavigationDrawer();
+		onView(withText(R.string.menu_save_image)).perform(click());
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
+
+		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+		pressBack();
+		onView(withText(R.string.menu_quit)).check(matches(isDisplayed()));
+	}
+
+	private Uri createTestImageFile() {
+		File imageFile = new File(Environment.getExternalStorageDirectory()
+				+ "/PocketCodePaintTest/", "testfile.jpg");
+		Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+		try {
+			imageFile.getParentFile().mkdirs();
+			imageFile.createNewFile();
+			OutputStream outputStream = new FileOutputStream(imageFile);
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream));
+			outputStream.close();
+		} catch (IOException e) {
+			fail("Picture file could not be created.");
+		}
+		deletionFileList.add(imageFile);
+		return Uri.fromFile(imageFile);
+	}
+
+	@Test
+	public void testLoadImageTransparency() {
+		Uri testImageUri = createTestImageFile();
+
+		Intent intent = new Intent();
+		intent.setData(testImageUri);
+		Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
+
+		onLoadImageProcedure();
+		onView(withText(R.string.discard_button_text))
+				.perform(click());
+
+		onToolBarView()
+				.performSelectTool(ToolType.ERASER);
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 	}
 
 	@Test
@@ -296,7 +465,7 @@ public class MenuFileActivityIntegrationTest {
 
 		// Save new image, stub ACTION_GET_CONTENT intent
 		Intent intent = new Intent();
-		intent.setData(PaintroidApplication.savedPictureUri);
+		intent.setData(NavigationDrawerMenuActivity.savedPictureUri);
 		Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
 
@@ -307,27 +476,27 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 
 		// Load the saved image
 		openNavigationDrawer();
 
 		onView(withText(R.string.menu_load_image)).perform(click());
 
-		assertTrue("Save copy flag not true", PaintroidApplication.saveCopy);
+		assertTrue("Save copy flag not true", launchActivityRule.getActivity().saveCopy);
 
 		openNavigationDrawer();
 
 		// Save copy of image
 		onView(withText(R.string.menu_save_copy)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull("Saved picture uri is null", NavigationDrawerMenuActivity.savedPictureUri);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(NavigationDrawerMenuActivity.savedPictureUri);
 
-		File saveFile = new File(getRealFilePathFromUri(PaintroidApplication.savedPictureUri));
+		File saveFile = new File(getRealFilePathFromUri(NavigationDrawerMenuActivity.savedPictureUri));
 
 		final long oldLength = saveFile.length();
 		final long firstModified = saveFile.lastModified();
@@ -340,7 +509,7 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		File actualSaveFile = new File(getRealFilePathFromUri(PaintroidApplication.savedPictureUri));
+		File actualSaveFile = new File(getRealFilePathFromUri(NavigationDrawerMenuActivity.savedPictureUri));
 
 		long newLength = actualSaveFile.length();
 		long lastModified = actualSaveFile.lastModified();
@@ -350,9 +519,10 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	private String getRealFilePathFromUri(Uri uri) {
-		String[] fileColumns = { MediaStore.Images.Media.DATA };
+		String[] fileColumns = {MediaStore.Images.Media.DATA};
 
 		Cursor cursor = launchActivityRule.getActivity().getContentResolver().query(uri, fileColumns, null, null, null);
+		assertNotNull(cursor);
 		cursor.moveToFirst();
 
 		int columnIndex = cursor.getColumnIndex(fileColumns[0]);
@@ -365,5 +535,4 @@ public class MenuFileActivityIntegrationTest {
 	private void addUriToDeletionFileList(Uri uri) {
 		deletionFileList.add(new File(getRealFilePathFromUri(uri)));
 	}
-
 }

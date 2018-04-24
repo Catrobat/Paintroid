@@ -19,42 +19,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">پاڪيٽ پينٽ</string>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="app_name" tools:ignore="UnusedResources">پاڪيٽ پينٽ</string>
   <string name="button_brush">برش</string>
   <string name="button_cursor">ڪرسر</string>
-  <string name="button_ellipse">گول/بيضوي</string>
-  <string name="button_zoom">زوم ڪيو</string>
   <string name="button_pipette">چوسڻو</string>
   <string name="button_undo">ڊاهيو</string>
   <string name="button_redo">واپس موٽايو</string>
   <string name="button_stamp">ٺپو</string>
-  <string name="button_rectangle">چورس/مستطيل</string>
   <string name="button_import_image">تصوير کڻي اچو</string>
   <string name="button_eraser">رٻڙ</string>
-  <string name="button_resize">تصوير جي سائيز مَٽايو</string>
   <string name="button_transform">مٽايو</string>
-  <string name="button_flip">پَلٽيو</string>
   <string name="button_fill">ڀريو</string>
-  <string name="button_move">منتقل ڪيو</string>
-  <string name="button_rotate">گھمايو</string>
   <string name="button_line">ليڪ</string>
   <string name="button_text">متن</string>
   <string name="button_shape">نقش</string>
-  <string name="cancel">رد ڪريو</string>
-  <string name="ok" tools:ignore="Typos">\@android:string/ok</string>
-  <string name="yes">هائو</string>
-  <string name="no">نه</string>
   <string name="done">ٺيڪ آهي</string>
   <string name="terms_of_use_and_service_title">خدمت ۽ استعمال جا شرط</string>
   <string name="terms_of_use_and_service_content">ڪيٽروبيٽ پروجيڪٽ جي ذريعي پيش ڪيل پاڪٽ پينٽ ۽ ٻيون پيش ڪيل سهولتون يعني پاڪيٽ ڪوڊ وغيره جي لاءِ اوهان کي اسان جي خدمت ۽ استعمال جي شرطن سان اتفاق ۽ انهن تي سختي سان عمل ڪرڻو پوندو. وڌيڪ وضاحت واسطي هيٺين لنڪ تي ڪلڪ ڪريو</string>
   <string name="terms_of_use_and_service_url_text">خدمت ۽ استعمال جا شرط</string>
-  <string name="about_title">پاڪيٽ پينٽ جي باري ۾&#8230;</string>
-  <string name="about_content">پاڪيٽ پينٽ تصويرن جو ايڊيٽر آهي جيڪو ڪيٽروبيٽ پروجيڪٽ جو حصو آهي. ڪيٽروبيٽ وزجيوئل پروگرامنگ لينگئج آهي جيڪا سمارٽ فون، ٽيبليٽ ۽ موبائيل برائوزرس جي لاءِ تخليقي اوزار تيار ڪندي آهي. پاڪيٽ پينٽ جو سورس ڪوڊ بنيادي طور تي %sجي تحت لائسنس يافته آهي. \nوڌيڪ وضاحت لاءِ هيٺين لنڪ تي ڪلڪ ڪريو.\n\n</string>
+  <string name="about_title">پاڪيٽ پينٽ جي باري ۾…</string>
+  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
   <string name="about_license_url_text">پاڪيٽ پينٽ سورس ڪوڊ لائسنس</string>
   <string name="about_catroid_url_text">ڪيٽروبيٽ جي باري ۾</string>
   <string name="about_version">ورشن:</string>
-  <string name="stroke_title">"اوزارن جون ترتيبون"</string>
   <string name="color_chooser_title">رنگ چونڊڻو</string>
   <string name="color_rgb">ڳاڙهوسائو نيرو (RGB)</string>
   <string name="color_red">ڳاڙهو</string>
@@ -64,17 +52,12 @@
   <string name="color_pre">اڳواٽ چونڊيل</string>
   <string name="color_hsv">رنگ چونڊيو</string>
   <string name="dialog_tools_title">اوزار</string>
-  <string name="dialog_save_title">تصوير محفوظ ڪريو</string>
-  <string name="dialog_save_text">فائل جو نالو لکو</string>
-  <string name="dialog_load">لوڊ ٿي رهيو آهي&#8230;</string>
-  <string name="dialog_overwrite_text">موجود فائيل جي مٿان ئي محفوظ ڪرڻ چاهيو ٿا?</string>
+  <string name="dialog_load">لوڊ ٿي رهيو آهي…</string>
   <string name="dialog_error_save_title">خامي فائيل آڻڻ/محفوظ ڪرڻ</string>
   <string name="dialog_error_sdcard_text">تصوير يا ڪارڊ چيڪ ڪريو!</string>
   <string name="dialog_brush_width_text">ٻاهرين لڪير جي ويڪر</string>
   <string name="dialog_warning_new_image">ڇا تبديليون محفوظ ٿين?</string>
   <string name="help_title">مدد</string>
-  <string name="help_content_ellipse">گول کي هٽايو، سائيز تبديل ڪريو يا بيضوي شڪل ۾ مَٽايو. تصوير تي شڪل ٺاهڻ لاءِ ڪلڪ ڪريو</string>
-  <string name="help_content_flip">تصوير کي پَلٽِڻ لاءِ هيٺين پٽي تي موجود نشان تي ڪلڪ ڪريو.</string>
   <string name="help_content_eraser">رٻڙ ذريعي تصوير جي حصن کي ڊاهيو.</string>
   <string name="help_content_brush">رنگ ۽ برش جي سائيز تبديل ڪرڻ لاءِ هيٺين پٽي تي موجود نشان تي ڪلڪ ڪريو.</string>
   <string name="help_content_eyedropper">رنگ چونڊڻ لاءِ تصوير تي ڪلڪ ڪريو.</string>
@@ -82,15 +65,14 @@
   <string name="help_content_redo">اڻمڪمل عمل کي واپس ڪرڻ لاءِ ڪلڪ ڪريو.</string>
   <string name="help_content_fill">چونڊيل رنگ علائقي ۾ ڀرڻ لاءِ تصوير تي ڪلڪ ڪريو.</string>
   <string name="help_content_cursor">ڪرسر کي ان هنڌ وٺي هلو جتي اوهان ليڪڻ چاهيو ٿا. ڪرسر کي متحرڪ ڪرڻ لاءِ ڪلڪ ڪريو. ليڪڻ لاءِ پنهنجون آڱريون هيڏي هوڏي ڪريو. غير متحرڪ ڪرڻ لاءِ ٻيهر ڪلڪ ڪريو.</string>
-  <string name="help_content_resize">تصوير جي سائيز مَٽائڻ لاءِ استعمال ڪريو.</string>
   <string name="help_content_transform">تصوير جي سائيز مَٽائڻ لاءِ استعمال ڪريو.</string>
   <string name="help_content_stamp">ٺپو هڻڻ لاءِ گھربل علائقي کي ڍَڪِڻ واسطي مستطيل کي هيڏي هوڏي ڪريو ۽ ان جي سائيز تبديل ڪريو. جڳھ چونڊ ڪرڻ لاءِ ڪلڪ ڪريو. ٺپو هڻڻ لاءِ هيڏي هوڏي ڪريو ۽ ٻيهر ڪلڪ ڪريو.</string>
-  <string name="help_content_rectangle">چورس مان مستطيل ٺاهڻ لاءِ ان کي هيڏي هوڏي ڪندي سائيز مَٽايو. تصوير تي شڪل ٺاهڻ لاءِ پينٽ تي ڪلڪ ڪريو.</string>
   <string name="help_content_import_png">ٺپن واري اوزار ڏانهن گئلري مان تصوير کڻي اچو.</string>
-  <string name="help_content_rotate">تصوير کي ساڄي يا کاٻي ڦيرائڻ لاءِ بٽڻ تي ڪلڪ ڪريو.</string>
   <string name="help_content_line">سڌي ليڪ پايو.</string>
   <string name="help_content_text">متن لکو ۽ ان کي سنواريو. پوءِ متن واري خاني جي سائيز تبديل ڪريو. تصوير تي متن لکڻ لاءِ هِن تي ڪلڪ ڪريو.</string>
   <string name="help_content_shape">Choose a shape and tap it to insert the selected shape</string>
+  <string name="help_content_layer">Create new layers or modify existing ones</string>
+  <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">بند ڪريو</string>
   <string name="closing_security_question">ڇا تبديليون محفوظ ٿين?</string>
   <string name="closing_catroid_security_question_title">پاڪيٽ ڪوڊ ڏانهن واپس ٿيو</string>
@@ -99,12 +81,10 @@
   <string name="menu_save_image">تصوير محفوظ ڪريو</string>
   <string name="menu_save_copy">نقل محفوظ ڪريو</string>
   <string name="menu_new_image_empty_image">خالي تصوير</string>
-  <string name="menu_item_tools">اوزارن جي فهرست</string>
   <string name="menu_hide_menu">سڄي اسڪرين</string>
   <string name="menu_show_menu">ننڊي اسڪرين</string>
   <string name="menu_new_image_from_camera">نئين تصوير ڪئميرا مان</string>
   <string name="menu_terms_of_use_and_service">استعمال جا شرط</string>
-  <string name="more">وڌيڪ</string>
   <string name="menu_about">جي بابت</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">برآمد ڪريو</string>
@@ -113,63 +93,33 @@
   <string name="menu_quit">بند ڪريو</string>
   <string name="save_button_text">محفوظ</string>
   <string name="discard_button_text">مسترد ڪريو</string>
-  <string name="resize_to_resize_tap_text">سائيز مَٽائڻ لاءِ ٽيپ ڪريو</string>
   <string name="resize_nothing_to_resize">سائيز مَٽائڻ لاءِ ڪجھ ڪونهي</string>
   <string name="resize_max_image_resolution_reached">تصوير جو رزالوشن ان کان مٿي نه ٿيندو</string>
-  <string name="text_tool_dialog_title">متن جي اوزار جون ترتيبون</string>
   <string name="text_tool_dialog_input_title">اوهان جو متن:</string>
   <string name="text_tool_dialog_format_options">جوڙجڪ جا اختيارات:</string>
-  <string name="text_tool_dialog_underline_shortcut">U</string>
-  <string name="text_tool_dialog_italic_shortcut">I</string>
-  <string name="text_tool_dialog_bold_shortcut">B</string>
   <string name="text_tool_dialog_input_hint">لکڻ لاءِ هتي ڪلڪ ڪريو</string>
-  <string name="text_tool_dialog_font_monospace">مونو سپيس فانٽ</string>
-  <string name="text_tool_dialog_font_serif">سيرف فانٽ</string>
-  <string name="text_tool_dialog_font_sans_serif">سين سيرف</string>
   <string name="shape_tool_dialog_rect_title">مستطيل</string>
   <string name="shape_tool_dialog_ellipse_title">بيضوي</string>
   <string name="shape_tool_dialog_star_title">تارو</string>
   <string name="shape_tool_dialog_heart_title">دل</string>
-  <string name="fill_tool_dialog_title">فل ٽول سيٽينگ</string>
   <string name="fill_tool_dialog_color_tolerance_title">رنگ تحمل</string>
-  <string name="fill_tool_dialog_input_hint_toast">1 کان 100 جي وچ ۾ نمبر وجهو</string>
-  <string name="transform_tool_header_text">مٽايو</string>
-  <string name="transform_tool_size_text">جسامت</string>
+  <string name="transform_tool_auto_crop_text">Auto adjust</string>
   <string name="transform_tool_roate_text">گھمايو</string>
   <string name="transform_tool_mirror_text">آئينو</string>
-  <string name="transform_tool_angle_text">ڪُنڊ</string>
   <string name="stamp_tool_copy_hint">ڪاپي ڪرڻ لاء ٽچ دٻائي ٻيهو</string>
   <string name="layers_title">ليير</string>
-  <string name="layer_string_default">DEFAULT</string>
   <string name="layer_new">نئون ليير</string>
   <string name="layer_delete">ليير ڊاهيو</string>
-  <string name="layer_opacity">گهرائيپ:</string>
-  <string name="layer_merge">ملايو</string>
-  <string name="layer_visible">ظاهر</string>
-  <string name="layer_lock">تالو</string>
-  <string name="layer_rename">نالو ماٽيو</string>
-  <string name="layer_copy">ڪاپي</string>
-  <string name="layer_ok">اوڪي</string>
-  <string name="layer_cancel">رد ڪريو</string>
-  <string name="layer_rename_title">نئي ليير جو نالو رکو</string>
-  <string name="layer_move_up">مٿي منتقل ڪيو</string>
-  <string name="layer_move_down">هيٺ منتقل ڪيو</string>
-  <string name="layer_move_to_top">بلڪل مٿي منتقل ڪيو</string>
-  <string name="layer_move_to_bottom">بلڪل هيٺ منتقل ڪيو</string>
-  <string name="layer_merge_info">ليير کي ملائيڻ لاء دٻايو</string>
   <string name="layer_too_many_layers">تمام گهڻا ليير ٿي ويا آهن</string>
   <string name="layer_invisible">سڀ ليير لڪل آهن</string>
-  <string name="layer_save_info">ليير محفوط ڪرڻ سان سڀ پاڻ ۾ ملي ويندا</string>
-  <string name="layer_prefix">ليير </string>
+  <string name="layer_merged">Layers merged</string>
   <!-- Extras -->
   <!-- Return to Catroid -->
-  <string name="dialog_unallowed_chars_title">منع ڪيل اکر</string>
-  <string name="dialog_unallowed_chars_text">فقط اکرن، عددن ۽ \'_\' جي اجازت آهي.</string>
   <string name="dialog_shape_text">شڪل</string>
   <string name="dialog_loading_image_failed_title">تصوير لوڊ ڪرڻ ۾ نقص</string>
   <string name="dialog_loading_image_failed_text">تصوير موزون ناهي</string>
-  <string name="drawer_open">Open navigation drawer</string>
-  <string name="drawer_close">Close navigation drawer</string>
+  <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
+  <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
   <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
   <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
   <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
@@ -177,12 +127,14 @@
   <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new start the intro or just skip it if you are already familiar with Pocket Paint.</string>
   <string name="intro_tool_more_information">ٽول کي ڪلڪ ڪري اُن بابت تفصيل وٺو</string>
   <string name="more_possibilities">وڌيڪ موقعا</string>
-  <string name="intro_possibilities_text">To change the color, use undo/redo or open the layers dialog use to top bar.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">لينڊاسڪيپ</string>
   <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
-  <string name="enjoy_pocket_code">سڀ سيٽ ٿي ويو آهي، پاڪيٽ پينٽ مان لطف اندوز ٿيو.</string>
+  <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">استعمال ڪريو ۽ نئي تخليق ڪريو.</string>
-  <string name="got_it">سمجهي ويس</string>
+  <string name="lets_go">Let\'s Go</string>
   <string name="next">اڳيون</string>
   <string name="skip">رد ڪريو</string>
+  <string name="menu_language">Language</string>
+  <string name="device_language">Device Language</string>
 </resources>

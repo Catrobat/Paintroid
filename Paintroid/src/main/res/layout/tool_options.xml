@@ -19,23 +19,24 @@
 -->
 
 <LinearLayout android:id="@+id/layout_tool_options"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:visibility="visible">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="visible"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:id="@+id/layout_tool_options_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dip"
         android:layout_marginStart="24dip"
         android:layout_marginTop="8dp"
         android:textAllCaps="true"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/tools_text_color"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        tools:text="example text"/>
 
     <LinearLayout
         android:id="@+id/layout_tool_specific_options"
@@ -44,7 +45,5 @@
         android:layout_marginTop="5dp"
         android:orientation="vertical">
     </LinearLayout>
-
-
 
 </LinearLayout>

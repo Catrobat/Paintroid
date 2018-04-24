@@ -18,17 +18,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="300dp"
-    android:orientation="vertical" xmlns:tools="http://schemas.android.com/tools">
+    android:orientation="vertical">
 
     <ScrollView
-        android:id="@+id/terms_of_use_and_service_scroll_view"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="252dp"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbarFadeDuration="99999"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -38,7 +39,6 @@
             android:padding="10dp" >
 
             <ImageView
-                android:id="@+id/terms_of_use_and_service_iview_Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_launcher" />
@@ -48,7 +48,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                 android:textColor="@color/text_color"
                 android:text="@string/terms_of_use_and_service_content" />
 
             <TextView
@@ -56,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColorLink="#E68B00"
+                android:textColorLink="@color/text_color_link"
                 android:textSize="20sp" />
         </LinearLayout>
     </ScrollView>

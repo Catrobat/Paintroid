@@ -17,9 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- *    This file incorporates work covered by the following copyright and  
- *    permission notice: 
- *    
+ *    This file incorporates work covered by the following copyright and
+ *    permission notice:
+ *
  *        Copyright (C) 2011 Devmil (Michael Lamers) 
  *        Mail: develmil@googlemail.com
  *
@@ -38,100 +38,100 @@
 
 package org.catrobat.paintroid.dialog.colorpicker;
 
-import org.catrobat.paintroid.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import org.catrobat.paintroid.R;
+
 public class PresetSelectorView extends LinearLayout {
 
-	private int mSelectedColor;
-	private TypedArray mPresetColors;
-	final float mScale = getContext().getResources().getDisplayMetrics().density;
-	private final static int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
-	private TableLayout mTableLayout;
-	private int COLOR_BUTTON_MARGIN = 2;
+	private static final int MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW = 4;
+	private static final int COLOR_BUTTON_MARGIN = 2;
 
-	private OnColorChangedListener mOnColorChangedListener;
+	private int selectedColor;
+	private TableLayout tableLayout;
+
+	private OnColorChangedListener onColorChangedListener;
 
 	public PresetSelectorView(Context context) {
 		super(context);
-		mTableLayout = new TableLayout(context);
+		tableLayout = new TableLayout(context);
 		init(context);
 	}
 
 	public PresetSelectorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mTableLayout = new TableLayout(context, attrs);
+		tableLayout = new TableLayout(context, attrs);
 		init(context);
 	}
 
 	private void init(Context context) {
-		mTableLayout.setGravity(Gravity.TOP);
-		mTableLayout.setOrientation(TableLayout.VERTICAL);
-		mTableLayout.setStretchAllColumns(true);
-
-		mPresetColors = getResources().obtainTypedArray(R.array.preset_colors);
+		tableLayout.setGravity(Gravity.TOP);
+		tableLayout.setOrientation(TableLayout.VERTICAL);
+		tableLayout.setStretchAllColumns(true);
+		tableLayout.setShrinkAllColumns(true);
 
 		OnClickListener presetButtonListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mSelectedColor = mPresetColors.getColor(v.getId(), 0);
+				selectedColor = ((ColorPickerPresetColorButton) v).getColor();
 				onColorChanged();
 			}
 		};
+
+		TypedArray presetColors = getResources().obtainTypedArray(R.array.preset_colors);
 
 		TableRow colorButtonsTableRow = new TableRow(context);
 		TableRow.LayoutParams colorButtonLayoutParameters = new TableRow.LayoutParams();
 		colorButtonLayoutParameters.setMargins(COLOR_BUTTON_MARGIN,
 				COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN, COLOR_BUTTON_MARGIN);
-		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < mPresetColors
+		for (int colorButtonIndexInRow = 0; colorButtonIndexInRow < presetColors
 				.length(); colorButtonIndexInRow++) {
-			Button colorButton = new ColorPickerPresetColorButton(context,
-					mPresetColors.getColor(colorButtonIndexInRow, 0));
-			colorButton.setId(colorButtonIndexInRow);
+			int color = presetColors.getColor(colorButtonIndexInRow, Color.TRANSPARENT);
+			View colorButton = new ColorPickerPresetColorButton(context, color);
 			colorButton.setOnClickListener(presetButtonListener);
-			colorButtonsTableRow.addView(colorButton,
-					colorButtonLayoutParameters);
-			if ((colorButtonIndexInRow + 1)
-					% MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW == 0) {
-				mTableLayout.addView(colorButtonsTableRow);
+			colorButtonsTableRow.addView(colorButton, colorButtonLayoutParameters);
+
+			if ((colorButtonIndexInRow + 1) % MAXIMUM_COLOR_BUTTONS_IN_COLOR_ROW == 0) {
+				tableLayout.addView(colorButtonsTableRow);
 				colorButtonsTableRow = new TableRow(context);
 			}
 		}
-		addView(mTableLayout);
+
+		presetColors.recycle();
+
+		addView(tableLayout);
 	}
 
-	public int getSelectedColor() {
-		return mSelectedColor;
+	private int getSelectedColor() {
+		return selectedColor;
 	}
 
 	public void setSelectedColor(int color) {
-		if (color == mSelectedColor) {
+		if (color == selectedColor) {
 			return;
 		}
-		mSelectedColor = color;
+		selectedColor = color;
 	}
 
 	private void onColorChanged() {
-		if (mOnColorChangedListener != null) {
-			mOnColorChangedListener.colorChanged(getSelectedColor());
+		if (onColorChangedListener != null) {
+			onColorChangedListener.colorChanged(getSelectedColor());
 		}
 	}
 
 	public void setOnColorChangedListener(OnColorChangedListener listener) {
-		mOnColorChangedListener = listener;
+		onColorChangedListener = listener;
 	}
 
-	public interface OnColorChangedListener {
-		public void colorChanged(int color);
+	interface OnColorChangedListener {
+		void colorChanged(int color);
 	}
-
 }

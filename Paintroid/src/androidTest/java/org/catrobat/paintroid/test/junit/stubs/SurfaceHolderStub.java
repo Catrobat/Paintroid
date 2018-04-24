@@ -41,7 +41,6 @@ public class SurfaceHolderStub implements SurfaceHolder {
 
 	@Override
 	public void addCallback(Callback callback) {
-
 	}
 
 	@Override
@@ -71,36 +70,29 @@ public class SurfaceHolderStub implements SurfaceHolder {
 
 	@Override
 	public void removeCallback(Callback callback) {
-
 	}
 
 	@Override
 	public void setFixedSize(int width, int height) {
-
 	}
 
 	@Override
 	public void setFormat(int format) {
-
 	}
 
 	@Override
 	public void setKeepScreenOn(boolean screenOn) {
-
 	}
 
 	@Override
 	public void setSizeFromLayout() {
-
 	}
 
 	@Override
 	public void setType(int type) {
-
 	}
 
 	@Override
 	public void unlockCanvasAndPost(Canvas canvas) {
-
 	}
 }

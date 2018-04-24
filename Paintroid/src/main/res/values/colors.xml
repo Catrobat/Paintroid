@@ -25,16 +25,14 @@
     <color name="tools_text_color">#33B5E5</color>
     <color name="transparent">#00000000</color>
     <color name="custom_background_color">#0097A7</color>
-    <color name="text_color">@android:color/white</color>
+    <color name="custom_background_color_transparent">#000097A7</color>
+    <color name="text_color_link">#E68B00</color>
     <color name="rectangle_secondary_color">#33B5E5</color>
     <color name="rectangle_primary_color">#555555</color>
     <color name="holo_blue_bright">#33B5E5</color>
-    <color name="dialog_edittext_color">@android:color/white</color>
-    <color name="dialog_edittext_color_hint">#80000000</color>
     <color name="cursor_tool_deactive_primary_color">#555555</color>
     <color name="dialog_subtitle">#33B5E5</color>
     <color name="dialog_subtitle_border">#c8e8ff</color>
-    <color name="dialog_background_pre_v14_color">#FF1E1E1E</color>
     <color name="color_chooser_rgb_red">#FFEB4618</color>
     <color name="color_chooser_rgb_green">#FF078707</color>
     <color name="color_chooser_rgb_blue">#FF0284e7</color>
@@ -65,10 +63,7 @@
 
     <color name="colorPrimary">#00838F</color>
     <color name="colorPrimaryDark">#00838F</color>
-    <color name="textColorPrimary">#FFFFFF</color>
-    <color name="windowBackground">#FFFFFF</color>
-    <color name="navigationBarColor">#000000</color>
-    <color name="colorAccent">#c8e8ff</color>
+    <color name="colorAccent">#33B5E5</color>
 
     <color name="bottom_bar_button_activated">#007A99</color>
     <color name="light_gray">#D3D3D3</color>
@@ -76,42 +71,14 @@
     <!--Intro Colors-->
     <!-- Screens background color-->
     <color name="bg_screen1">#0097A7</color>
-    <color name="bg_screen2">#0097A7</color>
-    <color name="bg_screen3">#0097A7</color>
-    <color name="bg_screen4">#0097A7</color>
 
     <!-- dots active colors -->
     <color name="dot_active">#fff</color>
-    <color name="dot_dark_screen1">#fff</color>
-    <color name="dot_dark_screen2">#fff</color>
-    <color name="dot_dark_screen3">#fff</color>
-    <color name="dot_dark_screen4">#fff</color>
-    <color name="dot_dark_screen5">#fff</color>
 
     <!-- dots inactive colors -->
     <color name="dot_inactive">#64ffffff</color>
-    <color name="dot_light_screen1">#64ffffff</color>
-    <color name="dot_light_screen2">#64ffffff</color>
-    <color name="dot_light_screen3">#64ffffff</color>
-    <color name="dot_light_screen4">#64ffffff</color>
-    <color name="dot_light_screen5">#64ffffff</color>
-
-    <array name="array_dot_inactive">
-        <item>@color/dot_light_screen1</item>
-        <item>@color/dot_light_screen2</item>
-        <item>@color/dot_light_screen3</item>
-        <item>@color/dot_light_screen4</item>
-        <item>@color/dot_light_screen5</item>
-    </array>
-
-    <array name="array_dot_active">
-        <item>@color/dot_dark_screen1</item>
-        <item>@color/dot_dark_screen2</item>
-        <item>@color/dot_dark_screen3</item>
-        <item>@color/dot_dark_screen4</item>
-        <item>@color/dot_dark_screen5</item>
-    </array>
 
     <color name="navigationDrawerBackground">#FFFFFF</color>
+    <color name="background_deactivated_drawing_surface">#80000000</color>
 
 </resources>

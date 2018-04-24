@@ -19,88 +19,77 @@
 
 package org.catrobat.paintroid;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
+import android.util.Log;
+
+import org.catrobat.paintroid.common.Constants;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
-
-@SuppressLint("NewApi")
 public abstract class FileIO {
-	private static File PAINTROID_MEDIA_FILE = null;
-	private static final int BUFFER_SIZE = 1024;
 	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_MM_dd_hhmmss";
 	private static final String ENDING = ".png";
+	private static final String TAG = FileIO.class.getSimpleName();
+	private static File paintroidMediaFile = null;
 
 	private FileIO() {
 	}
 
-	public static Uri getBaseUri() {
+	private static Uri getBaseUri() {
 		return MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 	}
 
-	public static boolean saveBitmap(Context context, Bitmap bitmap) {
-		return saveBitmap(context, bitmap, null);
-	}
-
-	public static boolean saveBitmap(Context context, Bitmap bitmap, String path) {
-		if (initialisePaintroidMediaDirectory() == false) {
+	static boolean saveBitmap(Context context, Bitmap bitmap, @Nullable String path, boolean saveCopy) {
+		if (!initialisePaintroidMediaDirectory()) {
 			return false;
 		}
 
-		final int QUALITY = 100;
-		final Bitmap.CompressFormat FORMAT = Bitmap.CompressFormat.PNG;
+		final int quality = 100;
+		final Bitmap.CompressFormat format = Bitmap.CompressFormat.PNG;
 		OutputStream outputStream = null;
 		File file = null;
 
 		try {
 			if (bitmap == null || bitmap.isRecycled()) {
-				Log.e(PaintroidApplication.TAG, "ERROR saving bitmap. ");
+				Log.e(TAG, "ERROR saving bitmap. ");
 				return false;
 			} else if (path != null) {
 				file = new File(path);
 				outputStream = new FileOutputStream(file);
-			} else if (PaintroidApplication.savedPictureUri != null
-					&& !PaintroidApplication.saveCopy) {
+			} else if (NavigationDrawerMenuActivity.savedPictureUri != null && !saveCopy) {
 				outputStream = context.getContentResolver().openOutputStream(
-						PaintroidApplication.savedPictureUri);
+						NavigationDrawerMenuActivity.savedPictureUri);
 			} else {
-				file = createNewEmptyPictureFile(context);
+				file = createNewEmptyPictureFile();
 				outputStream = new FileOutputStream(file);
 			}
 		} catch (FileNotFoundException e) {
-			Log.e(PaintroidApplication.TAG,
-					"ERROR writing image file. File not found. Path: " + path,
-					e);
+			Log.e(TAG, "ERROR writing image file. File not found. Path: " + path, e);
 			return false;
 		}
 
 		if (outputStream != null) {
-			boolean isSaved = bitmap.compress(FORMAT, QUALITY, outputStream);
+			boolean isSaved = bitmap.compress(format, quality, outputStream);
 			try {
 				outputStream.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e(TAG, e.getMessage());
 			}
 			if (isSaved) {
 				if (file != null) {
@@ -108,79 +97,51 @@ public abstract class FileIO {
 					contentValues.put(MediaStore.MediaColumns.DATA,
 							file.getAbsolutePath());
 
-					PaintroidApplication.savedPictureUri = context
+					NavigationDrawerMenuActivity.savedPictureUri = context
 							.getContentResolver().insert(getBaseUri(),
 									contentValues);
 				}
 			} else {
-				Log.e(PaintroidApplication.TAG,
-						"ERROR writing image file. Bitmap compress didn't work. ");
+				Log.e(TAG, "ERROR writing image file. Bitmap compress didn't work. ");
 				return false;
 			}
-
 		}
 		return true;
 	}
 
-	public static String getDefaultFileName() {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-				DEFAULT_FILENAME_TIME_FORMAT);
+	static String getDefaultFileName() {
+		SimpleDateFormat simpleDateFormat =
+				new SimpleDateFormat(DEFAULT_FILENAME_TIME_FORMAT, Locale.US);
 		return simpleDateFormat.format(new Date()) + ENDING;
 	}
 
-	public static File createNewEmptyPictureFile(Context context,
-			String filename) {
-		if (initialisePaintroidMediaDirectory() == true) {
-			if (!filename.toLowerCase().endsWith(ENDING.toLowerCase())) {
+	static File createNewEmptyPictureFile(String filename) {
+		if (initialisePaintroidMediaDirectory()) {
+			if (!filename.toLowerCase(Locale.US).endsWith(ENDING.toLowerCase(Locale.US))) {
 				filename += ENDING;
 			}
-			return new File(PAINTROID_MEDIA_FILE, filename);
+			return new File(paintroidMediaFile, filename);
 		} else {
 			return null;
 		}
 	}
 
-	public static File createNewEmptyPictureFile(Context context) {
-		return createNewEmptyPictureFile(context, getDefaultFileName());
-	}
-
-	public static String getRealPathFromURI(Context context, Uri imageUri) {
-		String path = null;
-		String[] filePathColumn = { MediaStore.Images.Media.DATA };
-		Cursor cursor = context.getContentResolver().query(imageUri,
-				filePathColumn, null, null, null);
-
-		if (cursor != null) {
-			cursor.moveToFirst();
-			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			path = cursor.getString(columnIndex);
-		} else {
-			try {
-				File file = new File(new java.net.URI(imageUri.toString()));
-				path = file.getAbsolutePath();
-			} catch (URISyntaxException e) {
-				Log.e("PAINTROID", "URI ERROR ", e);
-			}
-		}
-
-		return path;
+	private static File createNewEmptyPictureFile() {
+		return createNewEmptyPictureFile(getDefaultFileName());
 	}
 
 	private static boolean initialisePaintroidMediaDirectory() {
 		if (Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
-			PAINTROID_MEDIA_FILE = new File(
-					Environment.getExternalStorageDirectory(),
-					"/"
-							+ PaintroidApplication.applicationContext
-									.getString(R.string.ext_storage_directory_name) + "/");
+			paintroidMediaFile = new File(
+					Environment.getExternalStorageDirectory(), File.separatorChar
+					+ Constants.EXT_STORAGE_DIRECTORY_NAME + File.separatorChar);
 		} else {
 			return false;
 		}
-		if (PAINTROID_MEDIA_FILE != null) {
-			if (PAINTROID_MEDIA_FILE.isDirectory() == false) {
-
-				return PAINTROID_MEDIA_FILE.mkdirs();
+		if (paintroidMediaFile != null) {
+			if (!paintroidMediaFile.isDirectory()) {
+				return paintroidMediaFile.mkdirs();
 			}
 		} else {
 			return false;
@@ -188,95 +149,64 @@ public abstract class FileIO {
 		return true;
 	}
 
-	public static Bitmap getBitmapFromUri(Uri bitmapUri) {
-		BitmapFactory.Options options = new BitmapFactory.Options();
+	private static void setInvalidOptions(BitmapFactory.Options options) {
+		options.outWidth = -1;
+		options.outHeight = -1;
+	}
 
-//		TODO: special treatment necessary?
-//		if (PaintroidApplication.openedFromCatroid) {
-//			try {
-//				InputStream inputStream = PaintroidApplication.applicationContext
-//						.getContentResolver().openInputStream(bitmapUri);
-//				Bitmap immutableBitmap = BitmapFactory
-//						.decodeStream(inputStream);
-//				inputStream.close();
-//				return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
-//			} catch (FileNotFoundException e) {
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-
-		options.inJustDecodeBounds = true;
-
+	private static Bitmap decodeBitmapFromUri(Context context, Uri bitmapUri, BitmapFactory.Options options) {
+		Bitmap bitmap;
 		try {
-			InputStream inputStream = PaintroidApplication.applicationContext
-					.getContentResolver().openInputStream(bitmapUri);
-			BitmapFactory.decodeStream(inputStream, null, options);
+			InputStream inputStream = context.getContentResolver().openInputStream(bitmapUri);
+			if (inputStream == null) {
+				setInvalidOptions(options);
+				return null;
+			}
+			bitmap = BitmapFactory.decodeStream(inputStream, null, options);
 			inputStream.close();
 		} catch (Exception e) {
+			setInvalidOptions(options);
+			return null;
+		}
+		return bitmap;
+	}
+
+	private static int calculateSampleSize(int width, int height, int maxWidth, int maxHeight) {
+		int sampleSize = 1;
+		while (width > maxWidth || height > maxHeight) {
+			width /= 2;
+			height /= 2;
+			sampleSize *= 2;
+		}
+		return sampleSize;
+	}
+
+	static Bitmap getBitmapFromUri(Context context, Uri bitmapUri, boolean scaleImage) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		if (!scaleImage) {
+			options.inMutable = true;
+			return decodeBitmapFromUri(context, bitmapUri, options);
+		}
+
+		options.inJustDecodeBounds = true;
+		decodeBitmapFromUri(context, bitmapUri, options);
+		if (options.outHeight < 0 || options.outWidth < 0) {
 			return null;
 		}
 
-		int tmpWidth = options.outWidth;
-		int tmpHeight = options.outHeight;
-		int sampleSize = 1;
+		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		int sampleSize = calculateSampleSize(options.outWidth, options.outHeight,
+				metrics.widthPixels, metrics.heightPixels);
 
-		if (PaintroidApplication.scaleImage) {
-			DisplayMetrics metrics = new DisplayMetrics();
-			Display display = ((WindowManager) PaintroidApplication.applicationContext
-					.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-			display.getMetrics(metrics);
-			int maxWidth = display.getWidth();
-			int maxHeight = display.getHeight();
-
-			while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
-				tmpWidth /= 2;
-				tmpHeight /= 2;
-				sampleSize *= 2;
-			}
-		}
-		PaintroidApplication.scaleImage = true;
-
-
+		options.inMutable = true;
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
 
-		Bitmap immutableBitmap;
-		try {
-			InputStream inputStream = PaintroidApplication.applicationContext
-					.getContentResolver().openInputStream(bitmapUri);
-			immutableBitmap = BitmapFactory.decodeStream(inputStream, null,
-					options);
-			inputStream.close();
-		} catch (Exception e) {
-			return null;
-		}
-
-		tmpWidth = immutableBitmap.getWidth();
-		tmpHeight = immutableBitmap.getHeight();
-		int[] tmpPixels = new int[tmpWidth * tmpHeight];
-		immutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
-				tmpHeight);
-
-		Bitmap mutableBitmap = Bitmap.createBitmap(tmpWidth, tmpHeight,
-				Bitmap.Config.ARGB_8888);
-		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
-				tmpHeight);
-
-		return mutableBitmap;
+		return enableAlpha(decodeBitmapFromUri(context, bitmapUri, options));
 	}
 
-	public static Bitmap getBitmapFromFile(File bitmapFile) {
-
+	public static Bitmap getBitmapFromFile(File bitmapFile, int maxWidth, int maxHeight) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
-
-		if (PaintroidApplication.openedFromCatroid) {
-			options.inJustDecodeBounds = false;
-			Bitmap immutableBitmap = BitmapFactory.decodeFile(
-					bitmapFile.getAbsolutePath(), options);
-			return immutableBitmap.copy(Bitmap.Config.ARGB_8888, true);
-		}
 
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
@@ -285,84 +215,24 @@ public abstract class FileIO {
 		int tmpHeight = options.outHeight;
 		int sampleSize = 1;
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		Display display = ((WindowManager) PaintroidApplication.applicationContext
-				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-		display.getMetrics(metrics);
-		int maxWidth = display.getWidth();
-		int maxHeight = display.getHeight();
-
 		while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
 			tmpWidth /= 2;
 			tmpHeight /= 2;
 			sampleSize *= 2;
 		}
 
+		options.inMutable = true;
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = sampleSize;
 
-		Bitmap immutableBitmap = BitmapFactory.decodeFile(
-				bitmapFile.getAbsolutePath(), options);
-
-		tmpWidth = immutableBitmap.getWidth();
-		tmpHeight = immutableBitmap.getHeight();
-		int[] tmpPixels = new int[tmpWidth * tmpHeight];
-		immutableBitmap.getPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
-				tmpHeight);
-
-		Bitmap mutableBitmap = Bitmap.createBitmap(tmpWidth, tmpHeight,
-				Bitmap.Config.ARGB_8888);
-		mutableBitmap.setPixels(tmpPixels, 0, tmpWidth, 0, 0, tmpWidth,
-				tmpHeight);
-
-		return mutableBitmap;
+		return enableAlpha(BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options));
 	}
 
-	public static String createFilePathFromUri(Activity activity, Uri uri) {
-		// Problem here
-		String filepath = null;
-		String[] projection = { MediaStore.Images.Media.DATA };
-		Cursor cursor = activity
-				.managedQuery(uri, projection, null, null, null);
-		if (cursor != null) {
-			int columnIndex = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			cursor.moveToFirst();
-			filepath = cursor.getString(columnIndex);
+	private static Bitmap enableAlpha(Bitmap bitmap) {
+		if (bitmap == null) {
+			return null;
 		}
-
-		if (filepath == null
-				&& Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			String id = uri.getLastPathSegment().split(":")[1];
-			final String[] imageColumns = { MediaStore.Images.Media.DATA };
-			final String imageOrderBy = null;
-
-			String state = Environment.getExternalStorageState();
-			if (!state.equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
-				uri = MediaStore.Images.Media.INTERNAL_CONTENT_URI;
-			}
-			uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-			cursor = activity.managedQuery(uri, imageColumns,
-					MediaStore.Images.Media._ID + "=" + id, null, imageOrderBy);
-
-			if (cursor.moveToFirst()) {
-				filepath = cursor.getString(cursor
-						.getColumnIndex(MediaStore.Images.Media.DATA));
-			}
-
-		} else if (filepath == null) {
-			filepath = uri.getPath();
-		}
-		return filepath;
-	}
-
-	public static void copyStream(InputStream inputStream,
-			OutputStream outputStream) throws IOException {
-		byte[] buffer = new byte[BUFFER_SIZE];
-		int bytesRead;
-		while ((bytesRead = inputStream.read(buffer)) != -1) {
-			outputStream.write(buffer, 0, bytesRead);
-		}
+		bitmap.setHasAlpha(true);
+		return bitmap;
 	}
 }

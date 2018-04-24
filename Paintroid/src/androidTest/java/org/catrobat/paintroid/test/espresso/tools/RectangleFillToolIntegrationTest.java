@@ -33,12 +33,9 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -51,11 +48,8 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.BLACK_COLOR_PICKER_BUTTON_POSITION;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_BOX_HEIGHT;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_BOX_WIDTH;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_DRAWING_BITMAP;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.FIELD_NAME_TOOL_POSITION;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.TRANSPARENT_COLOR_PICKER_BUTTON_POSITION;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
@@ -65,6 +59,7 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColo
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -82,7 +77,7 @@ public class RectangleFillToolIntegrationTest {
 	private Bitmap workingBitmap;
 
 	@Before
-	public void setUp() throws NoSuchFieldException, IllegalAccessException {
+	public void setUp() {
 		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
 		Espresso.registerIdlingResources(dialogWait);
 
@@ -99,22 +94,22 @@ public class RectangleFillToolIntegrationTest {
 	public void tearDown() {
 		Espresso.unregisterIdlingResources(dialogWait);
 
-		if(workingBitmap != null && !workingBitmap.isRecycled()) {
+		if (workingBitmap != null && !workingBitmap.isRecycled()) {
 			workingBitmap.recycle();
 		}
 	}
 
 	@Test
-	public void testFilledRectIsCreated() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void testFilledRectIsCreated() {
 		selectTool(ToolType.SHAPE);
 
-		Tool mRectangleFillTool = PaintroidApplication.currentTool;
-		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool, FIELD_NAME_BOX_WIDTH);
-		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool, FIELD_NAME_BOX_HEIGHT);
-		PointF rectPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mRectangleFillTool, FIELD_NAME_TOOL_POSITION);
+		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		float rectWidth = rectangleFillTool.boxWidth;
+		float rectHeight = rectangleFillTool.boxHeight;
+		PointF rectPosition = rectangleFillTool.toolPosition;
 
-		assertTrue("Width should not be zero", rectWidth != 0.0f);
-		assertTrue("Width should not be zero", rectHeight != 0.0f);
+		assertNotEquals("Width should not be zero", rectWidth, 0.0f);
+		assertNotEquals("Height should not be zero", rectHeight, 0.0f);
 		assertNotNull("Position should not be NULL", rectPosition);
 	}
 
@@ -124,7 +119,7 @@ public class RectangleFillToolIntegrationTest {
 	 */
 	@Ignore
 	@Test
-	public void testEllipseIsDrawnOnBitmap() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void testEllipseIsDrawnOnBitmap() {
 
 		PaintroidApplication.perspective.setScale(1.0f);
 
@@ -132,9 +127,9 @@ public class RectangleFillToolIntegrationTest {
 
 		onView(withId(R.id.shapes_circle_btn)).perform(click());
 
-		Tool ellipseTool = PaintroidApplication.currentTool;
-		PointF centerPointTool = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, ellipseTool, FIELD_NAME_TOOL_POSITION);
-		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, ellipseTool, FIELD_NAME_BOX_HEIGHT);
+		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		PointF centerPointTool = ellipseTool.toolPosition;
+		float rectHeight = ellipseTool.boxHeight;
 
 		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);
 		int colorBeforeDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
@@ -173,41 +168,41 @@ public class RectangleFillToolIntegrationTest {
 	}
 
 	@Test
-	public void testRectOnBitmapHasSameColorAsInColorPickerAfterColorChange() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void testRectOnBitmapHasSameColorAsInColorPickerAfterColorChange() {
 		int colorPickerColorBeforeChange = PaintroidApplication.currentTool.getDrawPaint().getColor();
 
 		final int colorButtonPosition = 5;
 		selectColorPickerPresetSelectorColor(colorButtonPosition);
 
 		int colorPickerColorAfterChange = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertTrue("Colors should not be the same", colorPickerColorAfterChange != colorPickerColorBeforeChange);
+		assertNotEquals("Colors should not be the same", colorPickerColorAfterChange, colorPickerColorBeforeChange);
 
 		selectTool(ToolType.SHAPE);
 
 		int colorInRectangleTool = PaintroidApplication.currentTool.getDrawPaint().getColor();
 		assertEquals("Colors should be the same", colorPickerColorAfterChange, colorInRectangleTool);
 
-		Tool mRectangleFillTool = PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
 
-		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool, FIELD_NAME_BOX_WIDTH);
-		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool, FIELD_NAME_BOX_HEIGHT);
-		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool, FIELD_NAME_DRAWING_BITMAP);
+		float rectWidth = rectangleFillTool.boxWidth;
+		float rectHeight = rectangleFillTool.boxHeight;
+		Bitmap drawingBitmap = rectangleFillTool.drawingBitmap;
 
 		int colorInRectangle = drawingBitmap.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
 		assertEquals("Colors should be the same", colorPickerColorAfterChange, colorInRectangle);
 	}
 
 	@Test
-	public void testFilledRectChangesColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void testFilledRectChangesColor() {
 		selectTool(ToolType.SHAPE);
 
-		Tool mRectangleFillTool = PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
 
-		int colorInRectangleTool = mRectangleFillTool.getDrawPaint().getColor();
+		int colorInRectangleTool = rectangleFillTool.getDrawPaint().getColor();
 
-		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool, FIELD_NAME_BOX_WIDTH);
-		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool, FIELD_NAME_BOX_HEIGHT);
-		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool, FIELD_NAME_DRAWING_BITMAP);
+		float rectWidth = rectangleFillTool.boxWidth;
+		float rectHeight = rectangleFillTool.boxHeight;
+		Bitmap drawingBitmap = rectangleFillTool.drawingBitmap;
 
 		int colorInRectangle = drawingBitmap.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
 		assertEquals("Colors should be equal", colorInRectangleTool, colorInRectangle);
@@ -215,19 +210,19 @@ public class RectangleFillToolIntegrationTest {
 		final int colorButtonPosition = 5;
 		selectColorPickerPresetSelectorColor(colorButtonPosition);
 
-		int colorInRectangleToolAfter = mRectangleFillTool.getDrawPaint().getColor();
+		int colorInRectangleToolAfter = rectangleFillTool.getDrawPaint().getColor();
 
-		Bitmap drawingBitmapAfter = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mRectangleFillTool, FIELD_NAME_DRAWING_BITMAP);
+		Bitmap drawingBitmapAfter = rectangleFillTool.drawingBitmap;
 
 		int colorInRectangleAfter = drawingBitmapAfter.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
 
-		assertTrue("Colors should have changed", colorInRectangle != colorInRectangleAfter);
-		assertTrue("Colors should have changed", colorInRectangleTool != colorInRectangleToolAfter);
+		assertNotEquals("Colors should have changed", colorInRectangle, colorInRectangleAfter);
+		assertNotEquals("Colors should have changed", colorInRectangleTool, colorInRectangleToolAfter);
 		assertEquals("Colors should be equal", colorInRectangleTool, colorInRectangle);
 	}
 
 	@Test
-	public void testEraseWithEllipse() throws NoSuchFieldException, IllegalAccessException {
+	public void testEraseWithEllipse() {
 		selectTool(ToolType.SHAPE);
 		selectShapeTypeAndDraw(R.id.shapes_square_btn, false, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 
@@ -237,13 +232,13 @@ public class RectangleFillToolIntegrationTest {
 	}
 
 	@Test
-	public void testDrawWithDrawableShape() throws NoSuchFieldException, IllegalAccessException {
+	public void testDrawWithDrawableShape() {
 		selectTool(ToolType.SHAPE);
 		selectShapeTypeAndDraw(R.id.shapes_heart_btn, false, BLACK_COLOR_PICKER_BUTTON_POSITION);
 	}
 
 	@Test
-	public void testCheckeredBackgroundWhenTransparentColorSelected() throws NoSuchFieldException, IllegalAccessException {
+	public void testCheckeredBackgroundWhenTransparentColorSelected() {
 		selectTool(ToolType.SHAPE);
 
 		onView(withId(R.id.shapes_heart_btn)).perform(click());
@@ -252,14 +247,14 @@ public class RectangleFillToolIntegrationTest {
 
 		selectColorPickerPresetSelectorColor(TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 
-		Tool tool = PaintroidApplication.currentTool;
-		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, tool, FIELD_NAME_DRAWING_BITMAP);
+		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		Bitmap drawingBitmap = tool.drawingBitmap;
 		int width = drawingBitmap.getWidth();
 		int height = drawingBitmap.getHeight();
-		Point upperLeftQuarter = new Point((int)(width*0.25), (int)(height*0.25));
-		Point upperRightQuarter = new Point((int)(width*0.75), (int)(height*0.25));
-		Point lowerRightQuarter = new Point((int)(width*0.75), (int)(height*0.75));
-		Point lowerLeftQuarter = new Point((int)(width*0.25), (int)(height*0.75));
+		Point upperLeftQuarter = new Point((int) (width * 0.25), (int) (height * 0.25));
+		Point upperRightQuarter = new Point((int) (width * 0.75), (int) (height * 0.25));
+		Point lowerRightQuarter = new Point((int) (width * 0.75), (int) (height * 0.75));
+		Point lowerLeftQuarter = new Point((int) (width * 0.25), (int) (height * 0.75));
 
 		int checkeredWhite = Color.WHITE;
 		int checkeredGray = 0xFFC0C0C0;
@@ -278,27 +273,26 @@ public class RectangleFillToolIntegrationTest {
 	}
 
 	@Test
-	public void testEraseWithHeartShape() throws NoSuchFieldException, IllegalAccessException {
+	public void testEraseWithHeartShape() {
 		PaintroidApplication.perspective.setScale(1.0f);
 
 		selectTool(ToolType.SHAPE);
-		Tool tool = PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
 		selectShapeTypeAndDraw(R.id.shapes_square_btn, true, BLACK_COLOR_PICKER_BUTTON_POSITION);
 		int backgroundColor = tool.getDrawPaint().getColor();
 
 		clickSelectedToolButton();
 		selectShapeTypeAndDraw(R.id.shapes_heart_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 
-
-		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, tool, FIELD_NAME_DRAWING_BITMAP);
+		Bitmap drawingBitmap = tool.drawingBitmap;
 		int boxWidth = drawingBitmap.getWidth();
 		int boxHeight = drawingBitmap.getHeight();
-		PointF toolPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, tool, FIELD_NAME_TOOL_POSITION);
+		PointF toolPosition = tool.toolPosition;
 
-		Point upperLeftPixel = new Point((int)(toolPosition.x - boxWidth/4), (int)(toolPosition.y - boxHeight/4));
-		Point upperRightPixel = new Point((int)(toolPosition.x + boxWidth/4), (int)(toolPosition.y - boxHeight/4));
-		Point lowerRightPixel = new Point((int)(toolPosition.x + boxWidth/4), (int)(toolPosition.y + boxHeight/4));
-		Point lowerLeftPixel = new Point((int)(toolPosition.x - boxWidth/4), (int)(toolPosition.y + boxHeight/4));
+		Point upperLeftPixel = new Point((int) (toolPosition.x - boxWidth / 4), (int) (toolPosition.y - boxHeight / 4));
+		Point upperRightPixel = new Point((int) (toolPosition.x + boxWidth / 4), (int) (toolPosition.y - boxHeight / 4));
+		Point lowerRightPixel = new Point((int) (toolPosition.x + boxWidth / 4), (int) (toolPosition.y + boxHeight / 4));
+		Point lowerLeftPixel = new Point((int) (toolPosition.x - boxWidth / 4), (int) (toolPosition.y + boxHeight / 4));
 
 		Bitmap bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
 
@@ -315,12 +309,11 @@ public class RectangleFillToolIntegrationTest {
 		assertEquals("Pixel should not have been erased", backgroundColor, pixelColor);
 	}
 
-
-	public void selectShapeTypeAndDraw(int shapeBtnId, boolean changeColor, int colorButtonPosition) throws NoSuchFieldException, IllegalAccessException {
+	public void selectShapeTypeAndDraw(int shapeBtnId, boolean changeColor, int colorButtonPosition) {
 		onView(withId(shapeBtnId)).perform(click());
 
-		Tool tool = PaintroidApplication.currentTool;
-		PointF centerPointTool = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, tool, FIELD_NAME_TOOL_POSITION);
+		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		PointF centerPointTool = tool.toolPosition;
 
 		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);
 
@@ -330,9 +323,9 @@ public class RectangleFillToolIntegrationTest {
 			selectColorPickerPresetSelectorColor(colorButtonPosition);
 		}
 
-		float rectWidth = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, tool, FIELD_NAME_BOX_WIDTH);
-		float rectHeight = (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, tool, FIELD_NAME_BOX_HEIGHT);
-		Bitmap drawingBitmap = (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, tool, FIELD_NAME_DRAWING_BITMAP);
+		float rectWidth = tool.boxWidth;
+		float rectHeight = tool.boxHeight;
+		Bitmap drawingBitmap = tool.drawingBitmap;
 
 		int colorInRectangleTool = tool.getDrawPaint().getColor();
 		int colorInRectangle = drawingBitmap.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
@@ -350,5 +343,4 @@ public class RectangleFillToolIntegrationTest {
 		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor, colorAfterDrawing);
 	}
-
 }

@@ -18,64 +18,53 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bg_screen1">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/intro_possibilites_topbar"
-        layout="@layout/top_bar"/>
+    <include layout="@layout/top_bar"
+        android:id="@+id/intro_possibilites_topbar"/>
 
     <LinearLayout
         android:id="@+id/intro_possibilities_bottom_bar"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_bar_height"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/custom_background_color">
+        android:layout_alignParentStart="true">
 
-        <include layout="@layout/bottom_bar"/>
-
+        <include layout="@layout/bottom_bar" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@color/light_gray"
         android:layout_above="@id/intro_possibilities_bottom_bar"
         android:layout_below="@id/intro_possibilites_topbar">
 
-        <LinearLayout
-            android:id="@+id/introDrawingSurfaceView"
+        <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="15dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_marginTop="15dp"
             android:background="@drawable/checkeredbg_repeat"
             android:orientation="horizontal"/>
     </LinearLayout>
 
-
-
-
-
     <RelativeLayout
         android:id="@+id/intro_possibilities_textview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="#d20097a7"
         android:gravity="top"
         android:orientation="vertical"
         android:paddingEnd="@dimen/intro_margin_side"
         android:paddingStart="@dimen/intro_margin_side"
-        android:paddingTop="@dimen/intro_margin_top"
+        android:paddingTop="@dimen/intro_margin_top_possibilities"
+        android:layout_below="@id/intro_possibilites_topbar"
         android:visibility="visible">
 
         <TextView
@@ -96,7 +85,5 @@
             android:text="@string/intro_possibilities_text"/>
 
     </RelativeLayout>
-
-
 
 </RelativeLayout>

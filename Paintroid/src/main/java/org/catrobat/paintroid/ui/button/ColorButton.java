@@ -19,10 +19,6 @@
 
 package org.catrobat.paintroid.ui.button;
 
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,75 +26,70 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
-import android.widget.ImageButton;
 
-public class ColorButton extends ImageButton implements OnColorPickedListener {
+import org.catrobat.paintroid.R;
 
-	private static final int RECT_SIDE_LENGTH = 50;
+public class ColorButton extends AppCompatImageButton {
+
+	private static final int RECT_SIDE_LENGTH = 25;
 	private static final int RECT_BORDER_SIZE = 2;
 	private static final int RECT_BORDER_COLOR = Color.LTGRAY;
 
-	private Paint mColorPaint;
-	private Paint mBorderPaint;
-	private Paint mBackgroundPaint;
-	private Bitmap mBackgroundBitmap;
+	private Paint colorPaint;
+	private Paint borderPaint;
+	private Paint backgroundPaint;
 
-	private int mHeigth;
-	private int mWidth;
+	private RectF rect;
 
 	public ColorButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		if (!isInEditMode())
-			init(context);
+		init();
 	}
 
-	private void init(Context context) {
-		mColorPaint = new Paint();
-		mBackgroundPaint = new Paint();
-		mBorderPaint = new Paint();
-		mBorderPaint.setColor(RECT_BORDER_COLOR);
+	private void init() {
+		colorPaint = new Paint();
+		backgroundPaint = new Paint();
+		borderPaint = new Paint();
+		borderPaint.setColor(RECT_BORDER_COLOR);
+		borderPaint.setStyle(Paint.Style.STROKE);
+		borderPaint.setStrokeWidth(RECT_BORDER_SIZE);
 
-		mBackgroundBitmap = BitmapFactory.decodeResource(getResources(),
+		rect = new RectF();
+
+		Bitmap mBackgroundBitmap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.checkeredbg);
 		BitmapShader backgroundShader = new BitmapShader(mBackgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
-		mBackgroundPaint.setShader(backgroundShader);
-		ColorPickerDialog.init(context);
-		ColorPickerDialog.getInstance().addOnColorPickedListener(this);
+		backgroundPaint.setShader(backgroundShader);
 	}
 
-	@Override
 	public void colorChanged(int color) {
-
-		mColorPaint.setColor(color);
+		colorPaint.setColor(color);
 		invalidate();
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		int rectX = mWidth / 2 - RECT_SIDE_LENGTH / 2;
-		int rectY = mHeigth / 2 - RECT_SIDE_LENGTH / 2;
+		super.draw(canvas);
 
-		Rect colorRect = new Rect(rectX, rectY, rectX + RECT_SIDE_LENGTH, rectY
-				+ RECT_SIDE_LENGTH);
-		Rect borderRect = new Rect(colorRect.left - RECT_BORDER_SIZE,
-				colorRect.top - RECT_BORDER_SIZE, colorRect.right
-				+ RECT_BORDER_SIZE, colorRect.bottom + RECT_BORDER_SIZE);
+		float density = getResources().getDisplayMetrics().density;
+		float rectSideLengthDp = RECT_SIDE_LENGTH * density;
 
-		if (!isInEditMode()) {
-			canvas.drawRect(borderRect, mBorderPaint);
-			canvas.drawRect(colorRect, mBackgroundPaint);
-			canvas.drawRect(colorRect, mColorPaint);
+		float width = canvas.getWidth();
+		float height = canvas.getHeight();
+
+		float rectX = (width - rectSideLengthDp) / 2;
+		float rectY = (height - rectSideLengthDp) / 2;
+		rect.set(rectX, rectY, rectX + rectSideLengthDp, rectY + rectSideLengthDp);
+
+		if (Color.alpha(colorPaint.getColor()) != 0xff) {
+			canvas.drawRect(rect, backgroundPaint);
 		}
-	}
-
-	@Override
-	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-		mWidth = MeasureSpec.getSize(widthMeasureSpec);
-		mHeigth = MeasureSpec.getSize(heightMeasureSpec);
+		canvas.drawRect(rect, colorPaint);
+		canvas.drawRect(rect, borderPaint);
 	}
 }

@@ -21,35 +21,14 @@ package org.catrobat.paintroid.test.utils;
 
 import java.lang.reflect.Field;
 
-public class PrivateAccess {
+public final class PrivateAccess {
+	private PrivateAccess() {
+	}
 
 	public static Object getMemberValue(Class<?> classFromObject, Object object, String fieldName)
 			throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		Field field = classFromObject.getDeclaredField(fieldName);
 		field.setAccessible(true);
 		return field.get(object);
-	}
-
-	public static void setMemberValue(Class<?> classFromObject, Object object, String fieldName, Object value)
-			throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		Field field = classFromObject.getDeclaredField(fieldName);
-		field.setAccessible(true);
-		field.set(object, value);
-	}
-
-	public static boolean getMemberValueBoolean(Class<?> classFromObject, Object object, String fieldName)
-			throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		Field field = classFromObject.getDeclaredField(fieldName);
-		field.setAccessible(true);
-
-		return field.getBoolean(object);
-	}
-
-	public static void setMemberValue(Class<?> classFromObject, Object object, String fieldName, boolean value)
-			throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		Field field = classFromObject.getDeclaredField(fieldName);
-		field.setAccessible(true);
-		field.setBoolean(object, value);
-		field.setAccessible(false);
 	}
 }

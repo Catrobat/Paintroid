@@ -22,10 +22,6 @@ package org.catrobat.paintroid.ui.dragndrop;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
-import android.widget.ImageButton;
-
-import org.catrobat.paintroid.R;
-
 
 public class OnDragListener implements View.OnDragListener {
 
@@ -34,7 +30,6 @@ public class OnDragListener implements View.OnDragListener {
 	public OnDragListener(BrickDragAndDrop brick) {
 		this.brick = brick;
 	}
-
 
 	public boolean onDrag(View v, DragEvent event) {
 
@@ -61,13 +56,10 @@ public class OnDragListener implements View.OnDragListener {
 				brick.dragEnded();
 				return true;
 			default:
-				Log.e("Drag and Drop: ","Unknown action type receiver by OnDragListener");
+				Log.e("Drag and Drop: ", "Unknown action type receiver by OnDragListener");
 				break;
-
 		}
 
 		return false;
 	}
-
-
 }

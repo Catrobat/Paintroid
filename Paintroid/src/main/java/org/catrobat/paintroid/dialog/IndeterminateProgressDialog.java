@@ -19,28 +19,30 @@
 
 package org.catrobat.paintroid.dialog;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.widget.ProgressBar;
+
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 
-import android.content.Context;
-import android.view.Window;
-
-public final class IndeterminateProgressDialog extends BaseDialog {
+public final class IndeterminateProgressDialog extends AlertDialog {
 
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "IndeterminateProgressDialog has not been initialized. Call init() first!";
 
-	private static IndeterminateProgressDialog instance;
+	private static Dialog instance;
 
-	private IndeterminateProgressDialog(Context context) {
-		super(context);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.custom_progress_dialog);
-		// setIndeterminate(true);
-		// setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		setCancelable(false);
+	public IndeterminateProgressDialog(Context context) {
+		super(context, R.style.CustomProgressDialog);
 	}
 
-	public static IndeterminateProgressDialog getInstance() {
+	public static Dialog getInstance() {
 		if (instance == null) {
 			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
 		}
@@ -49,5 +51,24 @@ public final class IndeterminateProgressDialog extends BaseDialog {
 
 	public static void init(MainActivity mainActivity) {
 		instance = new IndeterminateProgressDialog(mainActivity);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.custom_progress_dialog);
+
+		// Remove this section once AppCompat supports tinting Progressbars
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+			if (progressBar != null) {
+				Drawable drawable = progressBar.getIndeterminateDrawable();
+				drawable.setColorFilter(
+						ContextCompat.getColor(getContext(), R.color.tools_text_color), PorterDuff.Mode.SRC_IN);
+			}
+		}
+
+		setCancelable(false);
 	}
 }

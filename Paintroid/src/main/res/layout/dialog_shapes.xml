@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         android:id="@+id/shape_tool_dialog_title"
@@ -12,11 +27,11 @@
         android:textAllCaps="true"
         android:textColor="@color/dialog_subtitle"
         android:textStyle="bold"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"/>
 
     <View
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -28,49 +43,45 @@
         android:id="@+id/shapes_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/shapes_square_btn"
+            style="@style/SelectableButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_square_black_24dp"
-            android:background="@color/transparent"/>
+            android:padding="16dp"/>
 
         <ImageButton
             android:id="@+id/shapes_circle_btn"
+            style="@style/SelectableButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_circle_black_24dp"
-            android:background="@color/transparent"/>
+            android:padding="16dp"
+            android:src="@drawable/ic_circle_black_24dp"/>
 
         <ImageButton
             android:id="@+id/shapes_heart_btn"
+            style="@style/SelectableButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_heart_black_24dp"
-            android:background="@color/transparent"/>
+            android:padding="16dp"
+            android:src="@drawable/ic_heart_black_24dp"/>
 
         <ImageButton
             android:id="@+id/shapes_star_btn"
+            style="@style/SelectableButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_star_black_24dp"
-            android:background="@color/transparent"/>
+            android:padding="16dp"/>
     </LinearLayout>
 
-</LinearLayout>
+</merge>

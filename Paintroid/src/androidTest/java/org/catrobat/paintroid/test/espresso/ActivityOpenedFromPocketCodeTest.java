@@ -28,8 +28,9 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
@@ -53,7 +54,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.EXTRA_CATROID_PICTURE_PATH_NAME;
+
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
@@ -83,7 +84,7 @@ public class ActivityOpenedFromPocketCodeTest {
 		imageFile = createImageFile("testFile");
 
 		Intent extras = new Intent();
-		extras.putExtra(EXTRA_CATROID_PICTURE_PATH_NAME, imageFile.getAbsolutePath());
+		extras.putExtra(Constants.PAINTROID_PICTURE_PATH, imageFile.getAbsolutePath());
 		launchActivityRule.launchActivity(extras);
 
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
@@ -95,8 +96,8 @@ public class ActivityOpenedFromPocketCodeTest {
 
 	@After
 	public void tearDown() {
-		PaintroidApplication.savedPictureUri = null;
-		PaintroidApplication.isSaved = false;
+		NavigationDrawerMenuActivity.savedPictureUri = null;
+		NavigationDrawerMenuActivity.isSaved = false;
 
 		if (imageFile != null && imageFile.exists()) {
 			imageFile.delete();
@@ -119,7 +120,7 @@ public class ActivityOpenedFromPocketCodeTest {
 
 		onView(withText(R.string.save_button_text)).perform(click());
 
-		assertEquals("Catroid picture path not correct", PaintroidApplication.catroidPicturePath, imageFile.getAbsolutePath());
+		assertEquals("Catroid picture path not correct", launchActivityRule.getActivity().catroidPicturePath, imageFile.getAbsolutePath());
 
 		assertThat("Image modification not saved", imageFile.lastModified(), greaterThan(lastModifiedBefore));
 		assertThat("Saved image length not changed", imageFile.length(), greaterThan(fileSizeBefore));
@@ -151,7 +152,6 @@ public class ActivityOpenedFromPocketCodeTest {
 
 		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
 		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
-
 
 		long lastModifiedBefore = imageFile.lastModified();
 		long fileSizeBefore = imageFile.length();

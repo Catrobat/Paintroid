@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -16,7 +17,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
     <!-- colors for presets in color picker -->
     <array name="preset_colors">
@@ -45,85 +46,19 @@
         <item name="menu_new_image_empty_image">@string/menu_new_image_empty_image</item>
         <item name="menu_new_image_from_camera">@string/menu_new_image_from_camera</item>
     </array>
-    <array name="edit_layer">
-        <!--<item name="edit_layer_visible">@string/layer_visible</item>-->
-        <!--<item name="edit_layer_lock">@string/layer_lock</item>-->
-        <!--<item name="edit_layer_rename">@string/layer_rename</item>-->
-        <!--<item name="edit_layer_merge">@string/layer_merge</item>-->
-        <!--<item name="edit_layer_delete">@string/layer_delete</item>-->
-        <item name="edit_layer_copy">@string/layer_copy</item>
-        <item name="edit_layer_move_up">@string/layer_move_up</item>
-        <item name="edit_layer_move_down">@string/layer_move_down</item>
-        <item name="edit_layer_move_to_top">@string/layer_move_to_top</item>
-        <item name="edit_layer_move_to_bottom">@string/layer_move_to_bottom</item>
-    </array>
 
     <string-array name="text_tool_font_array">
         <item>@string/text_tool_dialog_font_monospace</item>
         <item>@string/text_tool_dialog_font_serif</item>
         <item>@string/text_tool_dialog_font_sans_serif</item>
         <item>@string/text_tool_dialog_font_dubai</item>
-        <item>@string/text_tool_dialog_font_arabic_alarabiya</item>
+        <item>@string/text_tool_dialog_font_arabic_stc</item>
     </string-array>
 
-    <string-array name="text_tool_size_array" translatable="false">
+    <integer-array name="text_tool_size_array" translatable="false">
         <item>20</item>
         <item>30</item>
         <item>40</item>
         <item>60</item>
-    </string-array>
-
-    <string-array name="Languages_items" translatable="false">
-        <item>Device Language</item>
-        <item>Azərbaycan</item>
-        <item>Bosanski</item>
-        <item>Català(Espanya)</item>
-        <item>Čeština</item>
-        <item>Српски(Latin)</item>
-        <item>Cрпски(Ћирилица)</item>
-        <item>Dansk</item>
-        <item>Deutsch</item>
-        <item>English(Australia)</item>
-        <item>English(Canada)</item>
-        <item>English(United Kingdom)</item>
-        <item>Español</item>
-        <item>Français</item>
-        <item>Galego</item>
-        <item>Hrvatski</item>
-        <item>Indonesia</item>
-        <item>Italiano</item>
-        <item>Magyar</item>
-        <item>Македонски</item>
-        <item>Malay</item>
-        <item>Nederlands(Nederland)</item>
-        <item>Norsk</item>
-        <item>Polski</item>
-        <item>Português(Brasil)</item>
-        <item>Português(Portugal)</item>
-        <item>Pусский</item>
-        <item>Română</item>
-        <item>Shqip</item>
-        <item>Slovenščina</item>
-        <item>Svenska</item>
-        <item>Tiếng Việt</item>
-        <item>Türkçe</item>
-        <item>മലയാളം</item>
-        <item>தமிழ்</item>
-        <item>తెలుగు</item>
-        <item>ไทย</item>
-        <item>ગુજરાતી</item>
-        <item>हिंदी</item>
-        <item>日本語 </item>
-        <item>한국어 </item>
-        <item>简体中文</item>
-        <item>中國傳統的</item>
-        <item>العربية</item>
-        <item>اردو</item>
-        <item>فارسی</item>
-        <item>پښتو</item>
-        <item>سنڌي</item>
-        <item>עִברִית</item>
-    </string-array>
-
-
+    </integer-array>
 </resources>

@@ -1,73 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/toolbar"
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_top_bar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/top_bar_height"
-    android:background="@color/custom_background_color"
-    android:elevation="4dp"
-    android:orientation="horizontal"
-    >
+    tools:showIn="@layout/main">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/layout_top_bar"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:id="@+id/top_bar_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:weightSum="4"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp">
+        android:weightSum="4">
 
         <ImageButton
             android:id="@+id/btn_top_undo"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            style="?actionButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/transparent"
-            android:src="@drawable/icon_menu_undo" />
+            android:src="@drawable/undo_button_selector" />
 
         <ImageButton
             android:id="@+id/btn_top_redo"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            style="?actionButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/transparent"
-            android:src="@drawable/icon_menu_redo" />
+            android:src="@drawable/redo_button_selector" />
 
-        <org.catrobat.paintroid.ui.ClickableFrameLayout
-            android:id="@+id/btn_top_colorframe"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
             <org.catrobat.paintroid.ui.button.ColorButton
                 android:id="@+id/btn_top_color"
+                style="?actionButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-            <ImageButton
+                android:layout_height="match_parent" />
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/btn_top_color_palette"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="45dip"
-                android:layout_marginTop="20dip"
-                android:layout_marginLeft="5dip"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/ic_icon_menu_color_palette"
-                android:backgroundTint="@color/color_chooser_white"
-                android:foreground="@color/color_chooser_white"
-                android:foregroundTint="@color/color_chooser_white"
-                android:clickable="false" />
-        </org.catrobat.paintroid.ui.ClickableFrameLayout>
-
+                android:layout_gravity="center"
+                android:layout_marginStart="5dip"
+                android:layout_marginTop="12dip"
+                android:src="@drawable/ic_icon_menu_color_palette"
+                app:tint="@android:color/white" />
+        </FrameLayout>
 
         <ImageButton
             android:id="@+id/btn_top_layers"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            style="?actionButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/transparent"
             android:src="@drawable/icon_menu_layers"/>
-
     </LinearLayout>
-
-</android.support.v7.widget.Toolbar>
+</LinearLayout>
