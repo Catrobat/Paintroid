@@ -109,51 +109,28 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp" />
 
-    <RadioGroup
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="15dp"
         android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/stroke_rbtn_rect"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:buttonTint="@color/dialog_stroke_element_color"
-            android:layout_marginEnd="5dp" />
-
-        <ImageButton
-            android:id="@+id/stroke_ibtn_rect"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:tint="@color/dialog_stroke_element_color"
-            android:minHeight="32dip"
-            android:minWidth="32dip"
-            android:src="@drawable/square"
-            android:layout_marginEnd="20dp" />
-
-        <RadioButton
-            android:id="@+id/stroke_rbtn_circle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:checked="true"
-            android:buttonTint="@color/dialog_stroke_element_color"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="5dp" />
 
         <ImageButton
             android:id="@+id/stroke_ibtn_circle"
+            style="@style/SelectableButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:tint="@color/dialog_stroke_element_color"
-            android:minHeight="32dip"
-            android:minWidth="32dip"
-            android:src="@drawable/circle" />
-    </RadioGroup>
+            android:padding="16dp"
+            android:src="@drawable/ic_circle_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/stroke_ibtn_rect"
+            style="@style/SelectableButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:src="@drawable/ic_square_black_24dp" />
+    </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

@@ -35,8 +35,8 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.DEFAULT_STROKE_WIDTH;
@@ -248,7 +248,7 @@ public class EraserToolIntegrationTest {
 		onBrushPickerView().onStrokeWidthSeekBar()
 				.check(matches(withProgress(eraserStrokeWidth)));
 		onBrushPickerView().onStrokeCapRoundView()
-				.check(matches(isChecked()));
+				.check(matches(isSelected()));
 
 		onToolProperties()
 				.checkCap(Cap.ROUND)

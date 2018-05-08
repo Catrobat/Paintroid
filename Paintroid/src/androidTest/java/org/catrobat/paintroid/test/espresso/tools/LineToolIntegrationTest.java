@@ -149,7 +149,7 @@ public class LineToolIntegrationTest {
 
 		openToolOptionsForCurrentTool();
 
-		onView(withId(R.id.stroke_rbtn_rect)).perform(click());
+		onView(withId(R.id.stroke_ibtn_rect)).perform(click());
 
 		Paint strokePaint = getCurrentToolPaint();
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();

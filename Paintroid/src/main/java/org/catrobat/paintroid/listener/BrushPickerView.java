@@ -33,7 +33,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.SeekBar;
 
 import org.catrobat.paintroid.R;
@@ -52,8 +51,8 @@ public final class BrushPickerView implements View.OnClickListener {
 	public ArrayList<BrushPickerView.OnBrushChangedListener> brushChangedListener;
 	private final EditText brushSizeText;
 	private final SeekBar brushWidthSeekBar;
-	private final RadioButton radioButtonCircle;
-	private final RadioButton radioButtonRect;
+	private final ImageButton buttonCircle;
+	private final ImageButton buttonRect;
 	private final DrawerPreview drawerPreview;
 	private final ColorPickerDialog.OnColorPickedListener onColorPickedListener;
 
@@ -63,10 +62,8 @@ public final class BrushPickerView implements View.OnClickListener {
 		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
 		View brushPickerView = inflater.inflate(R.layout.dialog_stroke, rootView, true);
 
-		ImageButton buttonCircle = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_circle);
-		ImageButton buttonRect = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_rect);
-		radioButtonCircle = (RadioButton) brushPickerView.findViewById(R.id.stroke_rbtn_circle);
-		radioButtonRect = (RadioButton) brushPickerView.findViewById(R.id.stroke_rbtn_rect);
+		buttonCircle = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_circle);
+		buttonRect = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_rect);
 		brushWidthSeekBar = (SeekBar) brushPickerView.findViewById(R.id.stroke_width_seek_bar);
 		brushWidthSeekBar.setOnSeekBarChangeListener(new BrushPickerView.OnBrushChangedWidthSeekBarListener());
 		brushSizeText = (EditText) brushPickerView.findViewById(R.id.stroke_width_width_text);
@@ -76,8 +73,6 @@ public final class BrushPickerView implements View.OnClickListener {
 
 		buttonCircle.setOnClickListener(this);
 		buttonRect.setOnClickListener(this);
-		radioButtonCircle.setOnClickListener(this);
-		radioButtonRect.setOnClickListener(this);
 
 		onColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
 			@Override
@@ -132,20 +127,14 @@ public final class BrushPickerView implements View.OnClickListener {
 		switch (v.getId()) {
 			case R.id.stroke_ibtn_circle:
 				updateStrokeCap(Cap.ROUND);
-				radioButtonCircle.setChecked(true);
+				buttonCircle.setSelected(true);
+				buttonRect.setSelected(false);
 				hideKeyboard();
 				break;
 			case R.id.stroke_ibtn_rect:
 				updateStrokeCap(Cap.SQUARE);
-				radioButtonRect.setChecked(true);
-				hideKeyboard();
-				break;
-			case R.id.stroke_rbtn_circle:
-				updateStrokeCap(Cap.ROUND);
-				hideKeyboard();
-				break;
-			case R.id.stroke_rbtn_rect:
-				updateStrokeCap(Cap.SQUARE);
+				buttonRect.setSelected(true);
+				buttonCircle.setSelected(false);
 				hideKeyboard();
 				break;
 			default:
@@ -156,9 +145,11 @@ public final class BrushPickerView implements View.OnClickListener {
 
 	public void setCurrentPaint(Paint currentPaint) {
 		if (currentPaint.getStrokeCap() == Cap.ROUND) {
-			radioButtonCircle.setChecked(true);
+			buttonCircle.setSelected(true);
+			buttonRect.setSelected(false);
 		} else {
-			radioButtonRect.setChecked(true);
+			buttonCircle.setSelected(false);
+			buttonRect.setSelected(true);
 		}
 		brushWidthSeekBar.setProgress((int) currentPaint.getStrokeWidth());
 		brushSizeText.setText(String.format(Locale.getDefault(), "%d", (int) currentPaint.getStrokeWidth()));

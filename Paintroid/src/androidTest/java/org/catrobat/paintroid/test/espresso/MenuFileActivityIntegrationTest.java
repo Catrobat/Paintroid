@@ -218,7 +218,7 @@ public class MenuFileActivityIntegrationTest {
 		openNavigationDrawer();
 		onView(withText(R.string.menu_language)).perform(click());
 		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
-		onView(withText("Device Language")).perform(click());
+		onView(withText(R.string.device_language)).perform(click());
 
 		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
