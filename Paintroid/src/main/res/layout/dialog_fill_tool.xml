@@ -17,7 +17,15 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:focusableInTouchMode="true">
 
     <TextView
         android:id="@+id/fill_tool_dialog_color_tolerance_input_text_view"
@@ -73,8 +81,12 @@
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:textCursorDrawable="@null"
+            android:imeOptions="actionDone"
             android:layout_weight="1"
+            android:textSize="14sp"
+            android:textStyle="bold"
             android:textColor="@color/holo_blue_bright" />
     </LinearLayout>
 
-</merge>
+    </LinearLayout>
+</ScrollView>

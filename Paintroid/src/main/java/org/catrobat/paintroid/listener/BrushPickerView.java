@@ -71,6 +71,7 @@ public final class BrushPickerView implements View.OnClickListener {
 		brushWidthSeekBar.setOnSeekBarChangeListener(new BrushPickerView.OnBrushChangedWidthSeekBarListener());
 		brushSizeText = (EditText) brushPickerView.findViewById(R.id.stroke_width_width_text);
 		brushSizeText.setFilters(new InputFilter[]{new NumberRangeFilter(1, 100)});
+		brushSizeText.setCursorVisible(false);
 		drawerPreview = (DrawerPreview) brushPickerView.findViewById(R.id.drawer_preview);
 
 		buttonCircle.setOnClickListener(this);
@@ -109,6 +110,12 @@ public final class BrushPickerView implements View.OnClickListener {
 			}
 		});
 		brushSizeText.requestFocus();
+		brushSizeText.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				brushSizeText.setCursorVisible(true);
+			}
+		});
 		brushSizeText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
@@ -220,6 +227,7 @@ public final class BrushPickerView implements View.OnClickListener {
 		InputMethodManager imm = (InputMethodManager) brushSizeText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm != null) {
 			imm.hideSoftInputFromWindow(brushSizeText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+			brushSizeText.setCursorVisible(false);
 		}
 	}
 }
