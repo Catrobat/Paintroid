@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">Herz</string>
   <string name="fill_tool_dialog_color_tolerance_title">Farbtoleranz</string>
   <string name="transform_tool_auto_crop_text">Autom. Anpassung</string>
-  <string name="transform_tool_roate_text">Drehen</string>
-  <string name="transform_tool_mirror_text">Spiegeln</string>
   <string name="stamp_tool_copy_hint">Lange drücken um Inhalte zu kopieren</string>
   <string name="layers_title">Ebenen</string>
   <string name="layer_new">Neue Ebene</string>

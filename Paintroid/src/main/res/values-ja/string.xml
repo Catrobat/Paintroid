@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">ハート</string>
   <string name="fill_tool_dialog_color_tolerance_title">色の許容範囲</string>
   <string name="transform_tool_auto_crop_text">自動調整</string>
-  <string name="transform_tool_roate_text">回転</string>
-  <string name="transform_tool_mirror_text">ミラー</string>
   <string name="stamp_tool_copy_hint">長押ししてコンテンツをコピーします</string>
   <string name="layers_title">レイヤー</string>
   <string name="layer_new">新規レイヤ</string>

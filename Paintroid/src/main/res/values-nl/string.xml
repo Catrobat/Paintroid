@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">Hart</string>
   <string name="fill_tool_dialog_color_tolerance_title">Kleurtolerantie</string>
   <string name="transform_tool_auto_crop_text">Auto adjust</string>
-  <string name="transform_tool_roate_text">Draaien</string>
-  <string name="transform_tool_mirror_text">Spiegel</string>
   <string name="stamp_tool_copy_hint">Lang ingedrukt houden om inhoud te kopiëren</string>
   <string name="layers_title">Lagen</string>
   <string name="layer_new">Nieuwe laag</string>

@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">دل</string>
   <string name="fill_tool_dialog_color_tolerance_title">رنگ تحمل</string>
   <string name="transform_tool_auto_crop_text">Auto adjust</string>
-  <string name="transform_tool_roate_text">گھمايو</string>
-  <string name="transform_tool_mirror_text">آئينو</string>
   <string name="stamp_tool_copy_hint">ڪاپي ڪرڻ لاء ٽچ دٻائي ٻيهو</string>
   <string name="layers_title">ليير</string>
   <string name="layer_new">نئون ليير</string>

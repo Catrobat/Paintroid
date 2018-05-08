@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">Heart</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
   <string name="transform_tool_auto_crop_text">Auto adjust</string>
-  <string name="transform_tool_roate_text">Forgatás</string>
-  <string name="transform_tool_mirror_text">Mirror</string>
   <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Layers</string>
   <string name="layer_new">New Layer</string>

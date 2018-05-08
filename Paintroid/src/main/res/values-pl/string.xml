@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">Serce</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolerancja kolorów</string>
   <string name="transform_tool_auto_crop_text">Dopasuj automatycznie</string>
-  <string name="transform_tool_roate_text">Obróć</string>
-  <string name="transform_tool_mirror_text">Lustro</string>
   <string name="stamp_tool_copy_hint">Naciśnij długo, aby skopiować zawartość</string>
   <string name="layers_title">Warstwy</string>
   <string name="layer_new">Nowa Warstwa</string>

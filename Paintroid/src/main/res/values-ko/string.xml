@@ -104,8 +104,6 @@
   <string name="shape_tool_dialog_heart_title">하트</string>
   <string name="fill_tool_dialog_color_tolerance_title">색상 허용 오차</string>
   <string name="transform_tool_auto_crop_text">자동 조정</string>
-  <string name="transform_tool_roate_text">회전하기</string>
-  <string name="transform_tool_mirror_text">대칭</string>
   <string name="stamp_tool_copy_hint">복사하려면 길게 터치</string>
   <string name="layers_title">레이어</string>
   <string name="layer_new">새 레이어</string>
