@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">Bintang</string>
   <string name="shape_tool_dialog_heart_title">Heart</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Long press to copy content</string>
   <string name="layers_title">Layers</string>
   <string name="layer_new">Lapisan baru</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">Too many layers</string>
   <string name="layer_invisible">All layers invisible</string>
   <string name="layer_merged">Layers merged</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Bentuk</string>
   <string name="dialog_loading_image_failed_title">Galat saat memuat citra</string>
   <string name="dialog_loading_image_failed_text">Bukan berkas citra yang valid</string>
@@ -125,7 +126,7 @@
   <string name="intro_welcome_text">Dengan Pocket Paint tidak ada batasan untuk kreativitas anda. Jika anda baru, mulailah intro atau lewati saja jika anda sudah familiar dengan Pocket Paint.</string>
   <string name="intro_tool_more_information">Klik pada Peralatan untuk mendapatkan lebih banyak informasi</string>
   <string name="more_possibilities">More possibilities</string>
-  <string name="intro_possibilities_text">Untuk mengubah warna, gunakan undo/redo atau buka lapisan dialog menggunakan bar bagian atas.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Landscape</string>
   <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
   <string name="enjoy_pocket_paint">Anda sudah siap. Nikmatilah Pocket Paint.</string>

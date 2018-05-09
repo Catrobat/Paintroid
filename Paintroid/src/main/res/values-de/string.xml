@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">Stern</string>
   <string name="shape_tool_dialog_heart_title">Herz</string>
   <string name="fill_tool_dialog_color_tolerance_title">Farbtoleranz</string>
-  <string name="transform_tool_auto_crop_text">Autom. Anpassung</string>
+  <string name="transform_tool_auto_crop_text">zuschneiden</string>
+  <string name="transform_width_text">Breite</string>
+  <string name="transform_height_text">Höhe</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Lange drücken um Inhalte zu kopieren</string>
   <string name="layers_title">Ebenen</string>
   <string name="layer_new">Neue Ebene</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">Zu viele Ebenen</string>
   <string name="layer_invisible">Alle Ebenen sind unsichtbar</string>
   <string name="layer_merged">Ebenen zusammengefügt</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Form</string>
   <string name="dialog_loading_image_failed_title">Fehler beim Laden vom Bild</string>
   <string name="dialog_loading_image_failed_text">Keine gültige Bilddatei</string>
@@ -125,7 +126,7 @@
   <string name="intro_welcome_text">Mit Pocket Paint sind deiner Kreativität keine Grenzen gesetzt. Wenn du hier neu bist, starte das Intro oder überspringe es, wenn du bereits mit Pocket Paint vertraut bist.</string>
   <string name="intro_tool_more_information">Tippe auf ein Werkzeug, um weitere Informationen zu erhalten</string>
   <string name="more_possibilities">Mehr Möglichkeiten</string>
-  <string name="intro_possibilities_text">Um die Farbe zu ändern, \"Ruckgängig machen\" und \"Wiederherstellen\" zu nutzen, oder um den Ebenen-Dialog zu öffnen, verwende die Top-Bar.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Querformat</string>
   <string name="intro_landscape_text">Pocket Paint unterstützt auch zeichnen im Querformatmodus, um das beste Malerlebnis zu bieten.</string>
   <string name="enjoy_pocket_paint">Es kann losgehen. Viel Spaß mit Pocket Paint.</string>

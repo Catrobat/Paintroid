@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">Yıldız</string>
   <string name="shape_tool_dialog_heart_title">Kalp</string>
   <string name="fill_tool_dialog_color_tolerance_title">Renk toleransı</string>
-  <string name="transform_tool_auto_crop_text">Otomatik Ayarla</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">İçerik kopyalamak için uzun basın</string>
   <string name="layers_title">Katmanlar</string>
   <string name="layer_new">Yeni Katman</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">Çok fazla katman</string>
   <string name="layer_invisible">Tüm katmanlar görünmez</string>
   <string name="layer_merged">Birleştirilmiş Katmanlar</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Şekil</string>
   <string name="dialog_loading_image_failed_title">Resim yüklenirken hata oluştu</string>
   <string name="dialog_loading_image_failed_text">Geçersiz bir resim dosyası</string>
@@ -125,7 +126,7 @@
   <string name="intro_welcome_text">Pocket Paint ile yaratıcılığınızın sınırı yok. Yeniyseniz tanıtımı başlatın; Pocket Paint\'i biliyorsanız bu kısmı atlayın.</string>
   <string name="intro_tool_more_information">Daha fazla bilgi almak için bir araca tıkla</string>
   <string name="more_possibilities">Daha fazla olanak</string>
-  <string name="intro_possibilities_text">Renk değiştirmek için geri al / yinele tuşlarını kullanın. Veya üst çubuğu kullanın.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Yatay</string>
   <string name="intro_landscape_text">En iyi çizim deneyimi için Pocket Paint yatay modda çizimi de destekler.</string>
   <string name="enjoy_pocket_paint">Her şey ayarlandı. Pocket Code\'un keyfini çıkar.</string>

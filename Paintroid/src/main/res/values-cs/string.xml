@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">Hvězda</string>
   <string name="shape_tool_dialog_heart_title">Srdce</string>
   <string name="fill_tool_dialog_color_tolerance_title">Barevné odchylky</string>
-  <string name="transform_tool_auto_crop_text">Auto přizpůsobení</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Dlouhým stisknutím kopírovat obsah</string>
   <string name="layers_title">Vrstvy</string>
   <string name="layer_new">Nová vrstva</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">Příliš mnoho vrstev</string>
   <string name="layer_invisible">Všechny vrstvy neviditelné</string>
   <string name="layer_merged">Vrstvy spojeny</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Tvar</string>
   <string name="dialog_loading_image_failed_title">Chyba při načítání obrázku</string>
   <string name="dialog_loading_image_failed_text">Neplatná složka s obrázkem</string>
