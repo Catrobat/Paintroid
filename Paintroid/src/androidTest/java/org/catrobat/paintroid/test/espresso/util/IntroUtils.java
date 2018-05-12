@@ -115,7 +115,7 @@ public final class IntroUtils {
 		onView(withTapTargetDescription(toolType.getHelpTextResource()))
 				.check(matches(isDisplayed()));
 
-		tapTargetViewInteraction = onView(allOf(withClassName(Matchers.is(TT_CLASS_NAME))));
+		tapTargetViewInteraction = onView(withClassName(Matchers.is(TT_CLASS_NAME)));
 		tapTargetViewInteraction.check(matches(isDisplayed()));
 		fadeViewInteraction.check(matches(not(isDisplayed())));
 		tapTargetViewInteraction.perform(click()).check(isNotVisible());

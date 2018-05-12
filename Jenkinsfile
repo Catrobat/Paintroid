@@ -23,7 +23,7 @@ pipeline {
 		GRADLE_PROJECT_MODULE_NAME = "Paintroid"
 
 		// APK build output locations
-		APK_LOCATION_DEBUG = "${env.GRADLE_PROJECT_MODULE_NAME}/build/outputs/apk/Paintroid-debug.apk"
+		APK_LOCATION_DEBUG = "${env.GRADLE_PROJECT_MODULE_NAME}/build/outputs/apk/debug/Paintroid-debug.apk"
 
 		// share.catrob.at
 		CATROBAT_SHARE_UPLOAD_BRANCH = "develop"

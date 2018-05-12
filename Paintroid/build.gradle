@@ -41,18 +41,18 @@ if (project.hasProperty('independent')) {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 26
 
     defaultConfig {
         applicationId appId
         minSdkVersion 17
         targetSdkVersion 22
-        testInstrumentationRunner "org.catrobat.paintroid.test.utils.CustomAndroidJUnitRunner"
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         versionCode 21
         versionName "2.0.1"
         manifestPlaceholders += [appName: appName]
         externalNativeBuild.cmake.cppFlags "-fexceptions"
+        ndk.abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
     }
 
     sourceSets {
@@ -103,38 +103,35 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.4.0'
-    compile 'com.android.support:design:25.4.0'
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
 
-    androidTestCompile 'com.android.support.test:runner:1.0.1'
-    androidTestCompile 'com.android.support.test:rules:1.0.1'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.18.3'
 
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
 
-    pmd(
-            'net.sourceforge.pmd:pmd-core:5.8.1',
-            'net.sourceforge.pmd:pmd-java:5.8.1'
-    )
+    pmd 'net.sourceforge.pmd:pmd-core:5.8.1'
+    pmd 'net.sourceforge.pmd:pmd-java:5.8.1'
 
     checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
 }
 
-tasks.whenTaskAdded { task ->
-    if (!project.hasProperty('jenkins') && task.name.startsWith('assembleDebugAndroidTest')) {
-        verifyAnimationScalePermissionGranted.shouldRunAfter adbGrantAnimationScalePermission
-
-        task.dependsOn adbGrantAnimationScalePermission
-        task.dependsOn verifyAnimationScalePermissionGranted
-    }
-}
-
 if (project.hasProperty('jenkins')) {
-    project.android.dexOptions.preDexLibraries = false
+    android.dexOptions.preDexLibraries = false
+} else {
+    tasks.whenTaskAdded { task ->
+        if (task.name.startsWith('assembleDebugAndroidTest')) {
+            verifyAnimationScalePermissionGranted.shouldRunAfter adbGrantAnimationScalePermission
+
+            task.dependsOn adbGrantAnimationScalePermission
+            task.dependsOn verifyAnimationScalePermissionGranted
+        }
+    }
 }
