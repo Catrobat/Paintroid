@@ -50,7 +50,7 @@
   <string name="color_green">أخضر</string>
   <string name="color_blue">أزرق</string>
   <string name="color_alpha">ألفا</string>
-  <string name="color_pre">مُحدد مسبقاً</string>…
+  <string name="color_pre">مُحدد مسبقاً</string>
   <string name="color_hsv">اختيار اللون (hsv)</string>
   <string name="dialog_tools_title">أدوات</string>
   <string name="dialog_load">جاري التحميل…</string>
@@ -104,7 +104,10 @@
   <string name="shape_tool_dialog_star_title">نجمة</string>
   <string name="shape_tool_dialog_heart_title">قلب</string>
   <string name="fill_tool_dialog_color_tolerance_title">تفاوت اللون</string>
-  <string name="transform_tool_auto_crop_text">ضبط تلقائي</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">اضغط مطولاً لنسخ المحتوى</string>
   <string name="layers_title">الطبقات</string>
   <string name="layer_new">طبقة جديدة</string>
@@ -112,8 +115,6 @@
   <string name="layer_too_many_layers">طبقات عديدة</string>
   <string name="layer_invisible">كل الطبقات غير مرئية</string>
   <string name="layer_merged">تم دمج الطبقات</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">الشكل</string>
   <string name="dialog_loading_image_failed_title">خطأ في استيراد الصورة</string>
   <string name="dialog_loading_image_failed_text">ليس ملف صورة صالح</string>
@@ -126,7 +127,7 @@
   <string name="intro_welcome_text">مع بوكت بينت لا حدود لابداعك. إذا كنت جديداً, ابدأ المقدمة أو قم بتخطيها في حال كنت مألوفاً مع بوكت بينت.</string>
   <string name="intro_tool_more_information">انقر على الأداة للحصول على المزيد من المعلومات</string>
   <string name="more_possibilities">إمكانيات أكثر</string>
-  <string name="intro_possibilities_text">لتغيير اللون, استخدم تراجع / إعادة أو قم بفتح مربع حوار الطبقات في الشريط العلوي.</string>
+  <string name="intro_possibilities_text">استخدم الشريط العلوي لفتح القائمة الرئيسية, التراجع أو إعادة التغييرات, تغيير اللون, أو إظهار مربع حوار الطبقات.</string>
   <string name="landscape">أفقي</string>
   <string name="intro_landscape_text">بوكت بينت ايضاً يدعم الرسم في الوضع الأفقي لإعطائك أفضل تجربة للرسم.</string>
   <string name="enjoy_pocket_paint">أنت مستعد. تمتع بـ بوكت بينت.</string>

@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">स्टार</string>
   <string name="shape_tool_dialog_heart_title">दिल</string>
   <string name="fill_tool_dialog_color_tolerance_title">रंग सहिष्णुता</string>
-  <string name="transform_tool_auto_crop_text">स्वत: समायोजित करें</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">लांग प्रेस सामग्री की प्रतिलिपि करने के लिए</string>
   <string name="layers_title">परतों</string>
   <string name="layer_new">नई परत</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">बहुत अधिक परतें</string>
   <string name="layer_invisible">सभी परतों अदृश्य</string>
   <string name="layer_merged">लेयर्स मर्ज किए गए</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">आकार</string>
   <string name="dialog_loading_image_failed_title">चित्र तैयार होने में गड़बड़ी हो गयी हैं</string>
   <string name="dialog_loading_image_failed_text">ये उप्युक्त चित्र वाली फाइल नहीं हैं</string>
@@ -125,7 +126,7 @@
   <string name="intro_welcome_text">पॉकेट पेंट के साथ अपनी रचनात्मकता के लिए कोई सीमा नहीं है । यदि आप नए परिचय शुरू कर रहे है या बस इसे छोड़ अगर आप पॉकेट पेंट के साथ पहले से ही परिचित हैं ।</string>
   <string name="intro_tool_more_information">अधिक जानकारी प्राप्त करने के लिए एक उपकरण पर क्लिक करें</string>
   <string name="more_possibilities">अधिक संभावनाएं</string>
-  <string name="intro_possibilities_text">रंग बदलने के लिए, पूर्ववत् करें/फिर से करना या परतें संवाद ऊपरी पट्टी का उपयोग करें खोलें का उपयोग ।</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">परिदृश्य</string>
   <string name="intro_landscape_text">पॉकेट पेंट भी आप सबसे अच्छा पेंटिंग अनुभव देने के लिए परिदृश्य मोड में ड्राइंग का समर्थन करता है ।</string>
   <string name="enjoy_pocket_paint">तुम सब सेट कर रहे हैं । पॉकेट पेंट का आनंद लें ।</string>

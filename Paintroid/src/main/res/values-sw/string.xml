@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">Nyota</string>
   <string name="shape_tool_dialog_heart_title">Moyo</string>
   <string name="fill_tool_dialog_color_tolerance_title">Uvumilivu wa rangi</string>
-  <string name="transform_tool_auto_crop_text">Rekebisha moja kwa moja</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Bonyeza muda mrefu kunakili maudhui</string>
   <string name="layers_title">Safu</string>
   <string name="layer_new">Tabaka jipya</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">Safu nyingi sana</string>
   <string name="layer_invisible">Safu zote hazionekani</string>
   <string name="layer_merged">Safu zilizounganishwa</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Umbo</string>
   <string name="dialog_loading_image_failed_title">Kosa kwenye upakiaji picha</string>
   <string name="dialog_loading_image_failed_text">Faili la picha si halali</string>
@@ -125,7 +126,7 @@
   <string name="intro_welcome_text">Ukiwa na Mfuko Rangi hakuna kikomo cha ubunifu wako. Kama ni mgeni anza na utangulizi au ruka kama unauelewa wa Mfuko Rangi.</string>
   <string name="intro_tool_more_information">Bofya zana kupata maelezo zaidi</string>
   <string name="more_possibilities">Uwezekano zaidi</string>
-  <string name="intro_possibilities_text">Kubadilisha rangi, tumia futa/rudia au tumia ufito wa juu kufungua safu ya mazungumzo.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Kurasa mlalo</string>
   <string name="intro_landscape_text">Mfuko Rangi pia inasaidia kuchora kwenye kurasa mlalo ili kukupa uzoefu bora wa uchoraji.</string>
   <string name="enjoy_pocket_paint">Umeweka vyote. Furahia Mfuko Rangi.</string>
