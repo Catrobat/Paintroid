@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">星</string>
   <string name="shape_tool_dialog_heart_title">ハート</string>
   <string name="fill_tool_dialog_color_tolerance_title">色の許容範囲</string>
-  <string name="transform_tool_auto_crop_text">自動調整</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">長押ししてコンテンツをコピーします</string>
   <string name="layers_title">レイヤー</string>
   <string name="layer_new">新規レイヤ</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">レイヤーが多すぎます</string>
   <string name="layer_invisible">すべてのレイヤーが非表示</string>
   <string name="layer_merged">レイヤーを統合</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">図形</string>
   <string name="dialog_loading_image_failed_title">イメージの読み込みエラー</string>
   <string name="dialog_loading_image_failed_text">有効なイメージ ファイルではありません。</string>
@@ -125,7 +126,7 @@
   <string name="intro_welcome_text">ポケットペイントを使うとあなたの創造性に限界はありません。新しく使用する場合は紹介を開始してください。また、すでにポケットペイントを使っている場合はスキップしてください。</string>
   <string name="intro_tool_more_information">詳細情報を入手するにはツールをクリックしてください</string>
   <string name="more_possibilities">他の選択肢</string>
-  <string name="intro_possibilities_text">トップバーを使用して色の変更、元に戻す/やり直しの使用、またはレイヤーダイアログを開きます。</string>
+  <string name="intro_possibilities_text">上部のバーを使用してメインメニューを開く、変更を元に戻すまたは繰り返し、色を変更、またはレイヤーダイアログを表示します。</string>
   <string name="landscape">ランドスケープ (横長モード)</string>
   <string name="intro_landscape_text">ポケットのペイントは最高のペイント体験を得るためにランドスケープモード (横長モード) の描画もサポートします。</string>
   <string name="enjoy_pocket_paint">すべて設定されています。ポケットペイントをお楽しみください。</string>

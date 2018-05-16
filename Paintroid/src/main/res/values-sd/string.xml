@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">تارو</string>
   <string name="shape_tool_dialog_heart_title">دل</string>
   <string name="fill_tool_dialog_color_tolerance_title">رنگ تحمل</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">ڪاپي ڪرڻ لاء ٽچ دٻائي ٻيهو</string>
   <string name="layers_title">ليير</string>
   <string name="layer_new">نئون ليير</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">تمام گهڻا ليير ٿي ويا آهن</string>
   <string name="layer_invisible">سڀ ليير لڪل آهن</string>
   <string name="layer_merged">Layers merged</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">شڪل</string>
   <string name="dialog_loading_image_failed_title">تصوير لوڊ ڪرڻ ۾ نقص</string>
   <string name="dialog_loading_image_failed_text">تصوير موزون ناهي</string>
