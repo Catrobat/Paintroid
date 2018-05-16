@@ -27,7 +27,7 @@
   <string name="button_undo">취소</string>
   <string name="button_redo">다시 실행</string>
   <string name="button_stamp">스탬프</string>
-  <string name="button_import_image">그림</string>
+  <string name="button_import_image">그림 가져오기</string>
   <string name="button_eraser">지우개</string>
   <string name="button_transform">변환</string>
   <string name="button_fill">채우기</string>
@@ -39,7 +39,7 @@
   <string name="terms_of_use_and_service_content">포켓 코드와 Catrobat 프로그램에 의해 제공하는 다른 실행 파일을 사용하도록 허용하려면 우리의 이용 약관에 동의하고 포켓 코드와 우리의 다른 실행 파일을 사용할 때 엄격하게 약관을 따라 해야 합니다. 자세한 세부규정은 아래 링크를 참조하십시오.\n\n</string>
   <string name="terms_of_use_and_service_url_text">사용과 서비스 약관</string>
   <string name="about_title">포켓 코드에 대하여</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
+  <string name="about_content">포켓 페인트는 Catrobat project의 일부로 그림 편집기입니다.\n\nCatrobat은 시각적인 프로그래밍 언어이며 스마트폰, 태블릿, 모바일 브라우저를 위한 창의적인 도구입니다. \n\n포켓 페인트의 소스 코드는 %s와 라이센스 되어 있습니다.\n이 라이센스에 대한 정확한 세부 사항은 아래 링크를 참조하세요.\n\n</string>
   <string name="about_license_url_text">포켓 페인트 소스 코드 라이센스</string>
   <string name="about_catroid_url_text">Catrobat에 대하여</string>
   <string name="about_version">버전 정보</string>
@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">별</string>
   <string name="shape_tool_dialog_heart_title">하트</string>
   <string name="fill_tool_dialog_color_tolerance_title">색상 허용 오차</string>
-  <string name="transform_tool_auto_crop_text">자동 조정</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">복사하려면 길게 터치</string>
   <string name="layers_title">레이어</string>
   <string name="layer_new">새 레이어</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">너무 많은 레이어</string>
   <string name="layer_invisible">보이지 않는 모든 레이어</string>
   <string name="layer_merged">레이어 병합</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">모양</string>
   <string name="dialog_loading_image_failed_title">그림 로딩 중 에러</string>
   <string name="dialog_loading_image_failed_text">사용할 수 없는 이미지 파일</string>
@@ -125,7 +126,7 @@
   <string name="intro_welcome_text">포켓 페인트를 이용하면 창의력에 아무런 제한이 없습니다. 포켓 페인트를 잘 아시면 경우 생략하고 시작하세요.</string>
   <string name="intro_tool_more_information">더 많은 정보를 얻으려면 도구를 클릭</string>
   <string name="more_possibilities">더 많은 가능성</string>
-  <string name="intro_possibilities_text">색상을 변경 하려면, 실행 취소/다시 실행을 사용하가나 레이어 대화 상자를 사용하세요.</string>
+  <string name="intro_possibilities_text">맨 위의 막대를 사용하여 기본 메뉴를 열거나, 변경 재실행, 취소, 색상 바꾸기나  대화 상자 레이어를 표시할 수 있습니다.</string>
   <string name="landscape">가로 보기</string>
   <string name="intro_landscape_text">포켓 페인트는 가로보기 그리기를 지원합니다.</string>
   <string name="enjoy_pocket_paint">모든 설정이 다 되었습니다. 포켓 코드를 즐길 수 있습니다.</string>

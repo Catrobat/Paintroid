@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">Estrela</string>
   <string name="shape_tool_dialog_heart_title">Coração</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolerância de cor</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Pressione e segure para copiar o conteúdo</string>
   <string name="layers_title">Camadas</string>
   <string name="layer_new">Nova Camada</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">Há camadas demais</string>
   <string name="layer_invisible">Todas as camadas invisíveis</string>
   <string name="layer_merged">Layers merged</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Erro ao carregar imagem</string>
   <string name="dialog_loading_image_failed_text">Este não é um arquivo de imagem válido</string>
