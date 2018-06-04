@@ -26,7 +26,6 @@ import android.support.v4.view.ViewPager;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -48,9 +47,6 @@ public class ViewPagerIntegrationTest {
 
 	@Rule
 	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
-
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	private ViewPager viewPager;
 	private IntroPageViewAdapter viewPagerAdapter;

@@ -40,7 +40,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.TextTool;
 import org.junit.After;
@@ -99,8 +98,7 @@ public class TextToolIntegrationTest {
 	private static final double EQUALS_DELTA = 0.25d;
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+
 	private ActivityHelper activityHelper;
 	private IdlingResource dialogWait;
 	private TextTool textTool;

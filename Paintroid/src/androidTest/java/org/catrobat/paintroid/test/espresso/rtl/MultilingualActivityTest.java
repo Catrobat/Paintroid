@@ -26,7 +26,6 @@ import android.view.View;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,8 +50,6 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class MultilingualActivityTest {
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 	private static final Locale ARABICLOCALE = new Locale("ar");
 	private static final String ARABIC_SAVE_IMAGE = "حفظ الصورة";
 	private static final String ARABIC_LOAD_IMAGE = "استيراد صورة";

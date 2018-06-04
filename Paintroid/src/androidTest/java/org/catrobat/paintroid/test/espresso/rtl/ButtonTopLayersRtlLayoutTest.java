@@ -25,7 +25,6 @@ import android.support.test.runner.AndroidJUnit4;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,8 +46,7 @@ import static org.hamcrest.core.StringStartsWith.startsWith;
 @RunWith(AndroidJUnit4.class)
 public class ButtonTopLayersRtlLayoutTest {
 	private static final Locale ARABICLOCALE = new Locale("ar");
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+
 	@Rule
 	public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new RtlActivityTestRule<>(MainActivity.class);
 

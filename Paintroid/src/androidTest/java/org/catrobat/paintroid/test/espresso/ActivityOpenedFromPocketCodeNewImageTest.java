@@ -30,14 +30,11 @@ import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.RuleChain;
-import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.io.File;
@@ -61,12 +58,8 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 
 	private static final String IMAGE_NAME = "Look123";
 
-	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
-
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
 	@Rule
-	public TestRule chainRule = RuleChain.outerRule(launchActivityRule).around(systemAnimationsRule);
+	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
 
 	private ActivityHelper activityHelper;
 	private PointF screenPoint = null;

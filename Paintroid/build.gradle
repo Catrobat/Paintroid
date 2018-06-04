@@ -125,13 +125,4 @@ dependencies {
 
 if (project.hasProperty('jenkins')) {
     android.dexOptions.preDexLibraries = false
-} else {
-    tasks.whenTaskAdded { task ->
-        if (task.name.startsWith('assembleDebugAndroidTest')) {
-            verifyAnimationScalePermissionGranted.shouldRunAfter adbGrantAnimationScalePermission
-
-            task.dependsOn adbGrantAnimationScalePermission
-            task.dependsOn verifyAnimationScalePermissionGranted
-        }
-    }
 }
