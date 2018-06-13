@@ -4,12 +4,14 @@ pipeline {
 	agent {
 		docker {
 			image 'redeamer/jenkins-android-helper:latest'
-			args "--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle/:/.gradle -v /var/local/container_shared/android-sdk:/usr/local/android-sdk -v /var/local/container_shared/android-home:/.android -v /var/local/container_shared/emulator_console_auth_token:/.emulator_console_auth_token -v /var/local/container_shared/analytics.settings:/analytics.settings -v /var/local/container_shared/analytics.settings:/analytics.settings"
+			args "--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle/:/.gradle -v /var/local/container_shared/android-sdk-paintroid:/usr/local/android-sdk -v /var/local/container_shared/android-home:/.android -v /var/local/container_shared/emulator_console_auth_token:/.emulator_console_auth_token -v /var/local/container_shared/analytics.settings:/analytics.settings -v /var/local/container_shared/analytics.settings:/analytics.settings"
 		}
 	}
 
 	environment {
 		ANDROID_SDK_ROOT = "/usr/local/android-sdk"
+		// Deprecated: Still used by the used gradle version, once gradle respects ANDROID_SDK_ROOT, this can be removed
+		ANDROID_HOME = "/usr/local/android-sdk"
 		ANDROID_SDK_HOME = "/"
 		// This is important, as we want the keep our gradle cache, but we can't share it between containers
 		// the cache could only be shared if the gradle instances could comunicate with each other
@@ -17,7 +19,6 @@ pipeline {
 		GRADLE_USER_HOME = "/.gradle/${env.EXECUTOR_NUMBER}"
 		// Otherwise user.home returns ? for java applications
 		JAVA_TOOL_OPTIONS = "-Duser.home=/tmp/"
-		ANDROID_EMULATOR_IMAGE = "system-images;android-24;default;x86_64"
 
 		// modulename
 		GRADLE_PROJECT_MODULE_NAME = "Paintroid"
@@ -33,9 +34,10 @@ pipeline {
 		ANDROID_EMULATOR_HELPER_DEBUG = ""
 		// Needed for compatibiliby to current Jenkins-wide Envs
 		// Can be removed, once all builds are migrated to Pipeline
-		ANDROID_HOME = "/usr/local/android-sdk"
 		ANDROID_SDK_LOCATION = "/usr/local/android-sdk"
 		ANDROID_NDK = ""
+
+		PYTHONUNBUFFERED = "true"
 	}
 
 	options {
@@ -48,14 +50,14 @@ pipeline {
 			steps {
 				// Install Android SDK
 				lock("update-android-sdk-on-${env.NODE_NAME}") {
-					sh "jenkins_android_sdk_installer -g '${WORKSPACE}/${env.GRADLE_PROJECT_MODULE_NAME}/build.gradle' -s '${ANDROID_EMULATOR_IMAGE}'"
+					sh "./buildScripts/build_step_install_android_sdk"
 				}
 			}
 		}
 
 		stage('Static Analysis') {
 			steps {
-				sh "./gradlew pmd checkstyle lint"
+				sh "./buildScripts/build_step_run_static_analysis"
 			}
 
 			post {
@@ -69,31 +71,23 @@ pipeline {
 
 		stage('Unit and Device tests') {
 			steps {
-				// create emulator
-				sh "jenkins_android_emulator_helper -C -P 'hw.ramSize:800' -P 'vm.heapSize:128' -i '${ANDROID_EMULATOR_IMAGE}' -s xhdpi"
-				// start emulator
-				sh "jenkins_android_emulator_helper -S -r 768x1280 -l en_US -c '-gpu swiftshader_indirect -no-boot-anim -noaudio'"
-				// wait for emulator startup
-				sh "jenkins_android_emulator_helper -W"
 				// Run Unit and device tests
-				sh "jenkins_android_cmd_wrapper -I ./gradlew adbDisableAnimationsGlobally connectedDebugAndroidTest -Pjenkins"
-				// stop emulator
-				sh "jenkins_android_emulator_helper -K"
+				sh "./buildScripts/build_step_run_tests_on_emulator__all_tests"
 			}
 
 			post {
 				always {
 					junit '**/*TEST*.xml'
 
-					// kill emulator
-					sh "jenkins_android_emulator_helper -K"
+					// stop/kill emulator
+					sh "./buildScripts/build_helper_stop_emulator"
 				}
 			}
 		}
 
 		stage('Build Debug-APK') {
 			steps {
-				sh "./gradlew assembleDebug"
+				sh "./buildScripts/build_step_create_debug_apk"
 				stash name: "debug-apk", includes: "${env.APK_LOCATION_DEBUG}"
 				archiveArtifacts "${env.APK_LOCATION_DEBUG}"
 			}
@@ -115,6 +109,8 @@ pipeline {
 
 	post {
 		always {
+			step([$class: 'LogParserPublisher', failBuildOnError: true, projectRulePath: 'buildScripts/log_parser_rules', unstableOnWarning: true, useProjectRule: true])
+
 			// Send notifications with standalone=false
 			script {
 				sendNotifications false
