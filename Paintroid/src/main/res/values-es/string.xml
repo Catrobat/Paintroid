@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">Estrella</string>
   <string name="shape_tool_dialog_heart_title">Corazón</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolerancia de color</string>
-  <string name="transform_tool_auto_crop_text">Autoajustar</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Pulsación larga para copiar contenido</string>
   <string name="layers_title">Capas</string>
   <string name="layer_new">Nueva capa</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">Demasiadas capas</string>
   <string name="layer_invisible">Todas las capas invisibles</string>
   <string name="layer_merged">Capas fusionadas</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Error en la carga de la imagen</string>
   <string name="dialog_loading_image_failed_text">No es un archivo de imagen válido</string>
@@ -125,7 +126,7 @@
   <string name="intro_welcome_text">Con Pocket Paint no hay límites a tu creatividad. Si eres nuevo empieza con la intro o simplemente omítela si ya estás familiarizado con Pocket Paint.</string>
   <string name="intro_tool_more_information">Haz clic en Herramienta para obtener más información</string>
   <string name="more_possibilities">Más posibilidades</string>
-  <string name="intro_possibilities_text">Para cambiar el color, use deshacer/rehacer o abra el diálogo de las capas usando la barra superior.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Apaisado</string>
   <string name="intro_landscape_text">Pocket Paint también soporta dibujo en modo horizontal para darle la mejor experiencia pintando.</string>
   <string name="enjoy_pocket_paint">Ya estás listo/a. Disfruta Pocket Paint.</string>

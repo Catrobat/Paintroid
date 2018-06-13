@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">Ster</string>
   <string name="shape_tool_dialog_heart_title">Hart</string>
   <string name="fill_tool_dialog_color_tolerance_title">Kleurtolerantie</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Lang ingedrukt houden om inhoud te kopiëren</string>
   <string name="layers_title">Lagen</string>
   <string name="layer_new">Nieuwe laag</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">Te veel lagen</string>
   <string name="layer_invisible">Alle lagen onzichtbaar</string>
   <string name="layer_merged">Layers merged</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Vorm</string>
   <string name="dialog_loading_image_failed_title">Fout bij het laden van de afbeelding</string>
   <string name="dialog_loading_image_failed_text">Geen geldige afbeelding</string>

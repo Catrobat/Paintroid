@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">Звезда</string>
   <string name="shape_tool_dialog_heart_title">Сердце</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
-  <string name="transform_tool_auto_crop_text">Авторегулировка</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Долгий клик, чтобы скопировать</string>
   <string name="layers_title">Слои</string>
   <string name="layer_new">Новый слой</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">Слишком много слоев</string>
   <string name="layer_invisible">Все слои невидимы</string>
   <string name="layer_merged">Слои объединены</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Фигура</string>
   <string name="dialog_loading_image_failed_title">Ошибка загрузки изображения</string>
   <string name="dialog_loading_image_failed_text">Недопустимый файл изображения</string>
@@ -125,13 +126,13 @@
   <string name="intro_welcome_text">В Pocket Paint нет пределов вашему творчеству. Если вы новичок, посмотрите вступление, или пропустите его, если вы уже пользовались нашим приложением.</string>
   <string name="intro_tool_more_information">Нажмите на инструмент для дополнительной информации</string>
   <string name="more_possibilities">Больше возможностей</string>
-  <string name="intro_possibilities_text">Чтобы изменить цвет, используйте отменить/повторить или откройте диалоговое окно слоев в верхней панели.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Пейзаж</string>
   <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
   <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">Get started and create a new masterpiece.</string>
   <string name="lets_go">Let\'s Go</string>
-  <string name="next">Next</string>
+  <string name="next">Далее</string>
   <string name="skip">Skip</string>
   <string name="menu_language">Language</string>
   <string name="device_language">Device Language</string>
