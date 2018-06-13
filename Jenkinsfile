@@ -2,8 +2,16 @@
 
 pipeline {
 	agent {
-		docker {
-			image 'redeamer/jenkins-android-helper:latest'
+		dockerfile {
+			filename 'Dockerfile.jenkins'
+			// 'docker build' would normally copy the whole build-dir to the container, changing the
+			// docker build directory avoids that overhead
+			dir 'docker'
+			// Pass the uid and the gid of the current user (jenkins-user) to the Dockerfile, so a
+			// corresponding user can be added. This is needed to provide the jenkins user inside
+			// the container for the ssh-agent to work.
+			// Another way would be to simply map the passwd file, but would spoil additional information
+			additionalBuildArgs '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)'
 			args "--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle/:/.gradle -v /var/local/container_shared/android-sdk-paintroid:/usr/local/android-sdk -v /var/local/container_shared/android-home:/.android -v /var/local/container_shared/emulator_console_auth_token:/.emulator_console_auth_token -v /var/local/container_shared/analytics.settings:/analytics.settings -v /var/local/container_shared/analytics.settings:/analytics.settings"
 		}
 	}
