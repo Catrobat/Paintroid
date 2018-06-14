@@ -24,7 +24,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,9 +51,6 @@ public class NavigationDrawerTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule =
 			new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public SystemAnimationsRule animationsRule = new SystemAnimationsRule();
 
 	@Before
 	public void setUp() throws Exception {

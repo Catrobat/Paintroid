@@ -32,7 +32,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
 import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -64,8 +63,6 @@ public class TextToolSizeSpinnerTest {
 	private static final Locale ARABICLOCALE = new Locale("ar");
 	private static final Locale FARSILOCALE = new Locale("fa");
 	private Context context = InstrumentationRegistry.getTargetContext();
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 	private IdlingResource dialogWait;
 
 	@Rule

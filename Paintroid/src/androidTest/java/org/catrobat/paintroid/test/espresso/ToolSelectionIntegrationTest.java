@@ -36,7 +36,6 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
@@ -73,9 +72,6 @@ public class ToolSelectionIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();

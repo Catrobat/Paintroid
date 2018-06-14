@@ -31,7 +31,6 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -67,9 +66,6 @@ import static org.hamcrest.Matchers.not;
 public class LayerIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	private DialogHiddenIdlingResource dialogWait;
 	private int bitmapHeight;

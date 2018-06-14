@@ -27,7 +27,6 @@ import android.support.test.rule.ActivityTestRule;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.junit.Before;
@@ -58,8 +57,6 @@ public class ShapeToolIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 	@Parameter
 	public int shape;
 	@Parameter(1)

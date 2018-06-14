@@ -42,7 +42,6 @@ import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -98,8 +97,7 @@ public class MenuFileActivityIntegrationTest {
 	private static ArrayList<File> deletionFileList = null;
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+
 	private PointF screenPoint = null;
 
 	@Before

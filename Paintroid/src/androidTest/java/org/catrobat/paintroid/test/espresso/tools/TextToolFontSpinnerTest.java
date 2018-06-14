@@ -33,7 +33,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
 import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -70,8 +69,6 @@ public class TextToolFontSpinnerTest {
 	private Typeface defaultFontFace = Typeface.create(Typeface.MONOSPACE, normalStyle);
 	private Typeface stcFontFace = Typeface.createFromAsset(context.getResources().getAssets(), "STC.otf");
 	private Typeface dubaiFontFace = Typeface.createFromAsset(context.getResources().getAssets(), "Dubai.TTF");
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 	private IdlingResource dialogWait;
 
 	@Rule

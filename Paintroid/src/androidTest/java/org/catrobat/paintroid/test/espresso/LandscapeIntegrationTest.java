@@ -29,7 +29,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -66,9 +65,6 @@ public class LandscapeIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Before
 	public void setUp() {

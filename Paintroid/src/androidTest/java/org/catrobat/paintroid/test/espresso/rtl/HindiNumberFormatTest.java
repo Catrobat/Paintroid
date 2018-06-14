@@ -25,7 +25,6 @@ import android.support.test.runner.AndroidJUnit4;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,8 +51,6 @@ import static org.hamcrest.core.StringStartsWith.startsWith;
 
 @RunWith(AndroidJUnit4.class)
 public class HindiNumberFormatTest {
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 	private static final Locale ARABICLOCALE = new Locale("ar");
 	private static final String EXPECTED_RED_VALUE = "٢٤٠";
 	private static final String EXPECTED_GREEN_VALUE = "٢٢٨";

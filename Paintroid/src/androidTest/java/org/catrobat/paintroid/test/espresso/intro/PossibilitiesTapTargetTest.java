@@ -22,7 +22,6 @@ package org.catrobat.paintroid.test.espresso.intro;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
 import org.catrobat.paintroid.test.espresso.util.IntroUtils;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,8 +43,6 @@ public class PossibilitiesTapTargetTest {
 	@Rule
 	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 	@Parameter
 	public ToolType toolType;
 

@@ -26,7 +26,6 @@ import android.support.v4.content.ContextCompat;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.intro.TapTargetStyle;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,9 +37,6 @@ public class StyleFromXmlTest {
 
 	@Rule
 	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
-
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Test
 	public void testIntroHeaderStyle() {

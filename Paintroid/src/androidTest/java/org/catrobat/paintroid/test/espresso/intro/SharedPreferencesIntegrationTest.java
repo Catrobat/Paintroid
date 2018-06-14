@@ -24,7 +24,6 @@ import android.support.test.runner.AndroidJUnit4;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.Session;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,9 +40,6 @@ public class SharedPreferencesIntegrationTest {
 
 	@Rule
 	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule();
-
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Test
 	public void sharedPreferencesSetOnSkip() {
