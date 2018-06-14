@@ -53,7 +53,6 @@
   <string name="color_pre">پہلےچُناہو</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">اوزار</string>
-  <string name="dialog_load">لدائی کا عمل ہورہاہے…</string>
   <string name="dialog_error_save_title">لادنے کی غلطٖی/فائل محفوظ کریں</string>
   <string name="dialog_error_sdcard_text">تصویر یا SD کارڈ چیک کریں!</string>
   <string name="dialog_brush_width_text">چوڑائی کے لیے پھیرنا۔</string>

@@ -52,7 +52,6 @@
   <string name="color_pre">förvalt</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">verktyg</string>
-  <string name="dialog_load">Laddar…</string>
   <string name="dialog_error_save_title">Fel ladda/spara filen</string>
   <string name="dialog_error_sdcard_text">Kolla bild eller SD-kort!</string>
   <string name="dialog_brush_width_text">Streckbredd</string>

@@ -52,7 +52,6 @@
   <string name="color_pre">vorausgewählt</string>
   <string name="color_hsv">HSV-Farbwähler</string>
   <string name="dialog_tools_title">Werkzeuge</string>
-  <string name="dialog_load">Lade…</string>
   <string name="dialog_error_save_title">Fehler Laden/Speichern Datei</string>
   <string name="dialog_error_sdcard_text">Überprüfe das Bild oder die SD-Karte!</string>
   <string name="dialog_brush_width_text">Strichstärke</string>

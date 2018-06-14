@@ -52,10 +52,16 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 		return new DrawingSurfaceInteraction();
 	}
 
+	private static void assertColorEquals(@ColorInt int expected, @ColorInt int actual) {
+		String message = Integer.toHexString(expected) + " != " + Integer.toHexString(actual);
+		assertEquals(message, expected, actual);
+	}
+
 	public DrawingSurfaceInteraction checkPixelColor(@ColorInt int expectedColor, BitmapLocationProvider coordinateProvider) {
 		DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
 		float[] coordinates = coordinateProvider.calculateCoordinates(drawingSurface);
-		assertEquals(expectedColor, drawingSurface.getPixel(new PointF(coordinates[0], coordinates[1])));
+		int actualColor = drawingSurface.getPixel(new PointF(coordinates[0], coordinates[1]));
+		assertColorEquals(expectedColor, actualColor);
 		return this;
 	}
 

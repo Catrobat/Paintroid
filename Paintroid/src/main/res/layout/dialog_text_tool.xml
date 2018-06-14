@@ -60,6 +60,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp"
             android:textCursorDrawable="@null"
+            android:saveEnabled="false"
             android:hint="@string/text_tool_dialog_input_hint"
             android:imeOptions="flagNoExtractUi"/>
 

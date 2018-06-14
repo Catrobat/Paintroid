@@ -26,14 +26,11 @@ import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.widget.EditText;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
@@ -48,7 +45,6 @@ import org.junit.runner.RunWith;
 import java.io.File;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -62,7 +58,6 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getToolMem
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipeAccurate;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress;
@@ -71,8 +66,6 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInte
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class FillToolIntegrationTest {
@@ -82,16 +75,12 @@ public class FillToolIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	private ActivityHelper activityHelper;
-
 	private IdlingResource dialogWait;
 
 	@Before
 	public void setUp() {
 		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
 		IdlingRegistry.getInstance().register(dialogWait);
-
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 
 		onToolBarView()
 				.performSelectTool(ToolType.FILL);
@@ -104,7 +93,7 @@ public class FillToolIntegrationTest {
 
 	@Test
 	public void testFloodFillIfImageLoaded() {
-		NavigationDrawerMenuActivity.savedPictureUri = Uri.fromFile(new File("dummy"));
+		MainActivity.savedPictureUri = Uri.fromFile(new File("dummy"));
 
 		onToolProperties()
 				.checkColor(Color.BLACK);
@@ -115,7 +104,7 @@ public class FillToolIntegrationTest {
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
-		NavigationDrawerMenuActivity.savedPictureUri = null;
+		MainActivity.savedPictureUri = null;
 	}
 
 	@Test
@@ -226,36 +215,6 @@ public class FillToolIntegrationTest {
 
 		colorToleranceInput.check(matches(withText(Integer.toString(FillTool.DEFAULT_TOLERANCE_IN_PERCENT))));
 		colorToleranceSeekBar.check(matches(withProgress(FillTool.DEFAULT_TOLERANCE_IN_PERCENT)));
-	}
-
-	@Test
-	public void testFillToolToleranceCursorVisibility() {
-
-		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
-
-		openToolOptionsForCurrentTool();
-
-		final ViewInteraction colorToleranceInput = onView(withId(R.id.fill_tool_dialog_color_tolerance_input));
-		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.color_tolerance_seek_bar));
-
-		EditText colorToleranceEditText = (EditText) activityHelper.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
-		assertFalse("Cursor should not be visible", colorToleranceEditText.isCursorVisible());
-
-		colorToleranceInput.perform(click(), closeSoftKeyboard());
-
-		assertTrue("Cursor should not be visible", colorToleranceEditText.isCursorVisible());
-
-		int toleranceInPercent = 50;
-		colorToleranceInput.perform(replaceText(String.valueOf(toleranceInPercent)));
-		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
-		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool), TOLERANCE_DELTA);
-
-		colorToleranceSeekBar.perform(setProgress(toleranceInPercent));
-
-		assertFalse("Cursor should not be visible", colorToleranceEditText.isCursorVisible());
-
-		// Close tool options
-		clickSelectedToolButton();
 	}
 
 	@Test

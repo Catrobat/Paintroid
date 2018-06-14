@@ -83,6 +83,7 @@
             android:textCursorDrawable="@null"
             android:imeOptions="actionDone"
             android:layout_weight="1"
+            android:saveEnabled="false"
             android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/holo_blue_bright" />

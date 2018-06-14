@@ -25,6 +25,7 @@
     android:layout_height="match_parent"
     android:requiresFadingEdge="vertical"
     android:scrollbars="none"
+    android:saveEnabled="false"
     android:fillViewport="true"
     tools:showIn="@layout/main">
 

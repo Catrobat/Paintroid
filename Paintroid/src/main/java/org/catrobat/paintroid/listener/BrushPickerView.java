@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.listener;
 
-import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.support.annotation.VisibleForTesting;
@@ -30,7 +29,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -62,14 +60,13 @@ public final class BrushPickerView implements View.OnClickListener {
 		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
 		View brushPickerView = inflater.inflate(R.layout.dialog_stroke, rootView, true);
 
-		buttonCircle = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_circle);
-		buttonRect = (ImageButton) brushPickerView.findViewById(R.id.stroke_ibtn_rect);
-		brushWidthSeekBar = (SeekBar) brushPickerView.findViewById(R.id.stroke_width_seek_bar);
+		buttonCircle = brushPickerView.findViewById(R.id.stroke_ibtn_circle);
+		buttonRect = brushPickerView.findViewById(R.id.stroke_ibtn_rect);
+		brushWidthSeekBar = brushPickerView.findViewById(R.id.stroke_width_seek_bar);
 		brushWidthSeekBar.setOnSeekBarChangeListener(new BrushPickerView.OnBrushChangedWidthSeekBarListener());
-		brushSizeText = (EditText) brushPickerView.findViewById(R.id.stroke_width_width_text);
+		brushSizeText = brushPickerView.findViewById(R.id.stroke_width_width_text);
 		brushSizeText.setFilters(new InputFilter[]{new NumberRangeFilter(1, 100)});
-		brushSizeText.setCursorVisible(false);
-		drawerPreview = (DrawerPreview) brushPickerView.findViewById(R.id.drawer_preview);
+		drawerPreview = brushPickerView.findViewById(R.id.drawer_preview);
 
 		buttonCircle.setOnClickListener(this);
 		buttonRect.setOnClickListener(this);
@@ -104,21 +101,6 @@ public final class BrushPickerView implements View.OnClickListener {
 				brushWidthSeekBar.setProgress(sizeTextInt);
 			}
 		});
-		brushSizeText.requestFocus();
-		brushSizeText.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				brushSizeText.setCursorVisible(true);
-			}
-		});
-		brushSizeText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				if (!hasFocus) {
-					hideKeyboard();
-				}
-			}
-		});
 	}
 
 	@Override
@@ -129,13 +111,11 @@ public final class BrushPickerView implements View.OnClickListener {
 				updateStrokeCap(Cap.ROUND);
 				buttonCircle.setSelected(true);
 				buttonRect.setSelected(false);
-				hideKeyboard();
 				break;
 			case R.id.stroke_ibtn_rect:
 				updateStrokeCap(Cap.SQUARE);
 				buttonRect.setSelected(true);
 				buttonCircle.setSelected(false);
-				hideKeyboard();
 				break;
 			default:
 				break;
@@ -197,7 +177,6 @@ public final class BrushPickerView implements View.OnClickListener {
 			updateStrokeChange(progress);
 			if (fromUser) {
 				brushSizeText.setText(String.format(Locale.getDefault(), "%d", progress));
-				hideKeyboard();
 			}
 
 			drawerPreview.invalidate();
@@ -210,15 +189,6 @@ public final class BrushPickerView implements View.OnClickListener {
 		@Override
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			brushSizeText.setText(String.format(Locale.getDefault(), "%d", seekBar.getProgress()));
-			hideKeyboard();
-		}
-	}
-
-	private void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) brushSizeText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (imm != null) {
-			imm.hideSoftInputFromWindow(brushSizeText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-			brushSizeText.setCursorVisible(false);
 		}
 	}
 }

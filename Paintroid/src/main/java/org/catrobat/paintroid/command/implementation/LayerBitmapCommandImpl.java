@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
@@ -63,7 +63,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 					PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 					LayerListener.getInstance().refreshView();
 					PaintroidApplication.drawingSurface.refreshDrawingSurface();
-					NavigationDrawerMenuActivity.isSaved = false;
+					MainActivity.isSaved = false;
 					IndeterminateProgressDialog.getInstance().dismiss();
 				}
 			}.execute();

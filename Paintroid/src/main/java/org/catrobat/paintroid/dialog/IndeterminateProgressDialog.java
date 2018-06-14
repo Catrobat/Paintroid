@@ -37,6 +37,7 @@ public final class IndeterminateProgressDialog extends AlertDialog {
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "IndeterminateProgressDialog has not been initialized. Call init() first!";
 
 	private static Dialog instance;
+	private static boolean isShowing;
 
 	public IndeterminateProgressDialog(Context context) {
 		super(context, R.style.CustomProgressDialog);
@@ -49,8 +50,22 @@ public final class IndeterminateProgressDialog extends AlertDialog {
 		return instance;
 	}
 
+	public static void finishInstance() {
+		isShowing = false;
+		instance.dismiss();
+		instance = null;
+	}
+
+	public static void dismissInstance() {
+		isShowing = instance.isShowing();
+		instance.dismiss();
+	}
+
 	public static void init(MainActivity mainActivity) {
 		instance = new IndeterminateProgressDialog(mainActivity);
+		if (isShowing) {
+			instance.show();
+		}
 	}
 
 	@Override

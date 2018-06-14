@@ -52,7 +52,6 @@
   <string name="color_pre">praseleksi</string>
   <string name="color_hsv">pemilih warna hsv</string>
   <string name="dialog_tools_title">Peralatan</string>
-  <string name="dialog_load">Memuat…</string>
   <string name="dialog_error_save_title">Galat memuat/menyimpan berkas</string>
   <string name="dialog_error_sdcard_text">Periksa citra atau kartu SD!</string>
   <string name="dialog_brush_width_text">Lebar Goresan</string>

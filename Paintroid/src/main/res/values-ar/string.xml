@@ -53,7 +53,6 @@
   <string name="color_pre">مُحدد مسبقاً</string>
   <string name="color_hsv">اختيار اللون (hsv)</string>
   <string name="dialog_tools_title">أدوات</string>
-  <string name="dialog_load">جاري التحميل…</string>
   <string name="dialog_error_save_title">خطأ في استيراد/حفظ الملف</string>
   <string name="dialog_error_sdcard_text">تحقق من بطاقة الذاكرة SD أو الصورة!</string>
   <string name="dialog_brush_width_text">عرض الخط</string>

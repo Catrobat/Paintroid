@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,14 +25,22 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.test.annotation.UiThreadTest;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -41,21 +49,28 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-public class FillToolTests extends BaseToolTest {
+@RunWith(AndroidJUnit4.class)
+public class FillToolTests {
 	private static final float NO_TOLERANCE = 0.0f;
 	private static final float HALF_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE / 2.0f;
 	private static final float MAX_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE;
 
-	public FillToolTests() {
-		super();
+	@Rule
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+	private FillTool toolToTest;
+
+	@UiThreadTest
+	@Before
+	public void setUp() {
+		toolToTest = new FillTool(activityTestRule.getActivity(), ToolType.FILL);
 	}
 
 	@UiThreadTest
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		toolToTest = new FillTool(getActivity(), ToolType.FILL);
-		super.setUp();
+	@After
+	public void tearDown() {
+		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
+		BaseTool.reset();
 	}
 
 	@UiThreadTest
@@ -411,6 +426,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@SuppressWarnings("UnnecessaryLocalVariable")
 	private int[][] createPixelArrayForComplexTest(int backgroundColor, int boundaryColor) {
 		int w = boundaryColor;
 		int i = backgroundColor;
@@ -430,6 +446,7 @@ public class FillToolTests extends BaseToolTest {
 		return testArray;
 	}
 
+	@SuppressWarnings("UnnecessaryLocalVariable")
 	private int[][] createPixelArrayForSkipPixelTest(int backgroundColor, int boundaryColor) {
 		int w = boundaryColor;
 		int i = backgroundColor;

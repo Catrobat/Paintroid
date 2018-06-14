@@ -52,7 +52,6 @@
   <string name="color_pre">미리 선택</string>
   <string name="color_hsv">hsv 색상 선택기</string>
   <string name="dialog_tools_title">도구</string>
-  <string name="dialog_load">로드중입니다…</string>
   <string name="dialog_error_save_title">파일 로드/저장 오류</string>
   <string name="dialog_error_sdcard_text">이미지 또는 SD 카드를 확인!</string>
   <string name="dialog_brush_width_text">선 굵기</string>

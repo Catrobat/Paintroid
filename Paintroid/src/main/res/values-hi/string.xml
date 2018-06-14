@@ -52,7 +52,6 @@
   <string name="color_pre">पूर्व चयनित</string>
   <string name="color_hsv">hsv रंग को ढूंढना</string>
   <string name="dialog_tools_title">उपकरण</string>
-  <string name="dialog_load">तैयार हो रहा है…</string>
   <string name="dialog_error_save_title">फ़ाइल तैयार करने/सहेजने में त्रुटि</string>
   <string name="dialog_error_sdcard_text">छवि या एसडी कार्ड की जाँच करें!</string>
   <string name="dialog_brush_width_text">स्ट्रोक की चौड़ाई</string>

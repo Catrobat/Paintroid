@@ -52,7 +52,6 @@
   <string name="color_pre">pre-selección</string>
   <string name="color_hsv">hsv selector de color</string>
   <string name="dialog_tools_title">Herramientas</string>
-  <string name="dialog_load">Cargando…</string>
   <string name="dialog_error_save_title">Error cargar/guardar archivo</string>
   <string name="dialog_error_sdcard_text">Revisar la imagen del cheque o tarjeta SD!</string>
   <string name="dialog_brush_width_text">Anchura del trazo</string>

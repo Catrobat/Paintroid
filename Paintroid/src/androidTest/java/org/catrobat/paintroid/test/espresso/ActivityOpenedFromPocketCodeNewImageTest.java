@@ -1,4 +1,4 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -20,17 +20,14 @@
 package org.catrobat.paintroid.test.espresso;
 
 import android.content.Intent;
-import android.graphics.PointF;
 import android.os.Environment;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,14 +41,14 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ActivityOpenedFromPocketCodeNewImageTest {
@@ -61,52 +58,53 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
 
-	private ActivityHelper activityHelper;
-	private PointF screenPoint = null;
 	private File imageFile = null;
 
 	@Before
 	public void setUp() {
-		Intent extras = new Intent();
-		extras.putExtra(Constants.PAINTROID_PICTURE_PATH, "");
-		extras.putExtra(Constants.PAINTROID_PICTURE_NAME, IMAGE_NAME);
+		Intent intent = new Intent();
+		intent.putExtra(Constants.PAINTROID_PICTURE_PATH, "");
+		intent.putExtra(Constants.PAINTROID_PICTURE_NAME, IMAGE_NAME);
 
-		launchActivityRule.launchActivity(extras);
+		launchActivityRule.launchActivity(intent);
 
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
-
-		screenPoint = new PointF(activityHelper.getDisplayWidth() / 2, activityHelper.getDisplayHeight() / 2);
-
-		selectTool(ToolType.BRUSH);
+		imageFile = getImageFile(IMAGE_NAME);
 	}
 
 	@After
 	public void tearDown() {
-		NavigationDrawerMenuActivity.savedPictureUri = null;
-		NavigationDrawerMenuActivity.isSaved = false;
+		MainActivity.savedPictureUri = null;
+		MainActivity.isSaved = false;
 
-		if (imageFile != null) {
+		if (imageFile.exists()) {
 			imageFile.delete();
 		}
 	}
 
 	@Test
 	public void testSave() {
-		imageFile = getImageFile(IMAGE_NAME);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+		onNavigationDrawer()
+				.performOpen();
 
-		openNavigationDrawer();
+		onView(withText(R.string.menu_back))
+				.perform(click());
 
-		onView(withText(R.string.menu_back)).perform(click());
+		onView(withText(R.string.save_button_text))
+				.check(matches(isDisplayed()));
+		onView(withText(R.string.discard_button_text))
+				.check(matches(isDisplayed()));
 
-		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
-		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
+		onView(withText(R.string.save_button_text))
+				.perform(click());
 
-		onView(withText(R.string.save_button_text)).perform(click());
+		String path = launchActivityRule.getActivityResult().getResultData().getStringExtra(Constants.PAINTROID_PICTURE_PATH);
+		assertEquals(imageFile.getAbsolutePath(), path);
 
-		assertThat("Image file does not exist", imageFile.exists(), is(true));
-		assertThat("Image file is empty", imageFile.length(), greaterThan(0L));
+		assertTrue(imageFile.exists());
+		assertThat(imageFile.length(), greaterThan(0L));
 	}
 
 	private File getImageFile(String filename) {

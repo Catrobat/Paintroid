@@ -22,16 +22,14 @@ package org.catrobat.paintroid.test.espresso;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
-import android.graphics.PointF;
 import android.os.Environment;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -49,12 +47,12 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
@@ -68,41 +66,37 @@ public class ActivityOpenedFromPocketCodeTest {
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
 
-	private ActivityHelper activityHelper;
-
-	private PointF screenPoint = null;
 	private File imageFile = null;
 
 	@Before
 	public void setUp() {
-		imageFile = createImageFile("testFile");
+		imageFile = createImageFile();
 
 		Intent extras = new Intent();
 		extras.putExtra(Constants.PAINTROID_PICTURE_PATH, imageFile.getAbsolutePath());
 		launchActivityRule.launchActivity(extras);
 
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
-
-		screenPoint = new PointF(activityHelper.getDisplayWidth() / 2, activityHelper.getDisplayHeight() / 2);
-
-		selectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 	}
 
 	@After
 	public void tearDown() {
-		NavigationDrawerMenuActivity.savedPictureUri = null;
-		NavigationDrawerMenuActivity.isSaved = false;
+		MainActivity.savedPictureUri = null;
+		MainActivity.isSaved = false;
 
 		if (imageFile != null && imageFile.exists()) {
-			imageFile.delete();
+			assertTrue(imageFile.delete());
 		}
 	}
 
 	@Test
 	public void testSave() {
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		openNavigationDrawer();
+		onNavigationDrawer()
+				.performOpen();
 
 		onView(withText(R.string.menu_back)).perform(click());
 
@@ -114,7 +108,9 @@ public class ActivityOpenedFromPocketCodeTest {
 
 		onView(withText(R.string.save_button_text)).perform(click());
 
-		assertEquals("Catroid picture path not correct", launchActivityRule.getActivity().catroidPicturePath, imageFile.getAbsolutePath());
+		assertTrue(launchActivityRule.getActivity().isFinishing());
+		String path = launchActivityRule.getActivityResult().getResultData().getStringExtra(Constants.PAINTROID_PICTURE_PATH);
+		assertEquals(imageFile.getAbsolutePath(), path);
 
 		assertThat("Image modification not saved", imageFile.lastModified(), greaterThan(lastModifiedBefore));
 		assertThat("Saved image length not changed", imageFile.length(), greaterThan(fileSizeBefore));
@@ -123,9 +119,11 @@ public class ActivityOpenedFromPocketCodeTest {
 	@Test
 	@Ignore //TODO: does export still exist?
 	public void testExportNotTouchingOriginal() {
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		openNavigationDrawer();
+		onNavigationDrawer()
+				.performOpen();
 
 		long lastModifiedBefore = imageFile.lastModified();
 		long fileSizeBefore = imageFile.length();
@@ -138,9 +136,11 @@ public class ActivityOpenedFromPocketCodeTest {
 
 	@Test
 	public void testBackToPocketCode() {
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		openNavigationDrawer();
+		onNavigationDrawer()
+				.performOpen();
 
 		onView(withText(R.string.menu_back)).perform(click());
 
@@ -154,9 +154,9 @@ public class ActivityOpenedFromPocketCodeTest {
 		assertThat("Saved image length changed", imageFile.length(), equalTo(fileSizeBefore));
 	}
 
-	private File createImageFile(String filename) {
+	private File createImageFile() {
 		Bitmap bitmap = Bitmap.createBitmap(480, 800, Config.ARGB_8888);
-		File pictureFile = getImageFile(filename);
+		File pictureFile = getImageFile();
 		try {
 			pictureFile.getParentFile().mkdirs();
 			pictureFile.createNewFile();
@@ -170,8 +170,7 @@ public class ActivityOpenedFromPocketCodeTest {
 		return pictureFile;
 	}
 
-	private File getImageFile(String filename) {
-		File imageFile = new File(Environment.getExternalStorageDirectory() + "/PocketCodePaintTest/", filename + ".png");
-		return imageFile;
+	private File getImageFile() {
+		return new File(Environment.getExternalStorageDirectory() + "/PocketCodePaintTest/", "testFile.png");
 	}
 }

@@ -52,7 +52,6 @@
   <string name="color_pre">あらかじめ選択されています</string>
   <string name="color_hsv">hsv カラーピッカー</string>
   <string name="dialog_tools_title">ツール</string>
-  <string name="dialog_load">読み込み中…</string>
   <string name="dialog_error_save_title">読み込み/保存のエラー</string>
   <string name="dialog_error_sdcard_text">イメージまたは SD カードをチェック ！</string>
   <string name="dialog_brush_width_text">線の幅</string>

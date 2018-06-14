@@ -52,7 +52,6 @@
   <string name="color_pre">predizbor</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Orodja</string>
-  <string name="dialog_load">Nalaganje…</string>
   <string name="dialog_error_save_title">Napaka pri nalaganju/shranjevanju datoteke</string>
   <string name="dialog_error_sdcard_text">Preverite sliko ali SD-kartico!</string>
   <string name="dialog_brush_width_text">Debelina črte</string>

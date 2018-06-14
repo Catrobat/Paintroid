@@ -455,19 +455,19 @@ public class TextToolIntegrationTest {
 
 		int surfaceBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
 		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
-		PaintroidApplication.drawingSurface.getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		PaintroidApplication.drawingSurface.workingBitmap.getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals("Amount of black pixels should be the same when drawing", numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 
 		// Perform undo
 		onView(withId(R.id.btn_top_undo)).perform(click());
 
-		PaintroidApplication.drawingSurface.getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		PaintroidApplication.drawingSurface.workingBitmap.getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals("There should not be black pixels after undo", 0, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 
 		// Perform redo
 		onView(withId(R.id.btn_top_redo)).perform(click());
 
-		PaintroidApplication.drawingSurface.getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		PaintroidApplication.drawingSurface.workingBitmap.getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals("There should be black pixels again after redo", numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 	}
 

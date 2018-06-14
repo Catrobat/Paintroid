@@ -219,8 +219,8 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	@Override
-	public boolean checkIfDrawn() {
-		return drawBitmapCommandsAtLayer.get(0).moreCommands();
+	public boolean isUnchanged() {
+		return drawBitmapCommandsAtLayer.isEmpty() || !drawBitmapCommandsAtLayer.get(0).moreCommands();
 	}
 
 	@Override
@@ -373,7 +373,7 @@ public class CommandManagerImplementation implements CommandManager, Observer {
 	}
 
 	@Override
-	public boolean isCommandManagerInitialized() {
+	public boolean isInitialized() {
 		return initialized;
 	}
 

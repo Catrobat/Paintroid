@@ -52,7 +52,6 @@
   <string name="color_pre">заранее выбранный</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Инструменты</string>
-  <string name="dialog_load">Загрузка…</string>
   <string name="dialog_error_save_title">Ошибка загрузки/сохранения файла</string>
   <string name="dialog_error_sdcard_text">Проверьте изображение или SD-карту!</string>
   <string name="dialog_brush_width_text">Толщина линии</string>

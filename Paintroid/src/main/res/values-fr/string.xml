@@ -52,7 +52,6 @@
   <string name="color_pre">preselected</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Outils</string>
-  <string name="dialog_load">Chargement…</string>
   <string name="dialog_error_save_title">Erreur de chargement/sauvegarde du fichier</string>
   <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
   <string name="dialog_brush_width_text">Stroke Width</string>

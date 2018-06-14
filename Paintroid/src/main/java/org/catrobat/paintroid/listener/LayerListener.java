@@ -39,7 +39,6 @@ import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.UndoRedoManager;
 import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.eventlistener.OnActiveLayerChangedListener;
-import org.catrobat.paintroid.eventlistener.OnRefreshLayerDialogListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.ToastFactory;
@@ -50,7 +49,7 @@ import org.catrobat.paintroid.ui.dragndrop.OnDragListener;
 
 import java.util.ArrayList;
 
-public final class LayerListener implements OnRefreshLayerDialogListener, OnActiveLayerChangedListener, AdapterView.OnItemClickListener {
+public final class LayerListener implements OnActiveLayerChangedListener, AdapterView.OnItemClickListener {
 	private static final String TAG = LayerListener.class.getSimpleName();
 	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "LayerListener has not been initialized. Call init() first!";
 	private static final int ANIMATION_TIME = 300;
@@ -337,13 +336,6 @@ public final class LayerListener implements OnRefreshLayerDialogListener, OnActi
 		if (currentLayer.getLayerID() != layer.getLayerID()) {
 			selectLayer(layer);
 		}
-	}
-
-	@Override
-	public void onLayerDialogRefreshView() {
-		Log.d(TAG, "onLayerDialogRefreshView");
-
-		refreshView();
 	}
 
 	@Override

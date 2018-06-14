@@ -39,7 +39,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
 
 public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
@@ -57,7 +56,6 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	}
 
 	public ColorPickerViewInteraction performOpenColorPicker() {
-		check(matches(not(isDisplayed())));
 		onView(withId(R.id.btn_top_color))
 				.perform(click());
 		return this;
