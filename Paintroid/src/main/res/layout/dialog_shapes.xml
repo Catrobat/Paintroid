@@ -20,6 +20,107 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
+        android:id="@+id/outline_view_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="@string/dialog_brush_width_text"
+        android:textAllCaps="true"
+        android:textColor="@color/dialog_title_color"
+        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
+
+    <View
+        android:id="@+id/outline_view_border"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/dialog_subtitle_border"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="5"
+        android:orientation="horizontal" >
+
+        <SeekBar
+            android:id="@+id/shape_stroke_width_seek_bar"
+            android:progressTint="@color/dialog_stroke_element_color"
+            android:thumbTint="@color/dialog_stroke_element_color"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="16dp"
+            android:max="100"
+            android:minHeight="30dip"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dp" />
+
+        <EditText
+            android:id="@+id/shape_outline_edit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:textColor="@color/dialog_title_color"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/shape_tool_fill_outline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/shape_tool_dialog_fill_title"
+        android:textAllCaps="true"
+        android:textColor="@color/dialog_title_color"
+        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/dialog_subtitle_border"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/shape_ibtn_fill"
+            style="@style/SelectableButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:src="@drawable/ic_rectangle" />
+
+        <ImageButton
+            android:id="@+id/shape_ibtn_outline"
+            style="@style/SelectableButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:src="@drawable/ic_rectangle_out" />
+    </LinearLayout>
+    <TextView
         android:id="@+id/shape_tool_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,7 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_square_black_24dp"
+            android:src="@drawable/ic_rectangle"
             android:padding="16dp"/>
 
         <ImageButton
@@ -63,7 +164,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="16dp"
-            android:src="@drawable/ic_circle_black_24dp"/>
+            android:src="@drawable/ic_circle"/>
 
         <ImageButton
             android:id="@+id/shapes_heart_btn"
@@ -72,7 +173,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="16dp"
-            android:src="@drawable/ic_heart_black_24dp"/>
+            android:src="@drawable/ic_heart"/>
 
         <ImageButton
             android:id="@+id/shapes_star_btn"
@@ -80,7 +181,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_star_black_24dp"
+            android:src="@drawable/ic_star"
             android:padding="16dp"/>
     </LinearLayout>
 
