@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.test.rule.ActivityTestRule;
@@ -200,42 +199,6 @@ public class MainActivityIntegrationTest {
 
 		openLayerMenu();
 		selectLayer(0);
-		closeLayerMenu();
-	}
-
-	@Test
-	public void testSessionArtefactsChangeOrientation() {
-		openLayerMenu();
-		addNewLayer();
-		closeLayerMenu();
-		selectTool(ToolType.BRUSH);
-
-		PointF pointOnSurface = getSurfacePointFromScreenPoint(pointOnScreenMiddle);
-		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
-
-		int currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
-
-		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, currentColor);
-
-		onView(isRoot()).perform(touchAt(pointOnScreenMiddle));
-
-		currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
-		assertEquals("Color after drawing point has to be black", Color.BLACK, currentColor);
-
-		selectColorPickerPresetSelectorColor(ARRAY_POSITION_RED);
-
-		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-		int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Color after orientation changed has to be red", ARRAY_COLOR_RED, selectedColor);
-
-		currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
-		assertEquals("Bitmap Point Color after orientation changed has to be black", Color.BLACK, currentColor);
-
-		openLayerMenu();
-		selectLayer(0);
-		selectLayer(1);
 		closeLayerMenu();
 	}
 

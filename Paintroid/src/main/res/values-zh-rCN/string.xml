@@ -103,7 +103,10 @@
   <string name="shape_tool_dialog_star_title">星星</string>
   <string name="shape_tool_dialog_heart_title">心形</string>
   <string name="fill_tool_dialog_color_tolerance_title">允许的颜色差异</string>
-  <string name="transform_tool_auto_crop_text">自动调整</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">长按可复制内容</string>
   <string name="layers_title">图层</string>
   <string name="layer_new">新建图层</string>
@@ -111,8 +114,6 @@
   <string name="layer_too_many_layers">图层数量过多</string>
   <string name="layer_invisible">所有图层不可见</string>
   <string name="layer_merged">合并的图层</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">形状</string>
   <string name="dialog_loading_image_failed_title">加载图像时出错</string>
   <string name="dialog_loading_image_failed_text">不是有效的图像文件</string>
@@ -125,7 +126,7 @@
   <string name="intro_welcome_text">口袋画板将给予您无限的创造力。如果您是初次使用请看介绍，如果你已经熟悉口袋画板了请跳过介绍。</string>
   <string name="intro_tool_more_information">点击工具获得更多信息</string>
   <string name="more_possibilities">更多的可能性</string>
-  <string name="intro_possibilities_text">若要更改颜色，请使用撤消/重做或使用顶栏打开图层对话框。</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">横向</string>
   <string name="intro_landscape_text">口袋画板也支持在横向模式下绘画，给您最好的绘画体验。</string>
   <string name="enjoy_pocket_paint">一切就绪。请体验口袋绘图的乐趣。</string>
