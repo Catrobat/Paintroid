@@ -46,6 +46,10 @@ pipeline {
 		ANDROID_NDK = ""
 
 		PYTHONUNBUFFERED = "true"
+		JACOCO_XML = "Paintroid/build/reports/coverage/debug/report.xml"
+
+		// place the cobertura xml relative to the source, so that the source can be found
+		COBERTURA_XML = "Paintroid/src/main/java/coverage.xml"
 	}
 
 	options {
@@ -81,11 +85,17 @@ pipeline {
 			steps {
 				// Run Unit and device tests
 				sh "./buildScripts/build_step_run_tests_on_emulator__all_tests"
+
+				// Convert the JaCoCo coverate to the Cobertura XML file format.
+				// This is done since the Jenkins JaCoCo plugin does not work well.
+				// See also JENKINS-212 on jira.catrob.at
+				sh "./buildScripts/cover2cover.py $JACOCO_XML > $COBERTURA_XML"
 			}
 
 			post {
 				always {
 					junit '**/*TEST*.xml'
+					step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: COBERTURA_XML, failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
 
 					// stop/kill emulator
 					sh "./buildScripts/build_helper_stop_emulator"

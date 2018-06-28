@@ -74,6 +74,9 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
+        debug {
+            testCoverageEnabled = true
+        }
     }
 
     externalNativeBuild.cmake.path 'CMakeLists.txt'
