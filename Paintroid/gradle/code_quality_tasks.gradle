@@ -31,7 +31,7 @@ task checkstyle(type: Checkstyle) {
 
     reports {
         xml.enabled = true
-        xml.destination "build/reports/checkstyle.xml"
+        xml.destination file("build/reports/checkstyle.xml")
     }
 }
 
@@ -47,6 +47,6 @@ task pmd(type: Pmd) {
     reports {
         xml.enabled = true
         html.enabled = true
-        xml.destination "build/reports/pmd.xml"
+        xml.destination file("build/reports/pmd.xml")
     }
 }
