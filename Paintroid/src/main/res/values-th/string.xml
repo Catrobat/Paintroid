@@ -52,7 +52,6 @@
   <string name="color_pre">เลือกไว้แล้ว</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">เครื่องมือ</string>
-  <string name="dialog_load">กำลังโหลด…</string>
   <string name="dialog_error_save_title">ข้อผิดพลาดโหลด/บันทึกแฟ้ม</string>
   <string name="dialog_error_sdcard_text">ตรวจสอบอิมเมจหรือการ์ด SD!</string>
   <string name="dialog_brush_width_text">ความกว้างเส้นขีด</string>

@@ -23,7 +23,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,15 +31,13 @@ import org.junit.runner.RunWith;
 import java.util.Locale;
 
 import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.DrawerActions.open;
 import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.openMultilingualActivity;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.StringStartsWith.startsWith;
@@ -58,11 +55,11 @@ public class NavigationDrawerRtlTest {
 		onData(hasToString(startsWith(ARABICLOCALE.getDisplayName(ARABICLOCALE))))
 				.perform(click());
 
-		onView(withId(R.id.drawer_layout))
-				.perform(open())
+		onNavigationDrawer()
+				.performOpen()
 				.check(matches(isOpen()));
 		pressBack();
-		onView(withId(R.id.drawer_layout))
+		onNavigationDrawer()
 				.check(matches(not(isOpen())));
 	}
 }

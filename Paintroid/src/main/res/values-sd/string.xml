@@ -52,7 +52,6 @@
   <string name="color_pre">اڳواٽ چونڊيل</string>
   <string name="color_hsv">رنگ چونڊيو</string>
   <string name="dialog_tools_title">اوزار</string>
-  <string name="dialog_load">لوڊ ٿي رهيو آهي…</string>
   <string name="dialog_error_save_title">خامي فائيل آڻڻ/محفوظ ڪرڻ</string>
   <string name="dialog_error_sdcard_text">تصوير يا ڪارڊ چيڪ ڪريو!</string>
   <string name="dialog_brush_width_text">ٻاهرين لڪير جي ويڪر</string>

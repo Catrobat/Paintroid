@@ -52,7 +52,6 @@
   <string name="color_pre">pré-selecionados</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Ferramentas</string>
-  <string name="dialog_load">A carregar…</string>
   <string name="dialog_error_save_title">Erro carregar/salvar Arquivo</string>
   <string name="dialog_error_sdcard_text">Verifique Imagem ou Cartão SD!</string>
   <string name="dialog_brush_width_text">Largura do Traçado</string>

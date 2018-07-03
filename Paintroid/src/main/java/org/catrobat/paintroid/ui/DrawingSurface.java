@@ -1,4 +1,4 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
@@ -32,8 +32,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Shader;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -50,9 +48,6 @@ import java.util.ArrayList;
 
 public class DrawingSurface extends SurfaceView implements
 		SurfaceHolder.Callback {
-	protected static final String BUNDLE_INSTANCE_STATE = "BUNDLE_INSTANCE_STATE";
-	protected static final String BUNDLE_PERSPECTIVE = "BUNDLE_PERSPECTIVE";
-	protected static final String BUNDLE_WORKING_BITMAP = "BUNDLE_WORKING_BITMAP";
 	protected static final int BACKGROUND_COLOR = Color.LTGRAY;
 	private static final String TAG = DrawingSurface.class.getSimpleName();
 	private final Object drawingLock = new Object();
@@ -176,30 +171,6 @@ public class DrawingSurface extends SurfaceView implements
 		}
 	}
 
-	@Override
-	public Parcelable onSaveInstanceState() {
-		Bundle bundle = new Bundle();
-		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
-		bundle.putParcelable(BUNDLE_WORKING_BITMAP, workingBitmap);
-		bundle.putSerializable(BUNDLE_PERSPECTIVE, PaintroidApplication.perspective);
-		return bundle;
-	}
-
-	@Override
-	public void onRestoreInstanceState(Parcelable state) {
-		if (state instanceof Bundle) {
-			Bundle bundle = (Bundle) state;
-			PaintroidApplication.perspective = (Perspective) bundle
-					.getSerializable(BUNDLE_PERSPECTIVE);
-			resetBitmap((Bitmap) bundle.getParcelable(BUNDLE_WORKING_BITMAP));
-
-			super.onRestoreInstanceState(bundle
-					.getParcelable(BUNDLE_INSTANCE_STATE));
-		} else {
-			super.onRestoreInstanceState(state);
-		}
-	}
-
 	public synchronized void resetBitmap(Bitmap bitmap) {
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		setBitmap(bitmap);
@@ -241,7 +212,7 @@ public class DrawingSurface extends SurfaceView implements
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		surfaceCanBeUsed = true;
-		PaintroidApplication.perspective.setSurfaceHolder(holder);
+		PaintroidApplication.perspective.setSurfaceFrame(holder.getSurfaceFrame());
 
 		if (workingBitmap != null && drawingThread != null) {
 			drawingThread.start();
@@ -274,13 +245,6 @@ public class DrawingSurface extends SurfaceView implements
 		return Color.TRANSPARENT;
 	}
 
-	public void getPixels(int[] pixels, int offset, int stride, int x, int y,
-			int width, int height) {
-		if (!isWorkingBitmapRecycled()) {
-			workingBitmap.getPixels(pixels, offset, stride, x, y, width, height);
-		}
-	}
-
 	public int getBitmapWidth() {
 		if (workingBitmap == null) {
 			return -1;
@@ -310,7 +274,7 @@ public class DrawingSurface extends SurfaceView implements
 					try {
 						drawingLock.wait();
 					} catch (InterruptedException e) {
-						Log.e(TAG, e.getMessage());
+						return;
 					}
 				} else {
 					drawingSurfaceDirtyFlag = false;

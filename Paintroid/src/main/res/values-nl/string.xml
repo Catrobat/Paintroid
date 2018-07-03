@@ -52,7 +52,6 @@
   <string name="color_pre">voorgeselecteerd</string>
   <string name="color_hsv">hsv kleurkiezer</string>
   <string name="dialog_tools_title">Tools</string>
-  <string name="dialog_load">Laden…</string>
   <string name="dialog_error_save_title">Fout laden/opslaan bestand</string>
   <string name="dialog_error_sdcard_text">Controleer afbeelding of SD kaart!</string>
   <string name="dialog_brush_width_text">Lijnbreedte</string>

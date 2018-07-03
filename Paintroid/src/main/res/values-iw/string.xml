@@ -52,7 +52,6 @@
   <string name="color_pre">בחירה מראש</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">כלים</string>
-  <string name="dialog_load">טוען…</string>
   <string name="dialog_error_save_title">שגיאת טעינה/שמירת קובץ</string>
   <string name="dialog_error_sdcard_text">בדוק את התמונה או כרטיסי SD!</string>
   <string name="dialog_brush_width_text">רוחב קו</string>

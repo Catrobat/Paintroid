@@ -36,7 +36,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import static org.catrobat.paintroid.test.espresso.util.IntroUtils.getPageIndexFromLayout;
 import static org.junit.Assert.assertEquals;
@@ -53,7 +53,7 @@ public class TapTargetIntegrationTest {
 		LinearLayout targetItemView = IntroUtils.getBottomBarFromToolSlide(activityRule.getActivity());
 		TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
 		tapTargetBottomBar.initTargetView();
-		HashMap<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetBottomBar);
+		Map<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetBottomBar);
 		Assert.assertEquals("TapTarget doesn't have same size. Tool is missing",
 				IntroUtils.numberOfVisibleChildren(targetItemView), tapTargetMap.size());
 	}
@@ -65,7 +65,7 @@ public class TapTargetIntegrationTest {
 		TapTargetTopBar tapTargetTopBar = IntroUtils.getTapTargetTopBar(activityRule.getActivity());
 		tapTargetTopBar.initTargetView();
 
-		HashMap<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetTopBar);
+		Map<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetTopBar);
 		Assert.assertEquals("TapTarget doesn't have same size. Tool is missing",
 				IntroUtils.numberOfVisibleChildren(targetItemView), tapTargetMap.size());
 	}

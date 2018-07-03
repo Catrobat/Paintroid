@@ -87,7 +87,6 @@
         <!-- </activity> -->
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize|locale"
             android:label="${appName}">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

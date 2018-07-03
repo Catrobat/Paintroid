@@ -64,14 +64,12 @@ class DrawingSurfaceThread {
 	synchronized void stop() {
 		Log.d(TAG, "DrawingSurfaceThread.stop");
 		running = false;
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
-		if (internalThread != null && internalThread.isAlive()) {
-			Log.w(TAG, "DrawingSurfaceThread.join");
-			boolean retry = true;
-			while (retry) {
+		if (internalThread != null) {
+			Log.d(TAG, "DrawingSurfaceThread.join");
+			while (internalThread.isAlive()) {
 				try {
+					internalThread.interrupt();
 					internalThread.join();
-					retry = false;
 					Log.d(TAG, "DrawingSurfaceThread.stopped");
 				} catch (InterruptedException e) {
 					Log.e(TAG, "Interrupt while joining DrawingSurfaceThread\n", e);

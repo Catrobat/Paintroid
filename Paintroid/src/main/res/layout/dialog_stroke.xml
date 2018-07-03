@@ -82,6 +82,7 @@
             android:layout_marginTop="16dp"
             android:inputType="number"
             android:imeOptions="actionDone"
+            android:saveEnabled="false"
             android:textColor="@color/dialog_title_color"
             android:textSize="14sp"
             android:textStyle="bold"

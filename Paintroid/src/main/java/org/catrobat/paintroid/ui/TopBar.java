@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -35,22 +35,21 @@ import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.button.ColorButton;
 
-import java.util.Observable;
-
-public class TopBar extends Observable implements View.OnClickListener, OnUpdateTopBarListener, ColorPickerDialog.OnColorPickedListener {
+public class TopBar implements View.OnClickListener, OnUpdateTopBarListener, ColorPickerDialog.OnColorPickedListener {
 	private ImageButton undoButton;
 	private ImageButton redoButton;
 	private ColorButton colorButton;
 	private DrawerLayout layerDrawer;
 
 	public TopBar(MainActivity mainActivity) {
-		undoButton = (ImageButton) mainActivity.findViewById(R.id.btn_top_undo);
-		redoButton = (ImageButton) mainActivity.findViewById(R.id.btn_top_redo);
-		colorButton = (ColorButton) mainActivity.findViewById(R.id.btn_top_color);
-		ImageButton layerButton = (ImageButton) mainActivity.findViewById(R.id.btn_top_layers);
-		layerDrawer = (DrawerLayout) mainActivity.findViewById(R.id.drawer_layout);
+		undoButton = mainActivity.findViewById(R.id.btn_top_undo);
+		redoButton = mainActivity.findViewById(R.id.btn_top_redo);
+		colorButton = mainActivity.findViewById(R.id.btn_top_color);
+		ImageButton layerButton = mainActivity.findViewById(R.id.btn_top_layers);
+		layerDrawer = mainActivity.findViewById(R.id.drawer_layout);
 
 		undoButton.setOnClickListener(this);
 		redoButton.setOnClickListener(this);
@@ -68,6 +67,8 @@ public class TopBar extends Observable implements View.OnClickListener, OnUpdate
 			onUndoEnabled(!PaintroidApplication.commandManager.isUndoCommandListEmpty());
 			onRedoEnabled(!PaintroidApplication.commandManager.isRedoCommandListEmpty());
 		}
+
+		colorButton.colorChanged(BaseTool.BITMAP_PAINT.getColor());
 	}
 
 	private void onUndoClick() {
@@ -92,7 +93,6 @@ public class TopBar extends Observable implements View.OnClickListener, OnUpdate
 			return;
 		}
 		ColorPickerDialog.getInstance().show();
-		ColorPickerDialog.getInstance().setInitialColor(currentTool.getDrawPaint().getColor());
 	}
 
 	@Override

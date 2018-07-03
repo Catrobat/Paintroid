@@ -52,7 +52,6 @@
   <string name="color_pre">předvolená</string>
   <string name="color_hsv">Výběr barvy HSV</string>
   <string name="dialog_tools_title">Nástroje</string>
-  <string name="dialog_load">Načítání…</string>
   <string name="dialog_error_save_title">Chyba načítání/ukládání souboru</string>
   <string name="dialog_error_sdcard_text">Zkontrolujte obrázek nebo SD Kartu!</string>
   <string name="dialog_brush_width_text">Tloušťka tahu</string>

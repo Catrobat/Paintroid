@@ -89,7 +89,7 @@ public interface CommandManager {
 	/**
 	 * Checks if bitmap is painted.
 	 */
-	boolean checkIfDrawn();
+	boolean isUnchanged();
 
 	void enableUndo(boolean enable);
 
@@ -105,7 +105,7 @@ public interface CommandManager {
 
 	void processLayerRedo(LayerCommand command);
 
-	boolean isCommandManagerInitialized();
+	boolean isInitialized();
 
 	LinkedList<LayerCommand> getLayerOperationsCommandList();
 

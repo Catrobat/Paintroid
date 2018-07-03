@@ -52,7 +52,6 @@
   <string name="color_pre">előre kijelölt</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Eszközők</string>
-  <string name="dialog_load">Betöltés…</string>
   <string name="dialog_error_save_title">Hiba a fájl betöltése/mentése során</string>
   <string name="dialog_error_sdcard_text">Ellenőrizze a képet vagy az SD-kártyát!</string>
   <string name="dialog_brush_width_text">Tollvastagság</string>

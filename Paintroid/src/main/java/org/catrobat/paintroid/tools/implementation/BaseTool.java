@@ -1,4 +1,4 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
@@ -68,30 +68,23 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@VisibleForTesting
 	public static final int STROKE_25 = 25;
 	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-	public static final Paint BITMAP_PAINT;
+	public static final Paint BITMAP_PAINT = new Paint();
 	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-	public static final Paint CANVAS_PAINT;
-	private static final PorterDuffXfermode ERASE_XFERMODE;
+	public static final Paint CANVAS_PAINT = new Paint();
 	private static final int SCROLL_TOLERANCE_PERCENTAGE = 10;
 
 	static {
-		BITMAP_PAINT = new Paint(Paint.ANTI_ALIAS_FLAG);
-		BITMAP_PAINT.setColor(Color.BLACK);
-		BITMAP_PAINT.setStyle(Paint.Style.STROKE);
-		BITMAP_PAINT.setStrokeJoin(Paint.Join.ROUND);
-		BITMAP_PAINT.setStrokeCap(Paint.Cap.ROUND);
-		BITMAP_PAINT.setStrokeWidth(STROKE_25);
-		CANVAS_PAINT = new Paint(BITMAP_PAINT);
-		ERASE_XFERMODE = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+		reset();
 	}
 
 	final Paint checkeredPattern;
 	final int scrollTolerance;
 	final Context context;
 	final PointF movedDistance;
-	private final ToolType toolType;
-	private final OnColorPickedListener onColorPickedListener;
 	final OnBrushChangedListener onBrushChangedListener;
+	private final OnColorPickedListener onColorPickedListener;
+	private final PorterDuffXfermode eraseXfermode;
+	private final ToolType toolType;
 	boolean toolOptionsShown = false;
 	LinearLayout toolSpecificOptionsLayout;
 	PointF previousEventCoordinate;
@@ -101,6 +94,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		super();
 		this.toolType = toolType;
 		this.context = context;
+		eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
 		Resources resources = context.getResources();
 		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.checkeredbg);
@@ -130,14 +124,23 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			}
 		};
 
-		ColorPickerDialog.getInstance().addOnColorPickedListener(onColorPickedListener);
-
 		movedDistance = new PointF(0f, 0f);
 		previousEventCoordinate = new PointF(0f, 0f);
 
 		toolOptionsLayout = (LinearLayout) ((Activity) context).findViewById(R.id.layout_tool_options);
 		toolSpecificOptionsLayout = (LinearLayout) ((Activity) context).findViewById(R.id.layout_tool_specific_options);
 		resetAndInitializeToolOptions();
+	}
+
+	public static void reset() {
+		BITMAP_PAINT.reset();
+		BITMAP_PAINT.setAntiAlias(true);
+		BITMAP_PAINT.setColor(Color.BLACK);
+		BITMAP_PAINT.setStyle(Paint.Style.STROKE);
+		BITMAP_PAINT.setStrokeJoin(Paint.Join.ROUND);
+		BITMAP_PAINT.setStrokeCap(Paint.Cap.ROUND);
+		BITMAP_PAINT.setStrokeWidth(STROKE_25);
+		CANVAS_PAINT.set(BITMAP_PAINT);
 	}
 
 	@Override
@@ -157,8 +160,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	void setPaintColor(@ColorInt int color) {
 		BITMAP_PAINT.setColor(color);
-		if (Color.alpha(color) == 0x00) {
-			BITMAP_PAINT.setXfermode(ERASE_XFERMODE);
+		if (Color.alpha(color) == 0) {
 			CANVAS_PAINT.reset();
 			CANVAS_PAINT.setStyle(BITMAP_PAINT.getStyle());
 			CANVAS_PAINT.setStrokeJoin(BITMAP_PAINT.getStrokeJoin());
@@ -166,8 +168,10 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			CANVAS_PAINT.setStrokeWidth(BITMAP_PAINT.getStrokeWidth());
 			CANVAS_PAINT.setShader(checkeredPattern.getShader());
 			CANVAS_PAINT.setColor(Color.BLACK);
-			BITMAP_PAINT.setAlpha(0x00);
-			CANVAS_PAINT.setAlpha(0x00);
+			CANVAS_PAINT.setAlpha(0);
+
+			BITMAP_PAINT.setXfermode(eraseXfermode);
+			BITMAP_PAINT.setAlpha(0);
 		} else {
 			BITMAP_PAINT.setXfermode(null);
 			CANVAS_PAINT.set(BITMAP_PAINT);
@@ -364,6 +368,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void startTool() {
+		ColorPickerDialog.getInstance().addOnColorPickedListener(onColorPickedListener);
 		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 

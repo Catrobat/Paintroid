@@ -29,9 +29,9 @@ import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.ToolWithShape;
 
@@ -58,7 +58,7 @@ public abstract class BaseToolWithShape extends BaseTool implements
 
 		primaryShapeColor = resources.getColor(R.color.rectangle_primary_color);
 		secondaryShapeColor = resources.getColor(R.color.rectangle_secondary_color);
-		float actionBarHeight = NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT * metrics.density;
+		float actionBarHeight = Constants.ACTION_BAR_HEIGHT * metrics.density;
 		PointF surfaceToolPosition = new PointF(metrics.widthPixels / 2f, metrics.heightPixels
 				/ 2f - actionBarHeight);
 		toolPosition = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfaceToolPosition);

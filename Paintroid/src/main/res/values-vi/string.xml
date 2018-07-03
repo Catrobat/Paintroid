@@ -52,7 +52,6 @@
   <string name="color_pre">chọn</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Công cụ</string>
-  <string name="dialog_load">Đang tải…</string>
   <string name="dialog_error_save_title">Lỗi tải/lưu tập tin</string>
   <string name="dialog_error_sdcard_text">Kiểm tra hình ảnh hoặc thẻ SD!</string>
   <string name="dialog_brush_width_text">Chiều rộng không cố định</string>

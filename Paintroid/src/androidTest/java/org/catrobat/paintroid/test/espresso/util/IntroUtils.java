@@ -44,7 +44,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -160,7 +160,7 @@ public final class IntroUtils {
 		return tapTargetTopBar;
 	}
 
-	public static HashMap<ToolType, TapTarget> getMapFromTapTarget(TapTargetBase tapTarget) {
+	public static Map<ToolType, TapTarget> getMapFromTapTarget(TapTargetBase tapTarget) {
 		return tapTarget.tapTargetMap;
 	}
 

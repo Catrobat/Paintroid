@@ -52,7 +52,6 @@
   <string name="color_pre">önceden seçilmiş</string>
   <string name="color_hsv">hsv renk seçici</string>
   <string name="dialog_tools_title">Araçlar</string>
-  <string name="dialog_load">Yükleniyor…</string>
   <string name="dialog_error_save_title">Dosya yüklenirken/kaydedilirken hata</string>
   <string name="dialog_error_sdcard_text">Resmi veya SD kartı kontrol et!</string>
   <string name="dialog_brush_width_text">Fırça Genişliği</string>

@@ -25,8 +25,8 @@ import android.graphics.PointF;
 import android.support.test.InstrumentationRegistry;
 import android.util.DisplayMetrics;
 
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.ui.Perspective;
 
 public final class Utils {
@@ -55,7 +55,7 @@ public final class Utils {
 		Resources resources = InstrumentationRegistry.getTargetContext().getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
 		float density = metrics.density;
-		return (NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT * density);
+		return (Constants.ACTION_BAR_HEIGHT * density);
 	}
 
 	public static float getStatusbarHeight() {

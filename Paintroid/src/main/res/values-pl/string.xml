@@ -52,7 +52,6 @@
   <string name="color_pre">wstępnie wybrane</string>
   <string name="color_hsv">próbnik kolorów hsv</string>
   <string name="dialog_tools_title">Narzędzia</string>
-  <string name="dialog_load">Ładowanie…</string>
   <string name="dialog_error_save_title">Błąd ładowania/zapisu pliku</string>
   <string name="dialog_error_sdcard_text">Sprawdź obraz lub kartę SD!</string>
   <string name="dialog_brush_width_text">Szerokość krawędzi</string>

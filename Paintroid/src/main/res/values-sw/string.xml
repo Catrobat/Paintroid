@@ -52,7 +52,6 @@
   <string name="color_pre">ilichaguliwa</string>
   <string name="color_hsv">kitwa rangi hsv</string>
   <string name="dialog_tools_title">Zana</string>
-  <string name="dialog_load">Inapakia…</string>
   <string name="dialog_error_save_title">Kosa la kupakia/kuhifadhi faili</string>
   <string name="dialog_error_sdcard_text">Angalia picha au kadi ya SD!</string>
   <string name="dialog_brush_width_text">Kata Upana</string>

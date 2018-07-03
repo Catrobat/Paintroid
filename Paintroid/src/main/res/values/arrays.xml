@@ -42,10 +42,11 @@
         <item name="white">@color/color_chooser_white</item>
         <item name="transparent">@color/color_chooser_transparent</item>
     </array>
-    <array name="new_image">
-        <item name="menu_new_image_empty_image">@string/menu_new_image_empty_image</item>
-        <item name="menu_new_image_from_camera">@string/menu_new_image_from_camera</item>
-    </array>
+
+    <string-array name="new_image">
+        <item>@string/menu_new_image_empty_image</item>
+        <item>@string/menu_new_image_from_camera</item>
+    </string-array>
 
     <string-array name="text_tool_font_array">
         <item>@string/text_tool_dialog_font_monospace</item>

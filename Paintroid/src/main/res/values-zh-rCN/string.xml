@@ -52,7 +52,6 @@
   <string name="color_pre">预选</string>
   <string name="color_hsv">hsv 颜色选择器</string>
   <string name="dialog_tools_title">工具</string>
-  <string name="dialog_load">载入中…</string>
   <string name="dialog_error_save_title">加载/保存文件时发生错误</string>
   <string name="dialog_error_sdcard_text">检查图像或 SD 卡 ！</string>
   <string name="dialog_brush_width_text">笔画宽度</string>

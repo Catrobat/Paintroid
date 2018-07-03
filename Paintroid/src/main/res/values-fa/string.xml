@@ -52,7 +52,6 @@
   <string name="color_pre">از پیش انتخاب شده</string>
   <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">ابزار</string>
-  <string name="dialog_load">در حال بارگذاری…</string>
   <string name="dialog_error_save_title">خطا در بارگذاری یا ذخیره فایل</string>
   <string name="dialog_error_sdcard_text">تصویر یا کارت SD را بررسی کن!</string>
   <string name="dialog_brush_width_text">لمس عرضی</string>

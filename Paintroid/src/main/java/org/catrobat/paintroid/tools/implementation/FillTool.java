@@ -30,7 +30,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
@@ -119,8 +118,8 @@ public class FillTool extends BaseTool {
 		LayoutInflater inflater = LayoutInflater.from(context);
 		fillToolOptionsView = inflater.inflate(R.layout.dialog_fill_tool, toolSpecificOptionsLayout);
 
-		colorToleranceSeekBar = (SeekBar) fillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
-		colorToleranceEditText = (EditText) fillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
+		colorToleranceSeekBar = fillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
+		colorToleranceEditText = fillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
 		colorToleranceEditText.setFilters(new InputFilter[]{new NumberRangeFilter(0, 100)});
 		initializeFillOptionsListener();
 		updateColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);
@@ -133,9 +132,7 @@ public class FillTool extends BaseTool {
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				if (fromUser) {
 					updateColorToleranceText(progress);
-					hideKeyboard();
 				}
-				colorToleranceEditText.setCursorVisible(false);
 			}
 
 			@Override
@@ -147,7 +144,6 @@ public class FillTool extends BaseTool {
 			}
 		});
 
-		colorToleranceEditText.setCursorVisible(false);
 		colorToleranceEditText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -168,24 +164,9 @@ public class FillTool extends BaseTool {
 				}
 			}
 		});
-		colorToleranceEditText.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-					colorToleranceEditText.setCursorVisible(true);
-			}
-		});
-		colorToleranceEditText.requestFocus();
 	}
 
 	private void updateColorToleranceText(int toleranceInPercent) {
 		colorToleranceEditText.setText(String.format(Locale.getDefault(), "%d", toleranceInPercent));
-		colorToleranceEditText.setSelection(colorToleranceEditText.length());
-	}
-
-	private void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) colorToleranceEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (imm != null) {
-			imm.hideSoftInputFromWindow(colorToleranceEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		}
 	}
 }

@@ -52,7 +52,6 @@
   <string name="color_pre">preselezione</string>
   <string name="color_hsv">selettore di colore di Hsv</string>
   <string name="dialog_tools_title">Strumenti</string>
-  <string name="dialog_load">Caricamento in corso…</string>
   <string name="dialog_error_save_title">Errore durante il caricamento/salvataggio File</string>
   <string name="dialog_error_sdcard_text">Controllare l\'immagine o l\'SD-Card!</string>
   <string name="dialog_brush_width_text">Spessore del tratto</string>

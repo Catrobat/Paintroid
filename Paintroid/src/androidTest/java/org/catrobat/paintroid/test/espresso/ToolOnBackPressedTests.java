@@ -1,4 +1,4 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -22,17 +22,15 @@ package org.catrobat.paintroid.test.espresso;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
-import android.widget.Button;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -41,7 +39,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
-import java.io.IOException;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -50,18 +47,20 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.open;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
+import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ConfirmQuitDialogInteraction.onConfirmQuitDialog;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -83,198 +82,108 @@ public class ToolOnBackPressedTests {
 
 	@Before
 	public void setUp() {
-		deleteSaveFileIfExists();
-
-		selectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 	}
 
 	@After
 	public void tearDown() {
-		deleteSaveFileIfExists();
-	}
-
-	protected void deleteSaveFileIfExists() {
 		if (saveFile != null && saveFile.exists()) {
 			saveFile.delete();
+			saveFile = null;
 		}
-	}
-
-	protected ViewInteraction getPositiveButtonViewInteraction() {
-		return onView(allOf(withId(android.R.id.button1), withText(R.string.save_button_text), isAssignableFrom(Button.class)));
-	}
-
-	protected ViewInteraction getNegativeButtonViewInteraction() {
-		return onView(allOf(withId(android.R.id.button2), withText(R.string.discard_button_text), isAssignableFrom(Button.class)));
-	}
-
-	protected ViewInteraction getNeutralButtonViewInteraction() {
-		return onView(withId(android.R.id.button3));
-	}
-
-	protected ViewInteraction getDialogTitleViewInteraction() {
-		return onView(withText(R.string.closing_security_question_title));
-	}
-
-	protected ViewInteraction getDialogCatroidTitleViewInteraction() {
-		return onView(withText(R.string.closing_catroid_security_question_title));
-	}
-
-	protected ViewInteraction getDialogMessageViewInteraction() {
-		return onView(withText(R.string.closing_security_question));
-	}
-
-	protected void checkDialogVisible() {
-		final ViewInteraction negativeDialogButton = getNegativeButtonViewInteraction();
-		final ViewInteraction positiveDialogButton = getPositiveButtonViewInteraction();
-		final ViewInteraction neutralDialogButton = getNeutralButtonViewInteraction();
-
-		final ViewInteraction dialogTitle = getDialogTitleViewInteraction();
-		final ViewInteraction dialogMessage = getDialogMessageViewInteraction();
-
-		negativeDialogButton.check(matches(isDisplayed()));
-		positiveDialogButton.check(matches(isDisplayed()));
-		neutralDialogButton.check(matches(not(isDisplayed())));
-
-		dialogMessage.check(matches(isDisplayed()));
-		dialogTitle.check(matches(isDisplayed()));
-	}
-
-	protected void checkDialogDoesNotExist() {
-		final ViewInteraction negativeDialogButton = getNegativeButtonViewInteraction();
-		final ViewInteraction positiveDialogButton = getPositiveButtonViewInteraction();
-		final ViewInteraction neutralDialogButton = getNeutralButtonViewInteraction();
-
-		final ViewInteraction dialogTitle = getDialogTitleViewInteraction();
-		final ViewInteraction dialogMessage = getDialogMessageViewInteraction();
-
-		negativeDialogButton.check(doesNotExist());
-		positiveDialogButton.check(doesNotExist());
-		neutralDialogButton.check(doesNotExist());
-
-		dialogMessage.check(doesNotExist());
-		dialogTitle.check(doesNotExist());
-	}
-
-	protected void checkFromCatroidDialogVisible() {
-		final ViewInteraction negativeDialogButton = getNegativeButtonViewInteraction();
-		final ViewInteraction positiveDialogButton = getPositiveButtonViewInteraction();
-		final ViewInteraction neutralDialogButton = getNeutralButtonViewInteraction();
-
-		final ViewInteraction dialogTitle = getDialogCatroidTitleViewInteraction();
-		final ViewInteraction dialogMessage = getDialogMessageViewInteraction();
-
-		negativeDialogButton.check(matches(isDisplayed()));
-		positiveDialogButton.check(matches(isDisplayed()));
-		neutralDialogButton.check(matches(not(isDisplayed())));
-
-		dialogMessage.check(matches(isDisplayed()));
-		dialogTitle.check(matches(isDisplayed()));
-	}
-
-	protected void checkFromCatroidDialogDoesNotExist() {
-		final ViewInteraction negativeDialogButton = getNegativeButtonViewInteraction();
-		final ViewInteraction positiveDialogButton = getPositiveButtonViewInteraction();
-		final ViewInteraction neutralDialogButton = getNeutralButtonViewInteraction();
-
-		final ViewInteraction dialogTitle = getDialogCatroidTitleViewInteraction();
-		final ViewInteraction dialogMessage = getDialogMessageViewInteraction();
-
-		negativeDialogButton.check(doesNotExist());
-		positiveDialogButton.check(doesNotExist());
-		neutralDialogButton.check(doesNotExist());
-
-		dialogMessage.check(doesNotExist());
-		dialogTitle.check(doesNotExist());
 	}
 
 	@Test
 	public void testBrushToolBackPressed() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		final ViewInteraction negativeDialogButton = getNegativeButtonViewInteraction();
-
-		// Make change to drawing surface
-		onView(withId(R.id.drawingSurfaceView)).perform(touchCenterMiddle());
-
-		// Open dialog
 		Espresso.pressBack();
 
-		checkDialogVisible();
+		onConfirmQuitDialog()
+				.checkPositiveButton(matches(isDisplayed()))
+				.checkNegativeButton(matches(isDisplayed()))
+				.checkNeutralButton(matches(not(isDisplayed())))
+				.checkMessage(matches(isDisplayed()))
+				.checkTitle(matches(isDisplayed()));
 
-		// Close dialog
 		Espresso.pressBack();
 
-		checkDialogDoesNotExist();
+		onConfirmQuitDialog()
+				.checkPositiveButton(doesNotExist())
+				.checkNegativeButton(doesNotExist())
+				.checkNeutralButton(doesNotExist())
+				.checkMessage(doesNotExist())
+				.checkTitle(doesNotExist());
 
-		// Open dialog
 		Espresso.pressBack();
 
-		negativeDialogButton.perform(click());
+		onConfirmQuitDialog().onNegativeButton()
+				.perform(click());
 
-		assertTrue("Activity is not finishing after discard", launchActivityRule.getActivity().isFinishing());
+		assertTrue(launchActivityRule.getActivity().isFinishing());
 	}
 
 	@Test
-	public void testBrushToolBackPressedWithSaveAndOverride() throws IOException {
-
-		String pathToFile = launchActivityRule.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+	public void testBrushToolBackPressedWithSaveAndOverride() {
+		String pathToFile = launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 				+ File.separator
 				+ Constants.TEMP_PICTURE_NAME
 				+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
 
-		NavigationDrawerMenuActivity.savedPictureUri = Uri.fromFile(saveFile);
+		MainActivity.savedPictureUri = Uri.fromFile(saveFile);
 		long oldFileSize = saveFile.length();
 
-		onView(withId(R.id.drawingSurfaceView)).perform(touchCenterMiddle());
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		Espresso.pressBack();
 
-		final ViewInteraction positiveDialogButton = getPositiveButtonViewInteraction();
-
-		positiveDialogButton.perform(click());
+		onConfirmQuitDialog().onPositiveButton()
+				.perform(click());
 
 		long actualFileSize = saveFile.length();
-
-		assertNotEquals("Application finished, files not different.", oldFileSize, actualFileSize);
+		assertNotEquals(oldFileSize, actualFileSize);
 	}
 
 	@Test
 	public void testNotBrushToolBackPressed() {
-
-		selectTool(ToolType.CURSOR);
+		onToolBarView()
+				.performSelectTool(ToolType.CURSOR);
 
 		Espresso.pressBack();
 
-		assertEquals("Switching to another tool", PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
 	public void testToolOptionsDisappearWhenBackPressed() {
+		onToolBarView()
+				.performSelectTool(ToolType.CURSOR)
+				.performOpenToolOptions();
 
-		selectTool(ToolType.CURSOR);
-		openToolOptionsForCurrentTool();
-
-		String currentToolName = launchActivityRule.getActivity().getString(PaintroidApplication.currentTool.getToolType().getNameResource());
-
-		onView(withId(R.id.layout_tool_options_name)).check(matches(withText(currentToolName)));
+		onView(withId(R.id.layout_tool_options_name))
+				.check(matches(withText(R.string.button_cursor)));
 
 		Espresso.pressBack();
 
-		assertEquals("Tool should not have changed", PaintroidApplication.currentTool.getToolType(), ToolType.CURSOR);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.CURSOR);
 
 		onView(withId(R.id.main_tool_options)).check(matches(not(isDisplayed())));
 		onView(withId(R.id.layout_tool_options_name)).check(matches(not(isDisplayed())));
 
 		Espresso.pressBack();
 
-		assertEquals("Tool should not have changed", PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
-	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-
-		onView(withId(R.id.drawingSurfaceView)).perform(touchCenterMiddle());
+	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		String pathToFile =
 				Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
@@ -284,94 +193,126 @@ public class ToolOnBackPressedTests {
 						+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
-
+		MainActivity.savedPictureUri = Uri.fromFile(saveFile);
 		launchActivityRule.getActivity().openedFromCatroid = true;
 
 		Espresso.pressBack();
 
-		checkFromCatroidDialogVisible();
+		onConfirmQuitDialog()
+				.checkPositiveButton(matches(isDisplayed()))
+				.checkNegativeButton(matches(isDisplayed()))
+				.checkNeutralButton(matches(not(isDisplayed())))
+				.checkMessage(matches(isDisplayed()));
+
+		onView(withText(R.string.closing_catroid_security_question_title))
+				.check(matches(isDisplayed()));
 
 		Espresso.pressBack();
 
-		checkFromCatroidDialogDoesNotExist();
+		onConfirmQuitDialog()
+				.checkPositiveButton(doesNotExist())
+				.checkNegativeButton(doesNotExist())
+				.checkNeutralButton(doesNotExist())
+				.checkMessage(doesNotExist());
+
+		onView(withText(R.string.closing_catroid_security_question_title))
+				.check(doesNotExist());
 
 		Espresso.pressBack();
 
-		getPositiveButtonViewInteraction().perform(click());
+		onConfirmQuitDialog().onPositiveButton()
+				.perform(click());
 
-		assertTrue("Activity is not finishing after save", launchActivityRule.getActivity().isFinishing());
-		assertTrue("No file was created", saveFile.exists());
-		assertThat("The created file is empty", saveFile.length(), is(greaterThan(0L)));
+		assertTrue(launchActivityRule.getActivity().isFinishing());
+		assertTrue(saveFile.exists());
+		assertThat(saveFile.length(), is(greaterThan(0L)));
 	}
 
 	@Test
 	public void testBrushToolBackPressedFromCatroidAndDiscardPicture() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(withId(R.id.drawingSurfaceView)).perform(touchCenterMiddle());
-
-		String pathToFile = launchActivityRule.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+		String pathToFile = launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 				+ File.separator
 				+ Constants.TEMP_PICTURE_NAME
 				+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
-
+		MainActivity.savedPictureUri = Uri.fromFile(saveFile);
 		launchActivityRule.getActivity().openedFromCatroid = true;
 
 		Espresso.pressBack();
 
-		checkFromCatroidDialogVisible();
+		onConfirmQuitDialog()
+				.checkPositiveButton(matches(isDisplayed()))
+				.checkNegativeButton(matches(isDisplayed()))
+				.checkNeutralButton(matches(not(isDisplayed())))
+				.checkMessage(matches(isDisplayed()));
 
-		getNegativeButtonViewInteraction().perform(click());
+		onView(withText(R.string.closing_catroid_security_question_title))
+				.check(matches(isDisplayed()));
 
-		assertTrue("Activity is not finishing after save", launchActivityRule.getActivity().isFinishing());
-		assertFalse("File was created", saveFile.exists());
+		onConfirmQuitDialog().onNegativeButton()
+				.perform(click());
+
+		assertTrue(launchActivityRule.getActivity().isFinishing());
+		assertFalse(saveFile.exists());
 	}
 
 	@Test
 	public void testCloseNavigationDrawerOnBackPressed() {
-		onView(withId(R.id.drawer_layout)).perform(open());
-		onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
+		onNavigationDrawer()
+				.perform(open(Gravity.START))
+				.check(matches(isOpen()));
 		pressBack();
-		onView(withId(R.id.drawer_layout)).check(matches(isClosed()));
+		onNavigationDrawer()
+				.check(matches(isClosed()));
 	}
 
 	@Test
 	public void testCloseLayerDialogOnBackPressed() {
-		onView(withId(R.id.drawer_layout)).perform(open(Gravity.END));
-		onView(withId(R.id.drawer_layout)).check(matches(isDisplayed()));
+		onNavigationDrawer()
+				.perform(open(Gravity.END))
+				.check(matches(isDisplayed()));
 		pressBack();
-		onView(withId(R.id.drawer_layout)).check(matches(isClosed()));
+		onNavigationDrawer()
+				.check(matches(isClosed()));
 	}
 
 	@Test
 	public void testCloseColorPickerDialogOnBackPressed() {
-		onView(withId(R.id.btn_top_color)).perform(click());
-		onView(withId(R.id.colorchooser_base_layout)).check(matches(isDisplayed()));
+		onColorPickerView()
+				.performOpenColorPicker()
+				.check(matches(isDisplayed()));
 		pressBack();
-		onView(withId(R.id.colorchooser_base_layout)).check(doesNotExist());
+		onColorPickerView()
+				.check(doesNotExist());
 	}
 
 	@Test
 	public void testCloseToolOptionOnBackPressed() {
-		onView(withId(R.id.tools_rectangle)).perform(click());
-		onView(withId(R.id.layout_tool_options)).check(matches(isDisplayed()));
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onToolBarView().onToolOptions()
+				.check(matches(isDisplayed()));
 		pressBack();
-		onView(withId(R.id.layout_tool_options)).check(matches(not(isDisplayed())));
+		onToolBarView().onToolOptions()
+				.check(matches(not(isDisplayed())));
 	}
 
 	@Test
 	public void testCloseToolOptionsOnUndoPressed() {
-		onView(isRoot())
-				.perform(click());
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolBarView()
 				.performSelectTool(ToolType.TEXT);
-		onView(withId(R.id.layout_tool_options))
+		onToolBarView().onToolOptions()
 				.check(matches(isDisplayed()));
-		onView(withId(R.id.btn_top_undo))
+		onTopBarView().onUndoButton()
 				.check(matches(allOf(isDisplayed(), isEnabled())))
 				.perform(click());
-		onView(withId(R.id.layout_tool_options))
+		onToolBarView().onToolOptions()
 				.check(matches(not(isDisplayed())));
 	}
 }
