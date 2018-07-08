@@ -40,9 +40,9 @@
         <item name="android:windowBackground">@drawable/launch</item>
     </style>
 
-    <style name="MyMaterialTheme" parent="MyMaterialTheme.Base" />
+    <style name="PaintroidTheme" parent="PaintroidTheme.Base" />
 
-    <style name="MyMaterialTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="PaintroidTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/custom_background_color</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -52,7 +52,7 @@
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
     </style>
 
-    <style name="HighlightColorTheme" parent="MyMaterialTheme">
+    <style name="HighlightColorTheme" parent="PaintroidTheme">
         <item name="colorControlHighlight">@color/bottom_bar_button_activated</item>
     </style>
 
