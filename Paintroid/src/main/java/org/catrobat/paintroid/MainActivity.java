@@ -188,8 +188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				File imageFile = new File(picturePath);
 				if (imageFile.exists()) {
 					savedPictureUri = Uri.fromFile(imageFile);
-					DisplayMetrics metrics = getResources().getDisplayMetrics();
-					new LoadImageAsync(this, LOAD_IMAGE_CATROID, metrics, savedPictureUri, false).execute();
+					new LoadImageAsync(this, LOAD_IMAGE_CATROID, savedPictureUri).execute();
 				} else {
 					new CreateFileAsync(this, CREATE_FILE_DEFAULT, pictureName).execute();
 				}
@@ -412,12 +411,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			return;
 		}
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		int maxWidth = metrics.widthPixels;
+		int maxHeight = metrics.heightPixels;
 		switch (requestCode) {
 			case REQUEST_CODE_IMPORTPNG:
 				Uri selectedGalleryImageUri = data.getData();
 				Tool tool = ToolFactory.createTool(this, ToolType.IMPORTPNG);
 				switchTool(tool);
-				new LoadImageAsync(this, LOAD_IMAGE_IMPORTPNG, metrics, selectedGalleryImageUri, true).execute();
+				new LoadImageAsync(this, LOAD_IMAGE_IMPORTPNG, maxWidth, maxHeight, selectedGalleryImageUri).execute();
 				break;
 			case REQUEST_CODE_FINISH:
 				finish();
@@ -426,10 +427,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				recreate();
 				break;
 			case REQUEST_CODE_LOAD_PICTURE:
-				new LoadImageAsync(this, LOAD_IMAGE_DEFAULT, metrics, data.getData(), true).execute();
+				new LoadImageAsync(this, LOAD_IMAGE_DEFAULT, maxWidth, maxHeight, data.getData()).execute();
 				break;
 			case REQUEST_CODE_TAKE_PICTURE:
-				new LoadImageAsync(this, LOAD_IMAGE_DEFAULT, metrics, cameraImageUri, true).execute();
+				new LoadImageAsync(this, LOAD_IMAGE_DEFAULT, maxWidth, maxHeight, cameraImageUri).execute();
 				break;
 			default:
 				super.onActivityResult(requestCode, resultCode, data);
