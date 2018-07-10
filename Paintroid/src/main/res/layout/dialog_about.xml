@@ -18,9 +18,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="300dp"
-    android:orientation="vertical" xmlns:tools="http://schemas.android.com/tools">
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -31,7 +32,7 @@
         tools:ignore="UselessParent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
@@ -40,7 +41,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_launcher" />
+                android:src="@drawable/ic_launcher" />
 
             <TextView
                 android:id="@+id/dialog_about_version_name_text_view"
@@ -48,6 +49,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textSize="8sp"
+                android:text="@string/about_version"
                 tools:ignore="SmallSp" />
 
             <TextView
@@ -55,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/about_content" />
+                tools:text="@string/about_content" />
 
             <TextView
                 android:id="@+id/about_tview_Url"
@@ -63,7 +65,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColorLink="@color/text_color_link"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="@string/about_catroid_url_text" />
         </LinearLayout>
     </ScrollView>
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
@@ -21,10 +21,6 @@ package org.catrobat.paintroid;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.util.Log;
 
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.LayerBitmapCommand;
@@ -39,8 +35,6 @@ import java.util.LinkedList;
 import java.util.Locale;
 
 public class PaintroidApplication extends Application {
-	private static final String TAG = PaintroidApplication.class.getSimpleName();
-
 	public static Context applicationContext;
 	public static DrawingSurface drawingSurface;
 	public static CommandManager commandManager;
@@ -50,19 +44,6 @@ public class PaintroidApplication extends Application {
 	public static LinkedList<LayerCommand> layerOperationsUndoCommandList;
 	public static ArrayList<LayerBitmapCommand> drawBitmapCommandsAtLayer;
 	public static String defaultSystemLanguage;
-
-	public static String getVersionName(Context context) {
-		String versionName = "unknown";
-		try {
-			PackageInfo packageInfo = context.getPackageManager()
-					.getPackageInfo(context.getPackageName(),
-							PackageManager.GET_META_DATA);
-			versionName = packageInfo.versionName;
-		} catch (NameNotFoundException nameNotFoundException) {
-			Log.e(PaintroidApplication.TAG, "Name not found", nameNotFoundException);
-		}
-		return versionName;
-	}
 
 	@Override
 	public void onCreate() {
