@@ -78,7 +78,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
 
-		Bitmap croppedBitmap = layerUnderTest.getImage();
+		Bitmap croppedBitmap = layerUnderTest.getBitmap();
 		assertEquals("Cropping failed, width not correct ", widthOriginal - resizeCoordinateXLeft
 				- (widthOriginal - (resizeCoordinateXRight + 1)), croppedBitmap.getWidth());
 		assertEquals("Cropping failed, height not correct ", heightOriginal - resizeCoordinateYTop
@@ -99,7 +99,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
 
-		Bitmap enlargedBitmap = layerUnderTest.getImage();
+		Bitmap enlargedBitmap = layerUnderTest.getBitmap();
 		assertEquals("Enlarging failed, width not correct ", widthOriginal - resizeCoordinateXLeft
 				- (widthOriginal - (resizeCoordinateXRight + 1)), enlargedBitmap.getWidth());
 		assertEquals("Enlarging failed, height not correct ", heightOriginal - resizeCoordinateYTop
@@ -120,7 +120,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
 
-		Bitmap enlargedBitmap = layerUnderTest.getImage();
+		Bitmap enlargedBitmap = layerUnderTest.getBitmap();
 		assertEquals("Enlarging failed, width not correct ", widthOriginal, enlargedBitmap.getWidth());
 		assertEquals("Enlarging failed, height not correct ", heightOriginal, enlargedBitmap.getHeight());
 		enlargedBitmap.recycle();
@@ -134,43 +134,43 @@ public class ResizeCommandTest extends CommandTestSetup {
 
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
 
-		assertEquals("Width should not have changed", widthOriginal, layerUnderTest.getImage().getWidth());
-		assertEquals("Height should not have changed", heightOriginal, layerUnderTest.getImage().getHeight());
+		assertEquals("Width should not have changed", widthOriginal, layerUnderTest.getBitmap().getWidth());
+		assertEquals("Height should not have changed", heightOriginal, layerUnderTest.getBitmap().getHeight());
 	}
 
 	@Test
 	public void testIfBitmapIsNotResizedWithInvalidBounds() {
-		Bitmap originalBitmap = layerUnderTest.getImage();
+		Bitmap originalBitmap = layerUnderTest.getBitmap();
 		commandUnderTest = new ResizeCommand(bitmapUnderTest.getWidth(), 0, bitmapUnderTest.getWidth(),
 				0, maximumBitmapResolution);
 
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
-		assertTrue("bitmap must not change if X left is larger than bitmap scope", originalBitmap.sameAs(layerUnderTest.getImage()));
+		assertTrue("bitmap must not change if X left is larger than bitmap scope", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(-1, 0, -1, 0, maximumBitmapResolution);
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
-		assertTrue("bitmap must not change if X right is smaller than bitmap scope", originalBitmap.sameAs(layerUnderTest.getImage()));
+		assertTrue("bitmap must not change if X right is smaller than bitmap scope", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(0, bitmapUnderTest.getHeight(), 0,
 				bitmapUnderTest.getHeight(), maximumBitmapResolution);
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
-		assertTrue("bitmap must not change if Y top is larger than bitmap scope", originalBitmap.sameAs(layerUnderTest.getImage()));
+		assertTrue("bitmap must not change if Y top is larger than bitmap scope", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(0, -1, 0, -1, maximumBitmapResolution);
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
-		assertTrue("bitmap must not change if Y bottom is smaller than bitmap scope", originalBitmap.sameAs(layerUnderTest.getImage()));
+		assertTrue("bitmap must not change if Y bottom is smaller than bitmap scope", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(1, 0, 0, 0, maximumBitmapResolution);
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
-		assertTrue("bitmap must not change with widthXRight < widthXLeft bound", originalBitmap.sameAs(layerUnderTest.getImage()));
+		assertTrue("bitmap must not change with widthXRight < widthXLeft bound", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(0, 1, 0, 0, maximumBitmapResolution);
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
-		assertTrue("bitmap must not change with widthYBottom < widthYTop bound", originalBitmap.sameAs(layerUnderTest.getImage()));
+		assertTrue("bitmap must not change with widthYBottom < widthYTop bound", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(0, 0, bitmapUnderTest.getWidth() - 1,
 				bitmapUnderTest.getHeight() - 1, maximumBitmapResolution);
 		commandUnderTest.run(canvasUnderTest, layerUnderTest);
-		assertTrue("bitmap must not change because bounds are the same as original bitmap", originalBitmap.sameAs(layerUnderTest.getImage()));
+		assertTrue("bitmap must not change because bounds are the same as original bitmap", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 	}
 }

@@ -61,12 +61,12 @@ public class PipetteToolTest {
 		LayerListener layerListener = LayerListener.getInstance();
 		LayersAdapter layersAdapter = layerListener.getAdapter();
 		Layer layer = layersAdapter.getLayer(0);
-		Bitmap bitmap = layer.getImage();
+		Bitmap bitmap = layer.getBitmap();
 		bitmap.setPixel(X_COORDINATE_RED, 0, Color.RED);
 		bitmap.setPixel(X_COORDINATE_GREEN, 0, Color.GREEN);
 		bitmap.setPixel(X_COORDINATE_BLUE, 0, Color.BLUE);
 		bitmap.setPixel(X_COORDINATE_PART_TRANSPARENT, 0, 0xAAAAAAAA);
-		layer.setImage(bitmap);
+		layer.setBitmap(bitmap);
 
 		toolToTest.updateSurfaceBitmap();
 	}

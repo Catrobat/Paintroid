@@ -111,7 +111,6 @@
   <string name="layer_new">Nova Camada</string>
   <string name="layer_delete">Excluir Camada</string>
   <string name="layer_too_many_layers">Há camadas demais</string>
-  <string name="layer_invisible">Todas as camadas invisíveis</string>
   <string name="layer_merged">Layers merged</string>
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Erro ao carregar imagem</string>

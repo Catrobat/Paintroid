@@ -76,7 +76,7 @@ public class LayerIntegrationTest {
 		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
 		IdlingRegistry.getInstance().register(dialogWait);
 
-		Bitmap image = LayerListener.getInstance().getCurrentLayer().getImage();
+		Bitmap image = LayerListener.getInstance().getCurrentLayer().getBitmap();
 		bitmapHeight = image.getHeight();
 		bitmapWidth = image.getWidth();
 	}

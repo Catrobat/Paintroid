@@ -166,7 +166,7 @@ public class LayerBitmapCommandImpl implements LayerBitmapCommand {
 			bitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
 		}
 		bitmap.eraseColor(Color.TRANSPARENT);
-		layer.setImage(bitmap);
+		layer.setBitmap(bitmap);
 		PaintroidApplication.drawingSurface.resetBitmap(bitmap);
 	}
 

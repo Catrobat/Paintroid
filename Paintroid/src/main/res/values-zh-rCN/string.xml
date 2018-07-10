@@ -111,7 +111,6 @@
   <string name="layer_new">新建图层</string>
   <string name="layer_delete">删除图层</string>
   <string name="layer_too_many_layers">图层数量过多</string>
-  <string name="layer_invisible">所有图层不可见</string>
   <string name="layer_merged">合并的图层</string>
   <string name="dialog_shape_text">形状</string>
   <string name="dialog_loading_image_failed_title">加载图像时出错</string>

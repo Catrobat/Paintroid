@@ -48,7 +48,7 @@ public class FillCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
-		Bitmap bitmap = layer.getImage();
+		Bitmap bitmap = layer.getBitmap();
 
 		notifyStatus(NotifyStates.COMMAND_STARTED);
 		if (clickedPixel == null) {

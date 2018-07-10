@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		} else {
 			setLayoutDirection();
 
-			drawingSurface.resetBitmap(LayerListener.getInstance().getCurrentLayer().getImage());
+			drawingSurface.resetBitmap(LayerListener.getInstance().getCurrentLayer().getBitmap());
 			PaintroidApplication.perspective.resetScaleAndTranslation();
 			PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED);
 
@@ -745,7 +745,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				isSaved = false;
 				savedPictureUri = null;
 				cameraImageUri = null;
-				currentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
+				currentLayer.setBitmap(PaintroidApplication.drawingSurface.getBitmapCopy());
 				layerListener.refreshView();
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
@@ -763,7 +763,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				isSaved = false;
 				savedPictureUri = uri;
 				cameraImageUri = null;
-				currentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
+				currentLayer.setBitmap(PaintroidApplication.drawingSurface.getBitmapCopy());
 				layerListener.refreshView();
 				break;
 		}

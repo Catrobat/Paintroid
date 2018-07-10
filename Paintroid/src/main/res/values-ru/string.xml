@@ -111,7 +111,6 @@
   <string name="layer_new">Новый слой</string>
   <string name="layer_delete">Удалить слой</string>
   <string name="layer_too_many_layers">Слишком много слоев</string>
-  <string name="layer_invisible">Все слои невидимы</string>
   <string name="layer_merged">Слои объединены</string>
   <string name="dialog_shape_text">Фигура</string>
   <string name="dialog_loading_image_failed_title">Ошибка загрузки изображения</string>

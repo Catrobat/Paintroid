@@ -110,7 +110,7 @@ public class BrickDragAndDropLayerMenu extends BrickDragAndDrop {
 			heightOneLayer = view.getChildAt(0).getHeight();
 		}
 
-		Bitmap buffer = LayerListener.getInstance().getAdapter().getLayer(0).getImage();
+		Bitmap buffer = LayerListener.getInstance().getAdapter().getLayer(0).getBitmap();
 		blueBitmap = Bitmap.createBitmap(buffer.getWidth(), buffer.getHeight(), buffer.getConfig());
 		blueBitmap.eraseColor(view.getContext().getResources().getColor(R.color.custom_background_color));
 	}

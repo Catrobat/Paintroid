@@ -40,7 +40,7 @@ public class RotateCommand extends BaseCommand {
 
 	@Override
 	public void run(Canvas canvas, Layer layer) {
-		Bitmap bitmap = layer.getImage();
+		Bitmap bitmap = layer.getBitmap();
 
 		setChanged();
 		notifyStatus(NotifyStates.COMMAND_STARTED);
@@ -77,7 +77,7 @@ public class RotateCommand extends BaseCommand {
 
 		rotateCanvas.drawBitmap(bitmap, rotateMatrix, new Paint());
 
-		layer.setImage(rotatedBitmap);
+		layer.setBitmap(rotatedBitmap);
 
 		setChanged();
 

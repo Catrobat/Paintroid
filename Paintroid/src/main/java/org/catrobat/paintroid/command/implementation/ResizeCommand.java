@@ -49,7 +49,7 @@ public class ResizeCommand extends BaseCommand {
 		notifyStatus(NotifyStates.COMMAND_STARTED);
 
 		try {
-			Bitmap bitmap = layer.getImage();
+			Bitmap bitmap = layer.getBitmap();
 
 			if (resizeCoordinateXRight < resizeCoordinateXLeft) {
 				Log.e(TAG, "coordinate X right must be larger than coordinate X left");
@@ -109,7 +109,7 @@ public class ResizeCommand extends BaseCommand {
 			bitmap.getPixels(pixelsToCopy, 0, copyFromWidth, copyFromXLeft, copyFromYTop, copyFromWidth, copyFromHeight);
 			resizedBitmap.setPixels(pixelsToCopy, 0, copyToWidth, copyToXLeft, copyToYTop, copyToWidth, copyToHeight);
 
-			layer.setImage(resizedBitmap);
+			layer.setBitmap(resizedBitmap);
 
 			setChanged();
 		} catch (Exception e) {

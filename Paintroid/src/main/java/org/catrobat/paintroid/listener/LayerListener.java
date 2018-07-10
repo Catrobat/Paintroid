@@ -187,14 +187,12 @@ public final class LayerListener implements OnActiveLayerChangedListener, Adapte
 	public void selectLayer(Layer toSelect) {
 		if (currentLayer != null) {
 			currentLayer.setSelected(false);
-			currentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
+			currentLayer.setBitmap(PaintroidApplication.drawingSurface.getBitmapCopy());
 		}
 		currentLayer = toSelect;
 		currentLayer.setSelected(true);
 
-		PaintroidApplication.drawingSurface.setLock(currentLayer.getLocked());
-		PaintroidApplication.drawingSurface.setVisible(currentLayer.getVisible());
-		PaintroidApplication.drawingSurface.setBitmap(currentLayer.getImage());
+		PaintroidApplication.drawingSurface.setBitmap(currentLayer.getBitmap());
 		((Activity) context).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -213,14 +211,12 @@ public final class LayerListener implements OnActiveLayerChangedListener, Adapte
 	public void setCurrentLayer(Layer toSelect) {
 		if (currentLayer != null) {
 			currentLayer.setSelected(false);
-			currentLayer.setImage(PaintroidApplication.drawingSurface.getBitmapCopy());
+			currentLayer.setBitmap(PaintroidApplication.drawingSurface.getBitmapCopy());
 		}
 		currentLayer = toSelect;
 		currentLayer.setSelected(true);
 
-		PaintroidApplication.drawingSurface.setLock(currentLayer.getLocked());
-		PaintroidApplication.drawingSurface.setVisible(currentLayer.getVisible());
-		PaintroidApplication.drawingSurface.setBitmap(currentLayer.getImage());
+		PaintroidApplication.drawingSurface.setBitmap(currentLayer.getBitmap());
 	}
 
 	public void refreshView() {
@@ -280,11 +276,6 @@ public final class LayerListener implements OnActiveLayerChangedListener, Adapte
 		PaintroidApplication.commandManager.commitRemoveLayerCommand(new LayerCommand(currentLayer));
 		layersAdapter.removeLayer(currentLayer);
 		selectLayer(layersAdapter.getLayer(newPosition));
-
-		if (layersAdapter.checkAllLayerVisible()) {
-			ToastFactory.makeText(context, R.string.layer_invisible,
-					Toast.LENGTH_LONG).show();
-		}
 
 		updateButtonResource();
 		refreshView();

@@ -111,7 +111,6 @@
   <string name="layer_new">新規レイヤ</string>
   <string name="layer_delete">レイヤーを削除</string>
   <string name="layer_too_many_layers">レイヤーが多すぎます</string>
-  <string name="layer_invisible">すべてのレイヤーが非表示</string>
   <string name="layer_merged">レイヤーを統合</string>
   <string name="dialog_shape_text">図形</string>
   <string name="dialog_loading_image_failed_title">イメージの読み込みエラー</string>

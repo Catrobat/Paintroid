@@ -111,7 +111,6 @@
   <string name="layer_new">새 레이어</string>
   <string name="layer_delete">레이어 삭제</string>
   <string name="layer_too_many_layers">너무 많은 레이어</string>
-  <string name="layer_invisible">보이지 않는 모든 레이어</string>
   <string name="layer_merged">레이어 병합</string>
   <string name="dialog_shape_text">모양</string>
   <string name="dialog_loading_image_failed_title">그림 로딩 중 에러</string>

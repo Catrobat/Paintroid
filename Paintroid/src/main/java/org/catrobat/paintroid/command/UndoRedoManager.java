@@ -73,10 +73,10 @@ public final class UndoRedoManager {
 				}
 			}
 
-			int undoWidth = undoLayer.getImage().getWidth();
-			int undoHeight = undoLayer.getImage().getHeight();
-			int currentWidth = layer.getImage().getWidth();
-			int currentHeight = layer.getImage().getHeight();
+			int undoWidth = undoLayer.getBitmap().getWidth();
+			int undoHeight = undoLayer.getBitmap().getHeight();
+			int currentWidth = layer.getBitmap().getWidth();
+			int currentHeight = layer.getBitmap().getHeight();
 
 			Command resizeCommand = new ResizeCommand(
 					-undoCommand.getResizeCoordinateXLeft(),

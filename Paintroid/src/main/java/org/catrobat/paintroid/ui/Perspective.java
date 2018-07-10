@@ -137,7 +137,8 @@ public class Perspective implements Serializable {
 				+ surfaceCenterX - surfaceTranslationX;
 		float canvasY = (surfacePoint.y - surfaceCenterY) / surfaceScale
 				+ surfaceCenterY - surfaceTranslationY;
-		surfacePoint.set(canvasX, canvasY);
+		surfacePoint.x = canvasX;
+		surfacePoint.y = canvasY;
 	}
 
 	/**
