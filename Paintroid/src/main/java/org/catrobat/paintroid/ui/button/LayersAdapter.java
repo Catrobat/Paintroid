@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -22,8 +22,6 @@ package org.catrobat.paintroid.ui.button;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,13 +103,10 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 		return false;
 	}
 
-	public boolean addLayer(Layer existingLayer) {
+	public void addLayer(Layer existingLayer) {
 		if (layerList.size() < MAX_LAYER) {
 			layerList.add(0, existingLayer);
-			return true;
 		}
-
-		return false;
 	}
 
 	public void removeLayer(Layer layer) {
@@ -133,7 +128,6 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 		removeLayer(secondLayer);
 
 		Layer layer = new Layer(layerCounter++, mergedBitmap);
-		layer.setOpacity(100);
 		addLayer(layer);
 
 		return layer;
@@ -141,18 +135,14 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 
 	private Bitmap mergeBitmaps(Layer firstLayer, Layer secondLayer) {
 
-		Bitmap firstBitmap = firstLayer.getImage();
-		Bitmap secondBitmap = secondLayer.getImage();
+		Bitmap firstBitmap = firstLayer.getBitmap();
+		Bitmap secondBitmap = secondLayer.getBitmap();
 
 		Bitmap bmpOverlay = Bitmap.createBitmap(firstBitmap.getWidth(), firstBitmap.getHeight(), firstBitmap.getConfig());
 		Canvas canvas = new Canvas(bmpOverlay);
 
-		Paint overlayPaint = new Paint();
-		overlayPaint.setAlpha(firstLayer.getScaledOpacity());
-
-		canvas.drawBitmap(firstBitmap, new Matrix(), overlayPaint);
-		overlayPaint.setAlpha(secondLayer.getScaledOpacity());
-		canvas.drawBitmap(secondBitmap, 0, 0, overlayPaint);
+		canvas.drawBitmap(firstBitmap, 0, 0, null);
+		canvas.drawBitmap(secondBitmap, 0, 0, null);
 
 		return bmpOverlay;
 	}
@@ -173,7 +163,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 						ContextCompat.getColor(context, R.color.custom_background_color));
 			}
 			ImageView imageView = (ImageView) convertView.findViewById(R.id.layer_button_image);
-			imageView.setImageBitmap(layerList.get(position).getImage());
+			imageView.setImageBitmap(layerList.get(position).getBitmap());
 		}
 		return convertView;
 	}
@@ -192,7 +182,7 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	public void copy(int currentLayer) {
 
 		if (layerList.size() < MAX_LAYER) {
-			Bitmap image = layerList.get(getPosition(currentLayer)).getImage().copy(layerList.get(currentLayer).getImage().getConfig(), true);
+			Bitmap image = layerList.get(getPosition(currentLayer)).getBitmap().copy(layerList.get(currentLayer).getBitmap().getConfig(), true);
 			layerList.add(0, new Layer(layerCounter, image));
 			layerCounter++;
 			notifyDataSetChanged();
@@ -230,32 +220,18 @@ public class LayersAdapter extends BaseAdapter implements OnLayerEventListener {
 	}
 
 	public Bitmap getBitmapToSave() {
-		Bitmap firstBitmap = layerList.get(layerList.size() - 1).getImage();
+		Bitmap firstBitmap = layerList.get(layerList.size() - 1).getBitmap();
 		Bitmap bitmap = Bitmap.createBitmap(firstBitmap.getWidth(), firstBitmap.getHeight(), firstBitmap.getConfig());
 		Canvas canvas = new Canvas(bitmap);
-		Paint overlayPaint = new Paint();
-		overlayPaint.setAlpha(layerList.get(layerList.size() - 1).getScaledOpacity());
-		canvas.drawBitmap(firstBitmap, new Matrix(), overlayPaint);
+		canvas.drawBitmap(firstBitmap, 0, 0, null);
 
 		if (layerList.size() > 1) {
 			for (int i = layerList.size() - 2; i >= 0; i--) {
-				overlayPaint.setAlpha(layerList.get(i).getScaledOpacity());
-				canvas.drawBitmap(layerList.get(i).getImage(), 0, 0, overlayPaint);
+				canvas.drawBitmap(layerList.get(i).getBitmap(), 0, 0, null);
 			}
 		}
 
 		return bitmap;
-	}
-
-	public boolean checkAllLayerVisible() {
-
-		for (Layer layer : layerList) {
-			if (layer.getVisible()) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	public int getLayerCounter() {

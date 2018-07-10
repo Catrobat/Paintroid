@@ -111,7 +111,6 @@
   <string name="layer_new">Nytt lager</string>
   <string name="layer_delete">Ta bort lager</string>
   <string name="layer_too_many_layers">Too many layers</string>
-  <string name="layer_invisible">Alla lager osynliga</string>
   <string name="layer_merged">Layers merged</string>
   <string name="dialog_shape_text">Form</string>
   <string name="dialog_loading_image_failed_title">Fel vid inläsning av bilden</string>

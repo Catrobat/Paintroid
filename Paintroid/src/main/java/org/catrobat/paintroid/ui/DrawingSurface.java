@@ -2,17 +2,17 @@
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,12 +26,15 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.Shader;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -41,13 +44,15 @@ import android.view.SurfaceView;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
+import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask;
+import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTaskCallback;
 import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.ToolType;
 
 import java.util.ArrayList;
 
-public class DrawingSurface extends SurfaceView implements
-		SurfaceHolder.Callback {
+public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callback {
 	protected static final int BACKGROUND_COLOR = Color.LTGRAY;
 	private static final String TAG = DrawingSurface.class.getSimpleName();
 	private final Object drawingLock = new Object();
@@ -58,11 +63,7 @@ public class DrawingSurface extends SurfaceView implements
 	private Rect workingBitmapRect;
 	private Canvas workingBitmapCanvas;
 	private Paint framePaint;
-	private Paint clearPaint;
-	private Paint opacityPaint;
 	private Paint checkeredPattern;
-	private boolean lock;
-	private boolean visible;
 	private boolean drawingSurfaceDirtyFlag = false;
 	private DrawingSurfaceListener drawingSurfaceListener;
 
@@ -74,22 +75,6 @@ public class DrawingSurface extends SurfaceView implements
 	public DrawingSurface(Context context) {
 		super(context);
 		init();
-	}
-
-	public boolean getLock() {
-		return lock;
-	}
-
-	public void setLock(boolean locked) {
-		lock = locked;
-	}
-
-	public boolean getVisible() {
-		return visible;
-	}
-
-	public void setVisible(boolean visibilityToSet) {
-		visible = visibilityToSet;
 	}
 
 	public Canvas getCanvas() {
@@ -106,7 +91,7 @@ public class DrawingSurface extends SurfaceView implements
 			PaintroidApplication.perspective.applyToCanvas(surfaceViewCanvas);
 			surfaceViewCanvas.save();
 			surfaceViewCanvas.clipRect(workingBitmapRect, Region.Op.DIFFERENCE);
-			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
+			surfaceViewCanvas.drawColor(BACKGROUND_COLOR, PorterDuff.Mode.SRC);
 			surfaceViewCanvas.restore();
 			surfaceViewCanvas.drawRect(workingBitmapRect, checkeredPattern);
 			surfaceViewCanvas.drawRect(workingBitmapRect, framePaint);
@@ -117,7 +102,7 @@ public class DrawingSurface extends SurfaceView implements
 				ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
 
 				for (int i = layers.size() - 1; i >= 0; i--) {
-					surfaceViewCanvas.drawBitmap(layers.get(i).getImage(), 0, 0, opacityPaint);
+					surfaceViewCanvas.drawBitmap(layers.get(i).getBitmap(), 0, 0, null);
 				}
 				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
@@ -148,19 +133,17 @@ public class DrawingSurface extends SurfaceView implements
 		framePaint = new Paint();
 		framePaint.setColor(Color.BLACK);
 		framePaint.setStyle(Paint.Style.STROKE);
-
-		clearPaint = new Paint();
-		clearPaint.setColor(Color.TRANSPARENT);
-		clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-		opacityPaint = new Paint();
+		framePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
 
 		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPattern = new Paint();
 		checkeredPattern.setShader(shader);
-		setLock(false);
-		setVisible(true);
-		drawingSurfaceListener = new DrawingSurfaceListener();
+		checkeredPattern.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+
+		Handler handler = new Handler(Looper.getMainLooper());
+		AutoScrollTask autoScrollTask = new AutoScrollTask(handler, new AutoScrollTaskCallbackImpl());
+		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask);
 		setOnTouchListener(drawingSurfaceListener);
 	}
 
@@ -196,10 +179,6 @@ public class DrawingSurface extends SurfaceView implements
 		return workingBitmap == null || workingBitmap.isRecycled();
 	}
 
-	public synchronized boolean isDrawingSurfaceBitmapValid() {
-		return !isWorkingBitmapRecycled() && !surfaceCanBeUsed;
-	}
-
 	public synchronized boolean isPointOnCanvas(PointF point) {
 		if (isWorkingBitmapRecycled()) {
 			return false;
@@ -218,7 +197,7 @@ public class DrawingSurface extends SurfaceView implements
 			drawingThread.start();
 		}
 
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+		refreshDrawingSurface();
 	}
 
 	@Override
@@ -261,6 +240,41 @@ public class DrawingSurface extends SurfaceView implements
 
 	public boolean isBitmapNull() {
 		return workingBitmap == null;
+	}
+
+	private class AutoScrollTaskCallbackImpl implements AutoScrollTaskCallback {
+		public boolean isPointOnCanvas(PointF point) {
+			return DrawingSurface.this.isPointOnCanvas(point);
+		}
+
+		public void refreshDrawingSurface() {
+			DrawingSurface.this.refreshDrawingSurface();
+		}
+
+		public void handleToolMove(PointF coordinate) {
+			PaintroidApplication.currentTool.handleMove(coordinate);
+		}
+
+		public Point getToolAutoScrollDirection(float pointX, float pointY, int screenWidth, int screenHeight) {
+			return PaintroidApplication.currentTool
+					.getAutoScrollDirection(pointX, pointY, screenWidth, screenHeight);
+		}
+
+		public float getPerspectiveScale() {
+			return PaintroidApplication.perspective.getScale();
+		}
+
+		public void translatePerspective(float dx, float dy) {
+			PaintroidApplication.perspective.translate(dx, dy);
+		}
+
+		public void convertToCanvasFromSurface(PointF surfacePoint) {
+			PaintroidApplication.perspective.convertToCanvasFromSurface(surfacePoint);
+		}
+
+		public ToolType getCurrentToolType() {
+			return PaintroidApplication.currentTool.getToolType();
+		}
 	}
 
 	private class DrawLoop implements Runnable {

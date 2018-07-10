@@ -111,7 +111,6 @@
   <string name="layer_new">Nowa Warstwa</string>
   <string name="layer_delete">Usuń Warstwę</string>
   <string name="layer_too_many_layers">Za dużo warstw</string>
-  <string name="layer_invisible">Wszystkie warstwy niewidoczne</string>
   <string name="layer_merged">Scalone warstwy</string>
   <string name="dialog_shape_text">Kształt</string>
   <string name="dialog_loading_image_failed_title">Błąd ładowania obrazu</string>

@@ -111,7 +111,6 @@
   <string name="layer_new">نئون ليير</string>
   <string name="layer_delete">ليير ڊاهيو</string>
   <string name="layer_too_many_layers">تمام گهڻا ليير ٿي ويا آهن</string>
-  <string name="layer_invisible">سڀ ليير لڪل آهن</string>
   <string name="layer_merged">Layers merged</string>
   <string name="dialog_shape_text">شڪل</string>
   <string name="dialog_loading_image_failed_title">تصوير لوڊ ڪرڻ ۾ نقص</string>

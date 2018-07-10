@@ -112,7 +112,6 @@
   <string name="layer_new">طبقة جديدة</string>
   <string name="layer_delete">حذف الطبقة</string>
   <string name="layer_too_many_layers">طبقات عديدة</string>
-  <string name="layer_invisible">كل الطبقات غير مرئية</string>
   <string name="layer_merged">تم دمج الطبقات</string>
   <string name="dialog_shape_text">الشكل</string>
   <string name="dialog_loading_image_failed_title">خطأ في استيراد الصورة</string>

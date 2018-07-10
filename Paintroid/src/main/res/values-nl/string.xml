@@ -111,7 +111,6 @@
   <string name="layer_new">Nieuwe laag</string>
   <string name="layer_delete">Verwijder laag</string>
   <string name="layer_too_many_layers">Te veel lagen</string>
-  <string name="layer_invisible">Alle lagen onzichtbaar</string>
   <string name="layer_merged">Layers merged</string>
   <string name="dialog_shape_text">Vorm</string>
   <string name="dialog_loading_image_failed_title">Fout bij het laden van de afbeelding</string>

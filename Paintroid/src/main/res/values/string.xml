@@ -132,7 +132,6 @@
     <string name="layer_new">New Layer</string>
     <string name="layer_delete">Delete Layer</string>
     <string name="layer_too_many_layers">Too many layers</string>
-    <string name="layer_invisible">All layers invisible</string>
     <string name="layer_merged">Layers merged</string>
 
     <string name="license_url" translatable="false">http://developer.catrobat.org/licenses</string>

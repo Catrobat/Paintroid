@@ -111,7 +111,6 @@
   <string name="layer_new">New Layer</string>
   <string name="layer_delete">Delete Layer</string>
   <string name="layer_too_many_layers">Too many layers</string>
-  <string name="layer_invisible">All layers invisible</string>
   <string name="layer_merged">Layers merged</string>
   <string name="dialog_shape_text">Hình dạng</string>
   <string name="dialog_loading_image_failed_title">Lỗi khi tải hình ảnh</string>

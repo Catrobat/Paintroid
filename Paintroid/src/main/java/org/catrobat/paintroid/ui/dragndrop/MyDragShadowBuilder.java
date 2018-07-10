@@ -41,7 +41,7 @@ public class MyDragShadowBuilder extends View.DragShadowBuilder {
 	public MyDragShadowBuilder(View imageView) {
 		super(imageView);
 
-		Bitmap buffer = LayerListener.getInstance().getAdapter().getLayer(0).getImage();
+		Bitmap buffer = LayerListener.getInstance().getAdapter().getLayer(0).getBitmap();
 		greyBitmap = Bitmap.createBitmap(buffer.getWidth(), buffer.getHeight(), buffer.getConfig());
 		greyBitmap.eraseColor(Color.LTGRAY);
 	}
@@ -52,7 +52,7 @@ public class MyDragShadowBuilder extends View.DragShadowBuilder {
 
 	@Override
 	public void onProvideShadowMetrics(Point size, Point touch) {
-		shadowBitmap = mergeBitmaps(greyBitmap, LayerListener.getInstance().getAdapter().getLayer(dragPosition).getImage());
+		shadowBitmap = mergeBitmaps(greyBitmap, LayerListener.getInstance().getAdapter().getLayer(dragPosition).getBitmap());
 		shadow = new BitmapDrawable(getView().getResources(), shadowBitmap);
 
 		final View view = getView();

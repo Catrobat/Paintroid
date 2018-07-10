@@ -68,37 +68,37 @@ public class LayerTest {
 	@Test
 	public void testMergeLayers() {
 		int idFirstLayer = LayerListener.getInstance().getCurrentLayer().getLayerID();
-		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(1, 1, Color.BLACK);
-		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(1, 2, Color.BLACK);
+		LayerListener.getInstance().getCurrentLayer().getBitmap().setPixel(1, 1, Color.BLACK);
+		LayerListener.getInstance().getCurrentLayer().getBitmap().setPixel(1, 2, Color.BLACK);
 		LayerListener.getInstance().createLayer();
 		int idSecondLayer = LayerListener.getInstance().getCurrentLayer().getLayerID();
 		assertNotEquals("New Layer should be selected", idFirstLayer, idSecondLayer);
 
-		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(1, 1, Color.BLUE);
-		LayerListener.getInstance().getCurrentLayer().getImage().setPixel(2, 1, Color.BLUE);
+		LayerListener.getInstance().getCurrentLayer().getBitmap().setPixel(1, 1, Color.BLUE);
+		LayerListener.getInstance().getCurrentLayer().getBitmap().setPixel(2, 1, Color.BLUE);
 		LayerListener.getInstance().mergeLayer(0, 1);
 		int numLayersAfterMerge = LayerListener.getInstance().getAdapter().getCount();
 
 		assertEquals("Only one Layer should exist", 1, numLayersAfterMerge);
-		assertEquals("Color should be black", Color.BLACK, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(1, 2));
-		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(2, 1));
-		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(1, 1));
+		assertEquals("Color should be black", Color.BLACK, LayerListener.getInstance().getCurrentLayer().getBitmap().getPixel(1, 2));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getBitmap().getPixel(2, 1));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getBitmap().getPixel(1, 1));
 
 		UndoRedoManager.getInstance().performUndo();
 		int numLayersAfterUndo = LayerListener.getInstance().getAdapter().getCount();
 
 		assertEquals("Two Layers should exist", 2, numLayersAfterUndo);
-		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getAdapter().getLayer(0).getImage().getPixel(2, 1));
-		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getAdapter().getLayer(0).getImage().getPixel(1, 1));
-		assertEquals("Color should be black", Color.BLACK, LayerListener.getInstance().getAdapter().getLayer(1).getImage().getPixel(1, 2));
-		assertEquals("Color should be blue", Color.BLACK, LayerListener.getInstance().getAdapter().getLayer(1).getImage().getPixel(1, 1));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getAdapter().getLayer(0).getBitmap().getPixel(2, 1));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getAdapter().getLayer(0).getBitmap().getPixel(1, 1));
+		assertEquals("Color should be black", Color.BLACK, LayerListener.getInstance().getAdapter().getLayer(1).getBitmap().getPixel(1, 2));
+		assertEquals("Color should be blue", Color.BLACK, LayerListener.getInstance().getAdapter().getLayer(1).getBitmap().getPixel(1, 1));
 
 		UndoRedoManager.getInstance().performRedo();
 		int numLayersAfterRedo = LayerListener.getInstance().getAdapter().getCount();
 
 		assertEquals("Only one Layer should exist", 1, numLayersAfterRedo);
-		assertEquals("Color should be black", Color.BLACK, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(1, 2));
-		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(2, 1));
-		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getImage().getPixel(1, 1));
+		assertEquals("Color should be black", Color.BLACK, LayerListener.getInstance().getCurrentLayer().getBitmap().getPixel(1, 2));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getBitmap().getPixel(2, 1));
+		assertEquals("Color should be blue", Color.BLUE, LayerListener.getInstance().getCurrentLayer().getBitmap().getPixel(1, 1));
 	}
 }

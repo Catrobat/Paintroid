@@ -111,7 +111,6 @@
   <string name="layer_new">Nuovo livello</string>
   <string name="layer_delete">Elimina livello</string>
   <string name="layer_too_many_layers">Troppi livelli</string>
-  <string name="layer_invisible">Tutti i livelli invisibili</string>
   <string name="layer_merged">Livelli uniti</string>
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Errore durante il caricamento dell\'immagine</string>

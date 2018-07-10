@@ -217,7 +217,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -226,7 +226,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
 		onView(withText(R.string.device_language)).perform(click());
 
-		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
@@ -235,7 +235,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -244,7 +244,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
 		pressBack();
 
-		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
@@ -261,7 +261,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -270,7 +270,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		onView(withText(R.string.skip)).perform(click());
 
-		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
@@ -279,7 +279,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getImage();
+		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -288,7 +288,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		pressBack();
 
-		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getImage();
+		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 

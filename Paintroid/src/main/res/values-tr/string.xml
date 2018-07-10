@@ -111,7 +111,6 @@
   <string name="layer_new">Yeni Katman</string>
   <string name="layer_delete">Katmanı Sil</string>
   <string name="layer_too_many_layers">Çok fazla katman</string>
-  <string name="layer_invisible">Tüm katmanlar görünmez</string>
   <string name="layer_merged">Birleştirilmiş Katmanlar</string>
   <string name="dialog_shape_text">Şekil</string>
   <string name="dialog_loading_image_failed_title">Resim yüklenirken hata oluştu</string>
