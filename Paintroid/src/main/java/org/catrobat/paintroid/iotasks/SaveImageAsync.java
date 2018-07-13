@@ -27,7 +27,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
-import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.model.LayerModel;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -45,7 +46,7 @@ public class SaveImageAsync extends AsyncTask<Void, Void, Uri> {
 		this.requestCode = requestCode;
 		this.uri = uri;
 		this.saveAsCopy = saveAsCopy;
-		this.bitmap = LayerListener.getInstance().getBitmapOfAllLayersToSave();
+		this.bitmap = LayerModel.getBitmapOfAllLayersToSave(PaintroidApplication.layerModel.getLayers());
 	}
 
 	@Override

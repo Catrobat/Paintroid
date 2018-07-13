@@ -18,13 +18,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<LinearLayout android:id="@+id/layout_tool_options"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_tool_options"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:visibility="visible"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:visibility="visible">
 
     <TextView
         android:id="@+id/layout_tool_options_name"
@@ -36,7 +36,7 @@
         android:textSize="20sp"
         android:textColor="@color/tools_text_color"
         android:textStyle="bold"
-        tools:text="example text"/>
+        tools:text="@tools:sample/lorem"/>
 
     <LinearLayout
         android:id="@+id/layout_tool_specific_options"

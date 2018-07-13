@@ -201,7 +201,7 @@ public final class EspressoUtils {
 	}
 
 	public static Bitmap getWorkingBitmap() {
-		return PaintroidApplication.drawingSurface.workingBitmap;
+		return PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 	}
 
 	public static Paint getCurrentToolPaint() {

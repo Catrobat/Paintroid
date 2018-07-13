@@ -28,7 +28,8 @@ import android.graphics.Paint.Cap;
 import android.graphics.PointF;
 
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.model.Layer;
+import org.catrobat.paintroid.model.LayerModel;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,6 +38,8 @@ public abstract class CommandTestSetup {
 	static final int BITMAP_BASE_COLOR = Color.GREEN;
 	static final int BITMAP_REPLACE_COLOR = Color.CYAN;
 	static final int PAINT_BASE_COLOR = Color.BLUE;
+	static final int INITIAL_HEIGHT = 80;
+	static final int INITIAL_WIDTH = 80;
 
 	Command commandUnderTest;
 	Command commandUnderTestNull; // can be used to pass null to constructor
@@ -46,13 +49,18 @@ public abstract class CommandTestSetup {
 	Bitmap bitmapUnderTest;
 	Layer layerUnderTest;
 	Bitmap canvasBitmapUnderTest;
+	LayerModel layerModel;
 
 	@Before
 	public void setUp() {
-		canvasBitmapUnderTest = Bitmap.createBitmap(80, 80, Config.ARGB_8888);
+		layerModel = new LayerModel();
+		layerModel.setWidth(INITIAL_WIDTH);
+		layerModel.setHeight(INITIAL_HEIGHT);
+
+		canvasBitmapUnderTest = Bitmap.createBitmap(INITIAL_WIDTH, INITIAL_HEIGHT, Config.ARGB_8888);
 		canvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR);
 		bitmapUnderTest = canvasBitmapUnderTest.copy(Config.ARGB_8888, true);
-		layerUnderTest = new Layer(0, bitmapUnderTest);
+		layerUnderTest = new Layer(bitmapUnderTest);
 		canvasUnderTest = new Canvas();
 		canvasUnderTest.setBitmap(canvasBitmapUnderTest);
 		paintUnderTest = new Paint();
@@ -60,7 +68,9 @@ public abstract class CommandTestSetup {
 		paintUnderTest.setStrokeWidth(0);
 		paintUnderTest.setStyle(Paint.Style.STROKE);
 		paintUnderTest.setStrokeCap(Cap.BUTT);
-		pointUnderTest = new PointF(canvasBitmapUnderTest.getWidth() / 2, canvasBitmapUnderTest.getHeight() / 2);
+		pointUnderTest = new PointF(INITIAL_WIDTH / 2, INITIAL_HEIGHT / 2);
+		layerModel.addLayerAt(0, layerUnderTest);
+		layerModel.setCurrentLayer(layerUnderTest);
 	}
 
 	@Test
@@ -69,7 +79,8 @@ public abstract class CommandTestSetup {
 			commandUnderTestNull.run(null, null);
 			commandUnderTestNull.run(null, null);
 			commandUnderTestNull.run(canvasUnderTest, null);
-			commandUnderTestNull.run(null, layerUnderTest);
+			commandUnderTestNull.run(null, new LayerModel());
+			commandUnderTestNull.run(null, layerModel);
 		}
 	}
 }

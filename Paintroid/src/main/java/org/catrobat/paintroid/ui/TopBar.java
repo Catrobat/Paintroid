@@ -27,18 +27,12 @@ import android.widget.ImageButton;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.command.LayerBitmapCommand;
-import org.catrobat.paintroid.command.UndoRedoManager;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.eventlistener.OnUpdateTopBarListener;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.button.ColorButton;
 
-public class TopBar implements View.OnClickListener, OnUpdateTopBarListener, ColorPickerDialog.OnColorPickedListener {
+public class TopBar implements View.OnClickListener, ColorPickerDialog.OnColorPickedListener {
 	private ImageButton undoButton;
 	private ImageButton redoButton;
 	private ColorButton colorButton;
@@ -57,16 +51,7 @@ public class TopBar implements View.OnClickListener, OnUpdateTopBarListener, Col
 		ColorPickerDialog.getInstance().addOnColorPickedListener(this);
 		layerButton.setOnClickListener(this);
 
-		if (PaintroidApplication.layerOperationsCommandList != null) {
-			LayerBitmapCommand layerBitmapCommand = getCurrentLayerBitmapCommand();
-			if (layerBitmapCommand != null) {
-				onUndoEnabled(layerBitmapCommand.moreCommands());
-				onRedoEnabled(!layerBitmapCommand.getLayerUndoCommands().isEmpty());
-			}
-		} else {
-			onUndoEnabled(!PaintroidApplication.commandManager.isUndoCommandListEmpty());
-			onRedoEnabled(!PaintroidApplication.commandManager.isRedoCommandListEmpty());
-		}
+		refreshButtons();
 
 		colorButton.colorChanged(BaseTool.BITMAP_PAINT.getColor());
 	}
@@ -76,7 +61,7 @@ public class TopBar implements View.OnClickListener, OnUpdateTopBarListener, Col
 			PaintroidApplication.currentTool.hide();
 			return;
 		}
-		UndoRedoManager.getInstance().performUndo();
+		PaintroidApplication.commandManager.undo();
 	}
 
 	private void onRedoClick() {
@@ -84,7 +69,7 @@ public class TopBar implements View.OnClickListener, OnUpdateTopBarListener, Col
 			PaintroidApplication.currentTool.hide();
 			return;
 		}
-		UndoRedoManager.getInstance().performRedo();
+		PaintroidApplication.commandManager.redo();
 	}
 
 	private void onColorClick() {
@@ -95,20 +80,9 @@ public class TopBar implements View.OnClickListener, OnUpdateTopBarListener, Col
 		ColorPickerDialog.getInstance().show();
 	}
 
-	@Override
-	public void onUndoEnabled(boolean enabled) {
-		undoButton.setEnabled(enabled);
-	}
-
-	@Override
-	public void onRedoEnabled(boolean enabled) {
-		redoButton.setEnabled(enabled);
-	}
-
-	private LayerBitmapCommand getCurrentLayerBitmapCommand() {
-		Layer currentLayer = LayerListener.getInstance().getCurrentLayer();
-		LayerCommand layerCommand = new LayerCommand(currentLayer);
-		return PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
+	public void refreshButtons() {
+		undoButton.setEnabled(PaintroidApplication.commandManager.isUndoAvailable());
+		redoButton.setEnabled(PaintroidApplication.commandManager.isRedoAvailable());
 	}
 
 	@Override

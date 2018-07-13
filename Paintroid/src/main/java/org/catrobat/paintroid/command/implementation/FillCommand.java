@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,7 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
 
 public class FillCommand extends BaseCommand {
@@ -47,8 +47,8 @@ public class FillCommand extends BaseCommand {
 			int targetColor, int replacementColor, int colorToleranceThresholdSquared);
 
 	@Override
-	public void run(Canvas canvas, Layer layer) {
-		Bitmap bitmap = layer.getBitmap();
+	public void run(Canvas canvas, LayerContracts.Model layerModel) {
+		Bitmap bitmap = layerModel.getCurrentLayer().getBitmap();
 
 		notifyStatus(NotifyStates.COMMAND_STARTED);
 		if (clickedPixel == null) {

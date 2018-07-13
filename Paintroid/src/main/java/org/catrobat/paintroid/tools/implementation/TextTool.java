@@ -36,12 +36,9 @@ import android.widget.ToggleButton;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.TextToolCommand;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.listener.TextToolOptionsListener;
-import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
@@ -285,8 +282,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		((TextToolCommand) command).addObserver(this);
 		IndeterminateProgressDialog.getInstance().show();
 
-		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		PaintroidApplication.commandManager.addCommand(command);
 	}
 
 	@VisibleForTesting

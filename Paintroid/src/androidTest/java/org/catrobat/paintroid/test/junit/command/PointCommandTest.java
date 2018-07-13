@@ -33,7 +33,6 @@ public class PointCommandTest extends CommandTestSetup {
 	public void setUp() {
 		super.setUp();
 		commandUnderTest = new PointCommand(paintUnderTest, pointUnderTest);
-		commandUnderTestNull = new PointCommand(null, null);
 	}
 
 	@Test

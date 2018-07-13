@@ -24,7 +24,7 @@ import android.graphics.Paint;
 import android.support.test.InstrumentationRegistry;
 
 import org.catrobat.paintroid.command.implementation.BaseCommand;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.contract.LayerContracts;
 
 public final class BaseCommandImpl extends BaseCommand {
 
@@ -37,7 +37,7 @@ public final class BaseCommandImpl extends BaseCommand {
 	}
 
 	@Override
-	public void run(Canvas canvas, Layer layer) {
+	public void run(Canvas canvas, LayerContracts.Model layerModel) {
 	}
 
 	public void storeBitmapStub() {

@@ -75,18 +75,15 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
-        android:background="@color/navigationDrawerBackground">
-
-    </android.support.design.widget.NavigationView>
+        android:background="@color/navigationDrawerBackground" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view_layer"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|center"
-        android:background="@color/custom_background_color">
+        android:layout_gravity="end|center">
 
-        <include layout="@layout/layer_side_nav_layout" />
+        <include layout="@layout/layout_main_menu_layer" />
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

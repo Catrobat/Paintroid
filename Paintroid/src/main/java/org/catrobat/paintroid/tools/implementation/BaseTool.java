@@ -50,7 +50,9 @@ import android.widget.TextView;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
@@ -89,6 +91,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	LinearLayout toolSpecificOptionsLayout;
 	PointF previousEventCoordinate;
 	private LinearLayout toolOptionsLayout;
+	CommandFactory commandFactory = new DefaultCommandFactory();
 
 	public BaseTool(Context context, ToolType toolType) {
 		super();

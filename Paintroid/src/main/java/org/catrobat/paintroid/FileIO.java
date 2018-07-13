@@ -148,26 +148,9 @@ public final class FileIO {
 		return enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options));
 	}
 
-	public static Bitmap getBitmapFromFile(File bitmapFile, int maxWidth, int maxHeight) {
+	public static Bitmap getBitmapFromFile(File bitmapFile) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
-
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
-
-		int tmpWidth = options.outWidth;
-		int tmpHeight = options.outHeight;
-		int sampleSize = 1;
-
-		while (tmpWidth > maxWidth || tmpHeight > maxHeight) {
-			tmpWidth /= 2;
-			tmpHeight /= 2;
-			sampleSize *= 2;
-		}
-
 		options.inMutable = true;
-		options.inJustDecodeBounds = false;
-		options.inSampleSize = sampleSize;
-
 		return enableAlpha(BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options));
 	}
 

@@ -28,13 +28,12 @@ import android.support.v4.content.ContextCompat;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.listener.LayerListener;
+import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
-import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.hamcrest.Matcher;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -81,8 +80,8 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 	}
 
 	public DrawingSurfaceInteraction checkThatLayerDimensions(Matcher<Integer> matchesWidth, Matcher<Integer> matchesHeight) {
-		ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
-		for (Layer layer : layers) {
+		List<LayerContracts.Layer> layers = PaintroidApplication.layerModel.getLayers();
+		for (LayerContracts.Layer layer : layers) {
 			Bitmap bitmap = layer.getBitmap();
 			assertThat(bitmap.getWidth(), matchesWidth);
 			assertThat(bitmap.getHeight(), matchesHeight);
@@ -96,8 +95,8 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 	}
 
 	private void assertLayerDimensions(int expectedWidth, int expectedHeight) {
-		ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
-		for (Layer layer : layers) {
+		List<LayerContracts.Layer> layers = PaintroidApplication.layerModel.getLayers();
+		for (LayerContracts.Layer layer : layers) {
 			assertBitmapDimensions(layer.getBitmap(), expectedWidth, expectedHeight);
 		}
 	}

@@ -1,4 +1,4 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -108,11 +108,6 @@ public class RectangleFillToolIntegrationTest {
 		assertNotNull("Position should not be NULL", rectPosition);
 	}
 
-	/**
-	 * Fails if whole espresso tests run, there lives an artifact in drawing surface:
-	 * AssertionError: expected:<0> but was:<-16777216>
-	 */
-	//@Ignore
 	@Test
 	public void testEllipseIsDrawnOnBitmap() {
 
@@ -159,7 +154,6 @@ public class RectangleFillToolIntegrationTest {
 		// now the point under test is diagonal from the center -> if its a circle there should be no color
 		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertTrue("Pixel should not have been filled for a circle", (colorPickerColor != colorAfterDrawing));
-		PaintroidApplication.commandManager.resetAndClear(true);
 	}
 
 	@Test

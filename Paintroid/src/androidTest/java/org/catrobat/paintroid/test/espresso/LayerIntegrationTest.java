@@ -1,20 +1,20 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.espresso;
@@ -26,9 +26,9 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
@@ -72,17 +72,17 @@ public class LayerIntegrationTest {
 	private int bitmapWidth;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
 		IdlingRegistry.getInstance().register(dialogWait);
 
-		Bitmap image = LayerListener.getInstance().getCurrentLayer().getBitmap();
+		Bitmap image = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		bitmapHeight = image.getHeight();
 		bitmapWidth = image.getWidth();
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		IdlingRegistry.getInstance().unregister(dialogWait);
 	}
 
@@ -423,6 +423,7 @@ public class LayerIntegrationTest {
 				.performClose();
 
 		onTopBarView()
+				.performUndo()
 				.performUndo();
 
 		onDrawingSurfaceView()
@@ -433,8 +434,14 @@ public class LayerIntegrationTest {
 				.performSelectLayer(3)
 				.performClose();
 
-		onTopBarView()
-				.performRedo();
+		onToolBarView()
+				.performOpenToolOptions();
+		onTransformToolOptionsView()
+				.performAutoCrop();
+		onToolBarView()
+				.performCloseToolOptions();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
 		onDrawingSurfaceView()
 				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
@@ -654,6 +661,7 @@ public class LayerIntegrationTest {
 				.performClose();
 
 		onTopBarView()
+				.performUndo()
 				.performUndo()
 				.performUndo()
 				.performUndo();

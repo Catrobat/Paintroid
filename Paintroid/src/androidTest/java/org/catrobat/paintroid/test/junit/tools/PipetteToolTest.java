@@ -27,12 +27,10 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
-import org.catrobat.paintroid.ui.button.LayersAdapter;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -58,15 +56,11 @@ public class PipetteToolTest {
 	public void setUp() {
 		toolToTest = new PipetteTool(activityTestRule.getActivity(), ToolType.PIPETTE);
 
-		LayerListener layerListener = LayerListener.getInstance();
-		LayersAdapter layersAdapter = layerListener.getAdapter();
-		Layer layer = layersAdapter.getLayer(0);
-		Bitmap bitmap = layer.getBitmap();
+		Bitmap bitmap = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		bitmap.setPixel(X_COORDINATE_RED, 0, Color.RED);
 		bitmap.setPixel(X_COORDINATE_GREEN, 0, Color.GREEN);
 		bitmap.setPixel(X_COORDINATE_BLUE, 0, Color.BLUE);
 		bitmap.setPixel(X_COORDINATE_PART_TRANSPARENT, 0, 0xAAAAAAAA);
-		layer.setBitmap(bitmap);
 
 		toolToTest.updateSurfaceBitmap();
 	}

@@ -25,7 +25,7 @@ import android.support.test.espresso.contrib.DrawerActions;
 import android.view.Gravity;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.model.Layer;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -55,7 +55,7 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onLayerList() {
-		return onView(withId(R.id.nav_layer_list));
+		return onView(withId(R.id.layer_side_nav_list));
 	}
 
 	public LayerMenuViewInteraction checkLayerCount(int count) {
@@ -66,7 +66,7 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 
 	public DataInteraction onLayerAt(int listPosition) {
 		return onData(instanceOf(Layer.class))
-				.inAdapterView(withId(R.id.nav_layer_list))
+				.inAdapterView(withId(R.id.layer_side_nav_list))
 				.atPosition(listPosition);
 	}
 

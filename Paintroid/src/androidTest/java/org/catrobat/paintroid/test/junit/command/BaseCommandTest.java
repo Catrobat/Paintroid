@@ -64,7 +64,7 @@ public class BaseCommandTest {
 	@Test
 	public void testFreeResources() throws Exception {
 		File cacheDir = InstrumentationRegistry.getTargetContext().getCacheDir();
-		File storedBitmap = new File(cacheDir.getAbsolutePath(), "test");
+		File storedBitmap = new File(cacheDir, "test");
 
 		assertFalse(storedBitmap.exists());
 
