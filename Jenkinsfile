@@ -84,7 +84,12 @@ pipeline {
 
 		stage('Unit and Device tests') {
 			steps {
-				// Run Unit and device tests
+				// Run local unit tests
+				sh "./buildScripts/build_step_run_unit_tests__all_tests"
+				// ensure that the following test run does not overwrite the results
+				sh "mv ${env.GRADLE_PROJECT_MODULE_NAME}/build ${env.GRADLE_PROJECT_MODULE_NAME}/build-unittest"
+
+				// Run device tests
 				sh "./buildScripts/build_step_run_tests_on_emulator__all_tests"
 
 				// Convert the JaCoCo coverate to the Cobertura XML file format.
