@@ -33,7 +33,6 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,24 +113,6 @@ public class ActivityOpenedFromPocketCodeTest {
 
 		assertThat("Image modification not saved", imageFile.lastModified(), greaterThan(lastModifiedBefore));
 		assertThat("Saved image length not changed", imageFile.length(), greaterThan(fileSizeBefore));
-	}
-
-	@Test
-	@Ignore //TODO: does export still exist?
-	public void testExportNotTouchingOriginal() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onNavigationDrawer()
-				.performOpen();
-
-		long lastModifiedBefore = imageFile.lastModified();
-		long fileSizeBefore = imageFile.length();
-
-		onView(withText(R.string.menu_export)).perform(click());
-
-		assertThat("Image modified", imageFile.lastModified(), equalTo(lastModifiedBefore));
-		assertThat("Saved image length changed", imageFile.length(), equalTo(fileSizeBefore));
 	}
 
 	@Test

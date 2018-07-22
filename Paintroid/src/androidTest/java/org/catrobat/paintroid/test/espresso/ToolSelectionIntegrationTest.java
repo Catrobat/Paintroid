@@ -40,7 +40,6 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,7 +61,6 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ToolSelectionIntegrationTest {
@@ -198,21 +196,6 @@ public class ToolSelectionIntegrationTest {
 		onToolBarView().performSelectTool(ToolType.TRANSFORM);
 
 		assertFalse("Tool button should be most right", scrollView.canScrollHorizontally(scrollRight));
-	}
-
-	// TODO: how to implement?
-	@Test
-	@Ignore
-	public void testToolSelectionStartAnimation() {
-		int scrollX = scrollView.getScrollX();
-		assertTrue("Scroll position should be > 0 at start", scrollX > 0);
-
-		for (int i = 0; i < 5; i++) {
-			assertTrue(scrollView.getScrollX() <= scrollX);
-			scrollX = scrollView.getScrollX();
-		}
-
-		assertEquals("Animation should be finished after a second", 0, scrollX);
 	}
 
 	@Test
