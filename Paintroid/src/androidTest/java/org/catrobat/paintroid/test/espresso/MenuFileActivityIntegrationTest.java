@@ -41,7 +41,6 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,14 +68,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -484,69 +481,6 @@ public class MenuFileActivityIntegrationTest {
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
-	}
-
-	@Test
-	@Ignore // TODO: fails, File is still the same
-	public void testSaveLoadedImage() {
-
-		// Save new image, stub ACTION_GET_CONTENT intent
-		Intent intent = new Intent();
-		intent.setData(MainActivity.savedPictureUri);
-		Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
-		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
-
-		onDrawingSurfaceView()
-				.perform(swipe(DrawingSurfaceLocationProvider.MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
-
-		onNavigationDrawer()
-				.performOpen();
-
-		onView(withText(R.string.menu_save_image)).perform(click());
-
-		assertNotNull("Saved picture uri is null", MainActivity.savedPictureUri);
-
-		addUriToDeletionFileList(MainActivity.savedPictureUri);
-
-		// Load the saved image
-		onNavigationDrawer()
-				.performOpen();
-
-		onView(withText(R.string.menu_load_image)).perform(click());
-
-		assertTrue("Save copy flag not true", launchActivityRule.getActivity().copySaved);
-
-		onNavigationDrawer()
-				.performOpen();
-
-		// Save copy of image
-		onView(withText(R.string.menu_save_copy)).perform(click());
-
-		assertNotNull("Saved picture uri is null", MainActivity.savedPictureUri);
-
-		addUriToDeletionFileList(MainActivity.savedPictureUri);
-
-		File saveFile = new File(MainActivity.savedPictureUri.getPath());
-
-		final long oldLength = saveFile.length();
-		final long firstModified = saveFile.lastModified();
-
-		// Draw and save image
-		onDrawingSurfaceView()
-				.perform(swipe(DrawingSurfaceLocationProvider.MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE));
-
-		onNavigationDrawer()
-				.performOpen();
-
-		onView(withText(R.string.menu_save_image)).perform(click());
-
-		File actualSaveFile = new File(MainActivity.savedPictureUri.getPath());
-
-		long newLength = actualSaveFile.length();
-		long lastModified = actualSaveFile.lastModified();
-
-		assertNotEquals("File is still the same", oldLength, newLength);
-		assertNotEquals("File not currently modified", firstModified, lastModified);
 	}
 
 	private void addUriToDeletionFileList(Uri uri) {

@@ -37,7 +37,6 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -113,7 +112,7 @@ public class RectangleFillToolIntegrationTest {
 	 * Fails if whole espresso tests run, there lives an artifact in drawing surface:
 	 * AssertionError: expected:<0> but was:<-16777216>
 	 */
-	@Ignore
+	//@Ignore
 	@Test
 	public void testEllipseIsDrawnOnBitmap() {
 
