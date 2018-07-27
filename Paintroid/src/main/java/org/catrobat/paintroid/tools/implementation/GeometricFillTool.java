@@ -242,7 +242,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		float mid_h = shapeRect.height() / 2;
 		float height = shapeRect.height() - SHAPE_OFFSET;
 		float width = shapeRect.width() - SHAPE_OFFSET;
-		float zeroWidth = SHAPE_OFzeroWidthFSET;
+		float zeroWidth = SHAPE_OFFSET;
 		float zeroHeight = SHAPE_OFFSET;
 
 
