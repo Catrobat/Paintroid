@@ -90,13 +90,13 @@ pipeline {
 				// Convert the JaCoCo coverate to the Cobertura XML file format.
 				// This is done since the Jenkins JaCoCo plugin does not work well.
 				// See also JENKINS-212 on jira.catrob.at
-				sh "./buildScripts/cover2cover.py $JACOCO_XML > $COBERTURA_XML"
+				sh "if [ -e '$JACOCO_XML' ]; then ./buildScripts/cover2cover.py $JACOCO_XML > $COBERTURA_XML; fi"
 			}
 
 			post {
 				always {
 					junit '**/*TEST*.xml'
-					step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: COBERTURA_XML, failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
+					step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: COBERTURA_XML, failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false, failNoReports: false])
 
 					// stop/kill emulator
 					sh "./buildScripts/build_helper_stop_emulator"
