@@ -23,12 +23,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
+import android.graphics.PathMeasure;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -58,7 +61,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private ShapeDrawType shapeDrawType;
 	private ShapeToolOptionsListener shapeToolOptionsListener;
 	private Paint geometricFillCommandPaint;
-	private int outlineMultiplicand = 2;
+	private int outlineMultiplicand = 1; //TODO: awareness mark
 
 	public GeometricFillTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -123,8 +126,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
 
-		RectF shapeRect = new RectF(SHAPE_OFFSET, SHAPE_OFFSET, boxWidth
-				- SHAPE_OFFSET, boxHeight - SHAPE_OFFSET);
+		RectF shapeRect = new RectF(0, 0, boxWidth, boxHeight);
 
 		Paint drawPaint = new Paint();
 		drawPaint.setColor(CANVAS_PAINT.getColor());
@@ -137,10 +139,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			case OUTLINE:
 				drawPaint.setStyle(Style.STROKE);
 				drawPaint.setStrokeWidth(shapeOutlineWidth);
-				shapeRect = new RectF(SHAPE_OFFSET + shapeOutlineWidth/2,
-										SHAPE_OFFSET + shapeOutlineWidth/2,
-										boxWidth - SHAPE_OFFSET - shapeOutlineWidth/2,
-										boxHeight - SHAPE_OFFSET - shapeOutlineWidth/2);
 				drawPaint.setStrokeCap(Paint.Cap.BUTT);
 				break;
 			default:
@@ -161,17 +159,28 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 		switch (baseShape) {
 			case RECTANGLE:
+				if(drawPaint.getStyle() == Style.STROKE) {
+					shapeRect = new RectF(SHAPE_OFFSET + shapeOutlineWidth / 2,
+							SHAPE_OFFSET + shapeOutlineWidth / 2,
+							boxWidth - SHAPE_OFFSET - shapeOutlineWidth / 2,
+							boxHeight - SHAPE_OFFSET - shapeOutlineWidth / 2);
+				}
 				drawCanvas.drawRect(shapeRect, drawPaint);
 				break;
 			case OVAL:
+				if(drawPaint.getStyle() == Style.STROKE) {
+					shapeRect = new RectF(SHAPE_OFFSET + shapeOutlineWidth / 2,
+							SHAPE_OFFSET + shapeOutlineWidth / 2,
+							boxWidth - SHAPE_OFFSET - shapeOutlineWidth / 2,
+							boxHeight - SHAPE_OFFSET - shapeOutlineWidth / 2);
+				}
 				drawCanvas.drawOval(shapeRect, drawPaint);
 				break;
 			case STAR:
-			    drawCanvas.drawPath(getStarPath(shapeRect), drawPaint);
-				//drawShape(drawCanvas, shapeRect, drawPaint, R.drawable.star_temp);
+				drawCanvas.drawPath(getSpecialPath("star", shapeRect, drawPaint), drawPaint);
 				break;
 			case HEART:
-				drawShape(drawCanvas, shapeRect, drawPaint, R.drawable.ic_heart_black_48dp);
+				drawCanvas.drawPath(getSpecialPath("heart", shapeRect, drawPaint), drawPaint);
 				break;
 			default:
 				break;
@@ -188,7 +197,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		bundle.putSerializable(BUNDLE_BASE_SHAPE, baseShape);
 		bundle.putSerializable(BUNDLE_SHAPE_DRAW_TYPE, shapeDrawType);
 		bundle.putSerializable(BUNDLE_OUTLINE_WIDTH, shapeOutlineWidth/2);
-		// TODO: bundle.putSerializable(stroke width);
 	}
 
 	@Override
@@ -218,31 +226,68 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	    createAndSetBitmap();
     }
 
-    private Path getStarPath(RectF shapeRect){
-        float mid_w = shapeRect.width() / 2;
-        float mid_h = shapeRect.height() / 2;
-        float min = Math.min(shapeRect.width(), shapeRect.height());
+    private Path getSpecialPath(String type, RectF shapeRect, Paint drawPaint){
+
+        float stroke = drawPaint.getStrokeWidth();
+        Style fillType = drawPaint.getStyle();
+
+        if(fillType == Style.STROKE){
+			shapeRect = new RectF(SHAPE_OFFSET + stroke/2,
+								SHAPE_OFFSET + stroke/2,
+							boxWidth -  SHAPE_OFFSET - stroke/2,
+						boxHeight - SHAPE_OFFSET - stroke/2);
+		}
+
+		float mid_w = shapeRect.width() / 2;
+		float mid_h = shapeRect.height() / 2;
+		float height = shapeRect.height() - SHAPE_OFFSET;
+		float width = shapeRect.width() - SHAPE_OFFSET;
+		float zeroWidth = SHAPE_OFzeroWidthFSET;
+		float zeroHeight = SHAPE_OFFSET;
 
 
-        Path path = new Path();
+		Path path = new Path();
 
-        Log.d("Tester","test " + shapeRect.height());
+        switch (type){
+			case "star":
+				path.moveTo(mid_w, zeroHeight);
+				path.lineTo(mid_w + width/8, mid_h - height/8);
+				path.lineTo(width,mid_h - height/8);
+				path.lineTo(mid_w + 1.8f*width/8, mid_h + 1*height/8);
+				path.lineTo(mid_w + 3*width/8, height);
+				path.lineTo(mid_w, mid_h + 2*height/8);
+				path.lineTo(mid_w - 3*width/8, height);
+				path.lineTo(mid_w - 1.8f*width/8, mid_h + 1*height/8);
+				path.lineTo(zeroWidth,mid_h - height/8);
+				path.lineTo(mid_w - width/8, mid_h - height/8);
+				path.lineTo(mid_w, zeroHeight);
+				path.close();
 
-        //path.moveTo(mid, 0);
-        //path.lineTo(mid, shapeRect.height());
+				if(fillType == Style.STROKE){
+					drawPaint.setStrokeWidth(stroke/2);
+					drawPaint.setStrokeJoin(Paint.Join.ROUND);
+					path.offset(SHAPE_OFFSET + stroke/2, SHAPE_OFFSET + stroke/2);
+				}
 
-        /*// top left
-        path.moveTo(mid + half * 0.5f, half * 0.84f);
-        // top right
-        path.lineTo(mid + half * 1.5f, half * 0.84f);
-        // bottom left
-        path.lineTo(mid + half * 0.68f, half * 1.45f);
-        // top tip
-        path.lineTo(mid + half * 1.0f, half * 0.5f);
-        // bottom right
-        path.lineTo(mid + half * 1.32f, half * 1.45f);
-        // top left
-        path.lineTo(mid + half * 0.5f, half * 0.84f);*/
+				break;
+
+			case "heart":
+				path.moveTo(mid_w, height);
+				path.cubicTo(-0.2f*width,4.5f*height/8, 0.8f*width/8, -1.5f*height/8, mid_w, 1.5f*height/8);
+				path.cubicTo(7.2f*width/8, -1.5f*height/8, 1.2f*width, 4.5f*height/8, mid_w, height);
+				path.close();
+
+				if(fillType == Style.STROKE){
+					drawPaint.setStrokeWidth(stroke/2);
+					drawPaint.setStrokeJoin(Paint.Join.ROUND);
+					path.offset(SHAPE_OFFSET + stroke/2, SHAPE_OFFSET + stroke/2);
+				}
+
+				break;
+
+			default:
+				break;
+		}
 
         return path;
     }
