@@ -21,13 +21,19 @@ package org.catrobat.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
 import org.catrobat.paintroid.common.CommonFactory;
+import org.catrobat.paintroid.tools.helper.NativeFillAlgorithm;
+
+import static android.graphics.Bitmap.Config.ARGB_8888;
 
 public class DefaultCommandFactory implements CommandFactory {
 
@@ -45,7 +51,7 @@ public class DefaultCommandFactory implements CommandFactory {
 	public Command createInitCommand(Bitmap bitmap) {
 		CompositeCommand command = new CompositeCommand();
 		command.addCommand(new SetDimensionCommand(bitmap.getWidth(), bitmap.getHeight()));
-		command.addCommand(new LoadCommand(bitmap));
+		command.addCommand(new LoadCommand(bitmap.copy(ARGB_8888, false)));
 		return command;
 	}
 
@@ -95,5 +101,32 @@ public class DefaultCommandFactory implements CommandFactory {
 				commonFactory.createPaint(paint),
 				commonFactory.createPointF(coordinate)
 		);
+	}
+
+	@Override
+	public Command createFillCommand(int x, int y, Paint paint, float colorTolerance) {
+		return new FillCommand(new NativeFillAlgorithm(),
+				commonFactory.createPoint(x, y),
+				commonFactory.createPaint(paint), colorTolerance);
+	}
+
+	@Override
+	public Command createGeometricFillCommand(Bitmap bitmap, Point position, float boxWidth, float boxHeight, float boxRotation, Paint paint) {
+		Bitmap bitmapCopy = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+		RectF destRectF = commonFactory.createRectF(-boxWidth / 2f, -boxHeight / 2f, boxWidth / 2f, boxHeight / 2f);
+		return new GeometricFillCommand(bitmapCopy, position.x, position.y, destRectF, boxRotation,
+				commonFactory.createPaint(paint));
+	}
+
+	@Override
+	public Command createPathCommand(Paint paint, Path path) {
+		return new PathCommand(commonFactory.createPaint(paint), commonFactory.createPath(path), commonFactory);
+	}
+
+	@Override
+	public Command createTextToolCommand(String[] multilineText, Paint textPaint, int boxOffset, float boxWidth, float boxHeight, PointF toolPosition, float boxRotation) {
+		return new TextToolCommand(multilineText, commonFactory.createPaint(textPaint),
+				boxOffset, boxWidth, boxHeight, commonFactory.createPointF(toolPosition),
+				boxRotation);
 	}
 }

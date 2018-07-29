@@ -25,54 +25,46 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
 
-public class PathCommand extends BaseCommand {
-	private static final String TAG = PathCommand.class.getSimpleName();
-	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+public class PathCommand implements Command {
+	@VisibleForTesting
+	public Paint paint;
+	@VisibleForTesting
 	public Path path;
+	private CommonFactory commonFactory;
 
-	public PathCommand(Paint paint, Path path) {
-		super(paint);
-		if (path != null) {
-			this.path = new Path(path);
-		}
+	public PathCommand(Paint paint, Path path, CommonFactory commonFactory) {
+		this.paint = paint;
+		this.path = path;
+		this.commonFactory = commonFactory;
 	}
 
 	@Override
 	public void run(Canvas canvas, LayerContracts.Model layerModel) {
-		if ((canvas == null) || path == null) {
-			Log.w(TAG, "Object must not be null in PathCommand.");
-			return;
-		}
-
-		RectF bounds = new RectF();
+		RectF bounds = commonFactory.createRectF();
 		path.computeBounds(bounds, true);
 		Rect boundsCanvas = canvas.getClipBounds();
 
 		if (pathInCanvas(bounds, boundsCanvas)) {
 			canvas.drawPath(path, paint);
-		} else {
-
-			notifyStatus(NotifyStates.COMMAND_FAILED);
 		}
 	}
 
-	private boolean pathInCanvas(RectF rectangleBoundsPath,
-			Rect rectangleBoundsCanvas) {
-		RectF rectangleCanvas = new RectF(rectangleBoundsCanvas);
-
+	private boolean pathInCanvas(RectF rectangleBoundsPath, Rect rectangleBoundsCanvas) {
 		float strokeWidth = paint.getStrokeWidth();
 
-		rectangleBoundsPath.bottom = rectangleBoundsPath.bottom
-				+ (strokeWidth / 2);
-		rectangleBoundsPath.left = rectangleBoundsPath.left - (strokeWidth / 2);
-		rectangleBoundsPath.right = rectangleBoundsPath.right
-				+ (strokeWidth / 2);
-		rectangleBoundsPath.top = rectangleBoundsPath.top - (strokeWidth / 2);
+		rectangleBoundsPath.inset(-strokeWidth, -strokeWidth);
+		return rectangleBoundsCanvas.left < rectangleBoundsPath.right
+				&& rectangleBoundsPath.left < rectangleBoundsCanvas.right
+				&& rectangleBoundsCanvas.top < rectangleBoundsPath.bottom
+				&& rectangleBoundsPath.top < rectangleBoundsCanvas.bottom;
+	}
 
-		return RectF.intersects(rectangleCanvas, rectangleBoundsPath);
+	@Override
+	public void freeResources() {
 	}
 }

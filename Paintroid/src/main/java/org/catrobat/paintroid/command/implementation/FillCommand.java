@@ -24,61 +24,35 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
 
-public class FillCommand extends BaseCommand {
-	private static final boolean USE_CPP = true;
-
-	static {
-		System.loadLibrary("native-lib"); // NOPMD native fill command
-	}
-
+public class FillCommand implements Command {
+	private Paint paint;
 	private float colorTolerance;
+	private final FillAlgorithm fillAlgorithm;
 	private Point clickedPixel;
 
-	public FillCommand(Point clickedPixel, Paint currentPaint, float colorTolerance) {
-		super(currentPaint);
+	public FillCommand(FillAlgorithm fillAlgorithm, Point clickedPixel, Paint paint, float colorTolerance) {
+		this.fillAlgorithm = fillAlgorithm;
 		this.clickedPixel = clickedPixel;
+		this.paint = paint;
 		this.colorTolerance = colorTolerance;
 	}
-
-	public native void performFilling(int[] arr, int xStart, int yStart, int xSize, int ySize,
-			int targetColor, int replacementColor, int colorToleranceThresholdSquared);
 
 	@Override
 	public void run(Canvas canvas, LayerContracts.Model layerModel) {
 		Bitmap bitmap = layerModel.getCurrentLayer().getBitmap();
 
-		notifyStatus(NotifyStates.COMMAND_STARTED);
-		if (clickedPixel == null) {
-			setChanged();
-			notifyStatus(NotifyStates.COMMAND_FAILED);
-			return;
-		}
+		int replacementColor = bitmap.getPixel(clickedPixel.x, clickedPixel.y);
+		int targetColor = paint.getColor();
 
-		Bitmap emptyImage = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
-		if (bitmap.sameAs(emptyImage)) {
-			canvas.drawColor(paint.getColor());
-		} else {
-			int replacementColor = bitmap.getPixel(clickedPixel.x, clickedPixel.y);
-			int targetColor = paint.getColor();
+		fillAlgorithm.setParameters(bitmap, clickedPixel, targetColor, replacementColor, colorTolerance);
+		fillAlgorithm.performFilling();
+	}
 
-			if (USE_CPP) {
-				int width = bitmap.getWidth();
-				int height = bitmap.getHeight();
-				int[] pixelArray = new int[width * height];
-
-				bitmap.getPixels(pixelArray, 0, width, 0, 0, width, height);
-				performFilling(pixelArray, clickedPixel.x, clickedPixel.y, width, height,
-						targetColor, replacementColor, (int) (colorTolerance * colorTolerance));
-				bitmap.setPixels(pixelArray, 0, width, 0, 0, width, height);
-			} else {
-				FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, colorTolerance);
-				fillAlgorithm.performFilling();
-			}
-		}
-
-		notifyStatus(NotifyStates.COMMAND_DONE);
+	@Override
+	public void freeResources() {
 	}
 }

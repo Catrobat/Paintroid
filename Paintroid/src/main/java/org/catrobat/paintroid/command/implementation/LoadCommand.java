@@ -22,27 +22,27 @@ package org.catrobat.paintroid.command.implementation;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.model.Layer;
 
 import static android.graphics.Bitmap.Config.ARGB_8888;
 
-public class LoadCommand extends BaseCommand {
-
+public class LoadCommand implements Command {
 	private Bitmap loadedImage;
 
 	public LoadCommand(Bitmap newBitmap) {
-		loadedImage = newBitmap.copy(ARGB_8888, false);
+		loadedImage = newBitmap;
 	}
 
 	@Override
 	public void run(Canvas canvas, LayerContracts.Model layerModel) {
-		notifyStatus(NotifyStates.COMMAND_STARTED);
-
 		Layer currentLayer = new Layer(loadedImage.copy(ARGB_8888, true));
-		layerModel.getLayers().add(currentLayer);
+		layerModel.addLayerAt(0, currentLayer);
 		layerModel.setCurrentLayer(currentLayer);
+	}
 
-		notifyStatus(NotifyStates.COMMAND_DONE);
+	@Override
+	public void freeResources() {
 	}
 }

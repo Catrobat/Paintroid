@@ -232,7 +232,7 @@ private:
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_org_catrobat_paintroid_command_implementation_FillCommand_performFilling(JNIEnv *env,
+Java_org_catrobat_paintroid_tools_helper_NativeFillAlgorithm_performFilling(JNIEnv *env,
 																	  jobject obj,
 																	  jintArray arr,
 																	  jint x_start,

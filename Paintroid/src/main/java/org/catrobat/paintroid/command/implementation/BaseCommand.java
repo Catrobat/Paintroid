@@ -31,10 +31,9 @@ import org.catrobat.paintroid.command.Command;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Observable;
 import java.util.Random;
 
-public abstract class BaseCommand extends Observable implements Command {
+public abstract class BaseCommand implements Command {
 	private static final String TAG = BaseCommand.class.getSimpleName();
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public Paint paint;
@@ -84,11 +83,6 @@ public abstract class BaseCommand extends Observable implements Command {
 		}
 		bitmap.recycle();
 		bitmap = null;
-	}
-
-	protected void notifyStatus(NotifyStates state) {
-		setChanged();
-		notifyObservers(state);
 	}
 
 	public enum NotifyStates {

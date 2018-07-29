@@ -2,17 +2,17 @@
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -51,9 +51,7 @@ import android.widget.TextView;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandFactory;
-import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.listener.BrushPickerView.OnBrushChangedListener;
@@ -61,10 +59,7 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
-import java.util.Observable;
-import java.util.Observer;
-
-public abstract class BaseTool extends Observable implements Tool, Observer {
+public abstract class BaseTool implements Tool {
 	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
 	public static final float MOVE_TOLERANCE = 5;
 	@VisibleForTesting
@@ -130,8 +125,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		movedDistance = new PointF(0f, 0f);
 		previousEventCoordinate = new PointF(0f, 0f);
 
-		toolOptionsLayout = (LinearLayout) ((Activity) context).findViewById(R.id.layout_tool_options);
-		toolSpecificOptionsLayout = (LinearLayout) ((Activity) context).findViewById(R.id.layout_tool_specific_options);
+		toolOptionsLayout = ((Activity) context).findViewById(R.id.layout_tool_options);
+		toolSpecificOptionsLayout = ((Activity) context).findViewById(R.id.layout_tool_specific_options);
 		resetAndInitializeToolOptions();
 	}
 
@@ -157,8 +152,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public void changePaintColor(@ColorInt int color) {
 		setPaintColor(color);
-		super.setChanged();
-		super.notifyObservers();
 	}
 
 	void setPaintColor(@ColorInt int color) {
@@ -188,17 +181,12 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 		boolean antiAliasing = (strokeWidth > 1);
 		BITMAP_PAINT.setAntiAlias(antiAliasing);
 		CANVAS_PAINT.setAntiAlias(antiAliasing);
-
-		super.setChanged();
-		super.notifyObservers();
 	}
 
 	@Override
 	public void changePaintStrokeCap(Cap cap) {
 		BITMAP_PAINT.setStrokeCap(cap);
 		CANVAS_PAINT.setStrokeCap(cap);
-		super.setChanged();
-		super.notifyObservers();
 	}
 
 	@Override
@@ -210,8 +198,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	public void setDrawPaint(Paint paint) {
 		BITMAP_PAINT.set(paint);
 		CANVAS_PAINT.set(paint);
-		super.setChanged();
-		super.notifyObservers();
 	}
 
 	@Override
@@ -220,16 +206,6 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 	@Override
 	public ToolType getToolType() {
 		return this.toolType;
-	}
-
-	@Override
-	public void update(Observable observable, Object data) {
-		if (data instanceof BaseCommand.NotifyStates
-				&& (BaseCommand.NotifyStates.COMMAND_DONE == data || BaseCommand.NotifyStates.COMMAND_FAILED == data)) {
-
-			IndeterminateProgressDialog.getInstance().dismiss();
-			observable.deleteObserver(this);
-		}
 	}
 
 	protected abstract void resetInternalState();
@@ -280,7 +256,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 			@Override
 			public void run() {
 				toolSpecificOptionsLayout.removeAllViews();
-				TextView toolOptionsName = (TextView) toolOptionsLayout.findViewById(R.id.layout_tool_options_name);
+				TextView toolOptionsName = toolOptionsLayout.findViewById(R.id.layout_tool_options_name);
 				toolOptionsName.setText(context.getResources().getString(toolType.getNameResource()));
 			}
 		});
@@ -320,7 +296,7 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void hide() {
-		LinearLayout mainToolOptions = (LinearLayout) ((Activity) (context)).findViewById(R.id.main_tool_options);
+		LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.main_tool_options);
 		mainToolOptions.setVisibility(View.GONE);
 		dimBackground(false);
 		toolOptionsShown = false;
@@ -328,8 +304,8 @@ public abstract class BaseTool extends Observable implements Tool, Observer {
 
 	@Override
 	public void toggleShowToolOptions() {
-		LinearLayout mainToolOptions = (LinearLayout) ((Activity) (context)).findViewById(R.id.main_tool_options);
-		LinearLayout mainBottomBar = (LinearLayout) ((Activity) (context)).findViewById(R.id.main_bottom_bar);
+		LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.main_tool_options);
+		LinearLayout mainBottomBar = ((Activity) (context)).findViewById(R.id.main_bottom_bar);
 		int orientation = context.getResources().getConfiguration().orientation;
 
 		if (!toolOptionsShown) {

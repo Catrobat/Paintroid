@@ -31,8 +31,8 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.Region;
 import android.graphics.Shader;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -89,10 +89,14 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 				PaintroidApplication.perspective.applyToCanvas(surfaceViewCanvas);
 
-				surfaceViewCanvas.save();
-				surfaceViewCanvas.clipRect(canvasRect, Region.Op.DIFFERENCE);
-				surfaceViewCanvas.drawColor(BACKGROUND_COLOR, PorterDuff.Mode.SRC);
-				surfaceViewCanvas.restore();
+				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+					surfaceViewCanvas.drawColor(BACKGROUND_COLOR, PorterDuff.Mode.SRC);
+				} else {
+					surfaceViewCanvas.save();
+					surfaceViewCanvas.clipOutRect(canvasRect);
+					surfaceViewCanvas.drawColor(BACKGROUND_COLOR, PorterDuff.Mode.SRC);
+					surfaceViewCanvas.restore();
+				}
 
 				surfaceViewCanvas.drawRect(canvasRect, checkeredPattern);
 				surfaceViewCanvas.drawRect(canvasRect, framePaint);

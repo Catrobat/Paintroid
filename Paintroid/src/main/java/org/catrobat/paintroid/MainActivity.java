@@ -61,6 +61,8 @@ import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.AsyncCommandManager;
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
+import org.catrobat.paintroid.command.implementation.DefaultCommandManager;
+import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
 import org.catrobat.paintroid.dialog.DialogAbout;
@@ -221,7 +223,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 			DisplayMetrics metrics = getResources().getDisplayMetrics();
 
-			CommandManager commandManager = new AsyncCommandManager();
+			CommandManager synchronousCommandManager = new DefaultCommandManager(new CommonFactory(), PaintroidApplication.layerModel);
+			CommandManager commandManager = new AsyncCommandManager(synchronousCommandManager, PaintroidApplication.layerModel);
 			Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 			commandManager.setInitialStateCommand(initCommand);
 			commandManager.reset();
@@ -485,7 +488,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		if (changeToToolType == ToolType.IMPORTPNG) {
 			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 			intent.setType("image/*");
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+			setNewDocumentFlags(intent);
 			startActivityForResult(intent, REQUEST_CODE_IMPORTPNG);
 			return;
 		}
@@ -643,8 +646,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	private void startLoadImageIntent() {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		setNewDocumentFlags(intent);
 		startActivityForResult(intent, REQUEST_CODE_LOAD_PICTURE);
+	}
+
+	private static void setNewDocumentFlags(Intent intent) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+		} else {
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		}
 	}
 
 	protected void newImage() {
@@ -742,7 +753,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				cameraImageUri = uri;
 				Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 				intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+				setNewDocumentFlags(intent);
 				startActivityForResult(intent, REQUEST_CODE_TAKE_PICTURE);
 				break;
 		}

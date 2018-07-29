@@ -21,6 +21,8 @@ package org.catrobat.paintroid.command;
 
 import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.PointF;
 
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
@@ -50,5 +52,13 @@ public interface CommandFactory {
 			int resizeCoordinateXRight, int resizeCoordinateYBottom,
 			int maximumBitmapResolution);
 
-	Command createPointCommand(Paint bitmapPaint, PointF coordinate);
+	Command createPointCommand(Paint paint, PointF coordinate);
+
+	Command createFillCommand(int x, int y, Paint paint, float colorTolerance);
+
+	Command createGeometricFillCommand(Bitmap bitmap, Point position, float boxWidth, float boxHeight, float boxRotation, Paint paint);
+
+	Command createPathCommand(Paint paint, Path path);
+
+	Command createTextToolCommand(String[] multilineText, Paint textPaint, int boxOffset, float boxWidth, float boxHeight, PointF toolPosition, float boxRotation);
 }
