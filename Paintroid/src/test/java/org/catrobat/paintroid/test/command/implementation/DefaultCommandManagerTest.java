@@ -65,7 +65,7 @@ public class DefaultCommandManagerTest {
 	public void setUp() {
 		layerModel = new LayerModel();
 		PaintroidApplication.layerModel = layerModel;
-		commandManager = new DefaultCommandManager(commonFactory);
+		commandManager = new DefaultCommandManager(commonFactory, layerModel);
 	}
 
 	@Test

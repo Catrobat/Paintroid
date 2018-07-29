@@ -21,10 +21,8 @@ package org.catrobat.paintroid.command.implementation;
 
 import android.os.AsyncTask;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
 
 import java.util.ArrayList;
@@ -32,8 +30,14 @@ import java.util.List;
 
 public class AsyncCommandManager implements CommandManager {
 	private List<CommandListener> commandListeners = new ArrayList<>();
-	private CommandManager commandManager = new DefaultCommandManager(new CommonFactory());
+	private CommandManager commandManager;
+	private final LayerContracts.Model layerModel;
 	private boolean running = true;
+
+	public AsyncCommandManager(CommandManager commandManager, LayerContracts.Model layerModel) {
+		this.commandManager = commandManager;
+		this.layerModel = layerModel;
+	}
 
 	@Override
 	public void addCommandListener(CommandListener commandListener) {
@@ -66,8 +70,7 @@ public class AsyncCommandManager implements CommandManager {
 			@Override
 			protected Void doInBackground(Void... voids) {
 				if (running) {
-					final LayerContracts.Model model = PaintroidApplication.layerModel;
-					synchronized (model) {
+					synchronized (layerModel) {
 						commandManager.addCommand(command);
 					}
 				}
@@ -92,8 +95,7 @@ public class AsyncCommandManager implements CommandManager {
 			@Override
 			protected Void doInBackground(Void... voids) {
 				if (running) {
-					final LayerContracts.Model model = PaintroidApplication.layerModel;
-					synchronized (model) {
+					synchronized (layerModel) {
 						commandManager.undo();
 					}
 				}
@@ -119,8 +121,7 @@ public class AsyncCommandManager implements CommandManager {
 			@Override
 			protected Void doInBackground(Void... voids) {
 				if (running) {
-					final LayerContracts.Model model = PaintroidApplication.layerModel;
-					synchronized (model) {
+					synchronized (layerModel) {
 						commandManager.redo();
 					}
 				}
@@ -136,8 +137,7 @@ public class AsyncCommandManager implements CommandManager {
 
 	@Override
 	public void reset() {
-		final LayerContracts.Model model = PaintroidApplication.layerModel;
-		synchronized (model) {
+		synchronized (layerModel) {
 			commandManager.reset();
 		}
 		notifyCommandPostExecute();
@@ -150,8 +150,7 @@ public class AsyncCommandManager implements CommandManager {
 
 	@Override
 	public void setInitialStateCommand(Command command) {
-		final LayerContracts.Model model = PaintroidApplication.layerModel;
-		synchronized (model) {
+		synchronized (layerModel) {
 			commandManager.setInitialStateCommand(command);
 		}
 	}

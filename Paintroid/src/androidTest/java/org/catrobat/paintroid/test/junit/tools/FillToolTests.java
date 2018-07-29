@@ -33,7 +33,8 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.model.Layer;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.helper.FillAlgorithm;
+import org.catrobat.paintroid.tools.helper.JavaFillAlgorithm;
+import org.catrobat.paintroid.tools.helper.NativeFillAlgorithm;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.junit.After;
@@ -95,7 +96,8 @@ public class FillToolTests {
 		int targetColor = 16777215;
 		int replacementColor = 0;
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
+		JavaFillAlgorithm fillAlgorithm = new JavaFillAlgorithm();
+		fillAlgorithm.setParameters(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
 
 		int[][] algorithmPixels = fillAlgorithm.pixels;
 		assertEquals("Wrong array size", height, algorithmPixels.length);
@@ -128,7 +130,7 @@ public class FillToolTests {
 		Paint paint = new Paint();
 		paint.setColor(targetColor);
 
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, NO_TOLERANCE);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, NO_TOLERANCE);
 		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		int[][] pixels = getPixelsFromBitmap(bitmap);
@@ -160,7 +162,7 @@ public class FillToolTests {
 		pixels[1][0] = boundaryColor;
 		putPixelsToBitmap(bitmap, pixels);
 
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, NO_TOLERANCE);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, NO_TOLERANCE);
 		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		pixels = getPixelsFromBitmap(bitmap);
@@ -201,7 +203,7 @@ public class FillToolTests {
 		pixels[1][0] = boundaryColor;
 		putPixelsToBitmap(bitmap, pixels);
 
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, MAX_TOLERANCE);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, MAX_TOLERANCE);
 		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		pixels = getPixelsFromBitmap(bitmap);
@@ -234,7 +236,7 @@ public class FillToolTests {
 		pixels[1][0] = boundaryColor;
 		putPixelsToBitmap(bitmap, pixels);
 
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, MAX_TOLERANCE - 1);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, MAX_TOLERANCE - 1);
 		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		pixels = getPixelsFromBitmap(bitmap);
@@ -269,7 +271,7 @@ public class FillToolTests {
 		pixels[boundaryPixel.x][boundaryPixel.y] = boundaryColor;
 		putPixelsToBitmap(bitmap, pixels);
 
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, HALF_TOLERANCE);
 		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		pixels = getPixelsFromBitmap(bitmap);
@@ -308,7 +310,7 @@ public class FillToolTests {
 		Point boundaryPixel = new Point(width / 2, height / 4);
 		pixels[boundaryPixel.y][boundaryPixel.x] = boundaryColor;
 		putPixelsToBitmap(bitmap, pixels);
-		FillCommand fillCommand = new FillCommand(topLeftQuarterPixel, paint, HALF_TOLERANCE);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), topLeftQuarterPixel, paint, HALF_TOLERANCE);
 		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		int[][] actualPixels = getPixelsFromBitmap(bitmap);
@@ -341,7 +343,7 @@ public class FillToolTests {
 		paint.setColor(targetColor);
 
 		putPixelsToBitmap(bitmap, pixels);
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, HALF_TOLERANCE);
 		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		int[][] actualPixels = getPixelsFromBitmap(bitmap);
@@ -384,7 +386,7 @@ public class FillToolTests {
 			PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 			bitmap.eraseColor(replacementColor);
 			putPixelsToBitmap(bitmap, pixels);
-			FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
+			FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, HALF_TOLERANCE);
 			fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 			int[][] actualPixels = getPixelsFromBitmap(bitmap);
@@ -418,7 +420,7 @@ public class FillToolTests {
 		PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 		bitmap.eraseColor(replacementColor);
 		putPixelsToBitmap(bitmap, pixels);
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, HALF_TOLERANCE);
 		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		int[][] actualPixels = getPixelsFromBitmap(bitmap);

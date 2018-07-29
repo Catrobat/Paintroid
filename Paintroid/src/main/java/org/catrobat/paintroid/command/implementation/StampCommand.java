@@ -54,14 +54,11 @@ public class StampCommand extends BaseCommand {
 	@Override
 	public void run(Canvas canvas, LayerContracts.Model layerModel) {
 
-		notifyStatus(NotifyStates.COMMAND_STARTED);
 		if (fileToStoredBitmap != null) {
 			bitmap = FileIO.getBitmapFromFile(fileToStoredBitmap);
 		}
 
 		if (bitmap == null) {
-			setChanged();
-			notifyStatus(NotifyStates.COMMAND_FAILED);
 			return;
 		}
 
@@ -78,7 +75,5 @@ public class StampCommand extends BaseCommand {
 			bitmap.recycle();
 			bitmap = null;
 		}
-
-		notifyStatus(NotifyStates.COMMAND_DONE);
 	}
 }

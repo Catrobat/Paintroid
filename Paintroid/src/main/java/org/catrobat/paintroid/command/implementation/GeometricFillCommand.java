@@ -22,55 +22,33 @@ package org.catrobat.paintroid.command.implementation;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.RectF;
 
 import org.catrobat.paintroid.contract.LayerContracts;
 
 public class GeometricFillCommand extends BaseCommand {
-	protected final Point coordinates;
-	protected final float boxWidth;
-	protected final float boxHeight;
-	protected final float boxRotation;
-	protected final RectF boxRect;
+	private final float boxRotation;
+	private final RectF boxRect;
+	private final int pointX;
+	private final int pointY;
+	private final Paint geometricFillPaint;
 
-	protected Paint geometricFillPaint;
-
-	public GeometricFillCommand(Bitmap bitmap, Point position, float width, float height,
-			float rotation, Paint paint) {
-		super(new Paint(Paint.DITHER_FLAG));
-
-		coordinates = position != null ? new Point(position.x, position.y) : null;
-		if (bitmap != null) {
-			this.bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-		}
-		boxWidth = width;
-		boxHeight = height;
-		boxRotation = rotation;
-		boxRect = new RectF(-boxWidth / 2f, -boxHeight / 2f, boxWidth / 2f,
-				boxHeight / 2f);
-		geometricFillPaint = new Paint(paint);
+	public GeometricFillCommand(Bitmap bitmap, int pointX, int pointY, RectF boxRect,
+			float boxRotation, Paint paint) {
+		this.pointX = pointX;
+		this.pointY = pointY;
+		this.boxRect = boxRect;
+		this.bitmap = bitmap;
+		this.boxRotation = boxRotation;
+		geometricFillPaint = paint;
 	}
 
 	@Override
 	public void run(Canvas canvas, LayerContracts.Model layerModel) {
-
-		notifyStatus(NotifyStates.COMMAND_STARTED);
-
-		if (bitmap == null) {
-			setChanged();
-			notifyStatus(NotifyStates.COMMAND_FAILED);
-			return;
-		}
-
 		canvas.save();
-		canvas.translate(coordinates.x, coordinates.y);
+		canvas.translate(pointX, pointY);
 		canvas.rotate(boxRotation);
-
 		canvas.drawBitmap(bitmap, null, boxRect, geometricFillPaint);
-
 		canvas.restore();
-
-		notifyStatus(NotifyStates.COMMAND_DONE);
 	}
 }

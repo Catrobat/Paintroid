@@ -23,7 +23,10 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 public class CommonFactory {
 	public Canvas createCanvas() {
@@ -40,5 +43,21 @@ public class CommonFactory {
 
 	public PointF createPointF(PointF point) {
 		return new PointF(point.x, point.y);
+	}
+
+	public RectF createRectF(float left, float top, float right, float bottom) {
+		return new RectF(left, top, right, bottom);
+	}
+
+	public Point createPoint(int x, int y) {
+		return new Point(x, y);
+	}
+
+	public RectF createRectF() {
+		return new RectF();
+	}
+
+	public Path createPath(Path path) {
+		return new Path(path);
 	}
 }

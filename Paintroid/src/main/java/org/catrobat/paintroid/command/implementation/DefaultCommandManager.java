@@ -21,7 +21,6 @@ package org.catrobat.paintroid.command.implementation;
 
 import android.graphics.Canvas;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.common.CommonFactory;
@@ -38,10 +37,13 @@ public class DefaultCommandManager implements CommandManager {
 	private Deque<Command> redoCommandList = new ArrayDeque<>();
 	private Deque<Command> undoCommandList = new ArrayDeque<>();
 	private Command initialStateCommand;
-	private CommonFactory commonFactory;
 
-	public DefaultCommandManager(CommonFactory commonFactory) {
+	private final CommonFactory commonFactory;
+	private final LayerContracts.Model layerModel;
+
+	public DefaultCommandManager(CommonFactory commonFactory, LayerContracts.Model layerModel) {
 		this.commonFactory = commonFactory;
+		this.layerModel = layerModel;
 	}
 
 	@Override
@@ -69,7 +71,6 @@ public class DefaultCommandManager implements CommandManager {
 		redoCommandList.clear();
 		undoCommandList.addFirst(command);
 
-		LayerContracts.Model layerModel = PaintroidApplication.layerModel;
 		LayerContracts.Layer currentLayer = layerModel.getCurrentLayer();
 		Canvas canvas = commonFactory.createCanvas();
 		canvas.setBitmap(currentLayer.getBitmap());
@@ -83,7 +84,6 @@ public class DefaultCommandManager implements CommandManager {
 		Command command = undoCommandList.pop();
 		redoCommandList.addFirst(command);
 
-		LayerContracts.Model layerModel = PaintroidApplication.layerModel;
 		layerModel.reset();
 
 		Canvas canvas = commonFactory.createCanvas();
@@ -107,7 +107,6 @@ public class DefaultCommandManager implements CommandManager {
 		Command command = redoCommandList.pop();
 		undoCommandList.addFirst(command);
 
-		LayerContracts.Model layerModel = PaintroidApplication.layerModel;
 		LayerContracts.Layer currentLayer = layerModel.getCurrentLayer();
 		Canvas canvas = commonFactory.createCanvas();
 		canvas.setBitmap(currentLayer.getBitmap());
@@ -120,8 +119,6 @@ public class DefaultCommandManager implements CommandManager {
 	public void reset() {
 		undoCommandList.clear();
 		redoCommandList.clear();
-
-		LayerContracts.Model layerModel = PaintroidApplication.layerModel;
 		layerModel.reset();
 
 		if (initialStateCommand != null) {

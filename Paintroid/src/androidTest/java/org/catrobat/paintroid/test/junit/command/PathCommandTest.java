@@ -22,17 +22,11 @@ package org.catrobat.paintroid.test.junit.command;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
+import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Observable;
-import java.util.Observer;
-
-import static org.junit.Assert.assertTrue;
 
 public class PathCommandTest extends CommandTestSetup {
 
@@ -43,7 +37,7 @@ public class PathCommandTest extends CommandTestSetup {
 		Path pathUnderTest = new Path();
 		pathUnderTest.moveTo(1, 0);
 		pathUnderTest.lineTo(1, canvasBitmapUnderTest.getHeight());
-		commandUnderTest = new PathCommand(paintUnderTest, pathUnderTest);
+		commandUnderTest = new PathCommand(paintUnderTest, pathUnderTest, new CommonFactory());
 	}
 
 	@Test
@@ -56,13 +50,9 @@ public class PathCommandTest extends CommandTestSetup {
 		float bottom = canvasBitmapUnderTest.getHeight() + 100;
 		path.addRect(new RectF(left, top, right, bottom), Path.Direction.CW);
 
-		commandUnderTest = new PathCommand(paintUnderTest, path);
+		commandUnderTest = new PathCommand(paintUnderTest, path, new CommonFactory());
 
-		CommandManagerMockup commandManagerMockup = new CommandManagerMockup();
-		commandManagerMockup.testCommand(commandUnderTest);
 		commandUnderTest.run(canvasUnderTest, null);
-
-		assertTrue("PathCommand should have failed but didn't get deleted", commandManagerMockup.gotDeleted);
 	}
 
 	@Test
@@ -75,22 +65,5 @@ public class PathCommandTest extends CommandTestSetup {
 		}
 		commandUnderTest.run(canvasUnderTest, null);
 		PaintroidAsserts.assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest);
-	}
-
-	private class CommandManagerMockup implements Observer {
-		boolean gotDeleted = false;
-
-		void testCommand(Command command) {
-			((BaseCommand) command).addObserver(this);
-		}
-
-		@Override
-		public void update(Observable observable, Object data) {
-			if (data instanceof BaseCommand.NotifyStates
-					&& BaseCommand.NotifyStates.COMMAND_FAILED == data
-					&& observable instanceof Command) {
-				gotDeleted = true;
-			}
-		}
 	}
 }
