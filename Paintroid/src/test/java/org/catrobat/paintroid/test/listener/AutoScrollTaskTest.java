@@ -85,7 +85,7 @@ public class AutoScrollTaskTest {
 		autoScrollDirection.x = -1;
 		when(callback.getToolAutoScrollDirection(3f, 5f, 39, 42))
 				.thenReturn(autoScrollDirection);
-		when(callback.isPointOnCanvas(pointFEquals(7f, 11f))).thenReturn(true);
+		when(callback.isPointOnCanvas(7, 11)).thenReturn(true);
 		setPointFTo(7f, 11f).when(callback).convertToCanvasFromSurface(pointFEquals(3f, 5f));
 
 		autoScrollTask.setEventPoint(3f, 5f);
@@ -124,7 +124,7 @@ public class AutoScrollTaskTest {
 		autoScrollDirection.y = -1;
 		when(callback.getToolAutoScrollDirection(3f, 5f, 39, 42))
 				.thenReturn(autoScrollDirection);
-		when(callback.isPointOnCanvas(pointFEquals(7f, 11f))).thenReturn(true);
+		when(callback.isPointOnCanvas(7, 11)).thenReturn(true);
 		setPointFTo(7f, 11f).when(callback).convertToCanvasFromSurface(pointFEquals(3f, 5f));
 
 		autoScrollTask.setEventPoint(3f, 5f);

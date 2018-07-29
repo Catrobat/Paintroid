@@ -26,8 +26,9 @@ import android.graphics.Point;
 
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.model.Layer;
+import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
-import org.catrobat.paintroid.tools.Layer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,12 +53,20 @@ public class StampCommandTest extends CommandTestSetup {
 
 	@Test
 	public void testRun() {
-		commandUnderTest.run(canvasUnderTest, new Layer(0, Bitmap.createBitmap(1, 1, Config.ARGB_8888)));
+		Layer layer = new Layer(Bitmap.createBitmap(1, 1, Config.ARGB_8888));
+		LayerModel model = new LayerModel();
+		model.addLayerAt(0, layer);
+		model.setCurrentLayer(layer);
+		commandUnderTest.run(canvasUnderTest, model);
 		PaintroidAsserts.assertBitmapEquals(stampBitmapUnderTest, canvasBitmapUnderTest);
 
 		assertNull("Stamp bitmap not recycled.", ((BaseCommand) commandUnderTest).bitmap);
 		assertNotNull("Bitmap not stored", ((BaseCommand) commandUnderTest).fileToStoredBitmap);
-		commandUnderTest.run(canvasUnderTest, new Layer(0, Bitmap.createBitmap(10, 10, Config.ARGB_8888)));
+		Layer secondLayer = new Layer(Bitmap.createBitmap(10, 10, Config.ARGB_8888));
+		LayerModel secondModel = new LayerModel();
+		secondModel.addLayerAt(0, secondLayer);
+		secondModel.setCurrentLayer(secondLayer);
+		commandUnderTest.run(canvasUnderTest, secondModel);
 		PaintroidAsserts.assertBitmapEquals(stampBitmapUnderTest, canvasBitmapUnderTest);
 	}
 

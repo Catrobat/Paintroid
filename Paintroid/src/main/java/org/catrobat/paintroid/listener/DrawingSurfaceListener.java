@@ -217,7 +217,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				newMovePoint.y = pointY;
 				callback.convertToCanvasFromSurface(newMovePoint);
 
-				if (callback.isPointOnCanvas(newMovePoint)) {
+				if (callback.isPointOnCanvas((int) newMovePoint.x, (int) newMovePoint.y)) {
 					callback.translatePerspective(autoScrollDirection.x * STEP, autoScrollDirection.y * STEP);
 					callback.handleToolMove(newMovePoint);
 					callback.refreshDrawingSurface();
@@ -228,7 +228,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	}
 
 	public interface AutoScrollTaskCallback {
-		boolean isPointOnCanvas(PointF point);
+		boolean isPointOnCanvas(int pointX, int pointY);
 
 		void refreshDrawingSurface();
 

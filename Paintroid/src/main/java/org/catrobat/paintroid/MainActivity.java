@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
@@ -50,6 +49,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -57,11 +57,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.command.UndoRedoManager;
-import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.command.implementation.LoadCommand;
+import org.catrobat.paintroid.command.implementation.AsyncCommandManager;
+import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.dialog.CustomAlertDialogBuilder;
 import org.catrobat.paintroid.dialog.DialogAbout;
@@ -73,8 +72,7 @@ import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.iotasks.CreateFileAsync;
 import org.catrobat.paintroid.iotasks.LoadImageAsync;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
@@ -82,10 +80,14 @@ import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.ui.BottomBar;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.LayerAdapter;
+import org.catrobat.paintroid.ui.LayerMenuViewHolder;
+import org.catrobat.paintroid.ui.LayerNavigator;
+import org.catrobat.paintroid.ui.LayerPresenter;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.ToastFactory;
 import org.catrobat.paintroid.ui.TopBar;
-import org.catrobat.paintroid.ui.button.LayersAdapter;
+import org.catrobat.paintroid.ui.dragndrop.DragAndDropListView;
 
 import java.io.File;
 import java.lang.annotation.Retention;
@@ -96,7 +98,7 @@ import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_PATH;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
 		SaveImageAsync.SaveImageCallback, LoadImageAsync.LoadImageCallback, CreateFileAsync.CreateFileCallback,
-		BottomBar.BottomBarCallback {
+		BottomBar.BottomBarCallback, CommandManager.CommandListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private static final int REQUEST_CODE_IMPORTPNG = 1;
 	private static final int REQUEST_CODE_LOAD_PICTURE = 2;
@@ -117,13 +119,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	private static final int CREATE_FILE_DEFAULT = 0;
 	private static final int CREATE_FILE_TAKE_PHOTO = 1;
 
-	public static boolean isSaved = true;
+	public static boolean isSaved = false;
 	@VisibleForTesting
 	public static Uri savedPictureUri = null;
 	@VisibleForTesting
 	public TopBar topBar;
-	@VisibleForTesting
-	public boolean copySaved = false;
 	@VisibleForTesting
 	public boolean openedFromCatroid;
 	private Uri cameraImageUri;
@@ -133,12 +133,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	private Bundle toolBundle = new Bundle();
 	private DrawerLayout drawerLayout;
 	private DrawingSurface drawingSurface;
-	private NavigationView layerSideNav;
 	private NavigationView navigationView;
 	private View bottomBarLayout;
 	private View toolbarContainer;
 	private MenuItem navigationMenuExitFullscreen;
 	private MenuItem navigationMenuEnterFullscreen;
+	private LayerPresenter layerPresenter;
+	private CommandFactory commandFactory = new DefaultCommandFactory();
 
 	@IntDef({SAVE_IMAGE_DEFAULT,
 			SAVE_IMAGE_CHOOSE_NEW,
@@ -177,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+		onCreateGlobals();
 		onCreateView();
 
 		if (savedInstanceState == null) {
@@ -184,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			String pictureName = getIntent().getStringExtra(PAINTROID_PICTURE_NAME);
 			openedFromCatroid = picturePath != null;
 			if (openedFromCatroid) {
-				initializeWhenOpenedFromCatroid();
 				File imageFile = new File(picturePath);
 				if (imageFile.exists()) {
 					savedPictureUri = Uri.fromFile(imageFile);
@@ -193,28 +194,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 					new CreateFileAsync(this, CREATE_FILE_DEFAULT, pictureName).execute();
 				}
 			} else {
-				initialiseNewBitmap();
-				LayerListener.init(this, layerSideNav, drawingSurface.getBitmapCopy(), false);
+				initializeNewBitmap();
 			}
-
-			initCommandManager();
 		} else {
 			setLayoutDirection();
-
-			drawingSurface.resetBitmap(LayerListener.getInstance().getCurrentLayer().getBitmap());
-			PaintroidApplication.perspective.resetScaleAndTranslation();
 			PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED);
-
-			LayerListener.init(this, layerSideNav, drawingSurface.getBitmapCopy(), true);
 		}
+
+		CommandManager commandManager = PaintroidApplication.commandManager;
+		commandManager.addCommandListener(layerPresenter);
+		commandManager.addCommandListener(this);
 
 		initActionBar();
 		initNavigationDrawer();
 		initKeyboardIsShownListener();
 		setFullScreen(false);
+	}
 
-		PaintroidApplication.commandManager.setUpdateTopBarListener(topBar);
-		UndoRedoManager.getInstance().update();
+	private void onCreateGlobals() {
+		// init model
+		if (PaintroidApplication.layerModel == null) {
+			PaintroidApplication.layerModel = new LayerModel();
+		}
+
+		if (PaintroidApplication.commandManager == null) {
+
+			DisplayMetrics metrics = getResources().getDisplayMetrics();
+
+			CommandManager commandManager = new AsyncCommandManager();
+			Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
+			commandManager.setInitialStateCommand(initCommand);
+			commandManager.reset();
+			PaintroidApplication.commandManager = commandManager;
+		}
+		// end init
 	}
 
 	private void onCreateTool() {
@@ -236,10 +249,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	private void onCreateView() {
 		drawerLayout = findViewById(R.id.drawer_layout);
 		drawingSurface = findViewById(R.id.drawingSurfaceView);
-		layerSideNav = findViewById(R.id.nav_view_layer);
 		navigationView = findViewById(R.id.nav_view);
 		bottomBarLayout = findViewById(R.id.main_bottom_bar);
 		toolbarContainer = findViewById(R.id.layout_top_bar);
+		DragAndDropListView layerListView = findViewById(R.id.layer_side_nav_list);
 
 		Menu navigationViewMenu = navigationView.getMenu();
 		navigationMenuExitFullscreen = navigationViewMenu.findItem(R.id.nav_exit_fullscreen_mode);
@@ -248,9 +261,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		ColorPickerDialog.init(this);
 		IndeterminateProgressDialog.init(this);
 
+		ViewGroup layerLayout = findViewById(R.id.layer_side_nav_menu);
+		LayerMenuViewHolder layerMenuViewHolder = new LayerMenuViewHolder(layerLayout);
+
 		Resources resources = getResources();
 		Configuration configuration = resources.getConfiguration();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
+		LayerNavigator navigator = new LayerNavigator(this);
+
+		layerPresenter = new LayerPresenter(PaintroidApplication.layerModel, layerListView,
+				layerMenuViewHolder, PaintroidApplication.commandManager, commandFactory, navigator);
+		LayerAdapter layerAdapter = new LayerAdapter(layerPresenter);
+		layerPresenter.setAdapter(layerAdapter);
+		layerListView.setPresenter(layerPresenter);
+		layerListView.setAdapter(layerAdapter);
+
+		layerPresenter.refreshLayerMenuViewHolder();
+
+		layerMenuViewHolder.layerAddButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				layerPresenter.addLayer();
+			}
+		});
+
+		layerMenuViewHolder.layerDeleteButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				layerPresenter.removeLayer();
+			}
+		});
+
+		drawingSurface.setLayerModel(PaintroidApplication.layerModel);
 
 		PaintroidApplication.drawingSurface = drawingSurface;
 		PaintroidApplication.perspective = new Perspective(drawingSurface.getHolder().getSurfaceFrame(), metrics.density);
@@ -278,20 +320,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		}
 	}
 
-	private void initCommandManager() {
-		CommandManager commandManager = new CommandManagerImplementation();
-		PaintroidApplication.commandManager = commandManager;
-
-		LayerListener layerListener = LayerListener.getInstance();
-		LayersAdapter layersAdapter = layerListener.getAdapter();
-
-		commandManager.setUpdateTopBarListener(topBar);
-		commandManager.addChangeActiveLayerListener(layerListener);
-		commandManager.setLayerEventListener(layersAdapter);
-		commandManager.commitAddLayerCommand(new LayerCommand(layersAdapter.getLayer(0)));
-		commandManager.setInitialized(true);
-	}
-
 	private void initActionBar() {
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
@@ -312,17 +340,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	}
 
 	@Override
-	protected void onDestroy() {
-		Log.d(TAG, "onDestroy");
-		if (isFinishing()) {
-			Log.d(TAG, "onDestroy isFinishing");
+	public void commandPreExecute() {
+		IndeterminateProgressDialog.getInstance().show();
+	}
 
+	@Override
+	public void commandPostExecute() {
+		if (!isFinishing()) {
+			isSaved = false;
+			PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+			drawingSurface.refreshDrawingSurface();
+			topBar.refreshButtons();
+
+			IndeterminateProgressDialog.getInstance().dismiss();
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		PaintroidApplication.commandManager.removeCommandListener(layerPresenter);
+		PaintroidApplication.commandManager.removeCommandListener(this);
+
+		if (isFinishing()) {
 			BaseTool.reset();
 			PaintroidApplication.currentTool = null;
-
-			PaintroidApplication.commandManager.setInitialized(false);
-			PaintroidApplication.commandManager.resetAndClear(false);
-
+			PaintroidApplication.commandManager.shutdown();
+			PaintroidApplication.commandManager = null;
+			PaintroidApplication.layerModel = null;
 			savedPictureUri = null;
 
 			IndeterminateProgressDialog.finishInstance();
@@ -563,18 +607,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		});
 	}
 
-	private void initializeWhenOpenedFromCatroid() {
-		LayerListener.init(this, layerSideNav, drawingSurface.getBitmapCopy(), false);
-		if (PaintroidApplication.commandManager != null) {
-			PaintroidApplication.commandManager.resetAndClear(false);
-		}
-		initialiseNewBitmap();
-		LayerListener.getInstance().resetLayer();
-		LayerListener.getInstance().refreshView();
-	}
-
 	boolean imageUnchanged() {
-		return ((LayerListener.getInstance().getAdapter().getLayers().size() == 1) && PaintroidApplication.commandManager.isUnchanged());
+		return !PaintroidApplication.commandManager.isUndoAvailable();
 	}
 
 	protected void onLoadImage() {
@@ -660,9 +694,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	}
 
 	private void onNewImage() {
-		PaintroidApplication.commandManager.resetAndClear(false);
-		initialiseNewBitmap();
-		LayerListener.getInstance().resetLayer();
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		PaintroidApplication.commandManager.setInitialStateCommand(
+				commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels));
+		PaintroidApplication.commandManager.reset();
+		initializeNewBitmap();
 	}
 
 	private void onNewImageFromCamera() {
@@ -683,17 +719,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				getSupportFragmentManager(), Constants.LOAD_DIALOG_FRAGMENT_TAG);
 	}
 
-	private void initialiseNewBitmap() {
-		DisplayMetrics metrics = getResources().getDisplayMetrics();
-		Bitmap bitmap = Bitmap.createBitmap(metrics.widthPixels, metrics.heightPixels,
-				Bitmap.Config.ARGB_8888);
-		bitmap.eraseColor(Color.TRANSPARENT);
-
-		drawingSurface.resetBitmap(bitmap);
+	private void initializeNewBitmap() {
 		PaintroidApplication.perspective.resetScaleAndTranslation();
 		PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED);
-		isSaved = false;
+
 		savedPictureUri = null;
+
 		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
@@ -708,8 +739,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				savedPictureUri = uri;
 				break;
 			case CREATE_FILE_TAKE_PHOTO:
-				PaintroidApplication.commandManager.resetAndClear(false);
-				LayerListener.getInstance().resetLayer();
 				cameraImageUri = uri;
 				Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
 				intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
@@ -730,23 +759,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			return;
 		}
 
-		LayerListener layerListener;
-		Command command;
-		Layer currentLayer;
-
 		switch (requestCode) {
 			case LOAD_IMAGE_DEFAULT:
-				PaintroidApplication.commandManager.resetAndClear(false);
-				layerListener = LayerListener.getInstance();
-				layerListener.resetLayer();
-				currentLayer = layerListener.getCurrentLayer();
-				command = new LoadCommand(bitmap);
-				PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(currentLayer), command);
-				isSaved = false;
+				PaintroidApplication.commandManager.setInitialStateCommand(
+						commandFactory.createInitCommand(bitmap));
+				PaintroidApplication.commandManager.reset();
 				savedPictureUri = null;
 				cameraImageUri = null;
-				currentLayer.setBitmap(PaintroidApplication.drawingSurface.getBitmapCopy());
-				layerListener.refreshView();
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
 				if (PaintroidApplication.currentTool instanceof ImportTool) {
@@ -756,15 +775,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				}
 				break;
 			case LOAD_IMAGE_CATROID:
-				command = new LoadCommand(bitmap);
-				layerListener = LayerListener.getInstance();
-				currentLayer = layerListener.getCurrentLayer();
-				PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(currentLayer), command);
-				isSaved = false;
+				PaintroidApplication.commandManager.setInitialStateCommand(
+						commandFactory.createInitCommand(bitmap));
+				PaintroidApplication.commandManager.reset();
 				savedPictureUri = uri;
 				cameraImageUri = null;
-				currentLayer.setBitmap(PaintroidApplication.drawingSurface.getBitmapCopy());
-				layerListener.refreshView();
 				break;
 		}
 	}

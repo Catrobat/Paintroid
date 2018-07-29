@@ -21,39 +21,27 @@ package org.catrobat.paintroid.test.junit.command;
 
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class FlipCommandTest extends CommandTestSetup {
 
-	private int bitmapHeight;
-	private int bitmapWidth;
-
-	@Override
-	@Before
-	public void setUp() {
-		super.setUp();
-		bitmapHeight = bitmapUnderTest.getHeight();
-		bitmapWidth = bitmapUnderTest.getWidth();
-	}
-
 	@Test
 	public void testVerticalFlip() {
 		commandUnderTest = new FlipCommand(FlipDirection.FLIP_VERTICAL);
-		bitmapUnderTest.setPixel(0, bitmapHeight / 2, PAINT_BASE_COLOR);
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
-		int pixel = bitmapUnderTest.getPixel(bitmapWidth - 1, bitmapWidth / 2);
-		assertEquals("pixel should be paint_base_color", PAINT_BASE_COLOR, pixel);
+		bitmapUnderTest.setPixel(0, INITIAL_HEIGHT / 2, PAINT_BASE_COLOR);
+		commandUnderTest.run(canvasUnderTest, layerModel);
+		int pixel = bitmapUnderTest.getPixel(INITIAL_WIDTH - 1, INITIAL_WIDTH / 2);
+		assertEquals(PAINT_BASE_COLOR, pixel);
 	}
 
 	@Test
 	public void testHorizontalFlip() {
 		commandUnderTest = new FlipCommand(FlipDirection.FLIP_HORIZONTAL);
-		bitmapUnderTest.setPixel(bitmapWidth / 2, 0, PAINT_BASE_COLOR);
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
-		int pixel = bitmapUnderTest.getPixel(bitmapWidth / 2, bitmapWidth - 1);
-		assertEquals("pixel should be paint_base_color", PAINT_BASE_COLOR, pixel);
+		bitmapUnderTest.setPixel(INITIAL_WIDTH / 2, 0, PAINT_BASE_COLOR);
+		commandUnderTest.run(canvasUnderTest, layerModel);
+		int pixel = bitmapUnderTest.getPixel(INITIAL_WIDTH / 2, INITIAL_WIDTH - 1);
+		assertEquals(PAINT_BASE_COLOR, pixel);
 	}
 }

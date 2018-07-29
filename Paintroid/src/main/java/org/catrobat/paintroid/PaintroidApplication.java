@@ -20,37 +20,29 @@
 package org.catrobat.paintroid;
 
 import android.app.Application;
-import android.content.Context;
 
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.command.LayerBitmapCommand;
-import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.io.File;
 import java.util.Locale;
 
 public class PaintroidApplication extends Application {
-	public static Context applicationContext;
 	public static DrawingSurface drawingSurface;
 	public static CommandManager commandManager;
 	public static Tool currentTool;
 	public static Perspective perspective;
-	public static LinkedList<LayerCommand> layerOperationsCommandList;
-	public static LinkedList<LayerCommand> layerOperationsUndoCommandList;
-	public static ArrayList<LayerBitmapCommand> drawBitmapCommandsAtLayer;
 	public static String defaultSystemLanguage;
+	public static LayerContracts.Model layerModel;
+	public static File cacheDir;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		applicationContext = getApplicationContext();
-		commandManager = new CommandManagerImplementation();
-
+		cacheDir = getCacheDir();
 		defaultSystemLanguage = Locale.getDefault().getLanguage();
 	}
 }

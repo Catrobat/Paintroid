@@ -1,20 +1,20 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.espresso;
@@ -35,7 +35,6 @@ import org.catrobat.paintroid.MultilingualActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
-import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
@@ -214,7 +213,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getBitmap();
+		Bitmap imageBefore = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -223,7 +222,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
 		onView(withText(R.string.device_language)).perform(click());
 
-		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getBitmap();
+		Bitmap imageAfter = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
@@ -232,7 +231,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getBitmap();
+		Bitmap imageBefore = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -241,7 +240,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
 		pressBack();
 
-		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getBitmap();
+		Bitmap imageAfter = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
@@ -258,7 +257,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getBitmap();
+		Bitmap imageBefore = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -267,7 +266,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		onView(withText(R.string.skip)).perform(click());
 
-		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getBitmap();
+		Bitmap imageAfter = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
@@ -276,7 +275,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = LayerListener.getInstance().getCurrentLayer().getBitmap();
+		Bitmap imageBefore = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -285,7 +284,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		pressBack();
 
-		Bitmap imageAfter = LayerListener.getInstance().getCurrentLayer().getBitmap();
+		Bitmap imageAfter = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
@@ -466,8 +465,6 @@ public class MenuFileActivityIntegrationTest {
 				.performOpen();
 
 		onView(withText(R.string.menu_load_image))
-				.perform(click());
-		onView(withText(R.string.discard_button_text))
 				.perform(click());
 
 		onToolBarView()

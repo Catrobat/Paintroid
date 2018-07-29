@@ -32,7 +32,6 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
@@ -63,6 +62,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -141,7 +141,7 @@ public class DrawToolTests {
 		boolean returnValue = toolToTest.handleDown(event);
 
 		assertTrue(returnValue);
-		verify(commandManager, never()).commitCommandToLayer(any(LayerCommand.class), any(Command.class));
+		verify(commandManager, never()).addCommand(any(Command.class));
 	}
 
 	@UiThreadTest
@@ -184,7 +184,7 @@ public class DrawToolTests {
 		boolean returnValue = toolToTest.handleMove(event);
 
 		assertTrue(returnValue);
-		verify(commandManager, never()).commitCommandToLayer(any(LayerCommand.class), any(Command.class));
+		verify(commandManager, never()).addCommand(any(Command.class));
 	}
 
 	@UiThreadTest
@@ -252,7 +252,7 @@ public class DrawToolTests {
 
 		assertTrue(returnValue);
 		ArgumentCaptor<PathCommand> argument = ArgumentCaptor.forClass(PathCommand.class);
-		verify(commandManager).commitCommandToLayer(any(LayerCommand.class), argument.capture());
+		verify(commandManager).addCommand(argument.capture());
 		PathCommand command = argument.getValue();
 		assertPathEquals(pathStub, command.path);
 		assertPaintEquals(this.paint, command.paint);
@@ -268,7 +268,7 @@ public class DrawToolTests {
 		boolean returnValue = toolToTest.handleUp(null);
 
 		assertFalse(returnValue);
-		verify(commandManager, never()).commitCommandToLayer(any(LayerCommand.class), any(Command.class));
+		verify(commandManager, never()).addCommand(any(Command.class));
 	}
 
 	@UiThreadTest
@@ -282,7 +282,7 @@ public class DrawToolTests {
 		assertTrue(returnValue1);
 		assertTrue(returnValue2);
 		ArgumentCaptor<PointCommand> argument = ArgumentCaptor.forClass(PointCommand.class);
-		verify(commandManager).commitCommandToLayer(any(LayerCommand.class), argument.capture());
+		verify(commandManager).addCommand(argument.capture());
 		PointCommand command = argument.getValue();
 		assertEquals(tab, command.point);
 		assertPaintEquals(this.paint, command.paint);
@@ -303,7 +303,7 @@ public class DrawToolTests {
 		assertTrue(returnValue2);
 		assertTrue(returnValue3);
 		ArgumentCaptor<PointCommand> argument = ArgumentCaptor.forClass(PointCommand.class);
-		verify(commandManager).commitCommandToLayer(any(LayerCommand.class), argument.capture());
+		verify(commandManager).addCommand(argument.capture());
 		PointCommand command = argument.getValue();
 		assertEquals(tab1, command.point);
 		assertPaintEquals(this.paint, command.paint);
@@ -324,7 +324,7 @@ public class DrawToolTests {
 		toolToTest.handleMove(tab4);
 		toolToTest.handleUp(tab5);
 
-		verify(commandManager).commitCommandToLayer(any(LayerCommand.class), any(PathCommand.class));
+		verify(commandManager).addCommand(isA(PathCommand.class));
 	}
 
 	@UiThreadTest

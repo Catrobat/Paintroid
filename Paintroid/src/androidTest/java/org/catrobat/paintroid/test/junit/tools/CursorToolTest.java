@@ -32,7 +32,6 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.tools.ToolType;
@@ -103,7 +102,7 @@ public class CursorToolTest {
 		assertTrue(toolToTest.handleDown(point));
 		assertTrue(toolToTest.handleUp(point));
 
-		verify(commandManager).commitCommandToLayer(any(LayerCommand.class), isA(PointCommand.class));
+		verify(commandManager).addCommand(isA(PointCommand.class));
 		assertTrue(toolToTest.toolInDrawMode);
 	}
 
@@ -117,7 +116,7 @@ public class CursorToolTest {
 		assertTrue(toolToTest.handleDown(pointDown));
 		assertTrue(toolToTest.handleUp(pointUp));
 
-		verify(commandManager, never()).commitCommandToLayer(any(LayerCommand.class), any(Command.class));
+		verify(commandManager, never()).addCommand(any(Command.class));
 		assertFalse(toolToTest.toolInDrawMode);
 
 		// +/0
@@ -126,7 +125,7 @@ public class CursorToolTest {
 		assertTrue(toolToTest.handleDown(pointDown));
 		assertTrue(toolToTest.handleUp(pointUp));
 
-		verify(commandManager, never()).commitCommandToLayer(any(LayerCommand.class), any(Command.class));
+		verify(commandManager, never()).addCommand(any(Command.class));
 
 		assertFalse(toolToTest.toolInDrawMode);
 
@@ -136,7 +135,7 @@ public class CursorToolTest {
 		assertTrue(toolToTest.handleDown(pointDown));
 		assertTrue(toolToTest.handleUp(pointUp));
 
-		verify(commandManager, never()).commitCommandToLayer(any(LayerCommand.class), any(Command.class));
+		verify(commandManager, never()).addCommand(any(Command.class));
 		assertFalse(toolToTest.toolInDrawMode);
 
 		// -/-
@@ -145,7 +144,7 @@ public class CursorToolTest {
 		assertTrue(toolToTest.handleDown(pointDown));
 		assertTrue(toolToTest.handleUp(pointUp));
 
-		verify(commandManager, never()).commitCommandToLayer(any(LayerCommand.class), any(Command.class));
+		verify(commandManager, never()).addCommand(any(Command.class));
 		assertFalse(toolToTest.toolInDrawMode);
 	}
 

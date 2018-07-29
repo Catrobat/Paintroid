@@ -129,13 +129,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN) * 2;
 		boxHeight = boxWidth;
 
-		if (DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO && !PaintroidApplication.drawingSurface.isBitmapNull() && (
-				boxHeight > PaintroidApplication.drawingSurface
-						.getBitmapHeight() * MAXIMUM_BORDER_RATIO
-						|| boxWidth > PaintroidApplication.drawingSurface
-						.getBitmapWidth() * MAXIMUM_BORDER_RATIO)) {
-			boxHeight = PaintroidApplication.drawingSurface.getBitmapHeight() * MAXIMUM_BORDER_RATIO;
-			boxWidth = PaintroidApplication.drawingSurface.getBitmapWidth() * MAXIMUM_BORDER_RATIO;
+		if (DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO && (
+				boxHeight > PaintroidApplication.layerModel.getHeight() * MAXIMUM_BORDER_RATIO
+						|| boxWidth > PaintroidApplication.layerModel.getWidth() * MAXIMUM_BORDER_RATIO)) {
+			boxHeight = PaintroidApplication.layerModel.getHeight() * MAXIMUM_BORDER_RATIO;
+			boxWidth = PaintroidApplication.layerModel.getWidth() * MAXIMUM_BORDER_RATIO;
 		}
 
 		rotationArrowArcStrokeWidth = getDensitySpecificValue(2);
@@ -323,8 +321,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.rotate(-boxRotation);
 		canvas.translate(-toolPosition.x, -toolPosition.y);
 		canvas.drawRect(0, 0,
-				PaintroidApplication.drawingSurface.getBitmapWidth(),
-				PaintroidApplication.drawingSurface.getBitmapHeight(), backgroundPaint);
+				PaintroidApplication.layerModel.getWidth(),
+				PaintroidApplication.layerModel.getHeight(), backgroundPaint);
 		canvas.restore();
 	}
 

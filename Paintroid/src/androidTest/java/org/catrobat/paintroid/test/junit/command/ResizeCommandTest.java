@@ -21,13 +21,9 @@ package org.catrobat.paintroid.test.junit.command;
 
 import android.graphics.Bitmap;
 
-import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -57,14 +53,6 @@ public class ResizeCommandTest extends CommandTestSetup {
 		commandUnderTestNull = new ResizeCommand(1, 1, 2, 2, maximumBitmapResolution);
 	}
 
-	@After
-	public void tearDown() {
-		File fileToResizedBitmap = ((BaseCommand) commandUnderTest).fileToStoredBitmap;
-		if (fileToResizedBitmap != null) {
-			assertTrue(fileToResizedBitmap.delete());
-		}
-	}
-
 	@Test
 	public void testIfBitmapIsCropped() {
 		int widthOriginal = bitmapUnderTest.getWidth();
@@ -76,7 +64,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 		commandUnderTest = new ResizeCommand(resizeCoordinateXLeft, resizeCoordinateYTop,
 				resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution);
 
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 
 		Bitmap croppedBitmap = layerUnderTest.getBitmap();
 		assertEquals("Cropping failed, width not correct ", widthOriginal - resizeCoordinateXLeft
@@ -97,7 +85,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 		commandUnderTest = new ResizeCommand(resizeCoordinateXLeft, resizeCoordinateYTop,
 				resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution);
 
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 
 		Bitmap enlargedBitmap = layerUnderTest.getBitmap();
 		assertEquals("Enlarging failed, width not correct ", widthOriginal - resizeCoordinateXLeft
@@ -118,7 +106,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 		commandUnderTest = new ResizeCommand(resizeCoordinateXLeft, resizeCoordinateYTop,
 				resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution);
 
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 
 		Bitmap enlargedBitmap = layerUnderTest.getBitmap();
 		assertEquals("Enlarging failed, width not correct ", widthOriginal, enlargedBitmap.getWidth());
@@ -132,7 +120,7 @@ public class ResizeCommandTest extends CommandTestSetup {
 		int heightOriginal = bitmapUnderTest.getHeight();
 		commandUnderTest = new ResizeCommand(0, 0, widthOriginal * 2, heightOriginal * 2, maximumBitmapResolution);
 
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 
 		assertEquals("Width should not have changed", widthOriginal, layerUnderTest.getBitmap().getWidth());
 		assertEquals("Height should not have changed", heightOriginal, layerUnderTest.getBitmap().getHeight());
@@ -144,33 +132,33 @@ public class ResizeCommandTest extends CommandTestSetup {
 		commandUnderTest = new ResizeCommand(bitmapUnderTest.getWidth(), 0, bitmapUnderTest.getWidth(),
 				0, maximumBitmapResolution);
 
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 		assertTrue("bitmap must not change if X left is larger than bitmap scope", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(-1, 0, -1, 0, maximumBitmapResolution);
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 		assertTrue("bitmap must not change if X right is smaller than bitmap scope", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(0, bitmapUnderTest.getHeight(), 0,
 				bitmapUnderTest.getHeight(), maximumBitmapResolution);
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 		assertTrue("bitmap must not change if Y top is larger than bitmap scope", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(0, -1, 0, -1, maximumBitmapResolution);
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 		assertTrue("bitmap must not change if Y bottom is smaller than bitmap scope", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(1, 0, 0, 0, maximumBitmapResolution);
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 		assertTrue("bitmap must not change with widthXRight < widthXLeft bound", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(0, 1, 0, 0, maximumBitmapResolution);
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 		assertTrue("bitmap must not change with widthYBottom < widthYTop bound", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 
 		commandUnderTest = new ResizeCommand(0, 0, bitmapUnderTest.getWidth() - 1,
 				bitmapUnderTest.getHeight() - 1, maximumBitmapResolution);
-		commandUnderTest.run(canvasUnderTest, layerUnderTest);
+		commandUnderTest.run(canvasUnderTest, layerModel);
 		assertTrue("bitmap must not change because bounds are the same as original bitmap", originalBitmap.sameAs(layerUnderTest.getBitmap()));
 	}
 }
