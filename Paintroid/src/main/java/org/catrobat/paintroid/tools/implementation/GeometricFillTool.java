@@ -57,11 +57,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	@VisibleForTesting
 	public BaseShape baseShape;
-	public int shapeOutlineWidth = 0;
+	private int shapeOutlineWidth = 0;
 	private ShapeDrawType shapeDrawType;
 	private ShapeToolOptionsListener shapeToolOptionsListener;
 	private Paint geometricFillCommandPaint;
-	private int outlineMultiplicand = 1; //TODO: awareness mark
 
 	public GeometricFillTool(Context context, ToolType toolType) {
 		super(context, toolType);
@@ -74,7 +73,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		}
 
 		if(shapeOutlineWidth == 0){
-			shapeOutlineWidth = 25 * outlineMultiplicand;
+			shapeOutlineWidth = 25;
 		}
 
 		shapeDrawType = ShapeDrawType.FILL;
@@ -115,7 +114,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
                     }
                     @Override
 					public void setOutlineWidth(int outlineWidth){
-						shapeOutlineWidth = outlineWidth * outlineMultiplicand;
+						shapeOutlineWidth = outlineWidth;
 						createAndSetBitmap();
 					}
 				});
@@ -126,7 +125,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
 
-		RectF shapeRect = new RectF(0, 0, boxWidth, boxHeight);
+		RectF shapeRect;
 
 		Paint drawPaint = new Paint();
 		drawPaint.setColor(CANVAS_PAINT.getColor());
@@ -157,23 +156,23 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			drawPaint.setShader(checkeredPattern.getShader());
 		}
 
+		if(drawPaint.getStyle() == Style.STROKE) {
+			shapeRect = new RectF(SHAPE_OFFSET + shapeOutlineWidth / 2,
+					SHAPE_OFFSET + shapeOutlineWidth / 2,
+					boxWidth - SHAPE_OFFSET - shapeOutlineWidth / 2,
+					boxHeight - SHAPE_OFFSET - shapeOutlineWidth / 2);
+		} else {
+			shapeRect = new RectF(SHAPE_OFFSET,
+					SHAPE_OFFSET,
+					boxWidth - SHAPE_OFFSET,
+					boxHeight - SHAPE_OFFSET);
+		}
+
 		switch (baseShape) {
 			case RECTANGLE:
-				if(drawPaint.getStyle() == Style.STROKE) {
-					shapeRect = new RectF(SHAPE_OFFSET + shapeOutlineWidth / 2,
-							SHAPE_OFFSET + shapeOutlineWidth / 2,
-							boxWidth - SHAPE_OFFSET - shapeOutlineWidth / 2,
-							boxHeight - SHAPE_OFFSET - shapeOutlineWidth / 2);
-				}
 				drawCanvas.drawRect(shapeRect, drawPaint);
 				break;
 			case OVAL:
-				if(drawPaint.getStyle() == Style.STROKE) {
-					shapeRect = new RectF(SHAPE_OFFSET + shapeOutlineWidth / 2,
-							SHAPE_OFFSET + shapeOutlineWidth / 2,
-							boxWidth - SHAPE_OFFSET - shapeOutlineWidth / 2,
-							boxHeight - SHAPE_OFFSET - shapeOutlineWidth / 2);
-				}
 				drawCanvas.drawOval(shapeRect, drawPaint);
 				break;
 			case STAR:
@@ -185,7 +184,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			default:
 				break;
 		}
-
 		setBitmap(bitmap);
 	}
 
@@ -231,20 +229,12 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
         float stroke = drawPaint.getStrokeWidth();
         Style fillType = drawPaint.getStyle();
 
-        if(fillType == Style.STROKE){
-			shapeRect = new RectF(SHAPE_OFFSET + stroke/2,
-								SHAPE_OFFSET + stroke/2,
-							boxWidth -  SHAPE_OFFSET - stroke/2,
-						boxHeight - SHAPE_OFFSET - stroke/2);
-		}
-
 		float mid_w = shapeRect.width() / 2;
 		float mid_h = shapeRect.height() / 2;
-		float height = shapeRect.height() - SHAPE_OFFSET;
-		float width = shapeRect.width() - SHAPE_OFFSET;
-		float zeroWidth = SHAPE_OFFSET;
-		float zeroHeight = SHAPE_OFFSET;
-
+		float height = shapeRect.height();
+		float width = shapeRect.width();
+		float zeroWidth = 0;
+		float zeroHeight = 0;
 
 		Path path = new Path();
 
@@ -267,6 +257,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 					drawPaint.setStrokeWidth(stroke/2);
 					drawPaint.setStrokeJoin(Paint.Join.ROUND);
 					path.offset(SHAPE_OFFSET + stroke/2, SHAPE_OFFSET + stroke/2);
+				} else {
+					path.offset(SHAPE_OFFSET, SHAPE_OFFSET);
 				}
 
 				break;
@@ -281,6 +273,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 					drawPaint.setStrokeWidth(stroke/2);
 					drawPaint.setStrokeJoin(Paint.Join.ROUND);
 					path.offset(SHAPE_OFFSET + stroke/2, SHAPE_OFFSET + stroke/2);
+				} else {
+					path.offset(SHAPE_OFFSET, SHAPE_OFFSET);
 				}
 
 				break;
@@ -291,27 +285,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
         return path;
     }
-
-	private void drawShape(Canvas drawCanvas, RectF shapeRect, Paint drawPaint, int drawableId) {
-		/*Rect rect = new Rect((int) shapeRect.left, (int) shapeRect.top, (int) shapeRect.right, (int) shapeRect.bottom);
-
-		Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
-		Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, rect.width(), rect.height(), true);
-		Paint colorChangePaint = new Paint(drawPaint);
-
-		if (Color.alpha(CANVAS_PAINT.getColor()) == 0x00) {
-			int colorWithMaxAlpha = Color.BLACK;
-			colorChangePaint.setColor(colorWithMaxAlpha);
-		}
-
-		Bitmap checkeredBitmap = Bitmap.createBitmap(rect.width(), rect.height(), Bitmap.Config.ARGB_8888);
-		Canvas checkeredCanvas = new Canvas(checkeredBitmap);
-		checkeredCanvas.drawPaint(drawPaint);
-		drawCanvas.drawBitmap(checkeredBitmap, shapeRect.left, shapeRect.top, drawPaint);
-
-		//colorChangePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_ATOP));
-		drawCanvas.drawBitmap(scaledBitmap, shapeRect.left, shapeRect.top, colorChangePaint);*/
-	}
 
 	@Override
 	protected void onClickInBox() {
