@@ -172,10 +172,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				drawCanvas.drawOval(shapeRect, drawPaint);
 				break;
 			case STAR:
-				drawCanvas.drawPath(getSpecialPath("star", shapeRect, drawPaint), drawPaint);
+				drawCanvas.drawPath(getSpecialPath(BaseShape.STAR, shapeRect, drawPaint), drawPaint);
 				break;
 			case HEART:
-				drawCanvas.drawPath(getSpecialPath("heart", shapeRect, drawPaint), drawPaint);
+				drawCanvas.drawPath(getSpecialPath(BaseShape.HEART, shapeRect, drawPaint), drawPaint);
 				break;
 			default:
 				break;
@@ -220,7 +220,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	    createAndSetBitmap();
     }
 
-    private Path getSpecialPath(String type, RectF shapeRect, Paint drawPaint){
+    private Path getSpecialPath(BaseShape type, RectF shapeRect, Paint drawPaint){
 
         float stroke = drawPaint.getStrokeWidth();
         Style fillType = drawPaint.getStyle();
@@ -235,7 +235,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		Path path = new Path();
 
         switch (type){
-			case "star":
+			case STAR:
 				path.moveTo(mid_w, zeroHeight);
 				path.lineTo(mid_w + width/8, mid_h - height/8);
 				path.lineTo(width,mid_h - height/8);
@@ -259,7 +259,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 				break;
 
-			case "heart":
+			case HEART:
 				path.moveTo(mid_w, height);
 				path.cubicTo(-0.2f*width,4.5f*height/8, 0.8f*width/8, -1.5f*height/8, mid_w, 1.5f*height/8);
 				path.cubicTo(7.2f*width/8, -1.5f*height/8, 1.2f*width, 4.5f*height/8, mid_w, height);
