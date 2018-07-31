@@ -120,4 +120,52 @@ public class ShapeToolIntegrationTest {
 
 		assertTrue(expectedBitmap.sameAs(PaintroidApplication.drawingSurface.getBitmapCopy()));
 	}
+
+	@Test
+	public void testRememberOutlinePositionAfterOrientationChange() {
+		onView(withId(R.id.shape_ibtn_outline))
+				.perform(click());
+		onView(withId(shape))
+				.perform(click());
+
+		PointF p = new PointF(0, 0);
+		((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition.set(p);
+
+		activityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(p, ((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition);
+	}
+
+	@Test
+	public void testRememberOutlineShapeAfterOrientationChange() {
+		onView(withId(R.id.shape_ibtn_outline))
+				.perform(click());
+		onView(withId(shape))
+				.perform(click())
+				.check(matches(isSelected()));
+		onToolBarView()
+				.performCloseToolOptions();
+
+		onView(isRoot())
+				.perform(click());
+
+		Bitmap expectedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+
+		onTopBarView()
+				.performUndo();
+
+		activityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		onView(withId(shape))
+				.check(matches(isSelected()));
+
+		onToolBarView()
+				.performCloseToolOptions();
+
+		onView(isRoot())
+				.perform(click());
+
+		assertTrue(expectedBitmap.sameAs(PaintroidApplication.drawingSurface.getBitmapCopy()));
+	}
+
 }
