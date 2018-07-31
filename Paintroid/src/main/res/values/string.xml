@@ -47,13 +47,10 @@
     <string name="about_link_template" translatable="false">&lt;a href=\"%1$s\">%2$s&lt;/a></string>
     <string name="about_version">Version:</string>
     <string name="color_chooser_title">Color Chooser</string>
-    <string name="color_rgb">Red Green Blue (RGB)</string>
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
     <string name="color_blue">Blue</string>
     <string name="color_alpha">Alpha</string>
-    <string name="color_pre">preselected</string>
-    <string name="color_hsv">hsv color picker</string>
     <string name="dialog_tools_title">Tools</string>
     <string name="dialog_error_save_title">Error load/save File</string>
     <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>

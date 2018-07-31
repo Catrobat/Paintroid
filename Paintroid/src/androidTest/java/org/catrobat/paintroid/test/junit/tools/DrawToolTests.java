@@ -34,11 +34,8 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.command.implementation.PointCommand;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
@@ -343,22 +340,6 @@ public class DrawToolTests {
 	public void testShouldReturnBlackForForTopParameterButton() {
 		int color = getAttributeButtonColor();
 		assertEquals(Color.BLACK, color);
-	}
-
-	@UiThreadTest
-	@Test
-	public void testShouldChangePaintFromColorPicker() {
-		toolToTest.setDrawPaint(paint);
-		ColorPickerDialog colorPicker = ColorPickerDialog.getInstance();
-		List<OnColorPickedListener> colorPickerListener = colorPicker.onColorPickedListener;
-
-		for (OnColorPickedListener onColorPickedListener : colorPickerListener) {
-			onColorPickedListener.colorChanged(Color.RED);
-			// check if colorpicker listener is a tool, can also be color Button
-			if (onColorPickedListener instanceof Tool) {
-				assertEquals(Color.RED, toolToTest.getDrawPaint().getColor());
-			}
-		}
 	}
 
 	@UiThreadTest

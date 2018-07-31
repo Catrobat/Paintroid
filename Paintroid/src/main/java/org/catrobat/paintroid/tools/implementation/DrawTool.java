@@ -157,6 +157,12 @@ public class DrawTool extends BaseTool {
 	}
 
 	@Override
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
+		brushPickerView.invalidate();
+	}
+
+	@Override
 	public void setupToolOptions() {
 		brushPickerView = new BrushPickerView(toolSpecificOptionsLayout);
 		brushPickerView.setCurrentPaint(BITMAP_PAINT);
@@ -171,6 +177,5 @@ public class DrawTool extends BaseTool {
 	public void leaveTool() {
 		super.leaveTool();
 		brushPickerView.removeBrushChangedListener(onBrushChangedListener);
-		brushPickerView.removeListeners();
 	}
 }

@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools;
+package org.catrobat.paintroid.contract;
 
-import android.app.Activity;
-
-public interface ToolFactory {
-	Tool createTool(Activity activity, ToolType toolType);
+public interface MainActivityContracts {
+	interface Navigator {
+		void showColorPickerDialog();
+	}
 }

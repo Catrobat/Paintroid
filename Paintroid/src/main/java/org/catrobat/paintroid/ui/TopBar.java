@@ -27,29 +27,50 @@ import android.widget.ImageButton;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.button.ColorButton;
 
-public class TopBar implements View.OnClickListener, ColorPickerDialog.OnColorPickedListener {
+public class TopBar implements ColorPickerDialog.OnColorPickedListener {
 	private ImageButton undoButton;
 	private ImageButton redoButton;
 	private ColorButton colorButton;
+	private MainActivityContracts.Navigator navigator;
 	private DrawerLayout layerDrawer;
 
-	public TopBar(MainActivity mainActivity) {
+	public TopBar(MainActivity mainActivity, MainActivityContracts.Navigator navigator) {
 		undoButton = mainActivity.findViewById(R.id.btn_top_undo);
 		redoButton = mainActivity.findViewById(R.id.btn_top_redo);
 		colorButton = mainActivity.findViewById(R.id.btn_top_color);
-		ImageButton layerButton = mainActivity.findViewById(R.id.btn_top_layers);
 		layerDrawer = mainActivity.findViewById(R.id.drawer_layout);
+		ImageButton layerButton = mainActivity.findViewById(R.id.btn_top_layers);
+		this.navigator = navigator;
 
-		undoButton.setOnClickListener(this);
-		redoButton.setOnClickListener(this);
-		colorButton.setOnClickListener(this);
-		ColorPickerDialog.getInstance().addOnColorPickedListener(this);
-		layerButton.setOnClickListener(this);
+		undoButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onUndoClick();
+			}
+		});
+		redoButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onRedoClick();
+			}
+		});
+		colorButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onColorClick();
+			}
+		});
+		layerButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onLayerClick();
+			}
+		});
 
 		refreshButtons();
 
@@ -73,36 +94,18 @@ public class TopBar implements View.OnClickListener, ColorPickerDialog.OnColorPi
 	}
 
 	private void onColorClick() {
-		Tool currentTool = PaintroidApplication.currentTool;
-		if (!currentTool.getToolType().isColorChangeAllowed()) {
-			return;
+		if (PaintroidApplication.currentTool.getToolType().isColorChangeAllowed()) {
+			navigator.showColorPickerDialog();
 		}
-		ColorPickerDialog.getInstance().show();
+	}
+
+	private void onLayerClick() {
+		layerDrawer.openDrawer(Gravity.END);
 	}
 
 	public void refreshButtons() {
 		undoButton.setEnabled(PaintroidApplication.commandManager.isUndoAvailable());
 		redoButton.setEnabled(PaintroidApplication.commandManager.isRedoAvailable());
-	}
-
-	@Override
-	public void onClick(View view) {
-		switch (view.getId()) {
-			case R.id.btn_top_undo:
-				onUndoClick();
-				break;
-			case R.id.btn_top_redo:
-				onRedoClick();
-				break;
-			case R.id.btn_top_color:
-				onColorClick();
-				break;
-			case R.id.btn_top_layers:
-				layerDrawer.openDrawer(Gravity.END);
-				break;
-			default:
-				break;
-		}
 	}
 
 	@Override
