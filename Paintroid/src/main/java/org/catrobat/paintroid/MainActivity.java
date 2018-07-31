@@ -36,6 +36,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -79,6 +80,7 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.implementation.DefaultToolFactory;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.ui.BottomBar;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -86,6 +88,7 @@ import org.catrobat.paintroid.ui.LayerAdapter;
 import org.catrobat.paintroid.ui.LayerMenuViewHolder;
 import org.catrobat.paintroid.ui.LayerNavigator;
 import org.catrobat.paintroid.ui.LayerPresenter;
+import org.catrobat.paintroid.ui.MainActivityNavigator;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.ToastFactory;
 import org.catrobat.paintroid.ui.TopBar;
@@ -95,6 +98,7 @@ import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import static org.catrobat.paintroid.common.Constants.COLOR_PICKER_DIALOG_TAG;
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_NAME;
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_PATH;
 
@@ -142,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	private MenuItem navigationMenuEnterFullscreen;
 	private LayerPresenter layerPresenter;
 	private CommandFactory commandFactory = new DefaultCommandFactory();
+	private ToolFactory toolFactory = new DefaultToolFactory();
 
 	@IntDef({SAVE_IMAGE_DEFAULT,
 			SAVE_IMAGE_CHOOSE_NEW,
@@ -199,6 +204,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				initializeNewBitmap();
 			}
 		} else {
+			Fragment colorPickerDialogFragment = getSupportFragmentManager()
+					.findFragmentByTag(COLOR_PICKER_DIALOG_TAG);
+			if (colorPickerDialogFragment != null) {
+				ColorPickerDialog dialog = (ColorPickerDialog) colorPickerDialogFragment;
+				dialog.addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+					@Override
+					public void colorChanged(int color) {
+						PaintroidApplication.currentTool.changePaintColor(color);
+					}
+				});
+				dialog.addOnColorPickedListener(topBar);
+			}
+
 			setLayoutDirection();
 			PaintroidApplication.currentTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED);
 		}
@@ -236,13 +254,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	private void onCreateTool() {
 		Bundle bundle = new Bundle();
 		if (PaintroidApplication.currentTool == null) {
-			PaintroidApplication.currentTool = ToolFactory.createTool(this, ToolType.BRUSH);
+			PaintroidApplication.currentTool = toolFactory.createTool(this, ToolType.BRUSH);
 			PaintroidApplication.currentTool.startTool();
 		} else {
 			Paint paint = PaintroidApplication.currentTool.getDrawPaint();
 			PaintroidApplication.currentTool.leaveTool();
 			PaintroidApplication.currentTool.onSaveInstanceState(bundle);
-			PaintroidApplication.currentTool = ToolFactory.createTool(this, PaintroidApplication.currentTool.getToolType());
+			PaintroidApplication.currentTool = toolFactory.createTool(this, PaintroidApplication.currentTool.getToolType());
 			PaintroidApplication.currentTool.onRestoreInstanceState(bundle);
 			PaintroidApplication.currentTool.startTool();
 			PaintroidApplication.currentTool.setDrawPaint(paint);
@@ -261,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		navigationMenuExitFullscreen = navigationViewMenu.findItem(R.id.nav_exit_fullscreen_mode);
 		navigationMenuEnterFullscreen = navigationViewMenu.findItem(R.id.nav_fullscreen_mode);
 
-		ColorPickerDialog.init(this);
 		IndeterminateProgressDialog.init(this);
 
 		ViewGroup layerLayout = findViewById(R.id.layer_side_nav_menu);
@@ -305,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 		onCreateTool();
 		bottomBar = new BottomBar(this, metrics.density, configuration.orientation, bottomBarLayout, toolsLayout, scrollView);
-		topBar = new TopBar(this);
+		topBar = new TopBar(this, new MainActivityNavigator(this));
 	}
 
 	@Override
@@ -373,10 +390,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			savedPictureUri = null;
 
 			IndeterminateProgressDialog.finishInstance();
-			ColorPickerDialog.finishInstance();
 		} else {
 			IndeterminateProgressDialog.dismissInstance();
-			ColorPickerDialog.dismissInstance();
 		}
 
 		super.onDestroy();
@@ -463,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		switch (requestCode) {
 			case REQUEST_CODE_IMPORTPNG:
 				Uri selectedGalleryImageUri = data.getData();
-				Tool tool = ToolFactory.createTool(this, ToolType.IMPORTPNG);
+				Tool tool = toolFactory.createTool(this, ToolType.IMPORTPNG);
 				switchTool(tool);
 				new LoadImageAsync(this, LOAD_IMAGE_IMPORTPNG, maxWidth, maxHeight, selectedGalleryImageUri).execute();
 				break;
@@ -493,7 +508,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			return;
 		}
 
-		Tool tool = ToolFactory.createTool(this, changeToToolType);
+		Tool tool = toolFactory.createTool(this, changeToToolType);
 		switchTool(tool);
 	}
 

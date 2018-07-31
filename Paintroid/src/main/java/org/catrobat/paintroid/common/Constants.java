@@ -37,6 +37,7 @@ public final class Constants {
 	public static final String SAVE_DIALOG_FRAGMENT_TAG = "savedialogerror";
 	public static final String HELP_DIALOG_FRAGMENT_TAG = "helpdialogfragmenttag";
 	public static final String LOAD_DIALOG_FRAGMENT_TAG = "loadbitmapdialogerror";
+	public static final String COLOR_PICKER_DIALOG_TAG = "ColorPickerDialogTag";
 
 	private Constants() {
 		throw new AssertionError();

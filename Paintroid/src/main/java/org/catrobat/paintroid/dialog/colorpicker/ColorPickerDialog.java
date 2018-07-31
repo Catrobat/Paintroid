@@ -1,20 +1,20 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
  *    This file incorporates work covered by the following copyright and
@@ -38,14 +38,13 @@
 
 package org.catrobat.paintroid.dialog.colorpicker;
 
-import android.content.Context;
+import android.app.Dialog;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -53,60 +52,39 @@ import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatDialogFragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.BaseDialog;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public final class ColorPickerDialog extends BaseDialog {
-
-	private static final String NOT_INITIALIZED_ERROR_MESSAGE = "ColorPickerDialog has not been initialized. Call init() first!";
-	static Paint backgroundPaint = new Paint();
-	private static ColorPickerDialog instance;
-	private ColorPickerView colorPickerView;
+public final class ColorPickerDialog extends AppCompatDialogFragment implements ColorPickerView.OnColorChangedListener {
+	public static final String INITIAL_COLOR_KEY = "InitialColor";
 	@VisibleForTesting
-	public ArrayList<OnColorPickedListener> onColorPickedListener;
+	public List<OnColorPickedListener> onColorPickedListener = new ArrayList<>();
+	private ColorPickerView colorPickerView;
 	private Button buttonNewColor;
 
-	private ColorPickerDialog(Context context) {
-		super(context);
-		onColorPickedListener = new ArrayList<>();
-	}
-
-	public static ColorPickerDialog getInstance() {
-		if (instance == null) {
-			throw new IllegalStateException(NOT_INITIALIZED_ERROR_MESSAGE);
-		}
-		return instance;
-	}
-
-	public static void dismissInstance() {
-		instance.onColorPickedListener.clear();
-		instance.dismiss();
-	}
-
-	public static void finishInstance() {
-		instance.dismiss();
-		instance = null;
-		backgroundPaint.reset();
-		backgroundPaint.setColor(Color.BLACK);
-	}
-
-	public static void init(Context context) {
-		instance = new ColorPickerDialog(context);
+	public static ColorPickerDialog newInstance(@ColorInt int initialColor) {
+		ColorPickerDialog dialog = new ColorPickerDialog();
+		Bundle bundle = new Bundle();
+		bundle.putInt(INITIAL_COLOR_KEY, initialColor);
+		dialog.setArguments(bundle);
+		return dialog;
 	}
 
 	public void addOnColorPickedListener(OnColorPickedListener listener) {
 		onColorPickedListener.add(listener);
-	}
-
-	public void removeOnColorPickedListener(OnColorPickedListener listener) {
-		onColorPickedListener.remove(listener);
 	}
 
 	private void updateColorChange(int color) {
@@ -116,26 +94,24 @@ public final class ColorPickerDialog extends BaseDialog {
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.colorpicker_dialog);
-		setTitle(R.string.color_chooser_title);
 
-		Bitmap backgroundBitmap = BitmapFactory.decodeResource(getContext()
-				.getResources(), R.drawable.checkeredbg);
-		BitmapShader mBackgroundShader = new BitmapShader(backgroundBitmap,
-				TileMode.REPEAT, TileMode.REPEAT);
+		setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomAlertDialog);
+	}
 
-		backgroundPaint.setShader(mBackgroundShader);
-		buttonNewColor = (Button) findViewById(R.id.btn_colorchooser_ok);
-		colorPickerView = (ColorPickerView) findViewById(R.id.view_colorpicker);
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.colorpicker_dialog, container);
 	}
 
 	@Override
-	public void onAttachedToWindow() {
-		super.onAttachedToWindow();
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 
-		setInitialColor(PaintroidApplication.currentTool.getDrawPaint().getColor());
+		buttonNewColor = view.findViewById(R.id.btn_colorchooser_ok);
+		colorPickerView = view.findViewById(R.id.view_colorpicker);
 
 		buttonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -143,32 +119,37 @@ public final class ColorPickerDialog extends BaseDialog {
 				dismiss();
 			}
 		});
-		colorPickerView.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
-			@Override
-			public void colorChanged(int color) {
-				changeNewColor(color);
-				updateColorChange(color);
-			}
-		});
-	}
+		colorPickerView.setOnColorChangedListener(this);
 
-	@Override
-	public void onDetachedFromWindow() {
-		super.onDetachedFromWindow();
-
-		buttonNewColor.setOnClickListener(null);
-		colorPickerView.setOnColorChangedListener(null);
-	}
-
-	public void setInitialColor(int color) {
-		updateColorChange(color);
-		if ((buttonNewColor != null) && (colorPickerView != null)) {
-			changeNewColor(color);
-			colorPickerView.setSelectedColor(color);
+		if (savedInstanceState != null) {
+			setColor(savedInstanceState.getInt(INITIAL_COLOR_KEY, Color.BLACK));
+		} else {
+			Bundle arguments = getArguments();
+			setColor(arguments.getInt(INITIAL_COLOR_KEY, Color.BLACK));
 		}
 	}
 
-	private void changeNewColor(int color) {
+	@NonNull
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		Dialog dialog = super.onCreateDialog(savedInstanceState);
+		dialog.setTitle(R.string.color_chooser_title);
+		return dialog;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		outState.putInt(INITIAL_COLOR_KEY, colorPickerView.getSelectedColor());
+	}
+
+	public void setColor(int color) {
+		setButtonColor(color);
+		colorPickerView.setSelectedColor(color);
+	}
+
+	private void setButtonColor(int color) {
 		buttonNewColor.setBackground(CustomColorDrawable.createDrawable(color));
 
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color.green(color)) / 3;
@@ -179,17 +160,28 @@ public final class ColorPickerDialog extends BaseDialog {
 		}
 	}
 
+	@Override
+	public void colorChanged(int color) {
+		setButtonColor(color);
+		updateColorChange(color);
+	}
+
+	public interface OnColorPickedListener {
+		void colorChanged(int color);
+	}
+
 	static final class CustomColorDrawable extends ColorDrawable {
+		private Paint backgroundPaint;
+
 		private CustomColorDrawable(@ColorInt int color) {
 			super(color);
-		}
 
-		@Override
-		public void draw(Canvas canvas) {
 			if (Color.alpha(getColor()) != 0xff) {
-				canvas.drawRect(getBounds(), backgroundPaint);
+				Shader backgroundShader = new BitmapShader(
+						PaintroidApplication.backgroundBitmap, TileMode.REPEAT, TileMode.REPEAT);
+				backgroundPaint = new Paint();
+				backgroundPaint.setShader(backgroundShader);
 			}
-			super.draw(canvas);
 		}
 
 		static Drawable createDrawable(@ColorInt int color) {
@@ -200,9 +192,13 @@ public final class ColorPickerDialog extends BaseDialog {
 						new CustomColorDrawable(color), null);
 			}
 		}
-	}
 
-	public interface OnColorPickedListener {
-		void colorChanged(int color);
+		@Override
+		public void draw(Canvas canvas) {
+			if (backgroundPaint != null) {
+				canvas.drawRect(getBounds(), backgroundPaint);
+			}
+			super.draw(canvas);
+		}
 	}
 }

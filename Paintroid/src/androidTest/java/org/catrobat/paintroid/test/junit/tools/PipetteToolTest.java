@@ -28,6 +28,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
@@ -36,7 +37,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
 public class PipetteToolTest {
@@ -50,11 +55,14 @@ public class PipetteToolTest {
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	private PipetteTool toolToTest;
+	private OnColorPickedListener listener;
 
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		toolToTest = new PipetteTool(activityTestRule.getActivity(), ToolType.PIPETTE);
+		listener = mock(OnColorPickedListener.class);
+
+		toolToTest = new PipetteTool(activityTestRule.getActivity(), listener, ToolType.PIPETTE);
 
 		Bitmap bitmap = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		bitmap.setPixel(X_COORDINATE_RED, 0, Color.RED);
@@ -72,6 +80,9 @@ public class PipetteToolTest {
 		assertEquals(Color.RED, toolToTest.getDrawPaint().getColor());
 		toolToTest.handleMove(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
 		assertEquals(0xAAAAAAAA, toolToTest.getDrawPaint().getColor());
+
+		verify(listener).colorChanged(Color.RED);
+		verify(listener).colorChanged(0xAAAAAAAA);
 	}
 
 	@UiThreadTest
@@ -85,6 +96,11 @@ public class PipetteToolTest {
 		assertEquals(Color.GREEN, toolToTest.getDrawPaint().getColor());
 		toolToTest.handleMove(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
 		assertEquals(0xAAAAAAAA, toolToTest.getDrawPaint().getColor());
+
+		verify(listener).colorChanged(Color.RED);
+		verify(listener).colorChanged(Color.TRANSPARENT);
+		verify(listener).colorChanged(Color.GREEN);
+		verify(listener).colorChanged(0xAAAAAAAA);
 	}
 
 	@UiThreadTest
@@ -94,13 +110,15 @@ public class PipetteToolTest {
 		assertEquals(Color.BLUE, toolToTest.getDrawPaint().getColor());
 		toolToTest.handleUp(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
 		assertEquals(0xAAAAAAAA, toolToTest.getDrawPaint().getColor());
+
+		verify(listener).colorChanged(Color.BLUE);
+		verify(listener).colorChanged(0xAAAAAAAA);
 	}
 
 	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
-		ToolType toolType = toolToTest.getToolType();
-		assertEquals(ToolType.PIPETTE, toolType);
+		assertThat(toolToTest.getToolType(), is(ToolType.PIPETTE));
 	}
 
 	@UiThreadTest

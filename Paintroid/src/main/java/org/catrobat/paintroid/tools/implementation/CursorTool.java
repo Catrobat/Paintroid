@@ -71,6 +71,9 @@ public class CursorTool extends BaseToolWithShape {
 		if (toolInDrawMode) {
 			cursorToolSecondaryShapeColor = BITMAP_PAINT.getColor();
 		}
+		if (brushPickerView != null) {
+			brushPickerView.invalidate();
+		}
 	}
 
 	@Override
@@ -343,6 +346,5 @@ public class CursorTool extends BaseToolWithShape {
 	public void leaveTool() {
 		super.leaveTool();
 		brushPickerView.removeBrushChangedListener(onBrushChangedListener);
-		brushPickerView.removeListeners();
 	}
 }

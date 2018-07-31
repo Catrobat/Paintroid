@@ -52,8 +52,6 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.listener.BrushPickerView.OnBrushChangedListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
@@ -79,7 +77,6 @@ public abstract class BaseTool implements Tool {
 	final Context context;
 	final PointF movedDistance;
 	final OnBrushChangedListener onBrushChangedListener;
-	private final OnColorPickedListener onColorPickedListener;
 	private final PorterDuffXfermode eraseXfermode;
 	private final ToolType toolType;
 	boolean toolOptionsShown = false;
@@ -102,13 +99,6 @@ public abstract class BaseTool implements Tool {
 
 		scrollTolerance = resources.getDisplayMetrics().widthPixels
 				* SCROLL_TOLERANCE_PERCENTAGE / 100;
-
-		onColorPickedListener = new OnColorPickedListener() {
-			@Override
-			public void colorChanged(int color) {
-				changePaintColor(color);
-			}
-		};
 
 		onBrushChangedListener = new OnBrushChangedListener() {
 			@Override
@@ -347,12 +337,10 @@ public abstract class BaseTool implements Tool {
 
 	@Override
 	public void startTool() {
-		ColorPickerDialog.getInstance().addOnColorPickedListener(onColorPickedListener);
 		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 	}
 
 	@Override
 	public void leaveTool() {
-		ColorPickerDialog.getInstance().removeOnColorPickedListener(onColorPickedListener);
 	}
 }

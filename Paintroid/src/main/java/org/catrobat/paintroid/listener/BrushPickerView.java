@@ -1,20 +1,20 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.listener;
@@ -34,7 +34,6 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.ui.tools.DrawerPreview;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
@@ -52,7 +51,6 @@ public final class BrushPickerView implements View.OnClickListener {
 	private final ImageButton buttonCircle;
 	private final ImageButton buttonRect;
 	private final DrawerPreview drawerPreview;
-	private final ColorPickerDialog.OnColorPickedListener onColorPickedListener;
 
 	public BrushPickerView(ViewGroup rootView) {
 		brushChangedListener = new ArrayList<>();
@@ -70,14 +68,6 @@ public final class BrushPickerView implements View.OnClickListener {
 
 		buttonCircle.setOnClickListener(this);
 		buttonRect.setOnClickListener(this);
-
-		onColorPickedListener = new ColorPickerDialog.OnColorPickedListener() {
-			@Override
-			public void colorChanged(int color) {
-				drawerPreview.invalidate();
-			}
-		};
-		ColorPickerDialog.getInstance().addOnColorPickedListener(onColorPickedListener);
 
 		brushSizeText.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -143,10 +133,6 @@ public final class BrushPickerView implements View.OnClickListener {
 		brushChangedListener.remove(listener);
 	}
 
-	public void removeListeners() {
-		ColorPickerDialog.getInstance().removeOnColorPickedListener(onColorPickedListener);
-	}
-
 	private void updateStrokeChange(int strokeWidth) {
 		for (OnBrushChangedListener listener : brushChangedListener) {
 			listener.setStroke(strokeWidth);
@@ -157,6 +143,10 @@ public final class BrushPickerView implements View.OnClickListener {
 		for (OnBrushChangedListener listener : brushChangedListener) {
 			listener.setCap(cap);
 		}
+	}
+
+	public void invalidate() {
+		drawerPreview.invalidate();
 	}
 
 	public interface OnBrushChangedListener {

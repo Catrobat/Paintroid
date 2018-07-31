@@ -20,6 +20,8 @@
 package org.catrobat.paintroid;
 
 import android.app.Application;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.LayerContracts;
@@ -38,11 +40,13 @@ public class PaintroidApplication extends Application {
 	public static String defaultSystemLanguage;
 	public static LayerContracts.Model layerModel;
 	public static File cacheDir;
+	public static Bitmap backgroundBitmap;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		cacheDir = getCacheDir();
 		defaultSystemLanguage = Locale.getDefault().getLanguage();
+		backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
 	}
 }

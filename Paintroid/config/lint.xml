@@ -19,10 +19,11 @@
 -->
 
 <lint>
+    <issue id="UnusedResources">
+        <ignore regexp="res/values-(?!de).*/string.xml$" />
+    </issue>
 
-    <issue id="StringFormatInvalid" >
-        <ignore path="src/androidTest/java/org/catrobat/paintroid/test/espresso/MainActivityIntegrationTest.java" />
-    </issue >
-
-    <issue id="ResourceType" severity="warning" />
+    <issue id="ShowToast">
+        <ignore path="src/main/java/org/catrobat/paintroid/ui/ToastFactory.java" />
+    </issue>
 </lint>

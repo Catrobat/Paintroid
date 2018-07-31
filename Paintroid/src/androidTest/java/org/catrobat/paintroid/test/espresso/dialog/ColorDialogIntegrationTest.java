@@ -1,24 +1,25 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.espresso.dialog;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -29,14 +30,9 @@ import android.widget.Button;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
-import org.catrobat.paintroid.tools.ToolType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,13 +49,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickColorPickerPresetSelectorButton;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openColorPickerDialog;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withTextColor;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -86,34 +81,22 @@ public class ColorDialogIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	@Before
-	public void setUp() throws NoSuchFieldException, IllegalAccessException {
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
-
-		selectTool(ToolType.BRUSH);
-	}
-
-	@After
-	public void tearDown() {
-
-		IndeterminateProgressDialog.getInstance().dismiss();
-		ColorPickerDialog.getInstance().dismiss();
-	}
-
-	protected int getColorById(int colorId) {
+	private int getColorById(int colorId) {
 		return launchActivityRule.getActivity().getResources().getColor(colorId);
 	}
 
 	@Test
-	public void testStandardTabSelected() throws Throwable {
-		openColorPickerDialog();
+	public void testStandardTabSelected() {
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 	}
 
 	@Test
-	public void testTabsAreSelectable() throws Throwable {
-		openColorPickerDialog();
+	public void testTabsAreSelectable() {
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
@@ -130,7 +113,8 @@ public class ColorDialogIntegrationTest {
 	@Test
 	public void testColorNewColorButtonChangesStandard() {
 
-		openColorPickerDialog();
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		final Resources resources = launchActivityRule.getActivity().getResources();
 		final TypedArray presetColors = resources.obtainTypedArray(R.array.preset_colors);
@@ -150,8 +134,9 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
-	public void buttonTextColorPickerButtonShouldBeDifferentFromBackground() {
-		openColorPickerDialog();
+	public void testButtonTextColorPickerButtonShouldBeDifferentFromBackground() {
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		final Resources resources = launchActivityRule.getActivity().getResources();
 		final TypedArray presetColors = resources.obtainTypedArray(R.array.preset_colors);
@@ -170,10 +155,11 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
-	public void colorPickerDialogOnBackPressedSelectedColorShouldNotChange() {
+	public void testColorPickerDialogOnBackPressedSelectedColorShouldNotChange() {
 		int expectedSelectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
 
-		openColorPickerDialog();
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_palette))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
@@ -195,8 +181,9 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
-	public void testIfRGBSeekBarsDoChangeColor() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		openColorPickerDialog();
+	public void testIfRGBSeekBarsDoChangeColor() {
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_palette))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
@@ -266,8 +253,35 @@ public class ColorDialogIntegrationTest {
 
 	@Test
 	public void testOpenColorPickerOnClickOnColorButton() {
-		openColorPickerDialog();
-		onView(withId(R.id.colorchooser_base_layout)).check(matches(isDisplayed()));
-		onView(withId(R.id.view_colorpicker)).check(matches(isDisplayed()));
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(withId(R.id.colorchooser_base_layout))
+				.check(matches(isDisplayed()));
+		onColorPickerView()
+				.check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testColorPickerRemainsOpenOnOrientationChange() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		onColorPickerView().check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testColorPickerTabRestoredOnOrientationChange() {
+		onColorPickerView()
+				.performOpenColorPicker();
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_rgba)))
+				.perform(click());
+
+		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS)))
+				.check(matches(isDisplayed()));
 	}
 }
