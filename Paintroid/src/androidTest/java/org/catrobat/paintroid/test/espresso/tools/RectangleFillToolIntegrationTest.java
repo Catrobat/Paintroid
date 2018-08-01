@@ -23,16 +23,12 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.junit.After;
@@ -67,15 +63,10 @@ public class RectangleFillToolIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	private IdlingResource dialogWait;
-
 	private Bitmap workingBitmap;
 
 	@Before
 	public void setUp() {
-		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
-		Espresso.registerIdlingResources(dialogWait);
-
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
 		workingBitmap = getWorkingBitmap();
@@ -87,8 +78,6 @@ public class RectangleFillToolIntegrationTest {
 
 	@After
 	public void tearDown() {
-		Espresso.unregisterIdlingResources(dialogWait);
-
 		if (workingBitmap != null && !workingBitmap.isRecycled()) {
 			workingBitmap.recycle();
 		}

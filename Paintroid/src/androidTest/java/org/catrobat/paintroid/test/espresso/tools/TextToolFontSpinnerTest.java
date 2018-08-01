@@ -22,19 +22,14 @@ package org.catrobat.paintroid.test.espresso.tools;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
-import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.tools.ToolType;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,16 +64,9 @@ public class TextToolFontSpinnerTest {
 	private Typeface defaultFontFace = Typeface.create(Typeface.MONOSPACE, normalStyle);
 	private Typeface stcFontFace = Typeface.createFromAsset(context.getResources().getAssets(), "STC.otf");
 	private Typeface dubaiFontFace = Typeface.createFromAsset(context.getResources().getAssets(), "Dubai.TTF");
-	private IdlingResource dialogWait;
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class);
-
-	@Before
-	public void setUp() throws Exception {
-		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
-		Espresso.registerIdlingResources(dialogWait);
-	}
 
 	@Test
 	public void testTextFontFaceOfFontSpinnerArabic() throws Exception {

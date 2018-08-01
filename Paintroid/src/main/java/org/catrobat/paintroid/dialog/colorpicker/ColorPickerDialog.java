@@ -69,7 +69,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ColorPickerDialog extends AppCompatDialogFragment implements ColorPickerView.OnColorChangedListener {
-	public static final String INITIAL_COLOR_KEY = "InitialColor";
+	private static final String INITIAL_COLOR_KEY = "InitialColor";
 	@VisibleForTesting
 	public List<OnColorPickedListener> onColorPickedListener = new ArrayList<>();
 	private ColorPickerView colorPickerView;

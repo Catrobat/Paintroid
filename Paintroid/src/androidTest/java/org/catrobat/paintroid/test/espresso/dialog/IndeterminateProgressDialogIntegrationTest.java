@@ -1,32 +1,29 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.espresso.dialog;
 
 import android.content.res.Resources;
 import android.graphics.PointF;
-import android.graphics.drawable.ColorDrawable;
-import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.DisplayMetrics;
-import android.widget.ProgressBar;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
@@ -47,22 +44,20 @@ import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 
 @RunWith(AndroidJUnit4.class)
 public class IndeterminateProgressDialogIntegrationTest {
-
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-	@UiThreadTest
-	@Before
-	public void setUp() throws Exception {
-		IndeterminateProgressDialog.getInstance().show();
+	private IndeterminateProgressDialog dialog;
 
-		ProgressBar progressBar = (ProgressBar) IndeterminateProgressDialog.getInstance().findViewById(R.id.progressBar);
-		progressBar.setIndeterminateDrawable(new ColorDrawable(0xffff0000));
+	@Before
+	public void setUp() {
+		dialog = IndeterminateProgressDialog.newInstance();
+		dialog.show(activityTestRule.getActivity().getSupportFragmentManager(), "testdialog");
 	}
 
 	@After
-	public void tearDown() throws Exception {
-		IndeterminateProgressDialog.getInstance().dismiss();
+	public void tearDown() {
+		dialog.dismiss();
 	}
 
 	@Test

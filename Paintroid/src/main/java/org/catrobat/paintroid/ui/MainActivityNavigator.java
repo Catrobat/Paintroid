@@ -19,18 +19,49 @@
 
 package org.catrobat.paintroid.ui;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatDialogFragment;
+
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.MultilingualActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.WelcomeActivity;
+import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.contract.MainActivityContracts;
+import org.catrobat.paintroid.dialog.AboutDialog;
+import org.catrobat.paintroid.dialog.ChooseNewImageDialog;
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
+import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
+import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
+import org.catrobat.paintroid.dialog.TermsOfUseAndServiceDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 
+import static android.app.Activity.RESULT_OK;
+
 import static org.catrobat.paintroid.common.Constants.COLOR_PICKER_DIALOG_TAG;
+import static org.catrobat.paintroid.common.Constants.LOAD_DIALOG_FRAGMENT_TAG;
 
 public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	private MainActivity mainActivity;
 
 	public MainActivityNavigator(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
+	}
+
+	private static void setNewDocumentFlags(Intent intent) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+		} else {
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		}
 	}
 
 	@Override
@@ -44,5 +75,141 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		});
 		dialog.addOnColorPickedListener(mainActivity.topBar);
 		dialog.show(mainActivity.getSupportFragmentManager(), COLOR_PICKER_DIALOG_TAG);
+	}
+
+	@Override
+	public void startLanguageActivity(int requestCode) {
+		Intent language = new Intent(mainActivity.getApplicationContext(), MultilingualActivity.class);
+		mainActivity.startActivityForResult(language, requestCode);
+	}
+
+	@Override
+	public void startLoadImageActivity(int requestCode) {
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("image/*");
+		setNewDocumentFlags(intent);
+		mainActivity.startActivityForResult(intent, requestCode);
+	}
+
+	@Override
+	public void startTakePictureActivity(int requestCode, Uri cameraImageUri) {
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+		setNewDocumentFlags(intent);
+		mainActivity.startActivityForResult(intent, requestCode);
+	}
+
+	@Override
+	public void startImportImageActivity(int requestCode) {
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.setType("image/*");
+		setNewDocumentFlags(intent);
+		mainActivity.startActivityForResult(intent, requestCode);
+	}
+
+	@Override
+	public void startWelcomeActivity() {
+		Intent intent = new Intent(mainActivity.getApplicationContext(), WelcomeActivity.class);
+		intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		mainActivity.startActivity(intent);
+	}
+
+	@Override
+	public void showAboutDialog() {
+		AboutDialog about = AboutDialog.newInstance();
+		about.show(mainActivity.getSupportFragmentManager(), Constants.ABOUT_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showTermsOfServiceDialog() {
+		TermsOfUseAndServiceDialog termsOfUseAndService = TermsOfUseAndServiceDialog.newInstance();
+		termsOfUseAndService.show(mainActivity.getSupportFragmentManager(), Constants.TOS_DIALOG_FRAGMENT_TAG);
+	}
+
+	private Fragment getIndeterminateProgressFragment() {
+		FragmentManager supportFragmentManager = mainActivity.getSupportFragmentManager();
+		return supportFragmentManager.findFragmentByTag(Constants.INDETERMINATE_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showIndeterminateProgressDialog() {
+		Fragment fragment = getIndeterminateProgressFragment();
+		if (fragment == null) {
+			AppCompatDialogFragment dialog = IndeterminateProgressDialog.newInstance();
+			dialog.show(mainActivity.getSupportFragmentManager(), Constants.INDETERMINATE_FRAGMENT_TAG);
+		}
+	}
+
+	@Override
+	public void dismissIndeterminateProgressDialog() {
+		Fragment fragment = getIndeterminateProgressFragment();
+		if (fragment != null) {
+			AppCompatDialogFragment dialog = (AppCompatDialogFragment) fragment;
+			dialog.dismiss();
+		}
+	}
+
+	@Override
+	public void returnToPocketCode(String path) {
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra(Constants.PAINTROID_PICTURE_PATH, path);
+		mainActivity.setResult(RESULT_OK, resultIntent);
+		mainActivity.finish();
+	}
+
+	@Override
+	public void showToast(int resId, int duration) {
+		ToastFactory.makeText(mainActivity, resId, duration).show();
+	}
+
+	@Override
+	public void showSaveErrorDialog() {
+		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.WARNING,
+				R.string.dialog_error_sdcard_text, R.string.dialog_error_save_title);
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showLoadErrorDialog() {
+		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.WARNING,
+				R.string.dialog_loading_image_failed_title, R.string.dialog_loading_image_failed_text);
+		dialog.show(mainActivity.getSupportFragmentManager(), LOAD_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void finishActivity() {
+		mainActivity.finish();
+	}
+
+	@Override
+	public void showSaveBeforeReturnToCatroidDialog(final int requestCode, final Uri savedPictureUri) {
+		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(requestCode,
+				R.string.closing_catroid_security_question_title, savedPictureUri);
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showSaveBeforeFinishDialog(final int requestCode, final Uri savedPictureUri) {
+		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(requestCode,
+				R.string.closing_security_question_title, savedPictureUri);
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showSaveBeforeNewImageDialog(int requestCode, Uri savedPictureUri) {
+		AppCompatDialogFragment dialog = SaveBeforeNewImageDialog.newInstance(requestCode, savedPictureUri);
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showChooseNewImageDialog() {
+		AppCompatDialogFragment dialog = ChooseNewImageDialog.newInstance();
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.CHOOSE_IMAGE_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showSaveBeforeLoadImageDialog(int requestCode, Uri uri) {
+		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance(requestCode, uri);
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 }

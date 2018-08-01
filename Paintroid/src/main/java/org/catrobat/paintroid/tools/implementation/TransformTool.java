@@ -44,7 +44,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -276,11 +275,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private void autoCrop() {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
-			protected void onPreExecute() {
-				IndeterminateProgressDialog.getInstance().show();
-			}
-
-			@Override
 			protected Void doInBackground(Void... params) {
 				Rect shapeBounds = cropAlgorithmSnail(LayerModel.getBitmapOfAllLayersToSave(PaintroidApplication.layerModel.getLayers()));
 				if (shapeBounds != null) {
@@ -295,7 +289,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			@Override
 			protected void onPostExecute(Void result) {
 				PaintroidApplication.drawingSurface.refreshDrawingSurface();
-				IndeterminateProgressDialog.getInstance().dismiss();
 				setWidthAndHeightTexts(boxHeight, boxWidth);
 			}
 		}.execute();

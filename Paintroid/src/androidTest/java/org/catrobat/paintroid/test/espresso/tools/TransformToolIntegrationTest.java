@@ -22,8 +22,6 @@ package org.catrobat.paintroid.test.espresso.tools;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -31,9 +29,7 @@ import android.support.test.runner.AndroidJUnit4;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
@@ -80,7 +76,6 @@ public class TransformToolIntegrationTest {
 	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 	private ActivityHelper activityHelper;
-	private IdlingResource dialogWait;
 
 	private int displayWidth;
 	private int displayHeight;
@@ -148,9 +143,6 @@ public class TransformToolIntegrationTest {
 
 	@Before
 	public void setUp() {
-		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
-		IdlingRegistry.getInstance().register(dialogWait);
-
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 
 		displayWidth = activityHelper.getDisplayWidth();
@@ -169,8 +161,6 @@ public class TransformToolIntegrationTest {
 
 	@After
 	public void tearDown() {
-		IdlingRegistry.getInstance().unregister(dialogWait);
-
 		activityHelper = null;
 	}
 

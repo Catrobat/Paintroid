@@ -36,7 +36,6 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.StampCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.ToastFactory;
 
@@ -231,7 +230,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 			Command command = new StampCommand(drawingBitmap, intPosition,
 					boxWidth, boxHeight, boxRotation);
 
-			IndeterminateProgressDialog.getInstance().show();
 			PaintroidApplication.commandManager.addCommand(command);
 		}
 	}
@@ -269,24 +267,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	protected class CreateAndSetBitmapAsyncTask extends
 			AsyncTask<Void, Integer, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-			IndeterminateProgressDialog.getInstance().show();
-			super.onPreExecute();
-		}
-
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			createAndSetBitmap();
 			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void nothing) {
-			IndeterminateProgressDialog.getInstance().dismiss();
-			PaintroidApplication.drawingSurface.refreshDrawingSurface();
 		}
 	}
 }
