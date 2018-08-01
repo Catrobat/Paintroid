@@ -19,8 +19,49 @@
 
 package org.catrobat.paintroid.contract;
 
+import android.net.Uri;
+import android.support.annotation.StringRes;
+
 public interface MainActivityContracts {
 	interface Navigator {
 		void showColorPickerDialog();
+
+		void startLanguageActivity(int requestCode);
+
+		void startLoadImageActivity(int requestCode);
+
+		void startTakePictureActivity(int requestCode, Uri cameraImageUri);
+
+		void startImportImageActivity(int requestCode);
+
+		void showAboutDialog();
+
+		void startWelcomeActivity();
+
+		void showTermsOfServiceDialog();
+
+		void showIndeterminateProgressDialog();
+
+		void dismissIndeterminateProgressDialog();
+
+		void returnToPocketCode(String path);
+
+		void showToast(@StringRes int resId, int duration);
+
+		void showSaveErrorDialog();
+
+		void showLoadErrorDialog();
+
+		void finishActivity();
+
+		void showSaveBeforeReturnToCatroidDialog(int requestCode, Uri savedPictureUri);
+
+		void showSaveBeforeFinishDialog(int requestCode, Uri savedPictureUri);
+
+		void showSaveBeforeNewImageDialog(int requestCode, Uri savedPictureUri);
+
+		void showChooseNewImageDialog();
+
+		void showSaveBeforeLoadImageDialog(int requestCode, Uri uri);
 	}
 }

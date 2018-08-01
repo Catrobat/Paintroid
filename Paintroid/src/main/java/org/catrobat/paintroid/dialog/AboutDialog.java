@@ -19,12 +19,14 @@
 
 package org.catrobat.paintroid.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -36,15 +38,24 @@ import android.widget.TextView;
 import org.catrobat.paintroid.BuildConfig;
 import org.catrobat.paintroid.R;
 
-public class DialogAbout extends AppCompatDialogFragment {
+public class AboutDialog extends AppCompatDialogFragment {
 
-	public DialogAbout() {
+	public static AboutDialog newInstance() {
+		return new AboutDialog();
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.dialog_about, container, false);
+		if (getShowsDialog()) {
+			return super.onCreateView(inflater, container, savedInstanceState);
+		}
+		return inflater.inflate(R.layout.dialog_about, container, false);
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
 
 		TextView aboutVersionNameTextView = view.findViewById(R.id.dialog_about_version_name_text_view);
 		TextView aboutTextView = view.findViewById(R.id.about_tview_Text);
@@ -66,16 +77,19 @@ public class DialogAbout extends AppCompatDialogFragment {
 				getString(R.string.about_catroid_url_text));
 		aboutUrlTextView.append(Html.fromHtml(aboutCatroid));
 		aboutUrlTextView.append("\n");
-
-		return view;
 	}
 
 	@NonNull
 	@Override
+	@SuppressLint("InflateParams")
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		return new CustomAlertDialogBuilder(getActivity())
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		View layout = inflater.inflate(R.layout.dialog_about, null);
+		onViewCreated(layout, savedInstanceState);
+
+		return new AlertDialog.Builder(getContext(), R.style.CustomAlertDialog)
 				.setTitle(R.string.about_title)
-				.setView(onCreateView(getActivity().getLayoutInflater(), null, savedInstanceState))
+				.setView(layout)
 				.setPositiveButton(R.string.done, new OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {

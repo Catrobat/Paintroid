@@ -26,8 +26,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.EditText;
@@ -37,9 +35,7 @@ import android.widget.ToggleButton;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.TextTool;
 import org.junit.After;
@@ -97,7 +93,6 @@ public class TextToolIntegrationTest {
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	private ActivityHelper activityHelper;
-	private IdlingResource dialogWait;
 	private TextTool textTool;
 	private EditText textEditText;
 	private Spinner fontSpinner;
@@ -107,8 +102,6 @@ public class TextToolIntegrationTest {
 
 	@Before
 	public void setUp() {
-		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
-		IdlingRegistry.getInstance().register(dialogWait);
 
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 
@@ -132,8 +125,6 @@ public class TextToolIntegrationTest {
 
 	@After
 	public void tearDown() {
-		IdlingRegistry.getInstance().unregister(dialogWait);
-
 		activityHelper = null;
 	}
 

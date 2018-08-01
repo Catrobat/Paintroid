@@ -31,7 +31,6 @@ import junit.framework.AssertionFailedError;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
@@ -92,8 +91,6 @@ public class ToolSelectionIntegrationTest {
 
 	@After
 	public void tearDown() {
-		IndeterminateProgressDialog.getInstance().dismiss();
-
 		activityHelper = null;
 	}
 

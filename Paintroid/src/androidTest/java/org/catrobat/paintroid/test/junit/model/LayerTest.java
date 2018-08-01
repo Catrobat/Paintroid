@@ -55,7 +55,7 @@ public class LayerTest {
 	@UiThreadTest
 	@Test
 	public void testCreateManyLayers() {
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 100; i++) {
 			commandManager.addCommand(commandFactory.createAddLayerCommand());
 			commandManager.addCommand(commandFactory.createRemoveLayerCommand(1));
 		}

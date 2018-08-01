@@ -40,9 +40,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -364,7 +368,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		toolToTest.handleMove(new PointF(screenWidth / 2, topLeftRotationPoint.y));
 		toolToTest.handleUp(new PointF(screenWidth / 2, topLeftRotationPoint.y));
 		float newRotation = toolToTest.boxRotation;
-		assertTrue("Rotation value should be bigger after rotating.", rotation < newRotation);
+		assertThat(newRotation, is(greaterThan(rotation)));
 	}
 
 	@UiThreadTest
@@ -383,7 +387,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		toolToTest.handleMove(new PointF(topLeftRotationPoint.x, screenHeight / 2));
 		toolToTest.handleUp(new PointF(topLeftRotationPoint.x, screenHeight / 2));
 		float newRotation = toolToTest.boxRotation;
-		assertTrue("Rotation value should be smaller after rotating.", rotation > newRotation);
+		assertThat(newRotation, is(lessThan(rotation)));
 	}
 
 	@UiThreadTest

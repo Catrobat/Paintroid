@@ -36,7 +36,6 @@ import android.widget.ToggleButton;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.listener.TextToolOptionsListener;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -278,8 +277,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
 		Command command = commandFactory.createTextToolCommand(getMultilineText(), textPaint, BOX_OFFSET, boxWidth,
 				boxHeight, toolPosition, boxRotation);
-		IndeterminateProgressDialog.getInstance().show();
-
 		PaintroidApplication.commandManager.addCommand(command);
 	}
 
