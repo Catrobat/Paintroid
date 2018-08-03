@@ -28,6 +28,7 @@ import android.support.v7.app.AppCompatDialogFragment;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.contract.MainActivityContracts;
 
 public class ChooseNewImageDialog extends AppCompatDialogFragment {
 	public static ChooseNewImageDialog newInstance() {
@@ -44,12 +45,13 @@ public class ChooseNewImageDialog extends AppCompatDialogFragment {
 				.setItems(R.array.new_image, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						MainActivityContracts.Presenter presenter = activity.getPresenter();
 						switch (which) {
 							case 0:
-								activity.onNewImage();
+								presenter.onNewImage();
 								break;
 							case 1:
-								activity.onNewImageFromCamera();
+								presenter.onNewImageFromCamera();
 								break;
 						}
 					}

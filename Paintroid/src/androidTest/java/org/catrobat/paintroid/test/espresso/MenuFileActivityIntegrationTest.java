@@ -75,7 +75,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -88,15 +87,12 @@ public class MenuFileActivityIntegrationTest {
 
 	@Before
 	public void setUp() {
-		assertNull("Saved picture uri is not null", MainActivity.savedPictureUri);
 		onToolBarView().performSelectTool(ToolType.BRUSH);
 		deletionFileList = new ArrayList<>();
 	}
 
 	@After
 	public void tearDown() {
-		MainActivity.savedPictureUri = null;
-		MainActivity.isSaved = false;
 		for (File file : deletionFileList) {
 			if (file != null && file.exists()) {
 				assertTrue(file.delete());
@@ -354,7 +350,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		assertFalse("Image already saved", MainActivity.isSaved);
+		assertFalse(launchActivityRule.getActivity().model.isSaved());
 
 		pressMenuKey();
 
@@ -363,11 +359,11 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", MainActivity.savedPictureUri);
+		assertNotNull(launchActivityRule.getActivity().model.getSavedPictureUri());
 
-		addUriToDeletionFileList(MainActivity.savedPictureUri);
+		addUriToDeletionFileList(launchActivityRule.getActivity().model.getSavedPictureUri());
 
-		assertTrue("Image not saved", MainActivity.isSaved);
+		assertTrue(launchActivityRule.getActivity().model.isSaved());
 	}
 
 	@Test
@@ -380,9 +376,9 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", MainActivity.savedPictureUri);
+		assertNotNull(launchActivityRule.getActivity().model.getSavedPictureUri());
 
-		addUriToDeletionFileList(MainActivity.savedPictureUri);
+		addUriToDeletionFileList(launchActivityRule.getActivity().model.getSavedPictureUri());
 	}
 
 	@Test
@@ -395,11 +391,11 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", MainActivity.savedPictureUri);
+		assertNotNull(launchActivityRule.getActivity().model.getSavedPictureUri());
 
-		addUriToDeletionFileList(MainActivity.savedPictureUri);
+		addUriToDeletionFileList(launchActivityRule.getActivity().model.getSavedPictureUri());
 
-		File oldFile = new File(MainActivity.savedPictureUri.toString());
+		File oldFile = new File(launchActivityRule.getActivity().model.getSavedPictureUri().toString());
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE));
@@ -409,13 +405,13 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_copy)).perform(click());
 
-		File newFile = new File(MainActivity.savedPictureUri.toString());
+		File newFile = new File(launchActivityRule.getActivity().model.getSavedPictureUri().toString());
 
 		assertNotSame("Changes to saved", oldFile, newFile);
 
-		assertNotNull("Saved picture uri is null", MainActivity.savedPictureUri);
+		assertNotNull(launchActivityRule.getActivity().model.getSavedPictureUri());
 
-		addUriToDeletionFileList(MainActivity.savedPictureUri);
+		addUriToDeletionFileList(launchActivityRule.getActivity().model.getSavedPictureUri());
 	}
 
 	@Test
@@ -427,8 +423,8 @@ public class MenuFileActivityIntegrationTest {
 				.performOpen();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
-		assertNotNull("Saved picture uri is null", MainActivity.savedPictureUri);
-		addUriToDeletionFileList(MainActivity.savedPictureUri);
+		assertNotNull(launchActivityRule.getActivity().model.getSavedPictureUri());
+		addUriToDeletionFileList(launchActivityRule.getActivity().model.getSavedPictureUri());
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));

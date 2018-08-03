@@ -53,6 +53,7 @@ public class MultilingualActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		setTheme(R.style.MultilingualActivityTheme);
 		super.onCreate(savedInstanceState);
 
 		setToChosenLanguage(this);

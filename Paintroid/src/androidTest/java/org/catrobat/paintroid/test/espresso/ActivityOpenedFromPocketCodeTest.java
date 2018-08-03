@@ -81,9 +81,6 @@ public class ActivityOpenedFromPocketCodeTest {
 
 	@After
 	public void tearDown() {
-		MainActivity.savedPictureUri = null;
-		MainActivity.isSaved = false;
-
 		if (imageFile != null && imageFile.exists()) {
 			assertTrue(imageFile.delete());
 		}

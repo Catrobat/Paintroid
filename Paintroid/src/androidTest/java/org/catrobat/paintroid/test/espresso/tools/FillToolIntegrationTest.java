@@ -78,7 +78,7 @@ public class FillToolIntegrationTest {
 
 	@Test
 	public void testFloodFillIfImageLoaded() {
-		MainActivity.savedPictureUri = Uri.fromFile(new File("dummy"));
+		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(new File("dummy")));
 
 		onToolProperties()
 				.checkColor(Color.BLACK);
@@ -89,7 +89,7 @@ public class FillToolIntegrationTest {
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
-		MainActivity.savedPictureUri = null;
+		launchActivityRule.getActivity().model.setSavedPictureUri(null);
 	}
 
 	@Test

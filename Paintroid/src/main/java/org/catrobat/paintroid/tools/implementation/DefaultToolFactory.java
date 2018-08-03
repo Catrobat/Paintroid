@@ -22,6 +22,8 @@ package org.catrobat.paintroid.tools.implementation;
 import android.app.Activity;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.contract.MainActivityContracts;
+import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
@@ -44,7 +46,15 @@ public class DefaultToolFactory implements ToolFactory {
 				tool = new ImportTool(activity, toolType);
 				break;
 			case PIPETTE:
-				tool = new PipetteTool(activity, ((MainActivity) activity).topBar, toolType);
+				final MainActivity mainActivity = (MainActivity) activity;
+				final MainActivityContracts.Presenter presenter = mainActivity.getPresenter();
+				ColorPickerDialog.OnColorPickedListener listener = new ColorPickerDialog.OnColorPickedListener() {
+					@Override
+					public void colorChanged(int color) {
+						presenter.setTopBarColor(color);
+					}
+				};
+				tool = new PipetteTool(activity, listener, toolType);
 				break;
 			case FILL:
 				tool = new FillTool(activity, toolType);
