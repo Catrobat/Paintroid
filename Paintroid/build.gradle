@@ -40,6 +40,16 @@ if (project.hasProperty('independent')) {
     appName = property('independent') ?: 'Paint ' + today.format('MMdd HH:mm')
 }
 
+jacoco {
+    toolVersion = "0.8.1"
+}
+
+jacocoAndroidUnitTestReport {
+    csv.enabled false
+    html.enabled true
+    xml.enabled true
+}
+
 android {
     compileSdkVersion 26
 

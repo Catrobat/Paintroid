@@ -12,16 +12,15 @@ import build_helper_functions
 def usage():
     print(sys.argv[0] + """
 
-This script is a simple wrapper for the build_helper_run_unit_tests which
-allows to add a test-filter, but currently all tests are run.
+This scripts runs all the local unit tests for the debug flavor.
 
 The environment variable ANDROID_SDK_ROOT needs to be set.""")
 
 build_helper_functions.check_number_of_parameters(valid_param_count=0, usage_func=usage)
 
-# Run Unit and device tests for all tests
-test_runner_cmd = build_helper_functions.get_build_scripts_executable('build_helper_run_unit_tests')
+## RUN tests
+test_runner_cmd = [ build_helper_functions.get_relative_gradle_name(), '-Pjenkins', 'clean', 'jacocoTestDebugUnitTestReport' ]
 
 print("Calling: " + " ".join(test_runner_cmd))
-return_code = subprocess.run( test_runner_cmd ).returncode
+return_code = subprocess.run( test_runner_cmd, cwd=os.environ['REPO_DIR'] ).returncode
 sys.exit(return_code)
