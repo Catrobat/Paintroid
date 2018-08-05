@@ -134,7 +134,7 @@ public class ToolOnBackPressedTests {
 
 		saveFile = new File(pathToFile);
 
-		MainActivity.savedPictureUri = Uri.fromFile(saveFile);
+		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(saveFile));
 		long oldFileSize = saveFile.length();
 
 		onDrawingSurfaceView()
@@ -193,8 +193,8 @@ public class ToolOnBackPressedTests {
 						+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
-		MainActivity.savedPictureUri = Uri.fromFile(saveFile);
-		launchActivityRule.getActivity().openedFromCatroid = true;
+		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(saveFile));
+		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
 
 		Espresso.pressBack();
 
@@ -239,8 +239,8 @@ public class ToolOnBackPressedTests {
 				+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
-		MainActivity.savedPictureUri = Uri.fromFile(saveFile);
-		launchActivityRule.getActivity().openedFromCatroid = true;
+		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(saveFile));
+		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
 
 		Espresso.pressBack();
 

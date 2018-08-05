@@ -73,9 +73,6 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 
 	@After
 	public void tearDown() {
-		MainActivity.savedPictureUri = null;
-		MainActivity.isSaved = false;
-
 		if (imageFile.exists()) {
 			imageFile.delete();
 		}

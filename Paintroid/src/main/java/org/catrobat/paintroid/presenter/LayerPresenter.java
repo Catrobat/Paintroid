@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.ui;
+package org.catrobat.paintroid.presenter;
 
 import android.widget.Toast;
 
@@ -25,7 +25,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.LayerContracts;
-import org.catrobat.paintroid.contract.LayerContracts.Adapter;
 import org.catrobat.paintroid.contract.LayerContracts.LayerViewHolder;
 import org.catrobat.paintroid.contract.LayerContracts.Model;
 import org.catrobat.paintroid.ui.dragndrop.DragAndDropPresenter;
@@ -34,14 +33,14 @@ import org.catrobat.paintroid.ui.dragndrop.ListItemLongClickHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPresenter, CommandManager.CommandListener {
+public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPresenter {
 	private static final int MAX_LAYERS = 4;
 	private final CommandManager commandManager;
 	private final CommandFactory commandFactory;
 	private final Model model;
 	private ListItemLongClickHandler listItemLongClickHandler;
 	private LayerContracts.LayerMenuViewHolder layerMenuViewHolder;
-	private Adapter adapter;
+	private LayerContracts.Adapter adapter;
 	private List<LayerContracts.Layer> layers;
 	private LayerContracts.Navigator navigator;
 
@@ -55,7 +54,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		this.navigator = navigator;
 	}
 
-	public void setAdapter(Adapter adapter) {
+	public void setAdapter(LayerContracts.Adapter adapter) {
 		this.adapter = adapter;
 	}
 
@@ -168,13 +167,10 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 	}
 
 	@Override
-	public void commandPreExecute() {
-	}
-
-	@Override
-	public void commandPostExecute() {
+	public void invalidate() {
 		synchronized (model) {
-			layers = new ArrayList<>(model.getLayers());
+			layers.clear();
+			layers.addAll(model.getLayers());
 		}
 		refreshLayerMenuViewHolder();
 		adapter.notifyDataSetChanged();

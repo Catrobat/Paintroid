@@ -33,6 +33,10 @@ public interface LayerContracts {
 		void onLongClickLayerAtPosition(int position, LayerViewHolder viewHolder);
 
 		void onClickLayerAtPosition(int position, LayerViewHolder viewHolder);
+
+		void setAdapter(LayerContracts.Adapter layerAdapter);
+
+		void invalidate();
 	}
 
 	interface LayerViewHolder {

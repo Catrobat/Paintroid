@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.ui;
+package org.catrobat.paintroid.test.presenter;
 
 import android.graphics.Bitmap;
 import android.view.View;
@@ -31,7 +31,7 @@ import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.contract.LayerContracts.LayerViewHolder;
 import org.catrobat.paintroid.model.Layer;
 import org.catrobat.paintroid.model.LayerModel;
-import org.catrobat.paintroid.ui.LayerPresenter;
+import org.catrobat.paintroid.presenter.LayerPresenter;
 import org.catrobat.paintroid.ui.dragndrop.ListItemLongClickHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -477,7 +477,7 @@ public class LayerPresenterTest {
 		assertEquals(secondLayer, layerPresenter.getLayerItem(0));
 		assertEquals(firstLayer, layerPresenter.getLayerItem(1));
 
-		layerPresenter.commandPostExecute();
+		layerPresenter.invalidate();
 
 		assertEquals(firstLayer, layerPresenter.getLayerItem(0));
 		assertEquals(secondLayer, layerPresenter.getLayerItem(1));
@@ -489,7 +489,7 @@ public class LayerPresenterTest {
 		layerModel.addLayerAt(1, mock(Layer.class));
 
 		createPresenter();
-		layerPresenter.commandPostExecute();
+		layerPresenter.invalidate();
 
 		verify(layerAdapter).notifyDataSetChanged();
 		verify(layerMenuViewHolder).enableAddLayerButton();

@@ -29,7 +29,7 @@ import android.support.v7.app.AppCompatDialogFragment;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.iotasks.SaveImageAsync;
+import org.catrobat.paintroid.contract.MainActivityContracts;
 
 public class SaveBeforeLoadImageDialog extends AppCompatDialogFragment {
 	private static final String EXTRA_URI = "arguri";
@@ -59,13 +59,15 @@ public class SaveBeforeLoadImageDialog extends AppCompatDialogFragment {
 				.setPositiveButton(R.string.save_button_text, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						new SaveImageAsync(activity, requestCode, uri, false).execute();
+						MainActivityContracts.Presenter presenter = activity.getPresenter();
+						presenter.saveImageConfirmClicked(requestCode, uri);
 					}
 				})
 				.setNegativeButton(R.string.discard_button_text, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						activity.loadNewImage();
+						MainActivityContracts.Presenter presenter = activity.getPresenter();
+						presenter.loadNewImage();
 					}
 				})
 				.create();

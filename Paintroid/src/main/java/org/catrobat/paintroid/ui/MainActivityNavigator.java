@@ -21,11 +21,12 @@ package org.catrobat.paintroid.ui;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.MultilingualActivity;
@@ -43,8 +44,10 @@ import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.dialog.TermsOfUseAndServiceDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.tools.ToolType;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
 import static org.catrobat.paintroid.common.Constants.COLOR_PICKER_DIALOG_TAG;
 import static org.catrobat.paintroid.common.Constants.LOAD_DIALOG_FRAGMENT_TAG;
@@ -56,25 +59,25 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		this.mainActivity = mainActivity;
 	}
 
-	private static void setNewDocumentFlags(Intent intent) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-		} else {
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+	@Override
+	public void showColorPickerDialog() {
+		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
+		Fragment fragment = fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG);
+		if (fragment == null) {
+			ColorPickerDialog dialog = ColorPickerDialog.newInstance(PaintroidApplication.currentTool.getDrawPaint().getColor());
+			setupColorPickerDialogListeners(dialog);
+			dialog.show(fragmentManager, COLOR_PICKER_DIALOG_TAG);
 		}
 	}
 
-	@Override
-	public void showColorPickerDialog() {
-		ColorPickerDialog dialog = ColorPickerDialog.newInstance(PaintroidApplication.currentTool.getDrawPaint().getColor());
+	private void setupColorPickerDialogListeners(ColorPickerDialog dialog) {
 		dialog.addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
 				PaintroidApplication.currentTool.changePaintColor(color);
+				mainActivity.getPresenter().setTopBarColor(color);
 			}
 		});
-		dialog.addOnColorPickedListener(mainActivity.topBar);
-		dialog.show(mainActivity.getSupportFragmentManager(), COLOR_PICKER_DIALOG_TAG);
 	}
 
 	@Override
@@ -87,7 +90,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void startLoadImageActivity(int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
-		setNewDocumentFlags(intent);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		mainActivity.startActivityForResult(intent, requestCode);
 	}
 
@@ -95,7 +98,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void startTakePictureActivity(int requestCode, Uri cameraImageUri) {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
-		setNewDocumentFlags(intent);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		mainActivity.startActivityForResult(intent, requestCode);
 	}
 
@@ -103,7 +106,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void startImportImageActivity(int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
-		setNewDocumentFlags(intent);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		mainActivity.startActivityForResult(intent, requestCode);
 	}
 
@@ -182,6 +185,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
+	public void recreateActivity() {
+		mainActivity.recreate();
+	}
+
+	@Override
 	public void showSaveBeforeReturnToCatroidDialog(final int requestCode, final Uri savedPictureUri) {
 		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(requestCode,
 				R.string.closing_catroid_security_question_title, savedPictureUri);
@@ -211,5 +219,32 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showSaveBeforeLoadImageDialog(int requestCode, Uri uri) {
 		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance(requestCode, uri);
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showToolInfoDialog(ToolType toolType) {
+		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.INFO,
+				toolType.getHelpTextResource(), toolType.getNameResource());
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.HELP_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showToolChangeToast(int offset, int idRes) {
+		Toast toolNameToast = ToastFactory.makeText(mainActivity, idRes, Toast.LENGTH_SHORT);
+		int gravity = Gravity.TOP | Gravity.CENTER;
+		if (mainActivity.getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
+			offset = 0;
+		}
+		toolNameToast.setGravity(gravity, 0, offset);
+		toolNameToast.show();
+	}
+
+	@Override
+	public void restoreFragmentListeners() {
+		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
+		Fragment fragment = fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG);
+		if (fragment != null) {
+			setupColorPickerDialogListeners((ColorPickerDialog) fragment);
+		}
 	}
 }
