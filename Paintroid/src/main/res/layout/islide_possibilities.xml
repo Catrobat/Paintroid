@@ -27,7 +27,7 @@
     <LinearLayout
         android:id="@+id/intro_possibilities_bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_bar_height"
+        android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true">
 
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:background="@color/light_gray"
+        android:background="@color/pocketpaint_main_drawing_surface_background"
         android:layout_above="@id/intro_possibilities_bottom_bar"
         android:layout_below="@id/intro_possibilites_topbar">
 
@@ -61,15 +61,15 @@
         android:background="#d20097a7"
         android:gravity="top"
         android:orientation="vertical"
-        android:paddingEnd="@dimen/intro_margin_side"
-        android:paddingStart="@dimen/intro_margin_side"
-        android:paddingTop="@dimen/intro_margin_top_possibilities"
+        android:paddingEnd="@dimen/pocketpaint_welcome_margin_side"
+        android:paddingStart="@dimen/pocketpaint_welcome_margin_side"
+        android:paddingTop="@dimen/pocketpaint_welcome_margin_top_possibilities"
         android:layout_below="@id/intro_possibilites_topbar"
         android:visibility="visible">
 
         <TextView
             android:id="@+id/intro_possibilities_head"
-            style="@style/IntroHeader"
+            style="@style/PocketPaintWelcomeHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minLines="2"
@@ -77,11 +77,11 @@
 
         <TextView
             android:id="@+id/intro_possibilities_text"
-            style="@style/IntroText"
+            style="@style/PocketPaintWelcomeText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/intro_possibilities_head"
-            android:layout_marginTop="@dimen/intro_margin_top_text"
+            android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
             android:text="@string/intro_possibilities_text"/>
 
     </RelativeLayout>

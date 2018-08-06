@@ -60,7 +60,7 @@ public class CursorTool extends BaseToolWithShape {
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
 		cursorToolPrimaryShapeColor = context.getResources().getColor(
-						R.color.cursor_tool_deactive_primary_color);
+						R.color.pocketpaint_main_cursor_tool_inactive_primary_color);
 		cursorToolSecondaryShapeColor = Color.LTGRAY;
 		pathInsideBitmap = false;
 	}

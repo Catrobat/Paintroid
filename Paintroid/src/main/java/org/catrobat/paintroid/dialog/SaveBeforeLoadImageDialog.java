@@ -53,7 +53,7 @@ public class SaveBeforeLoadImageDialog extends AppCompatDialogFragment {
 		final int requestCode = args.getInt(EXTRA_REQUEST);
 		final Uri uri = args.getParcelable(EXTRA_URI);
 
-		return new AlertDialog.Builder(activity, R.style.CustomAlertDialog)
+		return new AlertDialog.Builder(activity, R.style.PocketPaintAlertDialog)
 				.setTitle(R.string.menu_load_image)
 				.setMessage(R.string.dialog_warning_new_image)
 				.setPositiveButton(R.string.save_button_text, new DialogInterface.OnClickListener() {

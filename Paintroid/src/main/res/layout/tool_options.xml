@@ -34,7 +34,7 @@
         android:layout_marginTop="8dp"
         android:textAllCaps="true"
         android:textSize="20sp"
-        android:textColor="@color/tools_text_color"
+        android:textColor="@color/pocketpaint_colorAccent"
         android:textStyle="bold"
         tools:text="@tools:sample/lorem"/>
 

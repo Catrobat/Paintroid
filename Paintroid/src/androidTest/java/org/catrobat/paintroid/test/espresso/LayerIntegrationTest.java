@@ -583,7 +583,7 @@ public class LayerIntegrationTest {
 
 		selectColorPickerPresetSelectorColor(GREEN_COLOR_PICKER_BUTTON_POSITION);
 		onToolProperties()
-				.checkColorResource(R.color.color_chooser_green1);
+				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -606,7 +606,7 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColorResource(R.color.color_chooser_green1);
+				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
 	}
 
 	@Test

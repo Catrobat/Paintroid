@@ -26,12 +26,12 @@
         android:id="@+id/intro_navigation"
         android:layout_width="match_parent"
         android:gravity="fill_vertical"
-        android:layout_height="@dimen/intro_navigation_height">
+        android:layout_height="@dimen/pocketpaint_welcome_navigation_height">
 
         <LinearLayout
             android:id="@+id/layoutDots"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dots_height"
+            android:layout_height="@dimen/pocketpaint_welcome_dots_height"
             android:layout_centerHorizontal="true"
             android:orientation="horizontal" />
 
@@ -59,7 +59,7 @@
         android:layout_above="@id/intro_navigation"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/color_chooser_white"/>
+        android:background="@color/pocketpaint_color_chooser_white"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"

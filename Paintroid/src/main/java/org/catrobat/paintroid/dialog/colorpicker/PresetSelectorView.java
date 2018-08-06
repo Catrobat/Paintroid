@@ -86,7 +86,7 @@ public class PresetSelectorView extends LinearLayout {
 			}
 		};
 
-		TypedArray presetColors = getResources().obtainTypedArray(R.array.preset_colors);
+		TypedArray presetColors = getResources().obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
 
 		TableRow colorButtonsTableRow = new TableRow(context);
 		TableRow.LayoutParams colorButtonLayoutParameters = new TableRow.LayoutParams();

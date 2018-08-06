@@ -23,8 +23,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_top_bar"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/top_bar_height"
-    tools:showIn="@layout/main">
+    android:layout_height="@dimen/pocketpaint_main_top_bar_height"
+    tools:showIn="@layout/activity_pocketpaint">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

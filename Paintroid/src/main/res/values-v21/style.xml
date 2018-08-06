@@ -18,7 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <style name="PaintroidTheme" parent="PaintroidTheme.Base">
+    <style name="PocketPaintTheme" parent="PocketPaintTheme.Base">
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
@@ -26,7 +26,7 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
     </style>
 
-    <style name="SelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
+    <style name="PocketPaintSelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
         <item name="android:background">@drawable/btn_borderless_selectable_material</item>
     </style>
 </resources>

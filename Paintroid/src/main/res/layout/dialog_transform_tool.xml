@@ -36,16 +36,10 @@
             android:layout_marginTop="0dp"
             android:text="@string/transform_tool_auto_crop_text"
             android:textAllCaps="true"
-            android:textColor="@color/dialog_title_color"
+            android:textColor="@color/pocketpaint_colorAccent"
             android:textStyle="bold" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="24dip"
-            android:background="@color/dialog_subtitle_border" />
-
+        <View style="@style/PocketPaintDividerHorizontal"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,7 +69,7 @@
                 android:minHeight="0dp"
                 android:padding="2dp"
                 android:src="@drawable/icon_menu_resize_adjust"
-                android:theme="@style/HighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme" />
             </TableRow>
 
             <TableRow
@@ -104,7 +98,7 @@
                     android:imeOptions="actionDone"
                     android:inputType="number"
                     android:layout_weight="1"
-                    android:textColor="@color/dialog_title_color"
+                    android:textColor="@color/pocketpaint_colorAccent"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -143,7 +137,7 @@
                     android:imeOptions="actionDone"
                     android:layout_weight="1"
                     android:inputType="number"
-                    android:textColor="@color/dialog_title_color"
+                    android:textColor="@color/pocketpaint_colorAccent"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -167,15 +161,10 @@
             android:layout_marginTop="5dp"
             android:text="@string/button_transform"
             android:textAllCaps="true"
-            android:textColor="@color/dialog_title_color"
+            android:textColor="@color/pocketpaint_colorAccent"
             android:textStyle="bold" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="24dip"
-            android:background="@color/dialog_subtitle_border" />
+        <View style="@style/PocketPaintDividerHorizontal"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -197,7 +186,7 @@
                 android:minHeight="0dp"
                 android:padding="2dp"
                 android:src="@drawable/icon_menu_rotate_left"
-                android:theme="@style/HighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme" />
 
             <ImageButton
                 android:id="@+id/transform_rotate_right_btn"
@@ -209,7 +198,7 @@
                 android:minHeight="0dp"
                 android:padding="2dp"
                 android:src="@drawable/icon_menu_rotate_right"
-                android:theme="@style/HighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme" />
 
             <ImageButton
                 android:id="@+id/transform_flip_vertical_btn"
@@ -221,7 +210,7 @@
                 android:minHeight="0dp"
                 android:padding="2dp"
                 android:src="@drawable/icon_menu_flip_vertical"
-                android:theme="@style/HighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme" />
 
             <ImageButton
                 android:id="@+id/transform_flip_horizontal_btn"
@@ -233,7 +222,7 @@
                 android:minHeight="0dp"
                 android:padding="2dp"
                 android:src="@drawable/icon_menu_flip_horizontal"
-                android:theme="@style/HighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme" />
 
 
         </LinearLayout>

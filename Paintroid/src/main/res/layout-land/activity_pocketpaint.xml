@@ -17,8 +17,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
@@ -39,7 +38,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true"
             android:layout_height="match_parent"
-            android:background="@color/transparent"
+            android:background="@color/pocketpaint_main_drawing_surface_active"
             android:layout_toEndOf="@+id/layout_top_bar"
             android:layout_toStartOf="@+id/main_bottom_bar" />
 
@@ -74,8 +73,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu"
-        android:background="@color/navigationDrawerBackground" />
+        app:menu="@menu/menu_pocketpaint_activity"
+        android:background="@color/pocketpaint_main_navigation_drawer_background" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view_layer"

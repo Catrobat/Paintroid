@@ -47,7 +47,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="@string/color_red"
-                android:textColor="@color/color_chooser_rgb_red"
+                android:textColor="@color/pocketpaint_color_chooser_rgb_red"
                 android:paddingStart="0dp"
                 android:paddingEnd="5dp" />
 
@@ -66,7 +66,7 @@
                 android:layout_span="2"
                 android:gravity="center_vertical|end"
                 android:text="255"
-                android:textColor="@color/holo_blue_bright"
+                android:textColor="@color/pocketpaint_colorAccent"
                 tools:ignore="HardcodedText" />
 
         </TableRow>
@@ -84,7 +84,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="@string/color_green"
-                android:textColor="@color/color_chooser_rgb_green"
+                android:textColor="@color/pocketpaint_color_chooser_rgb_green"
                 android:paddingStart="0dp"
                 android:paddingEnd="5dp" />
 
@@ -102,7 +102,7 @@
                 android:layout_span="2"
                 android:gravity="center_vertical|end"
                 android:text="255"
-                android:textColor="@color/holo_blue_bright"
+                android:textColor="@color/pocketpaint_colorAccent"
                 tools:ignore="HardcodedText" />
         </TableRow>
 
@@ -119,7 +119,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="@string/color_blue"
-                android:textColor="@color/color_chooser_rgb_blue"
+                android:textColor="@color/pocketpaint_color_chooser_rgb_blue"
                 android:paddingStart="0dp"
                 android:paddingEnd="5dp" />
 
@@ -137,7 +137,7 @@
                 android:layout_span="2"
                 android:gravity="center_vertical|end"
                 android:text="255"
-                android:textColor="@color/holo_blue_bright"
+                android:textColor="@color/pocketpaint_colorAccent"
                 tools:ignore="HardcodedText" />
 
         </TableRow>
@@ -155,7 +155,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="@string/color_alpha"
-                android:textColor="@color/color_chooser_rgb_alpha"
+                android:textColor="@color/pocketpaint_color_chooser_rgb_alpha"
                 android:paddingStart="0dp"
                 android:paddingEnd="5dp" />
 
@@ -172,7 +172,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical|end"
                 android:text="100"
-                android:textColor="@color/holo_blue_bright"
+                android:textColor="@color/pocketpaint_colorAccent"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -182,7 +182,7 @@
                 android:gravity="center_vertical|start"
                 android:text="%"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/holo_blue_bright"
+                android:textColor="@color/pocketpaint_colorAccent"
                 tools:ignore="HardcodedText" />
 
         </TableRow>

@@ -134,7 +134,7 @@ public final class IntroUtils {
 		final Context context = InstrumentationRegistry.getTargetContext();
 		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		int radiusOffset = TapTargetBase.RADIUS_OFFSET;
-		float dimension = context.getResources().getDimension(R.dimen.top_bar_height);
+		float dimension = context.getResources().getDimension(R.dimen.pocketpaint_main_top_bar_height);
 		return WelcomeActivityHelper.calculateTapTargetRadius(dimension, metrics, radiusOffset);
 	}
 

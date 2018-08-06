@@ -18,7 +18,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <declare-styleable name="IntroAttributes" >
+    <!-- PocketPaint -->
+    <declare-styleable name="PocketPaintWelcomeAttributes" >
         <attr name="android:textColor" />
         <attr name="android:fontFamily" />
         <attr name="android:textSize" />

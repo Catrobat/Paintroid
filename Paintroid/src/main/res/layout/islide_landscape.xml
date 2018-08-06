@@ -20,27 +20,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/intro_margin_top">
+    android:paddingTop="@dimen/pocketpaint_welcome_margin_top">
 
     <TextView
         android:id="@+id/intro_landscape_head"
-        style="@style/IntroHeader"
+        style="@style/PocketPaintWelcomeHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/intro_margin_side"
-        android:layout_marginStart="@dimen/intro_margin_side"
+        android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
+        android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
         android:minLines="2"
         android:text="@string/landscape" />
 
     <TextView
         android:id="@+id/intro_landscape_text"
-        style="@style/IntroText"
+        style="@style/PocketPaintWelcomeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/intro_landscape_head"
-        android:layout_marginEnd="@dimen/intro_margin_side"
-        android:layout_marginStart="@dimen/intro_margin_side"
-        android:layout_marginTop="@dimen/intro_margin_top_text"
+        android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
+        android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
+        android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
         android:text="@string/intro_landscape_text" />
 
     <ImageView

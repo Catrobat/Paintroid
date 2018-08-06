@@ -40,7 +40,7 @@
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/transparent"/>
+            android:background="@color/pocketpaint_main_drawing_surface_active" />
 
         <LinearLayout
             android:id="@+id/main_tool_options"
@@ -56,8 +56,8 @@
         <LinearLayout
             android:id="@+id/main_bottom_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/bottom_bar_height"
-            android:background="@color/custom_background_color"
+            android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
+            android:background="@color/pocketpaint_background_color"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true">
 
@@ -72,8 +72,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu"
-        android:background="@color/navigationDrawerBackground">
+        app:menu="@menu/menu_pocketpaint_activity"
+        android:background="@color/pocketpaint_main_navigation_drawer_background">
     </android.support.design.widget.NavigationView>
 
     <android.support.design.widget.NavigationView

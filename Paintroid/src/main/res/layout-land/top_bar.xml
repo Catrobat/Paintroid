@@ -26,7 +26,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="2dp"
-    tools:showIn="@layout/main">
+    tools:showIn="@layout/activity_pocketpaint">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -73,7 +73,7 @@
                 android:layout_marginStart="5dip"
                 android:layout_marginTop="12dip"
                 android:src="@drawable/ic_icon_menu_color_palette"
-                app:tint="@color/color_chooser_white" />
+                app:tint="@color/pocketpaint_color_chooser_white" />
         </FrameLayout>
 
         <ImageButton

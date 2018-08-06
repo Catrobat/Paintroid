@@ -87,7 +87,7 @@ public class AboutDialog extends AppCompatDialogFragment {
 		View layout = inflater.inflate(R.layout.dialog_about, null);
 		onViewCreated(layout, savedInstanceState);
 
-		return new AlertDialog.Builder(getContext(), R.style.CustomAlertDialog)
+		return new AlertDialog.Builder(getContext(), R.style.PocketPaintAlertDialog)
 				.setTitle(R.string.about_title)
 				.setView(layout)
 				.setPositiveButton(R.string.done, new OnClickListener() {

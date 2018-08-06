@@ -404,23 +404,20 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 					bitmapId = R.drawable.def_icon_rotate;
 					break;
 				default:
-					bitmapId = R.drawable.icon_menu_no_icon;
-					break;
+					return;
 			}
 
-			if (bitmapId != R.drawable.icon_menu_no_icon) {
-				Paint statusPaint = new Paint();
-				statusPaint.setColor(secondaryShapeColor);
-				canvas.clipRect(statusRect, Op.UNION);
-				statusPaint.setAlpha(128);
-				canvas.drawOval(statusRect, statusPaint);
+			Paint statusPaint = new Paint();
+			statusPaint.setColor(secondaryShapeColor);
+			canvas.clipRect(statusRect, Op.UNION);
+			statusPaint.setAlpha(128);
+			canvas.drawOval(statusRect, statusPaint);
 
-				Bitmap actionBitmap = BitmapFactory.decodeResource(context.getResources(), bitmapId);
-				statusPaint.setAlpha(255);
-				canvas.rotate(-boxRotation);
-				canvas.drawBitmap(actionBitmap, -24, -24, statusPaint);
-				canvas.rotate(boxRotation);
-			}
+			Bitmap actionBitmap = BitmapFactory.decodeResource(context.getResources(), bitmapId);
+			statusPaint.setAlpha(255);
+			canvas.rotate(-boxRotation);
+			canvas.drawBitmap(actionBitmap, -24, -24, statusPaint);
+			canvas.rotate(boxRotation);
 		}
 	}
 
@@ -777,8 +774,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	void highlightBoxWhenClickInBox(boolean highlight) {
 		final Resources resources = context.getResources();
 		final @ColorRes int colorId = highlight
-				? R.color.color_highlight_box
-				: R.color.rectangle_secondary_color;
+				? R.color.pocketpaint_main_rectangle_tool_highlight_color
+				: R.color.pocketpaint_main_rectangle_tool_accent_color;
 		secondaryShapeColor = ResourcesCompat.getColor(resources, colorId, null);
 	}
 

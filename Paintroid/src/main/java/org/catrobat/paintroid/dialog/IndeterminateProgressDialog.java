@@ -60,11 +60,11 @@ public class IndeterminateProgressDialog extends AppCompatDialogFragment {
 			ProgressBar progressBar = layout.findViewById(R.id.progressBar);
 			if (progressBar != null) {
 				Drawable drawable = progressBar.getIndeterminateDrawable();
-				int toolTextColor = ContextCompat.getColor(getContext(), R.color.tools_text_color);
+				int toolTextColor = ContextCompat.getColor(getContext(), R.color.pocketpaint_colorAccent);
 				drawable.setColorFilter(toolTextColor, PorterDuff.Mode.SRC_IN);
 			}
 		}
-		Dialog dialog = new AppCompatDialog(getContext(), R.style.CustomProgressDialog);
+		Dialog dialog = new AppCompatDialog(getContext(), R.style.PocketPaintProgressDialog);
 		dialog.setContentView(layout);
 		return dialog;
 	}

@@ -27,7 +27,7 @@
     <LinearLayout
         android:id="@+id/intro_tools_bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_bar_height"
+        android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true">
 
@@ -40,7 +40,7 @@
         android:layout_above="@id/intro_tools_bottom_bar"
         android:layout_alignParentStart="true"
         android:layout_below="@id/intro_tools_top_bar"
-        android:background="@color/light_gray">
+        android:background="@color/pocketpaint_main_drawing_surface_background">
 
         <View
             android:layout_width="match_parent"
@@ -58,9 +58,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#d20097a7"
-        android:paddingEnd="@dimen/intro_margin_side"
-        android:paddingStart="@dimen/intro_margin_side"
-        android:paddingTop="@dimen/intro_margin_top"
+        android:paddingEnd="@dimen/pocketpaint_welcome_margin_side"
+        android:paddingStart="@dimen/pocketpaint_welcome_margin_side"
+        android:paddingTop="@dimen/pocketpaint_welcome_margin_top"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:layout_above="@id/intro_tools_bottom_bar"
@@ -69,18 +69,18 @@
 
         <TextView
             android:id="@+id/intro_tools_head"
-            style="@style/IntroHeader"
+            style="@style/PocketPaintWelcomeHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minLines="2"
             android:text="@string/dialog_tools_title"/>
 
         <TextView
-            style="@style/IntroText"
+            style="@style/PocketPaintWelcomeText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/intro_tools_head"
-            android:layout_marginTop="@dimen/intro_margin_top_text"
+            android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
             android:text="@string/intro_tool_more_information"/>
     </RelativeLayout>
 </RelativeLayout>

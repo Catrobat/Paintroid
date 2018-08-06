@@ -161,7 +161,7 @@ public class BottomBarViewHolder implements MainActivityContracts.BottomBarViewH
 		final View toolView = layout.findViewById(toolType.getToolButtonID());
 		final Drawable backgroundDrawable = toolView.getBackground();
 
-		int color = ContextCompat.getColor(toolView.getContext(), R.color.bottom_bar_button_activated);
+		int color = ContextCompat.getColor(toolView.getContext(), R.color.pocketpaint_main_bottom_bar_selected);
 		int fadedColor = color & 0x00ffffff;
 
 		ValueAnimator animator = ObjectAnimator.ofInt(toolView, "backgroundColor", color, fadedColor);

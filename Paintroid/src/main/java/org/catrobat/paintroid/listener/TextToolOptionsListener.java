@@ -56,7 +56,7 @@ public final class TextToolOptionsListener {
 		italicToggleButton = textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_italic);
 		boldToggleButton = textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_bold);
 
-		fonts = Arrays.asList(context.getResources().getStringArray(R.array.text_tool_font_array));
+		fonts = Arrays.asList(context.getResources().getStringArray(R.array.pocketpaint_main_text_tool_fonts));
 		initializeListeners();
 
 		textEditText.requestFocus();

@@ -23,8 +23,8 @@
     android:layout_width="match_parent"
     android:layout_height="65dp"
     android:gravity="center_vertical|start"
-    android:paddingEnd="@dimen/language_text_margin"
-    android:paddingStart="@dimen/language_text_margin"
+    android:paddingEnd="@dimen/pocketpaint_multilingual_text_margin"
+    android:paddingStart="@dimen/pocketpaint_multilingual_text_margin"
     android:textColor="@android:color/white"
-    android:textSize="@dimen/language_name_text"
+    android:textSize="@dimen/pocketpaint_multilingual_name_text"
     tools:text="@string/device_language" />

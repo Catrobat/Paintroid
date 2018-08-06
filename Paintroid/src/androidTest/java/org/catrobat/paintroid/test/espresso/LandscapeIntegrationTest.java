@@ -186,7 +186,7 @@ public class LandscapeIntegrationTest {
 	public void testOpenColorPickerDialogChooseColorInLandscape() {
 		openColorPickerDialog();
 
-		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.preset_colors);
+		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_chooser_preset_colors);
 
 		for (int i = 0; i < colors.length; i++) {
 			clickColorPickerPresetSelectorButton(i);

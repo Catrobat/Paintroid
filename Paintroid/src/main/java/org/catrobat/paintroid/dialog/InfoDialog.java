@@ -50,7 +50,7 @@ public class InfoDialog extends AppCompatDialogFragment implements
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialog);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.PocketPaintAlertDialog);
 
 		Bundle arguments = getArguments();
 		if (arguments != null) {

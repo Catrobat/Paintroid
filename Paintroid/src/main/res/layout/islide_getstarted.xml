@@ -20,13 +20,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingEnd="@dimen/intro_margin_side"
-    android:paddingStart="@dimen/intro_margin_side"
-    android:paddingTop="@dimen/intro_margin_top">
+    android:paddingEnd="@dimen/pocketpaint_welcome_margin_side"
+    android:paddingStart="@dimen/pocketpaint_welcome_margin_side"
+    android:paddingTop="@dimen/pocketpaint_welcome_margin_top">
 
     <TextView
         android:id="@+id/intro_started_head"
-        style="@style/IntroHeader"
+        style="@style/PocketPaintWelcomeHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minLines="2"
@@ -34,11 +34,11 @@
 
     <TextView
         android:id="@+id/intro_started_text"
-        style="@style/IntroText"
+        style="@style/PocketPaintWelcomeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/intro_started_head"
-        android:layout_marginTop="@dimen/intro_margin_top_text"
+        android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
         android:text="@string/intro_get_started"/>
 
     <ImageView

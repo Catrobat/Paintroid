@@ -57,8 +57,8 @@ public abstract class BaseToolWithShape extends BaseTool implements
 		final Resources resources = context.getResources();
 		metrics = resources.getDisplayMetrics();
 
-		primaryShapeColor = ResourcesCompat.getColor(resources, R.color.rectangle_primary_color, null);
-		secondaryShapeColor = ResourcesCompat.getColor(resources, R.color.rectangle_secondary_color, null);
+		primaryShapeColor = ResourcesCompat.getColor(resources, R.color.pocketpaint_main_rectangle_tool_primary_color, null);
+		secondaryShapeColor = ResourcesCompat.getColor(resources, R.color.pocketpaint_colorAccent, null);
 		float actionBarHeight = Constants.ACTION_BAR_HEIGHT * metrics.density;
 		PointF surfaceToolPosition = new PointF(metrics.widthPixels / 2f, metrics.heightPixels
 				/ 2f - actionBarHeight);

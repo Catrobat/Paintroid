@@ -54,7 +54,7 @@ public class SaveBeforeNewImageDialog extends AppCompatDialogFragment {
 		final int requestCode = arguments.getInt(EXTRA_REQUEST);
 		final Uri uri = arguments.getParcelable(EXTRA_URI);
 
-		return new AlertDialog.Builder(activity, R.style.CustomAlertDialog)
+		return new AlertDialog.Builder(activity, R.style.PocketPaintAlertDialog)
 				.setTitle(R.string.menu_new_image)
 				.setMessage(R.string.dialog_warning_new_image)
 				.setCancelable(true)

@@ -77,7 +77,7 @@ public class TermsOfUseAndServiceDialog extends AppCompatDialogFragment {
 		View layout = inflater.inflate(R.layout.dialog_terms_of_use_and_service, null);
 		onViewCreated(layout, savedInstanceState);
 
-		return new AlertDialog.Builder(getContext(), R.style.CustomAlertDialog)
+		return new AlertDialog.Builder(getContext(), R.style.PocketPaintAlertDialog)
 				.setTitle(R.string.terms_of_use_and_service_title)
 				.setView(layout)
 				.setPositiveButton(R.string.done, new OnClickListener() {

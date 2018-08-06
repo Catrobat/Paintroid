@@ -18,7 +18,7 @@
  -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="line" >
-    <stroke android:color="@color/holo_blue_bright"
+    <stroke android:color="@color/pocketpaint_colorAccent"
         android:width="5dp"/>
 
 </shape>

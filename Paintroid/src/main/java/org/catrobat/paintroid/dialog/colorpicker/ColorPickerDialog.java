@@ -97,7 +97,7 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomAlertDialog);
+		setStyle(DialogFragment.STYLE_NORMAL, R.style.PocketPaintAlertDialog);
 	}
 
 	@Nullable

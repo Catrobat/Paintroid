@@ -32,7 +32,7 @@
         android:label="${appName}"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/SplashTheme"
+        android:theme="@style/PocketPaintSplashTheme"
         android:extractNativeLibs="false"
         tools:ignore="GoogleAppIndexingWarning">
 
