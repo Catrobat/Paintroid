@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,6 +24,7 @@ import android.graphics.Typeface;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
@@ -62,14 +63,14 @@ public class TextToolFontSpinnerTest {
 	private Typeface sansSerifFontFace = Typeface.create(Typeface.SANS_SERIF, normalStyle);
 	private Typeface serifFontFace = Typeface.create(Typeface.SERIF, normalStyle);
 	private Typeface defaultFontFace = Typeface.create(Typeface.MONOSPACE, normalStyle);
-	private Typeface stcFontFace = Typeface.createFromAsset(context.getResources().getAssets(), "STC.otf");
-	private Typeface dubaiFontFace = Typeface.createFromAsset(context.getResources().getAssets(), "Dubai.TTF");
+	private Typeface stcFontFace = ResourcesCompat.getFont(context, R.font.stc_regular);
+	private Typeface dubaiFontFace = ResourcesCompat.getFont(context, R.font.dubai);
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class);
 
 	@Test
-	public void testTextFontFaceOfFontSpinnerArabic() throws Exception {
+	public void testTextFontFaceOfFontSpinnerArabic() {
 		openMultilingualActivity();
 		onData(hasToString(startsWith(ARABICLOCALE.getDisplayName(ARABICLOCALE)))).perform(click());
 		assertEquals(Locale.getDefault().getDisplayLanguage(), ARABICLOCALE.getDisplayLanguage());
@@ -95,7 +96,7 @@ public class TextToolFontSpinnerTest {
 	}
 
 	@Test
-	public void testTextFontFaceOfFontSpinnerEnglish() throws Exception {
+	public void testTextFontFaceOfFontSpinnerEnglish() {
 		openMultilingualActivity();
 		onData(hasToString(startsWith(context.getResources().getString(R.string.device_language))))
 				.perform(click());

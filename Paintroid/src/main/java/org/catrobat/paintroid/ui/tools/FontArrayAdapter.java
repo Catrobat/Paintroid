@@ -1,20 +1,20 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.ui.tools;
@@ -23,10 +23,13 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import org.catrobat.paintroid.R;
 
 import java.util.List;
 
@@ -35,8 +38,8 @@ public class FontArrayAdapter extends ArrayAdapter<String> {
 	private Typeface sansSerifFontFace = Typeface.create(Typeface.SANS_SERIF, normalStyle);
 	private Typeface serifFontFace = Typeface.create(Typeface.SERIF, normalStyle);
 	private Typeface defaultFontFace = Typeface.create(Typeface.MONOSPACE, normalStyle);
-	private Typeface stcFontFace = Typeface.createFromAsset(getContext().getResources().getAssets(), "STC.otf");
-	private Typeface dubaiFontFace = Typeface.createFromAsset(getContext().getResources().getAssets(), "Dubai.TTF");
+	private Typeface stcFontFace = ResourcesCompat.getFont(getContext(), R.font.stc_regular);
+	private Typeface dubaiFontFace = ResourcesCompat.getFont(getContext(), R.font.dubai);
 
 	public FontArrayAdapter(@NonNull Context context, int resource, @NonNull List<String> objects) {
 		super(context, resource, objects);
