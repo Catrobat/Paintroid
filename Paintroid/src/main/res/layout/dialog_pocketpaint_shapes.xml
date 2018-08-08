@@ -20,7 +20,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
-        android:id="@+id/shape_tool_dialog_title"
+        android:id="@+id/pocketpaint_shape_tool_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/shape_tool_dialog_rect_title"
@@ -33,7 +33,7 @@
     <View style="@style/PocketPaintDividerHorizontal"/>
 
     <LinearLayout
-        android:id="@+id/shapes_container"
+        android:id="@+id/pocketpaint_shapes_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -41,7 +41,7 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/shapes_square_btn"
+            android:id="@+id/pocketpaint_shapes_square_btn"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             android:padding="16dp"/>
 
         <ImageButton
-            android:id="@+id/shapes_circle_btn"
+            android:id="@+id/pocketpaint_shapes_circle_btn"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
             android:src="@drawable/ic_pocketpaint_tool_circle"/>
 
         <ImageButton
-            android:id="@+id/shapes_heart_btn"
+            android:id="@+id/pocketpaint_shapes_heart_btn"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
             android:src="@drawable/ic_pocketpaint_tool_heart"/>
 
         <ImageButton
-            android:id="@+id/shapes_star_btn"
+            android:id="@+id/pocketpaint_shapes_star_btn"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

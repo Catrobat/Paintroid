@@ -57,9 +57,9 @@ public class AboutDialog extends AppCompatDialogFragment {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		TextView aboutVersionNameTextView = view.findViewById(R.id.dialog_about_version_name_text_view);
-		TextView aboutTextView = view.findViewById(R.id.about_tview_Text);
-		TextView aboutUrlTextView = view.findViewById(R.id.about_tview_Url);
+		TextView aboutVersionNameTextView = view.findViewById(R.id.pocketpaint_dialog_about_version_name_text_view);
+		TextView aboutTextView = view.findViewById(R.id.pocketpaint_about_tview_Text);
+		TextView aboutUrlTextView = view.findViewById(R.id.pocketpaint_about_tview_Url);
 
 		aboutVersionNameTextView.append(" " + BuildConfig.VERSION_NAME);
 

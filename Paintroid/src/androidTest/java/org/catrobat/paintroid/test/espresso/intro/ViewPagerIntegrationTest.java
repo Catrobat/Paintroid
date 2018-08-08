@@ -84,7 +84,7 @@ public class ViewPagerIntegrationTest {
 		shouldStartSequence(false);
 		for (int i = 0; i < activityRule.getLayouts().length; i++) {
 			assertEquals(i, viewPager.getCurrentItem());
-			onView(withId(R.id.btn_next)).perform(click());
+			onView(withId(R.id.pocketpaint_btn_next)).perform(click());
 		}
 	}
 

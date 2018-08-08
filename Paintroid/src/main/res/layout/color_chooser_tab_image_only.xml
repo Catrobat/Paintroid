@@ -24,7 +24,7 @@
     android:paddingBottom="2dp">
 
     <ImageView
-        android:id="@+id/tab_icon"
+        android:id="@+id/color_chooser_tab_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

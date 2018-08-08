@@ -86,7 +86,7 @@ public class NavigationDrawerTest {
 		onView(withText(R.string.menu_terms_of_use_and_service)).check(matches(isDisplayed()));
 		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_about)).check(matches(isDisplayed()));
-		onView(withId(R.id.drawer_layout)).perform(close());
+		onView(withId(R.id.pocketpaint_drawer_layout)).perform(close());
 	}
 
 	@Test
@@ -107,7 +107,7 @@ public class NavigationDrawerTest {
 	@Test
 	public void testNavigationDrawerItemFullScreenClick() {
 		onView(withText(R.string.menu_hide_menu)).perform(click());
-		onView(withId(R.id.drawer_layout)).perform(open());
+		onView(withId(R.id.pocketpaint_drawer_layout)).perform(open());
 		onView(withText(R.string.menu_show_menu)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_hide_menu)).check(doesNotExist());
 		onView(withText(R.string.menu_show_menu)).perform(click());

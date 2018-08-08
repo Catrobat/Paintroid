@@ -165,15 +165,15 @@ public class ToolOnBackPressedTests {
 				.performSelectTool(ToolType.CURSOR)
 				.performOpenToolOptions();
 
-		onView(withId(R.id.layout_tool_options_name))
+		onView(withId(R.id.pocketpaint_layout_tool_options_name))
 				.check(matches(withText(R.string.button_cursor)));
 
 		Espresso.pressBack();
 
 		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.CURSOR);
 
-		onView(withId(R.id.main_tool_options)).check(matches(not(isDisplayed())));
-		onView(withId(R.id.layout_tool_options_name)).check(matches(not(isDisplayed())));
+		onView(withId(R.id.pocketpaint_main_tool_options)).check(matches(not(isDisplayed())));
+		onView(withId(R.id.pocketpaint_layout_tool_options_name)).check(matches(not(isDisplayed())));
 
 		Espresso.pressBack();
 

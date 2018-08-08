@@ -36,10 +36,10 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 
 	public TopBarViewHolder(ViewGroup layout) {
 		this.layout = layout;
-		undoButton = layout.findViewById(R.id.btn_top_undo);
-		redoButton = layout.findViewById(R.id.btn_top_redo);
-		colorButton = layout.findViewById(R.id.btn_top_color);
-		layerButton = layout.findViewById(R.id.btn_top_layers);
+		undoButton = layout.findViewById(R.id.pocketpaint_btn_top_undo);
+		redoButton = layout.findViewById(R.id.pocketpaint_btn_top_redo);
+		colorButton = layout.findViewById(R.id.pocketpaint_btn_top_color);
+		layerButton = layout.findViewById(R.id.pocketpaint_btn_top_layers);
 	}
 
 	@Override

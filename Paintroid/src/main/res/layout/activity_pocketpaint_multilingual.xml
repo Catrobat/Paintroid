@@ -21,7 +21,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ListView
-        android:id="@+id/list_languages"
+        android:id="@+id/pocketpaint_list_languages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:isScrollContainer="true"

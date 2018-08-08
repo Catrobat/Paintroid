@@ -43,7 +43,7 @@ public class SharedPreferencesIntegrationTest {
 
 	@Test
 	public void sharedPreferencesSetOnSkip() {
-		onView(withId(R.id.btn_skip))
+		onView(withId(R.id.pocketpaint_btn_skip))
 				.perform(click());
 		Session session = new Session(activityRule.getActivity());
 		assertFalse(session.isFirstTimeLaunch());
@@ -52,7 +52,7 @@ public class SharedPreferencesIntegrationTest {
 	@Test
 	public void sharedPreferencesSetOnFinishIntro() {
 		changeIntroPage(activityRule.getLayouts().length - 1);
-		onView(withId(R.id.btn_next))
+		onView(withId(R.id.pocketpaint_btn_next))
 				.perform(click());
 		Session session = new Session(activityRule.getActivity());
 		assertFalse(session.isFirstTimeLaunch());

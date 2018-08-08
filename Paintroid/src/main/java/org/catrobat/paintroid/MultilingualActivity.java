@@ -60,14 +60,14 @@ public class MultilingualActivity extends AppCompatActivity {
 
 		setContentView(R.layout.activity_pocketpaint_multilingual);
 		setTitle(R.string.menu_language);
-		ListView listview = (ListView) findViewById(R.id.list_languages);
+		ListView listview = (ListView) findViewById(R.id.pocketpaint_list_languages);
 		final List<String> languagesNames = new ArrayList<>();
 		languagesNames.add(getResources().getString(R.string.device_language));
 		for (String aLanguageCode : LANGUAGE_CODE) {
 			Locale locale = getLocaleFromLanguageTag(aLanguageCode);
 			languagesNames.add(getDisplayName(locale));
 		}
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.pocketpaint_item_multilingual_name_text, R.id.lang_text, languagesNames);
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.pocketpaint_item_multilingual_name_text, R.id.pocketpaint_lang_text, languagesNames);
 		listview.setAdapter(adapter);
 		listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override

@@ -108,8 +108,8 @@ public class LayerAdapter extends BaseAdapter implements LayerContracts.Adapter 
 
 		LayerViewHolder(View itemView) {
 			this.itemView = itemView;
-			layerBackground = itemView.findViewById(R.id.item_layer_background);
-			imageView = itemView.findViewById(R.id.item_layer_image);
+			layerBackground = itemView.findViewById(R.id.pocketpaint_item_layer_background);
+			imageView = itemView.findViewById(R.id.pocketpaint_item_layer_image);
 		}
 
 		@Override

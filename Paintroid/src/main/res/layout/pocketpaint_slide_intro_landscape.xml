@@ -23,7 +23,7 @@
     android:paddingTop="@dimen/pocketpaint_welcome_margin_top">
 
     <TextView
-        android:id="@+id/intro_landscape_head"
+        android:id="@+id/pocketpaint_intro_landscape_head"
         style="@style/PocketPaintWelcomeHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,22 +33,22 @@
         android:text="@string/landscape" />
 
     <TextView
-        android:id="@+id/intro_landscape_text"
+        android:id="@+id/pocketpaint_intro_landscape_text"
         style="@style/PocketPaintWelcomeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/intro_landscape_head"
+        android:layout_below="@id/pocketpaint_intro_landscape_head"
         android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
         android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
         android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
         android:text="@string/intro_landscape_text" />
 
     <ImageView
-        android:id="@+id/image_landscape"
+        android:id="@+id/pocketpaint_image_landscape"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@id/intro_landscape_text"
+        android:layout_below="@id/pocketpaint_intro_landscape_text"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
         android:src="@drawable/pocketpaint_intro_landscape" />

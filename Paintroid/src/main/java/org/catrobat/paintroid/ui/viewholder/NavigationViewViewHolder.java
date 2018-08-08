@@ -35,8 +35,8 @@ public class NavigationViewViewHolder implements MainActivityContracts.Navigatio
 		this.navigationView = navigationView;
 
 		Menu navigationViewMenu = navigationView.getMenu();
-		navigationMenuExitFullscreen = navigationViewMenu.findItem(R.id.nav_exit_fullscreen_mode);
-		navigationMenuEnterFullscreen = navigationViewMenu.findItem(R.id.nav_fullscreen_mode);
+		navigationMenuExitFullscreen = navigationViewMenu.findItem(R.id.pocketpaint_nav_exit_fullscreen_mode);
+		navigationMenuEnterFullscreen = navigationViewMenu.findItem(R.id.pocketpaint_nav_fullscreen_mode);
 	}
 
 	@Override

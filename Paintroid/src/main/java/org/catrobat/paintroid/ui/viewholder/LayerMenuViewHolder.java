@@ -30,8 +30,8 @@ public class LayerMenuViewHolder implements LayerContracts.LayerMenuViewHolder {
 	public final View layerDeleteButton;
 
 	public LayerMenuViewHolder(ViewGroup layerLayout) {
-		layerAddButton = layerLayout.findViewById(R.id.layer_side_nav_button_add);
-		layerDeleteButton = layerLayout.findViewById(R.id.layer_side_nav_button_delete);
+		layerAddButton = layerLayout.findViewById(R.id.pocketpaint_layer_side_nav_button_add);
+		layerDeleteButton = layerLayout.findViewById(R.id.pocketpaint_layer_side_nav_button_delete);
 	}
 
 	@Override

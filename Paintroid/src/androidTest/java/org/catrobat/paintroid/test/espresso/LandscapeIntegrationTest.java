@@ -82,30 +82,30 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testBottomBarPosition() {
-		onView(withId(R.id.main_bottom_bar))
+		onView(withId(R.id.pocketpaint_main_bottom_bar))
 				.check(matches(isDisplayed()))
-				.check(isCompletelyRightOf(withId(R.id.drawingSurfaceView)));
+				.check(isCompletelyRightOf(withId(R.id.pocketpaint_drawing_surface_view)));
 	}
 
 	@Test
 	public void testTopBarPosition() {
-		onView(withId(R.id.layout_top_bar))
+		onView(withId(R.id.pocketpaint_layout_top_bar))
 				.check(matches(isDisplayed()))
-				.check(isCompletelyLeftOf(withId(R.id.drawingSurfaceView)));
+				.check(isCompletelyLeftOf(withId(R.id.pocketpaint_drawing_surface_view)));
 	}
 
 	@Test
 	public void testToolBarOptionWidth() {
 		openToolOptionsForCurrentTool();
 
-		onView(withId(R.id.main_tool_options))
+		onView(withId(R.id.pocketpaint_main_tool_options))
 				.check(matches(isDisplayed()))
-				.check(isCompletelyRightOf(withId(R.id.layout_top_bar)))
-				.check(isCompletelyLeftOf(withId(R.id.main_bottom_bar)));
+				.check(isCompletelyRightOf(withId(R.id.pocketpaint_layout_top_bar)))
+				.check(isCompletelyLeftOf(withId(R.id.pocketpaint_main_bottom_bar)));
 
-		onView(withId(R.id.layout_top_bar))
+		onView(withId(R.id.pocketpaint_layout_top_bar))
 				.check(matches(isDisplayed()));
-		onView(withId(R.id.main_bottom_bar))
+		onView(withId(R.id.pocketpaint_main_bottom_bar))
 				.check(matches(isDisplayed()));
 	}
 
@@ -114,7 +114,7 @@ public class LandscapeIntegrationTest {
 		selectTool(ToolType.PIPETTE);
 		openToolOptionsForCurrentTool();
 
-		onView(withId(R.id.main_tool_options))
+		onView(withId(R.id.pocketpaint_main_tool_options))
 				.check(matches(isDisplayed()));
 	}
 
@@ -137,12 +137,12 @@ public class LandscapeIntegrationTest {
 				openToolOptionsForCurrentTool();
 			}
 
-			onView(withId(R.id.main_tool_options))
+			onView(withId(R.id.pocketpaint_main_tool_options))
 					.check(matches(isDisplayed()));
 
 			openToolOptionsForCurrentTool();
 
-			onView(withId(R.id.main_tool_options))
+			onView(withId(R.id.pocketpaint_main_tool_options))
 					.check(matches(not(isDisplayed())));
 		}
 	}
@@ -168,9 +168,9 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testNavigationDrawerAppears() {
-		onView(withId(R.id.toolbar))
+		onView(withId(R.id.pocketpaint_toolbar))
 				.perform(click());
-		onView(withId(R.id.nav_view))
+		onView(withId(R.id.pocketpaint_nav_view))
 				.check(matches(isDisplayed()));
 	}
 
@@ -178,7 +178,7 @@ public class LandscapeIntegrationTest {
 	public void testOpenColorPickerDialogInLandscape() {
 		openColorPickerDialog();
 
-		onView(withId(R.id.view_colorpicker))
+		onView(withId(R.id.color_chooser_color_picker_view))
 				.check(matches(isDisplayed()));
 	}
 
@@ -195,7 +195,7 @@ public class LandscapeIntegrationTest {
 				int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
 				assertEquals(colors[i], selectedColor);
 
-				onView(withId(R.id.btn_colorchooser_ok))
+				onView(withId(R.id.color_chooser_button_ok))
 						.perform(scrollTo())
 						.check(matches(withBackgroundColor(colors[i])));
 			}
@@ -206,7 +206,7 @@ public class LandscapeIntegrationTest {
 	public void testScrollToColorChooserOk() {
 		openColorPickerDialog();
 
-		onView(withId(R.id.btn_colorchooser_ok))
+		onView(withId(R.id.color_chooser_button_ok))
 				.perform(scrollTo());
 	}
 
@@ -217,17 +217,17 @@ public class LandscapeIntegrationTest {
 		onView(withClassName(is(PresetSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_hsv)))
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_hsv)))
 				.perform(click());
 		onView(withClassName(is(HSVColorPickerView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
 				.perform(click());
 		onView(withClassName(is(RgbSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset)))
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset)))
 				.perform(click());
 		onView(withClassName(is(PresetSelectorView.class.getName())))
 				.check(matches(isDisplayed()));

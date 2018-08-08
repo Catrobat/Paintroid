@@ -361,11 +361,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 
 		if (model.isOpenedFromCatroid()) {
-			navigationDrawerViewHolder.removeItem(R.id.nav_save_image);
-			navigationDrawerViewHolder.removeItem(R.id.nav_save_duplicate);
+			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_save_image);
+			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_save_duplicate);
 		} else {
-			navigationDrawerViewHolder.removeItem(R.id.nav_back_to_pocket_code);
-			navigationDrawerViewHolder.removeItem(R.id.nav_export);
+			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
+			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_export);
 		}
 
 		view.initializeActionBar(model.isOpenedFromCatroid());

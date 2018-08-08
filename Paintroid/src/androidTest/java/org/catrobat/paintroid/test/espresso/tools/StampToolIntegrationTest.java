@@ -244,7 +244,7 @@ public class StampToolIntegrationTest {
 
 	@Test
 	public void testBitmapSavedOnOrientationChange() throws NoSuchFieldException, IllegalAccessException {
-		onView(withId(R.id.drawingSurfaceView))
+		onView(withId(R.id.pocketpaint_drawing_surface_view))
 				.perform(click());
 
 		onToolBarView()

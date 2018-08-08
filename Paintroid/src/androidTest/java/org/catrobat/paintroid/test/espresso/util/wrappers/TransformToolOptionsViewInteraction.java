@@ -27,7 +27,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public final class TransformToolOptionsViewInteraction extends CustomViewInteraction {
 	private TransformToolOptionsViewInteraction() {
-		super(onView(withId(R.id.main_tool_options)));
+		super(onView(withId(R.id.pocketpaint_main_tool_options)));
 	}
 
 	public static TransformToolOptionsViewInteraction onTransformToolOptionsView() {
@@ -35,31 +35,31 @@ public final class TransformToolOptionsViewInteraction extends CustomViewInterac
 	}
 
 	public TransformToolOptionsViewInteraction performAutoCrop() {
-		onView(withId(R.id.transform_auto_crop_btn))
+		onView(withId(R.id.pocketpaint_transform_auto_crop_btn))
 				.perform(click());
 		return this;
 	}
 
 	public TransformToolOptionsViewInteraction performRotateClockwise() {
-		onView(withId(R.id.transform_rotate_right_btn))
+		onView(withId(R.id.pocketpaint_transform_rotate_right_btn))
 				.perform(click());
 		return this;
 	}
 
 	public TransformToolOptionsViewInteraction performRotateCounterClockwise() {
-		onView(withId(R.id.transform_rotate_left_btn))
+		onView(withId(R.id.pocketpaint_transform_rotate_left_btn))
 				.perform(click());
 		return this;
 	}
 
 	public TransformToolOptionsViewInteraction performFlipVertical() {
-		onView(withId(R.id.transform_flip_vertical_btn))
+		onView(withId(R.id.pocketpaint_transform_flip_vertical_btn))
 				.perform(click());
 		return this;
 	}
 
 	public TransformToolOptionsViewInteraction performFlipHorizontal() {
-		onView(withId(R.id.transform_flip_horizontal_btn))
+		onView(withId(R.id.pocketpaint_transform_flip_horizontal_btn))
 				.perform(click());
 		return this;
 	}

@@ -39,7 +39,7 @@ import static org.hamcrest.Matchers.instanceOf;
 
 public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	private LayerMenuViewInteraction() {
-		super(onView(withId(R.id.nav_view_layer)));
+		super(onView(withId(R.id.pocketpaint_nav_view_layer)));
 	}
 
 	public static LayerMenuViewInteraction onLayerMenuView() {
@@ -47,15 +47,15 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onButtonAdd() {
-		return onView(withId(R.id.layer_side_nav_button_add));
+		return onView(withId(R.id.pocketpaint_layer_side_nav_button_add));
 	}
 
 	public ViewInteraction onButtonDelete() {
-		return onView(withId(R.id.layer_side_nav_button_delete));
+		return onView(withId(R.id.pocketpaint_layer_side_nav_button_delete));
 	}
 
 	public ViewInteraction onLayerList() {
-		return onView(withId(R.id.layer_side_nav_list));
+		return onView(withId(R.id.pocketpaint_layer_side_nav_list));
 	}
 
 	public LayerMenuViewInteraction checkLayerCount(int count) {
@@ -66,12 +66,12 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 
 	public DataInteraction onLayerAt(int listPosition) {
 		return onData(instanceOf(Layer.class))
-				.inAdapterView(withId(R.id.layer_side_nav_list))
+				.inAdapterView(withId(R.id.pocketpaint_layer_side_nav_list))
 				.atPosition(listPosition);
 	}
 
 	public LayerMenuViewInteraction performOpen() {
-		onView(withId(R.id.btn_top_layers))
+		onView(withId(R.id.pocketpaint_btn_top_layers))
 				.perform(click());
 		check(matches(isDisplayed()));
 		return this;
@@ -79,7 +79,7 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 
 	public LayerMenuViewInteraction performClose() {
 		check(matches(isDisplayed()));
-		onView(withId(R.id.drawer_layout))
+		onView(withId(R.id.pocketpaint_drawer_layout))
 			.perform(DrawerActions.close(Gravity.END));
 		return this;
 	}

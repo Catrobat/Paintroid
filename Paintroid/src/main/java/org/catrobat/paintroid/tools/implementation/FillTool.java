@@ -110,8 +110,8 @@ public class FillTool extends BaseTool {
 		LayoutInflater inflater = LayoutInflater.from(context);
 		fillToolOptionsView = inflater.inflate(R.layout.dialog_pocketpaint_fill_tool, toolSpecificOptionsLayout);
 
-		colorToleranceSeekBar = fillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
-		colorToleranceEditText = fillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
+		colorToleranceSeekBar = fillToolOptionsView.findViewById(R.id.pocketpaint_color_tolerance_seek_bar);
+		colorToleranceEditText = fillToolOptionsView.findViewById(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input);
 		colorToleranceEditText.setFilters(new InputFilter[]{new NumberRangeFilter(0, 100)});
 		initializeFillOptionsListener();
 		updateColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);

@@ -114,11 +114,11 @@ public class TextToolIntegrationTest {
 				.performSelectTool(ToolType.TEXT);
 		textTool = (TextTool) PaintroidApplication.currentTool;
 
-		textEditText = (EditText) activityHelper.findViewById(R.id.text_tool_dialog_input_text);
-		fontSpinner = (Spinner) activityHelper.findViewById(R.id.text_tool_dialog_spinner_font);
-		underlinedToggleButton = (ToggleButton) activityHelper.findViewById(R.id.text_tool_dialog_toggle_underlined);
-		italicToggleButton = (ToggleButton) activityHelper.findViewById(R.id.text_tool_dialog_toggle_italic);
-		boldToggleButton = (ToggleButton) activityHelper.findViewById(R.id.text_tool_dialog_toggle_bold);
+		textEditText = (EditText) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_input_text);
+		fontSpinner = (Spinner) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_font);
+		underlinedToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
+		italicToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
+		boldToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
 
 		textTool.resetBoxPosition();
 	}
@@ -130,7 +130,7 @@ public class TextToolIntegrationTest {
 
 	@Test
 	public void testDialogKeyboardTextBoxAppearanceOnStartup() {
-		onView(withId(R.id.text_tool_dialog_input_text)).check(matches(hasFocus()));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).check(matches(hasFocus()));
 		checkTextBoxDimensionsAndDefaultPosition();
 	}
 
@@ -413,13 +413,13 @@ public class TextToolIntegrationTest {
 		assertEquals("Amount of black pixels should be the same when drawing", numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 
 		// Perform undo
-		onView(withId(R.id.btn_top_undo)).perform(click());
+		onView(withId(R.id.pocketpaint_btn_top_undo)).perform(click());
 
 		PaintroidApplication.layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals("There should not be black pixels after undo", 0, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 
 		// Perform redo
-		onView(withId(R.id.btn_top_redo)).perform(click());
+		onView(withId(R.id.pocketpaint_btn_top_redo)).perform(click());
 
 		PaintroidApplication.layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals("There should be black pixels again after redo", numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
@@ -569,9 +569,9 @@ public class TextToolIntegrationTest {
 		 * current IME does not understand how to translate the string into key events). As a
 		 * workaround, you can use replaceText action to set the text directly in the EditText field.
 		 */
-		onView(withId(R.id.text_tool_dialog_input_text)).perform(replaceText(textToEnter));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(replaceText(textToEnter));
 		Espresso.closeSoftKeyboard();
-		onView(withId(R.id.text_tool_dialog_input_text)).check(matches(withText(textToEnter)));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).check(matches(withText(textToEnter)));
 	}
 
 	private void enterTestText() {
@@ -593,7 +593,7 @@ public class TextToolIntegrationTest {
 			case SANS_SERIF:
 			case STC:
 			case DUBAI:
-				onView(withId(R.id.text_tool_dialog_spinner_font)).perform(click());
+				onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font)).perform(click());
 				onData(allOf(is(instanceOf(String.class)), is(getFontString(format))))
 						.inRoot(isPlatformPopup())
 						.perform(click());

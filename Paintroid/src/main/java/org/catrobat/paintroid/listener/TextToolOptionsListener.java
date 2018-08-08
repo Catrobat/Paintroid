@@ -50,11 +50,11 @@ public final class TextToolOptionsListener {
 	public TextToolOptionsListener(Context context, View textToolOptionsView) {
 		this.context = context;
 
-		textEditText = textToolOptionsView.findViewById(R.id.text_tool_dialog_input_text);
-		fontSpinner = textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_font);
-		underlinedToggleButton = textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
-		italicToggleButton = textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_italic);
-		boldToggleButton = textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_bold);
+		textEditText = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_input_text);
+		fontSpinner = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_font);
+		underlinedToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
+		italicToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
+		boldToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
 
 		fonts = Arrays.asList(context.getResources().getStringArray(R.array.pocketpaint_main_text_tool_fonts));
 		initializeListeners();

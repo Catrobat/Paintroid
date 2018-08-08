@@ -76,7 +76,7 @@ public class TextToolFontSpinnerTest {
 		assertEquals(View.LAYOUT_DIRECTION_RTL, getConfiguration().getLayoutDirection());
 		assertTrue(checkTextDirection(Locale.getDefault().getDisplayName()));
 		selectTool(ToolType.TEXT);
-		onView(withId(R.id.text_tool_dialog_spinner_font))
+		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font))
 				.perform(click());
 		onView(withIndex(withId(android.R.id.text1), 0))
 				.check(matches(hasTypeFace(defaultFontFace)));
@@ -101,7 +101,7 @@ public class TextToolFontSpinnerTest {
 				.perform(click());
 		assertEquals(Locale.getDefault().getLanguage(), defaultSystemLanguage);
 		selectTool(ToolType.TEXT);
-		onView(withId(R.id.text_tool_dialog_spinner_font))
+		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font))
 				.perform(click());
 		onView(withIndex(withId(android.R.id.text1), 0))
 				.check(matches(hasTypeFace(defaultFontFace)));

@@ -44,7 +44,7 @@
                 android:src="@drawable/ic_pocketpaint_launcher" />
 
             <TextView
-                android:id="@+id/dialog_about_version_name_text_view"
+                android:id="@+id/pocketpaint_dialog_about_version_name_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -53,14 +53,14 @@
                 tools:ignore="SmallSp" />
 
             <TextView
-                android:id="@+id/about_tview_Text"
+                android:id="@+id/pocketpaint_about_tview_Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 tools:text="@string/about_content" />
 
             <TextView
-                android:id="@+id/about_tview_Url"
+                android:id="@+id/pocketpaint_about_tview_Url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"

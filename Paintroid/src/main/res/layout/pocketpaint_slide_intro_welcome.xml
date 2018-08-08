@@ -29,7 +29,7 @@
     android:paddingTop="@dimen/pocketpaint_welcome_margin_top">
 
     <TextView
-        android:id="@+id/intro_welcome_head"
+        android:id="@+id/pocketpaint_intro_welcome_head"
         style="@style/PocketPaintWelcomeHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,11 +37,11 @@
         android:text="@string/welcome_to_pocket_paint" />
 
     <TextView
-        android:id="@+id/intro_welcome_text"
+        android:id="@+id/pocketpaint_intro_welcome_text"
         style="@style/PocketPaintWelcomeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/intro_welcome_head"
+        android:layout_below="@id/pocketpaint_intro_welcome_head"
         android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
         android:text="@string/intro_welcome_text" />
 

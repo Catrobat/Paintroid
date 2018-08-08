@@ -254,7 +254,7 @@ public final class EspressoUtils {
 	 */
 	@Deprecated
 	public static void openColorPickerDialog() {
-		onView(withId(R.id.btn_top_color)).perform(click());
+		onView(withId(R.id.pocketpaint_btn_top_color)).perform(click());
 	}
 
 	/**
@@ -262,7 +262,7 @@ public final class EspressoUtils {
 	 */
 	@Deprecated
 	public static void closeColorPickerDialogWithDialogButton() {
-		onView(withId(R.id.btn_colorchooser_ok)).perform(click());
+		onView(withId(R.id.color_chooser_button_ok)).perform(click());
 	}
 
 	@ColorInt
@@ -327,7 +327,7 @@ public final class EspressoUtils {
 	}
 
 	public static void changeIntroPage(int page) {
-		onView(withId(R.id.view_pager)).perform(selectViewPagerPage(page));
+		onView(withId(R.id.pocketpaint_view_pager)).perform(selectViewPagerPage(page));
 	}
 
 	public static View getDescendantView(int ancestorResource, int targetResource, Activity activity) {

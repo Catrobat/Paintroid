@@ -193,7 +193,7 @@ public class MenuFileActivityIntegrationTest {
 
 		pressBack();
 
-		onView(withId(R.id.drawingSurfaceView)).check(matches(isDisplayed()));
+		onView(withId(R.id.pocketpaint_drawing_surface_view)).check(matches(isDisplayed()));
 	}
 
 	@Test

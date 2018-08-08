@@ -19,7 +19,7 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/colorchooser_base_layout"
+    android:id="@+id/color_chooser_base_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">
@@ -36,12 +36,12 @@
             android:orientation="vertical">
 
             <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
-                android:id="@+id/view_colorpicker"
+                android:id="@+id/color_chooser_color_picker_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/btn_colorchooser_ok"
+                android:id="@+id/color_chooser_button_ok"
                 style="?borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -30,7 +30,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public final class NavigationDrawerInteraction extends CustomViewInteraction {
 	private NavigationDrawerInteraction() {
-		super(onView(withId(R.id.drawer_layout)));
+		super(onView(withId(R.id.pocketpaint_drawer_layout)));
 	}
 
 	public static NavigationDrawerInteraction onNavigationDrawer() {
@@ -38,7 +38,7 @@ public final class NavigationDrawerInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onNavigationView() {
-		return onView(withId(R.id.nav_view));
+		return onView(withId(R.id.pocketpaint_nav_view));
 	}
 
 	public NavigationDrawerInteraction performOpen() {

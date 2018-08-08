@@ -115,8 +115,8 @@ public abstract class BaseTool implements Tool {
 		movedDistance = new PointF(0f, 0f);
 		previousEventCoordinate = new PointF(0f, 0f);
 
-		toolOptionsLayout = ((Activity) context).findViewById(R.id.layout_tool_options);
-		toolSpecificOptionsLayout = ((Activity) context).findViewById(R.id.layout_tool_specific_options);
+		toolOptionsLayout = ((Activity) context).findViewById(R.id.pocketpaint_layout_tool_options);
+		toolSpecificOptionsLayout = ((Activity) context).findViewById(R.id.pocketpaint_layout_tool_specific_options);
 		resetAndInitializeToolOptions();
 	}
 
@@ -239,14 +239,14 @@ public abstract class BaseTool implements Tool {
 
 	private void resetAndInitializeToolOptions() {
 		toolOptionsShown = false;
-		((Activity) (context)).findViewById(R.id.main_tool_options).setVisibility(View.INVISIBLE);
+		((Activity) (context)).findViewById(R.id.pocketpaint_main_tool_options).setVisibility(View.INVISIBLE);
 		dimBackground(false);
 
 		((Activity) (context)).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				toolSpecificOptionsLayout.removeAllViews();
-				TextView toolOptionsName = toolOptionsLayout.findViewById(R.id.layout_tool_options_name);
+				TextView toolOptionsName = toolOptionsLayout.findViewById(R.id.pocketpaint_layout_tool_options_name);
 				toolOptionsName.setText(context.getResources().getString(toolType.getNameResource()));
 			}
 		});
@@ -261,8 +261,8 @@ public abstract class BaseTool implements Tool {
 		if (toolOptionsShown) {
 			if (motionEventType == MotionEvent.ACTION_UP) {
 				PointF surfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(coordinate);
-				float toolOptionsOnSurfaceY = ((Activity) context).findViewById(R.id.main_tool_options).getY()
-						- ((Activity) context).findViewById(R.id.toolbar).getHeight();
+				float toolOptionsOnSurfaceY = ((Activity) context).findViewById(R.id.pocketpaint_main_tool_options).getY()
+						- ((Activity) context).findViewById(R.id.pocketpaint_toolbar).getHeight();
 				if (surfacePoint.y < toolOptionsOnSurfaceY) {
 					toggleShowToolOptions();
 				}
@@ -286,7 +286,7 @@ public abstract class BaseTool implements Tool {
 
 	@Override
 	public void hide() {
-		LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.main_tool_options);
+		LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.pocketpaint_main_tool_options);
 		mainToolOptions.setVisibility(View.GONE);
 		dimBackground(false);
 		toolOptionsShown = false;
@@ -294,8 +294,8 @@ public abstract class BaseTool implements Tool {
 
 	@Override
 	public void toggleShowToolOptions() {
-		LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.main_tool_options);
-		LinearLayout mainBottomBar = ((Activity) (context)).findViewById(R.id.main_bottom_bar);
+		LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.pocketpaint_main_tool_options);
+		LinearLayout mainBottomBar = ((Activity) (context)).findViewById(R.id.pocketpaint_main_bottom_bar);
 		int orientation = context.getResources().getConfiguration().orientation;
 
 		if (!toolOptionsShown) {
@@ -318,7 +318,7 @@ public abstract class BaseTool implements Tool {
 	}
 
 	private void dimBackground(boolean darken) {
-		View drawingSurfaceView = ((Activity) (context)).findViewById(R.id.drawingSurfaceView);
+		View drawingSurfaceView = ((Activity) (context)).findViewById(R.id.pocketpaint_drawing_surface_view);
 		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
 		int colorTo = ContextCompat.getColor(context, darken
 				? R.color.pocketpaint_main_drawing_surface_inactive

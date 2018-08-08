@@ -44,7 +44,7 @@ import static org.junit.Assert.assertThat;
 
 public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 	private DrawingSurfaceInteraction() {
-		super(onView(withId(R.id.drawingSurfaceView)));
+		super(onView(withId(R.id.pocketpaint_drawing_surface_view)));
 	}
 
 	public static DrawingSurfaceInteraction onDrawingSurfaceView() {

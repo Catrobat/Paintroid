@@ -139,23 +139,23 @@ public final class IntroUtils {
 	}
 
 	public static LinearLayout getBottomBarFromToolSlide(Activity activity) {
-		return (LinearLayout) getDescendantView(R.id.intro_tools_bottom_bar, R.id.tools_layout, activity);
+		return (LinearLayout) getDescendantView(R.id.pocketpaint_intro_tools_bottom_bar, R.id.pocketpaint_tools_layout, activity);
 	}
 
 	public static LinearLayout getTopBarFromPossibilitiesSlide(Activity activity) {
-		return (LinearLayout) getDescendantView(R.id.intro_possibilites_topbar, R.id.top_bar_buttons, activity);
+		return (LinearLayout) getDescendantView(R.id.pocketpaint_intro_possibilites_topbar, R.id.pocketpaint_top_bar_buttons, activity);
 	}
 
 	public static TapTargetBottomBar getTapTargetBottomBar(Activity activity) {
 		LinearLayout targetItemView = getBottomBarFromToolSlide(activity);
-		final View fadeView = activity.findViewById(R.id.intro_tools_textview);
-		return new TapTargetBottomBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_tools_bottom_bar);
+		final View fadeView = activity.findViewById(R.id.pocketpaint_intro_tools_textview);
+		return new TapTargetBottomBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.pocketpaint_intro_tools_bottom_bar);
 	}
 
 	public static TapTargetTopBar getTapTargetTopBar(Activity activity) {
-		final View fadeView = activity.findViewById(R.id.intro_possibilities_textview);
+		final View fadeView = activity.findViewById(R.id.pocketpaint_intro_possibilities_textview);
 		LinearLayout targetItemView = getTopBarFromPossibilitiesSlide(activity);
-		TapTargetTopBar tapTargetTopBar = new TapTargetTopBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_possibilities_bottom_bar);
+		TapTargetTopBar tapTargetTopBar = new TapTargetTopBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.pocketpaint_intro_possibilities_bottom_bar);
 		shouldStartSequence(false);
 		return tapTargetTopBar;
 	}
@@ -180,8 +180,8 @@ public final class IntroUtils {
 	}
 
 	public enum IntroSlide {
-		Tools(R.id.intro_tools_textview, R.id.intro_tools_bottom_bar),
-		Possibilities(R.id.intro_possibilities_textview, R.id.intro_possibilites_topbar);
+		Tools(R.id.pocketpaint_intro_tools_textview, R.id.pocketpaint_intro_tools_bottom_bar),
+		Possibilities(R.id.pocketpaint_intro_possibilities_textview, R.id.pocketpaint_intro_possibilites_topbar);
 
 		int fadeViewResourceId;
 		int toolBarResourceId;

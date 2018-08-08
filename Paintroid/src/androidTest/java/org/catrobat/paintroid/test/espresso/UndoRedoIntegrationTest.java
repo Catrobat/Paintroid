@@ -133,7 +133,7 @@ public class UndoRedoIntegrationTest {
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_TOP_LEFT);
 
-		onView(withId(R.id.btn_top_undo))
+		onView(withId(R.id.pocketpaint_btn_top_undo))
 				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo_disabled), not(isEnabled()))));
 	}
 

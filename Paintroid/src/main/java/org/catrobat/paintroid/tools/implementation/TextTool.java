@@ -292,7 +292,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		LayoutInflater inflater = LayoutInflater.from(context);
 		View textToolOptionsView = inflater.inflate(R.layout.dialog_pocketpaint_text_tool, toolSpecificOptionsLayout);
 
-		ToggleButton underlinedButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
+		ToggleButton underlinedButton = (ToggleButton) textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		underlinedButton.setPaintFlags(underlinedButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 		textToolOptionsListener = new TextToolOptionsListener(context, textToolOptionsView);

@@ -62,9 +62,9 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class ToolSelectionIntegrationTest {
-	private static final int START = R.id.tools_brush;
-	private static final int MIDDLE = R.id.tools_cursor;
-	private static final int END = R.id.tools_import;
+	private static final int START = R.id.pocketpaint_tools_brush;
+	private static final int MIDDLE = R.id.pocketpaint_tools_cursor;
+	private static final int END = R.id.pocketpaint_tools_import;
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -82,8 +82,8 @@ public class ToolSelectionIntegrationTest {
 
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
-		toolsLayout = launchActivityRule.getActivity().findViewById(R.id.tools_layout);
-		scrollView = launchActivityRule.getActivity().findViewById(R.id.bottom_bar_scroll_view);
+		toolsLayout = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_tools_layout);
+		scrollView = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_bottom_bar_scroll_view);
 
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
@@ -103,7 +103,7 @@ public class ToolSelectionIntegrationTest {
 	}
 
 	protected int getNumberOfNotVisibleTools() {
-		LinearLayout toolsLayout = launchActivityRule.getActivity().findViewById(R.id.tools_layout);
+		LinearLayout toolsLayout = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_tools_layout);
 		int toolCount = toolsLayout.getChildCount();
 		int numberOfNotVisibleTools = 0;
 		for (int i = 0; i < toolCount; i++) {
@@ -140,7 +140,7 @@ public class ToolSelectionIntegrationTest {
 		);
 
 		float posX = activityHelper.getDisplayWidth() / 2.0f;
-		float posY = launchActivityRule.getActivity().findViewById(R.id.main_tool_options).getY() + getStatusbarHeight() - 10;
+		float posY = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_main_tool_options).getY() + getStatusbarHeight() - 10;
 
 		UiInteractions.touchAt(posX, posY);
 
@@ -158,7 +158,7 @@ public class ToolSelectionIntegrationTest {
 		onToolBarView()
 				.performOpenToolOptions();
 
-		onView(withId(R.id.layout_tool_options))
+		onView(withId(R.id.pocketpaint_layout_tool_options))
 				.check(matches(isDisplayed()))
 				.perform(clickOutside(UiInteractions.Direction.ABOVE))
 				.check(matches(not(isDisplayed())));
@@ -205,7 +205,7 @@ public class ToolSelectionIntegrationTest {
 	@Test
 	public void testToolSelectionNextArrowDisplayed() {
 		try {
-			onView(withId(R.id.bottom_next))
+			onView(withId(R.id.pocketpaint_bottom_next))
 					.check(matches(isCompletelyDisplayed()));
 		} catch (AssertionFailedError e) {
 			onView(withId(START))
@@ -217,7 +217,7 @@ public class ToolSelectionIntegrationTest {
 
 	@Test
 	public void testToolSelectionPreviousArrowNotDisplayed() {
-		onView(withId(R.id.bottom_previous))
+		onView(withId(R.id.pocketpaint_bottom_previous))
 				.check(matches(not(isDisplayed())));
 	}
 
@@ -226,9 +226,9 @@ public class ToolSelectionIntegrationTest {
 		onView(withId(END))
 				.perform(scrollTo());
 		try {
-			onView(withId(R.id.bottom_previous))
+			onView(withId(R.id.pocketpaint_bottom_previous))
 					.check(matches(isCompletelyDisplayed()));
-			onView(withId(R.id.bottom_next))
+			onView(withId(R.id.pocketpaint_bottom_next))
 					.check(matches(not(isDisplayed())));
 		} catch (AssertionFailedError e) {
 			onView(withId(START))
@@ -243,9 +243,9 @@ public class ToolSelectionIntegrationTest {
 		onView(withId(START))
 				.perform(scrollTo());
 		try {
-			onView(withId(R.id.bottom_previous))
+			onView(withId(R.id.pocketpaint_bottom_previous))
 					.check(matches(not(isDisplayed())));
-			onView(withId(R.id.bottom_next))
+			onView(withId(R.id.pocketpaint_bottom_next))
 					.check(matches(isCompletelyDisplayed()));
 		} catch (AssertionFailedError e) {
 			onView(withId(START))
@@ -260,9 +260,9 @@ public class ToolSelectionIntegrationTest {
 		onView(withId(MIDDLE))
 				.perform(scrollTo());
 		try {
-			onView(withId(R.id.bottom_previous))
+			onView(withId(R.id.pocketpaint_bottom_previous))
 					.check(matches(isCompletelyDisplayed()));
-			onView(withId(R.id.bottom_next))
+			onView(withId(R.id.pocketpaint_bottom_next))
 					.check(matches(isCompletelyDisplayed()));
 		} catch (AssertionFailedError e) {
 

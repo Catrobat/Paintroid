@@ -78,12 +78,12 @@ public class WelcomeActivity extends AppCompatActivity {
 
 			if (layouts[position] == R.layout.pocketpaint_slide_intro_tools) {
 
-				View layout = findViewById(R.id.intro_tools_bottom_bar);
-				LinearLayout mToolsLayout = layout.findViewById(R.id.tools_layout);
-				final View fadeView = findViewById(R.id.intro_tools_textview);
+				View layout = findViewById(R.id.pocketpaint_intro_tools_bottom_bar);
+				LinearLayout mToolsLayout = layout.findViewById(R.id.pocketpaint_tools_layout);
+				final View fadeView = findViewById(R.id.pocketpaint_intro_tools_textview);
 
 				TapTargetBottomBar tapTargetBottomBar = new TapTargetBottomBar(mToolsLayout,
-						fadeView, WelcomeActivity.this, R.id.intro_tools_bottom_bar);
+						fadeView, WelcomeActivity.this, R.id.pocketpaint_intro_tools_bottom_bar);
 
 				tapTargetBottomBar.initTargetView();
 			}
@@ -99,12 +99,12 @@ public class WelcomeActivity extends AppCompatActivity {
 			this.state = state;
 			if (state == ViewPager.SCROLL_STATE_IDLE
 					&& layouts[pos] == R.layout.pocketpaint_slide_intro_possibilities) {
-				View layout = findViewById(R.id.intro_possibilites_topbar);
-				LinearLayout view = layout.findViewById(R.id.top_bar_buttons);
-				final View fadeView = findViewById(R.id.intro_possibilities_textview);
+				View layout = findViewById(R.id.pocketpaint_intro_possibilites_topbar);
+				LinearLayout view = layout.findViewById(R.id.pocketpaint_top_bar_buttons);
+				final View fadeView = findViewById(R.id.pocketpaint_intro_possibilities_textview);
 
 				TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
-						WelcomeActivity.this, R.id.intro_possibilities_bottom_bar);
+						WelcomeActivity.this, R.id.pocketpaint_intro_possibilities_bottom_bar);
 				target.initTargetView();
 			}
 		}
@@ -132,10 +132,10 @@ public class WelcomeActivity extends AppCompatActivity {
 		MultilingualActivity.setToChosenLanguage(this);
 		setContentView(R.layout.activity_pocketpaint_welcome);
 
-		viewPager = findViewById(R.id.view_pager);
-		dotsLayout = findViewById(R.id.layoutDots);
-		btnSkip = findViewById(R.id.btn_skip);
-		btnNext = findViewById(R.id.btn_next);
+		viewPager = findViewById(R.id.pocketpaint_view_pager);
+		dotsLayout = findViewById(R.id.pocketpaint_layout_dots);
+		btnSkip = findViewById(R.id.pocketpaint_btn_skip);
+		btnNext = findViewById(R.id.pocketpaint_btn_next);
 
 		colorActive = ContextCompat.getColor(this, R.color.pocketpaint_welcome_dot_active);
 		colorInactive = ContextCompat.getColor(this, R.color.pocketpaint_welcome_dot_inactive);

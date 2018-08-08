@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.not;
 
 public final class ToolBarViewInteraction extends CustomViewInteraction {
 	private ToolBarViewInteraction() {
-		super(onView(withId(R.id.toolbar)));
+		super(onView(withId(R.id.pocketpaint_toolbar)));
 	}
 
 	public static ToolBarViewInteraction onToolBarView() {
@@ -49,7 +49,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onToolOptions() {
-		return onView(withId(R.id.layout_tool_options));
+		return onView(withId(R.id.pocketpaint_layout_tool_options));
 	}
 
 	public ToolBarViewInteraction performClickSelectedToolButton() {

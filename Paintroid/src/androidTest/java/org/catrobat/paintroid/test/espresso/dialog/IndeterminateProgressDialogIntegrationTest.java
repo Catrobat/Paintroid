@@ -62,7 +62,7 @@ public class IndeterminateProgressDialogIntegrationTest {
 
 	@Test
 	public void testDialogIsShown() {
-		onView(withId(R.id.progressBar))
+		onView(withId(R.id.pocketpaint_progress_bar))
 				.check(matches(isDisplayed()));
 	}
 
@@ -70,7 +70,7 @@ public class IndeterminateProgressDialogIntegrationTest {
 	public void testDialogIsNotCancelableOnBack() {
 		pressBack();
 
-		onView(withId(R.id.progressBar))
+		onView(withId(R.id.pocketpaint_progress_bar))
 				.check(matches(isDisplayed()));
 	}
 
@@ -79,7 +79,7 @@ public class IndeterminateProgressDialogIntegrationTest {
 		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
 		PointF point = new PointF(-metrics.widthPixels / 4, -metrics.heightPixels / 4);
 
-		onView(withId(R.id.progressBar))
+		onView(withId(R.id.pocketpaint_progress_bar))
 				.perform(touchAt(point))
 				.check(matches(isDisplayed()));
 	}

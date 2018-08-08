@@ -58,13 +58,13 @@ public final class BrushPickerView implements View.OnClickListener {
 		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
 		View brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_stroke, rootView, true);
 
-		buttonCircle = brushPickerView.findViewById(R.id.stroke_ibtn_circle);
-		buttonRect = brushPickerView.findViewById(R.id.stroke_ibtn_rect);
-		brushWidthSeekBar = brushPickerView.findViewById(R.id.stroke_width_seek_bar);
+		buttonCircle = brushPickerView.findViewById(R.id.pocketpaint_stroke_ibtn_circle);
+		buttonRect = brushPickerView.findViewById(R.id.pocketpaint_stroke_ibtn_rect);
+		brushWidthSeekBar = brushPickerView.findViewById(R.id.pocketpaint_stroke_width_seek_bar);
 		brushWidthSeekBar.setOnSeekBarChangeListener(new BrushPickerView.OnBrushChangedWidthSeekBarListener());
-		brushSizeText = brushPickerView.findViewById(R.id.stroke_width_width_text);
+		brushSizeText = brushPickerView.findViewById(R.id.pocketpaint_stroke_width_width_text);
 		brushSizeText.setFilters(new InputFilter[]{new NumberRangeFilter(1, 100)});
-		drawerPreview = brushPickerView.findViewById(R.id.drawer_preview);
+		drawerPreview = brushPickerView.findViewById(R.id.pocketpaint_drawer_preview);
 
 		buttonCircle.setOnClickListener(this);
 		buttonRect.setOnClickListener(this);
@@ -97,12 +97,12 @@ public final class BrushPickerView implements View.OnClickListener {
 	public void onClick(View v) {
 
 		switch (v.getId()) {
-			case R.id.stroke_ibtn_circle:
+			case R.id.pocketpaint_stroke_ibtn_circle:
 				updateStrokeCap(Cap.ROUND);
 				buttonCircle.setSelected(true);
 				buttonRect.setSelected(false);
 				break;
-			case R.id.stroke_ibtn_rect:
+			case R.id.pocketpaint_stroke_ibtn_rect:
 				updateStrokeCap(Cap.SQUARE);
 				buttonRect.setSelected(true);
 				buttonCircle.setSelected(false);
