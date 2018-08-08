@@ -68,7 +68,7 @@
                 android:layout_weight="1"
                 android:minHeight="0dp"
                 android:padding="2dp"
-                android:src="@drawable/icon_menu_resize_adjust"
+                android:src="@drawable/ic_pocketpaint_tool_resize_adjust"
                 android:theme="@style/PocketPaintHighlightColorTheme" />
             </TableRow>
 
@@ -185,7 +185,7 @@
                 android:layout_weight="1"
                 android:minHeight="0dp"
                 android:padding="2dp"
-                android:src="@drawable/icon_menu_rotate_left"
+                android:src="@drawable/ic_pocketpaint_tool_rotate_left"
                 android:theme="@style/PocketPaintHighlightColorTheme" />
 
             <ImageButton
@@ -197,7 +197,7 @@
                 android:layout_weight="1"
                 android:minHeight="0dp"
                 android:padding="2dp"
-                android:src="@drawable/icon_menu_rotate_right"
+                android:src="@drawable/ic_pocketpaint_rotate_right"
                 android:theme="@style/PocketPaintHighlightColorTheme" />
 
             <ImageButton
@@ -209,7 +209,7 @@
                 android:layout_weight="1"
                 android:minHeight="0dp"
                 android:padding="2dp"
-                android:src="@drawable/icon_menu_flip_vertical"
+                android:src="@drawable/ic_pocketpaint_tool_flip_vertical"
                 android:theme="@style/PocketPaintHighlightColorTheme" />
 
             <ImageButton
@@ -221,7 +221,7 @@
                 android:layout_weight="1"
                 android:minHeight="0dp"
                 android:padding="2dp"
-                android:src="@drawable/icon_menu_flip_horizontal"
+                android:src="@drawable/ic_pocketpaint_tool_flip_horizontal"
                 android:theme="@style/PocketPaintHighlightColorTheme" />
 
 

@@ -77,7 +77,7 @@ public class ColorPickerView extends LinearLayoutCompat {
 	}
 
 	private static View createTabView(Context context, int iconResourceId) {
-		View tabView = inflate(context, R.layout.tab_image_only, null);
+		View tabView = inflate(context, R.layout.color_chooser_tab_image_only, null);
 		ImageView tabIcon = tabView.findViewById(R.id.tab_icon);
 		tabIcon.setBackgroundResource(iconResourceId);
 		return tabView;
@@ -137,17 +137,17 @@ public class ColorPickerView extends LinearLayoutCompat {
 		tabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
 
-		View preTabView = createTabView(getContext(), R.drawable.icon_color_chooser_tab_palette);
+		View preTabView = createTabView(getContext(), R.drawable.ic_color_chooser_tab_preset);
 		TabSpec preTab = tabHost.newTabSpec(PRE_TAG)
 				.setIndicator(preTabView)
 				.setContent(factory);
 
-		View hsvTabView = createTabView(getContext(), R.drawable.icon_color_chooser_tab_circle);
+		View hsvTabView = createTabView(getContext(), R.drawable.ic_color_chooser_tab_hsv);
 		TabSpec hsvTab = tabHost.newTabSpec(HSV_TAG)
 				.setIndicator(hsvTabView)
 				.setContent(factory);
 
-		View rgbTabView = createTabView(getContext(), R.drawable.icon_color_chooser_tab_rgba);
+		View rgbTabView = createTabView(getContext(), R.drawable.ic_color_chooser_tab_rgba);
 		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG)
 				.setIndicator(rgbTabView)
 				.setContent(factory);

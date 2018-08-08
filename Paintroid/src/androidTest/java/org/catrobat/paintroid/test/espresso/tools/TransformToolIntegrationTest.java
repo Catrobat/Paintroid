@@ -1205,18 +1205,18 @@ public class TransformToolIntegrationTest {
 				.checkLayerDimensions(initialHeight, initialWidth);
 
 		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo), isEnabled())));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo), isEnabled())));
 		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo_disabled), not(isEnabled()))));
 
 		onLayerMenuView()
 				.performOpen()
 				.performSelectLayer(0);
 
 		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo), isEnabled())));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo), isEnabled())));
 		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo_disabled), not(isEnabled()))));
 
 		onLayerMenuView()
 				.performSelectLayer(1)

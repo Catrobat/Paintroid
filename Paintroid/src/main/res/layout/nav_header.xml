@@ -21,4 +21,4 @@
     android:layout_width="wrap_content"
     android:layout_height="150dp"
     android:padding="16dp"
-    android:src="@drawable/ic_pocket_paint_logo" />
+    android:src="@drawable/pocketpaint_logo" />

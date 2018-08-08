@@ -47,6 +47,6 @@ public class PaintroidApplication extends Application {
 		super.onCreate();
 		cacheDir = getCacheDir();
 		defaultSystemLanguage = Locale.getDefault().getLanguage();
-		checkeredBackgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
+		checkeredBackgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
 	}
 }

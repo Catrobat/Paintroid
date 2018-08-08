@@ -708,7 +708,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	void createOverlayBitmap() {
 		overlayBitmap = BitmapFactory.decodeResource(context.getResources(),
-				R.drawable.icon_overlay_button);
+				R.drawable.pocketpaint_tool_overlay);
 	}
 
 	void highlightBox() {

@@ -130,7 +130,7 @@ public class SlidesTest {
 		EspressoUtils.checkViewMatchesText(R.id.intro_landscape_text, R.string.intro_landscape_text);
 
 		onView(withId(R.id.image_getstarded))
-				.check(matches(withDrawable(R.drawable.intro_portrait)));
+				.check(matches(withDrawable(R.drawable.pocketpaint_intro_portrait)));
 	}
 
 	@Test
@@ -140,7 +140,7 @@ public class SlidesTest {
 		EspressoUtils.checkViewMatchesText(R.id.intro_started_text, R.string.intro_get_started);
 
 		onView(withId(R.id.image_landscape))
-				.check(matches(withDrawable(R.drawable.intro_landscape)));
+				.check(matches(withDrawable(R.drawable.pocketpaint_intro_landscape)));
 	}
 
 	@Test

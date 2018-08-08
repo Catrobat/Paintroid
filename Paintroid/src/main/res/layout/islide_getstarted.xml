@@ -45,7 +45,7 @@
         android:layout_below="@id/intro_started_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/intro_portrait"
+        android:src="@drawable/pocketpaint_intro_portrait"
         android:layout_alignParentBottom="true"
         android:id="@+id/image_getstarded"
         android:layout_marginTop="20dp"

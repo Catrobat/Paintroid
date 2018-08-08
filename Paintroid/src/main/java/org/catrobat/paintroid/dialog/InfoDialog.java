@@ -69,8 +69,8 @@ public class InfoDialog extends AppCompatDialogFragment implements
 	}
 
 	public enum DialogType {
-		INFO(R.drawable.ic_info_black_48dp),
-		WARNING(R.drawable.ic_warning_black_48dp);
+		INFO(R.drawable.ic_pocketpaint_dialog_info),
+		WARNING(R.drawable.ic_pocketpaint_dialog_warning);
 
 		private int imageResource;
 

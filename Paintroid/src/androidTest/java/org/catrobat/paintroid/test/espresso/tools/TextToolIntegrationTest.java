@@ -565,7 +565,7 @@ public class TextToolIntegrationTest {
 		 * Use replaceText instead of typeText to support the arabic input.
 		 *
 		 * See:
-		 * java.lang.RuntimeException: Failed to get key events for string السلام عليكم 123 (i.e.
+		 * java.ic_pocketpaint_menu_language.RuntimeException: Failed to get key events for string السلام عليكم 123 (i.e.
 		 * current IME does not understand how to translate the string into key events). As a
 		 * workaround, you can use replaceText action to set the text directly in the EditText field.
 		 */

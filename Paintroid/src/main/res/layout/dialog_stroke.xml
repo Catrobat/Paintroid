@@ -108,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:padding="16dp"
-            android:src="@drawable/ic_circle_black_24dp" />
+            android:src="@drawable/ic_pocketpaint_tool_circle" />
 
         <ImageButton
             android:id="@+id/stroke_ibtn_rect"
@@ -116,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:padding="16dp"
-            android:src="@drawable/ic_square_black_24dp" />
+            android:src="@drawable/ic_pocketpaint_tool_square" />
     </LinearLayout>
 
     </LinearLayout>

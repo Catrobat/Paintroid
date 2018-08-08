@@ -75,9 +75,9 @@ public class UndoRedoIntegrationTest {
 		assertEquals(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, activityHelper.getScreenOrientation());
 
 		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo_disabled), not(isEnabled()))));
 		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo_disabled), not(isEnabled()))));
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT));
@@ -85,7 +85,7 @@ public class UndoRedoIntegrationTest {
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_LEFT);
 
 		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo), isEnabled())));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo), isEnabled())));
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
@@ -95,23 +95,23 @@ public class UndoRedoIntegrationTest {
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT);
 
 		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo_disabled), not(isEnabled()))));
 
 		onTopBarView()
 				.performUndo();
 
 		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo), isEnabled())));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo), isEnabled())));
 
 		activityHelper.setScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		assertEquals(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, activityHelper.getScreenOrientation());
 
 		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo), isEnabled())));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo), isEnabled())));
 		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo), isEnabled())))
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo), isEnabled())))
 				.perform(click())
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo_disabled), not(isEnabled()))));
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
@@ -119,7 +119,7 @@ public class UndoRedoIntegrationTest {
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_LEFT);
 
 		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo), isEnabled())))
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo), isEnabled())))
 				.perform(click());
 
 		onDrawingSurfaceView()
@@ -134,43 +134,43 @@ public class UndoRedoIntegrationTest {
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_TOP_LEFT);
 
 		onView(withId(R.id.btn_top_undo))
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo_disabled), not(isEnabled()))));
 	}
 
 	@Test
 	public void testDisableEnableUndo() {
 		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo_disabled), not(isEnabled()))));
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo), isEnabled())));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo), isEnabled())));
 
 		onTopBarView()
 				.performUndo();
 
 		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_undo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo_disabled), not(isEnabled()))));
 	}
 
 	@Test
 	public void testDisableEnableRedo() {
 		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo_disabled), not(isEnabled()))));
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo_disabled), not(isEnabled()))));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo_disabled), not(isEnabled()))));
 
 		onTopBarView()
 				.performUndo();
 
 		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.icon_menu_redo), isEnabled())));
+				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo), isEnabled())));
 	}
 
 	@Test

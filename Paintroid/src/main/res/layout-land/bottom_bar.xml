@@ -40,77 +40,77 @@
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_brush"/>
+            android:src="@drawable/ic_pocketpaint_tool_brush"/>
 
         <ImageButton
             android:id="@+id/tools_eraser"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_eraser"/>
+            android:src="@drawable/ic_pocketpaint_tool_eraser"/>
 
         <ImageButton
             android:id="@+id/tools_line"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_straight_line"/>
+            android:src="@drawable/ic_pocketpaint_tool_line"/>
 
         <ImageButton
             android:id="@+id/tools_rectangle"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_rectangle"/>
+            android:src="@drawable/ic_pocketpaint_tool_rectangle"/>
 
         <ImageButton
             android:id="@+id/tools_fill"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_bucket"/>
+            android:src="@drawable/ic_pocketpaint_tool_fill"/>
 
         <ImageButton
             android:id="@+id/tools_pipette"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_pipette"/>
+            android:src="@drawable/ic_pocketpaint_tool_pipette"/>
 
         <ImageButton
             android:id="@+id/tools_cursor"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_cursor"/>
+            android:src="@drawable/ic_pocketpaint_tool_cursor"/>
 
         <ImageButton
             android:id="@+id/tools_text"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_text"/>
+            android:src="@drawable/ic_pocketpaint_tool_text"/>
 
         <ImageButton
             android:id="@+id/tools_stamp"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_stamp"/>
+            android:src="@drawable/ic_pocketpaint_tool_stamp"/>
 
         <ImageButton
             android:id="@+id/tools_transform"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_transform"/>
+            android:src="@drawable/ic_pocketpaint_tool_transform"/>
 
         <ImageButton
             android:id="@+id/tools_import"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="@dimen/pocketpaint_main_bottom_bar_landscape_button_width"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_landscape_button_height"
-            android:src="@drawable/icon_menu_import_image"/>
+            android:src="@drawable/ic_pocketpaint_tool_import"/>
 
     </LinearLayout>
 </ScrollView>

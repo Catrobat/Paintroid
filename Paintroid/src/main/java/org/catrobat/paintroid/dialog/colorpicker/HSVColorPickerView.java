@@ -123,7 +123,7 @@ public class HSVColorPickerView extends View {
 		hueTrackerPaint.setAntiAlias(true);
 
 		checkeredPaint = new Paint();
-		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
 		BitmapShader checkeredShader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPaint.setShader(checkeredShader);
 

@@ -92,7 +92,7 @@ public abstract class BaseTool implements Tool {
 		eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
 		Resources resources = context.getResources();
-		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.checkeredbg);
+		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPattern = new Paint();
 		checkeredPattern.setShader(shader);

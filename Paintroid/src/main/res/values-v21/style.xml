@@ -27,6 +27,6 @@
     </style>
 
     <style name="PocketPaintSelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/btn_borderless_selectable_material</item>
+        <item name="android:background">@drawable/pocketpaint_selectable_button_bg</item>
     </style>
 </resources>

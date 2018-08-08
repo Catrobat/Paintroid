@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/undo_button_selector" />
+            android:src="@drawable/ic_pocketpaint_undo_selector" />
 
         <ImageButton
             android:id="@+id/btn_top_redo"
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/redo_button_selector" />
+            android:src="@drawable/ic_pocketpaint_redo_selector" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="5dip"
                 android:layout_marginTop="12dip"
-                android:src="@drawable/ic_icon_menu_color_palette"
+                android:src="@drawable/ic_pocketpaint_color_palette"
                 app:tint="@android:color/white" />
         </FrameLayout>
 
@@ -80,6 +80,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/icon_menu_layers"/>
+            android:src="@drawable/ic_pocketpaint_layers"/>
     </LinearLayout>
 </LinearLayout>

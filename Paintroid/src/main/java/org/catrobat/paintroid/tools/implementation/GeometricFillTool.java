@@ -150,10 +150,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				drawCanvas.drawOval(shapeRect, drawPaint);
 				break;
 			case STAR:
-				drawShape(drawCanvas, shapeRect, drawPaint, R.drawable.ic_star_black_48dp);
+				drawShape(drawCanvas, shapeRect, drawPaint, R.drawable.pocketpaint_tool_star);
 				break;
 			case HEART:
-				drawShape(drawCanvas, shapeRect, drawPaint, R.drawable.ic_heart_black_48dp);
+				drawShape(drawCanvas, shapeRect, drawPaint, R.drawable.pocketpaint_tool_heart);
 				break;
 			default:
 				break;

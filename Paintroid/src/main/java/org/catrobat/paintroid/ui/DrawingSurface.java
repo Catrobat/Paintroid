@@ -80,7 +80,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		framePaint.setStyle(Paint.Style.STROKE);
 		framePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
 
-		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPattern.setShader(shader);
 		checkeredPattern.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));

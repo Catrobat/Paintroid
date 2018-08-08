@@ -26,7 +26,7 @@
     android:paddingStart="5dp"
     android:paddingEnd="5dp"
     android:gravity="center_vertical"
-    android:background="@drawable/attribute_button_selector"
+    android:background="@drawable/pocketpaint_attribute_button_selector"
     android:orientation="horizontal">
 
     <ImageView
@@ -35,6 +35,6 @@
         android:layout_height="100dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:background="@drawable/checkeredbg_repeat"/>
+        android:background="@drawable/pocketpaint_checkeredbg_repeat"/>
 
 </LinearLayout>

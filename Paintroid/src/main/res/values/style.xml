@@ -37,7 +37,7 @@
     </style>
 
     <style name="PocketPaintSplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/launch</item>
+        <item name="android:windowBackground">@drawable/pocketpaint_splash</item>
     </style>
 
     <style name="PocketPaintTheme" parent="PocketPaintTheme.Base" />
@@ -68,7 +68,7 @@
     </style>
 
     <style name="PocketPaintSelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/attribute_button_selector</item>
+        <item name="android:background">@drawable/pocketpaint_attribute_button_selector</item>
     </style>
 
     <style name="PocketPaintDrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">

@@ -85,9 +85,9 @@ public class LayerIntegrationTest {
 		onLayerMenuView()
 				.check(matches(not(isDisplayed())));
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_add))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_delete_disabled))));
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))));
 	}
 
 	@Test
@@ -120,9 +120,9 @@ public class LayerIntegrationTest {
 				.checkLayerCount(2);
 
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_add))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_delete))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_delete))));
 
 		onLayerMenuView()
 				.performAddLayer()
@@ -130,9 +130,9 @@ public class LayerIntegrationTest {
 				.checkLayerCount(4);
 
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_new_disabled))));
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_add_disabled))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_delete))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_delete))));
 
 		onLayerMenuView()
 				.performDeleteLayer()
@@ -141,9 +141,9 @@ public class LayerIntegrationTest {
 				.checkLayerCount(1);
 
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_add))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_delete_disabled))));
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))));
 	}
 
 	@Test
@@ -157,9 +157,9 @@ public class LayerIntegrationTest {
 				.checkLayerCount(4);
 
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_new_disabled))));
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_add_disabled))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_delete))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_delete))));
 
 		onNavigationDrawer()
 				.performOpen();
@@ -171,9 +171,9 @@ public class LayerIntegrationTest {
 				.perform(click());
 
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_add))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_delete_disabled))));
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))));
 		onLayerMenuView()
 				.checkLayerCount(1);
 	}

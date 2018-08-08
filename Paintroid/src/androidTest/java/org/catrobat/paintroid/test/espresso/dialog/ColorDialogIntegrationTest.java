@@ -100,13 +100,13 @@ public class ColorDialogIntegrationTest {
 
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_circle))).perform(click());
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_hsv))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_HSV_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_palette))).perform(click());
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 	}
 
@@ -161,7 +161,7 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_palette))).perform(click());
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
 		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
@@ -185,12 +185,12 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_palette))).perform(click());
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
 		clickColorPickerPresetSelectorButton(0);
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
 		onView(withId(R.id.color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), withTextColor(getColorById(R.color.pocketpaint_color_chooser_rgb_red)))));
@@ -276,7 +276,7 @@ public class ColorDialogIntegrationTest {
 	public void testColorPickerTabRestoredOnOrientationChange() {
 		onColorPickerView()
 				.performOpenColorPicker();
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_rgba)))
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
 				.perform(click());
 
 		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);

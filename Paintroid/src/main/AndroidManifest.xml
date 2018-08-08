@@ -28,7 +28,7 @@
     <application
         android:name=".PaintroidApplication"
         android:allowBackup="false"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_pocketpaint_launcher"
         android:label="${appName}"
         android:largeHeap="true"
         android:supportsRtl="true"

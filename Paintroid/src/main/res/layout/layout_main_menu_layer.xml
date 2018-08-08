@@ -31,7 +31,7 @@
         android:contentDescription="@string/layer_new"
         android:padding="0dp"
         android:scaleType="fitXY"
-        android:src="@drawable/layer_new_button_selector"
+        android:src="@drawable/ic_pocketpaint_layers_add_selector"
         android:theme="@style/PocketPaintHighlightColorTheme" />
 
     <ImageButton
@@ -43,7 +43,7 @@
         android:contentDescription="@string/layer_delete"
         android:padding="0dp"
         android:scaleType="fitXY"
-        android:src="@drawable/layer_delete_button_selector"
+        android:src="@drawable/ic_pocketpaint_layers_delete_selector"
         android:theme="@style/PocketPaintHighlightColorTheme" />
 
     <org.catrobat.paintroid.ui.dragndrop.DragAndDropListView
