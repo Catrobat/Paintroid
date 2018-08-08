@@ -178,7 +178,7 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 
 			if (Color.alpha(getColor()) != 0xff) {
 				Shader backgroundShader = new BitmapShader(
-						PaintroidApplication.backgroundBitmap, TileMode.REPEAT, TileMode.REPEAT);
+						PaintroidApplication.checkeredBackgroundBitmap, TileMode.REPEAT, TileMode.REPEAT);
 				backgroundPaint = new Paint();
 				backgroundPaint.setShader(backgroundShader);
 			}
