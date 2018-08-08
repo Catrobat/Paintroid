@@ -51,5 +51,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/layer_side_nav_button_add"
-        tools:listitem="@layout/item_layer" />
+        tools:listitem="@layout/pocketpaint_item_layer" />
 </RelativeLayout>

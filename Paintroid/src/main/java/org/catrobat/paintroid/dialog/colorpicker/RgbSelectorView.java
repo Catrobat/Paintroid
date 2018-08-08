@@ -54,7 +54,7 @@ public class RgbSelectorView extends LinearLayout {
 	}
 
 	private void init() {
-		View rgbView = inflate(getContext(), R.layout.colorpicker_rgbview, null);
+		View rgbView = inflate(getContext(), R.layout.color_chooser_layout_rgbview, null);
 
 		addView(rgbView);
 

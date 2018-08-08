@@ -76,7 +76,7 @@ public class WelcomeActivity extends AppCompatActivity {
 				btnSkip.setVisibility(View.VISIBLE);
 			}
 
-			if (layouts[position] == R.layout.islide_tools) {
+			if (layouts[position] == R.layout.pocketpaint_slide_intro_tools) {
 
 				View layout = findViewById(R.id.intro_tools_bottom_bar);
 				LinearLayout mToolsLayout = layout.findViewById(R.id.tools_layout);
@@ -98,7 +98,7 @@ public class WelcomeActivity extends AppCompatActivity {
 		public void onPageScrollStateChanged(int state) {
 			this.state = state;
 			if (state == ViewPager.SCROLL_STATE_IDLE
-					&& layouts[pos] == R.layout.islide_possibilities) {
+					&& layouts[pos] == R.layout.pocketpaint_slide_intro_possibilities) {
 				View layout = findViewById(R.id.intro_possibilites_topbar);
 				LinearLayout view = layout.findViewById(R.id.top_bar_buttons);
 				final View fadeView = findViewById(R.id.intro_possibilities_textview);
@@ -141,11 +141,11 @@ public class WelcomeActivity extends AppCompatActivity {
 		colorInactive = ContextCompat.getColor(this, R.color.pocketpaint_welcome_dot_inactive);
 
 		layouts = new int[]{
-				R.layout.islide_welcome,
-				R.layout.islide_tools,
-				R.layout.islide_possibilities,
-				R.layout.islide_landscape,
-				R.layout.islide_getstarted};
+				R.layout.pocketpaint_slide_intro_welcome,
+				R.layout.pocketpaint_slide_intro_tools,
+				R.layout.pocketpaint_slide_intro_possibilities,
+				R.layout.pocketpaint_slide_intro_landscape,
+				R.layout.pocketpaint_slide_intro_getstarted};
 
 		changeStatusBarColor();
 		initViewPager();

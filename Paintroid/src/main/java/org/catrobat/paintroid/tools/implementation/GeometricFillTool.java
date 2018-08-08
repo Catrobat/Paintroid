@@ -231,7 +231,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		View shapeToolOptionView = inflater.inflate(R.layout.dialog_shapes, toolSpecificOptionsLayout);
+		View shapeToolOptionView = inflater.inflate(R.layout.dialog_pocketpaint_shapes, toolSpecificOptionsLayout);
 
 		shapeToolOptionsListener = new ShapeToolOptionsListener(shapeToolOptionView);
 		setupOnShapeToolDialogChangedListener();

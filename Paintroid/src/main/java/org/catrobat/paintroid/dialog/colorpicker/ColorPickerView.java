@@ -127,7 +127,7 @@ public class ColorPickerView extends LinearLayoutCompat {
 	}
 
 	private void init() {
-		View tabView = inflate(getContext(), R.layout.colorpicker_colorselectview, null);
+		View tabView = inflate(getContext(), R.layout.color_chooser_colorselectview, null);
 		addView(tabView);
 		rgbSelectorView = new RgbSelectorView(getContext());
 		preSelectorView = new PresetSelectorView(getContext());

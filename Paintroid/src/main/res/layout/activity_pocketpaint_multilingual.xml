@@ -25,5 +25,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:isScrollContainer="true"
-        tools:listitem="@layout/multilingual_name_text" />
+        tools:listitem="@layout/pocketpaint_item_multilingual_name_text" />
 </merge>

@@ -103,7 +103,7 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.colorpicker_dialog, container);
+		return inflater.inflate(R.layout.dialog_color_chooser, container);
 	}
 
 	@Override

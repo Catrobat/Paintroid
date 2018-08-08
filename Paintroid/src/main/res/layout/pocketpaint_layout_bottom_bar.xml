@@ -23,7 +23,7 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:orientation="horizontal"
-    tools:showIn="@layout/activity_pocketpaint">
+    tools:showIn="@layout/activity_pocketpaint_main">
 
     <org.catrobat.paintroid.ui.BottomBarHorizontalScrollView
         android:id="@+id/bottom_bar_scroll_view"

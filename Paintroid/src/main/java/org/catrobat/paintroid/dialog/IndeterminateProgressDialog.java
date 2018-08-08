@@ -53,7 +53,7 @@ public class IndeterminateProgressDialog extends AppCompatDialogFragment {
 	@SuppressLint("InflateParams")
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View layout = inflater.inflate(R.layout.layout_indeterminate, null);
+		View layout = inflater.inflate(R.layout.pocketpaint_layout_indeterminate, null);
 
 		// Remove this section once AppCompat supports tinting Progressbars
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {

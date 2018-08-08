@@ -68,7 +68,7 @@ public class LayerAdapter extends BaseAdapter implements LayerContracts.Adapter 
 
 		if (convertView == null) {
 			LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-			convertView = inflater.inflate(R.layout.item_layer, parent, false);
+			convertView = inflater.inflate(R.layout.pocketpaint_item_layer, parent, false);
 			viewHolder = new LayerViewHolder(convertView);
 			convertView.setTag(viewHolder);
 		} else {

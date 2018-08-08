@@ -29,7 +29,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <include layout="@layout/top_bar"
+        <include layout="@layout/pocketpaint_layout_top_bar"
             android:id="@+id/layout_top_bar" />
 
         <org.catrobat.paintroid.ui.DrawingSurface
@@ -50,7 +50,7 @@
             android:layout_alignParentBottom="true"
             android:background="@android:color/background_light">
 
-            <include layout="@layout/tool_options"/>
+            <include layout="@layout/pocketpaint_layout_tool_options"/>
         </LinearLayout>
 
         <LinearLayout
@@ -61,7 +61,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true">
 
-            <include layout="@layout/bottom_bar"/>
+            <include layout="@layout/pocketpaint_layout_bottom_bar"/>
         </LinearLayout>
 
     </RelativeLayout>
@@ -71,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
+        app:headerLayout="@layout/pocketpaint_layout_nav_header"
         app:menu="@menu/menu_pocketpaint_activity"
         android:background="@color/pocketpaint_main_navigation_drawer_background">
     </android.support.design.widget.NavigationView>
@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|center">
 
-        <include layout="@layout/layout_main_menu_layer" />
+        <include layout="@layout/pocketpaint_layout_main_menu_layer" />
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

@@ -27,7 +27,7 @@
     android:scrollbars="none"
     android:saveEnabled="false"
     android:fillViewport="true"
-    tools:showIn="@layout/activity_pocketpaint">
+    tools:showIn="@layout/activity_pocketpaint_main">
 
     <LinearLayout
         android:id="@+id/tools_layout"

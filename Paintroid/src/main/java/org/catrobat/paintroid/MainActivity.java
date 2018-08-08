@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		setTheme(R.style.PocketPaintTheme);
 		MultilingualActivity.setToChosenLanguage(this);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_pocketpaint);
+		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();
 
