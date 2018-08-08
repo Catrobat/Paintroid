@@ -57,7 +57,7 @@ public class IndeterminateProgressDialog extends AppCompatDialogFragment {
 
 		// Remove this section once AppCompat supports tinting Progressbars
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-			ProgressBar progressBar = layout.findViewById(R.id.progressBar);
+			ProgressBar progressBar = layout.findViewById(R.id.pocketpaint_progress_bar);
 			if (progressBar != null) {
 				Drawable drawable = progressBar.getIndeterminateDrawable();
 				int toolTextColor = ContextCompat.getColor(getContext(), R.color.pocketpaint_colorAccent);

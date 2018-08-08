@@ -822,8 +822,8 @@ public class MainActivityPresenterTest {
 
 		presenter.finishInitialize();
 
-		verify(navigationDrawerViewHolder).removeItem(R.id.nav_export);
-		verify(navigationDrawerViewHolder).removeItem(R.id.nav_back_to_pocket_code);
+		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_export);
+		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
 	}
 
 	@Test
@@ -836,8 +836,8 @@ public class MainActivityPresenterTest {
 
 		presenter.finishInitialize();
 
-		verify(navigationDrawerViewHolder).removeItem(R.id.nav_save_image);
-		verify(navigationDrawerViewHolder).removeItem(R.id.nav_save_duplicate);
+		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_save_image);
+		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_save_duplicate);
 	}
 
 	@Test

@@ -57,13 +57,13 @@
             android:gravity="center">
 
             <Spinner
-                android:id="@+id/text_tool_dialog_spinner_font"
+                android:id="@+id/pocketpaint_text_tool_dialog_spinner_font"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3.2"/>
 
             <ToggleButton
-                android:id="@+id/text_tool_dialog_toggle_underlined"
+                android:id="@+id/pocketpaint_text_tool_dialog_toggle_underlined"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:textStyle="normal"
@@ -72,7 +72,7 @@
                 android:layout_weight="1"/>
 
             <ToggleButton
-                android:id="@+id/text_tool_dialog_toggle_italic"
+                android:id="@+id/pocketpaint_text_tool_dialog_toggle_italic"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:textStyle="italic"
@@ -81,7 +81,7 @@
                 android:layout_weight="1" />
 
             <ToggleButton
-                android:id="@+id/text_tool_dialog_toggle_bold"
+                android:id="@+id/pocketpaint_text_tool_dialog_toggle_bold"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:textStyle="bold"
@@ -105,7 +105,7 @@
         <View style="@style/PocketPaintDividerHorizontal"/>
 
         <EditText
-            android:id="@+id/text_tool_dialog_input_text"
+            android:id="@+id/pocketpaint_text_tool_dialog_input_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"

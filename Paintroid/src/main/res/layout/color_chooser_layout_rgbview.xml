@@ -19,7 +19,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rgb_base_layout"
+    android:id="@+id/color_chooser_rgb_base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -41,7 +41,7 @@
             android:paddingTop="12dp" >
 
             <TextView
-                android:id="@+id/color_rgb_textview_red"
+                android:id="@+id/color_chooser_color_rgb_textview_red"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -52,14 +52,14 @@
                 android:paddingEnd="5dp" />
 
             <SeekBar
-                android:id="@+id/color_rgb_seekbar_red"
+                android:id="@+id/color_chooser_color_rgb_seekbar_red"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:max="255" />
 
             <TextView
-                android:id="@+id/rgb_red_value"
+                android:id="@+id/color_chooser_rgb_red_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -78,7 +78,7 @@
             android:paddingTop="12dp" >
 
             <TextView
-                android:id="@+id/color_rgb_textview_green"
+                android:id="@+id/color_chooser_color_rgb_textview_green"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -89,13 +89,13 @@
                 android:paddingEnd="5dp" />
 
             <SeekBar
-                android:id="@+id/color_rgb_seekbar_green"
+                android:id="@+id/color_chooser_color_rgb_seekbar_green"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:max="255" />
 
             <TextView
-                android:id="@+id/rgb_green_value"
+                android:id="@+id/color_chooser_rgb_green_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -113,7 +113,7 @@
             android:paddingTop="12dp" >
 
             <TextView
-                android:id="@+id/color_rgb_textview_blue"
+                android:id="@+id/color_chooser_color_rgb_textview_blue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -124,13 +124,13 @@
                 android:paddingEnd="5dp" />
 
             <SeekBar
-                android:id="@+id/color_rgb_seekbar_blue"
+                android:id="@+id/color_chooser_color_rgb_seekbar_blue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:max="255" />
 
             <TextView
-                android:id="@+id/rgb_blue_value"
+                android:id="@+id/color_chooser_rgb_blue_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -149,7 +149,7 @@
             android:paddingTop="12dp" >
 
             <TextView
-                android:id="@+id/color_rgb_textview_alpha"
+                android:id="@+id/color_chooser_color_rgb_textview_alpha"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -160,13 +160,13 @@
                 android:paddingEnd="5dp" />
 
             <SeekBar
-                android:id="@+id/color_rgb_seekbar_alpha"
+                android:id="@+id/color_chooser_color_rgb_seekbar_alpha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:max="255" />
 
             <TextView
-                android:id="@+id/rgb_alpha_value"
+                android:id="@+id/color_chooser_rgb_alpha_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"

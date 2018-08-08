@@ -23,7 +23,7 @@
 	android:orientation="vertical">
 
 	<TabHost
-		android:id="@+id/colorview_tabColors"
+		android:id="@+id/color_chooser_colorview_tabColors"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 

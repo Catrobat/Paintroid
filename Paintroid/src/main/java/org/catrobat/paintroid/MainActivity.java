@@ -169,10 +169,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	private void onCreateMainView() {
-		DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-		ViewGroup topBarLayout = findViewById(R.id.layout_top_bar);
-		View bottomBarLayout = findViewById(R.id.main_bottom_bar);
-		NavigationView navigationView = findViewById(R.id.nav_view);
+		DrawerLayout drawerLayout = findViewById(R.id.pocketpaint_drawer_layout);
+		ViewGroup topBarLayout = findViewById(R.id.pocketpaint_layout_top_bar);
+		View bottomBarLayout = findViewById(R.id.pocketpaint_main_bottom_bar);
+		NavigationView navigationView = findViewById(R.id.pocketpaint_nav_view);
 
 		drawerLayoutViewHolder = new DrawerLayoutViewHolder(drawerLayout);
 		TopBarViewHolder topBarViewHolder = new TopBarViewHolder(topBarLayout);
@@ -191,8 +191,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	private void onCreateLayerMenu() {
-		ViewGroup layerLayout = findViewById(R.id.layer_side_nav_menu);
-		DragAndDropListView layerListView = findViewById(R.id.layer_side_nav_list);
+		ViewGroup layerLayout = findViewById(R.id.pocketpaint_layer_side_nav_menu);
+		DragAndDropListView layerListView = findViewById(R.id.pocketpaint_layer_side_nav_list);
 
 		LayerMenuViewHolder layerMenuViewHolder = new LayerMenuViewHolder(layerLayout);
 		LayerNavigator layerNavigator = new LayerNavigator(getApplicationContext());
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	private void onCreateDrawingSurface() {
-		drawingSurface = findViewById(R.id.drawingSurfaceView);
+		drawingSurface = findViewById(R.id.pocketpaint_drawing_surface_view);
 		drawingSurface.setLayerModel(layerModel);
 
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -283,8 +283,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		}
 
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-			View next = viewHolder.layout.findViewById(R.id.bottom_next);
-			View previous = viewHolder.layout.findViewById(R.id.bottom_previous);
+			View next = viewHolder.layout.findViewById(R.id.pocketpaint_bottom_next);
+			View previous = viewHolder.layout.findViewById(R.id.pocketpaint_bottom_previous);
 			BottomBarHorizontalScrollView horizontalScrollView = (BottomBarHorizontalScrollView) viewHolder.scrollView;
 			horizontalScrollView.setScrollStateListener(new BottomBarScrollListener(previous, next));
 		}
@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	@Override
 	public void initializeActionBar(boolean isOpenedFromCatroid) {
-		Toolbar toolbar = findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.pocketpaint_toolbar);
 		setSupportActionBar(toolbar);
 
 		boolean showHome = model.isOpenedFromCatroid();
@@ -372,40 +372,40 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	private void onNavigationItemSelected(@NonNull MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.nav_back_to_pocket_code:
+			case R.id.pocketpaint_nav_back_to_pocket_code:
 				presenter.backToPocketCodeClicked();
 				break;
-			case R.id.nav_export:
+			case R.id.pocketpaint_nav_export:
 				presenter.saveCopyClicked();
 				break;
-			case R.id.nav_save_image:
+			case R.id.pocketpaint_nav_save_image:
 				presenter.saveImageClicked();
 				break;
-			case R.id.nav_save_duplicate:
+			case R.id.pocketpaint_nav_save_duplicate:
 				presenter.saveCopyClicked();
 				break;
-			case R.id.nav_open_image:
+			case R.id.pocketpaint_nav_open_image:
 				presenter.loadImageClicked();
 				break;
-			case R.id.nav_new_image:
+			case R.id.pocketpaint_nav_new_image:
 				presenter.newImageClicked();
 				break;
-			case R.id.nav_fullscreen_mode:
+			case R.id.pocketpaint_nav_fullscreen_mode:
 				presenter.enterFullscreenClicked();
 				break;
-			case R.id.nav_exit_fullscreen_mode:
+			case R.id.pocketpaint_nav_exit_fullscreen_mode:
 				presenter.exitFullscreenClicked();
 				break;
-			case R.id.nav_tos:
+			case R.id.pocketpaint_nav_tos:
 				presenter.showTermsOfServiceClicked();
 				break;
-			case R.id.nav_help:
+			case R.id.pocketpaint_nav_help:
 				presenter.showHelpClicked();
 				break;
-			case R.id.nav_about:
+			case R.id.pocketpaint_nav_about:
 				presenter.showAboutClicked();
 				break;
-			case R.id.nav_lang:
+			case R.id.pocketpaint_nav_lang:
 				presenter.selectLanguageClicked();
 				break;
 			default:

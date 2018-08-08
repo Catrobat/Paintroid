@@ -104,7 +104,7 @@ public class RectangleFillToolIntegrationTest {
 
 		selectTool(ToolType.SHAPE);
 
-		onView(withId(R.id.shapes_circle_btn)).perform(click());
+		onView(withId(R.id.pocketpaint_shapes_circle_btn)).perform(click());
 
 		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
 		PointF centerPointTool = ellipseTool.toolPosition;
@@ -125,12 +125,12 @@ public class RectangleFillToolIntegrationTest {
 
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor, colorAfterDrawing);
 
-		onView(withId(R.id.btn_top_undo)).perform(click());
+		onView(withId(R.id.pocketpaint_btn_top_undo)).perform(click());
 
 		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertEquals(colorBeforeDrawing, colorAfterUndo);
 
-		onView(withId(R.id.btn_top_redo)).perform(click());
+		onView(withId(R.id.pocketpaint_btn_top_redo)).perform(click());
 
 		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertEquals(colorPickerColor, colorAfterRedo);
@@ -202,24 +202,24 @@ public class RectangleFillToolIntegrationTest {
 	@Test
 	public void testEraseWithEllipse() {
 		selectTool(ToolType.SHAPE);
-		selectShapeTypeAndDraw(R.id.shapes_square_btn, false, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_square_btn, false, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 
 		clickSelectedToolButton();
 
-		selectShapeTypeAndDraw(R.id.shapes_circle_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_circle_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 	}
 
 	@Test
 	public void testDrawWithDrawableShape() {
 		selectTool(ToolType.SHAPE);
-		selectShapeTypeAndDraw(R.id.shapes_heart_btn, false, BLACK_COLOR_PICKER_BUTTON_POSITION);
+		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_heart_btn, false, BLACK_COLOR_PICKER_BUTTON_POSITION);
 	}
 
 	@Test
 	public void testCheckeredBackgroundWhenTransparentColorSelected() {
 		selectTool(ToolType.SHAPE);
 
-		onView(withId(R.id.shapes_heart_btn)).perform(click());
+		onView(withId(R.id.pocketpaint_shapes_heart_btn)).perform(click());
 
 		clickSelectedToolButton();
 
@@ -256,11 +256,11 @@ public class RectangleFillToolIntegrationTest {
 
 		selectTool(ToolType.SHAPE);
 		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
-		selectShapeTypeAndDraw(R.id.shapes_square_btn, true, BLACK_COLOR_PICKER_BUTTON_POSITION);
+		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_square_btn, true, BLACK_COLOR_PICKER_BUTTON_POSITION);
 		int backgroundColor = tool.getDrawPaint().getColor();
 
 		clickSelectedToolButton();
-		selectShapeTypeAndDraw(R.id.shapes_heart_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_heart_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 
 		Bitmap drawingBitmap = tool.drawingBitmap;
 		int boxWidth = drawingBitmap.getWidth();

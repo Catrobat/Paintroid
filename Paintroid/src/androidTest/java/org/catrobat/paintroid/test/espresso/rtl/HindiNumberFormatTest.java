@@ -68,23 +68,23 @@ public class HindiNumberFormatTest {
 				.perform(click());
 
 		selectTool(ToolType.BRUSH);
-		onView(withId(R.id.stroke_width_width_text))
+		onView(withId(R.id.pocketpaint_stroke_width_width_text))
 				.check(matches(withText(containsString(EXPECTED_STROKE_WIDTH_VALUE))));
 
 		selectTool(ToolType.LINE);
-		onView(withId(R.id.stroke_width_width_text))
+		onView(withId(R.id.pocketpaint_stroke_width_width_text))
 				.check(matches(withText(containsString(EXPECTED_STROKE_WIDTH_VALUE))));
 
 		selectTool(ToolType.CURSOR);
-		onView(withId(R.id.stroke_width_width_text))
+		onView(withId(R.id.pocketpaint_stroke_width_width_text))
 				.check(matches(withText(containsString(EXPECTED_STROKE_WIDTH_VALUE))));
 
 		selectTool(ToolType.FILL);
-		onView(withId(R.id.fill_tool_dialog_color_tolerance_input))
+		onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
 				.check(matches(withText(containsString(EXPECTED_COLOR_TOLERANCE_VALUE))));
 
 		selectTool(ToolType.ERASER);
-		onView(withId(R.id.stroke_width_width_text))
+		onView(withId(R.id.pocketpaint_stroke_width_width_text))
 				.check(matches(withText(containsString(EXPECTED_STROKE_WIDTH_VALUE))));
 	}
 
@@ -96,15 +96,15 @@ public class HindiNumberFormatTest {
 
 		openColorPickerDialog();
 		clickColorPickerPresetSelectorButton(7);
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
 				.perform(click());
-		onView(withId(R.id.rgb_red_value))
+		onView(withId(R.id.color_chooser_rgb_red_value))
 				.check(matches(withText(containsString(EXPECTED_RED_VALUE))));
-		onView(withId(R.id.rgb_green_value))
+		onView(withId(R.id.color_chooser_rgb_green_value))
 				.check(matches(withText(containsString(EXPECTED_GREEN_VALUE))));
-		onView(withId(R.id.rgb_blue_value))
+		onView(withId(R.id.color_chooser_rgb_blue_value))
 				.check(matches(withText(containsString(EXPECTED_BLAU_VALUE))));
-		onView(withId(R.id.rgb_alpha_value))
+		onView(withId(R.id.color_chooser_rgb_alpha_value))
 				.check(matches(withText(containsString(EXPECTED_ALFA_VALUE))));
 	}
 }

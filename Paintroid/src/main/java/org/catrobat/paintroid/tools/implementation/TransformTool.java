@@ -355,7 +355,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		rangeFilterHeight = new NumberRangeFilter(1, (int) (maximumBoxResolution / (boxWidth)));
 		rangeFilterWidth = new NumberRangeFilter(1, (int) (maximumBoxResolution / (boxHeight)));
 
-		widthEditText = toolSpecificOptionsLayout.findViewById(R.id.transform_width_value);
+		widthEditText = toolSpecificOptionsLayout.findViewById(R.id.pocketpaint_transform_width_value);
 		widthEditText.setFilters(new InputFilter[]{rangeFilterWidth});
 		textWatcherWidth = new TextWatcher() {
 			@Override
@@ -377,7 +377,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		};
 		widthEditText.addTextChangedListener(textWatcherWidth);
 
-		heightEditText = toolSpecificOptionsLayout.findViewById(R.id.transform_height_value);
+		heightEditText = toolSpecificOptionsLayout.findViewById(R.id.pocketpaint_transform_height_value);
 		heightEditText.setFilters(new InputFilter[]{rangeFilterHeight});
 		textWatcherHeight = new TextWatcher() {
 			@Override
@@ -403,19 +403,19 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			@Override
 			public void onClick(View v) {
 				switch (v.getId()) {
-					case R.id.transform_auto_crop_btn:
+					case R.id.pocketpaint_transform_auto_crop_btn:
 						autoCrop();
 						break;
-					case R.id.transform_rotate_left_btn:
+					case R.id.pocketpaint_transform_rotate_left_btn:
 						rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
 						break;
-					case R.id.transform_rotate_right_btn:
+					case R.id.pocketpaint_transform_rotate_right_btn:
 						rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
 						break;
-					case R.id.transform_flip_horizontal_btn:
+					case R.id.pocketpaint_transform_flip_horizontal_btn:
 						flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
 						break;
-					case R.id.transform_flip_vertical_btn:
+					case R.id.pocketpaint_transform_flip_vertical_btn:
 						flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
 						break;
 					default:
@@ -425,9 +425,9 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		};
 
 		int[] buttonIdList = {
-				R.id.transform_auto_crop_btn,
-				R.id.transform_rotate_left_btn, R.id.transform_rotate_right_btn,
-				R.id.transform_flip_horizontal_btn, R.id.transform_flip_vertical_btn};
+				R.id.pocketpaint_transform_auto_crop_btn,
+				R.id.pocketpaint_transform_rotate_left_btn, R.id.pocketpaint_transform_rotate_right_btn,
+				R.id.pocketpaint_transform_flip_horizontal_btn, R.id.pocketpaint_transform_flip_vertical_btn};
 
 		for (int id : buttonIdList) {
 			transformToolOptionView.findViewById(id).setOnClickListener(onClickListener);

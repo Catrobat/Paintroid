@@ -22,10 +22,10 @@
                 android:layout_height="match_parent">
 
     <include layout="@layout/pocketpaint_layout_top_bar"
-        android:id="@+id/intro_tools_top_bar"/>
+        android:id="@+id/pocketpaint_intro_tools_top_bar"/>
 
     <LinearLayout
-        android:id="@+id/intro_tools_bottom_bar"
+        android:id="@+id/pocketpaint_intro_tools_bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
         android:layout_alignParentBottom="true"
@@ -37,9 +37,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/intro_tools_bottom_bar"
+        android:layout_above="@id/pocketpaint_intro_tools_bottom_bar"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/intro_tools_top_bar"
+        android:layout_below="@id/pocketpaint_intro_tools_top_bar"
         android:background="@color/pocketpaint_main_drawing_surface_background">
 
         <View
@@ -54,7 +54,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/intro_tools_textview"
+        android:id="@+id/pocketpaint_intro_tools_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#d20097a7"
@@ -63,12 +63,12 @@
         android:paddingTop="@dimen/pocketpaint_welcome_margin_top"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@id/intro_tools_bottom_bar"
+        android:layout_above="@id/pocketpaint_intro_tools_bottom_bar"
         android:orientation="vertical"
         android:gravity="top">
 
         <TextView
-            android:id="@+id/intro_tools_head"
+            android:id="@+id/pocketpaint_intro_tools_head"
             style="@style/PocketPaintWelcomeHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             style="@style/PocketPaintWelcomeText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/intro_tools_head"
+            android:layout_below="@id/pocketpaint_intro_tools_head"
             android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
             android:text="@string/intro_tool_more_information"/>
     </RelativeLayout>

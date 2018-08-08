@@ -92,7 +92,7 @@ public class MainActivityIntegrationTest {
 
 		pressBack();
 
-		onView(withId(R.id.nav_view)).check(matches(not(isDisplayed())));
+		onView(withId(R.id.pocketpaint_nav_view)).check(matches(not(isDisplayed())));
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class MainActivityIntegrationTest {
 
 		pressBack();
 
-		onView(withId(R.id.nav_view)).check(matches(not(isDisplayed())));
+		onView(withId(R.id.pocketpaint_nav_view)).check(matches(not(isDisplayed())));
 	}
 
 	@Test

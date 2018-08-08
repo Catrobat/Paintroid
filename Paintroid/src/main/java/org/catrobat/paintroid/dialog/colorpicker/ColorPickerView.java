@@ -78,7 +78,7 @@ public class ColorPickerView extends LinearLayoutCompat {
 
 	private static View createTabView(Context context, int iconResourceId) {
 		View tabView = inflate(context, R.layout.color_chooser_tab_image_only, null);
-		ImageView tabIcon = tabView.findViewById(R.id.tab_icon);
+		ImageView tabIcon = tabView.findViewById(R.id.color_chooser_tab_icon);
 		tabIcon.setBackgroundResource(iconResourceId);
 		return tabView;
 	}
@@ -133,7 +133,7 @@ public class ColorPickerView extends LinearLayoutCompat {
 		preSelectorView = new PresetSelectorView(getContext());
 		hsvSelectorView = new HSVSelectorView(getContext());
 
-		tabHost = tabView.findViewById(R.id.colorview_tabColors);
+		tabHost = tabView.findViewById(R.id.color_chooser_colorview_tabColors);
 		tabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
 

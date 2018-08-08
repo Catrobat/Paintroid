@@ -35,11 +35,11 @@ public class ShapeToolOptionsListener {
 	private TextView shapeToolDialogTitle;
 
 	public ShapeToolOptionsListener(View shapeToolOptionsView) {
-		squareButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_square_btn);
-		circleButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_circle_btn);
-		heartButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_heart_btn);
-		starButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.shapes_star_btn);
-		shapeToolDialogTitle = (TextView) shapeToolOptionsView.findViewById(R.id.shape_tool_dialog_title);
+		squareButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.pocketpaint_shapes_square_btn);
+		circleButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.pocketpaint_shapes_circle_btn);
+		heartButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.pocketpaint_shapes_heart_btn);
+		starButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.pocketpaint_shapes_star_btn);
+		shapeToolDialogTitle = (TextView) shapeToolOptionsView.findViewById(R.id.pocketpaint_shape_tool_dialog_title);
 
 		initializeListeners();
 		setShapeActivated(GeometricFillTool.BaseShape.RECTANGLE);

@@ -21,25 +21,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_top_bar"
+    android:id="@+id/pocketpaint_layout_top_bar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/pocketpaint_main_top_bar_height"
     tools:showIn="@layout/activity_pocketpaint_main">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/pocketpaint_toolbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <LinearLayout
-        android:id="@+id/top_bar_buttons"
+        android:id="@+id/pocketpaint_top_bar_buttons"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:weightSum="4">
 
         <ImageButton
-            android:id="@+id/btn_top_undo"
+            android:id="@+id/pocketpaint_btn_top_undo"
             style="?actionButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -47,7 +47,7 @@
             android:src="@drawable/ic_pocketpaint_undo_selector" />
 
         <ImageButton
-            android:id="@+id/btn_top_redo"
+            android:id="@+id/pocketpaint_btn_top_redo"
             style="?actionButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -59,12 +59,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
             <org.catrobat.paintroid.ui.button.ColorButton
-                android:id="@+id/btn_top_color"
+                android:id="@+id/pocketpaint_btn_top_color"
                 style="?actionButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/btn_top_color_palette"
+                android:id="@+id/pocketpaint_btn_top_color_palette"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -75,7 +75,7 @@
         </FrameLayout>
 
         <ImageButton
-            android:id="@+id/btn_top_layers"
+            android:id="@+id/pocketpaint_btn_top_layers"
             style="?actionButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

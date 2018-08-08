@@ -44,14 +44,14 @@
                 android:src="@drawable/ic_pocketpaint_launcher" />
 
            <TextView
-                android:id="@+id/terms_of_use_and_service_tview_Text"
+                android:id="@+id/pocketpaint_terms_of_use_and_service_tview_Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/terms_of_use_and_service_content" />
 
             <TextView
-                android:id="@+id/terms_of_use_and_service_tview_Url"
+                android:id="@+id/pocketpaint_terms_of_use_and_service_tview_Url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"

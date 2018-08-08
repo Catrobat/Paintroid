@@ -23,20 +23,20 @@
 
     <RelativeLayout
         android:layout_alignParentBottom="true"
-        android:id="@+id/intro_navigation"
+        android:id="@+id/pocketpaint_intro_navigation"
         android:layout_width="match_parent"
         android:gravity="fill_vertical"
         android:layout_height="@dimen/pocketpaint_welcome_navigation_height">
 
         <LinearLayout
-            android:id="@+id/layoutDots"
+            android:id="@+id/pocketpaint_layout_dots"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/pocketpaint_welcome_dots_height"
             android:layout_centerHorizontal="true"
             android:orientation="horizontal" />
 
         <Button
-            android:id="@+id/btn_next"
+            android:id="@+id/pocketpaint_btn_next"
             style="?borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:textColor="@android:color/white" />
 
         <Button
-            android:id="@+id/btn_skip"
+            android:id="@+id/pocketpaint_btn_skip"
             style="?borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,15 +55,15 @@
     </RelativeLayout>
 
     <View
-        android:id="@+id/intro_horizontal_line"
-        android:layout_above="@id/intro_navigation"
+        android:id="@+id/pocketpaint_intro_horizontal_line"
+        android:layout_above="@id/pocketpaint_intro_navigation"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/pocketpaint_color_chooser_white"/>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_above="@id/intro_horizontal_line"
+        android:id="@+id/pocketpaint_view_pager"
+        android:layout_above="@id/pocketpaint_intro_horizontal_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

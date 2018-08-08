@@ -56,15 +56,15 @@ public class ButtonTopLayersRtlLayoutTest {
 		onData(hasToString(startsWith(ARABICLOCALE.getDisplayName(ARABICLOCALE))))
 				.perform(click());
 
-		onView(withId(R.id.btn_top_layers))
+		onView(withId(R.id.pocketpaint_btn_top_layers))
 				.perform(click());
-		onView(withId(R.id.nav_view_layer))
+		onView(withId(R.id.pocketpaint_nav_view_layer))
 				.check(matches(isCompletelyDisplayed()));
 
-		onView(withId(R.id.layer_side_nav_button_add))
+		onView(withId(R.id.pocketpaint_layer_side_nav_button_add))
 				.check(matches(isClickable()))
 				.perform(click());
-		onView(withId(R.id.layer_side_nav_button_delete))
+		onView(withId(R.id.pocketpaint_layer_side_nav_button_delete))
 				.check(matches(isClickable()))
 				.perform(click());
 	}

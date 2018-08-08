@@ -154,8 +154,8 @@ public class FillToolIntegrationTest {
 
 		openToolOptionsForCurrentTool();
 
-		final ViewInteraction colorToleranceInput = onView(withId(R.id.fill_tool_dialog_color_tolerance_input));
-		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.color_tolerance_seek_bar));
+		final ViewInteraction colorToleranceInput = onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input));
+		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.pocketpaint_color_tolerance_seek_bar));
 
 		String testToleranceText = "100";
 
@@ -179,8 +179,8 @@ public class FillToolIntegrationTest {
 
 		openToolOptionsForCurrentTool();
 
-		final ViewInteraction colorToleranceInput = onView(withId(R.id.fill_tool_dialog_color_tolerance_input));
-		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.color_tolerance_seek_bar));
+		final ViewInteraction colorToleranceInput = onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input));
+		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.pocketpaint_color_tolerance_seek_bar));
 
 		int toleranceInPercent = 50;
 
@@ -223,7 +223,7 @@ public class FillToolIntegrationTest {
 				.performSelectTool(ToolType.FILL)
 				.performOpenToolOptions();
 
-		onView(withId(R.id.fill_tool_dialog_color_tolerance_input))
+		onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
 				.perform(replaceText(String.valueOf(100)));
 
 		onToolBarView()

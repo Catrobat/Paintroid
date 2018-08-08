@@ -110,8 +110,8 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		buttonNewColor = view.findViewById(R.id.btn_colorchooser_ok);
-		colorPickerView = view.findViewById(R.id.view_colorpicker);
+		buttonNewColor = view.findViewById(R.id.color_chooser_button_ok);
+		colorPickerView = view.findViewById(R.id.color_chooser_color_picker_view);
 
 		buttonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override

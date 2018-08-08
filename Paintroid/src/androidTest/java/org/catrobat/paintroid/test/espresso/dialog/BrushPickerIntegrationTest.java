@@ -92,7 +92,7 @@ public class BrushPickerIntegrationTest {
 	}
 
 	private void setStrokeWidth(int strokeWidth, int expectedStrokeWidth) {
-		onView(withId(R.id.stroke_width_seek_bar))
+		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 				.perform(setProgress(strokeWidth))
 				.check(matches(withProgress(expectedStrokeWidth)));
 	}
@@ -103,18 +103,18 @@ public class BrushPickerIntegrationTest {
 
 	@Test
 	public void brushPickerDialogDefaultLayoutAndToolChanges() throws NoSuchFieldException, IllegalAccessException {
-		onView(withId(R.id.drawer_preview))
+		onView(withId(R.id.pocketpaint_drawer_preview))
 				.check(matches(isDisplayed()));
-		onView(withId(R.id.stroke_width_seek_bar))
+		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 				.check(matches(isDisplayed()))
 				.check(matches(withProgress(DEFAULT_STROKE_WIDTH)));
-		onView(withId(R.id.stroke_width_width_text))
+		onView(withId(R.id.pocketpaint_stroke_width_width_text))
 				.check(matches(isDisplayed()))
 				.check(matches(withText(Integer.toString(DEFAULT_STROKE_WIDTH))));
-		onView(withId(R.id.stroke_ibtn_rect))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.check(matches(isDisplayed()))
 				.check(matches(not(isSelected())));
-		onView(withId(R.id.stroke_ibtn_circle))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
 				.check(matches(isDisplayed()))
 				.check(matches(isSelected()));
 
@@ -124,10 +124,10 @@ public class BrushPickerIntegrationTest {
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), MAX_STROKE_WIDTH, Cap.ROUND);
 
-		onView(withId(R.id.stroke_ibtn_rect))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.perform(click())
 				.check(matches(isSelected()));
-		onView(withId(R.id.stroke_ibtn_circle))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
 				.check(matches(not(isSelected())));
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), MAX_STROKE_WIDTH, Cap.SQUARE);
@@ -143,7 +143,7 @@ public class BrushPickerIntegrationTest {
 		final int newStrokeWidth = 80;
 
 		setStrokeWidth(newStrokeWidth);
-		onView(withId(R.id.stroke_ibtn_rect))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.perform(click());
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), newStrokeWidth, Cap.SQUARE);
@@ -153,7 +153,7 @@ public class BrushPickerIntegrationTest {
 				.performSelectTool(ToolType.CURSOR)
 				.performOpenToolOptions();
 
-		onView(withId(R.id.stroke_width_seek_bar))
+		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 				.check(matches(withProgress(newStrokeWidth)));
 		assertStrokePaint(getCurrentToolCanvasPaint(), newStrokeWidth, Cap.SQUARE);
 
@@ -172,7 +172,7 @@ public class BrushPickerIntegrationTest {
 
 	@Test
 	public void brushPickerAntiAliasingOffAtMinimumBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		onView(withId(R.id.stroke_width_seek_bar))
+		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 				.perform(touchCenterLeft());
 
 		onToolBarView()
@@ -187,16 +187,16 @@ public class BrushPickerIntegrationTest {
 
 	@Test
 	public void brushPickerDialogRadioButtonsBehaviour() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-		onView(withId(R.id.stroke_ibtn_rect))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.check(matches(not(isSelected())));
-		onView(withId(R.id.stroke_ibtn_circle))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
 				.check(matches(isSelected()));
 
-		onView(withId(R.id.stroke_ibtn_rect))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.perform(click())
 				.check(matches(isSelected()));
 
-		onView(withId(R.id.stroke_ibtn_circle))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
 				.check(matches(not(isSelected())));
 
 		onToolBarView()
@@ -207,11 +207,11 @@ public class BrushPickerIntegrationTest {
 		onToolBarView()
 				.performOpenToolOptions();
 
-		onView(withId(R.id.stroke_ibtn_circle))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
 				.perform(click())
 				.check(matches(isSelected()));
 
-		onView(withId(R.id.stroke_ibtn_rect))
+		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.check(matches(not(isSelected())));
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), DEFAULT_STROKE_WIDTH, Cap.ROUND);
@@ -224,15 +224,15 @@ public class BrushPickerIntegrationTest {
 
 	@Test
 	public void brushPickerDialogEditTextBehaviour() {
-		onView(withId(R.id.stroke_width_width_text))
+		onView(withId(R.id.pocketpaint_stroke_width_width_text))
 				.perform(replaceText(String.valueOf(MIDDLE_STROKE_WIDTH)));
 
 		Espresso.closeSoftKeyboard();
 
-		onView(withId(R.id.stroke_width_width_text))
+		onView(withId(R.id.pocketpaint_stroke_width_width_text))
 				.check(matches(withText(String.valueOf(MIDDLE_STROKE_WIDTH))));
 
-		onView(withId(R.id.stroke_width_seek_bar))
+		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 				.check(matches(withProgress(MIDDLE_STROKE_WIDTH)));
 	}
 }

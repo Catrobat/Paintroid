@@ -56,13 +56,13 @@ public class RTLTest {
 
 	@Test
 	public void testNumberDots() {
-		onView(withId(R.id.layoutDots))
+		onView(withId(R.id.pocketpaint_layout_dots))
 				.check(matches(equalsNumberDots(activityRule.getLayouts().length)));
 	}
 
 	@Test
 	public void clickSkip() {
-		onView(withId(R.id.btn_skip))
+		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(matches(isDisplayed()))
 				.perform(click());
 		intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
@@ -71,9 +71,9 @@ public class RTLTest {
 	@Test
 	public void testCheckLastPage() {
 		EspressoUtils.changeIntroPage(IntroUtils.getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_getstarted));
-		onView(withId(R.id.btn_skip))
+		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(isNotVisible());
-		onView(withId(R.id.btn_next))
+		onView(withId(R.id.pocketpaint_btn_next))
 				.check(matches(isCompletelyDisplayed()))
 				.check(matches(withText(R.string.lets_go)))
 				.perform(click());
@@ -85,10 +85,10 @@ public class RTLTest {
 	public void testButtonsCompleteVisible() {
 		for (int i = activityRule.getLayouts().length - 1; i < 0; i--) {
 			EspressoUtils.changeIntroPage(i);
-			onView(withId(R.id.btn_skip))
+			onView(withId(R.id.pocketpaint_btn_skip))
 					.check(matches(isCompletelyDisplayed()))
 					.check(matches(withText(R.string.next)));
-			onView(withId(R.id.btn_next))
+			onView(withId(R.id.pocketpaint_btn_next))
 					.check(matches(isCompletelyDisplayed()))
 					.check(matches(withText(R.string.skip)));
 		}
@@ -101,20 +101,20 @@ public class RTLTest {
 
 		for (int i = activityRule.getLayouts().length - 1; i < 0; i--) {
 			EspressoUtils.changeIntroPage(i);
-			onView(withId(R.id.layoutDots))
+			onView(withId(R.id.pocketpaint_layout_dots))
 					.check(matches(checkDotsColors(i, colorActive, colorInactive)));
 		}
 	}
 
 	@Test
 	public void isSkipButtonOppositeSide() {
-		onView(withId(R.id.btn_skip))
+		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(matches(isOnRightSide()));
 	}
 
 	@Test
 	public void isNextButtonOppositeSide() {
-		onView(withId(R.id.btn_next))
+		onView(withId(R.id.pocketpaint_btn_next))
 				.check(matches(isOnLeftSide()));
 	}
 }

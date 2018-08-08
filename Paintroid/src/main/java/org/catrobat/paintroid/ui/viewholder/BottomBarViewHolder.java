@@ -45,7 +45,7 @@ public class BottomBarViewHolder implements MainActivityContracts.BottomBarViewH
 
 	public BottomBarViewHolder(View layout) {
 		this.layout = layout;
-		this.scrollView = layout.findViewById(R.id.bottom_bar_scroll_view);
+		this.scrollView = layout.findViewById(R.id.pocketpaint_bottom_bar_scroll_view);
 		this.orientation = layout.getResources().getConfiguration().orientation;
 	}
 

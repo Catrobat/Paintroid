@@ -54,7 +54,7 @@ public class TermsOfUseAndServiceDialog extends AppCompatDialogFragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		TextView termsOfUseAndServiceUrlTextView = view.findViewById(R.id.terms_of_use_and_service_tview_Url);
+		TextView termsOfUseAndServiceUrlTextView = view.findViewById(R.id.pocketpaint_terms_of_use_and_service_tview_Url);
 
 		termsOfUseAndServiceUrlTextView.setMovementMethod(LinkMovementMethod.getInstance());
 		String paintroidTermsOfUseAndService = getString(R.string.terms_of_use_and_service_link_template,

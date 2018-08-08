@@ -18,7 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item_layer_background"
+    android:id="@+id/pocketpaint_item_layer_background"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
@@ -30,7 +30,7 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/item_layer_image"
+        android:id="@+id/pocketpaint_item_layer_image"
         android:layout_width="75dp"
         android:layout_height="100dp"
         android:adjustViewBounds="true"

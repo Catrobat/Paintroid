@@ -59,10 +59,10 @@ public class SlidesTest {
 	public void testButtonsCompleteVisible() {
 		for (int i = 0; i < activityRule.getLayouts().length - 1; i++) {
 			EspressoUtils.changeIntroPage(i);
-			onView(withId(R.id.btn_next))
+			onView(withId(R.id.pocketpaint_btn_next))
 					.check(matches(isCompletelyDisplayed()))
 					.check(matches(withText(R.string.next)));
-			onView(withId(R.id.btn_skip))
+			onView(withId(R.id.pocketpaint_btn_skip))
 					.check(matches(isCompletelyDisplayed()))
 					.check(matches(withText(R.string.skip)));
 		}
@@ -70,13 +70,13 @@ public class SlidesTest {
 
 	@Test
 	public void testNumberDots() {
-		onView(withId(R.id.layoutDots))
+		onView(withId(R.id.pocketpaint_layout_dots))
 				.check(matches(equalsNumberDots(activityRule.getLayouts().length)));
 	}
 
 	@Test
 	public void clickSkip() {
-		onView(withId(R.id.btn_skip))
+		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(matches(isDisplayed()))
 				.perform(click());
 
@@ -86,9 +86,9 @@ public class SlidesTest {
 	@Test
 	public void testCheckLastPage() {
 		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_getstarted));
-		onView(withId(R.id.btn_skip))
+		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(isNotVisible());
-		onView(withId(R.id.btn_next))
+		onView(withId(R.id.pocketpaint_btn_next))
 				.check(matches(isCompletelyDisplayed()))
 				.check(matches(withText(R.string.lets_go)))
 				.perform(click());
@@ -104,7 +104,7 @@ public class SlidesTest {
 		for (int i = 0; i < activityRule.getLayouts().length; i++) {
 			EspressoUtils.changeIntroPage(i);
 
-			onView(withId(R.id.layoutDots))
+			onView(withId(R.id.pocketpaint_layout_dots))
 					.check(matches(checkDotsColors(i, colorActive, colorInactive)));
 		}
 	}
@@ -112,46 +112,46 @@ public class SlidesTest {
 	@Test
 	public void testWelcomeSlide() {
 		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_welcome));
-		EspressoUtils.checkViewMatchesText(R.id.intro_welcome_head, R.string.welcome_to_pocket_paint);
-		EspressoUtils.checkViewMatchesText(R.id.intro_welcome_text, R.string.intro_welcome_text);
+		EspressoUtils.checkViewMatchesText(R.id.pocketpaint_intro_welcome_head, R.string.welcome_to_pocket_paint);
+		EspressoUtils.checkViewMatchesText(R.id.pocketpaint_intro_welcome_text, R.string.intro_welcome_text);
 	}
 
 	@Test
 	public void testPossibilitiesSlide() {
 		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_possibilities));
-		EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_head, R.string.more_possibilities);
-		EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_text, R.string.intro_possibilities_text);
+		EspressoUtils.checkViewMatchesText(R.id.pocketpaint_intro_possibilities_head, R.string.more_possibilities);
+		EspressoUtils.checkViewMatchesText(R.id.pocketpaint_intro_possibilities_text, R.string.intro_possibilities_text);
 	}
 
 	@Test
 	public void testLandscapeSlide() {
 		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_landscape));
-		EspressoUtils.checkViewMatchesText(R.id.intro_landscape_head, R.string.landscape);
-		EspressoUtils.checkViewMatchesText(R.id.intro_landscape_text, R.string.intro_landscape_text);
+		EspressoUtils.checkViewMatchesText(R.id.pocketpaint_intro_landscape_head, R.string.landscape);
+		EspressoUtils.checkViewMatchesText(R.id.pocketpaint_intro_landscape_text, R.string.intro_landscape_text);
 
-		onView(withId(R.id.image_getstarded))
+		onView(withId(R.id.pocketpaint_image_getstarded))
 				.check(matches(withDrawable(R.drawable.pocketpaint_intro_portrait)));
 	}
 
 	@Test
 	public void testGetStaredSlide() {
 		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_getstarted));
-		EspressoUtils.checkViewMatchesText(R.id.intro_started_head, R.string.enjoy_pocket_paint);
-		EspressoUtils.checkViewMatchesText(R.id.intro_started_text, R.string.intro_get_started);
+		EspressoUtils.checkViewMatchesText(R.id.pocketpaint_intro_started_head, R.string.enjoy_pocket_paint);
+		EspressoUtils.checkViewMatchesText(R.id.pocketpaint_intro_started_text, R.string.intro_get_started);
 
-		onView(withId(R.id.image_landscape))
+		onView(withId(R.id.pocketpaint_image_landscape))
 				.check(matches(withDrawable(R.drawable.pocketpaint_intro_landscape)));
 	}
 
 	@Test
 	public void checkSkipButtonPosition() {
-		onView(withId(R.id.btn_skip))
+		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(matches(isOnLeftSide()));
 	}
 
 	@Test
 	public void checkNextButtonPosition() {
-		onView(withId(R.id.btn_next))
+		onView(withId(R.id.pocketpaint_btn_next))
 				.check(matches(isOnRightSide()));
 	}
 }

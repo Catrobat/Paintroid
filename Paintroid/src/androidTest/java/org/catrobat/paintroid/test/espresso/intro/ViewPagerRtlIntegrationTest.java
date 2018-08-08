@@ -74,7 +74,7 @@ public class ViewPagerRtlIntegrationTest {
 	public void pressNextAndCheckIndex() {
 		for (int i = activityRule.getLayouts().length - 1; i == 0; i--) {
 			assertEquals(i, viewPager.getCurrentItem());
-			onView(withId(R.id.btn_next)).perform(click());
+			onView(withId(R.id.pocketpaint_btn_next)).perform(click());
 		}
 	}
 
@@ -82,7 +82,7 @@ public class ViewPagerRtlIntegrationTest {
 	public void swipeAndCheckIndex() {
 		for (int i = activityRule.getLayouts().length - 1; i == 0; i--) {
 			assertEquals(i, viewPager.getCurrentItem());
-			onView(withId(R.id.btn_next)).perform(swipeRight());
+			onView(withId(R.id.pocketpaint_btn_next)).perform(swipeRight());
 		}
 	}
 }
