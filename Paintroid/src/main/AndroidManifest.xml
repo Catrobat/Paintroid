@@ -28,11 +28,11 @@
     <application
         android:name=".PaintroidApplication"
         android:allowBackup="false"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_pocketpaint_launcher"
         android:label="${appName}"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/SplashTheme"
+        android:theme="@style/PocketPaintSplashTheme"
         android:extractNativeLibs="false"
         tools:ignore="GoogleAppIndexingWarning">
 

@@ -70,7 +70,7 @@ public class RTLTest {
 
 	@Test
 	public void testCheckLastPage() {
-		EspressoUtils.changeIntroPage(IntroUtils.getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_getstarted));
+		EspressoUtils.changeIntroPage(IntroUtils.getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_getstarted));
 		onView(withId(R.id.btn_skip))
 				.check(isNotVisible());
 		onView(withId(R.id.btn_next))

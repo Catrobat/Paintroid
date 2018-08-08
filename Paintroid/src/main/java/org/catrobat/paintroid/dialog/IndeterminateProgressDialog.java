@@ -53,18 +53,18 @@ public class IndeterminateProgressDialog extends AppCompatDialogFragment {
 	@SuppressLint("InflateParams")
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View layout = inflater.inflate(R.layout.layout_indeterminate, null);
+		View layout = inflater.inflate(R.layout.pocketpaint_layout_indeterminate, null);
 
 		// Remove this section once AppCompat supports tinting Progressbars
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 			ProgressBar progressBar = layout.findViewById(R.id.progressBar);
 			if (progressBar != null) {
 				Drawable drawable = progressBar.getIndeterminateDrawable();
-				int toolTextColor = ContextCompat.getColor(getContext(), R.color.tools_text_color);
+				int toolTextColor = ContextCompat.getColor(getContext(), R.color.pocketpaint_colorAccent);
 				drawable.setColorFilter(toolTextColor, PorterDuff.Mode.SRC_IN);
 			}
 		}
-		Dialog dialog = new AppCompatDialog(getContext(), R.style.CustomProgressDialog);
+		Dialog dialog = new AppCompatDialog(getContext(), R.style.PocketPaintProgressDialog);
 		dialog.setContentView(layout);
 		return dialog;
 	}

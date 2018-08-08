@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<ScrollView xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:focusableInTouchMode="true">
+
+    <org.catrobat.paintroid.ui.tools.DrawerPreview
+        android:id="@+id/drawer_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="@string/dialog_brush_width_text"
+        android:textAllCaps="true"
+        android:textColor="@color/pocketpaint_colorAccent"
+        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
+
+    <View style="@style/PocketPaintDividerHorizontal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="5"
+        android:orientation="horizontal" >
+
+        <SeekBar
+            android:id="@+id/stroke_width_seek_bar"
+            android:progressTint="@color/pocketpaint_colorAccent"
+            android:thumbTint="@color/pocketpaint_colorAccent"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dip"
+            android:layout_marginTop="16dp"
+            android:max="100"
+            android:minHeight="30dip"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dp" />
+
+        <EditText
+            android:id="@+id/stroke_width_width_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:saveEnabled="false"
+            android:textColor="@color/pocketpaint_colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:ignore="LabelFor" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/dialog_shape_text"
+        android:textAllCaps="true"
+        android:textColor="@color/pocketpaint_colorAccent"
+        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dip" />
+
+    <View style="@style/PocketPaintDividerHorizontal"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/stroke_ibtn_circle"
+            style="@style/PocketPaintSelectableButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:src="@drawable/ic_pocketpaint_tool_circle" />
+
+        <ImageButton
+            android:id="@+id/stroke_ibtn_rect"
+            style="@style/PocketPaintSelectableButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:src="@drawable/ic_pocketpaint_tool_square" />
+    </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

@@ -58,7 +58,7 @@ public class SaveBeforeFinishDialog extends AppCompatDialogFragment {
 		final int title = arguments.getInt(EXTRA_TITLE);
 		final Uri uri = arguments.getParcelable(EXTRA_URI);
 
-		return new AlertDialog.Builder(activity, R.style.CustomAlertDialog)
+		return new AlertDialog.Builder(activity, R.style.PocketPaintAlertDialog)
 				.setTitle(title)
 				.setMessage(R.string.closing_security_question)
 				.setPositiveButton(R.string.save_button_text, new DialogInterface.OnClickListener() {

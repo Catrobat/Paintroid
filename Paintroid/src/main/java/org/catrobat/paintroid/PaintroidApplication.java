@@ -40,13 +40,13 @@ public class PaintroidApplication extends Application {
 	public static String defaultSystemLanguage;
 	public static LayerContracts.Model layerModel;
 	public static File cacheDir;
-	public static Bitmap backgroundBitmap;
+	public static Bitmap checkeredBackgroundBitmap;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		cacheDir = getCacheDir();
 		defaultSystemLanguage = Locale.getDefault().getLanguage();
-		backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
+		checkeredBackgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
 	}
 }

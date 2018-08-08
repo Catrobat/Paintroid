@@ -111,10 +111,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		setTheme(R.style.PaintroidTheme);
+		setTheme(R.style.PocketPaintTheme);
 		MultilingualActivity.setToChosenLanguage(this);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();
 

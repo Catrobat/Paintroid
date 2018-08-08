@@ -35,6 +35,7 @@ import android.graphics.Shader;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -50,14 +51,13 @@ import org.catrobat.paintroid.tools.ToolType;
 import java.util.ListIterator;
 
 public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callback {
-	private static final int BACKGROUND_COLOR = Color.LTGRAY;
-
 	private final Rect canvasRect = new Rect();
 	private final Paint framePaint = new Paint();
 	private final Paint checkeredPattern = new Paint();
 	private final Object surfaceLock = new Object();
 	private boolean surfaceDirty = false;
 	private boolean surfaceReady = false;
+	private int backgroundColor;
 
 	private DrawingSurfaceThread drawingThread;
 	private LayerContracts.Model layerModel;
@@ -70,6 +70,25 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	public DrawingSurface(Context context) {
 		super(context);
 		init();
+	}
+
+	private void init() {
+		backgroundColor = ContextCompat.getColor(getContext(),
+				R.color.pocketpaint_main_drawing_surface_background);
+
+		framePaint.setColor(Color.BLACK);
+		framePaint.setStyle(Paint.Style.STROKE);
+		framePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
+		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		checkeredPattern.setShader(shader);
+		checkeredPattern.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+
+		Handler handler = new Handler(Looper.getMainLooper());
+		AutoScrollTask autoScrollTask = new AutoScrollTask(handler, new AutoScrollTaskCallbackImpl());
+		DrawingSurfaceListener drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask);
+		setOnTouchListener(drawingSurfaceListener);
 	}
 
 	public void setLayerModel(LayerContracts.Model layerModel) {
@@ -90,11 +109,11 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 				PaintroidApplication.perspective.applyToCanvas(surfaceViewCanvas);
 
 				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-					surfaceViewCanvas.drawColor(BACKGROUND_COLOR, PorterDuff.Mode.SRC);
+					surfaceViewCanvas.drawColor(backgroundColor, PorterDuff.Mode.SRC);
 				} else {
 					surfaceViewCanvas.save();
 					surfaceViewCanvas.clipOutRect(canvasRect);
-					surfaceViewCanvas.drawColor(BACKGROUND_COLOR, PorterDuff.Mode.SRC);
+					surfaceViewCanvas.drawColor(backgroundColor, PorterDuff.Mode.SRC);
 					surfaceViewCanvas.restore();
 				}
 
@@ -121,22 +140,6 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
 		getHolder().removeCallback(this);
-	}
-
-	private void init() {
-		framePaint.setColor(Color.BLACK);
-		framePaint.setStyle(Paint.Style.STROKE);
-		framePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
-
-		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
-		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-		checkeredPattern.setShader(shader);
-		checkeredPattern.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
-
-		Handler handler = new Handler(Looper.getMainLooper());
-		AutoScrollTask autoScrollTask = new AutoScrollTask(handler, new AutoScrollTaskCallbackImpl());
-		DrawingSurfaceListener drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask);
-		setOnTouchListener(drawingSurfaceListener);
 	}
 
 	public void refreshDrawingSurface() {

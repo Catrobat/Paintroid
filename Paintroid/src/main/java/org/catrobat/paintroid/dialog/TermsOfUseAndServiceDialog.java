@@ -49,7 +49,7 @@ public class TermsOfUseAndServiceDialog extends AppCompatDialogFragment {
 		if (getShowsDialog()) {
 			return super.onCreateView(inflater, container, savedInstanceState);
 		}
-		return inflater.inflate(R.layout.dialog_terms_of_use_and_service, container, false);
+		return inflater.inflate(R.layout.dialog_pocketpaint_terms_of_use_and_service, container, false);
 	}
 
 	@Override
@@ -74,10 +74,10 @@ public class TermsOfUseAndServiceDialog extends AppCompatDialogFragment {
 	@SuppressLint("InflateParams")
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		View layout = inflater.inflate(R.layout.dialog_terms_of_use_and_service, null);
+		View layout = inflater.inflate(R.layout.dialog_pocketpaint_terms_of_use_and_service, null);
 		onViewCreated(layout, savedInstanceState);
 
-		return new AlertDialog.Builder(getContext(), R.style.CustomAlertDialog)
+		return new AlertDialog.Builder(getContext(), R.style.PocketPaintAlertDialog)
 				.setTitle(R.string.terms_of_use_and_service_title)
 				.setView(layout)
 				.setPositiveButton(R.string.done, new OnClickListener() {

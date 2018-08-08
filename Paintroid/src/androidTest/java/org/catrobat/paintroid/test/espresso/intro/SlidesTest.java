@@ -85,7 +85,7 @@ public class SlidesTest {
 
 	@Test
 	public void testCheckLastPage() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_getstarted));
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_getstarted));
 		onView(withId(R.id.btn_skip))
 				.check(isNotVisible());
 		onView(withId(R.id.btn_next))
@@ -111,36 +111,36 @@ public class SlidesTest {
 
 	@Test
 	public void testWelcomeSlide() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_welcome));
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_welcome));
 		EspressoUtils.checkViewMatchesText(R.id.intro_welcome_head, R.string.welcome_to_pocket_paint);
 		EspressoUtils.checkViewMatchesText(R.id.intro_welcome_text, R.string.intro_welcome_text);
 	}
 
 	@Test
 	public void testPossibilitiesSlide() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_possibilities));
 		EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_head, R.string.more_possibilities);
 		EspressoUtils.checkViewMatchesText(R.id.intro_possibilities_text, R.string.intro_possibilities_text);
 	}
 
 	@Test
 	public void testLandscapeSlide() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_landscape));
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_landscape));
 		EspressoUtils.checkViewMatchesText(R.id.intro_landscape_head, R.string.landscape);
 		EspressoUtils.checkViewMatchesText(R.id.intro_landscape_text, R.string.intro_landscape_text);
 
 		onView(withId(R.id.image_getstarded))
-				.check(matches(withDrawable(R.drawable.intro_portrait)));
+				.check(matches(withDrawable(R.drawable.pocketpaint_intro_portrait)));
 	}
 
 	@Test
 	public void testGetStaredSlide() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_getstarted));
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_getstarted));
 		EspressoUtils.checkViewMatchesText(R.id.intro_started_head, R.string.enjoy_pocket_paint);
 		EspressoUtils.checkViewMatchesText(R.id.intro_started_text, R.string.intro_get_started);
 
 		onView(withId(R.id.image_landscape))
-				.check(matches(withDrawable(R.drawable.intro_landscape)));
+				.check(matches(withDrawable(R.drawable.pocketpaint_intro_landscape)));
 	}
 
 	@Test

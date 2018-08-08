@@ -108,7 +108,7 @@ public class FillTool extends BaseTool {
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		fillToolOptionsView = inflater.inflate(R.layout.dialog_fill_tool, toolSpecificOptionsLayout);
+		fillToolOptionsView = inflater.inflate(R.layout.dialog_pocketpaint_fill_tool, toolSpecificOptionsLayout);
 
 		colorToleranceSeekBar = fillToolOptionsView.findViewById(R.id.color_tolerance_seek_bar);
 		colorToleranceEditText = fillToolOptionsView.findViewById(R.id.fill_tool_dialog_color_tolerance_input);

@@ -67,7 +67,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private static final boolean DEFAULT_ROTATION_ENABLED = false;
 	private static final boolean DEFAULT_BACKGROUND_SHADOW_ENABLED = true;
 	private static final boolean DEFAULT_RESIZE_POINTS_VISIBLE = true;
-	private static final boolean DEFAULT_STATUS_ICON_ENABLED = false;
 	private static final boolean DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO = true;
 	private static final boolean DEFAULT_RESPECT_MAXIMUM_BOX_RESOLUTION = false;
 
@@ -112,10 +111,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected float maximumBoxResolution;
 	private boolean backgroundShadowEnabled;
 	private boolean resizePointsVisible;
-	private boolean statusIconEnabled;
 	private boolean respectMaximumBorderRatio;
 	private boolean respectMaximumBoxResolution;
-	private boolean isDown = false;
 	private CountDownTimer downTimer;
 
 	public BaseToolWithRectangleShape(Context context, ToolType toolType) {
@@ -149,7 +146,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		rotationEnabled = DEFAULT_ROTATION_ENABLED;
 		backgroundShadowEnabled = DEFAULT_BACKGROUND_SHADOW_ENABLED;
 		resizePointsVisible = DEFAULT_RESIZE_POINTS_VISIBLE;
-		statusIconEnabled = DEFAULT_STATUS_ICON_ENABLED;
 		respectMaximumBorderRatio = DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO;
 		respectMaximumBoxResolution = DEFAULT_RESPECT_MAXIMUM_BOX_RESOLUTION;
 		maximumBoxResolution = DEFAULT_MAXIMUM_BOX_RESOLUTION;
@@ -204,7 +200,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	@Override
 	public boolean handleDown(PointF coordinate) {
-		isDown = true;
 		movedDistance.set(0, 0);
 		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		currentAction = getAction(coordinate.x, coordinate.y);
@@ -240,7 +235,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		isDown = false;
 		if (previousEventCoordinate == null) {
 			return false;
 		}
@@ -305,10 +299,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 		drawRectangle(canvas, boxWidth, boxHeight);
 		drawToolSpecifics(canvas, boxWidth, boxHeight);
-
-		if (statusIconEnabled) {
-			drawStatus(canvas);
-		}
 
 		canvas.restore();
 	}
@@ -386,42 +376,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		tempDrawingRectangle.set(-boxWidth / 2, -boxHeight / 2,
 				boxWidth / 2, boxHeight / 2);
 		canvas.drawRect(tempDrawingRectangle, linePaint);
-	}
-
-	private void drawStatus(Canvas canvas) {
-		RectF statusRect = new RectF(-48, -48, 48, 48);
-		if (isDown) {
-
-			int bitmapId;
-			switch (currentAction) {
-				case MOVE:
-					bitmapId = R.drawable.def_icon_move;
-					break;
-				case RESIZE:
-					bitmapId = R.drawable.def_icon_resize;
-					break;
-				case ROTATE:
-					bitmapId = R.drawable.def_icon_rotate;
-					break;
-				default:
-					bitmapId = R.drawable.icon_menu_no_icon;
-					break;
-			}
-
-			if (bitmapId != R.drawable.icon_menu_no_icon) {
-				Paint statusPaint = new Paint();
-				statusPaint.setColor(secondaryShapeColor);
-				canvas.clipRect(statusRect, Op.UNION);
-				statusPaint.setAlpha(128);
-				canvas.drawOval(statusRect, statusPaint);
-
-				Bitmap actionBitmap = BitmapFactory.decodeResource(context.getResources(), bitmapId);
-				statusPaint.setAlpha(255);
-				canvas.rotate(-boxRotation);
-				canvas.drawBitmap(actionBitmap, -24, -24, statusPaint);
-				canvas.rotate(boxRotation);
-			}
-		}
 	}
 
 	private void move(float deltaX, float deltaY) {
@@ -754,7 +708,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	void createOverlayBitmap() {
 		overlayBitmap = BitmapFactory.decodeResource(context.getResources(),
-				R.drawable.icon_overlay_button);
+				R.drawable.pocketpaint_tool_overlay);
 	}
 
 	void highlightBox() {
@@ -777,8 +731,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	void highlightBoxWhenClickInBox(boolean highlight) {
 		final Resources resources = context.getResources();
 		final @ColorRes int colorId = highlight
-				? R.color.color_highlight_box
-				: R.color.rectangle_secondary_color;
+				? R.color.pocketpaint_main_rectangle_tool_highlight_color
+				: R.color.pocketpaint_main_rectangle_tool_accent_color;
 		secondaryShapeColor = ResourcesCompat.getColor(resources, colorId, null);
 	}
 

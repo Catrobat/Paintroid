@@ -17,7 +17,7 @@ add_library( # Specifies the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             src/main/cpp/native-lib.cpp )
+             src/main/cpp/pocketpaint_fill_algorithm.cpp )
 
 find_library( # Defines the name of the path variable that stores the
               # location of the NDK library.

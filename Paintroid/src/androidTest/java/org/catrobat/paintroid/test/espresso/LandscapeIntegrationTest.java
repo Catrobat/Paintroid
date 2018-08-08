@@ -186,7 +186,7 @@ public class LandscapeIntegrationTest {
 	public void testOpenColorPickerDialogChooseColorInLandscape() {
 		openColorPickerDialog();
 
-		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.preset_colors);
+		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_chooser_preset_colors);
 
 		for (int i = 0; i < colors.length; i++) {
 			clickColorPickerPresetSelectorButton(i);
@@ -217,17 +217,17 @@ public class LandscapeIntegrationTest {
 		onView(withClassName(is(PresetSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_circle)))
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_hsv)))
 				.perform(click());
 		onView(withClassName(is(HSVColorPickerView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_rgba)))
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
 				.perform(click());
 		onView(withClassName(is(RgbSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_palette)))
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset)))
 				.perform(click());
 		onView(withClassName(is(PresetSelectorView.class.getName())))
 				.check(matches(isDisplayed()));

@@ -92,7 +92,7 @@ public abstract class BaseTool implements Tool {
 		eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
 		Resources resources = context.getResources();
-		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.checkeredbg);
+		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPattern = new Paint();
 		checkeredPattern.setShader(shader);
@@ -321,8 +321,8 @@ public abstract class BaseTool implements Tool {
 		View drawingSurfaceView = ((Activity) (context)).findViewById(R.id.drawingSurfaceView);
 		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
 		int colorTo = ContextCompat.getColor(context, darken
-				? R.color.background_deactivated_drawing_surface
-				: R.color.transparent);
+				? R.color.pocketpaint_main_drawing_surface_inactive
+				: R.color.pocketpaint_main_drawing_surface_active);
 
 		ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(
 				drawingSurfaceView, "backgroundColor", new ArgbEvaluator(), colorFrom, colorTo);

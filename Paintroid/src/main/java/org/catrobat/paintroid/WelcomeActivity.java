@@ -76,10 +76,10 @@ public class WelcomeActivity extends AppCompatActivity {
 				btnSkip.setVisibility(View.VISIBLE);
 			}
 
-			if (layouts[position] == R.layout.islide_tools) {
+			if (layouts[position] == R.layout.pocketpaint_slide_intro_tools) {
 
 				View layout = findViewById(R.id.intro_tools_bottom_bar);
-				LinearLayout mToolsLayout = (LinearLayout) layout.findViewById(R.id.tools_layout);
+				LinearLayout mToolsLayout = layout.findViewById(R.id.tools_layout);
 				final View fadeView = findViewById(R.id.intro_tools_textview);
 
 				TapTargetBottomBar tapTargetBottomBar = new TapTargetBottomBar(mToolsLayout,
@@ -98,9 +98,9 @@ public class WelcomeActivity extends AppCompatActivity {
 		public void onPageScrollStateChanged(int state) {
 			this.state = state;
 			if (state == ViewPager.SCROLL_STATE_IDLE
-					&& layouts[pos] == R.layout.islide_possibilities) {
+					&& layouts[pos] == R.layout.pocketpaint_slide_intro_possibilities) {
 				View layout = findViewById(R.id.intro_possibilites_topbar);
-				LinearLayout view = (LinearLayout) layout.findViewById(R.id.top_bar_buttons);
+				LinearLayout view = layout.findViewById(R.id.top_bar_buttons);
 				final View fadeView = findViewById(R.id.intro_possibilities_textview);
 
 				TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
@@ -113,7 +113,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(R.style.WelcomeActivityTheme);
+		setTheme(R.style.PocketPaintWelcomeActivityTheme);
 		super.onCreate(savedInstanceState);
 
 		session = new Session(this);
@@ -130,22 +130,22 @@ public class WelcomeActivity extends AppCompatActivity {
 		}
 
 		MultilingualActivity.setToChosenLanguage(this);
-		setContentView(R.layout.activity_welcome);
+		setContentView(R.layout.activity_pocketpaint_welcome);
 
-		viewPager = (ViewPager) findViewById(R.id.view_pager);
-		dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
-		btnSkip = (Button) findViewById(R.id.btn_skip);
-		btnNext = (Button) findViewById(R.id.btn_next);
+		viewPager = findViewById(R.id.view_pager);
+		dotsLayout = findViewById(R.id.layoutDots);
+		btnSkip = findViewById(R.id.btn_skip);
+		btnNext = findViewById(R.id.btn_next);
 
-		colorActive = ContextCompat.getColor(getApplicationContext(), R.color.dot_active);
-		colorInactive = ContextCompat.getColor(getApplicationContext(), R.color.dot_inactive);
+		colorActive = ContextCompat.getColor(this, R.color.pocketpaint_welcome_dot_active);
+		colorInactive = ContextCompat.getColor(this, R.color.pocketpaint_welcome_dot_inactive);
 
 		layouts = new int[]{
-				R.layout.islide_welcome,
-				R.layout.islide_tools,
-				R.layout.islide_possibilities,
-				R.layout.islide_landscape,
-				R.layout.islide_getstarted};
+				R.layout.pocketpaint_slide_intro_welcome,
+				R.layout.pocketpaint_slide_intro_tools,
+				R.layout.pocketpaint_slide_intro_possibilities,
+				R.layout.pocketpaint_slide_intro_landscape,
+				R.layout.pocketpaint_slide_intro_getstarted};
 
 		changeStatusBarColor();
 		initViewPager();
@@ -240,12 +240,12 @@ public class WelcomeActivity extends AppCompatActivity {
 	private void getStyleAttributesFromXml() {
 		final DisplayMetrics metrics = getBaseContext().getResources().getDisplayMetrics();
 		for (TapTargetStyle text : TapTargetStyle.values()) {
-			TypedArray attribute = obtainStyledAttributes(text.getResourceId(), R.styleable.IntroAttributes);
+			TypedArray attribute = obtainStyledAttributes(text.getResourceId(), R.styleable.PocketPaintWelcomeAttributes);
 
-			int textSizeDp = (int) attribute.getDimension(R.styleable.IntroAttributes_android_textSize, 16);
-			int textStyle = attribute.getInt(R.styleable.IntroAttributes_android_textStyle, 0);
-			int color = attribute.getColor(R.styleable.IntroAttributes_android_textColor, Color.WHITE);
-			String fontFamilyName = attribute.getString(R.styleable.IntroAttributes_android_fontFamily);
+			int textSizeDp = (int) attribute.getDimension(R.styleable.PocketPaintWelcomeAttributes_android_textSize, 16);
+			int textStyle = attribute.getInt(R.styleable.PocketPaintWelcomeAttributes_android_textStyle, 0);
+			int color = attribute.getColor(R.styleable.PocketPaintWelcomeAttributes_android_textColor, Color.WHITE);
+			String fontFamilyName = attribute.getString(R.styleable.PocketPaintWelcomeAttributes_android_fontFamily);
 			Typeface typeface = Typeface.create(fontFamilyName, textStyle);
 
 			text.setTextColor(color);

@@ -61,7 +61,7 @@ public class ColorButton extends AppCompatImageButton {
 		rect = new RectF();
 
 		Bitmap mBackgroundBitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.checkeredbg);
+				R.drawable.pocketpaint_checkeredbg);
 		BitmapShader backgroundShader = new BitmapShader(mBackgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
 		backgroundPaint.setShader(backgroundShader);

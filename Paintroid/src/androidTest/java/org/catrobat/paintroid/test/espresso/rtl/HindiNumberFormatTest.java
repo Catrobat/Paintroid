@@ -96,7 +96,7 @@ public class HindiNumberFormatTest {
 
 		openColorPickerDialog();
 		clickColorPickerPresetSelectorButton(7);
-		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.icon_color_chooser_tab_rgba)))
+		onView(allOf(withId(R.id.tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
 				.perform(click());
 		onView(withId(R.id.rgb_red_value))
 				.check(matches(withText(containsString(EXPECTED_RED_VALUE))));

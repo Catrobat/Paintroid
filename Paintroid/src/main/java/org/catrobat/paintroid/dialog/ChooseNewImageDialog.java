@@ -40,9 +40,9 @@ public class ChooseNewImageDialog extends AppCompatDialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		final MainActivity activity = (MainActivity) getActivity();
 
-		return new AlertDialog.Builder(getActivity(), R.style.CustomAlertDialog)
+		return new AlertDialog.Builder(getActivity(), R.style.PocketPaintAlertDialog)
 				.setTitle(R.string.menu_new_image)
-				.setItems(R.array.new_image, new DialogInterface.OnClickListener() {
+				.setItems(R.array.pocketpaint_main_dialog_new_image, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						MainActivityContracts.Presenter presenter = activity.getPresenter();

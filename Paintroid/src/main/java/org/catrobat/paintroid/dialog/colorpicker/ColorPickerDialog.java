@@ -97,13 +97,13 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomAlertDialog);
+		setStyle(DialogFragment.STYLE_NORMAL, R.style.PocketPaintAlertDialog);
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.colorpicker_dialog, container);
+		return inflater.inflate(R.layout.dialog_color_chooser, container);
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 
 			if (Color.alpha(getColor()) != 0xff) {
 				Shader backgroundShader = new BitmapShader(
-						PaintroidApplication.backgroundBitmap, TileMode.REPEAT, TileMode.REPEAT);
+						PaintroidApplication.checkeredBackgroundBitmap, TileMode.REPEAT, TileMode.REPEAT);
 				backgroundPaint = new Paint();
 				backgroundPaint.setShader(backgroundShader);
 			}

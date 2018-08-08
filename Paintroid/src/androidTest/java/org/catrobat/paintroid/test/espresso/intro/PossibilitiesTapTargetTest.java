@@ -57,7 +57,7 @@ public class PossibilitiesTapTargetTest {
 
 	@Before
 	public void setUp() {
-		changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
+		changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_possibilities));
 	}
 
 	@Test

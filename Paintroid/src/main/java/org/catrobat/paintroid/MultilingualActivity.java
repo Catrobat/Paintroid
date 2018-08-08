@@ -53,12 +53,12 @@ public class MultilingualActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		setTheme(R.style.MultilingualActivityTheme);
+		setTheme(R.style.PocketPaintMultilingualActivityTheme);
 		super.onCreate(savedInstanceState);
 
 		setToChosenLanguage(this);
 
-		setContentView(R.layout.activity_multilingual);
+		setContentView(R.layout.activity_pocketpaint_multilingual);
 		setTitle(R.string.menu_language);
 		ListView listview = (ListView) findViewById(R.id.list_languages);
 		final List<String> languagesNames = new ArrayList<>();
@@ -67,7 +67,7 @@ public class MultilingualActivity extends AppCompatActivity {
 			Locale locale = getLocaleFromLanguageTag(aLanguageCode);
 			languagesNames.add(getDisplayName(locale));
 		}
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.multilingual_name_text, R.id.lang_text, languagesNames);
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.pocketpaint_item_multilingual_name_text, R.id.lang_text, languagesNames);
 		listview.setAdapter(adapter);
 		listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override

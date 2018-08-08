@@ -56,7 +56,7 @@ public final class BrushPickerView implements View.OnClickListener {
 		brushChangedListener = new ArrayList<>();
 
 		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
-		View brushPickerView = inflater.inflate(R.layout.dialog_stroke, rootView, true);
+		View brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_stroke, rootView, true);
 
 		buttonCircle = brushPickerView.findViewById(R.id.stroke_ibtn_circle);
 		buttonRect = brushPickerView.findViewById(R.id.stroke_ibtn_rect);
