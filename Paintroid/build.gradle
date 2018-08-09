@@ -17,6 +17,34 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import org.catrobat.gradle.EmulatorsPlugin
+
+apply plugin: EmulatorsPlugin
+
+emulators {
+    dependencies {
+        sdk()
+        ndk()
+    }
+
+    emulator 'android24', {
+        avd {
+            systemImage = 'system-images;android-24;default;x86_64'
+            sdcardSizeMb = 200
+            hardwareProperties += ['hw.ramSize': 800, 'vm.heapSize': 128]
+            screenDensity = 'xhdpi'
+        }
+
+        parameters {
+            resolution = '768x1280'
+            language = 'en'
+            country = 'US'
+        }
+    }
+
+    shouldInstallEverythingAbove(project.hasProperty('installSdk'))
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'

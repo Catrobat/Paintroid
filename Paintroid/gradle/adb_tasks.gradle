@@ -17,46 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-def getAndroidDevices() {
-    def deviceIds = []
-    [ android.getAdbExecutable().absolutePath, 'devices' ].execute().text.eachLine { line ->
-        def matcher = line =~ /^(.*)\tdevice/
-        if (matcher) {
-            deviceIds << matcher[0][1]
-        }
-    }
-    deviceIds
+import org.catrobat.gradle.Adb
+import org.catrobat.gradle.AndroidDevice
+
+Adb adb() {
+    new Adb(android.getAdbExecutable())
 }
 
-def getAndroidSerial() {
-    def availableDevices = getAndroidDevices()
-    def androidSerial = System.getenv('ANDROID_SERIAL')
-
-    if (androidSerial?.trim() && !availableDevices.contains(androidSerial)) {
-        throw new IllegalStateException("Device ${androidSerial} not found")
-    } else if (availableDevices.size() == 0) {
-        throw new IllegalStateException("No connected devices!")
-    } else {
-        androidSerial = availableDevices.first()
-    }
-
-    return androidSerial.toString().trim()
-}
-
-def executeShellCommand(command) {
-    println("executing: ${command}")
-    def process = new ProcessBuilder(command).redirectErrorStream(true).start()
-    process.inputStream.eachLine {println it}
-    process.waitFor()
-    if(process.exitValue() != 0)
-        throw new GradleScriptException("adb exited with exit status ${process.exitValue()}", null)
+def androidDevice(String androidSerial = null) {
+    new AndroidDevice(adb(), androidSerial)
 }
 
 def createAdbInstallTask(variant) {
     task ("commandlineAdbInstall${variant.name.capitalize()}") {
         doLast {
-            def command = [ android.getAdbExecutable().absolutePath, '-s', getAndroidSerial(), 'install', variant.outputs[0].outputFile.path ]
-            executeShellCommand(command)
+            androidDevice().install(variant.outputs[0].outputFile.path)
         }
     }
 }
@@ -71,77 +46,27 @@ android.testVariants.all { variant ->
 
 task commandlineAdbRunTests {
     doLast {
-        def command = []
-        command.addAll([ android.getAdbExecutable().absolutePath, '-s', getAndroidSerial(), 'shell', 'am', 'instrument', '-w', '-e', 'junitOutputDirectory', '/mnt/sdcard/testresults' ])
-        if (System.properties['noDeviceTests']){
-            command.addAll(['-e', 'notAnnotation', 'org.catrobat.catroid.uitest.annotation.Device'])
-        }
-        if (System.properties['onlyDeviceTests']){
-            command.addAll(['-e', 'annotation', 'org.catrobat.catroid.uitest.annotation.Device'])
-        }
-        if (System.properties['testClass']){
-            command.addAll(['-e', 'class', System.properties['testClass'].toString()])
-        }
-        if (System.properties['testPackage']){
-            command.addAll(['-e', 'package', System.properties['testPackage'].toString()])
-        }
+        def device = androidDevice()
 
-        command.addAll(["${android.defaultConfig.testApplicationId}/${android.defaultConfig.testInstrumentationRunner}".toString()])
-        executeShellCommand(command)
+        def cmd = device.command(['shell', 'am', 'instrument', '-w', '-e', 'junitOutputDirectory', '/mnt/sdcard/testresults'])
+        cmd.addOptionalArguments(System.properties['noDeviceTests'], ['-e', 'notAnnotation', 'org.catrobat.catroid.uitest.annotation.Device'])
+        cmd.addOptionalArguments(System.properties['onlyDeviceTests'], ['-e', 'annotation', 'org.catrobat.catroid.uitest.annotation.Device'])
+        cmd.addOptionalArguments(System.properties['testClass'], ['-e', 'class', System.properties['testClass'].toString()])
+        cmd.addOptionalArguments(System.properties['testPackage'], ['-e', 'package', System.properties['testPackage'].toString()])
+        cmd.addArguments(["${android.defaultConfig.testApplicationId}/${android.defaultConfig.testInstrumentationRunner}".toString()])
+        cmd.verbose().execute(null)
 
-        def adbPath = project.getBuildDir().getPath()+"/adb"
-        def adbTestPath = adbPath+"/test"
-        def adbScreenshotsPath = adbPath+"/robotium_screenshots"
+        def adbPath = project.getBuildDir().getPath() + "/adb"
         file(adbPath).deleteDir()
+
+        def adbTestPath = adbPath + "/test"
         file(adbTestPath).mkdirs()
-        file(adbScreenshotsPath).mkdirs()
+        device.command(['pull', '/sdcard/testresults', adbTestPath]).verbose().execute()
 
-        def testPullCommand = [ android.getAdbExecutable().absolutePath, '-s', getAndroidSerial(), 'pull', '/sdcard/testresults', adbTestPath ]
-        def screenshotsPullCommand = [ android.getAdbExecutable().absolutePath, '-s', getAndroidSerial(), 'pull', '/sdcard/Robotium-Screenshots', adbScreenshotsPath ]
-
-        executeShellCommand(testPullCommand)
         try {
-            executeShellCommand(screenshotsPullCommand)
+            def adbScreenshotsPath = adbPath + "/robotium_screenshots"
+            file(adbScreenshotsPath).mkdirs()
+            device.command(['pull', '/sdcard/Robotium-Screenshots', adbScreenshotsPath]).verbose().execute()
         } catch (GradleScriptException) {}
-    }
-}
-
-task adbDisableAnimationsGlobally() {
-    description 'Disables android animations globally on the connected device'
-    group 'android'
-
-    doLast {
-        logger.lifecycle(description)
-
-        def androidSerial = getAndroidSerial()
-        exec {
-            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'put', 'global', 'window_animation_scale', '0.0'
-        }
-        exec {
-            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'put', 'global', 'transition_animation_scale', '0.0'
-        }
-        exec {
-            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'put', 'global', 'animator_duration_scale', '0.0'
-        }
-    }
-}
-
-task adbResetAnimationsGlobally() {
-    description 'Reset android animations globally on the connected device'
-    group 'android'
-
-    doLast {
-        logger.lifecycle(description)
-
-        def androidSerial = getAndroidSerial()
-        exec {
-            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'delete', 'global', 'window_animation_scale'
-        }
-        exec {
-            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'delete', 'global', 'transition_animation_scale'
-        }
-        exec {
-            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'delete', 'global', 'animator_duration_scale'
-        }
     }
 }
