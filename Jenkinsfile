@@ -83,7 +83,7 @@ pipeline {
 
 		stage('Static Analysis') {
 			steps {
-				sh "./buildScripts/build_step_run_static_analysis"
+				sh './gradlew clean pmd checkstyle lint'
 			}
 
 			post {
@@ -98,7 +98,7 @@ pipeline {
 		stage('Unit and Device tests') {
 			steps {
 				// Run local unit tests
-				sh "./buildScripts/build_step_run_unit_tests__all_tests"
+				sh './gradlew -Pjenkins clean jacocoTestDebugUnitTestReport'
 				// Convert the JaCoCo coverate to the Cobertura XML file format.
 				// This is done since the Jenkins JaCoCo plugin does not work well.
 				// See also JENKINS-212 on jira.catrob.at
@@ -107,8 +107,11 @@ pipeline {
 				sh "mv ${env.GRADLE_PROJECT_MODULE_NAME}/build ${env.GRADLE_PROJECT_MODULE_NAME}/build-unittest"
 
 				// Run device tests
-				sh "./buildScripts/build_step_run_tests_on_emulator__all_tests"
-
+				sh '''
+					./gradlew startEmulator adbDisableAnimationsGlobally
+					./gradlew -Pjenkins clean createDebugCoverageReport || true
+					./gradlew adbResetAnimationsGlobally retrieveLogcat
+				'''
 				// Convert the JaCoCo coverate to the Cobertura XML file format.
 				// This is done since the Jenkins JaCoCo plugin does not work well.
 				// See also JENKINS-212 on jira.catrob.at
@@ -120,15 +123,15 @@ pipeline {
 					junit '**/*TEST*.xml'
 					step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: "$JAVA_SRC/coverage*.xml", failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false, failNoReports: false])
 
-					// stop/kill emulator
-					sh "./buildScripts/build_helper_stop_emulator"
+					sh './gradlew stopEmulator'
+					archiveArtifacts 'logcat.txt'
 				}
 			}
 		}
 
 		stage('Build Debug-APK') {
 			steps {
-				sh "./buildScripts/build_step_create_debug_apk"
+				sh './gradlew clean assembleAndroidTest'
 				archiveArtifacts "${env.APK_LOCATION_DEBUG}"
 			}
 		}
