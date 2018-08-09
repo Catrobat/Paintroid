@@ -28,6 +28,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,8 +88,8 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
-		stc = Typeface.createFromAsset(context.getAssets(), "STC.otf");
-		dubai = Typeface.createFromAsset(context.getAssets(), "Dubai.TTF");
+		stc = ResourcesCompat.getFont(context, R.font.stc_regular);
+		dubai = ResourcesCompat.getFont(context, R.font.dubai);
 
 		textPaint = new Paint();
 		initializePaint();
@@ -230,7 +231,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 					textPaint.setTypeface(stc);
 					textPaint.setTextSkewX(textSkewX);
 				} catch (Exception e) {
-					Log.e("Can't set custom font", "STC");
+					Log.e("Can't set custom font", "stc_regular");
 				}
 				break;
 			case "Dubai":
@@ -238,7 +239,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 					textPaint.setTypeface(dubai);
 					textPaint.setTextSkewX(textSkewX);
 				} catch (Exception e) {
-					Log.e("Can't set custom font", "Dubai");
+					Log.e("Can't set custom font", "dubai");
 				}
 				break;
 		}
