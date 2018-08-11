@@ -30,7 +30,6 @@ Let's start to set up the working environment using the instructions in our  [Wi
 * [Twitter](http://twitter.com/Catroid)
 * [Google+](https://plus.google.com/u/0/+CatrobatOrgAdmin/posts)
 * [Our Google group](https://groups.google.com/forum/?fromgroups#!forum/catrobat)
-* Visit us on IRC: #catrobat or #catrobatdev on [freenode](http://freenode.net/)
 
 # License #
 [License](http://developer.catrobat.org/licenses) of our project (mainly AGPL v3).
