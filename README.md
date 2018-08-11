@@ -8,8 +8,6 @@ Since Pocket Paint is now available in **Google Play store** you can also downlo
 
 For more information oriented towards developers please visit our [developers page](http://developer.catrobat.org/).
 
-Nightly builds can be found [here](http://files.catrob.at).
-
 # Issues #
 **Please report all bugs on our [Jira Bugtracker](https://jira.catrob.at/secure/CreateIssue.jspa?pid=10401&issuetype=1)**
 
