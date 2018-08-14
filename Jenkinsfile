@@ -34,10 +34,6 @@ pipeline {
 		// APK build output locations
 		APK_LOCATION_DEBUG = "${env.GRADLE_PROJECT_MODULE_NAME}/build/outputs/apk/debug/Paintroid-debug.apk"
 
-		// share.catrob.at
-		CATROBAT_SHARE_UPLOAD_BRANCH = "develop"
-		CATROBAT_SHARE_APK_NAME = "org.catrobat.paintroid_debug_${env.CATROBAT_SHARE_UPLOAD_BRANCH}_latest.apk"
-
 		// set to any value to debug jenkins_android* scripts
 		ANDROID_EMULATOR_HELPER_DEBUG = ""
 		// Needed for compatibiliby to current Jenkins-wide Envs
@@ -121,19 +117,6 @@ pipeline {
 				sh "./buildScripts/build_step_create_debug_apk"
 				stash name: "debug-apk", includes: "${env.APK_LOCATION_DEBUG}"
 				archiveArtifacts "${env.APK_LOCATION_DEBUG}"
-			}
-		}
-
-		stage('Upload to share') {
-			when {
-				branch "${env.CATROBAT_SHARE_UPLOAD_BRANCH}"
-			}
-
-			steps {
-				unstash "debug-apk"
-				script {
-					uploadFileToShare "${env.APK_LOCATION_DEBUG}", "${env.CATROBAT_SHARE_APK_NAME}"
-				}
 			}
 		}
 	}
