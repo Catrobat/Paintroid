@@ -100,6 +100,8 @@
     <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
     <string name="shape_tool_dialog_star_title">Star</string>
     <string name="shape_tool_dialog_heart_title">Heart</string>
+    <string name="shape_tool_dialog_fill_title">Fill</string>
+    <string name="shape_tool_dialog_outline_title">Outline</string>
 
     <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
 

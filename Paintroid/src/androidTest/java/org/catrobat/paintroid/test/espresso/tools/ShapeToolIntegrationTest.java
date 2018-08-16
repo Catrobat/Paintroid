@@ -21,14 +21,13 @@ package org.catrobat.paintroid.test.espresso.tools;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.graphics.PointF;
 import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,13 +39,13 @@ import java.util.Arrays;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.runners.Parameterized.Parameter;
 import static org.junit.runners.Parameterized.Parameters;
@@ -79,19 +78,6 @@ public class ShapeToolIntegrationTest {
 	}
 
 	@Test
-	public void testRememberPositionAfterOrientationChange() {
-		onView(withId(shape))
-				.perform(click());
-
-		PointF p = new PointF(0, 0);
-		((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition.set(p);
-
-		activityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-		assertEquals(p, ((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition);
-	}
-
-	@Test
 	public void testRememberShapeAfterOrientationChange() {
 		onView(withId(shape))
 				.perform(click())
@@ -99,8 +85,8 @@ public class ShapeToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptions();
 
-		onView(isRoot())
-				.perform(click());
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
 		Bitmap expectedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
 
@@ -115,8 +101,38 @@ public class ShapeToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptions();
 
-		onView(isRoot())
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+
+		assertTrue(expectedBitmap.sameAs(PaintroidApplication.drawingSurface.getBitmapCopy()));
+	}
+
+	@Test
+	public void testRememberOutlineShapeAfterOrientationChange() {
+		onView(withId(R.id.pocketpaint_shape_ibtn_outline))
 				.perform(click());
+		onView(withId(shape))
+				.perform(click())
+				.check(matches(isSelected()));
+		onToolBarView()
+				.performCloseToolOptions();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+
+		Bitmap expectedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		onTopBarView()
+				.performUndo();
+
+		activityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		onView(withId(shape))
+				.check(matches(isSelected()));
+
+		onToolBarView()
+				.performCloseToolOptions();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
 		assertTrue(expectedBitmap.sameAs(PaintroidApplication.drawingSurface.getBitmapCopy()));
 	}
