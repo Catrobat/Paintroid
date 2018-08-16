@@ -12,7 +12,15 @@ pipeline {
 			// the container for the ssh-agent to work.
 			// Another way would be to simply map the passwd file, but would spoil additional information
 			additionalBuildArgs '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)'
-			args "--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle/:/.gradle -v /var/local/container_shared/android-sdk-paintroid:/usr/local/android-sdk -v /var/local/container_shared/android-home:/.android -v /var/local/container_shared/emulator_console_auth_token:/.emulator_console_auth_token -v /var/local/container_shared/analytics.settings:/analytics.settings"
+			// Currently there are two different NDK behaviors in place, one to keep NDK r16b, which
+			// was needed because of the removal of armeabi and MIPS support and one to always use the
+			// latest NDK, which is the suggestion from the NDK documentations.
+			// Therefore two different SDK locations on the host are currently in place:
+			// NDK r16b  : /var/local/container_shared/android-sdk
+			// NDK latest: /var/local/container_shared/android-sdk-ndk-latest
+			// As android-sdk was used from the beginning and is already 'released' this can't be changed
+			// to eg android-sdk-ndk-r16b and must be kept to the previously used value
+			args "--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle/:/.gradle -v /var/local/container_shared/android-sdk-ndk-latest:/usr/local/android-sdk -v /var/local/container_shared/android-home:/.android -v /var/local/container_shared/emulator_console_auth_token:/.emulator_console_auth_token -v /var/local/container_shared/analytics.settings:/analytics.settings"
 		}
 	}
 
