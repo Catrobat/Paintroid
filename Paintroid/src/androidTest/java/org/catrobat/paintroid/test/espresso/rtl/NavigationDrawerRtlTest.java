@@ -28,33 +28,21 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Locale;
-
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.pressBack;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 
-import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.openMultilingualActivity;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
-import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.core.StringStartsWith.startsWith;
 
 @RunWith(AndroidJUnit4.class)
 public class NavigationDrawerRtlTest {
-	private static final Locale ARABICLOCALE = new Locale("ar");
 
 	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class, "ar");
 
 	@Test
 	public void testNavigationDrawerCloseOnBack() {
-		openMultilingualActivity();
-		onData(hasToString(startsWith(ARABICLOCALE.getDisplayName(ARABICLOCALE))))
-				.perform(click());
-
 		onNavigationDrawer()
 				.performOpen()
 				.check(matches(isOpen()));

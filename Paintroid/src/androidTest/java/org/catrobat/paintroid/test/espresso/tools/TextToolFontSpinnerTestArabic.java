@@ -25,6 +25,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.content.res.ResourcesCompat;
+import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
@@ -34,17 +35,23 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Locale;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.checkTextDirection;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getConfiguration;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTypeFace;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withIndex;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class TextToolFontSpinnerTest {
+public class TextToolFontSpinnerTestArabic {
 	private int normalStyle = Typeface.NORMAL;
 	private Context context = InstrumentationRegistry.getTargetContext();
 	private Typeface sansSerifFontFace = Typeface.create(Typeface.SANS_SERIF, normalStyle);
@@ -54,10 +61,13 @@ public class TextToolFontSpinnerTest {
 	private Typeface dubaiFontFace = ResourcesCompat.getFont(context, R.font.dubai);
 
 	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class, "en");
+	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class, "ar");
 
 	@Test
-	public void testTextFontFaceOfFontSpinnerEnglish() {
+	public void testTextFontFaceOfFontSpinnerArabic() {
+		assertEquals(View.LAYOUT_DIRECTION_RTL, getConfiguration().getLayoutDirection());
+		assertTrue(checkTextDirection(Locale.getDefault().getDisplayName()));
+
 		selectTool(ToolType.TEXT);
 		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font))
 				.perform(click());

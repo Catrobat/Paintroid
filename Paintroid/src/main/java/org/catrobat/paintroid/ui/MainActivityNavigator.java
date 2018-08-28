@@ -29,20 +29,17 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.MultilingualActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.contract.MainActivityContracts;
-import org.catrobat.paintroid.dialog.AboutDialog;
 import org.catrobat.paintroid.dialog.ChooseNewImageDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
-import org.catrobat.paintroid.dialog.TermsOfUseAndServiceDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -81,12 +78,6 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void startLanguageActivity(int requestCode) {
-		Intent language = new Intent(mainActivity.getApplicationContext(), MultilingualActivity.class);
-		mainActivity.startActivityForResult(language, requestCode);
-	}
-
-	@Override
 	public void startLoadImageActivity(int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
@@ -115,18 +106,6 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Intent intent = new Intent(mainActivity.getApplicationContext(), WelcomeActivity.class);
 		intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		mainActivity.startActivity(intent);
-	}
-
-	@Override
-	public void showAboutDialog() {
-		AboutDialog about = AboutDialog.newInstance();
-		about.show(mainActivity.getSupportFragmentManager(), Constants.ABOUT_DIALOG_FRAGMENT_TAG);
-	}
-
-	@Override
-	public void showTermsOfServiceDialog() {
-		TermsOfUseAndServiceDialog termsOfUseAndService = TermsOfUseAndServiceDialog.newInstance();
-		termsOfUseAndService.show(mainActivity.getSupportFragmentManager(), Constants.TOS_DIALOG_FRAGMENT_TAG);
 	}
 
 	private Fragment getIndeterminateProgressFragment() {

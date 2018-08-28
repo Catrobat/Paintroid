@@ -29,13 +29,16 @@ import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
 
-public class PaintroidApplication {
+public final class PaintroidApplication {
 	public static DrawingSurface drawingSurface;
 	public static CommandManager commandManager;
 	public static Tool currentTool;
 	public static Perspective perspective;
-	public static String defaultSystemLanguage;
 	public static LayerContracts.Model layerModel;
 	public static File cacheDir;
 	public static Bitmap checkeredBackgroundBitmap;
+
+	private PaintroidApplication() {
+		throw new IllegalArgumentException();
+	}
 }

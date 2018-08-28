@@ -31,8 +31,4 @@
     <dimen name="pocketpaint_welcome_margin_top">100dp</dimen>
     <dimen name="pocketpaint_welcome_margin_top_possibilities">50dp</dimen>
     <dimen name="pocketpaint_welcome_margin_top_text">25dp</dimen>
-
-    <!-- PocketPaint MultilingualActivity -->
-    <dimen name="pocketpaint_multilingual_name_text">22sp</dimen>
-    <dimen name="pocketpaint_multilingual_text_margin">11dp</dimen>
 </resources>

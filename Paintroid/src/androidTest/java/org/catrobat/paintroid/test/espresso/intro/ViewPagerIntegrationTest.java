@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.espresso.intro;
 
-import android.support.test.espresso.Espresso;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.view.ViewPager;
 
@@ -94,10 +93,5 @@ public class ViewPagerIntegrationTest {
 			assertEquals(i, viewPager.getCurrentItem());
 			onView(isRoot()).perform(swipeLeft());
 		}
-	}
-
-	@Test
-	public void pressBack() {
-		Espresso.pressBack();
 	}
 }

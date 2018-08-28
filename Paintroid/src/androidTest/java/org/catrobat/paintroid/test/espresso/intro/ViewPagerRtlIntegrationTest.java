@@ -48,7 +48,7 @@ public class ViewPagerRtlIntegrationTest {
 	private IntroPageViewAdapter viewPagerAdapter;
 
 	@Before
-	public void setUp() throws NoSuchFieldException, IllegalAccessException {
+	public void setUp() {
 		viewPager = activityRule.getActivity().viewPager;
 		viewPagerAdapter = (IntroPageViewAdapter) viewPager.getAdapter();
 	}

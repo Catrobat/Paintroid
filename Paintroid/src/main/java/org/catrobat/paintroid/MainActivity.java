@@ -76,7 +76,6 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_NAME;
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_PATH;
@@ -114,11 +113,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(R.style.PocketPaintTheme);
+		super.onCreate(savedInstanceState);
+
 		PaintroidApplication.cacheDir = getCacheDir();
-		PaintroidApplication.defaultSystemLanguage = Locale.getDefault().getLanguage();
 		PaintroidApplication.checkeredBackgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
 				.pocketpaint_checkeredbg);
-		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();
@@ -393,14 +393,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			presenter.enterFullscreenClicked();
 		} else if (i == R.id.pocketpaint_nav_exit_fullscreen_mode) {
 			presenter.exitFullscreenClicked();
-		} else if (i == R.id.pocketpaint_nav_tos) {
-			presenter.showTermsOfServiceClicked();
 		} else if (i == R.id.pocketpaint_nav_help) {
 			presenter.showHelpClicked();
-		} else if (i == R.id.pocketpaint_nav_about) {
-			presenter.showAboutClicked();
-		} else if (i == R.id.pocketpaint_nav_lang) {
-			presenter.selectLanguageClicked();
 		} else {
 			throw new IllegalArgumentException();
 		}

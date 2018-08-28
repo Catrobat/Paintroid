@@ -1,25 +1,23 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid;
 
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -109,18 +107,11 @@ public class WelcomeActivity extends AppCompatActivity {
 			}
 		}
 	};
-	private Session session;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(R.style.PocketPaintWelcomeActivityTheme);
 		super.onCreate(savedInstanceState);
-
-		session = new Session(this);
-		if (!session.isFirstTimeLaunch() && getIntent().getFlags() != Intent.FLAG_GRANT_READ_URI_PERMISSION) {
-			launchHomeScreen();
-		}
-		getIntent().setFlags(0);
 
 		getStyleAttributesFromXml();
 
@@ -129,7 +120,6 @@ public class WelcomeActivity extends AppCompatActivity {
 					| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 		}
 
-		MultilingualActivity.setToChosenLanguage(this);
 		setContentView(R.layout.activity_pocketpaint_welcome);
 
 		viewPager = findViewById(R.id.pocketpaint_view_pager);
@@ -159,7 +149,7 @@ public class WelcomeActivity extends AppCompatActivity {
 		btnSkip.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				launchHomeScreen();
+				finish();
 			}
 		});
 
@@ -177,7 +167,7 @@ public class WelcomeActivity extends AppCompatActivity {
 				}
 
 				if (finished) {
-					launchHomeScreen();
+					finish();
 				} else {
 					viewPager.setCurrentItem(current);
 				}
@@ -221,14 +211,6 @@ public class WelcomeActivity extends AppCompatActivity {
 		return viewPager.getCurrentItem() + i;
 	}
 
-	private void launchHomeScreen() {
-		session.setFirstTimeLaunch(false);
-		Intent mainActivityIntent = new Intent(this, MainActivity.class);
-		mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-		startActivity(mainActivityIntent);
-		finish();
-	}
-
 	private void changeStatusBarColor() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			Window window = getWindow();
@@ -258,7 +240,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 	@Override
 	public void onBackPressed() {
-		launchHomeScreen();
+		finish();
 	}
 
 	@Override

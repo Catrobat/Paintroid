@@ -31,7 +31,6 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.MultilingualActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
@@ -194,50 +193,6 @@ public class MenuFileActivityIntegrationTest {
 		pressBack();
 
 		onView(withId(R.id.pocketpaint_drawing_surface_view)).check(matches(isDisplayed()));
-	}
-
-	@Test
-	public void testOnLanguage() {
-		onNavigationDrawer()
-				.performOpen();
-		onView(withText(R.string.menu_language)).perform(click());
-		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
-	}
-
-	@Test
-	public void testImageUnchangedAfterLanguageChange() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		Bitmap imageBefore = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
-		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
-
-		onNavigationDrawer()
-				.performOpen();
-		onView(withText(R.string.menu_language)).perform(click());
-		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
-		onView(withText(R.string.device_language)).perform(click());
-
-		Bitmap imageAfter = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
-		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
-	}
-
-	@Test
-	public void testImageUnchangedAfterLanguageAbort() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		Bitmap imageBefore = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
-		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
-
-		onNavigationDrawer()
-				.performOpen();
-		onView(withText(R.string.menu_language)).perform(click());
-		intended(hasComponent(hasClassName(MultilingualActivity.class.getName())));
-		pressBack();
-
-		Bitmap imageAfter = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
-		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
 	@Test

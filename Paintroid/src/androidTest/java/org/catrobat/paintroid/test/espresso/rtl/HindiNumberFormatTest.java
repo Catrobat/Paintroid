@@ -30,28 +30,21 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Locale;
-
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.openMultilingualActivity;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickColorPickerPresetSelectorButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openColorPickerDialog;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.core.StringStartsWith.startsWith;
 
 @RunWith(AndroidJUnit4.class)
 public class HindiNumberFormatTest {
-	private static final Locale ARABICLOCALE = new Locale("ar");
 	private static final String EXPECTED_RED_VALUE = "٢٤٠";
 	private static final String EXPECTED_GREEN_VALUE = "٢٢٨";
 	private static final String EXPECTED_BLAU_VALUE = "١٦٨";
@@ -59,14 +52,10 @@ public class HindiNumberFormatTest {
 	private static final String EXPECTED_STROKE_WIDTH_VALUE = "٢٥";
 	private static final String EXPECTED_COLOR_TOLERANCE_VALUE = "١٢";
 	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class, "ar");
 
 	@Test
-	public void testHindiNumberAtTool() throws Exception {
-		openMultilingualActivity();
-		onData(hasToString(startsWith(ARABICLOCALE.getDisplayName(ARABICLOCALE))))
-				.perform(click());
-
+	public void testHindiNumberAtTool() {
 		selectTool(ToolType.BRUSH);
 		onView(withId(R.id.pocketpaint_stroke_width_width_text))
 				.check(matches(withText(containsString(EXPECTED_STROKE_WIDTH_VALUE))));
@@ -89,11 +78,7 @@ public class HindiNumberFormatTest {
 	}
 
 	@Test
-	public void testHindiNumberAtColorDialog() throws Exception {
-		openMultilingualActivity();
-		onData(hasToString(startsWith(ARABICLOCALE.getDisplayName(ARABICLOCALE))))
-				.perform(click());
-
+	public void testHindiNumberAtColorDialog() {
 		openColorPickerDialog();
 		clickColorPickerPresetSelectorButton(7);
 		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))

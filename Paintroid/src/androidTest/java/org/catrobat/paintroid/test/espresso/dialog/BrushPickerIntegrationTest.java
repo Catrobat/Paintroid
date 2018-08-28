@@ -102,7 +102,7 @@ public class BrushPickerIntegrationTest {
 	}
 
 	@Test
-	public void brushPickerDialogDefaultLayoutAndToolChanges() throws NoSuchFieldException, IllegalAccessException {
+	public void brushPickerDialogDefaultLayoutAndToolChanges() {
 		onView(withId(R.id.pocketpaint_drawer_preview))
 				.check(matches(isDisplayed()));
 		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
@@ -139,7 +139,7 @@ public class BrushPickerIntegrationTest {
 	}
 
 	@Test
-	public void brushPickerDialogKeepStrokeOnToolChange() throws NoSuchFieldException, IllegalAccessException {
+	public void brushPickerDialogKeepStrokeOnToolChange() {
 		final int newStrokeWidth = 80;
 
 		setStrokeWidth(newStrokeWidth);
@@ -162,7 +162,7 @@ public class BrushPickerIntegrationTest {
 	}
 
 	@Test
-	public void brushPickerDialogMinimumBrushWidth() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void brushPickerDialogMinimumBrushWidth() {
 		setStrokeWidth(0, MIN_STROKE_WIDTH);
 		setStrokeWidth(MIN_STROKE_WIDTH);
 
@@ -171,7 +171,7 @@ public class BrushPickerIntegrationTest {
 	}
 
 	@Test
-	public void brushPickerAntiAliasingOffAtMinimumBrushSize() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void brushPickerAntiAliasingOffAtMinimumBrushSize() {
 		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 				.perform(touchCenterLeft());
 
@@ -186,7 +186,7 @@ public class BrushPickerIntegrationTest {
 	}
 
 	@Test
-	public void brushPickerDialogRadioButtonsBehaviour() throws SecurityException, IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+	public void brushPickerDialogRadioButtonsBehaviour() {
 		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.check(matches(not(isSelected())));
 		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
