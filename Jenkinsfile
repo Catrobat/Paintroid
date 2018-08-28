@@ -54,7 +54,7 @@ pipeline {
 		GRADLE_PROJECT_MODULE_NAME = "Paintroid"
 
 		// APK build output locations
-		APK_LOCATION_DEBUG = "${env.GRADLE_PROJECT_MODULE_NAME}/build/outputs/apk/debug/Paintroid-debug.apk"
+		APK_LOCATION_DEBUG = "${env.GRADLE_PROJECT_MODULE_NAME}/build/outputs/apk/androidTest/debug/Paintroid-debug-androidTest.apk"
 
 
 		// Code coverage

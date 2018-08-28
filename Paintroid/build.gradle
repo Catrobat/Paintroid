@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
@@ -25,20 +25,8 @@ apply plugin: 'pmd'
 apply from: 'gradle/adb_tasks.gradle'
 apply from: 'gradle/code_quality_tasks.gradle'
 
-def appId = 'org.catrobat.paintroid'
-def appName = '@string/app_name'
-
 check.dependsOn 'checkstyle'
 check.dependsOn 'pmd'
-
-// When -Pindependent was provided on the gradle command the APP name is changed.
-// This allows to have multiple Paintroid versions installed in parallel for testing purposes.
-// Furthermore these installations do not interfere with the actual Paintroid app.
-if (project.hasProperty('independent')) {
-    def today = new Date()
-    appId += '.independent_' + today.format('YYYYMMdd_HHmm')
-    appName = property('independent') ?: 'Paint ' + today.format('MMdd HH:mm')
-}
 
 jacoco {
     toolVersion = "0.8.1"
@@ -54,15 +42,14 @@ android {
     compileSdkVersion 26
 
     defaultConfig {
-        applicationId appId
         minSdkVersion 17
         targetSdkVersion 22
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         versionCode 21
         versionName "2.0.1"
-        manifestPlaceholders += [appName: appName]
         externalNativeBuild.cmake.cppFlags "-fexceptions"
         ndk.abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        multiDexEnabled true
     }
 
     sourceSets {
@@ -81,7 +68,6 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
         debug {

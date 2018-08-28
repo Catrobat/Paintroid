@@ -61,7 +61,7 @@ def createAdbInstallTask(variant) {
     }
 }
 
-android.applicationVariants.all { variant ->
+android.libraryVariants.all { variant ->
     createAdbInstallTask(variant)
 }
 

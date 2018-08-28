@@ -21,7 +21,7 @@ be partly replicated by './gradlew clean'.""")
 
 build_helper_functions.check_number_of_parameters(valid_param_count=0, usage_func=usage)
 
-create_apk_cmd = [ build_helper_functions.get_relative_gradle_name(), 'clean', 'assembleDebug' ]
+create_apk_cmd = [ build_helper_functions.get_relative_gradle_name(), 'clean', 'assembleAndroidTest' ]
 print("Calling: " + " ".join(create_apk_cmd))
 return_code = subprocess.run( create_apk_cmd, cwd=os.environ['REPO_DIR'] ).returncode
 sys.exit(return_code)

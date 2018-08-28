@@ -22,6 +22,7 @@ package org.catrobat.paintroid;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -75,6 +76,7 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_NAME;
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_PATH;
@@ -112,7 +114,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(R.style.PocketPaintTheme);
-		MultilingualActivity.setToChosenLanguage(this);
+		PaintroidApplication.cacheDir = getCacheDir();
+		PaintroidApplication.defaultSystemLanguage = Locale.getDefault().getLanguage();
+		PaintroidApplication.checkeredBackgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
+				.pocketpaint_checkeredbg);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pocketpaint_main);
 
@@ -371,45 +376,33 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	private void onNavigationItemSelected(@NonNull MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.pocketpaint_nav_back_to_pocket_code:
-				presenter.backToPocketCodeClicked();
-				break;
-			case R.id.pocketpaint_nav_export:
-				presenter.saveCopyClicked();
-				break;
-			case R.id.pocketpaint_nav_save_image:
-				presenter.saveImageClicked();
-				break;
-			case R.id.pocketpaint_nav_save_duplicate:
-				presenter.saveCopyClicked();
-				break;
-			case R.id.pocketpaint_nav_open_image:
-				presenter.loadImageClicked();
-				break;
-			case R.id.pocketpaint_nav_new_image:
-				presenter.newImageClicked();
-				break;
-			case R.id.pocketpaint_nav_fullscreen_mode:
-				presenter.enterFullscreenClicked();
-				break;
-			case R.id.pocketpaint_nav_exit_fullscreen_mode:
-				presenter.exitFullscreenClicked();
-				break;
-			case R.id.pocketpaint_nav_tos:
-				presenter.showTermsOfServiceClicked();
-				break;
-			case R.id.pocketpaint_nav_help:
-				presenter.showHelpClicked();
-				break;
-			case R.id.pocketpaint_nav_about:
-				presenter.showAboutClicked();
-				break;
-			case R.id.pocketpaint_nav_lang:
-				presenter.selectLanguageClicked();
-				break;
-			default:
-				throw new IllegalArgumentException();
+		int i = item.getItemId();
+		if (i == R.id.pocketpaint_nav_back_to_pocket_code) {
+			presenter.backToPocketCodeClicked();
+		} else if (i == R.id.pocketpaint_nav_export) {
+			presenter.saveCopyClicked();
+		} else if (i == R.id.pocketpaint_nav_save_image) {
+			presenter.saveImageClicked();
+		} else if (i == R.id.pocketpaint_nav_save_duplicate) {
+			presenter.saveCopyClicked();
+		} else if (i == R.id.pocketpaint_nav_open_image) {
+			presenter.loadImageClicked();
+		} else if (i == R.id.pocketpaint_nav_new_image) {
+			presenter.newImageClicked();
+		} else if (i == R.id.pocketpaint_nav_fullscreen_mode) {
+			presenter.enterFullscreenClicked();
+		} else if (i == R.id.pocketpaint_nav_exit_fullscreen_mode) {
+			presenter.exitFullscreenClicked();
+		} else if (i == R.id.pocketpaint_nav_tos) {
+			presenter.showTermsOfServiceClicked();
+		} else if (i == R.id.pocketpaint_nav_help) {
+			presenter.showHelpClicked();
+		} else if (i == R.id.pocketpaint_nav_about) {
+			presenter.showAboutClicked();
+		} else if (i == R.id.pocketpaint_nav_lang) {
+			presenter.selectLanguageClicked();
+		} else {
+			throw new IllegalArgumentException();
 		}
 	}
 
