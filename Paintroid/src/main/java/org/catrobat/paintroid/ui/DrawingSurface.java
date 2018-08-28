@@ -26,6 +26,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
@@ -176,6 +177,11 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
+		holder.setFormat(PixelFormat.RGBA_8888);
+
+		if (drawingThread != null) {
+			drawingThread.stop();
+		}
 		drawingThread = new DrawingSurfaceThread(new DrawLoop());
 	}
 
