@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.BuildConfig;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -186,23 +187,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void showTermsOfServiceClicked() {
-		navigator.showTermsOfServiceDialog();
-	}
-
-	@Override
 	public void showHelpClicked() {
 		navigator.startWelcomeActivity();
-	}
-
-	@Override
-	public void showAboutClicked() {
-		navigator.showAboutDialog();
-	}
-
-	@Override
-	public void selectLanguageClicked() {
-		navigator.startLanguageActivity(REQUEST_CODE_LANGUAGE);
 	}
 
 	@Override
@@ -367,6 +353,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
 			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_export);
 		}
+		navigationDrawerViewHolder.setVersion(BuildConfig.VERSION_NAME);
 
 		view.initializeActionBar(model.isOpenedFromCatroid());
 	}

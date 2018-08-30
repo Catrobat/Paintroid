@@ -44,24 +44,20 @@
     </group>
 
     <group android:id="@+id/pocketpaint_menu_bottom">
-        <item
-            android:id="@+id/pocketpaint_nav_lang"
-            android:icon="@drawable/ic_pocketpaint_menu_language"
-            android:title="@string/menu_language" />
-        <item
-            android:id="@+id/pocketpaint_nav_tos"
-            android:icon="@drawable/ic_pocketpaint_menu_tos"
-            android:title="@string/menu_terms_of_use_and_service" />
 
         <item
             android:id="@+id/pocketpaint_nav_help"
             android:icon="@drawable/ic_pocketpaint_menu_help"
             android:title="@string/help_title" />
 
+    </group>
+
+    <group android:id="@+id/pocketpaint_menu_footer">
+
         <item
-            android:id="@+id/pocketpaint_nav_about"
-            android:icon="@drawable/ic_pocketpaint_menu_info"
-            android:title="@string/menu_about" />
+            android:id="@+id/pocketpaint_nav_version"
+            android:title="@string/pocketpaint_app_name"
+            android:enabled="false"/>
     </group>
 
 </menu>

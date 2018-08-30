@@ -19,10 +19,8 @@
 
 package org.catrobat.paintroid.test.espresso.intro;
 
-import android.content.ComponentName;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
@@ -31,12 +29,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -47,6 +42,7 @@ import static org.catrobat.paintroid.test.espresso.util.UiMatcher.equalsNumberDo
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isNotVisible;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isOnLeftSide;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isOnRightSide;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class RTLTest {
@@ -65,7 +61,7 @@ public class RTLTest {
 		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(matches(isDisplayed()))
 				.perform(click());
-		intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
+		assertTrue(activityRule.getActivity().isFinishing());
 	}
 
 	@Test
@@ -78,7 +74,7 @@ public class RTLTest {
 				.check(matches(withText(R.string.lets_go)))
 				.perform(click());
 
-		intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
+		assertTrue(activityRule.getActivity().isFinishing());
 	}
 
 	@Test

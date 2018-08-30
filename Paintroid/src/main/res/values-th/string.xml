@@ -20,7 +20,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name" tools:ignore="UnusedResources">พ็อกเก็ต เพ้นท์</string>
+  <string name="pocketpaint_app_name" tools:ignore="UnusedResources">พ็อกเก็ต เพ้นท์</string>
   <string name="button_brush">แปรง</string>
   <string name="button_cursor">เคอร์เซอร์</string>
   <string name="button_pipette">ดูดสี</string>

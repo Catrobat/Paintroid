@@ -36,7 +36,8 @@ task checkstyle(type: Checkstyle) {
 }
 
 task pmd(type: Pmd) {
-    ruleSets = ['Paintroid/config/pmd.xml']
+    ruleSetFiles = files('config/pmd.xml')
+    ruleSets = []
 
     source '.'
     include '**/*.java'

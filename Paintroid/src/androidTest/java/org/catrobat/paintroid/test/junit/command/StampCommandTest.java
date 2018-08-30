@@ -23,7 +23,9 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.support.test.InstrumentationRegistry;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.model.Layer;
@@ -43,6 +45,8 @@ public class StampCommandTest extends CommandTestSetup {
 	@Before
 	public void setUp() {
 		super.setUp();
+		PaintroidApplication.cacheDir = InstrumentationRegistry.getTargetContext().getCacheDir();
+
 		stampBitmapUnderTest = canvasBitmapUnderTest.copy(Config.ARGB_8888, true);
 		stampBitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR);
 		commandUnderTest = new StampCommand(stampBitmapUnderTest, new Point(canvasBitmapUnderTest.getWidth() / 2,

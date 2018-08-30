@@ -99,15 +99,4 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="PocketPaintMultilingualActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="windowNoTitle">false</item>
-        <item name="windowActionBar">true</item>
-        <item name="colorPrimary">@color/pocketpaint_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/pocketpaint_colorPrimaryDark</item>
-        <item name="android:colorBackground">@color/pocketpaint_colorPrimary</item>
-        <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>
-        <item name="colorAccent">@color/pocketpaint_colorAccent</item>
-        <item name="drawerArrowStyle">@style/PocketPaintDrawerArrowStyle</item>
-    </style>
-
 </resources>

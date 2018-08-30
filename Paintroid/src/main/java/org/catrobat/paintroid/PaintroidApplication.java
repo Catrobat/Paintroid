@@ -19,9 +19,7 @@
 
 package org.catrobat.paintroid;
 
-import android.app.Application;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.LayerContracts;
@@ -30,23 +28,17 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
-import java.util.Locale;
 
-public class PaintroidApplication extends Application {
+public final class PaintroidApplication {
 	public static DrawingSurface drawingSurface;
 	public static CommandManager commandManager;
 	public static Tool currentTool;
 	public static Perspective perspective;
-	public static String defaultSystemLanguage;
 	public static LayerContracts.Model layerModel;
 	public static File cacheDir;
 	public static Bitmap checkeredBackgroundBitmap;
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		cacheDir = getCacheDir();
-		defaultSystemLanguage = Locale.getDefault().getLanguage();
-		checkeredBackgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
+	private PaintroidApplication() {
+		throw new IllegalArgumentException();
 	}
 }

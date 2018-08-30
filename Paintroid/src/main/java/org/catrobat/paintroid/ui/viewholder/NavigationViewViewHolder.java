@@ -30,6 +30,7 @@ public class NavigationViewViewHolder implements MainActivityContracts.Navigatio
 	public final NavigationView navigationView;
 	public final MenuItem navigationMenuExitFullscreen;
 	public final MenuItem navigationMenuEnterFullscreen;
+	public final MenuItem navigationMenuVersion;
 
 	public NavigationViewViewHolder(NavigationView navigationView) {
 		this.navigationView = navigationView;
@@ -37,11 +38,18 @@ public class NavigationViewViewHolder implements MainActivityContracts.Navigatio
 		Menu navigationViewMenu = navigationView.getMenu();
 		navigationMenuExitFullscreen = navigationViewMenu.findItem(R.id.pocketpaint_nav_exit_fullscreen_mode);
 		navigationMenuEnterFullscreen = navigationViewMenu.findItem(R.id.pocketpaint_nav_fullscreen_mode);
+		navigationMenuVersion = navigationViewMenu.findItem(R.id.pocketpaint_nav_version);
 	}
 
 	@Override
 	public void removeItem(int id) {
 		navigationView.getMenu().removeItem(id);
+	}
+
+	@Override
+	public void setVersion(String versionString) {
+		String appName = navigationView.getContext().getString(R.string.pocketpaint_app_name);
+		navigationMenuVersion.setTitle(appName + " v" + versionString);
 	}
 
 	@Override

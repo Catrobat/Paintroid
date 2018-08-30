@@ -402,24 +402,17 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		View.OnClickListener onClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				switch (v.getId()) {
-					case R.id.pocketpaint_transform_auto_crop_btn:
-						autoCrop();
-						break;
-					case R.id.pocketpaint_transform_rotate_left_btn:
-						rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
-						break;
-					case R.id.pocketpaint_transform_rotate_right_btn:
-						rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
-						break;
-					case R.id.pocketpaint_transform_flip_horizontal_btn:
-						flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
-						break;
-					case R.id.pocketpaint_transform_flip_vertical_btn:
-						flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
-						break;
-					default:
-						break;
+				int i = v.getId();
+				if (i == R.id.pocketpaint_transform_auto_crop_btn) {
+					autoCrop();
+				} else if (i == R.id.pocketpaint_transform_rotate_left_btn) {
+					rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
+				} else if (i == R.id.pocketpaint_transform_rotate_right_btn) {
+					rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
+				} else if (i == R.id.pocketpaint_transform_flip_horizontal_btn) {
+					flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
+				} else if (i == R.id.pocketpaint_transform_flip_vertical_btn) {
+					flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
 				}
 			}
 		};

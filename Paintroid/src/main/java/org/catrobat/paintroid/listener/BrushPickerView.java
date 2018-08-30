@@ -96,19 +96,15 @@ public final class BrushPickerView implements View.OnClickListener {
 	@Override
 	public void onClick(View v) {
 
-		switch (v.getId()) {
-			case R.id.pocketpaint_stroke_ibtn_circle:
-				updateStrokeCap(Cap.ROUND);
-				buttonCircle.setSelected(true);
-				buttonRect.setSelected(false);
-				break;
-			case R.id.pocketpaint_stroke_ibtn_rect:
-				updateStrokeCap(Cap.SQUARE);
-				buttonRect.setSelected(true);
-				buttonCircle.setSelected(false);
-				break;
-			default:
-				break;
+		int i = v.getId();
+		if (i == R.id.pocketpaint_stroke_ibtn_circle) {
+			updateStrokeCap(Cap.ROUND);
+			buttonCircle.setSelected(true);
+			buttonRect.setSelected(false);
+		} else if (i == R.id.pocketpaint_stroke_ibtn_rect) {
+			updateStrokeCap(Cap.SQUARE);
+			buttonRect.setSelected(true);
+			buttonCircle.setSelected(false);
 		}
 		drawerPreview.invalidate();
 	}

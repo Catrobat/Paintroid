@@ -29,9 +29,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Locale;
-
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -39,23 +36,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.openMultilingualActivity;
-import static org.hamcrest.Matchers.hasToString;
-import static org.hamcrest.core.StringStartsWith.startsWith;
-
 @RunWith(AndroidJUnit4.class)
 public class ButtonTopLayersRtlLayoutTest {
-	private static final Locale ARABICLOCALE = new Locale("ar");
-
 	@Rule
-	public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new RtlActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> mainActivityActivityTestRule =
+			new RtlActivityTestRule<>(MainActivity.class, "ar");
 
 	@Test
-	public void testButtonTopLayers() throws Exception {
-		openMultilingualActivity();
-		onData(hasToString(startsWith(ARABICLOCALE.getDisplayName(ARABICLOCALE))))
-				.perform(click());
-
+	public void testButtonTopLayers() {
 		onView(withId(R.id.pocketpaint_btn_top_layers))
 				.perform(click());
 		onView(withId(R.id.pocketpaint_nav_view_layer))

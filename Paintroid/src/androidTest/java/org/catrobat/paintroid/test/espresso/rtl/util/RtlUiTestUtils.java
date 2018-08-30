@@ -19,14 +19,6 @@
 
 package org.catrobat.paintroid.test.espresso.rtl.util;
 
-import org.catrobat.paintroid.R;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
-
 public final class RtlUiTestUtils {
 	private RtlUiTestUtils() {
 		throw new AssertionError();
@@ -35,10 +27,5 @@ public final class RtlUiTestUtils {
 	public static boolean checkTextDirection(String string) {
 		return Character.getDirectionality(string.charAt(0)) == Character.DIRECTIONALITY_RIGHT_TO_LEFT
 				|| Character.getDirectionality(string.charAt(0)) == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
-	}
-
-	public static void openMultilingualActivity() {
-		openNavigationDrawer();
-		onView(withText(R.string.menu_language)).perform(click());
 	}
 }
