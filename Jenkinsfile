@@ -131,7 +131,7 @@ pipeline {
 
 		stage('Build Debug-APK') {
 			steps {
-				sh './gradlew clean assembleAndroidTest'
+				sh './gradlew clean assembleDebug'
 				archiveArtifacts "${env.APK_LOCATION_DEBUG}"
 			}
 		}
