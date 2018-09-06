@@ -43,7 +43,7 @@ if len(sys.argv) > 1:
 build_helper_functions.bring_emulator_in_running_state()
 
 ## RUN tests
-test_runner_cmd = build_helper_functions.get_jenkins_android_helper_executable('jenkins_android_cmd_wrapper') + [ '-I', build_helper_functions.get_relative_gradle_name(), 'clean', 'adbDisableAnimationsGlobally', 'createDebugCoverageReport', 'adbResetAnimationsGlobally', '-Pjenkins' ]
+test_runner_cmd = build_helper_functions.get_jenkins_android_helper_executable('jenkins_android_cmd_wrapper') + [ '-I', build_helper_functions.get_relative_gradle_name(), '-PenableCoverage', 'clean', 'adbDisableAnimationsGlobally', 'createDebugCoverageReport', 'adbResetAnimationsGlobally', '-Pjenkins' ]
 if test_runner_arg is not None and test_runner_arg != "":
     test_runner_cmd = test_runner_cmd + [ test_runner_arg ]
 
