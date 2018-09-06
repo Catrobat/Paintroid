@@ -24,9 +24,19 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.4'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.3'
+        classpath 'com.novoda:bintray-release:0.8.1'
     }
+}
+
+ext {
+    androidCompileSdkVersion = 26
+    androidMinSdkVersion = 17
+    androidTargetSdkVersion = 22
+
+    androidVersionCode = 21
+    androidVersionName = '2.0.1'
 }
 
 allprojects {

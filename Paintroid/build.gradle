@@ -21,6 +21,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+apply plugin: 'com.novoda.bintray-release'
 
 apply from: 'gradle/adb_tasks.gradle'
 apply from: 'gradle/code_quality_tasks.gradle'
@@ -39,22 +40,21 @@ jacocoAndroidUnitTestReport {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion rootProject.ext.androidCompileSdkVersion
 
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 22
+        minSdkVersion rootProject.ext.androidMinSdkVersion
+        targetSdkVersion rootProject.ext.androidTargetSdkVersion
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
-        versionCode 21
-        versionName "2.0.1"
-        externalNativeBuild.cmake.cppFlags "-fexceptions"
+        versionCode rootProject.ext.androidVersionCode
+        versionName rootProject.ext.androidVersionName
+        externalNativeBuild.cmake.cppFlags "-fvisibility=hidden"
         ndk.abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         multiDexEnabled true
     }
 
     buildTypes {
         release {
-            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
         debug {
@@ -62,7 +62,7 @@ android {
         }
     }
 
-    externalNativeBuild.cmake.path 'CMakeLists.txt'
+    externalNativeBuild.cmake.path 'src/main/cpp/CMakeLists.txt'
 
     lintOptions {
         // specific ignores should be defined via lint.xml file
@@ -98,6 +98,21 @@ dependencies {
     pmd 'net.sourceforge.pmd:pmd-java:5.8.1'
 
     checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
+}
+
+tasks.withType(Javadoc).all {
+    enabled = false
+}
+
+publish {
+    userOrg = 'catrobat'
+    repoName = 'Paintroid'
+    groupId = 'org.catrobat.paintroid'
+    artifactId = 'paintroid'
+    publishVersion = rootProject.ext.androidVersionName
+    licences = ['AGPL-V3']
+    desc = 'A graphical paint editor library for Android'
+    website = 'https://github.com/Catrobat/Paintroid'
 }
 
 if (project.hasProperty('jenkins')) {

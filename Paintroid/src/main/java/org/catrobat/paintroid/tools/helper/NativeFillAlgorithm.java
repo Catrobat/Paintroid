@@ -30,7 +30,7 @@ public class NativeFillAlgorithm implements FillAlgorithm {
 	private float colorToleranceThreshold;
 
 	static {
-		System.loadLibrary("native-lib"); // NOPMD native fill command
+		System.loadLibrary("pocketpaint"); // NOPMD native fill command
 	}
 
 	public native void performFilling(int[] arr, int xStart, int yStart, int xSize, int ySize,

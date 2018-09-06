@@ -20,16 +20,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion rootProject.ext.androidCompileSdkVersion
     defaultConfig {
-        applicationId "org.catrobat.paintroid.app"
-        minSdkVersion 17
+        applicationId "org.catrobat.paintroid"
+        minSdkVersion rootProject.ext.androidMinSdkVersion
         //noinspection OldTargetApi
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion rootProject.ext.androidTargetSdkVersion
+        versionCode rootProject.ext.androidVersionCode
+        versionName rootProject.ext.androidVersionName
     }
-
     buildTypes {
         release {
             minifyEnabled true

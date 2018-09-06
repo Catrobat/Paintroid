@@ -52,10 +52,10 @@ pipeline {
 		//////////// May be edited by the developer on changing the build steps
 		// modulename
 		GRADLE_PROJECT_MODULE_NAME = "Paintroid"
+		GRADLE_APP_MODULE_NAME = "app"
 
 		// APK build output locations
-		APK_LOCATION_DEBUG = "${env.GRADLE_PROJECT_MODULE_NAME}/build/outputs/apk/androidTest/debug/Paintroid-debug-androidTest.apk"
-
+		APK_LOCATION_DEBUG = "${env.GRADLE_APP_MODULE_NAME}/build/outputs/apk/debug/app-debug.apk"
 
 		// Code coverage
 		JACOCO_XML = "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/coverage/debug/report.xml"
