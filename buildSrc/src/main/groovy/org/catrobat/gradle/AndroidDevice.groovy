@@ -67,7 +67,7 @@ class AndroidDevice {
 
             sleep(1000)
         }
-        throw new BootIncompleteExcpetion("The boot of device $androidSerial did not complete.")
+        throw new BootIncompleteException("The boot of device $androidSerial did not complete.")
     }
 
     void waitForStopped() {

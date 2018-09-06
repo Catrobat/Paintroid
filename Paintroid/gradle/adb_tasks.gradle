@@ -21,10 +21,10 @@ import org.catrobat.gradle.Adb
 import org.catrobat.gradle.AndroidDevice
 import org.catrobat.gradle.AvdCreator
 import org.catrobat.gradle.AvdStore
-import org.catrobat.gradle.BootIncompleteExcpetion
+import org.catrobat.gradle.BootIncompleteException
 import org.catrobat.gradle.DeviceNotFoundException
 import org.catrobat.gradle.EmulatorStarter
-import org.catrobat.gradle.NoDeviceExcpetion
+import org.catrobat.gradle.NoDeviceException
 import org.catrobat.gradle.Utils
 
 Adb adb() {
@@ -144,7 +144,7 @@ def reuseRunningOrStartEmulator() {
     } catch (DeviceNotFoundException e) {
         // A specific deivce was specified that does not exist
         throw e
-    } catch (NoDeviceExcpetion) {
+    } catch (NoDeviceException) {
         // no device running, start one
         println('Start the emulator!')
 
@@ -159,7 +159,7 @@ def reuseRunningOrStartEmulator() {
 
         try {
             device = androidDevice(adb().waitForSerial())
-        } catch(NoDeviceExcpetion e) {
+        } catch(NoDeviceException e) {
             proc.waitForOrKill(1)
             throw e
         }
@@ -168,7 +168,7 @@ def reuseRunningOrStartEmulator() {
     try {
         println("Using device ${device.androidSerial}")
         device.waitForBooted()
-    } catch (BootIncompleteExcpetion e) {
+    } catch (BootIncompleteException e) {
         proc?.waitForOrKill(1)
         throw e
     }

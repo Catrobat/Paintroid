@@ -34,15 +34,15 @@ class NoAvdException extends AndroidResourceException {
 
 @TypeChecked
 @InheritConstructors
-class NoDeviceExcpetion extends AndroidResourceException {
+class NoDeviceException extends AndroidResourceException {
 }
 
 @TypeChecked
 @InheritConstructors
-class DeviceNotFoundException extends NoDeviceExcpetion {
+class DeviceNotFoundException extends NoDeviceException {
 }
 
 @TypeChecked
 @InheritConstructors
-class BootIncompleteExcpetion extends AndroidResourceException {
+class BootIncompleteException extends AndroidResourceException {
 }

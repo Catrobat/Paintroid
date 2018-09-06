@@ -52,7 +52,7 @@ class Adb {
         if (androidSerial?.trim() && !availableDevices.contains(androidSerial)) {
             throw new DeviceNotFoundException("Device ${androidSerial} not found")
         } else if (availableDevices.size() == 0) {
-            throw new NoDeviceExcpetion("No connected devices!")
+            throw new NoDeviceException("No connected devices!")
         } else {
             androidSerial = availableDevices.first()
         }
@@ -64,7 +64,7 @@ class Adb {
         for (int i = 0; i < timeout; ++i) {
             try {
                 return getAndroidSerial()
-            } catch (NoDeviceExcpetion) {
+            } catch (NoDeviceException) {
                 sleep(1000)
             }
         }
