@@ -18,14 +18,11 @@
  */
 
 #include <jni.h>
-#include <string>
-#include <cstring>
-#include <iostream>
 #include <list>
 
 #include <android/log.h>
 
-#define  LOG_TAG    "native-lib"
+#define  LOG_TAG    "pocketpaint"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
