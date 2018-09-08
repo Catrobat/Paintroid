@@ -35,8 +35,8 @@ ext {
     androidMinSdkVersion = 17
     androidTargetSdkVersion = 22
 
-    androidVersionCode = 21
-    androidVersionName = '2.0.1'
+    androidVersionCode = 22
+    androidVersionName = '2.1.0'
 }
 
 allprojects {

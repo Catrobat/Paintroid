@@ -58,7 +58,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
         debug {
-            testCoverageEnabled = true
+            testCoverageEnabled = project.hasProperty('enableCoverage')
         }
     }
 
