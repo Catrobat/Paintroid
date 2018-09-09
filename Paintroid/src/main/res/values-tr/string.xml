@@ -35,22 +35,11 @@
   <string name="button_text">Metin</string>
   <string name="button_shape">Şekiller</string>
   <string name="done">Tamam</string>
-  <string name="terms_of_use_and_service_title">Kullanım ve Hizmet Koşulları</string>
-  <string name="terms_of_use_and_service_content">Pocket Paint ve Catrobat projesi tarafından sunulan diğer uygulamaları kullanabilmek için Kullanım ve Hizmet Koşullarını kabul etmek ve Pocket Code ile diğer uygulamaları kullandığınız esnada bu koşullara uymanız gerekmektedir. Lütfen ayrıntılı bilgi için aşağıdaki bağlantıyı inceleyiniz.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Kullanım ve Hizmet Koşulları</string>
-  <string name="about_title">Pocket Paint Hakkında…</string>
-  <string name="about_content">Pocket Paint resim editörü Catrobat projesinin bir parçasıdır.Catrobat akıllı telefonlar, tabletler ve mobil tarayıcılar için tasarlanmış bir programlama dili ve tasarım aracıdır.Pocket Paint uygulamasının kaynak kodu temel olarak <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>  lisansı altında sunulmaktadır.Lisansın tüm detayları için aşağıdaki bağlantıyı inceleyiniz.</string>
-  <string name="about_license_url_text">Pocket Paint Kaynak Kod Lisansı</string>
-  <string name="about_catroid_url_text">Catrobat Hakkında</string>
-  <string name="about_version">Sürüm:</string>
   <string name="color_chooser_title">Renk Seçici</string>
-  <string name="color_rgb">Kırmızı Yeşil Mavi (RGB)</string>
   <string name="color_red">Kırmızı</string>
   <string name="color_green">Yeşil</string>
   <string name="color_blue">Mavi</string>
   <string name="color_alpha">Alfa</string>
-  <string name="color_pre">önceden seçilmiş</string>
-  <string name="color_hsv">hsv renk seçici</string>
   <string name="dialog_tools_title">Araçlar</string>
   <string name="dialog_error_save_title">Dosya yüklenirken/kaydedilirken hata</string>
   <string name="dialog_error_sdcard_text">Resmi veya SD kartı kontrol et!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Seçim yap veya bir renk ayarla</string>
   <string name="closing_security_question_title">Çık</string>
   <string name="closing_security_question">Değişiklikler Kaydedilsin mi?</string>
-  <string name="closing_catroid_security_question_title">Pocket Code\'a Geri Dön</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Yeni resim</string>
   <string name="menu_load_image">Resim yükle</string>
   <string name="menu_save_image">Resmi kaydet</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">Tam ekran</string>
   <string name="menu_show_menu">Tam ekrandan çık</string>
   <string name="menu_new_image_from_camera">Kameradan yeni resim</string>
-  <string name="menu_terms_of_use_and_service">Kullanım Şartları</string>
-  <string name="menu_about">Hakkında</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Dışa aktar</string>
   <string name="saved">Resim kaydedildi</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Hadi Gidelim</string>
   <string name="next">İleri</string>
   <string name="skip">Atla</string>
-  <string name="menu_language">Dil</string>
-  <string name="device_language">Aygıt Dili</string>
 </resources>

@@ -35,22 +35,11 @@
   <string name="button_text">Text</string>
   <string name="button_shape">Tvary</string>
   <string name="done">Hotovo</string>
-  <string name="terms_of_use_and_service_title">Podmínky používání a služby</string>
-  <string name="terms_of_use_and_service_content">Chcete-li aby bylo umožněno používat Pocket Paint a další spustitelné soubory aplikace Project Catrobat, musíte souhlasit s našema podmínkama používání a službama a striktně jít za nimi, když používáte Pocket Code a naše další spustitelné soubory. Naleznete v odkazu níže pro jejich přesné formulace.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Podmínky používání a služby</string>
-  <string name="about_title">O Pocket Paint…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Pocket Paint zdrojový kód licence</string>
-  <string name="about_catroid_url_text">O Catrobat</string>
-  <string name="about_version">Verze:</string>
   <string name="color_chooser_title">Výběr barev</string>
-  <string name="color_rgb">Červená zelená modrá (RGB)</string>
   <string name="color_red">Červená</string>
   <string name="color_green">Zelená</string>
   <string name="color_blue">Modrá</string>
   <string name="color_alpha">Alpha</string>
-  <string name="color_pre">předvolená</string>
-  <string name="color_hsv">Výběr barvy HSV</string>
   <string name="dialog_tools_title">Nástroje</string>
   <string name="dialog_error_save_title">Chyba načítání/ukládání souboru</string>
   <string name="dialog_error_sdcard_text">Zkontrolujte obrázek nebo SD Kartu!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Ukončit</string>
   <string name="closing_security_question">Chcete uložit změny?</string>
-  <string name="closing_catroid_security_question_title">Zpět do Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Nový obrázek</string>
   <string name="menu_load_image">Načíst obrázek</string>
   <string name="menu_save_image">Uložit obrázek</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">Celá obrazovka</string>
   <string name="menu_show_menu">Ukončit režim celé obrazovky</string>
   <string name="menu_new_image_from_camera">Nový obrázek z kamery</string>
-  <string name="menu_terms_of_use_and_service">Podmínky použití</string>
-  <string name="menu_about">O Produktu</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exportovat</string>
   <string name="saved">Obrázek uložen</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Jdeme na to</string>
   <string name="next">Další</string>
   <string name="skip">Přeskočit</string>
-  <string name="menu_language">Jazyk</string>
-  <string name="device_language">Jazyk zařízení</string>
 </resources>

@@ -35,22 +35,11 @@
   <string name="button_text">טקסט</string>
   <string name="button_shape">Shapes</string>
   <string name="done">בוצע</string>
-  <string name="terms_of_use_and_service_title">תנאי שימוש ושירות</string>
-  <string name="terms_of_use_and_service_content">על מנת להשתמש כיס \' צייר \' הפעלה אחרים המוצעים על ידי הפרויקט Catrobat, עליך להסכים לתנאי השימוש שלנו, שירות ולאחר אך ורק אחריהם כשאתה משתמש כיס קוד הפעלה אחרים שלנו. ראה הקישור להלן לקבלת formulation.\n\n מדויק שלהם \n\n</string>
-  <string name="terms_of_use_and_service_url_text">תנאי שימוש ושירות</string>
-  <string name="about_title">אודות תוכנת הציור של פוקטקוד…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">רישיון לקוד מקור של פוקט-ציור</string>
-  <string name="about_catroid_url_text">אודות Catrobat</string>
-  <string name="about_version">גירסה:</string>
   <string name="color_chooser_title">שואב הצבע</string>
-  <string name="color_rgb">אדום ירוק כחול (RGB)</string>
   <string name="color_red">אדום</string>
   <string name="color_green">ירוק</string>
   <string name="color_blue">כחול</string>
   <string name="color_alpha">אלפא</string>
-  <string name="color_pre">בחירה מראש</string>
-  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">כלים</string>
   <string name="dialog_error_save_title">שגיאת טעינה/שמירת קובץ</string>
   <string name="dialog_error_sdcard_text">בדוק את התמונה או כרטיסי SD!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">צא</string>
   <string name="closing_security_question">האם לשמור שינויים?</string>
-  <string name="closing_catroid_security_question_title">חזור לפוקטקוד</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">תמונה חדשה</string>
   <string name="menu_load_image">טען תמונה</string>
   <string name="menu_save_image">שמור תמונה</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">מסך מלא</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">חדש תמונות מהמצלמה</string>
-  <string name="menu_terms_of_use_and_service">תנאי שימוש</string>
-  <string name="menu_about">אודות</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">יצא</string>
   <string name="saved">התמונה נשמרה</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Next</string>
   <string name="skip">Skip</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>
