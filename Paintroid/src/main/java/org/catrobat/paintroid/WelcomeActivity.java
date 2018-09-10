@@ -46,10 +46,8 @@ import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.reverseA
 
 public class WelcomeActivity extends AppCompatActivity {
 
-	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-	public int colorActive;
-	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-	public int colorInactive;
+	private int colorActive;
+	private int colorInactive;
 	@VisibleForTesting
 	public ViewPager viewPager;
 	private LinearLayout dotsLayout;
@@ -57,9 +55,8 @@ public class WelcomeActivity extends AppCompatActivity {
 	public int[] layouts;
 	private Button btnSkip;
 	private Button btnNext;
-	ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
+	ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
 		int pos;
-		int state;
 
 		@Override
 		public void onPageSelected(int position) {
@@ -73,37 +70,28 @@ public class WelcomeActivity extends AppCompatActivity {
 				btnNext.setText(R.string.next);
 				btnSkip.setVisibility(View.VISIBLE);
 			}
-
-			if (layouts[position] == R.layout.pocketpaint_slide_intro_tools) {
-
-				View layout = findViewById(R.id.pocketpaint_intro_tools_bottom_bar);
-				LinearLayout mToolsLayout = layout.findViewById(R.id.pocketpaint_tools_layout);
-				final View fadeView = findViewById(R.id.pocketpaint_intro_tools_textview);
-
-				TapTargetBottomBar tapTargetBottomBar = new TapTargetBottomBar(mToolsLayout,
-						fadeView, WelcomeActivity.this, R.id.pocketpaint_intro_tools_bottom_bar);
-
-				tapTargetBottomBar.initTargetView();
-			}
-		}
-
-		@Override
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-			pos = position;
 		}
 
 		@Override
 		public void onPageScrollStateChanged(int state) {
-			this.state = state;
-			if (state == ViewPager.SCROLL_STATE_IDLE
-					&& layouts[pos] == R.layout.pocketpaint_slide_intro_possibilities) {
-				View layout = findViewById(R.id.pocketpaint_intro_possibilites_topbar);
-				LinearLayout view = layout.findViewById(R.id.pocketpaint_top_bar_buttons);
-				final View fadeView = findViewById(R.id.pocketpaint_intro_possibilities_textview);
+			if (state == ViewPager.SCROLL_STATE_IDLE) {
+				if (layouts[pos] == R.layout.pocketpaint_slide_intro_possibilities) {
+					View layout = findViewById(R.id.pocketpaint_intro_possibilites_topbar);
+					LinearLayout view = layout.findViewById(R.id.pocketpaint_top_bar_buttons);
+					final View fadeView = findViewById(R.id.pocketpaint_intro_possibilities_textview);
 
-				TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
-						WelcomeActivity.this, R.id.pocketpaint_intro_possibilities_bottom_bar);
-				target.initTargetView();
+					TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
+							WelcomeActivity.this, R.id.pocketpaint_intro_possibilities_bottom_bar);
+					target.initTargetView();
+				} else if (layouts[pos] == R.layout.pocketpaint_slide_intro_tools) {
+					View layout = findViewById(R.id.pocketpaint_intro_tools_bottom_bar);
+					LinearLayout view = layout.findViewById(R.id.pocketpaint_tools_layout);
+					final View fadeView = findViewById(R.id.pocketpaint_intro_tools_textview);
+
+					TapTargetBottomBar target = new TapTargetBottomBar(view, fadeView,
+							WelcomeActivity.this, R.id.pocketpaint_intro_tools_bottom_bar);
+					target.initTargetView();
+				}
 			}
 		}
 	};
