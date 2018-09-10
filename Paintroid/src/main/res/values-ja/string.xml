@@ -20,7 +20,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="pocketpaint_app_name" tools:ignore="UnusedResources">ポケット\nペイント</string>
+  <string name="pocketpaint_app_name" tools:ignore="UnusedResources">ポケットペイント（お絵かきソフト）</string>
   <string name="button_brush">ブラシ</string>
   <string name="button_cursor">カーソル</string>
   <string name="button_pipette">ピペット</string>
@@ -35,22 +35,11 @@
   <string name="button_text">テキスト</string>
   <string name="button_shape">図形</string>
   <string name="done">完了</string>
-  <string name="terms_of_use_and_service_title">使用条件</string>
-  <string name="terms_of_use_and_service_content">Catrobat プロジェクトによって提供されるポケットペイントおよびその他の実行可能ファイルの使用が許可されるためには、サービスと利用規約に同意して、ポケットコードおよび私たちの他の実行可能ファイルを使用するにあたり、それに厳格に従う必要があります。その正確な内容は次のリンクを参照してください。\n\n</string>
-  <string name="terms_of_use_and_service_url_text">使用条件</string>
-  <string name="about_title">ポケットペイントについて</string>
-  <string name="about_content">ポケットペイントは、Catrobat プロジェクトの画像エディターのひとつです。\n\nCatrobat は、ビジュアルプログラミング言語と、スマートフォン、タブレット、そして携帯電話ブラウザー用のクリエイティブなツールのセットです。\n\nポケットペイントのソースコードは主に <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g> の下でライセンスされています。\nライセンスの正確な詳細は下のリンクを参照してください。\n\n</string>
-  <string name="about_license_url_text">ポケットペイント ソースコード ライセンス</string>
-  <string name="about_catroid_url_text">キャットロバットについて</string>
-  <string name="about_version">バージョン：</string>
   <string name="color_chooser_title">色を選択</string>
-  <string name="color_rgb">赤緑青 (RGB)</string>
   <string name="color_red">赤</string>
   <string name="color_green">緑</string>
   <string name="color_blue">青</string>
   <string name="color_alpha">透過度</string>
-  <string name="color_pre">あらかじめ選択されています</string>
-  <string name="color_hsv">hsv カラーピッカー</string>
   <string name="dialog_tools_title">ツール</string>
   <string name="dialog_error_save_title">読み込み/保存のエラー</string>
   <string name="dialog_error_sdcard_text">イメージまたは SD カードをチェック ！</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">色の選択または調整</string>
   <string name="closing_security_question_title">終了</string>
   <string name="closing_security_question">変更を保存しますか？</string>
-  <string name="closing_catroid_security_question_title">ポケットコードに戻る</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">新しいイメージ</string>
   <string name="menu_load_image">画像の取り込み</string>
   <string name="menu_save_image">画像を保存</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">全画面表示</string>
   <string name="menu_show_menu">全画面表示を終了</string>
   <string name="menu_new_image_from_camera">カメラから新しいイメージ</string>
-  <string name="menu_terms_of_use_and_service">利用規約</string>
-  <string name="menu_about">アプリについて</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">エクスポート</string>
   <string name="saved">画像を保存しました。</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">始めましょう</string>
   <string name="next">次へ</string>
   <string name="skip">スキップ</string>
-  <string name="menu_language">言語</string>
-  <string name="device_language">デバイスの言語</string>
 </resources>

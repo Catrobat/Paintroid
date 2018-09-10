@@ -35,23 +35,11 @@
   <string name="button_text">متن</string>
   <string name="button_shape">Shapes</string>
   <string name="done">مکمل ہوا</string>
-  <string name="terms_of_use_and_service_title">سروس اور استعمال کی شرائط</string>
-  <string name="terms_of_use_and_service_content">کیٹروبیٹ منصوبے  کی طرف سے پیش کردہ پاکٹ پینٹ اور دیگر چلنے والے پیشکش یعنی  پاکٹ کوڈ  وغیرہ کے لئے آپ کو ہمارے  سروس اور استعمال کی شرائط سے اتفاق اورسختی سےعمل کرنا ہو گا۔ ِان کے عین مطابق تشکیل کے لئے مندرجہ ذیل لنک پر ملاحظہ کریں.
-</string>
-  <string name="terms_of_use_and_service_url_text">سروس اور استعمال کی شرائط</string>
-  <string name="about_title">پاکٹ پینٹ کے بارے میں…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">پاکٹ پینٹ سورس کوڈ لائسنس</string>
-  <string name="about_catroid_url_text">کیٹروبیٹ کے بارے میں</string>
-  <string name="about_version">تبدیل صورت۔۔</string>
   <string name="color_chooser_title">رنگ انتخاب کریں۔</string>
-  <string name="color_rgb">سرخ سبز نیلا (RGB)</string>
   <string name="color_red">سرخ</string>
   <string name="color_green">سبز</string>
   <string name="color_blue">نیلا</string>
   <string name="color_alpha">الفا</string>
-  <string name="color_pre">پہلےچُناہو</string>
-  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">اوزار</string>
   <string name="dialog_error_save_title">لادنے کی غلطٖی/فائل محفوظ کریں</string>
   <string name="dialog_error_sdcard_text">تصویر یا SD کارڈ چیک کریں!</string>
@@ -75,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">بندکریں</string>
   <string name="closing_security_question">سیدھا لکیر کھینچے؟</string>
-  <string name="closing_catroid_security_question_title"> پاکٹ کوڈ  کے لئے واپس</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">نئی تصویر</string>
   <string name="menu_load_image">تصویر لادنا</string>
   <string name="menu_save_image">تصویر محفوظ کریں</string>
@@ -84,8 +72,6 @@
   <string name="menu_hide_menu">پورا پردہ</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">نئی تصویر کیمرے سے</string>
-  <string name="menu_terms_of_use_and_service">استعمال کی شرائط</string>
-  <string name="menu_about">اِس سافٹ وٖیر کے مطعلق۔</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">برآمدکرنا</string>
   <string name="saved">تصویر محفوظ ہوئی</string>
@@ -134,6 +120,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Next</string>
   <string name="skip">Skip</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

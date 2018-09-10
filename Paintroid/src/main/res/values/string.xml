@@ -63,7 +63,7 @@
     <string name="help_content_color_chooser">Select or adjust a color</string>
     <string name="closing_security_question_title">Quit</string>
     <string name="closing_security_question">Save Changes?</string>
-    <string name="closing_catroid_security_question_title">Back to Pocket Code</string>
+    <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="menu_new_image">New image</string>
     <string name="menu_load_image">Load image</string>
     <string name="menu_save_image">Save image</string>

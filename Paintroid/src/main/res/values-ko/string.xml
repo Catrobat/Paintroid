@@ -19,7 +19,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="pocketpaint_app_name" tools:ignore="UnusedResources">포켓 페인트</string>
   <string name="button_brush">붓</string>
   <string name="button_cursor">커서</string>
@@ -35,22 +35,11 @@
   <string name="button_text">텍스트</string>
   <string name="button_shape">모양</string>
   <string name="done">완료</string>
-  <string name="terms_of_use_and_service_title">사용과 서비스 약관</string>
-  <string name="terms_of_use_and_service_content">포켓 코드와 Catrobat 프로그램에 의해 제공하는 다른 실행 파일을 사용하도록 허용하려면 우리의 이용 약관에 동의하고 포켓 코드와 우리의 다른 실행 파일을 사용할 때 엄격하게 약관을 따라 해야 합니다. 자세한 세부규정은 아래 링크를 참조하십시오.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">사용과 서비스 약관</string>
-  <string name="about_title">포켓 코드에 대하여</string>
-  <string name="about_content">포켓 페인트는 Catrobat project의 일부로 그림 편집기입니다.\n\nCatrobat은 시각적인 프로그래밍 언어이며 스마트폰, 태블릿, 모바일 브라우저를 위한 창의적인 도구입니다. \n\n포켓 페인트의 소스 코드는 %s와 라이센스 되어 있습니다.\n이 라이센스에 대한 정확한 세부 사항은 아래 링크를 참조하세요.\n\n</string>
-  <string name="about_license_url_text">포켓 페인트 소스 코드 라이센스</string>
-  <string name="about_catroid_url_text">Catrobat에 대하여</string>
-  <string name="about_version">버전 정보</string>
   <string name="color_chooser_title">색상 선택기</string>
-  <string name="color_rgb">빨강 녹색 파랑 (RGB)</string>
   <string name="color_red">빨강</string>
   <string name="color_green">초록</string>
   <string name="color_blue">파랑</string>
   <string name="color_alpha">투명도</string>
-  <string name="color_pre">미리 선택</string>
-  <string name="color_hsv">hsv 색상 선택기</string>
   <string name="dialog_tools_title">도구</string>
   <string name="dialog_error_save_title">파일 로드/저장 오류</string>
   <string name="dialog_error_sdcard_text">이미지 또는 SD 카드를 확인!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">선택 하거나 색상 조정</string>
   <string name="closing_security_question_title">종료</string>
   <string name="closing_security_question">변경사항을 저장하시겠습니까?</string>
-  <string name="closing_catroid_security_question_title">포켓 코드로 다시 돌아가기</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">새 이미지</string>
   <string name="menu_load_image">로드 이미지</string>
   <string name="menu_save_image">이미지 저장</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">전체 화면</string>
   <string name="menu_show_menu">전체 화면 종료</string>
   <string name="menu_new_image_from_camera">카메라에서 새 이미지</string>
-  <string name="menu_terms_of_use_and_service">이용 약관</string>
-  <string name="menu_about">상세 정보</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">내보내기</string>
   <string name="saved">이미지가 저장되었습니다</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">시작하기</string>
   <string name="next">다음</string>
   <string name="skip">건너뛰기</string>
-  <string name="menu_language">언어</string>
-  <string name="device_language">장치 언어</string>
 </resources>

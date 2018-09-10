@@ -35,22 +35,11 @@
   <string name="button_text">शब्द</string>
   <string name="button_shape">आकार</string>
   <string name="done">पूर्ण</string>
-  <string name="terms_of_use_and_service_title">उपयोग और सेवा की शर्तें;</string>
-  <string name="terms_of_use_and_service_content">पॉकेट पेंट और अन्य एक्ज़ीक्यूटेबल्स, कैटरोबैट परियोजना के द्वारा उपलब्ध हैं, इनका प्रयोग करने के लिए आपको हमारी शर्ते एवम् सेवा से सहमत रहना होगा और उनके उपयोग के दोहरान आपको उसका कड़ाई से पालन करना होगा । सटीक सूत्र क लिए नीचे लिखे हुए लिंक पर जाए । \n\n</string>
-  <string name="terms_of_use_and_service_url_text">उपयोग की शर्ते और सेवाए</string>
-  <string name="about_title">पॉकेट पेंट के बारे में…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">जेब पेंट स्रोत कोड लाइसेंस</string>
-  <string name="about_catroid_url_text">कैटरोबैट के बारे में</string>
-  <string name="about_version">संस्करण:</string>
   <string name="color_chooser_title">रंग चयनकर्ता</string>
-  <string name="color_rgb">लाल हरी नीली</string>
   <string name="color_red">लाल</string>
   <string name="color_green">हरा</string>
   <string name="color_blue">नीला</string>
   <string name="color_alpha">अल्फा</string>
-  <string name="color_pre">पूर्व चयनित</string>
-  <string name="color_hsv">hsv रंग को ढूंढना</string>
   <string name="dialog_tools_title">उपकरण</string>
   <string name="dialog_error_save_title">फ़ाइल तैयार करने/सहेजने में त्रुटि</string>
   <string name="dialog_error_sdcard_text">छवि या एसडी कार्ड की जाँच करें!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">बंद करें</string>
   <string name="closing_security_question">परिवर्तन सहेजें?</string>
-  <string name="closing_catroid_security_question_title">पॉकेट कोड पर जाएँ</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">नया चित्र</string>
   <string name="menu_load_image">चित्र तैयार करें</string>
   <string name="menu_save_image">चित्र सहेजे</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">पूर्ण स्क्रीन</string>
   <string name="menu_show_menu">बाहर निकलें फुलस्क्रीन</string>
   <string name="menu_new_image_from_camera">कैमरा से नया चित्र</string>
-  <string name="menu_terms_of_use_and_service">उपयोग की शर्ते</string>
-  <string name="menu_about">जानकारी</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">निर्यात करें</string>
   <string name="saved">चित्र सहेज दिया गया</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">चलो चलें</string>
   <string name="next">अगला</string>
   <string name="skip">छोड़</string>
-  <string name="menu_language">भाषा</string>
-  <string name="device_language">डिवाइस भाषा</string>
 </resources>

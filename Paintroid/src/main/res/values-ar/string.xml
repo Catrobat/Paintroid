@@ -35,23 +35,11 @@
   <string name="button_text">النص</string>
   <string name="button_shape">الأشكال</string>
   <string name="done">موافق</string>
-  <string name="terms_of_use_and_service_title">شروط الاستخدام والخدمة</string>
-  <string name="terms_of_use_and_service_content">من أجل السماح لك باستخدام \"بوكت بينت\" والملفات التنفيذية الأخرى المُتاحة من قبل مشروع كاتروبات، يجب عليك الموافقة على شروط الاستخدام والخدمة الخاصة بنا واتباعها بدقة عند استخدامك \"بوكت كوود\" والملفات التنفيذية الأخرى.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">شروط الاستخدام والخدمة</string>
-  <string name="about_title">حول بوكت بينت.</string>
-  <string name="about_content">بوكت بينت هو محرر صور وجزء من مشروع الكاتروبات.\n\n كاتروبات هو لغة برمجة مرئية ومجموعة من أدوات الإبداع للأجهزة الذكية والأجهزة اللوحية, ومستعرضات الهاتف.\n\n النص المصدري لـ \"بوكت بينت\" مرخص ومحمي تحت <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.
-\n لمعرفة تفاصيل أكثر حول الرخصة قم بزيارة الرابط في الأسفل.\n\n</string>
-  <string name="about_license_url_text">رخصة النص الأصلي لبرنامج بوكت بينت</string>
-  <string name="about_catroid_url_text">حول كاتروبات</string>
-  <string name="about_version">الإصدار</string>
   <string name="color_chooser_title">مُنتقي اللون</string>
-  <string name="color_rgb">أحمر, أخضر ,أزرق (RGB)</string>
   <string name="color_red">أحمر</string>
   <string name="color_green">أخضر</string>
   <string name="color_blue">أزرق</string>
   <string name="color_alpha">ألفا</string>
-  <string name="color_pre">مُحدد مسبقاً</string>
-  <string name="color_hsv">اختيار اللون (hsv)</string>
   <string name="dialog_tools_title">أدوات</string>
   <string name="dialog_error_save_title">خطأ في استيراد/حفظ الملف</string>
   <string name="dialog_error_sdcard_text">تحقق من بطاقة الذاكرة SD أو الصورة!</string>
@@ -75,7 +63,7 @@
   <string name="help_content_color_chooser">تحديد أو ضبط اللون</string>
   <string name="closing_security_question_title">إنهاء/خروج</string>
   <string name="closing_security_question">حفظ التغييرات؟</string>
-  <string name="closing_catroid_security_question_title">العودة إلى أوامر بوكت </string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">صورة جديدة</string>
   <string name="menu_load_image">استيراد صورة</string>
   <string name="menu_save_image">حفظ الصورة</string>
@@ -84,8 +72,6 @@
   <string name="menu_hide_menu">ملء الشاشة</string>
   <string name="menu_show_menu">الخروج من وضع ملء الشاشة</string>
   <string name="menu_new_image_from_camera">صورة جديدة من الكاميرا</string>
-  <string name="menu_terms_of_use_and_service">شروط الاستخدام</string>
-  <string name="menu_about">حول</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">تصدير</string>
   <string name="saved">تم حفظ الصورة</string>
@@ -133,6 +119,4 @@
   <string name="lets_go">لنبدأ</string>
   <string name="next">التالي</string>
   <string name="skip">تخطى</string>
-  <string name="menu_language">اللغة</string>
-  <string name="device_language">لغة الجهاز</string>
 </resources>
