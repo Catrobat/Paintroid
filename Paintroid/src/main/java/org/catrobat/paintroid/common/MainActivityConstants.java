@@ -44,6 +44,11 @@ public final class MainActivityConstants {
 	public static final int REQUEST_CODE_TAKE_PICTURE = 4;
 	public static final int REQUEST_CODE_LANGUAGE = 5;
 
+	public static final int PERMISSION_EXTERNAL_STORAGE_LOAD = 1;
+	public static final int PERMISSION_EXTERNAL_STORAGE_SAVE = 2;
+	public static final int PERMISSION_EXTERNAL_STORAGE_SAVE_COPY = 3;
+	public static final int PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE = 4;
+
 	@IntDef({SAVE_IMAGE_DEFAULT, SAVE_IMAGE_CHOOSE_NEW, SAVE_IMAGE_LOAD_NEW, SAVE_IMAGE_FINISH, SAVE_IMAGE_EXIT_CATROID})
 	@Retention(RetentionPolicy.SOURCE)
 	public @interface SaveImageRequestCode {
@@ -62,6 +67,11 @@ public final class MainActivityConstants {
 	@IntDef({REQUEST_CODE_IMPORTPNG, REQUEST_CODE_LOAD_PICTURE, REQUEST_CODE_FINISH, REQUEST_CODE_TAKE_PICTURE, REQUEST_CODE_LANGUAGE})
 	@Retention(RetentionPolicy.SOURCE)
 	public @interface ActivityRequestCode {
+	}
+
+	@IntDef({PERMISSION_EXTERNAL_STORAGE_LOAD, PERMISSION_EXTERNAL_STORAGE_SAVE, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE})
+	@Retention(RetentionPolicy.SOURCE)
+	public @interface PermissionRequestCode {
 	}
 
 	private MainActivityConstants() {

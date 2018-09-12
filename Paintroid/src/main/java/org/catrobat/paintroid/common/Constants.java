@@ -42,6 +42,8 @@ public final class Constants {
 	public static final String SAVE_QUESTION_FRAGMENT_TAG = "savebeforequitfragment";
 	public static final String CHOOSE_IMAGE_FRAGMENT_TAG = "chooseimagefragment";
 
+	public static final String EXTERNAL_STORAGE_PERMISSION_DIALOG = "externalstoragepermissiondialog";
+
 	private Constants() {
 		throw new AssertionError();
 	}

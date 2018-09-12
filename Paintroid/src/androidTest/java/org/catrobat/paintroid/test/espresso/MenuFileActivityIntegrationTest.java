@@ -28,6 +28,7 @@ import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
@@ -83,6 +84,9 @@ public class MenuFileActivityIntegrationTest {
 	private static ArrayList<File> deletionFileList = null;
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
+
+	@Rule
+	public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
 	@Before
 	public void setUp() {

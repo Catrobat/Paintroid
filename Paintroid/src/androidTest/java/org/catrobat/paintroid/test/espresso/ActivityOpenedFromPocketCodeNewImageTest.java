@@ -19,9 +19,11 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Environment;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
@@ -30,6 +32,7 @@ import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,6 +60,12 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
+
+	@ClassRule
+	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
+			Manifest.permission.WRITE_EXTERNAL_STORAGE,
+			Manifest.permission.READ_EXTERNAL_STORAGE
+	);
 
 	private File imageFile = null;
 

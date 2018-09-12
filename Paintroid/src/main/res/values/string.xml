@@ -123,6 +123,9 @@
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
 
+    <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
+    <string name="permission_info_external_storage_title">Permission needed</string>
+
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

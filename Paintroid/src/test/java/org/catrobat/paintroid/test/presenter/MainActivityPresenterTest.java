@@ -19,9 +19,11 @@
 
 package org.catrobat.paintroid.test.presenter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -35,6 +37,8 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.MainActivityContracts;
+import org.catrobat.paintroid.dialog.PermissionInfoDialog;
+import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
@@ -45,10 +49,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.catrobat.paintroid.common.Constants.EXTERNAL_STORAGE_PERMISSION_DIALOG;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_TAKE_PHOTO;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_LOAD;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LANGUAGE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
@@ -67,6 +76,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -113,73 +124,10 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testLoadImageClickedWhenUnchangedThenStartLoadActivity() {
-		presenter.loadImageClicked();
-
-		verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
-		verifyNoMoreInteractions(navigator);
-	}
-
-	@Test
-	public void testLoadImageClickedWhenUndoAvailableThenShowSaveDialog() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-		when(commandManager.isUndoAvailable()).thenReturn(true);
-
-		presenter.loadImageClicked();
-
-		verify(navigator).showSaveBeforeLoadImageDialog(SAVE_IMAGE_LOAD_NEW, uri);
-		verifyNoMoreInteractions(navigator);
-	}
-
-	@Test
-	public void testLoadImageClickedWhenUndoAvailableAndSavedThenStartLoadActivity() {
-		when(commandManager.isUndoAvailable()).thenReturn(true);
-		when(model.isSaved()).thenReturn(true);
-
-		presenter.loadImageClicked();
-
-		verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
-		verifyNoMoreInteractions(navigator);
-	}
-
-	@Test
-	public void testLoadNewImageThenStartLoadActivity() {
-		presenter.loadNewImage();
-
-		verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
-		verifyNoMoreInteractions(navigator);
-	}
-
-	@Test
 	public void testNewImageClickedWhenUnchangedThenShowNewImageDialog() {
 		presenter.newImageClicked();
 
 		verify(navigator).showChooseNewImageDialog();
-		verifyNoMoreInteractions(navigator);
-	}
-
-	@Test
-	public void testNewImageClickedWhenUnchangedAndOpenedFromCatroidThenShowSaveDialog() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-		when(model.isOpenedFromCatroid()).thenReturn(true);
-
-		presenter.newImageClicked();
-
-		verify(navigator).showSaveBeforeNewImageDialog(SAVE_IMAGE_CHOOSE_NEW, uri);
-		verifyNoMoreInteractions(navigator);
-	}
-
-	@Test
-	public void testNewImageClickedWhenUndoAvailableThenShowSaveDialog() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-		when(commandManager.isUndoAvailable()).thenReturn(true);
-
-		presenter.newImageClicked();
-
-		verify(navigator).showSaveBeforeNewImageDialog(SAVE_IMAGE_CHOOSE_NEW, uri);
 		verifyNoMoreInteractions(navigator);
 	}
 
@@ -1005,6 +953,139 @@ public class MainActivityPresenterTest {
 		presenter.onSaveImagePostExecute(0, null, false);
 
 		verify(navigator).showSaveErrorDialog();
+	}
+
+	@Test
+	public void testSaveImageClickedWhenPermissionNotGrantedThenAskForPermission() {
+		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		doReturn(true).when(navigator).isSdkAboveOrEqualM();
+
+		presenter.saveImageClicked();
+
+		verify(navigator).askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				PERMISSION_EXTERNAL_STORAGE_SAVE);
+	}
+
+	@Test
+	public void testHandlePermissionRequestResultForRequestAfterSaveClickedPermissionNotGranted() {
+		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {});
+
+		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				EXTERNAL_STORAGE_PERMISSION_DIALOG,
+				PERMISSION_EXTERNAL_STORAGE_SAVE);
+	}
+
+	@Test
+	public void testHandlePermissionRequestResultForRequestAfterSaveClickedPermissionGranted() {
+		doReturn(null).when(model).getSavedPictureUri();
+
+		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {PackageManager.PERMISSION_GRANTED});
+
+		Uri uri = model.getSavedPictureUri();
+
+		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(uri));
+	}
+
+	@Test
+	public void testSaveCopyClickedWhenPermissionNotGrantedThenAskForPermission() {
+		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		doReturn(true).when(navigator).isSdkAboveOrEqualM();
+
+		presenter.saveCopyClicked();
+
+		verify(navigator).askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
+	}
+
+	@Test
+	public void testHandlePermissionRequestResultForRequestAfterSaveCopyClickedPermissionNotGranted() {
+		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {});
+
+		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				EXTERNAL_STORAGE_PERMISSION_DIALOG,
+				PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
+	}
+
+	@Test
+	public void testHandlePermissionRequestResultForRequestAfterSaveCopyClickedPermissionGranted() {
+		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {PackageManager.PERMISSION_GRANTED});
+
+		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT));
+	}
+
+	@Test
+	public void testLoadImageClickedWhenPermissionNotGrantedThenAskForPermissionShowInfoDialogIfNotGranted() {
+		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		doReturn(true).when(navigator).isSdkAboveOrEqualM();
+
+		presenter.loadImageClicked();
+
+		verify(navigator).askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				PERMISSION_EXTERNAL_STORAGE_LOAD);
+	}
+
+	@Test
+	public void testHandlePermissionRequestResultForRequestAfterLoadClickedPermissionNotGranted() {
+		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_LOAD,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {});
+
+		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				EXTERNAL_STORAGE_PERMISSION_DIALOG,
+				PERMISSION_EXTERNAL_STORAGE_LOAD);
+	}
+
+	@Test
+	public void testHandlePermissionRequestResultForRequestAfterLoadClickedPermissionGranted() {
+		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_LOAD,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {PackageManager.PERMISSION_GRANTED});
+
+		verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+	}
+
+	@Test
+	public void testNewImageClickedWhenPermissionNotGrantedThenAskForPermissionShowInfoDialogIfNotGranted() {
+		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		doReturn(true).when(navigator).isSdkAboveOrEqualM();
+		doReturn(true).when(model).isOpenedFromCatroid();
+		doReturn(false).when(model).isSaved();
+
+		presenter.newImageClicked();
+
+		verify(navigator).askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE);
+	}
+
+	@Test
+	public void testHandlePermissionRequestResultForRequestAfterNewImageClickedPermissionNotGranted() {
+		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {});
+
+		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				EXTERNAL_STORAGE_PERMISSION_DIALOG,
+				PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE);
+	}
+
+	@Test
+	public void testHandlePermissionRequestResultForRequestAfterNewImageClickedPermissionGranted() {
+		doReturn(true).when(model).isOpenedFromCatroid();
+		doReturn(false).when(model).isSaved();
+
+		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {PackageManager.PERMISSION_GRANTED});
+
+		verify(navigator).showSaveBeforeNewImageDialog(SAVE_IMAGE_CHOOSE_NEW, model.getSavedPictureUri());
 	}
 
 	@Test

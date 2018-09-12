@@ -19,6 +19,7 @@
 
 #include <jni.h>
 #include <list>
+#include <string.h>
 
 #include <android/log.h>
 

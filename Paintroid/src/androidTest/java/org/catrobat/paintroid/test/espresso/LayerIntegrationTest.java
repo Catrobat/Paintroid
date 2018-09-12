@@ -19,9 +19,11 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
@@ -62,6 +64,9 @@ import static org.hamcrest.Matchers.not;
 public class LayerIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
 	private int bitmapHeight;
 	private int bitmapWidth;
