@@ -19,7 +19,6 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.catrobat.paintroid"
-    android:finishOnTaskLaunch="true"
     android:installLocation="auto">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -31,31 +30,17 @@
         <activity
             android:name=".WelcomeActivity"
             android:theme="@style/PocketPaintSplashTheme"
-            android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/PocketPaintSplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
 
                 <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
                 <category android:name="android.intent.category.ALTERNATIVE" />
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="image/*" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/PocketPaintSplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT" />
-
-                <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
-                <category android:name="android.intent.category.ALTERNATIVE" />
 
                 <data android:mimeType="image/*" />
             </intent-filter>
