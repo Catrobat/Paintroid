@@ -115,8 +115,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	}
 
 	private void createAndSetBitmap() {
-		previousBoxHeight = boxHeight;
-		previousBoxWidth = boxWidth;
 		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
 				Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
@@ -152,16 +150,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			drawPaint.setShader(checkeredPattern.getShader());
 		}
 
+		shapeRect = new RectF(0, 0, boxWidth, boxHeight);
+		shapeRect.inset(SHAPE_OFFSET, SHAPE_OFFSET);
 		if (drawPaint.getStyle() == Style.STROKE) {
-			shapeRect = new RectF(SHAPE_OFFSET + shapeOutlineWidth / 2,
-					SHAPE_OFFSET + shapeOutlineWidth / 2,
-					boxWidth - SHAPE_OFFSET - shapeOutlineWidth / 2,
-					boxHeight - SHAPE_OFFSET - shapeOutlineWidth / 2);
-		} else {
-			shapeRect = new RectF(SHAPE_OFFSET,
-					SHAPE_OFFSET,
-					boxWidth - SHAPE_OFFSET,
-					boxHeight - SHAPE_OFFSET);
+			shapeRect.inset(shapeOutlineWidth / 2, shapeOutlineWidth / 2);
 		}
 
 		switch (baseShape) {
@@ -181,6 +173,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 				break;
 		}
 		setBitmap(bitmap);
+		previousBoxHeight = boxHeight;
+		previousBoxWidth = boxWidth;
 	}
 
 	@Override
@@ -216,8 +210,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
-		if(boxHeight < previousBoxHeight || boxHeight > previousBoxHeight ||
-				boxWidth < previousBoxWidth || boxWidth > previousBoxWidth) {
+		if (boxHeight < previousBoxHeight || boxHeight > previousBoxHeight
+				|| boxWidth < previousBoxWidth || boxWidth > previousBoxWidth) {
 			createAndSetBitmap();
 		}
 	}

@@ -177,10 +177,8 @@ public class ShapeToolOptionsListener {
 	}
 
 	private void resetDrawTypeActivated() {
-		View[] buttons = {fillButton, outlineButton};
-		for (View button : buttons) {
-			button.setSelected(false);
-		}
+		fillButton.setSelected(false);
+		outlineButton.setSelected(false);
 	}
 
 	public void setShapeActivated(GeometricFillTool.BaseShape shape) {
