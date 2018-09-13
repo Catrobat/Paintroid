@@ -49,6 +49,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.File;
+
 import static org.catrobat.paintroid.common.Constants.EXTERNAL_STORAGE_PERMISSION_DIALOG;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_TAKE_PHOTO;
@@ -156,6 +158,20 @@ public class MainActivityPresenterTest {
 
 		verify(navigator).finishActivity();
 		verifyNoMoreInteractions(navigator);
+	}
+
+	@Test
+	public void testOnCreateFilePostExecuteWhenTakePictureThenStartActivity() {
+		File file = mock(File.class);
+
+		presenter.onCreateFilePostExecute(CREATE_FILE_TAKE_PHOTO, file);
+
+		Uri uri = view.getFileProviderUriFromFile(file);
+
+		verify(model).setCameraImageUri(uri);
+		verify(navigator).startTakePictureActivity(REQUEST_CODE_TAKE_PICTURE, uri);
+		verifyNoMoreInteractions(navigator);
+		verify(model, never()).setSavedPictureUri(any(Uri.class));
 	}
 
 	@Test
@@ -858,33 +874,11 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveErrorDialog();
 	}
 
-	@Test
-	public void testOnCreateFilePostExecuteWhenDefaultThenSetUri() {
-		Uri uri = mock(Uri.class);
-
-		presenter.onCreateFilePostExecute(CREATE_FILE_DEFAULT, uri);
-
-		verify(model).setSavedPictureUri(uri);
-		verifyZeroInteractions(navigator);
-	}
-
-	@Test
-	public void testOnCreateFilePostExecuteWhenTakePictureThenStartActivity() {
-		Uri uri = mock(Uri.class);
-
-		presenter.onCreateFilePostExecute(CREATE_FILE_TAKE_PHOTO, uri);
-
-		verify(model).setCameraImageUri(uri);
-		verify(navigator).startTakePictureActivity(REQUEST_CODE_TAKE_PICTURE, uri);
-		verifyNoMoreInteractions(navigator);
-		verify(model, never()).setSavedPictureUri(any(Uri.class));
-	}
-
 	@Test(expected = IllegalArgumentException.class)
 	public void testOnCreateFilePostExecuteWhenInvalidRequestThenThrowException() {
-		Uri uri = mock(Uri.class);
+		File file = mock(File.class);
 
-		presenter.onCreateFilePostExecute(0, uri);
+		presenter.onCreateFilePostExecute(0, file);
 	}
 
 	@Test

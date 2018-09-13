@@ -247,7 +247,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void handleActivityResult(@ActivityRequestCode int requestCode, int resultCode, Intent data) {
 		if (resultCode != Activity.RESULT_OK) {
-			Log.d(MainActivity.TAG, "handleActivityResult: result not ok, most likely a dialog hast been canceled");
+			Log.d(MainActivity.TAG, "handleActivityResult: result not ok, most likely a dialog has been canceled");
 			return;
 		}
 
@@ -563,17 +563,18 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void onCreateFilePostExecute(@CreateFileRequestCode int requestCode, Uri uri) {
-		if (uri == null) {
+	public void onCreateFilePostExecute(@CreateFileRequestCode int requestCode, File file) {
+		if (file == null) {
 			navigator.showSaveErrorDialog();
 			return;
 		}
 
 		switch (requestCode) {
 			case CREATE_FILE_DEFAULT:
-				model.setSavedPictureUri(uri);
+				model.setSavedPictureUri(Uri.fromFile(file));
 				break;
 			case CREATE_FILE_TAKE_PHOTO:
+				Uri uri = view.getFileProviderUriFromFile(file);
 				model.setCameraImageUri(uri);
 				navigator.startTakePictureActivity(REQUEST_CODE_TAKE_PICTURE, uri);
 				break;

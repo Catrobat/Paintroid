@@ -19,17 +19,17 @@
 
 package org.catrobat.paintroid.iotasks;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-public class CreateFileAsync extends AsyncTask<Void, Void, Uri> {
+public class CreateFileAsync extends AsyncTask<Void, Void, File> {
 	private static final String TAG = CreateFileAsync.class.getSimpleName();
 	private WeakReference<CreateFileCallback> callbackRef;
 	private int requestCode;
@@ -42,7 +42,7 @@ public class CreateFileAsync extends AsyncTask<Void, Void, Uri> {
 	}
 
 	@Override
-	protected Uri doInBackground(Void... voids) {
+	protected File doInBackground(Void... voids) {
 		try {
 			return FileIO.createNewEmptyPictureFile(filename);
 		} catch (IOException e) {
@@ -52,15 +52,15 @@ public class CreateFileAsync extends AsyncTask<Void, Void, Uri> {
 	}
 
 	@Override
-	protected void onPostExecute(Uri uri) {
+	protected void onPostExecute(File file) {
 		CreateFileCallback callback = callbackRef.get();
 		if (callback != null && !callback.isFinishing()) {
-			callback.onCreateFilePostExecute(requestCode, uri);
+			callback.onCreateFilePostExecute(requestCode, file);
 		}
 	}
 
 	public interface CreateFileCallback {
-		void onCreateFilePostExecute(int requestCode, Uri uri);
+		void onCreateFilePostExecute(int requestCode, File file);
 		boolean isFinishing();
 	}
 }

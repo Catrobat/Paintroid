@@ -89,7 +89,7 @@ public final class FileIO {
 		return simpleDateFormat.format(new Date()) + ENDING;
 	}
 
-	public static Uri createNewEmptyPictureFile(String filename) throws IOException {
+	public static File createNewEmptyPictureFile(String filename) throws IOException {
 		if (filename == null) {
 			filename = getDefaultFileName();
 		}
@@ -99,7 +99,7 @@ public final class FileIO {
 		if (!filename.toLowerCase(Locale.US).endsWith(ENDING.toLowerCase(Locale.US))) {
 			filename += ENDING;
 		}
-		return Uri.fromFile(new File(Constants.MEDIA_DIRECTORY, filename));
+		return new File(Constants.MEDIA_DIRECTORY, filename);
 	}
 
 	private static Bitmap decodeBitmapFromUri(ContentResolver resolver, @NonNull Uri uri, BitmapFactory.Options options) throws IOException {
