@@ -35,22 +35,11 @@
   <string name="button_text">Texte</string>
   <string name="button_shape">Formes</string>
   <string name="done">Terminé</string>
-  <string name="terms_of_use_and_service_title">Conditions d’utilisation et de services</string>
-  <string name="terms_of_use_and_service_content">In order to be allowed to use Pocket Paint and other executables offered by the Catrobat project, you must agree to our Terms of Use and Service and strictly follow them when you use Pocket Code and our other executables. Please see the link below for their precise formulation.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Conditions d’utilisation et de services</string>
-  <string name="about_title">About Pocket Paint…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Pocket Paint Source Code License</string>
-  <string name="about_catroid_url_text">A propos de Catrobat</string>
-  <string name="about_version">Version:</string>
   <string name="color_chooser_title">Color Chooser</string>
-  <string name="color_rgb">Red Green Blue (RGB)</string>
   <string name="color_red">Rouge</string>
   <string name="color_green">Vert</string>
   <string name="color_blue">Bleu</string>
   <string name="color_alpha">Transparence</string>
-  <string name="color_pre">preselected</string>
-  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Outils</string>
   <string name="dialog_error_save_title">Erreur de chargement/sauvegarde du fichier</string>
   <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Quit</string>
   <string name="closing_security_question">Save Changes?</string>
-  <string name="closing_catroid_security_question_title">Back to Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Nouvelle image</string>
   <string name="menu_load_image">Charger l\'image</string>
   <string name="menu_save_image">Save image</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">Fullscreen</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">New image from camera</string>
-  <string name="menu_terms_of_use_and_service">Conditions d\'utilisation</string>
-  <string name="menu_about">Qui nous sommes</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Export</string>
   <string name="saved">Image saved</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Suivant</string>
   <string name="skip">Skip</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

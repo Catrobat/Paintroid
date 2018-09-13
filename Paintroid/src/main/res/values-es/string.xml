@@ -35,22 +35,11 @@
   <string name="button_text">Texto</string>
   <string name="button_shape">Formas</string>
   <string name="done">Listo</string>
-  <string name="terms_of_use_and_service_title">Términos de uso y servicio</string>
-  <string name="terms_of_use_and_service_content">Para poder utilizar Pocket Code y otros ejecutables ofrecidos por el proyecto Catrobat, debes de estar de acuerdo con nuestros Términos de Uso y seguirlos estrictamente cuando utilizas Pocket Code y nuestros otros ejecutables. Por favor vea el siguiente enlace para tener una formulación más precisa. \n</string>
-  <string name="terms_of_use_and_service_url_text">Términos de uso y servicio</string>
-  <string name="about_title">Acerca de Pocket Pintar…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Licencia de código de fuente para Pocket Pintar</string>
-  <string name="about_catroid_url_text">Acerca de Catrobat</string>
-  <string name="about_version">Versión:</string>
   <string name="color_chooser_title">Selector de color</string>
-  <string name="color_rgb">Rojo, verde, azul (RGB)</string>
   <string name="color_red">Rojo</string>
   <string name="color_green">Verde</string>
   <string name="color_blue">Azul</string>
   <string name="color_alpha">Alpha</string>
-  <string name="color_pre">pre-selección</string>
-  <string name="color_hsv">hsv selector de color</string>
   <string name="dialog_tools_title">Herramientas</string>
   <string name="dialog_error_save_title">Error cargar/guardar archivo</string>
   <string name="dialog_error_sdcard_text">Revisar la imagen del cheque o tarjeta SD!</string>
@@ -70,11 +59,11 @@
   <string name="help_content_line">Trazar una línea recta.</string>
   <string name="help_content_text">Escribir texto y darle formato. Redimensionar el cuadro de texto más tarde. Pulse para insertar el texto en la imagen.</string>
   <string name="help_content_shape">Elege una forma y pulsa para insertar la forma seleccionada</string>
-  <string name="help_content_layer">Create new layers or modify existing ones</string>
-  <string name="help_content_color_chooser">Select or adjust a color</string>
+  <string name="help_content_layer">Crear nuevas capas o modificar existentes</string>
+  <string name="help_content_color_chooser">Seleccionar o ajustar un color</string>
   <string name="closing_security_question_title">Salir</string>
   <string name="closing_security_question">Guardar Cambios?</string>
-  <string name="closing_catroid_security_question_title">Regresar a Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Nueva imagen</string>
   <string name="menu_load_image">Cargar Imagen</string>
   <string name="menu_save_image">Guardar imagen</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">Pantalla Completa</string>
   <string name="menu_show_menu">Salir de pantalla completa</string>
   <string name="menu_new_image_from_camera">Nueva imagen de la cámara</string>
-  <string name="menu_terms_of_use_and_service">Términos de Uso</string>
-  <string name="menu_about">Acerca de</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exportar</string>
   <string name="saved">Imagen guardada</string>
@@ -102,9 +89,9 @@
   <string name="shape_tool_dialog_star_title">Estrella</string>
   <string name="shape_tool_dialog_heart_title">Corazón</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolerancia de color</string>
-  <string name="transform_tool_auto_crop_text">crop</string>
-  <string name="transform_width_text">Width</string>
-  <string name="transform_height_text">Height</string>
+  <string name="transform_tool_auto_crop_text">cortar</string>
+  <string name="transform_width_text">Ancho</string>
+  <string name="transform_height_text">Alto</string>
   <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Pulsación larga para copiar contenido</string>
   <string name="layers_title">Capas</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Vamos</string>
   <string name="next">Siguiente</string>
   <string name="skip">Ignorar</string>
-  <string name="menu_language">Idioma</string>
-  <string name="device_language">Idioma del Dispositivo</string>
 </resources>

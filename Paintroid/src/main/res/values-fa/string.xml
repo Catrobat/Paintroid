@@ -35,22 +35,11 @@
   <string name="button_text">متن</string>
   <string name="button_shape">Shapes</string>
   <string name="done">ﺍﻧﺠﺎﻡ شد</string>
-  <string name="terms_of_use_and_service_title">شرایط استفاده و خدمات</string>
-  <string name="terms_of_use_and_service_content">به منظور مجاز بودن به استفاده از پاکت نقاشی و دیگر برنامه های اجرایی ارائه شده توسط پروژه کت ربات، باید با شرایط استفاده و سرویس موافقت کنی و هنگامی که پاکت کد و دیگر برنامه های اجرایی ما را استفاده می کنی باید آنها را دقیقا دنبال کنی. برای فرمول بندی دقیقتر به لینک زیر نگاهی بنداز.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">شرایط استفاده و خدمات</string>
-  <string name="about_title">درباره پاکت نقاشی…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">مجوز کد منبع پاکت نقاشی</string>
-  <string name="about_catroid_url_text">درباره \"کت رباط\"</string>
-  <string name="about_version">نسخه:</string>
   <string name="color_chooser_title">انتخابگر رنگ</string>
-  <string name="color_rgb">قرمز سبز آبی (ق.س.آ)</string>
   <string name="color_red">قرمز</string>
   <string name="color_green">سبز</string>
   <string name="color_blue">آبی</string>
   <string name="color_alpha">آلفا</string>
-  <string name="color_pre">از پیش انتخاب شده</string>
-  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">ابزار</string>
   <string name="dialog_error_save_title">خطا در بارگذاری یا ذخیره فایل</string>
   <string name="dialog_error_sdcard_text">تصویر یا کارت SD را بررسی کن!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">خروج</string>
   <string name="closing_security_question">تغییرات ذخیره شود؟</string>
-  <string name="closing_catroid_security_question_title">برگشتن به پاکت کد</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">تصویر جدید</string>
   <string name="menu_load_image">بارگذاری تصویر</string>
   <string name="menu_save_image">ذخیره تصویر</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">تمام صفحه</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">تصویر جدید از دوربین</string>
-  <string name="menu_terms_of_use_and_service">شرایط استفاده</string>
-  <string name="menu_about">درباره</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">خروجي گرفتن</string>
   <string name="saved">تصویر ذخیره شده</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Next</string>
   <string name="skip">پرش</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

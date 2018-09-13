@@ -35,22 +35,11 @@
   <string name="button_text">Testo</string>
   <string name="button_shape">Forme</string>
   <string name="done">Fatto</string>
-  <string name="terms_of_use_and_service_title">Condizioni d\'uso e servizio</string>
-  <string name="terms_of_use_and_service_content">Per usare Pocket Paint e altri programmi offerti da Catrobat, si deve prendere visione e accettare i nostri Termini d\'uso e di Servizio e seguirli rigorosamente quando si fa uso di Pocket Code e altri programmi. Seguire il link sotto-riportato per leggere i dettagli.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Condizioni d\'uso e servizio</string>
-  <string name="about_title">Informazioni su Pocket Paint…</string>
-  <string name="about_content">Pocket Paint è un editor di immagini che fa parte del progetto Catrobat.\n\nCatrobat è un linguaggio di programmazione visuale e un insieme di strumenti di creatività per smartphone, tablet e browser.\n\nIl codice sorgente di Pocket Paint è rilasciato per lo più sotto la <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nPer ulteriori dettagli sulla licenza seguire il link sottostante.\n\n</string>
-  <string name="about_license_url_text">Licenza per il codice sorgente di Pocket Paint</string>
-  <string name="about_catroid_url_text">Su Catrobat</string>
-  <string name="about_version">Versione:</string>
   <string name="color_chooser_title">Selezione colori</string>
-  <string name="color_rgb">Rosso verde blu (RGB)</string>
   <string name="color_red">Rosso</string>
   <string name="color_green">Verde</string>
   <string name="color_blue">Blu</string>
   <string name="color_alpha">Alpha (opacità)</string>
-  <string name="color_pre">preselezione</string>
-  <string name="color_hsv">selettore di colore di Hsv</string>
   <string name="dialog_tools_title">Strumenti</string>
   <string name="dialog_error_save_title">Errore durante il caricamento/salvataggio File</string>
   <string name="dialog_error_sdcard_text">Controllare l\'immagine o l\'SD-Card!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Seleziona o modifica un colore</string>
   <string name="closing_security_question_title">Esci</string>
   <string name="closing_security_question">Salvare le modifiche?</string>
-  <string name="closing_catroid_security_question_title">Ritorna a Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Nuova immagine</string>
   <string name="menu_load_image">Carica immagine</string>
   <string name="menu_save_image">Salva immagine</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">Schermo intero</string>
   <string name="menu_show_menu">Esci dallo schermo intero</string>
   <string name="menu_new_image_from_camera">Nuova immagine da fotocamera</string>
-  <string name="menu_terms_of_use_and_service">Termini di utilizzo</string>
-  <string name="menu_about">Informazioni su</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Esporta</string>
   <string name="saved">Immagine salvata</string>
@@ -102,9 +89,9 @@
   <string name="shape_tool_dialog_star_title">Stella</string>
   <string name="shape_tool_dialog_heart_title">Cuore</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolleranza colore</string>
-  <string name="transform_tool_auto_crop_text">crop</string>
-  <string name="transform_width_text">Width</string>
-  <string name="transform_height_text">Height</string>
+  <string name="transform_tool_auto_crop_text">ritaglia</string>
+  <string name="transform_width_text">Larghezza</string>
+  <string name="transform_height_text">Altezza</string>
   <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Premi a lungo per copiare il contenuto</string>
   <string name="layers_title">Livelli</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Si comincia</string>
   <string name="next">Avanti</string>
   <string name="skip">Ignora</string>
-  <string name="menu_language">Lingua</string>
-  <string name="device_language">Lingua del dispositivo</string>
 </resources>

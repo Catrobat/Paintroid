@@ -35,22 +35,11 @@
   <string name="button_text">Tekst</string>
   <string name="button_shape">Vormen</string>
   <string name="done">Gereed</string>
-  <string name="terms_of_use_and_service_title">Algemene gebruiksvoorwaarden</string>
-  <string name="terms_of_use_and_service_content">Om gebruik te mogen maken van Pocket Code en andere uitvoerbare bestanden aangeboden door het Catrobat project, moet je akkoord gaan met onze gebruiksvoorwaarden en deze strikt volgen wanner je gebruikt maakt van Pocket Code en onze andere uitvoerbare bestanden. Zie de link hieronder voor de precieze formulering.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Algemene gebruiksvoorwaarden</string>
-  <string name="about_title">Over Pocket Paint…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Pocket Paint broncode licentie</string>
-  <string name="about_catroid_url_text">Over Catrobat</string>
-  <string name="about_version">Versie:</string>
   <string name="color_chooser_title">Kleurkiezer</string>
-  <string name="color_rgb">Rood groen blauw (RGB)</string>
   <string name="color_red">Rood</string>
   <string name="color_green">Groen</string>
   <string name="color_blue">Blauw</string>
   <string name="color_alpha">Transparant</string>
-  <string name="color_pre">voorgeselecteerd</string>
-  <string name="color_hsv">hsv kleurkiezer</string>
   <string name="dialog_tools_title">Tools</string>
   <string name="dialog_error_save_title">Fout laden/opslaan bestand</string>
   <string name="dialog_error_sdcard_text">Controleer afbeelding of SD kaart!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Stoppen</string>
   <string name="closing_security_question">Wijzigingen opslaan?</string>
-  <string name="closing_catroid_security_question_title">Terug naar Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Nieuwe afbeelding</string>
   <string name="menu_load_image">Afbeelding laden</string>
   <string name="menu_save_image">Afbeelding opslaan</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">Volledig Scherm</string>
   <string name="menu_show_menu">Volledig scherm afsluiten</string>
   <string name="menu_new_image_from_camera">Nieuwe afbeelding van camera</string>
-  <string name="menu_terms_of_use_and_service">Gebruiksvoorwaarden</string>
-  <string name="menu_about">Over</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exporteer</string>
   <string name="saved">Afbeelding opgeslagen</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Volgende</string>
   <string name="skip">Overslaan</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

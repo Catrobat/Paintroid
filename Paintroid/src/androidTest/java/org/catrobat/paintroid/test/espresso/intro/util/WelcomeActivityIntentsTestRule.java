@@ -22,8 +22,10 @@ package org.catrobat.paintroid.test.espresso.intro.util;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
+import android.support.v4.content.ContextCompat;
 import android.util.LayoutDirection;
 
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.espresso.util.LanguageSupport;
@@ -56,11 +58,11 @@ public class WelcomeActivityIntentsTestRule extends IntentsTestRule<WelcomeActiv
 	}
 
 	public int getColorActive() {
-		return getActivity().colorActive;
+		return ContextCompat.getColor(getActivity(), R.color.pocketpaint_welcome_dot_active);
 	}
 
 	public int getColorInactive() {
-		return getActivity().colorInactive;
+		return ContextCompat.getColor(getActivity(), R.color.pocketpaint_welcome_dot_inactive);
 	}
 
 	@Override
@@ -93,5 +95,17 @@ public class WelcomeActivityIntentsTestRule extends IntentsTestRule<WelcomeActiv
 
 		Context targetContext = InstrumentationRegistry.getTargetContext();
 		LanguageSupport.setLocale(targetContext, new Locale("en"));
+	}
+
+	public void recreateActivity() {
+		InstrumentationRegistry.getInstrumentation().runOnMainSync(
+				new Runnable() {
+					@Override
+					public void run() {
+						getActivity().recreate();
+					}
+				}
+		);
+		InstrumentationRegistry.getInstrumentation().waitForIdleSync();
 	}
 }

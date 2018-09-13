@@ -35,22 +35,11 @@
   <string name="button_text">Text</string>
   <string name="button_shape">Shapes</string>
   <string name="done">Đã Thực hiện</string>
-  <string name="terms_of_use_and_service_title">Điều khoản sử dụng và dịch vụ</string>
-  <string name="terms_of_use_and_service_content">Để được phép sử dụng Pocket Code và các chương trình khác được cung cấp bởi dự án Catrobat, bạn phải đồng ý với điều khoản sử dụng của chúng tôi và nghiêm chỉnh thực hiện khi bạn sử dụng Pocket Code và các chương trình khác. Xin vui lòng xem các liên kết dưới đây để biết thêm thông tin.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Điều khoản sử dụng và dịch vụ</string>
-  <string name="about_title">Về Pocket Paint…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Giấy phép cho mã nguồn Pocket Paint</string>
-  <string name="about_catroid_url_text">Về Catrobat</string>
-  <string name="about_version">Phiên bản:</string>
   <string name="color_chooser_title">Bộ chọn màu</string>
-  <string name="color_rgb">Màu đỏ, xanh lá cây, xanh da trời(RGB)</string>
   <string name="color_red">Đỏ</string>
   <string name="color_green">Xanh lá cây</string>
   <string name="color_blue">Xanh da trời</string>
   <string name="color_alpha">Alpha</string>
-  <string name="color_pre">chọn</string>
-  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Công cụ</string>
   <string name="dialog_error_save_title">Lỗi tải/lưu tập tin</string>
   <string name="dialog_error_sdcard_text">Kiểm tra hình ảnh hoặc thẻ SD!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Thoát</string>
   <string name="closing_security_question">Lưu Thay Đổi?</string>
-  <string name="closing_catroid_security_question_title">Quay lại Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Hình ảnh mới</string>
   <string name="menu_load_image">Tải hình ảnh</string>
   <string name="menu_save_image">Lưu ảnh</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">Toàn màn hình</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">Hình ảnh mới từ máy ảnh</string>
-  <string name="menu_terms_of_use_and_service">Điều khoản sử dụng</string>
-  <string name="menu_about">Về</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Xuất</string>
   <string name="saved">Đã lưu ảnh</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Next</string>
   <string name="skip">Bỏ qua</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>
