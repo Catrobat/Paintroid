@@ -17,24 +17,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="org.catrobat.paintroid.app">
-
-    <application
-        android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/pocketpaint_app_name"
-        android:extractNativeLibs="false"
-        android:resizeableActivity="false"
-        tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
-
-        <activity
-            android:name="org.catrobat.paintroid.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application android:name="android.support.multidex.MultiDexApplication" />
 </manifest>
