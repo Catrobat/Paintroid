@@ -34,6 +34,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.junit.Before;
 import org.junit.Rule;
@@ -56,7 +57,6 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusb
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfaceCenterX;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfaceCenterY;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getToolMemberBoxPosition;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
@@ -278,7 +278,7 @@ public class StampToolIntegrationTest {
 	}
 
 	private void clickInStampBox(Tapper tapStyle) throws NoSuchFieldException, IllegalAccessException {
-		PointF boxCenter = getToolMemberBoxPosition();
+		PointF boxCenter = ((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition;
 		PointF screenPoint = convertFromCanvasToScreen(boxCenter, PaintroidApplication.perspective);
 
 		onView(isRoot()).perform(touchAt(screenPoint, tapStyle));

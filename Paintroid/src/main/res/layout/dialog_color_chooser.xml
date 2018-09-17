@@ -17,40 +17,39 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/color_chooser_base_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:padding="16dp">
 
-        <LinearLayout
+        <android.support.design.widget.TabLayout
+            android:id="@+id/color_chooser_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:tabGravity="fill" />
 
-            <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
-                android:id="@+id/color_chooser_color_picker_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <org.catrobat.paintroid.dialog.colorpicker.ColorPickerViewPager
+            android:id="@+id/color_chooser_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/color_chooser_button_ok"
-                style="?borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@null"
-                android:text="@string/done"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </ScrollView>
-</FrameLayout>
+        <Button
+            android:id="@+id/color_chooser_button_ok"
+            style="?borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@null"
+            android:text="@string/done" />
+    </LinearLayout>
+</ScrollView>
 
 

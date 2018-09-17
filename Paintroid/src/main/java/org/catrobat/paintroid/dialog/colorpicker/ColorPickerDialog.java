@@ -16,25 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- *    This file incorporates work covered by the following copyright and
- *    permission notice:
- *
- *        Copyright (C) 2011 Devmil (Michael Lamers) 
- *        Mail: develmil@googlemail.com
- *
- *        Licensed under the Apache License, Version 2.0 (the "License");
- *        you may not use this file except in compliance with the License.
- *        You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *        Unless required by applicable law or agreed to in writing, software
- *        distributed under the License is distributed on an "AS IS" BASIS,
- *        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *        See the License for the specific language governing permissions and
- *        limitations under the License.
- */
 
 package org.catrobat.paintroid.dialog.colorpicker;
 
@@ -52,10 +33,14 @@ import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,12 +53,13 @@ import org.catrobat.paintroid.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ColorPickerDialog extends AppCompatDialogFragment implements ColorPickerView.OnColorChangedListener {
+public final class ColorPickerDialog extends AppCompatDialogFragment implements ColorPickerContract.ColorPickerParentFragment {
 	private static final String INITIAL_COLOR_KEY = "InitialColor";
 	@VisibleForTesting
 	public List<OnColorPickedListener> onColorPickedListener = new ArrayList<>();
-	private ColorPickerView colorPickerView;
+	private int selectedColor;
 	private Button buttonNewColor;
+	private final List<ColorPickerContract.ColorPickerFragment> fragments = new ArrayList<>();
 
 	public static ColorPickerDialog newInstance(@ColorInt int initialColor) {
 		ColorPickerDialog dialog = new ColorPickerDialog();
@@ -83,11 +69,12 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 		return dialog;
 	}
 
+	@Override
 	public void addOnColorPickedListener(OnColorPickedListener listener) {
 		onColorPickedListener.add(listener);
 	}
 
-	private void updateColorChange(int color) {
+	private void notifyListeners(int color) {
 		for (OnColorPickedListener listener : onColorPickedListener) {
 			listener.colorChanged(color);
 		}
@@ -96,8 +83,14 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setStyle(DialogFragment.STYLE_NORMAL, R.style.PocketPaintAlertDialog);
+
+		if (savedInstanceState != null) {
+			selectedColor = savedInstanceState.getInt(INITIAL_COLOR_KEY, Color.BLACK);
+		} else {
+			Bundle arguments = getArguments();
+			selectedColor = arguments != null ? arguments.getInt(INITIAL_COLOR_KEY, Color.BLACK) : Color.BLACK;
+		}
 	}
 
 	@Nullable
@@ -107,26 +100,33 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	}
 
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
 		buttonNewColor = view.findViewById(R.id.color_chooser_button_ok);
-		colorPickerView = view.findViewById(R.id.color_chooser_color_picker_view);
-
 		buttonNewColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dismiss();
 			}
 		});
-		colorPickerView.setOnColorChangedListener(this);
 
-		if (savedInstanceState != null) {
-			setColor(savedInstanceState.getInt(INITIAL_COLOR_KEY, Color.BLACK));
-		} else {
-			Bundle arguments = getArguments();
-			setColor(arguments.getInt(INITIAL_COLOR_KEY, Color.BLACK));
-		}
+		ViewPager viewPager = view.findViewById(R.id.color_chooser_view_pager);
+		TabLayout tabLayout = view.findViewById(R.id.color_chooser_tab_layout);
+
+		ColorPickerPagerAdapter adapter = new ColorPickerPagerAdapter(getChildFragmentManager());
+		adapter.addItem(new ColorPickerFragmentBuilder(R.layout.color_chooser_view_preset),
+				R.drawable.ic_color_chooser_tab_preset);
+		adapter.addItem(new ColorPickerFragmentBuilder(R.layout.color_chooser_view_hsv),
+				R.drawable.ic_color_chooser_tab_hsv);
+		adapter.addItem(new ColorPickerFragmentBuilder(R.layout.color_chooser_view_rgba),
+				R.drawable.ic_color_chooser_tab_rgba);
+
+		viewPager.setOffscreenPageLimit(adapter.getCount());
+		viewPager.setAdapter(adapter);
+		tabLayout.setupWithViewPager(viewPager);
+		IconPagerAdapterHelper.setupIconsWithTabLayout(adapter, tabLayout);
+		setButtonColor(selectedColor);
 	}
 
 	@NonNull
@@ -141,33 +141,69 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putInt(INITIAL_COLOR_KEY, colorPickerView.getSelectedColor());
-	}
-
-	public void setColor(int color) {
-		setButtonColor(color);
-		colorPickerView.setSelectedColor(color);
+		outState.putInt(INITIAL_COLOR_KEY, selectedColor);
 	}
 
 	private void setButtonColor(int color) {
-		buttonNewColor.setBackground(CustomColorDrawable.createDrawable(color));
-
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color.green(color)) / 3;
-		if (referenceColor <= 128 && Color.alpha(color) > 5) {
+		boolean invertContrast = referenceColor <= 128 && Color.alpha(color) > 5;
+
+		if (invertContrast) {
 			buttonNewColor.setTextColor(Color.WHITE);
 		} else {
 			buttonNewColor.setTextColor(Color.BLACK);
 		}
+
+		buttonNewColor.setBackground(CustomColorDrawable.newCustomColorDrawable(color));
 	}
 
 	@Override
-	public void colorChanged(int color) {
+	public void colorChanged(ColorPickerContract.ColorPickerFragment sender, int color) {
+		selectedColor = color;
 		setButtonColor(color);
-		updateColorChange(color);
+		notifyFragments(sender, color);
+		notifyListeners(color);
+	}
+
+	private void notifyFragments(ColorPickerContract.ColorPickerFragment sender, int color) {
+		for (ColorPickerContract.ColorPickerFragment fragment : fragments) {
+			if (fragment != sender) {
+				fragment.setColor(color);
+			}
+		}
+	}
+
+	@Override
+	public void registerColorPickerFragment(ColorPickerContract.ColorPickerFragment fragment) {
+		fragments.add(fragment);
+	}
+
+	@Override
+	public void unregisterColorPickerFragment(ColorPickerContract.ColorPickerFragment fragment) {
+		fragments.remove(fragment);
+	}
+
+	@Override
+	public int getCurrentColor() {
+		return selectedColor;
 	}
 
 	public interface OnColorPickedListener {
 		void colorChanged(int color);
+	}
+
+	private static final class ColorPickerFragmentBuilder implements ColorPickerPagerAdapter.FragmentBuilder {
+		@LayoutRes
+		private int layoutId;
+
+		ColorPickerFragmentBuilder(int layoutId) {
+			this.layoutId = layoutId;
+		}
+
+		@Override
+		public Fragment create() {
+			return ColorPickerFragment.newInstance(layoutId);
+		}
 	}
 
 	static final class CustomColorDrawable extends ColorDrawable {
@@ -184,13 +220,19 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 			}
 		}
 
-		static Drawable createDrawable(@ColorInt int color) {
+		public static Drawable newCustomColorDrawable(@ColorInt int color) {
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 				return new CustomColorDrawable(color);
 			} else {
-				return new RippleDrawable(ColorStateList.valueOf(Color.WHITE),
+				return new RippleDrawable(ColorStateList.valueOf(getRippleColor(color)),
 						new CustomColorDrawable(color), null);
 			}
+		}
+
+		public static int getRippleColor(int color) {
+			float grayColor = Color.red(color) * 0.299f + Color.green(color) * 0.587f + Color.blue(color) * 0.114f;
+			boolean invertContrast = grayColor < 150;
+			return invertContrast ? Color.WHITE : Color.GRAY;
 		}
 
 		@Override

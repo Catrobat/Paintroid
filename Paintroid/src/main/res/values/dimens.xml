@@ -31,4 +31,14 @@
     <dimen name="pocketpaint_welcome_margin_top">100dp</dimen>
     <dimen name="pocketpaint_welcome_margin_top_possibilities">50dp</dimen>
     <dimen name="pocketpaint_welcome_margin_top_text">25dp</dimen>
+
+    <dimen name="pocketpaint_color_chooser_tracker_radius_outer">5dp</dimen>
+    <dimen name="pocketpaint_color_chooser_tracker_radius_inner">4dp</dimen>
+    <dimen name="pocketpaint_color_chooser_tracker_offset">2dp</dimen>
+    <dimen name="pocketpaint_color_chooser_tracker_stroke_width">2dp</dimen>
+    <dimen name="pocketpaint_color_chooser_hue_panel_width">30dp</dimen>
+    <dimen name="pocketpaint_color_chooser_alpha_panel_height">21dp</dimen>
+    <dimen name="pocketpaint_color_chooser_panel_spacing">10dp</dimen>
+    <dimen name="pocketpaint_color_chooser_drawing_offset">5dp</dimen>
+    <dimen name="pocketpaint_color_chooser_border_width">1dp</dimen>
 </resources>

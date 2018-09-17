@@ -49,24 +49,8 @@
     <color name="pocketpaint_color_chooser_rgb_blue">#FF0284e7</color>
     <color name="pocketpaint_color_chooser_rgb_alpha">#FFCCCCCC</color>
 
-    <color name="pocketpaint_color_chooser_blue1">#FF0074CD</color>
-    <color name="pocketpaint_color_chooser_blue2">#FF00B4F1</color>
-    <color name="pocketpaint_color_chooser_green1">#FF078707</color>
-    <color name="pocketpaint_color_chooser_green2">#FF8EC430</color>
-    <color name="pocketpaint_color_chooser_brown1">#FF61290E</color>
-    <color name="pocketpaint_color_chooser_brown2">#FFA84818</color>
-    <color name="pocketpaint_color_chooser_brown3">#FFDEAE66</color>
-    <color name="pocketpaint_color_chooser_brown4">#FFF0E4A8</color>
-    <color name="pocketpaint_color_chooser_purple1">#FF7D1379</color>
-    <color name="pocketpaint_color_chooser_purple2">#FFA743D1</color>
-    <color name="pocketpaint_color_chooser_purple3">#FFCA0186</color>
-    <color name="pocketpaint_color_chooser_purple4">#FFEB90D3</color>
-    <color name="pocketpaint_color_chooser_red1">#FFC5060E</color>
-    <color name="pocketpaint_color_chooser_orange1">#FFEB4618</color>
-    <color name="pocketpaint_color_chooser_orange2">#FFF9921C</color>
-    <color name="pocketpaint_color_chooser_yellow">#FFF3D605</color>
-    <color name="pocketpaint_color_chooser_black">#FF000000</color>
-    <color name="pocketpaint_color_chooser_gray">#FFA3A3A3</color>
-    <color name="pocketpaint_color_chooser_white">#ffffff</color>
-    <color name="pocketpaint_color_chooser_transparent">#00000000</color>
+    <color name="pocketpaint_color_chooser_border">#ff6E6E6E</color>
+    <color name="pocketpaint_color_chooser_slider_tracker">#fff5f5f5</color>
+    <color name="pocketpaint_color_chooser_sat_tracker_outer">#ffdddddd</color>
+    <color name="pocketpaint_color_chooser_sat_tracker_inner">#ff000000</color>
 </resources>

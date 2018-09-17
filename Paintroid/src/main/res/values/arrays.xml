@@ -19,27 +19,48 @@
 -->
 <resources>
     <!-- PocketPaint color chooser -->
+    <color name="pocketpaint_color_chooser_blue1">#FF0074CD</color>
+    <color name="pocketpaint_color_chooser_blue2">#FF00B4F1</color>
+    <color name="pocketpaint_color_chooser_green1">#FF078707</color>
+    <color name="pocketpaint_color_chooser_green2">#FF8EC430</color>
+    <color name="pocketpaint_color_chooser_brown1">#FF61290E</color>
+    <color name="pocketpaint_color_chooser_brown2">#FFA84818</color>
+    <color name="pocketpaint_color_chooser_brown3">#FFDEAE66</color>
+    <color name="pocketpaint_color_chooser_brown4">#FFF0E4A8</color>
+    <color name="pocketpaint_color_chooser_purple1">#FF7D1379</color>
+    <color name="pocketpaint_color_chooser_purple2">#FFA743D1</color>
+    <color name="pocketpaint_color_chooser_purple3">#FFCA0186</color>
+    <color name="pocketpaint_color_chooser_purple4">#FFEB90D3</color>
+    <color name="pocketpaint_color_chooser_red1">#FFC5060E</color>
+    <color name="pocketpaint_color_chooser_orange1">#FFEB4618</color>
+    <color name="pocketpaint_color_chooser_orange2">#FFF9921C</color>
+    <color name="pocketpaint_color_chooser_yellow">#FFF3D605</color>
+    <color name="pocketpaint_color_chooser_black">#FF000000</color>
+    <color name="pocketpaint_color_chooser_gray">#FFA3A3A3</color>
+    <color name="pocketpaint_color_chooser_white">#ffffff</color>
+    <color name="pocketpaint_color_chooser_transparent">#00000000</color>
+
     <array name="pocketpaint_color_chooser_preset_colors">
-        <item name="blue1">@color/pocketpaint_color_chooser_blue1</item>
-        <item name="blue2">@color/pocketpaint_color_chooser_blue2</item>
-        <item name="green1">@color/pocketpaint_color_chooser_green1</item>
-        <item name="green2">@color/pocketpaint_color_chooser_green2</item>
-        <item name="brown1">@color/pocketpaint_color_chooser_brown1</item>
-        <item name="brown2">@color/pocketpaint_color_chooser_brown2</item>
-        <item name="brown3">@color/pocketpaint_color_chooser_brown3</item>
-        <item name="brown4">@color/pocketpaint_color_chooser_brown4</item>
-        <item name="purple1">@color/pocketpaint_color_chooser_purple1</item>
-        <item name="purple2">@color/pocketpaint_color_chooser_purple2</item>
-        <item name="purple3">@color/pocketpaint_color_chooser_purple3</item>
-        <item name="purple4">@color/pocketpaint_color_chooser_purple4</item>
-        <item name="red1">@color/pocketpaint_color_chooser_red1</item>
-        <item name="orange1">@color/pocketpaint_color_chooser_orange1</item>
-        <item name="orange2">@color/pocketpaint_color_chooser_orange2</item>
-        <item name="yellow">@color/pocketpaint_color_chooser_yellow</item>
-        <item name="black">@color/pocketpaint_color_chooser_black</item>
-        <item name="darkgray">@color/pocketpaint_color_chooser_gray</item>
-        <item name="white">@color/pocketpaint_color_chooser_white</item>
-        <item name="transparent">@color/pocketpaint_color_chooser_transparent</item>
+        <item>@color/pocketpaint_color_chooser_blue1</item>
+        <item>@color/pocketpaint_color_chooser_blue2</item>
+        <item>@color/pocketpaint_color_chooser_green1</item>
+        <item>@color/pocketpaint_color_chooser_green2</item>
+        <item>@color/pocketpaint_color_chooser_brown1</item>
+        <item>@color/pocketpaint_color_chooser_brown2</item>
+        <item>@color/pocketpaint_color_chooser_brown3</item>
+        <item>@color/pocketpaint_color_chooser_brown4</item>
+        <item>@color/pocketpaint_color_chooser_purple1</item>
+        <item>@color/pocketpaint_color_chooser_purple2</item>
+        <item>@color/pocketpaint_color_chooser_purple3</item>
+        <item>@color/pocketpaint_color_chooser_purple4</item>
+        <item>@color/pocketpaint_color_chooser_red1</item>
+        <item>@color/pocketpaint_color_chooser_orange1</item>
+        <item>@color/pocketpaint_color_chooser_orange2</item>
+        <item>@color/pocketpaint_color_chooser_yellow</item>
+        <item>@color/pocketpaint_color_chooser_black</item>
+        <item>@color/pocketpaint_color_chooser_gray</item>
+        <item>@color/pocketpaint_color_chooser_white</item>
+        <item>@color/pocketpaint_color_chooser_transparent</item>
     </array>
 
     <!-- PocketPaint new image dialog options -->

@@ -19,32 +19,34 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
+import android.support.design.widget.TabLayout;
 import android.support.test.espresso.ViewInteraction;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
+import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
+import org.hamcrest.Matchers;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
 
 public final class ColorPickerViewInteraction extends CustomViewInteraction {
-	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
-
 	protected ColorPickerViewInteraction() {
-		super(onView(withId(R.id.color_chooser_color_picker_view)));
+		super(onView(withId(R.id.color_chooser_base_layout)));
 	}
 
 	public static ColorPickerViewInteraction onColorPickerView() {
@@ -52,7 +54,7 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onOkButton() {
-		return onView(withId(R.id.color_chooser_button_ok));
+		return onView(withId(R.id.color_chooser_button_ok)).inRoot(isDialog());
 	}
 
 	public ColorPickerViewInteraction performOpenColorPicker() {
@@ -68,16 +70,41 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
-	public ColorPickerViewInteraction performClickColorPickerPresetSelectorButton(int buttonPosition) {
-		final int colorButtonRowPosition = (buttonPosition / COLOR_PICKER_BUTTONS_PER_ROW);
-		final int colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW;
+	public ViewInteraction onPresetSelectorView() {
+		return onView(Matchers.<View>instanceOf(PresetSelectorView.class));
+	}
 
-		onView(allOf(isDescendantOfA(withClassName(containsString(PresetSelectorView.class.getSimpleName()))),
-				isDescendantOfA(isAssignableFrom(TableLayout.class)),
-				isDescendantOfA(isAssignableFrom(TableRow.class)),
-				hasTablePosition(colorButtonRowPosition, colorButtonColPosition)))
-				.perform(scrollTo())
-				.perform(click());
+	public ViewInteraction onRgbSelectorView() {
+		return onView(Matchers.<View>instanceOf(RgbSelectorView.class));
+	}
+
+	public ViewInteraction onHSVColorPickerView() {
+		return onView(Matchers.<View>instanceOf(HSVColorPickerView.class));
+	}
+
+	public ViewInteraction onColorChooserTabPreset() {
+		return onView(allOf(isDescendantOfA(Matchers.<View>instanceOf(TabLayout.class)),
+				withDrawable(R.drawable.ic_color_chooser_tab_preset)));
+	}
+
+	public ViewInteraction onColorChooserTabRgba() {
+		return onView(allOf(isDescendantOfA(Matchers.<View>instanceOf(TabLayout.class)),
+				withDrawable(R.drawable.ic_color_chooser_tab_rgba)));
+	}
+
+	public ViewInteraction onColorChooserTabHSV() {
+		return onView(allOf(isDescendantOfA(Matchers.<View>instanceOf(TabLayout.class)),
+				withDrawable(R.drawable.ic_color_chooser_tab_hsv)));
+	}
+
+	public ColorPickerViewInteraction performClickColorPickerPresetSelectorButton(int buttonPosition) {
+		onView(
+				allOf(
+						isDescendantOfA(Matchers.<View>instanceOf(PresetSelectorView.class)),
+						instanceOf(RecyclerView.class)
+				))
+				.perform(RecyclerViewActions.actionOnItemAtPosition(buttonPosition, scrollTo()))
+				.perform(RecyclerViewActions.actionOnItemAtPosition(buttonPosition, click()));
 		return this;
 	}
 }

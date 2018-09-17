@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
@@ -43,10 +44,9 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.checkTextDirection;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getConfiguration;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTypeFace;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withIndex;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -65,10 +65,12 @@ public class TextToolFontSpinnerTestArabic {
 
 	@Test
 	public void testTextFontFaceOfFontSpinnerArabic() {
-		assertEquals(View.LAYOUT_DIRECTION_RTL, getConfiguration().getLayoutDirection());
+		Configuration configuration = launchActivityRule.getActivity().getResources().getConfiguration();
+		assertEquals(View.LAYOUT_DIRECTION_RTL, configuration.getLayoutDirection());
 		assertTrue(checkTextDirection(Locale.getDefault().getDisplayName()));
 
-		selectTool(ToolType.TEXT);
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
 		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font))
 				.perform(click());
 		onView(withIndex(withId(android.R.id.text1), 0))

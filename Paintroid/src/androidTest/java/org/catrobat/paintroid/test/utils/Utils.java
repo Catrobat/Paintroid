@@ -29,6 +29,8 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.ui.Perspective;
 
+import static org.junit.Assert.assertEquals;
+
 public final class Utils {
 
 	private Utils() {
@@ -77,5 +79,10 @@ public final class Utils {
 	public static PointF getCanvasPointFromScreenPoint(PointF screenPoint) {
 		return PaintroidApplication.perspective
 				.getCanvasPointFromSurfacePoint(getSurfacePointFromScreenPoint(screenPoint));
+	}
+
+	public static void assertColorEquals(int expectedColor, int actualColor) {
+		assertEquals(String.format("expected: <%s> but was: <%s>", Integer.toHexString(expectedColor),
+				Integer.toHexString(actualColor)), expectedColor, actualColor);
 	}
 }

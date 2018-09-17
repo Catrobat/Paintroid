@@ -23,7 +23,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.espresso.util.IntroUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,7 +65,7 @@ public class RTLTest {
 
 	@Test
 	public void testCheckLastPage() {
-		EspressoUtils.changeIntroPage(IntroUtils.getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_getstarted));
+		IntroUtils.changeIntroPage(IntroUtils.getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_getstarted));
 		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(isNotVisible());
 		onView(withId(R.id.pocketpaint_btn_next))
@@ -80,7 +79,7 @@ public class RTLTest {
 	@Test
 	public void testButtonsCompleteVisible() {
 		for (int i = activityRule.getLayouts().length - 1; i < 0; i--) {
-			EspressoUtils.changeIntroPage(i);
+			IntroUtils.changeIntroPage(i);
 			onView(withId(R.id.pocketpaint_btn_skip))
 					.check(matches(isCompletelyDisplayed()))
 					.check(matches(withText(R.string.next)));
@@ -96,7 +95,7 @@ public class RTLTest {
 		int colorInactive = activityRule.getColorInactive();
 
 		for (int i = activityRule.getLayouts().length - 1; i < 0; i--) {
-			EspressoUtils.changeIntroPage(i);
+			IntroUtils.changeIntroPage(i);
 			onView(withId(R.id.pocketpaint_layout_dots))
 					.check(matches(checkDotsColors(i, colorActive, colorInactive)));
 		}

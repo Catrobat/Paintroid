@@ -27,7 +27,7 @@ import android.util.LayoutDirection;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.espresso.util.IntroUtils;
 import org.catrobat.paintroid.test.espresso.util.LanguageSupport;
 
 import java.util.Locale;
@@ -69,7 +69,7 @@ public class WelcomeActivityIntentsTestRule extends IntentsTestRule<WelcomeActiv
 	protected void beforeActivityLaunched() {
 		super.beforeActivityLaunched();
 
-		EspressoUtils.shouldStartSequence(startSequence);
+		IntroUtils.shouldStartSequence(startSequence);
 
 		String languageTagKey = rtl ? "ar" : "en";
 		Locale locale = new Locale(languageTagKey);

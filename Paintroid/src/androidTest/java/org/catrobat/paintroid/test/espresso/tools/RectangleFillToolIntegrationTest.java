@@ -203,33 +203,6 @@ public class RectangleFillToolIntegrationTest {
 	}
 
 	@Test
-	public void testCheckeredBackgroundWhenTransparentColorSelected() {
-		selectTool(ToolType.SHAPE);
-
-		onView(withId(R.id.pocketpaint_shapes_heart_btn)).perform(click());
-
-		clickSelectedToolButton();
-
-		selectColorPickerPresetSelectorColor(TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
-
-		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
-		Bitmap drawingBitmap = tool.drawingBitmap;
-		int width = drawingBitmap.getWidth();
-		int height = drawingBitmap.getHeight();
-		Point upperLeftQuarter = new Point((int) (width * 0.25), (int) (height * 0.25));
-		Point upperRightQuarter = new Point((int) (width * 0.75), (int) (height * 0.25));
-
-		int checkeredWhite = Color.WHITE;
-		int checkeredGray = 0xFFC0C0C0;
-
-		int pixelColor = drawingBitmap.getPixel(upperLeftQuarter.x, upperLeftQuarter.y);
-		assertTrue("Color should correspond to checkered pattern", pixelColor == checkeredGray || pixelColor == checkeredWhite);
-
-		pixelColor = drawingBitmap.getPixel(upperRightQuarter.x, upperRightQuarter.y);
-		assertTrue("Color should correspond to checkered pattern", pixelColor == checkeredGray || pixelColor == checkeredWhite);
-	}
-
-	@Test
 	public void testEraseWithHeartShape() {
 		PaintroidApplication.perspective.setScale(1.0f);
 

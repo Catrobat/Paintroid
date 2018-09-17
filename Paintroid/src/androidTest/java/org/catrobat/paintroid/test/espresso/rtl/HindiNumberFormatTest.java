@@ -36,19 +36,16 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickColorPickerPresetSelectorButton;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openColorPickerDialog;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
-import static org.hamcrest.Matchers.allOf;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.containsString;
 
 @RunWith(AndroidJUnit4.class)
 public class HindiNumberFormatTest {
 	private static final String EXPECTED_RED_VALUE = "٢٤٠";
 	private static final String EXPECTED_GREEN_VALUE = "٢٢٨";
-	private static final String EXPECTED_BLAU_VALUE = "١٦٨";
-	private static final String EXPECTED_ALFA_VALUE = "١٠٠";
+	private static final String EXPECTED_BLUE_VALUE = "١٦٨";
+	private static final String EXPECTED_ALPHA_VALUE = "١٠٠";
 	private static final String EXPECTED_STROKE_WIDTH_VALUE = "٢٥";
 	private static final String EXPECTED_COLOR_TOLERANCE_VALUE = "١٢";
 	@Rule
@@ -56,40 +53,48 @@ public class HindiNumberFormatTest {
 
 	@Test
 	public void testHindiNumberAtTool() {
-		selectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 		onView(withId(R.id.pocketpaint_stroke_width_width_text))
-				.check(matches(withText(containsString(EXPECTED_STROKE_WIDTH_VALUE))));
+				.check(matches(withText(EXPECTED_STROKE_WIDTH_VALUE)));
 
-		selectTool(ToolType.LINE);
+		onToolBarView()
+				.performSelectTool(ToolType.LINE);
 		onView(withId(R.id.pocketpaint_stroke_width_width_text))
-				.check(matches(withText(containsString(EXPECTED_STROKE_WIDTH_VALUE))));
+				.check(matches(withText(EXPECTED_STROKE_WIDTH_VALUE)));
 
-		selectTool(ToolType.CURSOR);
+		onToolBarView()
+				.performSelectTool(ToolType.CURSOR);
 		onView(withId(R.id.pocketpaint_stroke_width_width_text))
-				.check(matches(withText(containsString(EXPECTED_STROKE_WIDTH_VALUE))));
+				.check(matches(withText(EXPECTED_STROKE_WIDTH_VALUE)));
 
-		selectTool(ToolType.FILL);
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
 		onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
-				.check(matches(withText(containsString(EXPECTED_COLOR_TOLERANCE_VALUE))));
+				.check(matches(withText(EXPECTED_COLOR_TOLERANCE_VALUE)));
 
-		selectTool(ToolType.ERASER);
+		onToolBarView()
+				.performSelectTool(ToolType.ERASER);
 		onView(withId(R.id.pocketpaint_stroke_width_width_text))
-				.check(matches(withText(containsString(EXPECTED_STROKE_WIDTH_VALUE))));
+				.check(matches(withText(EXPECTED_STROKE_WIDTH_VALUE)));
 	}
 
 	@Test
 	public void testHindiNumberAtColorDialog() {
-		openColorPickerDialog();
-		clickColorPickerPresetSelectorButton(7);
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
+		onColorPickerView()
+				.performOpenColorPicker()
+				.performClickColorPickerPresetSelectorButton(7);
+
+		onColorPickerView().onColorChooserTabRgba()
 				.perform(click());
+
 		onView(withId(R.id.color_chooser_rgb_red_value))
 				.check(matches(withText(containsString(EXPECTED_RED_VALUE))));
 		onView(withId(R.id.color_chooser_rgb_green_value))
 				.check(matches(withText(containsString(EXPECTED_GREEN_VALUE))));
 		onView(withId(R.id.color_chooser_rgb_blue_value))
-				.check(matches(withText(containsString(EXPECTED_BLAU_VALUE))));
+				.check(matches(withText(containsString(EXPECTED_BLUE_VALUE))));
 		onView(withId(R.id.color_chooser_rgb_alpha_value))
-				.check(matches(withText(containsString(EXPECTED_ALFA_VALUE))));
+				.check(matches(withText(containsString(EXPECTED_ALPHA_VALUE))));
 	}
 }
