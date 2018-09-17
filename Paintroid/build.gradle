@@ -50,15 +50,18 @@ android {
         versionName rootProject.ext.androidVersionName
         externalNativeBuild.cmake.cppFlags "-fvisibility=hidden"
         ndk.abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
-        multiDexEnabled true
     }
 
     buildTypes {
         release {
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            testCoverageEnabled = true
+            testCoverageEnabled = project.hasProperty('enableCoverage')
+            // Multidex is required as espresso and mockito/bytebuddy are adding more functions
+            // than should be allowed by law.
+            // See https://github.com/mockito/mockito/issues/1112
+            multiDexEnabled true
         }
     }
 
@@ -82,6 +85,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
+    debugImplementation 'com.android.support:multidex:1.0.3'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.18.3'

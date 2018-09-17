@@ -35,22 +35,11 @@
   <string name="button_text">Teks</string>
   <string name="button_shape">Bentuk</string>
   <string name="done">Selesai</string>
-  <string name="terms_of_use_and_service_title">Persyaratan Penggunaan dan Layanan</string>
-  <string name="terms_of_use_and_service_content">Untuk menggunakan Pocket Code dan aplikasi lainnya yang ditawarkan oleh proyek Catrobat, Anda harus menyetujui Persyaratan Penggunaan dan Layanan kami, dan secara ketat mematuhinya ketika Anda menggunakan Pocket Code dan aplikasi kami lainnya. Silakan simak tautan di bawah ini untuk informasi lebih lanjut.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Persyaratan Penggunaan dan Layanan</string>
-  <string name="about_title">Tentang Pocket Paint…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Lisensi Kode Sumber Pocket Paint</string>
-  <string name="about_catroid_url_text">Tentang Catrobat</string>
-  <string name="about_version">Versi:</string>
   <string name="color_chooser_title">Pemilih Warna</string>
-  <string name="color_rgb">Merah Hijau Biru (RGB)</string>
   <string name="color_red">Merah</string>
   <string name="color_green">Hijau</string>
   <string name="color_blue">Biru</string>
   <string name="color_alpha">Alfa</string>
-  <string name="color_pre">praseleksi</string>
-  <string name="color_hsv">pemilih warna hsv</string>
   <string name="dialog_tools_title">Peralatan</string>
   <string name="dialog_error_save_title">Galat memuat/menyimpan berkas</string>
   <string name="dialog_error_sdcard_text">Periksa citra atau kartu SD!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Keluar</string>
   <string name="closing_security_question">Simpan Perubahan?</string>
-  <string name="closing_catroid_security_question_title">Kembali ke Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Citra baru</string>
   <string name="menu_load_image">Muat citra</string>
   <string name="menu_save_image">Simpan citra</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">Layar penuh</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">Citra baru dari kamera</string>
-  <string name="menu_terms_of_use_and_service">Persyaratan Penggunaan</string>
-  <string name="menu_about">Tentang</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Ekspor</string>
   <string name="saved">Citra tersimpan</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Lanjut</string>
   <string name="skip">Lewati</string>
-  <string name="menu_language">Bahasa</string>
-  <string name="device_language">Device Language</string>
 </resources>

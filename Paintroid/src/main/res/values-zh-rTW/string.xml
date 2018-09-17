@@ -35,22 +35,11 @@
   <string name="button_text">文字</string>
   <string name="button_shape">形狀</string>
   <string name="done">完成</string>
-  <string name="terms_of_use_and_service_title">使用與服務條款</string>
-  <string name="terms_of_use_and_service_content">為了能夠使用Pocket Code和 Catrobat 提供的其他軟體，您必須同意我們的使用與服務條款並且在使用我們的軟體時嚴格遵守，詳細說明請參閱下面的連結。 \n\n</string>
-  <string name="terms_of_use_and_service_url_text">使用與服務條款</string>
-  <string name="about_title">關於 Pocket Paint 口袋小畫家…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Pocket Paint 口袋小畫家 授權說明</string>
-  <string name="about_catroid_url_text">關於 Catrobat</string>
-  <string name="about_version">版本:</string>
   <string name="color_chooser_title">選擇顏色</string>
-  <string name="color_rgb">RGB三原色</string>
   <string name="color_red">紅</string>
   <string name="color_green">綠</string>
   <string name="color_blue">藍</string>
   <string name="color_alpha">透明度</string>
-  <string name="color_pre">預選顏色</string>
-  <string name="color_hsv">hsv 采色器</string>
   <string name="dialog_tools_title">工具</string>
   <string name="dialog_error_save_title">載入/存檔錯誤</string>
   <string name="dialog_error_sdcard_text">檢查圖檔或 SD 卡!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">離開</string>
   <string name="closing_security_question">儲存修改?</string>
-  <string name="closing_catroid_security_question_title">回 Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">新圖檔</string>
   <string name="menu_load_image">載入圖檔</string>
   <string name="menu_save_image">儲存圖檔</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">全螢幕顯示</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">相機拍攝新圖檔</string>
-  <string name="menu_terms_of_use_and_service">使用條款</string>
-  <string name="menu_about">關於</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">匯出</string>
   <string name="saved">圖檔已儲存</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">下一步</string>
   <string name="skip">Skip</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

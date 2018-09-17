@@ -19,7 +19,7 @@ The environment variable ANDROID_SDK_ROOT needs to be set.""")
 build_helper_functions.check_number_of_parameters(valid_param_count=0, usage_func=usage)
 
 ## RUN tests
-test_runner_cmd = [ build_helper_functions.get_relative_gradle_name(), '-Pjenkins', 'clean', 'jacocoTestDebugUnitTestReport' ]
+test_runner_cmd = [ build_helper_functions.get_relative_gradle_name(), '-Pjenkins', '-PenableCoverage', 'clean', 'jacocoTestDebugUnitTestReport' ]
 
 print("Calling: " + " ".join(test_runner_cmd))
 return_code = subprocess.run( test_runner_cmd, cwd=os.environ['REPO_DIR'] ).returncode

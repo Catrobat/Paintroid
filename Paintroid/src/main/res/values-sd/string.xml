@@ -35,22 +35,11 @@
   <string name="button_text">متن</string>
   <string name="button_shape">نقش</string>
   <string name="done">ٺيڪ آهي</string>
-  <string name="terms_of_use_and_service_title">خدمت ۽ استعمال جا شرط</string>
-  <string name="terms_of_use_and_service_content">ڪيٽروبيٽ پروجيڪٽ جي ذريعي پيش ڪيل پاڪٽ پينٽ ۽ ٻيون پيش ڪيل سهولتون يعني پاڪيٽ ڪوڊ وغيره جي لاءِ اوهان کي اسان جي خدمت ۽ استعمال جي شرطن سان اتفاق ۽ انهن تي سختي سان عمل ڪرڻو پوندو. وڌيڪ وضاحت واسطي هيٺين لنڪ تي ڪلڪ ڪريو</string>
-  <string name="terms_of_use_and_service_url_text">خدمت ۽ استعمال جا شرط</string>
-  <string name="about_title">پاڪيٽ پينٽ جي باري ۾…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">پاڪيٽ پينٽ سورس ڪوڊ لائسنس</string>
-  <string name="about_catroid_url_text">ڪيٽروبيٽ جي باري ۾</string>
-  <string name="about_version">ورشن:</string>
   <string name="color_chooser_title">رنگ چونڊڻو</string>
-  <string name="color_rgb">ڳاڙهوسائو نيرو (RGB)</string>
   <string name="color_red">ڳاڙهو</string>
   <string name="color_green">سائو</string>
   <string name="color_blue">نيرو</string>
   <string name="color_alpha">الفا</string>
-  <string name="color_pre">اڳواٽ چونڊيل</string>
-  <string name="color_hsv">رنگ چونڊيو</string>
   <string name="dialog_tools_title">اوزار</string>
   <string name="dialog_error_save_title">خامي فائيل آڻڻ/محفوظ ڪرڻ</string>
   <string name="dialog_error_sdcard_text">تصوير يا ڪارڊ چيڪ ڪريو!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">بند ڪريو</string>
   <string name="closing_security_question">ڇا تبديليون محفوظ ٿين?</string>
-  <string name="closing_catroid_security_question_title">پاڪيٽ ڪوڊ ڏانهن واپس ٿيو</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">نئين تصوير</string>
   <string name="menu_load_image">تصوير آڻيو</string>
   <string name="menu_save_image">تصوير محفوظ ڪريو</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">سڄي اسڪرين</string>
   <string name="menu_show_menu">ننڊي اسڪرين</string>
   <string name="menu_new_image_from_camera">نئين تصوير ڪئميرا مان</string>
-  <string name="menu_terms_of_use_and_service">استعمال جا شرط</string>
-  <string name="menu_about">جي بابت</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">برآمد ڪريو</string>
   <string name="saved">تصوير محفوظ ٿي</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">اڳيون</string>
   <string name="skip">رد ڪريو</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

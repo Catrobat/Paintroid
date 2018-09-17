@@ -35,22 +35,11 @@
   <string name="button_text">Text</string>
   <string name="button_shape">Shapes</string>
   <string name="done">เสร็จสิ้น</string>
-  <string name="terms_of_use_and_service_title">เงื่อนไขการใช้งานและบริการ</string>
-  <string name="terms_of_use_and_service_content">เพื่อที่จะได้รับอนุญาตให้ใช้โปรแกรม Pocket Code และ ส่วนอื่น ๆ จากโครงการ Catrobat คุณต้องยอมรับเงื่อนไขการใช้งานของเรา และกระทำตามข้อกำหนดอย่างเคร่งครัดเมื่อคุณใช้โปรแกรม Pocket Code และส่วนอื่นๆ ของเรา ข้อกำหนดอย่างละเอียดสามารถอ่านได้จากลิงค์ด้านล่าง</string>
-  <string name="terms_of_use_and_service_url_text">เงื่อนไขการใช้งานและบริการ</string>
-  <string name="about_title">เกี่ยวกับ Pocket Paint</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Pocket Pain Source โค็ดใบอนุญาติ</string>
-  <string name="about_catroid_url_text">เกี่ยวกับ Catrobat</string>
-  <string name="about_version">รุ่น:</string>
   <string name="color_chooser_title">ตัวเลือกสี</string>
-  <string name="color_rgb">สีแดง เขียว น้ำเงิน (RGB)</string>
   <string name="color_red">สีแดง</string>
   <string name="color_green">สีเขียว</string>
   <string name="color_blue">สีน้ำเงิน</string>
   <string name="color_alpha">ความโปร่งใส</string>
-  <string name="color_pre">เลือกไว้แล้ว</string>
-  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">เครื่องมือ</string>
   <string name="dialog_error_save_title">ข้อผิดพลาดโหลด/บันทึกแฟ้ม</string>
   <string name="dialog_error_sdcard_text">ตรวจสอบอิมเมจหรือการ์ด SD!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">ออก</string>
   <string name="closing_security_question">บันทึกการเปลี่ยนแปลง?</string>
-  <string name="closing_catroid_security_question_title">กลับไปยัง Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">รูปใหม่</string>
   <string name="menu_load_image">โหลด​รูป​ภาพ</string>
   <string name="menu_save_image">บันทึกรูปภาพ</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">เต็มจอ</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">ภาพใหม่จากกล้อง</string>
-  <string name="menu_terms_of_use_and_service">เงื่อนไขการใช้งาน</string>
-  <string name="menu_about">เกี่ยวกับ</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">ส่งออก</string>
   <string name="saved">บันทึกภาพแล้ว</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Next</string>
   <string name="skip">ข้าม</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

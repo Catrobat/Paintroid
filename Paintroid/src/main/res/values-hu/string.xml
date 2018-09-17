@@ -35,22 +35,11 @@
   <string name="button_text">Szöveg</string>
   <string name="button_shape">Shapes</string>
   <string name="done">Kész</string>
-  <string name="terms_of_use_and_service_title">Felhasználási feltételek</string>
-  <string name="terms_of_use_and_service_content">A Pocket Code és a Catrobat projekt más projekteinek használatához el kell fogadnia a felhasználási feltételeket, és be kell tartania a benne foglaltakat a Pocket Code és egyéb programjaink használata során. Lásd az alábbi hivatkozást a teljes szöveg megtekintéséhez.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Felhasználási feltételek</string>
-  <string name="about_title">A Pocket Paintről…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">A Pocket Paint forráskódjának licence</string>
-  <string name="about_catroid_url_text">A Catrobatról</string>
-  <string name="about_version">Verzió:</string>
   <string name="color_chooser_title">Színválasztó</string>
-  <string name="color_rgb">Vörös Zöld Kék (RGB)</string>
   <string name="color_red">Vörös</string>
   <string name="color_green">Zöld</string>
   <string name="color_blue">Kék</string>
   <string name="color_alpha">Alpha</string>
-  <string name="color_pre">előre kijelölt</string>
-  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Eszközők</string>
   <string name="dialog_error_save_title">Hiba a fájl betöltése/mentése során</string>
   <string name="dialog_error_sdcard_text">Ellenőrizze a képet vagy az SD-kártyát!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Kilépés</string>
   <string name="closing_security_question">Változtatások mentése?</string>
-  <string name="closing_catroid_security_question_title">Vissza a Pocket Code-ba</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Új kép</string>
   <string name="menu_load_image">Kép betöltése</string>
   <string name="menu_save_image">Kép mentése</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">Teljes képernyő</string>
   <string name="menu_show_menu">Exit fullscreen</string>
   <string name="menu_new_image_from_camera">Új kép a kamerával</string>
-  <string name="menu_terms_of_use_and_service">Felhasználási feltételek</string>
-  <string name="menu_about">A programról</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exportálás</string>
   <string name="saved">A kép mentve</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Next</string>
   <string name="skip">Átugrás</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

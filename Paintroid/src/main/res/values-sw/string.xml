@@ -35,22 +35,11 @@
   <string name="button_text">Maandishi</string>
   <string name="button_shape">Maumbo</string>
   <string name="done">Maliza</string>
-  <string name="terms_of_use_and_service_title">Masharti ya matumizi na Huduma</string>
-  <string name="terms_of_use_and_service_content">Ili uruhusiwe kutumia Mfuko Rangi na vitekeleza vingine vinavyotolewa na mradi wa Catrobat, lazima ukubaliane na masharti ya utumiaji na huduma zetu na fuata madhubuti unapotumia Msimbo wa Mfukoni na vitekeleza vingine. Tafadhali angalia kiunganishi chini kwa uundaji wao sahihi.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Masharti ya matumizi na Huduma</string>
-  <string name="about_title">Kuhusu Mfuko Rangi…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Leseni ya chanzo cha msimbo wa Mfuko Rangi</string>
-  <string name="about_catroid_url_text">Kuhusu Catrobat</string>
-  <string name="about_version">Toleo la:</string>
   <string name="color_chooser_title">Kichagua rangi</string>
-  <string name="color_rgb">Nyekundu Kijani Bluu (NKB)</string>
   <string name="color_red">Nyekundu</string>
   <string name="color_green">Kijani</string>
   <string name="color_blue">Bluu</string>
   <string name="color_alpha">Alpha</string>
-  <string name="color_pre">ilichaguliwa</string>
-  <string name="color_hsv">kitwa rangi hsv</string>
   <string name="dialog_tools_title">Zana</string>
   <string name="dialog_error_save_title">Kosa la kupakia/kuhifadhi faili</string>
   <string name="dialog_error_sdcard_text">Angalia picha au kadi ya SD!</string>
@@ -74,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Aga</string>
   <string name="closing_security_question">Hifadhi mabadiliko?</string>
-  <string name="closing_catroid_security_question_title">Rudi kwenye msimbo wa mfukoni</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Picha mpya</string>
   <string name="menu_load_image">Pakia picha</string>
   <string name="menu_save_image">Hifadhi picha</string>
@@ -83,8 +72,6 @@
   <string name="menu_hide_menu">Skrini nzima</string>
   <string name="menu_show_menu">Toa skrini nzima</string>
   <string name="menu_new_image_from_camera">Picha mpya kutoka kwenye kamera</string>
-  <string name="menu_terms_of_use_and_service">Masharti ya matumizi</string>
-  <string name="menu_about">Kuhusu</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Hamisha</string>
   <string name="saved">Picha imehifadhiwa</string>
@@ -132,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Ifuatayo</string>
   <string name="skip">Ruka</string>
-  <string name="menu_language">Lugha</string>
-  <string name="device_language">Device Language</string>
 </resources>
