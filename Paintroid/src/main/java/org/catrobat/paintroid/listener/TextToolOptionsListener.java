@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.listener;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Paint;
 import android.text.Editable;
@@ -27,7 +26,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -36,13 +34,10 @@ import android.widget.ToggleButton;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.ui.tools.FontArrayAdapter;
 
-import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
-public final class TextToolOptionsListener extends Fragment {
+public final class TextToolOptionsListener {
 	private OnTextToolOptionsChangedListener onTextToolOptionsChangedListener;
 	private Context context;
 	private final EditText textEditText;
@@ -50,26 +45,21 @@ public final class TextToolOptionsListener extends Fragment {
 	private final ToggleButton underlinedToggleButton;
 	private final ToggleButton italicToggleButton;
 	private final ToggleButton boldToggleButton;
-	private final Spinner textSizeSpinner;
-	private final List<String> sizes;
 	private final List<String> fonts;
-	private final NumberFormat localeNumberFormat;
 
 	public TextToolOptionsListener(Context context, View textToolOptionsView) {
 		this.context = context;
 
-		textEditText = (EditText) textToolOptionsView.findViewById(R.id.text_tool_dialog_input_text);
-		fontSpinner = (Spinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_font);
-		underlinedToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
-		italicToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_italic);
-		boldToggleButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_bold);
-		textSizeSpinner = (Spinner) textToolOptionsView.findViewById(R.id.text_tool_dialog_spinner_text_size);
+		textEditText = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_input_text);
+		fontSpinner = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_font);
+		underlinedToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
+		italicToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
+		boldToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
 
-		fonts = Arrays.asList(context.getResources().getStringArray(R.array.text_tool_font_array));
-		sizes = new ArrayList<>();
-		localeNumberFormat = NumberFormat.getNumberInstance(Locale.getDefault());
-
+		fonts = Arrays.asList(context.getResources().getStringArray(R.array.pocketpaint_main_text_tool_fonts));
 		initializeListeners();
+
+		textEditText.requestFocus();
 	}
 
 	private void initializeListeners() {
@@ -89,7 +79,6 @@ public final class TextToolOptionsListener extends Fragment {
 			}
 		});
 
-		textEditText.requestFocus();
 		textEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
@@ -112,6 +101,7 @@ public final class TextToolOptionsListener extends Fragment {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
+				hideKeyboard();
 			}
 		});
 
@@ -142,27 +132,6 @@ public final class TextToolOptionsListener extends Fragment {
 				hideKeyboard();
 			}
 		});
-
-		int[] intSizes = context.getResources().getIntArray(R.array.text_tool_size_array);
-		for (int value : intSizes) {
-			sizes.add(localeNumberFormat.format(value));
-		}
-		ArrayAdapter<String> textSizeArrayAdapter = new ArrayAdapter<>(context,
-				android.R.layout.simple_list_item_activated_1, sizes);
-		textSizeSpinner.setAdapter(textSizeArrayAdapter);
-
-		textSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				int textSize = Integer.valueOf((String) parent.getItemAtPosition(position));
-				onTextToolOptionsChangedListener.setTextSize(textSize);
-				hideKeyboard();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-			}
-		});
 	}
 
 	public void setState(boolean bold, boolean italic, boolean underlined, String text, int textSize, String font) {
@@ -170,19 +139,18 @@ public final class TextToolOptionsListener extends Fragment {
 		italicToggleButton.setChecked(italic);
 		underlinedToggleButton.setChecked(underlined);
 		textEditText.setText(text);
-		textSizeSpinner.setSelection(sizes.indexOf(localeNumberFormat.format(textSize)));
 		fontSpinner.setSelection(fonts.indexOf(font));
-	}
-
-	public void hideKeyboard() {
-		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (imm != null) {
-			imm.hideSoftInputFromWindow(textEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-		}
 	}
 
 	public void setOnTextToolOptionsChangedListener(OnTextToolOptionsChangedListener listener) {
 		onTextToolOptionsChangedListener = listener;
+	}
+
+	private void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (imm != null) {
+			imm.hideSoftInputFromWindow(textEditText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		}
 	}
 
 	public interface OnTextToolOptionsChangedListener {

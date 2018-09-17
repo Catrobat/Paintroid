@@ -19,14 +19,12 @@
 
 package org.catrobat.paintroid.test.espresso.intro;
 
-import android.support.test.espresso.Espresso;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.view.ViewPager;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -48,9 +46,6 @@ public class ViewPagerIntegrationTest {
 
 	@Rule
 	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
-
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	private ViewPager viewPager;
 	private IntroPageViewAdapter viewPagerAdapter;
@@ -88,7 +83,7 @@ public class ViewPagerIntegrationTest {
 		shouldStartSequence(false);
 		for (int i = 0; i < activityRule.getLayouts().length; i++) {
 			assertEquals(i, viewPager.getCurrentItem());
-			onView(withId(R.id.btn_next)).perform(click());
+			onView(withId(R.id.pocketpaint_btn_next)).perform(click());
 		}
 	}
 
@@ -98,10 +93,5 @@ public class ViewPagerIntegrationTest {
 			assertEquals(i, viewPager.getCurrentItem());
 			onView(isRoot()).perform(swipeLeft());
 		}
-	}
-
-	@Test
-	public void pressBack() {
-		Espresso.pressBack();
 	}
 }

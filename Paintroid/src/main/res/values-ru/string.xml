@@ -20,7 +20,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name" tools:ignore="UnusedResources">Pocket Paint</string>
+  <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint</string>
   <string name="button_brush">Кисть</string>
   <string name="button_cursor">Курсор</string>
   <string name="button_pipette">Пипетка</string>
@@ -35,24 +35,12 @@
   <string name="button_text">Текст</string>
   <string name="button_shape">Формы</string>
   <string name="done">Готово</string>
-  <string name="terms_of_use_and_service_title">Условия использования и предоставления услуг</string>
-  <string name="terms_of_use_and_service_content">Для того, чтобы иметь возможность использовать Pocket Paint и другие исполняемые файлы, предлагаемые проектом Catrobat, вы должны согласиться с нашими Условиями использования и предоставления услуг и строго следовать их при использовании Pocket Paint и наших других исполняемых файлов. Пожалуйста, перейдите по ссылке ниже для их точной формулировки.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Условия использования и предоставления услуг</string>
-  <string name="about_title">О Pocket Paint…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Лицензия исходного кода Pocket Paint</string>
-  <string name="about_catroid_url_text">О проекте Catrobat</string>
-  <string name="about_version">Версия:</string>
   <string name="color_chooser_title">Выбор цвета</string>
-  <string name="color_rgb">Красный Зелёный Синий (RGB)</string>
   <string name="color_red">Красный</string>
   <string name="color_green">Зелёный</string>
   <string name="color_blue">Синий</string>
   <string name="color_alpha">Прозрачность</string>
-  <string name="color_pre">заранее выбранный</string>
-  <string name="color_hsv">hsv color picker</string>
   <string name="dialog_tools_title">Инструменты</string>
-  <string name="dialog_load">Загрузка…</string>
   <string name="dialog_error_save_title">Ошибка загрузки/сохранения файла</string>
   <string name="dialog_error_sdcard_text">Проверьте изображение или SD-карту!</string>
   <string name="dialog_brush_width_text">Толщина линии</string>
@@ -75,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Выход</string>
   <string name="closing_security_question">Сохранить изменения?</string>
-  <string name="closing_catroid_security_question_title">Вернуться в Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Новое изображение</string>
   <string name="menu_load_image">Загрузить изображение</string>
   <string name="menu_save_image">Сохранить изображение</string>
@@ -84,8 +72,6 @@
   <string name="menu_hide_menu">На весь экран</string>
   <string name="menu_show_menu">Выйти из полноэкранного режима</string>
   <string name="menu_new_image_from_camera">Новое изображение с камеры</string>
-  <string name="menu_terms_of_use_and_service">Условия использования</string>
-  <string name="menu_about">О программе</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Экспорт</string>
   <string name="saved">Картинка сохранена</string>
@@ -103,18 +89,16 @@
   <string name="shape_tool_dialog_star_title">Звезда</string>
   <string name="shape_tool_dialog_heart_title">Сердце</string>
   <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
-  <string name="transform_tool_auto_crop_text">Авторегулировка</string>
-  <string name="transform_tool_roate_text">Повернуть</string>
-  <string name="transform_tool_mirror_text">Зеркало</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Долгий клик, чтобы скопировать</string>
   <string name="layers_title">Слои</string>
   <string name="layer_new">Новый слой</string>
   <string name="layer_delete">Удалить слой</string>
   <string name="layer_too_many_layers">Слишком много слоев</string>
-  <string name="layer_invisible">Все слои невидимы</string>
   <string name="layer_merged">Слои объединены</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Фигура</string>
   <string name="dialog_loading_image_failed_title">Ошибка загрузки изображения</string>
   <string name="dialog_loading_image_failed_text">Недопустимый файл изображения</string>
@@ -127,14 +111,12 @@
   <string name="intro_welcome_text">В Pocket Paint нет пределов вашему творчеству. Если вы новичок, посмотрите вступление, или пропустите его, если вы уже пользовались нашим приложением.</string>
   <string name="intro_tool_more_information">Нажмите на инструмент для дополнительной информации</string>
   <string name="more_possibilities">Больше возможностей</string>
-  <string name="intro_possibilities_text">Чтобы изменить цвет, используйте отменить/повторить или откройте диалоговое окно слоев в верхней панели.</string>
+  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
   <string name="landscape">Пейзаж</string>
   <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
   <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
   <string name="intro_get_started">Get started and create a new masterpiece.</string>
   <string name="lets_go">Let\'s Go</string>
-  <string name="next">Next</string>
+  <string name="next">Далее</string>
   <string name="skip">Skip</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

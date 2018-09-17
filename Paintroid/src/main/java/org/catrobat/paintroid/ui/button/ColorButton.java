@@ -38,15 +38,12 @@ public class ColorButton extends AppCompatImageButton {
 	private static final int RECT_SIDE_LENGTH = 25;
 	private static final int RECT_BORDER_SIZE = 2;
 	private static final int RECT_BORDER_COLOR = Color.LTGRAY;
-	private static final boolean DEFAULT_DRAW_SELECTED_COLOR = true;
 
 	private Paint colorPaint;
 	private Paint borderPaint;
 	private Paint backgroundPaint;
 
 	private RectF rect;
-
-	private boolean drawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
 
 	public ColorButton(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -64,22 +61,10 @@ public class ColorButton extends AppCompatImageButton {
 		rect = new RectF();
 
 		Bitmap mBackgroundBitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.checkeredbg);
+				R.drawable.pocketpaint_checkeredbg);
 		BitmapShader backgroundShader = new BitmapShader(mBackgroundBitmap,
 				TileMode.REPEAT, TileMode.REPEAT);
 		backgroundPaint.setShader(backgroundShader);
-	}
-
-	public void resetDrawSelectedColor() {
-		drawSelectedColor = DEFAULT_DRAW_SELECTED_COLOR;
-	}
-
-	public boolean getDrawSelectedColor() {
-		return drawSelectedColor;
-	}
-
-	public void setDrawSelectedColor(boolean drawSelectedColor) {
-		this.drawSelectedColor = drawSelectedColor;
 	}
 
 	public void colorChanged(int color) {
@@ -90,10 +75,6 @@ public class ColorButton extends AppCompatImageButton {
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
-
-		if (!drawSelectedColor) {
-			return;
-		}
 
 		float density = getResources().getDisplayMetrics().density;
 		float rectSideLengthDp = RECT_SIDE_LENGTH * density;

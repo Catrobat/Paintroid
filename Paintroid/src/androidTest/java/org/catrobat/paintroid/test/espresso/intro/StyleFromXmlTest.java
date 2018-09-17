@@ -26,7 +26,6 @@ import android.support.v4.content.ContextCompat;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.intro.TapTargetStyle;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,15 +38,12 @@ public class StyleFromXmlTest {
 	@Rule
 	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
 	@Test
 	public void testIntroHeaderStyle() {
 		TapTargetStyle headerStyle = TapTargetStyle.HEADER_STYLE;
 		assertEquals("Text Size not matching", headerStyle.getTextSize(), 24);
 
-		int color = ContextCompat.getColor(activityRule.getActivity(), R.color.color_chooser_white);
+		int color = ContextCompat.getColor(activityRule.getActivity(), R.color.pocketpaint_color_chooser_white);
 		assertEquals("Header Text Color not matching", color, headerStyle.getTextColor());
 
 		Typeface expectedTypeface = Typeface.create("sans-serif", Typeface.NORMAL);
@@ -59,7 +55,7 @@ public class StyleFromXmlTest {
 		TapTargetStyle textStyle = TapTargetStyle.TEXT_STYLE;
 		assertEquals("Text Size not matching", textStyle.getTextSize(), 16);
 
-		int color = ContextCompat.getColor(activityRule.getActivity(), R.color.color_chooser_white);
+		int color = ContextCompat.getColor(activityRule.getActivity(), R.color.pocketpaint_color_chooser_white);
 		assertEquals("Header Text Color not matching", color, textStyle.getTextColor());
 
 		Typeface expectedTypeface = Typeface.create("sans-serif", Typeface.NORMAL);

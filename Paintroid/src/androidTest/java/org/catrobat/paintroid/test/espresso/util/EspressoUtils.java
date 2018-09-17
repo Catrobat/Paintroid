@@ -50,10 +50,8 @@ import org.catrobat.paintroid.test.utils.Utils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
-import org.catrobat.paintroid.tools.implementation.EraserTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.ui.Perspective;
-import org.catrobat.paintroid.ui.button.ColorButton;
 import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -203,7 +201,7 @@ public final class EspressoUtils {
 	}
 
 	public static Bitmap getWorkingBitmap() {
-		return PaintroidApplication.drawingSurface.workingBitmap;
+		return PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 	}
 
 	public static Paint getCurrentToolPaint() {
@@ -212,10 +210,6 @@ public final class EspressoUtils {
 
 	public static float getToolMemberColorTolerance(FillTool fillTool) {
 		return fillTool.colorTolerance;
-	}
-
-	public static ColorButton getToolMemberColorButton(EraserTool eraserTool) {
-		return eraserTool.colorButton;
 	}
 
 	public static PointF getToolMemberBoxPosition() {
@@ -260,7 +254,7 @@ public final class EspressoUtils {
 	 */
 	@Deprecated
 	public static void openColorPickerDialog() {
-		onView(withId(R.id.btn_top_color)).perform(click());
+		onView(withId(R.id.pocketpaint_btn_top_color)).perform(click());
 	}
 
 	/**
@@ -268,7 +262,7 @@ public final class EspressoUtils {
 	 */
 	@Deprecated
 	public static void closeColorPickerDialogWithDialogButton() {
-		onView(withId(R.id.btn_colorchooser_ok)).perform(click());
+		onView(withId(R.id.color_chooser_button_ok)).perform(click());
 	}
 
 	@ColorInt
@@ -333,7 +327,7 @@ public final class EspressoUtils {
 	}
 
 	public static void changeIntroPage(int page) {
-		onView(withId(R.id.view_pager)).perform(selectViewPagerPage(page));
+		onView(withId(R.id.pocketpaint_view_pager)).perform(selectViewPagerPage(page));
 	}
 
 	public static View getDescendantView(int ancestorResource, int targetResource, Activity activity) {

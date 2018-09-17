@@ -20,7 +20,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name" tools:ignore="UnusedResources">Pocket Paint</string>
+  <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint</string>
   <string name="button_brush">Pennello</string>
   <string name="button_cursor">Cursore</string>
   <string name="button_pipette">Pipetta</string>
@@ -35,24 +35,12 @@
   <string name="button_text">Testo</string>
   <string name="button_shape">Forme</string>
   <string name="done">Fatto</string>
-  <string name="terms_of_use_and_service_title">Condizioni d\'uso e servizio</string>
-  <string name="terms_of_use_and_service_content">Per usare Pocket Paint e altri programmi offerti da Catrobat, si deve prendere visione e accettare i nostri Termini d\'uso e di Servizio e seguirli rigorosamente quando si fa uso di Pocket Code e altri programmi. Seguire il link sotto-riportato per leggere i dettagli.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Condizioni d\'uso e servizio</string>
-  <string name="about_title">Informazioni su Pocket Paint…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Licenza per il codice sorgente di Pocket Paint</string>
-  <string name="about_catroid_url_text">Su Catrobat</string>
-  <string name="about_version">Versione:</string>
   <string name="color_chooser_title">Selezione colori</string>
-  <string name="color_rgb">Rosso verde blu (RGB)</string>
   <string name="color_red">Rosso</string>
   <string name="color_green">Verde</string>
   <string name="color_blue">Blu</string>
   <string name="color_alpha">Alpha (opacità)</string>
-  <string name="color_pre">preselezione</string>
-  <string name="color_hsv">selettore di colore di Hsv</string>
   <string name="dialog_tools_title">Strumenti</string>
-  <string name="dialog_load">Caricamento in corso…</string>
   <string name="dialog_error_save_title">Errore durante il caricamento/salvataggio File</string>
   <string name="dialog_error_sdcard_text">Controllare l\'immagine o l\'SD-Card!</string>
   <string name="dialog_brush_width_text">Spessore del tratto</string>
@@ -71,11 +59,11 @@
   <string name="help_content_line">Disegnare una linea retta.</string>
   <string name="help_content_text">Scrivi testo e formattalo. In seguito, ridimensiona la casella di testo. Toccare per inserire il testo sull\'immagine.</string>
   <string name="help_content_shape">Scegli una forma e tocca per inserire la forma selezionata</string>
-  <string name="help_content_layer">Create new layers or modify existing ones</string>
-  <string name="help_content_color_chooser">Select or adjust a color</string>
+  <string name="help_content_layer">Crea nuovi livelli o modifica quelli esistenti</string>
+  <string name="help_content_color_chooser">Seleziona o modifica un colore</string>
   <string name="closing_security_question_title">Esci</string>
   <string name="closing_security_question">Salvare le modifiche?</string>
-  <string name="closing_catroid_security_question_title">Ritorna a Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Nuova immagine</string>
   <string name="menu_load_image">Carica immagine</string>
   <string name="menu_save_image">Salva immagine</string>
@@ -84,8 +72,6 @@
   <string name="menu_hide_menu">Schermo intero</string>
   <string name="menu_show_menu">Esci dallo schermo intero</string>
   <string name="menu_new_image_from_camera">Nuova immagine da fotocamera</string>
-  <string name="menu_terms_of_use_and_service">Termini di utilizzo</string>
-  <string name="menu_about">Informazioni su</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Esporta</string>
   <string name="saved">Immagine salvata</string>
@@ -103,18 +89,16 @@
   <string name="shape_tool_dialog_star_title">Stella</string>
   <string name="shape_tool_dialog_heart_title">Cuore</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolleranza colore</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
-  <string name="transform_tool_roate_text">Ruota</string>
-  <string name="transform_tool_mirror_text">Specchio</string>
+  <string name="transform_tool_auto_crop_text">ritaglia</string>
+  <string name="transform_width_text">Larghezza</string>
+  <string name="transform_height_text">Altezza</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Premi a lungo per copiare il contenuto</string>
   <string name="layers_title">Livelli</string>
   <string name="layer_new">Nuovo livello</string>
   <string name="layer_delete">Elimina livello</string>
   <string name="layer_too_many_layers">Troppi livelli</string>
-  <string name="layer_invisible">Tutti i livelli invisibili</string>
-  <string name="layer_merged">Layers merged</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
+  <string name="layer_merged">Livelli uniti</string>
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Errore durante il caricamento dell\'immagine</string>
   <string name="dialog_loading_image_failed_text">Non è un file di immagine valido</string>
@@ -127,14 +111,12 @@
   <string name="intro_welcome_text">Con Pocket Paint non ci sono limiti alla tua creatività. Se sei nuovo guarda l\'intro; saltala se hai già familiarità con il programma.</string>
   <string name="intro_tool_more_information">Fai clic su uno strumento per ottenere ulteriori informazioni</string>
   <string name="more_possibilities">Ulteriori possibilità</string>
-  <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
+  <string name="intro_possibilities_text">Utilizza la barra in alto per aprire il menu principale, annullare o ripristinare le modifiche, cambiare colore o mostrare la scelta dei livelli.</string>
   <string name="landscape">Orizzontale</string>
   <string name="intro_landscape_text">Pocket Paint supporta il disegno in modalità orizzontale per una migliore esperienza di disegno.</string>
-  <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
+  <string name="enjoy_pocket_paint">Sei pronto. Divertiti con Pocket Paint.</string>
   <string name="intro_get_started">Inizia e crea un nuovo capolavoro.</string>
-  <string name="lets_go">Let\'s Go</string>
+  <string name="lets_go">Si comincia</string>
   <string name="next">Avanti</string>
   <string name="skip">Ignora</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

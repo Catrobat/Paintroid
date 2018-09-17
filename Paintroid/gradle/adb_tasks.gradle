@@ -17,17 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-def getAdb() {
-    def adbPath = android.getAdbExecutable()
-    if (System.properties['adbPath']) {
-        adbPath = System.properties['adbPath']
-    }
-    return adbPath.toString()
-}
-
 def getAndroidDevices() {
     def deviceIds = []
-    [getAdb(), 'devices'].execute().text.eachLine { line ->
+    [ android.getAdbExecutable().absolutePath, 'devices' ].execute().text.eachLine { line ->
         def matcher = line =~ /^(.*)\tdevice/
         if (matcher) {
             deviceIds << matcher[0][1]
@@ -36,20 +28,19 @@ def getAndroidDevices() {
     deviceIds
 }
 
-def getAndroidDevice() {
+def getAndroidSerial() {
     def availableDevices = getAndroidDevices()
-    def deviceId
-    if (System.properties['deviceId']) {
-        deviceId = System.properties['deviceId']
-        if (!availableDevices.contains(deviceId))
-            throw new IllegalStateException("Device ${deviceId} not found")
+    def androidSerial = System.getenv('ANDROID_SERIAL')
+
+    if (androidSerial?.trim() && !availableDevices.contains(androidSerial)) {
+        throw new IllegalStateException("Device ${androidSerial} not found")
+    } else if (availableDevices.size() == 0) {
+        throw new IllegalStateException("No connected devices!")
     } else {
-        if (availableDevices.size() == 0)
-            throw new IllegalStateException("No devices found")
-        else
-            deviceId = availableDevices.first()
+        androidSerial = availableDevices.first()
     }
-    return deviceId.toString()
+
+    return androidSerial.toString().trim()
 }
 
 def executeShellCommand(command) {
@@ -64,13 +55,13 @@ def executeShellCommand(command) {
 def createAdbInstallTask(variant) {
     task ("commandlineAdbInstall${variant.name.capitalize()}") {
         doLast {
-            def command = [getAdb(), '-s', getAndroidDevice(), 'install', variant.outputs[0].outputFile.path]
+            def command = [ android.getAdbExecutable().absolutePath, '-s', getAndroidSerial(), 'install', variant.outputs[0].outputFile.path ]
             executeShellCommand(command)
         }
     }
 }
 
-android.applicationVariants.all { variant ->
+android.libraryVariants.all { variant ->
     createAdbInstallTask(variant)
 }
 
@@ -81,7 +72,7 @@ android.testVariants.all { variant ->
 task commandlineAdbRunTests {
     doLast {
         def command = []
-        command.addAll([getAdb(), '-s', getAndroidDevice(), 'shell', 'am', 'instrument', '-w', '-e', 'junitOutputDirectory', '/mnt/sdcard/testresults'])
+        command.addAll([ android.getAdbExecutable().absolutePath, '-s', getAndroidSerial(), 'shell', 'am', 'instrument', '-w', '-e', 'junitOutputDirectory', '/mnt/sdcard/testresults' ])
         if (System.properties['noDeviceTests']){
             command.addAll(['-e', 'notAnnotation', 'org.catrobat.catroid.uitest.annotation.Device'])
         }
@@ -105,8 +96,8 @@ task commandlineAdbRunTests {
         file(adbTestPath).mkdirs()
         file(adbScreenshotsPath).mkdirs()
 
-        def testPullCommand = [getAdb(), '-s', getAndroidDevice(), 'pull', '/sdcard/testresults', adbTestPath]
-        def screenshotsPullCommand = [getAdb(), '-s', getAndroidDevice(), 'pull', '/sdcard/Robotium-Screenshots', adbScreenshotsPath]
+        def testPullCommand = [ android.getAdbExecutable().absolutePath, '-s', getAndroidSerial(), 'pull', '/sdcard/testresults', adbTestPath ]
+        def screenshotsPullCommand = [ android.getAdbExecutable().absolutePath, '-s', getAndroidSerial(), 'pull', '/sdcard/Robotium-Screenshots', adbScreenshotsPath ]
 
         executeShellCommand(testPullCommand)
         try {
@@ -115,53 +106,42 @@ task commandlineAdbRunTests {
     }
 }
 
-task adbDisableAnimationsGlobally(type:Exec) {
+task adbDisableAnimationsGlobally() {
     description 'Disables android animations globally on the connected device'
     group 'android'
 
-    commandLine android.getAdbExecutable(), 'shell', 'settings', 'put', 'global', 'window_animation_scale', '0.0'
-    commandLine android.getAdbExecutable(), 'shell', 'settings', 'put', 'global', 'transition_animation_scale', '0.0'
-    commandLine android.getAdbExecutable(), 'shell', 'settings', 'put', 'global', 'animator_duration_scale', '0.0'
-}
-
-task adbGrantAnimationScalePermission() {
-    description 'Runs "adb shell pm grant" command to grant animation scale permission'
-    group 'Permission'
-
     doLast {
-        def adb = android.getAdbExe().toString()
-        def deviceId = getAndroidDevice()
+        logger.lifecycle(description)
 
-        def adbGrantCommand = "${adb} -s ${deviceId} shell pm grant ${android.defaultConfig.applicationId} android.permission.SET_ANIMATION_SCALE"
-
-        logger.info("Granting SET_ANIMATION_SCALE permission to device ${deviceId}")
-
-        logger.debug(adbGrantCommand)
-
-        logger.debug(adbGrantCommand.execute().text)
-
-        logger.debug("Grant done.")
+        def androidSerial = getAndroidSerial()
+        exec {
+            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'put', 'global', 'window_animation_scale', '0.0'
+        }
+        exec {
+            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'put', 'global', 'transition_animation_scale', '0.0'
+        }
+        exec {
+            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'put', 'global', 'animator_duration_scale', '0.0'
+        }
     }
 }
 
-task verifyAnimationScalePermissionGranted() {
-    description 'Task to verify that SET_ANIMATION_SCALE permission is granted'
-    group 'Permission'
+task adbResetAnimationsGlobally() {
+    description 'Reset android animations globally on the connected device'
+    group 'android'
 
     doLast {
-        def adb = android.getAdbExe().toString()
-        def deviceId = getAndroidDevice()
+        logger.lifecycle(description)
 
-        def adbCommand = "${adb} -s ${deviceId} shell dumpsys package ${android.defaultConfig.applicationId}"
-
-        def cmdResultText = adbCommand.execute().text
-
-        if(cmdResultText ==~ /(?s).*android.permission.SET_ANIMATION_SCALE(: granted=true|(?s)).*/) {
-            logger.info("SET_ANIMATION_SCALE granted on device ${deviceId} for package ${android.defaultConfig.applicationId}.")
-        } else {
-            def errorMessage = "SET_ANIMATION_SCALE not granted on device ${deviceId} for package ${android.defaultConfig.applicationId}."
-            logger.error(errorMessage)
-            throw new GradleScriptException(errorMessage, null)
+        def androidSerial = getAndroidSerial()
+        exec {
+            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'delete', 'global', 'window_animation_scale'
+        }
+        exec {
+            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'delete', 'global', 'transition_animation_scale'
+        }
+        exec {
+            commandLine android.getAdbExecutable().absolutePath, '-s', androidSerial, 'shell', 'settings', 'delete', 'global', 'animator_duration_scale'
         }
     }
 }

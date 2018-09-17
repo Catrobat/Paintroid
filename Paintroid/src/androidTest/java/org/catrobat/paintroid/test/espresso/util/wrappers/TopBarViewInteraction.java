@@ -29,7 +29,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public final class TopBarViewInteraction extends CustomViewInteraction {
 	private TopBarViewInteraction() {
-		super(onView(withId(R.id.layout_top_bar)));
+		super(onView(withId(R.id.pocketpaint_layout_top_bar)));
 	}
 
 	public static TopBarViewInteraction onTopBarView() {
@@ -37,15 +37,15 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onUndoButton() {
-		return onView(withId(R.id.btn_top_undo));
+		return onView(withId(R.id.pocketpaint_btn_top_undo));
 	}
 
 	public ViewInteraction onRedoButton() {
-		return onView(withId(R.id.btn_top_redo));
+		return onView(withId(R.id.pocketpaint_btn_top_redo));
 	}
 
 	public ViewInteraction onPaletteButton() {
-		return onView(withId(R.id.btn_top_color_palette));
+		return onView(withId(R.id.pocketpaint_btn_top_color_palette));
 	}
 
 	public TopBarViewInteraction performUndo() {

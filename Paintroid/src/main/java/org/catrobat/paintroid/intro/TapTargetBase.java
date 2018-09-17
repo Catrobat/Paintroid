@@ -69,7 +69,7 @@ public abstract class TapTargetBase {
 		this.radius = calculateTapTargetRadius(targetView.getHeight(), metrics, RADIUS_OFFSET);
 		bottomBarView = activity.findViewById(bottomBarResourceId);
 		bottomScrollBar = (BottomBarHorizontalScrollView)
-				bottomBarView.findViewById(R.id.bottom_bar_scroll_view);
+				bottomBarView.findViewById(R.id.pocketpaint_bottom_bar_scroll_view);
 	}
 
 	private static ToolTypeViewTuple getToolTypeFromView(View view) {
@@ -125,8 +125,8 @@ public abstract class TapTargetBase {
 	}
 
 	private void setBottomBarListener() {
-		final View previous = bottomBarView.findViewById(R.id.bottom_previous);
-		final View next = bottomBarView.findViewById(R.id.bottom_next);
+		final View previous = bottomBarView.findViewById(R.id.pocketpaint_bottom_previous);
+		final View next = bottomBarView.findViewById(R.id.pocketpaint_bottom_next);
 		bottomScrollBar.setScrollStateListener(new BottomBarScrollListener(previous, next));
 	}
 
@@ -153,8 +153,8 @@ public abstract class TapTargetBase {
 				.descriptionTextSize(TapTargetStyle.TEXT_STYLE.getTextSize())
 				.textTypeface(TapTargetStyle.TEXT_STYLE.getTypeface())
 				.cancelable(true)
-				.outerCircleColor(R.color.custom_background_color)
-				.targetCircleColor(R.color.color_chooser_white);
+				.outerCircleColor(R.color.pocketpaint_background_color)
+				.targetCircleColor(R.color.pocketpaint_color_chooser_white);
 	}
 
 	static final class ToolTypeViewTuple {

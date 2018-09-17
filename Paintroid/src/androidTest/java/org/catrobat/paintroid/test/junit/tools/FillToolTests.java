@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,14 +25,23 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.test.annotation.UiThreadTest;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.FillCommand;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.model.Layer;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.helper.FillAlgorithm;
+import org.catrobat.paintroid.tools.helper.JavaFillAlgorithm;
+import org.catrobat.paintroid.tools.helper.NativeFillAlgorithm;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.FillTool;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -41,21 +50,33 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-public class FillToolTests extends BaseToolTest {
+@RunWith(AndroidJUnit4.class)
+public class FillToolTests {
 	private static final float NO_TOLERANCE = 0.0f;
 	private static final float HALF_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE / 2.0f;
 	private static final float MAX_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE;
 
-	public FillToolTests() {
-		super();
+	@Rule
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+	private FillTool toolToTest;
+
+	@UiThreadTest
+	@Before
+	public void setUp() {
+		PaintroidApplication.layerModel.reset();
+		Layer layer = new Layer(null);
+		PaintroidApplication.layerModel.addLayerAt(0, layer);
+		PaintroidApplication.layerModel.setCurrentLayer(layer);
+
+		toolToTest = new FillTool(activityTestRule.getActivity(), ToolType.FILL);
 	}
 
 	@UiThreadTest
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		toolToTest = new FillTool(getActivity(), ToolType.FILL);
-		super.setUp();
+	@After
+	public void tearDown() {
+		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
+		BaseTool.reset();
 	}
 
 	@UiThreadTest
@@ -75,7 +96,8 @@ public class FillToolTests extends BaseToolTest {
 		int targetColor = 16777215;
 		int replacementColor = 0;
 
-		FillAlgorithm fillAlgorithm = new FillAlgorithm(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
+		JavaFillAlgorithm fillAlgorithm = new JavaFillAlgorithm();
+		fillAlgorithm.setParameters(bitmap, clickedPixel, targetColor, replacementColor, HALF_TOLERANCE);
 
 		int[][] algorithmPixels = fillAlgorithm.pixels;
 		assertEquals("Wrong array size", height, algorithmPixels.length);
@@ -101,15 +123,15 @@ public class FillToolTests extends BaseToolTest {
 		int width = 10;
 		int height = 20;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Layer layer = new Layer(0, bitmap);
 		bitmap.eraseColor(Color.WHITE);
+		PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 		Point clickedPixel = new Point(width / 2, height / 2);
 		int targetColor = Color.BLACK;
 		Paint paint = new Paint();
 		paint.setColor(targetColor);
 
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, NO_TOLERANCE);
-		fillCommand.run(new Canvas(), layer);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, NO_TOLERANCE);
+		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		int[][] pixels = getPixelsFromBitmap(bitmap);
 		assertEquals("Wrong array size", height, pixels.length);
@@ -130,7 +152,7 @@ public class FillToolTests extends BaseToolTest {
 		int targetColor = Color.GREEN;
 		int boundaryColor = Color.RED;
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Layer layer = new Layer(0, bitmap);
+		PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 
 		Paint paint = new Paint();
 		paint.setColor(targetColor);
@@ -140,8 +162,8 @@ public class FillToolTests extends BaseToolTest {
 		pixels[1][0] = boundaryColor;
 		putPixelsToBitmap(bitmap, pixels);
 
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, NO_TOLERANCE);
-		fillCommand.run(new Canvas(), layer);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, NO_TOLERANCE);
+		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		pixels = getPixelsFromBitmap(bitmap);
 		assertEquals("Color of upper left pixel should not have been replaced", 0, pixels[0][0]);
@@ -171,7 +193,7 @@ public class FillToolTests extends BaseToolTest {
 		int maxTolerancePerChannel = 0xFF;
 		int boundaryColor = Color.argb(maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Layer layer = new Layer(0, bitmap);
+		PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 		bitmap.eraseColor(replacementColor);
 		Paint paint = new Paint();
 		paint.setColor(targetColor);
@@ -181,8 +203,8 @@ public class FillToolTests extends BaseToolTest {
 		pixels[1][0] = boundaryColor;
 		putPixelsToBitmap(bitmap, pixels);
 
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, MAX_TOLERANCE);
-		fillCommand.run(new Canvas(), layer);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, MAX_TOLERANCE);
+		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		pixels = getPixelsFromBitmap(bitmap);
 
@@ -204,7 +226,7 @@ public class FillToolTests extends BaseToolTest {
 		int maxTolerancePerChannel = 0xFF;
 		int boundaryColor = Color.argb(maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel, maxTolerancePerChannel);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Layer layer = new Layer(0, bitmap);
+		PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 		bitmap.eraseColor(replacementColor);
 		Paint paint = new Paint();
 		paint.setColor(targetColor);
@@ -214,8 +236,8 @@ public class FillToolTests extends BaseToolTest {
 		pixels[1][0] = boundaryColor;
 		putPixelsToBitmap(bitmap, pixels);
 
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, MAX_TOLERANCE - 1);
-		fillCommand.run(new Canvas(), layer);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, MAX_TOLERANCE - 1);
+		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		pixels = getPixelsFromBitmap(bitmap);
 
@@ -238,7 +260,7 @@ public class FillToolTests extends BaseToolTest {
 		Point clickedPixel = new Point(width / 2, height / 2);
 		Point boundaryPixel = new Point(width / 4, height / 4);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Layer layer = new Layer(0, bitmap);
+		PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 		int targetColor = 0;
 		int boundaryColor = Color.argb(0xFF, 0xFF, 0xFF, 0xFF);
 		bitmap.eraseColor(targetColor);
@@ -249,8 +271,8 @@ public class FillToolTests extends BaseToolTest {
 		pixels[boundaryPixel.x][boundaryPixel.y] = boundaryColor;
 		putPixelsToBitmap(bitmap, pixels);
 
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
-		fillCommand.run(new Canvas(), layer);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, HALF_TOLERANCE);
+		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		pixels = getPixelsFromBitmap(bitmap);
 
@@ -276,7 +298,7 @@ public class FillToolTests extends BaseToolTest {
 
 		Point topLeftQuarterPixel = new Point(width / 4, height / 4);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Layer layer = new Layer(0, bitmap);
+		PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 		bitmap.eraseColor(replacementColor);
 		Paint paint = new Paint();
 		paint.setColor(targetColor);
@@ -288,8 +310,8 @@ public class FillToolTests extends BaseToolTest {
 		Point boundaryPixel = new Point(width / 2, height / 4);
 		pixels[boundaryPixel.y][boundaryPixel.x] = boundaryColor;
 		putPixelsToBitmap(bitmap, pixels);
-		FillCommand fillCommand = new FillCommand(topLeftQuarterPixel, paint, HALF_TOLERANCE);
-		fillCommand.run(new Canvas(), layer);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), topLeftQuarterPixel, paint, HALF_TOLERANCE);
+		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		int[][] actualPixels = getPixelsFromBitmap(bitmap);
 		for (int row = 0; row < height; row++) {
@@ -315,14 +337,14 @@ public class FillToolTests extends BaseToolTest {
 		int width = pixels[0].length;
 		Point clickedPixel = new Point(1, 1);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Layer layer = new Layer(0, bitmap);
+		PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 		bitmap.eraseColor(replacementColor);
 		Paint paint = new Paint();
 		paint.setColor(targetColor);
 
 		putPixelsToBitmap(bitmap, pixels);
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
-		fillCommand.run(new Canvas(), layer);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, HALF_TOLERANCE);
+		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		int[][] actualPixels = getPixelsFromBitmap(bitmap);
 		int[][] expectedPixels = createPixelArrayAndDrawSpiral(targetColor, boundaryColor);
@@ -361,11 +383,11 @@ public class FillToolTests extends BaseToolTest {
 		for (Point clickedPixel : clickedPixels) {
 			pixels = createPixelArrayForComplexTest(replacementColor, boundaryColor);
 			Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-			Layer layer = new Layer(0, bitmap);
+			PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 			bitmap.eraseColor(replacementColor);
 			putPixelsToBitmap(bitmap, pixels);
-			FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
-			fillCommand.run(new Canvas(), layer);
+			FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, HALF_TOLERANCE);
+			fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 			int[][] actualPixels = getPixelsFromBitmap(bitmap);
 			int[][] expectedPixels = createPixelArrayForComplexTest(targetColor, boundaryColor);
@@ -395,11 +417,11 @@ public class FillToolTests extends BaseToolTest {
 
 		pixels = createPixelArrayForSkipPixelTest(replacementColor, boundaryColor);
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		Layer layer = new Layer(0, bitmap);
+		PaintroidApplication.layerModel.getCurrentLayer().setBitmap(bitmap);
 		bitmap.eraseColor(replacementColor);
 		putPixelsToBitmap(bitmap, pixels);
-		FillCommand fillCommand = new FillCommand(clickedPixel, paint, HALF_TOLERANCE);
-		fillCommand.run(new Canvas(), layer);
+		FillCommand fillCommand = new FillCommand(new NativeFillAlgorithm(), clickedPixel, paint, HALF_TOLERANCE);
+		fillCommand.run(new Canvas(), PaintroidApplication.layerModel);
 
 		int[][] actualPixels = getPixelsFromBitmap(bitmap);
 		int[][] expectedPixels = createPixelArrayForSkipPixelTest(targetColor, boundaryColor);
@@ -411,6 +433,7 @@ public class FillToolTests extends BaseToolTest {
 		}
 	}
 
+	@SuppressWarnings("UnnecessaryLocalVariable")
 	private int[][] createPixelArrayForComplexTest(int backgroundColor, int boundaryColor) {
 		int w = boundaryColor;
 		int i = backgroundColor;
@@ -430,6 +453,7 @@ public class FillToolTests extends BaseToolTest {
 		return testArray;
 	}
 
+	@SuppressWarnings("UnnecessaryLocalVariable")
 	private int[][] createPixelArrayForSkipPixelTest(int backgroundColor, int boundaryColor) {
 		int w = boundaryColor;
 		int i = backgroundColor;

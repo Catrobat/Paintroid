@@ -30,7 +30,6 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -60,9 +59,6 @@ public class LineToolIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	private ActivityHelper activityHelper;
 
@@ -149,7 +145,7 @@ public class LineToolIntegrationTest {
 
 		openToolOptionsForCurrentTool();
 
-		onView(withId(R.id.stroke_rbtn_rect)).perform(click());
+		onView(withId(R.id.pocketpaint_stroke_ibtn_rect)).perform(click());
 
 		Paint strokePaint = getCurrentToolPaint();
 		int paintStrokeWidth = (int) strokePaint.getStrokeWidth();

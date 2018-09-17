@@ -19,66 +19,54 @@
 
 -->
 <resources>
+    <!-- PocketPaint theme colors -->
+    <color name="pocketpaint_colorPrimary">#00838F</color>
+    <color name="pocketpaint_colorPrimaryDark">#00838F</color>
+    <color name="pocketpaint_colorAccent">#33B5E5</color>
+    <color name="pocketpaint_text_color_link">#E68B00</color>
+    <color name="pocketpaint_background_color">#0097A7</color>
 
-    <color name="dialog_title_color">#33B5E5</color>
-    <color name="dialog_stroke_element_color">#33B5E5</color>
-    <color name="tools_text_color">#33B5E5</color>
-    <color name="transparent">#00000000</color>
-    <color name="custom_background_color">#0097A7</color>
-    <color name="custom_background_color_transparent">#000097A7</color>
-    <color name="text_color_link">#E68B00</color>
-    <color name="rectangle_secondary_color">#33B5E5</color>
-    <color name="rectangle_primary_color">#555555</color>
-    <color name="holo_blue_bright">#33B5E5</color>
-    <color name="cursor_tool_deactive_primary_color">#555555</color>
-    <color name="dialog_subtitle">#33B5E5</color>
-    <color name="dialog_subtitle_border">#c8e8ff</color>
-    <color name="color_chooser_rgb_red">#FFEB4618</color>
-    <color name="color_chooser_rgb_green">#FF078707</color>
-    <color name="color_chooser_rgb_blue">#FF0284e7</color>
-    <color name="color_chooser_rgb_alpha">#FFCCCCCC</color>
-    <color name="color_highlight_box">#72e5ff</color>
+    <!-- PocketPaint main activity -->
+    <color name="pocketpaint_main_separator_color">#c8e8ff</color>
+    <color name="pocketpaint_main_bottom_bar_color_transparent">#000097A7</color>
+    <color name="pocketpaint_main_bottom_bar_selected">#007A99</color>
+    <color name="pocketpaint_main_drawing_surface_active">#00000000</color>
+    <color name="pocketpaint_main_drawing_surface_inactive">#80000000</color>
+    <color name="pocketpaint_main_drawing_surface_background">#D3D3D3</color>
+    <color name="pocketpaint_main_rectangle_tool_primary_color">#555555</color>
+    <color name="pocketpaint_main_rectangle_tool_accent_color">#33B5E5</color>
+    <color name="pocketpaint_main_rectangle_tool_highlight_color">#72e5ff</color>
+    <color name="pocketpaint_main_cursor_tool_inactive_primary_color">#555555</color>
+    <color name="pocketpaint_main_navigation_drawer_background">@android:color/white</color>
 
-    <!-- colors for preselect colorchooser -->
-    <color name="color_chooser_blue1">#FF0074CD</color>
-    <color name="color_chooser_blue2">#FF00B4F1</color>
-    <color name="color_chooser_green1">#FF078707</color>
-    <color name="color_chooser_green2">#FF8EC430</color>
-    <color name="color_chooser_brown1">#FF61290E</color>
-    <color name="color_chooser_brown2">#FFA84818</color>
-    <color name="color_chooser_brown3">#FFDEAE66</color>
-    <color name="color_chooser_brown4">#FFF0E4A8</color>
-    <color name="color_chooser_purple1">#FF7D1379</color>
-    <color name="color_chooser_purple2">#FFA743D1</color>
-    <color name="color_chooser_purple3">#FFCA0186</color>
-    <color name="color_chooser_purple4">#FFEB90D3</color>
-    <color name="color_chooser_red1">#FFC5060E</color>
-    <color name="color_chooser_orange1">#FFEB4618</color>
-    <color name="color_chooser_orange2">#FFF9921C</color>
-    <color name="color_chooser_yellow">#FFF3D605</color>
-    <color name="color_chooser_black">#FF000000</color>
-    <color name="color_chooser_gray">#FFA3A3A3</color>
-    <color name="color_chooser_white">#ffffff</color>
-    <color name="color_chooser_transparent">#00000000</color>
+    <!-- PocketPaint welcome activity -->
+    <color name="pocketpaint_welcome_dot_active">#ffffffff</color>
+    <color name="pocketpaint_welcome_dot_inactive">#64ffffff</color>
 
-    <color name="colorPrimary">#00838F</color>
-    <color name="colorPrimaryDark">#00838F</color>
-    <color name="colorAccent">#33B5E5</color>
+    <!-- PocketPaint color chooser -->
+    <color name="pocketpaint_color_chooser_rgb_red">#FFEB4618</color>
+    <color name="pocketpaint_color_chooser_rgb_green">#FF078707</color>
+    <color name="pocketpaint_color_chooser_rgb_blue">#FF0284e7</color>
+    <color name="pocketpaint_color_chooser_rgb_alpha">#FFCCCCCC</color>
 
-    <color name="bottom_bar_button_activated">#007A99</color>
-    <color name="light_gray">#D3D3D3</color>
-
-    <!--Intro Colors-->
-    <!-- Screens background color-->
-    <color name="bg_screen1">#0097A7</color>
-
-    <!-- dots active colors -->
-    <color name="dot_active">#fff</color>
-
-    <!-- dots inactive colors -->
-    <color name="dot_inactive">#64ffffff</color>
-
-    <color name="navigationDrawerBackground">#FFFFFF</color>
-    <color name="background_deactivated_drawing_surface">#80000000</color>
-
+    <color name="pocketpaint_color_chooser_blue1">#FF0074CD</color>
+    <color name="pocketpaint_color_chooser_blue2">#FF00B4F1</color>
+    <color name="pocketpaint_color_chooser_green1">#FF078707</color>
+    <color name="pocketpaint_color_chooser_green2">#FF8EC430</color>
+    <color name="pocketpaint_color_chooser_brown1">#FF61290E</color>
+    <color name="pocketpaint_color_chooser_brown2">#FFA84818</color>
+    <color name="pocketpaint_color_chooser_brown3">#FFDEAE66</color>
+    <color name="pocketpaint_color_chooser_brown4">#FFF0E4A8</color>
+    <color name="pocketpaint_color_chooser_purple1">#FF7D1379</color>
+    <color name="pocketpaint_color_chooser_purple2">#FFA743D1</color>
+    <color name="pocketpaint_color_chooser_purple3">#FFCA0186</color>
+    <color name="pocketpaint_color_chooser_purple4">#FFEB90D3</color>
+    <color name="pocketpaint_color_chooser_red1">#FFC5060E</color>
+    <color name="pocketpaint_color_chooser_orange1">#FFEB4618</color>
+    <color name="pocketpaint_color_chooser_orange2">#FFF9921C</color>
+    <color name="pocketpaint_color_chooser_yellow">#FFF3D605</color>
+    <color name="pocketpaint_color_chooser_black">#FF000000</color>
+    <color name="pocketpaint_color_chooser_gray">#FFA3A3A3</color>
+    <color name="pocketpaint_color_chooser_white">#ffffff</color>
+    <color name="pocketpaint_color_chooser_transparent">#00000000</color>
 </resources>

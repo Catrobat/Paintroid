@@ -28,7 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public final class BrushPickerViewInteraction extends CustomViewInteraction {
 	private BrushPickerViewInteraction() {
-		super(onView(withId(R.id.main_tool_options)));
+		super(onView(withId(R.id.pocketpaint_main_tool_options)));
 	}
 
 	public static BrushPickerViewInteraction onBrushPickerView() {
@@ -36,18 +36,18 @@ public final class BrushPickerViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onStrokeWidthSeekBar() {
-		return onView(withId(R.id.stroke_width_seek_bar));
+		return onView(withId(R.id.pocketpaint_stroke_width_seek_bar));
 	}
 
 	public ViewInteraction onStrokeWidthTextView() {
-		return onView(withId(R.id.stroke_width_width_text));
+		return onView(withId(R.id.pocketpaint_stroke_width_width_text));
 	}
 
 	public ViewInteraction onStrokeCapSquareView() {
-		return onView(withId(R.id.stroke_rbtn_rect));
+		return onView(withId(R.id.pocketpaint_stroke_ibtn_rect));
 	}
 
 	public ViewInteraction onStrokeCapRoundView() {
-		return onView(withId(R.id.stroke_rbtn_circle));
+		return onView(withId(R.id.pocketpaint_stroke_ibtn_circle));
 	}
 }

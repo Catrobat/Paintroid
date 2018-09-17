@@ -18,47 +18,42 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-
-    <!-- colors for presets in color picker -->
-    <array name="preset_colors">
-        <item name="blue1">@color/color_chooser_blue1</item>
-        <item name="blue2">@color/color_chooser_blue2</item>
-        <item name="green1">@color/color_chooser_green1</item>
-        <item name="green2">@color/color_chooser_green2</item>
-        <item name="brown1">@color/color_chooser_brown1</item>
-        <item name="brown2">@color/color_chooser_brown2</item>
-        <item name="brown3">@color/color_chooser_brown3</item>
-        <item name="brown4">@color/color_chooser_brown4</item>
-        <item name="purple1">@color/color_chooser_purple1</item>
-        <item name="purple2">@color/color_chooser_purple2</item>
-        <item name="purple3">@color/color_chooser_purple3</item>
-        <item name="purple4">@color/color_chooser_purple4</item>
-        <item name="red1">@color/color_chooser_red1</item>
-        <item name="orange1">@color/color_chooser_orange1</item>
-        <item name="orange2">@color/color_chooser_orange2</item>
-        <item name="yellow">@color/color_chooser_yellow</item>
-        <item name="black">@color/color_chooser_black</item>
-        <item name="darkgray">@color/color_chooser_gray</item>
-        <item name="white">@color/color_chooser_white</item>
-        <item name="transparent">@color/color_chooser_transparent</item>
-    </array>
-    <array name="new_image">
-        <item name="menu_new_image_empty_image">@string/menu_new_image_empty_image</item>
-        <item name="menu_new_image_from_camera">@string/menu_new_image_from_camera</item>
+    <!-- PocketPaint color chooser -->
+    <array name="pocketpaint_color_chooser_preset_colors">
+        <item name="blue1">@color/pocketpaint_color_chooser_blue1</item>
+        <item name="blue2">@color/pocketpaint_color_chooser_blue2</item>
+        <item name="green1">@color/pocketpaint_color_chooser_green1</item>
+        <item name="green2">@color/pocketpaint_color_chooser_green2</item>
+        <item name="brown1">@color/pocketpaint_color_chooser_brown1</item>
+        <item name="brown2">@color/pocketpaint_color_chooser_brown2</item>
+        <item name="brown3">@color/pocketpaint_color_chooser_brown3</item>
+        <item name="brown4">@color/pocketpaint_color_chooser_brown4</item>
+        <item name="purple1">@color/pocketpaint_color_chooser_purple1</item>
+        <item name="purple2">@color/pocketpaint_color_chooser_purple2</item>
+        <item name="purple3">@color/pocketpaint_color_chooser_purple3</item>
+        <item name="purple4">@color/pocketpaint_color_chooser_purple4</item>
+        <item name="red1">@color/pocketpaint_color_chooser_red1</item>
+        <item name="orange1">@color/pocketpaint_color_chooser_orange1</item>
+        <item name="orange2">@color/pocketpaint_color_chooser_orange2</item>
+        <item name="yellow">@color/pocketpaint_color_chooser_yellow</item>
+        <item name="black">@color/pocketpaint_color_chooser_black</item>
+        <item name="darkgray">@color/pocketpaint_color_chooser_gray</item>
+        <item name="white">@color/pocketpaint_color_chooser_white</item>
+        <item name="transparent">@color/pocketpaint_color_chooser_transparent</item>
     </array>
 
-    <string-array name="text_tool_font_array">
+    <!-- PocketPaint new image dialog options -->
+    <string-array name="pocketpaint_main_dialog_new_image">
+        <item>@string/menu_new_image_empty_image</item>
+        <item>@string/menu_new_image_from_camera</item>
+    </string-array>
+
+    <!-- PocketPaint font chooser options -->
+    <string-array name="pocketpaint_main_text_tool_fonts">
         <item>@string/text_tool_dialog_font_monospace</item>
         <item>@string/text_tool_dialog_font_serif</item>
         <item>@string/text_tool_dialog_font_sans_serif</item>
         <item>@string/text_tool_dialog_font_dubai</item>
         <item>@string/text_tool_dialog_font_arabic_stc</item>
     </string-array>
-
-    <integer-array name="text_tool_size_array" translatable="false">
-        <item>20</item>
-        <item>30</item>
-        <item>40</item>
-        <item>60</item>
-    </integer-array>
 </resources>

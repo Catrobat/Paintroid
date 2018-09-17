@@ -17,20 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="dots_height">35dp</dimen>
-    <dimen name="intro_navigation_height">40dp</dimen>
-    <dimen name="intro_margin_side">50dp</dimen>
-    <dimen name="intro_margin_top">100dp</dimen>
-    <dimen name="intro_margin_top_possibilities">50dp</dimen>
-    <dimen name="intro_margin_top_text">25dp</dimen>
-    <dimen name="bottom_bar_button_width">65dp</dimen>
-    <dimen name="bottom_bar_height">50dp</dimen>
-    <dimen name="top_bar_height">50dp</dimen>
-    <dimen name="bottom_bar_landscape_button_width">50dp</dimen>
-    <dimen name="bottom_bar_landscape_button_height">65dp</dimen>
+    <!-- PocketPaint MainActivity -->
+    <dimen name="pocketpaint_main_bottom_bar_button_width">65dp</dimen>
+    <dimen name="pocketpaint_main_bottom_bar_height">50dp</dimen>
+    <dimen name="pocketpaint_main_top_bar_height">50dp</dimen>
+    <dimen name="pocketpaint_main_bottom_bar_landscape_button_width">50dp</dimen>
+    <dimen name="pocketpaint_main_bottom_bar_landscape_button_height">65dp</dimen>
 
-    <!--MultilingualActivity Activity dimens -->
-    <dimen name="language_name_text">22sp</dimen>
-    <dimen name="language_text_margin">11dp</dimen>
+    <!-- PocketPaint WelcomeActivity -->
+    <dimen name="pocketpaint_welcome_dots_height">35dp</dimen>
+    <dimen name="pocketpaint_welcome_navigation_height">40dp</dimen>
+    <dimen name="pocketpaint_welcome_margin_side">50dp</dimen>
+    <dimen name="pocketpaint_welcome_margin_top">100dp</dimen>
+    <dimen name="pocketpaint_welcome_margin_top_possibilities">50dp</dimen>
+    <dimen name="pocketpaint_welcome_margin_top_text">25dp</dimen>
 </resources>

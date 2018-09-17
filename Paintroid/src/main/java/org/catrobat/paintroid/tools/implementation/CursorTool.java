@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,12 +33,7 @@ import android.widget.Toast;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.command.implementation.PathCommand;
-import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.listener.BrushPickerView;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.ToastFactory;
 
@@ -65,7 +60,7 @@ public class CursorTool extends BaseToolWithShape {
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
 		cursorToolPrimaryShapeColor = context.getResources().getColor(
-						R.color.cursor_tool_deactive_primary_color);
+						R.color.pocketpaint_main_cursor_tool_inactive_primary_color);
 		cursorToolSecondaryShapeColor = Color.LTGRAY;
 		pathInsideBitmap = false;
 	}
@@ -75,6 +70,9 @@ public class CursorTool extends BaseToolWithShape {
 		super.changePaintColor(color);
 		if (toolInDrawMode) {
 			cursorToolSecondaryShapeColor = BITMAP_PAINT.getColor();
+		}
+		if (brushPickerView != null) {
+			brushPickerView.invalidate();
 		}
 	}
 
@@ -265,6 +263,10 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
+	protected void onClickInBox() {
+	}
+
+	@Override
 	public void draw(Canvas canvas) {
 		setPaintColor(CANVAS_PAINT.getColor());
 		if (toolInDrawMode) {
@@ -290,9 +292,8 @@ public class CursorTool extends BaseToolWithShape {
 			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
 			return false;
 		}
-		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		Command command = new PathCommand(BITMAP_PAINT, pathToDraw);
-		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		Command command = commandFactory.createPathCommand(BITMAP_PAINT, pathToDraw);
+		PaintroidApplication.commandManager.addCommand(command);
 		return true;
 	}
 
@@ -301,9 +302,8 @@ public class CursorTool extends BaseToolWithShape {
 			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
 			return false;
 		}
-		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		Command command = new PointCommand(BITMAP_PAINT, coordinate);
-		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		Command command = commandFactory.createPointCommand(BITMAP_PAINT, coordinate);
+		PaintroidApplication.commandManager.addCommand(command);
 		return true;
 	}
 
@@ -346,6 +346,5 @@ public class CursorTool extends BaseToolWithShape {
 	public void leaveTool() {
 		super.leaveTool();
 		brushPickerView.removeBrushChangedListener(onBrushChangedListener);
-		brushPickerView.removeListeners();
 	}
 }

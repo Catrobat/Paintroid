@@ -20,7 +20,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name" tools:ignore="UnusedResources">Pocket Paint</string>
+  <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint</string>
   <string name="button_brush">Pincel</string>
   <string name="button_cursor">Cursor</string>
   <string name="button_pipette">Pipeta</string>
@@ -35,24 +35,12 @@
   <string name="button_text">Texto</string>
   <string name="button_shape">Formas</string>
   <string name="done">Concluído</string>
-  <string name="terms_of_use_and_service_title">Termos de Uso e Serviço</string>
-  <string name="terms_of_use_and_service_content">Para que você possa usar o Pocket Paint e outros executáveis oferecidos pelo projeto Catrobat, você precisa concordar com nossos Termos de Uso e Serviço e segui-los estritamente. Por favor, veja o link abaixo para definições exatas.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Termos de Uso e Serviço</string>
-  <string name="about_title">Sobre o Pocket Paint…</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">Licença do Código Fonte do Pocket Paint</string>
-  <string name="about_catroid_url_text">Sobre o Catrobat</string>
-  <string name="about_version">Versão:</string>
   <string name="color_chooser_title">Seletor de cores</string>
-  <string name="color_rgb">Red Green Blue (RGB)</string>
   <string name="color_red">Vermelho</string>
   <string name="color_green">Verde</string>
   <string name="color_blue">Azul</string>
   <string name="color_alpha">Alfa</string>
-  <string name="color_pre">pré-selecionados</string>
-  <string name="color_hsv">seletor de cores hsv</string>
   <string name="dialog_tools_title">Ferramentas</string>
-  <string name="dialog_load">Carregando…</string>
   <string name="dialog_error_save_title">Erro ao carregar/salvar Arquivo</string>
   <string name="dialog_error_sdcard_text">Verifique Imagem ou Cartão SD!</string>
   <string name="dialog_brush_width_text">Largura do Traço</string>
@@ -75,7 +63,7 @@
   <string name="help_content_color_chooser">Select or adjust a color</string>
   <string name="closing_security_question_title">Sair</string>
   <string name="closing_security_question">Salvar alterações?</string>
-  <string name="closing_catroid_security_question_title">Volta ao Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">Nova imagem</string>
   <string name="menu_load_image">Carregar imagem</string>
   <string name="menu_save_image">Salvar imagem</string>
@@ -84,8 +72,6 @@
   <string name="menu_hide_menu">Tela cheia</string>
   <string name="menu_show_menu">Sair do modo tela cheia</string>
   <string name="menu_new_image_from_camera">Nova imagem da câmera</string>
-  <string name="menu_terms_of_use_and_service">Termos de Uso</string>
-  <string name="menu_about">Sobre</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exportar</string>
   <string name="saved">Imagem salva</string>
@@ -103,18 +89,16 @@
   <string name="shape_tool_dialog_star_title">Estrela</string>
   <string name="shape_tool_dialog_heart_title">Coração</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolerância de cor</string>
-  <string name="transform_tool_auto_crop_text">Auto adjust</string>
-  <string name="transform_tool_roate_text">Girar</string>
-  <string name="transform_tool_mirror_text">Espelho</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Pressione e segure para copiar o conteúdo</string>
   <string name="layers_title">Camadas</string>
   <string name="layer_new">Nova Camada</string>
   <string name="layer_delete">Excluir Camada</string>
   <string name="layer_too_many_layers">Há camadas demais</string>
-  <string name="layer_invisible">Todas as camadas invisíveis</string>
   <string name="layer_merged">Layers merged</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Forma</string>
   <string name="dialog_loading_image_failed_title">Erro ao carregar imagem</string>
   <string name="dialog_loading_image_failed_text">Este não é um arquivo de imagem válido</string>
@@ -135,6 +119,4 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Next</string>
   <string name="skip">Saltar</string>
-  <string name="menu_language">Language</string>
-  <string name="device_language">Device Language</string>
 </resources>

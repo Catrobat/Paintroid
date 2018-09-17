@@ -54,19 +54,19 @@ public class RgbSelectorView extends LinearLayout {
 	}
 
 	private void init() {
-		View rgbView = inflate(getContext(), R.layout.colorpicker_rgbview, null);
+		View rgbView = inflate(getContext(), R.layout.color_chooser_layout_rgbview, null);
 
 		addView(rgbView);
 
-		seekBarRed = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekbar_red);
-		seekBarGreen = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekbar_green);
-		seekBarBlue = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekbar_blue);
-		seekBarAlpha = (SeekBar) rgbView.findViewById(R.id.color_rgb_seekbar_alpha);
+		seekBarRed = (SeekBar) rgbView.findViewById(R.id.color_chooser_color_rgb_seekbar_red);
+		seekBarGreen = (SeekBar) rgbView.findViewById(R.id.color_chooser_color_rgb_seekbar_green);
+		seekBarBlue = (SeekBar) rgbView.findViewById(R.id.color_chooser_color_rgb_seekbar_blue);
+		seekBarAlpha = (SeekBar) rgbView.findViewById(R.id.color_chooser_color_rgb_seekbar_alpha);
 
-		textViewRed = (TextView) rgbView.findViewById(R.id.rgb_red_value);
-		textViewGreen = (TextView) rgbView.findViewById(R.id.rgb_green_value);
-		textViewBlue = (TextView) rgbView.findViewById(R.id.rgb_blue_value);
-		textViewAlpha = (TextView) rgbView.findViewById(R.id.rgb_alpha_value);
+		textViewRed = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_red_value);
+		textViewGreen = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_green_value);
+		textViewBlue = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_blue_value);
+		textViewAlpha = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_alpha_value);
 
 		setSelectedColor(Color.BLACK);
 	}

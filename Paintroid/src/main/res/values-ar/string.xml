@@ -20,7 +20,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name" tools:ignore="UnusedResources">بوكت بينت</string>
+  <string name="pocketpaint_app_name" tools:ignore="UnusedResources">بوكت بينت</string>
   <string name="button_brush">فرشاة</string>
   <string name="button_cursor">مؤشر</string>
   <string name="button_pipette">التقاط اللون</string>
@@ -35,25 +35,12 @@
   <string name="button_text">النص</string>
   <string name="button_shape">الأشكال</string>
   <string name="done">موافق</string>
-  <string name="terms_of_use_and_service_title">شروط الاستخدام والخدمة</string>
-  <string name="terms_of_use_and_service_content">من أجل السماح لك باستخدام \"بوكت بينت\" والملفات التنفيذية الأخرى المُتاحة من قبل مشروع كاتروبات، يجب عليك الموافقة على شروط الاستخدام والخدمة الخاصة بنا واتباعها بدقة عند استخدامك \"بوكت كوود\" والملفات التنفيذية الأخرى.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">شروط الاستخدام والخدمة</string>
-  <string name="about_title">حول بوكت بينت.</string>
-  <string name="about_content">بوكت بينت هو محرر صور وجزء من مشروع الكاتروبات.\n\n كاتروبات هو لغة برمجة مرئية ومجموعة من أدوات الإبداع للأجهزة الذكية والأجهزة اللوحية, ومستعرضات الهاتف.\n\n النص المصدري لـ \"بوكت بينت\" مرخص ومحمي تحت <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.
-\n لمعرفة تفاصيل أكثر حول الرخصة قم بزيارة الرابط في الأسفل.\n\n</string>
-  <string name="about_license_url_text">رخصة النص الأصلي لبرنامج بوكت بينت</string>
-  <string name="about_catroid_url_text">حول كاتروبات</string>
-  <string name="about_version">الإصدار</string>
   <string name="color_chooser_title">مُنتقي اللون</string>
-  <string name="color_rgb">أحمر, أخضر ,أزرق (RGB)</string>
   <string name="color_red">أحمر</string>
   <string name="color_green">أخضر</string>
   <string name="color_blue">أزرق</string>
   <string name="color_alpha">ألفا</string>
-  <string name="color_pre">مُحدد مسبقاً</string>…
-  <string name="color_hsv">اختيار اللون (hsv)</string>
   <string name="dialog_tools_title">أدوات</string>
-  <string name="dialog_load">جاري التحميل…</string>
   <string name="dialog_error_save_title">خطأ في استيراد/حفظ الملف</string>
   <string name="dialog_error_sdcard_text">تحقق من بطاقة الذاكرة SD أو الصورة!</string>
   <string name="dialog_brush_width_text">عرض الخط</string>
@@ -76,7 +63,7 @@
   <string name="help_content_color_chooser">تحديد أو ضبط اللون</string>
   <string name="closing_security_question_title">إنهاء/خروج</string>
   <string name="closing_security_question">حفظ التغييرات؟</string>
-  <string name="closing_catroid_security_question_title">العودة إلى أوامر بوكت </string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">صورة جديدة</string>
   <string name="menu_load_image">استيراد صورة</string>
   <string name="menu_save_image">حفظ الصورة</string>
@@ -85,8 +72,6 @@
   <string name="menu_hide_menu">ملء الشاشة</string>
   <string name="menu_show_menu">الخروج من وضع ملء الشاشة</string>
   <string name="menu_new_image_from_camera">صورة جديدة من الكاميرا</string>
-  <string name="menu_terms_of_use_and_service">شروط الاستخدام</string>
-  <string name="menu_about">حول</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">تصدير</string>
   <string name="saved">تم حفظ الصورة</string>
@@ -104,18 +89,16 @@
   <string name="shape_tool_dialog_star_title">نجمة</string>
   <string name="shape_tool_dialog_heart_title">قلب</string>
   <string name="fill_tool_dialog_color_tolerance_title">تفاوت اللون</string>
-  <string name="transform_tool_auto_crop_text">ضبط تلقائي</string>
-  <string name="transform_tool_roate_text">تدوير</string>
-  <string name="transform_tool_mirror_text">مرآة</string>
+  <string name="transform_tool_auto_crop_text">قص</string>
+  <string name="transform_width_text">العرض</string>
+  <string name="transform_height_text">الارتفاع</string>
+  <string name="pixel">بكسل</string>
   <string name="stamp_tool_copy_hint">اضغط مطولاً لنسخ المحتوى</string>
   <string name="layers_title">الطبقات</string>
   <string name="layer_new">طبقة جديدة</string>
   <string name="layer_delete">حذف الطبقة</string>
   <string name="layer_too_many_layers">طبقات عديدة</string>
-  <string name="layer_invisible">كل الطبقات غير مرئية</string>
   <string name="layer_merged">تم دمج الطبقات</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">الشكل</string>
   <string name="dialog_loading_image_failed_title">خطأ في استيراد الصورة</string>
   <string name="dialog_loading_image_failed_text">ليس ملف صورة صالح</string>
@@ -128,7 +111,7 @@
   <string name="intro_welcome_text">مع بوكت بينت لا حدود لابداعك. إذا كنت جديداً, ابدأ المقدمة أو قم بتخطيها في حال كنت مألوفاً مع بوكت بينت.</string>
   <string name="intro_tool_more_information">انقر على الأداة للحصول على المزيد من المعلومات</string>
   <string name="more_possibilities">إمكانيات أكثر</string>
-  <string name="intro_possibilities_text">لتغيير اللون, استخدم تراجع / إعادة أو قم بفتح مربع حوار الطبقات في الشريط العلوي.</string>
+  <string name="intro_possibilities_text">استخدم الشريط العلوي لفتح القائمة الرئيسية, التراجع أو إعادة التغييرات, تغيير اللون, أو إظهار مربع حوار الطبقات.</string>
   <string name="landscape">أفقي</string>
   <string name="intro_landscape_text">بوكت بينت ايضاً يدعم الرسم في الوضع الأفقي لإعطائك أفضل تجربة للرسم.</string>
   <string name="enjoy_pocket_paint">أنت مستعد. تمتع بـ بوكت بينت.</string>
@@ -136,6 +119,4 @@
   <string name="lets_go">لنبدأ</string>
   <string name="next">التالي</string>
   <string name="skip">تخطى</string>
-  <string name="menu_language">اللغة</string>
-  <string name="device_language">لغة الجهاز</string>
 </resources>

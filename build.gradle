@@ -21,18 +21,31 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.2'
+        // CAUTION
+        // Increasing the android gradle plugin version number may or may not break the
+        // tests on Kitkat.
+        // See https://github.com/googlesamples/android-testing/issues/179
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.3'
+        classpath 'com.novoda:bintray-release:0.8.1'
     }
+}
+
+ext {
+    androidCompileSdkVersion = 26
+    androidMinSdkVersion = 17
+    androidTargetSdkVersion = 22
+
+    androidVersionCode = 22
+    androidVersionName = '2.1.0'
 }
 
 allprojects {
     repositories {
         jcenter()
-        maven {
-            url "https://maven.google.com"
-        }
+        google()
     }
 }

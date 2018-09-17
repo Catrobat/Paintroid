@@ -1,4 +1,4 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
@@ -19,57 +19,26 @@
 
 package org.catrobat.paintroid;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.util.Log;
+import android.graphics.Bitmap;
 
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.command.LayerBitmapCommand;
-import org.catrobat.paintroid.command.implementation.CommandManagerImplementation;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
+import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Locale;
+import java.io.File;
 
-public class PaintroidApplication extends Application {
-	private static final String TAG = PaintroidApplication.class.getSimpleName();
-
-	public static Context applicationContext;
+public final class PaintroidApplication {
 	public static DrawingSurface drawingSurface;
 	public static CommandManager commandManager;
 	public static Tool currentTool;
 	public static Perspective perspective;
-	public static LinkedList<LayerCommand> layerOperationsCommandList;
-	public static LinkedList<LayerCommand> layerOperationsUndoCommandList;
-	public static ArrayList<LayerBitmapCommand> drawBitmapCommandsAtLayer;
-	public static String defaultSystemLanguage;
+	public static LayerContracts.Model layerModel;
+	public static File cacheDir;
+	public static Bitmap checkeredBackgroundBitmap;
 
-	public static String getVersionName(Context context) {
-		String versionName = "unknown";
-		try {
-			PackageInfo packageInfo = context.getPackageManager()
-					.getPackageInfo(context.getPackageName(),
-							PackageManager.GET_META_DATA);
-			versionName = packageInfo.versionName;
-		} catch (NameNotFoundException nameNotFoundException) {
-			Log.e(PaintroidApplication.TAG, "Name not found", nameNotFoundException);
-		}
-		return versionName;
-	}
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		applicationContext = getApplicationContext();
-		commandManager = new CommandManagerImplementation();
-
-		defaultSystemLanguage = Locale.getDefault().getLanguage();
+	private PaintroidApplication() {
+		throw new IllegalArgumentException();
 	}
 }

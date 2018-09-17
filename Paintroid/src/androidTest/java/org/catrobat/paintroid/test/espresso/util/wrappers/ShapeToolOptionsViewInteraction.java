@@ -28,7 +28,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 public final class ShapeToolOptionsViewInteraction extends CustomViewInteraction {
 	private ShapeToolOptionsViewInteraction() {
-		super(onView(withId(R.id.main_tool_options)));
+		super(onView(withId(R.id.pocketpaint_main_tool_options)));
 	}
 
 	public static ShapeToolOptionsViewInteraction onShapeToolOptionsView() {
@@ -38,19 +38,19 @@ public final class ShapeToolOptionsViewInteraction extends CustomViewInteraction
 	public ShapeToolOptionsViewInteraction performSelectShape(GeometricFillTool.BaseShape shape) {
 		switch (shape) {
 			case RECTANGLE:
-				onView(withId(R.id.shapes_square_btn))
+				onView(withId(R.id.pocketpaint_shapes_square_btn))
 						.perform(click());
 				break;
 			case OVAL:
-				onView(withId(R.id.shapes_circle_btn))
+				onView(withId(R.id.pocketpaint_shapes_circle_btn))
 						.perform(click());
 				break;
 			case HEART:
-				onView(withId(R.id.shapes_heart_btn))
+				onView(withId(R.id.pocketpaint_shapes_heart_btn))
 						.perform(click());
 				break;
 			case STAR:
-				onView(withId(R.id.shapes_star_btn))
+				onView(withId(R.id.pocketpaint_shapes_star_btn))
 						.perform(click());
 				break;
 		}

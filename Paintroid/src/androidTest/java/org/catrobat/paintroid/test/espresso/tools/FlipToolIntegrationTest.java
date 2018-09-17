@@ -20,20 +20,14 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Color;
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -51,24 +45,12 @@ public class FlipToolIntegrationTest {
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
-	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
-	private IdlingResource dialogWait;
 
 	@Before
 	public void setUp() {
-		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
-		IdlingRegistry.getInstance().register(dialogWait);
-
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
-	}
-
-	@After
-	public void tearDown() {
-		IdlingRegistry.getInstance().unregister(dialogWait);
 	}
 
 	@Test

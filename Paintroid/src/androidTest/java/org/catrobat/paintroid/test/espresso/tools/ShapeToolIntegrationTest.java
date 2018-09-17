@@ -27,7 +27,6 @@ import android.support.test.rule.ActivityTestRule;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.junit.Before;
@@ -58,8 +57,6 @@ public class ShapeToolIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 	@Parameter
 	public int shape;
 	@Parameter(1)
@@ -68,10 +65,10 @@ public class ShapeToolIntegrationTest {
 	@Parameters(name = "{1}")
 	public static Iterable<Object[]> data() {
 		return Arrays.asList(new Object[][]{
-				{R.id.shapes_square_btn, "Square"},
-				{R.id.shapes_circle_btn, "Circle"},
-				{R.id.shapes_heart_btn, "Heart"},
-				{R.id.shapes_star_btn, "Star"}
+				{R.id.pocketpaint_shapes_square_btn, "Square"},
+				{R.id.pocketpaint_shapes_circle_btn, "Circle"},
+				{R.id.pocketpaint_shapes_heart_btn, "Heart"},
+				{R.id.pocketpaint_shapes_star_btn, "Star"}
 		});
 	}
 

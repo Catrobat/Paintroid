@@ -1,4 +1,4 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -31,17 +31,19 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.BaseTool;
 
 public class DrawerPreview extends View {
 
 	private static final int BORDER = 2;
 
 	private Paint canvasPaint;
-	private Paint checkeredPattern = new Paint();
+	private Paint checkeredPattern;
+	private Paint borderPaint;
+	private Path path;
 
 	public DrawerPreview(Context context) {
 		super(context);
@@ -54,39 +56,36 @@ public class DrawerPreview extends View {
 	}
 
 	private void init() {
-		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard,
 				Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-		checkeredPattern.setShader(shader);
 		canvasPaint = new Paint();
+		checkeredPattern = new Paint();
+		checkeredPattern.setShader(shader);
+		borderPaint = new Paint();
+		path = new Path();
 	}
 
 	private void changePaintColor(int color) {
-		Paint drawPaint = PaintroidApplication.currentTool.getDrawPaint();
+		Paint drawPaint = BaseTool.BITMAP_PAINT;
 		float strokeWidth = drawPaint.getStrokeWidth();
 		Paint.Cap strokeCap = drawPaint.getStrokeCap();
+		canvasPaint.reset();
+		canvasPaint.setStyle(Paint.Style.STROKE);
+		canvasPaint.setStrokeWidth(strokeWidth);
+		canvasPaint.setStrokeCap(strokeCap);
+		canvasPaint.setAntiAlias(true);
+
 		if (Color.alpha(color) == 0x00) {
-			canvasPaint.reset();
-			canvasPaint.setStyle(Paint.Style.STROKE);
-			canvasPaint.setStrokeWidth(strokeWidth);
-			canvasPaint.setColor(color);
-			canvasPaint.setStrokeCap(strokeCap);
-			canvasPaint.setAntiAlias(true);
 			canvasPaint.setShader(checkeredPattern.getShader());
 			canvasPaint.setColor(Color.BLACK);
-			canvasPaint.setAlpha(0x00);
 		} else {
-			canvasPaint.reset();
-			canvasPaint.setStyle(Paint.Style.STROKE);
-			canvasPaint.setStrokeWidth(strokeWidth);
-			canvasPaint.setStrokeCap(strokeCap);
 			canvasPaint.setColor(color);
-			canvasPaint.setAntiAlias(true);
 		}
 	}
 
 	private void drawDrawerPreview(Canvas canvas) {
-		int currentColor = MainActivity.colorPickerInitialColor;
+		int currentColor = BaseTool.BITMAP_PAINT.getColor();
 		changePaintColor(currentColor);
 
 		int centerX = getLeft() + getWidth() / 2;
@@ -96,12 +95,13 @@ public class DrawerPreview extends View {
 		int endX = getRight() - getWidth() / 8;
 		int endY = centerY;
 
-		Path path = new Path();
-		path.moveTo(startX, startY);
 		float x2 = getLeft() + getWidth() / 4;
 		float y2 = getTop();
 		float x4 = getRight() - getWidth() / 4;
 		float y4 = getBottom();
+
+		path.reset();
+		path.moveTo(startX, startY);
 		path.cubicTo(startX, startY, x2, y2, centerX, centerY);
 		path.cubicTo(centerX, centerY, x4, y4, endX, endY);
 
@@ -119,8 +119,7 @@ public class DrawerPreview extends View {
 	}
 
 	private void drawBorder(Canvas canvas) {
-		Paint borderPaint = new Paint();
-		Paint drawPaint = PaintroidApplication.currentTool.getDrawPaint();
+		Paint drawPaint = BaseTool.BITMAP_PAINT;
 		float strokeWidth = drawPaint.getStrokeWidth();
 		Paint.Cap strokeCap = drawPaint.getStrokeCap();
 		int startX;
@@ -128,6 +127,7 @@ public class DrawerPreview extends View {
 		int endX;
 		int endY;
 
+		borderPaint.reset();
 		borderPaint.setStyle(Paint.Style.STROKE);
 		borderPaint.setStrokeCap(strokeCap);
 		borderPaint.setStrokeWidth(strokeWidth + BORDER);
@@ -153,11 +153,11 @@ public class DrawerPreview extends View {
 			endX = getRight() - getWidth() / 8 + BORDER;
 			endY = centerY - BORDER;
 
-			Path borderPath = new Path();
-			borderPath.moveTo(startX, startY);
-			borderPath.cubicTo(startX, startY, x2, y2, centerX, centerY);
-			borderPath.cubicTo(centerX, centerY, x4, y4, endX, endY);
-			canvas.drawPath(borderPath, borderPaint);
+			path.reset();
+			path.moveTo(startX, startY);
+			path.cubicTo(startX, startY, x2, y2, centerX, centerY);
+			path.cubicTo(centerX, centerY, x4, y4, endX, endY);
+			canvas.drawPath(path, borderPaint);
 		}
 	}
 
@@ -171,7 +171,7 @@ public class DrawerPreview extends View {
 		int endX = getRight() - getWidth() / 8;
 		int endY = centerY;
 
-		Path path = new Path();
+		path.reset();
 		path.moveTo(startX, startY);
 		float x2 = getLeft() + getWidth() / 4;
 		float y2 = getTop();
@@ -185,7 +185,7 @@ public class DrawerPreview extends View {
 	}
 
 	private void drawLinePreview(Canvas canvas) {
-		int currentColor = MainActivity.colorPickerInitialColor;
+		int currentColor = BaseTool.BITMAP_PAINT.getColor();
 		changePaintColor(currentColor);
 
 		int startX = getLeft() + getWidth() / 8;
@@ -229,7 +229,7 @@ public class DrawerPreview extends View {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-		int height = (int) (getMeasuredHeight() * 0.2);
-		setMeasuredDimension(widthMeasureSpec, height);
+		int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+		setMeasuredDimension(widthSize, (int) (widthSize * .25));
 	}
 }

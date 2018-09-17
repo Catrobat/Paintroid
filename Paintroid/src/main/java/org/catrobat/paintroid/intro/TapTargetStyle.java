@@ -24,7 +24,7 @@ import android.graphics.Typeface;
 import org.catrobat.paintroid.R;
 
 public enum TapTargetStyle {
-	HEADER_STYLE(R.style.IntroHeader), TEXT_STYLE(R.style.IntroText);
+	HEADER_STYLE(R.style.PocketPaintWelcomeHeader), TEXT_STYLE(R.style.PocketPaintWelcomeText);
 
 	private int resourceId;
 	private int textColor;

@@ -19,25 +19,19 @@
 
 package org.catrobat.paintroid.test.espresso.intro;
 
-import android.content.ComponentName;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.espresso.util.IntroUtils;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -48,6 +42,7 @@ import static org.catrobat.paintroid.test.espresso.util.UiMatcher.equalsNumberDo
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isNotVisible;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isOnLeftSide;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isOnRightSide;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class RTLTest {
@@ -55,44 +50,41 @@ public class RTLTest {
 	@Rule
 	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false, true);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
 	@Test
 	public void testNumberDots() {
-		onView(withId(R.id.layoutDots))
+		onView(withId(R.id.pocketpaint_layout_dots))
 				.check(matches(equalsNumberDots(activityRule.getLayouts().length)));
 	}
 
 	@Test
 	public void clickSkip() {
-		onView(withId(R.id.btn_skip))
+		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(matches(isDisplayed()))
 				.perform(click());
-		intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
+		assertTrue(activityRule.getActivity().isFinishing());
 	}
 
 	@Test
 	public void testCheckLastPage() {
-		EspressoUtils.changeIntroPage(IntroUtils.getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_getstarted));
-		onView(withId(R.id.btn_skip))
+		EspressoUtils.changeIntroPage(IntroUtils.getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_getstarted));
+		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(isNotVisible());
-		onView(withId(R.id.btn_next))
+		onView(withId(R.id.pocketpaint_btn_next))
 				.check(matches(isCompletelyDisplayed()))
 				.check(matches(withText(R.string.lets_go)))
 				.perform(click());
 
-		intended(hasComponent(new ComponentName(getTargetContext(), MainActivity.class)));
+		assertTrue(activityRule.getActivity().isFinishing());
 	}
 
 	@Test
 	public void testButtonsCompleteVisible() {
 		for (int i = activityRule.getLayouts().length - 1; i < 0; i--) {
 			EspressoUtils.changeIntroPage(i);
-			onView(withId(R.id.btn_skip))
+			onView(withId(R.id.pocketpaint_btn_skip))
 					.check(matches(isCompletelyDisplayed()))
 					.check(matches(withText(R.string.next)));
-			onView(withId(R.id.btn_next))
+			onView(withId(R.id.pocketpaint_btn_next))
 					.check(matches(isCompletelyDisplayed()))
 					.check(matches(withText(R.string.skip)));
 		}
@@ -105,20 +97,20 @@ public class RTLTest {
 
 		for (int i = activityRule.getLayouts().length - 1; i < 0; i--) {
 			EspressoUtils.changeIntroPage(i);
-			onView(withId(R.id.layoutDots))
+			onView(withId(R.id.pocketpaint_layout_dots))
 					.check(matches(checkDotsColors(i, colorActive, colorInactive)));
 		}
 	}
 
 	@Test
 	public void isSkipButtonOppositeSide() {
-		onView(withId(R.id.btn_skip))
+		onView(withId(R.id.pocketpaint_btn_skip))
 				.check(matches(isOnRightSide()));
 	}
 
 	@Test
 	public void isNextButtonOppositeSide() {
-		onView(withId(R.id.btn_next))
+		onView(withId(R.id.pocketpaint_btn_next))
 				.check(matches(isOnLeftSide()));
 	}
 }

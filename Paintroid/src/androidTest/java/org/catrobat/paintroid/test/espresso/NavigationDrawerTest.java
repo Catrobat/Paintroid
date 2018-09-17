@@ -24,7 +24,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,9 +51,6 @@ public class NavigationDrawerTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule =
 			new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public SystemAnimationsRule animationsRule = new SystemAnimationsRule();
 
 	@Before
 	public void setUp() throws Exception {
@@ -86,11 +82,8 @@ public class NavigationDrawerTest {
 		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_new_image)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_hide_menu)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_language)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_terms_of_use_and_service)).check(matches(isDisplayed()));
 		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_about)).check(matches(isDisplayed()));
-		onView(withId(R.id.drawer_layout)).perform(close());
+		onView(withId(R.id.pocketpaint_drawer_layout)).perform(close());
 	}
 
 	@Test
@@ -99,19 +92,9 @@ public class NavigationDrawerTest {
 	}
 
 	@Test
-	public void testNavigationDrawerItemAboutClick() {
-		onView(withText(R.string.menu_about)).perform(click());
-	}
-
-	@Test
-	public void testNavigationDrawerItemTermsOfUserClick() {
-		onView(withText(R.string.menu_terms_of_use_and_service)).perform(click());
-	}
-
-	@Test
 	public void testNavigationDrawerItemFullScreenClick() {
 		onView(withText(R.string.menu_hide_menu)).perform(click());
-		onView(withId(R.id.drawer_layout)).perform(open());
+		onView(withId(R.id.pocketpaint_drawer_layout)).perform(open());
 		onView(withText(R.string.menu_show_menu)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_hide_menu)).check(doesNotExist());
 		onView(withText(R.string.menu_show_menu)).perform(click());

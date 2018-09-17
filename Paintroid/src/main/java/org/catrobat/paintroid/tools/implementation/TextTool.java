@@ -1,20 +1,20 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
@@ -28,6 +28,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,12 +37,7 @@ import android.widget.ToggleButton;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.command.implementation.TextToolCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.listener.LayerListener;
 import org.catrobat.paintroid.listener.TextToolOptionsListener;
-import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
@@ -92,8 +88,8 @@ public class TextTool extends BaseToolWithRectangleShape {
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
-		stc = Typeface.createFromAsset(context.getAssets(), "STC.otf");
-		dubai = Typeface.createFromAsset(context.getAssets(), "Dubai.TTF");
+		stc = ResourcesCompat.getFont(context, R.font.stc_regular);
+		dubai = ResourcesCompat.getFont(context, R.font.dubai);
 
 		textPaint = new Paint();
 		initializePaint();
@@ -235,7 +231,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 					textPaint.setTypeface(stc);
 					textPaint.setTextSkewX(textSkewX);
 				} catch (Exception e) {
-					Log.e("Can't set custom font", "STC");
+					Log.e("Can't set custom font", "stc_regular");
 				}
 				break;
 			case "Dubai":
@@ -243,7 +239,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 					textPaint.setTypeface(dubai);
 					textPaint.setTextSkewX(textSkewX);
 				} catch (Exception e) {
-					Log.e("Can't set custom font", "Dubai");
+					Log.e("Can't set custom font", "dubai");
 				}
 				break;
 		}
@@ -280,13 +276,9 @@ public class TextTool extends BaseToolWithRectangleShape {
 	protected void onClickInBox() {
 		highlightBox();
 		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
-		Command command = new TextToolCommand(getMultilineText(), textPaint, BOX_OFFSET, boxWidth,
+		Command command = commandFactory.createTextToolCommand(getMultilineText(), textPaint, BOX_OFFSET, boxWidth,
 				boxHeight, toolPosition, boxRotation);
-		((TextToolCommand) command).addObserver(this);
-		IndeterminateProgressDialog.getInstance().show();
-
-		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		PaintroidApplication.commandManager.addCommand(command);
 	}
 
 	@VisibleForTesting
@@ -299,9 +291,9 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		View textToolOptionsView = inflater.inflate(R.layout.dialog_text_tool, toolSpecificOptionsLayout);
+		View textToolOptionsView = inflater.inflate(R.layout.dialog_pocketpaint_text_tool, toolSpecificOptionsLayout);
 
-		ToggleButton underlinedButton = (ToggleButton) textToolOptionsView.findViewById(R.id.text_tool_dialog_toggle_underlined);
+		ToggleButton underlinedButton = (ToggleButton) textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		underlinedButton.setPaintFlags(underlinedButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 		textToolOptionsListener = new TextToolOptionsListener(context, textToolOptionsView);

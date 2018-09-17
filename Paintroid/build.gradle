@@ -17,82 +17,61 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+apply plugin: 'com.novoda.bintray-release'
 
 apply from: 'gradle/adb_tasks.gradle'
 apply from: 'gradle/code_quality_tasks.gradle'
 
-def appId = 'org.catrobat.paintroid'
-def appName = '@string/app_name'
-
 check.dependsOn 'checkstyle'
 check.dependsOn 'pmd'
 
-// When -Pindependent was provided on the gradle command the APP name is changed.
-// This allows to have multiple Paintroid versions installed in parallel for testing purposes.
-// Furthermore these installations do not interfere with the actual Paintroid app.
-if (project.hasProperty('independent')) {
-    def today = new Date()
-    appId += '.independent_' + today.format('YYYYMMdd_HHmm')
-    appName = property('independent') ?: 'Paint ' + today.format('MMdd HH:mm')
+jacoco {
+    toolVersion = "0.8.1"
+}
+
+jacocoAndroidUnitTestReport {
+    csv.enabled false
+    html.enabled true
+    xml.enabled true
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion rootProject.ext.androidCompileSdkVersion
 
     defaultConfig {
-        applicationId appId
-        minSdkVersion 17
-        targetSdkVersion 22
-        testInstrumentationRunner "org.catrobat.paintroid.test.utils.CustomAndroidJUnitRunner"
-        versionCode 21
-        versionName "2.0.1"
-        manifestPlaceholders += [appName: appName]
-        externalNativeBuild.cmake.cppFlags "-fexceptions"
-    }
-
-    sourceSets {
-        main {
-            java.srcDir 'src/main/java'
-            resources.srcDir 'src/main/res'
-        }
-
-        androidTest {
-            if (file('../testexclusions.txt').exists()) {
-                java.exclude file('../testexclusions.txt').readLines()
-            }
-        }
+        minSdkVersion rootProject.ext.androidMinSdkVersion
+        targetSdkVersion rootProject.ext.androidTargetSdkVersion
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        versionCode rootProject.ext.androidVersionCode
+        versionName rootProject.ext.androidVersionName
+        externalNativeBuild.cmake.cppFlags "-fvisibility=hidden"
+        ndk.abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            testCoverageEnabled = project.hasProperty('enableCoverage')
+            // Multidex is required as espresso and mockito/bytebuddy are adding more functions
+            // than should be allowed by law.
+            // See https://github.com/mockito/mockito/issues/1112
+            multiDexEnabled true
         }
     }
 
-    externalNativeBuild.cmake.path 'CMakeLists.txt'
+    externalNativeBuild.cmake.path 'src/main/cpp/CMakeLists.txt'
 
     lintOptions {
-        // specific ignores should be defined via lint.xml file, all general ignores should be added here
+        // specific ignores should be defined via lint.xml file
         lintConfig file('config/lint.xml')
-        // CommitPrefEdits should be reviewed, if using apply instead of commit is working with our tests
-        // RtlSymmetry/RtlHardcoded should be reviewed
-        // GradleDynamicVersion ignored - e.g. according to sdkmanager:gradle-plugin it should be imported this way
-        // IconMissingDensityFolder - currently no xxxhdpi icons available
-        // TODO ticket for HandlerLeak
-        // TODO don't know if WrongRegion warning is a false-positive one
-        ignore 'ContentDescription', 'InvalidPackage', 'ValidFragment', 'GradleDependency',
-                'ClickableViewAccessibility', 'UnusedAttribute', 'CommitPrefEdits', 'OldTargetApi',
-                'RtlSymmetry', 'GradleDynamicVersion', 'RtlHardcoded', 'HandlerLeak', 'IconMissingDensityFolder',
-                'WrongRegion', 'RelativeOverlap', 'IconColors', 'MissingTranslation', 'ExtraTranslation',
-                'GradleCompatible', 'WifiManagerLeak', 'ApplySharedPref', 'DefaultLocale', 'ObsoleteSdkInt',
-                'StaticFieldLeak' , 'AppCompatResource'
+        ignore 'ClickableViewAccessibility', 'ContentDescription',
+                'StaticFieldLeak', 'GradleDependency', 'OldTargetApi'
 
         textReport true
         xmlReport true
@@ -103,38 +82,43 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.4.0'
-    compile 'com.android.support:design:25.4.0'
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
+    debugImplementation 'com.android.support:multidex:1.0.3'
 
-    androidTestCompile 'com.android.support.test:runner:1.0.1'
-    androidTestCompile 'com.android.support.test:rules:1.0.1'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.18.3'
 
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation 'org.mockito:mockito-android:2.18.3'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
 
-    pmd(
-            'net.sourceforge.pmd:pmd-core:5.8.1',
-            'net.sourceforge.pmd:pmd-java:5.8.1'
-    )
+    pmd 'net.sourceforge.pmd:pmd-core:5.8.1'
+    pmd 'net.sourceforge.pmd:pmd-java:5.8.1'
 
     checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
 }
 
-tasks.whenTaskAdded { task ->
-    if (!project.hasProperty('jenkins') && task.name.startsWith('assembleDebugAndroidTest')) {
-        verifyAnimationScalePermissionGranted.shouldRunAfter adbGrantAnimationScalePermission
+tasks.withType(Javadoc).all {
+    enabled = false
+}
 
-        task.dependsOn adbGrantAnimationScalePermission
-        task.dependsOn verifyAnimationScalePermissionGranted
-    }
+publish {
+    userOrg = 'catrobat'
+    repoName = 'Paintroid'
+    groupId = 'org.catrobat.paintroid'
+    artifactId = 'paintroid'
+    publishVersion = rootProject.ext.androidVersionName
+    licences = ['AGPL-V3']
+    desc = 'A graphical paint editor library for Android'
+    website = 'https://github.com/Catrobat/Paintroid'
 }
 
 if (project.hasProperty('jenkins')) {
-    project.android.dexOptions.preDexLibraries = false
+    android.dexOptions.preDexLibraries = false
 }

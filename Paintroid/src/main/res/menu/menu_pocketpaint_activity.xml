@@ -1,0 +1,63 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/pocketpaint_menu_top">
+        <item
+            android:id="@+id/pocketpaint_nav_back_to_pocket_code"
+            android:icon="@drawable/ic_pocketpaint_menu_back"
+            android:title="@string/menu_back" />
+
+        <item
+            android:id="@+id/pocketpaint_nav_save_image"
+            android:icon="@drawable/ic_pocketpaint_menu_save"
+            android:title="@string/menu_save_image" />
+
+        <item
+            android:id="@+id/pocketpaint_nav_export"
+            android:icon="@drawable/ic_pocketpaint_menu_save"
+            android:title="@string/menu_export"
+            />
+
+        <item
+            android:id="@+id/pocketpaint_nav_save_duplicate"
+            android:icon="@drawable/ic_pocketpaint_menu_copy"
+            android:title="@string/menu_save_copy" />
+
+        <item
+            android:id="@+id/pocketpaint_nav_open_image"
+            android:icon="@drawable/ic_pocketpaint_menu_open"
+            android:title="@string/menu_load_image" />
+
+        <item
+            android:id="@+id/pocketpaint_nav_new_image"
+            android:icon="@drawable/ic_pocketpaint_menu_new_image"
+            android:title="@string/menu_new_image" />
+    </group>
+
+    <group>
+        <item
+            android:id="@+id/pocketpaint_nav_exit_fullscreen_mode"
+            android:icon="@drawable/ic_pocketpaint_menu_fullscreen_exit"
+            android:title="@string/menu_show_menu" />
+        <item
+            android:id="@+id/pocketpaint_nav_fullscreen_mode"
+            android:icon="@drawable/ic_pocketpaint_menu_fullscreen"
+            android:title="@string/menu_hide_menu" />
+    </group>
+
+    <group android:id="@+id/pocketpaint_menu_bottom">
+
+        <item
+            android:id="@+id/pocketpaint_nav_help"
+            android:icon="@drawable/ic_pocketpaint_menu_help"
+            android:title="@string/help_title" />
+
+    </group>
+
+    <group android:id="@+id/pocketpaint_menu_footer">
+
+        <item
+            android:id="@+id/pocketpaint_nav_version"
+            android:title="@string/pocketpaint_app_name"
+            android:enabled="false"/>
+    </group>
+
+</menu>

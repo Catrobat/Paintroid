@@ -21,26 +21,17 @@ package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Color;
 import android.net.Uri;
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.widget.EditText;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.FillTool;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,9 +40,8 @@ import org.junit.runner.RunWith;
 import java.io.File;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -63,7 +53,6 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getToolMem
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipeAccurate;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress;
@@ -72,8 +61,6 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInte
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class FillToolIntegrationTest {
@@ -83,32 +70,15 @@ public class FillToolIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
-	private ActivityHelper activityHelper;
-
-	private IdlingResource dialogWait;
-
 	@Before
 	public void setUp() {
-		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
-		IdlingRegistry.getInstance().register(dialogWait);
-
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
-
 		onToolBarView()
 				.performSelectTool(ToolType.FILL);
 	}
 
-	@After
-	public void tearDown() {
-		IdlingRegistry.getInstance().unregister(dialogWait);
-	}
-
 	@Test
 	public void testFloodFillIfImageLoaded() {
-		NavigationDrawerMenuActivity.savedPictureUri = Uri.fromFile(new File("dummy"));
+		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(new File("dummy")));
 
 		onToolProperties()
 				.checkColor(Color.BLACK);
@@ -119,7 +89,7 @@ public class FillToolIntegrationTest {
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
-		NavigationDrawerMenuActivity.savedPictureUri = null;
+		launchActivityRule.getActivity().model.setSavedPictureUri(null);
 	}
 
 	@Test
@@ -167,7 +137,7 @@ public class FillToolIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onDrawingSurfaceView()
-				.checkPixelColorResource(R.color.color_chooser_green1, BitmapLocationProvider.MIDDLE)
+				.checkPixelColorResource(R.color.pocketpaint_color_chooser_green1, BitmapLocationProvider.MIDDLE)
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE_RIGHT)
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
 	}
@@ -184,27 +154,19 @@ public class FillToolIntegrationTest {
 
 		openToolOptionsForCurrentTool();
 
-		final ViewInteraction colorToleranceInput = onView(withId(R.id.fill_tool_dialog_color_tolerance_input));
-		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.color_tolerance_seek_bar));
+		final ViewInteraction colorToleranceInput = onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input));
+		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.pocketpaint_color_tolerance_seek_bar));
 
 		String testToleranceText = "100";
 
 		colorToleranceInput.check(matches(withText(Integer.toString(FillTool.DEFAULT_TOLERANCE_IN_PERCENT))));
 
-		colorToleranceInput.perform(typeText(testToleranceText), closeSoftKeyboard());
+		colorToleranceInput.perform(replaceText(testToleranceText), closeSoftKeyboard());
 
 		colorToleranceInput.check(matches(withText(testToleranceText)));
 		colorToleranceSeekBar.check(matches(withProgress(Integer.parseInt(testToleranceText))));
 
 		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(100);
-		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool), TOLERANCE_DELTA);
-
-		int seekBarTestValue = 50;
-		colorToleranceSeekBar.perform(setProgress(seekBarTestValue));
-		colorToleranceSeekBar.check(matches(withProgress(seekBarTestValue)));
-		colorToleranceInput.check(matches(withText(Integer.toString(seekBarTestValue))));
-
-		expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(50);
 		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool), TOLERANCE_DELTA);
 
 		// Close tool options
@@ -217,13 +179,14 @@ public class FillToolIntegrationTest {
 
 		openToolOptionsForCurrentTool();
 
-		final ViewInteraction colorToleranceInput = onView(withId(R.id.fill_tool_dialog_color_tolerance_input));
-		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.color_tolerance_seek_bar));
+		final ViewInteraction colorToleranceInput = onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input));
+		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.pocketpaint_color_tolerance_seek_bar));
 
 		int toleranceInPercent = 50;
-		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
 
-		colorToleranceSeekBar.perform(setProgress(toleranceInPercent));
+		colorToleranceInput.perform(replaceText(String.valueOf(toleranceInPercent)));
+
+		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
 
 		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool), TOLERANCE_DELTA);
 
@@ -237,34 +200,6 @@ public class FillToolIntegrationTest {
 
 		colorToleranceInput.check(matches(withText(Integer.toString(FillTool.DEFAULT_TOLERANCE_IN_PERCENT))));
 		colorToleranceSeekBar.check(matches(withProgress(FillTool.DEFAULT_TOLERANCE_IN_PERCENT)));
-	}
-
-	@Test
-	public void testFillToolToleranceCursorVisibility() {
-
-		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
-
-		openToolOptionsForCurrentTool();
-
-		final ViewInteraction colorToleranceInput = onView(withId(R.id.fill_tool_dialog_color_tolerance_input));
-		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.color_tolerance_seek_bar));
-
-		EditText colorToleranceEditText = (EditText) activityHelper.findViewById(R.id.fill_tool_dialog_color_tolerance_input);
-		assertFalse("Cursor should not be visible", colorToleranceEditText.isCursorVisible());
-
-		colorToleranceInput.perform(click(), closeSoftKeyboard());
-
-		assertTrue("Cursor should not be visible", colorToleranceEditText.isCursorVisible());
-
-		int toleranceInPercent = 50;
-		colorToleranceSeekBar.perform(setProgress(toleranceInPercent));
-		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
-		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, getToolMemberColorTolerance(fillTool), TOLERANCE_DELTA);
-
-		assertFalse("Cursor should not be visible", colorToleranceEditText.isCursorVisible());
-
-		// Close tool options
-		clickSelectedToolButton();
 	}
 
 	@Test
@@ -282,14 +217,14 @@ public class FillToolIntegrationTest {
 		selectColorPickerPresetSelectorColor(BROWN2_COLOR_PICKER_BUTTON_POSITION);
 
 		onToolProperties()
-				.checkColorResource(R.color.color_chooser_brown2);
+				.checkColorResource(R.color.pocketpaint_color_chooser_brown2);
 
 		onToolBarView()
 				.performSelectTool(ToolType.FILL)
 				.performOpenToolOptions();
 
-		onView(withId(R.id.color_tolerance_seek_bar))
-				.perform(setProgress(100));
+		onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
+				.perform(replaceText(String.valueOf(100)));
 
 		onToolBarView()
 				.performCloseToolOptions();
@@ -297,8 +232,8 @@ public class FillToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onDrawingSurfaceView()
-				.checkPixelColorResource(R.color.color_chooser_brown2, BitmapLocationProvider.MIDDLE)
-				.checkPixelColorResource(R.color.color_chooser_brown2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
+				.checkPixelColorResource(R.color.pocketpaint_color_chooser_brown2, BitmapLocationProvider.MIDDLE)
+				.checkPixelColorResource(R.color.pocketpaint_color_chooser_brown2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
 
 		onTopBarView()
 				.performUndo();
@@ -311,7 +246,7 @@ public class FillToolIntegrationTest {
 				.performRedo();
 
 		onDrawingSurfaceView()
-				.checkPixelColorResource(R.color.color_chooser_brown2, BitmapLocationProvider.MIDDLE)
-				.checkPixelColorResource(R.color.color_chooser_brown2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
+				.checkPixelColorResource(R.color.pocketpaint_color_chooser_brown2, BitmapLocationProvider.MIDDLE)
+				.checkPixelColorResource(R.color.pocketpaint_color_chooser_brown2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
 	}
 }

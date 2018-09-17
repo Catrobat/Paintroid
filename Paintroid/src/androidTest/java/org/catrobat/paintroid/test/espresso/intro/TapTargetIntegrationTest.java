@@ -30,14 +30,13 @@ import org.catrobat.paintroid.intro.TapTargetTopBar;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.espresso.util.IntroUtils;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import static org.catrobat.paintroid.test.espresso.util.IntroUtils.getPageIndexFromLayout;
 import static org.junit.Assert.assertEquals;
@@ -48,35 +47,32 @@ public class TapTargetIntegrationTest {
 	@Rule
 	public WelcomeActivityIntentsTestRule activityRule = new WelcomeActivityIntentsTestRule(false);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
 	@Test
 	public void numberTapTargetsBottomBar() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_tools));
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools));
 		LinearLayout targetItemView = IntroUtils.getBottomBarFromToolSlide(activityRule.getActivity());
 		TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
 		tapTargetBottomBar.initTargetView();
-		HashMap<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetBottomBar);
+		Map<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetBottomBar);
 		Assert.assertEquals("TapTarget doesn't have same size. Tool is missing",
 				IntroUtils.numberOfVisibleChildren(targetItemView), tapTargetMap.size());
 	}
 
 	@Test
 	public void numberTapTargetsTopBar() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_possibilities));
 		LinearLayout targetItemView = IntroUtils.getTopBarFromPossibilitiesSlide(activityRule.getActivity());
 		TapTargetTopBar tapTargetTopBar = IntroUtils.getTapTargetTopBar(activityRule.getActivity());
 		tapTargetTopBar.initTargetView();
 
-		HashMap<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetTopBar);
+		Map<ToolType, TapTarget> tapTargetMap = IntroUtils.getMapFromTapTarget(tapTargetTopBar);
 		Assert.assertEquals("TapTarget doesn't have same size. Tool is missing",
 				IntroUtils.numberOfVisibleChildren(targetItemView), tapTargetMap.size());
 	}
 
 	@Test
 	public void testRadiusTopBar() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_possibilities));
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_possibilities));
 		EspressoUtils.waitMillis(200);
 		TapTargetTopBar tapTargetTopBar = IntroUtils.getTapTargetTopBar(activityRule.getActivity());
 		int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget();
@@ -87,7 +83,7 @@ public class TapTargetIntegrationTest {
 
 	@Test
 	public void testRadiusBottomBar() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.islide_tools));
+		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools));
 		TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
 		int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget();
 		int actualRadius = tapTargetBottomBar.radius;

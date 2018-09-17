@@ -1,39 +1,34 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.espresso;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.test.espresso.IdlingRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -68,26 +63,14 @@ public class LayerIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
-	private DialogHiddenIdlingResource dialogWait;
 	private int bitmapHeight;
 	private int bitmapWidth;
 
 	@Before
-	public void setUp() throws Exception {
-		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
-		IdlingRegistry.getInstance().register(dialogWait);
-
-		Bitmap image = LayerListener.getInstance().getCurrentLayer().getImage();
+	public void setUp() {
+		Bitmap image = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		bitmapHeight = image.getHeight();
 		bitmapWidth = image.getWidth();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		IdlingRegistry.getInstance().unregister(dialogWait);
 	}
 
 	@Test
@@ -102,9 +85,9 @@ public class LayerIntegrationTest {
 		onLayerMenuView()
 				.check(matches(not(isDisplayed())));
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_add))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_delete_disabled))));
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))));
 	}
 
 	@Test
@@ -137,9 +120,9 @@ public class LayerIntegrationTest {
 				.checkLayerCount(2);
 
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_add))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_delete))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_delete))));
 
 		onLayerMenuView()
 				.performAddLayer()
@@ -147,9 +130,9 @@ public class LayerIntegrationTest {
 				.checkLayerCount(4);
 
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_new_disabled))));
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_add_disabled))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_delete))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_delete))));
 
 		onLayerMenuView()
 				.performDeleteLayer()
@@ -158,9 +141,9 @@ public class LayerIntegrationTest {
 				.checkLayerCount(1);
 
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_add))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_delete_disabled))));
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))));
 	}
 
 	@Test
@@ -174,9 +157,9 @@ public class LayerIntegrationTest {
 				.checkLayerCount(4);
 
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_new_disabled))));
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_add_disabled))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_delete))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_delete))));
 
 		onNavigationDrawer()
 				.performOpen();
@@ -188,9 +171,9 @@ public class LayerIntegrationTest {
 				.perform(click());
 
 		onLayerMenuView().onButtonAdd()
-				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.icon_layers_new))));
+				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_add))));
 		onLayerMenuView().onButtonDelete()
-				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.icon_layers_delete_disabled))));
+				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))));
 		onLayerMenuView()
 				.checkLayerCount(1);
 	}
@@ -427,6 +410,7 @@ public class LayerIntegrationTest {
 				.performClose();
 
 		onTopBarView()
+				.performUndo()
 				.performUndo();
 
 		onDrawingSurfaceView()
@@ -437,8 +421,14 @@ public class LayerIntegrationTest {
 				.performSelectLayer(3)
 				.performClose();
 
-		onTopBarView()
-				.performRedo();
+		onToolBarView()
+				.performOpenToolOptions();
+		onTransformToolOptionsView()
+				.performAutoCrop();
+		onToolBarView()
+				.performCloseToolOptions();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
 		onDrawingSurfaceView()
 				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
@@ -593,7 +583,7 @@ public class LayerIntegrationTest {
 
 		selectColorPickerPresetSelectorColor(GREEN_COLOR_PICKER_BUTTON_POSITION);
 		onToolProperties()
-				.checkColorResource(R.color.color_chooser_green1);
+				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -616,7 +606,7 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColorResource(R.color.color_chooser_green1);
+				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
 	}
 
 	@Test
@@ -658,6 +648,7 @@ public class LayerIntegrationTest {
 				.performClose();
 
 		onTopBarView()
+				.performUndo()
 				.performUndo()
 				.performUndo()
 				.performUndo();

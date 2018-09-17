@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,50 +26,42 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.Region;
 import android.graphics.Shader;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.VisibleForTesting;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask;
+import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTaskCallback;
+import org.catrobat.paintroid.tools.ToolType;
 
-import java.util.ArrayList;
+import java.util.ListIterator;
 
-public class DrawingSurface extends SurfaceView implements
-		SurfaceHolder.Callback {
-	protected static final String BUNDLE_INSTANCE_STATE = "BUNDLE_INSTANCE_STATE";
-	protected static final String BUNDLE_PERSPECTIVE = "BUNDLE_PERSPECTIVE";
-	protected static final String BUNDLE_WORKING_BITMAP = "BUNDLE_WORKING_BITMAP";
-	protected static final int BACKGROUND_COLOR = Color.LTGRAY;
-	private static final String TAG = DrawingSurface.class.getSimpleName();
-	private final Object drawingLock = new Object();
-	protected boolean surfaceCanBeUsed;
+public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callback {
+	private final Rect canvasRect = new Rect();
+	private final Paint framePaint = new Paint();
+	private final Paint checkeredPattern = new Paint();
+	private final Object surfaceLock = new Object();
+	private boolean surfaceDirty = false;
+	private boolean surfaceReady = false;
+	private int backgroundColor;
+
 	private DrawingSurfaceThread drawingThread;
-	@VisibleForTesting
-	public Bitmap workingBitmap;
-	private Rect workingBitmapRect;
-	private Canvas workingBitmapCanvas;
-	private Paint framePaint;
-	private Paint clearPaint;
-	private Paint opacityPaint;
-	private Paint checkeredPattern;
-	private boolean lock;
-	private boolean visible;
-	private boolean drawingSurfaceDirtyFlag = false;
-	private DrawingSurfaceListener drawingSurfaceListener;
+	private LayerContracts.Model layerModel;
 
 	public DrawingSurface(Context context, AttributeSet attrSet) {
 		super(context, attrSet);
@@ -81,222 +73,177 @@ public class DrawingSurface extends SurfaceView implements
 		init();
 	}
 
-	public boolean getLock() {
-		return lock;
+	private void init() {
+		backgroundColor = ContextCompat.getColor(getContext(),
+				R.color.pocketpaint_main_drawing_surface_background);
+
+		framePaint.setColor(Color.BLACK);
+		framePaint.setStyle(Paint.Style.STROKE);
+		framePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
+		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		checkeredPattern.setShader(shader);
+		checkeredPattern.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+
+		Handler handler = new Handler(Looper.getMainLooper());
+		AutoScrollTask autoScrollTask = new AutoScrollTask(handler, new AutoScrollTaskCallbackImpl());
+		DrawingSurfaceListener drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask);
+		setOnTouchListener(drawingSurfaceListener);
 	}
 
-	public void setLock(boolean locked) {
-		lock = locked;
-	}
-
-	public boolean getVisible() {
-		return visible;
-	}
-
-	public void setVisible(boolean visibilityToSet) {
-		visible = visibilityToSet;
+	public void setLayerModel(LayerContracts.Model layerModel) {
+		this.layerModel = layerModel;
 	}
 
 	public Canvas getCanvas() {
-		return workingBitmapCanvas;
+		throw new IllegalArgumentException();
 	}
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
-		try {
-			if (workingBitmapRect == null || surfaceViewCanvas == null
-					|| workingBitmapCanvas == null || isWorkingBitmapRecycled()) {
-				return;
-			}
+		final LayerContracts.Model model = layerModel;
+		synchronized (model) {
+			if (surfaceReady) {
 
-			PaintroidApplication.perspective.applyToCanvas(surfaceViewCanvas);
-			surfaceViewCanvas.save();
-			surfaceViewCanvas.clipRect(workingBitmapRect, Region.Op.DIFFERENCE);
-			surfaceViewCanvas.drawColor(BACKGROUND_COLOR);
-			surfaceViewCanvas.restore();
-			surfaceViewCanvas.drawRect(workingBitmapRect, checkeredPattern);
-			surfaceViewCanvas.drawRect(workingBitmapRect, framePaint);
+				canvasRect.set(0, 0, model.getWidth(), model.getHeight());
 
-			if (workingBitmap != null && !workingBitmap.isRecycled()
-					&& surfaceCanBeUsed) {
+				PaintroidApplication.perspective.applyToCanvas(surfaceViewCanvas);
 
-				ArrayList<Layer> layers = LayerListener.getInstance().getAdapter().getLayers();
-
-				for (int i = layers.size() - 1; i >= 0; i--) {
-					surfaceViewCanvas.drawBitmap(layers.get(i).getImage(), 0, 0, opacityPaint);
+				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+					surfaceViewCanvas.drawColor(backgroundColor, PorterDuff.Mode.SRC);
+				} else {
+					surfaceViewCanvas.save();
+					surfaceViewCanvas.clipOutRect(canvasRect);
+					surfaceViewCanvas.drawColor(backgroundColor, PorterDuff.Mode.SRC);
+					surfaceViewCanvas.restore();
 				}
+
+				surfaceViewCanvas.drawRect(canvasRect, checkeredPattern);
+				surfaceViewCanvas.drawRect(canvasRect, framePaint);
+
+				ListIterator<LayerContracts.Layer> iterator = model.listIterator(model.getLayerCount());
+				while (iterator.hasPrevious()) {
+					surfaceViewCanvas.drawBitmap(iterator.previous().getBitmap(), 0, 0, null);
+				}
+
 				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
 			}
-		} catch (Exception e) {
-			Log.e(TAG, e.getMessage());
 		}
 	}
 
 	@Override
 	protected void onAttachedToWindow() {
 		super.onAttachedToWindow();
-
 		getHolder().addCallback(this);
 	}
 
 	@Override
 	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
-
 		getHolder().removeCallback(this);
 	}
 
-	private void init() {
-
-		workingBitmapRect = new Rect();
-		workingBitmapCanvas = new Canvas();
-
-		framePaint = new Paint();
-		framePaint.setColor(Color.BLACK);
-		framePaint.setStyle(Paint.Style.STROKE);
-
-		clearPaint = new Paint();
-		clearPaint.setColor(Color.TRANSPARENT);
-		clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-		opacityPaint = new Paint();
-
-		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
-		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-		checkeredPattern = new Paint();
-		checkeredPattern.setShader(shader);
-		setLock(false);
-		setVisible(true);
-		drawingSurfaceListener = new DrawingSurfaceListener();
-		setOnTouchListener(drawingSurfaceListener);
-	}
-
 	public void refreshDrawingSurface() {
-		synchronized (drawingLock) {
-			drawingSurfaceDirtyFlag = true;
-			drawingLock.notify();
-		}
-	}
-
-	@Override
-	public Parcelable onSaveInstanceState() {
-		Bundle bundle = new Bundle();
-		bundle.putParcelable(BUNDLE_INSTANCE_STATE, super.onSaveInstanceState());
-		bundle.putParcelable(BUNDLE_WORKING_BITMAP, workingBitmap);
-		bundle.putSerializable(BUNDLE_PERSPECTIVE, PaintroidApplication.perspective);
-		return bundle;
-	}
-
-	@Override
-	public void onRestoreInstanceState(Parcelable state) {
-		if (state instanceof Bundle) {
-			Bundle bundle = (Bundle) state;
-			PaintroidApplication.perspective = (Perspective) bundle
-					.getSerializable(BUNDLE_PERSPECTIVE);
-			resetBitmap((Bitmap) bundle.getParcelable(BUNDLE_WORKING_BITMAP));
-
-			super.onRestoreInstanceState(bundle
-					.getParcelable(BUNDLE_INSTANCE_STATE));
-		} else {
-			super.onRestoreInstanceState(state);
-		}
-	}
-
-	public synchronized void resetBitmap(Bitmap bitmap) {
-		PaintroidApplication.perspective.resetScaleAndTranslation();
-		setBitmap(bitmap);
-
-		if (surfaceCanBeUsed) {
-			drawingThread.start();
+		synchronized (surfaceLock) {
+			surfaceDirty = true;
+			surfaceLock.notify();
 		}
 	}
 
 	public synchronized void setBitmap(Bitmap bitmap) {
-		if (bitmap != null) {
-			workingBitmap = bitmap;
-			workingBitmapCanvas.setBitmap(workingBitmap);
-			workingBitmapRect.set(0, 0, bitmap.getWidth(), bitmap.getHeight());
-		}
+		layerModel.getCurrentLayer().setBitmap(bitmap);
 	}
 
 	public synchronized Bitmap getBitmapCopy() {
-		return !isWorkingBitmapRecycled() ? Bitmap.createBitmap(workingBitmap) : null;
+		return Bitmap.createBitmap(layerModel.getCurrentLayer().getBitmap());
 	}
 
-	private boolean isWorkingBitmapRecycled() {
-		return workingBitmap == null || workingBitmap.isRecycled();
-	}
-
-	public synchronized boolean isDrawingSurfaceBitmapValid() {
-		return !isWorkingBitmapRecycled() && !surfaceCanBeUsed;
-	}
-
-	public synchronized boolean isPointOnCanvas(PointF point) {
-		if (isWorkingBitmapRecycled()) {
-			return false;
-		}
-
-		Rect boundsCanvas = workingBitmapCanvas.getClipBounds();
-		return boundsCanvas.contains((int) point.x, (int) point.y);
+	public synchronized boolean isPointOnCanvas(int pointX, int pointY) {
+		return pointX > 0 && pointX < layerModel.getWidth()
+				&& pointY > 0 && pointY < layerModel.getHeight();
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		surfaceCanBeUsed = true;
-		PaintroidApplication.perspective.setSurfaceHolder(holder);
+		surfaceReady = true;
+		PaintroidApplication.perspective.setSurfaceFrame(holder.getSurfaceFrame());
 
-		if (workingBitmap != null && drawingThread != null) {
+		if (drawingThread != null) {
 			drawingThread.start();
 		}
 
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+		refreshDrawingSurface();
 	}
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
+		holder.setFormat(PixelFormat.RGBA_8888);
+
+		if (drawingThread != null) {
+			drawingThread.stop();
+		}
 		drawingThread = new DrawingSurfaceThread(new DrawLoop());
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		surfaceCanBeUsed = false;
+		surfaceReady = false;
 		if (drawingThread != null) {
 			drawingThread.stop();
 		}
 	}
 
 	public int getPixel(PointF coordinate) {
-		try {
-			if (!isWorkingBitmapRecycled()) {
-				return workingBitmap.getPixel((int) coordinate.x, (int) coordinate.y);
-			}
-		} catch (IllegalArgumentException e) {
-			Log.w(TAG, "getBitmapColor coordinate out of bounds");
+		Bitmap bitmap = layerModel.getCurrentLayer().getBitmap();
+		if (coordinate.x >= 0 && coordinate.y >= 0
+				&& coordinate.x < bitmap.getWidth()
+				&& coordinate.y < bitmap.getHeight()) {
+			return bitmap.getPixel((int) coordinate.x, (int) coordinate.y);
 		}
 		return Color.TRANSPARENT;
 	}
 
-	public void getPixels(int[] pixels, int offset, int stride, int x, int y,
-			int width, int height) {
-		if (!isWorkingBitmapRecycled()) {
-			workingBitmap.getPixels(pixels, offset, stride, x, y, width, height);
-		}
-	}
-
 	public int getBitmapWidth() {
-		if (workingBitmap == null) {
-			return -1;
-		}
-		return workingBitmap.getWidth();
+		return layerModel.getWidth();
 	}
 
 	public int getBitmapHeight() {
-		if (workingBitmap == null) {
-			return -1;
-		}
-		return workingBitmap.getHeight();
+		return layerModel.getHeight();
 	}
 
-	public boolean isBitmapNull() {
-		return workingBitmap == null;
+	private class AutoScrollTaskCallbackImpl implements AutoScrollTaskCallback {
+		public boolean isPointOnCanvas(int pointX, int pointY) {
+			return DrawingSurface.this.isPointOnCanvas(pointX, pointY);
+		}
+
+		public void refreshDrawingSurface() {
+			DrawingSurface.this.refreshDrawingSurface();
+		}
+
+		public void handleToolMove(PointF coordinate) {
+			PaintroidApplication.currentTool.handleMove(coordinate);
+		}
+
+		public Point getToolAutoScrollDirection(float pointX, float pointY, int screenWidth, int screenHeight) {
+			return PaintroidApplication.currentTool
+					.getAutoScrollDirection(pointX, pointY, screenWidth, screenHeight);
+		}
+
+		public float getPerspectiveScale() {
+			return PaintroidApplication.perspective.getScale();
+		}
+
+		public void translatePerspective(float dx, float dy) {
+			PaintroidApplication.perspective.translate(dx, dy);
+		}
+
+		public void convertToCanvasFromSurface(PointF surfacePoint) {
+			PaintroidApplication.perspective.convertToCanvasFromSurface(surfacePoint);
+		}
+
+		public ToolType getCurrentToolType() {
+			return PaintroidApplication.currentTool.getToolType();
+		}
 	}
 
 	private class DrawLoop implements Runnable {
@@ -305,18 +252,18 @@ public class DrawingSurface extends SurfaceView implements
 		@Override
 		public void run() {
 
-			synchronized (drawingLock) {
-				if (!drawingSurfaceDirtyFlag && surfaceCanBeUsed) {
+			synchronized (surfaceLock) {
+				if (!surfaceDirty && surfaceReady) {
 					try {
-						drawingLock.wait();
+						surfaceLock.wait();
 					} catch (InterruptedException e) {
-						Log.e(TAG, e.getMessage());
+						return;
 					}
 				} else {
-					drawingSurfaceDirtyFlag = false;
+					surfaceDirty = false;
 				}
 
-				if (!surfaceCanBeUsed) {
+				if (!surfaceReady) {
 					return;
 				}
 			}

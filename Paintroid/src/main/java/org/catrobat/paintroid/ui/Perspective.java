@@ -23,10 +23,9 @@ import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.annotation.VisibleForTesting;
-import android.view.SurfaceHolder;
 
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.common.Constants;
 
 import java.io.Serializable;
 
@@ -36,7 +35,7 @@ public class Perspective implements Serializable {
 	public static final float SCROLL_BORDER = 50f;
 	private static final long serialVersionUID = 7742690846128292452L;
 	private static final float BORDER_ZOOM_FACTOR = 0.95f;
-	private static final float ACTION_BAR_HEIGHT = NavigationDrawerMenuActivity.ACTION_BAR_HEIGHT;
+	private static final float ACTION_BAR_HEIGHT = Constants.ACTION_BAR_HEIGHT;
 
 	private final float screenDensity;
 	@VisibleForTesting
@@ -60,15 +59,14 @@ public class Perspective implements Serializable {
 	@VisibleForTesting
 	public float initialTranslationY;
 
-	public Perspective(SurfaceHolder holder, float screenDensity) {
-		setSurfaceHolder(holder);
+	public Perspective(Rect surfaceFrame, float screenDensity) {
+		setSurfaceFrame(surfaceFrame);
 		this.screenDensity = screenDensity;
 		surfaceScale = 1f;
 		isFullscreen = false;
 	}
 
-	public synchronized void setSurfaceHolder(SurfaceHolder holder) {
-		Rect surfaceFrame = holder.getSurfaceFrame();
+	public synchronized void setSurfaceFrame(Rect surfaceFrame) {
 		surfaceWidth = surfaceFrame.right;
 		surfaceCenterX = surfaceFrame.exactCenterX();
 		surfaceHeight = surfaceFrame.bottom; // - ACTION_BAR_HEIGHT * screenDensity;
@@ -139,7 +137,8 @@ public class Perspective implements Serializable {
 				+ surfaceCenterX - surfaceTranslationX;
 		float canvasY = (surfacePoint.y - surfaceCenterY) / surfaceScale
 				+ surfaceCenterY - surfaceTranslationY;
-		surfacePoint.set(canvasX, canvasY);
+		surfacePoint.x = canvasX;
+		surfacePoint.y = canvasY;
 	}
 
 	/**

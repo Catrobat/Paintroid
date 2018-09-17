@@ -32,7 +32,6 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
@@ -85,9 +84,6 @@ public class StampToolIntegrationTest {
 	private static Tapper tapStampLong = UiInteractions.DefinedLongTap.withPressTimeout(1500);
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
 
 	@Before
 	public void setUp() {
@@ -248,7 +244,7 @@ public class StampToolIntegrationTest {
 
 	@Test
 	public void testBitmapSavedOnOrientationChange() throws NoSuchFieldException, IllegalAccessException {
-		onView(withId(R.id.drawingSurfaceView))
+		onView(withId(R.id.pocketpaint_drawing_surface_view))
 				.perform(click());
 
 		onToolBarView()

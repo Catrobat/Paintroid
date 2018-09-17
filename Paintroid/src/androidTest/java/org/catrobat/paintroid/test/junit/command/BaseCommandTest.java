@@ -1,20 +1,20 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.junit.command;
@@ -24,7 +24,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.support.test.InstrumentationRegistry;
 
-import org.catrobat.paintroid.test.junit.stubs.BaseCommandStub;
+import org.catrobat.paintroid.test.junit.stubs.BaseCommandImpl;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.After;
 import org.junit.Before;
@@ -36,16 +36,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class BaseCommandTest {
 
-	private BaseCommandStub baseCommand;
+	private BaseCommandImpl baseCommand;
 	private Bitmap bitmap;
 
 	@Before
 	public void setUp() {
-		baseCommand = new BaseCommandStub();
+		baseCommand = new BaseCommandImpl();
 		bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
 		baseCommand.bitmap = bitmap;
 	}
@@ -58,39 +57,32 @@ public class BaseCommandTest {
 
 	@Test
 	public void testBaseCommand() {
-		new BaseCommandStub(null);
-		new BaseCommandStub(new Paint());
+		new BaseCommandImpl(null);
+		new BaseCommandImpl(new Paint());
 	}
 
 	@Test
-	public void testFreeResources() {
+	public void testFreeResources() throws Exception {
 		File cacheDir = InstrumentationRegistry.getTargetContext().getCacheDir();
-		File storedBitmap = new File(cacheDir.getAbsolutePath(), "test");
-		try {
-			assertFalse(storedBitmap.exists());
+		File storedBitmap = new File(cacheDir, "test");
 
-			baseCommand.fileToStoredBitmap = storedBitmap;
-			baseCommand.freeResources();
-			assertNull(baseCommand.bitmap);
+		assertFalse(storedBitmap.exists());
 
-			File restoredBitmap = baseCommand.fileToStoredBitmap;
-			assertFalse("bitmap not deleted", restoredBitmap.exists());
-			if (restoredBitmap.exists()) {
-				assertTrue(restoredBitmap.delete());
-			}
-		} catch (Exception e) {
-			fail("EXCEPTION: " + e.toString());
+		baseCommand.fileToStoredBitmap = storedBitmap;
+		baseCommand.freeResources();
+		assertNull(baseCommand.bitmap);
+
+		File restoredBitmap = baseCommand.fileToStoredBitmap;
+		assertFalse("bitmap not deleted", restoredBitmap.exists());
+		if (restoredBitmap.exists()) {
+			assertTrue(restoredBitmap.delete());
 		}
 
-		try {
-			assertTrue(storedBitmap.createNewFile());
-			assertTrue(storedBitmap.exists());
-			baseCommand.freeResources();
-			assertFalse(storedBitmap.exists());
-			assertNull(baseCommand.bitmap);
-		} catch (Exception e) {
-			fail("EXCEPTION: " + e.toString());
-		}
+		assertTrue(storedBitmap.createNewFile());
+		assertTrue(storedBitmap.exists());
+		baseCommand.freeResources();
+		assertFalse(storedBitmap.exists());
+		assertNull(baseCommand.bitmap);
 	}
 
 	@Test
@@ -107,8 +99,6 @@ public class BaseCommandTest {
 			assertNotNull(storedBitmap.getAbsolutePath());
 			Bitmap restoredBitmap = BitmapFactory.decodeFile(storedBitmap.getAbsolutePath());
 			PaintroidAsserts.assertBitmapEquals("Loaded file doesn't match saved file.", restoredBitmap, bitmapCopy);
-		} catch (Exception e) {
-			fail("EXCEPTION: " + e.toString());
 		} finally {
 			assertNotNull("Failed to delete the stored bitmap(0)", storedBitmap);
 			assertTrue("Failed to delete the stored bitmap(1)", storedBitmap.delete());

@@ -1,24 +1,25 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -28,28 +29,28 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.support.annotation.VisibleForTesting;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.ToastFactory;
+import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
-import java.util.Observable;
+import java.util.Locale;
 
 public class TransformTool extends BaseToolWithRectangleShape {
 
@@ -74,6 +75,15 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private boolean cropRunFinished = false;
 	private boolean maxImageResolutionInformationAlreadyShown = false;
 
+	private EditText widthEditText;
+	private EditText heightEditText;
+
+	private TextWatcher textWatcherHeight;
+	private TextWatcher textWatcherWidth;
+
+	private NumberRangeFilter rangeFilterHeight;
+	private NumberRangeFilter rangeFilterWidth;
+
 	private View transformToolOptionView;
 
 	public TransformTool(Context context, ToolType toolType) {
@@ -84,12 +94,8 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
 
-		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-
-		if (!drawingSurface.isBitmapNull()) {
-			boxHeight = drawingSurface.getBitmapHeight();
-			boxWidth = drawingSurface.getBitmapWidth();
-		}
+		boxHeight = PaintroidApplication.layerModel.getHeight();
+		boxWidth = PaintroidApplication.layerModel.getWidth();
 		toolPosition.x = boxWidth / 2f;
 		toolPosition.y = boxHeight / 2f;
 
@@ -167,7 +173,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void resetInternalState() {
-		resetScaleAndTranslation();
+		initialiseResizingState();
 	}
 
 	@Override
@@ -202,6 +208,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 				boxHeight = boxWidth;
 				boxWidth = tempHeight;
 			}
+			setWidthAndHeightTexts(boxHeight, boxWidth);
 		}
 	}
 
@@ -214,13 +221,21 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	private void initialiseResizingState() {
 		cropRunFinished = false;
+		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
 		resizeBoundWidthXRight = 0;
 		resizeBoundHeightYBottom = 0;
-		resizeBoundWidthXLeft = PaintroidApplication.drawingSurface
-				.getBitmapWidth();
-		resizeBoundHeightYTop = PaintroidApplication.drawingSurface
-				.getBitmapHeight();
+		resizeBoundWidthXLeft = drawingSurface.getBitmapWidth();
+		resizeBoundHeightYTop = drawingSurface.getBitmapHeight();
 		resetScaleAndTranslation();
+		resizeBoundWidthXRight = drawingSurface.getBitmapWidth() - 1;
+		resizeBoundHeightYBottom = drawingSurface.getBitmapHeight() - 1;
+		resizeBoundWidthXLeft = 0f;
+		resizeBoundHeightYTop = 0f;
+		setRectangle(new RectF(resizeBoundWidthXLeft,
+				resizeBoundHeightYTop, resizeBoundWidthXRight,
+				resizeBoundHeightYBottom));
+		cropRunFinished = true;
+		setWidthAndHeightTexts(boxHeight, boxWidth);
 	}
 
 	private void executeResizeCommand() {
@@ -228,19 +243,13 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			cropRunFinished = false;
 			initResizeBounds();
 			if (areResizeBordersValid()) {
-
-				for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-					Command resizeCommand = new ResizeCommand((int) Math.floor(resizeBoundWidthXLeft),
-							(int) Math.floor(resizeBoundHeightYTop),
-							(int) Math.floor(resizeBoundWidthXRight),
-							(int) Math.floor(resizeBoundHeightYBottom),
-							(int) maximumBoxResolution);
-
-					if (layer.getSelected()) {
-						((ResizeCommand) resizeCommand).addObserver(this);
-					}
-					PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), resizeCommand);
-				}
+				Command resizeCommand = commandFactory.createResizeCommand(
+						(int) Math.floor(resizeBoundWidthXLeft),
+						(int) Math.floor(resizeBoundHeightYTop),
+						(int) Math.floor(resizeBoundWidthXRight),
+						(int) Math.floor(resizeBoundHeightYBottom),
+						(int) maximumBoxResolution);
+				PaintroidApplication.commandManager.addCommand(resizeCommand);
 			} else {
 				cropRunFinished = true;
 				ToastFactory.makeText(context, R.string.resize_nothing_to_resize,
@@ -250,35 +259,24 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	}
 
 	private void flip(FlipCommand.FlipDirection flipDirection) {
-		Command command = new FlipCommand(flipDirection);
-		IndeterminateProgressDialog.getInstance().show();
-		((FlipCommand) command).addObserver(this);
-		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		Command command = commandFactory.createFlipCommand(flipDirection);
+		PaintroidApplication.commandManager.addCommand(command);
 	}
 
 	private void rotate(RotateCommand.RotateDirection rotateDirection) {
-		IndeterminateProgressDialog.getInstance().show();
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			Command command = new RotateCommand(rotateDirection);
+		Command command = commandFactory.createRotateCommand(rotateDirection);
+		PaintroidApplication.commandManager.addCommand(command);
 
-			if (layer.getSelected()) {
-				((RotateCommand) command).addObserver(this);
-			}
-			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
-		}
+		float tempBoxWidth = boxWidth;
+		boxWidth = boxHeight;
+		boxHeight = tempBoxWidth;
 	}
 
 	private void autoCrop() {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
-			protected void onPreExecute() {
-				IndeterminateProgressDialog.getInstance().show();
-			}
-
-			@Override
 			protected Void doInBackground(Void... params) {
-				Rect shapeBounds = cropAlgorithmSnail(LayerListener.getInstance().getBitmapOfAllLayersToSave());
+				Rect shapeBounds = cropAlgorithmSnail(LayerModel.getBitmapOfAllLayersToSave(PaintroidApplication.layerModel.getLayers()));
 				if (shapeBounds != null) {
 					boxWidth = shapeBounds.width() + 1;
 					boxHeight = shapeBounds.height() + 1;
@@ -291,7 +289,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			@Override
 			protected void onPostExecute(Void result) {
 				PaintroidApplication.drawingSurface.refreshDrawingSurface();
-				IndeterminateProgressDialog.getInstance().dismiss();
+				setWidthAndHeightTexts(boxHeight, boxWidth);
 			}
 		}.execute();
 	}
@@ -317,25 +315,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		}
 
 		return true;
-	}
-
-	@Override
-	public void update(Observable observable, Object data) {
-		super.update(observable, data);
-		if (data instanceof BaseCommand.NotifyStates
-				&& (BaseCommand.NotifyStates.COMMAND_DONE == data
-				|| BaseCommand.NotifyStates.COMMAND_FAILED == data)) {
-			initialiseResizingState();
-			final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-			resizeBoundWidthXRight = drawingSurface.getBitmapWidth() - 1;
-			resizeBoundHeightYBottom = drawingSurface.getBitmapHeight() - 1;
-			resizeBoundWidthXLeft = 0f;
-			resizeBoundHeightYTop = 0f;
-			setRectangle(new RectF(resizeBoundWidthXLeft,
-					resizeBoundHeightYTop, resizeBoundWidthXRight,
-					resizeBoundHeightYBottom));
-			cropRunFinished = true;
-		}
 	}
 
 	private void setRectangle(RectF rectangle) {
@@ -371,37 +350,77 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	@Override
 	public void setupToolOptions() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		transformToolOptionView = inflater.inflate(R.layout.dialog_transform_tool, toolSpecificOptionsLayout);
+		transformToolOptionView = inflater.inflate(R.layout.dialog_pocketpaint_transform_tool, toolSpecificOptionsLayout);
+
+		rangeFilterHeight = new NumberRangeFilter(1, (int) (maximumBoxResolution / (boxWidth)));
+		rangeFilterWidth = new NumberRangeFilter(1, (int) (maximumBoxResolution / (boxHeight)));
+
+		widthEditText = toolSpecificOptionsLayout.findViewById(R.id.pocketpaint_transform_width_value);
+		widthEditText.setFilters(new InputFilter[]{rangeFilterWidth});
+		textWatcherWidth = new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String str = widthEditText.getText().toString();
+				if (str.isEmpty()) {
+					str = "1";
+				}
+				boxWidth = Float.parseFloat(str);
+			}
+		};
+		widthEditText.addTextChangedListener(textWatcherWidth);
+
+		heightEditText = toolSpecificOptionsLayout.findViewById(R.id.pocketpaint_transform_height_value);
+		heightEditText.setFilters(new InputFilter[]{rangeFilterHeight});
+		textWatcherHeight = new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				String str = heightEditText.getText().toString();
+				if (str.isEmpty()) {
+					str = "1";
+				}
+				boxHeight = Float.parseFloat(str);
+			}
+		};
+		heightEditText.addTextChangedListener(textWatcherHeight);
 
 		View.OnClickListener onClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				switch (v.getId()) {
-					case R.id.transform_auto_crop_btn:
-						autoCrop();
-						break;
-					case R.id.transform_rotate_left_btn:
-						rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
-						break;
-					case R.id.transform_rotate_right_btn:
-						rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
-						break;
-					case R.id.transform_flip_horizontal_btn:
-						flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
-						break;
-					case R.id.transform_flip_vertical_btn:
-						flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
-						break;
-					default:
-						break;
+				int i = v.getId();
+				if (i == R.id.pocketpaint_transform_auto_crop_btn) {
+					autoCrop();
+				} else if (i == R.id.pocketpaint_transform_rotate_left_btn) {
+					rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
+				} else if (i == R.id.pocketpaint_transform_rotate_right_btn) {
+					rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
+				} else if (i == R.id.pocketpaint_transform_flip_horizontal_btn) {
+					flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
+				} else if (i == R.id.pocketpaint_transform_flip_vertical_btn) {
+					flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
 				}
 			}
 		};
 
 		int[] buttonIdList = {
-				R.id.transform_auto_crop_btn,
-				R.id.transform_rotate_left_btn, R.id.transform_rotate_right_btn,
-				R.id.transform_flip_horizontal_btn, R.id.transform_flip_vertical_btn};
+				R.id.pocketpaint_transform_auto_crop_btn,
+				R.id.pocketpaint_transform_rotate_left_btn, R.id.pocketpaint_transform_rotate_right_btn,
+				R.id.pocketpaint_transform_flip_horizontal_btn, R.id.pocketpaint_transform_flip_vertical_btn};
 
 		for (int id : buttonIdList) {
 			transformToolOptionView.findViewById(id).setOnClickListener(onClickListener);
@@ -421,5 +440,27 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		if (!toolOptionsShown) {
 			ToastFactory.makeText(context, R.string.transform_info_text, Toast.LENGTH_LONG).show();
 		}
+	}
+
+	private void setWidthAndHeightTexts(float heightValue, float widthValue) {
+
+		final float height = heightValue;
+		final float width = widthValue;
+		((Activity) transformToolOptionView.getContext()).runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				widthEditText.removeTextChangedListener(textWatcherWidth);
+				heightEditText.removeTextChangedListener(textWatcherHeight);
+
+				rangeFilterHeight.setMax((int) (maximumBoxResolution / (boxWidth)));
+				rangeFilterWidth.setMax((int) (maximumBoxResolution / (boxHeight)));
+
+				widthEditText.setText(String.format(Locale.getDefault(), "%d", (int) width));
+				heightEditText.setText(String.format(Locale.getDefault(), "%d", (int) height));
+
+				widthEditText.addTextChangedListener(textWatcherWidth);
+				heightEditText.addTextChangedListener(textWatcherHeight);
+			}
+		});
 	}
 }

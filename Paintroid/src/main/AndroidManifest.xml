@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -17,86 +18,29 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="org.catrobat.paintroid"
-          android:finishOnTaskLaunch="true"
-          android:installLocation="auto">
-
-    <!-- Remember to increase versionCode by 1 with each new release! -->
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true"
-        android:xlargeScreens="false" />
+    android:installLocation="auto">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
 
-    <!-- Moved to src/debug/AndroidManifest.xml -->
-    <!--<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />-->
-
-    <!--
-    Activate the following permission if you want to test errors aso. which are related to the SD-card
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    -->
     <application
-        android:name=".PaintroidApplication"
-        android:allowBackup="false"
-        android:icon="@drawable/ic_launcher"
-        android:label="${appName}"
         android:largeHeap="true"
-        android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme"
-        android:vmSafeMode="true"
-        android:extractNativeLibs="false"
-        tools:ignore="GoogleAppIndexingWarning">
+        android:supportsRtl="true">
 
-        <!-- [prol] disabled Title Bar and Landscape Mode -->
         <activity
             android:name=".WelcomeActivity"
-            android:configChanges="orientation|locale"
-            android:label="${appName}"
-            android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:theme="@style/PocketPaintSplashTheme"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/PocketPaintSplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
 
                 <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
                 <category android:name="android.intent.category.ALTERNATIVE" />
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="image/*" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MultilingualActivity"
-            android:theme="@style/MultilingualActivityTheme"/>
-        <!-- EXCLUDE PREFERENCES FOR RELEASE -->
-        <!-- <activity android:name=".preferences.SettingsActivity" -->
-        <!-- android:screenOrientation="portrait" -->
-        <!-- android:configChanges="locale" -->
-        <!-- android:theme="@style/Theme.Sherlock.ForceOverflow"> -->
-        <!-- <intent-filter > -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-        <activity
-            android:name=".MainActivity"
-            android:configChanges="orientation|screenSize|locale"
-            android:label="${appName}">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.GET_CONTENT" />
-
-                <category android:name="android.intent.category.SELECTED_ALTERNATIVE" />
-                <category android:name="android.intent.category.ALTERNATIVE" />
 
                 <data android:mimeType="image/*" />
             </intent-filter>

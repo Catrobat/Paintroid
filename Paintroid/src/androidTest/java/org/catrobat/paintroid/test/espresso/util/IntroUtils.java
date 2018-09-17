@@ -44,7 +44,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -115,7 +115,7 @@ public final class IntroUtils {
 		onView(withTapTargetDescription(toolType.getHelpTextResource()))
 				.check(matches(isDisplayed()));
 
-		tapTargetViewInteraction = onView(allOf(withClassName(Matchers.is(TT_CLASS_NAME))));
+		tapTargetViewInteraction = onView(withClassName(Matchers.is(TT_CLASS_NAME)));
 		tapTargetViewInteraction.check(matches(isDisplayed()));
 		fadeViewInteraction.check(matches(not(isDisplayed())));
 		tapTargetViewInteraction.perform(click()).check(isNotVisible());
@@ -134,33 +134,33 @@ public final class IntroUtils {
 		final Context context = InstrumentationRegistry.getTargetContext();
 		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		int radiusOffset = TapTargetBase.RADIUS_OFFSET;
-		float dimension = context.getResources().getDimension(R.dimen.top_bar_height);
+		float dimension = context.getResources().getDimension(R.dimen.pocketpaint_main_top_bar_height);
 		return WelcomeActivityHelper.calculateTapTargetRadius(dimension, metrics, radiusOffset);
 	}
 
 	public static LinearLayout getBottomBarFromToolSlide(Activity activity) {
-		return (LinearLayout) getDescendantView(R.id.intro_tools_bottom_bar, R.id.tools_layout, activity);
+		return (LinearLayout) getDescendantView(R.id.pocketpaint_intro_tools_bottom_bar, R.id.pocketpaint_tools_layout, activity);
 	}
 
 	public static LinearLayout getTopBarFromPossibilitiesSlide(Activity activity) {
-		return (LinearLayout) getDescendantView(R.id.intro_possibilites_topbar, R.id.top_bar_buttons, activity);
+		return (LinearLayout) getDescendantView(R.id.pocketpaint_intro_possibilites_topbar, R.id.pocketpaint_top_bar_buttons, activity);
 	}
 
 	public static TapTargetBottomBar getTapTargetBottomBar(Activity activity) {
 		LinearLayout targetItemView = getBottomBarFromToolSlide(activity);
-		final View fadeView = activity.findViewById(R.id.intro_tools_textview);
-		return new TapTargetBottomBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_tools_bottom_bar);
+		final View fadeView = activity.findViewById(R.id.pocketpaint_intro_tools_textview);
+		return new TapTargetBottomBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.pocketpaint_intro_tools_bottom_bar);
 	}
 
 	public static TapTargetTopBar getTapTargetTopBar(Activity activity) {
-		final View fadeView = activity.findViewById(R.id.intro_possibilities_textview);
+		final View fadeView = activity.findViewById(R.id.pocketpaint_intro_possibilities_textview);
 		LinearLayout targetItemView = getTopBarFromPossibilitiesSlide(activity);
-		TapTargetTopBar tapTargetTopBar = new TapTargetTopBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.intro_possibilities_bottom_bar);
+		TapTargetTopBar tapTargetTopBar = new TapTargetTopBar(targetItemView, fadeView, (WelcomeActivity) activity, R.id.pocketpaint_intro_possibilities_bottom_bar);
 		shouldStartSequence(false);
 		return tapTargetTopBar;
 	}
 
-	public static HashMap<ToolType, TapTarget> getMapFromTapTarget(TapTargetBase tapTarget) {
+	public static Map<ToolType, TapTarget> getMapFromTapTarget(TapTargetBase tapTarget) {
 		return tapTarget.tapTargetMap;
 	}
 
@@ -180,8 +180,8 @@ public final class IntroUtils {
 	}
 
 	public enum IntroSlide {
-		Tools(R.id.intro_tools_textview, R.id.intro_tools_bottom_bar),
-		Possibilities(R.id.intro_possibilities_textview, R.id.intro_possibilites_topbar);
+		Tools(R.id.pocketpaint_intro_tools_textview, R.id.pocketpaint_intro_tools_bottom_bar),
+		Possibilities(R.id.pocketpaint_intro_possibilities_textview, R.id.pocketpaint_intro_possibilites_topbar);
 
 		int fadeViewResourceId;
 		int toolBarResourceId;

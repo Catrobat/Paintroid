@@ -24,3 +24,6 @@ local.properties
 build/
 .gradle/
 .externalNativeBuild/
+
+# Cache for build scripts
+__pycache__

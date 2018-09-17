@@ -20,7 +20,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name" tools:ignore="UnusedResources">Pocket Paint</string>
+  <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint</string>
   <string name="button_brush">Pinsel</string>
   <string name="button_cursor">Eingabezeiger</string>
   <string name="button_pipette">Pipette</string>
@@ -35,24 +35,12 @@
   <string name="button_text">Text</string>
   <string name="button_shape">Formen</string>
   <string name="done">Fertig</string>
-  <string name="terms_of_use_and_service_title">Nutzungsbedingungen und Service</string>
-  <string name="terms_of_use_and_service_content">Um Pocket Paint und andere ausführbare Dateien, die durch das Catrobat-Projekt angeboten werden, verwenden zu dürfen, musst du unsere Nutzungsbedingungen und Service strikt befolgen. Für genauere Informationen siehe auf den Link darunter.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">Nutzungsbedingungen und Service</string>
-  <string name="about_title">Über Pocket Paint…</string>
-  <string name="about_content">Pocket Paint ist ein Bild-Editor, der Teil des Catrobat Projektes ist.\n\nCatrobat ist eine visuelle Programmiersprache welche kreative Tools für Smartphones, Tablets und mobile Browser bereitstellt.\n\n Der Source-Code von Pocket Paint steht hauptsächlich unter der <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\n Für genaue Angaben zu der Lizenz, beachte den Link unten.\n\n</string>
-  <string name="about_license_url_text">Pocket Paint Quellcode-Lizenz</string>
-  <string name="about_catroid_url_text">Über Catrobat</string>
-  <string name="about_version">Version:</string>
   <string name="color_chooser_title">Farbauswahl</string>
-  <string name="color_rgb">Rot Grün Blau (RGB)</string>
   <string name="color_red">Rot</string>
   <string name="color_green">Grün</string>
   <string name="color_blue">Blau</string>
   <string name="color_alpha">Alpha</string>
-  <string name="color_pre">vorausgewählt</string>
-  <string name="color_hsv">HSV-Farbwähler</string>
   <string name="dialog_tools_title">Werkzeuge</string>
-  <string name="dialog_load">Lade…</string>
   <string name="dialog_error_save_title">Fehler Laden/Speichern Datei</string>
   <string name="dialog_error_sdcard_text">Überprüfe das Bild oder die SD-Karte!</string>
   <string name="dialog_brush_width_text">Strichstärke</string>
@@ -75,7 +63,7 @@
   <string name="help_content_color_chooser">Wähle eine Farbe oder passe sie an</string>
   <string name="closing_security_question_title">Verlassen</string>
   <string name="closing_security_question">Änderungen speichern?</string>
-  <string name="closing_catroid_security_question_title">Zurück zu Pocket Code</string>
+  <string name="closing_catroid_security_question_title">Zurück zum Projekt</string>
   <string name="menu_new_image">Neues Bild</string>
   <string name="menu_load_image">Bild laden</string>
   <string name="menu_save_image">Bild speichern</string>
@@ -84,8 +72,6 @@
   <string name="menu_hide_menu">Vollbild</string>
   <string name="menu_show_menu">Vollbildmodus beenden</string>
   <string name="menu_new_image_from_camera">Neues Bild von der Kamera</string>
-  <string name="menu_terms_of_use_and_service">Nutzungsbedingungen</string>
-  <string name="menu_about">Über Pocket Paint</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exportieren</string>
   <string name="saved">Bild gespeichert</string>
@@ -103,18 +89,16 @@
   <string name="shape_tool_dialog_star_title">Stern</string>
   <string name="shape_tool_dialog_heart_title">Herz</string>
   <string name="fill_tool_dialog_color_tolerance_title">Farbtoleranz</string>
-  <string name="transform_tool_auto_crop_text">Autom. Anpassung</string>
-  <string name="transform_tool_roate_text">Drehen</string>
-  <string name="transform_tool_mirror_text">Spiegeln</string>
+  <string name="transform_tool_auto_crop_text">zuschneiden</string>
+  <string name="transform_width_text">Breite</string>
+  <string name="transform_height_text">Höhe</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">Lange drücken um Inhalte zu kopieren</string>
   <string name="layers_title">Ebenen</string>
   <string name="layer_new">Neue Ebene</string>
   <string name="layer_delete">Ebene löschen</string>
   <string name="layer_too_many_layers">Zu viele Ebenen</string>
-  <string name="layer_invisible">Alle Ebenen sind unsichtbar</string>
   <string name="layer_merged">Ebenen zusammengefügt</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">Form</string>
   <string name="dialog_loading_image_failed_title">Fehler beim Laden vom Bild</string>
   <string name="dialog_loading_image_failed_text">Keine gültige Bilddatei</string>
@@ -127,7 +111,7 @@
   <string name="intro_welcome_text">Mit Pocket Paint sind deiner Kreativität keine Grenzen gesetzt. Wenn du hier neu bist, starte das Intro oder überspringe es, wenn du bereits mit Pocket Paint vertraut bist.</string>
   <string name="intro_tool_more_information">Tippe auf ein Werkzeug, um weitere Informationen zu erhalten</string>
   <string name="more_possibilities">Mehr Möglichkeiten</string>
-  <string name="intro_possibilities_text">Um die Farbe zu ändern, \"Ruckgängig machen\" und \"Wiederherstellen\" zu nutzen, oder um den Ebenen-Dialog zu öffnen, verwende die Top-Bar.</string>
+  <string name="intro_possibilities_text">Verwende die Top-Bar um das Hauptmenü zu öffnen, Änderungen rückgängig zu machen oder zu wiederholen, die Farbe zu wechseln, oder den Ebenen-Dialog zu öffnen.</string>
   <string name="landscape">Querformat</string>
   <string name="intro_landscape_text">Pocket Paint unterstützt auch zeichnen im Querformatmodus, um das beste Malerlebnis zu bieten.</string>
   <string name="enjoy_pocket_paint">Es kann losgehen. Viel Spaß mit Pocket Paint.</string>
@@ -135,6 +119,4 @@
   <string name="lets_go">Los Geht\'s</string>
   <string name="next">Weiter</string>
   <string name="skip">Überspringen</string>
-  <string name="menu_language">Sprache</string>
-  <string name="device_language">Systemsprache</string>
 </resources>

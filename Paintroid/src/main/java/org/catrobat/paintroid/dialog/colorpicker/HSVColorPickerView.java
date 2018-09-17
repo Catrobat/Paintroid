@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,8 +30,10 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -97,7 +99,6 @@ public class HSVColorPickerView extends View {
 	}
 
 	private void init() {
-		setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 		density = getContext().getResources().getDisplayMetrics().density;
 		paletteCircleTrackerRadius *= density;
 		rectangleTrackerOffset *= density;
@@ -123,7 +124,7 @@ public class HSVColorPickerView extends View {
 		hueTrackerPaint.setAntiAlias(true);
 
 		checkeredPaint = new Paint();
-		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.checkeredbg);
+		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
 		BitmapShader checkeredShader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPaint.setShader(checkeredShader);
 
@@ -198,11 +199,21 @@ public class HSVColorPickerView extends View {
 
 		satShader = new LinearGradient(rect.left, rect.top, rect.right,
 				rect.bottom, Color.WHITE, rgb, Shader.TileMode.CLAMP);
-		ComposeShader mShader = new ComposeShader(valShader, satShader,
-				PorterDuff.Mode.MULTIPLY);
-		satValPaint.setShader(mShader);
 
-		canvas.drawRect(rect, satValPaint);
+		if (Build.VERSION.SDK_INT >= 28) {
+			ComposeShader mShader = new ComposeShader(valShader, satShader,
+					PorterDuff.Mode.MULTIPLY);
+			satValPaint.setShader(mShader);
+
+			canvas.drawRect(rect, satValPaint);
+		} else {
+			satValPaint.setXfermode(null);
+			satValPaint.setShader(valShader);
+			canvas.drawRect(rect, satValPaint);
+			satValPaint.setShader(satShader);
+			satValPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
+			canvas.drawRect(rect, satValPaint);
+		}
 
 		Point p = satValToPoint(sat, val);
 		satValTrackerPaint.setColor(0xff000000);

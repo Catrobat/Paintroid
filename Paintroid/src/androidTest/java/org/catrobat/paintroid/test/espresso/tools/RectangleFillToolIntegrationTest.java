@@ -1,4 +1,4 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -23,22 +23,16 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,18 +63,10 @@ public class RectangleFillToolIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
-	private IdlingResource dialogWait;
-
 	private Bitmap workingBitmap;
 
 	@Before
 	public void setUp() {
-		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
-		Espresso.registerIdlingResources(dialogWait);
-
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
 		workingBitmap = getWorkingBitmap();
@@ -92,8 +78,6 @@ public class RectangleFillToolIntegrationTest {
 
 	@After
 	public void tearDown() {
-		Espresso.unregisterIdlingResources(dialogWait);
-
 		if (workingBitmap != null && !workingBitmap.isRecycled()) {
 			workingBitmap.recycle();
 		}
@@ -113,11 +97,6 @@ public class RectangleFillToolIntegrationTest {
 		assertNotNull("Position should not be NULL", rectPosition);
 	}
 
-	/**
-	 * Fails if whole espresso tests run, there lives an artifact in drawing surface:
-	 * AssertionError: expected:<0> but was:<-16777216>
-	 */
-	@Ignore
 	@Test
 	public void testEllipseIsDrawnOnBitmap() {
 
@@ -125,7 +104,7 @@ public class RectangleFillToolIntegrationTest {
 
 		selectTool(ToolType.SHAPE);
 
-		onView(withId(R.id.shapes_circle_btn)).perform(click());
+		onView(withId(R.id.pocketpaint_shapes_circle_btn)).perform(click());
 
 		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
 		PointF centerPointTool = ellipseTool.toolPosition;
@@ -146,12 +125,12 @@ public class RectangleFillToolIntegrationTest {
 
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor, colorAfterDrawing);
 
-		onView(withId(R.id.btn_top_undo)).perform(click());
+		onView(withId(R.id.pocketpaint_btn_top_undo)).perform(click());
 
 		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertEquals(colorBeforeDrawing, colorAfterUndo);
 
-		onView(withId(R.id.btn_top_redo)).perform(click());
+		onView(withId(R.id.pocketpaint_btn_top_redo)).perform(click());
 
 		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertEquals(colorPickerColor, colorAfterRedo);
@@ -164,7 +143,6 @@ public class RectangleFillToolIntegrationTest {
 		// now the point under test is diagonal from the center -> if its a circle there should be no color
 		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
 		assertTrue("Pixel should not have been filled for a circle", (colorPickerColor != colorAfterDrawing));
-		PaintroidApplication.commandManager.resetAndClear(true);
 	}
 
 	@Test
@@ -224,24 +202,24 @@ public class RectangleFillToolIntegrationTest {
 	@Test
 	public void testEraseWithEllipse() {
 		selectTool(ToolType.SHAPE);
-		selectShapeTypeAndDraw(R.id.shapes_square_btn, false, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_square_btn, false, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 
 		clickSelectedToolButton();
 
-		selectShapeTypeAndDraw(R.id.shapes_circle_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_circle_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 	}
 
 	@Test
 	public void testDrawWithDrawableShape() {
 		selectTool(ToolType.SHAPE);
-		selectShapeTypeAndDraw(R.id.shapes_heart_btn, false, BLACK_COLOR_PICKER_BUTTON_POSITION);
+		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_heart_btn, false, BLACK_COLOR_PICKER_BUTTON_POSITION);
 	}
 
 	@Test
 	public void testCheckeredBackgroundWhenTransparentColorSelected() {
 		selectTool(ToolType.SHAPE);
 
-		onView(withId(R.id.shapes_heart_btn)).perform(click());
+		onView(withId(R.id.pocketpaint_shapes_heart_btn)).perform(click());
 
 		clickSelectedToolButton();
 
@@ -278,11 +256,11 @@ public class RectangleFillToolIntegrationTest {
 
 		selectTool(ToolType.SHAPE);
 		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
-		selectShapeTypeAndDraw(R.id.shapes_square_btn, true, BLACK_COLOR_PICKER_BUTTON_POSITION);
+		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_square_btn, true, BLACK_COLOR_PICKER_BUTTON_POSITION);
 		int backgroundColor = tool.getDrawPaint().getColor();
 
 		clickSelectedToolButton();
-		selectShapeTypeAndDraw(R.id.shapes_heart_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_heart_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 
 		Bitmap drawingBitmap = tool.drawingBitmap;
 		int boxWidth = drawingBitmap.getWidth();

@@ -20,14 +20,14 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name" tools:ignore="UnusedResources">포켓 페인트</string>
+  <string name="pocketpaint_app_name" tools:ignore="UnusedResources">포켓 페인트</string>
   <string name="button_brush">붓</string>
   <string name="button_cursor">커서</string>
   <string name="button_pipette">색 고르기</string>
   <string name="button_undo">취소</string>
   <string name="button_redo">다시 실행</string>
   <string name="button_stamp">스탬프</string>
-  <string name="button_import_image">그림</string>
+  <string name="button_import_image">그림 가져오기</string>
   <string name="button_eraser">지우개</string>
   <string name="button_transform">변환</string>
   <string name="button_fill">채우기</string>
@@ -35,24 +35,12 @@
   <string name="button_text">텍스트</string>
   <string name="button_shape">모양</string>
   <string name="done">완료</string>
-  <string name="terms_of_use_and_service_title">사용과 서비스 약관</string>
-  <string name="terms_of_use_and_service_content">포켓 코드와 Catrobat 프로그램에 의해 제공하는 다른 실행 파일을 사용하도록 허용하려면 우리의 이용 약관에 동의하고 포켓 코드와 우리의 다른 실행 파일을 사용할 때 엄격하게 약관을 따라 해야 합니다. 자세한 세부규정은 아래 링크를 참조하십시오.\n\n</string>
-  <string name="terms_of_use_and_service_url_text">사용과 서비스 약관</string>
-  <string name="about_title">포켓 코드에 대하여</string>
-  <string name="about_content">Pocket Paint is a picture editor that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets, and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the <xliff:g id="license" example="GNU Affero General Public License">%s</xliff:g>.\nFor precise details of the license see the link below.\n\n</string>
-  <string name="about_license_url_text">포켓 페인트 소스 코드 라이센스</string>
-  <string name="about_catroid_url_text">Catrobat에 대하여</string>
-  <string name="about_version">버전 정보</string>
   <string name="color_chooser_title">색상 선택기</string>
-  <string name="color_rgb">빨강 녹색 파랑 (RGB)</string>
   <string name="color_red">빨강</string>
   <string name="color_green">초록</string>
   <string name="color_blue">파랑</string>
   <string name="color_alpha">투명도</string>
-  <string name="color_pre">미리 선택</string>
-  <string name="color_hsv">hsv 색상 선택기</string>
   <string name="dialog_tools_title">도구</string>
-  <string name="dialog_load">로드중입니다…</string>
   <string name="dialog_error_save_title">파일 로드/저장 오류</string>
   <string name="dialog_error_sdcard_text">이미지 또는 SD 카드를 확인!</string>
   <string name="dialog_brush_width_text">선 굵기</string>
@@ -75,7 +63,7 @@
   <string name="help_content_color_chooser">선택 하거나 색상 조정</string>
   <string name="closing_security_question_title">종료</string>
   <string name="closing_security_question">변경사항을 저장하시겠습니까?</string>
-  <string name="closing_catroid_security_question_title">포켓 코드로 다시 돌아가기</string>
+  <string name="closing_catroid_security_question_title">Back to project</string>
   <string name="menu_new_image">새 이미지</string>
   <string name="menu_load_image">로드 이미지</string>
   <string name="menu_save_image">이미지 저장</string>
@@ -84,8 +72,6 @@
   <string name="menu_hide_menu">전체 화면</string>
   <string name="menu_show_menu">전체 화면 종료</string>
   <string name="menu_new_image_from_camera">카메라에서 새 이미지</string>
-  <string name="menu_terms_of_use_and_service">이용 약관</string>
-  <string name="menu_about">상세 정보</string>
   <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">내보내기</string>
   <string name="saved">이미지가 저장되었습니다</string>
@@ -103,18 +89,16 @@
   <string name="shape_tool_dialog_star_title">별</string>
   <string name="shape_tool_dialog_heart_title">하트</string>
   <string name="fill_tool_dialog_color_tolerance_title">색상 허용 오차</string>
-  <string name="transform_tool_auto_crop_text">자동 조정</string>
-  <string name="transform_tool_roate_text">회전하기</string>
-  <string name="transform_tool_mirror_text">대칭</string>
+  <string name="transform_tool_auto_crop_text">crop</string>
+  <string name="transform_width_text">Width</string>
+  <string name="transform_height_text">Height</string>
+  <string name="pixel">px</string>
   <string name="stamp_tool_copy_hint">복사하려면 길게 터치</string>
   <string name="layers_title">레이어</string>
   <string name="layer_new">새 레이어</string>
   <string name="layer_delete">레이어 삭제</string>
   <string name="layer_too_many_layers">너무 많은 레이어</string>
-  <string name="layer_invisible">보이지 않는 모든 레이어</string>
   <string name="layer_merged">레이어 병합</string>
-  <!-- Extras -->
-  <!-- Return to Catroid -->
   <string name="dialog_shape_text">모양</string>
   <string name="dialog_loading_image_failed_title">그림 로딩 중 에러</string>
   <string name="dialog_loading_image_failed_text">사용할 수 없는 이미지 파일</string>
@@ -127,7 +111,7 @@
   <string name="intro_welcome_text">포켓 페인트를 이용하면 창의력에 아무런 제한이 없습니다. 포켓 페인트를 잘 아시면 경우 생략하고 시작하세요.</string>
   <string name="intro_tool_more_information">더 많은 정보를 얻으려면 도구를 클릭</string>
   <string name="more_possibilities">더 많은 가능성</string>
-  <string name="intro_possibilities_text">색상을 변경 하려면, 실행 취소/다시 실행을 사용하가나 레이어 대화 상자를 사용하세요.</string>
+  <string name="intro_possibilities_text">맨 위의 막대를 사용하여 기본 메뉴를 열거나, 변경 재실행, 취소, 색상 바꾸기나  대화 상자 레이어를 표시할 수 있습니다.</string>
   <string name="landscape">가로 보기</string>
   <string name="intro_landscape_text">포켓 페인트는 가로보기 그리기를 지원합니다.</string>
   <string name="enjoy_pocket_paint">모든 설정이 다 되었습니다. 포켓 코드를 즐길 수 있습니다.</string>
@@ -135,6 +119,4 @@
   <string name="lets_go">시작하기</string>
   <string name="next">다음</string>
   <string name="skip">건너뛰기</string>
-  <string name="menu_language">언어</string>
-  <string name="device_language">장치 언어</string>
 </resources>

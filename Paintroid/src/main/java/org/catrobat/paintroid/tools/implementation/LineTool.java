@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,11 +27,7 @@ import android.graphics.PointF;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.listener.BrushPickerView;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.tools.Layer;
 import org.catrobat.paintroid.tools.ToolType;
 
 public class LineTool extends BaseTool {
@@ -108,9 +104,8 @@ public class LineTool extends BaseTool {
 		}
 
 		if (pathInsideBitmap) {
-			Command command = new PathCommand(BITMAP_PAINT, finalPath);
-			Layer layer = LayerListener.getInstance().getCurrentLayer();
-			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+			Command command = commandFactory.createPathCommand(BITMAP_PAINT, finalPath);
+			PaintroidApplication.commandManager.addCommand(command);
 		}
 
 		return true;
@@ -120,6 +115,12 @@ public class LineTool extends BaseTool {
 	public void resetInternalState() {
 		initialEventCoordinate = null;
 		currentCoordinate = null;
+	}
+
+	@Override
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
+		brushPickerView.invalidate();
 	}
 
 	@Override
@@ -138,6 +139,5 @@ public class LineTool extends BaseTool {
 	public void leaveTool() {
 		super.leaveTool();
 		brushPickerView.removeBrushChangedListener(onBrushChangedListener);
-		brushPickerView.removeListeners();
 	}
 }
