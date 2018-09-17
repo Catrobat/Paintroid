@@ -71,6 +71,10 @@ pipeline {
 		buildDiscarder(logRotator(numToKeepStr: '30'))
 	}
 
+    triggers {
+        cron(env.BRANCH_NAME == 'develop' ? '@midnight' : '')
+    }
+
 	stages {
 		stage('Setup Android SDK') {
 			steps {
