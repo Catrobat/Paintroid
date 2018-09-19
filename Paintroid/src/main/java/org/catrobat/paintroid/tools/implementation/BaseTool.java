@@ -287,7 +287,7 @@ public abstract class BaseTool implements Tool {
 	@Override
 	public void hide() {
 		LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.pocketpaint_main_tool_options);
-		mainToolOptions.setVisibility(View.GONE);
+		mainToolOptions.setVisibility(View.INVISIBLE);
 		dimBackground(false);
 		toolOptionsShown = false;
 	}
