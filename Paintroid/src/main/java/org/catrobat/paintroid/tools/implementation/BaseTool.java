@@ -80,6 +80,7 @@ public abstract class BaseTool implements Tool {
 	private final PorterDuffXfermode eraseXfermode;
 	private final ToolType toolType;
 	boolean toolOptionsShown = false;
+	boolean toggleOptions = false;
 	LinearLayout toolSpecificOptionsLayout;
 	PointF previousEventCoordinate;
 	private LinearLayout toolOptionsLayout;
@@ -285,35 +286,43 @@ public abstract class BaseTool implements Tool {
 	}
 
 	@Override
+	public void resetToggleOptions() {
+		toggleOptions = false;
+	}
+
+	@Override
 	public void hide() {
 		LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.pocketpaint_main_tool_options);
-		mainToolOptions.setVisibility(View.GONE);
+		mainToolOptions.setVisibility(View.INVISIBLE);
 		dimBackground(false);
 		toolOptionsShown = false;
+		toggleOptions = true;
 	}
 
 	@Override
 	public void toggleShowToolOptions() {
-		LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.pocketpaint_main_tool_options);
-		LinearLayout mainBottomBar = ((Activity) (context)).findViewById(R.id.pocketpaint_main_bottom_bar);
-		int orientation = context.getResources().getConfiguration().orientation;
+		if (!toggleOptions) {
+			LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.pocketpaint_main_tool_options);
+			LinearLayout mainBottomBar = ((Activity) (context)).findViewById(R.id.pocketpaint_main_bottom_bar);
+			int orientation = context.getResources().getConfiguration().orientation;
 
-		if (!toolOptionsShown) {
-			mainToolOptions.setY(mainBottomBar.getY() + mainBottomBar.getHeight());
-			mainToolOptions.setVisibility(View.VISIBLE);
-			float yPos = 0;
-			if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-				yPos = mainBottomBar.getY() - mainToolOptions.getHeight();
-			} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-				yPos = mainBottomBar.getHeight() - mainToolOptions.getHeight();
+			if (!toolOptionsShown) {
+				mainToolOptions.setY(mainBottomBar.getY() + mainBottomBar.getHeight());
+				mainToolOptions.setVisibility(View.VISIBLE);
+				float yPos = 0;
+				if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+					yPos = mainBottomBar.getY() - mainToolOptions.getHeight();
+				} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+					yPos = mainBottomBar.getHeight() - mainToolOptions.getHeight();
+				}
+				mainToolOptions.animate().y(yPos);
+				dimBackground(true);
+				toolOptionsShown = true;
+			} else {
+				mainToolOptions.animate().y(mainBottomBar.getY() + mainBottomBar.getHeight());
+				dimBackground(false);
+				toolOptionsShown = false;
 			}
-			mainToolOptions.animate().y(yPos);
-			dimBackground(true);
-			toolOptionsShown = true;
-		} else {
-			mainToolOptions.animate().y(mainBottomBar.getY() + mainBottomBar.getHeight());
-			dimBackground(false);
-			toolOptionsShown = false;
 		}
 	}
 
