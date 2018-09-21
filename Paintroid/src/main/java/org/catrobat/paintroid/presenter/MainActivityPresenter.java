@@ -364,6 +364,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		bottomBarViewHolder.show();
 		navigationDrawerViewHolder.hideExitFullScreen();
 		navigationDrawerViewHolder.showEnterFullScreen();
+		PaintroidApplication.currentTool.resetToggleOptions();
 
 		PaintroidApplication.perspective.setFullscreen(false);
 	}

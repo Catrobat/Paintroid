@@ -46,6 +46,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickColorPickerPresetSelectorButton;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getColorArrayFromResource;
@@ -55,6 +56,8 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawP
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -69,7 +72,8 @@ public class LandscapeIntegrationTest {
 	@Before
 	public void setUp() {
 		resetDrawPaintAndBrushPickerView();
-		selectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 	}
@@ -231,6 +235,96 @@ public class LandscapeIntegrationTest {
 				.perform(click());
 		onView(withClassName(is(PresetSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testFullscreenPortraitOrientationChangeWithBrush() {
+		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
+
+		onNavigationDrawer()
+				.performOpen();
+
+		onView(withText(R.string.menu_hide_menu)).perform(click());
+
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		onNavigationDrawer()
+				.performOpen();
+
+		onView(withText(R.string.menu_show_menu)).perform(click());
+
+		onToolBarView()
+				.performOpenToolOptions()
+				.performCloseToolOptions();
+	}
+
+	@Test
+	public void testFullscreenLandscapeOrientationChangeWithBrush() {
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		onNavigationDrawer()
+				.performOpen();
+
+		onView(withText(R.string.menu_hide_menu)).perform(click());
+
+		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
+
+		onNavigationDrawer()
+				.performOpen();
+
+		onView(withText(R.string.menu_show_menu)).perform(click());
+
+		onToolBarView()
+				.performOpenToolOptions()
+				.performCloseToolOptions();
+	}
+
+	@Test
+	public void testFullscreenPortraitOrientationChangeWithShape() {
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+
+		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
+
+		onNavigationDrawer()
+				.performOpen();
+
+		onView(withText(R.string.menu_hide_menu)).perform(click());
+
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		onNavigationDrawer()
+				.performOpen();
+
+		onView(withText(R.string.menu_show_menu)).perform(click());
+
+		onToolBarView()
+				.performOpenToolOptions()
+				.performCloseToolOptions();
+	}
+
+	@Test
+	public void testFullscreenLandscapeOrientationChangeWithShape() {
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		onNavigationDrawer()
+				.performOpen();
+
+		onView(withText(R.string.menu_hide_menu)).perform(click());
+
+		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
+
+		onNavigationDrawer()
+				.performOpen();
+
+		onView(withText(R.string.menu_show_menu)).perform(click());
+
+		onToolBarView()
+				.performOpenToolOptions()
+				.performCloseToolOptions();
 	}
 
 	private void setOrientation(int orientation) {
