@@ -96,7 +96,7 @@ class Installer {
 
     Installer writeLicenseFiles() {
         File licencesDir = new File(androidSdk, 'licenses')
-        licencesDir.mkdir()
+        licencesDir.mkdirs()
         if (!licencesDir.exists()) {
             throw new ResourceException("The license directory could not be created: $licencesDir")
         }

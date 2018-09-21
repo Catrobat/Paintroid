@@ -44,13 +44,16 @@ import org.gradle.api.InvalidUserDataException
  */
 @TypeChecked
 class EmulatorsPluginExtension {
-    boolean installEverythingBelow = false
+    private boolean performInstallation = false
     Map<String, EmulatorExtension> emulatorLookup = [:]
     Map<String, Closure> emulatorTemplates = [:]
     DependenciesExtension dependencies = new DependenciesExtension()
 
     void dependencies(@DelegatesTo(DependenciesExtension) Closure settings) {
         Utils.applySettings(settings, dependencies)
+        if (performInstallation) {
+            installDependencies()
+        }
     }
 
     /**
@@ -96,10 +99,15 @@ class EmulatorsPluginExtension {
             Utils.applySettings(templateSettings, e)
         }
         Utils.applySettings(settings, e)
-        emulatorLookup[name] = e
 
         if (!e.avdSettings || !e.emulatorParameters) {
             throw new InvalidUserDataException("Specify both an 'avd' and a 'parameters' block for [$name]!")
+        }
+
+        emulatorLookup[name] = e
+
+        if (this.performInstallation) {
+            installEmulators()
         }
     }
 
@@ -118,17 +126,26 @@ class EmulatorsPluginExtension {
         emulatorTemplates[name] = settings
     }
 
-    void shouldInstallEverythingAbove(boolean performInstallation) {
-        if (!performInstallation) {
-            return
+    void install(boolean performInstallation) {
+        this.performInstallation = performInstallation
+        if (this.performInstallation) {
+            installDependencies()
+            installEmulators()
         }
+    }
 
+    private void installDependencies() {
         def installer = new Installer()
 
         installer.writeLicenseFiles()
         installer.installSdk(dependencies.sdkSettings)
         installer.installNdk(dependencies.ndkSettings)
         installer.installPackages(dependencies.packages)
+    }
+
+    private void installEmulators() {
+        def installer = new Installer()
+        installer.writeLicenseFiles()
 
         emulatorLookup.each { k, v ->
             installer.installImage(v.avdSettings.systemImage)
