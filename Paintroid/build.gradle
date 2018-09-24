@@ -22,6 +22,8 @@ import org.catrobat.gradle.EmulatorsPlugin
 apply plugin: EmulatorsPlugin
 
 emulators {
+    install project.hasProperty('installSdk')
+
     dependencies {
         sdk()
         ndk()
@@ -41,8 +43,6 @@ emulators {
             country = 'US'
         }
     }
-
-    shouldInstallEverythingAbove(project.hasProperty('installSdk'))
 }
 
 apply plugin: 'com.android.library'
