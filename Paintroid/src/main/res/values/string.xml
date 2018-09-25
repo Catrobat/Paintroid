@@ -72,7 +72,7 @@
     <string name="menu_hide_menu">Fullscreen</string>
     <string name="menu_show_menu">Exit fullscreen</string>
     <string name="menu_new_image_from_camera">New image from camera</string>
-
+    <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">Export</string>
     <string name="saved">Image saved</string>
@@ -138,4 +138,13 @@
     <string name="lets_go">Let\'s Go</string>
     <string name="next">Next</string>
     <string name="skip">Skip</string>
+
+    <string name="pocketpaint_about_title">About</string>
+    <string name="pocketpaint_about_version">Version %s</string>
+    <string name="pocketpaint_about_license">GNU Affero General Public License, v3</string>
+    <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
+    <string name="pocketpaint_about_url_license_description">Pocket Paint Source Code License</string>
+    <string name="pocketpaint_about_url_catrobat_description">About Catrobat</string>
+    <string name="pocketpaint_about_url_license" translatable="false">&lt;a href=\"http://developer.catrobat.org/licenses\"&gt;%s&lt;/a&gt;</string>
+    <string name="pocketpaint_about_url_catrobat" translatable="false">&lt;a href=\"http://catrobat.org/\"&gt;%s&lt;/a&gt;</string>
 </resources>

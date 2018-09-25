@@ -50,6 +50,11 @@
             android:icon="@drawable/ic_pocketpaint_menu_help"
             android:title="@string/help_title" />
 
+        <item
+            android:id="@+id/pocketpaint_nav_about"
+            android:icon="@drawable/ic_pocketpaint_menu_info"
+            android:title="@string/pocketpaint_menu_about" />
+
     </group>
 
     <group android:id="@+id/pocketpaint_menu_footer">
