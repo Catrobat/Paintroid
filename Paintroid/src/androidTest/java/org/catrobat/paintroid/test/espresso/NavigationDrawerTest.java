@@ -92,6 +92,11 @@ public class NavigationDrawerTest {
 	}
 
 	@Test
+	public void testNavigationDrawerItemAboutClick() {
+		onView(withText(R.string.pocketpaint_about_title)).perform(click());
+	}
+
+	@Test
 	public void testNavigationDrawerItemFullScreenClick() {
 		onView(withText(R.string.menu_hide_menu)).perform(click());
 		onView(withId(R.id.pocketpaint_drawer_layout)).perform(open());
