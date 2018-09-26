@@ -20,10 +20,14 @@
 package org.catrobat.paintroid.ui;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -37,6 +41,7 @@ import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.ChooseNewImageDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
@@ -45,9 +50,6 @@ import org.catrobat.paintroid.tools.ToolType;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
-
-import static org.catrobat.paintroid.common.Constants.COLOR_PICKER_DIALOG_TAG;
-import static org.catrobat.paintroid.common.Constants.LOAD_DIALOG_FRAGMENT_TAG;
 
 public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	private MainActivity mainActivity;
@@ -59,11 +61,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void showColorPickerDialog() {
 		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
-		Fragment fragment = fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG);
+		Fragment fragment = fragmentManager.findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
 		if (fragment == null) {
 			ColorPickerDialog dialog = ColorPickerDialog.newInstance(PaintroidApplication.currentTool.getDrawPaint().getColor());
 			setupColorPickerDialogListeners(dialog);
-			dialog.show(fragmentManager, COLOR_PICKER_DIALOG_TAG);
+			dialog.show(fragmentManager, Constants.COLOR_PICKER_DIALOG_TAG);
 		}
 	}
 
@@ -155,7 +157,32 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showLoadErrorDialog() {
 		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.WARNING,
 				R.string.dialog_loading_image_failed_title, R.string.dialog_loading_image_failed_text);
-		dialog.show(mainActivity.getSupportFragmentManager(), LOAD_DIALOG_FRAGMENT_TAG);
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.LOAD_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showPermissionDialog(PermissionInfoDialog.PermissionType permissionType, String dialogTag, int requestCode) {
+		AppCompatDialogFragment dialog =
+				PermissionInfoDialog.newInstance(permissionType, requestCode);
+		dialog.show(mainActivity.getSupportFragmentManager(), dialogTag);
+	}
+
+	@Override
+	public void askForPermission(String[] permissions, int requestCode) {
+		ActivityCompat.requestPermissions(mainActivity,
+				permissions,
+				requestCode);
+	}
+
+	@Override
+	public boolean isSdkAboveOrEqualM() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+	}
+
+	@Override
+	public boolean doIHavePermission(String permission) {
+		return ContextCompat.checkSelfPermission(mainActivity,
+				permission) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	@Override
@@ -221,7 +248,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void restoreFragmentListeners() {
 		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
-		Fragment fragment = fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG);
+		Fragment fragment = fragmentManager.findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
 		if (fragment != null) {
 			setupColorPickerDialogListeners((ColorPickerDialog) fragment);
 		}

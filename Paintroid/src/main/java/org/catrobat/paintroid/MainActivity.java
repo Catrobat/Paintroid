@@ -423,6 +423,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		presenter.handlePermissionRequestResults(requestCode, permissions, grantResults);
+	}
+
+	@Override
 	public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 	}

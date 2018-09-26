@@ -28,6 +28,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.iotasks.CreateFileAsync;
 import org.catrobat.paintroid.iotasks.LoadImageAsync;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
@@ -56,6 +57,14 @@ public interface MainActivityContracts {
 		void showSaveErrorDialog();
 
 		void showLoadErrorDialog();
+
+		void showPermissionDialog(PermissionInfoDialog.PermissionType permissionType, String dialogTag, int requestCode);
+
+		void askForPermission(String[] permissions, int requestCode);
+
+		boolean isSdkAboveOrEqualM();
+
+		boolean doIHavePermission(String permission);
 
 		void finishActivity();
 
@@ -135,6 +144,8 @@ public interface MainActivityContracts {
 		void onNewImageFromCamera();
 
 		void handleActivityResult(int requestCode, int resultCode, Intent data);
+
+		void handlePermissionRequestResults(int requestCode, String[] permissions, int[] grantResults);
 
 		void onBackPressed();
 
