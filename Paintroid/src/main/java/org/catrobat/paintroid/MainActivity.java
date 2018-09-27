@@ -62,6 +62,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.KeyboardListener;
 import org.catrobat.paintroid.ui.LayerAdapter;
 import org.catrobat.paintroid.ui.LayerNavigator;
 import org.catrobat.paintroid.ui.MainActivityInteractor;
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private MainActivityContracts.Presenter presenter;
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
 	private Handler handler = new Handler();
+	private KeyboardListener keyboardListener;
 
 	@Override
 	public MainActivityContracts.Presenter getPresenter() {
@@ -190,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		presenter = new MainActivityPresenter(this, model, navigator, interactor, topBarViewHolder,
 				bottomBarViewHolder, drawerLayoutViewHolder, navigationDrawerViewHolder, commandManager);
 
+		keyboardListener = new KeyboardListener(drawerLayout);
 		setTopBarListeners(topBarViewHolder);
 		setBottomBarListeners(bottomBarViewHolder);
 		setNavigationViewListeners(navigationDrawerViewHolder);
@@ -431,9 +434,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	@Override
 	public boolean isKeyboardShown() {
-		View activityView = drawerLayoutViewHolder.drawerLayout;
-		View rootView = activityView.getRootView();
-		return rootView.getHeight() - activityView.getHeight() > 300;
+		return keyboardListener.isSoftKeyboardVisible();
 	}
 
 	@Override
