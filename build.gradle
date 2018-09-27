@@ -28,7 +28,8 @@ buildscript {
         // Increasing the android gradle plugin version number may or may not break the
         // tests on Kitkat.
         // See https://github.com/googlesamples/android-testing/issues/179
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        // Temporary workaround in `gradle.properties` file, which has to be removed in 3.2.x
+        classpath 'com.android.tools.build:gradle:3.1.4'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.3'
         classpath 'com.novoda:bintray-release:0.8.1'
     }
@@ -39,8 +40,8 @@ ext {
     androidMinSdkVersion = 17
     androidTargetSdkVersion = 22
 
-    androidVersionCode = 22
-    androidVersionName = '2.1.0'
+    androidVersionCode = 23
+    androidVersionName = '2.1.1'
 }
 
 allprojects {

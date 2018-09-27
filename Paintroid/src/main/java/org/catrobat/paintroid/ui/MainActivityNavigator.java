@@ -34,6 +34,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.contract.MainActivityContracts;
+import org.catrobat.paintroid.dialog.AboutDialog;
 import org.catrobat.paintroid.dialog.ChooseNewImageDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
@@ -106,6 +107,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Intent intent = new Intent(mainActivity.getApplicationContext(), WelcomeActivity.class);
 		intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		mainActivity.startActivity(intent);
+	}
+
+	@Override
+	public void showAboutDialog() {
+		AboutDialog about = AboutDialog.newInstance();
+		about.show(mainActivity.getSupportFragmentManager(), Constants.ABOUT_DIALOG_FRAGMENT_TAG);
 	}
 
 	private Fragment getIndeterminateProgressFragment() {

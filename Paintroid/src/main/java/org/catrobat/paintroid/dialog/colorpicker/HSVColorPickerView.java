@@ -25,7 +25,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ComposeShader;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -33,7 +32,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -200,20 +198,12 @@ public class HSVColorPickerView extends View {
 		satShader = new LinearGradient(rect.left, rect.top, rect.right,
 				rect.bottom, Color.WHITE, rgb, Shader.TileMode.CLAMP);
 
-		if (Build.VERSION.SDK_INT >= 28) {
-			ComposeShader mShader = new ComposeShader(valShader, satShader,
-					PorterDuff.Mode.MULTIPLY);
-			satValPaint.setShader(mShader);
-
-			canvas.drawRect(rect, satValPaint);
-		} else {
-			satValPaint.setXfermode(null);
-			satValPaint.setShader(valShader);
-			canvas.drawRect(rect, satValPaint);
-			satValPaint.setShader(satShader);
-			satValPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
-			canvas.drawRect(rect, satValPaint);
-		}
+		satValPaint.setXfermode(null);
+		satValPaint.setShader(valShader);
+		canvas.drawRect(rect, satValPaint);
+		satValPaint.setShader(satShader);
+		satValPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY));
+		canvas.drawRect(rect, satValPaint);
 
 		Point p = satValToPoint(sat, val);
 		satValTrackerPaint.setColor(0xff000000);
