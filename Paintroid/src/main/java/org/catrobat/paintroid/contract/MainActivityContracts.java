@@ -44,6 +44,8 @@ public interface MainActivityContracts {
 
 		void startImportImageActivity(int requestCode);
 
+		void showAboutDialog();
+
 		void startWelcomeActivity();
 
 		void showIndeterminateProgressDialog();
@@ -138,6 +140,8 @@ public interface MainActivityContracts {
 		void backToPocketCodeClicked();
 
 		void showHelpClicked();
+
+		void showAboutClicked();
 
 		void onNewImage();
 

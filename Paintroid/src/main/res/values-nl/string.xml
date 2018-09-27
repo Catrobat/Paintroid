@@ -72,7 +72,6 @@
   <string name="menu_hide_menu">Volledig Scherm</string>
   <string name="menu_show_menu">Volledig scherm afsluiten</string>
   <string name="menu_new_image_from_camera">Nieuwe afbeelding van camera</string>
-  <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Exporteer</string>
   <string name="saved">Afbeelding opgeslagen</string>
   <string name="copy">Kopie opgeslagen</string>
@@ -88,6 +87,8 @@
   <string name="shape_tool_dialog_ellipse_title">Ellips</string>
   <string name="shape_tool_dialog_star_title">Ster</string>
   <string name="shape_tool_dialog_heart_title">Hart</string>
+  <string name="shape_tool_dialog_fill_title">Vullen</string>
+  <string name="shape_tool_dialog_outline_title">Outline</string>
   <string name="fill_tool_dialog_color_tolerance_title">Kleurtolerantie</string>
   <string name="transform_tool_auto_crop_text">crop</string>
   <string name="transform_width_text">Width</string>
@@ -119,4 +120,8 @@
   <string name="lets_go">Let\'s Go</string>
   <string name="next">Volgende</string>
   <string name="skip">Overslaan</string>
+  <string name="pocketpaint_about_title">About</string>
+  <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
+  <string name="pocketpaint_about_url_license_description">Pocket Paint Source Code License</string>
+  <string name="pocketpaint_about_url_catrobat_description">Over Catrobat</string>
 </resources>

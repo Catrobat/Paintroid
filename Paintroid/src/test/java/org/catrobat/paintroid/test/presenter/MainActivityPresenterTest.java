@@ -253,6 +253,14 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
+	public void testShowAboutClickedThenShowAboutDialog() {
+		presenter.showAboutClicked();
+
+		verify(navigator).showAboutDialog();
+		verifyNoMoreInteractions(navigator);
+	}
+
+	@Test
 	public void testOnNewImageThenResetCommandManager() {
 		DisplayMetrics metrics = mock(DisplayMetrics.class);
 		when(view.getDisplayMetrics()).thenReturn(metrics);
