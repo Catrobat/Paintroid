@@ -63,7 +63,7 @@
   <string name="help_content_color_chooser">Seleziona o modifica un colore</string>
   <string name="closing_security_question_title">Esci</string>
   <string name="closing_security_question">Salvare le modifiche?</string>
-  <string name="closing_catroid_security_question_title">Back to project</string>
+  <string name="closing_catroid_security_question_title">Torna al progetto</string>
   <string name="menu_new_image">Nuova immagine</string>
   <string name="menu_load_image">Carica immagine</string>
   <string name="menu_save_image">Salva immagine</string>
@@ -72,7 +72,6 @@
   <string name="menu_hide_menu">Schermo intero</string>
   <string name="menu_show_menu">Esci dallo schermo intero</string>
   <string name="menu_new_image_from_camera">Nuova immagine da fotocamera</string>
-  <string name="menu_back">@string/closing_catroid_security_question_title</string>
   <string name="menu_export">Esporta</string>
   <string name="saved">Immagine salvata</string>
   <string name="copy">Copia salvata</string>
@@ -88,6 +87,8 @@
   <string name="shape_tool_dialog_ellipse_title">Ellisse</string>
   <string name="shape_tool_dialog_star_title">Stella</string>
   <string name="shape_tool_dialog_heart_title">Cuore</string>
+  <string name="shape_tool_dialog_fill_title">Riempi</string>
+  <string name="shape_tool_dialog_outline_title">Outline</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolleranza colore</string>
   <string name="transform_tool_auto_crop_text">ritaglia</string>
   <string name="transform_width_text">Larghezza</string>
@@ -119,4 +120,8 @@
   <string name="lets_go">Si comincia</string>
   <string name="next">Avanti</string>
   <string name="skip">Ignora</string>
+  <string name="pocketpaint_about_title">About</string>
+  <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
+  <string name="pocketpaint_about_url_license_description">Pocket Paint Source Code License</string>
+  <string name="pocketpaint_about_url_catrobat_description">Su Catrobat</string>
 </resources>
