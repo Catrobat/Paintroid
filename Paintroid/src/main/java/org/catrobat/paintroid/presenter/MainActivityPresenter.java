@@ -387,7 +387,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (isOpenedFromCatroid) {
 			File imageFile = new File(extraPicturePath);
 			if (imageFile.exists()) {
-				model.setSavedPictureUri(Uri.fromFile(imageFile));
+				model.setSavedPictureUri(view.getUriFromFile(imageFile));
 				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri());
 			} else {
 				interactor.createFile(this, CREATE_FILE_DEFAULT, extraPictureName);
@@ -571,7 +571,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 		switch (requestCode) {
 			case CREATE_FILE_DEFAULT:
-				model.setSavedPictureUri(Uri.fromFile(file));
+				model.setSavedPictureUri(view.getUriFromFile(file));
 				break;
 			case CREATE_FILE_TAKE_PHOTO:
 				Uri uri = view.getFileProviderUriFromFile(file);

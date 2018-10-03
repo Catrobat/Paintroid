@@ -104,6 +104,8 @@ public interface MainActivityContracts {
 
 		void forwardActivityResult(int requestCode, int resultCode, Intent data);
 
+		Uri getUriFromFile(File file);
+
 		void hideKeyboard();
 
 		boolean isKeyboardShown();

@@ -468,6 +468,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	@Override
+	public Uri getUriFromFile(File file) {
+		return Uri.fromFile(file);
+	}
+
+	@Override
 	public void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (inputMethodManager != null) {
