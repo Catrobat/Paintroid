@@ -34,6 +34,8 @@ import org.catrobat.paintroid.iotasks.LoadImageAsync;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.tools.ToolType;
 
+import java.io.File;
+
 public interface MainActivityContracts {
 	interface Navigator {
 		void showColorPickerDialog();
@@ -102,6 +104,8 @@ public interface MainActivityContracts {
 
 		void forwardActivityResult(int requestCode, int resultCode, Intent data);
 
+		Uri getUriFromFile(File file);
+
 		void hideKeyboard();
 
 		boolean isKeyboardShown();
@@ -111,6 +115,8 @@ public interface MainActivityContracts {
 		void enterFullScreen();
 
 		void exitFullScreen();
+
+		Uri getFileProviderUriFromFile(File file);
 	}
 
 	interface Presenter {

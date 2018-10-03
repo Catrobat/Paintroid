@@ -64,8 +64,7 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
 			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE
-	);
+			Manifest.permission.READ_EXTERNAL_STORAGE);
 
 	private File imageFile = null;
 

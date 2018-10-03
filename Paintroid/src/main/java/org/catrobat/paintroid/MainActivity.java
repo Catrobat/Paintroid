@@ -31,6 +31,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -75,6 +76,7 @@ import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder;
 import org.catrobat.paintroid.ui.viewholder.NavigationViewViewHolder;
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -457,6 +459,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	public void exitFullScreen() {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	}
+
+	@Override
+	public Uri getFileProviderUriFromFile(File file) {
+		String authority = getPackageName() + ".paintroid.fileprovider";
+		return FileProvider.getUriForFile(this, authority, file);
+	}
+
+	@Override
+	public Uri getUriFromFile(File file) {
+		return Uri.fromFile(file);
 	}
 
 	@Override
