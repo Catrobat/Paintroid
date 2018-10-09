@@ -582,6 +582,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			model.setSaved(true);
 		}
 
+		if (!model.isOpenedFromCatroid() || saveAsCopy) {
+			navigator.broadcastAddPictureToGallery(uri);
+		}
+
 		switch (requestCode) {
 			case SAVE_IMAGE_CHOOSE_NEW:
 				navigator.showChooseNewImageDialog();

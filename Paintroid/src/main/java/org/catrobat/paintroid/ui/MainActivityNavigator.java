@@ -226,6 +226,13 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
+	public void broadcastAddPictureToGallery(Uri uri) {
+		Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+		mediaScanIntent.setData(uri);
+		mainActivity.sendBroadcast(mediaScanIntent);
+	}
+
+	@Override
 	public void restoreFragmentListeners() {
 		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
 		Fragment fragment = fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG);

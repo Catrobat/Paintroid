@@ -78,6 +78,8 @@ public interface MainActivityContracts {
 		void showToolInfoDialog(ToolType toolType);
 
 		void showToolChangeToast(int offset, int idRes);
+
+		void broadcastAddPictureToGallery(Uri uri);
 	}
 
 	interface MainView {
