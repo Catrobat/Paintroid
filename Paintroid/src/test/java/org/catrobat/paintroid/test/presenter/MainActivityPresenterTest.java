@@ -338,11 +338,20 @@ public class MainActivityPresenterTest {
 	public void testOnNewImageThenSetInitialStateCommand() {
 		DisplayMetrics metrics = mock(DisplayMetrics.class);
 		when(view.getDisplayMetrics()).thenReturn(metrics);
-		PaintroidApplication.perspective = mock(Perspective.class);
 
 		presenter.onNewImage();
 
 		verify(commandManager).setInitialStateCommand(any(Command.class));
+	}
+
+	@Test
+	public void testOnNewImageThenResetSavedPictureUri() {
+		DisplayMetrics metrics = mock(DisplayMetrics.class);
+		when(view.getDisplayMetrics()).thenReturn(metrics);
+
+		presenter.onNewImage();
+
+		verify(model).setSavedPictureUri(null);
 	}
 
 	@Test
