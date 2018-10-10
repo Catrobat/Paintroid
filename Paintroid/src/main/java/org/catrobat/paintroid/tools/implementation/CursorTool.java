@@ -83,7 +83,7 @@ public class CursorTool extends BaseToolWithShape {
 		movedDistance.set(0, 0);
 		pathInsideBitmap = false;
 
-		pathInsideBitmap = checkPathInsideBitmap(coordinate);
+		pathInsideBitmap = checkPathInsideBitmap(toolPosition);
 		return true;
 	}
 
@@ -95,7 +95,7 @@ public class CursorTool extends BaseToolWithShape {
 		float newCursorPositionX = this.toolPosition.x + vectorCX;
 		float newCursorPositionY = this.toolPosition.y + vectorCY;
 
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && checkPathInsideBitmap(toolPosition)) {
 			pathInsideBitmap = true;
 		}
 
@@ -149,7 +149,7 @@ public class CursorTool extends BaseToolWithShape {
 	@Override
 	public boolean handleUp(PointF coordinate) {
 
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && checkPathInsideBitmap(toolPosition)) {
 			pathInsideBitmap = true;
 		}
 
