@@ -200,6 +200,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void onNewImage() {
 		DisplayMetrics metrics = view.getDisplayMetrics();
 		resetPerspectiveAfterNextCommand = true;
+		model.setSavedPictureUri(null);
 		Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 		commandManager.setInitialStateCommand(initCommand);
 		commandManager.reset();
