@@ -88,7 +88,7 @@
   <string name="shape_tool_dialog_star_title">Stella</string>
   <string name="shape_tool_dialog_heart_title">Cuore</string>
   <string name="shape_tool_dialog_fill_title">Riempi</string>
-  <string name="shape_tool_dialog_outline_title">Outline</string>
+  <string name="shape_tool_dialog_outline_title">Contorno</string>
   <string name="fill_tool_dialog_color_tolerance_title">Tolleranza colore</string>
   <string name="transform_tool_auto_crop_text">ritaglia</string>
   <string name="transform_width_text">Larghezza</string>
@@ -120,8 +120,8 @@
   <string name="lets_go">Si comincia</string>
   <string name="next">Avanti</string>
   <string name="skip">Ignora</string>
-  <string name="pocketpaint_about_title">About</string>
-  <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
-  <string name="pocketpaint_about_url_license_description">Pocket Paint Source Code License</string>
+  <string name="pocketpaint_about_title">Informazioni</string>
+  <string name="pocketpaint_about_content">Pocket Paint è un editor di immagini che fa parte del progetto Catrobat.\n\nCatrobat è un linguaggio di programmazione visuale e un insieme di strumenti per la creatività utilizzabili da smartphone, tablet e altri dispositivi mobili.\n\nIl codice sorgente di Pocket Paint è rilasciato principalmente sotto la licenza %s.\nPer i dettagli della licenza seguire il link sotto-riportato.</string>
+  <string name="pocketpaint_about_url_license_description">Licenza per il codice sorgente di Pocket Paint</string>
   <string name="pocketpaint_about_url_catrobat_description">Su Catrobat</string>
 </resources>

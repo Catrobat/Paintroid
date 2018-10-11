@@ -338,11 +338,20 @@ public class MainActivityPresenterTest {
 	public void testOnNewImageThenSetInitialStateCommand() {
 		DisplayMetrics metrics = mock(DisplayMetrics.class);
 		when(view.getDisplayMetrics()).thenReturn(metrics);
-		PaintroidApplication.perspective = mock(Perspective.class);
 
 		presenter.onNewImage();
 
 		verify(commandManager).setInitialStateCommand(any(Command.class));
+	}
+
+	@Test
+	public void testOnNewImageThenResetSavedPictureUri() {
+		DisplayMetrics metrics = mock(DisplayMetrics.class);
+		when(view.getDisplayMetrics()).thenReturn(metrics);
+
+		presenter.onNewImage();
+
+		verify(model).setSavedPictureUri(null);
 	}
 
 	@Test
@@ -1056,7 +1065,50 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true);
 
-		verifyZeroInteractions(model);
+		verify(model, never()).setSavedPictureUri(any(Uri.class));
+		verify(model, never()).setCameraImageUri(any(Uri.class));
+		verify(model, never()).setSaved(anyBoolean());
+		verify(model, never()).setOpenedFromCatroid(anyBoolean());
+		verify(model, never()).setInitialAnimationPlayed(anyBoolean());
+		verify(model, never()).setFullScreen(anyBoolean());
+	}
+
+	@Test
+	public void testOnSaveImagePostExecuteWhenSavedThenBroadcastToPictureGallery() {
+		Uri uri = mock(Uri.class);
+
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false);
+
+		verify(navigator).broadcastAddPictureToGallery(uri);
+	}
+
+	@Test
+	public void testOnSaveImagePostExecuteWhenSavedAsCopyThenBroadcastToPictureGallery() {
+		Uri uri = mock(Uri.class);
+
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true);
+
+		verify(navigator).broadcastAddPictureToGallery(uri);
+	}
+
+	@Test
+	public void testOnSaveImagePostExecuteWhenSavedFromCatroidThenDoNotBroadcastToPictureGallery() {
+		Uri uri = mock(Uri.class);
+		when(model.isOpenedFromCatroid()).thenReturn(true);
+
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false);
+
+		verify(navigator, never()).broadcastAddPictureToGallery(uri);
+	}
+
+	@Test
+	public void testOnSaveImagePostExecuteWhenSavedAsCopyFromCatroidThenBroadcastToPictureGallery() {
+		Uri uri = mock(Uri.class);
+		when(model.isOpenedFromCatroid()).thenReturn(true);
+
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true);
+
+		verify(navigator).broadcastAddPictureToGallery(uri);
 	}
 
 	@Test
