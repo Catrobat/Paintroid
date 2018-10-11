@@ -234,6 +234,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void onNewImage() {
 		DisplayMetrics metrics = view.getDisplayMetrics();
 		resetPerspectiveAfterNextCommand = true;
+		model.setSavedPictureUri(null);
 		Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 		commandManager.setInitialStateCommand(initCommand);
 		commandManager.reset();
@@ -641,6 +642,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			navigator.showToast(R.string.saved, Toast.LENGTH_LONG);
 			model.setSavedPictureUri(uri);
 			model.setSaved(true);
+		}
+
+		if (!model.isOpenedFromCatroid() || saveAsCopy) {
+			navigator.broadcastAddPictureToGallery(uri);
 		}
 
 		switch (requestCode) {

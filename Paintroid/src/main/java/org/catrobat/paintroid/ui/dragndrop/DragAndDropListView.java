@@ -98,6 +98,10 @@ public class DragAndDropListView extends ListView implements ListItemLongClickHa
 
 	@Override
 	public void handleOnItemLongClick(int position, View view) {
+		if (this.view != null) {
+			this.view.setVisibility(VISIBLE);
+		}
+
 		this.view = view;
 		this.initialPosition = position;
 		this.position = position;

@@ -108,6 +108,18 @@ public class CursorToolTest {
 
 	@UiThreadTest
 	@Test
+	public void testShouldActivateCursorOnTapEventOutsideDrawingSurface() {
+		PointF point = new PointF(-5, -5);
+
+		assertTrue(toolToTest.handleDown(point));
+		assertTrue(toolToTest.handleUp(point));
+
+		verify(commandManager).addCommand(isA(PointCommand.class));
+		assertTrue(toolToTest.toolInDrawMode);
+	}
+
+	@UiThreadTest
+	@Test
 	public void testShouldNotActivateCursorOnTabEvent() {
 		PointF pointDown = new PointF(0, 0);
 		PointF pointUp = new PointF(pointDown.x + MOVE_TOLERANCE + 1, pointDown.y + MOVE_TOLERANCE + 1);
