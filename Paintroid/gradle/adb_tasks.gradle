@@ -17,8 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.catrobat.gradle.Adb
-import org.catrobat.gradle.AndroidDevice
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.catrobat.gradle.androidemulators:android-emulators-gradle:1.0.1'
+    }
+}
+
+import org.catrobat.gradle.androidemulators.Adb
+import org.catrobat.gradle.androidemulators.AndroidDevice
 
 Adb adb() {
     new Adb(android.getAdbExecutable())
