@@ -111,11 +111,7 @@ pipeline {
 				sh "mv ${env.GRADLE_PROJECT_MODULE_NAME}/build ${env.GRADLE_PROJECT_MODULE_NAME}/build-unittest"
 
 				// Run device tests
-				sh '''
-					./gradlew startEmulator adbDisableAnimationsGlobally
-					./gradlew -PenableCoverage -Pjenkins clean createDebugCoverageReport
-					./gradlew adbResetAnimationsGlobally retrieveLogcat
-				'''
+				sh './gradlew -PenableCoverage -Pjenkins clean startEmulator adbDisableAnimationsGlobally createDebugCoverageReport'
 				// Convert the JaCoCo coverate to the Cobertura XML file format.
 				// This is done since the Jenkins JaCoCo plugin does not work well.
 				// See also JENKINS-212 on jira.catrob.at

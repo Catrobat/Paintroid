@@ -17,9 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import org.catrobat.gradle.EmulatorsPlugin
-
-apply plugin: EmulatorsPlugin
+apply plugin: 'org.catrobat.gradle.androidemulators'
 
 emulators {
     install project.hasProperty('installSdk')

@@ -1,5 +1,0 @@
-# jenkins-android-helper
-Helper scripts to be able to run the android emulator within Jenkins Pipelines.
-
-The files in this folder are retrieved from https://github.com/redeamer/jenkins-android-helper, if you
-fix a bug or add a feature, please get the change into upstream and keep this folder in sync with upstream.
