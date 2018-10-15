@@ -113,7 +113,7 @@ pipeline {
 				// Run device tests
 				sh '''
 					./gradlew startEmulator adbDisableAnimationsGlobally
-					./gradlew -PenableCoverage -Pjenkins clean createDebugCoverageReport || true
+					./gradlew -PenableCoverage -Pjenkins clean createDebugCoverageReport
 					./gradlew adbResetAnimationsGlobally retrieveLogcat
 				'''
 				// Convert the JaCoCo coverate to the Cobertura XML file format.
