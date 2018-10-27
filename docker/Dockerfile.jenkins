@@ -1,16 +1,81 @@
 FROM openjdk:8-jdk
 
-LABEL maintainer="contact@catrobat.org"
+# Android Dependencies
+# --------------------
+# Adapt the paramters below to change the dependencies.
+#
 
-## Default values for the arguments to be passed from the Jenkinsfile.
-## Those contain the uid and gid of the Jenkins user, and are used to
-## create this user inside of the container, needed for eg ssh-agent to work
+# Android SDK 26.1.1
+ARG ANDROID_SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
+
+# Android NDK r18b
+ARG ANDROID_NDK_URL="https://dl.google.com/android/repository/android-ndk-r18b-linux-x86_64.zip"
+
+ARG SDKMANAGER_PACKAGES="build-tools;27.0.3 platforms;android-26 cmake;3.6.4111459 system-images;android-24;default;x86_64 emulator platform-tools"
+
+
+# Arguments, Environment
+# ----------------------
+#
+
+# Default values for the arguments to be passed from the Jenkinsfile.
+# Those contain the uid and gid of the Jenkins user, and are used to
+# create this user inside of the container, needed for eg ssh-agent to work
 ARG USER_ID=1000
 ARG GROUP_ID=1000
+ARG KVM_GROUP_ID=999
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		lsof \
-		python3 \
-	&& rm -rf /var/lib/apt/lists/*
-## add the 'Jenkins' user
-RUN groupadd -g $GROUP_ID user && useradd -M -u $USER_ID -g $GROUP_ID -d / -s /usr/sbin/nologin user
+# Environment variables that are needed by the build job.
+
+ENV ANDROID_SDK_ROOT=/home/user/android/sdk
+ENV ANDROID_AVD_HOME=/home/user/avds
+
+# Deprecated: Still used by gradle, once gradle respects ANDROID_SDK_ROOT, this can be removed
+ENV ANDROID_HOME=$ANDROID_SDK_ROOT
+
+ARG _SDKMANAGER=$ANDROID_SDK_ROOT/tools/bin/sdkmanager
+
+# User Management
+# ---------------
+#
+
+# add the 'Jenkins' user
+# Add group of the user used by Jenkins during building.
+RUN if [ ! $(getent group $GROUP_ID) ]; then groupadd -g $GROUP_ID user; fi
+
+RUN groupadd -g $KVM_GROUP_ID kvm
+
+# Add the user used by Jenkins during building.
+RUN useradd -m -u $USER_ID -g $GROUP_ID -G $KVM_GROUP_ID -s /usr/sbin/nologin user
+
+# Run all other commands as user
+USER user
+
+RUN mkdir -p $ANDROID_AVD_HOME
+
+
+# Android SDK
+# ------------------
+#
+RUN curl $ANDROID_SDK_URL --output /tmp/android_sdk.zip \
+  && mkdir -p $ANDROID_SDK_ROOT \
+  && unzip -d $ANDROID_SDK_ROOT /tmp/android_sdk.zip \
+  && rm /tmp/android_sdk.zip
+
+
+# Android NDK
+# ----------------
+#
+RUN if [ ! -z "$ANDROID_NDK_URL" ]; then \
+    curl $ANDROID_NDK_URL --output /tmp/android_ndk.zip \
+    && mkdir -p $ANDROID_SDK_ROOT /tmp/ndk \
+    && unzip -d /tmp/ndk /tmp/android_ndk.zip \
+    && mv /tmp/ndk/* $ANDROID_SDK_ROOT/ndk-bundle \
+    && rm /tmp/android_ndk.zip; \
+  fi
+
+
+# Installing SDK Packages
+# -----------------------
+#
+RUN if [ ! -z "$SDKMANAGER_PACKAGES" ]; then yes | $_SDKMANAGER $SDKMANAGER_PACKAGES; fi
