@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -39,6 +40,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,11 +79,15 @@ import org.catrobat.paintroid.ui.viewholder.NavigationViewViewHolder;
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_NAME;
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_PATH;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_LOAD;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
 
 public class MainActivity extends AppCompatActivity implements MainActivityContracts.MainView,
 		CommandManager.CommandListener {
@@ -385,13 +391,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		if (i == R.id.pocketpaint_nav_back_to_pocket_code) {
 			presenter.backToPocketCodeClicked();
 		} else if (i == R.id.pocketpaint_nav_export) {
-			presenter.saveCopyClicked();
+			presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, null);
 		} else if (i == R.id.pocketpaint_nav_save_image) {
-			presenter.saveImageClicked();
+			presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE, null);
 		} else if (i == R.id.pocketpaint_nav_save_duplicate) {
-			presenter.saveCopyClicked();
+			presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, null);
 		} else if (i == R.id.pocketpaint_nav_open_image) {
-			presenter.loadImageClicked();
+			presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_LOAD, null);
 		} else if (i == R.id.pocketpaint_nav_new_image) {
 			presenter.newImageClicked();
 		} else if (i == R.id.pocketpaint_nav_fullscreen_mode) {
@@ -463,8 +469,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	@Override
 	public Uri getFileProviderUriFromFile(File file) {
-		String authority = getPackageName() + ".paintroid.fileprovider";
-		return FileProvider.getUriForFile(this, authority, file);
+		File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+		Uri uri = null;
+		try {
+			File image = File.createTempFile(file.getName(), ".jpg", storageDir);
+
+			String authority = getPackageName() + ".paintroid.fileprovider";
+			uri = FileProvider.getUriForFile(this, authority, image);
+		} catch (IOException e) {
+			Log.e(TAG, "Exception while creating tmp file.");
+		}
+
+		return uri;
 	}
 
 	@Override

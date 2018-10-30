@@ -129,6 +129,8 @@ public interface MainActivityContracts {
 
 		void finishInitialize();
 
+		void checkPermissionAndForward(int requestCode, Uri uri);
+
 		void loadImageClicked();
 
 		void loadNewImage();

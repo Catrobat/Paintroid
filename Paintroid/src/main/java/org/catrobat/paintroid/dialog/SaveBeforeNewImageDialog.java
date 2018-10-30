@@ -31,6 +31,8 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_IMAGE;
+
 public class SaveBeforeNewImageDialog extends AppCompatDialogFragment {
 	private static final String EXTRA_URI = "arguri";
 	private static final String EXTRA_REQUEST = "argrequest";
@@ -51,7 +53,6 @@ public class SaveBeforeNewImageDialog extends AppCompatDialogFragment {
 		final MainActivity activity = (MainActivity) getActivity();
 
 		Bundle arguments = getArguments();
-		final int requestCode = arguments.getInt(EXTRA_REQUEST);
 		final Uri uri = arguments.getParcelable(EXTRA_URI);
 
 		return new AlertDialog.Builder(activity, R.style.PocketPaintAlertDialog)
@@ -62,7 +63,7 @@ public class SaveBeforeNewImageDialog extends AppCompatDialogFragment {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						MainActivityContracts.Presenter presenter = activity.getPresenter();
-						presenter.saveImageConfirmClicked(requestCode, uri);
+						presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_IMAGE, uri);
 					}
 				})
 				.setNegativeButton(R.string.discard_button_text, new DialogInterface.OnClickListener() {

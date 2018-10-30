@@ -76,8 +76,11 @@ import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CAT
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_IMPORTPNG;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_LOAD;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_IMAGE;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
@@ -110,6 +113,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private Bundle toolBundle = new Bundle();
 	private ToolFactory toolFactory = new DefaultToolFactory();
 	private boolean focusAfterRecreate = true;
+	private Uri saveUriWhilePermissionHandling;
 
 	public MainActivityPresenter(MainView view, Model model, Navigator navigator, Interactor interactor,
 			TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
@@ -132,26 +136,16 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void loadImageClicked() {
-		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-			navigator.askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-					PERMISSION_EXTERNAL_STORAGE_LOAD);
+		if (isImageUnchanged() || model.isSaved()) {
+			navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
 		} else {
-			if (isImageUnchanged() || model.isSaved()) {
-				navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
-			} else {
-				navigator.showSaveBeforeLoadImageDialog(SAVE_IMAGE_LOAD_NEW, model.getSavedPictureUri());
-			}
+			navigator.showSaveBeforeLoadImageDialog(SAVE_IMAGE_LOAD_NEW, model.getSavedPictureUri());
 		}
 	}
 
 	@Override
 	public void loadNewImage() {
-		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-			navigator.askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-					PERMISSION_EXTERNAL_STORAGE_LOAD);
-		} else {
-			navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
-		}
+		navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
 	}
 
 	@Override
@@ -159,12 +153,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (isImageUnchanged() && !model.isOpenedFromCatroid() || model.isSaved()) {
 			navigator.showChooseNewImageDialog();
 		} else {
-			if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-				navigator.askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-						PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE);
-			} else {
-				navigator.showSaveBeforeNewImageDialog(SAVE_IMAGE_CHOOSE_NEW, model.getSavedPictureUri());
-			}
+			navigator.showSaveBeforeNewImageDialog(SAVE_IMAGE_CHOOSE_NEW, model.getSavedPictureUri());
 		}
 	}
 
@@ -185,22 +174,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveCopyClicked() {
-		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-			navigator.askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-					PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
-		} else {
-			interactor.saveCopy(this, SAVE_IMAGE_DEFAULT);
-		}
+		interactor.saveCopy(this, SAVE_IMAGE_DEFAULT);
 	}
 
 	@Override
 	public void saveImageClicked() {
-		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-			navigator.askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-					PERMISSION_EXTERNAL_STORAGE_SAVE);
-		} else {
-			interactor.saveImage(this, SAVE_IMAGE_DEFAULT, model.getSavedPictureUri());
-		}
+		interactor.saveImage(this, SAVE_IMAGE_DEFAULT, model.getSavedPictureUri());
 	}
 
 	@Override
@@ -292,15 +271,58 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
 					saveCopyClicked();
 					break;
-				case PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE:
-					newImageClicked();
+				case PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA:
+					onNewImageFromCamera();
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC:
+					saveImageConfirmClicked(SAVE_IMAGE_FINISH, saveUriWhilePermissionHandling);
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
+					saveImageConfirmClicked(SAVE_IMAGE_EXIT_CATROID, saveUriWhilePermissionHandling);
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_IMAGE:
+					saveImageConfirmClicked(SAVE_IMAGE_CHOOSE_NEW, saveUriWhilePermissionHandling);
 					break;
 				default:
 					Log.d(MainActivity.TAG, "handlePermissionRequestResults: permission granted not handled");
+
 			}
 		} else {
 			navigator.showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
 							EXTERNAL_STORAGE_PERMISSION_DIALOG, requestCode);
+		}
+	}
+
+	@Override
+	public void checkPermissionAndForward(@PermissionRequestCode int requestCode, Uri uri)
+	{
+		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+			saveUriWhilePermissionHandling = uri;
+			navigator.askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+		} else {
+			switch (requestCode) {
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
+					saveCopyClicked();
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_LOAD:
+					loadImageClicked();
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA:
+					onNewImageFromCamera();
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE:
+					saveImageClicked();
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC:
+					saveImageConfirmClicked(SAVE_IMAGE_EXIT_CATROID, uri);
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
+					saveImageConfirmClicked(SAVE_IMAGE_FINISH, uri);
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_IMAGE:
+					saveImageConfirmClicked(SAVE_IMAGE_LOAD_NEW, uri);
+					break;
+			}
 		}
 	}
 

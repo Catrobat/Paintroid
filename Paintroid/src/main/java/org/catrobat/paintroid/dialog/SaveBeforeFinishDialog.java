@@ -32,6 +32,11 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
+import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_EXIT_CATROID;
+import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
+
 public class SaveBeforeFinishDialog extends AppCompatDialogFragment {
 	private static final String EXTRA_URI = "arguri";
 	private static final String EXTRA_REQUEST = "argrequest";
@@ -65,7 +70,15 @@ public class SaveBeforeFinishDialog extends AppCompatDialogFragment {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						MainActivityContracts.Presenter presenter = activity.getPresenter();
-						presenter.saveImageConfirmClicked(requestCode, uri);
+						switch (requestCode)
+						{
+							case SAVE_IMAGE_EXIT_CATROID:
+								presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC, uri);
+								break;
+							case SAVE_IMAGE_FINISH:
+								presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, uri);
+								break;
+						}
 					}
 				})
 				.setNegativeButton(R.string.discard_button_text, new DialogInterface.OnClickListener() {
