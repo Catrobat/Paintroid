@@ -77,6 +77,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEF
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_IMPORTPNG;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_LOAD;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_FINISH;
@@ -241,7 +242,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void onNewImageFromCamera() {
-		interactor.createFile(this, CREATE_FILE_TAKE_PHOTO, null);
+		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+			navigator.askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+					PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA);
+		} else {
+			interactor.createFile(this, CREATE_FILE_TAKE_PHOTO, null);
+		}
 	}
 
 	@Override
@@ -293,6 +299,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE:
 					newImageClicked();
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA:
+					onNewImageFromCamera();
 					break;
 				default:
 					Log.d(MainActivity.TAG, "handlePermissionRequestResults: permission granted not handled");

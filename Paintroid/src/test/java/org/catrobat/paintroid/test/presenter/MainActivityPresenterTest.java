@@ -38,6 +38,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
+import org.catrobat.paintroid.iotasks.CreateFileAsync;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.tools.Tool;
@@ -58,6 +59,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CAT
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_LOAD;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_FINISH;
@@ -1088,6 +1090,39 @@ public class MainActivityPresenterTest {
 				new int[] {PackageManager.PERMISSION_GRANTED});
 
 		verify(navigator).showSaveBeforeNewImageDialog(SAVE_IMAGE_CHOOSE_NEW, model.getSavedPictureUri());
+	}
+
+	@Test
+	public void testNewImageFromCameraClickedWhenPermissionNotGrantedThenAskForPermission() {
+		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		doReturn(true).when(navigator).isSdkAboveOrEqualM();
+
+		presenter.onNewImageFromCamera();
+
+		verify(navigator).askForPermission(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA);
+	}
+
+	@Test
+	public void testHandlePermissionRequestResultForRequestAfterNewImageFromCameraClickedPermissionNotGranted() {
+		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {});
+
+		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				EXTERNAL_STORAGE_PERMISSION_DIALOG,
+				PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA);
+	}
+
+	@Test
+	public void testHandlePermissionRequestResultForRequestAfterNewImageFromCameraClickedPermissionGranted() {
+		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_NEW_IMAGE_CAMERA,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {PackageManager.PERMISSION_GRANTED});
+
+		String matcherHelper = null;
+
+		verify(interactor).createFile(any(CreateFileAsync.CreateFileCallback.class), eq(CREATE_FILE_TAKE_PHOTO), eq(matcherHelper));
 	}
 
 	@Test
