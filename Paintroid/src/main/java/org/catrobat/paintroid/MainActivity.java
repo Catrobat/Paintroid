@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
@@ -40,6 +41,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +80,7 @@ import org.catrobat.paintroid.ui.viewholder.NavigationViewViewHolder;
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -469,6 +472,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	public void exitFullScreen() {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	}
+
+	@Override
+	public File getExternalDirPictureFile() {
+		File image = null;
+		try {
+			File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+			image = File.createTempFile(FileIO.getDefaultFileName(), ".jpg", storageDir);
+			image.deleteOnExit();
+		} catch (IOException e) {
+			Log.e(TAG, "Exception while creating tmp image file.");
+		}
+		return image;
 	}
 
 	@Override
