@@ -3,6 +3,7 @@
 pipeline {
 	agent {
 		dockerfile {
+// stupid comment
 			filename 'Dockerfile.jenkins'
 			// 'docker build' would normally copy the whole build-dir to the container, changing the
 			// docker build directory avoids that overhead
