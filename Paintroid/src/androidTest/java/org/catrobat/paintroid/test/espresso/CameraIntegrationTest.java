@@ -38,8 +38,8 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.test.runner.intent.IntentCallback;
 import android.support.test.runner.intent.IntentMonitorRegistry;
 
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
@@ -76,6 +76,8 @@ public class CameraIntegrationTest {
 
 	private static ArrayList<File> deletionFileList = null;
 	private static IntentCallback cameraIntentCallback = null;
+
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
 
 	@Rule
 	public IntentsTestRule<MainActivity> intentsTestRule = new IntentsTestRule<>(MainActivity.class);
@@ -147,7 +149,7 @@ public class CameraIntegrationTest {
 
 		assertEquals("Color on drawing surface wrong",
 				Color.BLACK,
-				PaintroidApplication.drawingSurface.getPixel(new PointF(0, 0)));
+				drawingSurfaceWrapper.getPixel(new PointF(0, 0)));
 
 		IntentMonitorRegistry.getInstance().removeIntentCallback(cameraIntentCallback);
 	}
@@ -178,6 +180,6 @@ public class CameraIntegrationTest {
 
 		assertEquals("Color on drawing surface wrong",
 				Color.BLACK,
-				PaintroidApplication.drawingSurface.getPixel(testPixel));
+				drawingSurfaceWrapper.getPixel(testPixel));
 	}
 }

@@ -21,7 +21,12 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.app.Activity;
 
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.PerspectiveWrapper;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
@@ -29,21 +34,27 @@ import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolType;
 
 public class DefaultToolFactory implements ToolFactory {
+
 	@Override
-	public Tool createTool(Activity activity, ToolType toolType) {
+	public Tool createTool(Activity activity, ToolType toolType, CommandManager commandManager) {
 		Tool tool;
+		DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+		CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
+		PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
+		LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
+
 		switch (toolType) {
 			case BRUSH:
-				tool = new DrawTool(activity, toolType);
+				tool = new DrawTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case CURSOR:
-				tool = new CursorTool(activity, toolType);
+				tool = new CursorTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case STAMP:
-				tool = new StampTool(activity, toolType);
+				tool = new StampTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case IMPORTPNG:
-				tool = new ImportTool(activity, toolType);
+				tool = new ImportTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case PIPETTE:
 				final MainActivity mainActivity = (MainActivity) activity;
@@ -54,28 +65,28 @@ public class DefaultToolFactory implements ToolFactory {
 						presenter.setTopBarColor(color);
 					}
 				};
-				tool = new PipetteTool(activity, listener, toolType);
+				tool = new PipetteTool(activity, listener, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case FILL:
-				tool = new FillTool(activity, toolType);
+				tool = new FillTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case TRANSFORM:
-				tool = new TransformTool(activity, toolType);
+				tool = new TransformTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case SHAPE:
-				tool = new GeometricFillTool(activity, toolType);
+				tool = new GeometricFillTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case ERASER:
-				tool = new EraserTool(activity, toolType);
+				tool = new EraserTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case LINE:
-				tool = new LineTool(activity, toolType);
+				tool = new LineTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case TEXT:
-				tool = new TextTool(activity, toolType);
+				tool = new TextTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			default:
-				tool = new DrawTool(activity, ToolType.BRUSH);
+				tool = new DrawTool(activity, ToolType.BRUSH, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 		}
 		tool.setupToolOptions();

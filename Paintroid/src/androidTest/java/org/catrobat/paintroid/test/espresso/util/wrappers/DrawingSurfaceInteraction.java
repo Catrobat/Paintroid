@@ -26,6 +26,7 @@ import android.support.annotation.ColorRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.ContextCompat;
 
+import org.catrobat.paintroid.LayerModelWrapper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.LayerContracts;
@@ -43,6 +44,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public final class DrawingSurfaceInteraction extends CustomViewInteraction {
+
+	private LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
+
 	private DrawingSurfaceInteraction() {
 		super(onView(withId(R.id.pocketpaint_drawing_surface_view)));
 	}
@@ -80,7 +84,7 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 	}
 
 	public DrawingSurfaceInteraction checkThatLayerDimensions(Matcher<Integer> matchesWidth, Matcher<Integer> matchesHeight) {
-		List<LayerContracts.Layer> layers = PaintroidApplication.layerModel.getLayers();
+		List<LayerContracts.Layer> layers = layerModelWrapper.getLayers();
 		for (LayerContracts.Layer layer : layers) {
 			Bitmap bitmap = layer.getBitmap();
 			assertThat(bitmap.getWidth(), matchesWidth);
@@ -95,7 +99,7 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 	}
 
 	private void assertLayerDimensions(int expectedWidth, int expectedHeight) {
-		List<LayerContracts.Layer> layers = PaintroidApplication.layerModel.getLayers();
+		List<LayerContracts.Layer> layers = layerModelWrapper.getLayers();
 		for (LayerContracts.Layer layer : layers) {
 			assertBitmapDimensions(layer.getBitmap(), expectedWidth, expectedHeight);
 		}

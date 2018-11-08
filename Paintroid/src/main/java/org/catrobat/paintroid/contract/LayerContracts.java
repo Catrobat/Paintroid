@@ -30,10 +30,6 @@ public interface LayerContracts {
 
 		void removeLayer();
 
-		void onLongClickLayerAtPosition(int position, LayerViewHolder viewHolder);
-
-		void onClickLayerAtPosition(int position, LayerViewHolder viewHolder);
-
 		void setAdapter(LayerContracts.Adapter layerAdapter);
 
 		void invalidate();

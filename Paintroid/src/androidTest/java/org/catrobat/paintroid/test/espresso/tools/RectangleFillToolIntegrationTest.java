@@ -26,8 +26,11 @@ import android.graphics.PointF;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
@@ -58,12 +61,15 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class RectangleFillToolIntegrationTest {
 
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
+	private CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Before
 	public void setUp() {
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
+		drawingSurfaceWrapper.destroyDrawingCache();
 
 		selectTool(ToolType.BRUSH);
 		resetColorPicker();
@@ -87,7 +93,7 @@ public class RectangleFillToolIntegrationTest {
 	@Test
 	public void testEllipseIsDrawnOnBitmap() {
 
-		PaintroidApplication.perspective.setScale(1.0f);
+		perspectiveWrapper.setScale(1.0f);
 
 		selectTool(ToolType.SHAPE);
 
@@ -98,7 +104,7 @@ public class RectangleFillToolIntegrationTest {
 		float rectHeight = ellipseTool.boxHeight;
 
 		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);
-		int colorBeforeDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		int colorBeforeDrawing = drawingSurfaceWrapper.getPixel(pointUnderTest);
 
 		clickSelectedToolButton();
 
@@ -106,45 +112,45 @@ public class RectangleFillToolIntegrationTest {
 
 		pressBack();
 
-		int colorPickerColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		int colorPickerColor = currentToolWrapper.getDrawPaint().getColor();
 
-		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		int colorAfterDrawing = drawingSurfaceWrapper.getPixel(pointUnderTest);
 
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor, colorAfterDrawing);
 
 		onView(withId(R.id.pocketpaint_btn_top_undo)).perform(click());
 
-		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		int colorAfterUndo = drawingSurfaceWrapper.getPixel(pointUnderTest);
 		assertEquals(colorBeforeDrawing, colorAfterUndo);
 
 		onView(withId(R.id.pocketpaint_btn_top_redo)).perform(click());
 
-		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		int colorAfterRedo = drawingSurfaceWrapper.getPixel(pointUnderTest);
 		assertEquals(colorPickerColor, colorAfterRedo);
 
 		pointUnderTest.x = centerPointTool.x + (rectHeight / 2.5f);
-		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		colorAfterDrawing = drawingSurfaceWrapper.getPixel(pointUnderTest);
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor, colorAfterDrawing);
 
 		pointUnderTest.y = centerPointTool.y + (rectHeight / 2.5f);
 		// now the point under test is diagonal from the center -> if its a circle there should be no color
-		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		colorAfterDrawing = drawingSurfaceWrapper.getPixel(pointUnderTest);
 		assertTrue("Pixel should not have been filled for a circle", (colorPickerColor != colorAfterDrawing));
 	}
 
 	@Test
 	public void testRectOnBitmapHasSameColorAsInColorPickerAfterColorChange() {
-		int colorPickerColorBeforeChange = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		int colorPickerColorBeforeChange = currentToolWrapper.getDrawPaint().getColor();
 
 		final int colorButtonPosition = 5;
 		selectColorPickerPresetSelectorColor(colorButtonPosition);
 
-		int colorPickerColorAfterChange = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		int colorPickerColorAfterChange = currentToolWrapper.getDrawPaint().getColor();
 		assertNotEquals("Colors should not be the same", colorPickerColorAfterChange, colorPickerColorBeforeChange);
 
 		selectTool(ToolType.SHAPE);
 
-		int colorInRectangleTool = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		int colorInRectangleTool = currentToolWrapper.getDrawPaint().getColor();
 		assertEquals("Colors should be the same", colorPickerColorAfterChange, colorInRectangleTool);
 
 		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
@@ -231,7 +237,7 @@ public class RectangleFillToolIntegrationTest {
 
 	@Test
 	public void testEraseWithHeartShape() {
-		PaintroidApplication.perspective.setScale(1.0f);
+		perspectiveWrapper.setScale(1.0f);
 
 		selectTool(ToolType.SHAPE);
 		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
@@ -248,7 +254,7 @@ public class RectangleFillToolIntegrationTest {
 		Point upperLeftPixel = new Point((int) (toolPosition.x - boxWidth / 4), (int) (toolPosition.y - boxHeight / 4));
 		Point upperRightPixel = new Point((int) (toolPosition.x + boxWidth / 4), (int) (toolPosition.y - boxHeight / 4));
 
-		Bitmap bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		Bitmap bitmap = drawingSurfaceWrapper.getBitmapCopy();
 
 		int pixelColor = bitmap.getPixel(upperLeftPixel.x, upperLeftPixel.y);
 		assertEquals("Pixel should have been erased", Color.TRANSPARENT, pixelColor);
@@ -287,8 +293,8 @@ public class RectangleFillToolIntegrationTest {
 
 		onView(isRoot()).perform(touchAt(centerPointTool.x - 1, centerPointTool.y - 1));
 
-		int colorPickerColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		int colorPickerColor = currentToolWrapper.getDrawPaint().getColor();
+		int colorAfterDrawing = drawingSurfaceWrapper.getPixel(pointUnderTest);
 		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor, colorAfterDrawing);
 	}
 }

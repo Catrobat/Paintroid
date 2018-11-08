@@ -25,8 +25,12 @@ import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PointF;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -37,8 +41,10 @@ public class LineTool extends BaseTool {
 	protected boolean pathInsideBitmap;
 	private BrushPickerView brushPickerView;
 
-	public LineTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public LineTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+					CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
+					LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
+		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 	}
 
 	@Override
@@ -51,8 +57,8 @@ public class LineTool extends BaseTool {
 
 		canvas.save();
 		canvas.clipRect(0, 0,
-				PaintroidApplication.drawingSurface.getBitmapWidth(),
-				PaintroidApplication.drawingSurface.getBitmapHeight());
+				drawingSurfaceWrapper.getBitmapWidth(),
+				drawingSurfaceWrapper.getBitmapHeight());
 		if (CANVAS_PAINT.getAlpha() == 0x00) {
 			CANVAS_PAINT.setColor(Color.BLACK);
 			canvas.drawLine(initialEventCoordinate.x,
@@ -105,7 +111,7 @@ public class LineTool extends BaseTool {
 
 		if (pathInsideBitmap) {
 			Command command = commandFactory.createPathCommand(BITMAP_PAINT, finalPath);
-			PaintroidApplication.commandManager.addCommand(command);
+			commandManager.addCommand(command);
 		}
 
 		return true;

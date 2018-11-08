@@ -26,8 +26,9 @@ import android.graphics.PointF;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.tools.ToolType;
@@ -66,12 +67,14 @@ public class LineToolIntegrationTest {
 	private int displayHeight;
 
 	private PointF pointOnScreenMiddle;
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
 
 	@Before
 	public void setUp() {
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
+		drawingSurfaceWrapper.destroyDrawingCache();
 
 		displayWidth = activityHelper.getDisplayWidth();
 		displayHeight = activityHelper.getDisplayHeight();
@@ -92,54 +95,54 @@ public class LineToolIntegrationTest {
 	@Test
 	public void testVerticalLineColor() {
 		PointF pointOnSurface = getSurfacePointFromScreenPoint(pointOnScreenMiddle);
-		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
+		PointF pointOnCanvas = perspectiveWrapper.getCanvasPointFromSurfacePoint(pointOnSurface);
 
-		int currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		int currentColor = drawingSurfaceWrapper.getPixel(pointOnCanvas);
 
 		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, currentColor);
 
 		onView(isRoot()).perform(swipe(pointOnScreenMiddle.x, pointOnScreenMiddle.y - HALF_LINE_LENGTH, pointOnScreenMiddle.x, pointOnScreenMiddle.y + HALF_LINE_LENGTH));
 
-		currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		currentColor = drawingSurfaceWrapper.getPixel(pointOnCanvas);
 		assertEquals("Color after drawing line has to be black", Color.BLACK, currentColor);
 	}
 
 	@Test
 	public void testHorizontalLineColor() {
 		PointF pointOnSurface = getSurfacePointFromScreenPoint(pointOnScreenMiddle);
-		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
+		PointF pointOnCanvas = perspectiveWrapper.getCanvasPointFromSurfacePoint(pointOnSurface);
 
-		int currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		int currentColor = drawingSurfaceWrapper.getPixel(pointOnCanvas);
 
 		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, currentColor);
 
 		onView(isRoot()).perform(swipe(pointOnScreenMiddle.x - HALF_LINE_LENGTH, pointOnScreenMiddle.y, pointOnScreenMiddle.x + HALF_LINE_LENGTH, pointOnScreenMiddle.y));
 
-		currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		currentColor = drawingSurfaceWrapper.getPixel(pointOnCanvas);
 		assertEquals("Color after drawing line has to be black", Color.BLACK, currentColor);
 	}
 
 	@Test
 	public void testDiagonalLineColor() {
 		PointF pointOnSurface = getSurfacePointFromScreenPoint(pointOnScreenMiddle);
-		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
+		PointF pointOnCanvas = perspectiveWrapper.getCanvasPointFromSurfacePoint(pointOnSurface);
 
-		int currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		int currentColor = drawingSurfaceWrapper.getPixel(pointOnCanvas);
 
 		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, currentColor);
 
 		onView(isRoot()).perform(swipe(pointOnScreenMiddle.x - HALF_LINE_LENGTH, pointOnScreenMiddle.y + HALF_LINE_LENGTH, pointOnScreenMiddle.x + HALF_LINE_LENGTH, pointOnScreenMiddle.y - HALF_LINE_LENGTH));
 
-		currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		currentColor = drawingSurfaceWrapper.getPixel(pointOnCanvas);
 		assertEquals("Color after drawing line has to be black", Color.BLACK, currentColor);
 	}
 
 	@Test
 	public void testChangeLineToolForm() throws NoSuchFieldException, IllegalAccessException {
 		PointF pointOnSurface = getSurfacePointFromScreenPoint(pointOnScreenMiddle);
-		PointF pointOnCanvas = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(pointOnSurface);
+		PointF pointOnCanvas = perspectiveWrapper.getCanvasPointFromSurfacePoint(pointOnSurface);
 
-		int currentColor = PaintroidApplication.drawingSurface.getPixel(pointOnCanvas);
+		int currentColor = drawingSurfaceWrapper.getPixel(pointOnCanvas);
 
 		assertEquals("Color before doing anything has to be transparent", Color.TRANSPARENT, currentColor);
 

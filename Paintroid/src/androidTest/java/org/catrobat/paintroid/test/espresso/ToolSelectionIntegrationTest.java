@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 
 import junit.framework.AssertionFailedError;
 
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -65,6 +66,7 @@ public class ToolSelectionIntegrationTest {
 	private static final int START = R.id.pocketpaint_tools_brush;
 	private static final int MIDDLE = R.id.pocketpaint_tools_cursor;
 	private static final int END = R.id.pocketpaint_tools_import;
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -80,7 +82,7 @@ public class ToolSelectionIntegrationTest {
 	public void setUp() {
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
+		drawingSurfaceWrapper.destroyDrawingCache();
 
 		toolsLayout = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_tools_layout);
 		scrollView = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_bottom_bar_scroll_view);

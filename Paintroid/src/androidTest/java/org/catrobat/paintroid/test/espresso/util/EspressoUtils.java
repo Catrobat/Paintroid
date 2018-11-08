@@ -78,7 +78,6 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 
 public final class EspressoUtils {
-
 	public static final Paint.Cap DEFAULT_STROKE_CAP = Paint.Cap.ROUND;
 
 	public static final int DEFAULT_STROKE_WIDTH = 25;

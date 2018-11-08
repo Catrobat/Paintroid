@@ -23,8 +23,9 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,13 +37,14 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class BitmapIntegrationTest {
-
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+	private LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Before
 	public void setUp() {
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
+		drawingSurfaceWrapper.destroyDrawingCache();
 
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
@@ -50,8 +52,8 @@ public class BitmapIntegrationTest {
 
 	@Test
 	public void drawingSurfaceBitmapIsDisplaySize() {
-		final int bitmapWidth = PaintroidApplication.layerModel.getWidth();
-		final int bitmapHeight = PaintroidApplication.layerModel.getHeight();
+		final int bitmapWidth = layerModelWrapper.getWidth();
+		final int bitmapHeight = layerModelWrapper.getHeight();
 
 		DisplayMetrics metrics = launchActivityRule.getActivity().getResources().getDisplayMetrics();
 

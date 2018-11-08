@@ -15,7 +15,8 @@ pipeline {
 			additionalBuildArgs '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --build-arg KVM_GROUP_ID=$(getent group kvm | cut -d: -f3)'
 			// Ensure that each executor has its own gradle cache to not affect other builds
 			// that run concurrently.
-			args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle'
+			args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=7G --cpus=3.5'
+			label 'LimitedEmulator'
 		}
 	}
 
@@ -45,6 +46,7 @@ pipeline {
 
 	triggers {
 		cron(env.BRANCH_NAME == 'develop' ? '@midnight' : '')
+		issueCommentTrigger('.*test this please.*')
 	}
 
 	stages {

@@ -26,7 +26,7 @@ import android.support.annotation.ColorRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.ContextCompat;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.CurrentToolWrapper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,13 +34,13 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 	private ToolPropertiesInteraction() {
 		super(null);
 	}
-
+	private CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
 	public static ToolPropertiesInteraction onToolProperties() {
 		return new ToolPropertiesInteraction();
 	}
 
 	public ToolPropertiesInteraction checkColor(@ColorInt int expectedColor) {
-		assertEquals(expectedColor, PaintroidApplication.currentTool.getDrawPaint().getColor());
+		assertEquals(expectedColor, currentToolWrapper.getDrawPaint().getColor());
 		return this;
 	}
 
@@ -50,13 +50,13 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 	}
 
 	public ToolPropertiesInteraction checkCap(Cap expectedCap) {
-		Paint strokePaint = PaintroidApplication.currentTool.getDrawPaint();
+		Paint strokePaint = currentToolWrapper.getDrawPaint();
 		assertEquals(expectedCap, strokePaint.getStrokeCap());
 		return this;
 	}
 
 	public ToolPropertiesInteraction checkStrokeWidth(float expectedStrokeWidth) {
-		Paint strokePaint = PaintroidApplication.currentTool.getDrawPaint();
+		Paint strokePaint = currentToolWrapper.getDrawPaint();
 		assertEquals(expectedStrokeWidth, strokePaint.getStrokeWidth(), Float.MIN_VALUE);
 		return this;
 	}

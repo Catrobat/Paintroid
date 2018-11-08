@@ -17,12 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools;
+package org.catrobat.paintroid;
 
-import android.app.Activity;
+import android.graphics.Paint;
 
-import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolType;
 
-public interface ToolFactory {
-	Tool createTool(Activity activity, ToolType toolType, CommandManager commandManager);
+public class CurrentToolWrapper {
+
+	public void resetInternalState(Tool.StateChange stateChange) {
+		PaintroidApplication.currentTool.resetInternalState(stateChange);
+	}
+
+	public ToolType getToolType() {
+		return PaintroidApplication.currentTool.getToolType();
+	}
+
+	public Paint getDrawPaint() {
+		return PaintroidApplication.currentTool.getDrawPaint();
+	}
+
+	public boolean getToolOptionsAreShown() {
+		return PaintroidApplication.currentTool.getToolOptionsAreShown();
+	}
+
+	public void changePaintStrokeWidth(int strokeWidth) {
+		PaintroidApplication.currentTool.changePaintStrokeWidth(strokeWidth);
+	}
+
+	public void hide() {
+		PaintroidApplication.currentTool.hide();
+	}
 }

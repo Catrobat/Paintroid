@@ -33,6 +33,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
@@ -110,12 +112,15 @@ public class TextToolIntegrationTest {
 	private ToggleButton boldToggleButton;
 	private Spinner textSizeSpinner;
 
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+	private LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
+
 	@Before
 	public void setUp() {
 
 		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
 
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
+		drawingSurfaceWrapper.destroyDrawingCache();
 
 		resetColorPicker();
 		resetDrawPaintAndBrushPickerView();
@@ -452,21 +457,21 @@ public class TextToolIntegrationTest {
 
 		onView(isRoot()).perform(touchAt(screenPoint));
 
-		int surfaceBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		int surfaceBitmapWidth = drawingSurfaceWrapper.getBitmapWidth();
 		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
-		PaintroidApplication.layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		layerModelWrapper.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals(numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 
 		onTopBarView()
 				.performUndo();
 
-		PaintroidApplication.layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		layerModelWrapper.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals(0, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 
 		onTopBarView()
 				.performRedo();
 
-		PaintroidApplication.layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		layerModelWrapper.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals(numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 	}
 
@@ -597,7 +602,7 @@ public class TextToolIntegrationTest {
 		PointF actualBoxPosition = getToolMemberBoxPosition();
 		float boxHeight = getToolMemberBoxHeight();
 
-		float expectedBoxPositionX = PaintroidApplication.drawingSurface.getBitmapWidth() / 2.0f;
+		float expectedBoxPositionX = drawingSurfaceWrapper.getBitmapWidth() / 2.0f;
 		float expectedBoxPositionY = boxHeight / 2.0f + marginTop;
 
 		assertEquals(expectedBoxPositionX, actualBoxPosition.x, EQUALS_DELTA);

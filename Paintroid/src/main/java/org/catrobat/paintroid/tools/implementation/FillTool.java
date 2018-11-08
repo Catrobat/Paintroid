@@ -32,16 +32,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
 import java.util.Locale;
 
 public class FillTool extends BaseTool {
+
 	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 12;
 	public static final int MAX_ABSOLUTE_TOLERANCE = 510;
 
@@ -51,8 +55,10 @@ public class FillTool extends BaseTool {
 	private EditText colorToleranceEditText;
 	private View fillToolOptionsView;
 
-	public FillTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public FillTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+					CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
+					LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
+		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 	}
 
 	public void updateColorTolerance(int colorToleranceInPercent) {
@@ -78,21 +84,19 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-
-		int bitmapHeight = drawingSurface.getBitmapHeight();
-		int bitmapWidth = drawingSurface.getBitmapWidth();
+		int bitmapHeight = drawingSurfaceWrapper.getBitmapHeight();
+		int bitmapWidth = drawingSurfaceWrapper.getBitmapWidth();
 
 		if (coordinate.x > bitmapWidth || coordinate.y > bitmapHeight
 				|| coordinate.x < 0 || coordinate.y < 0) {
 			return false;
 		}
 
-		if (colorTolerance == 0 && BITMAP_PAINT.getColor() == drawingSurface.getPixel(coordinate)) {
+		if (colorTolerance == 0 && BITMAP_PAINT.getColor() == drawingSurfaceWrapper.getPixel(coordinate)) {
 			return false;
 		}
 		Command command = commandFactory.createFillCommand((int) coordinate.x, (int) coordinate.y, BITMAP_PAINT, colorTolerance);
-		PaintroidApplication.commandManager.addCommand(command);
+		commandManager.addCommand(command);
 
 		return true;
 	}
