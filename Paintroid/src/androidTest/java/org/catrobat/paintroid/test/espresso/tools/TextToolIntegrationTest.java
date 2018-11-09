@@ -90,7 +90,12 @@ public class TextToolIntegrationTest {
 	private static final String FONT_STC = "STC";
 	private static final String FONT_DUBAI = "Dubai";
 
-	private static final int DEFAULT_TEXT_SIZE_20 = 20;
+	private static final int TEXT_SIZE_30 = 30;
+
+	private static final String TEXT_SIZE_20_STRING = "20px";
+	private static final String TEXT_SIZE_30_STRING = "30px";
+	private static final String TEXT_SIZE_40_STRING = "40px";
+	private static final String TEXT_SIZE_60_STRING = "60px";
 
 	private static final double EQUALS_DELTA = 0.25d;
 	@Rule
@@ -103,6 +108,7 @@ public class TextToolIntegrationTest {
 	private ToggleButton underlinedToggleButton;
 	private ToggleButton italicToggleButton;
 	private ToggleButton boldToggleButton;
+	private Spinner textSizeSpinner;
 
 	@Before
 	public void setUp() {
@@ -123,6 +129,7 @@ public class TextToolIntegrationTest {
 		underlinedToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		italicToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
+		textSizeSpinner = (Spinner) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
 
 		textTool.resetBoxPosition();
 	}
@@ -164,8 +171,8 @@ public class TextToolIntegrationTest {
 		boolean actualBold = boldToggleButton.isChecked();
 		assertEquals(expectedBold, actualBold);
 
-		int expectedTextSize = getToolMemberTextSize();
-		assertEquals(expectedTextSize, DEFAULT_TEXT_SIZE_20);
+		String actualTextSize = (String) textSizeSpinner.getSelectedItem();
+		assertEquals("Wrong text size selected", TEXT_SIZE_20_STRING, actualTextSize);
 	}
 
 	@Test
@@ -205,6 +212,10 @@ public class TextToolIntegrationTest {
 		assertFalse(getToolMemberBold());
 		assertFalse(boldToggleButton.isChecked());
 		assertEquals(getFontString(FormattingOptions.BOLD), boldToggleButton.getText().toString());
+
+		selectFormatting(FormattingOptions.SIZE_30);
+		assertEquals("Tool member has wrong value for text size", TEXT_SIZE_30, getToolMemberTextSize());
+		assertEquals("Wrong current item of text size spinner", TEXT_SIZE_30_STRING, textSizeSpinner.getSelectedItem());
 	}
 
 	@Test
@@ -214,6 +225,7 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.UNDERLINE);
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
+		selectFormatting(FormattingOptions.SIZE_40);
 
 		onToolBarView()
 				.performCloseToolOptions();
@@ -232,6 +244,8 @@ public class TextToolIntegrationTest {
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
+		assertEquals("Wrong text size selected after reopen dialog",
+				String.valueOf(TEXT_SIZE_40_STRING), textSizeSpinner.getSelectedItem());
 		checkTextBoxDimensions();
 	}
 
@@ -242,6 +256,7 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.UNDERLINE);
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
+		selectFormatting(FormattingOptions.SIZE_40);
 
 		final PointF toolMemberBoxPosition = getToolMemberBoxPosition();
 		PointF expectedPosition = new PointF(toolMemberBoxPosition.x, toolMemberBoxPosition.y);
@@ -256,6 +271,7 @@ public class TextToolIntegrationTest {
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
+		assertEquals("Wrong text size selected after reopen dialog", TEXT_SIZE_40_STRING, textSizeSpinner.getSelectedItem());
 
 		assertEquals(expectedPosition, getToolMemberBoxPosition());
 		checkTextBoxDimensions();
@@ -380,6 +396,42 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
+	public void testInputTextAndFormatForTextSize30() {
+		enterTestText();
+
+		float boxWidth = getToolMemberBoxWidth();
+		float boxHeight = getToolMemberBoxHeight();
+		selectFormatting(FormattingOptions.SIZE_30);
+		checkTextBoxDimensions();
+		assertTrue("Text box width should be larger with bigger text size", getToolMemberBoxWidth() > boxWidth);
+		assertTrue("Text box height should be larger with bigger text size", getToolMemberBoxHeight() > boxHeight);
+	}
+
+	@Test
+	public void testInputTextAndFormatForTextSize40() {
+		enterTestText();
+
+		float boxWidth = getToolMemberBoxWidth();
+		float boxHeight = getToolMemberBoxHeight();
+		selectFormatting(FormattingOptions.SIZE_40);
+		checkTextBoxDimensions();
+		assertTrue("Text box width should be larger with bigger text size", getToolMemberBoxWidth() > boxWidth);
+		assertTrue("Text box height should be larger with bigger text size", getToolMemberBoxHeight() > boxHeight);
+	}
+
+	@Test
+	public void testInputTextAndFormatForTextSize60() {
+		enterTestText();
+
+		float boxWidth = getToolMemberBoxWidth();
+		float boxHeight = getToolMemberBoxHeight();
+		selectFormatting(FormattingOptions.SIZE_60);
+		checkTextBoxDimensions();
+		assertTrue("Text box width should be larger with bigger text size", getToolMemberBoxWidth() > boxWidth);
+		assertTrue("Text box height should be larger with bigger text size", getToolMemberBoxHeight() > boxHeight);
+	}
+
+	@Test
 	public void testCommandUndoAndRedo() {
 		enterMultilineTestText();
 
@@ -490,7 +542,11 @@ public class TextToolIntegrationTest {
 		boolean italic = italicToggleButton.isChecked();
 
 		String font = (String) fontSpinner.getSelectedItem();
-		float textSize = (float) DEFAULT_TEXT_SIZE_20 * textSizeMagnificationFactor;
+
+		String stringTextSize = ((String) textSizeSpinner.getSelectedItem());
+		stringTextSize = stringTextSize.substring(0, stringTextSize.indexOf("px"));
+		float textSize = Float.valueOf(stringTextSize) * textSizeMagnificationFactor;
+
 		Paint textPaint = new Paint();
 		textPaint.setAntiAlias(true);
 		textPaint.setTextSize(textSize);
@@ -596,6 +652,15 @@ public class TextToolIntegrationTest {
 			case BOLD:
 				onView(withText(getFontString(format))).perform(click());
 				break;
+			case SIZE_20:
+			case SIZE_30:
+			case SIZE_40:
+			case SIZE_60:
+				onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_text_size)).perform(click());
+				onData(allOf(is(instanceOf(String.class)), is(getFontString(format))))
+						.inRoot(isPlatformPopup())
+						.perform(click());
+				break;
 			default:
 				fail("Formatting option not supported.");
 		}
@@ -619,6 +684,14 @@ public class TextToolIntegrationTest {
 				return activityHelper.getString(R.string.text_tool_dialog_italic_shortcut);
 			case BOLD:
 				return activityHelper.getString(R.string.text_tool_dialog_bold_shortcut);
+			case SIZE_20:
+				return String.valueOf(TEXT_SIZE_20_STRING);
+			case SIZE_30:
+				return String.valueOf(TEXT_SIZE_30_STRING);
+			case SIZE_40:
+				return String.valueOf(TEXT_SIZE_40_STRING);
+			case SIZE_60:
+				return String.valueOf(TEXT_SIZE_60_STRING);
 
 			default:
 				return null;
@@ -692,6 +765,6 @@ public class TextToolIntegrationTest {
 	}
 
 	private enum FormattingOptions {
-		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, STC, DUBAI
+		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, STC, DUBAI, SIZE_20, SIZE_30, SIZE_40, SIZE_60
 	}
 }
