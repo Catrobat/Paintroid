@@ -48,14 +48,17 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandFactory;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
 import org.catrobat.paintroid.listener.BrushPickerView.OnBrushChangedListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
 
 public abstract class BaseTool implements Tool {
 	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
@@ -85,13 +88,24 @@ public abstract class BaseTool implements Tool {
 	PointF previousEventCoordinate;
 	private LinearLayout toolOptionsLayout;
 	CommandFactory commandFactory = new DefaultCommandFactory();
+	protected CommandManager commandManager;
+	protected DrawingSurfaceWrapper drawingSurfaceWrapper;
+	protected CurrentToolWrapper currentToolWrapper;
+	protected PerspectiveWrapper perspectiveWrapper;
+	protected LayerModelWrapper layerModelWrapper;
 
-	public BaseTool(Context context, ToolType toolType) {
+	public BaseTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+					CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
+					LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
 		super();
 		this.toolType = toolType;
 		this.context = context;
+		this.commandManager = commandManager;
 		eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
-
+		this.drawingSurfaceWrapper = drawingSurfaceWrapper;
+		this.currentToolWrapper = currentToolWrapper;
+		this.perspectiveWrapper = perspectiveWrapper;
+		this.layerModelWrapper = layerModelWrapper;
 		Resources resources = context.getResources();
 		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
@@ -232,9 +246,8 @@ public abstract class BaseTool implements Tool {
 	}
 
 	boolean checkPathInsideBitmap(PointF coordinate) {
-		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-		return (coordinate.x < drawingSurface.getBitmapWidth())
-				&& (coordinate.y < drawingSurface.getBitmapHeight())
+		return (coordinate.x < drawingSurfaceWrapper.getBitmapWidth())
+				&& (coordinate.y < drawingSurfaceWrapper.getBitmapHeight())
 				&& (coordinate.x > 0) && (coordinate.y > 0);
 	}
 
@@ -261,7 +274,7 @@ public abstract class BaseTool implements Tool {
 
 		if (toolOptionsShown) {
 			if (motionEventType == MotionEvent.ACTION_UP) {
-				PointF surfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(coordinate);
+				PointF surfacePoint = perspectiveWrapper.getSurfacePointFromCanvasPoint(coordinate);
 				float toolOptionsOnSurfaceY = ((Activity) context).findViewById(R.id.pocketpaint_main_tool_options).getY()
 						- ((Activity) context).findViewById(R.id.pocketpaint_toolbar).getHeight();
 				if (surfacePoint.y < toolOptionsOnSurfaceY) {
@@ -346,7 +359,7 @@ public abstract class BaseTool implements Tool {
 
 	@Override
 	public void startTool() {
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+		drawingSurfaceWrapper.refreshDrawingSurface();
 	}
 
 	@Override

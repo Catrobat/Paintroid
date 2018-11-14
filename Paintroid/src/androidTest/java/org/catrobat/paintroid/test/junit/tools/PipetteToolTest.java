@@ -26,8 +26,12 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
@@ -45,6 +49,11 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
 public class PipetteToolTest {
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+	private CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
+	private LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
+	private CommandManager commandManager = mock(CommandManager.class);
 
 	private static final int X_COORDINATE_RED = 1;
 	private static final int X_COORDINATE_GREEN = 3;
@@ -62,9 +71,10 @@ public class PipetteToolTest {
 	public void setUp() {
 		listener = mock(OnColorPickedListener.class);
 
-		toolToTest = new PipetteTool(activityTestRule.getActivity(), listener, ToolType.PIPETTE);
+		toolToTest = new PipetteTool(activityTestRule.getActivity(), listener, ToolType.PIPETTE,
+				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
-		Bitmap bitmap = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap bitmap = layerModelWrapper.getCurrentLayer().getBitmap();
 		bitmap.setPixel(X_COORDINATE_RED, 0, Color.RED);
 		bitmap.setPixel(X_COORDINATE_GREEN, 0, Color.GREEN);
 		bitmap.setPixel(X_COORDINATE_BLUE, 0, Color.BLUE);

@@ -25,13 +25,12 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,7 +53,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class UndoRedoIntegrationTest {
-
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -175,7 +174,6 @@ public class UndoRedoIntegrationTest {
 
 	@Test
 	public void testPreserveZoomAndMoveAfterUndo() {
-		Perspective perspective = PaintroidApplication.perspective;
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -184,21 +182,20 @@ public class UndoRedoIntegrationTest {
 		int translationX = 10;
 		int translationY = 15;
 
-		perspective.setScale(scale);
-		perspective.setSurfaceTranslationX(translationX);
-		perspective.setSurfaceTranslationY(translationY);
+		perspectiveWrapper.setScale(scale);
+		perspectiveWrapper.setSurfaceTranslationX(translationX);
+		perspectiveWrapper.setSurfaceTranslationY(translationY);
 
 		onTopBarView()
 				.performUndo();
 
-		assertEquals(scale, perspective.getScale(), Float.MIN_VALUE);
-		assertEquals(translationX, perspective.getSurfaceTranslationX(), Float.MIN_VALUE);
-		assertEquals(translationY, perspective.getSurfaceTranslationY(), Float.MIN_VALUE);
+		assertEquals(scale, perspectiveWrapper.getScale(), Float.MIN_VALUE);
+		assertEquals(translationX, perspectiveWrapper.getSurfaceTranslationX(), Float.MIN_VALUE);
+		assertEquals(translationY, perspectiveWrapper.getSurfaceTranslationY(), Float.MIN_VALUE);
 	}
 
 	@Test
 	public void testPreserveZoomAndMoveAfterRedo() {
-		Perspective perspective = PaintroidApplication.perspective;
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -210,15 +207,15 @@ public class UndoRedoIntegrationTest {
 		int translationX = 10;
 		int translationY = 15;
 
-		perspective.setScale(scale);
-		perspective.setSurfaceTranslationX(translationX);
-		perspective.setSurfaceTranslationY(translationY);
+		perspectiveWrapper.setScale(scale);
+		perspectiveWrapper.setSurfaceTranslationX(translationX);
+		perspectiveWrapper.setSurfaceTranslationY(translationY);
 
 		onTopBarView()
 				.performRedo();
 
-		assertEquals(scale, perspective.getScale(), Float.MIN_VALUE);
-		assertEquals(translationX, perspective.getSurfaceTranslationX(), Float.MIN_VALUE);
-		assertEquals(translationY, perspective.getSurfaceTranslationY(), Float.MIN_VALUE);
+		assertEquals(scale, perspectiveWrapper.getScale(), Float.MIN_VALUE);
+		assertEquals(translationX, perspectiveWrapper.getSurfaceTranslationX(), Float.MIN_VALUE);
+		assertEquals(translationY, perspectiveWrapper.getSurfaceTranslationY(), Float.MIN_VALUE);
 	}
 }

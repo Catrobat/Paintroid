@@ -21,7 +21,7 @@ package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import android.support.test.espresso.ViewInteraction;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -36,6 +36,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 
 public final class ToolBarViewInteraction extends CustomViewInteraction {
+
+	private CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
 	private ToolBarViewInteraction() {
 		super(onView(withId(R.id.pocketpaint_toolbar)));
 	}
@@ -45,7 +47,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onSelectedToolButton() {
-		return onView(withId(PaintroidApplication.currentTool.getToolType().getToolButtonID()));
+		return onView(withId(currentToolWrapper.getToolType().getToolButtonID()));
 	}
 
 	public ViewInteraction onToolOptions() {
@@ -61,7 +63,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 	public ToolBarViewInteraction performSelectTool(ToolType toolType) {
 		onView(withId(toolType.getToolButtonID()))
 				.perform(scrollTo());
-		if (PaintroidApplication.currentTool.getToolType() != toolType) {
+		if (currentToolWrapper.getToolType() != toolType) {
 			onView(withId(toolType.getToolButtonID()))
 					.perform(click());
 		}

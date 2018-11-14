@@ -5,7 +5,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ScrollingViewIntegrationTest {
-
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -44,7 +44,7 @@ public class ScrollingViewIntegrationTest {
 	public void testScrollingViewDrawTool() throws NoSuchFieldException, IllegalAccessException {
 
 		final int perspectiveScale = 5;
-		PaintroidApplication.perspective.setScale(perspectiveScale);
+		perspectiveWrapper.setScale(perspectiveScale);
 
 		float surfaceWidth = getSurfaceWidth();
 		float surfaceHeight = getSurfaceHeight();
@@ -104,7 +104,7 @@ public class ScrollingViewIntegrationTest {
 	@Test
 	public void testScrollingViewCursorTool() throws NoSuchFieldException, IllegalAccessException {
 		final int perspectiveScale = 5;
-		PaintroidApplication.perspective.setScale(perspectiveScale);
+		perspectiveWrapper.setScale(perspectiveScale);
 
 		float surfaceWidth = getSurfaceWidth();
 		float surfaceHeight = getSurfaceHeight();

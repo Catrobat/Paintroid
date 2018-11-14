@@ -23,8 +23,8 @@ import android.graphics.Color;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
@@ -66,6 +66,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class LandscapeIntegrationTest {
 
+	private CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -135,9 +136,9 @@ public class LandscapeIntegrationTest {
 
 			selectTool(toolType);
 
-			assertEquals(toolType, PaintroidApplication.currentTool.getToolType());
+			assertEquals(toolType, currentToolWrapper.getToolType());
 
-			if (!PaintroidApplication.currentTool.getToolOptionsAreShown()) {
+			if (!currentToolWrapper.getToolOptionsAreShown()) {
 				openToolOptionsForCurrentTool();
 			}
 
@@ -165,7 +166,7 @@ public class LandscapeIntegrationTest {
 			selectTool(toolType);
 
 			setOrientation(SCREEN_ORIENTATION_PORTRAIT);
-			assertEquals(toolType, PaintroidApplication.currentTool.getToolType());
+			assertEquals(toolType, currentToolWrapper.getToolType());
 			setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 		}
 	}
@@ -196,7 +197,7 @@ public class LandscapeIntegrationTest {
 			clickColorPickerPresetSelectorButton(i);
 
 			if (colors[i] != Color.TRANSPARENT) {
-				int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+				int selectedColor = currentToolWrapper.getDrawPaint().getColor();
 				assertEquals(colors[i], selectedColor);
 
 				onView(withId(R.id.color_chooser_button_ok))

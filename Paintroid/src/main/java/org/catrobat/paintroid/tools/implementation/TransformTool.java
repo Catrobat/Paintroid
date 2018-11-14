@@ -39,14 +39,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.ToastFactory;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
@@ -55,6 +58,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 public class TransformTool extends BaseToolWithRectangleShape {
+
 	public static final String TAG = TransformTool.class.getSimpleName();
 
 	private static final float START_ZOOM_FACTOR = 0.95f;
@@ -89,16 +93,18 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	private View transformToolOptionView;
 
-	public TransformTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public TransformTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+						CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
+						LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
+		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
 
-		boxHeight = PaintroidApplication.layerModel.getHeight();
-		boxWidth = PaintroidApplication.layerModel.getWidth();
+		boxHeight = layerModelWrapper.getHeight();
+		boxWidth = layerModelWrapper.getWidth();
 		toolPosition.x = boxWidth / 2f;
 		toolPosition.y = boxHeight / 2f;
 
@@ -216,22 +222,21 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	}
 
 	private void resetScaleAndTranslation() {
-		PaintroidApplication.perspective.resetScaleAndTranslation();
-		float zoomFactor = PaintroidApplication.perspective
+		perspectiveWrapper.resetScaleAndTranslation();
+		float zoomFactor = perspectiveWrapper
 				.getScaleForCenterBitmap() * START_ZOOM_FACTOR;
-		PaintroidApplication.perspective.setScale(zoomFactor);
+		perspectiveWrapper.setScale(zoomFactor);
 	}
 
 	private void initialiseResizingState() {
 		cropRunFinished = false;
-		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
 		resizeBoundWidthXRight = 0;
 		resizeBoundHeightYBottom = 0;
-		resizeBoundWidthXLeft = drawingSurface.getBitmapWidth();
-		resizeBoundHeightYTop = drawingSurface.getBitmapHeight();
+		resizeBoundWidthXLeft = drawingSurfaceWrapper.getBitmapWidth();
+		resizeBoundHeightYTop = drawingSurfaceWrapper.getBitmapHeight();
 		resetScaleAndTranslation();
-		resizeBoundWidthXRight = drawingSurface.getBitmapWidth() - 1;
-		resizeBoundHeightYBottom = drawingSurface.getBitmapHeight() - 1;
+		resizeBoundWidthXRight = drawingSurfaceWrapper.getBitmapWidth() - 1;
+		resizeBoundHeightYBottom = drawingSurfaceWrapper.getBitmapHeight() - 1;
 		resizeBoundWidthXLeft = 0f;
 		resizeBoundHeightYTop = 0f;
 		setRectangle(new RectF(resizeBoundWidthXLeft,
@@ -252,7 +257,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 						(int) Math.floor(resizeBoundWidthXRight),
 						(int) Math.floor(resizeBoundHeightYBottom),
 						(int) maximumBoxResolution);
-				PaintroidApplication.commandManager.addCommand(resizeCommand);
+				commandManager.addCommand(resizeCommand);
 			} else {
 				cropRunFinished = true;
 				ToastFactory.makeText(context, R.string.resize_nothing_to_resize,
@@ -263,12 +268,12 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	private void flip(FlipCommand.FlipDirection flipDirection) {
 		Command command = commandFactory.createFlipCommand(flipDirection);
-		PaintroidApplication.commandManager.addCommand(command);
+		commandManager.addCommand(command);
 	}
 
 	private void rotate(RotateCommand.RotateDirection rotateDirection) {
 		Command command = commandFactory.createRotateCommand(rotateDirection);
-		PaintroidApplication.commandManager.addCommand(command);
+		commandManager.addCommand(command);
 
 		float tempBoxWidth = boxWidth;
 		boxWidth = boxHeight;
@@ -279,7 +284,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
-				Rect shapeBounds = cropAlgorithmSnail(LayerModel.getBitmapOfAllLayersToSave(PaintroidApplication.layerModel.getLayers()));
+				Rect shapeBounds = cropAlgorithmSnail(LayerModel.getBitmapOfAllLayersToSave(layerModelWrapper.getLayers()));
 				if (shapeBounds != null) {
 					boxWidth = shapeBounds.width() + 1;
 					boxHeight = shapeBounds.height() + 1;
@@ -291,7 +296,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 			@Override
 			protected void onPostExecute(Void result) {
-				PaintroidApplication.drawingSurface.refreshDrawingSurface();
+				drawingSurfaceWrapper.refreshDrawingSurface();
 				setWidthAndHeightTexts(boxHeight, boxWidth);
 			}
 		}.execute();
@@ -302,14 +307,14 @@ public class TransformTool extends BaseToolWithRectangleShape {
 				|| resizeBoundHeightYTop > resizeBoundHeightYBottom) {
 			return false;
 		}
-		if (resizeBoundWidthXLeft >= PaintroidApplication.drawingSurface.getBitmapWidth()
+		if (resizeBoundWidthXLeft >= drawingSurfaceWrapper.getBitmapWidth()
 				|| resizeBoundWidthXRight < 0 || resizeBoundHeightYBottom < 0
-				|| resizeBoundHeightYTop >= PaintroidApplication.drawingSurface.getBitmapHeight()) {
+				|| resizeBoundHeightYTop >= drawingSurfaceWrapper.getBitmapHeight()) {
 			return false;
 		}
 		if (resizeBoundWidthXLeft == 0 && resizeBoundHeightYTop == 0
-				&& resizeBoundWidthXRight == PaintroidApplication.drawingSurface.getBitmapWidth() - 1
-				&& resizeBoundHeightYBottom == PaintroidApplication.drawingSurface.getBitmapHeight() - 1) {
+				&& resizeBoundWidthXRight == drawingSurfaceWrapper.getBitmapWidth() - 1
+				&& resizeBoundHeightYBottom == drawingSurfaceWrapper.getBitmapHeight() - 1) {
 			return false;
 		}
 		if ((resizeBoundWidthXRight + 1 - resizeBoundWidthXLeft)

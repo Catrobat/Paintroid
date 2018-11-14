@@ -35,9 +35,13 @@ import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -60,8 +64,10 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private float previousBoxWidth;
 	private float previousBoxHeight;
 
-	public GeometricFillTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public GeometricFillTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+							CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
+							LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
+		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
@@ -285,15 +291,15 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	@Override
 	protected void onClickInBox() {
 		Point intPosition = new Point((int) toolPosition.x, (int) toolPosition.y);
-		int bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
-		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		int bitmapHeight = drawingSurfaceWrapper.getBitmapHeight();
+		int bitmapWidth = drawingSurfaceWrapper.getBitmapWidth();
 
 		if (!(toolPosition.x - boxWidth / 2 > bitmapWidth || toolPosition.y - boxHeight / 2 > bitmapHeight
 				|| toolPosition.x + boxWidth / 2 < 0 || toolPosition.y + boxHeight / 2 < 0)) {
 
 			Command command = commandFactory.createGeometricFillCommand(drawingBitmap, intPosition,
 					boxWidth, boxHeight, boxRotation, geometricFillCommandPaint);
-			PaintroidApplication.commandManager.addCommand(command);
+			commandManager.addCommand(command);
 			highlightBox();
 		}
 	}

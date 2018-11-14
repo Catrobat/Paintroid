@@ -28,8 +28,12 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.PathCommand;
@@ -46,7 +50,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
@@ -60,12 +63,18 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
 public class DrawToolTests {
 	private static final float MOVE_TOLERANCE = BaseTool.MOVE_TOLERANCE;
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+	private CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
+	private LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
+	private CommandManager commandManager = mock(CommandManager.class);
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -73,16 +82,14 @@ public class DrawToolTests {
 	@Rule
 	public MockitoRule mockito = MockitoJUnit.rule();
 
-	@Mock
-	private CommandManager commandManager;
-
 	private DrawTool toolToTest;
 	private Paint paint;
 
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		toolToTest = new DrawTool(activityTestRule.getActivity(), ToolType.BRUSH);
+		toolToTest = new DrawTool(activityTestRule.getActivity(), ToolType.BRUSH,
+				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setStrokeCap(Paint.Cap.ROUND);
@@ -93,7 +100,7 @@ public class DrawToolTests {
 	@UiThreadTest
 	@After
 	public void tearDown() {
-		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
+		drawingSurfaceWrapper.setBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
 		BaseTool.reset();
 	}
 

@@ -28,8 +28,10 @@ import android.support.test.espresso.action.Tapper;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.tools.ToolType;
@@ -82,12 +84,14 @@ public class StampToolIntegrationTest {
 	private static final int ROTATION_STEPSIZE = 30;
 	private static final float ROTATION_TOLERANCE = 10;
 	private static Tapper tapStampLong = UiInteractions.DefinedLongTap.withPressTimeout(1500);
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Before
 	public void setUp() {
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
+		drawingSurfaceWrapper.destroyDrawingCache();
 
 		selectTool(ToolType.BRUSH);
 		resetColorPicker();
@@ -96,7 +100,7 @@ public class StampToolIntegrationTest {
 
 	@Test
 	public void testBoundingboxAlgorithm() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		PaintroidApplication.perspective.setScale(1.0f);
+		perspectiveWrapper.setScale(1.0f);
 
 		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(getSurfaceCenterX(), getSurfaceCenterY());
 		onView(isRoot()).perform(touchAt(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET - (SQUARE_LENGTH / 3)));
@@ -186,7 +190,7 @@ public class StampToolIntegrationTest {
 
 		PointF pixelCoordinateToControlColor = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
 		PointF surfacePoint = getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
-		int pixelToControl = PaintroidApplication.drawingSurface.getPixel(PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint));
+		int pixelToControl = drawingSurfaceWrapper.getPixel(perspectiveWrapper.getCanvasPointFromSurfacePoint(surfacePoint));
 
 		assertEquals("First Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
 
@@ -202,7 +206,7 @@ public class StampToolIntegrationTest {
 
 		pixelCoordinateToControlColor = new PointF(toolPosition.x, toolPosition.y + moveOffset + Y_CLICK_OFFSET);
 		surfacePoint = getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
-		pixelToControl = PaintroidApplication.drawingSurface.getPixel(PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfacePoint));
+		pixelToControl = drawingSurfaceWrapper.getPixel(perspectiveWrapper.getCanvasPointFromSurfacePoint(surfacePoint));
 
 		assertEquals("Second Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
 	}
@@ -211,9 +215,9 @@ public class StampToolIntegrationTest {
 	public void testStampOutsideDrawingSurface() throws NoSuchFieldException, IllegalAccessException {
 		onView(isRoot()).perform(touchAt(getSurfaceCenterX(), getSurfaceCenterY() + getActionbarHeight() + getStatusbarHeight() - Y_CLICK_OFFSET));
 
-		int screenWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
-		int screenHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
-		PaintroidApplication.perspective.setScale(SCALE_25);
+		int screenWidth = drawingSurfaceWrapper.getBitmapWidth();
+		int screenHeight = drawingSurfaceWrapper.getBitmapHeight();
+		perspectiveWrapper.setScale(SCALE_25);
 
 		selectTool(ToolType.STAMP);
 

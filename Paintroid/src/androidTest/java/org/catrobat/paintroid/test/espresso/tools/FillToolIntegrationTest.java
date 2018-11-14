@@ -27,6 +27,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
@@ -66,6 +67,7 @@ import static org.junit.Assert.assertEquals;
 public class FillToolIntegrationTest {
 
 	private static final double TOLERANCE_DELTA = 0.05d;
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -104,7 +106,7 @@ public class FillToolIntegrationTest {
 
 	@Test
 	public void testNothingHappensWhenClickedOutsideDrawingArea() {
-		PaintroidApplication.perspective.multiplyScale(.5f);
+		perspectiveWrapper.multiplyScale(.5f);
 		onToolProperties()
 				.checkColor(Color.BLACK);
 		onDrawingSurfaceView()

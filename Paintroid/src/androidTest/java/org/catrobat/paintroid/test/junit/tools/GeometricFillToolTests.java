@@ -26,8 +26,12 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
@@ -38,6 +42,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 @RunWith(AndroidJUnit4.class)
 public class GeometricFillToolTests {
@@ -49,24 +54,33 @@ public class GeometricFillToolTests {
 	private GeometricFillTool ovalShapeTool;
 	private GeometricFillTool heartShapeTool;
 	private GeometricFillTool starShapeTool;
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+	private CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
+	private LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
+	private CommandManager commandManager = mock(CommandManager.class);
 
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		rectangleShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
+		rectangleShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE,
+				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		rectangleShapeTool.baseShape = GeometricFillTool.BaseShape.RECTANGLE;
-		ovalShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
+		ovalShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE,
+				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		ovalShapeTool.baseShape = GeometricFillTool.BaseShape.OVAL;
-		heartShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
+		heartShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE,
+				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		heartShapeTool.baseShape = GeometricFillTool.BaseShape.HEART;
-		starShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
+		starShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE,
+				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		starShapeTool.baseShape = GeometricFillTool.BaseShape.STAR;
 	}
 
 	@UiThreadTest
 	@After
 	public void tearDown() {
-		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
+		drawingSurfaceWrapper.setBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
 		BaseTool.reset();
 	}
 
@@ -98,7 +112,7 @@ public class GeometricFillToolTests {
 		Paint red = new Paint();
 		red.setColor(Color.RED);
 		rectangleShapeTool.setDrawPaint(red);
-		int color = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		int color = currentToolWrapper.getDrawPaint().getColor();
 		assertEquals("Red colour expected", Color.RED, color);
 	}
 }
