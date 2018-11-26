@@ -11,43 +11,15 @@ pipeline {
 			// corresponding user can be added. This is needed to provide the jenkins user inside
 			// the container for the ssh-agent to work.
 			// Another way would be to simply map the passwd file, but would spoil additional information
-			additionalBuildArgs '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g)'
-			// Currently there are two different NDK behaviors in place, one to keep NDK r16b, which
-			// was needed because of the removal of armeabi and MIPS support and one to always use the
-			// latest NDK, which is the suggestion from the NDK documentations.
-			// Therefore two different SDK locations on the host are currently in place:
-			// NDK r16b  : /var/local/container_shared/android-sdk
-			// NDK latest: /var/local/container_shared/android-sdk-ndk-latest
-			// As android-sdk was used from the beginning and is already 'released' this can't be changed
-			// to eg android-sdk-ndk-r16b and must be kept to the previously used value
-			args "--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle/:/.gradle -v /var/local/container_shared/android-sdk-ndk-latest:/usr/local/android-sdk -v /var/local/container_shared/android-home:/.android -v /var/local/container_shared/emulator_console_auth_token:/.emulator_console_auth_token -v /var/local/container_shared/analytics.settings:/analytics.settings"
+			// Also hand in the group id of kvm to allow using /dev/kvm.
+			additionalBuildArgs '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --build-arg KVM_GROUP_ID=$(getent group kvm | cut -d: -f3)'
+			// Ensure that each executor has its own gradle cache to not affect other builds
+			// that run concurrently.
+			args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle'
 		}
 	}
 
 	environment {
-		//////// Define environment variables to point to the correct locations inside the container ////////
-		//////////// Most likely not edited by the developer
-		ANDROID_SDK_ROOT = "/usr/local/android-sdk"
-		// Deprecated: Still used by the used gradle version, once gradle respects ANDROID_SDK_ROOT, this can be removed
-		ANDROID_HOME = "/usr/local/android-sdk"
-		ANDROID_SDK_HOME = "/"
-		// Needed for compatibiliby to current Jenkins-wide Envs
-		// Can be removed, once all builds are migrated to Pipeline
-		ANDROID_SDK_LOCATION = "/usr/local/android-sdk"
-		ANDROID_NDK = ""
-		// This is important, as we want the keep our gradle cache, but we can't share it between containers
-		// the cache could only be shared if the gradle instances could comunicate with each other
-		// imho keeping the cache per executor will have the least space impact
-		GRADLE_USER_HOME = "/.gradle/${env.EXECUTOR_NUMBER}"
-		// Otherwise user.home returns ? for java applications
-		JAVA_TOOL_OPTIONS = "-Duser.home=/tmp/"
-
-		//// jenkins-android-helper related variables
-		// set to any value to debug jenkins_android* scripts
-		ANDROID_EMULATOR_HELPER_DEBUG = ""
-		// get stdout of called subprocesses immediately
-		PYTHONUNBUFFERED = "true"
-
 		//////// Build specific variables ////////
 		//////////// May be edited by the developer on changing the build steps
 		// modulename
@@ -71,20 +43,11 @@ pipeline {
 		buildDiscarder(logRotator(numToKeepStr: '30'))
 	}
 
-    triggers {
-        cron(env.BRANCH_NAME == 'develop' ? '@midnight' : '')
-    }
+	triggers {
+		cron(env.BRANCH_NAME == 'develop' ? '@midnight' : '')
+	}
 
 	stages {
-		stage('Setup Android SDK') {
-			steps {
-				// Install Android SDK
-				lock("update-android-sdk-on-${env.NODE_NAME}") {
-					sh './gradlew -PinstallSdk'
-				}
-			}
-		}
-
 		stage('Static Analysis') {
 			steps {
 				sh './gradlew clean pmd checkstyle lint'
@@ -123,7 +86,7 @@ pipeline {
 					junit '**/*TEST*.xml'
 					step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: "$JAVA_SRC/coverage*.xml", failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false, failNoReports: false])
 
-					sh './gradlew stopEmulator clearAvdStore'
+					sh './gradlew stopEmulator'
 					archiveArtifacts 'logcat.txt'
 
 					plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
