@@ -264,14 +264,12 @@ public class LayerPresenterTest {
 
 	@Test
 	public void testOnLongClickLayerAtPosition() {
-		LayerViewHolder layerViewHolder = mock(LayerViewHolder.class);
 		View view = mock(View.class);
-		when(layerViewHolder.getView()).thenReturn(view);
 		layerModel.addLayerAt(0, mock(Layer.class));
 		layerModel.addLayerAt(1, mock(Layer.class));
 
 		createPresenter();
-		layerPresenter.onLongClickLayerAtPosition(0, layerViewHolder);
+		layerPresenter.onLongClickLayerAtPosition(0, view);
 
 		verify(listItemLongClickHandler).handleOnItemLongClick(0, view);
 		verifyZeroInteractions(commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
@@ -279,18 +277,30 @@ public class LayerPresenterTest {
 
 	@Test
 	public void testOnLongClickLayerAtPositionWhenOnlyOneLayer() {
-		LayerViewHolder layerViewHolder = mock(LayerViewHolder.class);
+		View view = mock(View.class);
 		layerModel.addLayerAt(0, mock(Layer.class));
 
 		createPresenter();
-		layerPresenter.onLongClickLayerAtPosition(0, layerViewHolder);
+		layerPresenter.onLongClickLayerAtPosition(0, view);
+
+		verifyZeroInteractions(listItemLongClickHandler, commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
+	}
+
+	@Test
+	public void testOnLongClickLayerAtPositionWhenPositionOutOfBounds() {
+		View view = mock(View.class);
+		layerModel.addLayerAt(0, mock(Layer.class));
+		layerModel.addLayerAt(1, mock(Layer.class));
+
+		createPresenter();
+		layerPresenter.onLongClickLayerAtPosition(2, view);
 
 		verifyZeroInteractions(listItemLongClickHandler, commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
 	}
 
 	@Test
 	public void testOnClickLayerAtPositionWhenDeselected() {
-		LayerViewHolder layerViewHolder = mock(LayerViewHolder.class);
+		View view = mock(View.class);
 		layerModel.addLayerAt(0, mock(Layer.class));
 		layerModel.addLayerAt(1, mock(Layer.class));
 		layerModel.setCurrentLayer(layerModel.getLayerAt(1));
@@ -298,20 +308,35 @@ public class LayerPresenterTest {
 		when(commandFactory.createSelectLayerCommand(0)).thenReturn(command);
 
 		createPresenter();
-		layerPresenter.onClickLayerAtPosition(0, layerViewHolder);
+		layerPresenter.onClickLayerAtPosition(0, view);
 
 		verify(commandManager).addCommand(command);
 	}
 
 	@Test
 	public void testOnClickLayerAtPositionWhenAlreadySelected() {
-		LayerViewHolder layerViewHolder = mock(LayerViewHolder.class);
+		View view = mock(View.class);
 		Layer layer = mock(Layer.class);
 		layerModel.addLayerAt(0, layer);
 		layerModel.setCurrentLayer(layer);
 
 		createPresenter();
-		layerPresenter.onClickLayerAtPosition(0, layerViewHolder);
+		layerPresenter.onClickLayerAtPosition(0, view);
+
+		verifyZeroInteractions(commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
+	}
+
+	@Test
+	public void testOnClickLayerAtPositionWhenPositionOutOfBounds() {
+		View view = mock(View.class);
+		Layer firstLayer = mock(Layer.class);
+		Layer secondLayer = mock(Layer.class);
+		layerModel.addLayerAt(0, firstLayer);
+		layerModel.addLayerAt(1, secondLayer);
+		layerModel.setCurrentLayer(firstLayer);
+
+		createPresenter();
+		layerPresenter.onClickLayerAtPosition(2, view);
 
 		verifyZeroInteractions(commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
 	}
@@ -454,6 +479,10 @@ public class LayerPresenterTest {
 
 	@Test
 	public void testMarkMergeable() {
+		Layer firstLayer = mock(Layer.class);
+		Layer secondLayer = mock(Layer.class);
+		layerModel.addLayerAt(0, firstLayer);
+		layerModel.addLayerAt(1, secondLayer);
 		LayerViewHolder layerViewHolder = mock(LayerViewHolder.class);
 		when(layerAdapter.getViewHolderAt(1)).thenReturn(layerViewHolder);
 
@@ -461,6 +490,14 @@ public class LayerPresenterTest {
 		layerPresenter.markMergeable(0, 1);
 
 		verify(layerViewHolder).setMergable();
+		verifyZeroInteractions(commandManager, layerMenuViewHolder, listItemLongClickHandler);
+	}
+
+	@Test
+	public void testMarkMergeableWhenPositionInvalidDoesNothing() {
+		createPresenter();
+		layerPresenter.markMergeable(0, 1);
+
 		verifyZeroInteractions(commandManager, layerMenuViewHolder, listItemLongClickHandler);
 	}
 
