@@ -50,7 +50,7 @@ pipeline {
 	stages {
 		stage('Static Analysis') {
 			steps {
-				sh './gradlew clean pmd checkstyle lint'
+				sh './gradlew pmd checkstyle lint'
 			}
 
 			post {
@@ -65,16 +65,14 @@ pipeline {
 		stage('Unit and Device tests') {
 			steps {
 				// Run local unit tests
-				sh './gradlew -PenableCoverage -Pjenkins clean jacocoTestDebugUnitTestReport'
+				sh './gradlew -PenableCoverage -Pjenkins jacocoTestDebugUnitTestReport'
 				// Convert the JaCoCo coverate to the Cobertura XML file format.
 				// This is done since the Jenkins JaCoCo plugin does not work well.
 				// See also JENKINS-212 on jira.catrob.at
 				sh "if [ -f '$JACOCO_UNIT_XML' ]; then ./buildScripts/cover2cover.py $JACOCO_UNIT_XML > $JAVA_SRC/coverage1.xml; fi"
-				// ensure that the following test run does not overwrite the results
-				sh "mv ${env.GRADLE_PROJECT_MODULE_NAME}/build ${env.GRADLE_PROJECT_MODULE_NAME}/build-unittest"
 
 				// Run device tests
-				sh './gradlew -PenableCoverage -Pjenkins clean startEmulator adbDisableAnimationsGlobally createDebugCoverageReport'
+				sh './gradlew -PenableCoverage -Pjenkins startEmulator adbDisableAnimationsGlobally createDebugCoverageReport'
 				// Convert the JaCoCo coverate to the Cobertura XML file format.
 				// This is done since the Jenkins JaCoCo plugin does not work well.
 				// See also JENKINS-212 on jira.catrob.at
@@ -97,7 +95,7 @@ pipeline {
 
 		stage('Build Debug-APK') {
 			steps {
-				sh './gradlew clean assembleDebug'
+				sh './gradlew assembleDebug'
 				archiveArtifacts "${env.APK_LOCATION_DEBUG}"
 			}
 		}
