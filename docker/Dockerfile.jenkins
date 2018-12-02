@@ -22,18 +22,44 @@ ARG SDKMANAGER_PACKAGES="build-tools;27.0.3 platforms;android-26 cmake;3.6.41114
 # Those contain the uid and gid of the Jenkins user, and are used to
 # create this user inside of the container, needed for eg ssh-agent to work
 ARG USER_ID=1000
+ARG USER_HOME=/home/user
 ARG GROUP_ID=1000
 ARG KVM_GROUP_ID=999
 
 # Environment variables that are needed by the build job.
 
-ENV ANDROID_SDK_ROOT=/home/user/android/sdk
-ENV ANDROID_AVD_HOME=/home/user/avds
+ENV ANDROID_SDK_ROOT=$USER_HOME/android/sdk
+ENV ANDROID_AVD_HOME=$USER_HOME/avds
 
 # Deprecated: Still used by gradle, once gradle respects ANDROID_SDK_ROOT, this can be removed
 ENV ANDROID_HOME=$ANDROID_SDK_ROOT
 
 ARG _SDKMANAGER=$ANDROID_SDK_ROOT/tools/bin/sdkmanager
+
+# System Packages
+# ---------------
+#
+
+# curl/openssh-client: upload to web/share
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl \
+        openssh-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Fastlane
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        rubygems \
+        ruby-dev \
+        g++ \
+        make \
+        less \
+    && rm -rf /var/lib/apt/lists/* \
+    && gem update --system \
+    && gem install fastlane -NV \
+    && apt-get purge -y --auto-remove \
+        ruby-dev \
+        g++ \
+        make
 
 # User Management
 # ---------------
@@ -46,7 +72,7 @@ RUN if [ ! $(getent group $GROUP_ID) ]; then groupadd -g $GROUP_ID user; fi
 RUN groupadd -g $KVM_GROUP_ID kvm
 
 # Add the user used by Jenkins during building.
-RUN useradd -m -u $USER_ID -g $GROUP_ID -G $KVM_GROUP_ID -s /usr/sbin/nologin user
+RUN useradd -m -u $USER_ID -g $GROUP_ID -G $KVM_GROUP_ID -d $USER_HOME -s /usr/sbin/nologin user
 
 # Run all other commands as user
 USER user
@@ -58,21 +84,21 @@ RUN mkdir -p $ANDROID_AVD_HOME
 # ------------------
 #
 RUN curl $ANDROID_SDK_URL --output /tmp/android_sdk.zip \
-  && mkdir -p $ANDROID_SDK_ROOT \
-  && unzip -d $ANDROID_SDK_ROOT /tmp/android_sdk.zip \
-  && rm /tmp/android_sdk.zip
+    && mkdir -p $ANDROID_SDK_ROOT \
+    && unzip -d $ANDROID_SDK_ROOT /tmp/android_sdk.zip \
+    && rm /tmp/android_sdk.zip
 
 
 # Android NDK
 # ----------------
 #
 RUN if [ ! -z "$ANDROID_NDK_URL" ]; then \
-    curl $ANDROID_NDK_URL --output /tmp/android_ndk.zip \
-    && mkdir -p $ANDROID_SDK_ROOT /tmp/ndk \
-    && unzip -d /tmp/ndk /tmp/android_ndk.zip \
-    && mv /tmp/ndk/* $ANDROID_SDK_ROOT/ndk-bundle \
-    && rm /tmp/android_ndk.zip; \
-  fi
+        curl $ANDROID_NDK_URL --output /tmp/android_ndk.zip \
+        && mkdir -p $ANDROID_SDK_ROOT /tmp/ndk \
+        && unzip -d /tmp/ndk /tmp/android_ndk.zip \
+        && mv /tmp/ndk/* $ANDROID_SDK_ROOT/ndk-bundle \
+        && rm /tmp/android_ndk.zip; \
+    fi
 
 
 # Installing SDK Packages
