@@ -79,3 +79,13 @@ RUN if [ ! -z "$ANDROID_NDK_URL" ]; then \
 # -----------------------
 #
 RUN if [ ! -z "$SDKMANAGER_PACKAGES" ]; then yes | $_SDKMANAGER $SDKMANAGER_PACKAGES; fi
+
+# Performance related settings for the JVM
+# - Respect the cgroup settings for memory.
+#
+# Note: Usage of _JAVA_OPTIONS is in general discouraged.
+#       This is an internal flag that will be preferred over
+#       JAVA_TOOL_OPTIONS and the command line parameters.
+#       We still use it here to ensure that these settings
+#       are respected, no matter what is configured elsewhere.
+ENV _JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
