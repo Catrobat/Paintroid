@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.app.Activity;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.LayerModelWrapper;
@@ -35,6 +36,7 @@ import org.catrobat.paintroid.tools.ToolType;
 
 public class DefaultToolFactory implements ToolFactory {
 
+	private ContextActivityWrapper contextActivityWrapper = new ContextActivityWrapper();
 	@Override
 	public Tool createTool(Activity activity, ToolType toolType, CommandManager commandManager) {
 		Tool tool;
@@ -42,7 +44,7 @@ public class DefaultToolFactory implements ToolFactory {
 		CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
 		PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
 		LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
-
+		contextActivityWrapper.setContext(activity);
 		switch (toolType) {
 			case BRUSH:
 				tool = new DrawTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
