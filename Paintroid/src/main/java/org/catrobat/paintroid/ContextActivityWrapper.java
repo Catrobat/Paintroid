@@ -26,8 +26,7 @@ import android.view.View;
 public class ContextActivityWrapper {
 	private Context context;
 
-	public void setContext(Context context)
-	{
+	public ContextActivityWrapper(Context context) {
 		this.context = context;
 	}
 

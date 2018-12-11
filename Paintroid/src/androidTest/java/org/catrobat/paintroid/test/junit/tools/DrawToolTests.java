@@ -28,6 +28,7 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.LayerModelWrapper;
@@ -88,7 +89,7 @@ public class DrawToolTests {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		toolToTest = new DrawTool(activityTestRule.getActivity(), ToolType.BRUSH,
+		toolToTest = new DrawTool(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.BRUSH,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		paint = new Paint();
 		paint.setColor(Color.BLACK);

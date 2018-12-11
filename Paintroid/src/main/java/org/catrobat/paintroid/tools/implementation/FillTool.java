@@ -32,6 +32,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.LayerModelWrapper;
@@ -55,10 +56,10 @@ public class FillTool extends BaseTool {
 	private EditText colorToleranceEditText;
 	private View fillToolOptionsView;
 
-	public FillTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+	public FillTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
 					CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
 					LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
-		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+		super(contextActivityWrapper, context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 	}
 
 	public void updateColorTolerance(int colorToleranceInPercent) {

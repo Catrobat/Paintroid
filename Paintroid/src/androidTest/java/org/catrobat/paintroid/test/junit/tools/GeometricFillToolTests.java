@@ -26,6 +26,7 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.LayerModelWrapper;
@@ -63,16 +64,16 @@ public class GeometricFillToolTests {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		rectangleShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE,
+		rectangleShapeTool = new GeometricFillTool(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.SHAPE,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		rectangleShapeTool.baseShape = GeometricFillTool.BaseShape.RECTANGLE;
-		ovalShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE,
+		ovalShapeTool = new GeometricFillTool(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.SHAPE,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		ovalShapeTool.baseShape = GeometricFillTool.BaseShape.OVAL;
-		heartShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE,
+		heartShapeTool = new GeometricFillTool(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.SHAPE,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		heartShapeTool.baseShape = GeometricFillTool.BaseShape.HEART;
-		starShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE,
+		starShapeTool = new GeometricFillTool(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.SHAPE,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		starShapeTool.baseShape = GeometricFillTool.BaseShape.STAR;
 	}

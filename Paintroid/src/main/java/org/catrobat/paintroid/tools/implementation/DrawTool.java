@@ -26,6 +26,7 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.support.annotation.VisibleForTesting;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.LayerModelWrapper;
@@ -45,10 +46,10 @@ public class DrawTool extends BaseTool {
 	@VisibleForTesting
 	public BrushPickerView brushPickerView;
 
-	public DrawTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+	public DrawTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
 					CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
 					LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
-		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+		super(contextActivityWrapper, context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
 		drawToolMovedDistance = new PointF(0f, 0f);

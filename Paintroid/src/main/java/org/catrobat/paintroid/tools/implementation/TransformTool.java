@@ -39,6 +39,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.LayerModelWrapper;
@@ -93,10 +94,10 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	private View transformToolOptionView;
 
-	public TransformTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+	public TransformTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
 						CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
 						LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
-		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+		super(contextActivityWrapper, context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);

@@ -24,6 +24,7 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.LayerModelWrapper;
@@ -59,7 +60,7 @@ public class ImportToolTest {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		tool = new ImportTool(activityTestRule.getActivity(), ToolType.IMPORTPNG,
+		tool = new ImportTool(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.IMPORTPNG,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
 		drawingSurfaceWidth = drawingSurfaceWrapper.getBitmapWidth();

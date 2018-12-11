@@ -29,6 +29,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.LayerModelWrapper;
@@ -78,7 +79,7 @@ public class BaseToolWithRectangleShapeToolTest {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		toolToTest = new BaseToolWithRectangleShapeImpl(activityTestRule.getActivity(), ToolType.SHAPE,
+		toolToTest = new BaseToolWithRectangleShapeImpl(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.SHAPE,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
 		DisplayMetrics metrics = InstrumentationRegistry.getTargetContext()
@@ -297,7 +298,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		float scale = 0.8f;
 		perspectiveWrapper.setScale(scale);
 
-		toolToTest = new BaseToolWithRectangleShapeImpl(activityTestRule.getActivity(), ToolType.SHAPE,
+		toolToTest = new BaseToolWithRectangleShapeImpl(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.SHAPE,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
 		float width = toolToTest.boxWidth;
@@ -308,7 +309,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		scale = 0.15f;
 		perspectiveWrapper.setScale(scale);
 
-		toolToTest = new BaseToolWithRectangleShapeImpl(activityTestRule.getActivity(), ToolType.SHAPE,
+		toolToTest = new BaseToolWithRectangleShapeImpl(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.SHAPE,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
 		width = toolToTest.boxWidth;
@@ -321,7 +322,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		scale = 0.1f;
 		perspectiveWrapper.setScale(scale);
 
-		toolToTest = new BaseToolWithRectangleShapeImpl(activityTestRule.getActivity(), ToolType.SHAPE,
+		toolToTest = new BaseToolWithRectangleShapeImpl(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.SHAPE,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
 		float newWidth = toolToTest.boxWidth;
@@ -341,12 +342,12 @@ public class BaseToolWithRectangleShapeToolTest {
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() {
 		float scale = 1f;
 		perspectiveWrapper.setScale(scale);
-		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(activityTestRule.getActivity(), ToolType.BRUSH,
+		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.BRUSH,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		scale = 2f;
 		perspectiveWrapper.setScale(scale);
 
-		BaseToolWithRectangleShape rectTool2 = new BaseToolWithRectangleShapeImpl(activityTestRule.getActivity(), ToolType.BRUSH,
+		BaseToolWithRectangleShape rectTool2 = new BaseToolWithRectangleShapeImpl(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.BRUSH,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		assertTrue("rectangle should be smaller with scale 2",
 				(rectTool1.boxWidth > rectTool2.boxWidth)
@@ -359,11 +360,11 @@ public class BaseToolWithRectangleShapeToolTest {
 		float scale = 1f;
 		perspectiveWrapper.setScale(scale);
 
-		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(activityTestRule.getActivity(), ToolType.BRUSH,
+		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.BRUSH,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		scale = 0.5f;
 		perspectiveWrapper.setScale(scale);
-		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(activityTestRule.getActivity(), ToolType.BRUSH,
+		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(new ContextActivityWrapper(activityTestRule.getActivity()), activityTestRule.getActivity(), ToolType.BRUSH,
 				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		assertTrue("rectangle should be bigger with scale 0.5",
 				(rectTool1.boxWidth < rectTool05.boxWidth)
@@ -541,10 +542,10 @@ public class BaseToolWithRectangleShapeToolTest {
 
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 
-		BaseToolWithRectangleShapeImpl(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+		BaseToolWithRectangleShapeImpl(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
 						CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
 									LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
-			super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+			super(contextActivityWrapper, context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		}
 
 		@Override

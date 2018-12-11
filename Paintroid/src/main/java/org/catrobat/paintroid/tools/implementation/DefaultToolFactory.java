@@ -36,7 +36,6 @@ import org.catrobat.paintroid.tools.ToolType;
 
 public class DefaultToolFactory implements ToolFactory {
 
-	private ContextActivityWrapper contextActivityWrapper = new ContextActivityWrapper();
 	@Override
 	public Tool createTool(Activity activity, ToolType toolType, CommandManager commandManager) {
 		Tool tool;
@@ -44,19 +43,20 @@ public class DefaultToolFactory implements ToolFactory {
 		CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
 		PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
 		LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
-		contextActivityWrapper.setContext(activity);
+		ContextActivityWrapper contextActivityWrapper = new ContextActivityWrapper(activity);
+
 		switch (toolType) {
 			case BRUSH:
-				tool = new DrawTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new DrawTool(contextActivityWrapper, activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case CURSOR:
-				tool = new CursorTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new CursorTool(contextActivityWrapper, activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case STAMP:
-				tool = new StampTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new StampTool(contextActivityWrapper, activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case IMPORTPNG:
-				tool = new ImportTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new ImportTool(contextActivityWrapper, activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case PIPETTE:
 				final MainActivity mainActivity = (MainActivity) activity;
@@ -67,28 +67,28 @@ public class DefaultToolFactory implements ToolFactory {
 						presenter.setTopBarColor(color);
 					}
 				};
-				tool = new PipetteTool(activity, listener, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new PipetteTool(contextActivityWrapper, activity, listener, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case FILL:
-				tool = new FillTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new FillTool(contextActivityWrapper, activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case TRANSFORM:
-				tool = new TransformTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new TransformTool(contextActivityWrapper, activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case SHAPE:
-				tool = new GeometricFillTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new GeometricFillTool(contextActivityWrapper, activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case ERASER:
-				tool = new EraserTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new EraserTool(contextActivityWrapper, activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case LINE:
-				tool = new LineTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new LineTool(contextActivityWrapper, activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			case TEXT:
-				tool = new TextTool(activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new TextTool(contextActivityWrapper, activity, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 			default:
-				tool = new DrawTool(activity, ToolType.BRUSH, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
+				tool = new DrawTool(contextActivityWrapper, activity, ToolType.BRUSH, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 				break;
 		}
 		tool.setupToolOptions();
