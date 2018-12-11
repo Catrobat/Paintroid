@@ -21,6 +21,8 @@ package org.catrobat.paintroid;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 public class ContextActivityWrapper {
@@ -32,5 +34,17 @@ public class ContextActivityWrapper {
 
 	public <T extends View> T findViewById(int id) {
 		return ((Activity) context).findViewById(id);
+	}
+
+	public Resources getResources() {
+		return context.getResources();
+	}
+
+	public int getColor(int id) {
+		return ContextCompat.getColor(context, id);
+	}
+
+	public Activity getContextActivity() {
+		return ((Activity) (context));
 	}
 }
