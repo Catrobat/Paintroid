@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -243,7 +244,7 @@ public abstract class BaseTool implements Tool {
 		contextActivityWrapper.findViewById(R.id.pocketpaint_main_tool_options).setVisibility(View.INVISIBLE);
 		dimBackground(false);
 
-		contextActivityWrapper.getContextActivity().runOnUiThread(new Runnable() {
+		((Activity) (context)).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				toolSpecificOptionsLayout.removeAllViews();
