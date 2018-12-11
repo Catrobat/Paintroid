@@ -3,14 +3,15 @@ package org.catrobat.paintroid.tools.implementation;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 public class ImportTool extends StampTool {
 
-	public ImportTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public ImportTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType) {
+		super(contextActivityWrapper, context, toolType);
 		readyForPaste = true;
 		longClickAllowed = false;
 		createOverlayBitmap();

@@ -28,6 +28,7 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.implementation.FillCommand;
@@ -64,12 +65,13 @@ public class FillToolTests {
 	@UiThreadTest
 	@Before
 	public void setUp() {
+		ContextActivityWrapper contextActivityWrapper = new ContextActivityWrapper(activityTestRule.getActivity());
 		PaintroidApplication.layerModel.reset();
 		Layer layer = new Layer(null);
 		PaintroidApplication.layerModel.addLayerAt(0, layer);
 		PaintroidApplication.layerModel.setCurrentLayer(layer);
 
-		toolToTest = new FillTool(activityTestRule.getActivity(), ToolType.FILL);
+		toolToTest = new FillTool(contextActivityWrapper, activityTestRule.getActivity(), ToolType.FILL);
 	}
 
 	@UiThreadTest

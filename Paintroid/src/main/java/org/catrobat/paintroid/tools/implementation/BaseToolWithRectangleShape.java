@@ -41,6 +41,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
@@ -115,8 +116,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private boolean respectMaximumBoxResolution;
 	private CountDownTimer downTimer;
 
-	public BaseToolWithRectangleShape(Context context, ToolType toolType) {
-		super(context, toolType);
+	public BaseToolWithRectangleShape(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType) {
+		super(contextActivityWrapper, context, toolType);
 
 		final Resources resources = context.getResources();
 		int orientation = resources.getConfiguration().orientation;

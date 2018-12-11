@@ -35,6 +35,7 @@ import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -60,8 +61,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private float previousBoxWidth;
 	private float previousBoxHeight;
 
-	public GeometricFillTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public GeometricFillTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType) {
+		super(contextActivityWrapper, context, toolType);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);

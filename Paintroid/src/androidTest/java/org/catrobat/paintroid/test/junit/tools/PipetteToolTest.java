@@ -26,6 +26,7 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
@@ -60,9 +61,10 @@ public class PipetteToolTest {
 	@UiThreadTest
 	@Before
 	public void setUp() {
+		ContextActivityWrapper contextActivityWrapper = new ContextActivityWrapper(activityTestRule.getActivity());
 		listener = mock(OnColorPickedListener.class);
 
-		toolToTest = new PipetteTool(activityTestRule.getActivity(), listener, ToolType.PIPETTE);
+		toolToTest = new PipetteTool(contextActivityWrapper, activityTestRule.getActivity(), listener, ToolType.PIPETTE);
 
 		Bitmap bitmap = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
 		bitmap.setPixel(X_COORDINATE_RED, 0, Color.RED);

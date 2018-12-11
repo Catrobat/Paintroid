@@ -34,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ToggleButton;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -81,8 +82,8 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@VisibleForTesting
 	public int textSize = 20;
 
-	public TextTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public TextTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType) {
+		super(contextActivityWrapper, context, toolType);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);

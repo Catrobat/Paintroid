@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PointF;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.listener.BrushPickerView;
@@ -37,8 +38,8 @@ public class LineTool extends BaseTool {
 	protected boolean pathInsideBitmap;
 	private BrushPickerView brushPickerView;
 
-	public LineTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public LineTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType) {
+		super(contextActivityWrapper, context, toolType);
 	}
 
 	@Override

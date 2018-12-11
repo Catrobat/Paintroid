@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -55,8 +56,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 	private CountDownTimer downTimer;
 	private boolean longClickPerformed = false;
 
-	public StampTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public StampTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType) {
+		super(contextActivityWrapper, context, toolType);
 		readyForPaste = false;
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
