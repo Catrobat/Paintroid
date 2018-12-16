@@ -244,7 +244,7 @@ public abstract class BaseTool implements Tool {
 		contextActivityWrapper.findViewById(R.id.pocketpaint_main_tool_options).setVisibility(View.INVISIBLE);
 		dimBackground(false);
 
-		((Activity) (context)).runOnUiThread(new Runnable() {
+		contextActivityWrapper.getContextActivity().runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				toolSpecificOptionsLayout.removeAllViews();
