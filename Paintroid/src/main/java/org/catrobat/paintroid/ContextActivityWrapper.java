@@ -32,16 +32,38 @@ public class ContextActivityWrapper {
 		this.context = context;
 	}
 
-	public <T extends View> T findViewById(int id) {
-		return ((Activity) context).findViewById(id);
+	public <T extends View> T getMainToolOptions() {
+		return ((Activity) context).findViewById(R.id.pocketpaint_main_tool_options);
+	}
+
+	public <T extends View> T getMainBottomBar() {
+		return ((Activity) context).findViewById(R.id.pocketpaint_main_bottom_bar);
+	}
+
+	public <T extends View> T getToolbar() {
+		return ((Activity) context).findViewById(R.id.pocketpaint_toolbar);
+	}
+
+	public <T extends View> T getLayoutToolOptions() {
+		return ((Activity) context).findViewById(R.id.pocketpaint_layout_tool_options);
+	}
+
+	public <T extends View> T getLayoutToolSpecificOptions() {
+		return ((Activity) context).findViewById(R.id.pocketpaint_layout_tool_specific_options);
+	}
+
+	public <T extends View> T getDrawingSurfaceView() {
+		return ((Activity) context).findViewById(R.id.pocketpaint_drawing_surface_view);
 	}
 
 	public Resources getResources() {
 		return context.getResources();
 	}
 
-	public int getColor(int id) {
-		return ContextCompat.getColor(context, id);
+	public int getColor(boolean darken) {
+		return ContextCompat.getColor(context, darken
+				? R.color.pocketpaint_main_drawing_surface_inactive
+				: R.color.pocketpaint_main_drawing_surface_active);
 	}
 
 	public Activity getContextActivity() {
