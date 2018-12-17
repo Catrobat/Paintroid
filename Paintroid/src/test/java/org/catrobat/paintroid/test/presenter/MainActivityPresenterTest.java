@@ -845,13 +845,6 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testToolLongClickedThenShowInfoDialog() {
-		presenter.toolLongClicked(ToolType.FILL);
-
-		verify(navigator).showToolInfoDialog(ToolType.FILL);
-	}
-
-	@Test
 	public void testGotFocusThenPlayInitialAnimation() {
 		Tool currentTool = mock(Tool.class);
 		PaintroidApplication.currentTool = currentTool;

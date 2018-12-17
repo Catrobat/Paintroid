@@ -515,11 +515,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void toolLongClicked(ToolType toolType) {
-		navigator.showToolInfoDialog(toolType);
-	}
-
-	@Override
 	public void gotFocus() {
 		ToolType currentToolType = PaintroidApplication.currentTool.getToolType();
 		if (focusAfterRecreate) {

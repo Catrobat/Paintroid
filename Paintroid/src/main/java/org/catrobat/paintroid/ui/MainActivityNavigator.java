@@ -47,7 +47,6 @@ import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.tools.ToolType;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
@@ -232,13 +231,6 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showSaveBeforeLoadImageDialog(int requestCode, Uri uri) {
 		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance(requestCode, uri);
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
-	}
-
-	@Override
-	public void showToolInfoDialog(ToolType toolType) {
-		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.INFO,
-				toolType.getHelpTextResource(), toolType.getNameResource());
-		dialog.show(mainActivity.getSupportFragmentManager(), Constants.HELP_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
