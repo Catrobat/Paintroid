@@ -22,7 +22,6 @@ package org.catrobat.paintroid.tools.implementation;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -301,37 +300,12 @@ public abstract class BaseTool implements Tool {
 
 	@Override
 	public void toggleShowToolOptions() {
-		if (!toggleOptions) {
-			LinearLayout mainToolOptions = contextActivityWrapper.getMainToolOptions();
-			LinearLayout mainBottomBar = contextActivityWrapper.getMainBottomBar();
-			int orientation = contextActivityWrapper.getResources().getConfiguration().orientation;
-
-			if (!toolOptionsShown) {
-				mainToolOptions.setY(mainBottomBar.getY() + mainBottomBar.getHeight());
-				mainToolOptions.setVisibility(View.VISIBLE);
-				float yPos = 0;
-				if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-					yPos = mainBottomBar.getY() - mainToolOptions.getHeight();
-				} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-					yPos = mainBottomBar.getHeight() - mainToolOptions.getHeight();
-				}
-				mainToolOptions.animate().y(yPos);
-				dimBackground(true);
-				toolOptionsShown = true;
-			} else {
-				mainToolOptions.animate().y(mainBottomBar.getY() + mainBottomBar.getHeight());
-				dimBackground(false);
-				toolOptionsShown = false;
-			}
-		}
+		toolOptionsShown = contextActivityWrapper.toggleShowToolOptions(toggleOptions, toolOptionsShown);
 	}
 
 	private void dimBackground(boolean darken) {
 		View drawingSurfaceView = contextActivityWrapper.getDrawingSurfaceView();
 		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
-		/*int colorTo = contextActivityWrapper.getColor(darken
-				? R.color.pocketpaint_main_drawing_surface_inactive
-				: R.color.pocketpaint_main_drawing_surface_active);*/
 
 		int colorTo = contextActivityWrapper.getColor(darken);
 

@@ -19,11 +19,16 @@
 
 package org.catrobat.paintroid;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.LinearLayout;
 
 public class ContextActivityWrapper {
 	private Context context;
@@ -68,5 +73,46 @@ public class ContextActivityWrapper {
 
 	public Activity getContextActivity() {
 		return ((Activity) (context));
+	}
+
+	public boolean toggleShowToolOptions(boolean toggleOptions, boolean toolOptionsShown) {
+		if (!toggleOptions) {
+			LinearLayout mainToolOptions = ((Activity) context).findViewById(R.id.pocketpaint_main_tool_options);
+			LinearLayout mainBottomBar = ((Activity) context).findViewById(R.id.pocketpaint_main_bottom_bar);
+			int orientation = getResources().getConfiguration().orientation;
+
+			if (!toolOptionsShown) {
+				mainToolOptions.setY(mainBottomBar.getY() + mainBottomBar.getHeight());
+				mainToolOptions.setVisibility(View.VISIBLE);
+				float yPos = 0;
+				if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+					yPos = mainBottomBar.getY() - mainToolOptions.getHeight();
+				} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+					yPos = mainBottomBar.getHeight() - mainToolOptions.getHeight();
+				}
+				mainToolOptions.animate().y(yPos);
+				dimBackground(true);
+
+				return true;
+			} else {
+				mainToolOptions.animate().y(mainBottomBar.getY() + mainBottomBar.getHeight());
+				dimBackground(false);
+
+				return false;
+			}
+		}
+		return toolOptionsShown;
+	}
+
+	private void dimBackground(boolean darken) {
+		View drawingSurfaceView = getDrawingSurfaceView();
+		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
+
+		int colorTo = getColor(darken);
+
+		ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(
+				drawingSurfaceView, "backgroundColor", new ArgbEvaluator(), colorFrom, colorTo);
+		backgroundColorAnimator.setDuration(250);
+		backgroundColorAnimator.start();
 	}
 }

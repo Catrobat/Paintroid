@@ -396,7 +396,7 @@ public class BaseToolWithRectangleShapeToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testRotateRectangle() {
+	public void jiatestRotateRectangle() {
 
 		toolToTest.rotationEnabled = true;
 		toolToTest.handleDown(toolPosition);
