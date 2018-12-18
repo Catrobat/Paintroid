@@ -29,7 +29,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class ContextActivityWrapper {
 	private Context context;
@@ -122,5 +121,4 @@ public class ContextActivityWrapper {
 		mainToolOptions.setVisibility(View.INVISIBLE);
 		dimBackground(false);
 	}
-
 }
