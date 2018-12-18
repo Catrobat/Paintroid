@@ -29,6 +29,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class ContextActivityWrapper {
 	private Context context;
@@ -104,7 +105,7 @@ public class ContextActivityWrapper {
 		return toolOptionsShown;
 	}
 
-	private void dimBackground(boolean darken) {
+	public void dimBackground(boolean darken) {
 		View drawingSurfaceView = getDrawingSurfaceView();
 		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
 
@@ -115,4 +116,11 @@ public class ContextActivityWrapper {
 		backgroundColorAnimator.setDuration(250);
 		backgroundColorAnimator.start();
 	}
+
+	public void hide() {
+		LinearLayout mainToolOptions = getMainToolOptions();
+		mainToolOptions.setVisibility(View.INVISIBLE);
+		dimBackground(false);
+	}
+
 }

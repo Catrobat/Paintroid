@@ -19,8 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -35,7 +33,6 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.VisibleForTesting;
@@ -240,7 +237,7 @@ public abstract class BaseTool implements Tool {
 	private void resetAndInitializeToolOptions() {
 		toolOptionsShown = false;
 		contextActivityWrapper.getMainToolOptions().setVisibility(View.INVISIBLE);
-		dimBackground(false);
+		contextActivityWrapper.dimBackground(false);
 
 		contextActivityWrapper.getContextActivity().runOnUiThread(new Runnable() {
 			@Override
@@ -291,9 +288,7 @@ public abstract class BaseTool implements Tool {
 
 	@Override
 	public void hide() {
-		LinearLayout mainToolOptions = contextActivityWrapper.getMainToolOptions();
-		mainToolOptions.setVisibility(View.INVISIBLE);
-		dimBackground(false);
+		contextActivityWrapper.hide();
 		toolOptionsShown = false;
 		toggleOptions = true;
 	}
@@ -301,18 +296,6 @@ public abstract class BaseTool implements Tool {
 	@Override
 	public void toggleShowToolOptions() {
 		toolOptionsShown = contextActivityWrapper.toggleShowToolOptions(toggleOptions, toolOptionsShown);
-	}
-
-	private void dimBackground(boolean darken) {
-		View drawingSurfaceView = contextActivityWrapper.getDrawingSurfaceView();
-		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
-
-		int colorTo = contextActivityWrapper.getColor(darken);
-
-		ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(
-				drawingSurfaceView, "backgroundColor", new ArgbEvaluator(), colorFrom, colorTo);
-		backgroundColorAnimator.setDuration(250);
-		backgroundColorAnimator.start();
 	}
 
 	@Override
