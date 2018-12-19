@@ -27,3 +27,10 @@ build/
 
 # Cache for build scripts
 __pycache__
+
+#Fastlane
+fastlane/*
+!fastlane/Appfile
+!fastlane/Fastfile
+!fastlane/staticContent/
+Gemfile

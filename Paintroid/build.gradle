@@ -84,6 +84,8 @@ android {
         release {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        signedRelease {
+        }
         debug {
             testCoverageEnabled = project.hasProperty('enableCoverage')
             // Multidex is required as espresso and mockito/bytebuddy are adding more functions
