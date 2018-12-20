@@ -26,6 +26,7 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.ToolType;
@@ -53,13 +54,14 @@ public class GeometricFillToolTests {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		rectangleShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
+		ContextActivityWrapper contextActivityWrapper = new ContextActivityWrapper(activityTestRule.getActivity());
+		rectangleShapeTool = new GeometricFillTool(contextActivityWrapper, activityTestRule.getActivity(), ToolType.SHAPE);
 		rectangleShapeTool.baseShape = GeometricFillTool.BaseShape.RECTANGLE;
-		ovalShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
+		ovalShapeTool = new GeometricFillTool(contextActivityWrapper, activityTestRule.getActivity(), ToolType.SHAPE);
 		ovalShapeTool.baseShape = GeometricFillTool.BaseShape.OVAL;
-		heartShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
+		heartShapeTool = new GeometricFillTool(contextActivityWrapper, activityTestRule.getActivity(), ToolType.SHAPE);
 		heartShapeTool.baseShape = GeometricFillTool.BaseShape.HEART;
-		starShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
+		starShapeTool = new GeometricFillTool(contextActivityWrapper, activityTestRule.getActivity(), ToolType.SHAPE);
 		starShapeTool.baseShape = GeometricFillTool.BaseShape.STAR;
 	}
 

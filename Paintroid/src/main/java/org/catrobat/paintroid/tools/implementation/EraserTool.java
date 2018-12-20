@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.tools.ToolType;
 
 public class EraserTool extends DrawTool {
@@ -31,8 +32,8 @@ public class EraserTool extends DrawTool {
 	@ColorInt
 	private int previousColor = Color.BLACK;
 
-	public EraserTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public EraserTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType) {
+		super(contextActivityWrapper, context, toolType);
 	}
 
 	@Override

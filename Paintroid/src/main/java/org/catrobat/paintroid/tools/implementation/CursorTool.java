@@ -30,6 +30,7 @@ import android.graphics.RectF;
 import android.support.annotation.VisibleForTesting;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -54,8 +55,8 @@ public class CursorTool extends BaseToolWithShape {
 	public boolean toolInDrawMode = false;
 	private BrushPickerView brushPickerView;
 
-	public CursorTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public CursorTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType) {
+		super(contextActivityWrapper, context, toolType);
 
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);

@@ -19,11 +19,7 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,17 +33,14 @@ import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandFactory;
@@ -85,14 +78,15 @@ public abstract class BaseTool implements Tool {
 	PointF previousEventCoordinate;
 	private LinearLayout toolOptionsLayout;
 	CommandFactory commandFactory = new DefaultCommandFactory();
+	private ContextActivityWrapper contextActivityWrapper;
 
-	public BaseTool(Context context, ToolType toolType) {
+	public BaseTool(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType) {
 		super();
 		this.toolType = toolType;
 		this.context = context;
 		eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
-
-		Resources resources = context.getResources();
+		this.contextActivityWrapper = contextActivityWrapper;
+		Resources resources = contextActivityWrapper.getResources();
 		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg);
 		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 		checkeredPattern = new Paint();
@@ -116,8 +110,8 @@ public abstract class BaseTool implements Tool {
 		movedDistance = new PointF(0f, 0f);
 		previousEventCoordinate = new PointF(0f, 0f);
 
-		toolOptionsLayout = ((Activity) context).findViewById(R.id.pocketpaint_layout_tool_options);
-		toolSpecificOptionsLayout = ((Activity) context).findViewById(R.id.pocketpaint_layout_tool_specific_options);
+		toolOptionsLayout = contextActivityWrapper.getLayoutToolOptions();
+		toolSpecificOptionsLayout = contextActivityWrapper.getLayoutToolSpecificOptions();
 		resetAndInitializeToolOptions();
 	}
 
@@ -240,17 +234,8 @@ public abstract class BaseTool implements Tool {
 
 	private void resetAndInitializeToolOptions() {
 		toolOptionsShown = false;
-		((Activity) (context)).findViewById(R.id.pocketpaint_main_tool_options).setVisibility(View.INVISIBLE);
-		dimBackground(false);
 
-		((Activity) (context)).runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				toolSpecificOptionsLayout.removeAllViews();
-				TextView toolOptionsName = toolOptionsLayout.findViewById(R.id.pocketpaint_layout_tool_options_name);
-				toolOptionsName.setText(context.getResources().getString(toolType.getNameResource()));
-			}
-		});
+		contextActivityWrapper.resetAndInitializeToolOptions(toolSpecificOptionsLayout, toolOptionsLayout, toolType);
 	}
 
 	@Override
@@ -262,8 +247,8 @@ public abstract class BaseTool implements Tool {
 		if (toolOptionsShown) {
 			if (motionEventType == MotionEvent.ACTION_UP) {
 				PointF surfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(coordinate);
-				float toolOptionsOnSurfaceY = ((Activity) context).findViewById(R.id.pocketpaint_main_tool_options).getY()
-						- ((Activity) context).findViewById(R.id.pocketpaint_toolbar).getHeight();
+				float toolOptionsOnSurfaceY = contextActivityWrapper.getMainToolOptions().getY()
+						- contextActivityWrapper.getToolbar().getHeight();
 				if (surfacePoint.y < toolOptionsOnSurfaceY) {
 					toggleShowToolOptions();
 				}
@@ -292,51 +277,14 @@ public abstract class BaseTool implements Tool {
 
 	@Override
 	public void hide() {
-		LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.pocketpaint_main_tool_options);
-		mainToolOptions.setVisibility(View.INVISIBLE);
-		dimBackground(false);
+		contextActivityWrapper.hide();
 		toolOptionsShown = false;
 		toggleOptions = true;
 	}
 
 	@Override
 	public void toggleShowToolOptions() {
-		if (!toggleOptions) {
-			LinearLayout mainToolOptions = ((Activity) (context)).findViewById(R.id.pocketpaint_main_tool_options);
-			LinearLayout mainBottomBar = ((Activity) (context)).findViewById(R.id.pocketpaint_main_bottom_bar);
-			int orientation = context.getResources().getConfiguration().orientation;
-
-			if (!toolOptionsShown) {
-				mainToolOptions.setY(mainBottomBar.getY() + mainBottomBar.getHeight());
-				mainToolOptions.setVisibility(View.VISIBLE);
-				float yPos = 0;
-				if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-					yPos = mainBottomBar.getY() - mainToolOptions.getHeight();
-				} else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-					yPos = mainBottomBar.getHeight() - mainToolOptions.getHeight();
-				}
-				mainToolOptions.animate().y(yPos);
-				dimBackground(true);
-				toolOptionsShown = true;
-			} else {
-				mainToolOptions.animate().y(mainBottomBar.getY() + mainBottomBar.getHeight());
-				dimBackground(false);
-				toolOptionsShown = false;
-			}
-		}
-	}
-
-	private void dimBackground(boolean darken) {
-		View drawingSurfaceView = ((Activity) (context)).findViewById(R.id.pocketpaint_drawing_surface_view);
-		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
-		int colorTo = ContextCompat.getColor(context, darken
-				? R.color.pocketpaint_main_drawing_surface_inactive
-				: R.color.pocketpaint_main_drawing_surface_active);
-
-		ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(
-				drawingSurfaceView, "backgroundColor", new ArgbEvaluator(), colorFrom, colorTo);
-		backgroundColorAnimator.setDuration(250);
-		backgroundColorAnimator.start();
+		toolOptionsShown = contextActivityWrapper.toggleShowToolOptions(toggleOptions, toolOptionsShown);
 	}
 
 	@Override

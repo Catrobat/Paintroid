@@ -30,6 +30,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
@@ -51,8 +52,8 @@ public abstract class BaseToolWithShape extends BaseTool implements
 	final Paint linePaint;
 	final DisplayMetrics metrics;
 
-	public BaseToolWithShape(Context context, ToolType toolType) {
-		super(context, toolType);
+	public BaseToolWithShape(ContextActivityWrapper contextActivityWrapper, Context context, ToolType toolType) {
+		super(contextActivityWrapper, context, toolType);
 
 		final Resources resources = context.getResources();
 		metrics = resources.getDisplayMetrics();

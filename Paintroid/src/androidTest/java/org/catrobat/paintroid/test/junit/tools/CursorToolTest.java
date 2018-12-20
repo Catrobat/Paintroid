@@ -28,6 +28,7 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.ContextActivityWrapper;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
@@ -75,7 +76,8 @@ public class CursorToolTest {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		toolToTest = new CursorTool(activityTestRule.getActivity(), ToolType.CURSOR);
+		ContextActivityWrapper contextActivityWrapper = new ContextActivityWrapper(activityTestRule.getActivity());
+		toolToTest = new CursorTool(contextActivityWrapper, activityTestRule.getActivity(), ToolType.CURSOR);
 		PaintroidApplication.commandManager = commandManager;
 	}
 
