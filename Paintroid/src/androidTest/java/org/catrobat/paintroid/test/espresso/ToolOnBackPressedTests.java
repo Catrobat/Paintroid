@@ -26,8 +26,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
 
+import org.catrobat.paintroid.CurrentToolWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
@@ -72,7 +72,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ToolOnBackPressedTests {
-
+	private CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
 	private static final String FILE_ENDING = ".png";
 
 	@Rule
@@ -156,7 +156,7 @@ public class ToolOnBackPressedTests {
 
 		Espresso.pressBack();
 
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+		assertEquals(currentToolWrapper.getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
@@ -170,14 +170,14 @@ public class ToolOnBackPressedTests {
 
 		Espresso.pressBack();
 
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.CURSOR);
+		assertEquals(currentToolWrapper.getToolType(), ToolType.CURSOR);
 
 		onView(withId(R.id.pocketpaint_main_tool_options)).check(matches(not(isDisplayed())));
 		onView(withId(R.id.pocketpaint_layout_tool_options_name)).check(matches(not(isDisplayed())));
 
 		Espresso.pressBack();
 
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+		assertEquals(currentToolWrapper.getToolType(), ToolType.BRUSH);
 	}
 
 	@Test

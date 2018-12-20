@@ -3,14 +3,19 @@ package org.catrobat.paintroid.tools.implementation;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
+import org.catrobat.paintroid.PerspectiveWrapper;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
 
 public class ImportTool extends StampTool {
 
-	public ImportTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public ImportTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+					CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
+					LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
+		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		readyForPaste = true;
 		longClickAllowed = false;
 		createOverlayBitmap();
@@ -20,9 +25,8 @@ public class ImportTool extends StampTool {
 	public void setBitmapFromFile(Bitmap bitmap) {
 		super.setBitmapFromFile(bitmap);
 
-		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-		final float maximumBorderRatioWidth = MAXIMUM_BORDER_RATIO * drawingSurface.getBitmapWidth();
-		final float maximumBorderRatioHeight = MAXIMUM_BORDER_RATIO * drawingSurface.getBitmapHeight();
+		final float maximumBorderRatioWidth = MAXIMUM_BORDER_RATIO * drawingSurfaceWrapper.getBitmapWidth();
+		final float maximumBorderRatioHeight = MAXIMUM_BORDER_RATIO * drawingSurfaceWrapper.getBitmapHeight();
 
 		final float minimumSize = DEFAULT_BOX_RESIZE_MARGIN;
 

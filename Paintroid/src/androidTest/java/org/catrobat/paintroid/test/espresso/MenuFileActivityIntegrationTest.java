@@ -31,8 +31,9 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
@@ -81,6 +82,8 @@ import static org.junit.Assert.fail;
 @RunWith(AndroidJUnit4.class)
 public class MenuFileActivityIntegrationTest {
 
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+	private LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
 	private static ArrayList<File> deletionFileList = null;
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
@@ -112,7 +115,7 @@ public class MenuFileActivityIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		getWorkingBitmap().setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
-		assertEquals("Color on drawing surface wrong", Color.BLACK, PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+		assertEquals("Color on drawing surface wrong", Color.BLACK, drawingSurfaceWrapper.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 
 		onNavigationDrawer()
 				.performOpen();
@@ -123,7 +126,7 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_new_image_empty_image)).perform(click());
 
-		assertEquals("Color should be Transparent", Color.TRANSPARENT, PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+		assertEquals("Color should be Transparent", Color.TRANSPARENT, drawingSurfaceWrapper.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
 	}
 
 	@Test
@@ -212,7 +215,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap imageBefore = layerModelWrapper.getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -221,7 +224,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		onView(withText(R.string.skip)).perform(click());
 
-		Bitmap imageAfter = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap imageAfter = layerModelWrapper.getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
@@ -230,7 +233,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap imageBefore = layerModelWrapper.getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -239,7 +242,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		pressBack();
 
-		Bitmap imageAfter = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap imageAfter = layerModelWrapper.getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 

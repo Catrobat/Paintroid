@@ -23,8 +23,8 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.support.test.rule.ActivityTestRule;
 
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
@@ -53,6 +53,7 @@ import static org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class ShapeToolIntegrationTest {
 
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -88,7 +89,7 @@ public class ShapeToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		Bitmap expectedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		Bitmap expectedBitmap = drawingSurfaceWrapper.getBitmapCopy();
 
 		onTopBarView()
 				.performUndo();
@@ -104,7 +105,7 @@ public class ShapeToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		assertTrue(expectedBitmap.sameAs(PaintroidApplication.drawingSurface.getBitmapCopy()));
+		assertTrue(expectedBitmap.sameAs(drawingSurfaceWrapper.getBitmapCopy()));
 	}
 
 	@Test
@@ -120,7 +121,7 @@ public class ShapeToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		Bitmap expectedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		Bitmap expectedBitmap = drawingSurfaceWrapper.getBitmapCopy();
 		onTopBarView()
 				.performUndo();
 
@@ -134,6 +135,6 @@ public class ShapeToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		assertTrue(expectedBitmap.sameAs(PaintroidApplication.drawingSurface.getBitmapCopy()));
+		assertTrue(expectedBitmap.sameAs(drawingSurfaceWrapper.getBitmapCopy()));
 	}
 }

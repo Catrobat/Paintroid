@@ -34,12 +34,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ToggleButton;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.TextToolOptionsListener;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
 
 public class TextTool extends BaseToolWithRectangleShape {
 
@@ -81,8 +84,10 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@VisibleForTesting
 	public int textSize = 20;
 
-	public TextTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public TextTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+					CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
+					LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
+		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
@@ -278,13 +283,12 @@ public class TextTool extends BaseToolWithRectangleShape {
 		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
 		Command command = commandFactory.createTextToolCommand(getMultilineText(), textPaint, BOX_OFFSET, boxWidth,
 				boxHeight, toolPosition, boxRotation);
-		PaintroidApplication.commandManager.addCommand(command);
+		commandManager.addCommand(command);
 	}
 
 	@VisibleForTesting
 	public void resetBoxPosition() {
-		DrawingSurface surface = PaintroidApplication.drawingSurface;
-		toolPosition.x = surface.getBitmapWidth() / 2.0f;
+		toolPosition.x = drawingSurfaceWrapper.getBitmapWidth() / 2.0f;
 		toolPosition.y = boxHeight / 2.0f + MARGIN_TOP;
 	}
 

@@ -24,6 +24,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
+import org.catrobat.paintroid.PerspectiveWrapper;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ToolType;
 
 public class EraserTool extends DrawTool {
@@ -31,8 +36,10 @@ public class EraserTool extends DrawTool {
 	@ColorInt
 	private int previousColor = Color.BLACK;
 
-	public EraserTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public EraserTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+				CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
+					LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
+		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 	}
 
 	@Override

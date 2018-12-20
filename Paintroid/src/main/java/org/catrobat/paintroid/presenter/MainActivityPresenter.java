@@ -258,7 +258,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		switch (requestCode) {
 			case REQUEST_CODE_IMPORTPNG:
 				Uri selectedGalleryImageUri = data.getData();
-				Tool tool = toolFactory.createTool((Activity) view, ToolType.IMPORTPNG);
+				Tool tool = toolFactory.createTool((Activity) view, ToolType.IMPORTPNG, commandManager);
 				switchTool(tool);
 				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, maxWidth, maxHeight, selectedGalleryImageUri);
 				break;
@@ -466,13 +466,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		ToolFactory toolFactory = new DefaultToolFactory();
 
 		if (PaintroidApplication.currentTool == null) {
-			PaintroidApplication.currentTool = toolFactory.createTool((Activity) view, ToolType.BRUSH);
+			PaintroidApplication.currentTool = toolFactory.createTool((Activity) view, ToolType.BRUSH, commandManager);
 			PaintroidApplication.currentTool.startTool();
 		} else {
 			Paint paint = PaintroidApplication.currentTool.getDrawPaint();
 			PaintroidApplication.currentTool.leaveTool();
 			PaintroidApplication.currentTool.onSaveInstanceState(bundle);
-			PaintroidApplication.currentTool = toolFactory.createTool((Activity) view, PaintroidApplication.currentTool.getToolType());
+			PaintroidApplication.currentTool = toolFactory.createTool((Activity) view, PaintroidApplication.currentTool.getToolType(), commandManager);
 			PaintroidApplication.currentTool.onRestoreInstanceState(bundle);
 			PaintroidApplication.currentTool.startTool();
 			PaintroidApplication.currentTool.setDrawPaint(paint);
@@ -509,7 +509,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (type == ToolType.IMPORTPNG) {
 			navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
 		} else {
-			Tool tool = toolFactory.createTool((Activity) view, type);
+			Tool tool = toolFactory.createTool((Activity) view, type, commandManager);
 			switchTool(tool);
 		}
 	}

@@ -24,20 +24,29 @@ import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 @RunWith(AndroidJUnit4.class)
 public class ImportToolTest {
+	private DrawingSurfaceWrapper drawingSurfaceWrapper = new DrawingSurfaceWrapper();
+	private CurrentToolWrapper currentToolWrapper = new CurrentToolWrapper();
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
+	private LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
+	private CommandManager commandManager = mock(CommandManager.class);
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -50,11 +59,11 @@ public class ImportToolTest {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		tool = new ImportTool(activityTestRule.getActivity(), ToolType.IMPORTPNG);
+		tool = new ImportTool(activityTestRule.getActivity(), ToolType.IMPORTPNG,
+				drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 
-		DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-		drawingSurfaceWidth = drawingSurface.getBitmapWidth();
-		drawingSurfaceHeight = drawingSurface.getBitmapHeight();
+		drawingSurfaceWidth = drawingSurfaceWrapper.getBitmapWidth();
+		drawingSurfaceHeight = drawingSurfaceWrapper.getBitmapHeight();
 	}
 
 	@Test

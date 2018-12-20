@@ -26,8 +26,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.LayerModelWrapper;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
@@ -62,6 +62,8 @@ import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class LayerIntegrationTest {
+
+	private LayerModelWrapper layerModelWrapper = new LayerModelWrapper();
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -73,7 +75,7 @@ public class LayerIntegrationTest {
 
 	@Before
 	public void setUp() {
-		Bitmap image = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap image = layerModelWrapper.getCurrentLayer().getBitmap();
 		bitmapHeight = image.getHeight();
 		bitmapWidth = image.getWidth();
 	}

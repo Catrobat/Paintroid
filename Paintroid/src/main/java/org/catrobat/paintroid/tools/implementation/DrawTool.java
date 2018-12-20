@@ -26,8 +26,12 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.support.annotation.VisibleForTesting;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.CurrentToolWrapper;
+import org.catrobat.paintroid.DrawingSurfaceWrapper;
+import org.catrobat.paintroid.LayerModelWrapper;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -41,8 +45,10 @@ public class DrawTool extends BaseTool {
 	@VisibleForTesting
 	public BrushPickerView brushPickerView;
 
-	public DrawTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public DrawTool(Context context, ToolType toolType, DrawingSurfaceWrapper drawingSurfaceWrapper,
+					CurrentToolWrapper currentToolWrapper, PerspectiveWrapper perspectiveWrapper,
+					LayerModelWrapper layerModelWrapper, CommandManager commandManager) {
+		super(context, toolType, drawingSurfaceWrapper, currentToolWrapper, perspectiveWrapper, layerModelWrapper, commandManager);
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
 		drawToolMovedDistance = new PointF(0f, 0f);
@@ -53,15 +59,15 @@ public class DrawTool extends BaseTool {
 	public void draw(Canvas canvas) {
 		setPaintColor(CANVAS_PAINT.getColor());
 
-		if (PaintroidApplication.currentTool.getToolType() == ToolType.ERASER
+		if (currentToolWrapper.getToolType() == ToolType.ERASER
 				&& CANVAS_PAINT.getColor() != Color.TRANSPARENT) {
 			setPaintColor(Color.TRANSPARENT);
 		}
 
 		canvas.save();
 		canvas.clipRect(0, 0,
-				PaintroidApplication.drawingSurface.getBitmapWidth(),
-				PaintroidApplication.drawingSurface.getBitmapHeight());
+				drawingSurfaceWrapper.getBitmapWidth(),
+				drawingSurfaceWrapper.getBitmapHeight());
 		if (CANVAS_PAINT.getColor() == Color.TRANSPARENT) {
 			CANVAS_PAINT.setColor(Color.BLACK);
 			canvas.drawPath(pathToDraw, CANVAS_PAINT);
@@ -131,21 +137,21 @@ public class DrawTool extends BaseTool {
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
 		if (!pathInsideBitmap) {
-			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
+			currentToolWrapper.resetInternalState(StateChange.RESET_INTERNAL_STATE);
 			return false;
 		}
 		Command command = commandFactory.createPathCommand(BITMAP_PAINT, pathToDraw);
-		PaintroidApplication.commandManager.addCommand(command);
+		commandManager.addCommand(command);
 		return true;
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
 		if (!pathInsideBitmap) {
-			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
+			currentToolWrapper.resetInternalState(StateChange.RESET_INTERNAL_STATE);
 			return false;
 		}
 		Command command = commandFactory.createPointCommand(BITMAP_PAINT, coordinate);
-		PaintroidApplication.commandManager.addCommand(command);
+		commandManager.addCommand(command);
 		return true;
 	}
 

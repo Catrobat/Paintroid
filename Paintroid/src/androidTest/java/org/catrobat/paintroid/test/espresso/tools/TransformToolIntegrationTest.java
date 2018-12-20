@@ -28,6 +28,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.PerspectiveWrapper;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
@@ -70,6 +71,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class TransformToolIntegrationTest {
 
+	private PerspectiveWrapper perspectiveWrapper = new PerspectiveWrapper();
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -102,8 +104,8 @@ public class TransformToolIntegrationTest {
 				verticalStartY, 10, lineLength);
 	}
 
-	private static PointF getSurfacePointFromCanvasPoint(PointF point) {
-		return PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(point);
+	private PointF getSurfacePointFromCanvasPoint(PointF point) {
+		return perspectiveWrapper.getSurfacePointFromCanvasPoint(point);
 	}
 
 	private static float getToolSelectionBoxWidth() {
@@ -792,7 +794,7 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM)
 				.performCloseToolOptions();
 
-		PaintroidApplication.perspective.multiplyScale(.25f);
+		perspectiveWrapper.multiplyScale(.25f);
 
 		PointF dragFrom = getSurfacePointFromCanvasPoint(new PointF(initialWidth, initialHeight));
 		PointF dragTo = getSurfacePointFromCanvasPoint(new PointF(maxWidth + 10, initialHeight));
@@ -815,8 +817,8 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM)
 				.performCloseToolOptions();
 
-		final float zoomFactor = PaintroidApplication.perspective.getScaleForCenterBitmap() * .25f;
-		PaintroidApplication.perspective.setScale(zoomFactor);
+		final float zoomFactor = perspectiveWrapper.getScaleForCenterBitmap() * .25f;
+		perspectiveWrapper.setScale(zoomFactor);
 
 		PointF dragFrom = getSurfacePointFromCanvasPoint(new PointF(initialWidth, initialHeight));
 		PointF dragTo = getSurfacePointFromCanvasPoint(new PointF(maxWidth + 10, initialHeight));
@@ -924,7 +926,7 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM)
 				.performCloseToolOptions();
 
-		PaintroidApplication.perspective.multiplyScale(.25f);
+		perspectiveWrapper.multiplyScale(.25f);
 
 		setToolPosition(initialWidth + initialHeight / 2,
 				initialHeight + initialHeight / 2);
@@ -944,7 +946,7 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM)
 				.performCloseToolOptions();
 
-		PaintroidApplication.perspective.multiplyScale(.25f);
+		perspectiveWrapper.multiplyScale(.25f);
 
 		setToolPosition(initialWidth + initialHeight / 2,
 				initialHeight + initialHeight / 2);
