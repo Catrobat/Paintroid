@@ -3,14 +3,17 @@ import sys
 import xml.etree.ElementTree as ET
 import re
 import os.path
+import logging
 
 """
 The script allows to convert JaCoCo xml-results to Cobertura xml-files.
-Script taken from https://github.com/rix0rrr/cover2cover
+Script taken from https://github.com/rix0rrr/cover2cover and modified to fit our needs.
 """
 
 # branch-rate="0.0" complexity="0.0" line-rate="1.0"
 # branch="true" hits="1" number="86"
+
+logging.basicConfig(format='[cover2cover] %(levelname)s: %(message)s', level=logging.INFO)
 
 def find_lines(j_package, filename):
     """Return all <line> elements for a given source file in a package."""
@@ -138,24 +141,35 @@ def convert_root(source, target, source_roots):
 
     add_counters(source, target)
 
-def jacoco2cobertura(filename, source_roots):
-    if filename == '-':
+def jacoco2cobertura(in_xml, out_xml, source_roots):
+    if in_xml == '-':
         root = ET.fromstring(sys.stdin.read())
     else:
-        tree = ET.parse(filename)
+        tree = ET.parse(in_xml)
         root = tree.getroot()
 
     into = ET.Element('coverage')
     convert_root(root, into, source_roots)
-    print '<?xml version="1.0" ?>'
-    print ET.tostring(into)
+
+    contents = '<?xml version="1.0" ?>' + ET.tostring(into)
+    with open(out_xml, 'w') as f:
+        f.write(contents)
+    logging.info("Wrote cobertura xml file to {}.".format(out_xml))
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print "Usage: cover2cover.py FILENAME [SOURCE_ROOTS]"
+    if len(sys.argv) < 3:
+        logging.error("Usage: cover2cover.py IN_XML OUT_XML [SOURCE_ROOTS]")
         sys.exit(1)
 
-    filename    = sys.argv[1]
-    source_roots = sys.argv[2:] if 2 < len(sys.argv) else '.'
+    in_xml = sys.argv[1]
+    out_xml = sys.argv[2]
+    source_roots = sys.argv[3:] if 3 < len(sys.argv) else '.'
 
-    jacoco2cobertura(filename, source_roots)
+    if not os.path.isfile(in_xml):
+        logging.warning("Input XML does not exist.\nSkipping.")
+        sys.exit(0)
+
+    try:
+        jacoco2cobertura(in_xml, out_xml, source_roots)
+    except Exception:
+        logging.exception("Cobertura conversion failed!\nSkipping to continue the build.")
