@@ -130,10 +130,8 @@ public class TextToolIntegrationTest {
 		italicToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
 		textSizeSpinner = (Spinner) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
-
 		textTool.resetBoxPosition();
 	}
-
 	@After
 	public void tearDown() {
 		activityHelper = null;
@@ -143,6 +141,23 @@ public class TextToolIntegrationTest {
 	public void testDialogKeyboardTextBoxAppearanceOnStartup() {
 		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).check(matches(hasFocus()));
 		checkTextBoxDimensionsAndDefaultPosition();
+	}
+
+	@Test
+	public void testConfirmButton() {
+		enterTestText();
+		selectFormatting(FormattingOptions.SERIF);
+		selectFormatting(FormattingOptions.UNDERLINE);
+		selectFormatting(FormattingOptions.SIZE_30);
+		onView(withId(R.id.ic_pocketpaint_text_tool_confirm_button)).perform(click());
+		assertEquals(TEST_TEXT, getToolMemberText());
+		assertTrue(getToolMemberUnderlined());
+		assertTrue(underlinedToggleButton.isChecked());
+		assertEquals(getFontString(FormattingOptions.UNDERLINE), underlinedToggleButton.getText().toString());
+		assertEquals("Tool member has wrong value for text size", TEXT_SIZE_30, getToolMemberTextSize());
+		assertEquals("Wrong current item of text size spinner", TEXT_SIZE_30_STRING, textSizeSpinner.getSelectedItem());
+		assertEquals(FONT_SERIF, getToolMemberFont());
+		assertEquals(FONT_SERIF, fontSpinner.getSelectedItem());
 	}
 
 	@Test

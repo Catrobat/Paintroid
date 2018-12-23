@@ -28,9 +28,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Checkable;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
+import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.ui.tools.FontArrayAdapter;
 
@@ -48,17 +50,18 @@ public final class TextToolOptionsListener {
 	private final ToggleButton italicToggleButton;
 	private final ToggleButton boldToggleButton;
 	private final Spinner textSizeSpinner;
+	private final ImageButton confirmInputTextButton;
 	private final List<String> fonts;
 
 	public TextToolOptionsListener(Context context, View textToolOptionsView) {
 		this.context = context;
-
 		textEditText = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_input_text);
 		fontSpinner = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_font);
 		underlinedToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		italicToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
 		textSizeSpinner = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
+		confirmInputTextButton = textToolOptionsView.findViewById(R.id.ic_pocketpaint_text_tool_confirm_button);
 
 		fonts = Arrays.asList(context.getResources().getStringArray(R.array.pocketpaint_main_text_tool_fonts));
 
@@ -106,6 +109,7 @@ public final class TextToolOptionsListener {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
+
 				hideKeyboard();
 			}
 		});
@@ -136,6 +140,14 @@ public final class TextToolOptionsListener {
 				onTextToolOptionsChangedListener.setBold(bold);
 				hideKeyboard();
 			}
+		});
+
+		confirmInputTextButton.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				PaintroidApplication.currentTool.toggleShowToolOptions();
+				hideKeyboard();
+				}
 		});
 
 		final int[] intSizes = context.getResources().getIntArray(R.array.pocketpaint_text_tool_size_array);
