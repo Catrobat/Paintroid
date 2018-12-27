@@ -49,6 +49,18 @@
                 android:background="@null"
                 android:text="@string/done"
                 android:textSize="14sp" />
+
+
+            <Button
+                android:id="@+id/color_chooser_button_cancel"
+                style="?borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@null"
+                android:text="@string/cancel"
+                android:textSize="14sp" />
+
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

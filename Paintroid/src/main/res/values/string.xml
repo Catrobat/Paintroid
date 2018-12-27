@@ -33,7 +33,8 @@
     <string name="button_line">Line</string>
     <string name="button_text">Text</string>
     <string name="button_shape">Shapes</string>
-    <string name="done">Done</string>
+    <string name="done">Applay</string>
+    <string name="cancel">Cancel</string>
 
     <string name="color_chooser_title">Color Chooser</string>
     <string name="color_red">Red</string>

@@ -73,7 +73,9 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	@VisibleForTesting
 	public List<OnColorPickedListener> onColorPickedListener = new ArrayList<>();
 	private ColorPickerView colorPickerView;
-	private Button buttonNewColor;
+	private Button buttonApplayColor;
+	private Button buttonCancelColor;
+	private int previousColor = 0;
 
 	public static ColorPickerDialog newInstance(@ColorInt int initialColor) {
 		ColorPickerDialog dialog = new ColorPickerDialog();
@@ -110,15 +112,26 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		buttonNewColor = view.findViewById(R.id.color_chooser_button_ok);
+		buttonApplayColor = view.findViewById(R.id.color_chooser_button_ok);
 		colorPickerView = view.findViewById(R.id.color_chooser_color_picker_view);
+		buttonCancelColor = view.findViewById(R.id.color_chooser_button_cancel);
 
-		buttonNewColor.setOnClickListener(new View.OnClickListener() {
+		buttonApplayColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dismiss();
 			}
 		});
+
+		buttonCancelColor.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setButtonsColor(previousColor);
+				updateColorChange(previousColor);
+				dismiss();
+			}
+		});
+
 		colorPickerView.setOnColorChangedListener(this);
 
 		if (savedInstanceState != null) {
@@ -145,24 +158,38 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	}
 
 	public void setColor(int color) {
-		setButtonColor(color);
+		setButtonsColor(color);
 		colorPickerView.setSelectedColor(color);
+		previousColor = color;
 	}
 
-	private void setButtonColor(int color) {
-		buttonNewColor.setBackground(CustomColorDrawable.createDrawable(color));
+	private void setButtonsColor(int color) {
+		buttonApplayColor.setBackground(CustomColorDrawable.createDrawable(color));
 
-		int referenceColor = (Color.red(color) + Color.blue(color) + Color.green(color)) / 3;
-		if (referenceColor <= 128 && Color.alpha(color) > 5) {
-			buttonNewColor.setTextColor(Color.WHITE);
+		int referenceApplayColor = (Color.red(color) + Color.blue(color) + Color.green(color)) / 3;
+		if (referenceApplayColor <= 128 && Color.alpha(color) > 5) {
+			buttonApplayColor.setTextColor(Color.WHITE);
 		} else {
-			buttonNewColor.setTextColor(Color.BLACK);
+			buttonApplayColor.setTextColor(Color.BLACK);
+		}
+
+		if (previousColor == 0) {
+			buttonCancelColor.setBackground(CustomColorDrawable.createDrawable(Color.BLACK));
+			buttonCancelColor.setTextColor(Color.WHITE);
+		} else {
+			buttonCancelColor.setBackground(CustomColorDrawable.createDrawable(previousColor));
+			int referenceCancelColor = (Color.red(previousColor) + Color.blue(previousColor) + Color.green(previousColor)) / 3;
+			if (referenceCancelColor <= 128 && Color.alpha(previousColor) > 5) {
+				buttonApplayColor.setTextColor(Color.WHITE);
+			} else {
+				buttonApplayColor.setTextColor(Color.BLACK);
+			}
 		}
 	}
 
 	@Override
 	public void colorChanged(int color) {
-		setButtonColor(color);
+		setButtonsColor(color);
 		updateColorChange(color);
 	}
 
