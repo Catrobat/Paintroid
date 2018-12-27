@@ -73,7 +73,7 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	@VisibleForTesting
 	public List<OnColorPickedListener> onColorPickedListener = new ArrayList<>();
 	private ColorPickerView colorPickerView;
-	private Button buttonApplayColor;
+	private Button buttonApplyColor;
 	private Button buttonCancelColor;
 	private int previousColor = 0;
 
@@ -112,11 +112,11 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		buttonApplayColor = view.findViewById(R.id.color_chooser_button_ok);
+		buttonApplyColor = view.findViewById(R.id.color_chooser_button_ok);
 		colorPickerView = view.findViewById(R.id.color_chooser_color_picker_view);
 		buttonCancelColor = view.findViewById(R.id.color_chooser_button_cancel);
 
-		buttonApplayColor.setOnClickListener(new View.OnClickListener() {
+		buttonApplyColor.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dismiss();
@@ -164,13 +164,13 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	}
 
 	private void setButtonsColor(int color) {
-		buttonApplayColor.setBackground(CustomColorDrawable.createDrawable(color));
+		buttonApplyColor.setBackground(CustomColorDrawable.createDrawable(color));
 
-		int referenceApplayColor = (Color.red(color) + Color.blue(color) + Color.green(color)) / 3;
-		if (referenceApplayColor <= 128 && Color.alpha(color) > 5) {
-			buttonApplayColor.setTextColor(Color.WHITE);
+		int referenceApplyColor = (Color.red(color) + Color.blue(color) + Color.green(color)) / 3;
+		if (referenceApplyColor <= 128 && Color.alpha(color) > 5) {
+			buttonApplyColor.setTextColor(Color.WHITE);
 		} else {
-			buttonApplayColor.setTextColor(Color.BLACK);
+			buttonApplyColor.setTextColor(Color.BLACK);
 		}
 
 		if (previousColor == 0) {
@@ -180,9 +180,9 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 			buttonCancelColor.setBackground(CustomColorDrawable.createDrawable(previousColor));
 			int referenceCancelColor = (Color.red(previousColor) + Color.blue(previousColor) + Color.green(previousColor)) / 3;
 			if (referenceCancelColor <= 128 && Color.alpha(previousColor) > 5) {
-				buttonApplayColor.setTextColor(Color.WHITE);
+				buttonApplyColor.setTextColor(Color.WHITE);
 			} else {
-				buttonApplayColor.setTextColor(Color.BLACK);
+				buttonApplyColor.setTextColor(Color.BLACK);
 			}
 		}
 	}
