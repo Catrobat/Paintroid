@@ -167,6 +167,7 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 		buttonApplyColor.setBackground(CustomColorDrawable.createDrawable(color));
 
 		int referenceApplyColor = (Color.red(color) + Color.blue(color) + Color.green(color)) / 3;
+		
 		if (referenceApplyColor <= 128 && Color.alpha(color) > 5) {
 			buttonApplyColor.setTextColor(Color.WHITE);
 		} else {
