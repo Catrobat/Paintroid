@@ -180,9 +180,9 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 			buttonCancelColor.setBackground(CustomColorDrawable.createDrawable(previousColor));
 			int referenceCancelColor = (Color.red(previousColor) + Color.blue(previousColor) + Color.green(previousColor)) / 3;
 			if (referenceCancelColor <= 128 && Color.alpha(previousColor) > 5) {
-				buttonApplyColor.setTextColor(Color.WHITE);
+				buttonCancelColor.setTextColor(Color.WHITE);
 			} else {
-				buttonApplyColor.setTextColor(Color.BLACK);
+				buttonCancelColor.setTextColor(Color.BLACK);
 			}
 		}
 	}
