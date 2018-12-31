@@ -32,7 +32,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
@@ -46,25 +46,24 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/color_chooser_button_ok"
+                    android:id="@+id/color_chooser_button_cancel"
                     style="?borderlessButtonStyle"
                     android:layout_width="127dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="@null"
-                    android:text="@string/done"
+                    android:text="@string/cancel"
                     android:textSize="14sp" />
 
-
                 <Button
-                    android:id="@+id/color_chooser_button_cancel"
+                    android:id="@+id/color_chooser_button_ok"
                     style="?borderlessButtonStyle"
                     android:layout_width="127dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:background="@null"
-                    android:text="@string/cancel"
+                    android:text="@string/done"
                     android:textSize="14sp" />
 
             </LinearLayout>
