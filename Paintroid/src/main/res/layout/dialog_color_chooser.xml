@@ -27,12 +27,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
@@ -40,27 +40,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <Button
-                android:id="@+id/color_chooser_button_ok"
-                style="?borderlessButtonStyle"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@null"
-                android:text="@string/done"
-                android:textSize="14sp" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/color_chooser_button_ok"
+                    style="?borderlessButtonStyle"
+                    android:layout_width="127dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@null"
+                    android:text="@string/done"
+                    android:textSize="14sp" />
 
 
-            <Button
-                android:id="@+id/color_chooser_button_cancel"
-                style="?borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@null"
-                android:text="@string/cancel"
-                android:textSize="14sp" />
+                <Button
+                    android:id="@+id/color_chooser_button_cancel"
+                    style="?borderlessButtonStyle"
+                    android:layout_width="127dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@null"
+                    android:text="@string/cancel"
+                    android:textSize="14sp" />
 
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
