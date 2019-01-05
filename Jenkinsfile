@@ -4,10 +4,22 @@ def reports = 'Paintroid/build/reports'
 
 // place the cobertura xml relative to the source, so that the source can be found
 def javaSrc = 'Paintroid/src/main/java'
-def jacocoXml = "$reports/coverage/debug/report.xml"
-def jacocoUnitXml = "$reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml"
 
 def debugApk = 'app/build/outputs/apk/debug/app-debug.apk'
+
+def junitAndCoverage(String jacocoXmlFile, String coverageName, String javaSrcLocation) {
+    // Consume all test xml files. Otherwise tests would be tracked multiple
+    // times if this function was called again.
+    String testPattern = '**/*TEST*.xml'
+    junit testResults: testPattern, allowEmptyResults: true
+    cleanWs patterns: [[pattern: testPattern, type: 'INCLUDE']]
+
+    String coverageFile = "$javaSrcLocation/coverage_${coverageName}.xml"
+    // Convert the JaCoCo coverate to the Cobertura XML file format.
+    // This is done since the Jenkins JaCoCo plugin does not work well.
+    // See also JENKINS-212 on jira.catrob.at
+    sh "./buildScripts/cover2cover.py '$jacocoXmlFile' '$coverageFile'"
+}
 
 pipeline {
     agent {
@@ -55,30 +67,36 @@ pipeline {
             }
         }
 
-        stage('Unit and Device tests') {
-            steps {
-                // Run local unit tests
-                sh './gradlew -PenableCoverage -Pjenkins jacocoTestDebugUnitTestReport'
-                // Convert the JaCoCo coverate to the Cobertura XML file format.
-                // This is done since the Jenkins JaCoCo plugin does not work well.
-                // See also JENKINS-212 on jira.catrob.at
-                sh "./buildScripts/cover2cover.py '$jacocoUnitXml' '$javaSrc/coverage1.xml'"
+        stage('Tests') {
+            stages {
+                stage('Unit Tests') {
+                    steps {
+                        sh './gradlew -PenableCoverage -Pjenkins jacocoTestDebugUnitTestReport'
+                    }
+                    post {
+                        always {
+                            junitAndCoverage "$reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml", 'unit', javaSrc
+                        }
+                    }
+                }
 
-                // Run device tests
-                sh './gradlew -PenableCoverage -Pjenkins startEmulator adbDisableAnimationsGlobally createDebugCoverageReport'
-                // Convert the JaCoCo coverate to the Cobertura XML file format.
-                // This is done since the Jenkins JaCoCo plugin does not work well.
-                // See also JENKINS-212 on jira.catrob.at
-                sh "./buildScripts/cover2cover.py '$jacocoXml' '$javaSrc/coverage2.xml'"
+                stage('Device Tests') {
+                    steps {
+                        sh './gradlew -PenableCoverage -Pjenkins startEmulator adbDisableAnimationsGlobally createDebugCoverageReport'
+                    }
+                    post {
+                        always {
+                            sh './gradlew stopEmulator'
+                            junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
+                            archiveArtifacts 'logcat.txt'
+                        }
+                    }
+                }
             }
 
             post {
                 always {
-                    junit '**/*TEST*.xml'
                     step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: "$javaSrc/coverage*.xml", failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false, failNoReports: false])
-
-                    sh './gradlew stopEmulator'
-                    archiveArtifacts 'logcat.txt'
 
                     plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
                     plot csvFileName: 'apksize.csv', csvSeries: [[displayTableFlag: false, exclusionValues: 'kilobytes', file: 'Paintroid/build/outputs/apksize/*/*.csv', inclusionFlag: 'INCLUDE_BY_STRING', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'APK Size'
