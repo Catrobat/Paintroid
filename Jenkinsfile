@@ -1,5 +1,14 @@
 #!groovy
 
+def reports = 'Paintroid/build/reports'
+
+// place the cobertura xml relative to the source, so that the source can be found
+def javaSrc = 'Paintroid/src/main/java'
+def jacocoXml = "$reports/coverage/debug/report.xml"
+def jacocoUnitXml = "$reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml"
+
+def debugApk = 'app/build/outputs/apk/debug/app-debug.apk'
+
 pipeline {
     agent {
         dockerfile {
@@ -18,24 +27,6 @@ pipeline {
             args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=7G --cpus=3.5'
             label 'LimitedEmulator'
         }
-    }
-
-    environment {
-        //////// Build specific variables ////////
-        //////////// May be edited by the developer on changing the build steps
-        // modulename
-        GRADLE_PROJECT_MODULE_NAME = "Paintroid"
-        GRADLE_APP_MODULE_NAME = "app"
-
-        // APK build output locations
-        APK_LOCATION_DEBUG = "${env.GRADLE_APP_MODULE_NAME}/build/outputs/apk/debug/app-debug.apk"
-
-        // Code coverage
-        JACOCO_XML = "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/coverage/debug/report.xml"
-        JACOCO_UNIT_XML = "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml"
-
-        // place the cobertura xml relative to the source, so that the source can be found
-        JAVA_SRC = "${env.GRADLE_PROJECT_MODULE_NAME}/src/main/java"
     }
 
     options {
@@ -57,9 +48,9 @@ pipeline {
 
             post {
                 always {
-                    pmd         canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/pmd.xml",        unHealthy: '', unstableTotalAll: '0'
-                    checkstyle  canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/checkstyle.xml", unHealthy: '', unstableTotalAll: '0'
-                    androidLint canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/lint*.xml",      unHealthy: '', unstableTotalAll: '0'
+                    pmd         canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "$reports/pmd.xml",        unHealthy: '', unstableTotalAll: '0'
+                    checkstyle  canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "$reports/checkstyle.xml", unHealthy: '', unstableTotalAll: '0'
+                    androidLint canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "$reports/lint*.xml",      unHealthy: '', unstableTotalAll: '0'
                 }
             }
         }
@@ -71,20 +62,20 @@ pipeline {
                 // Convert the JaCoCo coverate to the Cobertura XML file format.
                 // This is done since the Jenkins JaCoCo plugin does not work well.
                 // See also JENKINS-212 on jira.catrob.at
-                sh "./buildScripts/cover2cover.py '$JACOCO_UNIT_XML' '$JAVA_SRC/coverage1.xml'"
+                sh "./buildScripts/cover2cover.py '$jacocoUnitXml' '$javaSrc/coverage1.xml'"
 
                 // Run device tests
                 sh './gradlew -PenableCoverage -Pjenkins startEmulator adbDisableAnimationsGlobally createDebugCoverageReport'
                 // Convert the JaCoCo coverate to the Cobertura XML file format.
                 // This is done since the Jenkins JaCoCo plugin does not work well.
                 // See also JENKINS-212 on jira.catrob.at
-                sh "./buildScripts/cover2cover.py '$JACOCO_XML' '$JAVA_SRC/coverage2.xml'"
+                sh "./buildScripts/cover2cover.py '$jacocoXml' '$javaSrc/coverage2.xml'"
             }
 
             post {
                 always {
                     junit '**/*TEST*.xml'
-                    step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: "$JAVA_SRC/coverage*.xml", failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false, failNoReports: false])
+                    step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: "$javaSrc/coverage*.xml", failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false, failNoReports: false])
 
                     sh './gradlew stopEmulator'
                     archiveArtifacts 'logcat.txt'
@@ -98,7 +89,7 @@ pipeline {
         stage('Build Debug-APK') {
             steps {
                 sh './gradlew assembleDebug'
-                archiveArtifacts "${env.APK_LOCATION_DEBUG}"
+                archiveArtifacts debugApk
             }
         }
     }
