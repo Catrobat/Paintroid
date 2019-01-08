@@ -60,7 +60,7 @@ public class SaveBeforeLoadImageDialog extends AppCompatDialogFragment {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						MainActivityContracts.Presenter presenter = activity.getPresenter();
-						presenter.saveImageConfirmClicked(requestCode, uri);
+						presenter.checkPermissionAndForward(requestCode, uri);
 					}
 				})
 				.setNegativeButton(R.string.discard_button_text, new DialogInterface.OnClickListener() {
