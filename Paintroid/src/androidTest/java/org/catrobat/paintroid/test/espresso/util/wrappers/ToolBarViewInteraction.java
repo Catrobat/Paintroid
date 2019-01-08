@@ -27,7 +27,6 @@ import org.catrobat.paintroid.tools.ToolType;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -78,11 +77,5 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 		onToolOptions()
 				.check(matches(isDisplayed()));
 		return performClickSelectedToolButton();
-	}
-
-	public ToolBarViewInteraction performLongClickOnTool(ToolType toolType) {
-		onView(withId(toolType.getToolButtonID()))
-				.perform(scrollTo(), longClick());
-		return this;
 	}
 }

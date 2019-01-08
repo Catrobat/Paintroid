@@ -297,13 +297,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 					presenter.toolClicked(type);
 				}
 			});
-			toolButton.setOnLongClickListener(new View.OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					presenter.toolLongClicked(type);
-					return true;
-				}
-			});
 		}
 
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {

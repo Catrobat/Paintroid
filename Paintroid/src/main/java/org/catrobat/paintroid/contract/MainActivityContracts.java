@@ -86,8 +86,6 @@ public interface MainActivityContracts {
 
 		void restoreFragmentListeners();
 
-		void showToolInfoDialog(ToolType toolType);
-
 		void showToolChangeToast(int offset, int idRes);
 
 		void broadcastAddPictureToGallery(Uri uri);
@@ -184,8 +182,6 @@ public interface MainActivityContracts {
 		void onCreateTool();
 
 		void toolClicked(ToolType toolType);
-
-		void toolLongClicked(ToolType toolType);
 
 		void gotFocus();
 	}

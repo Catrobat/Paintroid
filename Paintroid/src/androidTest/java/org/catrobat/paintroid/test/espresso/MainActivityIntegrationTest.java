@@ -26,7 +26,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +38,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.longClickOnTool;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.hamcrest.Matchers.not;
 
@@ -79,65 +77,5 @@ public class MainActivityIntegrationTest {
 
 		onView(withId(R.id.pocketpaint_nav_view))
 				.check(matches(not(isDisplayed())));
-	}
-
-	@Test
-	public void testHelpDialogForBrush() {
-		toolHelpTest(ToolType.BRUSH, R.string.help_content_brush);
-	}
-
-	@Test
-	public void testHelpDialogForCursor() {
-		toolHelpTest(ToolType.CURSOR, R.string.help_content_cursor);
-	}
-
-	@Test
-	public void testHelpDialogForPipette() {
-		toolHelpTest(ToolType.PIPETTE, R.string.help_content_eyedropper);
-	}
-
-	@Test
-	public void testHelpDialogForStamp() {
-		toolHelpTest(ToolType.STAMP, R.string.help_content_stamp);
-	}
-
-	@Test
-	public void testHelpDialogForBucket() {
-		toolHelpTest(ToolType.FILL, R.string.help_content_fill);
-	}
-
-	@Test
-	public void testHelpDialogForShape() {
-		toolHelpTest(ToolType.SHAPE, R.string.help_content_shape);
-	}
-
-	@Test
-	public void testHelpDialogForTransform() {
-		toolHelpTest(ToolType.TRANSFORM, R.string.help_content_transform);
-	}
-
-	@Test
-	public void testHelpDialogForEraser() {
-		toolHelpTest(ToolType.ERASER, R.string.help_content_eraser);
-	}
-
-	@Test
-	public void testHelpDialogForImportImage() {
-		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
-	}
-
-	@Test
-	public void testHelpDialogForText() {
-		toolHelpTest(ToolType.TEXT, R.string.help_content_text);
-	}
-
-	private void toolHelpTest(ToolType toolToClick, int expectedHelpTextResourceId) {
-		longClickOnTool(toolToClick);
-
-		onView(withText(expectedHelpTextResourceId)).check(matches(isDisplayed()));
-		onView(withText(android.R.string.ok)).check(matches(isDisplayed()));
-		onView(withText(toolToClick.getNameResource())).check(matches(isDisplayed()));
-
-		onView(withText(android.R.string.ok)).perform(click());
 	}
 }
