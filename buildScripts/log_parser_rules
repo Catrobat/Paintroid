@@ -3,3 +3,4 @@
 
 error /(?i)Instrumentation run failed due/
 error /(?i)ddmlib.*Exception/
+error /Cobertura conversion failed/
