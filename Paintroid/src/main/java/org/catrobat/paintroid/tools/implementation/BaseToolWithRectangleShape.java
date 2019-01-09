@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -34,17 +33,21 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Region.Op;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.ColorRes;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
+
+import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
 public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
@@ -63,7 +66,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
 	protected static final boolean DEFAULT_ANTIALIASING_ON = true;
 
-	private static final boolean DEFAULT_RESPECT_BORDERS = false;
 	private static final boolean DEFAULT_ROTATION_ENABLED = false;
 	private static final boolean DEFAULT_BACKGROUND_SHADOW_ENABLED = true;
 	private static final boolean DEFAULT_RESIZE_POINTS_VISIBLE = true;
@@ -98,8 +100,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	@VisibleForTesting
 	public float rotationSymbolDistance;
 	@VisibleForTesting
-	public boolean respectImageBounds;
-	@VisibleForTesting
 	public boolean rotationEnabled;
 	protected float boxResizeMargin;
 	protected float rotationSymbolWidth;
@@ -107,7 +107,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected ResizeAction resizeAction;
 	protected FloatingBoxAction currentAction;
 	protected RotatePosition rotatePosition;
-	protected Bitmap overlayBitmap;
+	protected Drawable overlayDrawable;
 	protected float maximumBoxResolution;
 	private boolean backgroundShadowEnabled;
 	private boolean resizePointsVisible;
@@ -142,7 +142,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		rotatePosition = RotatePosition.TOP_LEFT;
 		resizeAction = ResizeAction.NONE;
 
-		respectImageBounds = DEFAULT_RESPECT_BORDERS;
 		rotationEnabled = DEFAULT_ROTATION_ENABLED;
 		backgroundShadowEnabled = DEFAULT_BACKGROUND_SHADOW_ENABLED;
 		resizePointsVisible = DEFAULT_RESIZE_POINTS_VISIBLE;
@@ -151,6 +150,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		maximumBoxResolution = DEFAULT_MAXIMUM_BOX_RESOLUTION;
 
 		initScaleDependedValues();
+		createOverlayBitmap();
 
 		linePaint.reset();
 		linePaint.setDither(true);
@@ -293,8 +293,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (drawingBitmap != null) {
 			drawBitmap(canvas, boxWidth, boxHeight);
 		}
-		if (overlayBitmap != null) {
-			drawOverlayBitmap(canvas, boxWidth, boxHeight);
+		if (overlayDrawable != null) {
+			drawOverlayDrawable(canvas, boxWidth, boxHeight);
 		}
 
 		drawRectangle(canvas, boxWidth, boxHeight);
@@ -364,10 +364,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.drawBitmap(drawingBitmap, null, tempDrawingRectangle, null);
 	}
 
-	private void drawOverlayBitmap(Canvas canvas, float boxWidth, float boxHeight) {
-		float size = Math.min(boxWidth, boxHeight) / 8;
-		tempDrawingRectangle.set(-size, -size, size, size);
-		canvas.drawBitmap(overlayBitmap, null, tempDrawingRectangle, null);
+	private void drawOverlayDrawable(Canvas canvas, float boxWidth, float boxHeight) {
+		int size = (int) (Math.min(boxWidth, boxHeight) / 8);
+		overlayDrawable.setBounds(-size, -size, size, size);
+		overlayDrawable.draw(canvas);
 	}
 
 	private void drawRectangle(Canvas canvas, float boxWidth, float boxHeight) {
@@ -379,27 +379,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void move(float deltaX, float deltaY) {
-		float newXPos = toolPosition.x + deltaX;
-		float newYPos = toolPosition.y + deltaY;
-		if (respectImageBounds) {
-			if (newXPos - boxWidth / 2 < 0) {
-				newXPos = boxWidth / 2;
-			} else if (newXPos + boxWidth / 2 > PaintroidApplication.drawingSurface
-					.getBitmapWidth()) {
-				newXPos = PaintroidApplication.drawingSurface.getBitmapWidth()
-						- boxWidth / 2;
-			}
-
-			if (newYPos - boxHeight / 2 < 0) {
-				newYPos = boxHeight / 2;
-			} else if (newYPos + boxHeight / 2 > PaintroidApplication.drawingSurface
-					.getBitmapHeight()) {
-				newYPos = PaintroidApplication.drawingSurface.getBitmapHeight()
-						- boxHeight / 2;
-			}
-		}
-		toolPosition.x = newXPos;
-		toolPosition.y = newYPos;
+		toolPosition.x += deltaX;
+		toolPosition.y += deltaY;
 	}
 
 	private void rotate(float deltaX, float deltaY) {
@@ -511,13 +492,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private boolean checkRotationPoints(float clickCoordinatesRotatedX, float clickCoordinatesRotatedY, PointF rotationPoint) {
-		if (clickCoordinatesRotatedX > rotationPoint.x - rotationSymbolDistance / 2
+		return clickCoordinatesRotatedX > rotationPoint.x - rotationSymbolDistance / 2
 				&& clickCoordinatesRotatedX < rotationPoint.x + rotationSymbolDistance / 2
 				&& clickCoordinatesRotatedY > rotationPoint.y - rotationSymbolDistance / 2
-				&& clickCoordinatesRotatedY < rotationPoint.y + rotationSymbolDistance / 2) {
-			return true;
-		}
-		return false;
+				&& clickCoordinatesRotatedY < rotationPoint.y + rotationSymbolDistance / 2;
 	}
 
 	private void resize(float deltaX, float deltaY) {
@@ -575,9 +553,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newHeight = (float) (boxHeight - deltaYCorrected);
 				newPosX = toolPosition.x - resizeYMoveCenterX;
 				newPosY = toolPosition.y + resizeYMoveCenterY;
-				if (respectImageBounds && newPosY - newHeight / 2 < 0) {
-					break;
-				}
 
 				if (respectMaximumBorderRatio && newHeight > maximumBorderRatioHeight) {
 					boxHeight = maximumBorderRatioHeight;
@@ -595,9 +570,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newHeight = (float) (boxHeight + deltaYCorrected);
 				newPosX = toolPosition.x - resizeYMoveCenterX;
 				newPosY = toolPosition.y + resizeYMoveCenterY;
-				if (respectImageBounds && newPosY + newHeight / 2 > drawingSurfaceBitmapHeight) {
-					break;
-				}
 
 				if (respectMaximumBorderRatio && newHeight > maximumBorderRatioHeight) {
 					boxHeight = maximumBorderRatioHeight;
@@ -621,9 +593,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newWidth = (float) (boxWidth - deltaXCorrected);
 				newPosX = toolPosition.x + resizeXMoveCenterX;
 				newPosY = toolPosition.y + resizeXMoveCenterY;
-				if (respectImageBounds && newPosX - newWidth / 2 < 0) {
-					break;
-				}
 
 				if (respectMaximumBorderRatio && newWidth > maximumBorderRatioWidth) {
 					boxWidth = maximumBorderRatioWidth;
@@ -641,9 +610,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				newWidth = (float) (boxWidth + deltaXCorrected);
 				newPosX = toolPosition.x + resizeXMoveCenterX;
 				newPosY = toolPosition.y + resizeXMoveCenterY;
-				if (respectImageBounds && newPosX + newWidth / 2 > drawingSurfaceBitmapWidth) {
-					break;
-				}
 
 				if (respectMaximumBorderRatio && newWidth > maximumBorderRatioWidth) {
 					boxWidth = maximumBorderRatioWidth;
@@ -675,10 +641,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 	}
 
-	protected void setRespectImageBounds(boolean respectImageBounds) {
-		this.respectImageBounds = respectImageBounds;
-	}
-
 	protected void setRotationEnabled(boolean rotationEnabled) {
 		this.rotationEnabled = rotationEnabled;
 	}
@@ -706,9 +668,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		toolPosition.y = oldPosY;
 	}
 
-	void createOverlayBitmap() {
-		overlayBitmap = BitmapFactory.decodeResource(context.getResources(),
-				R.drawable.pocketpaint_tool_overlay);
+	private void createOverlayBitmap() {
+		int overlayDrawableResource = getToolType().getOverlayDrawableResource();
+		if (overlayDrawableResource != INVALID_RESOURCE_ID) {
+			overlayDrawable = AppCompatResources.getDrawable(context, overlayDrawableResource);
+			if (overlayDrawable != null) {
+				overlayDrawable.setFilterBitmap(false);
+			}
+		}
 	}
 
 	void highlightBox() {

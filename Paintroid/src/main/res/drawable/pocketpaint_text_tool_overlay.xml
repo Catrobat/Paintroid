@@ -1,0 +1,30 @@
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="128dp"
+    android:height="128dp"
+    android:viewportWidth="128"
+    android:viewportHeight="128">
+  <path
+      android:pathData="M64,64m-64,0a64,64 0,1 1,128 0a64,64 0,1 1,-128 0"
+      android:fillColor="#00838f"/>
+  <path
+      android:pathData="M35.562,29h56.876v17.5s-2.17,-13.125 -8.75,-13.125H68.375v59.063c0,4.375 6.781,4.375 8.969,4.375 2.187,0 1.968,2.187 1.968,2.187H48.688s0,-2.187 2.187,-2.187 8.72,0 8.75,-4.375c0.03,-4.375 0,-59.063 0,-59.063H44.312c-6.58,0 -8.75,13.125 -8.75,13.125z"
+      android:fillColor="#fff"/>
+</vector>

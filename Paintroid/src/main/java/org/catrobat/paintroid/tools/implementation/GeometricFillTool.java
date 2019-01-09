@@ -44,7 +44,6 @@ import org.catrobat.paintroid.tools.ToolType;
 public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
-	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 	private static final float SHAPE_OFFSET = 10f;
 
 	private static final String BUNDLE_BASE_SHAPE = "BASE_SHAPE";
@@ -64,7 +63,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		super(context, toolType);
 
 		setRotationEnabled(ROTATION_ENABLED);
-		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
 		if (baseShape == null) {
 			baseShape = BaseShape.RECTANGLE;
@@ -72,7 +70,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 		shapeDrawType = ShapeDrawType.FILL;
 
-		createOverlayBitmap();
 		createAndSetBitmap();
 	}
 

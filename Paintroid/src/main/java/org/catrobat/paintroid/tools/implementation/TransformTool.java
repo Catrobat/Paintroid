@@ -59,7 +59,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	private static final float START_ZOOM_FACTOR = 0.95f;
 	private static final boolean ROTATION_ENABLED = false;
-	private static final boolean RESPECT_IMAGE_BORDERS = false;
 	private static final boolean RESIZE_POINTS_VISIBLE = false;
 	private static final boolean RESPECT_MAXIMUM_BORDER_RATIO = false;
 	private static final boolean RESPECT_MAXIMUM_BOX_RESOLUTION = true;
@@ -93,7 +92,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		super(context, toolType);
 
 		setRotationEnabled(ROTATION_ENABLED);
-		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
 

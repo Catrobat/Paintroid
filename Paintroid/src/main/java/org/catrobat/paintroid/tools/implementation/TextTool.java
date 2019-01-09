@@ -44,7 +44,6 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 public class TextTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
-	private static final boolean RESPECT_IMAGE_BORDERS = false;
 	private static final boolean RESIZE_POINTS_VISIBLE = true;
 	@VisibleForTesting
 	public static final int TEXT_SIZE_MAGNIFICATION_FACTOR = 3;
@@ -85,7 +84,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		super(context, toolType);
 
 		setRotationEnabled(ROTATION_ENABLED);
-		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
 		stc = ResourcesCompat.getFont(context, R.font.stc_regular);
@@ -94,7 +92,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		textPaint = new Paint();
 		initializePaint();
 
-		createOverlayBitmap();
 		createAndSetBitmap();
 		resetBoxPosition();
 	}
