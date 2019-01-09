@@ -254,33 +254,6 @@ public class BaseToolWithRectangleShapeToolTest {
 
 	@UiThreadTest
 	@Test
-	public void testMoveRectangleRespectBorders() {
-		toolToTest.respectImageBounds = true;
-		float rectWidth = toolToTest.boxWidth;
-		float rectHeight = toolToTest.boxHeight;
-		PointF rectPosition = toolToTest.toolPosition;
-
-		float dragFromX = rectPosition.x;
-		float dragToX = rectPosition.x - screenWidth;
-		float dragFromY = rectPosition.y;
-		float dragToY = rectPosition.y - screenHeight;
-
-		toolToTest.handleDown(new PointF(dragFromX, dragFromY));
-		toolToTest.handleMove(new PointF(dragToX, dragToY));
-		toolToTest.handleUp(new PointF(dragToX, dragToY));
-
-		float newWidth = toolToTest.boxWidth;
-		float newHeight = toolToTest.boxHeight;
-		PointF newPosition = toolToTest.toolPosition;
-
-		assertEquals("old width should be same as new width", rectWidth, newWidth, Double.MIN_VALUE);
-		assertEquals("old height should be same as new height", rectHeight, newHeight, Double.MIN_VALUE);
-		assertEquals("rectangle should be top left: x ", rectWidth / 2, newPosition.x, Double.MIN_VALUE);
-		assertEquals("rectangle should be top left: y", rectHeight / 2, newPosition.y, Double.MIN_VALUE);
-	}
-
-	@UiThreadTest
-	@Test
 	public void testRectangleSizeMaximumWhenZoomed() {
 
 		float scale = 0.8f;

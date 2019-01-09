@@ -42,7 +42,6 @@ import org.catrobat.paintroid.ui.ToastFactory;
 public class StampTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
-	private static final boolean RESPECT_IMAGE_BOUNDS = false;
 	private static final long LONG_CLICK_THRESHOLD_MILLIS = 1000;
 	private static final String BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP";
 	public static final String BUNDLE_TOOL_READY_FOR_PASTE = "BUNDLE_TOOL_READY_FOR_PASTE";
@@ -59,13 +58,11 @@ public class StampTool extends BaseToolWithRectangleShape {
 		super(context, toolType);
 		readyForPaste = false;
 		setRotationEnabled(ROTATION_ENABLED);
-		setRespectImageBounds(RESPECT_IMAGE_BOUNDS);
 
 		setBitmap(Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
 				Config.ARGB_8888));
 
 		createAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
-		createOverlayBitmap();
 	}
 
 	public void setBitmapFromFile(Bitmap bitmap) {

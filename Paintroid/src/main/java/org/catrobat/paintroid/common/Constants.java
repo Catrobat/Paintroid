@@ -42,6 +42,8 @@ public final class Constants {
 
 	public static final String PERMISSION_DIALOG_FRAGMENT_TAG = "permissiondialogfragment";
 
+	public static final int INVALID_RESOURCE_ID = 0;
+
 	private Constants() {
 		throw new AssertionError();
 	}
