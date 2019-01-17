@@ -293,6 +293,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (drawingBitmap != null) {
 			drawBitmap(canvas, boxWidth, boxHeight);
 		}
+
 		if (overlayDrawable != null) {
 			drawOverlayDrawable(canvas, boxWidth, boxHeight);
 		}
