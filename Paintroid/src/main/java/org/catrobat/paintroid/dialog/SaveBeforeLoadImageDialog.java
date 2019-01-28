@@ -21,53 +21,33 @@ package org.catrobat.paintroid.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.contract.MainActivityContracts;
 
-public class SaveBeforeLoadImageDialog extends AppCompatDialogFragment {
-	private static final String EXTRA_URI = "arguri";
-	private static final String EXTRA_REQUEST = "argrequest";
-
-	public static SaveBeforeLoadImageDialog newInstance(int requestCode, Uri uri) {
-		Bundle args = new Bundle();
-		args.putInt(EXTRA_REQUEST, requestCode);
-		args.putParcelable(EXTRA_URI, uri);
-
-		SaveBeforeLoadImageDialog dialog = new SaveBeforeLoadImageDialog();
-		dialog.setArguments(args);
-		return dialog;
+public class SaveBeforeLoadImageDialog extends MainActivityDialogFragment {
+	public static SaveBeforeLoadImageDialog newInstance() {
+		return new SaveBeforeLoadImageDialog();
 	}
 
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		final MainActivity activity = (MainActivity) getActivity();
-		Bundle args = getArguments();
-		final int requestCode = args.getInt(EXTRA_REQUEST);
-		final Uri uri = args.getParcelable(EXTRA_URI);
-
-		return new AlertDialog.Builder(activity, R.style.PocketPaintAlertDialog)
+		return new AlertDialog.Builder(getActivity(), R.style.PocketPaintAlertDialog)
 				.setTitle(R.string.menu_load_image)
 				.setMessage(R.string.dialog_warning_new_image)
 				.setPositiveButton(R.string.save_button_text, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						MainActivityContracts.Presenter presenter = activity.getPresenter();
-						presenter.checkPermissionAndForward(requestCode, uri);
+						getPresenter().saveBeforeLoadImage();
 					}
 				})
 				.setNegativeButton(R.string.discard_button_text, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						MainActivityContracts.Presenter presenter = activity.getPresenter();
-						presenter.loadNewImage();
+						getPresenter().loadNewImage();
 					}
 				})
 				.create();

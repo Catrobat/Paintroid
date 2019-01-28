@@ -125,6 +125,8 @@
 
     <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
     <string name="permission_info_external_storage_title">Permission needed</string>
+    <string name="permission_info_camera_text">In order to take photos the application needs the following permission.</string>
+    <string name="permission_info_camera_title">Permission needed</string>
 
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>

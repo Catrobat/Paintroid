@@ -44,6 +44,7 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
+import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDialogType;
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
@@ -167,17 +168,14 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void showPermissionDialog(PermissionInfoDialog.PermissionType permissionType, String dialogTag, int requestCode) {
-		AppCompatDialogFragment dialog =
-				PermissionInfoDialog.newInstance(permissionType, requestCode);
-		dialog.show(mainActivity.getSupportFragmentManager(), dialogTag);
+	public void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode) {
+		AppCompatDialogFragment dialog = PermissionInfoDialog.newInstance(permissionType, permissions, requestCode);
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void askForPermission(String[] permissions, int requestCode) {
-		ActivityCompat.requestPermissions(mainActivity,
-				permissions,
-				requestCode);
+		ActivityCompat.requestPermissions(mainActivity, permissions, requestCode);
 	}
 
 	@Override
@@ -202,22 +200,22 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void showSaveBeforeReturnToCatroidDialog(final int requestCode, final Uri savedPictureUri) {
-		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(requestCode,
-				R.string.closing_catroid_security_question_title, savedPictureUri);
+	public void showSaveBeforeReturnToCatroidDialog() {
+		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(
+				SaveBeforeFinishDialogType.BACK_TO_POCKET_CODE);
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
-	public void showSaveBeforeFinishDialog(final int requestCode, final Uri savedPictureUri) {
-		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(requestCode,
-				R.string.closing_security_question_title, savedPictureUri);
+	public void showSaveBeforeFinishDialog() {
+		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(
+				SaveBeforeFinishDialogType.FINISH);
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
-	public void showSaveBeforeNewImageDialog(int requestCode, Uri savedPictureUri) {
-		AppCompatDialogFragment dialog = SaveBeforeNewImageDialog.newInstance(requestCode, savedPictureUri);
+	public void showSaveBeforeNewImageDialog() {
+		AppCompatDialogFragment dialog = SaveBeforeNewImageDialog.newInstance();
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
@@ -228,8 +226,8 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void showSaveBeforeLoadImageDialog(int requestCode, Uri uri) {
-		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance(requestCode, uri);
+	public void showSaveBeforeLoadImageDialog() {
+		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance();
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 

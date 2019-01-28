@@ -19,12 +19,12 @@
 
 package org.catrobat.paintroid.dialog;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -32,79 +32,73 @@ import android.support.v7.app.AppCompatDialogFragment;
 
 import org.catrobat.paintroid.R;
 
-import static android.content.DialogInterface.BUTTON_NEGATIVE;
-import static android.content.DialogInterface.BUTTON_POSITIVE;
+public class PermissionInfoDialog extends AppCompatDialogFragment {
 
-public class PermissionInfoDialog extends AppCompatDialogFragment implements
-		DialogInterface.OnClickListener {
+	private static final String PERMISSION_TYPE_KEY = "permissionTypeKey";
+	private static final String PERMISSIONS_KEY = "permissionsKey";
+	private static final String REQUEST_CODE_KEY = "requestCodeKey";
 
-	public static final String DRAWABLE_RESOURCE_KEY = "drawableResource";
-	public static final String MESSAGE_RESOURCE_KEY = "messageResource";
-	public static final String TITLE_RESOURCE_KEY = "titleResource";
+	private int requestCode;
+	private String[] permissions;
+	private PermissionType permissionType;
 
-	public int requestCode;
-
-	public static PermissionInfoDialog newInstance(PermissionType permissionType, int requestCode) {
+	public static PermissionInfoDialog newInstance(PermissionType permissionType, String[] permissions, int requestCode) {
 		PermissionInfoDialog permissionInfoDialog = new PermissionInfoDialog();
 
-		permissionInfoDialog.requestCode = requestCode;
 		Bundle bundle = new Bundle();
-		bundle.putInt(DRAWABLE_RESOURCE_KEY, permissionType.getImageResource());
-		bundle.putInt(MESSAGE_RESOURCE_KEY, permissionType.getMessageResource());
-		bundle.putInt(TITLE_RESOURCE_KEY, permissionType.getTitleResource());
+		bundle.putSerializable(PERMISSION_TYPE_KEY, permissionType);
+		bundle.putStringArray(PERMISSIONS_KEY, permissions);
+		bundle.putInt(REQUEST_CODE_KEY, requestCode);
 		permissionInfoDialog.setArguments(bundle);
 		return permissionInfoDialog;
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Bundle arguments = getArguments();
+		requestCode = arguments.getInt(REQUEST_CODE_KEY);
+		permissions = arguments.getStringArray(PERMISSIONS_KEY);
+		permissionType = (PermissionType) arguments.getSerializable(PERMISSION_TYPE_KEY);
 	}
 
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.PocketPaintAlertDialog);
-
-		Bundle arguments = getArguments();
-		if (arguments != null) {
-			builder.setTitle(arguments.getInt(TITLE_RESOURCE_KEY))
-					.setIcon(arguments.getInt(DRAWABLE_RESOURCE_KEY))
-					.setMessage(arguments.getInt(MESSAGE_RESOURCE_KEY));
-		}
-
-		builder.setPositiveButton(android.R.string.ok, this);
-		builder.setNegativeButton(android.R.string.cancel, this);
-		return builder.create();
-	}
-
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		switch (which) {
-			case BUTTON_POSITIVE:
-				ActivityCompat.requestPermissions(getActivity(),
-						new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-						requestCode);
-				dialog.cancel();
-				break;
-			case BUTTON_NEGATIVE:
-				dialog.cancel();
-				break;
-		}
+		return new AlertDialog.Builder(getContext(), R.style.PocketPaintAlertDialog)
+				.setTitle(permissionType.getTitleResource())
+				.setIcon(permissionType.getIconResource())
+				.setMessage(permissionType.getMessageResource())
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						ActivityCompat.requestPermissions(getActivity(), permissions, requestCode);
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, null)
+				.create();
 	}
 
 	public enum PermissionType {
 		EXTERNAL_STORAGE(R.drawable.ic_pocketpaint_dialog_info,
 				R.string.permission_info_external_storage_text,
-				R.string.permission_info_external_storage_title);
+				R.string.permission_info_external_storage_title),
+		CAMERA(R.drawable.ic_pocketpaint_dialog_info,
+				R.string.permission_info_camera_text,
+				R.string.permission_info_camera_title);
 
-		private int imageResource;
+		private int iconResource;
 		private int messageResource;
 		private int titleResource;
 
-		PermissionType(@DrawableRes int imageResource, @StringRes int messageResource, @StringRes int titleResource) {
-			this.imageResource = imageResource;
+		PermissionType(@DrawableRes int iconResource, @StringRes int messageResource, @StringRes int titleResource) {
+			this.iconResource = iconResource;
 			this.messageResource = messageResource;
 			this.titleResource = titleResource;
 		}
 
-		public @DrawableRes int getImageResource() {
-			return imageResource;
+		public @DrawableRes int getIconResource() {
+			return iconResource;
 		}
 		public @StringRes int getMessageResource() {
 			return messageResource;
