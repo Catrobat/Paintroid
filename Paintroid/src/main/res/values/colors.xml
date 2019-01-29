@@ -35,7 +35,7 @@
     <color name="pocketpaint_main_drawing_surface_background">#D3D3D3</color>
     <color name="pocketpaint_main_rectangle_tool_primary_color">#555555</color>
     <color name="pocketpaint_main_rectangle_tool_accent_color">#33B5E5</color>
-    <color name="pocketpaint_main_rectangle_tool_highlight_color">#72e5ff</color>
+    <color name="pocketpaint_main_rectangle_tool_highlight_color">#e56b33</color>
     <color name="pocketpaint_main_cursor_tool_inactive_primary_color">#555555</color>
     <color name="pocketpaint_main_navigation_drawer_background">@android:color/white</color>
 
