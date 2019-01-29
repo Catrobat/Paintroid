@@ -32,7 +32,8 @@ public class AsyncCommandManager implements CommandManager {
 	private List<CommandListener> commandListeners = new ArrayList<>();
 	private CommandManager commandManager;
 	private final LayerContracts.Model layerModel;
-	private boolean running = true;
+	private boolean shuttingDown;
+	private boolean busy;
 
 	public AsyncCommandManager(CommandManager commandManager, LayerContracts.Model layerModel) {
 		this.commandManager = commandManager;
@@ -61,6 +62,10 @@ public class AsyncCommandManager implements CommandManager {
 
 	@Override
 	public void addCommand(final Command command) {
+		if (busy) {
+			return;
+		}
+
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected void onPreExecute() {
@@ -69,7 +74,7 @@ public class AsyncCommandManager implements CommandManager {
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				if (running) {
+				if (!shuttingDown) {
 					synchronized (layerModel) {
 						commandManager.addCommand(command);
 					}
@@ -86,6 +91,10 @@ public class AsyncCommandManager implements CommandManager {
 
 	@Override
 	public void undo() {
+		if (busy) {
+			return;
+		}
+
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected void onPreExecute() {
@@ -94,7 +103,7 @@ public class AsyncCommandManager implements CommandManager {
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				if (running) {
+				if (!shuttingDown) {
 					synchronized (layerModel) {
 						commandManager.undo();
 					}
@@ -111,6 +120,10 @@ public class AsyncCommandManager implements CommandManager {
 
 	@Override
 	public void redo() {
+		if (busy) {
+			return;
+		}
+
 		new AsyncTask<Void, Void, Void>() {
 
 			@Override
@@ -120,7 +133,7 @@ public class AsyncCommandManager implements CommandManager {
 
 			@Override
 			protected Void doInBackground(Void... voids) {
-				if (running) {
+				if (!shuttingDown) {
 					synchronized (layerModel) {
 						commandManager.redo();
 					}
@@ -145,7 +158,7 @@ public class AsyncCommandManager implements CommandManager {
 
 	@Override
 	public void shutdown() {
-		running = false;
+		shuttingDown = true;
 	}
 
 	@Override
@@ -155,8 +168,14 @@ public class AsyncCommandManager implements CommandManager {
 		}
 	}
 
+	@Override
+	public boolean isBusy() {
+		return busy;
+	}
+
 	private void notifyCommandPreExecute() {
-		if (running) {
+		busy = true;
+		if (!shuttingDown) {
 			for (CommandListener listener : commandListeners) {
 				listener.commandPreExecute();
 			}
@@ -164,7 +183,8 @@ public class AsyncCommandManager implements CommandManager {
 	}
 
 	private void notifyCommandPostExecute() {
-		if (running) {
+		busy = false;
+		if (!shuttingDown) {
 			for (CommandListener listener : commandListeners) {
 				listener.commandPostExecute();
 			}

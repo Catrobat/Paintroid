@@ -136,7 +136,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Fragment fragment = getIndeterminateProgressFragment();
 		if (fragment != null) {
 			AppCompatDialogFragment dialog = (AppCompatDialogFragment) fragment;
-			dialog.dismiss();
+			dialog.dismissAllowingStateLoss();
 		}
 	}
 
