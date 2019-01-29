@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private KeyboardListener keyboardListener;
 	private PaintroidApplicationFragment appFragment;
 
+	private Runnable waitForOnResume;
+
 	@Override
 	public MainActivityContracts.Presenter getPresenter() {
 		return presenter;
@@ -118,6 +120,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@Override
 	public DisplayMetrics getDisplayMetrics() {
 		return getResources().getDisplayMetrics();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (waitForOnResume != null) {
+			Runnable runPermissionHandler = waitForOnResume;
+			waitForOnResume = null;
+
+			runPermissionHandler.run();
+		}
 	}
 
 	@Override
@@ -436,8 +450,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-		presenter.handlePermissionRequestResults(requestCode, permissions, grantResults);
+	public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
+
+		if (VERSION.SDK_INT == Build.VERSION_CODES.M) {
+			waitForOnResume = new Runnable() {
+				@Override
+				public void run() {
+					presenter.handlePermissionRequestResults(requestCode, permissions, grantResults);
+				}
+			};
+		} else {
+			presenter.handlePermissionRequestResults(requestCode, permissions, grantResults);
+		}
 	}
 
 	@Override
