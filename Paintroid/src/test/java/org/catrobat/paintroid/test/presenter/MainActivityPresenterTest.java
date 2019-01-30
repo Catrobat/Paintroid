@@ -51,13 +51,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 
-import static org.catrobat.paintroid.common.Constants.EXTERNAL_STORAGE_PERMISSION_DIALOG;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_TAKE_PHOTO;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
@@ -66,7 +65,6 @@ import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_F
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LANGUAGE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_TAKE_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_BACK_TO_PC;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOAD_NEW;
@@ -81,7 +79,6 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -153,7 +150,7 @@ public class MainActivityPresenterTest {
 
 		presenter.newImageClicked();
 
-		verify(navigator).showSaveBeforeNewImageDialog(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, model.getSavedPictureUri());
+		verify(navigator).showSaveBeforeNewImageDialog();
 		verifyNoMoreInteractions(navigator);
 	}
 
@@ -189,13 +186,11 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testBackToCatroidClickedWhenUndoAvailableThenShowSaveDialog() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
 		when(commandManager.isUndoAvailable()).thenReturn(true);
 
 		presenter.backToPocketCodeClicked();
 
-		verify(navigator).showSaveBeforeFinishDialog(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, uri);
+		verify(navigator).showSaveBeforeFinishDialog();
 		verifyNoMoreInteractions(navigator);
 	}
 
@@ -212,14 +207,12 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testBackToCatroidClickedWhenUndoAvailableAndOpenedFromCatroidThenShowSaveBeforeReturnDialog() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 		when(commandManager.isUndoAvailable()).thenReturn(true);
 
 		presenter.backToPocketCodeClicked();
 
-		verify(navigator).showSaveBeforeReturnToCatroidDialog(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC, uri);
+		verify(navigator).showSaveBeforeReturnToCatroidDialog();
 		verifyNoMoreInteractions(navigator);
 	}
 
@@ -238,7 +231,7 @@ public class MainActivityPresenterTest {
 		when(model.isSaved()).thenReturn(false);
 		presenter.loadImageClicked();
 
-		verify(navigator).showSaveBeforeLoadImageDialog(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, model.getSavedPictureUri());
+		verify(navigator).showSaveBeforeLoadImageDialog();
 		verifyNoMoreInteractions(interactor);
 	}
 
@@ -359,10 +352,20 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testOnNewImageFromCameraThenCreateFile() {
+	public void testOnNewImageFromCameraWhenPermissionGrantedThenCreateFile() {
 		presenter.onNewImageFromCamera();
 
 		verify(interactor).createFile(presenter, CREATE_FILE_TAKE_PHOTO, null);
+	}
+
+	@Test
+	public void testOnNewImageFromCameraWhenPermissionNotGrantedThenAskForPermission() {
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(navigator.doIHavePermission(Manifest.permission.CAMERA)).thenReturn(false);
+
+		presenter.onNewImageFromCamera();
+
+		verify(navigator).askForPermission(new String[] {Manifest.permission.CAMERA}, PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO);
 	}
 
 	@Test
@@ -373,7 +376,7 @@ public class MainActivityPresenterTest {
 
 		presenter.handleActivityResult(0, Activity.RESULT_OK, intent);
 
-		verify(view).forwardActivityResult(0, Activity.RESULT_OK, intent);
+		verify(view).superHandleActivityResult(0, Activity.RESULT_OK, intent);
 	}
 
 	@Test
@@ -1025,8 +1028,8 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testHandlePermissionResultsSavePermissionGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE,
+	public void testHandlePermissionResultSavePermissionGranted() {
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE,
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_GRANTED});
 
@@ -1036,18 +1039,19 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testHandlePermissionResultsSavePermissionNotGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE,
+	public void testHandlePermissionResultSavePermissionNotGranted() {
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE,
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_DENIED});
 
-		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				EXTERNAL_STORAGE_PERMISSION_DIALOG, PERMISSION_EXTERNAL_STORAGE_SAVE);
+		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE
+		);
 	}
 
 	@Test
-	public void testHandlePermissionResultsSaveCopyPermissionGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
+	public void testHandlePermissionResultSaveCopyPermissionGranted() {
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_GRANTED});
 
@@ -1055,205 +1059,236 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testHandlePermissionResultsSaveCopyPermissionNotGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
+	public void testHandlePermissionResultSaveCopyPermissionNotGranted() {
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_DENIED});
 
-		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				EXTERNAL_STORAGE_PERMISSION_DIALOG, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
+		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+		);
 	}
 
 	@Test
-	public void testHandlePermissionResultsSaveBeforeBackToPCPermissionGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC,
+	public void testHandlePermissionResultSaveBeforeFinishPermissionGranted() {
+		Uri uri = mock(Uri.class);
+		when(model.getSavedPictureUri()).thenReturn(uri);
+
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_GRANTED});
 
-		Uri uri = model.getSavedPictureUri();
-
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_BACK_TO_PC), eq(uri));
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, uri);
 	}
 
 	@Test
-	public void testHandlePermissionResultsSaveBeforeBackToPCPermissionNotGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC,
+	public void testHandlePermissionResultSaveBeforeFinishPermissionNotGranted() {
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_DENIED});
 
-		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				EXTERNAL_STORAGE_PERMISSION_DIALOG, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC);
+		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
+		);
 	}
 
 	@Test
-	public void testHandlePermissionResultsSaveBeforeFinishPermissionGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
+	public void testHandlePermissionResultSaveBeforeLoadNewPermissionNotGranted() {
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[] {PackageManager.PERMISSION_DENIED});
+
+		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
+		);
+	}
+
+	@Test
+	public void testHandlePermissionResultSaveBeforeLoadNewPermissionGranted() {
+		Uri uri = mock(Uri.class);
+		when(model.getSavedPictureUri()).thenReturn(uri);
+
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_GRANTED});
 
-		Uri uri = model.getSavedPictureUri();
-
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_FINISH), eq(uri));
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, uri);
 	}
 
 	@Test
-	public void testHandlePermissionResultsSaveBeforeFinishPermissionNotGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
+	public void testHandlePermissionResultSaveBeforeNewEmptyPermissionNotGranted() {
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_DENIED});
 
-		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				EXTERNAL_STORAGE_PERMISSION_DIALOG, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
+		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
+		);
 	}
 
 	@Test
-	public void testHandlePermissionResultsSaveBeforeLoadNewPermissionNotGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
+	public void testHandlePermissionResultWhenCameraPermissionNotGrantedThenShowRationale() {
+		presenter.handleRequestPermissionsResult(PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO,
+				new String[] {Manifest.permission.CAMERA},
 				new int[] {PackageManager.PERMISSION_DENIED});
 
-		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				EXTERNAL_STORAGE_PERMISSION_DIALOG, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
+		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.CAMERA,
+				new String[] {Manifest.permission.CAMERA}, PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO
+		);
 	}
 
 	@Test
-	public void testHandlePermissionResultsSaveBeforeLoadNewPermissionGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_GRANTED});
+	public void testHandlePermissionResultSaveBeforeNewEmptyPermissionGranted() {
+		Uri uri = mock(Uri.class);
+		when(model.getSavedPictureUri()).thenReturn(uri);
 
-		Uri uri = model.getSavedPictureUri();
-
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_LOAD_NEW), eq(uri));
-	}
-
-	@Test
-	public void testHandlePermissionResultsSaveBeforeNewEmptyPermissionNotGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_DENIED});
-
-		verify(navigator).showPermissionDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				EXTERNAL_STORAGE_PERMISSION_DIALOG, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
-	}
-
-	@Test
-	public void testHandlePermissionResultsSaveBeforeNewEmptyPermissionGranted() {
-		presenter.handlePermissionRequestResults(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(navigator).showChooseNewImageDialog();
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, uri);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testHandlePermissionResultWhenStoragePermissionGrantedAndRequestCodeInvalid() {
+		presenter.handleRequestPermissionsResult(PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO,
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_GRANTED});
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testHandlePermissionResultWhenCameraPermissionGrantedAndRequestCodeInvalid() {
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
+				new String[]{Manifest.permission.CAMERA},
+				new int[]{PackageManager.PERMISSION_GRANTED});
+	}
+
+	@Test
+	public void testHandlePermissionResultWhenStoragePermissionGrantedAndRequestCodeUnknownThenCallBaseHandle() {
+		presenter.handleRequestPermissionsResult(100,
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_GRANTED});
+
+		verify(view).superHandleRequestPermissionsResult(100,
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_GRANTED});
+	}
+
+	@Test
+	public void testHandlePermissionResultWhenCameraPermissionGrantedAndRequestCodeUnknownThenCallBaseHandle() {
+		presenter.handleRequestPermissionsResult(123,
+				new String[]{Manifest.permission.CAMERA},
+				new int[]{PackageManager.PERMISSION_GRANTED});
+
+		verify(view).superHandleRequestPermissionsResult(123,
+				new String[]{Manifest.permission.CAMERA},
+				new int[]{PackageManager.PERMISSION_GRANTED});
+	}
+
+	@Test
+	public void testHandlePermissionResultWhenMultiplePermissionsThenCallBaseHandle() {
+		presenter.handleRequestPermissionsResult(456,
+				new String[]{Manifest.permission.CAMERA, Manifest.permission.CAMERA},
+				new int[]{PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_DENIED});
+
+		verify(view).superHandleRequestPermissionsResult(456,
+				new String[]{Manifest.permission.CAMERA, Manifest.permission.CAMERA},
+				new int[]{PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_DENIED});
 	}
 
 	@Test
 	public void testOnNavigationItemSelectedSaveCopyPermissionGranted() {
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, null);
+		presenter.saveCopyClicked();
 
-		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT));
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT);
 	}
 
 	@Test
 	public void testOnNavigationItemSelectedSaveCopyPermissionNotGranted() {
-		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		doReturn(true).when(navigator).isSdkAboveOrEqualM();
+		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
 
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, null);
+		presenter.saveCopyClicked();
 
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
 	}
 
 	@Test
 	public void testOnNavigationItemSelectedSavePermissionGranted() {
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE, null);
+		Uri uri = mock(Uri.class);
+		when(model.getSavedPictureUri()).thenReturn(uri);
 
-		Uri uri = model.getSavedPictureUri();
+		presenter.saveImageClicked();
 
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(uri));
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, uri);
 	}
 
 	@Test
 	public void testOnNavigationItemSelectedSavePermissionNotGranted() {
-		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		doReturn(true).when(navigator).isSdkAboveOrEqualM();
+		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
 
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE, null);
+		presenter.saveImageClicked();
 
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE);
 	}
 
 	@Test
-	public void testSaveAndBackToPocketCodePermissionGranted() {
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC, null);
-
-		Uri uri = model.getSavedPictureUri();
-
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_BACK_TO_PC), eq(uri));
-	}
-
-	@Test
-	public void testSaveAndBackToPocketCodePermissionNotGranted() {
-		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		doReturn(true).when(navigator).isSdkAboveOrEqualM();
-
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC, null);
-
-		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_BACK_TO_PC);
-	}
-
-	@Test
 	public void testSaveAndFinishPermissionGranted() {
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, null);
+		Uri uri = mock(Uri.class);
+		when(model.getSavedPictureUri()).thenReturn(uri);
 
-		Uri uri = model.getSavedPictureUri();
+		presenter.saveBeforeFinish();
 
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_FINISH), eq(uri));
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, uri);
 	}
 
 	@Test
 	public void testSaveAndFinishPermissionNotGranted() {
-		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		doReturn(true).when(navigator).isSdkAboveOrEqualM();
+		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
 
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, null);
+		presenter.saveBeforeFinish();
 
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
 	}
 
 	@Test
 	public void testSaveAndNewImagePermissionGranted() {
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, null);
+		Uri uri = mock(Uri.class);
+		when(model.getSavedPictureUri()).thenReturn(uri);
 
-		Uri uri = model.getSavedPictureUri();
+		presenter.saveBeforeNewImage();
 
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_NEW_EMPTY), eq(uri));
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, uri);
 	}
 
 	@Test
 	public void testSaveAndNewImagePermissionNotGranted() {
-		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		doReturn(true).when(navigator).isSdkAboveOrEqualM();
+		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
 
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, null);
+		presenter.saveBeforeNewImage();
 
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
 	}
 
 	@Test
 	public void testSaveAndLoadImagePermissionGranted() {
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, null);
+		Uri uri = mock(Uri.class);
+		when(model.getSavedPictureUri()).thenReturn(uri);
 
-		Uri uri = model.getSavedPictureUri();
+		presenter.saveBeforeLoadImage();
 
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_LOAD_NEW), eq(uri));
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, uri);
 	}
 
 	@Test
 	public void testSaveAndLoadImagePermissionNotGranted() {
-		doReturn(false).when(navigator).doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		doReturn(true).when(navigator).isSdkAboveOrEqualM();
+		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
 
-		presenter.checkPermissionAndForward(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, null);
+		presenter.saveBeforeLoadImage();
 
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
 	}
@@ -1388,8 +1423,9 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePostExecuteWhenExitToCatroidThenReturnToCatroid() {
 		Uri uri = mock(Uri.class);
 		when(uri.getPath()).thenReturn("testPath");
+		when(model.isOpenedFromCatroid()).thenReturn(true);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_BACK_TO_PC, uri, false);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false);
 
 		verify(navigator).returnToPocketCode("testPath");
 	}

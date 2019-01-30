@@ -32,17 +32,15 @@ public final class Constants {
 	public static final float ACTION_BAR_HEIGHT = 50.0f;
 	public static final File MEDIA_DIRECTORY = new File(Environment.getExternalStorageDirectory(), EXT_STORAGE_DIRECTORY_NAME);
 
-	public static final String TOS_DIALOG_FRAGMENT_TAG = "termsofuseandservicedialogfragment";
 	public static final String ABOUT_DIALOG_FRAGMENT_TAG = "aboutdialogfragment";
 	public static final String SAVE_DIALOG_FRAGMENT_TAG = "savedialogerror";
-	public static final String HELP_DIALOG_FRAGMENT_TAG = "helpdialogfragmenttag";
 	public static final String LOAD_DIALOG_FRAGMENT_TAG = "loadbitmapdialogerror";
 	public static final String COLOR_PICKER_DIALOG_TAG = "ColorPickerDialogTag";
 	public static final String INDETERMINATE_FRAGMENT_TAG = "indeterminatefragment";
 	public static final String SAVE_QUESTION_FRAGMENT_TAG = "savebeforequitfragment";
 	public static final String CHOOSE_IMAGE_FRAGMENT_TAG = "chooseimagefragment";
 
-	public static final String EXTERNAL_STORAGE_PERMISSION_DIALOG = "externalstoragepermissiondialog";
+	public static final String PERMISSION_DIALOG_FRAGMENT_TAG = "permissiondialogfragment";
 
 	private Constants() {
 		throw new AssertionError();

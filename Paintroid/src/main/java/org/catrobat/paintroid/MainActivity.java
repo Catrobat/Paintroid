@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private KeyboardListener keyboardListener;
 	private PaintroidApplicationFragment appFragment;
 
-	private Runnable waitForOnResume;
+	private Runnable deferredRequestPermissionsResult;
 
 	@Override
 	public MainActivityContracts.Presenter getPresenter() {
@@ -126,11 +126,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	protected void onResume() {
 		super.onResume();
 
-		if (waitForOnResume != null) {
-			Runnable runPermissionHandler = waitForOnResume;
-			waitForOnResume = null;
+		if (deferredRequestPermissionsResult != null) {
+			Runnable runnable = deferredRequestPermissionsResult;
+			deferredRequestPermissionsResult = null;
 
-			runPermissionHandler.run();
+			runnable.run();
 		}
 	}
 
@@ -450,23 +450,28 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	@Override
-	public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
+	public void superHandleActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
 
 		if (VERSION.SDK_INT == Build.VERSION_CODES.M) {
-			waitForOnResume = new Runnable() {
+			deferredRequestPermissionsResult = new Runnable() {
 				@Override
 				public void run() {
-					presenter.handlePermissionRequestResults(requestCode, permissions, grantResults);
+					presenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
 				}
 			};
 		} else {
-			presenter.handlePermissionRequestResults(requestCode, permissions, grantResults);
+			presenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
 	}
 
 	@Override
-	public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+	public void superHandleRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
 	@Override
