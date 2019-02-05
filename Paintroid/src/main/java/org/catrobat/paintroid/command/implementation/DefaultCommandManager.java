@@ -138,6 +138,11 @@ public class DefaultCommandManager implements CommandManager {
 		initialStateCommand = command;
 	}
 
+	@Override
+	public boolean isBusy() {
+		return false;
+	}
+
 	private void notifyCommandExecuted() {
 		for (CommandListener listener : commandListeners) {
 			listener.commandPostExecute();

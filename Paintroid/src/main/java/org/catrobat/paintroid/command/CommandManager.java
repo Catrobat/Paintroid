@@ -41,6 +41,8 @@ public interface CommandManager {
 
 	void setInitialStateCommand(Command command);
 
+	boolean isBusy();
+
 	interface CommandListener {
 		void commandPreExecute();
 

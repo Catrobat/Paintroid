@@ -465,6 +465,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		navigationDrawerViewHolder.setVersion(BuildConfig.VERSION_NAME);
 
 		view.initializeActionBar(model.isOpenedFromCatroid());
+
+		if (!commandManager.isBusy()) {
+			navigator.dismissIndeterminateProgressDialog();
+		}
 	}
 
 	private void exitFullScreen() {
