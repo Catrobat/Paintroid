@@ -293,6 +293,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			protected void onPostExecute(Void result) {
 				PaintroidApplication.drawingSurface.refreshDrawingSurface();
 				setWidthAndHeightTexts(boxHeight, boxWidth);
+				toggleShowToolOptions();
 			}
 		}.execute();
 	}
