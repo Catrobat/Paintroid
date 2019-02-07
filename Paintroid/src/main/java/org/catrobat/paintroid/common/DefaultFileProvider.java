@@ -17,35 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.command;
+package org.catrobat.paintroid.common;
 
-public interface CommandManager {
+import android.support.v4.content.FileProvider;
 
-	void addCommandListener(CommandListener commandListener);
-
-	void removeCommandListener(CommandListener commandListener);
-
-	boolean isUndoAvailable();
-
-	boolean isRedoAvailable();
-
-	void addCommand(Command command);
-
-	void undo();
-
-	void redo();
-
-	void reset();
-
-	void shutdown();
-
-	void setInitialStateCommand(Command command);
-
-	boolean isBusy();
-
-	interface CommandListener {
-		void commandPreExecute();
-
-		void commandPostExecute();
-	}
+public class DefaultFileProvider extends FileProvider {
 }

@@ -17,35 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.command;
+package org.catrobat.paintroid.dialog;
 
-public interface CommandManager {
+import android.os.Bundle;
+import android.support.v7.app.AppCompatDialogFragment;
 
-	void addCommandListener(CommandListener commandListener);
+import org.catrobat.paintroid.contract.MainActivityContracts;
 
-	void removeCommandListener(CommandListener commandListener);
+public class MainActivityDialogFragment extends AppCompatDialogFragment {
+	private MainActivityContracts.Presenter presenter;
 
-	boolean isUndoAvailable();
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-	boolean isRedoAvailable();
+		MainActivityContracts.MainView activity = (MainActivityContracts.MainView) getActivity();
+		if (activity == null) {
+			throw new IllegalArgumentException("Parent activity must implement MainActivityContracts.MainView");
+		}
+		presenter = activity.getPresenter();
+	}
 
-	void addCommand(Command command);
-
-	void undo();
-
-	void redo();
-
-	void reset();
-
-	void shutdown();
-
-	void setInitialStateCommand(Command command);
-
-	boolean isBusy();
-
-	interface CommandListener {
-		void commandPreExecute();
-
-		void commandPostExecute();
+	public MainActivityContracts.Presenter getPresenter() {
+		return presenter;
 	}
 }

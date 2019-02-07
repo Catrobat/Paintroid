@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
@@ -62,7 +63,7 @@ public interface MainActivityContracts {
 
 		void showLoadErrorDialog();
 
-		void showPermissionDialog(PermissionInfoDialog.PermissionType permissionType, String dialogTag, int requestCode);
+		void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode);
 
 		void askForPermission(String[] permissions, int requestCode);
 
@@ -74,15 +75,15 @@ public interface MainActivityContracts {
 
 		void recreateActivity();
 
-		void showSaveBeforeReturnToCatroidDialog(int requestCode, Uri savedPictureUri);
+		void showSaveBeforeReturnToCatroidDialog();
 
-		void showSaveBeforeFinishDialog(int requestCode, Uri savedPictureUri);
+		void showSaveBeforeFinishDialog();
 
-		void showSaveBeforeNewImageDialog(int requestCode, Uri savedPictureUri);
+		void showSaveBeforeNewImageDialog();
 
 		void showChooseNewImageDialog();
 
-		void showSaveBeforeLoadImageDialog(int requestCode, Uri uri);
+		void showSaveBeforeLoadImageDialog();
 
 		void restoreFragmentListeners();
 
@@ -102,7 +103,9 @@ public interface MainActivityContracts {
 
 		void initializeActionBar(boolean isOpenedFromCatroid);
 
-		void forwardActivityResult(int requestCode, int resultCode, Intent data);
+		void superHandleActivityResult(int requestCode, int resultCode, Intent data);
+
+		void superHandleRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
 
 		Uri getUriFromFile(File file);
 
@@ -128,8 +131,6 @@ public interface MainActivityContracts {
 				boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri);
 
 		void finishInitialize();
-
-		void checkPermissionAndForward(int requestCode, Uri uri);
 
 		void loadImageClicked();
 
@@ -159,7 +160,7 @@ public interface MainActivityContracts {
 
 		void handleActivityResult(int requestCode, int resultCode, Intent data);
 
-		void handlePermissionRequestResults(int requestCode, String[] permissions, int[] grantResults);
+		void handleRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
 
 		void onBackPressed();
 
@@ -184,6 +185,14 @@ public interface MainActivityContracts {
 		void toolClicked(ToolType toolType);
 
 		void gotFocus();
+
+		void saveBeforeLoadImage();
+
+		void saveBeforeNewImage();
+
+		void saveBeforeFinish();
+
+		void finishActivity();
 	}
 
 	interface Model {
