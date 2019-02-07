@@ -77,22 +77,6 @@ public class LayerAdapter extends BaseAdapter implements LayerContracts.Adapter 
 
 		viewHolders.put(position, viewHolder);
 		presenter.onBindLayerViewHolderAtPosition(position, viewHolder);
-
-		convertView.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				presenter.onLongClickLayerAtPosition(position, viewHolder);
-				return true;
-			}
-		});
-
-		convertView.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				presenter.onClickLayerAtPosition(position, viewHolder);
-			}
-		});
-
 		return convertView;
 	}
 

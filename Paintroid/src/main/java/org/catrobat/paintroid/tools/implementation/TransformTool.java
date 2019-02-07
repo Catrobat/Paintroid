@@ -50,9 +50,12 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.ToastFactory;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 
 public class TransformTool extends BaseToolWithRectangleShape {
+	public static final String TAG = TransformTool.class.getSimpleName();
 
 	private static final float START_ZOOM_FACTOR = 0.95f;
 	private static final boolean ROTATION_ENABLED = false;
@@ -372,7 +375,11 @@ public class TransformTool extends BaseToolWithRectangleShape {
 				if (str.isEmpty()) {
 					str = "1";
 				}
-				boxWidth = Float.parseFloat(str);
+				try {
+					boxWidth = NumberFormat.getIntegerInstance().parse(str).intValue();
+				} catch (ParseException e) {
+					Log.e(TAG, e.getMessage());
+				}
 			}
 		};
 		widthEditText.addTextChangedListener(textWatcherWidth);
@@ -394,7 +401,11 @@ public class TransformTool extends BaseToolWithRectangleShape {
 				if (str.isEmpty()) {
 					str = "1";
 				}
-				boxHeight = Float.parseFloat(str);
+				try {
+					boxHeight = NumberFormat.getIntegerInstance().parse(str).intValue();
+				} catch (ParseException e) {
+					Log.e(TAG, e.getMessage());
+				}
 			}
 		};
 		heightEditText.addTextChangedListener(textWatcherHeight);

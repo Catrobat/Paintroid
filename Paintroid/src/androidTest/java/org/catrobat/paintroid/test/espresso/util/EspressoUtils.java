@@ -56,7 +56,6 @@ import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
@@ -176,20 +175,6 @@ public final class EspressoUtils {
 		}
 
 		viewInteraction.check(matches(isDisplayed()));
-	}
-
-	/**
-	 * @deprecated use {@link ToolBarViewInteraction#performLongClickOnTool(ToolType)}
-	 */
-	@Deprecated
-	public static void longClickOnTool(ToolType toolType) {
-		ViewInteraction toolInteraction = onView(withId(toolType.getToolButtonID()))
-				.perform(scrollTo());
-
-		toolInteraction.perform(longClick());
-
-		// Some test fail without wait
-		waitMillis(500);
 	}
 
 	public static float getSurfaceWidth() {

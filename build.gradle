@@ -20,8 +20,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
     dependencies {
         // CAUTION
@@ -32,21 +32,25 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.1.4'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.3'
         classpath 'com.novoda:bintray-release:0.8.1'
+        classpath 'org.catrobat.gradle.androidemulators:android-emulators-gradle:1.1.0'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.4'
+        classpath 'com.vanniktech:gradle-android-apk-size-plugin:0.4.0'
+
     }
 }
 
 ext {
     androidCompileSdkVersion = 26
     androidMinSdkVersion = 17
-    androidTargetSdkVersion = 22
+    androidTargetSdkVersion = 26
 
-    androidVersionCode = 24
-    androidVersionName = '2.1.2'
+    androidVersionCode = 25
+    androidVersionName = '2.2.0'
 }
 
 allprojects {
     repositories {
-        jcenter()
         google()
+        jcenter()
     }
 }

@@ -19,13 +19,16 @@
 
 package org.catrobat.paintroid.presenter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.util.DisplayMetrics;
@@ -44,6 +47,7 @@ import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.CreateFileRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode;
+import org.catrobat.paintroid.common.MainActivityConstants.PermissionRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.SaveImageRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts.BottomBarViewHolder;
 import org.catrobat.paintroid.contract.MainActivityContracts.DrawerLayoutViewHolder;
@@ -54,6 +58,7 @@ import org.catrobat.paintroid.contract.MainActivityContracts.NavigationDrawerVie
 import org.catrobat.paintroid.contract.MainActivityContracts.Navigator;
 import org.catrobat.paintroid.contract.MainActivityContracts.Presenter;
 import org.catrobat.paintroid.contract.MainActivityContracts.TopBarViewHolder;
+import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.iotasks.CreateFileAsync.CreateFileCallback;
 import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback;
 import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback;
@@ -70,16 +75,21 @@ import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_TA
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_IMPORTPNG;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LANGUAGE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_TAKE_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_CHOOSE_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_EXIT_CATROID;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOAD_NEW;
+import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_NEW_EMPTY;
 import static org.catrobat.paintroid.tools.Tool.StateChange.NEW_IMAGE_LOADED;
 import static org.catrobat.paintroid.tools.Tool.StateChange.RESET_INTERNAL_STATE;
 
@@ -126,8 +136,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (isImageUnchanged() || model.isSaved()) {
 			navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
 		} else {
-			navigator.showSaveBeforeLoadImageDialog(SAVE_IMAGE_LOAD_NEW, model.getSavedPictureUri());
+			navigator.showSaveBeforeLoadImageDialog();
 		}
+	}
+
+	@Override
+	public void saveBeforeLoadImage() {
+		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
 	}
 
 	@Override
@@ -140,8 +155,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (isImageUnchanged() && !model.isOpenedFromCatroid() || model.isSaved()) {
 			navigator.showChooseNewImageDialog();
 		} else {
-			navigator.showSaveBeforeNewImageDialog(SAVE_IMAGE_CHOOSE_NEW, model.getSavedPictureUri());
+			navigator.showSaveBeforeNewImageDialog();
 		}
+	}
+
+	@Override
+	public void saveBeforeNewImage() {
+		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
 	}
 
 	@Override
@@ -151,22 +171,32 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	private void showSecurityQuestionBeforeExit() {
 		if (isImageUnchanged() || model.isSaved()) {
-			navigator.finishActivity();
+			finishActivity();
 		} else if (model.isOpenedFromCatroid()) {
-			navigator.showSaveBeforeReturnToCatroidDialog(SAVE_IMAGE_EXIT_CATROID, model.getSavedPictureUri());
+			navigator.showSaveBeforeReturnToCatroidDialog();
 		} else {
-			navigator.showSaveBeforeFinishDialog(SAVE_IMAGE_FINISH, model.getSavedPictureUri());
+			navigator.showSaveBeforeFinishDialog();
 		}
 	}
 
 	@Override
+	public void finishActivity() {
+		navigator.finishActivity();
+	}
+
+	@Override
+	public void saveBeforeFinish() {
+		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
+	}
+
+	@Override
 	public void saveCopyClicked() {
-		interactor.saveCopy(this, SAVE_IMAGE_DEFAULT);
+		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
 	}
 
 	@Override
 	public void saveImageClicked() {
-		interactor.saveImage(this, SAVE_IMAGE_DEFAULT, model.getSavedPictureUri());
+		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE);
 	}
 
 	@Override
@@ -206,15 +236,33 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		commandManager.reset();
 	}
 
+	private void askForPermission(String permission, @PermissionRequestCode int requestCode) {
+		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(permission)) {
+			navigator.askForPermission(new String[]{permission}, requestCode);
+		} else {
+			handleRequestPermissionsResult(requestCode,
+					new String[]{permission},
+					new int[]{PackageManager.PERMISSION_GRANTED});
+		}
+	}
+
+	private void askForWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
+		askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, requestCode);
+	}
+
+	private void askForCameraPermission(@PermissionRequestCode int requestCode) {
+		askForPermission(Manifest.permission.CAMERA, requestCode);
+	}
+
 	@Override
 	public void onNewImageFromCamera() {
-		interactor.createFile(this, CREATE_FILE_TAKE_PHOTO, null);
+		askForCameraPermission(PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO);
 	}
 
 	@Override
 	public void handleActivityResult(@ActivityRequestCode int requestCode, int resultCode, Intent data) {
 		if (resultCode != Activity.RESULT_OK) {
-			Log.d(MainActivity.TAG, "handleActivityResult: result not ok, most likely a dialog hast been canceled");
+			Log.d(MainActivity.TAG, "handleActivityResult: result not ok, most likely a dialog has been canceled");
 			return;
 		}
 
@@ -241,7 +289,62 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, maxWidth, maxHeight, model.getCameraImageUri());
 				break;
 			default:
-				view.forwardActivityResult(requestCode, resultCode, data);
+				view.superHandleActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	@Override
+	public void handleRequestPermissionsResult(@PermissionRequestCode int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		if (permissions.length == 1 && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				switch (requestCode) {
+					case PERMISSION_EXTERNAL_STORAGE_SAVE:
+						interactor.saveImage(this, SAVE_IMAGE_DEFAULT, model.getSavedPictureUri());
+						break;
+					case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
+						interactor.saveCopy(this, SAVE_IMAGE_DEFAULT);
+						break;
+					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
+						saveImageConfirmClicked(SAVE_IMAGE_FINISH, model.getSavedPictureUri());
+						break;
+					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW:
+						saveImageConfirmClicked(SAVE_IMAGE_LOAD_NEW, model.getSavedPictureUri());
+						break;
+					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
+						saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, model.getSavedPictureUri());
+						break;
+					case PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO:
+						throw new IllegalArgumentException("Unexpected request code (" + requestCode + ") for permission " + permissions[0]);
+					default:
+						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
+						break;
+				}
+			} else {
+				navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+						permissions, requestCode);
+			}
+		} else if (permissions.length == 1 && permissions[0].equals(Manifest.permission.CAMERA)) {
+			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				switch (requestCode) {
+					case PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO:
+						interactor.createFile(this, CREATE_FILE_TAKE_PHOTO, null);
+						break;
+					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
+					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW:
+					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
+					case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
+					case PERMISSION_EXTERNAL_STORAGE_SAVE:
+						throw new IllegalArgumentException("Unexpected request code (" + requestCode + ") for permission " + permissions[0]);
+					default:
+						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
+						break;
+				}
+			} else {
+				navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.CAMERA,
+						permissions, requestCode);
+			}
+		} else {
+			view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
 	}
 
@@ -329,7 +432,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (isOpenedFromCatroid) {
 			File imageFile = new File(extraPicturePath);
 			if (imageFile.exists()) {
-				model.setSavedPictureUri(Uri.fromFile(imageFile));
+				model.setSavedPictureUri(view.getUriFromFile(imageFile));
 				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri());
 			} else {
 				interactor.createFile(this, CREATE_FILE_DEFAULT, extraPictureName);
@@ -362,6 +465,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		navigationDrawerViewHolder.setVersion(BuildConfig.VERSION_NAME);
 
 		view.initializeActionBar(model.isOpenedFromCatroid());
+
+		if (!commandManager.isBusy()) {
+			navigator.dismissIndeterminateProgressDialog();
+		}
 	}
 
 	private void exitFullScreen() {
@@ -370,6 +477,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		bottomBarViewHolder.show();
 		navigationDrawerViewHolder.hideExitFullScreen();
 		navigationDrawerViewHolder.showEnterFullScreen();
+		PaintroidApplication.currentTool.resetToggleOptions();
 
 		PaintroidApplication.perspective.setFullscreen(false);
 	}
@@ -455,11 +563,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void toolLongClicked(ToolType toolType) {
-		navigator.showToolInfoDialog(toolType);
-	}
-
-	@Override
 	public void gotFocus() {
 		ToolType currentToolType = PaintroidApplication.currentTool.getToolType();
 		if (focusAfterRecreate) {
@@ -504,17 +607,19 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void onCreateFilePostExecute(@CreateFileRequestCode int requestCode, Uri uri) {
-		if (uri == null) {
+	public void onCreateFilePostExecute(@CreateFileRequestCode int requestCode, File file) {
+		if (file == null) {
 			navigator.showSaveErrorDialog();
 			return;
 		}
 
 		switch (requestCode) {
 			case CREATE_FILE_DEFAULT:
-				model.setSavedPictureUri(uri);
+				model.setSavedPictureUri(view.getUriFromFile(file));
 				break;
 			case CREATE_FILE_TAKE_PHOTO:
+				File tempImageFile = view.getExternalDirPictureFile();
+				Uri uri = view.getFileProviderUriFromFile(tempImageFile);
 				model.setCameraImageUri(uri);
 				navigator.startTakePictureActivity(REQUEST_CODE_TAKE_PICTURE, uri);
 				break;
@@ -588,19 +693,20 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 
 		switch (requestCode) {
-			case SAVE_IMAGE_CHOOSE_NEW:
+			case SAVE_IMAGE_NEW_EMPTY:
 				navigator.showChooseNewImageDialog();
 				break;
 			case SAVE_IMAGE_DEFAULT:
 				break;
 			case SAVE_IMAGE_FINISH:
-				navigator.finishActivity();
+				if (model.isOpenedFromCatroid()) {
+					navigator.returnToPocketCode(uri.getPath());
+				} else {
+					navigator.finishActivity();
+				}
 				return;
 			case SAVE_IMAGE_LOAD_NEW:
 				navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
-				break;
-			case SAVE_IMAGE_EXIT_CATROID:
-				navigator.returnToPocketCode(uri.getPath());
 				break;
 			default:
 				throw new IllegalArgumentException();

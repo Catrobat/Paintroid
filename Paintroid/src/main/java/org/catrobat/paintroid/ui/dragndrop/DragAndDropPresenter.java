@@ -23,6 +23,8 @@
 
 package org.catrobat.paintroid.ui.dragndrop;
 
+import android.view.View;
+
 public interface DragAndDropPresenter {
 	int swapItemsVisually(int position, int swapWith);
 
@@ -31,4 +33,8 @@ public interface DragAndDropPresenter {
 	void reorderItems(int position, int swapWith);
 
 	void markMergeable(int position, int mergeWith);
+
+	void onLongClickLayerAtPosition(int position, View view);
+
+	void onClickLayerAtPosition(int position, View view);
 }

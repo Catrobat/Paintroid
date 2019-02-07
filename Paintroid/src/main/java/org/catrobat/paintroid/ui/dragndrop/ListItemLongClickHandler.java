@@ -27,4 +27,6 @@ import android.view.View;
 
 public interface ListItemLongClickHandler {
 	void handleOnItemLongClick(int position, View view);
+
+	void stopDragging();
 }

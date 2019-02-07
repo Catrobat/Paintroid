@@ -21,59 +21,74 @@ package org.catrobat.paintroid.dialog;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.contract.MainActivityContracts;
 
-public class SaveBeforeFinishDialog extends AppCompatDialogFragment {
-	private static final String EXTRA_URI = "arguri";
-	private static final String EXTRA_REQUEST = "argrequest";
-	private static final String EXTRA_TITLE = "argtitle";
+public class SaveBeforeFinishDialog extends MainActivityDialogFragment {
+	private static final String DIALOG_TYPE = "argDialogType";
+	private SaveBeforeFinishDialogType dialogType;
 
-	public static SaveBeforeFinishDialog newInstance(int requestCode, @StringRes int title, Uri uri) {
+	public static SaveBeforeFinishDialog newInstance(SaveBeforeFinishDialogType dialogType) {
 		Bundle args = new Bundle();
-		args.putInt(EXTRA_REQUEST, requestCode);
-		args.putInt(EXTRA_TITLE, title);
-		args.putParcelable(EXTRA_URI, uri);
+		args.putSerializable(DIALOG_TYPE, dialogType);
 
 		SaveBeforeFinishDialog dialog = new SaveBeforeFinishDialog();
 		dialog.setArguments(args);
 		return dialog;
 	}
 
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		Bundle arguments = getArguments();
+		dialogType = (SaveBeforeFinishDialogType) arguments.getSerializable(DIALOG_TYPE);
+	}
+
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		final MainActivity activity = (MainActivity) getActivity();
-
-		Bundle arguments = getArguments();
-		final int requestCode = arguments.getInt(EXTRA_REQUEST);
-		final int title = arguments.getInt(EXTRA_TITLE);
-		final Uri uri = arguments.getParcelable(EXTRA_URI);
-
-		return new AlertDialog.Builder(activity, R.style.PocketPaintAlertDialog)
-				.setTitle(title)
-				.setMessage(R.string.closing_security_question)
+		return new AlertDialog.Builder(getActivity(), R.style.PocketPaintAlertDialog)
+				.setTitle(dialogType.getTitleResource())
+				.setMessage(dialogType.getMessageResource())
 				.setPositiveButton(R.string.save_button_text, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						MainActivityContracts.Presenter presenter = activity.getPresenter();
-						presenter.saveImageConfirmClicked(requestCode, uri);
+						getPresenter().saveBeforeFinish();
 					}
 				})
 				.setNegativeButton(R.string.discard_button_text, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						activity.finish();
+						getPresenter().finishActivity();
 					}
 				})
 				.create();
+	}
+
+	public enum SaveBeforeFinishDialogType {
+		BACK_TO_POCKET_CODE(R.string.closing_catroid_security_question_title, R.string.closing_security_question),
+		FINISH(R.string.closing_security_question_title, R.string.closing_security_question);
+
+		private final int titleResource;
+		private final int messageResource;
+
+		SaveBeforeFinishDialogType(@StringRes int titleResource, @StringRes int messageResource) {
+			this.titleResource = titleResource;
+			this.messageResource = messageResource;
+		}
+
+		public int getTitleResource() {
+			return titleResource;
+		}
+
+		public int getMessageResource() {
+			return messageResource;
+		}
 	}
 }

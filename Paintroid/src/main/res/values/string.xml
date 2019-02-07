@@ -100,6 +100,8 @@
     <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
     <string name="shape_tool_dialog_star_title">Star</string>
     <string name="shape_tool_dialog_heart_title">Heart</string>
+    <string name="shape_tool_dialog_fill_title">Fill</string>
+    <string name="shape_tool_dialog_outline_title">Outline</string>
 
     <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
 
@@ -120,6 +122,11 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
+
+    <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
+    <string name="permission_info_external_storage_title">Permission needed</string>
+    <string name="permission_info_camera_text">In order to take photos the application needs the following permission.</string>
+    <string name="permission_info_camera_title">Permission needed</string>
 
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>

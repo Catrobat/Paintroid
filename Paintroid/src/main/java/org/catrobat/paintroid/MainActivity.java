@@ -27,10 +27,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -38,6 +41,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +79,8 @@ import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder;
 import org.catrobat.paintroid.ui.viewholder.NavigationViewViewHolder;
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -90,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private static final String WAS_INITIAL_ANIMATION_PLAYED = "wasInitialAnimationPlayed";
 	private static final String SAVED_PICTURE_URI_KEY = "savedPictureUri";
 	private static final String CAMERA_IMAGE_URI_KEY = "cameraImageUri";
+	private static final String APP_FRAGMENT_KEY = "customActivityState";
 
 	@VisibleForTesting
 	public MainActivityContracts.Model model;
@@ -101,6 +108,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
 	private Handler handler = new Handler();
 	private KeyboardListener keyboardListener;
+	private PaintroidApplicationFragment appFragment;
+
+	private Runnable deferredRequestPermissionsResult;
 
 	@Override
 	public MainActivityContracts.Presenter getPresenter() {
@@ -113,14 +123,26 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+
+		if (deferredRequestPermissionsResult != null) {
+			Runnable runnable = deferredRequestPermissionsResult;
+			deferredRequestPermissionsResult = null;
+
+			runnable.run();
+		}
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(R.style.PocketPaintTheme);
 		super.onCreate(savedInstanceState);
 
-		PaintroidApplication.cacheDir = getCacheDir();
-		PaintroidApplication.checkeredBackgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable
-				.pocketpaint_checkeredbg);
-
+		getAppFragment();
+		appFragment.setCacheDir(getCacheDir());
+		appFragment.setCheckeredBackgroundBitmap(BitmapFactory.decodeResource(getResources(), R.drawable
+				.pocketpaint_checkeredbg));
 		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();
@@ -154,13 +176,21 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		presenter.finishInitialize();
 	}
 
-	private void onCreateGlobals() {
-		if (PaintroidApplication.layerModel == null) {
-			PaintroidApplication.layerModel = new LayerModel();
+	private void getAppFragment() {
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		appFragment = (PaintroidApplicationFragment) fragmentManager.findFragmentByTag(APP_FRAGMENT_KEY);
+		if (appFragment == null) {
+			appFragment = new PaintroidApplicationFragment();
+			fragmentManager.beginTransaction().add(appFragment, APP_FRAGMENT_KEY).commit();
 		}
-		layerModel = PaintroidApplication.layerModel;
+	}
 
-		if (PaintroidApplication.commandManager == null) {
+	private void onCreateGlobals() {
+		if (appFragment.getLayerModel() == null) {
+			appFragment.setLayerModel(new LayerModel());
+		}
+		layerModel = appFragment.getLayerModel();
+		if (appFragment.getCommandManager() == null) {
 			DisplayMetrics metrics = getResources().getDisplayMetrics();
 
 			CommandFactory commandFactory = new DefaultCommandFactory();
@@ -169,9 +199,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 			commandManager.setInitialStateCommand(initCommand);
 			commandManager.reset();
-			PaintroidApplication.commandManager = commandManager;
+			appFragment.setCommandManager(commandManager);
 		} else {
-			commandManager = PaintroidApplication.commandManager;
+			commandManager = appFragment.getCommandManager();
 		}
 	}
 
@@ -221,8 +251,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		drawingSurface.setLayerModel(layerModel);
 
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
-		PaintroidApplication.drawingSurface = drawingSurface;
-		PaintroidApplication.perspective = new Perspective(drawingSurface.getHolder().getSurfaceFrame(), metrics.density);
+		appFragment.setDrawingSurface(drawingSurface);
+		appFragment.setPerspective(new Perspective(drawingSurface.getHolder().getSurfaceFrame(), metrics.density));
 	}
 
 	private void setLayerMenuListeners(LayerMenuViewHolder layerMenuViewHolder) {
@@ -279,13 +309,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 				@Override
 				public void onClick(View v) {
 					presenter.toolClicked(type);
-				}
-			});
-			toolButton.setOnLongClickListener(new View.OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-					presenter.toolLongClicked(type);
-					return true;
 				}
 			});
 		}
@@ -369,10 +392,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		if (isFinishing()) {
 			BaseTool.reset();
 			commandManager.shutdown();
-
-			PaintroidApplication.currentTool = null;
-			PaintroidApplication.commandManager = null;
-			PaintroidApplication.layerModel = null;
+			appFragment.setCurrentTool(null);
+			appFragment.setCommandManager(null);
+			appFragment.setLayerModel(null);
 		}
 
 		super.onDestroy();
@@ -428,8 +450,28 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	@Override
-	public void forwardActivityResult(int requestCode, int resultCode, Intent data) {
+	public void superHandleActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+
+		if (VERSION.SDK_INT == Build.VERSION_CODES.M) {
+			deferredRequestPermissionsResult = new Runnable() {
+				@Override
+				public void run() {
+					presenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
+				}
+			};
+		} else {
+			presenter.handleRequestPermissionsResult(requestCode, permissions, grantResults);
+		}
+	}
+
+	@Override
+	public void superHandleRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
 	@Override
@@ -452,6 +494,30 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	public void exitFullScreen() {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	}
+
+	@Override
+	public File getExternalDirPictureFile() {
+		File image = null;
+		try {
+			File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+			image = File.createTempFile(FileIO.getDefaultFileName(), ".jpg", storageDir);
+			image.deleteOnExit();
+		} catch (IOException e) {
+			Log.e(TAG, "Exception while creating tmp image file.");
+		}
+		return image;
+	}
+
+	@Override
+	public Uri getFileProviderUriFromFile(File file) {
+		String authority = getPackageName() + ".paintroid.fileprovider";
+		return FileProvider.getUriForFile(this, authority, file);
+	}
+
+	@Override
+	public Uri getUriFromFile(File file) {
+		return Uri.fromFile(file);
 	}
 
 	@Override

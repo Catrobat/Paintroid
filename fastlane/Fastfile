@@ -1,0 +1,43 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+ENV["FASTLANE_SKIP_UPDATE_CHECK"] = "1"
+opt_out_usage
+
+default_platform(:android)
+
+platform :android do
+    desc "Runs all the tests"
+        lane :test do
+        gradle(task: "test")
+    end
+
+    desc "upload Paintroid APK to alpha track"
+    lane :upload_APK_Paintroid do
+        # ...
+        upload_to_play_store(
+            package_name:               'org.catrobat.paintroid',
+            track:                      'alpha',
+            json_key_data:              ENV['googlePlayJsonKey'],
+            apk_paths:                  './app/build/outputs/apk/signedRelease/app-signedRelease.apk',
+            skip_upload_apk:            'false',
+            skip_upload_metadata:       'true',
+            skip_upload_images:         'true',
+            skip_upload_screenshots:    'true',
+            validate_only:              'false',
+            check_superseded_tracks:    'false',
+        )
+    end
+end

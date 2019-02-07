@@ -16,7 +16,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.listener;
 
 import android.content.Context;
@@ -26,6 +25,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -34,8 +34,10 @@ import android.widget.ToggleButton;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.ui.tools.FontArrayAdapter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public final class TextToolOptionsListener {
 	private OnTextToolOptionsChangedListener onTextToolOptionsChangedListener;
@@ -45,6 +47,7 @@ public final class TextToolOptionsListener {
 	private final ToggleButton underlinedToggleButton;
 	private final ToggleButton italicToggleButton;
 	private final ToggleButton boldToggleButton;
+	private final Spinner textSizeSpinner;
 	private final List<String> fonts;
 
 	public TextToolOptionsListener(Context context, View textToolOptionsView) {
@@ -55,8 +58,10 @@ public final class TextToolOptionsListener {
 		underlinedToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		italicToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
+		textSizeSpinner = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
 
 		fonts = Arrays.asList(context.getResources().getStringArray(R.array.pocketpaint_main_text_tool_fonts));
+
 		initializeListeners();
 
 		textEditText.requestFocus();
@@ -130,6 +135,29 @@ public final class TextToolOptionsListener {
 				boolean bold = ((Checkable) v).isChecked();
 				onTextToolOptionsChangedListener.setBold(bold);
 				hideKeyboard();
+			}
+		});
+
+		final int[] intSizes = context.getResources().getIntArray(R.array.pocketpaint_text_tool_size_array);
+		ArrayList<String> stringSizes = new ArrayList<String>();
+		String pixelString = context.getString(R.string.pixel);
+		for (int size : intSizes) {
+			stringSizes.add(String.format(Locale.getDefault(), "%d", size) + pixelString);
+		}
+
+		ArrayAdapter<String> textSizeArrayAdapter = new ArrayAdapter<>(context,
+				android.R.layout.simple_list_item_activated_1, stringSizes);
+		textSizeSpinner.setAdapter(textSizeArrayAdapter);
+
+		textSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				int textSize = intSizes[position];
+				onTextToolOptionsChangedListener.setTextSize(textSize);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
 	}

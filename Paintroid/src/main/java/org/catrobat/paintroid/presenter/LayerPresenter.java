@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.presenter;
 
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.R;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPresenter {
+	private static final String TAG = LayerPresenter.class.getSimpleName();
 	private static final int MAX_LAYERS = 4;
 	private final CommandManager commandManager;
 	private final CommandFactory commandFactory;
@@ -121,20 +124,6 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 	}
 
 	@Override
-	public void onLongClickLayerAtPosition(int position, LayerViewHolder viewHolder) {
-		if (getLayerCount() > 1) {
-			listItemLongClickHandler.handleOnItemLongClick(position, viewHolder.getView());
-		}
-	}
-
-	@Override
-	public void onClickLayerAtPosition(int position, LayerViewHolder viewHolder) {
-		if (position != model.getLayerIndexOf(model.getCurrentLayer())) {
-			commandManager.addCommand(commandFactory.createSelectLayerCommand(position));
-		}
-	}
-
-	@Override
 	public int swapItemsVisually(int position, int swapWith) {
 		LayerContracts.Layer tempLayer = layers.get(position);
 		layers.set(position, layers.get(swapWith));
@@ -163,7 +152,39 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 
 	@Override
 	public void markMergeable(int position, int mergeWith) {
+		if (!isPositionValid(position) || !isPositionValid(mergeWith)) {
+			Log.e(TAG, "onLongClickLayerAtPosition at invalid position");
+			return;
+		}
 		adapter.getViewHolderAt(mergeWith).setMergable();
+	}
+
+	@Override
+	public void onLongClickLayerAtPosition(int position, View view) {
+		if (!isPositionValid(position)) {
+			Log.e(TAG, "onLongClickLayerAtPosition at invalid position");
+			return;
+		}
+
+		if (getLayerCount() > 1) {
+			listItemLongClickHandler.handleOnItemLongClick(position, view);
+		}
+	}
+
+	@Override
+	public void onClickLayerAtPosition(int position, View view) {
+		if (!isPositionValid(position)) {
+			Log.e(TAG, "onClickLayerAtPosition at invalid position");
+			return;
+		}
+
+		if (position != model.getLayerIndexOf(model.getCurrentLayer())) {
+			commandManager.addCommand(commandFactory.createSelectLayerCommand(position));
+		}
+	}
+
+	private boolean isPositionValid(int position) {
+		return position >= 0 && position < layers.size();
 	}
 
 	@Override
@@ -174,5 +195,6 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		}
 		refreshLayerMenuViewHolder();
 		adapter.notifyDataSetChanged();
+		listItemLongClickHandler.stopDragging();
 	}
 }

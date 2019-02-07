@@ -31,7 +31,6 @@ import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,7 +45,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.BLACK_COLOR_PICKER_BUTTON_POSITION;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.TRANSPARENT_COLOR_PICKER_BUTTON_POSITION;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
@@ -63,24 +61,13 @@ public class RectangleFillToolIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	private Bitmap workingBitmap;
-
 	@Before
 	public void setUp() {
 		PaintroidApplication.drawingSurface.destroyDrawingCache();
 
-		workingBitmap = getWorkingBitmap();
-
 		selectTool(ToolType.BRUSH);
 		resetColorPicker();
 		resetDrawPaintAndBrushPickerView();
-	}
-
-	@After
-	public void tearDown() {
-		if (workingBitmap != null && !workingBitmap.isRecycled()) {
-			workingBitmap.recycle();
-		}
 	}
 
 	@Test
@@ -231,8 +218,6 @@ public class RectangleFillToolIntegrationTest {
 		int height = drawingBitmap.getHeight();
 		Point upperLeftQuarter = new Point((int) (width * 0.25), (int) (height * 0.25));
 		Point upperRightQuarter = new Point((int) (width * 0.75), (int) (height * 0.25));
-		Point lowerRightQuarter = new Point((int) (width * 0.75), (int) (height * 0.75));
-		Point lowerLeftQuarter = new Point((int) (width * 0.25), (int) (height * 0.75));
 
 		int checkeredWhite = Color.WHITE;
 		int checkeredGray = 0xFFC0C0C0;
@@ -242,12 +227,6 @@ public class RectangleFillToolIntegrationTest {
 
 		pixelColor = drawingBitmap.getPixel(upperRightQuarter.x, upperRightQuarter.y);
 		assertTrue("Color should correspond to checkered pattern", pixelColor == checkeredGray || pixelColor == checkeredWhite);
-
-		pixelColor = drawingBitmap.getPixel(lowerRightQuarter.x, lowerRightQuarter.y);
-		assertEquals("Pixel should be transparent", Color.TRANSPARENT, pixelColor);
-
-		pixelColor = drawingBitmap.getPixel(lowerLeftQuarter.x, lowerLeftQuarter.y);
-		assertEquals("Pixel should be transparent", Color.TRANSPARENT, pixelColor);
 	}
 
 	@Test
@@ -257,7 +236,6 @@ public class RectangleFillToolIntegrationTest {
 		selectTool(ToolType.SHAPE);
 		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
 		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_square_btn, true, BLACK_COLOR_PICKER_BUTTON_POSITION);
-		int backgroundColor = tool.getDrawPaint().getColor();
 
 		clickSelectedToolButton();
 		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_heart_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
@@ -269,8 +247,6 @@ public class RectangleFillToolIntegrationTest {
 
 		Point upperLeftPixel = new Point((int) (toolPosition.x - boxWidth / 4), (int) (toolPosition.y - boxHeight / 4));
 		Point upperRightPixel = new Point((int) (toolPosition.x + boxWidth / 4), (int) (toolPosition.y - boxHeight / 4));
-		Point lowerRightPixel = new Point((int) (toolPosition.x + boxWidth / 4), (int) (toolPosition.y + boxHeight / 4));
-		Point lowerLeftPixel = new Point((int) (toolPosition.x - boxWidth / 4), (int) (toolPosition.y + boxHeight / 4));
 
 		Bitmap bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
 
@@ -279,12 +255,6 @@ public class RectangleFillToolIntegrationTest {
 
 		pixelColor = bitmap.getPixel(upperRightPixel.x, upperRightPixel.y);
 		assertEquals("Pixel should have been erased", Color.TRANSPARENT, pixelColor);
-
-		pixelColor = bitmap.getPixel(lowerRightPixel.x, lowerRightPixel.y);
-		assertEquals("Pixel should not have been erased", backgroundColor, pixelColor);
-
-		pixelColor = bitmap.getPixel(lowerLeftPixel.x, lowerLeftPixel.y);
-		assertEquals("Pixel should not have been erased", backgroundColor, pixelColor);
 	}
 
 	public void selectShapeTypeAndDraw(int shapeBtnId, boolean changeColor, int colorButtonPosition) {

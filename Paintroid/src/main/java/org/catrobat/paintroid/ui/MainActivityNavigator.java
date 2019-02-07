@@ -20,10 +20,14 @@
 package org.catrobat.paintroid.ui;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -38,17 +42,15 @@ import org.catrobat.paintroid.dialog.AboutDialog;
 import org.catrobat.paintroid.dialog.ChooseNewImageDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
+import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDialogType;
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.tools.ToolType;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
-
-import static org.catrobat.paintroid.common.Constants.COLOR_PICKER_DIALOG_TAG;
-import static org.catrobat.paintroid.common.Constants.LOAD_DIALOG_FRAGMENT_TAG;
 
 public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	private MainActivity mainActivity;
@@ -60,11 +62,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void showColorPickerDialog() {
 		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
-		Fragment fragment = fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG);
+		Fragment fragment = fragmentManager.findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
 		if (fragment == null) {
 			ColorPickerDialog dialog = ColorPickerDialog.newInstance(PaintroidApplication.currentTool.getDrawPaint().getColor());
 			setupColorPickerDialogListeners(dialog);
-			dialog.show(fragmentManager, COLOR_PICKER_DIALOG_TAG);
+			dialog.show(fragmentManager, Constants.COLOR_PICKER_DIALOG_TAG);
 		}
 	}
 
@@ -134,7 +136,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Fragment fragment = getIndeterminateProgressFragment();
 		if (fragment != null) {
 			AppCompatDialogFragment dialog = (AppCompatDialogFragment) fragment;
-			dialog.dismiss();
+			dialog.dismissAllowingStateLoss();
 		}
 	}
 
@@ -162,7 +164,29 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showLoadErrorDialog() {
 		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.WARNING,
 				R.string.dialog_loading_image_failed_title, R.string.dialog_loading_image_failed_text);
-		dialog.show(mainActivity.getSupportFragmentManager(), LOAD_DIALOG_FRAGMENT_TAG);
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.LOAD_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode) {
+		AppCompatDialogFragment dialog = PermissionInfoDialog.newInstance(permissionType, permissions, requestCode);
+		dialog.show(mainActivity.getSupportFragmentManager(), Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void askForPermission(String[] permissions, int requestCode) {
+		ActivityCompat.requestPermissions(mainActivity, permissions, requestCode);
+	}
+
+	@Override
+	public boolean isSdkAboveOrEqualM() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+	}
+
+	@Override
+	public boolean doIHavePermission(String permission) {
+		return ContextCompat.checkSelfPermission(mainActivity,
+				permission) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	@Override
@@ -176,22 +200,22 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void showSaveBeforeReturnToCatroidDialog(final int requestCode, final Uri savedPictureUri) {
-		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(requestCode,
-				R.string.closing_catroid_security_question_title, savedPictureUri);
+	public void showSaveBeforeReturnToCatroidDialog() {
+		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(
+				SaveBeforeFinishDialogType.BACK_TO_POCKET_CODE);
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
-	public void showSaveBeforeFinishDialog(final int requestCode, final Uri savedPictureUri) {
-		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(requestCode,
-				R.string.closing_security_question_title, savedPictureUri);
+	public void showSaveBeforeFinishDialog() {
+		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(
+				SaveBeforeFinishDialogType.FINISH);
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
-	public void showSaveBeforeNewImageDialog(int requestCode, Uri savedPictureUri) {
-		AppCompatDialogFragment dialog = SaveBeforeNewImageDialog.newInstance(requestCode, savedPictureUri);
+	public void showSaveBeforeNewImageDialog() {
+		AppCompatDialogFragment dialog = SaveBeforeNewImageDialog.newInstance();
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
@@ -202,16 +226,9 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void showSaveBeforeLoadImageDialog(int requestCode, Uri uri) {
-		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance(requestCode, uri);
+	public void showSaveBeforeLoadImageDialog() {
+		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance();
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
-	}
-
-	@Override
-	public void showToolInfoDialog(ToolType toolType) {
-		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.INFO,
-				toolType.getHelpTextResource(), toolType.getNameResource());
-		dialog.show(mainActivity.getSupportFragmentManager(), Constants.HELP_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
@@ -235,7 +252,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void restoreFragmentListeners() {
 		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
-		Fragment fragment = fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG);
+		Fragment fragment = fragmentManager.findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
 		if (fragment != null) {
 			setupColorPickerDialogListeners((ColorPickerDialog) fragment);
 		}

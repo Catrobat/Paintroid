@@ -18,7 +18,7 @@
 
         <item
             android:id="@+id/pocketpaint_nav_save_duplicate"
-            android:icon="@drawable/ic_pocketpaint_menu_copy"
+            android:icon="@drawable/ic_pocketpaint_menu_save_copy"
             android:title="@string/menu_save_copy" />
 
         <item

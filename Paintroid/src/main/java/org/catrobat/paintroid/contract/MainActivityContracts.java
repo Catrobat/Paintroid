@@ -24,14 +24,18 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.iotasks.CreateFileAsync;
 import org.catrobat.paintroid.iotasks.LoadImageAsync;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.tools.ToolType;
+
+import java.io.File;
 
 public interface MainActivityContracts {
 	interface Navigator {
@@ -59,23 +63,29 @@ public interface MainActivityContracts {
 
 		void showLoadErrorDialog();
 
+		void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode);
+
+		void askForPermission(String[] permissions, int requestCode);
+
+		boolean isSdkAboveOrEqualM();
+
+		boolean doIHavePermission(String permission);
+
 		void finishActivity();
 
 		void recreateActivity();
 
-		void showSaveBeforeReturnToCatroidDialog(int requestCode, Uri savedPictureUri);
+		void showSaveBeforeReturnToCatroidDialog();
 
-		void showSaveBeforeFinishDialog(int requestCode, Uri savedPictureUri);
+		void showSaveBeforeFinishDialog();
 
-		void showSaveBeforeNewImageDialog(int requestCode, Uri savedPictureUri);
+		void showSaveBeforeNewImageDialog();
 
 		void showChooseNewImageDialog();
 
-		void showSaveBeforeLoadImageDialog(int requestCode, Uri uri);
+		void showSaveBeforeLoadImageDialog();
 
 		void restoreFragmentListeners();
-
-		void showToolInfoDialog(ToolType toolType);
 
 		void showToolChangeToast(int offset, int idRes);
 
@@ -93,7 +103,11 @@ public interface MainActivityContracts {
 
 		void initializeActionBar(boolean isOpenedFromCatroid);
 
-		void forwardActivityResult(int requestCode, int resultCode, Intent data);
+		void superHandleActivityResult(int requestCode, int resultCode, Intent data);
+
+		void superHandleRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
+
+		Uri getUriFromFile(File file);
 
 		void hideKeyboard();
 
@@ -104,6 +118,10 @@ public interface MainActivityContracts {
 		void enterFullScreen();
 
 		void exitFullScreen();
+
+		Uri getFileProviderUriFromFile(File file);
+
+		File getExternalDirPictureFile();
 	}
 
 	interface Presenter {
@@ -142,6 +160,8 @@ public interface MainActivityContracts {
 
 		void handleActivityResult(int requestCode, int resultCode, Intent data);
 
+		void handleRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults);
+
 		void onBackPressed();
 
 		void saveImageConfirmClicked(int requestCode, Uri uri);
@@ -164,9 +184,15 @@ public interface MainActivityContracts {
 
 		void toolClicked(ToolType toolType);
 
-		void toolLongClicked(ToolType toolType);
-
 		void gotFocus();
+
+		void saveBeforeLoadImage();
+
+		void saveBeforeNewImage();
+
+		void saveBeforeFinish();
+
+		void finishActivity();
 	}
 
 	interface Model {

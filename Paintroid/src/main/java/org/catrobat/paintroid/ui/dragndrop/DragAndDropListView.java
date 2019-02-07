@@ -31,6 +31,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class DragAndDropListView extends ListView implements ListItemLongClickHandler {
@@ -51,14 +52,34 @@ public class DragAndDropListView extends ListView implements ListItemLongClickHa
 
 	public DragAndDropListView(Context context) {
 		super(context);
+		init();
 	}
 
 	public DragAndDropListView(Context context, AttributeSet attributes) {
 		super(context, attributes);
+		init();
 	}
 
 	public DragAndDropListView(Context context, AttributeSet attributes, int defStyle) {
 		super(context, attributes, defStyle);
+		init();
+	}
+
+	private void init() {
+		setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				presenter.onLongClickLayerAtPosition(position, view);
+				return true;
+			}
+		});
+
+		setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				presenter.onClickLayerAtPosition(position, view);
+			}
+		});
 	}
 
 	public void setPresenter(DragAndDropPresenter presenter) {
@@ -73,6 +94,8 @@ public class DragAndDropListView extends ListView implements ListItemLongClickHa
 
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_UP:
+				handleTouchUp();
+				break;
 			case MotionEvent.ACTION_CANCEL:
 				stopDragging();
 				break;
@@ -109,6 +132,17 @@ public class DragAndDropListView extends ListView implements ListItemLongClickHa
 		hoveringListItem = getHoveringListItem(view);
 		setOffsetToCenter(viewBounds);
 		invalidate();
+	}
+
+	@Override
+	public void stopDragging() {
+		if (hoveringListItem != null) {
+			mergePosition = -1;
+			view.setVisibility(VISIBLE);
+			view = null;
+			hoveringListItem = null;
+			invalidate();
+		}
 	}
 
 	@Override
@@ -184,17 +218,13 @@ public class DragAndDropListView extends ListView implements ListItemLongClickHa
 		return (position >= 0 && position < getCount());
 	}
 
-	private void stopDragging() {
+	private void handleTouchUp() {
 		if (mergePosition != -1) {
 			presenter.mergeItems(initialPosition, mergePosition);
 		} else {
 			presenter.reorderItems(initialPosition, position);
 		}
 
-		mergePosition = -1;
-		view.setVisibility(VISIBLE);
-		view = null;
-		hoveringListItem = null;
-		invalidate();
+		stopDragging();
 	}
 }

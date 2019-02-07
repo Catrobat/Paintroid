@@ -57,6 +57,8 @@ public interface Tool {
 
 	void hide();
 
+	void resetToggleOptions();
+
 	void toggleShowToolOptions();
 
 	void onSaveInstanceState(Bundle bundle);
