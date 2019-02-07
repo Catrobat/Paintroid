@@ -43,8 +43,6 @@ public interface MainActivityContracts {
 
 		void startLoadImageActivity(int requestCode);
 
-		void startTakePictureActivity(int requestCode, Uri cameraImageUri);
-
 		void startImportImageActivity(int requestCode);
 
 		void showAboutDialog();
@@ -81,8 +79,6 @@ public interface MainActivityContracts {
 
 		void showSaveBeforeNewImageDialog();
 
-		void showChooseNewImageDialog();
-
 		void showSaveBeforeLoadImageDialog();
 
 		void restoreFragmentListeners();
@@ -118,10 +114,6 @@ public interface MainActivityContracts {
 		void enterFullScreen();
 
 		void exitFullScreen();
-
-		Uri getFileProviderUriFromFile(File file);
-
-		File getExternalDirPictureFile();
 	}
 
 	interface Presenter {
@@ -138,8 +130,6 @@ public interface MainActivityContracts {
 
 		void newImageClicked();
 
-		void chooseNewImage();
-
 		void saveCopyClicked();
 
 		void saveImageClicked();
@@ -155,8 +145,6 @@ public interface MainActivityContracts {
 		void showAboutClicked();
 
 		void onNewImage();
-
-		void onNewImageFromCamera();
 
 		void handleActivityResult(int requestCode, int resultCode, Intent data);
 

@@ -47,7 +47,7 @@ public class SaveBeforeNewImageDialog extends MainActivityDialogFragment {
 				.setNegativeButton(R.string.discard_button_text, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						getPresenter().chooseNewImage();
+						getPresenter().onNewImage();
 					}
 				})
 				.create();

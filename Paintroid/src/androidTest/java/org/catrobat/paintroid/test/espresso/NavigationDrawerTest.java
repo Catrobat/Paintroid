@@ -37,7 +37,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.close;
 import static android.support.test.espresso.contrib.DrawerActions.open;
 import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
-import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -53,7 +52,7 @@ public class NavigationDrawerTest {
 			new ActivityTestRule<>(MainActivity.class);
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		onNavigationDrawer()
 				.performOpen();
 	}
@@ -107,8 +106,7 @@ public class NavigationDrawerTest {
 
 	@Test
 	public void testNavigationDrawerItemNewImageClick() {
-		onView(withText(R.string.menu_new_image)).perform(click())
-				.inRoot(isDialog()).check(matches(isDisplayed()));
+		onView(withText(R.string.menu_new_image)).perform(click());
 	}
 
 	@Test

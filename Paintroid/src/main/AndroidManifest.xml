@@ -22,21 +22,10 @@
     android:installLocation="auto">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:largeHeap="true"
         android:supportsRtl="true">
-
-        <provider
-            android:name=".common.DefaultFileProvider"
-            android:authorities="${applicationId}.paintroid.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/pocketpaint_file_provider_paths"/>
-        </provider>
 
         <activity
             android:name=".WelcomeActivity"

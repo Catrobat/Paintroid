@@ -172,8 +172,6 @@ public class LayerIntegrationTest {
 				.perform(click());
 		onView(withText(R.string.discard_button_text))
 				.perform(click());
-		onView(withText(R.string.menu_new_image_empty_image))
-				.perform(click());
 
 		onLayerMenuView().onButtonAdd()
 				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_add))));
@@ -326,8 +324,6 @@ public class LayerIntegrationTest {
 				.perform(click());
 		onView(withText(R.string.discard_button_text))
 				.perform(click());
-		onView(withText(R.string.menu_new_image_empty_image))
-				.perform(click());
 
 		onToolBarView()
 				.performSelectTool(ToolType.PIPETTE);
@@ -357,8 +353,6 @@ public class LayerIntegrationTest {
 		onView(withText(R.string.menu_new_image))
 				.perform(click());
 		onView(withText(R.string.save_button_text))
-				.perform(click());
-		onView(withText(R.string.menu_new_image_empty_image))
 				.perform(click());
 
 		onToolBarView()
