@@ -24,7 +24,6 @@ emulators {
 
     dependencies {
         sdk()
-        ndk()
     }
 
     emulator 'android24', {
@@ -76,8 +75,6 @@ android {
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
         versionCode rootProject.ext.androidVersionCode
         versionName rootProject.ext.androidVersionName
-        externalNativeBuild.cmake.cppFlags "-fvisibility=hidden"
-        ndk.abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
     }
 
     buildTypes {
@@ -94,8 +91,6 @@ android {
             multiDexEnabled true
         }
     }
-
-    externalNativeBuild.cmake.path 'src/main/cpp/CMakeLists.txt'
 
     lintOptions {
         // specific ignores should be defined via lint.xml file
