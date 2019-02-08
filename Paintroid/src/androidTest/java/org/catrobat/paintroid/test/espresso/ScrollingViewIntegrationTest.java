@@ -1,3 +1,22 @@
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.catrobat.paintroid.test.espresso;
 
 import android.graphics.PointF;
@@ -22,9 +41,9 @@ import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusb
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfaceHeight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfaceWidth;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
@@ -34,14 +53,16 @@ public class ScrollingViewIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+	private int drawerEdgeSize;
 
 	@Before
 	public void setUp() {
-		selectTool(ToolType.BRUSH);
+		float displayDensity = launchActivityRule.getActivity().getResources().getDisplayMetrics().density;
+		drawerEdgeSize = (int) (20 * displayDensity + 0.5f);
 	}
 
 	@Test
-	public void testScrollingViewDrawTool() throws NoSuchFieldException, IllegalAccessException {
+	public void testScrollingViewDrawTool() {
 
 		final int perspectiveScale = 5;
 		PaintroidApplication.perspective.setScale(perspectiveScale);
@@ -49,8 +70,8 @@ public class ScrollingViewIntegrationTest {
 		float surfaceWidth = getSurfaceWidth();
 		float surfaceHeight = getSurfaceHeight();
 
-		float xRight = surfaceWidth - 1;
-		float xLeft = 1;
+		float xRight = surfaceWidth - 1 - drawerEdgeSize;
+		float xLeft = 1 + drawerEdgeSize;
 		float xMiddle = surfaceWidth / 2;
 
 		final float actionBarHeight = getActionbarHeight();
@@ -69,6 +90,9 @@ public class ScrollingViewIntegrationTest {
 		PointF bottomRight = new PointF(xRight, yBottom);
 		PointF bottomLeft = new PointF(xLeft, yBottom);
 		PointF topRight = new PointF(xRight, yTop);
+
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(middle);
 
@@ -81,28 +105,10 @@ public class ScrollingViewIntegrationTest {
 		longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(topLeft);
 		longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(bottomLeft);
 		longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(topRight);
-
-//		dragAndCheckIfCanvasHasMovedInXOrY(middle, rightMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(rightMiddle, middle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(middle, leftMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(leftMiddle, middle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(middle, topMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(topMiddle, middle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(middle, bottomMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(bottomMiddle, middle);
-
-//		dragAndCheckIfCanvasHasMovedInXAndY(middle, topRight);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topRight, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(middle, bottomRight);
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomRight, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(middle, bottomLeft);
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomLeft, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(middle, topLeft);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topLeft, middle);
 	}
 
 	@Test
-	public void testScrollingViewCursorTool() throws NoSuchFieldException, IllegalAccessException {
+	public void testScrollingViewCursorTool() {
 		final int perspectiveScale = 5;
 		PaintroidApplication.perspective.setScale(perspectiveScale);
 
@@ -130,7 +136,8 @@ public class ScrollingViewIntegrationTest {
 		PointF bottomLeft = new PointF(xLeft, yBottom);
 		PointF topRight = new PointF(xRight, yTop);
 
-		selectTool(ToolType.CURSOR);
+		onToolBarView()
+				.performSelectTool(ToolType.CURSOR);
 
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(rightMiddle);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(leftMiddle);
@@ -145,19 +152,6 @@ public class ScrollingViewIntegrationTest {
 		dragAndCheckIfCanvasHasMovedInXOrY(topMiddle, middle);
 		dragAndCheckIfCanvasHasMovedInXOrY(topMiddle, bottomMiddle);
 		dragAndCheckIfCanvasHasMovedInXOrY(bottomMiddle, middle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(rightMiddle, leftMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(leftMiddle, middle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(leftMiddle, rightMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(rightMiddle, middle);
-
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomLeft, topRight);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topRight, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topRight, bottomLeft);
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomLeft, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomRight, topLeft);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topLeft, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topLeft, bottomRight);
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomRight, middle);
 
 		onView(isRoot()).perform(touchCenterMiddle());
 	}
