@@ -13,7 +13,6 @@ public class ImportTool extends StampTool {
 		super(context, toolType);
 		readyForPaste = true;
 		longClickAllowed = false;
-		createOverlayBitmap();
 	}
 
 	@Override

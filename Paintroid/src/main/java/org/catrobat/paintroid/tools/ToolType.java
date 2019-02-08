@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.tools;
 
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.StringRes;
 
@@ -27,36 +28,40 @@ import org.catrobat.paintroid.tools.Tool.StateChange;
 
 import java.util.EnumSet;
 
+import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
+
 public enum ToolType {
-	PIPETTE(R.string.button_pipette, R.string.help_content_eyedropper, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_pipette),
-	BRUSH(R.string.button_brush, R.string.help_content_brush, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_brush),
-	UNDO(R.string.button_undo, R.string.help_content_undo, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_undo),
-	REDO(R.string.button_redo, R.string.help_content_redo, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_redo),
-	FILL(R.string.button_fill, R.string.help_content_fill, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_fill),
-	STAMP(R.string.button_stamp, R.string.help_content_stamp, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_stamp),
-	LINE(R.string.button_line, R.string.help_content_line, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_line),
-	CURSOR(R.string.button_cursor, R.string.help_content_cursor, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_cursor),
-	IMPORTPNG(R.string.button_import_image, R.string.help_content_import_png, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_import),
-	TRANSFORM(R.string.button_transform, R.string.help_content_transform, true, EnumSet.of(StateChange.RESET_INTERNAL_STATE, StateChange.NEW_IMAGE_LOADED), R.id.pocketpaint_tools_transform),
-	ERASER(R.string.button_eraser, R.string.help_content_eraser, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_eraser),
-	SHAPE(R.string.button_shape, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_rectangle),
-	TEXT(R.string.button_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_text),
-	LAYER(R.string.layers_title, R.string.help_content_layer, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_layers),
-	COLORCHOOSER(R.string.color_chooser_title, R.string.help_content_color_chooser, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_color);
+	PIPETTE(R.string.button_pipette, R.string.help_content_eyedropper, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_pipette, INVALID_RESOURCE_ID),
+	BRUSH(R.string.button_brush, R.string.help_content_brush, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_brush, INVALID_RESOURCE_ID),
+	UNDO(R.string.button_undo, R.string.help_content_undo, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_undo, INVALID_RESOURCE_ID),
+	REDO(R.string.button_redo, R.string.help_content_redo, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_redo, INVALID_RESOURCE_ID),
+	FILL(R.string.button_fill, R.string.help_content_fill, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_fill, INVALID_RESOURCE_ID),
+	STAMP(R.string.button_stamp, R.string.help_content_stamp, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_stamp, R.drawable.pocketpaint_stamp_tool_overlay),
+	LINE(R.string.button_line, R.string.help_content_line, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_line, INVALID_RESOURCE_ID),
+	CURSOR(R.string.button_cursor, R.string.help_content_cursor, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_cursor, INVALID_RESOURCE_ID),
+	IMPORTPNG(R.string.button_import_image, R.string.help_content_import_png, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_import, R.drawable.pocketpaint_import_tool_overlay),
+	TRANSFORM(R.string.button_transform, R.string.help_content_transform, true, EnumSet.of(StateChange.RESET_INTERNAL_STATE, StateChange.NEW_IMAGE_LOADED), R.id.pocketpaint_tools_transform, INVALID_RESOURCE_ID),
+	ERASER(R.string.button_eraser, R.string.help_content_eraser, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_eraser, INVALID_RESOURCE_ID),
+	SHAPE(R.string.button_shape, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_rectangle, R.drawable.pocketpaint_rectangle_tool_overlay),
+	TEXT(R.string.button_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_text, R.drawable.pocketpaint_text_tool_overlay),
+	LAYER(R.string.layers_title, R.string.help_content_layer, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_layers, INVALID_RESOURCE_ID),
+	COLORCHOOSER(R.string.color_chooser_title, R.string.help_content_color_chooser, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_color, INVALID_RESOURCE_ID);
 
 	private int nameResource;
 	private int helpTextResource;
 	private boolean allowColorChange;
 	private EnumSet<StateChange> stateChangeBehaviour;
 	private int toolButtonID;
+	private int overlayDrawableResource;
 
 	ToolType(int nameResource, int helpTextResource, boolean allowColorchange,
-			EnumSet<StateChange> stateChangeBehaviour, int toolButtonID) {
+			EnumSet<StateChange> stateChangeBehaviour, int toolButtonID, int overlayDrawableResource) {
 		this.nameResource = nameResource;
 		this.helpTextResource = helpTextResource;
 		allowColorChange = allowColorchange;
 		this.stateChangeBehaviour = stateChangeBehaviour;
 		this.toolButtonID = toolButtonID;
+		this.overlayDrawableResource = overlayDrawableResource;
 	}
 
 	public @StringRes int getNameResource() {
@@ -65,6 +70,10 @@ public enum ToolType {
 
 	public @StringRes int getHelpTextResource() {
 		return helpTextResource;
+	}
+
+	public @DrawableRes int getOverlayDrawableResource() {
+		return overlayDrawableResource;
 	}
 
 	public boolean isColorChangeAllowed() {
