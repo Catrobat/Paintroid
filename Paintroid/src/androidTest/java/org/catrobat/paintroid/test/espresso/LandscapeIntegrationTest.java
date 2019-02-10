@@ -114,22 +114,14 @@ public class LandscapeIntegrationTest {
 	}
 
 	@Test
-	public void testToolBarOption() {
-		selectTool(ToolType.PIPETTE);
-		openToolOptionsForCurrentTool();
-
-		onView(withId(R.id.pocketpaint_main_tool_options))
-				.check(matches(isDisplayed()));
-	}
-
-	@Test
 	public void testTools() {
 		for (ToolType toolType : ToolType.values()) {
 			if (toolType == ToolType.IMPORTPNG
 					|| toolType == ToolType.COLORCHOOSER
 					|| toolType == ToolType.REDO
 					|| toolType == ToolType.UNDO
-					|| toolType == ToolType.LAYER) {
+					|| toolType == ToolType.LAYER
+					|| !toolType.hasOptions()) {
 				continue;
 			}
 

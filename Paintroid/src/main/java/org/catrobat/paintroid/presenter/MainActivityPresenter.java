@@ -498,7 +498,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void toolClicked(ToolType type) {
 		bottomBarViewHolder.cancelAnimation();
 
-		if (PaintroidApplication.currentTool.getToolType() == type) {
+		if (PaintroidApplication.currentTool.getToolType() == type && type.hasOptions()) {
 			PaintroidApplication.currentTool.toggleShowToolOptions();
 		} else if (view.isKeyboardShown()) {
 			view.hideKeyboard();
