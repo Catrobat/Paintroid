@@ -63,6 +63,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected static final int DEFAULT_ROTATION_SYMBOL_WIDTH = 30;
 	protected static final float DEFAULT_MAXIMUM_BOX_RESOLUTION = 0;
 	protected static final int CLICK_IN_BOX_MOVE_TOLERANCE = 10;
+	protected static final int DEFAULT_RECTANGLE_SHRINKING = 0;
+	protected static final int HIGHLIGHT_RECTANGLE_SHRINKING = 5;
 
 	protected static final boolean DEFAULT_ANTIALIASING_ON = true;
 
@@ -72,7 +74,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private static final boolean DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO = true;
 	private static final boolean DEFAULT_RESPECT_MAXIMUM_BOX_RESOLUTION = false;
 
-	private static final int CLICK_TIMEOUT_MILLIS = 150;
+	private static final int CLICK_TIMEOUT_MILLIS = 250;
 
 	private static final String BUNDLE_BOX_WIDTH = "BOX_WIDTH";
 	private static final String BUNDLE_BOX_HEIGHT = "BOX_HEIGHT";
@@ -113,6 +115,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private boolean resizePointsVisible;
 	private boolean respectMaximumBorderRatio;
 	private boolean respectMaximumBoxResolution;
+	private int rectangleShrinkingOnHighlight;
 	private CountDownTimer downTimer;
 
 	public BaseToolWithRectangleShape(Context context, ToolType toolType) {
@@ -133,6 +136,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			boxHeight = PaintroidApplication.layerModel.getHeight() * MAXIMUM_BORDER_RATIO;
 			boxWidth = PaintroidApplication.layerModel.getWidth() * MAXIMUM_BORDER_RATIO;
 		}
+
+		rectangleShrinkingOnHighlight = DEFAULT_RECTANGLE_SHRINKING;
 
 		rotationArrowArcStrokeWidth = getDensitySpecificValue(2);
 		rotationArrowArcRadius = getDensitySpecificValue(8);
@@ -373,8 +378,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private void drawRectangle(Canvas canvas, float boxWidth, float boxHeight) {
 		linePaint.setStrokeWidth(toolStrokeWidth);
 		linePaint.setColor(secondaryShapeColor);
-		tempDrawingRectangle.set(-boxWidth / 2, -boxHeight / 2,
-				boxWidth / 2, boxHeight / 2);
+		tempDrawingRectangle.set(-boxWidth / 2 + rectangleShrinkingOnHighlight, -boxHeight / 2 + rectangleShrinkingOnHighlight,
+				boxWidth / 2 - rectangleShrinkingOnHighlight, boxHeight / 2 - rectangleShrinkingOnHighlight);
 		canvas.drawRect(tempDrawingRectangle, linePaint);
 	}
 
@@ -701,6 +706,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				? R.color.pocketpaint_main_rectangle_tool_highlight_color
 				: R.color.pocketpaint_main_rectangle_tool_accent_color;
 		secondaryShapeColor = ResourcesCompat.getColor(resources, colorId, null);
+
+		rectangleShrinkingOnHighlight = highlight
+				? HIGHLIGHT_RECTANGLE_SHRINKING
+				: DEFAULT_RECTANGLE_SHRINKING;
 	}
 
 	@Override
@@ -741,7 +750,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		linePaint.setColor(primaryShapeColor);
 		linePaint.setStrokeWidth(toolStrokeWidth * 2);
 
-		PointF rightTopPoint = new PointF(-boxWidth / 2, -boxHeight / 2);
+		PointF rightTopPoint = new PointF(-boxWidth / 2 + rectangleShrinkingOnHighlight, -boxHeight / 2 + rectangleShrinkingOnHighlight);
 
 		for (int lines = 0; lines < 4; lines++) {
 			float resizeLineLengthHeight = boxHeight / 10;
