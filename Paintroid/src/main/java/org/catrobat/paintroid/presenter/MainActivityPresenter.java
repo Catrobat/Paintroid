@@ -71,11 +71,9 @@ import org.catrobat.paintroid.tools.implementation.ImportTool;
 import java.io.File;
 
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_TAKE_PHOTO;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_IMPORTPNG;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
@@ -85,7 +83,6 @@ import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_F
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LANGUAGE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_TAKE_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOAD_NEW;
@@ -153,7 +150,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void newImageClicked() {
 		if (isImageUnchanged() && !model.isOpenedFromCatroid() || model.isSaved()) {
-			navigator.showChooseNewImageDialog();
+			onNewImage();
 		} else {
 			navigator.showSaveBeforeNewImageDialog();
 		}
@@ -162,11 +159,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void saveBeforeNewImage() {
 		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
-	}
-
-	@Override
-	public void chooseNewImage() {
-		navigator.showChooseNewImageDialog();
 	}
 
 	private void showSecurityQuestionBeforeExit() {
@@ -236,27 +228,14 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		commandManager.reset();
 	}
 
-	private void askForPermission(String permission, @PermissionRequestCode int requestCode) {
-		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(permission)) {
-			navigator.askForPermission(new String[]{permission}, requestCode);
+	private void askForWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
+		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+			navigator.askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
 		} else {
 			handleRequestPermissionsResult(requestCode,
-					new String[]{permission},
+					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 					new int[]{PackageManager.PERMISSION_GRANTED});
 		}
-	}
-
-	private void askForWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
-		askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, requestCode);
-	}
-
-	private void askForCameraPermission(@PermissionRequestCode int requestCode) {
-		askForPermission(Manifest.permission.CAMERA, requestCode);
-	}
-
-	@Override
-	public void onNewImageFromCamera() {
-		askForCameraPermission(PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO);
 	}
 
 	@Override
@@ -285,9 +264,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			case REQUEST_CODE_LOAD_PICTURE:
 				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, maxWidth, maxHeight, data.getData());
 				break;
-			case REQUEST_CODE_TAKE_PICTURE:
-				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, maxWidth, maxHeight, model.getCameraImageUri());
-				break;
 			default:
 				view.superHandleActivityResult(requestCode, resultCode, data);
 		}
@@ -313,34 +289,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
 						saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, model.getSavedPictureUri());
 						break;
-					case PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO:
-						throw new IllegalArgumentException("Unexpected request code (" + requestCode + ") for permission " + permissions[0]);
 					default:
 						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
 						break;
 				}
 			} else {
 				navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-						permissions, requestCode);
-			}
-		} else if (permissions.length == 1 && permissions[0].equals(Manifest.permission.CAMERA)) {
-			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				switch (requestCode) {
-					case PERMISSION_CAMERA_CREATE_FILE_TAKE_PHOTO:
-						interactor.createFile(this, CREATE_FILE_TAKE_PHOTO, null);
-						break;
-					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
-					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW:
-					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
-					case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
-					case PERMISSION_EXTERNAL_STORAGE_SAVE:
-						throw new IllegalArgumentException("Unexpected request code (" + requestCode + ") for permission " + permissions[0]);
-					default:
-						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
-						break;
-				}
-			} else {
-				navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.CAMERA,
 						permissions, requestCode);
 			}
 		} else {
@@ -617,12 +571,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			case CREATE_FILE_DEFAULT:
 				model.setSavedPictureUri(view.getUriFromFile(file));
 				break;
-			case CREATE_FILE_TAKE_PHOTO:
-				File tempImageFile = view.getExternalDirPictureFile();
-				Uri uri = view.getFileProviderUriFromFile(tempImageFile);
-				model.setCameraImageUri(uri);
-				navigator.startTakePictureActivity(REQUEST_CODE_TAKE_PICTURE, uri);
-				break;
 			default:
 				throw new IllegalArgumentException();
 		}
@@ -694,7 +642,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 		switch (requestCode) {
 			case SAVE_IMAGE_NEW_EMPTY:
-				navigator.showChooseNewImageDialog();
+				onNewImage();
 				break;
 			case SAVE_IMAGE_DEFAULT:
 				break;

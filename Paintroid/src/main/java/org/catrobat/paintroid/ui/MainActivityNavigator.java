@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,7 +38,6 @@ import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
-import org.catrobat.paintroid.dialog.ChooseNewImageDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
@@ -84,14 +82,6 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void startLoadImageActivity(int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-		mainActivity.startActivityForResult(intent, requestCode);
-	}
-
-	@Override
-	public void startTakePictureActivity(int requestCode, Uri cameraImageUri) {
-		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 		mainActivity.startActivityForResult(intent, requestCode);
 	}
@@ -217,12 +207,6 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showSaveBeforeNewImageDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeNewImageDialog.newInstance();
 		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
-	}
-
-	@Override
-	public void showChooseNewImageDialog() {
-		AppCompatDialogFragment dialog = ChooseNewImageDialog.newInstance();
-		dialog.show(mainActivity.getSupportFragmentManager(), Constants.CHOOSE_IMAGE_FRAGMENT_TAG);
 	}
 
 	@Override
