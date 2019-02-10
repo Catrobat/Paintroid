@@ -31,7 +31,7 @@ import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
 import org.catrobat.paintroid.common.CommonFactory;
-import org.catrobat.paintroid.tools.helper.NativeFillAlgorithm;
+import org.catrobat.paintroid.tools.helper.JavaFillAlgorithm;
 
 import static android.graphics.Bitmap.Config.ARGB_8888;
 
@@ -105,7 +105,7 @@ public class DefaultCommandFactory implements CommandFactory {
 
 	@Override
 	public Command createFillCommand(int x, int y, Paint paint, float colorTolerance) {
-		return new FillCommand(new NativeFillAlgorithm(),
+		return new FillCommand(new JavaFillAlgorithm(),
 				commonFactory.createPoint(x, y),
 				commonFactory.createPaint(paint), colorTolerance);
 	}
