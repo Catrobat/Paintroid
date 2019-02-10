@@ -31,7 +31,6 @@ import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -52,6 +51,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DrawingSurfaceListenerTest {
 
+	private static final float DISPLAY_DENSITY = 1.5f;
 	@Mock
 	private AutoScrollTask autoScrollTask;
 
@@ -61,13 +61,14 @@ public class DrawingSurfaceListenerTest {
 	@Mock
 	private Perspective perspective;
 
-	@InjectMocks
 	private DrawingSurfaceListener drawingSurfaceListener;
 
 	@Before
 	public void setUp() {
 		PaintroidApplication.currentTool = currentTool;
 		PaintroidApplication.perspective = perspective;
+
+		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, DISPLAY_DENSITY);
 	}
 
 	@Test
@@ -81,22 +82,118 @@ public class DrawingSurfaceListenerTest {
 		MotionEvent motionEvent = mock(MotionEvent.class);
 
 		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
-		when(motionEvent.getX()).thenReturn(3f);
+		when(motionEvent.getX()).thenReturn(41f);
 		when(motionEvent.getY()).thenReturn(5f);
 
-		when(drawingSurface.getWidth()).thenReturn(7);
+		when(drawingSurface.getWidth()).thenReturn(97);
 		when(drawingSurface.getHeight()).thenReturn(11);
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
-		verify(perspective).convertToCanvasFromSurface(pointFEquals(3f, 5f));
-		verify(currentTool).handleTouch(pointFEquals(3f, 5f), eq(MotionEvent.ACTION_DOWN));
+		verify(perspective).convertToCanvasFromSurface(pointFEquals(41f, 5f));
+		verify(currentTool).handleTouch(pointFEquals(41f, 5f), eq(MotionEvent.ACTION_DOWN));
 
-		verify(autoScrollTask).setViewDimensions(7, 11);
-		verify(autoScrollTask).setEventPoint(3f, 5f);
+		verify(autoScrollTask).setViewDimensions(97, 11);
+		verify(autoScrollTask).setEventPoint(41f, 5f);
 		verify(autoScrollTask).start();
 
 		verifyNoMoreInteractions(autoScrollTask, currentTool, perspective);
+	}
+
+	@Test
+	public void testOnTouchDownIgnoredIfInsideDrawerLeftEdge() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
+		when(motionEvent.getX()).thenReturn(20 * DISPLAY_DENSITY - 1);
+		when(motionEvent.getY()).thenReturn(5f);
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		verifyNoMoreInteractions(autoScrollTask, currentTool);
+	}
+
+	@Test
+	public void testOnTouchMoveIgnoredIfInsideDrawerLeftEdge() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE);
+		when(motionEvent.getX()).thenReturn(20 * DISPLAY_DENSITY - 1);
+		when(motionEvent.getY()).thenReturn(5f);
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		verifyNoMoreInteractions(autoScrollTask, currentTool);
+	}
+
+	@Test
+	public void testOnTouchCancelIgnoredIfInsideDrawerLeftEdge() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_CANCEL);
+		when(motionEvent.getX()).thenReturn(20 * DISPLAY_DENSITY - 1);
+		when(motionEvent.getY()).thenReturn(5f);
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		verifyNoMoreInteractions(autoScrollTask, currentTool);
+	}
+
+	@Test
+	public void testOnTouchDownIgnoredIfInsideDrawerRightEdge() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
+		when(motionEvent.getX()).thenReturn(67f);
+		when(motionEvent.getY()).thenReturn(5f);
+
+		when(drawingSurface.getWidth()).thenReturn((int) (67 + 20 * DISPLAY_DENSITY - 1));
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		verifyNoMoreInteractions(autoScrollTask, currentTool);
+	}
+
+	@Test
+	public void testOnTouchMoveIgnoredIfInsideDrawerRightEdge() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE);
+		when(motionEvent.getX()).thenReturn(67f);
+		when(motionEvent.getY()).thenReturn(5f);
+
+		when(drawingSurface.getWidth()).thenReturn((int) (67 + 20 * DISPLAY_DENSITY - 1));
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		verifyNoMoreInteractions(autoScrollTask, currentTool);
+	}
+
+	@Test
+	public void testOnTouchCancelIgnoredIfInsideDrawerRightEdge() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_CANCEL);
+		when(motionEvent.getX()).thenReturn(67f);
+		when(motionEvent.getY()).thenReturn(5f);
+
+		when(drawingSurface.getWidth()).thenReturn((int) (67 + 20 * DISPLAY_DENSITY - 1));
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		verifyNoMoreInteractions(autoScrollTask, currentTool);
 	}
 
 	@Test
@@ -188,6 +285,7 @@ public class DrawingSurfaceListenerTest {
 
 		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
 		when(motionEvent.getPointerCount()).thenReturn(2);
+		when(motionEvent.getX()).thenReturn(50f);
 		when(autoScrollTask.isRunning()).thenReturn(true);
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);

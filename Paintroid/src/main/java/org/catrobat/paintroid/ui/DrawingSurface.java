@@ -88,7 +88,8 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 		Handler handler = new Handler(Looper.getMainLooper());
 		AutoScrollTask autoScrollTask = new AutoScrollTask(handler, new AutoScrollTaskCallbackImpl());
-		DrawingSurfaceListener drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask);
+		float density = getResources().getDisplayMetrics().density;
+		DrawingSurfaceListener drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, density);
 		setOnTouchListener(drawingSurfaceListener);
 	}
 
