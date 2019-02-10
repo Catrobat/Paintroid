@@ -383,8 +383,6 @@ public class LayerIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
@@ -424,8 +422,6 @@ public class LayerIntegrationTest {
 				.performOpenToolOptions();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 

@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.espresso.tools;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.support.test.espresso.PerformException;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -179,6 +180,17 @@ public class TransformToolIntegrationTest {
 		assertThat(getToolSelectionBoxHeight(), lessThan((float) initialHeight));
 	}
 
+	@Test(expected = PerformException.class)
+	public void testToolsClosedAfterAutoCrop() {
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+
+		onTransformToolOptionsView()
+				.performAutoCrop();
+
+		onTransformToolOptionsView().performAutoCrop();
+	}
+
 	@Test
 	public void testAutoCropOnEmptyBitmap() {
 		onToolBarView()
@@ -297,8 +309,7 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
+
 		assertEquals(1, getToolSelectionBoxWidth(), Float.MIN_VALUE);
 		assertEquals(1, getToolSelectionBoxHeight(), Float.MIN_VALUE);
 
@@ -318,8 +329,6 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
@@ -341,8 +350,6 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
@@ -364,8 +371,6 @@ public class TransformToolIntegrationTest {
 
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 		onDrawingSurfaceView()
@@ -381,8 +386,6 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptions();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 		onDrawingSurfaceView()
@@ -398,8 +401,6 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptions();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 		onDrawingSurfaceView()
@@ -414,8 +415,6 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptions();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 		onDrawingSurfaceView()
@@ -432,8 +431,6 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
@@ -449,45 +446,23 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testCenterBitmapAfterCropAndUndo() {
-	/*	final PointF originalTopLeft = getSurfacePointFromCanvasPoint(new PointF(0, 0));
-		final PointF originalBottomRight = getSurfacePointFromCanvasPoint(
-				new PointF(initialWidth - 1, initialHeight - 1));*/
-
 		drawPlus(getWorkingBitmap(), initialWidth / 2);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
 		final Bitmap croppedBitmap = getWorkingBitmap();
 
-	/*	final PointF topLeft = getSurfacePointFromCanvasPoint(new PointF(0, 0));
-		final PointF bottomRight = getSurfacePointFromCanvasPoint(
-				new PointF(croppedBitmap.getWidth(), croppedBitmap.getHeight()));*/
-
 		assertThat(initialHeight, greaterThan(croppedBitmap.getHeight()));
 		assertThat(initialWidth, greaterThan(croppedBitmap.getWidth()));
-
-		/*assertThat(topLeft.x, greaterThan(originalTopLeft.x));
-		assertThat(topLeft.y, greaterThan(originalTopLeft.y));
-		assertThat(bottomRight.x, lessThan(originalBottomRight.x));
-		assertThat(bottomRight.y, lessThan(originalBottomRight.y));*/
 
 		onTopBarView()
 				.performUndo();
 
-		//PaintroidApplication.perspective.setScale(50);
-
-		/*final PointF undoTopLeft = getSurfacePointFromCanvasPoint(new PointF(0, 0));
-		final PointF undoBottomRight = getSurfacePointFromCanvasPoint(
-				new PointF(initialWidth - 1, initialHeight - 1));
-		assertEquals(undoTopLeft, originalTopLeft);
-		assertEquals(undoBottomRight, originalBottomRight);*/
 		Bitmap undoBitmap = getWorkingBitmap();
 		assertEquals("undoBitmap.getHeight should be initialHeight", undoBitmap.getHeight(), initialHeight);
 		assertEquals("undoBitmap.getWidth should be initialWidth", undoBitmap.getWidth(), initialWidth);
@@ -517,8 +492,6 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
@@ -550,8 +523,6 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
@@ -573,8 +544,6 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
@@ -602,8 +571,6 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
@@ -631,8 +598,6 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
@@ -660,8 +625,6 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
@@ -702,10 +665,10 @@ public class TransformToolIntegrationTest {
 		getWorkingBitmap().setPixels(new int[cropSize * height],
 				0, cropSize, 0, 0, cropSize, height);
 
+		onToolBarView()
+				.performOpenToolOptions();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onDrawingSurfaceView()
@@ -720,8 +683,6 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptions();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onDrawingSurfaceView()
@@ -736,8 +697,6 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptions();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onDrawingSurfaceView()
@@ -752,8 +711,6 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptions();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onDrawingSurfaceView()
