@@ -130,6 +130,8 @@ public interface MainActivityContracts {
 
 		void newImageClicked();
 
+		void discardImageClicked();
+
 		void saveCopyClicked();
 
 		void saveImageClicked();

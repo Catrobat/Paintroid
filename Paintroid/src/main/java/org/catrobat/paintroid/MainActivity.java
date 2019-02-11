@@ -402,6 +402,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			presenter.loadImageClicked();
 		} else if (i == R.id.pocketpaint_nav_new_image) {
 			presenter.newImageClicked();
+		} else if (i == R.id.pocketpaint_nav_discard_image) {
+			presenter.discardImageClicked();
 		} else if (i == R.id.pocketpaint_nav_fullscreen_mode) {
 			presenter.enterFullscreenClicked();
 		} else if (i == R.id.pocketpaint_nav_exit_fullscreen_mode) {

@@ -30,6 +30,11 @@
             android:id="@+id/pocketpaint_nav_new_image"
             android:icon="@drawable/ic_pocketpaint_menu_new_image"
             android:title="@string/menu_new_image" />
+
+        <item
+            android:id="@+id/pocketpaint_nav_discard_image"
+            android:icon="@drawable/ic_pocketpaint_menu_new_image"
+            android:title="@string/menu_discard_image" />
     </group>
 
     <group>
