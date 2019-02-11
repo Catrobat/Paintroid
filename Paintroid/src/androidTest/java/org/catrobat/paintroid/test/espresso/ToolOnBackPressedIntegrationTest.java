@@ -19,10 +19,12 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.Manifest;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
 
@@ -34,6 +36,7 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,12 +74,17 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class ToolOnBackPressedTests {
+public class ToolOnBackPressedIntegrationTest {
 
 	private static final String FILE_ENDING = ".png";
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@ClassRule
+	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
+			Manifest.permission.WRITE_EXTERNAL_STORAGE,
+			Manifest.permission.READ_EXTERNAL_STORAGE);
 
 	private File saveFile = null;
 

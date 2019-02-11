@@ -149,7 +149,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void newImageClicked() {
-		if (isImageUnchanged() && !model.isOpenedFromCatroid() || model.isSaved()) {
+		if (isImageUnchanged() || model.isSaved()) {
 			onNewImage();
 		} else {
 			navigator.showSaveBeforeNewImageDialog();
@@ -226,6 +226,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 		commandManager.setInitialStateCommand(initCommand);
 		commandManager.reset();
+	}
+
+	@Override
+	public void discardImageClicked() {
+		commandManager.addCommand(commandFactory.createResetCommand());
 	}
 
 	private void askForWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
@@ -412,9 +417,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (model.isOpenedFromCatroid()) {
 			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_save_image);
 			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_save_duplicate);
+			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_new_image);
 		} else {
 			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
 			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_export);
+			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_discard_image);
 		}
 		navigationDrawerViewHolder.setVersion(BuildConfig.VERSION_NAME);
 
