@@ -66,7 +66,6 @@ public class PermissionInfoDialog extends AppCompatDialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		return new AlertDialog.Builder(getContext(), R.style.PocketPaintAlertDialog)
-				.setTitle(permissionType.getTitleResource())
 				.setIcon(permissionType.getIconResource())
 				.setMessage(permissionType.getMessageResource())
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -81,17 +80,14 @@ public class PermissionInfoDialog extends AppCompatDialogFragment {
 
 	public enum PermissionType {
 		EXTERNAL_STORAGE(R.drawable.ic_pocketpaint_dialog_info,
-				R.string.permission_info_external_storage_text,
-				R.string.permission_info_external_storage_title);
+				R.string.permission_info_external_storage_text);
 
 		private int iconResource;
 		private int messageResource;
-		private int titleResource;
 
-		PermissionType(@DrawableRes int iconResource, @StringRes int messageResource, @StringRes int titleResource) {
+		PermissionType(@DrawableRes int iconResource, @StringRes int messageResource) {
 			this.iconResource = iconResource;
 			this.messageResource = messageResource;
-			this.titleResource = titleResource;
 		}
 
 		public @DrawableRes int getIconResource() {
@@ -99,9 +95,6 @@ public class PermissionInfoDialog extends AppCompatDialogFragment {
 		}
 		public @StringRes int getMessageResource() {
 			return messageResource;
-		}
-		public @StringRes int getTitleResource() {
-			return titleResource;
 		}
 	}
 }
