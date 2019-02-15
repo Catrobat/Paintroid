@@ -474,12 +474,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	@Override
 	public void enterFullScreen() {
+		drawingSurface.disableAutoScroll();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 	}
 
 	@Override
 	public void exitFullScreen() {
+		drawingSurface.enableAutoScroll();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 	}

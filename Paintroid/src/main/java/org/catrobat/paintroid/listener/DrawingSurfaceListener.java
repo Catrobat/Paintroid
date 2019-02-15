@@ -53,6 +53,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private PointF eventTouchPoint;
 	private boolean ignoreTouch;
 	private int drawerEdgeSize;
+	private boolean autoScroll = true;
 
 	public DrawingSurfaceListener(AutoScrollTask autoScrollTask, float displayDensity) {
 		this.touchMode = TouchMode.DRAW;
@@ -72,6 +73,17 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private void calculateMidPoint(MotionEvent event) {
 		xMidPoint = (event.getX(0) + event.getX(1)) / 2f;
 		yMidPoint = (event.getY(0) + event.getY(1)) / 2f;
+	}
+
+	public void enableAutoScroll() {
+		autoScroll = true;
+	}
+
+	public void disableAutoScroll() {
+		autoScroll = false;
+		if (autoScrollTask.isRunning()) {
+			autoScrollTask.stop();
+		}
 	}
 
 	@Override
@@ -96,9 +108,11 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 				currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_DOWN);
 
-				autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y);
-				autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
-				autoScrollTask.start();
+				if (autoScroll) {
+					autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y);
+					autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
+					autoScrollTask.start();
+				}
 
 				break;
 			case MotionEvent.ACTION_MOVE:
@@ -111,8 +125,10 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					}
 
 					touchMode = TouchMode.DRAW;
-					autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y);
-					autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
+					if (autoScroll) {
+						autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y);
+						autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
+					}
 
 					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_MOVE);
 				} else {
