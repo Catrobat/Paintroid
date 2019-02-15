@@ -30,6 +30,7 @@ import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.ViewConfiguration;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.PaintroidApplication;
@@ -41,22 +42,22 @@ import org.catrobat.paintroid.ui.ToastFactory;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
-	private static final boolean ROTATION_ENABLED = true;
-	private static final long LONG_CLICK_THRESHOLD_MILLIS = 1000;
-	private static final String BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP";
 	public static final String BUNDLE_TOOL_READY_FOR_PASTE = "BUNDLE_TOOL_READY_FOR_PASTE";
-
+	private static final boolean ROTATION_ENABLED = true;
+	private static final String BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP";
 	protected static CreateAndSetBitmapAsyncTask createAndSetBitmapAsync = null;
-	protected boolean readyForPaste = false;
+	protected boolean readyForPaste;
 	protected boolean longClickAllowed = true;
 
+	private int longPressTimeout;
 	private Toast copyHintToast;
 	private CountDownTimer downTimer;
-	private boolean longClickPerformed = false;
+	private boolean longClickPerformed;
 
 	public StampTool(Context context, ToolType toolType) {
 		super(context, toolType);
 		readyForPaste = false;
+		longPressTimeout = ViewConfiguration.getLongPressTimeout();
 		setRotationEnabled(ROTATION_ENABLED);
 
 		setBitmap(Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
@@ -142,19 +143,22 @@ public class StampTool extends BaseToolWithRectangleShape {
 		super.handleDown(coordinate);
 		longClickPerformed = false;
 		if (longClickAllowed) {
-			downTimer = new CountDownTimer(LONG_CLICK_THRESHOLD_MILLIS, LONG_CLICK_THRESHOLD_MILLIS * 2) {
+			if (downTimer != null) {
+				downTimer.cancel();
+			}
+			downTimer = new CountDownTimer(longPressTimeout, longPressTimeout * 2) {
+				float downToolPositionX = toolPosition.x;
+				float downToolPositionY = toolPosition.y;
 				@Override
 				public void onTick(long millisUntilFinished) {
 				}
 
 				@Override
 				public void onFinish() {
-					if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y
+					if (movedDistance.x <= CLICK_IN_BOX_MOVE_TOLERANCE
+							&& movedDistance.y <= CLICK_IN_BOX_MOVE_TOLERANCE
 							&& isCoordinateInsideBox(previousEventCoordinate)) {
-						longClickPerformed = true;
-						highlightBoxWhenClickInBox(true);
-						PaintroidApplication.drawingSurface.refreshDrawingSurface();
-						onLongClickInBox();
+						onLongClickInBox(downToolPositionX, downToolPositionY);
 					}
 				}
 			}.start();
@@ -187,13 +191,16 @@ public class StampTool extends BaseToolWithRectangleShape {
 			copyHintToast = ToastFactory.makeText(context, R.string.stamp_tool_copy_hint, Toast.LENGTH_SHORT);
 			copyHintToast.show();
 		} else if (drawingBitmap != null && !drawingBitmap.isRecycled()) {
-
 			paste();
 			highlightBox();
 		}
 	}
 
-	protected void onLongClickInBox() {
+	private void onLongClickInBox(float toolPositionX, float toolPositionY) {
+		longClickPerformed = true;
+		highlightBoxWhenClickInBox(true);
+		toolPosition.set(toolPositionX, toolPositionY);
+		PaintroidApplication.drawingSurface.refreshDrawingSurface();
 		copy();
 	}
 
@@ -268,6 +275,11 @@ public class StampTool extends BaseToolWithRectangleShape {
 		protected Void doInBackground(Void... arg0) {
 			createAndSetBitmap();
 			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			PaintroidApplication.drawingSurface.refreshDrawingSurface();
 		}
 	}
 }

@@ -91,9 +91,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private final Paint backgroundPaint;
 	private final RectF tempDrawingRectangle;
 	private final PointF tempToolPosition;
-	@VisibleForTesting
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public float boxWidth;
-	@VisibleForTesting
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public float boxHeight;
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public float boxRotation; // in degree
@@ -254,14 +254,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	protected boolean isCoordinateInsideBox(PointF coordinate) {
-		if (coordinate.x > toolPosition.x - boxWidth / 2
+		return coordinate.x > toolPosition.x - boxWidth / 2
 				&& coordinate.x < toolPosition.x + boxWidth / 2
 				&& coordinate.y > toolPosition.y - boxHeight / 2
-				&& coordinate.y < toolPosition.y + boxHeight / 2) {
-			return true;
-		}
-
-		return false;
+				&& coordinate.y < toolPosition.y + boxHeight / 2;
 	}
 
 	@Override
