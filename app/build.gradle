@@ -19,6 +19,20 @@
 
 apply plugin: 'com.android.application'
 
+ext {
+    appId = 'org.catrobat.paintroid'
+    appName = '@string/pocketpaint_app_name'
+}
+
+// When -Pindependent was provided on the gradle command the APP name is changed.
+// This allows to have multiple Paintroid versions installed in parallel for testing purposes.
+// Furthermore these installations do not interfere with the actual Paintroid app.
+if (project.hasProperty('independent')) {
+    def today = new Date()
+    appId += '.independent_' + today.format('YYYYMMdd_HHmm')
+    appName = property('independent') ?: 'Paint ' + today.format('MMdd HH:mm')
+}
+
 if (!project.hasProperty("signingKeystore")) {
     ext.signingKeystore = "dummyKeystore"
 }
@@ -26,12 +40,13 @@ if (!project.hasProperty("signingKeystore")) {
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
     defaultConfig {
-        applicationId "org.catrobat.paintroid"
+        applicationId appId
         minSdkVersion rootProject.ext.androidMinSdkVersion
         //noinspection OldTargetApi
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
         versionCode rootProject.ext.androidVersionCode
         versionName rootProject.ext.androidVersionName
+        manifestPlaceholders += [appName: appName]
     }
 
     signingConfigs {

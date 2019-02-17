@@ -24,7 +24,7 @@
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/pocketpaint_app_name"
+        android:label="${appName}"
         android:extractNativeLibs="false"
         android:resizeableActivity="false"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
