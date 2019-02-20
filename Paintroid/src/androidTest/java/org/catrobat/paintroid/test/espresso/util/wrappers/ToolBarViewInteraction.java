@@ -35,6 +35,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.not;
 
 public final class ToolBarViewInteraction extends CustomViewInteraction {
+
 	private ToolBarViewInteraction() {
 		super(onView(withId(R.id.pocketpaint_toolbar)));
 	}

@@ -36,10 +36,12 @@ import android.widget.ToggleButton;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
+import org.catrobat.paintroid.contract.LayerContracts;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.TextTool;
-import org.junit.After;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,17 +58,17 @@ import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
+import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.BLACK_COLOR_PICKER_BUTTON_POSITION;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
@@ -74,7 +76,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -101,7 +102,7 @@ public class TextToolIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	private ActivityHelper activityHelper;
+	private MainActivityHelper activityHelper;
 	private TextTool textTool;
 	private EditText textEditText;
 	private Spinner fontSpinner;
@@ -109,34 +110,29 @@ public class TextToolIntegrationTest {
 	private ToggleButton italicToggleButton;
 	private ToggleButton boldToggleButton;
 	private Spinner textSizeSpinner;
+	private Perspective perspective;
+	private LayerContracts.Model layerModel;
+	private MainActivity activity;
 
 	@Before
 	public void setUp() {
-
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
-
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
-
-		resetColorPicker();
-		resetDrawPaintAndBrushPickerView();
+		activity = launchActivityRule.getActivity();
+		activityHelper = new MainActivityHelper(activity);
+		perspective = activity.perspective;
+		layerModel = activity.layerModel;
 
 		onToolBarView()
 				.performSelectTool(ToolType.TEXT);
 		textTool = (TextTool) PaintroidApplication.currentTool;
 
-		textEditText = (EditText) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_input_text);
-		fontSpinner = (Spinner) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_font);
-		underlinedToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
-		italicToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
-		boldToggleButton = (ToggleButton) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
-		textSizeSpinner = (Spinner) activityHelper.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
+		textEditText = activity.findViewById(R.id.pocketpaint_text_tool_dialog_input_text);
+		fontSpinner = activity.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_font);
+		underlinedToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
+		italicToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
+		boldToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
+		textSizeSpinner = activity.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
 
 		textTool.resetBoxPosition();
-	}
-
-	@After
-	public void tearDown() {
-		activityHelper = null;
 	}
 
 	@Test
@@ -147,49 +143,43 @@ public class TextToolIntegrationTest {
 
 	@Test
 	public void testDialogDefaultValues() {
-		String expectedHintText = activityHelper.getString(R.string.text_tool_dialog_input_hint);
-		String actualHintText = textEditText.getHint().toString();
-		assertEquals(expectedHintText, actualHintText);
+		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text))
+				.check(matches(withHint(R.string.text_tool_dialog_input_hint)))
+				.check(matches(withText(textTool.text)));
 
-		String expectedText = getToolMemberText();
-		String actualText = textEditText.getText().toString();
-		assertEquals(expectedText, actualText);
+		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font))
+				.check(matches(withSpinnerText(textTool.font)));
 
-		String expectedFont = getToolMemberFont();
-		String actualFont = (String) fontSpinner.getSelectedItem();
-		assertEquals(expectedFont, actualFont);
+		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_underlined))
+				.check(matches(isNotChecked()));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_bold))
+				.check(matches(isNotChecked()));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_italic))
+				.check(matches(isNotChecked()));
 
-		boolean expectedUnderlined = getToolMemberUnderlined();
-		boolean actualUnderlined = underlinedToggleButton.isChecked();
-		assertEquals(expectedUnderlined, actualUnderlined);
+		assertFalse(textTool.underlined);
+		assertFalse(textTool.italic);
+		assertFalse(textTool.bold);
 
-		boolean expectedItalic = getToolMemberItalic();
-		boolean actualItalic = italicToggleButton.isChecked();
-		assertEquals(expectedItalic, actualItalic);
-
-		boolean expectedBold = getToolMemberBold();
-		boolean actualBold = boldToggleButton.isChecked();
-		assertEquals(expectedBold, actualBold);
-
-		String actualTextSize = (String) textSizeSpinner.getSelectedItem();
-		assertEquals("Wrong text size selected", TEXT_SIZE_20_STRING, actualTextSize);
+		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_text_size))
+				.check(matches(withSpinnerText(TEXT_SIZE_20_STRING)));
 	}
 
 	@Test
 	public void testDialogToolInteraction() {
 		enterTestText();
-		assertEquals(TEST_TEXT, getToolMemberText());
+		assertEquals(TEST_TEXT, textTool.text);
 
 		selectFormatting(FormattingOptions.SERIF);
-		assertEquals(FONT_SERIF, getToolMemberFont());
+		assertEquals(FONT_SERIF, textTool.font);
 		assertEquals(FONT_SERIF, fontSpinner.getSelectedItem());
 
 		selectFormatting(FormattingOptions.UNDERLINE);
-		assertTrue(getToolMemberUnderlined());
+		assertTrue(textTool.underlined);
 		assertTrue(underlinedToggleButton.isChecked());
 		assertEquals(getFontString(FormattingOptions.UNDERLINE), underlinedToggleButton.getText().toString());
 		selectFormatting(FormattingOptions.UNDERLINE);
-		assertFalse(getToolMemberUnderlined());
+		assertFalse(textTool.underlined);
 		assertFalse(underlinedToggleButton.isChecked());
 		assertEquals(getFontString(FormattingOptions.UNDERLINE), underlinedToggleButton.getText().toString());
 
@@ -261,8 +251,7 @@ public class TextToolIntegrationTest {
 		final PointF toolMemberBoxPosition = getToolMemberBoxPosition();
 		PointF expectedPosition = new PointF(toolMemberBoxPosition.x, toolMemberBoxPosition.y);
 
-		launchActivityRule.getActivity()
-				.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		textTool = (TextTool) PaintroidApplication.currentTool;
 
@@ -445,28 +434,29 @@ public class TextToolIntegrationTest {
 		int numberOfBlackPixels = countPixelsWithColor(pixelsTool, Color.BLACK);
 
 		PointF screenPoint = new PointF(activityHelper.getDisplayWidth() / 2.0f, activityHelper.getDisplayHeight() / 2.0f);
-		PointF canvasPoint = getCanvasPointFromScreenPoint(screenPoint);
+		PointF canvasPoint = perspective.getCanvasPointFromSurfacePoint(getSurfacePointFromScreenPoint(screenPoint));
 		canvasPoint.x = (float) Math.round(canvasPoint.x);
 		canvasPoint.y = (float) Math.round(canvasPoint.y);
 		setToolMemberBoxPosition(canvasPoint);
 
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		int surfaceBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		int surfaceBitmapWidth = layerModel.getWidth();
 		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
-		PaintroidApplication.layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals(numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 
 		onTopBarView()
 				.performUndo();
 
-		PaintroidApplication.layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals(0, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 
 		onTopBarView()
 				.performRedo();
 
-		PaintroidApplication.layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		assertEquals(numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 	}
 
@@ -485,11 +475,12 @@ public class TextToolIntegrationTest {
 		float boxPositionX = getToolMemberBoxPosition().x;
 		float boxPositionY = getToolMemberBoxPosition().y;
 
-		selectColorPickerPresetSelectorColor(5);
+		onToolProperties()
+				.setColor(Color.WHITE);
 
 		Paint paint = textTool.textPaint;
 		int selectedColor = paint.getColor();
-		assertNotEquals(selectedColor, Color.BLACK);
+		assertEquals(Color.WHITE, selectedColor);
 		Bitmap bitmap = getToolMemberDrawingBitmap();
 		int[] pixels = new int[bitmap.getWidth()];
 		bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
@@ -498,8 +489,6 @@ public class TextToolIntegrationTest {
 
 		assertEquals(boxPositionX, getToolMemberBoxPosition().x, EQUALS_DELTA);
 		assertEquals(boxPositionY, getToolMemberBoxPosition().y, EQUALS_DELTA);
-
-		selectColorPickerPresetSelectorColor(BLACK_COLOR_PICKER_BUTTON_POSITION);
 	}
 
 	@Test
@@ -597,7 +586,7 @@ public class TextToolIntegrationTest {
 		PointF actualBoxPosition = getToolMemberBoxPosition();
 		float boxHeight = getToolMemberBoxHeight();
 
-		float expectedBoxPositionX = PaintroidApplication.drawingSurface.getBitmapWidth() / 2.0f;
+		float expectedBoxPositionX = layerModel.getWidth() / 2.0f;
 		float expectedBoxPositionY = boxHeight / 2.0f + marginTop;
 
 		assertEquals(expectedBoxPositionX, actualBoxPosition.x, EQUALS_DELTA);
@@ -615,7 +604,7 @@ public class TextToolIntegrationTest {
 		 *
 		 * See:
 		 * java.ic_pocketpaint_menu_language.RuntimeException: Failed to get key events for string السلام عليكم 123 (i.e.
-		 * current IME does not understand how to translate the string into key events). As a
+		 * current IME does not understand how to translatePerspective the string into key events). As a
 		 * workaround, you can use replaceText action to set the text directly in the EditText field.
 		 */
 		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(replaceText(textToEnter));
@@ -679,11 +668,11 @@ public class TextToolIntegrationTest {
 			case DUBAI:
 				return FONT_DUBAI;
 			case UNDERLINE:
-				return activityHelper.getString(R.string.text_tool_dialog_underline_shortcut);
+				return activity.getString(R.string.text_tool_dialog_underline_shortcut);
 			case ITALIC:
-				return activityHelper.getString(R.string.text_tool_dialog_italic_shortcut);
+				return activity.getString(R.string.text_tool_dialog_italic_shortcut);
 			case BOLD:
-				return activityHelper.getString(R.string.text_tool_dialog_bold_shortcut);
+				return activity.getString(R.string.text_tool_dialog_bold_shortcut);
 			case SIZE_20:
 				return String.valueOf(TEXT_SIZE_20_STRING);
 			case SIZE_30:
@@ -732,20 +721,8 @@ public class TextToolIntegrationTest {
 		textTool.toolPosition.set(position);
 	}
 
-	private String getToolMemberText() {
-		return textTool.text;
-	}
-
-	private String getToolMemberFont() {
-		return textTool.font;
-	}
-
 	private boolean getToolMemberItalic() {
 		return textTool.italic;
-	}
-
-	private boolean getToolMemberUnderlined() {
-		return textTool.underlined;
 	}
 
 	private boolean getToolMemberBold() {

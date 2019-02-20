@@ -23,8 +23,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.SurfaceHolder;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +37,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class PerspectiveTests {
 
 	private static final float SCREEN_DENSITY = 2f;
@@ -58,16 +56,15 @@ public class PerspectiveTests {
 
 	@Before
 	public void setUp() {
-		Rect rect = mock(Rect.class);
-		rect.right = SURFACE_WIDTH;
-		rect.bottom = SURFACE_HEIGHT;
-		when(rect.exactCenterX()).thenReturn(EXACT_CENTER_X);
-		when(rect.exactCenterY()).thenReturn(EXACT_CENTER_Y);
-		when(holder.getSurfaceFrame()).thenReturn(rect);
+		Rect surfaceFrame = mock(Rect.class);
+		surfaceFrame.right = SURFACE_WIDTH;
+		surfaceFrame.bottom = SURFACE_HEIGHT;
+		when(surfaceFrame.exactCenterX()).thenReturn(EXACT_CENTER_X);
+		when(surfaceFrame.exactCenterY()).thenReturn(EXACT_CENTER_Y);
+		when(holder.getSurfaceFrame()).thenReturn(surfaceFrame);
 
-		PaintroidApplication.drawingSurface = mock(DrawingSurface.class);
-
-		perspective = new Perspective(holder.getSurfaceFrame(), SCREEN_DENSITY);
+		perspective = new Perspective(SCREEN_DENSITY, 0, 0);
+		perspective.setSurfaceFrame(surfaceFrame);
 	}
 
 	@Test

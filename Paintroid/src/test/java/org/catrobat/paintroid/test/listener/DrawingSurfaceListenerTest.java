@@ -22,12 +22,10 @@ package org.catrobat.paintroid.test.listener;
 import android.graphics.PointF;
 import android.view.MotionEvent;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,21 +57,21 @@ public class DrawingSurfaceListenerTest {
 	private Tool currentTool;
 
 	@Mock
-	private Perspective perspective;
+	private DrawingSurfaceListener.DrawingSurfaceListenerCallback callback;
 
 	private DrawingSurfaceListener drawingSurfaceListener;
 
 	@Before
 	public void setUp() {
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = perspective;
+		when(callback.getCurrentTool())
+				.thenReturn(currentTool);
 
-		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, DISPLAY_DENSITY);
+		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, callback, DISPLAY_DENSITY);
 	}
 
 	@Test
 	public void testSetUp() {
-		verifyZeroInteractions(currentTool, perspective, autoScrollTask);
+		verifyZeroInteractions(currentTool, callback, autoScrollTask);
 	}
 
 	@Test
@@ -90,14 +88,16 @@ public class DrawingSurfaceListenerTest {
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
-		verify(perspective).convertToCanvasFromSurface(pointFEquals(41f, 5f));
+		verify(callback).convertToCanvasFromSurface(pointFEquals(41f, 5f));
 		verify(currentTool).handleTouch(pointFEquals(41f, 5f), eq(MotionEvent.ACTION_DOWN));
 
 		verify(autoScrollTask).setViewDimensions(97, 11);
 		verify(autoScrollTask).setEventPoint(41f, 5f);
 		verify(autoScrollTask).start();
 
-		verifyNoMoreInteractions(autoScrollTask, currentTool, perspective);
+		verifyNoMoreInteractions(autoScrollTask, currentTool);
+		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
+		verify(callback, never()).translatePerspective(anyFloat(), anyFloat());
 	}
 
 	@Test
@@ -211,7 +211,7 @@ public class DrawingSurfaceListenerTest {
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
-		verify(perspective).convertToCanvasFromSurface(pointFEquals(5f, 3f));
+		verify(callback).convertToCanvasFromSurface(pointFEquals(5f, 3f));
 		verify(currentTool).handleTouch(pointFEquals(5f, 3f), eq(MotionEvent.ACTION_MOVE));
 		verify(autoScrollTask).setEventPoint(5f, 3f);
 		verify(autoScrollTask).setViewDimensions(7, 11);
@@ -274,8 +274,8 @@ public class DrawingSurfaceListenerTest {
 		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
 		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
-		verify(perspective, never()).translate(anyFloat(), anyFloat());
-		verify(perspective, never()).multiplyScale(anyFloat());
+		verify(callback, never()).translatePerspective(anyFloat(), anyFloat());
+		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
 	}
 
 	@Test
@@ -321,8 +321,8 @@ public class DrawingSurfaceListenerTest {
 		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
 		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
-		verify(perspective).translate(10, -10);
-		verify(perspective, never()).multiplyScale(anyFloat());
+		verify(callback).translatePerspective(10, -10);
+		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
 	}
 
 	@Test
@@ -359,9 +359,9 @@ public class DrawingSurfaceListenerTest {
 		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
 		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
-		verify(perspective, never()).translate(anyFloat(), anyFloat());
-		verify(perspective).multiplyScale((2f - 4f) / (1f - 5f));
-		verify(perspective).multiplyScale((1f - 5f) / (2f - 4f));
+		verify(callback, never()).translatePerspective(anyFloat(), anyFloat());
+		verify(callback).multiplyPerspectiveScale((2f - 4f) / (1f - 5f));
+		verify(callback).multiplyPerspectiveScale((1f - 5f) / (2f - 4f));
 	}
 
 	@Test

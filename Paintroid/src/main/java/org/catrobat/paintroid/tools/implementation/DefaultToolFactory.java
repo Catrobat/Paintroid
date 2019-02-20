@@ -22,28 +22,33 @@ package org.catrobat.paintroid.tools.implementation;
 import android.app.Activity;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
 
 public class DefaultToolFactory implements ToolFactory {
+
 	@Override
-	public Tool createTool(Activity activity, ToolType toolType) {
+	public Tool createTool(ToolType toolType, Activity activity, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint) {
 		Tool tool;
+
 		switch (toolType) {
 			case BRUSH:
-				tool = new DrawTool(activity, toolType);
+				tool = new DrawTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case CURSOR:
-				tool = new CursorTool(activity, toolType);
+				tool = new CursorTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case STAMP:
-				tool = new StampTool(activity, toolType);
+				tool = new StampTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case IMPORTPNG:
-				tool = new ImportTool(activity, toolType);
+				tool = new ImportTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case PIPETTE:
 				final MainActivity mainActivity = (MainActivity) activity;
@@ -54,28 +59,28 @@ public class DefaultToolFactory implements ToolFactory {
 						presenter.setTopBarColor(color);
 					}
 				};
-				tool = new PipetteTool(activity, listener, toolType);
+				tool = new PipetteTool(activity, toolPaint, workspace, commandManager, listener);
 				break;
 			case FILL:
-				tool = new FillTool(activity, toolType);
+				tool = new FillTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case TRANSFORM:
-				tool = new TransformTool(activity, toolType);
+				tool = new TransformTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case SHAPE:
-				tool = new GeometricFillTool(activity, toolType);
+				tool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case ERASER:
-				tool = new EraserTool(activity, toolType);
+				tool = new EraserTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case LINE:
-				tool = new LineTool(activity, toolType);
+				tool = new LineTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case TEXT:
-				tool = new TextTool(activity, toolType);
+				tool = new TextTool(activity, toolPaint, workspace, commandManager);
 				break;
 			default:
-				tool = new DrawTool(activity, ToolType.BRUSH);
+				tool = new DrawTool(activity, toolPaint, workspace, commandManager);
 				break;
 		}
 		tool.setupToolOptions();

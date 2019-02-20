@@ -20,17 +20,26 @@
 package org.catrobat.paintroid.test.junit.command;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Color;
 
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
+import org.catrobat.paintroid.model.Layer;
+import org.catrobat.paintroid.model.LayerModel;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ResizeCommandTest extends CommandTestSetup {
+public class ResizeCommandTest {
 
 	private static final int MAXIMUM_BITMAP_RESOLUTION_FACTOR = 4;
+	private static final int BITMAP_BASE_COLOR = Color.GREEN;
+	private static final int INITIAL_HEIGHT = 80;
+	private static final int INITIAL_WIDTH = 80;
 
 	private int resizeCoordinateXLeft;
 	private int resizeCoordinateYTop;
@@ -38,10 +47,28 @@ public class ResizeCommandTest extends CommandTestSetup {
 	private int resizeCoordinateYBottom;
 	private int maximumBitmapResolution;
 
-	@Override
+	private Command commandUnderTest;
+	private Command commandUnderTestNull; // can be used to pass null to constructor
+	private Canvas canvasUnderTest;
+	private Bitmap bitmapUnderTest;
+	private Layer layerUnderTest;
+	private LayerModel layerModel;
+
 	@Before
 	public void setUp() {
-		super.setUp();
+		layerModel = new LayerModel();
+		layerModel.setWidth(INITIAL_WIDTH);
+		layerModel.setHeight(INITIAL_HEIGHT);
+
+		Bitmap canvasBitmapUnderTest = Bitmap.createBitmap(INITIAL_WIDTH, INITIAL_HEIGHT, Config.ARGB_8888);
+		canvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR);
+		bitmapUnderTest = canvasBitmapUnderTest.copy(Config.ARGB_8888, true);
+		layerUnderTest = new Layer(bitmapUnderTest);
+		canvasUnderTest = new Canvas();
+		canvasUnderTest.setBitmap(canvasBitmapUnderTest);
+		layerModel.addLayerAt(0, layerUnderTest);
+		layerModel.setCurrentLayer(layerUnderTest);
+
 		resizeCoordinateXLeft = 0;
 		resizeCoordinateYTop = 0;
 		resizeCoordinateXRight = bitmapUnderTest.getWidth() - 1;
@@ -51,6 +78,15 @@ public class ResizeCommandTest extends CommandTestSetup {
 		commandUnderTest = new ResizeCommand(resizeCoordinateXLeft, resizeCoordinateYTop,
 				resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution);
 		commandUnderTestNull = new ResizeCommand(1, 1, 2, 2, maximumBitmapResolution);
+	}
+
+	@Test
+	public void testRunWithNullParameters() {
+		commandUnderTestNull.run(null, null);
+		commandUnderTestNull.run(null, null);
+		commandUnderTestNull.run(canvasUnderTest, null);
+		commandUnderTestNull.run(null, new LayerModel());
+		commandUnderTestNull.run(null, layerModel);
 	}
 
 	@Test

@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.test.annotation.UiThreadTest;
@@ -28,14 +27,18 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import static org.junit.Assert.assertEquals;
 
@@ -45,6 +48,12 @@ public class GeometricFillToolTests {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+	@Rule
+	public MockitoRule mockito = MockitoJUnit.rule();
+
+	@Mock
+	private CommandManager commandManager;
+
 	private GeometricFillTool rectangleShapeTool;
 	private GeometricFillTool ovalShapeTool;
 	private GeometricFillTool heartShapeTool;
@@ -53,21 +62,21 @@ public class GeometricFillToolTests {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		rectangleShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
-		rectangleShapeTool.baseShape = GeometricFillTool.BaseShape.RECTANGLE;
-		ovalShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
-		ovalShapeTool.baseShape = GeometricFillTool.BaseShape.OVAL;
-		heartShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
-		heartShapeTool.baseShape = GeometricFillTool.BaseShape.HEART;
-		starShapeTool = new GeometricFillTool(activityTestRule.getActivity(), ToolType.SHAPE);
-		starShapeTool.baseShape = GeometricFillTool.BaseShape.STAR;
-	}
+		MainActivity activity = activityTestRule.getActivity();
+		Workspace workspace = activity.workspace;
+		ToolPaint toolPaint = activity.toolPaint;
 
-	@UiThreadTest
-	@After
-	public void tearDown() {
-		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
-		BaseTool.reset();
+		rectangleShapeTool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
+		rectangleShapeTool.baseShape = GeometricFillTool.BaseShape.RECTANGLE;
+
+		ovalShapeTool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
+		ovalShapeTool.baseShape = GeometricFillTool.BaseShape.OVAL;
+
+		heartShapeTool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
+		heartShapeTool.baseShape = GeometricFillTool.BaseShape.HEART;
+
+		starShapeTool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
+		starShapeTool.baseShape = GeometricFillTool.BaseShape.STAR;
 	}
 
 	@UiThreadTest

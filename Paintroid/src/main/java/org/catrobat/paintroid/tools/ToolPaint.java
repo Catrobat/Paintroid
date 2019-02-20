@@ -17,20 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid;
+package org.catrobat.paintroid.tools;
 
-import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.support.annotation.ColorInt;
 
-import org.catrobat.paintroid.tools.Tool;
+public interface ToolPaint {
 
-import java.io.File;
+	Paint getPaint();
 
-public final class PaintroidApplication {
-	public static Tool currentTool;
-	public static File cacheDir;
-	public static Bitmap checkeredBackgroundBitmap;
+	void setPaint(Paint paint);
 
-	private PaintroidApplication() {
-		throw new IllegalArgumentException();
-	}
+	Paint getPreviewPaint();
+
+	int getColor();
+
+	void setColor(@ColorInt int color);
+
+	int getPreviewColor();
+
+	float getStrokeWidth();
+
+	void setStrokeWidth(float strokeWidth);
+
+	Paint.Cap getStrokeCap();
+
+	void setStrokeCap(Paint.Cap strokeCap);
 }

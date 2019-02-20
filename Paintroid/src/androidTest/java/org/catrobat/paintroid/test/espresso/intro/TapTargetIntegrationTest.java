@@ -49,7 +49,7 @@ public class TapTargetIntegrationTest {
 
 	@Test
 	public void numberTapTargetsBottomBar() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools));
+		IntroUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools));
 		LinearLayout targetItemView = IntroUtils.getBottomBarFromToolSlide(activityRule.getActivity());
 		TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
 		tapTargetBottomBar.initTargetView();
@@ -60,7 +60,7 @@ public class TapTargetIntegrationTest {
 
 	@Test
 	public void numberTapTargetsTopBar() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_possibilities));
+		IntroUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_possibilities));
 		LinearLayout targetItemView = IntroUtils.getTopBarFromPossibilitiesSlide(activityRule.getActivity());
 		TapTargetTopBar tapTargetTopBar = IntroUtils.getTapTargetTopBar(activityRule.getActivity());
 		tapTargetTopBar.initTargetView();
@@ -72,7 +72,7 @@ public class TapTargetIntegrationTest {
 
 	@Test
 	public void testRadiusTopBar() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_possibilities));
+		IntroUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_possibilities));
 		EspressoUtils.waitMillis(200);
 		TapTargetTopBar tapTargetTopBar = IntroUtils.getTapTargetTopBar(activityRule.getActivity());
 		int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget();
@@ -83,7 +83,7 @@ public class TapTargetIntegrationTest {
 
 	@Test
 	public void testRadiusBottomBar() {
-		EspressoUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools));
+		IntroUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools));
 		TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
 		int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget();
 		int actualRadius = tapTargetBottomBar.radius;

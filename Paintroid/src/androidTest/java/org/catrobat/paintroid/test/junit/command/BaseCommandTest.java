@@ -21,12 +21,13 @@ package org.catrobat.paintroid.test.junit.command;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.test.InstrumentationRegistry;
 
-import org.catrobat.paintroid.test.junit.stubs.BaseCommandImpl;
+import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,26 +40,20 @@ import static org.junit.Assert.assertTrue;
 
 public class BaseCommandTest {
 
-	private BaseCommandImpl baseCommand;
+	private StubCommand baseCommand;
 	private Bitmap bitmap;
 
 	@Before
 	public void setUp() {
-		baseCommand = new BaseCommandImpl();
+		baseCommand = new StubCommand();
 		bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
 		baseCommand.bitmap = bitmap;
 	}
 
-	@After
-	public void tearDown() {
-		bitmap.recycle();
-		bitmap = null;
-	}
-
 	@Test
 	public void testBaseCommand() {
-		new BaseCommandImpl(null);
-		new BaseCommandImpl(new Paint());
+		new StubCommand(null);
+		new StubCommand(new Paint());
 	}
 
 	@Test
@@ -102,6 +97,24 @@ public class BaseCommandTest {
 		} finally {
 			assertNotNull("Failed to delete the stored bitmap(0)", storedBitmap);
 			assertTrue("Failed to delete the stored bitmap(1)", storedBitmap.delete());
+		}
+	}
+
+	public static final class StubCommand extends BaseCommand {
+		public StubCommand() {
+			super();
+		}
+
+		public StubCommand(Paint paint) {
+			super(paint);
+		}
+
+		@Override
+		public void run(Canvas canvas, LayerContracts.Model layerModel) {
+		}
+
+		public void storeBitmapStub() {
+			storeBitmap(InstrumentationRegistry.getTargetContext().getCacheDir());
 		}
 	}
 }

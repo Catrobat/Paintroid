@@ -34,12 +34,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ToggleButton;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.TextToolOptionsListener;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.tools.Workspace;
 
 public class TextTool extends BaseToolWithRectangleShape {
 
@@ -80,8 +81,8 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@VisibleForTesting
 	public int textSize = 20;
 
-	public TextTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public TextTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(context, toolPaint, workspace, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
@@ -99,7 +100,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private void initializePaint() {
 		textPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
-		textPaint.setColor(CANVAS_PAINT.getColor());
+		textPaint.setColor(toolPaint.getPreviewColor());
 		textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
 		textPaint.setUnderlineText(underlined);
 		textPaint.setFakeBoldText(bold);
@@ -253,7 +254,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		float width = boxWidth;
 		float height = boxHeight;
 		PointF position = new PointF(toolPosition.x, toolPosition.y);
-		textPaint.setColor(CANVAS_PAINT.getColor());
+		textPaint.setColor(toolPaint.getPreviewColor());
 		createAndSetBitmap();
 		toolPosition.set(position);
 		boxWidth = width;
@@ -275,13 +276,12 @@ public class TextTool extends BaseToolWithRectangleShape {
 		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
 		Command command = commandFactory.createTextToolCommand(getMultilineText(), textPaint, BOX_OFFSET, boxWidth,
 				boxHeight, toolPosition, boxRotation);
-		PaintroidApplication.commandManager.addCommand(command);
+		commandManager.addCommand(command);
 	}
 
 	@VisibleForTesting
 	public void resetBoxPosition() {
-		DrawingSurface surface = PaintroidApplication.drawingSurface;
-		toolPosition.x = surface.getBitmapWidth() / 2.0f;
+		toolPosition.x = workspace.getWidth() / 2.0f;
 		toolPosition.y = boxHeight / 2.0f + MARGIN_TOP;
 	}
 
@@ -313,7 +313,12 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@Override
 	public void setDrawPaint(Paint paint) {
 		super.setDrawPaint(paint);
-		textPaint.setColor(CANVAS_PAINT.getColor());
+		textPaint.setColor(toolPaint.getPreviewColor());
+	}
+
+	@Override
+	public ToolType getToolType() {
+		return ToolType.TEXT;
 	}
 
 	@Override

@@ -24,15 +24,18 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
 
 public class EraserTool extends DrawTool {
 
 	@ColorInt
 	private int previousColor = Color.BLACK;
 
-	public EraserTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public EraserTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(context, toolPaint, workspace, commandManager);
 	}
 
 	@Override
@@ -52,5 +55,10 @@ public class EraserTool extends DrawTool {
 	public void changePaintColor(int color) {
 		super.changePaintColor(color);
 		previousColor = color;
+	}
+
+	@Override
+	public ToolType getToolType() {
+		return ToolType.ERASER;
 	}
 }

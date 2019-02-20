@@ -25,11 +25,10 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
@@ -54,17 +53,20 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class UndoRedoIntegrationTest {
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	private ActivityHelper activityHelper;
+	private MainActivityHelper activityHelper;
+
+	private Perspective perspective;
 
 	@Before
 	public void setUp() {
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
+		activityHelper = new MainActivityHelper(launchActivityRule.getActivity());
 
 		activityHelper.setScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+		perspective = launchActivityRule.getActivity().perspective;
 
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
@@ -175,7 +177,6 @@ public class UndoRedoIntegrationTest {
 
 	@Test
 	public void testPreserveZoomAndMoveAfterUndo() {
-		Perspective perspective = PaintroidApplication.perspective;
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -198,7 +199,6 @@ public class UndoRedoIntegrationTest {
 
 	@Test
 	public void testPreserveZoomAndMoveAfterRedo() {
-		Perspective perspective = PaintroidApplication.perspective;
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));

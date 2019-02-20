@@ -22,14 +22,19 @@ package org.catrobat.paintroid.tools.implementation;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.support.annotation.VisibleForTesting;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.BrushPickerView;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.ui.tools.DrawerPreview;
 
 public class DrawTool extends BaseTool {
 
@@ -41,8 +46,8 @@ public class DrawTool extends BaseTool {
 	@VisibleForTesting
 	public BrushPickerView brushPickerView;
 
-	public DrawTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public DrawTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(context, toolPaint, workspace, commandManager);
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
 		drawToolMovedDistance = new PointF(0f, 0f);
@@ -51,25 +56,28 @@ public class DrawTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
-		setPaintColor(CANVAS_PAINT.getColor());
+		setPaintColor(toolPaint.getPreviewColor());
 
-		if (PaintroidApplication.currentTool.getToolType() == ToolType.ERASER
-				&& CANVAS_PAINT.getColor() != Color.TRANSPARENT) {
+		if (getToolType() == ToolType.ERASER && toolPaint.getPreviewColor() != Color.TRANSPARENT) {
 			setPaintColor(Color.TRANSPARENT);
 		}
 
 		canvas.save();
-		canvas.clipRect(0, 0,
-				PaintroidApplication.drawingSurface.getBitmapWidth(),
-				PaintroidApplication.drawingSurface.getBitmapHeight());
-		if (CANVAS_PAINT.getColor() == Color.TRANSPARENT) {
-			CANVAS_PAINT.setColor(Color.BLACK);
-			canvas.drawPath(pathToDraw, CANVAS_PAINT);
-			CANVAS_PAINT.setColor(Color.TRANSPARENT);
+		canvas.clipRect(0, 0, workspace.getWidth(), workspace.getHeight());
+		if (toolPaint.getPreviewColor() == Color.TRANSPARENT) {
+			Paint previewPaint = toolPaint.getPreviewPaint();
+			previewPaint.setColor(Color.BLACK);
+			canvas.drawPath(pathToDraw, previewPaint);
+			previewPaint.setColor(Color.TRANSPARENT);
 		} else {
-			canvas.drawPath(pathToDraw, BITMAP_PAINT);
+			canvas.drawPath(pathToDraw, toolPaint.getPaint());
 		}
 		canvas.restore();
+	}
+
+	@Override
+	public ToolType getToolType() {
+		return ToolType.BRUSH;
 	}
 
 	@Override
@@ -131,21 +139,21 @@ public class DrawTool extends BaseTool {
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
 		if (!pathInsideBitmap) {
-			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
+			resetInternalState(StateChange.RESET_INTERNAL_STATE);
 			return false;
 		}
-		Command command = commandFactory.createPathCommand(BITMAP_PAINT, pathToDraw);
-		PaintroidApplication.commandManager.addCommand(command);
+		Command command = commandFactory.createPathCommand(toolPaint.getPaint(), pathToDraw);
+		commandManager.addCommand(command);
 		return true;
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
 		if (!pathInsideBitmap) {
-			PaintroidApplication.currentTool.resetInternalState(StateChange.RESET_INTERNAL_STATE);
+			resetInternalState(StateChange.RESET_INTERNAL_STATE);
 			return false;
 		}
-		Command command = commandFactory.createPointCommand(BITMAP_PAINT, coordinate);
-		PaintroidApplication.commandManager.addCommand(command);
+		Command command = commandFactory.createPointCommand(toolPaint.getPaint(), coordinate);
+		commandManager.addCommand(command);
 		return true;
 	}
 
@@ -165,17 +173,49 @@ public class DrawTool extends BaseTool {
 	@Override
 	public void setupToolOptions() {
 		brushPickerView = new BrushPickerView(toolSpecificOptionsLayout);
-		brushPickerView.setCurrentPaint(BITMAP_PAINT);
+		brushPickerView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	public void startTool() {
 		super.startTool();
-		brushPickerView.addBrushChangedListener(onBrushChangedListener);
+		brushPickerView.setBrushChangedListener(new BrushPickerView.OnBrushChangedListener() {
+			@Override
+			public void setCap(Cap strokeCap) {
+				changePaintStrokeCap(strokeCap);
+			}
+
+			@Override
+			public void setStrokeWidth(int strokeWidth) {
+				changePaintStrokeWidth(strokeWidth);
+			}
+		});
+		brushPickerView.setDrawerPreviewCallback(new DrawerPreview.Callback() {
+			@Override
+			public float getStrokeWidth() {
+				return toolPaint.getStrokeWidth();
+			}
+
+			@Override
+			public Cap getStrokeCap() {
+				return toolPaint.getStrokeCap();
+			}
+
+			@Override
+			public int getColor() {
+				return toolPaint.getColor();
+			}
+
+			@Override
+			public ToolType getToolType() {
+				return DrawTool.this.getToolType();
+			}
+		});
 	}
 
 	@Override
 	public void leaveTool() {
 		super.leaveTool();
-		brushPickerView.removeBrushChangedListener(onBrushChangedListener);
+		brushPickerView.setBrushChangedListener(null);
+		brushPickerView.setDrawerPreviewCallback(null);
 	}
 }

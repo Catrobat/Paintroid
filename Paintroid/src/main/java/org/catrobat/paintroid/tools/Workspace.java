@@ -17,30 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.junit.stubs;
+package org.catrobat.paintroid.tools;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.support.test.InstrumentationRegistry;
+import android.graphics.Bitmap;
+import android.graphics.PointF;
 
-import org.catrobat.paintroid.command.implementation.BaseCommand;
-import org.catrobat.paintroid.contract.LayerContracts;
+public interface Workspace {
+	int getHeight();
 
-public final class BaseCommandImpl extends BaseCommand {
+	int getWidth();
 
-	public BaseCommandImpl() {
-		super();
-	}
+	Bitmap getBitmapOfAllLayers();
 
-	public BaseCommandImpl(Paint paint) {
-		super(paint);
-	}
+	Bitmap getBitmapOfCurrentLayer();
 
-	@Override
-	public void run(Canvas canvas, LayerContracts.Model layerModel) {
-	}
+	int getPixelOfCurrentLayer(PointF coordinate);
 
-	public void storeBitmapStub() {
-		storeBitmap(InstrumentationRegistry.getTargetContext().getCacheDir());
-	}
+	void resetPerspective();
+
+	void setScale(float zoomFactor);
+
+	float getScaleForCenterBitmap();
+
+	float getScale();
+
+	PointF getSurfacePointFromCanvasPoint(PointF coordinate);
+
+	PointF getCanvasPointFromSurfacePoint(PointF surfacePoint);
+
+	void invalidate();
 }

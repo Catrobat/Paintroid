@@ -30,14 +30,14 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.DisplayMetrics;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.common.Constants;
-import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolWithShape;
+import org.catrobat.paintroid.tools.Workspace;
 
-public abstract class BaseToolWithShape extends BaseTool implements
-		ToolWithShape {
+public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {
 
 	private static final String BUNDLE_TOOL_POSITION_X = "TOOL_POSITION_X";
 	private static final String BUNDLE_TOOL_POSITION_Y = "TOOL_POSITION_Y";
@@ -51,8 +51,8 @@ public abstract class BaseToolWithShape extends BaseTool implements
 	final Paint linePaint;
 	final DisplayMetrics metrics;
 
-	public BaseToolWithShape(Context context, ToolType toolType) {
-		super(context, toolType);
+	public BaseToolWithShape(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(context, toolPaint, workspace, commandManager);
 
 		final Resources resources = context.getResources();
 		metrics = resources.getDisplayMetrics();
@@ -62,7 +62,7 @@ public abstract class BaseToolWithShape extends BaseTool implements
 		float actionBarHeight = Constants.ACTION_BAR_HEIGHT * metrics.density;
 		PointF surfaceToolPosition = new PointF(metrics.widthPixels / 2f, metrics.heightPixels
 				/ 2f - actionBarHeight);
-		toolPosition = PaintroidApplication.perspective.getCanvasPointFromSurfacePoint(surfaceToolPosition);
+		toolPosition = workspace.getCanvasPointFromSurfacePoint(surfaceToolPosition);
 		linePaint = new Paint();
 		linePaint.setColor(primaryShapeColor);
 	}
@@ -72,12 +72,12 @@ public abstract class BaseToolWithShape extends BaseTool implements
 
 	float getStrokeWidthForZoom(float defaultStrokeWidth, float minStrokeWidth, float maxStrokeWidth) {
 		float strokeWidth = (defaultStrokeWidth * metrics.density)
-				/ PaintroidApplication.perspective.getScale();
+				/ workspace.getScale();
 		return Math.min(maxStrokeWidth, Math.max(minStrokeWidth, strokeWidth));
 	}
 
 	float getInverselyProportionalSizeForZoom(float defaultSize) {
-		float applicationScale = PaintroidApplication.perspective.getScale();
+		float applicationScale = workspace.getScale();
 		return (defaultSize * metrics.density) / applicationScale;
 	}
 
@@ -103,9 +103,7 @@ public abstract class BaseToolWithShape extends BaseTool implements
 
 		int deltaX = 0;
 		int deltaY = 0;
-		PointF surfaceToolPosition = PaintroidApplication.perspective
-				.getSurfacePointFromCanvasPoint(new PointF(toolPosition.x,
-						toolPosition.y));
+		PointF surfaceToolPosition = workspace.getSurfacePointFromCanvasPoint(new PointF(toolPosition.x, toolPosition.y));
 
 		if (surfaceToolPosition.x < scrollTolerance) {
 			deltaX = 1;

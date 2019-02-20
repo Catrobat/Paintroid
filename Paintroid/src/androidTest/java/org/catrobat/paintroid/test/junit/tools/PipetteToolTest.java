@@ -27,15 +27,19 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
@@ -45,7 +49,6 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
 public class PipetteToolTest {
-
 	private static final int X_COORDINATE_RED = 1;
 	private static final int X_COORDINATE_GREEN = 3;
 	private static final int X_COORDINATE_BLUE = 5;
@@ -54,17 +57,26 @@ public class PipetteToolTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+	@Rule
+	public MockitoRule mockito = MockitoJUnit.rule();
+
+	@Mock
+	private CommandManager commandManager;
+
 	private PipetteTool toolToTest;
 	private OnColorPickedListener listener;
+	private ToolPaint toolPaint;
 
 	@UiThreadTest
 	@Before
 	public void setUp() {
 		listener = mock(OnColorPickedListener.class);
+		MainActivity activity = activityTestRule.getActivity();
+		Workspace workspace = activity.workspace;
+		toolPaint = activity.toolPaint;
+		toolToTest = new PipetteTool(activity, toolPaint, workspace, commandManager, listener);
 
-		toolToTest = new PipetteTool(activityTestRule.getActivity(), listener, ToolType.PIPETTE);
-
-		Bitmap bitmap = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap bitmap = activity.layerModel.getCurrentLayer().getBitmap();
 		bitmap.setPixel(X_COORDINATE_RED, 0, Color.RED);
 		bitmap.setPixel(X_COORDINATE_GREEN, 0, Color.GREEN);
 		bitmap.setPixel(X_COORDINATE_BLUE, 0, Color.BLUE);
@@ -125,7 +137,7 @@ public class PipetteToolTest {
 	@Test
 	public void testShouldReturnCorrectColorForForTopButtonIfColorIsTransparent() {
 		toolToTest.handleUp(new PointF(0, 0));
-		int color = getAttributeButtonColor();
+		int color = toolPaint.getColor();
 		assertEquals(Color.TRANSPARENT, color);
 	}
 
@@ -133,11 +145,7 @@ public class PipetteToolTest {
 	@Test
 	public void testShouldReturnCorrectColorForForTopButtonIfColorIsRed() {
 		toolToTest.handleUp(new PointF(X_COORDINATE_RED, 0));
-		int color = getAttributeButtonColor();
+		int color = toolPaint.getColor();
 		assertEquals(Color.RED, color);
-	}
-
-	private int getAttributeButtonColor() {
-		return BaseTool.BITMAP_PAINT.getColor();
 	}
 }

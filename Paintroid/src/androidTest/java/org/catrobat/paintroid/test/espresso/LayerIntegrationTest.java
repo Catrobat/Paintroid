@@ -20,17 +20,16 @@
 package org.catrobat.paintroid.test.espresso;
 
 import android.Manifest;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -44,10 +43,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.BLACK_COLOR_PICKER_BUTTON_POSITION;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.GREEN_COLOR_PICKER_BUTTON_POSITION;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.WHITE_COLOR_PICKER_BUTTON_POSITION;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
@@ -76,9 +71,9 @@ public class LayerIntegrationTest {
 
 	@Before
 	public void setUp() {
-		Bitmap image = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
-		bitmapHeight = image.getHeight();
-		bitmapWidth = image.getWidth();
+		Workspace workspace = launchActivityRule.getActivity().workspace;
+		bitmapHeight = workspace.getHeight();
+		bitmapWidth = workspace.getWidth();
 	}
 
 	@Test
@@ -229,11 +224,12 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.TRANSPARENT);
+				.checkMatchesColor(Color.TRANSPARENT);
 
 		onToolBarView()
 				.performSelectTool(ToolType.FILL);
-		selectColorPickerPresetSelectorColor(BLACK_COLOR_PICKER_BUTTON_POSITION);
+		onToolProperties()
+				.setColor(Color.BLACK);
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
@@ -242,7 +238,7 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 
 		onLayerMenuView()
 				.checkLayerCount(2)
@@ -256,7 +252,7 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.TRANSPARENT);
+				.checkMatchesColor(Color.TRANSPARENT);
 	}
 
 	@Test
@@ -279,7 +275,7 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 
 		onLayerMenuView()
 				.performOpen()
@@ -288,7 +284,8 @@ public class LayerIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.FILL);
-		selectColorPickerPresetSelectorColor(WHITE_COLOR_PICKER_BUTTON_POSITION);
+		onToolProperties()
+				.setColor(Color.WHITE);
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolBarView()
@@ -296,7 +293,7 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.WHITE);
+				.checkMatchesColor(Color.WHITE);
 
 		onLayerMenuView()
 				.performOpen()
@@ -305,7 +302,7 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.WHITE);
+				.checkMatchesColor(Color.WHITE);
 	}
 
 	@Test
@@ -333,7 +330,7 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.TRANSPARENT);
+				.checkMatchesColor(Color.TRANSPARENT);
 		onLayerMenuView()
 				.checkLayerCount(1);
 	}
@@ -364,7 +361,7 @@ public class LayerIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolProperties()
-				.checkColor(Color.TRANSPARENT);
+				.checkMatchesColor(Color.TRANSPARENT);
 
 		onLayerMenuView()
 				.checkLayerCount(1);
@@ -482,7 +479,7 @@ public class LayerIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -500,7 +497,7 @@ public class LayerIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 	}
 
 	@Test
@@ -525,21 +522,21 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
 		onToolProperties()
-				.checkColor(Color.TRANSPARENT);
+				.checkMatchesColor(Color.TRANSPARENT);
 
 		onTopBarView()
 				.performUndo();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 
 		onTopBarView()
 				.performRedo();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
 		onToolProperties()
-				.checkColor(Color.TRANSPARENT);
+				.checkMatchesColor(Color.TRANSPARENT);
 	}
 
 	@Test
@@ -579,9 +576,9 @@ public class LayerIntegrationTest {
 				.checkLayerCount(2)
 				.performClose();
 
-		selectColorPickerPresetSelectorColor(GREEN_COLOR_PICKER_BUTTON_POSITION);
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.setColorResource(R.color.pocketpaint_color_chooser_green1)
+				.checkMatchesColorResource(R.color.pocketpaint_color_chooser_green1);
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -604,7 +601,7 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_chooser_green1);
 	}
 
 	@Test

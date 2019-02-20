@@ -20,29 +20,29 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import android.graphics.Bitmap;
-import android.graphics.PointF;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.action.CoordinatesProvider;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.LayerContracts;
-import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
-import org.catrobat.paintroid.ui.DrawingSurface;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-
-import java.util.List;
+import org.hamcrest.TypeSafeMatcher;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.catrobat.paintroid.test.espresso.util.MainActivityHelper.getMainActivityFromView;
+import static org.hamcrest.Matchers.is;
 
 public final class DrawingSurfaceInteraction extends CustomViewInteraction {
+
 	private DrawingSurfaceInteraction() {
 		super(onView(withId(R.id.pocketpaint_drawing_surface_view)));
 	}
@@ -51,53 +51,76 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 		return new DrawingSurfaceInteraction();
 	}
 
-	private static void assertColorEquals(@ColorInt int expected, @ColorInt int actual) {
-		String message = Integer.toHexString(expected) + " != " + Integer.toHexString(actual);
-		assertEquals(message, expected, actual);
-	}
+	public DrawingSurfaceInteraction checkPixelColor(@ColorInt final int expectedColor, final CoordinatesProvider coordinateProvider) {
+		check(matches(new TypeSafeMatcher<View>() {
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
+			}
 
-	public DrawingSurfaceInteraction checkPixelColor(@ColorInt int expectedColor, BitmapLocationProvider coordinateProvider) {
-		DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-		float[] coordinates = coordinateProvider.calculateCoordinates(drawingSurface);
-		int actualColor = drawingSurface.getPixel(new PointF(coordinates[0], coordinates[1]));
-		assertColorEquals(expectedColor, actualColor);
+			@Override
+			protected boolean matchesSafely(View view) {
+				MainActivity activity = getMainActivityFromView(view);
+				LayerContracts.Layer currentLayer = activity.layerModel.getCurrentLayer();
+				float[] coordinates = coordinateProvider.calculateCoordinates(view);
+				int actualColor = currentLayer.getBitmap().getPixel((int) coordinates[0], (int) coordinates[1]);
+				return expectedColor == actualColor;
+			}
+		}));
 		return this;
 	}
 
-	public DrawingSurfaceInteraction checkPixelColorResource(@ColorRes int expectedColorRes, BitmapLocationProvider coordinateProvider) {
+	public DrawingSurfaceInteraction checkPixelColorResource(@ColorRes int expectedColorRes, CoordinatesProvider coordinateProvider) {
 		int expectedColor = ContextCompat.getColor(InstrumentationRegistry.getTargetContext(), expectedColorRes);
 		return checkPixelColor(expectedColor, coordinateProvider);
 	}
 
-	public DrawingSurfaceInteraction checkBitmapDimension(int expectedWidth, int expectedHeight) {
-		assertBitmapDimensions(getWorkingBitmap(), expectedWidth, expectedHeight);
+	public DrawingSurfaceInteraction checkBitmapDimension(final int expectedWidth, final int expectedHeight) {
+		check(matches(new TypeSafeMatcher<View>() {
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("Bitmap has is size "
+						+ expectedWidth + "x and "
+						+ expectedHeight + "y");
+			}
+
+			@Override
+			protected boolean matchesSafely(View view) {
+				MainActivity activity = getMainActivityFromView(view);
+				LayerContracts.Model layerModel = activity.layerModel;
+				Bitmap bitmap = layerModel.getCurrentLayer().getBitmap();
+				return expectedWidth == bitmap.getWidth() && expectedHeight == bitmap.getHeight();
+			}
+		}));
 		return this;
 	}
 
 	public DrawingSurfaceInteraction checkLayerDimensions(int expectedWidth, int expectedHeight) {
-		assertLayerDimensions(expectedWidth, expectedHeight);
+		checkThatLayerDimensions(is(expectedWidth), is(expectedHeight));
 		return this;
 	}
 
-	public DrawingSurfaceInteraction checkThatLayerDimensions(Matcher<Integer> matchesWidth, Matcher<Integer> matchesHeight) {
-		List<LayerContracts.Layer> layers = PaintroidApplication.layerModel.getLayers();
-		for (LayerContracts.Layer layer : layers) {
-			Bitmap bitmap = layer.getBitmap();
-			assertThat(bitmap.getWidth(), matchesWidth);
-			assertThat(bitmap.getHeight(), matchesHeight);
-		}
+	public DrawingSurfaceInteraction checkThatLayerDimensions(final Matcher<Integer> matchesWidth, final Matcher<Integer> matchesHeight) {
+		check(matches(new TypeSafeMatcher<View>() {
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("All layers have expected size");
+			}
+
+			@Override
+			protected boolean matchesSafely(View view) {
+				MainActivity activity = getMainActivityFromView(view);
+				LayerContracts.Model layerModel = activity.layerModel;
+				for (LayerContracts.Layer layer : layerModel.getLayers()) {
+					Bitmap bitmap = layer.getBitmap();
+					if (!matchesWidth.matches(bitmap.getWidth()) || !matchesHeight.matches(bitmap.getHeight())) {
+						return false;
+					}
+				}
+				return true;
+			}
+		}));
+
 		return this;
-	}
-
-	private void assertBitmapDimensions(Bitmap bitmap, int expectedWidth, int expectedHeight) {
-		assertEquals(expectedWidth, bitmap.getWidth());
-		assertEquals(expectedHeight, bitmap.getHeight());
-	}
-
-	private void assertLayerDimensions(int expectedWidth, int expectedHeight) {
-		List<LayerContracts.Layer> layers = PaintroidApplication.layerModel.getLayers();
-		for (LayerContracts.Layer layer : layers) {
-			assertBitmapDimensions(layer.getBitmap(), expectedWidth, expectedHeight);
-		}
 	}
 }

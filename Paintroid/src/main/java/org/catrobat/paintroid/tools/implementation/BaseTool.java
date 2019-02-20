@@ -29,13 +29,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -48,49 +45,38 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandFactory;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
-import org.catrobat.paintroid.listener.BrushPickerView.OnBrushChangedListener;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.Workspace;
 
 public abstract class BaseTool implements Tool {
 	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
 	public static final float MOVE_TOLERANCE = 5;
-	@VisibleForTesting
-	public static final int STROKE_25 = 25;
-	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-	public static final Paint BITMAP_PAINT = new Paint();
-	@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-	public static final Paint CANVAS_PAINT = new Paint();
 	private static final int SCROLL_TOLERANCE_PERCENTAGE = 10;
-
-	static {
-		reset();
-	}
 
 	final Paint checkeredPattern;
 	final int scrollTolerance;
 	final Context context;
 	final PointF movedDistance;
-	final OnBrushChangedListener onBrushChangedListener;
-	private final PorterDuffXfermode eraseXfermode;
-	private final ToolType toolType;
 	boolean toolOptionsShown = false;
 	boolean toggleOptions = false;
 	LinearLayout toolSpecificOptionsLayout;
 	PointF previousEventCoordinate;
 	private LinearLayout toolOptionsLayout;
 	CommandFactory commandFactory = new DefaultCommandFactory();
+	protected CommandManager commandManager;
+	protected Workspace workspace;
+	protected ToolPaint toolPaint;
 
-	public BaseTool(Context context, ToolType toolType) {
-		super();
-		this.toolType = toolType;
+	public BaseTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		this.context = context;
-		eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+		this.toolPaint = toolPaint;
+		this.workspace = workspace;
+		this.commandManager = commandManager;
 
 		Resources resources = context.getResources();
 		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg);
@@ -101,35 +87,12 @@ public abstract class BaseTool implements Tool {
 		scrollTolerance = resources.getDisplayMetrics().widthPixels
 				* SCROLL_TOLERANCE_PERCENTAGE / 100;
 
-		onBrushChangedListener = new OnBrushChangedListener() {
-			@Override
-			public void setCap(Cap cap) {
-				changePaintStrokeCap(cap);
-			}
-
-			@Override
-			public void setStroke(int strokeWidth) {
-				changePaintStrokeWidth(strokeWidth);
-			}
-		};
-
 		movedDistance = new PointF(0f, 0f);
 		previousEventCoordinate = new PointF(0f, 0f);
 
 		toolOptionsLayout = ((Activity) context).findViewById(R.id.pocketpaint_layout_tool_options);
 		toolSpecificOptionsLayout = ((Activity) context).findViewById(R.id.pocketpaint_layout_tool_specific_options);
 		resetAndInitializeToolOptions();
-	}
-
-	public static void reset() {
-		BITMAP_PAINT.reset();
-		BITMAP_PAINT.setAntiAlias(true);
-		BITMAP_PAINT.setColor(Color.BLACK);
-		BITMAP_PAINT.setStyle(Paint.Style.STROKE);
-		BITMAP_PAINT.setStrokeJoin(Paint.Join.ROUND);
-		BITMAP_PAINT.setStrokeCap(Paint.Cap.ROUND);
-		BITMAP_PAINT.setStrokeWidth(STROKE_25);
-		CANVAS_PAINT.set(BITMAP_PAINT);
 	}
 
 	@Override
@@ -146,58 +109,31 @@ public abstract class BaseTool implements Tool {
 	}
 
 	void setPaintColor(@ColorInt int color) {
-		BITMAP_PAINT.setColor(color);
-		if (Color.alpha(color) == 0) {
-			CANVAS_PAINT.reset();
-			CANVAS_PAINT.setStyle(BITMAP_PAINT.getStyle());
-			CANVAS_PAINT.setStrokeJoin(BITMAP_PAINT.getStrokeJoin());
-			CANVAS_PAINT.setStrokeCap(BITMAP_PAINT.getStrokeCap());
-			CANVAS_PAINT.setStrokeWidth(BITMAP_PAINT.getStrokeWidth());
-			CANVAS_PAINT.setShader(checkeredPattern.getShader());
-			CANVAS_PAINT.setColor(Color.BLACK);
-			CANVAS_PAINT.setAlpha(0);
-
-			BITMAP_PAINT.setXfermode(eraseXfermode);
-			BITMAP_PAINT.setAlpha(0);
-		} else {
-			BITMAP_PAINT.setXfermode(null);
-			CANVAS_PAINT.set(BITMAP_PAINT);
-		}
+		toolPaint.setColor(color);
 	}
 
 	@Override
 	public void changePaintStrokeWidth(int strokeWidth) {
-		BITMAP_PAINT.setStrokeWidth(strokeWidth);
-		CANVAS_PAINT.setStrokeWidth(strokeWidth);
-		boolean antiAliasing = (strokeWidth > 1);
-		BITMAP_PAINT.setAntiAlias(antiAliasing);
-		CANVAS_PAINT.setAntiAlias(antiAliasing);
+		toolPaint.setStrokeWidth(strokeWidth);
 	}
 
 	@Override
 	public void changePaintStrokeCap(Cap cap) {
-		BITMAP_PAINT.setStrokeCap(cap);
-		CANVAS_PAINT.setStrokeCap(cap);
+		toolPaint.setStrokeCap(cap);
 	}
 
 	@Override
 	public Paint getDrawPaint() {
-		return new Paint(BITMAP_PAINT);
+		return new Paint(toolPaint.getPaint());
 	}
 
 	@Override
 	public void setDrawPaint(Paint paint) {
-		BITMAP_PAINT.set(paint);
-		CANVAS_PAINT.set(paint);
+		toolPaint.setPaint(paint);
 	}
 
 	@Override
 	public abstract void draw(Canvas canvas);
-
-	@Override
-	public ToolType getToolType() {
-		return this.toolType;
-	}
 
 	protected abstract void resetInternalState();
 
@@ -232,9 +168,8 @@ public abstract class BaseTool implements Tool {
 	}
 
 	boolean checkPathInsideBitmap(PointF coordinate) {
-		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-		return (coordinate.x < drawingSurface.getBitmapWidth())
-				&& (coordinate.y < drawingSurface.getBitmapHeight())
+		return (coordinate.x < workspace.getWidth())
+				&& (coordinate.y < workspace.getHeight())
 				&& (coordinate.x > 0) && (coordinate.y > 0);
 	}
 
@@ -248,7 +183,7 @@ public abstract class BaseTool implements Tool {
 			public void run() {
 				toolSpecificOptionsLayout.removeAllViews();
 				TextView toolOptionsName = toolOptionsLayout.findViewById(R.id.pocketpaint_layout_tool_options_name);
-				toolOptionsName.setText(context.getResources().getString(toolType.getNameResource()));
+				toolOptionsName.setText(context.getResources().getString(getToolType().getNameResource()));
 			}
 		});
 	}
@@ -261,7 +196,7 @@ public abstract class BaseTool implements Tool {
 
 		if (toolOptionsShown) {
 			if (motionEventType == MotionEvent.ACTION_UP) {
-				PointF surfacePoint = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(coordinate);
+				PointF surfacePoint = workspace.getSurfacePointFromCanvasPoint(coordinate);
 				float toolOptionsOnSurfaceY = ((Activity) context).findViewById(R.id.pocketpaint_main_tool_options).getY()
 						- ((Activity) context).findViewById(R.id.pocketpaint_toolbar).getHeight();
 				if (surfacePoint.y < toolOptionsOnSurfaceY) {
@@ -346,7 +281,7 @@ public abstract class BaseTool implements Tool {
 
 	@Override
 	public void startTool() {
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+		workspace.invalidate();
 	}
 
 	@Override

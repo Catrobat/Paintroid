@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -29,7 +28,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.PathCommand;
@@ -37,10 +35,12 @@ import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.tools.Tool.StateChange;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
 import org.catrobat.paintroid.tools.implementation.DrawTool;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,8 +49,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
-import java.util.List;
 
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPaintEquals;
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEquals;
@@ -78,23 +76,19 @@ public class DrawToolTests {
 
 	private DrawTool toolToTest;
 	private Paint paint;
+	private ToolPaint toolPaint;
 
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		toolToTest = new DrawTool(activityTestRule.getActivity(), ToolType.BRUSH);
+		MainActivity activity = activityTestRule.getActivity();
+		Workspace workspace = activity.workspace;
+		toolPaint = activity.toolPaint;
+		toolToTest = new DrawTool(activity, toolPaint, workspace, commandManager);
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setStrokeCap(Paint.Cap.ROUND);
-		paint.setStrokeWidth(BaseTool.STROKE_25);
-		PaintroidApplication.commandManager = commandManager;
-	}
-
-	@UiThreadTest
-	@After
-	public void tearDown() {
-		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
-		BaseTool.reset();
+		paint.setStrokeWidth(DefaultToolPaint.STROKE_25);
 	}
 
 	@UiThreadTest
@@ -109,7 +103,8 @@ public class DrawToolTests {
 	@Test
 	public void testShouldReturnPaint() {
 		toolToTest.setDrawPaint(paint);
-		Paint drawPaint = BaseTool.BITMAP_PAINT;
+
+		Paint drawPaint = toolPaint.getPaint();
 		assertEquals(paint.getColor(), drawPaint.getColor());
 		assertEquals(paint.getStrokeWidth(), drawPaint.getStrokeWidth(), Double.MIN_VALUE);
 		assertEquals(paint.getStrokeCap(), drawPaint.getStrokeCap());
@@ -308,7 +303,7 @@ public class DrawToolTests {
 
 	@UiThreadTest
 	@Test
-	public void testShouldAddPathCommandOnMultipleMovesWithinTolleranceEvent() {
+	public void testShouldAddPathCommandOnMultipleMovesWithinToleranceEvent() {
 		PointF tab1 = new PointF(7, 7);
 		PointF tab2 = new PointF(7, MOVE_TOLERANCE - 0.1f);
 		PointF tab3 = new PointF(7, 7);
@@ -338,27 +333,20 @@ public class DrawToolTests {
 	@UiThreadTest
 	@Test
 	public void testShouldReturnBlackForForTopParameterButton() {
-		int color = getAttributeButtonColor();
-		assertEquals(Color.BLACK, color);
+		assertEquals(Color.BLACK, toolPaint.getColor());
 	}
 
 	@UiThreadTest
 	@Test
 	public void testShouldChangePaintFromBrushPicker() {
 		toolToTest.setupToolOptions();
-		toolToTest.setDrawPaint(this.paint);
+		toolToTest.startTool();
+		toolToTest.setDrawPaint(paint);
 		BrushPickerView brushPicker = toolToTest.brushPickerView;
-		List<BrushPickerView.OnBrushChangedListener> brushPickerListener = brushPicker.brushChangedListener;
-
-		for (BrushPickerView.OnBrushChangedListener onBrushChangedListener : brushPickerListener) {
-			onBrushChangedListener.setCap(Paint.Cap.ROUND);
-			onBrushChangedListener.setStroke(15);
-			assertEquals(Paint.Cap.ROUND, toolToTest.getDrawPaint().getStrokeCap());
-			assertEquals(15f, toolToTest.getDrawPaint().getStrokeWidth(), Double.MIN_VALUE);
-		}
-	}
-
-	private int getAttributeButtonColor() {
-		return BaseTool.BITMAP_PAINT.getColor();
+		BrushPickerView.OnBrushChangedListener onBrushChangedListener = brushPicker.brushChangedListener;
+		onBrushChangedListener.setCap(Paint.Cap.ROUND);
+		onBrushChangedListener.setStrokeWidth(15);
+		assertEquals(Paint.Cap.ROUND, toolToTest.getDrawPaint().getStrokeCap());
+		assertEquals(15f, toolToTest.getDrawPaint().getStrokeWidth(), Double.MIN_VALUE);
 	}
 }

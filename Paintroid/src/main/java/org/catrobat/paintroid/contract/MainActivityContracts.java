@@ -21,6 +21,7 @@ package org.catrobat.paintroid.contract;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
@@ -111,15 +112,15 @@ public interface MainActivityContracts {
 
 		void refreshDrawingSurface();
 
-		void enterFullScreen();
+		void enterFullscreen();
 
-		void exitFullScreen();
+		void exitFullscreen();
 	}
 
 	interface Presenter {
 		void initializeFromCleanState(String extraPicturePath, String extraPictureName);
 
-		void restoreState(boolean isFullScreen, boolean isSaved, boolean isOpenedFromCatroid,
+		void restoreState(boolean isFullscreen, boolean isSaved, boolean isOpenedFromCatroid,
 				boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri);
 
 		void finishInitialize();
@@ -198,9 +199,9 @@ public interface MainActivityContracts {
 
 		void setSaved(boolean saved);
 
-		boolean isFullScreen();
+		boolean isFullscreen();
 
-		void setFullScreen(boolean fullScreen);
+		void setFullscreen(boolean fullscreen);
 
 		boolean isOpenedFromCatroid();
 
@@ -212,11 +213,11 @@ public interface MainActivityContracts {
 	}
 
 	interface Interactor {
-		void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode);
+		void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Bitmap bitmap);
 
 		void createFile(CreateFileAsync.CreateFileCallback callback, int requestCode, @Nullable String filename);
 
-		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Uri uri);
+		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Bitmap bitmap, Uri uri);
 
 		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri);
 
@@ -255,13 +256,13 @@ public interface MainActivityContracts {
 
 		void setVersion(String versionString);
 
-		void showExitFullScreen();
+		void showExitFullscreen();
 
-		void hideExitFullScreen();
+		void hideExitFullscreen();
 
-		void showEnterFullScreen();
+		void showEnterFullscreen();
 
-		void hideEnterFullScreen();
+		void hideEnterFullscreen();
 	}
 
 	interface BottomBarViewHolder {

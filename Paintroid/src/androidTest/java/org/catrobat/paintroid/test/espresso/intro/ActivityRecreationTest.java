@@ -21,7 +21,7 @@ package org.catrobat.paintroid.test.espresso.intro;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.intro.util.WelcomeActivityIntentsTestRule;
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.espresso.util.IntroUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,7 +68,7 @@ public class ActivityRecreationTest {
 	@Test
 	public void testToolsPageDoesNotCrashAfterRecreate() {
 		int toolsPageIndex = getPageIndexFromLayout(activityRule.getLayouts(), layout);
-		EspressoUtils.changeIntroPage(toolsPageIndex);
+		IntroUtils.changeIntroPage(toolsPageIndex);
 
 		activityRule.recreateActivity();
 
@@ -79,7 +79,7 @@ public class ActivityRecreationTest {
 	@Test
 	public void testToolsPageRestoreDotsColor() {
 		int toolsPageIndex = getPageIndexFromLayout(activityRule.getLayouts(), layout);
-		EspressoUtils.changeIntroPage(toolsPageIndex);
+		IntroUtils.changeIntroPage(toolsPageIndex);
 
 		activityRule.recreateActivity();
 

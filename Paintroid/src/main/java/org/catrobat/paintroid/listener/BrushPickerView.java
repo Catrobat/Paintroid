@@ -37,24 +37,21 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.ui.tools.DrawerPreview;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
-public final class BrushPickerView implements View.OnClickListener {
+public final class BrushPickerView {
 	private static final int MIN_BRUSH_SIZE = 1;
 	private static final String TAG = BrushPickerView.class.getSimpleName();
 
-	@VisibleForTesting
-	public ArrayList<BrushPickerView.OnBrushChangedListener> brushChangedListener;
 	private final EditText brushSizeText;
 	private final SeekBar brushWidthSeekBar;
 	private final ImageButton buttonCircle;
 	private final ImageButton buttonRect;
 	private final DrawerPreview drawerPreview;
+	@VisibleForTesting
+	public OnBrushChangedListener brushChangedListener;
 
 	public BrushPickerView(ViewGroup rootView) {
-		brushChangedListener = new ArrayList<>();
-
 		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
 		View brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_stroke, rootView, true);
 
@@ -66,8 +63,18 @@ public final class BrushPickerView implements View.OnClickListener {
 		brushSizeText.setFilters(new InputFilter[]{new NumberRangeFilter(1, 100)});
 		drawerPreview = brushPickerView.findViewById(R.id.pocketpaint_drawer_preview);
 
-		buttonCircle.setOnClickListener(this);
-		buttonRect.setOnClickListener(this);
+		buttonCircle.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onCircleButtonClicked();
+			}
+		});
+		buttonRect.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onRectButtonClicked();
+			}
+		});
 
 		brushSizeText.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -93,20 +100,18 @@ public final class BrushPickerView implements View.OnClickListener {
 		});
 	}
 
-	@Override
-	public void onClick(View v) {
+	private void onRectButtonClicked() {
+		updateStrokeCap(Cap.SQUARE);
+		buttonRect.setSelected(true);
+		buttonCircle.setSelected(false);
+		invalidate();
+	}
 
-		int i = v.getId();
-		if (i == R.id.pocketpaint_stroke_ibtn_circle) {
-			updateStrokeCap(Cap.ROUND);
-			buttonCircle.setSelected(true);
-			buttonRect.setSelected(false);
-		} else if (i == R.id.pocketpaint_stroke_ibtn_rect) {
-			updateStrokeCap(Cap.SQUARE);
-			buttonRect.setSelected(true);
-			buttonCircle.setSelected(false);
-		}
-		drawerPreview.invalidate();
+	private void onCircleButtonClicked() {
+		updateStrokeCap(Cap.ROUND);
+		buttonCircle.setSelected(true);
+		buttonRect.setSelected(false);
+		invalidate();
 	}
 
 	public void setCurrentPaint(Paint currentPaint) {
@@ -121,23 +126,19 @@ public final class BrushPickerView implements View.OnClickListener {
 		brushSizeText.setText(String.format(Locale.getDefault(), "%d", (int) currentPaint.getStrokeWidth()));
 	}
 
-	public void addBrushChangedListener(OnBrushChangedListener listener) {
-		brushChangedListener.add(listener);
+	public void setBrushChangedListener(OnBrushChangedListener brushChangedListener) {
+		this.brushChangedListener = brushChangedListener;
 	}
 
-	public void removeBrushChangedListener(OnBrushChangedListener listener) {
-		brushChangedListener.remove(listener);
-	}
-
-	private void updateStrokeChange(int strokeWidth) {
-		for (OnBrushChangedListener listener : brushChangedListener) {
-			listener.setStroke(strokeWidth);
+	private void updateStrokeWidthChange(int strokeWidth) {
+		if (brushChangedListener != null) {
+			brushChangedListener.setStrokeWidth(strokeWidth);
 		}
 	}
 
 	private void updateStrokeCap(Cap cap) {
-		for (OnBrushChangedListener listener : brushChangedListener) {
-			listener.setCap(cap);
+		if (brushChangedListener != null) {
+			brushChangedListener.setCap(cap);
 		}
 	}
 
@@ -145,10 +146,15 @@ public final class BrushPickerView implements View.OnClickListener {
 		drawerPreview.invalidate();
 	}
 
-	public interface OnBrushChangedListener {
-		void setCap(Paint.Cap cap);
+	public void setDrawerPreviewCallback(DrawerPreview.Callback callback) {
+		drawerPreview.setCallback(callback);
+		drawerPreview.invalidate();
+	}
 
-		void setStroke(int stroke);
+	public interface OnBrushChangedListener {
+		void setCap(Cap strokeCap);
+
+		void setStrokeWidth(int strokeWidth);
 	}
 
 	public class OnBrushChangedWidthSeekBarListener implements
@@ -160,7 +166,7 @@ public final class BrushPickerView implements View.OnClickListener {
 				progress = MIN_BRUSH_SIZE;
 				seekBar.setProgress(progress);
 			}
-			updateStrokeChange(progress);
+			updateStrokeWidthChange(progress);
 			if (fromUser) {
 				brushSizeText.setText(String.format(Locale.getDefault(), "%d", progress));
 			}
