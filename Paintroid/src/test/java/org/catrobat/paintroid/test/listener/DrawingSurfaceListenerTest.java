@@ -48,7 +48,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class DrawingSurfaceListenerTest {
 
 	private static final float DISPLAY_DENSITY = 1.5f;
@@ -411,5 +411,23 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(autoScrollTask).stop();
+	}
+
+	@Test
+	public void testDisableAutoScroll() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
+		when(motionEvent.getX()).thenReturn(41f);
+		when(motionEvent.getY()).thenReturn(5f);
+
+		when(drawingSurface.getWidth()).thenReturn(97);
+		when(drawingSurface.getHeight()).thenReturn(11);
+
+		drawingSurfaceListener.disableAutoScroll();
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		verify(autoScrollTask, never()).start();
 	}
 }

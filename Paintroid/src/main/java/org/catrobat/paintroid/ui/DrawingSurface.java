@@ -62,6 +62,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 
 	private DrawingSurfaceThread drawingThread;
 	private LayerContracts.Model layerModel;
+	private DrawingSurfaceListener drawingSurfaceListener;
 
 	public DrawingSurface(Context context, AttributeSet attrSet) {
 		super(context, attrSet);
@@ -89,7 +90,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		Handler handler = new Handler(Looper.getMainLooper());
 		AutoScrollTask autoScrollTask = new AutoScrollTask(handler, new AutoScrollTaskCallbackImpl());
 		float density = getResources().getDisplayMetrics().density;
-		DrawingSurfaceListener drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, density);
+		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, density);
 		setOnTouchListener(drawingSurfaceListener);
 	}
 
@@ -149,6 +150,14 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 			surfaceDirty = true;
 			surfaceLock.notify();
 		}
+	}
+
+	public void enableAutoScroll() {
+		drawingSurfaceListener.enableAutoScroll();
+	}
+
+	public void disableAutoScroll() {
+		drawingSurfaceListener.disableAutoScroll();
 	}
 
 	public synchronized void setBitmap(Bitmap bitmap) {
