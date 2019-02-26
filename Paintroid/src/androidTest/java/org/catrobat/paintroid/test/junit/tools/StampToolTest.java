@@ -20,48 +20,64 @@
 package org.catrobat.paintroid.test.junit.tools;
 
 import android.graphics.PointF;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.support.test.InstrumentationRegistry;
+import android.util.DisplayMetrics;
 import android.view.ViewConfiguration;
 
-import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.class)
 public class StampToolTest {
-
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+	@Mock
+	private ToolPaint toolPaint;
+	@Mock
+	private CommandManager commandManager;
+	@Mock
+	private Workspace workspace;
+	@Mock
+	private CommandFactory commandFactory;
+	@Mock
+	private ToolOptionsControllerContract toolOptionsController;
+	@Mock
+	private ContextCallback contextCallback;
+	@Mock
+	private DisplayMetrics displayMetrics;
 
 	private StampTool tool;
 
-	@UiThreadTest
 	@Before
 	public void setUp() {
-		MainActivity activity = activityTestRule.getActivity();
-		ToolPaint toolPaint = activity.toolPaint;
-		CommandManager commandManager = activity.commandManager;
-		Workspace workspace = activity.workspace;
-		tool = new StampTool(activity, toolPaint, workspace, commandManager);
+		when(contextCallback.getDisplayMetrics()).thenReturn(displayMetrics);
+		displayMetrics.widthPixels = 200;
+		displayMetrics.heightPixels = 300;
+		when(workspace.getScale()).thenReturn(1f);
+		when(workspace.getWidth()).thenReturn(200);
+		when(workspace.getHeight()).thenReturn(300);
+
+		tool = new StampTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 	}
 
 	@Test
-	public void testLongClickResetsToolPosition() throws Throwable {
-
+	public void testLongClickResetsToolPosition() throws InterruptedException {
 		final float initialX = tool.toolPosition.x;
 		final float initialY = tool.toolPosition.y;
 
-		activityTestRule.runOnUiThread(new Runnable() {
+		InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
 			@Override
 			public void run() {
 				tool.handleDown(new PointF(initialX, initialY));
@@ -76,5 +92,10 @@ public class StampToolTest {
 
 		assertEquals(initialX, tool.toolPosition.x, Float.MIN_VALUE);
 		assertEquals(initialY, tool.toolPosition.y, Float.MIN_VALUE);
+	}
+
+	@Test
+	public void testShouldReturnCorrectToolType() {
+		assertEquals(ToolType.STAMP, tool.getToolType());
 	}
 }

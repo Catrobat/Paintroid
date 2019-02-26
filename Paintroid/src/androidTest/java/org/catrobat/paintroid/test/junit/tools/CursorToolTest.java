@@ -23,28 +23,29 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsContract;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
+import static org.catrobat.paintroid.test.utils.ToolPositionMatcher.eqToolPosition;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -52,36 +53,44 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class CursorToolTest {
-	private static final float MOVE_TOLERANCE = BaseTool.MOVE_TOLERANCE;
-
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public MockitoRule mockito = MockitoJUnit.rule();
-
+	private static final float MOVE_TOLERANCE = Constants.MOVE_TOLERANCE;
 	@Mock
-	private CommandManager commandManager;
+	public CommandManager commandManager;
+	@Mock
+	public BrushToolOptionsContract brushToolOptions;
+	@Mock
+	public ContextCallback contextCallback;
+	@Mock
+	public ToolOptionsControllerContract toolOptionsController;
+	@Mock
+	public CommandFactory commandFactory;
+	@Mock
+	public ToolPaint toolPaint;
+	@Mock
+	public Workspace workspace;
+	@Mock
+	public Paint paint;
+	@Mock
+	public Command command;
+	@InjectMocks
+	public CursorTool toolToTest;
 
-	private CursorTool toolToTest;
-	private ToolPaint toolPaint;
-
-	@UiThreadTest
 	@Before
 	public void setUp() {
-		MainActivity activity = activityTestRule.getActivity();
-		Workspace workspace = activity.workspace;
-		toolPaint = activity.toolPaint;
-		toolToTest = new CursorTool(activity, toolPaint, workspace, commandManager);
+		when(toolPaint.getPaint()).thenReturn(paint);
+
+		when(workspace.getWidth()).thenReturn(1920);
+		when(workspace.getHeight()).thenReturn(1080);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = toolToTest.getToolType();
@@ -89,33 +98,39 @@ public class CursorToolTest {
 		assertEquals(ToolType.CURSOR, toolType);
 	}
 
-	@UiThreadTest
 	@Test
-	public void testShouldActivateCursorOnTabEvent() {
+	public void testShouldActivateCursorOnTapEvent() {
 		PointF point = new PointF(5, 5);
+		Command command = mock(Command.class);
+		when(workspace.contains(point)).thenReturn(true);
+		when(workspace.contains(eqToolPosition(toolToTest))).thenReturn(true);
+		when(commandFactory.createPointCommand(eq(paint), eqToolPosition(toolToTest))).thenReturn(command);
 
 		assertTrue(toolToTest.handleDown(point));
 		assertTrue(toolToTest.handleUp(point));
 
-		verify(commandManager).addCommand(isA(PointCommand.class));
+		verify(commandManager).addCommand(command);
 		assertTrue(toolToTest.toolInDrawMode);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldActivateCursorOnTapEventOutsideDrawingSurface() {
 		PointF point = new PointF(-5, -5);
+		when(workspace.contains(point)).thenReturn(false);
+		when(workspace.contains(eqToolPosition(toolToTest))).thenReturn(true);
+		when(commandFactory.createPointCommand(eq(paint), eqToolPosition(toolToTest))).thenReturn(command);
 
 		assertTrue(toolToTest.handleDown(point));
 		assertTrue(toolToTest.handleUp(point));
 
-		verify(commandManager).addCommand(isA(PointCommand.class));
+		verify(commandManager).addCommand(command);
 		assertTrue(toolToTest.toolInDrawMode);
 	}
 
-	@UiThreadTest
 	@Test
-	public void testShouldNotActivateCursorOnTabEvent() {
+	public void testShouldNotActivateCursorOnTapEvent() {
+		when(commandFactory.createPointCommand(eq(paint), any(PointF.class))).thenReturn(command);
+
 		PointF pointDown = new PointF(0, 0);
 		PointF pointUp = new PointF(pointDown.x + MOVE_TOLERANCE + 1, pointDown.y + MOVE_TOLERANCE + 1);
 
@@ -123,7 +138,7 @@ public class CursorToolTest {
 		assertTrue(toolToTest.handleDown(pointDown));
 		assertTrue(toolToTest.handleUp(pointUp));
 
-		verify(commandManager, never()).addCommand(any(Command.class));
+		verify(commandManager, never()).addCommand(command);
 		assertFalse(toolToTest.toolInDrawMode);
 
 		// +/0
@@ -132,7 +147,7 @@ public class CursorToolTest {
 		assertTrue(toolToTest.handleDown(pointDown));
 		assertTrue(toolToTest.handleUp(pointUp));
 
-		verify(commandManager, never()).addCommand(any(Command.class));
+		verify(commandManager, never()).addCommand(command);
 
 		assertFalse(toolToTest.toolInDrawMode);
 
@@ -142,7 +157,7 @@ public class CursorToolTest {
 		assertTrue(toolToTest.handleDown(pointDown));
 		assertTrue(toolToTest.handleUp(pointUp));
 
-		verify(commandManager, never()).addCommand(any(Command.class));
+		verify(commandManager, never()).addCommand(command);
 		assertFalse(toolToTest.toolInDrawMode);
 
 		// -/-
@@ -151,13 +166,20 @@ public class CursorToolTest {
 		assertTrue(toolToTest.handleDown(pointDown));
 		assertTrue(toolToTest.handleUp(pointUp));
 
-		verify(commandManager, never()).addCommand(any(Command.class));
+		verify(commandManager, never()).addCommand(command);
 		assertFalse(toolToTest.toolInDrawMode);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldMovePathOnUpEvent() {
+		when(workspace.getSurfacePointFromCanvasPoint(any(PointF.class)))
+				.thenAnswer(new Answer<PointF>() {
+					@Override
+					public PointF answer(InvocationOnMock invocation) {
+						return invocation.getArgument(0);
+					}
+				});
+
 		PointF event1 = new PointF(0, 0);
 		PointF event2 = new PointF(MOVE_TOLERANCE, MOVE_TOLERANCE);
 		PointF event3 = new PointF(MOVE_TOLERANCE * 2, -MOVE_TOLERANCE);
@@ -200,7 +222,6 @@ public class CursorToolTest {
 		verify(stub).lineTo(testCursorPosition.x, testCursorPosition.y);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldCheckIfColorChangesIfToolIsActive() {
 

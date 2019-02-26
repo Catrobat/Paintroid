@@ -34,11 +34,11 @@ import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.TextTool;
 import org.catrobat.paintroid.ui.Perspective;
@@ -57,7 +57,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup;
-import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -113,6 +112,7 @@ public class TextToolIntegrationTest {
 	private Perspective perspective;
 	private LayerContracts.Model layerModel;
 	private MainActivity activity;
+	private ToolReference currentTool;
 
 	@Before
 	public void setUp() {
@@ -120,10 +120,11 @@ public class TextToolIntegrationTest {
 		activityHelper = new MainActivityHelper(activity);
 		perspective = activity.perspective;
 		layerModel = activity.layerModel;
+		currentTool = activity.currentTool;
 
 		onToolBarView()
 				.performSelectTool(ToolType.TEXT);
-		textTool = (TextTool) PaintroidApplication.currentTool;
+		textTool = (TextTool) currentTool.get();
 
 		textEditText = activity.findViewById(R.id.pocketpaint_text_tool_dialog_input_text);
 		fontSpinner = activity.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_font);
@@ -133,12 +134,6 @@ public class TextToolIntegrationTest {
 		textSizeSpinner = activity.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
 
 		textTool.resetBoxPosition();
-	}
-
-	@Test
-	public void testDialogKeyboardTextBoxAppearanceOnStartup() {
-		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).check(matches(hasFocus()));
-		checkTextBoxDimensionsAndDefaultPosition();
 	}
 
 	@Test
@@ -236,7 +231,6 @@ public class TextToolIntegrationTest {
 		assertTrue(boldToggleButton.isChecked());
 		assertEquals("Wrong text size selected after reopen dialog",
 				String.valueOf(TEXT_SIZE_40_STRING), textSizeSpinner.getSelectedItem());
-		checkTextBoxDimensions();
 	}
 
 	@Test
@@ -253,7 +247,7 @@ public class TextToolIntegrationTest {
 
 		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-		textTool = (TextTool) PaintroidApplication.currentTool;
+		textTool = (TextTool) currentTool.get();
 
 		assertEquals(TEST_TEXT, textEditText.getText().toString());
 		assertEquals(FONT_SANS_SERIF, fontSpinner.getSelectedItem());
@@ -263,7 +257,6 @@ public class TextToolIntegrationTest {
 		assertEquals("Wrong text size selected after reopen dialog", TEXT_SIZE_40_STRING, textSizeSpinner.getSelectedItem());
 
 		assertEquals(expectedPosition, getToolMemberBoxPosition());
-		checkTextBoxDimensions();
 	}
 
 	@Test

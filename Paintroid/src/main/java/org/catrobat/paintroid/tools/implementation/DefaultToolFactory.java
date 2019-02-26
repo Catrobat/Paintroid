@@ -19,71 +19,87 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.app.Activity;
-
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 
 public class DefaultToolFactory implements ToolFactory {
+	private final MainActivity activity;
+
+	public DefaultToolFactory(MainActivity mainActivity) {
+		this.activity = mainActivity;
+	}
 
 	@Override
-	public Tool createTool(ToolType toolType, Activity activity, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint) {
+	public Tool createTool(ToolType toolType, ToolOptionsControllerContract toolOptionsController, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint) {
 		Tool tool;
 
+		toolOptionsController.removeToolViews();
+		toolOptionsController.setToolName(toolType.getNameResource());
+
+		ContextCallback contextCallback = new DefaultContextCallback(activity.getApplicationContext());
+		CommandFactory commandFactory = new DefaultCommandFactory();
+
 		switch (toolType) {
-			case BRUSH:
-				tool = new DrawTool(activity, toolPaint, workspace, commandManager);
-				break;
 			case CURSOR:
-				tool = new CursorTool(activity, toolPaint, workspace, commandManager);
+				tool = new CursorTool(toolOptionsController.createBrushPickerView(), contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 				break;
 			case STAMP:
-				tool = new StampTool(activity, toolPaint, workspace, commandManager);
+				tool = new StampTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 				break;
 			case IMPORTPNG:
-				tool = new ImportTool(activity, toolPaint, workspace, commandManager);
+				tool = new ImportTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 				break;
 			case PIPETTE:
-				final MainActivity mainActivity = (MainActivity) activity;
-				final MainActivityContracts.Presenter presenter = mainActivity.getPresenter();
+				final MainActivityContracts.Presenter presenter = activity.getPresenter();
 				ColorPickerDialog.OnColorPickedListener listener = new ColorPickerDialog.OnColorPickedListener() {
 					@Override
 					public void colorChanged(int color) {
 						presenter.setTopBarColor(color);
 					}
 				};
-				tool = new PipetteTool(activity, toolPaint, workspace, commandManager, listener);
+				tool = new PipetteTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager, listener, commandFactory);
 				break;
 			case FILL:
-				tool = new FillTool(activity, toolPaint, workspace, commandManager);
+				tool = new FillTool(toolOptionsController.createFillToolOptions(), contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 				break;
 			case TRANSFORM:
-				tool = new TransformTool(activity, toolPaint, workspace, commandManager);
+				tool = new TransformTool(toolOptionsController.createTransformToolOptions(), contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 				break;
 			case SHAPE:
-				tool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
+				tool = new ShapeTool(toolOptionsController.createShapeToolOptions(), contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 				break;
 			case ERASER:
-				tool = new EraserTool(activity, toolPaint, workspace, commandManager);
+				tool = new EraserTool(toolOptionsController.createBrushPickerView(), toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 				break;
 			case LINE:
-				tool = new LineTool(activity, toolPaint, workspace, commandManager);
+				tool = new LineTool(toolOptionsController.createBrushPickerView(), contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 				break;
 			case TEXT:
-				tool = new TextTool(activity, toolPaint, workspace, commandManager);
+				tool = new TextTool(toolOptionsController.createTextToolOptions(), contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 				break;
+			case BRUSH:
 			default:
-				tool = new DrawTool(activity, toolPaint, workspace, commandManager);
+				tool = new BrushTool(toolOptionsController.createBrushPickerView(), toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 				break;
 		}
-		tool.setupToolOptions();
+
+		if (toolType.showOptionsInitially()) {
+			toolOptionsController.showAnimated();
+		} else {
+			toolOptionsController.hide();
+		}
+
 		return tool;
 	}
 }

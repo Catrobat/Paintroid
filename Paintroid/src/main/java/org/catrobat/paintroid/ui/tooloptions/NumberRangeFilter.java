@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.ui.tools;
+package org.catrobat.paintroid.ui.tooloptions;
 
 import android.text.InputFilter;
 import android.text.Spanned;

@@ -22,130 +22,135 @@ package org.catrobat.paintroid.test.junit.tools;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
-import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class PipetteToolTest {
 	private static final int X_COORDINATE_RED = 1;
 	private static final int X_COORDINATE_GREEN = 3;
 	private static final int X_COORDINATE_BLUE = 5;
 	private static final int X_COORDINATE_PART_TRANSPARENT = 7;
 
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public MockitoRule mockito = MockitoJUnit.rule();
-
 	@Mock
 	private CommandManager commandManager;
+	@Mock
+	private ContextCallback contextCallback;
+	@Mock
+	private CommandFactory commandFactory;
+	@Mock
+	private ToolOptionsControllerContract toolOptionsController;
+	@Mock
+	private OnColorPickedListener listener;
+	@Mock
+	private ToolPaint toolPaint;
+	@Mock
+	private Workspace workspace;
 
 	private PipetteTool toolToTest;
-	private OnColorPickedListener listener;
-	private ToolPaint toolPaint;
 
-	@UiThreadTest
 	@Before
 	public void setUp() {
-		listener = mock(OnColorPickedListener.class);
-		MainActivity activity = activityTestRule.getActivity();
-		Workspace workspace = activity.workspace;
-		toolPaint = activity.toolPaint;
-		toolToTest = new PipetteTool(activity, toolPaint, workspace, commandManager, listener);
-
-		Bitmap bitmap = activity.layerModel.getCurrentLayer().getBitmap();
+		Bitmap bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
 		bitmap.setPixel(X_COORDINATE_RED, 0, Color.RED);
 		bitmap.setPixel(X_COORDINATE_GREEN, 0, Color.GREEN);
 		bitmap.setPixel(X_COORDINATE_BLUE, 0, Color.BLUE);
 		bitmap.setPixel(X_COORDINATE_PART_TRANSPARENT, 0, 0xAAAAAAAA);
+		when(workspace.getBitmapOfAllLayers()).thenReturn(bitmap);
 
-		toolToTest.updateSurfaceBitmap();
+		toolToTest = new PipetteTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager, listener, commandFactory);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testHandleDown() {
 		toolToTest.handleDown(new PointF(X_COORDINATE_RED, 0));
-		assertEquals(Color.RED, toolToTest.getDrawPaint().getColor());
 		toolToTest.handleMove(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
-		assertEquals(0xAAAAAAAA, toolToTest.getDrawPaint().getColor());
 
-		verify(listener).colorChanged(Color.RED);
-		verify(listener).colorChanged(0xAAAAAAAA);
+		InOrder inToolPaintOrder = Mockito.inOrder(toolPaint);
+		inToolPaintOrder.verify(toolPaint).setColor(Color.RED);
+		inToolPaintOrder.verify(toolPaint).setColor(0xAAAAAAAA);
+		inToolPaintOrder.verifyNoMoreInteractions();
+
+		InOrder inListenerOrder = Mockito.inOrder(listener);
+		inListenerOrder.verify(listener).colorChanged(Color.RED);
+		inListenerOrder.verify(listener).colorChanged(0xAAAAAAAA);
+		inListenerOrder.verifyNoMoreInteractions();
 	}
 
-	@UiThreadTest
 	@Test
 	public void testHandleMove() {
 		toolToTest.handleDown(new PointF(X_COORDINATE_RED, 0));
-		assertEquals(Color.RED, toolToTest.getDrawPaint().getColor());
 		toolToTest.handleMove(new PointF(X_COORDINATE_RED + 1, 0));
-		assertEquals(Color.TRANSPARENT, toolToTest.getDrawPaint().getColor());
 		toolToTest.handleMove(new PointF(X_COORDINATE_GREEN, 0));
-		assertEquals(Color.GREEN, toolToTest.getDrawPaint().getColor());
 		toolToTest.handleMove(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
-		assertEquals(0xAAAAAAAA, toolToTest.getDrawPaint().getColor());
 
-		verify(listener).colorChanged(Color.RED);
-		verify(listener).colorChanged(Color.TRANSPARENT);
-		verify(listener).colorChanged(Color.GREEN);
-		verify(listener).colorChanged(0xAAAAAAAA);
+		InOrder inToolPaintOrder = Mockito.inOrder(toolPaint);
+		inToolPaintOrder.verify(toolPaint).setColor(Color.RED);
+		inToolPaintOrder.verify(toolPaint).setColor(Color.TRANSPARENT);
+		inToolPaintOrder.verify(toolPaint).setColor(Color.GREEN);
+		inToolPaintOrder.verify(toolPaint).setColor(0xAAAAAAAA);
+		inToolPaintOrder.verifyNoMoreInteractions();
+
+		InOrder inListenerOrder = Mockito.inOrder(listener);
+		inListenerOrder.verify(listener).colorChanged(Color.RED);
+		inListenerOrder.verify(listener).colorChanged(Color.TRANSPARENT);
+		inListenerOrder.verify(listener).colorChanged(Color.GREEN);
+		inListenerOrder.verify(listener).colorChanged(0xAAAAAAAA);
+		inListenerOrder.verifyNoMoreInteractions();
 	}
 
-	@UiThreadTest
 	@Test
 	public void testHandleUp() {
 		toolToTest.handleUp(new PointF(X_COORDINATE_BLUE, 0));
-		assertEquals(Color.BLUE, toolToTest.getDrawPaint().getColor());
 		toolToTest.handleUp(new PointF(X_COORDINATE_PART_TRANSPARENT, 0));
-		assertEquals(0xAAAAAAAA, toolToTest.getDrawPaint().getColor());
 
-		verify(listener).colorChanged(Color.BLUE);
-		verify(listener).colorChanged(0xAAAAAAAA);
+		InOrder inToolPaintOrder = Mockito.inOrder(toolPaint);
+		inToolPaintOrder.verify(toolPaint).setColor(Color.BLUE);
+		inToolPaintOrder.verify(toolPaint).setColor(0xAAAAAAAA);
+		inToolPaintOrder.verifyNoMoreInteractions();
+
+		InOrder inListenerOrder = Mockito.inOrder(listener);
+		inListenerOrder.verify(listener).colorChanged(Color.BLUE);
+		inListenerOrder.verify(listener).colorChanged(0xAAAAAAAA);
+		inListenerOrder.verifyNoMoreInteractions();
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
 		assertThat(toolToTest.getToolType(), is(ToolType.PIPETTE));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectColorForForTopButtonIfColorIsTransparent() {
 		toolToTest.handleUp(new PointF(0, 0));
-		int color = toolPaint.getColor();
-		assertEquals(Color.TRANSPARENT, color);
+
+		verify(toolPaint).setColor(Color.TRANSPARENT);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectColorForForTopButtonIfColorIsRed() {
 		toolToTest.handleUp(new PointF(X_COORDINATE_RED, 0));
-		int color = toolPaint.getColor();
-		assertEquals(Color.RED, color);
+
+		verify(toolPaint).setColor(Color.RED);
 	}
 }

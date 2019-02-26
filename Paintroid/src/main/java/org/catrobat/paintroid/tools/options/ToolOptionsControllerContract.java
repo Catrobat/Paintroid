@@ -17,13 +17,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools.helper;
+package org.catrobat.paintroid.tools.options;
 
-import android.graphics.Bitmap;
-import android.graphics.Point;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 
-public interface FillAlgorithm {
-	void setParameters(Bitmap bitmap, Point clickedPixel, int targetColor, int replacementColor, float colorToleranceThreshold);
+import org.catrobat.paintroid.ui.tooloptions.BrushToolOptions;
 
-	void performFilling();
+public interface ToolOptionsControllerContract {
+	void hideAnimated();
+
+	void hide();
+
+	void showAnimated();
+
+	void removeToolViews();
+
+	void setToolName(@StringRes int id);
+
+	boolean isVisible();
+
+	int getScrollTolerance();
+
+	BrushToolOptions createBrushPickerView();
+
+	FillToolOptionsContract createFillToolOptions();
+
+	TransformToolOptionsContract createTransformToolOptions();
+
+	TextToolOptionsContract createTextToolOptions();
+
+	ShapeToolOptionsContract createShapeToolOptions();
+
+	void setCallback(@Nullable Callback callback);
+
+	interface Callback {
+		void onHide();
+
+		void onShow();
+	}
 }

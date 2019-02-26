@@ -24,7 +24,6 @@ import android.support.test.espresso.action.CoordinatesProvider;
 import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 
@@ -103,7 +102,7 @@ public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 		public float[] calculateCoordinates(View view) {
 			MainActivity mainActivity = getMainActivityFromView(view);
 			Workspace workspace = mainActivity.workspace;
-			PointF toolPosition = ((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition;
+			PointF toolPosition = ((BaseToolWithShape) mainActivity.currentTool.get()).toolPosition;
 			PointF point = workspace.getSurfacePointFromCanvasPoint(toolPosition);
 			return calculateViewOffset(view, point.x, point.y);
 		}

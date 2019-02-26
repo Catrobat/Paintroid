@@ -20,52 +20,58 @@
 package org.catrobat.paintroid.test.junit.tools;
 
 import android.graphics.Bitmap;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.util.DisplayMetrics;
 
-import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ImportToolTest {
-
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public MockitoRule mockito = MockitoJUnit.rule();
-
 	@Mock
 	private CommandManager commandManager;
+	@Mock
+	private CommandFactory commandFactory;
+	@Mock
+	private ContextCallback contextCallback;
+	@Mock
+	private ToolOptionsControllerContract toolOptionsController;
+	@Mock
+	private DisplayMetrics displayMetrics;
+	@Mock
+	private Workspace workspace;
+	@Mock
+	private ToolPaint toolPaint;
 
 	private int drawingSurfaceWidth;
 	private int drawingSurfaceHeight;
 
 	private ImportTool tool;
 
-	@UiThreadTest
 	@Before
 	public void setUp() {
-		MainActivity activity = activityTestRule.getActivity();
-		Workspace workspace = activity.workspace;
-		ToolPaint toolPaint = activity.toolPaint;
-		tool = new ImportTool(activity, toolPaint, workspace, commandManager);
-
+		when(workspace.getScale()).thenReturn(1f);
+		when(workspace.getWidth()).thenReturn(1080);
+		when(workspace.getHeight()).thenReturn(1920);
+		when(contextCallback.getDisplayMetrics()).thenReturn(displayMetrics);
+		displayMetrics.widthPixels = 1080;
+		displayMetrics.heightPixels = 1920;
 		drawingSurfaceWidth = workspace.getWidth();
 		drawingSurfaceHeight = workspace.getHeight();
+
+		tool = new ImportTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 	}
 
 	@Test

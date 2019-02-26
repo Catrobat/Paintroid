@@ -27,6 +27,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.PathCommand;
@@ -36,7 +37,9 @@ import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(AndroidJUnit4.class)
 public class PathCommandTest {
 
 	private static final int BITMAP_BASE_COLOR = Color.GREEN;

@@ -27,7 +27,7 @@
         android:orientation="vertical"
         android:focusableInTouchMode="true">
 
-    <org.catrobat.paintroid.ui.tools.DrawerPreview
+    <org.catrobat.paintroid.ui.tooloptions.BrushToolPreview
         android:id="@+id/pocketpaint_drawer_preview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

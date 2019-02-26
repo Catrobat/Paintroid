@@ -17,8 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools.helper;
+package org.catrobat.paintroid.tools.common;
 
-public interface FillAlgorithmFactory {
-	FillAlgorithm createFillAlgorithm();
+import android.graphics.Point;
+import android.graphics.PointF;
+
+public final class Conversion {
+	private Conversion() {
+		throw new RuntimeException("no");
+	}
+
+	public static Point toPoint(PointF point) {
+		return new Point((int) point.x, (int) point.y);
+	}
 }

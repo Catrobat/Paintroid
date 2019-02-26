@@ -21,12 +21,9 @@ package org.catrobat.paintroid;
 
 import android.graphics.Bitmap;
 
-import org.catrobat.paintroid.tools.Tool;
-
 import java.io.File;
 
 public final class PaintroidApplication {
-	public static Tool currentTool;
 	public static File cacheDir;
 	public static Bitmap checkeredBackgroundBitmap;
 

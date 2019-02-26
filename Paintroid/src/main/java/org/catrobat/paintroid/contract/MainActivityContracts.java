@@ -84,7 +84,7 @@ public interface MainActivityContracts {
 
 		void restoreFragmentListeners();
 
-		void showToolChangeToast(int offset, int idRes);
+		void showToolChangeToast(@StringRes int idRes, int offset);
 
 		void broadcastAddPictureToGallery(Uri uri);
 	}

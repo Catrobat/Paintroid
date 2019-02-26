@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
@@ -30,10 +31,12 @@ import org.catrobat.paintroid.model.Layer;
 import org.catrobat.paintroid.model.LayerModel;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(AndroidJUnit4.class)
 public class ResizeCommandTest {
 
 	private static final int MAXIMUM_BITMAP_RESOLUTION_FACTOR = 4;

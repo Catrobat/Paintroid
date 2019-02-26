@@ -31,7 +31,7 @@ import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
 import org.catrobat.paintroid.common.CommonFactory;
-import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory;
+import org.catrobat.paintroid.tools.algorithm.JavaFillAlgorithmFactory;
 
 import static android.graphics.Bitmap.Config.ARGB_8888;
 

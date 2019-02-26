@@ -19,17 +19,25 @@
 
 package org.catrobat.paintroid.test.espresso.util;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.PointF;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.support.test.runner.lifecycle.Stage;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.common.Constants;
 import org.hamcrest.Matcher;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -44,6 +52,18 @@ public final class EspressoUtils {
 	public static final int DEFAULT_STROKE_WIDTH = 25;
 
 	private EspressoUtils() {
+	}
+
+	public static MainActivity getCurrentActivity() {
+		final List<Activity> resumedActivities = new ArrayList<>();
+		InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+			@Override
+			public void run() {
+				Collection<Activity> activitiesInStage = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+				resumedActivities.addAll(activitiesInStage);
+			}
+		});
+		return (MainActivity) resumedActivities.get(0);
 	}
 
 	/**

@@ -46,4 +46,6 @@ public interface Workspace {
 	PointF getCanvasPointFromSurfacePoint(PointF surfacePoint);
 
 	void invalidate();
+
+	boolean contains(PointF point);
 }

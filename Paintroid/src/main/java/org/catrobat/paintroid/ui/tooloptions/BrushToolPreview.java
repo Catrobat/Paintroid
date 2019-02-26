@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.ui.tools;
+package org.catrobat.paintroid.ui.tooloptions;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -31,11 +31,11 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsContract;
 
-public class DrawerPreview extends View {
+public class BrushToolPreview extends View {
 
 	private static final int BORDER = 2;
 
@@ -43,14 +43,15 @@ public class DrawerPreview extends View {
 	private Paint checkeredPattern;
 	private Paint borderPaint;
 	private Path path;
-	private Callback callback;
 
-	public DrawerPreview(Context context) {
+	private BrushToolOptionsContract.PreviewCallback callback;
+
+	public BrushToolPreview(Context context) {
 		super(context);
 		init();
 	}
 
-	public DrawerPreview(Context context, AttributeSet attrs) {
+	public BrushToolPreview(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
 	}
@@ -132,7 +133,7 @@ public class DrawerPreview extends View {
 		borderPaint.setColor(Color.BLACK);
 		borderPaint.setAntiAlias(true);
 
-		if (PaintroidApplication.currentTool.getToolType() == ToolType.LINE) {
+		if (callback.getToolType() == ToolType.LINE) {
 			startX = getLeft() + getWidth() / 8 - BORDER;
 			startY = getTop() + getHeight() / 2;
 			endX = getRight() - getWidth() / 8 + BORDER;
@@ -208,21 +209,22 @@ public class DrawerPreview extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
-		if (callback != null) {
-			ToolType currentTool = callback.getToolType();
+		if (callback == null) {
+			return;
+		}
 
-			switch (currentTool) {
-				case BRUSH:
-				case CURSOR:
-					drawDrawerPreview(canvas);
-					break;
-				case LINE:
-					drawLinePreview(canvas);
-					break;
-				case ERASER:
-					drawEraserPreview(canvas);
-					break;
-			}
+		ToolType currentTool = callback.getToolType();
+		switch (currentTool) {
+			case BRUSH:
+			case CURSOR:
+				drawDrawerPreview(canvas);
+				break;
+			case LINE:
+				drawLinePreview(canvas);
+				break;
+			case ERASER:
+				drawEraserPreview(canvas);
+				break;
 		}
 	}
 
@@ -234,17 +236,7 @@ public class DrawerPreview extends View {
 		setMeasuredDimension(widthSize, (int) (widthSize * .25));
 	}
 
-	public void setCallback(Callback callback) {
+	public void setCallback(BrushToolOptionsContract.PreviewCallback callback) {
 		this.callback = callback;
-	}
-
-	public interface Callback {
-		float getStrokeWidth();
-
-		Paint.Cap getStrokeCap();
-
-		int getColor();
-
-		ToolType getToolType();
 	}
 }

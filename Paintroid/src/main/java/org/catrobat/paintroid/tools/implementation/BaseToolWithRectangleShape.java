@@ -19,9 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -37,15 +34,17 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.content.res.AppCompatResources;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 
 import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
@@ -118,14 +117,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private int rectangleShrinkingOnHighlight;
 	private CountDownTimer downTimer;
 
-	public BaseToolWithRectangleShape(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public BaseToolWithRectangleShape(ContextCallback contextCallback, ToolOptionsControllerContract toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager, CommandFactory commandFactory) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 
-		final Resources resources = context.getResources();
-		int orientation = resources.getConfiguration().orientation;
-		float boxSize = orientation == Configuration.ORIENTATION_PORTRAIT
-				? metrics.widthPixels
-				: metrics.heightPixels;
+		ContextCallback.ScreenOrientation orientation = contextCallback.getOrientation();
+		float boxSize = orientation == ContextCallback.ScreenOrientation.PORTRAIT
+				? metrics.widthPixels : metrics.heightPixels;
 		boxWidth = boxSize / workspace.getScale()
 				- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN) * 2;
 		boxHeight = boxWidth;
@@ -426,14 +423,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				.cos(-rotationRadiant) * (clickCoordinatesY - toolPosition.y));
 
 		// Move (within box)
-		if (clickCoordinatesRotatedX < toolPosition.x + boxWidth / 2
-				- boxResizeMargin
-				&& clickCoordinatesRotatedX > toolPosition.x - boxWidth / 2
-				+ boxResizeMargin
-				&& clickCoordinatesRotatedY < toolPosition.y + boxHeight / 2
-				- boxResizeMargin
-				&& clickCoordinatesRotatedY > toolPosition.y - boxHeight / 2
-				+ boxResizeMargin) {
+		if (clickCoordinatesRotatedX < toolPosition.x + boxWidth / 2 - boxResizeMargin
+				&& clickCoordinatesRotatedX > toolPosition.x - boxWidth / 2 + boxResizeMargin
+				&& clickCoordinatesRotatedY < toolPosition.y + boxHeight / 2 - boxResizeMargin
+				&& clickCoordinatesRotatedY > toolPosition.y - boxHeight / 2 + boxResizeMargin) {
 			return FloatingBoxAction.MOVE;
 		}
 
@@ -674,7 +667,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private void createOverlayDrawable() {
 		int overlayDrawableResource = getToolType().getOverlayDrawableResource();
 		if (overlayDrawableResource != INVALID_RESOURCE_ID) {
-			overlayDrawable = AppCompatResources.getDrawable(context, overlayDrawableResource);
+			overlayDrawable = contextCallback.getDrawable(overlayDrawableResource);
 			if (overlayDrawable != null) {
 				overlayDrawable.setFilterBitmap(false);
 			}
@@ -698,12 +691,13 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}.start();
 	}
 
+	protected abstract void onClickInBox();
+
 	void highlightBoxWhenClickInBox(boolean highlight) {
-		final Resources resources = context.getResources();
 		final @ColorRes int colorId = highlight
 				? R.color.pocketpaint_main_rectangle_tool_highlight_color
 				: R.color.pocketpaint_main_rectangle_tool_accent_color;
-		secondaryShapeColor = ResourcesCompat.getColor(resources, colorId, null);
+		secondaryShapeColor = contextCallback.getColor(colorId);
 
 		rectangleShrinkingOnHighlight = highlight
 				? HIGHLIGHT_RECTANGLE_SHRINKING
@@ -724,7 +718,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle bundle) {
+	public void onSaveInstanceState(@NonNull Bundle bundle) {
 		super.onSaveInstanceState(bundle);
 		bundle.putFloat(BUNDLE_BOX_WIDTH, boxWidth);
 		bundle.putFloat(BUNDLE_BOX_HEIGHT, boxHeight);
@@ -732,15 +726,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	@Override
-	public void onRestoreInstanceState(Bundle bundle) {
+	public void onRestoreInstanceState(@NonNull Bundle bundle) {
 		super.onRestoreInstanceState(bundle);
 		boxWidth = bundle.getFloat(BUNDLE_BOX_WIDTH, boxWidth);
 		boxHeight = bundle.getFloat(BUNDLE_BOX_HEIGHT, boxHeight);
 		boxRotation = bundle.getFloat(BUNDLE_BOX_ROTATION, boxRotation);
-	}
-
-	@Override
-	public void setupToolOptions() {
 	}
 
 	@Override

@@ -17,11 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools.helper;
+package org.catrobat.paintroid.tools;
 
-public class JavaFillAlgorithmFactory implements FillAlgorithmFactory {
-	@Override
-	public FillAlgorithm createFillAlgorithm() {
-		return new JavaFillAlgorithm();
-	}
+public interface ToolReference {
+	Tool get();
+	void set(Tool tool);
 }

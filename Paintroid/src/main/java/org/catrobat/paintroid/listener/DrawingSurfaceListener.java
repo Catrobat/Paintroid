@@ -19,23 +19,15 @@
 
 package org.catrobat.paintroid.listener;
 
-import android.graphics.Point;
 import android.graphics.PointF;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.StateChange;
-import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 import org.catrobat.paintroid.ui.DrawingSurface;
-
-import java.util.EnumSet;
-
-import static org.catrobat.paintroid.tools.ToolType.FILL;
-import static org.catrobat.paintroid.tools.ToolType.PIPETTE;
-import static org.catrobat.paintroid.tools.ToolType.TRANSFORM;
 
 public class DrawingSurfaceListener implements OnTouchListener {
 	private static final float DRAWER_EDGE_SIZE = 20;
@@ -50,6 +42,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	private PointF canvasTouchPoint;
 	private PointF eventTouchPoint;
+
 	private boolean ignoreTouch;
 	private int drawerEdgeSize;
 	private boolean autoScroll = true;
@@ -60,8 +53,8 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		drawerEdgeSize = (int) (DRAWER_EDGE_SIZE * displayDensity + 0.5f);
 		touchMode = TouchMode.DRAW;
 
-		canvasTouchPoint = new PointF();
 		eventTouchPoint = new PointF();
+		canvasTouchPoint = new PointF();
 	}
 
 	private float calculatePointerDistance(MotionEvent event) {
@@ -88,6 +81,14 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
+		ToolOptionsControllerContract toolOptionsController = callback.getToolOptionsController();
+
+		if (toolOptionsController.isVisible()) {
+			toolOptionsController.hideAnimated();
+			ignoreTouch = true;
+			return true;
+		}
+
 		DrawingSurface drawingSurface = (DrawingSurface) view;
 		Tool currentTool = callback.getCurrentTool();
 
@@ -105,7 +106,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					return true;
 				}
 
-				currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_DOWN);
+				currentTool.handleDown(canvasTouchPoint);
 
 				if (autoScroll) {
 					autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y);
@@ -129,7 +130,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 						autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
 					}
 
-					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_MOVE);
+					currentTool.handleMove(canvasTouchPoint);
 				} else {
 					if (autoScrollTask.isRunning()) {
 						autoScrollTask.stop();
@@ -167,7 +168,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				}
 
 				if (touchMode == TouchMode.DRAW) {
-					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_UP);
+					currentTool.handleUp(canvasTouchPoint);
 				} else {
 					currentTool.resetInternalState(StateChange.MOVE_CANCELED);
 				}
@@ -178,6 +179,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				touchMode = TouchMode.DRAW;
 				break;
 		}
+
 		drawingSurface.refreshDrawingSurface();
 		return true;
 	}
@@ -186,104 +188,10 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		DRAW, PINCH
 	}
 
-	public static class AutoScrollTask implements Runnable {
-		// IMPORTANT: If the SCROLL_INTERVAL_FACTOR is chosen too low,
-		// espresso will wait forever for the handler queue to be empty on long touch events.
-		private static final int SCROLL_INTERVAL_FACTOR = 40;
-		private static final float STEP = 2f;
-
-		private boolean running;
-		private float pointX;
-		private float pointY;
-		private int width;
-		private int height;
-		private EnumSet<ToolType> ignoredTools = EnumSet.of(PIPETTE, FILL, TRANSFORM);
-		private final PointF newMovePoint;
-
-		private final Handler handler;
-		private AutoScrollTaskCallback callback;
-
-		public AutoScrollTask(Handler handler, AutoScrollTaskCallback callback) {
-			this.handler = handler;
-			this.callback = callback;
-			running = false;
-			newMovePoint = new PointF();
-		}
-
-		public void setEventPoint(float pointX, float pointY) {
-			this.pointX = pointX;
-			this.pointY = pointY;
-		}
-
-		public void setViewDimensions(int width, int height) {
-			this.width = width;
-			this.height = height;
-		}
-
-		public void start() {
-			if (running || width == 0 || height == 0) {
-				throw new IllegalStateException();
-			} else if (ignoredTools.contains(callback.getCurrentToolType())) {
-				return;
-			}
-			running = true;
-			run();
-		}
-
-		public void stop() {
-			if (running) {
-				running = false;
-				handler.removeCallbacks(this);
-			}
-		}
-
-		public boolean isRunning() {
-			return running;
-		}
-
-		private int calculateScrollInterval(float scale) {
-			return (int) (SCROLL_INTERVAL_FACTOR / Math.cbrt(scale));
-		}
-
-		@Override
-		public void run() {
-			Point autoScrollDirection = callback.getToolAutoScrollDirection(pointX, pointY, width, height);
-
-			if (autoScrollDirection.x != 0 || autoScrollDirection.y != 0) {
-				newMovePoint.x = pointX;
-				newMovePoint.y = pointY;
-				callback.convertToCanvasFromSurface(newMovePoint);
-
-				if (callback.isPointOnCanvas((int) newMovePoint.x, (int) newMovePoint.y)) {
-					callback.translatePerspective(autoScrollDirection.x * STEP, autoScrollDirection.y * STEP);
-					callback.handleToolMove(newMovePoint);
-					callback.refreshDrawingSurface();
-				}
-			}
-			handler.postDelayed(this, calculateScrollInterval(callback.getPerspectiveScale()));
-		}
-	}
-
-	public interface AutoScrollTaskCallback {
-		boolean isPointOnCanvas(int pointX, int pointY);
-
-		void refreshDrawingSurface();
-
-		void handleToolMove(PointF coordinate);
-
-		Point getToolAutoScrollDirection(float pointX, float pointY, int screenWidth, int screenHeight);
-
-		float getPerspectiveScale();
-
-		void translatePerspective(float dx, float dy);
-
-		void convertToCanvasFromSurface(PointF surfacePoint);
-
-		ToolType getCurrentToolType();
-	}
-
 	public interface DrawingSurfaceListenerCallback {
 		Tool getCurrentTool();
+
+		ToolOptionsControllerContract getToolOptionsController();
 
 		void multiplyPerspectiveScale(float factor);
 

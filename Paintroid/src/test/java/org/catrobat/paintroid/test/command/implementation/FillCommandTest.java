@@ -9,8 +9,7 @@ import android.graphics.Point;
 import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.model.LayerModel;
-import org.catrobat.paintroid.tools.helper.FillAlgorithm;
-import org.catrobat.paintroid.tools.helper.FillAlgorithmFactory;
+import org.catrobat.paintroid.tools.algorithm.FillAlgorithm;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class FillCommandTest {
 	@Mock
-	private FillAlgorithmFactory fillAlgorithmFactory;
+	private FillAlgorithm.Factory fillAlgorithmFactory;
 
 	@Mock
 	private FillAlgorithm fillAlgorithm;

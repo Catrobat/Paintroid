@@ -26,7 +26,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
@@ -142,7 +141,7 @@ public class FillToolIntegrationTest {
 
 	@Test
 	public void testFillToolOptionsDialog() {
-		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
+		FillTool fillTool = (FillTool) launchActivityRule.getActivity().currentTool.get();
 		assertEquals(
 				"Wrong fill tool member value for color tolerance",
 				fillTool.getToleranceAbsoluteValue(FillTool.DEFAULT_TOLERANCE_IN_PERCENT),
@@ -175,7 +174,7 @@ public class FillToolIntegrationTest {
 
 	@Test
 	public void testFillToolDialogAfterToolSwitch() {
-		FillTool fillTool = (FillTool) PaintroidApplication.currentTool;
+		FillTool fillTool = (FillTool) launchActivityRule.getActivity().currentTool.get();
 
 		onToolBarView()
 				.performClickSelectedToolButton();

@@ -24,12 +24,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.File;
 
@@ -38,6 +40,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(AndroidJUnit4.class)
 public class BaseCommandTest {
 
 	private StubCommand baseCommand;

@@ -22,9 +22,10 @@ package org.catrobat.paintroid.test.listener;
 import android.graphics.PointF;
 import android.view.MotionEvent;
 
+import org.catrobat.paintroid.listener.AutoScrollTask;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
-import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,6 @@ import static org.catrobat.paintroid.tools.Tool.StateChange.MOVE_CANCELED;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -57,6 +57,9 @@ public class DrawingSurfaceListenerTest {
 	private Tool currentTool;
 
 	@Mock
+	private ToolOptionsControllerContract toolOptionsController;
+
+	@Mock
 	private DrawingSurfaceListener.DrawingSurfaceListenerCallback callback;
 
 	private DrawingSurfaceListener drawingSurfaceListener;
@@ -65,6 +68,8 @@ public class DrawingSurfaceListenerTest {
 	public void setUp() {
 		when(callback.getCurrentTool())
 				.thenReturn(currentTool);
+		when(callback.getToolOptionsController())
+				.thenReturn(toolOptionsController);
 
 		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, callback, DISPLAY_DENSITY);
 	}
@@ -89,7 +94,7 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(callback).convertToCanvasFromSurface(pointFEquals(41f, 5f));
-		verify(currentTool).handleTouch(pointFEquals(41f, 5f), eq(MotionEvent.ACTION_DOWN));
+		verify(currentTool).handleDown(pointFEquals(41f, 5f));
 
 		verify(autoScrollTask).setViewDimensions(97, 11);
 		verify(autoScrollTask).setEventPoint(41f, 5f);
@@ -212,7 +217,7 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(callback).convertToCanvasFromSurface(pointFEquals(5f, 3f));
-		verify(currentTool).handleTouch(pointFEquals(5f, 3f), eq(MotionEvent.ACTION_MOVE));
+		verify(currentTool).handleMove(pointFEquals(5f, 3f));
 		verify(autoScrollTask).setEventPoint(5f, 3f);
 		verify(autoScrollTask).setViewDimensions(7, 11);
 		verifyNoMoreInteractions(autoScrollTask);
@@ -251,7 +256,7 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
-		verify(currentTool, never()).handleTouch(any(PointF.class), anyInt());
+		verify(currentTool, never()).handleMove(any(PointF.class));
 		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
 		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 	}
@@ -270,7 +275,7 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
-		verify(currentTool, never()).handleTouch(any(PointF.class), anyInt());
+		verify(currentTool, never()).handleMove(any(PointF.class));
 		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
 		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
@@ -317,7 +322,7 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
-		verify(currentTool, never()).handleTouch(any(PointF.class), anyInt());
+		verify(currentTool, never()).handleMove(any(PointF.class));
 		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
 		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
@@ -355,7 +360,7 @@ public class DrawingSurfaceListenerTest {
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
-		verify(currentTool, never()).handleTouch(any(PointF.class), anyInt());
+		verify(currentTool, never()).handleMove(any(PointF.class));
 		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
 		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
@@ -375,7 +380,7 @@ public class DrawingSurfaceListenerTest {
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
-		verify(currentTool).handleTouch(pointFEquals(3f, 5f), eq(MotionEvent.ACTION_UP));
+		verify(currentTool).handleUp(pointFEquals(3f, 5f));
 		verifyNoMoreInteractions(currentTool);
 	}
 
@@ -393,11 +398,11 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(currentTool, times(2)).resetInternalState(MOVE_CANCELED);
-		verify(currentTool, never()).handleTouch(any(PointF.class), anyInt());
+		verify(currentTool, never()).handleMove(any(PointF.class));
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
-		verify(currentTool).handleTouch(pointFEquals(3f, 5f), eq(MotionEvent.ACTION_UP));
+		verify(currentTool).handleUp(pointFEquals(3f, 5f));
 	}
 
 	@Test

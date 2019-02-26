@@ -19,23 +19,23 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.content.res.ResourcesCompat;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.common.Constants;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolWithShape;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 
 public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {
 
@@ -48,21 +48,18 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	int primaryShapeColor;
 	int secondaryShapeColor;
 
-	final Paint linePaint;
-	final DisplayMetrics metrics;
+	Paint linePaint;
+	DisplayMetrics metrics;
 
-	public BaseToolWithShape(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public BaseToolWithShape(ContextCallback contextCallback, ToolOptionsControllerContract toolOptionsViewHolder, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager, CommandFactory commandFactory) {
+		super(contextCallback, toolOptionsViewHolder, toolPaint, workspace, commandManager, commandFactory);
 
-		final Resources resources = context.getResources();
-		metrics = resources.getDisplayMetrics();
+		metrics = contextCallback.getDisplayMetrics();
 
-		primaryShapeColor = ResourcesCompat.getColor(resources, R.color.pocketpaint_main_rectangle_tool_primary_color, null);
-		secondaryShapeColor = ResourcesCompat.getColor(resources, R.color.pocketpaint_colorAccent, null);
-		float actionBarHeight = Constants.ACTION_BAR_HEIGHT * metrics.density;
-		PointF surfaceToolPosition = new PointF(metrics.widthPixels / 2f, metrics.heightPixels
-				/ 2f - actionBarHeight);
-		toolPosition = workspace.getCanvasPointFromSurfacePoint(surfaceToolPosition);
+		primaryShapeColor = contextCallback.getColor(R.color.pocketpaint_main_rectangle_tool_primary_color);
+		secondaryShapeColor = contextCallback.getColor(R.color.pocketpaint_colorAccent);
+
+		toolPosition = new PointF(workspace.getWidth() / 2f, workspace.getHeight() / 2f);
 		linePaint = new Paint();
 		linePaint.setColor(primaryShapeColor);
 	}
@@ -71,18 +68,16 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	public abstract void drawShape(Canvas canvas);
 
 	float getStrokeWidthForZoom(float defaultStrokeWidth, float minStrokeWidth, float maxStrokeWidth) {
-		float strokeWidth = (defaultStrokeWidth * metrics.density)
-				/ workspace.getScale();
+		float strokeWidth = (defaultStrokeWidth * metrics.density) / workspace.getScale();
 		return Math.min(maxStrokeWidth, Math.max(minStrokeWidth, strokeWidth));
 	}
 
-	float getInverselyProportionalSizeForZoom(float defaultSize) {
-		float applicationScale = workspace.getScale();
-		return (defaultSize * metrics.density) / applicationScale;
+	float getInverselyProportionalSizeForZoom(float size) {
+		return (size * metrics.density) / workspace.getScale();
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle bundle) {
+	public void onSaveInstanceState(@NonNull Bundle bundle) {
 		super.onSaveInstanceState(bundle);
 
 		bundle.putFloat(BUNDLE_TOOL_POSITION_X, toolPosition.x);
@@ -90,7 +85,7 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	}
 
 	@Override
-	public void onRestoreInstanceState(Bundle bundle) {
+	public void onRestoreInstanceState(@NonNull Bundle bundle) {
 		super.onRestoreInstanceState(bundle);
 
 		toolPosition.x = bundle.getFloat(BUNDLE_TOOL_POSITION_X, toolPosition.x);
@@ -98,8 +93,7 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	}
 
 	@Override
-	public Point getAutoScrollDirection(float pointX, float pointY,
-			int viewWidth, int viewHeight) {
+	public Point getAutoScrollDirection(float pointX, float pointY, int viewWidth, int viewHeight) {
 
 		int deltaX = 0;
 		int deltaY = 0;
@@ -122,7 +116,6 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 
 		return new Point(deltaX, deltaY);
 	}
-	protected abstract void onClickInBox();
 
 	protected void drawToolSpecifics(Canvas canvas, float boxWidth, float boxHeight) {
 	}

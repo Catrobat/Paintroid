@@ -77,6 +77,11 @@ public class DefaultWorkspace implements Workspace {
 	}
 
 	@Override
+	public boolean contains(PointF point) {
+		return point.x < getWidth() && point.x >= 0 && point.y < getHeight() && point.y >= 0;
+	}
+
+	@Override
 	public int getPixelOfCurrentLayer(PointF coordinate) {
 		if (coordinate.x >= 0 && coordinate.y >= 0 && coordinate.x < getWidth() && coordinate.y < getHeight()) {
 			Bitmap bitmap = layerModel.getCurrentLayer().getBitmap();

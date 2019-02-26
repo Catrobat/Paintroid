@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -30,20 +29,21 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.view.LayoutInflater;
-import android.view.View;
 
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.helper.Conversion;
+import org.catrobat.paintroid.tools.common.Conversion;
+import org.catrobat.paintroid.tools.options.ShapeToolOptionsContract;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 
-public class GeometricFillTool extends BaseToolWithRectangleShape {
+public class ShapeTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
 	private static final float SHAPE_OFFSET = 10f;
@@ -56,13 +56,13 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	public BaseShape baseShape;
 	private int shapeOutlineWidth = 25;
 	private ShapeDrawType shapeDrawType;
-	private ShapeToolOptionsListener shapeToolOptionsListener;
+	private ShapeToolOptionsContract shapeToolOptions;
 	private Paint geometricFillCommandPaint;
 	private float previousBoxWidth;
 	private float previousBoxHeight;
 
-	public GeometricFillTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public ShapeTool(ShapeToolOptionsContract shapeToolOptions, ContextCallback contextCallback, ToolOptionsControllerContract toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager, CommandFactory commandFactory) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
 
 		setRotationEnabled(ROTATION_ENABLED);
 
@@ -71,6 +71,26 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		}
 
 		shapeDrawType = ShapeDrawType.FILL;
+
+		this.shapeToolOptions = shapeToolOptions;
+		this.shapeToolOptions.setCallback(
+				new ShapeToolOptionsContract.Callback() {
+					@Override
+					public void setToolType(BaseShape shape) {
+						baseShape = shape;
+						createAndSetBitmap();
+					}
+					@Override
+					public void setDrawType(ShapeDrawType drawType) {
+						shapeDrawType = drawType;
+						createAndSetBitmap();
+					}
+					@Override
+					public void setOutlineWidth(int outlineWidth) {
+						shapeOutlineWidth = outlineWidth;
+						createAndSetBitmap();
+					}
+				});
 
 		createAndSetBitmap();
 	}
@@ -92,30 +112,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		createAndSetBitmap();
 	}
 
-	private void setupOnShapeToolDialogChangedListener() {
-		shapeToolOptionsListener.setOnShapeToolOptionsChangedListener(
-				new ShapeToolOptionsListener.OnShapeToolOptionsChangedListener() {
-					@Override
-					public void setToolType(BaseShape shape) {
-						baseShape = shape;
-						createAndSetBitmap();
-					}
-					@Override
-					public void setDrawType(ShapeDrawType drawType) {
-						shapeDrawType = drawType;
-						createAndSetBitmap();
-					}
-					@Override
-					public void setOutlineWidth(int outlineWidth) {
-						shapeOutlineWidth = outlineWidth;
-						createAndSetBitmap();
-					}
-				});
-	}
-
 	private void createAndSetBitmap() {
-		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
-				Bitmap.Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight, Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
 
 		RectF shapeRect;
@@ -146,7 +144,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 			drawPaint.reset();
 			drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
-			drawPaint.setShader(checkeredPattern.getShader());
+			drawPaint.setShader(contextCallback.getCheckeredBitmapShader());
 		}
 
 		shapeRect = new RectF(0, 0, boxWidth, boxHeight);
@@ -177,7 +175,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle bundle) {
+	public void onSaveInstanceState(@NonNull Bundle bundle) {
 		super.onSaveInstanceState(bundle);
 
 		bundle.putSerializable(BUNDLE_BASE_SHAPE, baseShape);
@@ -186,7 +184,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	public void onRestoreInstanceState(Bundle bundle) {
+	public void onRestoreInstanceState(@NonNull Bundle bundle) {
 		super.onRestoreInstanceState(bundle);
 
 		BaseShape baseShape = (BaseShape) bundle.getSerializable(BUNDLE_BASE_SHAPE);
@@ -199,9 +197,9 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 			this.shapeDrawType = shapeDrawType;
 			this.shapeOutlineWidth = shapeOutlineWidth;
 
-			shapeToolOptionsListener.setShapeActivated(baseShape);
-			shapeToolOptionsListener.setDrawTypeActivated(shapeDrawType);
-			shapeToolOptionsListener.setShapeOutlineWidth(shapeOutlineWidth);
+			shapeToolOptions.setShapeActivated(baseShape);
+			shapeToolOptions.setDrawTypeActivated(shapeDrawType);
+			shapeToolOptions.setShapeOutlineWidth(shapeOutlineWidth);
 			createAndSetBitmap();
 		}
 	}
@@ -302,21 +300,6 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void resetInternalState() {
-	}
-
-	@Override
-	public void setupToolOptions() {
-		LayoutInflater inflater = LayoutInflater.from(context);
-		View shapeToolOptionView = inflater.inflate(R.layout.dialog_pocketpaint_shapes, toolSpecificOptionsLayout);
-
-		shapeToolOptionsListener = new ShapeToolOptionsListener(shapeToolOptionView);
-		setupOnShapeToolDialogChangedListener();
-		toolSpecificOptionsLayout.post(new Runnable() {
-			@Override
-			public void run() {
-				toggleShowToolOptions();
-			}
-		});
 	}
 
 	public enum ShapeDrawType {

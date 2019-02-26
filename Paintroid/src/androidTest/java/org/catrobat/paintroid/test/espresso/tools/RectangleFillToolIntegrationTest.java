@@ -27,14 +27,13 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
+import org.catrobat.paintroid.tools.implementation.ShapeTool;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
@@ -81,7 +80,7 @@ public class RectangleFillToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
 
-		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) launchActivityRule.getActivity().currentTool.get();
 		float rectWidth = rectangleFillTool.boxWidth;
 		float rectHeight = rectangleFillTool.boxHeight;
 		PointF rectPosition = rectangleFillTool.toolPosition;
@@ -98,9 +97,9 @@ public class RectangleFillToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
 		onShapeToolOptionsView()
-				.performSelectShape(GeometricFillTool.BaseShape.OVAL);
+				.performSelectShape(ShapeTool.BaseShape.OVAL);
 
-		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) launchActivityRule.getActivity().currentTool.get();
 		float rectHeight = ellipseTool.boxHeight;
 
 		onToolBarView()
@@ -140,7 +139,7 @@ public class RectangleFillToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
 
-		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) launchActivityRule.getActivity().currentTool.get();
 
 		Bitmap drawingBitmap = rectangleFillTool.drawingBitmap;
 		int colorInRectangle = drawingBitmap.getPixel(drawingBitmap.getWidth() / 2, drawingBitmap.getHeight() / 2);
@@ -155,7 +154,7 @@ public class RectangleFillToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
 
-		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) launchActivityRule.getActivity().currentTool.get();
 
 		Bitmap drawingBitmap = rectangleFillTool.drawingBitmap;
 		int colorInRectangle = drawingBitmap.getPixel(drawingBitmap.getWidth() / 2, drawingBitmap.getHeight() / 2);
@@ -180,14 +179,14 @@ public class RectangleFillToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
 		onShapeToolOptionsView()
-				.performSelectShape(GeometricFillTool.BaseShape.RECTANGLE);
+				.performSelectShape(ShapeTool.BaseShape.RECTANGLE);
 		selectShapeTypeAndDraw(false, Color.TRANSPARENT);
 
 		onToolBarView()
 				.performClickSelectedToolButton();
 
 		onShapeToolOptionsView()
-				.performSelectShape(GeometricFillTool.BaseShape.OVAL);
+				.performSelectShape(ShapeTool.BaseShape.OVAL);
 		selectShapeTypeAndDraw(true, Color.TRANSPARENT);
 	}
 
@@ -196,7 +195,7 @@ public class RectangleFillToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
 		onShapeToolOptionsView()
-				.performSelectShape(GeometricFillTool.BaseShape.HEART);
+				.performSelectShape(ShapeTool.BaseShape.HEART);
 		selectShapeTypeAndDraw(false, Color.BLACK);
 	}
 
@@ -206,7 +205,7 @@ public class RectangleFillToolIntegrationTest {
 				.performSelectTool(ToolType.SHAPE);
 
 		onShapeToolOptionsView()
-				.performSelectShape(GeometricFillTool.BaseShape.HEART);
+				.performSelectShape(ShapeTool.BaseShape.HEART);
 
 		onToolBarView()
 				.performCloseToolOptions();
@@ -214,7 +213,7 @@ public class RectangleFillToolIntegrationTest {
 		onToolProperties()
 				.setColor(Color.TRANSPARENT);
 
-		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) launchActivityRule.getActivity().currentTool.get();
 		Bitmap drawingBitmap = tool.drawingBitmap;
 		int width = drawingBitmap.getWidth();
 		int height = drawingBitmap.getHeight();
@@ -238,16 +237,16 @@ public class RectangleFillToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
 		onShapeToolOptionsView()
-				.performSelectShape(GeometricFillTool.BaseShape.RECTANGLE);
+				.performSelectShape(ShapeTool.BaseShape.RECTANGLE);
 		selectShapeTypeAndDraw(true, Color.BLACK);
 
 		onToolBarView()
 				.performOpenToolOptions();
 		onShapeToolOptionsView()
-				.performSelectShape(GeometricFillTool.BaseShape.HEART);
+				.performSelectShape(ShapeTool.BaseShape.HEART);
 		selectShapeTypeAndDraw(true, Color.TRANSPARENT);
 
-		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) launchActivityRule.getActivity().currentTool.get();
 		Bitmap drawingBitmap = tool.drawingBitmap;
 		int boxWidth = drawingBitmap.getWidth();
 		int boxHeight = drawingBitmap.getHeight();
@@ -266,7 +265,7 @@ public class RectangleFillToolIntegrationTest {
 	}
 
 	public void selectShapeTypeAndDraw(boolean changeColor, int color) {
-		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) launchActivityRule.getActivity().currentTool.get();
 		PointF centerPointTool = tool.toolPosition;
 
 		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);

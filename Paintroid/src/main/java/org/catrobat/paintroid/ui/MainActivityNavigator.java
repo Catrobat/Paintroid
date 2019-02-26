@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -32,7 +33,6 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.common.Constants;
@@ -46,15 +46,18 @@ import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDial
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.tools.ToolReference;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
 public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	private MainActivity mainActivity;
+	private ToolReference currentTool;
 
-	public MainActivityNavigator(MainActivity mainActivity) {
+	public MainActivityNavigator(MainActivity mainActivity, ToolReference currentTool) {
 		this.mainActivity = mainActivity;
+		this.currentTool = currentTool;
 	}
 
 	@Override
@@ -62,7 +65,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
 		Fragment fragment = fragmentManager.findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
 		if (fragment == null) {
-			ColorPickerDialog dialog = ColorPickerDialog.newInstance(PaintroidApplication.currentTool.getDrawPaint().getColor());
+			ColorPickerDialog dialog = ColorPickerDialog.newInstance(currentTool.get().getDrawPaint().getColor());
 			setupColorPickerDialogListeners(dialog);
 			dialog.show(fragmentManager, Constants.COLOR_PICKER_DIALOG_TAG);
 		}
@@ -72,7 +75,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		dialog.addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
-				PaintroidApplication.currentTool.changePaintColor(color);
+				currentTool.get().changePaintColor(color);
 				mainActivity.getPresenter().setTopBarColor(color);
 			}
 		});
@@ -216,7 +219,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void showToolChangeToast(int offset, int idRes) {
+	public void showToolChangeToast(@StringRes int idRes, int offset) {
 		Toast toolNameToast = ToastFactory.makeText(mainActivity, idRes, Toast.LENGTH_SHORT);
 		int gravity = Gravity.TOP | Gravity.CENTER;
 		if (mainActivity.getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {

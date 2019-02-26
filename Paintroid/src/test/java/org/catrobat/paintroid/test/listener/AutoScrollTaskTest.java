@@ -23,8 +23,8 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Handler;
 
-import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask;
-import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTaskCallback;
+import org.catrobat.paintroid.listener.AutoScrollTask;
+import org.catrobat.paintroid.listener.AutoScrollTask.AutoScrollTaskCallback;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

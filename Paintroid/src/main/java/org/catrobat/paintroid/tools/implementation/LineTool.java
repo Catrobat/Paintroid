@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -28,22 +27,65 @@ import android.graphics.Path;
 import android.graphics.PointF;
 
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.listener.BrushPickerView;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.ui.tools.DrawerPreview;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsContract;
+import org.catrobat.paintroid.tools.options.ToolOptionsControllerContract;
 
 public class LineTool extends BaseTool {
 
-	protected PointF initialEventCoordinate;
-	protected PointF currentCoordinate;
-	protected boolean pathInsideBitmap;
-	private BrushPickerView brushPickerView;
+	private PointF initialEventCoordinate;
+	private PointF currentCoordinate;
+	private boolean pathInsideBitmap;
 
-	public LineTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	private BrushToolOptionsContract brushToolOptions;
+
+	public LineTool(BrushToolOptionsContract brushToolOptions, ContextCallback contextCallback, ToolOptionsControllerContract toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager, CommandFactory commandFactory) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager, commandFactory);
+
+		this.brushToolOptions = brushToolOptions;
+		setCallbacks();
+	}
+
+	private void setCallbacks() {
+		brushToolOptions.setCurrentPaint(toolPaint.getPaint());
+		brushToolOptions.setCallback(new BrushToolOptionsContract.Callback() {
+			@Override
+			public void setCap(Cap strokeCap) {
+				changePaintStrokeCap(strokeCap);
+			}
+
+			@Override
+			public void setStrokeWidth(int strokeWidth) {
+				changePaintStrokeWidth(strokeWidth);
+			}
+		});
+
+		brushToolOptions.setDrawerPreviewCallback(new BrushToolOptionsContract.PreviewCallback() {
+			@Override
+			public float getStrokeWidth() {
+				return toolPaint.getStrokeWidth();
+			}
+
+			@Override
+			public Cap getStrokeCap() {
+				return toolPaint.getStrokeCap();
+			}
+
+			@Override
+			public int getColor() {
+				return toolPaint.getColor();
+			}
+
+			@Override
+			public ToolType getToolType() {
+				return LineTool.this.getToolType();
+			}
+		});
 	}
 
 	@Override
@@ -52,7 +94,7 @@ public class LineTool extends BaseTool {
 			return;
 		}
 
-		setPaintColor(toolPaint.getPreviewColor());
+		toolPaint.setColor(toolPaint.getPreviewColor());
 
 		canvas.save();
 		canvas.clipRect(0, 0, workspace.getWidth(), workspace.getHeight());
@@ -85,14 +127,15 @@ public class LineTool extends BaseTool {
 		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathInsideBitmap = false;
 
-		pathInsideBitmap = checkPathInsideBitmap(coordinate);
+		pathInsideBitmap = workspace.contains(coordinate);
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
 		currentCoordinate = new PointF(coordinate.x, coordinate.y);
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
+
+		if (!pathInsideBitmap && workspace.contains(coordinate)) {
 			pathInsideBitmap = true;
 		}
 		return true;
@@ -108,7 +151,7 @@ public class LineTool extends BaseTool {
 		finalPath.moveTo(initialEventCoordinate.x, initialEventCoordinate.y);
 		finalPath.lineTo(coordinate.x, coordinate.y);
 
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && workspace.contains(coordinate)) {
 			pathInsideBitmap = true;
 		}
 
@@ -129,57 +172,6 @@ public class LineTool extends BaseTool {
 	@Override
 	public void changePaintColor(int color) {
 		super.changePaintColor(color);
-		brushPickerView.invalidate();
-	}
-
-	@Override
-	public void setupToolOptions() {
-		brushPickerView = new BrushPickerView(toolSpecificOptionsLayout);
-		brushPickerView.setCurrentPaint(toolPaint.getPaint());
-	}
-
-	@Override
-	public void startTool() {
-		super.startTool();
-		brushPickerView.setBrushChangedListener(new BrushPickerView.OnBrushChangedListener() {
-			@Override
-			public void setCap(Cap strokeCap) {
-				changePaintStrokeCap(strokeCap);
-			}
-
-			@Override
-			public void setStrokeWidth(int strokeWidth) {
-				changePaintStrokeWidth(strokeWidth);
-			}
-		});
-
-		brushPickerView.setDrawerPreviewCallback(new DrawerPreview.Callback() {
-			@Override
-			public float getStrokeWidth() {
-				return toolPaint.getStrokeWidth();
-			}
-
-			@Override
-			public Cap getStrokeCap() {
-				return toolPaint.getStrokeCap();
-			}
-
-			@Override
-			public int getColor() {
-				return toolPaint.getColor();
-			}
-
-			@Override
-			public ToolType getToolType() {
-				return LineTool.this.getToolType();
-			}
-		});
-	}
-
-	@Override
-	public void leaveTool() {
-		super.leaveTool();
-		brushPickerView.setBrushChangedListener(null);
-		brushPickerView.setDrawerPreviewCallback(null);
+		brushToolOptions.invalidate();
 	}
 }

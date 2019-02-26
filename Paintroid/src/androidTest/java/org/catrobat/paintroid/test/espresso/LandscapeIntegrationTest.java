@@ -28,11 +28,11 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -59,7 +59,6 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawe
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -67,6 +66,7 @@ public class LandscapeIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+	private ToolReference currentTool;
 
 	@Before
 	public void setUp() {
@@ -74,6 +74,9 @@ public class LandscapeIntegrationTest {
 				.performSelectTool(ToolType.BRUSH);
 
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		MainActivity activity = activityTestRule.getActivity();
+		currentTool = activity.currentTool;
 	}
 
 	@Test
@@ -113,59 +116,6 @@ public class LandscapeIntegrationTest {
 	}
 
 	@Test
-	public void testTools() {
-		for (ToolType toolType : ToolType.values()) {
-			if (toolType == ToolType.IMPORTPNG
-					|| toolType == ToolType.COLORCHOOSER
-					|| toolType == ToolType.REDO
-					|| toolType == ToolType.UNDO
-					|| toolType == ToolType.LAYER
-					|| !toolType.hasOptions()) {
-				continue;
-			}
-
-			onToolBarView()
-					.performSelectTool(toolType);
-
-			assertEquals(toolType, PaintroidApplication.currentTool.getToolType());
-
-			if (!PaintroidApplication.currentTool.getToolOptionsAreShown()) {
-				onToolBarView()
-						.performClickSelectedToolButton();
-			}
-
-			onView(withId(R.id.pocketpaint_main_tool_options))
-					.check(matches(isDisplayed()));
-
-			onToolBarView()
-					.performClickSelectedToolButton();
-
-			onView(withId(R.id.pocketpaint_main_tool_options))
-					.check(matches(not(isDisplayed())));
-		}
-	}
-
-	@Test
-	public void testCorrectSelectionInBothOrientations() {
-		for (ToolType toolType : ToolType.values()) {
-			if (toolType == ToolType.IMPORTPNG
-					|| toolType == ToolType.COLORCHOOSER
-					|| toolType == ToolType.REDO
-					|| toolType == ToolType.UNDO
-					|| toolType == ToolType.LAYER) {
-				continue;
-			}
-
-			onToolBarView()
-					.performSelectTool(toolType);
-
-			setOrientation(SCREEN_ORIENTATION_PORTRAIT);
-			assertEquals(toolType, PaintroidApplication.currentTool.getToolType());
-			setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
-		}
-	}
-
-	@Test
 	public void testNavigationDrawerAppears() {
 		onView(withId(R.id.pocketpaint_toolbar))
 				.perform(click());
@@ -194,7 +144,7 @@ public class LandscapeIntegrationTest {
 					.performClickColorPickerPresetSelectorButton(i);
 
 			if (colors[i] != Color.TRANSPARENT) {
-				int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+				int selectedColor = currentTool.get().getDrawPaint().getColor();
 				assertEquals(colors[i], selectedColor);
 
 				onView(withId(R.id.color_chooser_button_ok))

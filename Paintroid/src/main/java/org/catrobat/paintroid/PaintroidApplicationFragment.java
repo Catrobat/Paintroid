@@ -25,15 +25,15 @@ import android.support.v4.app.Fragment;
 
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.LayerContracts;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
 
 public class PaintroidApplicationFragment extends Fragment {
 	private CommandManager commandManager;
-	private Tool currentTool;
+	private ToolReference currentTool;
 	private Perspective perspective;
 	private LayerContracts.Model layerModel;
 	private File cacheDir;
@@ -50,7 +50,7 @@ public class PaintroidApplicationFragment extends Fragment {
 		return commandManager;
 	}
 
-	public Tool getCurrentTool() {
+	public ToolReference getCurrentTool() {
 		return currentTool;
 	}
 
@@ -74,9 +74,8 @@ public class PaintroidApplicationFragment extends Fragment {
 		this.commandManager = commandManager;
 	}
 
-	public void setCurrentTool(Tool currentTool) {
+	public void setCurrentTool(ToolReference currentTool) {
 		this.currentTool = currentTool;
-		PaintroidApplication.currentTool = this.currentTool;
 	}
 
 	public void setPerspective(Perspective perspective) {

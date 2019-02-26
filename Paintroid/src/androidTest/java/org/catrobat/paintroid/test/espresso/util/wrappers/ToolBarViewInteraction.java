@@ -21,7 +21,6 @@ package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import android.support.test.espresso.ViewInteraction;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -32,6 +31,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCurrentActivity;
 import static org.hamcrest.Matchers.not;
 
 public final class ToolBarViewInteraction extends CustomViewInteraction {
@@ -45,7 +45,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onSelectedToolButton() {
-		return onView(withId(PaintroidApplication.currentTool.getToolType().getToolButtonID()));
+		return onView(withId(getCurrentActivity().currentTool.get().getToolType().getToolButtonID()));
 	}
 
 	public ViewInteraction onToolOptions() {
@@ -61,7 +61,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 	public ToolBarViewInteraction performSelectTool(ToolType toolType) {
 		onView(withId(toolType.getToolButtonID()))
 				.perform(scrollTo());
-		if (PaintroidApplication.currentTool.getToolType() != toolType) {
+		if (getCurrentActivity().currentTool.get().getToolType() != toolType) {
 			onView(withId(toolType.getToolButtonID()))
 					.perform(click());
 		}

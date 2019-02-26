@@ -26,6 +26,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
@@ -36,10 +37,12 @@ import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+@RunWith(AndroidJUnit4.class)
 public class StampCommandTest {
 
 	private Bitmap stampBitmapUnderTest;
