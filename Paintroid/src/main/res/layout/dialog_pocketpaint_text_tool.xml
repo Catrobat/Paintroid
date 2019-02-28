@@ -132,11 +132,11 @@
             android:layout_width="match_parent"
             android:weightSum="4.0"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="0dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="10dp"
-            android:gravity="center">
+            android:gravity="start">
 
             <EditText
                 android:id="@+id/pocketpaint_text_tool_dialog_input_text"
@@ -148,15 +148,14 @@
                 android:hint="@string/text_tool_dialog_input_hint"
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textMultiLine"
-                android:textCursorDrawable="@null" />
+                android:textCursorDrawable="@null"
+                />
 
             <ImageButton
                 android:id="@+id/ic_pocketpaint_text_tool_confirm_button"
                 style="@style/PocketPaintSelectableButton"
                 android:layout_width="57dp"
                 android:layout_height="80dp"
-                android:layout_marginStart="1dp"
-                android:layout_marginEnd="30dp"
                 android:src="@drawable/ic_pocketpaint_text_tool_confirm_button" />
 
         </LinearLayout>
