@@ -65,13 +65,12 @@
     <string name="closing_security_question">Salvar alterações?</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="menu_new_image">Nova imagem</string>
+    <string name="menu_discard_image">Discard image</string>
     <string name="menu_load_image">Carregar imagem</string>
     <string name="menu_save_image">Salvar imagem</string>
     <string name="menu_save_copy">Salvar cópia</string>
-    <string name="menu_new_image_empty_image">Imagem vazia</string>
     <string name="menu_hide_menu">Tela cheia</string>
     <string name="menu_show_menu">Exit fullscreen</string>
-    <string name="menu_new_image_from_camera">Nova imagem da câmera</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">Exportar</string>
@@ -105,8 +104,7 @@
     <string name="dialog_shape_text">Forma</string>
     <string name="dialog_loading_image_failed_title">Erro ao carregar imagem</string>
     <string name="dialog_loading_image_failed_text">Este não é um arquivo de imagem válido</string>
-    <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
-    <string name="permission_info_external_storage_title">Permission needed</string>
+    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save files to the local memory, the app needs read and write access to it. You can always change permissions through your device\'s settings.</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
