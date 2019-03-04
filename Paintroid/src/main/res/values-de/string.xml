@@ -65,13 +65,12 @@
     <string name="closing_security_question">Änderungen speichern?</string>
     <string name="closing_catroid_security_question_title">Zurück zum Projekt</string>
     <string name="menu_new_image">Neues Bild</string>
+    <string name="menu_discard_image">Bild verwerfen</string>
     <string name="menu_load_image">Bild laden</string>
     <string name="menu_save_image">Bild speichern</string>
     <string name="menu_save_copy">Kopie speichern</string>
-    <string name="menu_new_image_empty_image">Leeres Bild</string>
     <string name="menu_hide_menu">Vollbild</string>
     <string name="menu_show_menu">Vollbildmodus beenden</string>
-    <string name="menu_new_image_from_camera">Neues Bild von der Kamera</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">Exportieren</string>
@@ -106,7 +105,6 @@
     <string name="dialog_loading_image_failed_title">Fehler beim Laden vom Bild</string>
     <string name="dialog_loading_image_failed_text">Keine gültige Bilddatei</string>
     <string name="permission_info_external_storage_text">Um Bilder auf externem Speicher zu speichern wird die folgende Berechtigung benötigt.</string>
-    <string name="permission_info_external_storage_title">Berechtigung benötigt</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Navigation-Drawer öffnen</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Navigation-Drawer schließen</string>
     <string name="transform_info_text">Ziehe die Kanten an ihre neue Position und tipp dann, um den Bildbereich zu vergrößern oder zu verkleinern.</string>

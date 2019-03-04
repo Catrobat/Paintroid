@@ -65,13 +65,12 @@
     <string name="closing_security_question">是否保存修改?</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="menu_new_image">新建图像</string>
+    <string name="menu_discard_image">Discard image</string>
     <string name="menu_load_image">载入图像</string>
     <string name="menu_save_image">保存图像</string>
     <string name="menu_save_copy">保存副本</string>
-    <string name="menu_new_image_empty_image">清空图像</string>
     <string name="menu_hide_menu">全屏</string>
     <string name="menu_show_menu">退出全屏</string>
-    <string name="menu_new_image_from_camera">用相机拍摄新图像</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">导出</string>
@@ -105,8 +104,7 @@
     <string name="dialog_shape_text">形状</string>
     <string name="dialog_loading_image_failed_title">加载图像时出错</string>
     <string name="dialog_loading_image_failed_text">不是有效的图像文件</string>
-    <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
-    <string name="permission_info_external_storage_title">Permission needed</string>
+    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save files to the local memory, the app needs read and write access to it. You can always change permissions through your device\'s settings.</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">将边缘拖动到新位置，然后点击可放大或裁剪图像。</string>
