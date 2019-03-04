@@ -19,12 +19,12 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -40,6 +40,7 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +50,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -65,18 +67,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class MenuFileActivityIntegrationTest {
@@ -85,8 +84,10 @@ public class MenuFileActivityIntegrationTest {
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
 
-	@Rule
-	public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+	@ClassRule
+	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
+			Manifest.permission.WRITE_EXTERNAL_STORAGE,
+			Manifest.permission.READ_EXTERNAL_STORAGE);
 
 	@Before
 	public void setUp() {
@@ -105,25 +106,23 @@ public class MenuFileActivityIntegrationTest {
 
 	@Test
 	public void testNewEmptyDrawingWithSave() {
-		final int xCoordinatePixel = 0;
-		final int yCoordinatePixel = 0;
-
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		getWorkingBitmap().setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
-		assertEquals("Color on drawing surface wrong", Color.BLACK, PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
 		onNavigationDrawer()
 				.performOpen();
 
-		onView(withText(R.string.menu_new_image)).perform(click());
+		onView(withText(R.string.menu_new_image))
+				.perform(click());
 
-		onView(withText(R.string.save_button_text)).perform(click());
+		onView(withText(R.string.save_button_text))
+				.perform(click());
 
-		onView(withText(R.string.menu_new_image_empty_image)).perform(click());
-
-		assertEquals("Color should be Transparent", Color.TRANSPARENT, PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 	}
 
 	@Test
@@ -134,12 +133,17 @@ public class MenuFileActivityIntegrationTest {
 		onNavigationDrawer()
 				.performOpen();
 
-		onView(withText(R.string.menu_load_image)).perform(click());
+		onView(withText(R.string.menu_load_image))
+				.perform(click());
 
-		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.dialog_warning_new_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
-		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
+		onView(withText(R.string.menu_load_image))
+				.check(matches(isDisplayed()));
+		onView(withText(R.string.dialog_warning_new_image))
+				.check(matches(isDisplayed()));
+		onView(withText(R.string.save_button_text))
+				.check(matches(isDisplayed()));
+		onView(withText(R.string.discard_button_text))
+				.check(matches(isDisplayed()));
 	}
 
 	@Test
@@ -169,7 +173,7 @@ public class MenuFileActivityIntegrationTest {
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 
 		Intent intent = new Intent();
-		intent.setData(createTestImageFile());
+		intent.setData(Uri.fromFile(createTestImageFile()));
 		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
 
@@ -270,14 +274,17 @@ public class MenuFileActivityIntegrationTest {
 		onNavigationDrawer()
 				.performOpen();
 
-		onView(withText(R.string.menu_new_image)).perform(click());
+		onView(withText(R.string.menu_new_image))
+				.perform(click());
 
-		onView(withText(R.string.discard_button_text)).perform(click());
+		onView(withText(R.string.discard_button_text))
+				.perform(click());
 
-		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+		onView(withText(R.string.dialog_warning_new_image))
+				.check(doesNotExist());
 
 		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 	}
 
 	@Test
@@ -392,7 +399,7 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
-	private Uri createTestImageFile() {
+	private File createTestImageFile() {
 		File imageFile = new File(Environment.getExternalStorageDirectory()
 				+ "/PocketCodePaintTest/", "testfile.jpg");
 		Bitmap bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
@@ -403,16 +410,16 @@ public class MenuFileActivityIntegrationTest {
 			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream));
 			outputStream.close();
 		} catch (IOException e) {
-			fail("Picture file could not be created.");
+			throw new AssertionError("Picture file could not be created.", e);
 		}
 		deletionFileList.add(imageFile);
-		return Uri.fromFile(imageFile);
+		return imageFile;
 	}
 
 	@Test
 	public void testLoadImageTransparency() {
 		Intent intent = new Intent();
-		intent.setData(createTestImageFile());
+		intent.setData(Uri.fromFile(createTestImageFile()));
 		Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
 
@@ -436,6 +443,6 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	private void addUriToDeletionFileList(Uri uri) {
-		deletionFileList.add(new File(uri.getPath()));
+		deletionFileList.add(new File(Objects.requireNonNull(uri.getPath())));
 	}
 }

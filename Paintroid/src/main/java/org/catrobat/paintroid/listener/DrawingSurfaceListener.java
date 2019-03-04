@@ -40,6 +40,7 @@ import static org.catrobat.paintroid.tools.ToolType.PIPETTE;
 import static org.catrobat.paintroid.tools.ToolType.TRANSFORM;
 
 public class DrawingSurfaceListener implements OnTouchListener {
+	private static final float DRAWER_EDGE_SIZE = 20;
 	private TouchMode touchMode;
 
 	private float pointerDistance;
@@ -48,13 +49,19 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private float xMidPoint;
 	private float yMidPoint;
 
-	private PointF touchPoint;
+	private PointF canvasTouchPoint;
+	private PointF eventTouchPoint;
+	private boolean ignoreTouch;
+	private int drawerEdgeSize;
+	private boolean autoScroll = true;
 
-	public DrawingSurfaceListener(AutoScrollTask autoScrollTask) {
+	public DrawingSurfaceListener(AutoScrollTask autoScrollTask, float displayDensity) {
 		this.touchMode = TouchMode.DRAW;
 		this.autoScrollTask = autoScrollTask;
+		drawerEdgeSize = (int) (DRAWER_EDGE_SIZE * displayDensity + 0.5f);
 
-		touchPoint = new PointF();
+		canvasTouchPoint = new PointF();
+		eventTouchPoint = new PointF();
 	}
 
 	private float calculatePointerDistance(MotionEvent event) {
@@ -68,36 +75,62 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		yMidPoint = (event.getY(0) + event.getY(1)) / 2f;
 	}
 
+	public void enableAutoScroll() {
+		autoScroll = true;
+	}
+
+	public void disableAutoScroll() {
+		autoScroll = false;
+		if (autoScrollTask.isRunning()) {
+			autoScrollTask.stop();
+		}
+	}
+
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		Tool currentTool = PaintroidApplication.currentTool;
 		DrawingSurface drawingSurface = (DrawingSurface) view;
 		Perspective perspective = PaintroidApplication.perspective;
 
-		touchPoint.x = event.getX();
-		touchPoint.y = event.getY();
-		perspective.convertToCanvasFromSurface(touchPoint);
+		canvasTouchPoint.x = event.getX();
+		canvasTouchPoint.y = event.getY();
+		eventTouchPoint.x = canvasTouchPoint.x;
+		eventTouchPoint.y = canvasTouchPoint.y;
+
+		perspective.convertToCanvasFromSurface(canvasTouchPoint);
 
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				currentTool.handleTouch(touchPoint, MotionEvent.ACTION_DOWN);
+				if (eventTouchPoint.x < drawerEdgeSize || view.getWidth() - eventTouchPoint.x < drawerEdgeSize) {
+					ignoreTouch = true;
+					return true;
+				}
 
-				autoScrollTask.setEventPoint(event.getX(), event.getY());
-				autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
-				autoScrollTask.start();
+				currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_DOWN);
+
+				if (autoScroll) {
+					autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y);
+					autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
+					autoScrollTask.start();
+				}
 
 				break;
 			case MotionEvent.ACTION_MOVE:
+				if (ignoreTouch) {
+					return true;
+				}
 				if (event.getPointerCount() == 1) {
 					if (touchMode == TouchMode.PINCH) {
 						break;
 					}
 
 					touchMode = TouchMode.DRAW;
-					autoScrollTask.setEventPoint(event.getX(), event.getY());
-					autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
+					if (autoScroll) {
+						autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y);
+						autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
+					}
 
-					currentTool.handleTouch(touchPoint, MotionEvent.ACTION_MOVE);
+					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_MOVE);
 				} else {
 					if (autoScrollTask.isRunning()) {
 						autoScrollTask.stop();
@@ -125,12 +158,17 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				break;
 			case MotionEvent.ACTION_UP:
 			case MotionEvent.ACTION_CANCEL:
+				if (ignoreTouch) {
+					ignoreTouch = false;
+					return true;
+				}
+
 				if (autoScrollTask.isRunning()) {
 					autoScrollTask.stop();
 				}
 
 				if (touchMode == TouchMode.DRAW) {
-					currentTool.handleTouch(touchPoint, MotionEvent.ACTION_UP);
+					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_UP);
 				} else {
 					currentTool.resetInternalState(StateChange.MOVE_CANCELED);
 				}

@@ -65,13 +65,12 @@
     <string name="closing_security_question">Spremi izmjene?</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="menu_new_image">Nova slika</string>
+    <string name="menu_discard_image">Discard image</string>
     <string name="menu_load_image">Učitaj sliku</string>
     <string name="menu_save_image">Spremi sliku</string>
     <string name="menu_save_copy">Spremi kopiju</string>
-    <string name="menu_new_image_empty_image">Prazna slika</string>
     <string name="menu_hide_menu">Fullscreen</string>
     <string name="menu_show_menu">Exit fullscreen</string>
-    <string name="menu_new_image_from_camera">Nova slika s kamere</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">Export</string>
@@ -105,8 +104,7 @@
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image file</string>
-    <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
-    <string name="permission_info_external_storage_title">Permission needed</string>
+    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save files to the local memory, the app needs read and write access to it. You can always change permissions through your device\'s settings.</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>

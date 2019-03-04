@@ -19,12 +19,15 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.Manifest;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +40,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.close;
 import static android.support.test.espresso.contrib.DrawerActions.open;
 import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
-import static android.support.test.espresso.matcher.RootMatchers.isDialog;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -46,14 +48,18 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawe
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
-public class NavigationDrawerTest {
+public class NavigationDrawerIntegrationTest {
 
 	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule =
-			new ActivityTestRule<>(MainActivity.class);
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+	@ClassRule
+	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
+			Manifest.permission.WRITE_EXTERNAL_STORAGE,
+			Manifest.permission.READ_EXTERNAL_STORAGE);
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		onNavigationDrawer()
 				.performOpen();
 	}
@@ -77,13 +83,18 @@ public class NavigationDrawerTest {
 
 	@Test
 	public void testNavigationDrawerAllItemsExist() {
-		onView(withText(R.string.menu_save_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_save_copy)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_new_image)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_hide_menu)).check(matches(isDisplayed()));
 		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
-		onView(withId(R.id.pocketpaint_drawer_layout)).perform(close());
+		onView(withText(R.string.pocketpaint_menu_about)).check(matches(isDisplayed()));
+
+		onView(withText(R.string.menu_save_image)).check(matches(isDisplayed()));
+		onView(withText(R.string.menu_save_copy)).check(matches(isDisplayed()));
+		onView(withText(R.string.menu_new_image)).check(matches(isDisplayed()));
+
+		onView(withText(R.string.menu_back)).check(doesNotExist());
+		onView(withText(R.string.menu_discard_image)).check(doesNotExist());
+		onView(withText(R.string.menu_export)).check(doesNotExist());
 	}
 
 	@Test
@@ -107,8 +118,7 @@ public class NavigationDrawerTest {
 
 	@Test
 	public void testNavigationDrawerItemNewImageClick() {
-		onView(withText(R.string.menu_new_image)).perform(click())
-				.inRoot(isDialog()).check(matches(isDisplayed()));
+		onView(withText(R.string.menu_new_image)).perform(click());
 	}
 
 	@Test

@@ -65,13 +65,12 @@
     <string name="closing_security_question">Değişiklikler Kaydedilsin mi?</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="menu_new_image">Yeni resim</string>
+    <string name="menu_discard_image">Discard image</string>
     <string name="menu_load_image">Resim yükle</string>
     <string name="menu_save_image">Resmi kaydet</string>
     <string name="menu_save_copy">Kopyasını kaydet</string>
-    <string name="menu_new_image_empty_image">Boş resim</string>
     <string name="menu_hide_menu">Tam ekran</string>
     <string name="menu_show_menu">Tam ekrandan çık</string>
-    <string name="menu_new_image_from_camera">Kameradan yeni resim</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">Dışa aktar</string>
@@ -105,8 +104,7 @@
     <string name="dialog_shape_text">Şekil</string>
     <string name="dialog_loading_image_failed_title">Resim yüklenirken hata oluştu</string>
     <string name="dialog_loading_image_failed_text">Geçersiz bir resim dosyası</string>
-    <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
-    <string name="permission_info_external_storage_title">Permission needed</string>
+    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save files to the local memory, the app needs read and write access to it. You can always change permissions through your device\'s settings.</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">Kenarları yeni konumlarına sürükle, sonra büyütmek veya resim alanını kırpmak için dokun.</string>

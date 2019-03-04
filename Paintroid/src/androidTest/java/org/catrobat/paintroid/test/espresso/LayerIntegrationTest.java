@@ -32,6 +32,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,8 +66,10 @@ public class LayerIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	@Rule
-	public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+	@ClassRule
+	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
+			Manifest.permission.WRITE_EXTERNAL_STORAGE,
+			Manifest.permission.READ_EXTERNAL_STORAGE);
 
 	private int bitmapHeight;
 	private int bitmapWidth;
@@ -171,8 +174,6 @@ public class LayerIntegrationTest {
 		onView(withText(R.string.menu_new_image))
 				.perform(click());
 		onView(withText(R.string.discard_button_text))
-				.perform(click());
-		onView(withText(R.string.menu_new_image_empty_image))
 				.perform(click());
 
 		onLayerMenuView().onButtonAdd()
@@ -326,8 +327,6 @@ public class LayerIntegrationTest {
 				.perform(click());
 		onView(withText(R.string.discard_button_text))
 				.perform(click());
-		onView(withText(R.string.menu_new_image_empty_image))
-				.perform(click());
 
 		onToolBarView()
 				.performSelectTool(ToolType.PIPETTE);
@@ -358,8 +357,6 @@ public class LayerIntegrationTest {
 				.perform(click());
 		onView(withText(R.string.save_button_text))
 				.perform(click());
-		onView(withText(R.string.menu_new_image_empty_image))
-				.perform(click());
 
 		onToolBarView()
 				.performSelectTool(ToolType.PIPETTE);
@@ -389,8 +386,6 @@ public class LayerIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
@@ -430,8 +425,6 @@ public class LayerIntegrationTest {
 				.performOpenToolOptions();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onToolBarView()
-				.performCloseToolOptions();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 

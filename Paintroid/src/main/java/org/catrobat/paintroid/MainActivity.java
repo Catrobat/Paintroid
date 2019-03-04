@@ -27,13 +27,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -41,7 +39,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +77,6 @@ import org.catrobat.paintroid.ui.viewholder.NavigationViewViewHolder;
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -168,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 			presenter.restoreState(isFullScreen, isSaved, isOpenedFromCatroid,
 					wasInitialAnimationPlayed, savedPictureUri, cameraImageUri);
-			setLayoutDirection();
 		}
 
 		commandManager.addCommandListener(this);
@@ -345,13 +340,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		}
 	}
 
-	private void setLayoutDirection() {
-		if (VERSION.SDK_INT > Build.VERSION_CODES.N_MR1) {
-			Configuration config = getResources().getConfiguration();
-			getWindow().getDecorView().setLayoutDirection(config.getLayoutDirection());
-		}
-	}
-
 	@Override
 	public void initializeActionBar(boolean isOpenedFromCatroid) {
 		Toolbar toolbar = findViewById(R.id.pocketpaint_toolbar);
@@ -414,6 +402,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			presenter.loadImageClicked();
 		} else if (i == R.id.pocketpaint_nav_new_image) {
 			presenter.newImageClicked();
+		} else if (i == R.id.pocketpaint_nav_discard_image) {
+			presenter.discardImageClicked();
 		} else if (i == R.id.pocketpaint_nav_fullscreen_mode) {
 			presenter.enterFullscreenClicked();
 		} else if (i == R.id.pocketpaint_nav_exit_fullscreen_mode) {
@@ -486,33 +476,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	@Override
 	public void enterFullScreen() {
+		drawingSurface.disableAutoScroll();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 	}
 
 	@Override
 	public void exitFullScreen() {
+		drawingSurface.enableAutoScroll();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-	}
-
-	@Override
-	public File getExternalDirPictureFile() {
-		File image = null;
-		try {
-			File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-			image = File.createTempFile(FileIO.getDefaultFileName(), ".jpg", storageDir);
-			image.deleteOnExit();
-		} catch (IOException e) {
-			Log.e(TAG, "Exception while creating tmp image file.");
-		}
-		return image;
-	}
-
-	@Override
-	public Uri getFileProviderUriFromFile(File file) {
-		String authority = getPackageName() + ".paintroid.fileprovider";
-		return FileProvider.getUriForFile(this, authority, file);
 	}
 
 	@Override

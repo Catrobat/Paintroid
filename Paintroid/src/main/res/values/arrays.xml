@@ -42,12 +42,6 @@
         <item name="transparent">@color/pocketpaint_color_chooser_transparent</item>
     </array>
 
-    <!-- PocketPaint new image dialog options -->
-    <string-array name="pocketpaint_main_dialog_new_image">
-        <item>@string/menu_new_image_empty_image</item>
-        <item>@string/menu_new_image_from_camera</item>
-    </string-array>
-
     <!-- PocketPaint font chooser options -->
     <string-array name="pocketpaint_main_text_tool_fonts">
         <item>@string/text_tool_dialog_font_monospace</item>
