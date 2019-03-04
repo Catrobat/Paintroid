@@ -157,6 +157,14 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
+	public void testDiscardImageClickedThenClearsLayers() {
+		presenter.discardImageClicked();
+
+		verify(commandManager).addCommand(any(Command.class));
+		verifyNoMoreInteractions(commandManager, navigator);
+	}
+
+	@Test
 	public void testBackToCatroidClickedWhenUnchangedThenFinishActivity() {
 		presenter.backToPocketCodeClicked();
 

@@ -17,10 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.espresso;
+package org.catrobat.paintroid.test.espresso.catroid;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.os.Environment;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.GrantPermissionRule;
@@ -30,6 +32,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -38,25 +41,29 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
-public class ActivityOpenedFromPocketCodeNewImageTest {
-
-	private static final String IMAGE_NAME = "Look123";
+public class OpenedFromPocketCodeWithImageTest {
 
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
@@ -70,19 +77,20 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 
 	@Before
 	public void setUp() {
-		Intent intent = new Intent();
-		intent.putExtra(Constants.PAINTROID_PICTURE_PATH, "");
-		intent.putExtra(Constants.PAINTROID_PICTURE_NAME, IMAGE_NAME);
+		imageFile = createImageFile();
 
-		launchActivityRule.launchActivity(intent);
+		Intent extras = new Intent();
+		extras.putExtra(Constants.PAINTROID_PICTURE_PATH, imageFile.getAbsolutePath());
+		launchActivityRule.launchActivity(extras);
 
-		imageFile = getImageFile(IMAGE_NAME);
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 	}
 
 	@After
 	public void tearDown() {
-		if (imageFile.exists()) {
-			imageFile.delete();
+		if (imageFile != null && imageFile.exists()) {
+			assertTrue(imageFile.delete());
 		}
 	}
 
@@ -94,27 +102,61 @@ public class ActivityOpenedFromPocketCodeNewImageTest {
 		onNavigationDrawer()
 				.performOpen();
 
-		onView(withText(R.string.menu_back))
-				.perform(click());
+		onView(withText(R.string.menu_back)).perform(click());
 
-		onView(withText(R.string.save_button_text))
-				.check(matches(isDisplayed()));
-		onView(withText(R.string.discard_button_text))
-				.check(matches(isDisplayed()));
+		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
+		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
 
-		onView(withText(R.string.save_button_text))
-				.perform(click());
+		long lastModifiedBefore = imageFile.lastModified();
+		long fileSizeBefore = imageFile.length();
 
+		onView(withText(R.string.save_button_text)).perform(click());
+
+		assertTrue(launchActivityRule.getActivity().isFinishing());
 		String path = launchActivityRule.getActivityResult().getResultData().getStringExtra(Constants.PAINTROID_PICTURE_PATH);
 		assertEquals(imageFile.getAbsolutePath(), path);
 
-		assertTrue(imageFile.exists());
-		assertThat(imageFile.length(), greaterThan(0L));
+		assertThat("Image modification not saved", imageFile.lastModified(), greaterThan(lastModifiedBefore));
+		assertThat("Saved image length not changed", imageFile.length(), greaterThan(fileSizeBefore));
 	}
 
-	private File getImageFile(String filename) {
-		return new File(Environment.getExternalStorageDirectory(), File.separatorChar
-				+ Constants.EXT_STORAGE_DIRECTORY_NAME
-				+ File.separatorChar + filename + ".png");
+	@Test
+	public void testBackToPocketCode() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onNavigationDrawer()
+				.performOpen();
+
+		onView(withText(R.string.menu_back)).perform(click());
+
+		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
+		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
+
+		long lastModifiedBefore = imageFile.lastModified();
+		long fileSizeBefore = imageFile.length();
+
+		assertThat("Image modified", imageFile.lastModified(), equalTo(lastModifiedBefore));
+		assertThat("Saved image length changed", imageFile.length(), equalTo(fileSizeBefore));
+	}
+
+	private File createImageFile() {
+		Bitmap bitmap = Bitmap.createBitmap(480, 800, Config.ARGB_8888);
+		File pictureFile = getImageFile();
+		try {
+			pictureFile.getParentFile().mkdirs();
+			pictureFile.createNewFile();
+			OutputStream outputStream = new FileOutputStream(pictureFile);
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream));
+			outputStream.close();
+		} catch (IOException e) {
+			fail("Picture file could not be created.");
+		}
+
+		return pictureFile;
+	}
+
+	private File getImageFile() {
+		return new File(Environment.getExternalStorageDirectory() + "/PocketCodePaintTest/", "testFile.png");
 	}
 }

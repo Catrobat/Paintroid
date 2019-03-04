@@ -13,8 +13,7 @@
         <item
             android:id="@+id/pocketpaint_nav_export"
             android:icon="@drawable/ic_pocketpaint_menu_save"
-            android:title="@string/menu_export"
-            />
+            android:title="@string/menu_export" />
 
         <item
             android:id="@+id/pocketpaint_nav_save_duplicate"
@@ -30,6 +29,11 @@
             android:id="@+id/pocketpaint_nav_new_image"
             android:icon="@drawable/ic_pocketpaint_menu_new_image"
             android:title="@string/menu_new_image" />
+
+        <item
+            android:id="@+id/pocketpaint_nav_discard_image"
+            android:icon="@drawable/ic_pocketpaint_menu_discard_image"
+            android:title="@string/menu_discard_image" />
     </group>
 
     <group>
@@ -62,7 +66,7 @@
         <item
             android:id="@+id/pocketpaint_nav_version"
             android:title="@string/pocketpaint_app_name"
-            android:enabled="false"/>
+            android:enabled="false" />
     </group>
 
 </menu>
