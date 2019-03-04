@@ -65,13 +65,12 @@
     <string name="closing_security_question">Guardar Cambios?</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="menu_new_image">Nueva imagen</string>
+    <string name="menu_discard_image">Discard image</string>
     <string name="menu_load_image">Cargar Imagen</string>
     <string name="menu_save_image">Guardar imagen</string>
     <string name="menu_save_copy">Guardar copia</string>
-    <string name="menu_new_image_empty_image">Imagen en blanco</string>
     <string name="menu_hide_menu">Pantalla Completa</string>
     <string name="menu_show_menu">Salir de pantalla completa</string>
-    <string name="menu_new_image_from_camera">Nueva imagen de la cámara</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">Exportar</string>
@@ -105,8 +104,7 @@
     <string name="dialog_shape_text">Forma</string>
     <string name="dialog_loading_image_failed_title">Error en la carga de la imagen</string>
     <string name="dialog_loading_image_failed_text">No es un archivo de imagen válido</string>
-    <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
-    <string name="permission_info_external_storage_title">Permission needed</string>
+    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save files to the local memory, the app needs read and write access to it. You can always change permissions through your device\'s settings.</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">Arrastra los bordes a su nueva posición, luego pulsa para agrandar o recortar el área de imagen.</string>

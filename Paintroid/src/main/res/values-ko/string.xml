@@ -65,13 +65,12 @@
     <string name="closing_security_question">변경사항을 저장하시겠습니까?</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="menu_new_image">새 이미지</string>
+    <string name="menu_discard_image">Discard image</string>
     <string name="menu_load_image">로드 이미지</string>
     <string name="menu_save_image">이미지 저장</string>
     <string name="menu_save_copy">복사본 저장</string>
-    <string name="menu_new_image_empty_image">빈 그림</string>
     <string name="menu_hide_menu">전체 화면</string>
     <string name="menu_show_menu">전체 화면 종료</string>
-    <string name="menu_new_image_from_camera">카메라에서 새 이미지</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">내보내기</string>
@@ -105,8 +104,7 @@
     <string name="dialog_shape_text">모양</string>
     <string name="dialog_loading_image_failed_title">그림 로딩 중 에러</string>
     <string name="dialog_loading_image_failed_text">사용할 수 없는 이미지 파일</string>
-    <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
-    <string name="permission_info_external_storage_title">Permission needed</string>
+    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save files to the local memory, the app needs read and write access to it. You can always change permissions through your device\'s settings.</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">새로운 위치로 가장자리를 끌고, 확대하거나 자르려면 탭하세요.</string>

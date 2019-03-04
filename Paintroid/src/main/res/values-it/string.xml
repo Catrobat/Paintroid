@@ -65,13 +65,12 @@
     <string name="closing_security_question">Salvare le modifiche?</string>
     <string name="closing_catroid_security_question_title">Torna al progetto</string>
     <string name="menu_new_image">Nuova immagine</string>
+    <string name="menu_discard_image">Discard image</string>
     <string name="menu_load_image">Carica immagine</string>
     <string name="menu_save_image">Salva immagine</string>
     <string name="menu_save_copy">Salva copia</string>
-    <string name="menu_new_image_empty_image">Nuova immagine</string>
     <string name="menu_hide_menu">Schermo intero</string>
     <string name="menu_show_menu">Esci dallo schermo intero</string>
-    <string name="menu_new_image_from_camera">Nuova immagine da fotocamera</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">Esporta</string>
@@ -105,8 +104,7 @@
     <string name="dialog_shape_text">Forma</string>
     <string name="dialog_loading_image_failed_title">Errore durante il caricamento dell\'immagine</string>
     <string name="dialog_loading_image_failed_text">Non è un file di immagine valido</string>
-    <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
-    <string name="permission_info_external_storage_title">Permission needed</string>
+    <string name="permission_info_external_storage_text">Al fine di poter usare una memoria esterna per salvare le immagini, l\'applicazione necessita della seguente autorizzazione.</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Apri il menù di navigazione</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Chiudi il menù di navigazione</string>
     <string name="transform_info_text">Trascina i bordi nella nuova posizione, quindi tocca per ingrandire o ritagliare l\'area dell\'immagine.</string>

@@ -63,15 +63,14 @@
     <string name="help_content_color_chooser">تحديد أو ضبط اللون</string>
     <string name="closing_security_question_title">إنهاء/خروج</string>
     <string name="closing_security_question">حفظ التغييرات؟</string>
-    <string name="closing_catroid_security_question_title">Back to project</string>
+    <string name="closing_catroid_security_question_title">الرجوع إلى البرنامج</string>
     <string name="menu_new_image">صورة جديدة</string>
+    <string name="menu_discard_image">Discard image</string>
     <string name="menu_load_image">استيراد صورة</string>
     <string name="menu_save_image">حفظ الصورة</string>
     <string name="menu_save_copy">حفظ كـ نسخة</string>
-    <string name="menu_new_image_empty_image">صورة فارغة</string>
     <string name="menu_hide_menu">ملء الشاشة</string>
     <string name="menu_show_menu">الخروج من وضع ملء الشاشة</string>
-    <string name="menu_new_image_from_camera">صورة جديدة من الكاميرا</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">تصدير</string>
@@ -90,7 +89,7 @@
     <string name="shape_tool_dialog_star_title">نجمة</string>
     <string name="shape_tool_dialog_heart_title">قلب</string>
     <string name="shape_tool_dialog_fill_title">تعبئة</string>
-    <string name="shape_tool_dialog_outline_title">Outline</string>
+    <string name="shape_tool_dialog_outline_title">خط محيطي</string>
     <string name="fill_tool_dialog_color_tolerance_title">تفاوت اللون</string>
     <string name="transform_tool_auto_crop_text">قص</string>
     <string name="transform_width_text">العرض</string>
@@ -105,8 +104,7 @@
     <string name="dialog_shape_text">الشكل</string>
     <string name="dialog_loading_image_failed_title">خطأ في استيراد الصورة</string>
     <string name="dialog_loading_image_failed_text">ليس ملف صورة صالح</string>
-    <string name="permission_info_external_storage_text">In order to save images to external storage the application needs the following permission.</string>
-    <string name="permission_info_external_storage_title">Permission needed</string>
+    <string name="permission_info_external_storage_text">من أجل حفظ الصور إلى وحدة التخزين الخارجية يحتاج التطبيق الإذن التالي.</string>
     <string name="drawer_open" tools:ignore="UnusedResources">فتح قائمة التنقل</string>
     <string name="drawer_close" tools:ignore="UnusedResources">إغلاق قائمة التنقل</string>
     <string name="transform_info_text">اسحب الحواف إلى المركز الجديد، ثم اضغط للتكبير أو اقتصاص صورة المنطقة.</string>
@@ -124,10 +122,10 @@
     <string name="lets_go">لنبدأ</string>
     <string name="next">التالي</string>
     <string name="skip">تخطى</string>
-    <string name="pocketpaint_about_title">About</string>
+    <string name="pocketpaint_about_title">حول</string>
     <string name="pocketpaint_about_version">Version %s</string>
     <string name="pocketpaint_about_license">GNU Affero General Public License, v3</string>
-    <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
-    <string name="pocketpaint_about_url_license_description">Pocket Paint Source Code License</string>
+    <string name="pocketpaint_about_content">بوكت بينت هو مكتبة تحرير صور وهو جزء من مشروع الكاتروبات.\n\n كاتروبات هو لغة برمجة مرئية ومجموعة من أدوات الإبداع للأجهزة الذكية والأجهزة اللوحية، ومستعرضات الهاتف.\n\n النص المصدري لبرمجية \"بوكت بينت\" مرخص ومحمي تحت %s.\n لمعرفة تفاصيل أدق حول الرخصة قم بزيارة الرابط في الأسفل.\n\n.</string>
+    <string name="pocketpaint_about_url_license_description">رخصة النص الأصلي لبرنامج بوكت بينت</string>
     <string name="pocketpaint_about_url_catrobat_description">حول كاتروبات</string>
 </resources>
