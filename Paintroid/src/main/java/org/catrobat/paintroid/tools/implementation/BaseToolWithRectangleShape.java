@@ -155,7 +155,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		maximumBoxResolution = DEFAULT_MAXIMUM_BOX_RESOLUTION;
 
 		initScaleDependedValues();
-		createOverlayBitmap();
+		createOverlayDrawable();
 
 		linePaint.reset();
 		linePaint.setDither(true);
@@ -294,8 +294,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (drawingBitmap != null) {
 			drawBitmap(canvas, boxWidth, boxHeight);
 		}
+
 		if (overlayDrawable != null) {
-			drawOverlayDrawable(canvas, boxWidth, boxHeight);
+			drawOverlayDrawable(canvas, boxWidth, boxHeight, boxRotation);
 		}
 
 		drawRectangle(canvas, boxWidth, boxHeight);
@@ -365,10 +366,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.drawBitmap(drawingBitmap, null, tempDrawingRectangle, null);
 	}
 
-	private void drawOverlayDrawable(Canvas canvas, float boxWidth, float boxHeight) {
+	private void drawOverlayDrawable(Canvas canvas, float boxWidth, float boxHeight, float boxRotation) {
 		int size = (int) (Math.min(boxWidth, boxHeight) / 8);
+
+		canvas.save();
+		canvas.rotate(-boxRotation);
 		overlayDrawable.setBounds(-size, -size, size, size);
 		overlayDrawable.draw(canvas);
+		canvas.restore();
 	}
 
 	private void drawRectangle(Canvas canvas, float boxWidth, float boxHeight) {
@@ -669,7 +674,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		toolPosition.y = oldPosY;
 	}
 
-	private void createOverlayBitmap() {
+	private void createOverlayDrawable() {
 		int overlayDrawableResource = getToolType().getOverlayDrawableResource();
 		if (overlayDrawableResource != INVALID_RESOURCE_ID) {
 			overlayDrawable = AppCompatResources.getDrawable(context, overlayDrawableResource);
