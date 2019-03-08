@@ -27,15 +27,16 @@ import android.graphics.Point;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
+import org.catrobat.paintroid.tools.helper.FillAlgorithmFactory;
 
 public class FillCommand implements Command {
 	private Paint paint;
 	private float colorTolerance;
-	private final FillAlgorithm fillAlgorithm;
+	private FillAlgorithmFactory fillAlgorithmFactory;
 	private Point clickedPixel;
 
-	public FillCommand(FillAlgorithm fillAlgorithm, Point clickedPixel, Paint paint, float colorTolerance) {
-		this.fillAlgorithm = fillAlgorithm;
+	public FillCommand(FillAlgorithmFactory fillAlgorithmFactory, Point clickedPixel, Paint paint, float colorTolerance) {
+		this.fillAlgorithmFactory = fillAlgorithmFactory;
 		this.clickedPixel = clickedPixel;
 		this.paint = paint;
 		this.colorTolerance = colorTolerance;
@@ -47,6 +48,8 @@ public class FillCommand implements Command {
 
 		int replacementColor = bitmap.getPixel(clickedPixel.x, clickedPixel.y);
 		int targetColor = paint.getColor();
+
+		FillAlgorithm fillAlgorithm = fillAlgorithmFactory.createFillAlgorithm();
 
 		fillAlgorithm.setParameters(bitmap, clickedPixel, targetColor, replacementColor, colorTolerance);
 		fillAlgorithm.performFilling();
