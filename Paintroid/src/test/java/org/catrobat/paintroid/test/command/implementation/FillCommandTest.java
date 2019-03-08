@@ -10,6 +10,8 @@ import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.tools.helper.FillAlgorithm;
+import org.catrobat.paintroid.tools.helper.FillAlgorithmFactory;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -24,6 +26,9 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class FillCommandTest {
 	@Mock
+	private FillAlgorithmFactory fillAlgorithmFactory;
+
+	@Mock
 	private FillAlgorithm fillAlgorithm;
 
 	@Mock
@@ -32,19 +37,25 @@ public class FillCommandTest {
 	@Mock
 	private Paint paint;
 
+	@Before
+	public void setUp() {
+		when(fillAlgorithmFactory.createFillAlgorithm())
+				.thenReturn(fillAlgorithm);
+	}
+
 	@Test
 	public void testSetUp() {
-		FillCommand command = new FillCommand(fillAlgorithm, clickedPixel, paint, 0);
+		FillCommand command = new FillCommand(fillAlgorithmFactory, clickedPixel, paint, 0);
 
 		assertNotNull(command);
-		verifyZeroInteractions(fillAlgorithm, clickedPixel, paint);
+		verifyZeroInteractions(fillAlgorithmFactory, clickedPixel, paint);
 	}
 
 	@Test
 	public void testRun() {
 		clickedPixel.x = 3;
 		clickedPixel.y = 5;
-		FillCommand command = new FillCommand(fillAlgorithm, clickedPixel, paint, 0.5f);
+		FillCommand command = new FillCommand(fillAlgorithmFactory, clickedPixel, paint, 0.5f);
 		Canvas canvas = mock(Canvas.class);
 		LayerModel layerModel = new LayerModel();
 		LayerContracts.Layer layer = mock(LayerContracts.Layer.class);
