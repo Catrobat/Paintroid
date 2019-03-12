@@ -31,7 +31,7 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.changeIntroPage;
+import static org.catrobat.paintroid.test.espresso.util.IntroUtils.changeIntroPage;
 import static org.catrobat.paintroid.test.espresso.util.IntroUtils.getPageIndexFromLayout;
 import static org.catrobat.paintroid.test.espresso.util.IntroUtils.introClickToolAndCheckView;
 import static org.junit.runners.Parameterized.Parameter;

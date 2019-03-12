@@ -23,10 +23,12 @@ import android.graphics.PointF;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.view.View;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
-import org.catrobat.paintroid.ui.DrawingSurface;
 
+import static org.catrobat.paintroid.test.espresso.util.MainActivityHelper.getMainActivityFromView;
 import static org.catrobat.paintroid.test.espresso.util.PositionCoordinatesProvider.calculateViewOffset;
 
 public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
@@ -99,18 +101,20 @@ public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 	TOOL_POSITION {
 		@Override
 		public float[] calculateCoordinates(View view) {
+			MainActivity mainActivity = getMainActivityFromView(view);
+			Workspace workspace = mainActivity.workspace;
 			PointF toolPosition = ((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition;
-			PointF point = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(toolPosition);
+			PointF point = workspace.getSurfacePointFromCanvasPoint(toolPosition);
 			return calculateViewOffset(view, point.x, point.y);
 		}
 	};
 
 	private static float[] calculatePercentageOffset(View view, float percentageX, float percentageY) {
-		DrawingSurface drawingSurface = (DrawingSurface) view;
-		float pointX = drawingSurface.getBitmapWidth() * percentageX;
-		float pointY = drawingSurface.getBitmapHeight() * percentageY;
-		PointF point = PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(
-				new PointF(pointX, pointY));
+		MainActivity mainActivity = getMainActivityFromView(view);
+		Workspace workspace = mainActivity.workspace;
+		float pointX = workspace.getWidth() * percentageX;
+		float pointY = workspace.getHeight() * percentageY;
+		PointF point = workspace.getSurfacePointFromCanvasPoint(new PointF(pointX, pointY));
 		return calculateViewOffset(view, point.x, point.y);
 	}
 }

@@ -26,7 +26,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
@@ -35,11 +34,14 @@ import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.helper.Conversion;
 
 public class GeometricFillTool extends BaseToolWithRectangleShape {
 
@@ -59,8 +61,8 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private float previousBoxWidth;
 	private float previousBoxHeight;
 
-	public GeometricFillTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public GeometricFillTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(context, toolPaint, workspace, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 
@@ -119,7 +121,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		RectF shapeRect;
 
 		Paint drawPaint = new Paint();
-		drawPaint.setColor(CANVAS_PAINT.getColor());
+		drawPaint.setColor(toolPaint.getPreviewColor());
 		drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
 		switch (shapeDrawType) {
@@ -136,7 +138,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		}
 
 		geometricFillCommandPaint = new Paint(Paint.DITHER_FLAG);
-		if (Color.alpha(CANVAS_PAINT.getColor()) == 0x00) {
+		if (Color.alpha(toolPaint.getPreviewColor()) == 0x00) {
 			int colorWithMaxAlpha = Color.BLACK;
 			geometricFillCommandPaint.setColor(colorWithMaxAlpha);
 			geometricFillCommandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
@@ -213,6 +215,11 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 		}
 	}
 
+	@Override
+	public ToolType getToolType() {
+		return ToolType.SHAPE;
+	}
+
 	private Path getSpecialPath(BaseShape type, RectF shapeRect, Paint drawPaint) {
 
 		float stroke = drawPaint.getStrokeWidth();
@@ -281,16 +288,14 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void onClickInBox() {
-		Point intPosition = new Point((int) toolPosition.x, (int) toolPosition.y);
-		int bitmapHeight = PaintroidApplication.drawingSurface.getBitmapHeight();
-		int bitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		if (toolPosition.x - boxWidth / 2 <= workspace.getWidth()
+				&& toolPosition.y - boxHeight / 2 <= workspace.getHeight()
+				&& toolPosition.x + boxWidth / 2 >= 0
+				&& toolPosition.y + boxHeight / 2 >= 0) {
 
-		if (!(toolPosition.x - boxWidth / 2 > bitmapWidth || toolPosition.y - boxHeight / 2 > bitmapHeight
-				|| toolPosition.x + boxWidth / 2 < 0 || toolPosition.y + boxHeight / 2 < 0)) {
-
-			Command command = commandFactory.createGeometricFillCommand(drawingBitmap, intPosition,
+			Command command = commandFactory.createGeometricFillCommand(drawingBitmap, Conversion.toPoint(toolPosition),
 					boxWidth, boxHeight, boxRotation, geometricFillCommandPaint);
-			PaintroidApplication.commandManager.addCommand(command);
+			commandManager.addCommand(command);
 			highlightBox();
 		}
 	}

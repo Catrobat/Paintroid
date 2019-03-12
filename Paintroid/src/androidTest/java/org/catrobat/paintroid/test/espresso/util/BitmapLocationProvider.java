@@ -22,7 +22,10 @@ package org.catrobat.paintroid.test.espresso.util;
 import android.support.test.espresso.action.CoordinatesProvider;
 import android.view.View;
 
-import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.tools.Workspace;
+
+import static org.catrobat.paintroid.test.espresso.util.MainActivityHelper.getMainActivityFromView;
 
 public enum BitmapLocationProvider implements CoordinatesProvider{
 	MIDDLE {
@@ -81,9 +84,10 @@ public enum BitmapLocationProvider implements CoordinatesProvider{
 	};
 
 	private static float[] calculatePercentageOffset(View view, float percentageX, float percentageY) {
-		DrawingSurface drawingSurface = (DrawingSurface) view;
-		float pointX = (drawingSurface.getBitmapWidth() - 1) * percentageX;
-		float pointY = drawingSurface.getBitmapHeight() * percentageY;
+		MainActivity mainActivity = getMainActivityFromView(view);
+		Workspace workspace = mainActivity.workspace;
+		float pointX = (workspace.getWidth() - 1) * percentageX;
+		float pointY = workspace.getHeight() * percentageY;
 		return new float[] {pointX, pointY};
 	}
 }

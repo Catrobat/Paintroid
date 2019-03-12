@@ -42,10 +42,10 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.util.DisplayMetrics;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.Workspace;
 
 import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
@@ -118,23 +118,23 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private int rectangleShrinkingOnHighlight;
 	private CountDownTimer downTimer;
 
-	public BaseToolWithRectangleShape(Context context, ToolType toolType) {
-		super(context, toolType);
+	public BaseToolWithRectangleShape(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(context, toolPaint, workspace, commandManager);
 
 		final Resources resources = context.getResources();
 		int orientation = resources.getConfiguration().orientation;
 		float boxSize = orientation == Configuration.ORIENTATION_PORTRAIT
 				? metrics.widthPixels
 				: metrics.heightPixels;
-		boxWidth = boxSize / PaintroidApplication.perspective.getScale()
+		boxWidth = boxSize / workspace.getScale()
 				- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN) * 2;
 		boxHeight = boxWidth;
 
 		if (DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO && (
-				boxHeight > PaintroidApplication.layerModel.getHeight() * MAXIMUM_BORDER_RATIO
-						|| boxWidth > PaintroidApplication.layerModel.getWidth() * MAXIMUM_BORDER_RATIO)) {
-			boxHeight = PaintroidApplication.layerModel.getHeight() * MAXIMUM_BORDER_RATIO;
-			boxWidth = PaintroidApplication.layerModel.getWidth() * MAXIMUM_BORDER_RATIO;
+				boxHeight > workspace.getHeight() * MAXIMUM_BORDER_RATIO
+						|| boxWidth > workspace.getWidth() * MAXIMUM_BORDER_RATIO)) {
+			boxHeight = workspace.getHeight() * MAXIMUM_BORDER_RATIO;
+			boxWidth = workspace.getWidth() * MAXIMUM_BORDER_RATIO;
 		}
 
 		rectangleShrinkingOnHighlight = DEFAULT_RECTANGLE_SHRINKING;
@@ -200,7 +200,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			drawingBitmap = bitmap;
 		}
 
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+		workspace.invalidate();
 	}
 
 	@Override
@@ -314,8 +314,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.rotate(-boxRotation);
 		canvas.translate(-toolPosition.x, -toolPosition.y);
 		canvas.drawRect(0, 0,
-				PaintroidApplication.layerModel.getWidth(),
-				PaintroidApplication.layerModel.getHeight(), backgroundPaint);
+				workspace.getWidth(),
+				workspace.getHeight(), backgroundPaint);
 		canvas.restore();
 	}
 
@@ -505,11 +505,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void resize(float deltaX, float deltaY) {
-		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-		final int drawingSurfaceBitmapWidth = drawingSurface.getBitmapWidth();
-		final int drawingSurfaceBitmapHeight = drawingSurface.getBitmapHeight();
-		final float maximumBorderRatioWidth = drawingSurfaceBitmapWidth * MAXIMUM_BORDER_RATIO;
-		final float maximumBorderRatioHeight = drawingSurfaceBitmapHeight * MAXIMUM_BORDER_RATIO;
+		final float maximumBorderRatioWidth = workspace.getWidth() * MAXIMUM_BORDER_RATIO;
+		final float maximumBorderRatioHeight = workspace.getHeight() * MAXIMUM_BORDER_RATIO;
 
 		double rotationRadian = Math.toRadians(boxRotation);
 		double deltaXCorrected = Math.cos(-rotationRadian) * deltaX
@@ -689,13 +686,13 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			@Override
 			public void onTick(long millisUntilFinished) {
 				highlightBoxWhenClickInBox(true);
-				PaintroidApplication.drawingSurface.refreshDrawingSurface();
+				workspace.invalidate();
 			}
 
 			@Override
 			public void onFinish() {
 				highlightBoxWhenClickInBox(false);
-				PaintroidApplication.drawingSurface.refreshDrawingSurface();
+				workspace.invalidate();
 				downTimer.cancel();
 			}
 		}.start();

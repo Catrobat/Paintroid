@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -29,15 +28,15 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -71,19 +70,15 @@ public class CursorToolTest {
 	private CommandManager commandManager;
 
 	private CursorTool toolToTest;
+	private ToolPaint toolPaint;
 
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		toolToTest = new CursorTool(activityTestRule.getActivity(), ToolType.CURSOR);
-		PaintroidApplication.commandManager = commandManager;
-	}
-
-	@UiThreadTest
-	@After
-	public void tearDown() {
-		PaintroidApplication.drawingSurface.setBitmap(Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8));
-		BaseTool.reset();
+		MainActivity activity = activityTestRule.getActivity();
+		Workspace workspace = activity.workspace;
+		toolPaint = activity.toolPaint;
+		toolToTest = new CursorTool(activity, toolPaint, workspace, commandManager);
 	}
 
 	@UiThreadTest
@@ -218,7 +213,7 @@ public class CursorToolTest {
 
 		checkIfInDrawMode = toolToTest.toolInDrawMode;
 		assertTrue(checkIfInDrawMode);
-		Paint testmBitmapPaint = CursorTool.BITMAP_PAINT;
+		Paint testmBitmapPaint = toolPaint.getPaint();
 		int testmSecondaryShapeColor = toolToTest.cursorToolSecondaryShapeColor;
 
 		assertEquals(testmBitmapPaint.getColor(), testmSecondaryShapeColor);
@@ -228,7 +223,7 @@ public class CursorToolTest {
 
 		checkIfInDrawMode = toolToTest.toolInDrawMode;
 		assertFalse(checkIfInDrawMode);
-		testmBitmapPaint = CursorTool.BITMAP_PAINT;
+		testmBitmapPaint = toolPaint.getPaint();
 		testmSecondaryShapeColor = toolToTest.cursorToolSecondaryShapeColor;
 		assertNotEquals(testmBitmapPaint.getColor(), testmSecondaryShapeColor);
 
@@ -238,7 +233,7 @@ public class CursorToolTest {
 
 		checkIfInDrawMode = toolToTest.toolInDrawMode;
 		assertTrue(checkIfInDrawMode);
-		Paint testmBitmapPaint2 = CursorTool.BITMAP_PAINT;
+		Paint testmBitmapPaint2 = toolPaint.getPaint();
 		int testmSecondaryShapeColor2 = toolToTest.cursorToolSecondaryShapeColor;
 		assertEquals(testmBitmapPaint2.getColor(), testmSecondaryShapeColor2);
 
@@ -247,7 +242,7 @@ public class CursorToolTest {
 
 		checkIfInDrawMode = toolToTest.toolInDrawMode;
 		assertFalse(checkIfInDrawMode);
-		testmBitmapPaint2 = CursorTool.BITMAP_PAINT;
+		testmBitmapPaint2 = toolPaint.getPaint();
 		testmSecondaryShapeColor2 = toolToTest.cursorToolSecondaryShapeColor;
 		assertNotEquals(testmBitmapPaint2.getColor(), testmSecondaryShapeColor2);
 
@@ -259,7 +254,7 @@ public class CursorToolTest {
 
 		toolToTest.changePaintColor(Color.CYAN);
 
-		Paint testmBitmapPaint3 = CursorTool.BITMAP_PAINT;
+		Paint testmBitmapPaint3 = toolPaint.getPaint();
 		int testmSecondaryShapeColor3 = toolToTest.cursorToolSecondaryShapeColor;
 		assertEquals("If cursor already active and color gets changed, cursortool should change color immediately",
 				testmBitmapPaint3.getColor(), testmSecondaryShapeColor3);

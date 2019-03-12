@@ -26,28 +26,24 @@ import android.support.v4.app.Fragment;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
 
 public class PaintroidApplicationFragment extends Fragment {
-	private DrawingSurface drawingSurface;
 	private CommandManager commandManager;
 	private Tool currentTool;
 	private Perspective perspective;
 	private LayerContracts.Model layerModel;
 	private File cacheDir;
 	private Bitmap checkeredBackgroundBitmap;
+	private ToolPaint toolPaint;
 
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 		setRetainInstance(true);
-	}
-
-	public DrawingSurface getDrawingSurface() {
-		return drawingSurface;
 	}
 
 	public CommandManager getCommandManager() {
@@ -74,14 +70,8 @@ public class PaintroidApplicationFragment extends Fragment {
 		return checkeredBackgroundBitmap;
 	}
 
-	public void setDrawingSurface(DrawingSurface drawingSurface) {
-		this.drawingSurface = drawingSurface;
-		PaintroidApplication.drawingSurface = this.drawingSurface;
-	}
-
 	public void setCommandManager(CommandManager commandManager) {
 		this.commandManager = commandManager;
-		PaintroidApplication.commandManager = this.commandManager;
 	}
 
 	public void setCurrentTool(Tool currentTool) {
@@ -91,12 +81,10 @@ public class PaintroidApplicationFragment extends Fragment {
 
 	public void setPerspective(Perspective perspective) {
 		this.perspective = perspective;
-		PaintroidApplication.perspective = this.perspective;
 	}
 
 	public void setLayerModel(LayerContracts.Model layerModel) {
 		this.layerModel = layerModel;
-		PaintroidApplication.layerModel = this.layerModel;
 	}
 
 	public void setCacheDir(File cacheDir) {
@@ -107,5 +95,13 @@ public class PaintroidApplicationFragment extends Fragment {
 	public void setCheckeredBackgroundBitmap(Bitmap checkeredBackgroundBitmap) {
 		this.checkeredBackgroundBitmap = checkeredBackgroundBitmap;
 		PaintroidApplication.checkeredBackgroundBitmap = this.checkeredBackgroundBitmap;
+	}
+
+	public ToolPaint getToolPaint() {
+		return toolPaint;
+	}
+
+	public void setToolPaint(ToolPaint toolPaint) {
+		this.toolPaint = toolPaint;
 	}
 }

@@ -64,9 +64,12 @@ import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback;
 import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.DefaultToolFactory;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
+import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
 
@@ -95,9 +98,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	private MainView view;
 	private Model model;
+	private Workspace workspace;
 	private Navigator navigator;
 	private Interactor interactor;
 	private TopBarViewHolder topBarViewHolder;
+	private ToolPaint toolPaint;
+	private Perspective perspective;
 	private BottomBarViewHolder bottomBarViewHolder;
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
 	private NavigationDrawerViewHolder navigationDrawerViewHolder;
@@ -109,12 +115,14 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private ToolFactory toolFactory = new DefaultToolFactory();
 	private boolean focusAfterRecreate = true;
 
-	public MainActivityPresenter(MainView view, Model model, Navigator navigator, Interactor interactor,
+	public MainActivityPresenter(MainView view, Model model, Workspace workspace, Navigator navigator, Interactor interactor,
 			TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
 			DrawerLayoutViewHolder drawerLayoutViewHolder,
-			NavigationDrawerViewHolder navigationDrawerViewHolder, CommandManager commandManager) {
+			NavigationDrawerViewHolder navigationDrawerViewHolder, CommandManager commandManager,
+			ToolPaint toolPaint, Perspective perspective) {
 		this.view = view;
 		this.model = model;
+		this.workspace = workspace;
 		this.navigator = navigator;
 		this.interactor = interactor;
 		this.bottomBarViewHolder = bottomBarViewHolder;
@@ -122,6 +130,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		this.navigationDrawerViewHolder = navigationDrawerViewHolder;
 		this.commandManager = commandManager;
 		this.topBarViewHolder = topBarViewHolder;
+		this.toolPaint = toolPaint;
+		this.perspective = perspective;
 	}
 
 	private boolean isImageUnchanged() {
@@ -193,14 +203,14 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void enterFullscreenClicked() {
-		model.setFullScreen(true);
-		enterFullScreen();
+		model.setFullscreen(true);
+		enterFullscreen();
 	}
 
 	@Override
 	public void exitFullscreenClicked() {
-		model.setFullScreen(false);
-		exitFullScreen();
+		model.setFullscreen(false);
+		exitFullscreen();
 	}
 
 	@Override
@@ -256,7 +266,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		switch (requestCode) {
 			case REQUEST_CODE_IMPORTPNG:
 				Uri selectedGalleryImageUri = data.getData();
-				Tool tool = toolFactory.createTool((Activity) view, ToolType.IMPORTPNG);
+				Tool tool = toolFactory.createTool(ToolType.IMPORTPNG, (Activity) view, commandManager, workspace, toolPaint);
 				switchTool(tool);
 				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, maxWidth, maxHeight, selectedGalleryImageUri);
 				break;
@@ -278,12 +288,15 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void handleRequestPermissionsResult(@PermissionRequestCode int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		if (permissions.length == 1 && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				Bitmap bitmap;
 				switch (requestCode) {
 					case PERMISSION_EXTERNAL_STORAGE_SAVE:
-						interactor.saveImage(this, SAVE_IMAGE_DEFAULT, model.getSavedPictureUri());
+						bitmap = workspace.getBitmapOfAllLayers();
+						interactor.saveImage(this, SAVE_IMAGE_DEFAULT, bitmap, model.getSavedPictureUri());
 						break;
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
-						interactor.saveCopy(this, SAVE_IMAGE_DEFAULT);
+						bitmap = workspace.getBitmapOfAllLayers();
+						interactor.saveCopy(this, SAVE_IMAGE_DEFAULT, bitmap);
 						break;
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
 						saveImageConfirmClicked(SAVE_IMAGE_FINISH, model.getSavedPictureUri());
@@ -313,7 +326,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			drawerLayoutViewHolder.closeDrawer(Gravity.START, true);
 		} else if (drawerLayoutViewHolder.isDrawerOpen(GravityCompat.END)) {
 			drawerLayoutViewHolder.closeDrawer(Gravity.END, true);
-		} else if (model.isFullScreen()) {
+		} else if (model.isFullscreen()) {
 			exitFullscreenClicked();
 		} else if (PaintroidApplication.currentTool.getToolOptionsAreShown()) {
 			PaintroidApplication.currentTool.toggleShowToolOptions();
@@ -326,7 +339,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveImageConfirmClicked(int requestCode, Uri uri) {
-		interactor.saveImage(this, requestCode, uri);
+		Bitmap bitmap = workspace.getBitmapOfAllLayers();
+		interactor.saveImage(this, requestCode, bitmap, uri);
 	}
 
 	@Override
@@ -368,7 +382,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void onCommandPostExecute() {
 		if (resetPerspectiveAfterNextCommand) {
 			resetPerspectiveAfterNextCommand = false;
-			PaintroidApplication.perspective.resetScaleAndTranslation();
+			workspace.resetPerspective();
 		}
 
 		model.setSaved(false);
@@ -408,10 +422,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		topBarViewHolder.setColorButtonColor(PaintroidApplication.currentTool.getDrawPaint().getColor());
 		bottomBarViewHolder.selectToolButton(PaintroidApplication.currentTool.getToolType());
 
-		if (model.isFullScreen()) {
-			enterFullScreen();
+		if (model.isFullscreen()) {
+			enterFullscreen();
 		} else {
-			exitFullScreen();
+			exitFullscreen();
 		}
 
 		if (model.isOpenedFromCatroid()) {
@@ -432,32 +446,32 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 	}
 
-	private void exitFullScreen() {
-		view.exitFullScreen();
+	private void exitFullscreen() {
+		view.exitFullscreen();
 		topBarViewHolder.show();
 		bottomBarViewHolder.show();
-		navigationDrawerViewHolder.hideExitFullScreen();
-		navigationDrawerViewHolder.showEnterFullScreen();
-		PaintroidApplication.currentTool.resetToggleOptions();
+		navigationDrawerViewHolder.hideExitFullscreen();
+		navigationDrawerViewHolder.showEnterFullscreen();
 
-		PaintroidApplication.perspective.setFullscreen(false);
+		PaintroidApplication.currentTool.resetToggleOptions();
+		perspective.exitFullscreen();
 	}
 
-	private void enterFullScreen() {
-		view.enterFullScreen();
+	private void enterFullscreen() {
+		view.enterFullscreen();
 		topBarViewHolder.hide();
 		bottomBarViewHolder.hide();
-		navigationDrawerViewHolder.showExitFullScreen();
-		navigationDrawerViewHolder.hideEnterFullScreen();
+		navigationDrawerViewHolder.showExitFullscreen();
+		navigationDrawerViewHolder.hideEnterFullscreen();
 
 		PaintroidApplication.currentTool.hide();
-		PaintroidApplication.perspective.setFullscreen(true);
+		perspective.enterFullscreen();
 	}
 
 	@Override
-	public void restoreState(boolean isFullScreen, boolean isSaved, boolean isOpenedFromCatroid,
+	public void restoreState(boolean isFullscreen, boolean isSaved, boolean isOpenedFromCatroid,
 			boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri) {
-		model.setFullScreen(isFullScreen);
+		model.setFullscreen(isFullscreen);
 		model.setSaved(isSaved);
 		model.setOpenedFromCatroid(isOpenedFromCatroid);
 		model.setInitialAnimationPlayed(wasInitialAnimationPlayed);
@@ -475,13 +489,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		ToolFactory toolFactory = new DefaultToolFactory();
 
 		if (PaintroidApplication.currentTool == null) {
-			PaintroidApplication.currentTool = toolFactory.createTool((Activity) view, ToolType.BRUSH);
+			PaintroidApplication.currentTool = toolFactory.createTool(ToolType.BRUSH, (Activity) view, commandManager, workspace, toolPaint);
 			PaintroidApplication.currentTool.startTool();
 		} else {
 			Paint paint = PaintroidApplication.currentTool.getDrawPaint();
 			PaintroidApplication.currentTool.leaveTool();
 			PaintroidApplication.currentTool.onSaveInstanceState(bundle);
-			PaintroidApplication.currentTool = toolFactory.createTool((Activity) view, PaintroidApplication.currentTool.getToolType());
+			PaintroidApplication.currentTool = toolFactory.createTool(PaintroidApplication.currentTool.getToolType(), (Activity) view, commandManager, workspace, toolPaint);
 			PaintroidApplication.currentTool.onRestoreInstanceState(bundle);
 			PaintroidApplication.currentTool.startTool();
 			PaintroidApplication.currentTool.setDrawPaint(paint);
@@ -518,7 +532,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (type == ToolType.IMPORTPNG) {
 			navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
 		} else {
-			Tool tool = toolFactory.createTool((Activity) view, type);
+			Tool tool = toolFactory.createTool(type, (Activity) view, commandManager, workspace, toolPaint);
 			switchTool(tool);
 		}
 	}

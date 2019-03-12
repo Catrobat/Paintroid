@@ -21,11 +21,14 @@ package org.catrobat.paintroid.test.junit.command;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.support.test.InstrumentationRegistry;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.model.Layer;
@@ -37,14 +40,38 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class StampCommandTest extends CommandTestSetup {
+public class StampCommandTest {
 
 	private Bitmap stampBitmapUnderTest;
 
-	@Override
+	private static final int BITMAP_BASE_COLOR = Color.GREEN;
+	private static final int BITMAP_REPLACE_COLOR = Color.CYAN;
+	private static final int INITIAL_HEIGHT = 80;
+	private static final int INITIAL_WIDTH = 80;
+
+	private Command commandUnderTest;
+	private Command commandUnderTestNull; // can be used to pass null to constructor
+	private PointF pointUnderTest;
+	private Canvas canvasUnderTest;
+	private Bitmap canvasBitmapUnderTest;
+	private LayerModel layerModel;
+
 	@Before
 	public void setUp() {
-		super.setUp();
+		layerModel = new LayerModel();
+		layerModel.setWidth(INITIAL_WIDTH);
+		layerModel.setHeight(INITIAL_HEIGHT);
+
+		canvasBitmapUnderTest = Bitmap.createBitmap(INITIAL_WIDTH, INITIAL_HEIGHT, Config.ARGB_8888);
+		canvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR);
+		Bitmap bitmapUnderTest = canvasBitmapUnderTest.copy(Config.ARGB_8888, true);
+		Layer layerUnderTest = new Layer(bitmapUnderTest);
+		canvasUnderTest = new Canvas();
+		canvasUnderTest.setBitmap(canvasBitmapUnderTest);
+		pointUnderTest = new PointF(INITIAL_WIDTH / 2, INITIAL_HEIGHT / 2);
+		layerModel.addLayerAt(0, layerUnderTest);
+		layerModel.setCurrentLayer(layerUnderTest);
+
 		PaintroidApplication.cacheDir = InstrumentationRegistry.getTargetContext().getCacheDir();
 
 		stampBitmapUnderTest = canvasBitmapUnderTest.copy(Config.ARGB_8888, true);
@@ -53,6 +80,15 @@ public class StampCommandTest extends CommandTestSetup {
 				canvasBitmapUnderTest.getHeight() / 2), canvasBitmapUnderTest.getWidth(),
 				canvasBitmapUnderTest.getHeight(), 0);
 		commandUnderTestNull = new StampCommand(null, null, 0, 0, 0);
+	}
+
+	@Test
+	public void testRunWithNullParameters() {
+		commandUnderTestNull.run(null, null);
+		commandUnderTestNull.run(null, null);
+		commandUnderTestNull.run(canvasUnderTest, null);
+		commandUnderTestNull.run(null, new LayerModel());
+		commandUnderTestNull.run(null, layerModel);
 	}
 
 	@Test

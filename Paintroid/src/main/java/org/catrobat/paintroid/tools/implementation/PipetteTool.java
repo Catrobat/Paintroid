@@ -24,18 +24,19 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.model.LayerModel;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
 
 public class PipetteTool extends BaseTool {
 
 	private Bitmap surfaceBitmap;
 	private ColorPickerDialog.OnColorPickedListener listener;
 
-	public PipetteTool(Context context, ColorPickerDialog.OnColorPickedListener listener, ToolType toolType) {
-		super(context, toolType);
+	public PipetteTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager, ColorPickerDialog.OnColorPickedListener listener) {
+		super(context, toolPaint, workspace, commandManager);
 		this.listener = listener;
 
 		updateSurfaceBitmap();
@@ -43,6 +44,11 @@ public class PipetteTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
+	}
+
+	@Override
+	public ToolType getToolType() {
+		return ToolType.PIPETTE;
 	}
 
 	@Override
@@ -78,7 +84,7 @@ public class PipetteTool extends BaseTool {
 	}
 
 	public void updateSurfaceBitmap() {
-		surfaceBitmap = LayerModel.getBitmapOfAllLayersToSave(PaintroidApplication.layerModel.getLayers());
+		surfaceBitmap = workspace.getBitmapOfAllLayers();
 	}
 
 	@Override

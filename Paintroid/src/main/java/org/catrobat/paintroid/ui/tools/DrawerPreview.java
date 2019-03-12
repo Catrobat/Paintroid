@@ -34,7 +34,6 @@ import android.view.View;
 import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
 
 public class DrawerPreview extends View {
 
@@ -44,6 +43,7 @@ public class DrawerPreview extends View {
 	private Paint checkeredPattern;
 	private Paint borderPaint;
 	private Path path;
+	private Callback callback;
 
 	public DrawerPreview(Context context) {
 		super(context);
@@ -67,9 +67,8 @@ public class DrawerPreview extends View {
 	}
 
 	private void changePaintColor(int color) {
-		Paint drawPaint = BaseTool.BITMAP_PAINT;
-		float strokeWidth = drawPaint.getStrokeWidth();
-		Paint.Cap strokeCap = drawPaint.getStrokeCap();
+		float strokeWidth = callback.getStrokeWidth();
+		Paint.Cap strokeCap = callback.getStrokeCap();
 		canvasPaint.reset();
 		canvasPaint.setStyle(Paint.Style.STROKE);
 		canvasPaint.setStrokeWidth(strokeWidth);
@@ -85,7 +84,7 @@ public class DrawerPreview extends View {
 	}
 
 	private void drawDrawerPreview(Canvas canvas) {
-		int currentColor = BaseTool.BITMAP_PAINT.getColor();
+		int currentColor = callback.getColor();
 		changePaintColor(currentColor);
 
 		int centerX = getLeft() + getWidth() / 2;
@@ -119,9 +118,8 @@ public class DrawerPreview extends View {
 	}
 
 	private void drawBorder(Canvas canvas) {
-		Paint drawPaint = BaseTool.BITMAP_PAINT;
-		float strokeWidth = drawPaint.getStrokeWidth();
-		Paint.Cap strokeCap = drawPaint.getStrokeCap();
+		float strokeWidth = callback.getStrokeWidth();
+		Paint.Cap strokeCap = callback.getStrokeCap();
 		int startX;
 		int startY;
 		int endX;
@@ -185,7 +183,7 @@ public class DrawerPreview extends View {
 	}
 
 	private void drawLinePreview(Canvas canvas) {
-		int currentColor = BaseTool.BITMAP_PAINT.getColor();
+		int currentColor = callback.getColor();
 		changePaintColor(currentColor);
 
 		int startX = getLeft() + getWidth() / 8;
@@ -209,19 +207,22 @@ public class DrawerPreview extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		ToolType currentTool = PaintroidApplication.currentTool.getToolType();
 
-		switch (currentTool) {
-			case BRUSH:
-			case CURSOR:
-				drawDrawerPreview(canvas);
-				break;
-			case LINE:
-				drawLinePreview(canvas);
-				break;
-			case ERASER:
-				drawEraserPreview(canvas);
-				break;
+		if (callback != null) {
+			ToolType currentTool = callback.getToolType();
+
+			switch (currentTool) {
+				case BRUSH:
+				case CURSOR:
+					drawDrawerPreview(canvas);
+					break;
+				case LINE:
+					drawLinePreview(canvas);
+					break;
+				case ERASER:
+					drawEraserPreview(canvas);
+					break;
+			}
 		}
 	}
 
@@ -231,5 +232,19 @@ public class DrawerPreview extends View {
 
 		int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 		setMeasuredDimension(widthSize, (int) (widthSize * .25));
+	}
+
+	public void setCallback(Callback callback) {
+		this.callback = callback;
+	}
+
+	public interface Callback {
+		float getStrokeWidth();
+
+		Paint.Cap getStrokeCap();
+
+		int getColor();
+
+		ToolType getToolType();
 	}
 }

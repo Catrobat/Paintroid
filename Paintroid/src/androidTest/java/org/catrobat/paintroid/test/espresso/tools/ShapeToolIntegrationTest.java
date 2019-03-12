@@ -24,10 +24,10 @@ import android.graphics.Bitmap;
 import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,6 +61,8 @@ public class ShapeToolIntegrationTest {
 	@Parameter(1)
 	public String shapeName;
 
+	private Workspace workspace;
+
 	@Parameters(name = "{1}")
 	public static Iterable<Object[]> data() {
 		return Arrays.asList(new Object[][]{
@@ -72,7 +74,8 @@ public class ShapeToolIntegrationTest {
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
+		workspace = activityTestRule.getActivity().workspace;
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
 	}
@@ -88,7 +91,7 @@ public class ShapeToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		Bitmap expectedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		Bitmap expectedBitmap = workspace.getBitmapOfCurrentLayer();
 
 		onTopBarView()
 				.performUndo();
@@ -104,7 +107,7 @@ public class ShapeToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		assertTrue(expectedBitmap.sameAs(PaintroidApplication.drawingSurface.getBitmapCopy()));
+		assertTrue(expectedBitmap.sameAs(workspace.getBitmapOfCurrentLayer()));
 	}
 
 	@Test
@@ -120,7 +123,7 @@ public class ShapeToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		Bitmap expectedBitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		Bitmap expectedBitmap = workspace.getBitmapOfCurrentLayer();
 		onTopBarView()
 				.performUndo();
 
@@ -134,6 +137,6 @@ public class ShapeToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		assertTrue(expectedBitmap.sameAs(PaintroidApplication.drawingSurface.getBitmapCopy()));
+		assertTrue(expectedBitmap.sameAs(workspace.getBitmapOfCurrentLayer()));
 	}
 }

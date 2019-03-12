@@ -48,7 +48,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickColorPickerPresetSelectorButton;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
@@ -78,6 +77,7 @@ public class ColorDialogIntegrationTest {
 	private static final String TEXT_ALPHA_MAX = "100";
 
 	private static final String TEXT_PERCENT_SIGN = "%";
+
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -120,7 +120,8 @@ public class ColorDialogIntegrationTest {
 		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
 		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
 
-			clickColorPickerPresetSelectorButton(counterColors);
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors);
 
 			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
 			int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
@@ -142,7 +143,8 @@ public class ColorDialogIntegrationTest {
 		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
 		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
 
-			clickColorPickerPresetSelectorButton(counterColors);
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors);
 
 			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
 
@@ -171,7 +173,8 @@ public class ColorDialogIntegrationTest {
 
 		assertNotEquals("Selected color should not be the same as the color to select", colorToSelect, expectedSelectedColor);
 
-		clickColorPickerPresetSelectorButton(colorToSelectIndex);
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(colorToSelectIndex);
 
 		// Close color picker dialog
 		onView(isRoot()).perform(pressBack());
@@ -188,7 +191,8 @@ public class ColorDialogIntegrationTest {
 		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		clickColorPickerPresetSelectorButton(0);
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(0);
 
 		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));

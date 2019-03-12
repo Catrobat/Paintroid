@@ -32,7 +32,6 @@ import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
@@ -64,10 +63,8 @@ import static android.support.test.espresso.intent.matcher.ComponentNameMatchers
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
@@ -89,10 +86,13 @@ public class MenuFileActivityIntegrationTest {
 			Manifest.permission.WRITE_EXTERNAL_STORAGE,
 			Manifest.permission.READ_EXTERNAL_STORAGE);
 
+	private MainActivity activity;
+
 	@Before
 	public void setUp() {
 		onToolBarView().performSelectTool(ToolType.BRUSH);
 		deletionFileList = new ArrayList<>();
+		activity = launchActivityRule.getActivity();
 	}
 
 	@After
@@ -200,7 +200,8 @@ public class MenuFileActivityIntegrationTest {
 
 		pressBack();
 
-		onView(withId(R.id.pocketpaint_drawing_surface_view)).check(matches(isDisplayed()));
+		onDrawingSurfaceView()
+				.check(matches(isDisplayed()));
 	}
 
 	@Test
@@ -216,7 +217,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap imageBefore = activity.layerModel.getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -225,7 +226,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		onView(withText(R.string.skip)).perform(click());
 
-		Bitmap imageAfter = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap imageAfter = activity.layerModel.getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
@@ -234,7 +235,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		Bitmap imageBefore = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap imageBefore = activity.layerModel.getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
 		onNavigationDrawer()
@@ -243,7 +244,7 @@ public class MenuFileActivityIntegrationTest {
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		pressBack();
 
-		Bitmap imageAfter = PaintroidApplication.layerModel.getCurrentLayer().getBitmap();
+		Bitmap imageAfter = activity.layerModel.getCurrentLayer().getBitmap();
 		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
 	}
 
@@ -289,8 +290,6 @@ public class MenuFileActivityIntegrationTest {
 
 	@Test
 	public void testNewEmptyDrawingDialogOnBackPressed() {
-		resetColorPicker();
-
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
@@ -316,7 +315,7 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		assertFalse(launchActivityRule.getActivity().model.isSaved());
+		assertFalse(activity.model.isSaved());
 
 		pressMenuKey();
 
@@ -325,11 +324,11 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull(launchActivityRule.getActivity().model.getSavedPictureUri());
+		assertNotNull(activity.model.getSavedPictureUri());
 
-		addUriToDeletionFileList(launchActivityRule.getActivity().model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 
-		assertTrue(launchActivityRule.getActivity().model.isSaved());
+		assertTrue(activity.model.isSaved());
 	}
 
 	@Test
@@ -342,9 +341,9 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull(launchActivityRule.getActivity().model.getSavedPictureUri());
+		assertNotNull(activity.model.getSavedPictureUri());
 
-		addUriToDeletionFileList(launchActivityRule.getActivity().model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 	}
 
 	@Test
@@ -357,11 +356,11 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull(launchActivityRule.getActivity().model.getSavedPictureUri());
+		assertNotNull(activity.model.getSavedPictureUri());
 
-		addUriToDeletionFileList(launchActivityRule.getActivity().model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 
-		File oldFile = new File(launchActivityRule.getActivity().model.getSavedPictureUri().toString());
+		File oldFile = new File(activity.model.getSavedPictureUri().toString());
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE));
@@ -371,13 +370,13 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_copy)).perform(click());
 
-		File newFile = new File(launchActivityRule.getActivity().model.getSavedPictureUri().toString());
+		File newFile = new File(activity.model.getSavedPictureUri().toString());
 
 		assertNotSame("Changes to saved", oldFile, newFile);
 
-		assertNotNull(launchActivityRule.getActivity().model.getSavedPictureUri());
+		assertNotNull(activity.model.getSavedPictureUri());
 
-		addUriToDeletionFileList(launchActivityRule.getActivity().model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 	}
 
 	@Test
@@ -389,8 +388,8 @@ public class MenuFileActivityIntegrationTest {
 				.performOpen();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
-		assertNotNull(launchActivityRule.getActivity().model.getSavedPictureUri());
-		addUriToDeletionFileList(launchActivityRule.getActivity().model.getSavedPictureUri());
+		assertNotNull(activity.model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));

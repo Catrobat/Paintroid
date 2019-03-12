@@ -26,7 +26,9 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.ViewConfiguration;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,7 +48,11 @@ public class StampToolTest {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		tool = new StampTool(activityTestRule.getActivity(), ToolType.STAMP);
+		MainActivity activity = activityTestRule.getActivity();
+		ToolPaint toolPaint = activity.toolPaint;
+		CommandManager commandManager = activity.commandManager;
+		Workspace workspace = activity.workspace;
+		tool = new StampTool(activity, toolPaint, workspace, commandManager);
 	}
 
 	@Test

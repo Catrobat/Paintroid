@@ -39,9 +39,9 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTypeFace;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withIndex;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 
 @RunWith(AndroidJUnit4.class)
 public class TextToolFontSpinnerTest {
@@ -58,7 +58,8 @@ public class TextToolFontSpinnerTest {
 
 	@Test
 	public void testTextFontFaceOfFontSpinnerEnglish() {
-		selectTool(ToolType.TEXT);
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
 		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font))
 				.perform(click());
 		onView(withIndex(withId(android.R.id.text1), 0))

@@ -24,9 +24,9 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,11 +36,8 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getActionbarHeight;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromSurfacePoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusbarHeight;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfaceHeight;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfaceWidth;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -50,14 +47,16 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ScrollingViewIntegrationTest {
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 	private int drawerEdgeSize;
+	private Perspective perspective;
 
 	@Before
 	public void setUp() {
-		float displayDensity = launchActivityRule.getActivity().getResources().getDisplayMetrics().density;
+		MainActivity activity = launchActivityRule.getActivity();
+		float displayDensity = activity.getResources().getDisplayMetrics().density;
+		perspective = activity.perspective;
 		drawerEdgeSize = (int) (20 * displayDensity + 0.5f);
 	}
 
@@ -65,10 +64,10 @@ public class ScrollingViewIntegrationTest {
 	public void testScrollingViewDrawTool() {
 
 		final int perspectiveScale = 5;
-		PaintroidApplication.perspective.setScale(perspectiveScale);
+		perspective.setScale(perspectiveScale);
 
-		float surfaceWidth = getSurfaceWidth();
-		float surfaceHeight = getSurfaceHeight();
+		float surfaceWidth = perspective.surfaceWidth;
+		float surfaceHeight = perspective.surfaceHeight;
 
 		float xRight = surfaceWidth - 1 - drawerEdgeSize;
 		float xLeft = 1 + drawerEdgeSize;
@@ -110,10 +109,10 @@ public class ScrollingViewIntegrationTest {
 	@Test
 	public void testScrollingViewCursorTool() {
 		final int perspectiveScale = 5;
-		PaintroidApplication.perspective.setScale(perspectiveScale);
+		perspective.setScale(perspectiveScale);
 
-		float surfaceWidth = getSurfaceWidth();
-		float surfaceHeight = getSurfaceHeight();
+		float surfaceWidth = perspective.surfaceWidth;
+		float surfaceHeight = perspective.surfaceHeight;
 
 		final float actionBarHeight = getActionbarHeight();
 		final float statusBarHeight = getStatusbarHeight();
@@ -159,11 +158,11 @@ public class ScrollingViewIntegrationTest {
 	public void longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(PointF clickPoint) {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(clickPoint);
 
-		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(touchLongAt(clickPoint.x, clickPoint.y));
 
-		PointF endPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		float delta = 0.5f;
 		assertNotEquals("view should scroll in x", startPointCanvas.x, endPointCanvas.x, delta);
@@ -173,11 +172,11 @@ public class ScrollingViewIntegrationTest {
 	public void longpressOnPointAndCheckIfCanvasPointHasChangedInXOrY(PointF clickPoint) {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(clickPoint);
 
-		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(touchLongAt(clickPoint.x, clickPoint.y));
 
-		PointF endPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		assertTrue("scrolling did not work", (startPointCanvas.x != endPointCanvas.x) || (startPointCanvas.y != endPointCanvas.y));
 	}
@@ -185,11 +184,11 @@ public class ScrollingViewIntegrationTest {
 	public void longpressOnPointAndCheckIfCanvasPointHasNotChanged(PointF clickPoint) {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(clickPoint);
 
-		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(touchLongAt(clickPoint.x, clickPoint.y));
 
-		PointF endPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		float delta = 0.5f;
 		assertEquals("view should not scroll in x", startPointCanvas.x, endPointCanvas.x, delta);
@@ -198,12 +197,12 @@ public class ScrollingViewIntegrationTest {
 
 	public void dragAndCheckIfCanvasHasMovedInXAndY(PointF fromPoint, PointF toPoint) {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
 		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF endPointCanvas = getCanvasPointFromSurfacePoint(endPointSurface);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
 		assertNotEquals("scrolling did not work in x", startPointCanvas.x, endPointCanvas.x);
 		assertNotEquals("scrolling did not work in y", startPointCanvas.y, endPointCanvas.y);
@@ -211,24 +210,26 @@ public class ScrollingViewIntegrationTest {
 
 	public void dragAndCheckIfCanvasHasMovedInXOrY(PointF fromPoint, PointF toPoint) {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
 		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF endPointCanvas = getCanvasPointFromSurfacePoint(endPointSurface);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
-		assertTrue("scrolling did not work", (startPointCanvas.x != endPointCanvas.x) || (startPointCanvas.y != endPointCanvas.y));
+		String message = "startX(" + startPointCanvas.x + ") != endX(" + endPointCanvas.x
+				+ ") || startY(" + startPointCanvas.y + ") != endY(" + endPointCanvas.y + ")";
+		assertTrue(message, (startPointCanvas.x != endPointCanvas.x) || (startPointCanvas.y != endPointCanvas.y));
 	}
 
 	public void dragAndCheckIfCanvasHasNotMoved(PointF fromPoint, PointF toPoint) {
 		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
 		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF endPointCanvas = getCanvasPointFromSurfacePoint(endPointSurface);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
 		float delta = 0.5f;
 		assertEquals("view should not scroll but did it in x direction", startPointCanvas.x, endPointCanvas.x, delta);

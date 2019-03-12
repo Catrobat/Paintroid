@@ -22,13 +22,18 @@ package org.catrobat.paintroid.tools.implementation;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Paint.Cap;
 import android.graphics.Path;
 import android.graphics.PointF;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.BrushPickerView;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.ui.tools.DrawerPreview;
 
 public class LineTool extends BaseTool {
 
@@ -37,8 +42,8 @@ public class LineTool extends BaseTool {
 	protected boolean pathInsideBitmap;
 	private BrushPickerView brushPickerView;
 
-	public LineTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public LineTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(context, toolPaint, workspace, commandManager);
 	}
 
 	@Override
@@ -47,24 +52,28 @@ public class LineTool extends BaseTool {
 			return;
 		}
 
-		setPaintColor(CANVAS_PAINT.getColor());
+		setPaintColor(toolPaint.getPreviewColor());
 
 		canvas.save();
-		canvas.clipRect(0, 0,
-				PaintroidApplication.drawingSurface.getBitmapWidth(),
-				PaintroidApplication.drawingSurface.getBitmapHeight());
-		if (CANVAS_PAINT.getAlpha() == 0x00) {
-			CANVAS_PAINT.setColor(Color.BLACK);
+		canvas.clipRect(0, 0, workspace.getWidth(), workspace.getHeight());
+		if (toolPaint.getPreviewPaint().getAlpha() == 0x00) {
+			Paint previewPaint = toolPaint.getPreviewPaint();
+			previewPaint.setColor(Color.BLACK);
 			canvas.drawLine(initialEventCoordinate.x,
 					initialEventCoordinate.y, currentCoordinate.x,
-					currentCoordinate.y, CANVAS_PAINT);
-			CANVAS_PAINT.setColor(Color.TRANSPARENT);
+					currentCoordinate.y, previewPaint);
+			previewPaint.setColor(Color.TRANSPARENT);
 		} else {
 			canvas.drawLine(initialEventCoordinate.x,
 					initialEventCoordinate.y, currentCoordinate.x,
-					currentCoordinate.y, BITMAP_PAINT);
+					currentCoordinate.y, toolPaint.getPaint());
 		}
 		canvas.restore();
+	}
+
+	@Override
+	public ToolType getToolType() {
+		return ToolType.LINE;
 	}
 
 	@Override
@@ -104,8 +113,8 @@ public class LineTool extends BaseTool {
 		}
 
 		if (pathInsideBitmap) {
-			Command command = commandFactory.createPathCommand(BITMAP_PAINT, finalPath);
-			PaintroidApplication.commandManager.addCommand(command);
+			Command command = commandFactory.createPathCommand(toolPaint.getPaint(), finalPath);
+			commandManager.addCommand(command);
 		}
 
 		return true;
@@ -126,18 +135,51 @@ public class LineTool extends BaseTool {
 	@Override
 	public void setupToolOptions() {
 		brushPickerView = new BrushPickerView(toolSpecificOptionsLayout);
-		brushPickerView.setCurrentPaint(BITMAP_PAINT);
+		brushPickerView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	@Override
 	public void startTool() {
 		super.startTool();
-		brushPickerView.addBrushChangedListener(onBrushChangedListener);
+		brushPickerView.setBrushChangedListener(new BrushPickerView.OnBrushChangedListener() {
+			@Override
+			public void setCap(Cap strokeCap) {
+				changePaintStrokeCap(strokeCap);
+			}
+
+			@Override
+			public void setStrokeWidth(int strokeWidth) {
+				changePaintStrokeWidth(strokeWidth);
+			}
+		});
+
+		brushPickerView.setDrawerPreviewCallback(new DrawerPreview.Callback() {
+			@Override
+			public float getStrokeWidth() {
+				return toolPaint.getStrokeWidth();
+			}
+
+			@Override
+			public Cap getStrokeCap() {
+				return toolPaint.getStrokeCap();
+			}
+
+			@Override
+			public int getColor() {
+				return toolPaint.getColor();
+			}
+
+			@Override
+			public ToolType getToolType() {
+				return LineTool.this.getToolType();
+			}
+		});
 	}
 
 	@Override
 	public void leaveTool() {
 		super.leaveTool();
-		brushPickerView.removeBrushChangedListener(onBrushChangedListener);
+		brushPickerView.setBrushChangedListener(null);
+		brushPickerView.setDrawerPreviewCallback(null);
 	}
 }

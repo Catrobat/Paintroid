@@ -25,14 +25,17 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
-import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,6 +45,12 @@ public class ImportToolTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+	@Rule
+	public MockitoRule mockito = MockitoJUnit.rule();
+
+	@Mock
+	private CommandManager commandManager;
+
 	private int drawingSurfaceWidth;
 	private int drawingSurfaceHeight;
 
@@ -50,11 +59,13 @@ public class ImportToolTest {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		tool = new ImportTool(activityTestRule.getActivity(), ToolType.IMPORTPNG);
+		MainActivity activity = activityTestRule.getActivity();
+		Workspace workspace = activity.workspace;
+		ToolPaint toolPaint = activity.toolPaint;
+		tool = new ImportTool(activity, toolPaint, workspace, commandManager);
 
-		DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-		drawingSurfaceWidth = drawingSurface.getBitmapWidth();
-		drawingSurfaceHeight = drawingSurface.getBitmapHeight();
+		drawingSurfaceWidth = workspace.getWidth();
+		drawingSurfaceHeight = workspace.getHeight();
 	}
 
 	@Test

@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
+import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.support.annotation.ColorInt;
@@ -27,6 +28,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.ContextCompat;
 
 import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.R;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,19 +36,18 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 	private ToolPropertiesInteraction() {
 		super(null);
 	}
-
 	public static ToolPropertiesInteraction onToolProperties() {
 		return new ToolPropertiesInteraction();
 	}
 
-	public ToolPropertiesInteraction checkColor(@ColorInt int expectedColor) {
+	public ToolPropertiesInteraction checkMatchesColor(@ColorInt int expectedColor) {
 		assertEquals(expectedColor, PaintroidApplication.currentTool.getDrawPaint().getColor());
 		return this;
 	}
 
-	public ToolPropertiesInteraction checkColorResource(@ColorRes int expectedColorRes) {
+	public ToolPropertiesInteraction checkMatchesColorResource(@ColorRes int expectedColorRes) {
 		int expectedColor = ContextCompat.getColor(InstrumentationRegistry.getTargetContext(), expectedColorRes);
-		return checkColor(expectedColor);
+		return checkMatchesColor(expectedColor);
 	}
 
 	public ToolPropertiesInteraction checkCap(Cap expectedCap) {
@@ -59,5 +60,21 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 		Paint strokePaint = PaintroidApplication.currentTool.getDrawPaint();
 		assertEquals(expectedStrokeWidth, strokePaint.getStrokeWidth(), Float.MIN_VALUE);
 		return this;
+	}
+
+	public ToolPropertiesInteraction setColor(int color) {
+		PaintroidApplication.currentTool.changePaintColor(color);
+		return this;
+	}
+
+	public ToolPropertiesInteraction setColorResource(@ColorRes int colorResource) {
+		int color = ContextCompat.getColor(InstrumentationRegistry.getTargetContext(), colorResource);
+		return setColor(color);
+	}
+
+	public ToolPropertiesInteraction setColorPreset(int colorPresetPosition) {
+		Context targetContext = InstrumentationRegistry.getTargetContext();
+		int[] presetColors = targetContext.getResources().getIntArray(R.array.pocketpaint_color_chooser_preset_colors);
+		return setColor(presetColors[colorPresetPosition]);
 	}
 }

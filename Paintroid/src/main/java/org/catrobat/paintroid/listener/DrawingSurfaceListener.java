@@ -26,12 +26,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Perspective;
 
 import java.util.EnumSet;
 
@@ -41,6 +39,7 @@ import static org.catrobat.paintroid.tools.ToolType.TRANSFORM;
 
 public class DrawingSurfaceListener implements OnTouchListener {
 	private static final float DRAWER_EDGE_SIZE = 20;
+	private final DrawingSurfaceListenerCallback callback;
 	private TouchMode touchMode;
 
 	private float pointerDistance;
@@ -55,10 +54,11 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private int drawerEdgeSize;
 	private boolean autoScroll = true;
 
-	public DrawingSurfaceListener(AutoScrollTask autoScrollTask, float displayDensity) {
-		this.touchMode = TouchMode.DRAW;
+	public DrawingSurfaceListener(AutoScrollTask autoScrollTask, DrawingSurfaceListenerCallback callback, float displayDensity) {
 		this.autoScrollTask = autoScrollTask;
+		this.callback = callback;
 		drawerEdgeSize = (int) (DRAWER_EDGE_SIZE * displayDensity + 0.5f);
+		touchMode = TouchMode.DRAW;
 
 		canvasTouchPoint = new PointF();
 		eventTouchPoint = new PointF();
@@ -88,16 +88,15 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		Tool currentTool = PaintroidApplication.currentTool;
 		DrawingSurface drawingSurface = (DrawingSurface) view;
-		Perspective perspective = PaintroidApplication.perspective;
+		Tool currentTool = callback.getCurrentTool();
 
 		canvasTouchPoint.x = event.getX();
 		canvasTouchPoint.y = event.getY();
 		eventTouchPoint.x = canvasTouchPoint.x;
 		eventTouchPoint.y = canvasTouchPoint.y;
 
-		perspective.convertToCanvasFromSurface(canvasTouchPoint);
+		callback.convertToCanvasFromSurface(canvasTouchPoint);
 
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
@@ -145,14 +144,14 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					pointerDistance = calculatePointerDistance(event);
 					if (pointerDistanceOld > 0 && pointerDistanceOld != pointerDistance) {
 						float scale = (pointerDistance / pointerDistanceOld);
-						perspective.multiplyScale(scale);
+						callback.multiplyPerspectiveScale(scale);
 					}
 
 					float xOld = xMidPoint;
 					float yOld = yMidPoint;
 					calculateMidPoint(event);
 					if (xOld > 0 && xMidPoint != xOld || yOld > 0 && yMidPoint != yOld) {
-						perspective.translate(xMidPoint - xOld, yMidPoint - yOld);
+						callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld);
 					}
 				}
 				break;
@@ -281,5 +280,15 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		void convertToCanvasFromSurface(PointF surfacePoint);
 
 		ToolType getCurrentToolType();
+	}
+
+	public interface DrawingSurfaceListenerCallback {
+		Tool getCurrentTool();
+
+		void multiplyPerspectiveScale(float factor);
+
+		void translatePerspective(float x, float y);
+
+		void convertToCanvasFromSurface(PointF surfacePoint);
 	}
 }

@@ -35,7 +35,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 
 @RunWith(AndroidJUnit4.class)
 public class StatusbarIntegrationTest {
@@ -45,7 +45,8 @@ public class StatusbarIntegrationTest {
 
 	@Before
 	public void setUp() {
-		selectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 	}
 
 	@Test

@@ -1,4 +1,4 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -19,7 +19,11 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.annotation.ArrayRes;
+import android.support.annotation.ColorInt;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -48,14 +52,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickColorPickerPresetSelectorButton;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getColorArrayFromResource;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openColorPickerDialog;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.allOf;
@@ -71,7 +70,6 @@ public class LandscapeIntegrationTest {
 
 	@Before
 	public void setUp() {
-		resetDrawPaintAndBrushPickerView();
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
 
@@ -100,7 +98,8 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testToolBarOptionWidth() {
-		openToolOptionsForCurrentTool();
+		onToolBarView()
+				.performClickSelectedToolButton();
 
 		onView(withId(R.id.pocketpaint_main_tool_options))
 				.check(matches(isDisplayed()))
@@ -125,18 +124,21 @@ public class LandscapeIntegrationTest {
 				continue;
 			}
 
-			selectTool(toolType);
+			onToolBarView()
+					.performSelectTool(toolType);
 
 			assertEquals(toolType, PaintroidApplication.currentTool.getToolType());
 
 			if (!PaintroidApplication.currentTool.getToolOptionsAreShown()) {
-				openToolOptionsForCurrentTool();
+				onToolBarView()
+						.performClickSelectedToolButton();
 			}
 
 			onView(withId(R.id.pocketpaint_main_tool_options))
 					.check(matches(isDisplayed()));
 
-			openToolOptionsForCurrentTool();
+			onToolBarView()
+					.performClickSelectedToolButton();
 
 			onView(withId(R.id.pocketpaint_main_tool_options))
 					.check(matches(not(isDisplayed())));
@@ -154,7 +156,8 @@ public class LandscapeIntegrationTest {
 				continue;
 			}
 
-			selectTool(toolType);
+			onToolBarView()
+					.performSelectTool(toolType);
 
 			setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 			assertEquals(toolType, PaintroidApplication.currentTool.getToolType());
@@ -172,7 +175,8 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testOpenColorPickerDialogInLandscape() {
-		openColorPickerDialog();
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		onView(withId(R.id.color_chooser_color_picker_view))
 				.check(matches(isDisplayed()));
@@ -180,12 +184,14 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testOpenColorPickerDialogChooseColorInLandscape() {
-		openColorPickerDialog();
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_chooser_preset_colors);
 
 		for (int i = 0; i < colors.length; i++) {
-			clickColorPickerPresetSelectorButton(i);
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(i);
 
 			if (colors[i] != Color.TRANSPARENT) {
 				int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
@@ -200,7 +206,8 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testScrollToColorChooserOk() {
-		openColorPickerDialog();
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		onView(withId(R.id.color_chooser_button_ok))
 				.perform(scrollTo());
@@ -208,7 +215,8 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testColorPickerDialogSwitchTabsInLandscape() {
-		openColorPickerDialog();
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		onView(withClassName(is(PresetSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
@@ -321,5 +329,20 @@ public class LandscapeIntegrationTest {
 
 	private void setOrientation(int orientation) {
 		activityTestRule.getActivity().setRequestedOrientation(orientation);
+	}
+
+	@ColorInt
+	private static int[] getColorArrayFromResource(Context context, @ArrayRes int id) {
+		TypedArray typedColors = context.getResources().obtainTypedArray(id);
+		try {
+			@ColorInt
+			int[] colors = new int[typedColors.length()];
+			for (int i = 0; i < typedColors.length(); i++) {
+				colors[i] = typedColors.getColor(i, Color.BLACK);
+			}
+			return colors;
+		} finally {
+			typedColors.recycle();
+		}
 	}
 }

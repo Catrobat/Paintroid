@@ -25,7 +25,7 @@ import org.catrobat.paintroid.contract.MainActivityContracts;
 
 public class MainActivityModel implements MainActivityContracts.Model {
 	private boolean openedFromCatroid;
-	private boolean isFullScreen;
+	private boolean isFullscreen;
 	private boolean isSaved;
 	private boolean wasInitialAnimationPlayed;
 	private Uri savedPictureUri;
@@ -62,13 +62,13 @@ public class MainActivityModel implements MainActivityContracts.Model {
 	}
 
 	@Override
-	public boolean isFullScreen() {
-		return isFullScreen;
+	public boolean isFullscreen() {
+		return isFullscreen;
 	}
 
 	@Override
-	public void setFullScreen(boolean fullScreen) {
-		isFullScreen = fullScreen;
+	public void setFullscreen(boolean fullscreen) {
+		isFullscreen = fullscreen;
 	}
 
 	@Override

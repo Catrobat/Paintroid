@@ -32,16 +32,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.SeekBar;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
 import java.util.Locale;
 
 public class FillTool extends BaseTool {
+
 	public static final int DEFAULT_TOLERANCE_IN_PERCENT = 12;
 	public static final int MAX_ABSOLUTE_TOLERANCE = 510;
 
@@ -51,8 +53,8 @@ public class FillTool extends BaseTool {
 	private EditText colorToleranceEditText;
 	private View fillToolOptionsView;
 
-	public FillTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public FillTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(context, toolPaint, workspace, commandManager);
 	}
 
 	public void updateColorTolerance(int colorToleranceInPercent) {
@@ -78,21 +80,16 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-
-		int bitmapHeight = drawingSurface.getBitmapHeight();
-		int bitmapWidth = drawingSurface.getBitmapWidth();
-
-		if (coordinate.x > bitmapWidth || coordinate.y > bitmapHeight
+		if (coordinate.x > workspace.getWidth() || coordinate.y > workspace.getHeight()
 				|| coordinate.x < 0 || coordinate.y < 0) {
 			return false;
 		}
 
-		if (colorTolerance == 0 && BITMAP_PAINT.getColor() == drawingSurface.getPixel(coordinate)) {
+		if (colorTolerance == 0 && toolPaint.getColor() == workspace.getPixelOfCurrentLayer(coordinate)) {
 			return false;
 		}
-		Command command = commandFactory.createFillCommand((int) coordinate.x, (int) coordinate.y, BITMAP_PAINT, colorTolerance);
-		PaintroidApplication.commandManager.addCommand(command);
+		Command command = commandFactory.createFillCommand((int) coordinate.x, (int) coordinate.y, toolPaint.getPaint(), colorTolerance);
+		commandManager.addCommand(command);
 
 		return true;
 	}
@@ -103,6 +100,11 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
+	}
+
+	@Override
+	public ToolType getToolType() {
+		return ToolType.FILL;
 	}
 
 	@Override
