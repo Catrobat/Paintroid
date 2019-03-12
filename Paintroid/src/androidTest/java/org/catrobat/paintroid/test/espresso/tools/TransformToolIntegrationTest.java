@@ -59,6 +59,7 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesI
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
@@ -1190,5 +1191,71 @@ public class TransformToolIntegrationTest {
 
 		onDrawingSurfaceView()
 				.checkLayerDimensions(initialHeight, initialWidth);
+	}
+
+	@Test
+	public void testCropWithClickOutsideToolbox() {
+
+		Bitmap workingBitmap;
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT));
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT));
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+
+		onTransformToolOptionsView()
+				.performAutoCrop();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
+		initialWidth = workingBitmap.getWidth();
+		initialHeight = workingBitmap.getHeight();
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.LEFT_MIDDLE,
+						DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_LEFT));
+
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
+		assertThat(workingBitmap.getWidth(), lessThan(initialWidth));
+		assertThat(workingBitmap.getHeight(), equalTo(initialHeight));
+		initialWidth = workingBitmap.getWidth();
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.RIGHT_MIDDLE,
+						DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_RIGHT));
+
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
+		assertThat(workingBitmap.getWidth(), lessThan(initialWidth));
+		assertThat(workingBitmap.getHeight(), equalTo(initialHeight));
+		initialWidth = workingBitmap.getWidth();
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE,
+						DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_BOTTOM));
+
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
+		assertThat(workingBitmap.getHeight(), lessThan(initialHeight));
+		assertThat(workingBitmap.getWidth(), equalTo(initialWidth));
+		initialHeight = workingBitmap.getHeight();
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.TOP_MIDDLE,
+						DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_TOP));
+
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
+		assertThat(workingBitmap.getHeight(), lessThan(initialHeight));
+		assertThat(workingBitmap.getWidth(), equalTo(initialWidth));
 	}
 }

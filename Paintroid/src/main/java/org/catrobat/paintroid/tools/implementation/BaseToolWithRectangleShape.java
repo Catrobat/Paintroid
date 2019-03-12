@@ -238,6 +238,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		return true;
 	}
 
+	protected void onClick(PointF coordinate) {
+		if (isCoordinateInsideBox(coordinate)) {
+			onClickInBox();
+		}
+	}
+
 	@Override
 	public boolean handleUp(PointF coordinate) {
 		if (previousEventCoordinate == null) {
@@ -246,9 +252,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		movedDistance.set(
 				movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
 				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
-		if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y
-				&& isCoordinateInsideBox(coordinate)) {
-			onClickInBox();
+		if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y) {
+			onClick(coordinate);
 		}
 		return true;
 	}

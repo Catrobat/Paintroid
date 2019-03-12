@@ -38,16 +38,34 @@ public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 			return calculatePercentageOffset(view, .5f, .5f);
 		}
 	},
+	LEFT_MIDDLE {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, .0f, .5f);
+		}
+	},
 	HALFWAY_LEFT_MIDDLE {
 		@Override
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, .25f, .5f);
 		}
 	},
+	RIGHT_MIDDLE {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, 1f, .5f);
+		}
+	},
 	HALFWAY_RIGHT_MIDDLE {
 		@Override
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, .75f, .5f);
+		}
+	},
+	TOP_MIDDLE {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, .5f, 0f);
 		}
 	},
 	HALFWAY_TOP_MIDDLE {
@@ -96,6 +114,24 @@ public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 		@Override
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, 1.5f, .5f);
+		}
+	},
+	OUTSIDE_MIDDLE_LEFT {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, -.3f, .5f);
+		}
+	},
+	OUTSIDE_MIDDLE_BOTTOM {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, 1.3f, .5f);
+		}
+	},
+	OUTSIDE_MIDDLE_TOP {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, .5f, -.3f);
 		}
 	},
 	TOOL_POSITION {
