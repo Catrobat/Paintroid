@@ -38,6 +38,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTypeFace;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withIndex;
@@ -76,5 +77,14 @@ public class TextToolFontSpinnerTest {
 
 		onView(withIndex(withId(android.R.id.text1), 4))
 				.check(matches(hasTypeFace(stcFontFace)));
+	}
+
+	@Test
+	public void checkIfSansSerifIsDefaultSpinnerFont() {
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font))
+				.check(matches(withSpinnerText("Sans Serif")));
 	}
 }
