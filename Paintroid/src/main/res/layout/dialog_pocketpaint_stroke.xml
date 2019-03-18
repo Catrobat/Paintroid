@@ -33,87 +33,62 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:text="@string/dialog_brush_width_text"
-        android:textAllCaps="true"
-        android:textColor="@color/pocketpaint_colorAccent"
-        android:textStyle="bold"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip" />
+        style="@style/PocketPaintToolSubtitle"
+        android:text="@string/dialog_brush_width_text" />
 
-    <View style="@style/PocketPaintDividerHorizontal"/>
+    <View style="@style/PocketPaintToolSectionDivider"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="5"
-        android:orientation="horizontal" >
+        style="@style/PocketPaintToolSection">
 
         <SeekBar
             android:id="@+id/pocketpaint_stroke_width_seek_bar"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:layout_gravity="center"
-            android:layout_marginBottom="5dip"
-            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:max="100"
-            android:minHeight="30dip"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="24dp" />
+            android:minHeight="30dip"/>
+
+        <Space style="@style/PocketPaintToolHorizontalSpace"/>
 
         <EditText
             android:id="@+id/pocketpaint_stroke_width_width_text"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minEms="3"
             android:inputType="number"
             android:imeOptions="actionDone"
             android:saveEnabled="false"
             android:textColor="@color/pocketpaint_colorAccent"
             android:textSize="14sp"
             android:textStyle="bold"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            tools:text="100" />
     </LinearLayout>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/dialog_shape_text"
-        android:textAllCaps="true"
-        android:textColor="@color/pocketpaint_colorAccent"
-        android:textStyle="bold"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip" />
+        style="@style/PocketPaintToolSubtitle"
+        android:text="@string/dialog_shape_text" />
 
-    <View style="@style/PocketPaintDividerHorizontal"/>
+    <View style="@style/PocketPaintToolSectionDivider"/>
 
     <LinearLayout
+        style="@style/PocketPaintToolSection"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="horizontal" >
+        android:layout_gravity="center">
 
         <ImageButton
             android:id="@+id/pocketpaint_stroke_ibtn_circle"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="16dp"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_pocketpaint_tool_circle" />
 
         <ImageButton
             android:id="@+id/pocketpaint_stroke_ibtn_rect"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="16dp"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_pocketpaint_tool_square" />
     </LinearLayout>
 

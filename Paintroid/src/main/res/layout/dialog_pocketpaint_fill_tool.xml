@@ -29,51 +29,33 @@
 
     <TextView
         android:id="@+id/pocketpaint_fill_tool_dialog_color_tolerance_input_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
+        style="@style/PocketPaintToolSubtitle"
         android:labelFor="@+id/pocketpaint_fill_tool_dialog_color_tolerance_input"
-        android:text="@string/fill_tool_dialog_color_tolerance_title"
-        android:textAllCaps="true"
-        android:textColor="@color/pocketpaint_colorAccent"
-        android:textStyle="bold"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip" />
+        android:text="@string/fill_tool_dialog_color_tolerance_title" />
 
-    <View style="@style/PocketPaintDividerHorizontal"/>
+    <View style="@style/PocketPaintToolSectionDivider"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="28dp"
-        android:weightSum="5"
-        android:orientation="horizontal" >
+        style="@style/PocketPaintToolSection" >
 
         <SeekBar
             android:id="@+id/pocketpaint_color_tolerance_seek_bar"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:layout_gravity="center"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:max="100"
-            android:minHeight="30dip"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="24dp" />
+            android:minHeight="30dip"/>
+
+        <Space style="@style/PocketPaintToolHorizontalSpace"/>
 
         <EditText
             android:id="@+id/pocketpaint_fill_tool_dialog_color_tolerance_input"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:inputType="number"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
             android:textCursorDrawable="@null"
+            android:minEms="3"
             android:imeOptions="actionDone"
-            android:layout_weight="1"
             android:saveEnabled="false"
             android:textSize="14sp"
             android:textStyle="bold"

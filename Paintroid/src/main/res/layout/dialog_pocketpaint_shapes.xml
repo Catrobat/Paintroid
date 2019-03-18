@@ -17,152 +17,116 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/pocketpaint_outline_view_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:text="@string/dialog_brush_width_text"
-        android:textAllCaps="true"
-        android:textColor="@color/pocketpaint_main_rectangle_tool_accent_color"
-        android:textStyle="bold"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip" />
+        style="@style/PocketPaintToolSubtitle"
+        android:text="@string/dialog_brush_width_text" />
 
     <View
-        style="@style/PocketPaintDividerHorizontal"
+        style="@style/PocketPaintToolSectionDivider"
         android:id="@+id/pocketpaint_outline_view_border" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="5"
+        style="@style/PocketPaintToolSection"
         android:orientation="horizontal" >
 
         <SeekBar
             android:id="@+id/pocketpaint_shape_stroke_width_seek_bar"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:layout_gravity="center"
-            android:layout_marginBottom="5dip"
-            android:layout_marginTop="16dp"
-            android:max="100"
-            android:minHeight="30dip"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="24dp" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100" />
+
+        <Space style="@style/PocketPaintToolHorizontalSpace" />
 
         <EditText
             android:id="@+id/pocketpaint_shape_outline_edit"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:inputType="number"
             android:imeOptions="actionDone"
             android:textColor="@color/pocketpaint_colorAccent"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:minEms="3"
             tools:ignore="LabelFor" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/pocketpaint_shape_tool_fill_outline"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/shape_tool_dialog_fill_title"
-        android:textAllCaps="true"
-        android:textColor="@color/pocketpaint_colorAccent"
-        android:textStyle="bold"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dip" />
+        style="@style/PocketPaintToolSubtitle"
+        android:text="@string/shape_tool_dialog_fill_title"  />
 
-    <View style="@style/PocketPaintDividerHorizontal"/>
+    <View style="@style/PocketPaintToolSectionDivider"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        style="@style/PocketPaintToolSection"
         android:layout_gravity="center"
-        android:orientation="horizontal" >
+        android:layout_width="wrap_content">
 
         <ImageButton
             android:id="@+id/pocketpaint_shape_ibtn_fill"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="16dp"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_pocketpaint_rectangle" />
 
         <ImageButton
             android:id="@+id/pocketpaint_shape_ibtn_outline"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:padding="16dp"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_pocketpaint_rectangle_out" />
     </LinearLayout>
+
     <TextView
         android:id="@+id/pocketpaint_shape_tool_dialog_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/shape_tool_dialog_rect_title"
-        android:textAllCaps="true"
-        android:textColor="@color/pocketpaint_colorAccent"
-        android:textStyle="bold"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="16dp"/>
+        style="@style/PocketPaintToolSubtitle"
+        android:text="@string/shape_tool_dialog_rect_title" />
 
-    <View style="@style/PocketPaintDividerHorizontal"/>
+    <View style="@style/PocketPaintToolSectionDivider"/>
 
     <LinearLayout
         android:id="@+id/pocketpaint_shapes_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="horizontal">
+        style="@style/PocketPaintToolSection">
 
         <ImageButton
             android:id="@+id/pocketpaint_shapes_square_btn"
             style="@style/PocketPaintSelectableButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_pocketpaint_rectangle"
-            android:padding="16dp"/>
+            android:src="@drawable/ic_pocketpaint_rectangle" />
 
         <ImageButton
             android:id="@+id/pocketpaint_shapes_circle_btn"
             style="@style/PocketPaintSelectableButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="16dp"
             android:src="@drawable/ic_pocketpaint_circle"/>
 
         <ImageButton
             android:id="@+id/pocketpaint_shapes_heart_btn"
             style="@style/PocketPaintSelectableButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="16dp"
             android:src="@drawable/ic_pocketpaint_heart"/>
 
         <ImageButton
             android:id="@+id/pocketpaint_shapes_star_btn"
             style="@style/PocketPaintSelectableButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_pocketpaint_star"
-            android:padding="16dp"/>
+            android:src="@drawable/ic_pocketpaint_star"/>
     </LinearLayout>
 
-</merge>
+</LinearLayout>

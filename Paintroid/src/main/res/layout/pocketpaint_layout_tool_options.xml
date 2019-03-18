@@ -17,33 +17,22 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pocketpaint_layout_tool_options"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:visibility="visible">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/pocketpaint_layout_tool_options_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dip"
-        android:layout_marginTop="8dp"
-        android:textAllCaps="true"
-        android:textSize="20sp"
-        android:textColor="@color/pocketpaint_colorAccent"
-        android:textStyle="bold"
-        tools:text="@tools:sample/lorem"/>
+        style="@style/PocketPaintToolTitle"
+        tools:text="Tool name"/>
 
     <LinearLayout
         android:id="@+id/pocketpaint_layout_tool_specific_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:orientation="vertical">
     </LinearLayout>
-
 </LinearLayout>
