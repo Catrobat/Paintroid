@@ -68,9 +68,10 @@ pipeline {
 
             post {
                 always {
-                    pmd         canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "$reports/pmd.xml",        unHealthy: '', unstableTotalAll: '0'
-                    checkstyle  canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "$reports/checkstyle.xml", unHealthy: '', unstableTotalAll: '0'
-                    androidLint canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "$reports/lint*.xml",      unHealthy: '', unstableTotalAll: '0'
+                    recordIssues aggregatingResults: true, enabledForFailure: true, qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]],
+                                 tools: [androidLintParser(pattern: "$reports/lint*.xml"),
+                                         checkStyle(pattern: "$reports/checkstyle.xml"),
+                                         pmdParser(pattern: "$reports/pmd.xml")]
                 }
             }
         }
