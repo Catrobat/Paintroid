@@ -29,7 +29,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
+import org.catrobat.paintroid.tools.implementation.ShapeTool;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
 import java.util.Locale;
@@ -72,45 +72,45 @@ public class ShapeToolOptionsListener {
 		outlineWidthEditText.setText(String.format(Locale.getDefault(), "%d", (int) startingOutlineWidth));
 		outlineWidthSeekBar.setProgress(startingOutlineWidth);
 		initializeListeners();
-		setShapeActivated(GeometricFillTool.BaseShape.RECTANGLE);
-		setDrawTypeActivated(GeometricFillTool.ShapeDrawType.FILL);
+		setShapeActivated(ShapeTool.BaseShape.RECTANGLE);
+		setDrawTypeActivated(ShapeTool.ShapeDrawType.FILL);
 	}
 
 	private void initializeListeners() {
 		squareButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onShapeClicked(GeometricFillTool.BaseShape.RECTANGLE);
+				onShapeClicked(ShapeTool.BaseShape.RECTANGLE);
 			}
 		});
 		circleButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onShapeClicked(GeometricFillTool.BaseShape.OVAL);
+				onShapeClicked(ShapeTool.BaseShape.OVAL);
 			}
 		});
 		heartButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onShapeClicked(GeometricFillTool.BaseShape.HEART);
+				onShapeClicked(ShapeTool.BaseShape.HEART);
 			}
 		});
 		starButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onShapeClicked(GeometricFillTool.BaseShape.STAR);
+				onShapeClicked(ShapeTool.BaseShape.STAR);
 			}
 		});
 		fillButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onDrawTypeClicked(GeometricFillTool.ShapeDrawType.FILL);
+				onDrawTypeClicked(ShapeTool.ShapeDrawType.FILL);
 			}
 		});
 		outlineButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				onDrawTypeClicked(GeometricFillTool.ShapeDrawType.OUTLINE);
+				onDrawTypeClicked(ShapeTool.ShapeDrawType.OUTLINE);
 			}
 		});
 		outlineWidthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -155,12 +155,12 @@ public class ShapeToolOptionsListener {
 		});
 	}
 
-	private void onShapeClicked(GeometricFillTool.BaseShape shape) {
+	private void onShapeClicked(ShapeTool.BaseShape shape) {
 		onShapeToolOptionsChangedListener.setToolType(shape);
 		setShapeActivated(shape);
 	}
 
-	private void onDrawTypeClicked(GeometricFillTool.ShapeDrawType drawType) {
+	private void onDrawTypeClicked(ShapeTool.ShapeDrawType drawType) {
 		onShapeToolOptionsChangedListener.setDrawType(drawType);
 		setDrawTypeActivated(drawType);
 	}
@@ -181,7 +181,7 @@ public class ShapeToolOptionsListener {
 		outlineButton.setSelected(false);
 	}
 
-	public void setShapeActivated(GeometricFillTool.BaseShape shape) {
+	public void setShapeActivated(ShapeTool.BaseShape shape) {
 		resetShapeActivated();
 		switch (shape) {
 			case RECTANGLE:
@@ -206,7 +206,7 @@ public class ShapeToolOptionsListener {
 		}
 	}
 
-	public void setDrawTypeActivated(GeometricFillTool.ShapeDrawType drawType) {
+	public void setDrawTypeActivated(ShapeTool.ShapeDrawType drawType) {
 		resetDrawTypeActivated();
 		switch (drawType) {
 			case FILL:
@@ -249,8 +249,8 @@ public class ShapeToolOptionsListener {
 	}
 
 	public interface OnShapeToolOptionsChangedListener {
-		void setToolType(GeometricFillTool.BaseShape shape);
-		void setDrawType(GeometricFillTool.ShapeDrawType drawType);
+		void setToolType(ShapeTool.BaseShape shape);
+		void setDrawType(ShapeTool.ShapeDrawType drawType);
 		void setOutlineWidth(int outlineWidth);
 	}
 }

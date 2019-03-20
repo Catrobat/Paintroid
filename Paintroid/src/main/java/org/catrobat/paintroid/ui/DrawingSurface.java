@@ -41,13 +41,13 @@ import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTaskCallback;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 
 import java.util.ListIterator;
@@ -65,6 +65,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	private LayerContracts.Model layerModel;
 	private Perspective perspective;
 	private DrawingSurfaceListener drawingSurfaceListener;
+	private ToolReference toolReference;
 
 	public DrawingSurface(Context context, AttributeSet attrSet) {
 		super(context, attrSet);
@@ -95,7 +96,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		DrawingSurfaceListener.DrawingSurfaceListenerCallback callback = new DrawingSurfaceListener.DrawingSurfaceListenerCallback() {
 			@Override
 			public Tool getCurrentTool() {
-				return PaintroidApplication.currentTool;
+				return toolReference.get();
 			}
 
 			@Override
@@ -117,16 +118,10 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		setOnTouchListener(drawingSurfaceListener);
 	}
 
-	public void setLayerModel(LayerContracts.Model layerModel) {
+	public void setArguments(LayerContracts.Model layerModel, Perspective perspective, ToolReference toolReference) {
 		this.layerModel = layerModel;
-	}
-
-	public void setPerspective(Perspective perspective) {
 		this.perspective = perspective;
-	}
-
-	public Canvas getCanvas() {
-		throw new IllegalArgumentException();
+		this.toolReference = toolReference;
 	}
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {
@@ -156,7 +151,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 					surfaceViewCanvas.drawBitmap(iterator.previous().getBitmap(), 0, 0, null);
 				}
 
-				PaintroidApplication.currentTool.draw(surfaceViewCanvas);
+				toolReference.get().draw(surfaceViewCanvas);
 			}
 		}
 	}
@@ -238,11 +233,11 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		}
 
 		public void handleToolMove(PointF coordinate) {
-			PaintroidApplication.currentTool.handleMove(coordinate);
+			toolReference.get().handleMove(coordinate);
 		}
 
 		public Point getToolAutoScrollDirection(float pointX, float pointY, int screenWidth, int screenHeight) {
-			return PaintroidApplication.currentTool.getAutoScrollDirection(pointX, pointY, screenWidth, screenHeight);
+			return toolReference.get().getAutoScrollDirection(pointX, pointY, screenWidth, screenHeight);
 		}
 
 		public float getPerspectiveScale() {
@@ -258,7 +253,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 		}
 
 		public ToolType getCurrentToolType() {
-			return PaintroidApplication.currentTool.getToolType();
+			return toolReference.get().getToolType();
 		}
 	}
 

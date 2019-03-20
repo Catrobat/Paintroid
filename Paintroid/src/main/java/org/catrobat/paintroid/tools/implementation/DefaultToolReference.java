@@ -17,17 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid;
+package org.catrobat.paintroid.tools.implementation;
 
-import android.graphics.Bitmap;
+import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolReference;
 
-import java.io.File;
+public class DefaultToolReference implements ToolReference {
+	private Tool tool;
 
-public final class PaintroidApplication {
-	public static File cacheDir;
-	public static Bitmap checkeredBackgroundBitmap;
+	@Override
+	public Tool get() {
+		return tool;
+	}
 
-	private PaintroidApplication() {
-		throw new IllegalArgumentException();
+	@Override
+	public void set(Tool tool) {
+		this.tool = tool;
 	}
 }

@@ -26,12 +26,12 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
+import org.catrobat.paintroid.tools.implementation.ShapeTool;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,7 +43,7 @@ import org.mockito.junit.MockitoRule;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-public class GeometricFillToolTests {
+public class ShapeToolTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -54,10 +54,10 @@ public class GeometricFillToolTests {
 	@Mock
 	private CommandManager commandManager;
 
-	private GeometricFillTool rectangleShapeTool;
-	private GeometricFillTool ovalShapeTool;
-	private GeometricFillTool heartShapeTool;
-	private GeometricFillTool starShapeTool;
+	private ShapeTool rectangleShapeTool;
+	private ShapeTool ovalShapeTool;
+	private ShapeTool heartShapeTool;
+	private ShapeTool starShapeTool;
 
 	@UiThreadTest
 	@Before
@@ -66,17 +66,17 @@ public class GeometricFillToolTests {
 		Workspace workspace = activity.workspace;
 		ToolPaint toolPaint = activity.toolPaint;
 
-		rectangleShapeTool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
-		rectangleShapeTool.baseShape = GeometricFillTool.BaseShape.RECTANGLE;
+		rectangleShapeTool = new ShapeTool(activity, toolPaint, workspace, commandManager);
+		rectangleShapeTool.baseShape = ShapeTool.BaseShape.RECTANGLE;
 
-		ovalShapeTool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
-		ovalShapeTool.baseShape = GeometricFillTool.BaseShape.OVAL;
+		ovalShapeTool = new ShapeTool(activity, toolPaint, workspace, commandManager);
+		ovalShapeTool.baseShape = ShapeTool.BaseShape.OVAL;
 
-		heartShapeTool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
-		heartShapeTool.baseShape = GeometricFillTool.BaseShape.HEART;
+		heartShapeTool = new ShapeTool(activity, toolPaint, workspace, commandManager);
+		heartShapeTool.baseShape = ShapeTool.BaseShape.HEART;
 
-		starShapeTool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
-		starShapeTool.baseShape = GeometricFillTool.BaseShape.STAR;
+		starShapeTool = new ShapeTool(activity, toolPaint, workspace, commandManager);
+		starShapeTool.baseShape = ShapeTool.BaseShape.STAR;
 	}
 
 	@UiThreadTest
@@ -91,14 +91,14 @@ public class GeometricFillToolTests {
 		toolTypeRect = starShapeTool.getToolType();
 		assertEquals(ToolType.SHAPE, toolTypeRect);
 
-		GeometricFillTool.BaseShape rectangleShape = rectangleShapeTool.getBaseShape();
-		assertEquals(GeometricFillTool.BaseShape.RECTANGLE, rectangleShape);
-		GeometricFillTool.BaseShape ovalShape = ovalShapeTool.getBaseShape();
-		assertEquals(GeometricFillTool.BaseShape.OVAL, ovalShape);
-		GeometricFillTool.BaseShape heartShape = heartShapeTool.getBaseShape();
-		assertEquals(GeometricFillTool.BaseShape.HEART, heartShape);
-		GeometricFillTool.BaseShape starShape = starShapeTool.getBaseShape();
-		assertEquals(GeometricFillTool.BaseShape.STAR, starShape);
+		ShapeTool.BaseShape rectangleShape = rectangleShapeTool.getBaseShape();
+		assertEquals(ShapeTool.BaseShape.RECTANGLE, rectangleShape);
+		ShapeTool.BaseShape ovalShape = ovalShapeTool.getBaseShape();
+		assertEquals(ShapeTool.BaseShape.OVAL, ovalShape);
+		ShapeTool.BaseShape heartShape = heartShapeTool.getBaseShape();
+		assertEquals(ShapeTool.BaseShape.HEART, heartShape);
+		ShapeTool.BaseShape starShape = starShapeTool.getBaseShape();
+		assertEquals(ShapeTool.BaseShape.STAR, starShape);
 	}
 
 	@UiThreadTest
@@ -107,7 +107,9 @@ public class GeometricFillToolTests {
 		Paint red = new Paint();
 		red.setColor(Color.RED);
 		rectangleShapeTool.setDrawPaint(red);
-		int color = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		MainActivity activity = activityTestRule.getActivity();
+		Tool currentTool = activity.toolReference.get();
+		int color = currentTool.getDrawPaint().getColor();
 		assertEquals("Red colour expected", Color.RED, color);
 	}
 }

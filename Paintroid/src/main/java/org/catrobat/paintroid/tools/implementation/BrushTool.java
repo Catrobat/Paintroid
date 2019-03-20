@@ -36,7 +36,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.ui.tools.DrawerPreview;
 
-public class DrawTool extends BaseTool {
+public class BrushTool extends BaseTool {
 
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public Path pathToDraw;
@@ -46,7 +46,7 @@ public class DrawTool extends BaseTool {
 	@VisibleForTesting
 	public BrushPickerView brushPickerView;
 
-	public DrawTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+	public BrushTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(context, toolPaint, workspace, commandManager);
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
@@ -207,7 +207,7 @@ public class DrawTool extends BaseTool {
 
 			@Override
 			public ToolType getToolType() {
-				return DrawTool.this.getToolType();
+				return BrushTool.this.getToolType();
 			}
 		});
 	}

@@ -29,7 +29,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 
-public class EraserTool extends DrawTool {
+public class EraserTool extends BrushTool {
 
 	@ColorInt
 	private int previousColor = Color.BLACK;

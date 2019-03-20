@@ -39,8 +39,8 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.implementation.BrushTool;
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
-import org.catrobat.paintroid.tools.implementation.DrawTool;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -62,7 +62,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
-public class DrawToolTests {
+public class BrushToolTest {
 	private static final float MOVE_TOLERANCE = BaseTool.MOVE_TOLERANCE;
 
 	@Rule
@@ -74,7 +74,7 @@ public class DrawToolTests {
 	@Mock
 	private CommandManager commandManager;
 
-	private DrawTool toolToTest;
+	private BrushTool toolToTest;
 	private Paint paint;
 	private ToolPaint toolPaint;
 
@@ -84,7 +84,7 @@ public class DrawToolTests {
 		MainActivity activity = activityTestRule.getActivity();
 		Workspace workspace = activity.workspace;
 		toolPaint = activity.toolPaint;
-		toolToTest = new DrawTool(activity, toolPaint, workspace, commandManager);
+		toolToTest = new BrushTool(activity, toolPaint, workspace, commandManager);
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setStrokeCap(Paint.Cap.ROUND);

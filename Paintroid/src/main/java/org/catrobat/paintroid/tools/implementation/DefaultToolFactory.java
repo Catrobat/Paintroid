@@ -39,7 +39,7 @@ public class DefaultToolFactory implements ToolFactory {
 
 		switch (toolType) {
 			case BRUSH:
-				tool = new DrawTool(activity, toolPaint, workspace, commandManager);
+				tool = new BrushTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case CURSOR:
 				tool = new CursorTool(activity, toolPaint, workspace, commandManager);
@@ -68,7 +68,7 @@ public class DefaultToolFactory implements ToolFactory {
 				tool = new TransformTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case SHAPE:
-				tool = new GeometricFillTool(activity, toolPaint, workspace, commandManager);
+				tool = new ShapeTool(activity, toolPaint, workspace, commandManager);
 				break;
 			case ERASER:
 				tool = new EraserTool(activity, toolPaint, workspace, commandManager);
@@ -80,7 +80,7 @@ public class DefaultToolFactory implements ToolFactory {
 				tool = new TextTool(activity, toolPaint, workspace, commandManager);
 				break;
 			default:
-				tool = new DrawTool(activity, toolPaint, workspace, commandManager);
+				tool = new BrushTool(activity, toolPaint, workspace, commandManager);
 				break;
 		}
 		tool.setupToolOptions();

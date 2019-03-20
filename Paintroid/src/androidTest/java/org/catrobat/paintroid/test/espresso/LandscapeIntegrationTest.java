@@ -28,11 +28,11 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -52,6 +52,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getMainActivity;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
@@ -74,6 +75,10 @@ public class LandscapeIntegrationTest {
 				.performSelectTool(ToolType.BRUSH);
 
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+	}
+
+	private Tool getCurrentTool() {
+		return getMainActivity().toolReference.get();
 	}
 
 	@Test
@@ -127,9 +132,9 @@ public class LandscapeIntegrationTest {
 			onToolBarView()
 					.performSelectTool(toolType);
 
-			assertEquals(toolType, PaintroidApplication.currentTool.getToolType());
+			assertEquals(toolType, getCurrentTool().getToolType());
 
-			if (!PaintroidApplication.currentTool.getToolOptionsAreShown()) {
+			if (!getCurrentTool().getToolOptionsAreShown()) {
 				onToolBarView()
 						.performClickSelectedToolButton();
 			}
@@ -160,7 +165,7 @@ public class LandscapeIntegrationTest {
 					.performSelectTool(toolType);
 
 			setOrientation(SCREEN_ORIENTATION_PORTRAIT);
-			assertEquals(toolType, PaintroidApplication.currentTool.getToolType());
+			assertEquals(toolType, getCurrentTool().getToolType());
 			setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 		}
 	}
@@ -194,7 +199,7 @@ public class LandscapeIntegrationTest {
 					.performClickColorPickerPresetSelectorButton(i);
 
 			if (colors[i] != Color.TRANSPARENT) {
-				int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+				int selectedColor = getCurrentTool().getDrawPaint().getColor();
 				assertEquals(colors[i], selectedColor);
 
 				onView(withId(R.id.color_chooser_button_ok))

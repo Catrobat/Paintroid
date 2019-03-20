@@ -19,25 +19,20 @@
 
 package org.catrobat.paintroid;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.LayerContracts;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.ui.Perspective;
-
-import java.io.File;
 
 public class PaintroidApplicationFragment extends Fragment {
 	private CommandManager commandManager;
-	private Tool currentTool;
+	private ToolReference currentTool;
 	private Perspective perspective;
 	private LayerContracts.Model layerModel;
-	private File cacheDir;
-	private Bitmap checkeredBackgroundBitmap;
 	private ToolPaint toolPaint;
 
 	@Override
@@ -50,51 +45,32 @@ public class PaintroidApplicationFragment extends Fragment {
 		return commandManager;
 	}
 
-	public Tool getCurrentTool() {
+	public void setCommandManager(CommandManager commandManager) {
+		this.commandManager = commandManager;
+	}
+
+	public ToolReference getCurrentTool() {
 		return currentTool;
+	}
+
+	public void setCurrentTool(ToolReference currentTool) {
+		this.currentTool = currentTool;
 	}
 
 	public Perspective getPerspective() {
 		return perspective;
 	}
 
-	public LayerContracts.Model getLayerModel() {
-		return layerModel;
-	}
-
-	public File getCacheDir() {
-		return cacheDir;
-	}
-
-	public Bitmap getCheckeredBackgroundBitmap() {
-		return checkeredBackgroundBitmap;
-	}
-
-	public void setCommandManager(CommandManager commandManager) {
-		this.commandManager = commandManager;
-	}
-
-	public void setCurrentTool(Tool currentTool) {
-		this.currentTool = currentTool;
-		PaintroidApplication.currentTool = this.currentTool;
-	}
-
 	public void setPerspective(Perspective perspective) {
 		this.perspective = perspective;
 	}
 
+	public LayerContracts.Model getLayerModel() {
+		return layerModel;
+	}
+
 	public void setLayerModel(LayerContracts.Model layerModel) {
 		this.layerModel = layerModel;
-	}
-
-	public void setCacheDir(File cacheDir) {
-		this.cacheDir = cacheDir;
-		PaintroidApplication.cacheDir = this.cacheDir;
-	}
-
-	public void setCheckeredBackgroundBitmap(Bitmap checkeredBackgroundBitmap) {
-		this.checkeredBackgroundBitmap = checkeredBackgroundBitmap;
-		PaintroidApplication.checkeredBackgroundBitmap = this.checkeredBackgroundBitmap;
 	}
 
 	public ToolPaint getToolPaint() {

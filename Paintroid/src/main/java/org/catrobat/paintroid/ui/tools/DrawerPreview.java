@@ -31,7 +31,6 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
 
@@ -132,7 +131,7 @@ public class DrawerPreview extends View {
 		borderPaint.setColor(Color.BLACK);
 		borderPaint.setAntiAlias(true);
 
-		if (PaintroidApplication.currentTool.getToolType() == ToolType.LINE) {
+		if (callback.getToolType() == ToolType.LINE) {
 			startX = getLeft() + getWidth() / 8 - BORDER;
 			startY = getTop() + getHeight() / 2;
 			endX = getRight() - getWidth() / 8 + BORDER;
