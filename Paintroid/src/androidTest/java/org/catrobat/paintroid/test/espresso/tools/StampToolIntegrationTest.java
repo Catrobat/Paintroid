@@ -28,10 +28,10 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
@@ -76,6 +76,7 @@ public class StampToolIntegrationTest {
 
 	private Workspace workspace;
 	private Perspective perspective;
+	private ToolReference toolReference;
 
 	@Before
 	public void setUp() {
@@ -84,6 +85,7 @@ public class StampToolIntegrationTest {
 		MainActivity activity = launchActivityRule.getActivity();
 		workspace = activity.workspace;
 		perspective = activity.perspective;
+		toolReference = activity.toolReference;
 	}
 
 	@Test
@@ -96,7 +98,7 @@ public class StampToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.STAMP);
 
-		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		StampTool stampTool = (StampTool) toolReference.get();
 
 		stampTool.toolPosition.set(surfaceCenterPoint);
 		stampTool.boxWidth = SQUARE_LENGTH;
@@ -170,7 +172,7 @@ public class StampToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.STAMP);
 
-		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		StampTool stampTool = (StampTool) toolReference.get();
 		PointF toolPosition = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
 		stampTool.toolPosition.set(toolPosition);
 
@@ -213,7 +215,7 @@ public class StampToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.STAMP);
 
-		StampTool stampTool = (StampTool) PaintroidApplication.currentTool;
+		StampTool stampTool = (StampTool) toolReference.get();
 		PointF toolPosition = new PointF(perspective.surfaceCenterX, perspective.surfaceCenterY);
 		stampTool.toolPosition.set(toolPosition);
 		stampTool.boxWidth = (int) (bitmapWidth * STAMP_RESIZE_FACTOR);
@@ -245,13 +247,13 @@ public class StampToolIntegrationTest {
 				.performSelectTool(ToolType.STAMP);
 
 		Bitmap emptyBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
-				PaintroidApplication.currentTool).drawingBitmap);
+				toolReference.get()).drawingBitmap);
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION, tapStampLong));
 
 		Bitmap expectedBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
-				PaintroidApplication.currentTool).drawingBitmap);
+				toolReference.get()).drawingBitmap);
 
 		assertFalse(expectedBitmap.sameAs(emptyBitmap));
 
@@ -259,7 +261,7 @@ public class StampToolIntegrationTest {
 				.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		Bitmap actualBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
-				PaintroidApplication.currentTool).drawingBitmap);
+				toolReference.get()).drawingBitmap);
 
 		assertTrue(expectedBitmap.sameAs(actualBitmap));
 	}

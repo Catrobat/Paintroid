@@ -29,10 +29,10 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -87,9 +87,13 @@ public class ToolOnBackPressedIntegrationTest {
 			Manifest.permission.READ_EXTERNAL_STORAGE);
 
 	private File saveFile = null;
+	private ToolReference toolReference;
 
 	@Before
 	public void setUp() {
+		MainActivity activity = launchActivityRule.getActivity();
+		toolReference = activity.toolReference;
+
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
 	}
@@ -164,7 +168,7 @@ public class ToolOnBackPressedIntegrationTest {
 
 		Espresso.pressBack();
 
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+		assertEquals(toolReference.get().getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
@@ -178,14 +182,14 @@ public class ToolOnBackPressedIntegrationTest {
 
 		Espresso.pressBack();
 
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.CURSOR);
+		assertEquals(toolReference.get().getToolType(), ToolType.CURSOR);
 
 		onView(withId(R.id.pocketpaint_main_tool_options)).check(matches(not(isDisplayed())));
 		onView(withId(R.id.pocketpaint_layout_tool_options_name)).check(matches(not(isDisplayed())));
 
 		Espresso.pressBack();
 
-		assertEquals(PaintroidApplication.currentTool.getToolType(), ToolType.BRUSH);
+		assertEquals(toolReference.get().getToolType(), ToolType.BRUSH);
 	}
 
 	@Test

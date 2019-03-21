@@ -55,7 +55,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class FillToolTests {
+public class FillToolTest {
 	private static final float NO_TOLERANCE = 0.0f;
 	private static final float HALF_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE / 2.0f;
 	private static final float MAX_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE;

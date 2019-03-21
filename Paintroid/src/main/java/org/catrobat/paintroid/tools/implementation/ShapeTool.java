@@ -43,7 +43,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.helper.Conversion;
 
-public class GeometricFillTool extends BaseToolWithRectangleShape {
+public class ShapeTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;
 	private static final float SHAPE_OFFSET = 10f;
@@ -61,7 +61,7 @@ public class GeometricFillTool extends BaseToolWithRectangleShape {
 	private float previousBoxWidth;
 	private float previousBoxHeight;
 
-	public GeometricFillTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+	public ShapeTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(context, toolPaint, workspace, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);

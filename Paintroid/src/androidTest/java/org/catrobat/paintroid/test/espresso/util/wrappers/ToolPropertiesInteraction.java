@@ -27,9 +27,10 @@ import android.support.annotation.ColorRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.v4.content.ContextCompat;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.Tool;
 
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getMainActivity;
 import static org.junit.Assert.assertEquals;
 
 public final class ToolPropertiesInteraction extends CustomViewInteraction {
@@ -41,7 +42,7 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 	}
 
 	public ToolPropertiesInteraction checkMatchesColor(@ColorInt int expectedColor) {
-		assertEquals(expectedColor, PaintroidApplication.currentTool.getDrawPaint().getColor());
+		assertEquals(expectedColor, getCurrentTool().getDrawPaint().getColor());
 		return this;
 	}
 
@@ -51,20 +52,24 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 	}
 
 	public ToolPropertiesInteraction checkCap(Cap expectedCap) {
-		Paint strokePaint = PaintroidApplication.currentTool.getDrawPaint();
+		Paint strokePaint = getCurrentTool().getDrawPaint();
 		assertEquals(expectedCap, strokePaint.getStrokeCap());
 		return this;
 	}
 
 	public ToolPropertiesInteraction checkStrokeWidth(float expectedStrokeWidth) {
-		Paint strokePaint = PaintroidApplication.currentTool.getDrawPaint();
+		Paint strokePaint = getCurrentTool().getDrawPaint();
 		assertEquals(expectedStrokeWidth, strokePaint.getStrokeWidth(), Float.MIN_VALUE);
 		return this;
 	}
 
 	public ToolPropertiesInteraction setColor(int color) {
-		PaintroidApplication.currentTool.changePaintColor(color);
+		getCurrentTool().changePaintColor(color);
 		return this;
+	}
+
+	public Tool getCurrentTool() {
+		return getMainActivity().toolReference.get();
 	}
 
 	public ToolPropertiesInteraction setColorResource(@ColorRes int colorResource) {

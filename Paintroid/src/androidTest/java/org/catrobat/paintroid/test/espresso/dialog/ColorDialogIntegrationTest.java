@@ -28,11 +28,12 @@ import android.support.test.runner.AndroidJUnit4;
 import android.widget.Button;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.tools.ToolReference;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,6 +81,12 @@ public class ColorDialogIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+	private ToolReference toolReference;
+
+	@Before
+	public void setUp() {
+		toolReference = launchActivityRule.getActivity().toolReference;
+	}
 
 	private int getColorById(int colorId) {
 		return launchActivityRule.getActivity().getResources().getColor(colorId);
@@ -124,7 +131,7 @@ public class ColorDialogIntegrationTest {
 					.performClickColorPickerPresetSelectorButton(counterColors);
 
 			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
-			int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+			int selectedColor = toolReference.get().getDrawPaint().getColor();
 
 			assertEquals("Color in array and selected color not the same", arrayColor, selectedColor);
 
@@ -158,7 +165,7 @@ public class ColorDialogIntegrationTest {
 
 	@Test
 	public void testColorPickerDialogOnBackPressedSelectedColorShouldNotChange() {
-		int expectedSelectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		int expectedSelectedColor = toolReference.get().getDrawPaint().getColor();
 
 		onColorPickerView()
 				.performOpenColorPicker();
@@ -179,7 +186,7 @@ public class ColorDialogIntegrationTest {
 		// Close color picker dialog
 		onView(isRoot()).perform(pressBack());
 
-		int currentSelectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		int currentSelectedColor = toolReference.get().getDrawPaint().getColor();
 		assertNotEquals("Selected color has not changed", expectedSelectedColor, currentSelectedColor);
 	}
 
@@ -213,7 +220,7 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_chooser_rgb_alpha_value)).check(matches(isDisplayed()));
 		onView(allOf(withText(TEXT_PERCENT_SIGN), hasSibling(withId(R.id.color_chooser_rgb_alpha_value)))).check(matches(isDisplayed()));
 
-		int currentSelectColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		int currentSelectColor = toolReference.get().getDrawPaint().getColor();
 
 		onView(withId(R.id.color_chooser_rgb_red_value)).check(matches(withText(Integer.toString(Color.red(currentSelectColor)))));
 		onView(withId(R.id.color_chooser_rgb_green_value)).check(matches(withText(Integer.toString(Color.green(currentSelectColor)))));
@@ -252,7 +259,7 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).perform(touchCenterRight());
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
-		assertEquals("Selected color is not blue", PaintroidApplication.currentTool.getDrawPaint().getColor(), Color.BLUE);
+		assertEquals("Selected color is not blue", toolReference.get().getDrawPaint().getColor(), Color.BLUE);
 	}
 
 	@Test

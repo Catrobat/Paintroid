@@ -20,7 +20,7 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.implementation.GeometricFillTool;
+import org.catrobat.paintroid.tools.implementation.ShapeTool;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -35,7 +35,7 @@ public final class ShapeToolOptionsViewInteraction extends CustomViewInteraction
 		return new ShapeToolOptionsViewInteraction();
 	}
 
-	public ShapeToolOptionsViewInteraction performSelectShape(GeometricFillTool.BaseShape shape) {
+	public ShapeToolOptionsViewInteraction performSelectShape(ShapeTool.BaseShape shape) {
 		switch (shape) {
 			case RECTANGLE:
 				onView(withId(R.id.pocketpaint_shapes_square_btn))

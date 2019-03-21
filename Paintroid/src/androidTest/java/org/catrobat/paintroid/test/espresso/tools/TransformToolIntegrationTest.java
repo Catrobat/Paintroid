@@ -28,12 +28,12 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
@@ -85,6 +85,7 @@ public class TransformToolIntegrationTest {
 
 	private Perspective perspective;
 	private LayerContracts.Model layerModel;
+	private ToolReference toolReference;
 
 	private static void drawPlus(Bitmap bitmap, int lineLength) {
 		int horizontalStartX = bitmap.getWidth() / 4;
@@ -108,38 +109,38 @@ public class TransformToolIntegrationTest {
 		return perspective.getSurfacePointFromCanvasPoint(point);
 	}
 
-	private static float getToolSelectionBoxWidth() {
-		return ((BaseToolWithRectangleShape) PaintroidApplication.currentTool).boxWidth;
+	private float getToolSelectionBoxWidth() {
+		return ((BaseToolWithRectangleShape) toolReference.get()).boxWidth;
 	}
 
-	private static void setToolSelectionBoxWidth(float width) {
-		((BaseToolWithRectangleShape) PaintroidApplication.currentTool).boxWidth = width;
+	private void setToolSelectionBoxWidth(float width) {
+		((BaseToolWithRectangleShape) toolReference.get()).boxWidth = width;
 	}
 
-	private static float getToolSelectionBoxHeight() {
-		return ((BaseToolWithRectangleShape) PaintroidApplication.currentTool).boxHeight;
+	private float getToolSelectionBoxHeight() {
+		return ((BaseToolWithRectangleShape) toolReference.get()).boxHeight;
 	}
 
-	private static void setToolSelectionBoxHeight(float height) {
-		((BaseToolWithRectangleShape) PaintroidApplication.currentTool).boxHeight = height;
+	private void setToolSelectionBoxHeight(float height) {
+		((BaseToolWithRectangleShape) toolReference.get()).boxHeight = height;
 	}
 
-	private static void setToolSelectionBoxDimensions(float width, float height) {
+	private void setToolSelectionBoxDimensions(float width, float height) {
 		BaseToolWithRectangleShape currentTool = (BaseToolWithRectangleShape)
-				PaintroidApplication.currentTool;
+				toolReference.get();
 		currentTool.boxWidth = width;
 		currentTool.boxHeight = height;
 	}
 
-	private static PointF getToolPosition() {
-		return ((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition;
+	private PointF getToolPosition() {
+		return ((BaseToolWithShape) toolReference.get()).toolPosition;
 	}
 
-	private static void setToolPosition(float x, float y) {
-		((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition.set(x, y);
+	private void setToolPosition(float x, float y) {
+		((BaseToolWithShape) toolReference.get()).toolPosition.set(x, y);
 	}
 
-	private static PointF newPointF(PointF point) {
+	private PointF newPointF(PointF point) {
 		return new PointF(point.x, point.y);
 	}
 
@@ -149,6 +150,7 @@ public class TransformToolIntegrationTest {
 		activityHelper = new MainActivityHelper(activity);
 		perspective = activity.perspective;
 		layerModel = activity.layerModel;
+		toolReference = activity.toolReference;
 
 		displayWidth = activityHelper.getDisplayWidth();
 		displayHeight = activityHelper.getDisplayHeight();
@@ -528,7 +530,7 @@ public class TransformToolIntegrationTest {
 		final Bitmap croppedBitmap = layerModel.getCurrentLayer().getBitmap();
 		final int width = croppedBitmap.getWidth();
 		final int height = croppedBitmap.getHeight();
-		final TransformTool tool = (TransformTool) PaintroidApplication.currentTool;
+		final TransformTool tool = (TransformTool) toolReference.get();
 		assertEquals(0.0f, tool.resizeBoundWidthXLeft, Float.MIN_VALUE);
 		assertEquals(width - 1, tool.resizeBoundWidthXRight, Float.MIN_VALUE);
 		assertEquals(0.0f, tool.resizeBoundHeightYTop, Float.MIN_VALUE);
@@ -733,7 +735,7 @@ public class TransformToolIntegrationTest {
 		final int height = croppedBitmap.getHeight();
 		final int width = croppedBitmap.getWidth();
 
-		final TransformTool tool = (TransformTool) PaintroidApplication.currentTool;
+		final TransformTool tool = (TransformTool) toolReference.get();
 		assertEquals(0.0f, tool.resizeBoundWidthXLeft, Float.MIN_VALUE);
 		assertEquals(width - 1, tool.resizeBoundWidthXRight, Float.MIN_VALUE);
 		assertEquals(0.0f, tool.resizeBoundHeightYTop, Float.MIN_VALUE);

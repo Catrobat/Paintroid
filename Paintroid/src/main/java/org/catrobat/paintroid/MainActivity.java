@@ -60,9 +60,11 @@ import org.catrobat.paintroid.model.MainActivityModel;
 import org.catrobat.paintroid.presenter.LayerPresenter;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
+import org.catrobat.paintroid.tools.implementation.DefaultToolReference;
 import org.catrobat.paintroid.tools.implementation.DefaultWorkspace;
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -109,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	public CommandManager commandManager;
 	@VisibleForTesting
 	public ToolPaint toolPaint;
+	@VisibleForTesting
+	public ToolReference toolReference;
 
 	private LayerPresenter layerPresenter;
 	private DrawingSurface drawingSurface;
@@ -148,9 +152,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		super.onCreate(savedInstanceState);
 
 		getAppFragment();
-		appFragment.setCacheDir(getCacheDir());
-		appFragment.setCheckeredBackgroundBitmap(BitmapFactory.decodeResource(getResources(), R.drawable
-				.pocketpaint_checkeredbg));
+		PaintroidApplication.cacheDir = getCacheDir();
+		PaintroidApplication.checkeredBackgroundBitmap =
+				BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
 		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();
@@ -211,11 +215,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			commandManager = appFragment.getCommandManager();
 		}
 		if (appFragment.getToolPaint() == null) {
-			toolPaint = new DefaultToolPaint(getApplicationContext());
-			appFragment.setToolPaint(toolPaint);
-		} else {
-			toolPaint = appFragment.getToolPaint();
+			appFragment.setToolPaint(new DefaultToolPaint(getApplicationContext()));
 		}
+		toolPaint = appFragment.getToolPaint();
+		if (appFragment.getCurrentTool() == null) {
+			appFragment.setCurrentTool(new DefaultToolReference());
+		}
+		toolReference = appFragment.getCurrentTool();
 	}
 
 	private void onCreateMainView() {
@@ -237,11 +243,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 				drawingSurface.refreshDrawingSurface();
 			}
 		});
-		MainActivityContracts.Navigator navigator = new MainActivityNavigator(this);
+		MainActivityContracts.Navigator navigator = new MainActivityNavigator(this, toolReference);
 		MainActivityContracts.Interactor interactor = new MainActivityInteractor();
 		model = new MainActivityModel();
-		presenter = new MainActivityPresenter(this, model, workspace, navigator, interactor,
-				topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder, navigationDrawerViewHolder, commandManager, toolPaint, perspective);
+		presenter = new MainActivityPresenter(this, model, workspace, toolReference, navigator,
+				interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
+				navigationDrawerViewHolder, commandManager, toolPaint, perspective);
 
 		keyboardListener = new KeyboardListener(drawerLayout);
 		setTopBarListeners(topBarViewHolder);
@@ -269,8 +276,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	private void onCreateDrawingSurface() {
 		drawingSurface = findViewById(R.id.pocketpaint_drawing_surface_view);
-		drawingSurface.setLayerModel(layerModel);
-		drawingSurface.setPerspective(perspective);
+		drawingSurface.setArguments(layerModel, perspective, toolReference);
 
 		appFragment.setPerspective(perspective);
 	}
