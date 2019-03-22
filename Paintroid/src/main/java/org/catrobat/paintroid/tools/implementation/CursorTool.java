@@ -36,9 +36,10 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.common.CommonBrushChangedListener;
+import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener;
 import org.catrobat.paintroid.tools.options.BrushToolOptions;
 import org.catrobat.paintroid.tools.options.ToolOptionsController;
-import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptions;
 
 import static org.catrobat.paintroid.tools.common.Constants.MOVE_TOLERANCE;
 
@@ -57,17 +58,21 @@ public class CursorTool extends BaseToolWithShape {
 	public int cursorToolSecondaryShapeColor;
 	@VisibleForTesting
 	public boolean toolInDrawMode = false;
-	private DefaultBrushToolOptions brushPickerView;
+	private BrushToolOptions brushToolOptions;
 
-	public CursorTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+	public CursorTool(BrushToolOptions brushToolOptions, ContextCallback contextCallback, ToolOptionsController toolOptionsController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		this.brushToolOptions = brushToolOptions;
 
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
 		cursorToolPrimaryShapeColor = contextCallback.getColor(R.color.pocketpaint_main_cursor_tool_inactive_primary_color);
 		cursorToolSecondaryShapeColor = Color.LTGRAY;
 		pathInsideBitmap = false;
+
+		brushToolOptions.setBrushChangedListener(new CommonBrushChangedListener(this));
+		brushToolOptions.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
 	}
 
 	@Override
@@ -76,8 +81,8 @@ public class CursorTool extends BaseToolWithShape {
 		if (toolInDrawMode) {
 			cursorToolSecondaryShapeColor = toolPaint.getColor();
 		}
-		if (brushPickerView != null) {
-			brushPickerView.invalidate();
+		if (brushToolOptions != null) {
+			brushToolOptions.invalidate();
 		}
 	}
 
@@ -335,51 +340,6 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void setupToolOptions() {
-		brushPickerView = new DefaultBrushToolOptions(toolSpecificOptionsLayout);
-		brushPickerView.setCurrentPaint(toolPaint.getPaint());
-	}
-
-	@Override
-	public void startTool() {
-		super.startTool();
-		brushPickerView.setBrushChangedListener(new BrushToolOptions.OnBrushChangedListener() {
-			@Override
-			public void setCap(Cap strokeCap) {
-				changePaintStrokeCap(strokeCap);
-			}
-
-			@Override
-			public void setStrokeWidth(int strokeWidth) {
-				changePaintStrokeWidth(strokeWidth);
-			}
-		});
-		brushPickerView.setBrushPreviewListener(new BrushToolOptions.OnBrushPreviewListener() {
-			@Override
-			public float getStrokeWidth() {
-				return toolPaint.getStrokeWidth();
-			}
-
-			@Override
-			public Cap getStrokeCap() {
-				return toolPaint.getStrokeCap();
-			}
-
-			@Override
-			public int getColor() {
-				return toolPaint.getColor();
-			}
-
-			@Override
-			public ToolType getToolType() {
-				return CursorTool.this.getToolType();
-			}
-		});
-	}
-
-	@Override
-	public void leaveTool() {
-		super.leaveTool();
-		brushPickerView.setBrushChangedListener(null);
-		brushPickerView.setBrushPreviewListener(null);
+		brushToolOptions.setCurrentPaint(toolPaint.getPaint());
 	}
 }

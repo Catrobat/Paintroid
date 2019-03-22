@@ -52,7 +52,7 @@ public class DefaultToolFactory implements ToolFactory {
 				tool = new BrushTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			case CURSOR:
-				tool = new CursorTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+				tool = new CursorTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			case STAMP:
 				tool = new StampTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
