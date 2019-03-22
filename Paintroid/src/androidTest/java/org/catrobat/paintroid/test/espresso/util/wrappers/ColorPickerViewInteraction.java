@@ -24,7 +24,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
+import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -45,7 +45,7 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
 
 	protected ColorPickerViewInteraction() {
-		super(onView(withId(R.id.color_chooser_color_picker_view)));
+		super(onView(withId(R.id.color_picker_view)));
 	}
 
 	public static ColorPickerViewInteraction onColorPickerView() {
@@ -53,7 +53,7 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onOkButton() {
-		return onView(withId(R.id.color_chooser_button_ok));
+		return onView(withId(R.id.color_picker_button_ok));
 	}
 
 	public ColorPickerViewInteraction performOpenColorPicker() {
@@ -63,16 +63,16 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onCancelButton() {
-		return onView(withId(R.id.color_chooser_button_cancel));
+		return onView(withId(R.id.color_picker_button_cancel));
 	}
 
 	public void checkCancelButtonColor(int color) {
-		onView(withId(R.id.color_chooser_button_cancel))
+		onView(withId(R.id.color_picker_button_cancel))
 				.check(matches(withBackgroundColor(color)));
 	}
 
 	public void checkApplyButtonColor(int color) {
-		onView(withId(R.id.color_chooser_button_ok))
+		onView(withId(R.id.color_picker_button_ok))
 				.check(matches(withBackgroundColor(color)));
 	}
 

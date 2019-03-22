@@ -1,23 +1,23 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.dialog.colorpicker;
+package org.catrobat.paintroid.colorpicker;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -30,11 +30,9 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import org.catrobat.paintroid.R;
-
 import java.util.Locale;
 
-import static org.catrobat.paintroid.common.Constants.NOT_A_HEX_VALUE;
+import static org.catrobat.paintroid.colorpicker.Constants.NOT_A_HEX_VALUE;
 
 public class RgbSelectorView extends LinearLayout {
 
@@ -60,21 +58,21 @@ public class RgbSelectorView extends LinearLayout {
 	}
 
 	private void init() {
-		View rgbView = inflate(getContext(), R.layout.color_chooser_layout_rgbview, null);
+		View rgbView = inflate(getContext(), R.layout.color_picker_layout_rgbview, null);
 
 		addView(rgbView);
 
-		seekBarRed = (SeekBar) rgbView.findViewById(R.id.color_chooser_color_rgb_seekbar_red);
-		seekBarGreen = (SeekBar) rgbView.findViewById(R.id.color_chooser_color_rgb_seekbar_green);
-		seekBarBlue = (SeekBar) rgbView.findViewById(R.id.color_chooser_color_rgb_seekbar_blue);
-		seekBarAlpha = (SeekBar) rgbView.findViewById(R.id.color_chooser_color_rgb_seekbar_alpha);
+		seekBarRed = (SeekBar) rgbView.findViewById(R.id.color_picker_color_rgb_seekbar_red);
+		seekBarGreen = (SeekBar) rgbView.findViewById(R.id.color_picker_color_rgb_seekbar_green);
+		seekBarBlue = (SeekBar) rgbView.findViewById(R.id.color_picker_color_rgb_seekbar_blue);
+		seekBarAlpha = (SeekBar) rgbView.findViewById(R.id.color_picker_color_rgb_seekbar_alpha);
 
-		textViewRed = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_red_value);
-		textViewGreen = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_green_value);
-		textViewBlue = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_blue_value);
-		textViewAlpha = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_alpha_value);
+		textViewRed = (TextView) rgbView.findViewById(R.id.color_picker_rgb_red_value);
+		textViewGreen = (TextView) rgbView.findViewById(R.id.color_picker_rgb_green_value);
+		textViewBlue = (TextView) rgbView.findViewById(R.id.color_picker_rgb_blue_value);
+		textViewAlpha = (TextView) rgbView.findViewById(R.id.color_picker_rgb_alpha_value);
 
-		editTextHex = (EditText) rgbView.findViewById(R.id.color_chooser_color_rgb_hex);
+		editTextHex = (EditText) rgbView.findViewById(R.id.color_picker_color_rgb_hex);
 		resetTextColor();
 
 		setSelectedColor(Color.BLACK);
@@ -146,11 +144,11 @@ public class RgbSelectorView extends LinearLayout {
 	}
 
 	private void resetTextColor() {
-		editTextHex.setTextColor(getResources().getColor(R.color.pocketpaint_color_chooser_hex_correct_black));
+		editTextHex.setTextColor(getResources().getColor(R.color.pocketpaint_color_picker_hex_correct_black));
 	}
 
 	private void setTextColorToRed() {
-		editTextHex.setTextColor(getResources().getColor(R.color.pocketpaint_color_chooser_hex_wrong_value_red));
+		editTextHex.setTextColor(getResources().getColor(R.color.pocketpaint_color_picker_hex_wrong_value_red));
 	}
 
 	@Override

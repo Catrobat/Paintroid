@@ -20,8 +20,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="PocketPaintTitleTextStyle">
-        <item name="android:textColor">@color/pocketpaint_colorAccent</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+    <item name="android:textColor">@color/pocketpaint_colorAccent</item>
+    <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
 
     <style name="PocketPaintAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -46,6 +46,7 @@
         <item name="android:windowBackground">@color/pocketpaint_background_color</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="dialogTheme">@style/PocketPaintAlertDialog</item>
         <item name="colorPrimary">@color/pocketpaint_colorPrimary</item>
         <item name="colorPrimaryDark">@color/pocketpaint_colorPrimaryDark</item>
         <item name="colorAccent">@color/pocketpaint_colorAccent</item>
@@ -109,14 +110,14 @@
     </style>
 
     <style name="PocketPaintWelcomeHeader" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">@color/pocketpaint_color_chooser_white</item>
+        <item name="android:textColor">@color/pocketpaint_color_picker_white</item>
         <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="PocketPaintWelcomeText" parent="@android:style/TextAppearance.DeviceDefault.Medium">
-        <item name="android:textColor">@color/pocketpaint_color_chooser_white</item>
+        <item name="android:textColor">@color/pocketpaint_color_picker_white</item>
         <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>

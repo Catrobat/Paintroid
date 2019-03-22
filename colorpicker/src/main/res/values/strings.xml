@@ -16,33 +16,17 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical">
+-->
+<resources>
+    <string name="color_picker_title">Color Picker</string>
+    <string name="color_picker_tab_icon">Color Picker tab icon</string>
 
-	<TabHost
-		android:id="@+id/color_chooser_colorview_tabColors"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+    <string name="color_red">Red</string>
+    <string name="color_green">Green</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_alpha">Alpha</string>
+    <string name="color_hex">HEX</string>
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			android:padding="2dp">
-
-			<TabWidget
-				android:id="@android:id/tabs"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content" />
-
-			<FrameLayout
-				android:id="@android:id/tabcontent"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent" />
-
-		</LinearLayout>
-	</TabHost>
-</LinearLayout>
+    <string name="color_picker_apply">Apply</string>
+    <string name="color_picker_cancel">Cancel</string>
+</resources>

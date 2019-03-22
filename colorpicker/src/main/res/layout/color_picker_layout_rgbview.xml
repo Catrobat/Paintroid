@@ -19,7 +19,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/color_chooser_rgb_base_layout"
+    android:id="@+id/color_picker_rgb_base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -40,32 +40,32 @@
             android:paddingTop="12dp">
 
             <TextView
-                android:id="@+id/color_chooser_color_rgb_textview_red"
+                android:id="@+id/color_picker_color_rgb_textview_red"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="@string/color_red"
-                android:textColor="@color/pocketpaint_color_chooser_rgb_red"
+                android:textColor="@color/pocketpaint_color_picker_rgb_red"
                 android:paddingStart="0dp"
                 android:paddingEnd="5dp" />
 
             <SeekBar
-                android:id="@+id/color_chooser_color_rgb_seekbar_red"
+                android:id="@+id/color_picker_color_rgb_seekbar_red"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:max="255" />
 
             <TextView
-                android:id="@+id/color_chooser_rgb_red_value"
+                android:id="@+id/color_picker_rgb_red_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_span="2"
                 android:gravity="center_vertical|end"
                 android:text="255"
-                android:textColor="@color/pocketpaint_colorAccent"
+                android:textColor="?attr/colorAccent"
                 tools:ignore="HardcodedText" />
         </TableRow>
 
@@ -76,31 +76,31 @@
             android:paddingTop="12dp">
 
             <TextView
-                android:id="@+id/color_chooser_color_rgb_textview_green"
+                android:id="@+id/color_picker_color_rgb_textview_green"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="@string/color_green"
-                android:textColor="@color/pocketpaint_color_chooser_rgb_green"
+                android:textColor="@color/pocketpaint_color_picker_rgb_green"
                 android:paddingStart="0dp"
                 android:paddingEnd="5dp" />
 
             <SeekBar
-                android:id="@+id/color_chooser_color_rgb_seekbar_green"
+                android:id="@+id/color_picker_color_rgb_seekbar_green"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:max="255" />
 
             <TextView
-                android:id="@+id/color_chooser_rgb_green_value"
+                android:id="@+id/color_picker_rgb_green_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_span="2"
                 android:gravity="center_vertical|end"
                 android:text="255"
-                android:textColor="@color/pocketpaint_colorAccent"
+                android:textColor="?attr/colorAccent"
                 tools:ignore="HardcodedText" />
         </TableRow>
 
@@ -111,31 +111,31 @@
             android:paddingTop="12dp">
 
             <TextView
-                android:id="@+id/color_chooser_color_rgb_textview_blue"
+                android:id="@+id/color_picker_color_rgb_textview_blue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="@string/color_blue"
-                android:textColor="@color/pocketpaint_color_chooser_rgb_blue"
+                android:textColor="@color/pocketpaint_color_picker_rgb_blue"
                 android:paddingStart="0dp"
                 android:paddingEnd="5dp" />
 
             <SeekBar
-                android:id="@+id/color_chooser_color_rgb_seekbar_blue"
+                android:id="@+id/color_picker_color_rgb_seekbar_blue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:max="255" />
 
             <TextView
-                android:id="@+id/color_chooser_rgb_blue_value"
+                android:id="@+id/color_picker_rgb_blue_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_span="2"
                 android:gravity="center_vertical|end"
                 android:text="255"
-                android:textColor="@color/pocketpaint_colorAccent"
+                android:textColor="?attr/colorAccent"
                 tools:ignore="HardcodedText" />
 
         </TableRow>
@@ -147,30 +147,30 @@
             android:paddingTop="12dp">
 
             <TextView
-                android:id="@+id/color_chooser_color_rgb_textview_alpha"
+                android:id="@+id/color_picker_color_rgb_textview_alpha"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:text="@string/color_alpha"
-                android:textColor="@color/pocketpaint_color_chooser_rgb_alpha"
+                android:textColor="@color/pocketpaint_color_picker_rgb_alpha"
                 android:paddingStart="0dp"
                 android:paddingEnd="5dp" />
 
             <SeekBar
-                android:id="@+id/color_chooser_color_rgb_seekbar_alpha"
+                android:id="@+id/color_picker_color_rgb_seekbar_alpha"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:max="255" />
 
             <TextView
-                android:id="@+id/color_chooser_rgb_alpha_value"
+                android:id="@+id/color_picker_rgb_alpha_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical|end"
                 android:text="100"
-                android:textColor="@color/pocketpaint_colorAccent"
+                android:textColor="?attr/colorAccent"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -180,7 +180,7 @@
                 android:gravity="center_vertical|start"
                 android:text="%"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/pocketpaint_colorAccent"
+                android:textColor="?attr/colorAccent"
                 tools:ignore="HardcodedText" />
         </TableRow>
 
@@ -191,15 +191,15 @@
             android:paddingTop="12dp">
 
             <TextView
-                android:id="@+id/color_chooser_color_rgb_textview_hex"
+                android:id="@+id/color_picker_color_rgb_textview_hex"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:text="@string/color_hex"
-                android:textColor="@color/pocketpaint_color_chooser_hex_black" />
+                android:textColor="@color/pocketpaint_color_picker_hex_black" />
 
             <EditText
-                android:id="@+id/color_chooser_color_rgb_hex"
+                android:id="@+id/color_picker_color_rgb_hex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"

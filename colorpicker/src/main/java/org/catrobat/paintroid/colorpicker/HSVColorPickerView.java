@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.dialog.colorpicker;
+package org.catrobat.paintroid.colorpicker;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -35,8 +35,6 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-import org.catrobat.paintroid.R;
 
 public class HSVColorPickerView extends View {
 

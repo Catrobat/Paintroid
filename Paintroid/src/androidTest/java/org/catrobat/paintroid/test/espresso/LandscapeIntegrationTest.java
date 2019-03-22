@@ -29,9 +29,9 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
-import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
-import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.colorpicker.HSVColorPickerView;
+import org.catrobat.paintroid.colorpicker.PresetSelectorView;
+import org.catrobat.paintroid.colorpicker.RgbSelectorView;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.options.ToolOptionsController;
@@ -189,7 +189,7 @@ public class LandscapeIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(withId(R.id.color_chooser_color_picker_view))
+		onView(withId(R.id.color_picker_view))
 				.check(matches(isDisplayed()));
 	}
 
@@ -198,14 +198,14 @@ public class LandscapeIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_chooser_preset_colors);
+		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_picker_preset_colors);
 
 		for (int i = 0; i < colors.length; i++) {
 			onColorPickerView()
 					.performClickColorPickerPresetSelectorButton(i);
 
 			if (colors[i] != Color.TRANSPARENT) {
-				onView(withId(R.id.color_chooser_button_ok))
+				onView(withId(R.id.color_picker_button_ok))
 						.perform(scrollTo())
 						.check(matches(withBackgroundColor(colors[i])));
 			}
@@ -214,7 +214,7 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testOpenColorPickerDialogApplyColorInLandscape() {
-		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_chooser_preset_colors);
+		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_picker_preset_colors);
 
 		for (int i = 0; i < colors.length; i++) {
 			onColorPickerView()
@@ -258,7 +258,7 @@ public class LandscapeIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(withId(R.id.color_chooser_button_ok))
+		onView(withId(R.id.color_picker_button_ok))
 				.perform(scrollTo());
 	}
 
@@ -270,19 +270,19 @@ public class LandscapeIntegrationTest {
 		onView(withClassName(is(PresetSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_hsv)))
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv)))
 				.perform(click());
 		onView(withClassName(is(HSVColorPickerView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba)))
 				.perform(click());
 		onView(withClassName(is(RgbSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(withId(R.id.color_chooser_rgb_base_layout)).perform(swipeDown());
+		onView(withId(R.id.color_picker_rgb_base_layout)).perform(swipeDown());
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset)))
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset)))
 				.perform(click());
 		onView(withClassName(is(PresetSelectorView.class.getName())))
 				.check(matches(isDisplayed()));

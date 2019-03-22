@@ -23,8 +23,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 
+import org.catrobat.paintroid.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog.OnColorPickedListener;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;

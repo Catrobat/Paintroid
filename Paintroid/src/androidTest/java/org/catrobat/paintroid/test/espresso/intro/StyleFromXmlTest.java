@@ -43,7 +43,7 @@ public class StyleFromXmlTest {
 		TapTargetStyle headerStyle = TapTargetStyle.HEADER_STYLE;
 		assertEquals("Text Size not matching", headerStyle.getTextSize(), 24);
 
-		int color = ContextCompat.getColor(activityRule.getActivity(), R.color.pocketpaint_color_chooser_white);
+		int color = ContextCompat.getColor(activityRule.getActivity(), R.color.pocketpaint_color_picker_white);
 		assertEquals("Header Text Color not matching", color, headerStyle.getTextColor());
 
 		Typeface expectedTypeface = Typeface.create("sans-serif", Typeface.NORMAL);
@@ -55,7 +55,7 @@ public class StyleFromXmlTest {
 		TapTargetStyle textStyle = TapTargetStyle.TEXT_STYLE;
 		assertEquals("Text Size not matching", textStyle.getTextSize(), 16);
 
-		int color = ContextCompat.getColor(activityRule.getActivity(), R.color.pocketpaint_color_chooser_white);
+		int color = ContextCompat.getColor(activityRule.getActivity(), R.color.pocketpaint_color_picker_white);
 		assertEquals("Header Text Color not matching", color, textStyle.getTextColor());
 
 		Typeface expectedTypeface = Typeface.create("sans-serif", Typeface.NORMAL);

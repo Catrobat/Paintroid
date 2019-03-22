@@ -41,12 +41,6 @@
     <string name="cap_circle">Circle</string>
     <string name="cap_square">Square</string>
 
-    <string name="color_chooser_title">Color Chooser</string>
-    <string name="color_red">Red</string>
-    <string name="color_green">Green</string>
-    <string name="color_blue">Blue</string>
-    <string name="color_alpha">Alpha</string>
-    <string name="color_hex">HEX</string>
     <string name="dialog_tools_title">Tools</string>
     <string name="dialog_error_save_title">Error load/save File</string>
     <string name="dialog_error_sdcard_text">Check Image or SD-Card!</string>
@@ -162,13 +156,8 @@
     <string name="pocketpaint_about_url_license" translatable="false">&lt;a href=\"http://developer.catrobat.org/licenses\"&gt;%s&lt;/a&gt;</string>
     <string name="pocketpaint_about_url_catrobat" translatable="false">&lt;a href=\"http://catrobat.org/\"&gt;%s&lt;/a&gt;</string>
 
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
-
     <string name="pocketpaint_logo">Pocket Paint logo</string>
     <string name="pocketpaint_intro">Intro</string>
 
     <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
-
-    <string name="color_picker_apply">Apply</string>
-    <string name="color_picker_cancel">Cancel</string>
 </resources>

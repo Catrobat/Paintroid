@@ -19,7 +19,7 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/color_chooser_base_layout"
+    android:id="@+id/color_picker_base_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">
@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
-                android:id="@+id/color_chooser_color_picker_view"
+            <org.catrobat.paintroid.colorpicker.ColorPickerView
+                android:id="@+id/color_picker_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -44,10 +44,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                    android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/color_chooser_button_cancel"
+                    android:id="@+id/color_picker_button_cancel"
                     style="?android:borderlessButtonStyle"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                     android:textSize="14sp" />
 
                 <Button
-                    android:id="@+id/color_chooser_button_ok"
+                    android:id="@+id/color_picker_button_ok"
                     style="?android:borderlessButtonStyle"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"

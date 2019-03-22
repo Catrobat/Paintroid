@@ -136,8 +136,8 @@ public class RectangleFillToolIntegrationTest {
 	@Test
 	public void testRectOnBitmapHasSameColorAsInColorPickerAfterColorChange() {
 		onToolProperties()
-				.setColorResource(R.color.pocketpaint_color_chooser_brown1)
-				.checkMatchesColorResource(R.color.pocketpaint_color_chooser_brown1);
+				.setColorResource(R.color.pocketpaint_color_picker_brown1)
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_brown1);
 
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
@@ -148,7 +148,7 @@ public class RectangleFillToolIntegrationTest {
 		int colorInRectangle = drawingBitmap.getPixel(drawingBitmap.getWidth() / 2, drawingBitmap.getHeight() / 2);
 
 		onToolProperties()
-				.checkMatchesColorResource(R.color.pocketpaint_color_chooser_brown1)
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_brown1)
 				.checkMatchesColor(colorInRectangle);
 	}
 
@@ -167,13 +167,13 @@ public class RectangleFillToolIntegrationTest {
 				.checkMatchesColor(Color.BLACK);
 
 		onToolProperties()
-				.setColorResource(R.color.pocketpaint_color_chooser_brown1);
+				.setColorResource(R.color.pocketpaint_color_picker_brown1);
 
 		Bitmap drawingBitmapAfter = rectangleFillTool.drawingBitmap;
 		int colorInRectangleAfter = drawingBitmapAfter.getPixel(drawingBitmap.getWidth() / 2, drawingBitmap.getHeight() / 2);
 
 		onToolProperties()
-				.checkMatchesColorResource(R.color.pocketpaint_color_chooser_brown1)
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_brown1)
 				.checkMatchesColor(colorInRectangleAfter);
 	}
 

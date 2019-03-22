@@ -86,15 +86,15 @@ public class HindiNumberFormatTest {
 		onColorPickerView()
 				.performOpenColorPicker()
 				.performClickColorPickerPresetSelectorButton(7);
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba)))
 				.perform(click());
-		onView(withId(R.id.color_chooser_rgb_red_value))
+		onView(withId(R.id.color_picker_rgb_red_value))
 				.check(matches(withText(containsString(EXPECTED_RED_VALUE))));
-		onView(withId(R.id.color_chooser_rgb_green_value))
+		onView(withId(R.id.color_picker_rgb_green_value))
 				.check(matches(withText(containsString(EXPECTED_GREEN_VALUE))));
-		onView(withId(R.id.color_chooser_rgb_blue_value))
+		onView(withId(R.id.color_picker_rgb_blue_value))
 				.check(matches(withText(containsString(EXPECTED_BLAU_VALUE))));
-		onView(withId(R.id.color_chooser_rgb_alpha_value))
+		onView(withId(R.id.color_picker_rgb_alpha_value))
 				.check(matches(withText(containsString(EXPECTED_ALFA_VALUE))));
 	}
 }

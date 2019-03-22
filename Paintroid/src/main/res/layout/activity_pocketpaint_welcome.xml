@@ -61,7 +61,7 @@
         android:layout_above="@id/pocketpaint_intro_navigation"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/pocketpaint_color_chooser_white"/>
+        android:background="@color/pocketpaint_color_picker_white"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pocketpaint_view_pager"

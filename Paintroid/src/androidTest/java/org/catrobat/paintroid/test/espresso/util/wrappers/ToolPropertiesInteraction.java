@@ -79,7 +79,7 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 
 	public ToolPropertiesInteraction setColorPreset(int colorPresetPosition) {
 		Context targetContext = InstrumentationRegistry.getTargetContext();
-		int[] presetColors = targetContext.getResources().getIntArray(R.array.pocketpaint_color_chooser_preset_colors);
+		int[] presetColors = targetContext.getResources().getIntArray(R.array.pocketpaint_color_picker_preset_colors);
 		return setColor(presetColors[colorPresetPosition]);
 	}
 }

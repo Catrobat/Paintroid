@@ -1,4 +1,5 @@
-/**
+<?xml version="1.0" encoding="utf-8"?>
+<!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -15,32 +16,6 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-package org.catrobat.paintroid.dialog.colorpicker;
-
-import android.content.Context;
-import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.v7.appcompat.R;
-import android.support.v7.widget.AppCompatImageButton;
-
-public class ColorPickerPresetColorButton extends AppCompatImageButton {
-
-	@ColorInt
-	int color;
-
-	public ColorPickerPresetColorButton(Context context) {
-		this(context, Color.BLACK);
-	}
-
-	public ColorPickerPresetColorButton(Context context, @ColorInt int color) {
-		super(context, null, R.attr.borderlessButtonStyle);
-		this.color = color;
-		setBackground(ColorPickerDialog.CustomColorDrawable.createDrawable(color));
-	}
-
-	public @ColorInt int getColor() {
-		return color;
-	}
-}
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.catrobat.paintroid.colorpicker" />
