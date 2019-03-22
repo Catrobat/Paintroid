@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -38,10 +37,12 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.helper.Conversion;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
 public class ShapeTool extends BaseToolWithRectangleShape {
 
@@ -61,8 +62,9 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 	private float previousBoxWidth;
 	private float previousBoxHeight;
 
-	public ShapeTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public ShapeTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 
@@ -146,7 +148,7 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 
 			drawPaint.reset();
 			drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
-			drawPaint.setShader(checkeredPattern.getShader());
+			drawPaint.setShader(checkeredShader);
 		}
 
 		shapeRect = new RectF(0, 0, boxWidth, boxHeight);
@@ -306,7 +308,7 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = LayoutInflater.from(context);
+		LayoutInflater inflater = LayoutInflater.from(toolSpecificOptionsLayout.getContext());
 		View shapeToolOptionView = inflater.inflate(R.layout.dialog_pocketpaint_shapes, toolSpecificOptionsLayout);
 
 		shapeToolOptionsListener = new ShapeToolOptionsListener(shapeToolOptionView);
@@ -314,7 +316,7 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 		toolSpecificOptionsLayout.post(new Runnable() {
 			@Override
 			public void run() {
-				toggleShowToolOptions();
+				toolOptionsController.showAnimated();
 			}
 		});
 	}

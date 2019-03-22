@@ -19,23 +19,22 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.content.res.ResourcesCompat;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.common.Constants;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolWithShape;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
 public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {
 
@@ -51,14 +50,14 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	final Paint linePaint;
 	final DisplayMetrics metrics;
 
-	public BaseToolWithShape(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public BaseToolWithShape(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 
-		final Resources resources = context.getResources();
-		metrics = resources.getDisplayMetrics();
+		metrics = contextCallback.getDisplayMetrics();
 
-		primaryShapeColor = ResourcesCompat.getColor(resources, R.color.pocketpaint_main_rectangle_tool_primary_color, null);
-		secondaryShapeColor = ResourcesCompat.getColor(resources, R.color.pocketpaint_colorAccent, null);
+		primaryShapeColor = contextCallback.getColor(R.color.pocketpaint_main_rectangle_tool_primary_color);
+		secondaryShapeColor = contextCallback.getColor(R.color.pocketpaint_colorAccent);
 		float actionBarHeight = Constants.ACTION_BAR_HEIGHT * metrics.density;
 		PointF surfaceToolPosition = new PointF(metrics.widthPixels / 2f, metrics.heightPixels
 				/ 2f - actionBarHeight);

@@ -17,35 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools;
+package org.catrobat.paintroid.tools.common;
 
-import android.graphics.Bitmap;
-import android.graphics.PointF;
+public final class Constants {
+	public static final float SCROLL_TOLERANCE_PERCENTAGE = 0.1f;
+	public static final float MOVE_TOLERANCE = 5;
 
-public interface Workspace {
-	boolean contains(PointF point);
-
-	int getHeight();
-
-	int getWidth();
-
-	Bitmap getBitmapOfAllLayers();
-
-	Bitmap getBitmapOfCurrentLayer();
-
-	int getPixelOfCurrentLayer(PointF coordinate);
-
-	void resetPerspective();
-
-	void setScale(float zoomFactor);
-
-	float getScaleForCenterBitmap();
-
-	float getScale();
-
-	PointF getSurfacePointFromCanvasPoint(PointF coordinate);
-
-	PointF getCanvasPointFromSurfacePoint(PointF surfacePoint);
-
-	void invalidate();
+	private Constants() {
+		throw new RuntimeException("no");
+	}
 }

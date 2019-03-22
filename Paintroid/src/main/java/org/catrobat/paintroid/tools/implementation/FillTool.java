@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.support.annotation.VisibleForTesting;
@@ -35,9 +34,11 @@ import android.widget.SeekBar;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
 import java.util.Locale;
@@ -53,8 +54,9 @@ public class FillTool extends BaseTool {
 	private EditText colorToleranceEditText;
 	private View fillToolOptionsView;
 
-	public FillTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public FillTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 	}
 
 	public void updateColorTolerance(int colorToleranceInPercent) {
@@ -109,7 +111,7 @@ public class FillTool extends BaseTool {
 
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = LayoutInflater.from(context);
+		LayoutInflater inflater = LayoutInflater.from(toolSpecificOptionsLayout.getContext());
 		fillToolOptionsView = inflater.inflate(R.layout.dialog_pocketpaint_fill_tool, toolSpecificOptionsLayout);
 
 		colorToleranceSeekBar = fillToolOptionsView.findViewById(R.id.pocketpaint_color_tolerance_seek_bar);

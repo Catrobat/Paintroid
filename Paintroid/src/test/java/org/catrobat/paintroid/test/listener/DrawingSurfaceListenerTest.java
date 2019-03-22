@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +35,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.catrobat.paintroid.test.utils.PointFMatcher.pointFEquals;
 import static org.catrobat.paintroid.tools.Tool.StateChange.MOVE_CANCELED;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -57,6 +59,9 @@ public class DrawingSurfaceListenerTest {
 	private Tool currentTool;
 
 	@Mock
+	private ToolOptionsController toolOptionsController;
+
+	@Mock
 	private DrawingSurfaceListener.DrawingSurfaceListenerCallback callback;
 
 	private DrawingSurfaceListener drawingSurfaceListener;
@@ -65,6 +70,8 @@ public class DrawingSurfaceListenerTest {
 	public void setUp() {
 		when(callback.getCurrentTool())
 				.thenReturn(currentTool);
+		when(callback.getToolOptionsController())
+				.thenReturn(toolOptionsController);
 
 		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, callback, DISPLAY_DENSITY);
 	}
@@ -119,13 +126,13 @@ public class DrawingSurfaceListenerTest {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
 		MotionEvent motionEvent = mock(MotionEvent.class);
 
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE);
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
 		when(motionEvent.getX()).thenReturn(20 * DISPLAY_DENSITY - 1);
 		when(motionEvent.getY()).thenReturn(5f);
 
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
+		assertFalse(onTouchResult);
 		verifyNoMoreInteractions(autoScrollTask, currentTool);
 	}
 
@@ -134,14 +141,13 @@ public class DrawingSurfaceListenerTest {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
 		MotionEvent motionEvent = mock(MotionEvent.class);
 
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_CANCEL);
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
 		when(motionEvent.getX()).thenReturn(20 * DISPLAY_DENSITY - 1);
 		when(motionEvent.getY()).thenReturn(5f);
 
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
+		assertFalse(onTouchResult);
 		verifyNoMoreInteractions(autoScrollTask, currentTool);
 	}
 
@@ -166,15 +172,15 @@ public class DrawingSurfaceListenerTest {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
 		MotionEvent motionEvent = mock(MotionEvent.class);
 
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE);
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
 		when(motionEvent.getX()).thenReturn(67f);
 		when(motionEvent.getY()).thenReturn(5f);
 
 		when(drawingSurface.getWidth()).thenReturn((int) (67 + 20 * DISPLAY_DENSITY - 1));
 
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
+		assertFalse(onTouchResult);
 		verifyNoMoreInteractions(autoScrollTask, currentTool);
 	}
 
@@ -183,16 +189,15 @@ public class DrawingSurfaceListenerTest {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
 		MotionEvent motionEvent = mock(MotionEvent.class);
 
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE, MotionEvent.ACTION_CANCEL);
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
 		when(motionEvent.getX()).thenReturn(67f);
 		when(motionEvent.getY()).thenReturn(5f);
 
 		when(drawingSurface.getWidth()).thenReturn((int) (67 + 20 * DISPLAY_DENSITY - 1));
 
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
+		assertFalse(onTouchResult);
 		verifyNoMoreInteractions(autoScrollTask, currentTool);
 	}
 
@@ -429,5 +434,19 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(autoScrollTask, never()).start();
+	}
+
+	@Test
+	public void testOnTouchWhenToolOptionsShownThenHideToolOptions() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(toolOptionsController.isVisible()).thenReturn(true);
+
+		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		assertFalse(onTouchResult);
+		verify(toolOptionsController).hideAnimated();
+		verifyZeroInteractions(currentTool);
 	}
 }

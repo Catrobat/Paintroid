@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -30,9 +29,11 @@ import android.graphics.PointF;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.BrushPickerView;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.tools.DrawerPreview;
 
 public class LineTool extends BaseTool {
@@ -42,8 +43,8 @@ public class LineTool extends BaseTool {
 	protected boolean pathInsideBitmap;
 	private BrushPickerView brushPickerView;
 
-	public LineTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public LineTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 	}
 
 	@Override
@@ -85,14 +86,14 @@ public class LineTool extends BaseTool {
 		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		pathInsideBitmap = false;
 
-		pathInsideBitmap = checkPathInsideBitmap(coordinate);
+		pathInsideBitmap = workspace.contains(coordinate);
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
 		currentCoordinate = new PointF(coordinate.x, coordinate.y);
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && workspace.contains(coordinate)) {
 			pathInsideBitmap = true;
 		}
 		return true;
@@ -108,7 +109,7 @@ public class LineTool extends BaseTool {
 		finalPath.moveTo(initialEventCoordinate.x, initialEventCoordinate.y);
 		finalPath.lineTo(coordinate.x, coordinate.y);
 
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && workspace.contains(coordinate)) {
 			pathInsideBitmap = true;
 		}
 

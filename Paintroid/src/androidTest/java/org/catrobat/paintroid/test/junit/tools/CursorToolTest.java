@@ -23,6 +23,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -32,11 +33,14 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.PointCommand;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
+import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -58,7 +62,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
 public class CursorToolTest {
-	private static final float MOVE_TOLERANCE = BaseTool.MOVE_TOLERANCE;
+	private static final float MOVE_TOLERANCE = Constants.MOVE_TOLERANCE;
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -78,7 +82,9 @@ public class CursorToolTest {
 		MainActivity activity = activityTestRule.getActivity();
 		Workspace workspace = activity.workspace;
 		toolPaint = activity.toolPaint;
-		toolToTest = new CursorTool(activity, toolPaint, workspace, commandManager);
+		ToolOptionsController toolOptionsController = activity.toolOptionsController;
+		ContextCallback contextCallback = new DefaultContextCallback(InstrumentationRegistry.getTargetContext());
+		toolToTest = new CursorTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 	}
 
 	@UiThreadTest

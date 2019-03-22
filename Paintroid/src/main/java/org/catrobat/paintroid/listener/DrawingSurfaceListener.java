@@ -29,6 +29,7 @@ import android.view.View.OnTouchListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.util.EnumSet;
@@ -50,7 +51,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	private PointF canvasTouchPoint;
 	private PointF eventTouchPoint;
-	private boolean ignoreTouch;
 	private int drawerEdgeSize;
 	private boolean autoScroll = true;
 
@@ -88,6 +88,13 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
+		ToolOptionsController toolOptionsController = callback.getToolOptionsController();
+
+		if (toolOptionsController.isVisible()) {
+			toolOptionsController.hideAnimated();
+			return false;
+		}
+
 		DrawingSurface drawingSurface = (DrawingSurface) view;
 		Tool currentTool = callback.getCurrentTool();
 
@@ -101,8 +108,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				if (eventTouchPoint.x < drawerEdgeSize || view.getWidth() - eventTouchPoint.x < drawerEdgeSize) {
-					ignoreTouch = true;
-					return true;
+					return false;
 				}
 
 				currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_DOWN);
@@ -115,9 +121,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 				break;
 			case MotionEvent.ACTION_MOVE:
-				if (ignoreTouch) {
-					return true;
-				}
 				if (event.getPointerCount() == 1) {
 					if (touchMode == TouchMode.PINCH) {
 						break;
@@ -157,10 +160,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				break;
 			case MotionEvent.ACTION_UP:
 			case MotionEvent.ACTION_CANCEL:
-				if (ignoreTouch) {
-					ignoreTouch = false;
-					return true;
-				}
 
 				if (autoScrollTask.isRunning()) {
 					autoScrollTask.stop();
@@ -290,5 +289,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		void translatePerspective(float x, float y);
 
 		void convertToCanvasFromSurface(PointF surfacePoint);
+
+		ToolOptionsController getToolOptionsController();
 	}
 }

@@ -21,17 +21,21 @@ package org.catrobat.paintroid.test.junit.tools;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
 import org.catrobat.paintroid.tools.implementation.ShapeTool;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -65,17 +69,19 @@ public class ShapeToolTest {
 		MainActivity activity = activityTestRule.getActivity();
 		Workspace workspace = activity.workspace;
 		ToolPaint toolPaint = activity.toolPaint;
+		ToolOptionsController toolOptionsController = activity.toolOptionsController;
+		ContextCallback contextCallback = new DefaultContextCallback(InstrumentationRegistry.getTargetContext());
 
-		rectangleShapeTool = new ShapeTool(activity, toolPaint, workspace, commandManager);
+		rectangleShapeTool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 		rectangleShapeTool.baseShape = ShapeTool.BaseShape.RECTANGLE;
 
-		ovalShapeTool = new ShapeTool(activity, toolPaint, workspace, commandManager);
+		ovalShapeTool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 		ovalShapeTool.baseShape = ShapeTool.BaseShape.OVAL;
 
-		heartShapeTool = new ShapeTool(activity, toolPaint, workspace, commandManager);
+		heartShapeTool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 		heartShapeTool.baseShape = ShapeTool.BaseShape.HEART;
 
-		starShapeTool = new ShapeTool(activity, toolPaint, workspace, commandManager);
+		starShapeTool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 		starShapeTool.baseShape = ShapeTool.BaseShape.STAR;
 	}
 

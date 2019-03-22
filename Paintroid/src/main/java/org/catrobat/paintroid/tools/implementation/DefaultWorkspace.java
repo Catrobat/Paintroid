@@ -41,6 +41,11 @@ public class DefaultWorkspace implements Workspace {
 	}
 
 	@Override
+	public boolean contains(PointF point) {
+		return point.x < getWidth() && point.x >= 0 && point.y < getHeight() && point.y >= 0;
+	}
+
+	@Override
 	public int getHeight() {
 		return layerModel.getHeight();
 	}

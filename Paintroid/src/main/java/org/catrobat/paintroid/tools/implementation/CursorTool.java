@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -29,17 +28,19 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.VisibleForTesting;
-import android.widget.Toast;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.BrushPickerView;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.ui.ToastFactory;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.tools.DrawerPreview;
+
+import static org.catrobat.paintroid.tools.common.Constants.MOVE_TOLERANCE;
 
 public class CursorTool extends BaseToolWithShape {
 
@@ -58,13 +59,13 @@ public class CursorTool extends BaseToolWithShape {
 	public boolean toolInDrawMode = false;
 	private BrushPickerView brushPickerView;
 
-	public CursorTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public CursorTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
-		cursorToolPrimaryShapeColor = context.getResources().getColor(
-						R.color.pocketpaint_main_cursor_tool_inactive_primary_color);
+		cursorToolPrimaryShapeColor = contextCallback.getColor(R.color.pocketpaint_main_cursor_tool_inactive_primary_color);
 		cursorToolSecondaryShapeColor = Color.LTGRAY;
 		pathInsideBitmap = false;
 	}
@@ -87,7 +88,7 @@ public class CursorTool extends BaseToolWithShape {
 		movedDistance.set(0, 0);
 		pathInsideBitmap = false;
 
-		pathInsideBitmap = checkPathInsideBitmap(toolPosition);
+		pathInsideBitmap = workspace.contains(toolPosition);
 		return true;
 	}
 
@@ -99,7 +100,7 @@ public class CursorTool extends BaseToolWithShape {
 		float newCursorPositionX = this.toolPosition.x + vectorCX;
 		float newCursorPositionY = this.toolPosition.y + vectorCY;
 
-		if (!pathInsideBitmap && checkPathInsideBitmap(toolPosition)) {
+		if (!pathInsideBitmap && workspace.contains(toolPosition)) {
 			pathInsideBitmap = true;
 		}
 
@@ -151,7 +152,7 @@ public class CursorTool extends BaseToolWithShape {
 	@Override
 	public boolean handleUp(PointF coordinate) {
 
-		if (!pathInsideBitmap && checkPathInsideBitmap(toolPosition)) {
+		if (!pathInsideBitmap && workspace.contains(toolPosition)) {
 			pathInsideBitmap = true;
 		}
 
@@ -314,19 +315,17 @@ public class CursorTool extends BaseToolWithShape {
 	private void handleDrawMode() {
 
 		if (toolInDrawMode) {
-			if (MOVE_TOLERANCE < movedDistance.x
-					|| MOVE_TOLERANCE < movedDistance.y) {
+			if (MOVE_TOLERANCE < movedDistance.x || MOVE_TOLERANCE < movedDistance.y) {
 				addPathCommand(toolPosition);
 				cursorToolSecondaryShapeColor = toolPaint.getColor();
 			} else {
-				ToastFactory.makeText(context, R.string.cursor_draw_inactive, Toast.LENGTH_SHORT).show();
+				contextCallback.showNotification(R.string.cursor_draw_inactive);
 				toolInDrawMode = false;
 				cursorToolSecondaryShapeColor = Color.LTGRAY;
 			}
 		} else {
-			if (MOVE_TOLERANCE >= movedDistance.x
-					&& MOVE_TOLERANCE >= movedDistance.y) {
-				ToastFactory.makeText(context, R.string.cursor_draw_active, Toast.LENGTH_SHORT).show();
+			if (MOVE_TOLERANCE >= movedDistance.x && MOVE_TOLERANCE >= movedDistance.y) {
+				contextCallback.showNotification(R.string.cursor_draw_active);
 				toolInDrawMode = true;
 				cursorToolSecondaryShapeColor = toolPaint.getColor();
 				addPointCommand(toolPosition);

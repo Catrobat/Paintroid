@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.junit.tools;
 
 import android.graphics.PointF;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -27,9 +28,12 @@ import android.view.ViewConfiguration;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
 import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,7 +56,9 @@ public class StampToolTest {
 		ToolPaint toolPaint = activity.toolPaint;
 		CommandManager commandManager = activity.commandManager;
 		Workspace workspace = activity.workspace;
-		tool = new StampTool(activity, toolPaint, workspace, commandManager);
+		ToolOptionsController toolOptionsController = activity.toolOptionsController;
+		ContextCallback contextCallback = new DefaultContextCallback(InstrumentationRegistry.getTargetContext());
+		tool = new StampTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 	}
 
 	@Test

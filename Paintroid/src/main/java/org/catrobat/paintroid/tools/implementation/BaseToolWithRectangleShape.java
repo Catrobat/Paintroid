@@ -19,9 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -38,22 +35,23 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.ColorRes;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.content.res.AppCompatResources;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
+import org.catrobat.paintroid.tools.ContextCallback.ScreenOrientation;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
 import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
 public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
-	@VisibleForTesting
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public static final float MAXIMUM_BORDER_RATIO = 2f;
-	@VisibleForTesting
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public static final int DEFAULT_BOX_RESIZE_MARGIN = 20;
 	protected static final int DEFAULT_RECTANGLE_MARGIN = 100;
 	protected static final float DEFAULT_TOOL_STROKE_WIDTH = 3f;
@@ -118,12 +116,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private int rectangleShrinkingOnHighlight;
 	private CountDownTimer downTimer;
 
-	public BaseToolWithRectangleShape(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public BaseToolWithRectangleShape(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 
-		final Resources resources = context.getResources();
-		int orientation = resources.getConfiguration().orientation;
-		float boxSize = orientation == Configuration.ORIENTATION_PORTRAIT
+		ScreenOrientation orientation = contextCallback.getOrientation();
+		float boxSize = orientation == ScreenOrientation.PORTRAIT
 				? metrics.widthPixels
 				: metrics.heightPixels;
 		boxWidth = boxSize / workspace.getScale()
@@ -674,7 +672,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private void createOverlayDrawable() {
 		int overlayDrawableResource = getToolType().getOverlayDrawableResource();
 		if (overlayDrawableResource != INVALID_RESOURCE_ID) {
-			overlayDrawable = AppCompatResources.getDrawable(context, overlayDrawableResource);
+			overlayDrawable = contextCallback.getDrawable(overlayDrawableResource);
 			if (overlayDrawable != null) {
 				overlayDrawable.setFilterBitmap(false);
 			}
@@ -699,11 +697,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	void highlightBoxWhenClickInBox(boolean highlight) {
-		final Resources resources = context.getResources();
 		final @ColorRes int colorId = highlight
 				? R.color.pocketpaint_main_rectangle_tool_highlight_color
 				: R.color.pocketpaint_main_rectangle_tool_accent_color;
-		secondaryShapeColor = ResourcesCompat.getColor(resources, colorId, null);
+		secondaryShapeColor = contextCallback.getColor(colorId);
 
 		rectangleShrinkingOnHighlight = highlight
 				? HIGHLIGHT_RECTANGLE_SHRINKING
