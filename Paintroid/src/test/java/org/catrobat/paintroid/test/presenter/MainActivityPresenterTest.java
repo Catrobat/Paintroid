@@ -61,9 +61,9 @@ import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXT
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_FINISH;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LANGUAGE;
+import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOAD_NEW;
@@ -307,7 +307,7 @@ public class MainActivityPresenterTest {
 	public void testShowHelpClickedThenStartWelcomeActivity() {
 		presenter.showHelpClicked();
 
-		verify(navigator).startWelcomeActivity();
+		verify(navigator).startWelcomeActivity(REQUEST_CODE_INTRO);
 		verifyNoMoreInteractions(navigator);
 	}
 
@@ -373,25 +373,14 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testHandleActivityResultWhenFinishThenFinishActivity() {
+	public void testHandleActivityResultWhenUnhandledAndResultNotOKThenForwardResult() {
 		DisplayMetrics metrics = mock(DisplayMetrics.class);
 		when(view.getDisplayMetrics()).thenReturn(metrics);
 		Intent intent = mock(Intent.class);
 
-		presenter.handleActivityResult(REQUEST_CODE_FINISH, Activity.RESULT_OK, intent);
+		presenter.handleActivityResult(0, Activity.RESULT_CANCELED, intent);
 
-		verify(navigator).finishActivity();
-	}
-
-	@Test
-	public void testHandleActivityResultWhenLanguageThenRecreateActivity() {
-		DisplayMetrics metrics = mock(DisplayMetrics.class);
-		when(view.getDisplayMetrics()).thenReturn(metrics);
-		Intent intent = mock(Intent.class);
-
-		presenter.handleActivityResult(REQUEST_CODE_LANGUAGE, Activity.RESULT_OK, intent);
-
-		verify(navigator).recreateActivity();
+		verify(view).superHandleActivityResult(0, Activity.RESULT_CANCELED, intent);
 	}
 
 	@Test
@@ -411,11 +400,36 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandleActivityResultWhenResultNotOkThenDoNothing() {
+		DisplayMetrics metrics = mock(DisplayMetrics.class);
+		when(view.getDisplayMetrics()).thenReturn(metrics);
 		Intent intent = mock(Intent.class);
 
 		presenter.handleActivityResult(0, Activity.RESULT_CANCELED, intent);
 
-		verifyZeroInteractions(view, interactor, navigator);
+		verifyZeroInteractions(interactor, navigator);
+	}
+
+	@Test
+	public void testHandleActivityResultWhenRequestIntroAndResultOKThenDoNothing() {
+		DisplayMetrics metrics = mock(DisplayMetrics.class);
+		when(view.getDisplayMetrics()).thenReturn(metrics);
+		Intent intent = mock(Intent.class);
+
+		presenter.handleActivityResult(REQUEST_CODE_INTRO, Activity.RESULT_OK, intent);
+
+		verifyZeroInteractions(interactor, navigator);
+	}
+
+	@Test
+	public void testHandleActivityResultWhenRequestIntroAndResultSplitScreenNotSupportedThenShowToast() {
+		DisplayMetrics metrics = mock(DisplayMetrics.class);
+		when(view.getDisplayMetrics()).thenReturn(metrics);
+		Intent intent = mock(Intent.class);
+
+		presenter.handleActivityResult(REQUEST_CODE_INTRO, RESULT_INTRO_MW_NOT_SUPPORTED, intent);
+
+		verify(navigator).showToast(R.string.pocketpaint_intro_split_screen_not_supported, Toast.LENGTH_LONG);
+		verifyZeroInteractions(interactor, navigator);
 	}
 
 	@Test

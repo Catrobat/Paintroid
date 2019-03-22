@@ -40,6 +40,7 @@ import org.catrobat.paintroid.intro.TapTargetBottomBar;
 import org.catrobat.paintroid.intro.TapTargetStyle;
 import org.catrobat.paintroid.intro.TapTargetTopBar;
 
+import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
 import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.getSpFromDimension;
 import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.isRTL;
 import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.reverseArray;
@@ -106,6 +107,12 @@ public class WelcomeActivity extends AppCompatActivity {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 					| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInMultiWindowMode()) {
+			setResult(RESULT_INTRO_MW_NOT_SUPPORTED);
+			finish();
+			return;
 		}
 
 		setContentView(R.layout.activity_pocketpaint_welcome);

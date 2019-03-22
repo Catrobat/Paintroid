@@ -35,6 +35,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.common.Constants;
+import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
@@ -81,7 +82,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void startLoadImageActivity(int requestCode) {
+	public void startLoadImageActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -89,7 +90,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void startImportImageActivity(int requestCode) {
+	public void startImportImageActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -97,10 +98,10 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void startWelcomeActivity() {
+	public void startWelcomeActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(mainActivity.getApplicationContext(), WelcomeActivity.class);
 		intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-		mainActivity.startActivity(intent);
+		mainActivity.startActivityForResult(intent, requestCode);
 	}
 
 	@Override
@@ -184,11 +185,6 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void finishActivity() {
 		mainActivity.finish();
-	}
-
-	@Override
-	public void recreateActivity() {
-		mainActivity.recreate();
 	}
 
 	@Override
