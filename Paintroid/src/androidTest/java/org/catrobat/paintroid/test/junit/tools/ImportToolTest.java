@@ -20,40 +20,38 @@
 package org.catrobat.paintroid.test.junit.tools;
 
 import android.graphics.Bitmap;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.util.DisplayMetrics;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ImportToolTest {
-
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public MockitoRule mockito = MockitoJUnit.rule();
-
 	@Mock
 	private CommandManager commandManager;
+	@Mock
+	private Workspace workspace;
+	@Mock
+	private ToolPaint toolPaint;
+	@Mock
+	private ToolOptionsController toolOptionsController;
+	@Mock
+	private ContextCallback contextCallback;
+	@Mock
+	private DisplayMetrics displayMetrics;
 
 	private int drawingSurfaceWidth;
 	private int drawingSurfaceHeight;
@@ -63,15 +61,19 @@ public class ImportToolTest {
 	@UiThreadTest
 	@Before
 	public void setUp() {
-		MainActivity activity = activityTestRule.getActivity();
-		Workspace workspace = activity.workspace;
-		ToolPaint toolPaint = activity.toolPaint;
-		ToolOptionsController toolOptionsController = activity.toolOptionsController;
-		ContextCallback contextCallback = new DefaultContextCallback(InstrumentationRegistry.getTargetContext());
-		tool = new ImportTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		drawingSurfaceWidth = 20;
+		drawingSurfaceHeight = 30;
 
-		drawingSurfaceWidth = workspace.getWidth();
-		drawingSurfaceHeight = workspace.getHeight();
+		displayMetrics.heightPixels = 1920;
+		displayMetrics.widthPixels = 1080;
+		displayMetrics.density = 1;
+
+		when(contextCallback.getDisplayMetrics()).thenReturn(displayMetrics);
+		when(workspace.getWidth()).thenReturn(20);
+		when(workspace.getHeight()).thenReturn(30);
+		when(workspace.getScale()).thenReturn(1f);
+
+		tool = new ImportTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 	}
 
 	@Test

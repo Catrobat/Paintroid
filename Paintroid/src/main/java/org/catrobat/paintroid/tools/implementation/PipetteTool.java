@@ -73,8 +73,7 @@ public class PipetteTool extends BaseTool {
 			return false;
 		}
 
-		if (coordinate.x < 0 || coordinate.y < 0
-				|| coordinate.x >= surfaceBitmap.getWidth() || coordinate.y >= surfaceBitmap.getHeight()) {
+		if (!workspace.contains(coordinate)) {
 			return false;
 		}
 
