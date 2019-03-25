@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -37,17 +36,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
+import org.catrobat.paintroid.tools.ContextCallback;
+import org.catrobat.paintroid.tools.ContextCallback.NotificationDuration;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.ui.ToastFactory;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
 import java.text.NumberFormat;
@@ -89,8 +89,9 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	private View transformToolOptionView;
 
-	public TransformTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public TransformTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
@@ -105,11 +106,22 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 		cropRunFinished = true;
 
-		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		final DisplayMetrics metrics = contextCallback.getDisplayMetrics();
 		setMaximumBoxResolution(metrics.widthPixels * metrics.heightPixels
 				* MAXIMUM_BITMAP_SIZE_FACTOR);
 		setRespectMaximumBoxResolution(RESPECT_MAXIMUM_BOX_RESOLUTION);
 		initResizeBounds();
+
+		toolOptionsController.setCallback(new ToolOptionsController.Callback() {
+			@Override
+			public void onHide() {
+				TransformTool.this.contextCallback.showNotification(R.string.transform_info_text, NotificationDuration.LONG);
+			}
+
+			@Override
+			public void onShow() {
+			}
+		});
 	}
 
 	private static boolean containsNotTransparentPixel(int[][] pixels, int fromX, int fromY, int toX, int toY) {
@@ -252,8 +264,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 				commandManager.addCommand(resizeCommand);
 			} else {
 				cropRunFinished = true;
-				ToastFactory.makeText(context, R.string.resize_nothing_to_resize,
-						Toast.LENGTH_SHORT).show();
+				contextCallback.showNotification(R.string.resize_nothing_to_resize);
 			}
 		}
 	}
@@ -290,7 +301,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			protected void onPostExecute(Void result) {
 				workspace.invalidate();
 				setWidthAndHeightTexts(boxHeight, boxWidth);
-				toggleShowToolOptions();
+				toolOptionsController.hideAnimated();
 			}
 		}.execute();
 	}
@@ -342,15 +353,14 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			float oldPosX, float oldPosY) {
 		super.preventThatBoxGetsTooLarge(oldWidth, oldHeight, oldPosX, oldPosY);
 		if (!maxImageResolutionInformationAlreadyShown) {
-			ToastFactory.makeText(context, R.string.resize_max_image_resolution_reached,
-					Toast.LENGTH_SHORT).show();
+			contextCallback.showNotification(R.string.resize_max_image_resolution_reached);
 			maxImageResolutionInformationAlreadyShown = true;
 		}
 	}
 
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = LayoutInflater.from(context);
+		LayoutInflater inflater = LayoutInflater.from(toolSpecificOptionsLayout.getContext());
 		transformToolOptionView = inflater.inflate(R.layout.dialog_pocketpaint_transform_tool, toolSpecificOptionsLayout);
 
 		rangeFilterHeight = new NumberRangeFilter(1, (int) (maximumBoxResolution / (boxWidth)));
@@ -438,7 +448,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		toolSpecificOptionsLayout.post(new Runnable() {
 			@Override
 			public void run() {
-				toggleShowToolOptions();
+				toolOptionsController.showAnimated();
 			}
 		});
 	}
@@ -446,14 +456,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	@Override
 	public ToolType getToolType() {
 		return ToolType.TRANSFORM;
-	}
-
-	@Override
-	public void toggleShowToolOptions() {
-		super.toggleShowToolOptions();
-		if (!toolOptionsShown) {
-			ToastFactory.makeText(context, R.string.transform_info_text, Toast.LENGTH_LONG).show();
-		}
 	}
 
 	private void setWidthAndHeightTexts(float heightValue, float widthValue) {

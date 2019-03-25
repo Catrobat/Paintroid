@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -28,7 +27,6 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,9 +36,11 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.TextToolOptionsListener;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
 public class TextTool extends BaseToolWithRectangleShape {
 
@@ -81,20 +81,33 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@VisibleForTesting
 	public int textSize = 20;
 
-	public TextTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public TextTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
-		stc = ResourcesCompat.getFont(context, R.font.stc_regular);
-		dubai = ResourcesCompat.getFont(context, R.font.dubai);
+		stc = contextCallback.getFont(R.font.stc_regular);
+		dubai = contextCallback.getFont(R.font.dubai);
 
 		textPaint = new Paint();
 		initializePaint();
 
 		createAndSetBitmap();
 		resetBoxPosition();
+
+		toolOptionsController.setCallback(new ToolOptionsController.Callback() {
+			@Override
+			public void onHide() {
+				createAndSetBitmap();
+			}
+
+			@Override
+			public void onShow() {
+				createAndSetBitmap();
+			}
+		});
 	}
 
 	private void initializePaint() {
@@ -287,27 +300,21 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = LayoutInflater.from(context);
+		LayoutInflater inflater = LayoutInflater.from(toolSpecificOptionsLayout.getContext());
 		View textToolOptionsView = inflater.inflate(R.layout.dialog_pocketpaint_text_tool, toolSpecificOptionsLayout);
 
-		ToggleButton underlinedButton = (ToggleButton) textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
+		ToggleButton underlinedButton = textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		underlinedButton.setPaintFlags(underlinedButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-		textToolOptionsListener = new TextToolOptionsListener(context, textToolOptionsView);
+		textToolOptionsListener = new TextToolOptionsListener(toolSpecificOptionsLayout.getContext(), textToolOptionsView);
 		setupOnTextToolDialogChangedListener();
 
 		toolSpecificOptionsLayout.post(new Runnable() {
 			@Override
 			public void run() {
-				toggleShowToolOptions();
+				toolOptionsController.showAnimated();
 			}
 		});
-	}
-
-	@Override
-	public void toggleShowToolOptions() {
-		super.toggleShowToolOptions();
-		createAndSetBitmap();
 	}
 
 	@Override

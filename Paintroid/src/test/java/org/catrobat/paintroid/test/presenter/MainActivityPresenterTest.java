@@ -43,6 +43,7 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
@@ -116,6 +117,9 @@ public class MainActivityPresenterTest {
 
 	@Mock
 	private ToolReference toolReference;
+
+	@Mock
+	private ToolOptionsController toolOptionsController;
 
 	@Mock
 	private Tool tool;
@@ -285,7 +289,7 @@ public class MainActivityPresenterTest {
 		verify(view).enterFullscreen();
 		verify(navigationDrawerViewHolder).hideEnterFullscreen();
 		verify(navigationDrawerViewHolder).showExitFullscreen();
-		verify(tool).hide();
+		verify(toolOptionsController).disable();
 		verify(perspective).enterFullscreen();
 	}
 
@@ -300,6 +304,7 @@ public class MainActivityPresenterTest {
 		verify(view).exitFullscreen();
 		verify(navigationDrawerViewHolder).showEnterFullscreen();
 		verify(navigationDrawerViewHolder).hideExitFullscreen();
+		verify(toolOptionsController).enable();
 		verify(perspective).exitFullscreen();
 	}
 
@@ -461,11 +466,11 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testOnBackPressedWhenToolOptionsShownThenHideToolOptions() {
 		when(toolReference.get()).thenReturn(tool);
-		when(tool.getToolOptionsAreShown()).thenReturn(true);
+		when(toolOptionsController.isVisible()).thenReturn(true);
 
 		presenter.onBackPressed();
 
-		verify(tool).toggleShowToolOptions();
+		verify(toolOptionsController).hideAnimated();
 	}
 
 	@Test
@@ -822,7 +827,7 @@ public class MainActivityPresenterTest {
 
 		presenter.toolClicked(ToolType.BRUSH);
 
-		verify(tool).toggleShowToolOptions();
+		verify(toolOptionsController).showAnimated();
 	}
 
 	@Test

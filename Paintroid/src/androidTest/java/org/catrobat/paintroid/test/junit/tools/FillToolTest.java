@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -33,12 +34,15 @@ import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.FillCommand;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.model.Layer;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithm;
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory;
+import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
 import org.catrobat.paintroid.tools.implementation.FillTool;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -84,7 +88,9 @@ public class FillToolTest {
 
 		Workspace workspace = activity.workspace;
 		ToolPaint toolPaint = activity.toolPaint;
-		toolToTest = new FillTool(activity, toolPaint, workspace, commandManager);
+		ToolOptionsController toolOptionsController = activity.toolOptionsController;
+		ContextCallback contextCallback = new DefaultContextCallback(InstrumentationRegistry.getTargetContext());
+		toolToTest = new FillTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 	}
 
 	@UiThreadTest

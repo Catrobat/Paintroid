@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -31,10 +30,14 @@ import android.support.annotation.VisibleForTesting;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.listener.BrushPickerView;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.tools.DrawerPreview;
+
+import static org.catrobat.paintroid.tools.common.Constants.MOVE_TOLERANCE;
 
 public class BrushTool extends BaseTool {
 
@@ -46,8 +49,9 @@ public class BrushTool extends BaseTool {
 	@VisibleForTesting
 	public BrushPickerView brushPickerView;
 
-	public BrushTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public BrushTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
 		drawToolMovedDistance = new PointF(0f, 0f);
@@ -91,7 +95,7 @@ public class BrushTool extends BaseTool {
 		drawToolMovedDistance.set(0, 0);
 		pathInsideBitmap = false;
 
-		pathInsideBitmap = checkPathInsideBitmap(coordinate);
+		pathInsideBitmap = workspace.contains(coordinate);
 		return true;
 	}
 
@@ -108,7 +112,7 @@ public class BrushTool extends BaseTool {
 				drawToolMovedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 		previousEventCoordinate.set(coordinate.x, coordinate.y);
 
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && workspace.contains(coordinate)) {
 			pathInsideBitmap = true;
 		}
 		return true;
@@ -120,7 +124,7 @@ public class BrushTool extends BaseTool {
 			return false;
 		}
 
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
+		if (!pathInsideBitmap && workspace.contains(coordinate)) {
 			pathInsideBitmap = true;
 		}
 

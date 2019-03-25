@@ -17,35 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools;
+package org.catrobat.paintroid.tools.options;
 
-import android.graphics.Bitmap;
-import android.graphics.PointF;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.view.ViewGroup;
 
-public interface Workspace {
-	boolean contains(PointF point);
+public interface ToolOptionsController {
+	void hideAnimated();
 
-	int getHeight();
+	void disable();
 
-	int getWidth();
+	void enable();
 
-	Bitmap getBitmapOfAllLayers();
+	void resetToOrigin();
 
-	Bitmap getBitmapOfCurrentLayer();
+	void showAnimated();
 
-	int getPixelOfCurrentLayer(PointF coordinate);
+	void removeToolViews();
 
-	void resetPerspective();
+	void setToolName(@StringRes int id);
 
-	void setScale(float zoomFactor);
+	boolean isVisible();
 
-	float getScaleForCenterBitmap();
+	void setCallback(@Nullable Callback callback);
 
-	float getScale();
+	ViewGroup getToolSpecificOptionsLayout();
 
-	PointF getSurfacePointFromCanvasPoint(PointF coordinate);
+	interface Callback {
+		void onHide();
 
-	PointF getCanvasPointFromSurfacePoint(PointF surfacePoint);
-
-	void invalidate();
+		void onShow();
+	}
 }

@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -31,17 +30,17 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.VisibleForTesting;
 import android.view.ViewConfiguration;
-import android.widget.Toast;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.helper.Conversion;
-import org.catrobat.paintroid.ui.ToastFactory;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
@@ -53,12 +52,12 @@ public class StampTool extends BaseToolWithRectangleShape {
 	protected boolean longClickAllowed = true;
 
 	private int longPressTimeout;
-	private Toast copyHintToast;
 	private CountDownTimer downTimer;
 	private boolean longClickPerformed;
 
-	public StampTool(Context context, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(context, toolPaint, workspace, commandManager);
+	public StampTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 		readyForPaste = false;
 		longPressTimeout = ViewConfiguration.getLongPressTimeout();
 		setRotationEnabled(ROTATION_ENABLED);
@@ -195,8 +194,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 	@Override
 	protected void onClickInBox() {
 		if (!readyForPaste) {
-			copyHintToast = ToastFactory.makeText(context, R.string.stamp_tool_copy_hint, Toast.LENGTH_SHORT);
-			copyHintToast.show();
+			contextCallback.showNotification(R.string.stamp_tool_copy_hint);
 		} else if (drawingBitmap != null && !drawingBitmap.isRecycled()) {
 			paste();
 			highlightBox();

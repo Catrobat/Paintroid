@@ -34,6 +34,7 @@ import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -79,6 +80,10 @@ public class LandscapeIntegrationTest {
 
 	private Tool getCurrentTool() {
 		return getMainActivity().toolReference.get();
+	}
+
+	private ToolOptionsController getToolOptionsController() {
+		return getMainActivity().toolOptionsController;
 	}
 
 	@Test
@@ -134,7 +139,7 @@ public class LandscapeIntegrationTest {
 
 			assertEquals(toolType, getCurrentTool().getToolType());
 
-			if (!getCurrentTool().getToolOptionsAreShown()) {
+			if (!getToolOptionsController().isVisible()) {
 				onToolBarView()
 						.performClickSelectedToolButton();
 			}
