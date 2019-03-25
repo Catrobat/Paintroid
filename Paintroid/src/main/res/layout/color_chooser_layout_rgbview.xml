@@ -22,8 +22,7 @@
     android:id="@+id/color_chooser_rgb_base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <View
         android:layout_width="1000dp"
@@ -32,13 +31,13 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:stretchColumns="1" >
+        android:stretchColumns="1">
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="12dp"
-            android:paddingTop="12dp" >
+            android:paddingTop="12dp">
 
             <TextView
                 android:id="@+id/color_chooser_color_rgb_textview_red"
@@ -68,14 +67,13 @@
                 android:text="255"
                 android:textColor="@color/pocketpaint_colorAccent"
                 tools:ignore="HardcodedText" />
-
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="12dp"
-            android:paddingTop="12dp" >
+            android:paddingTop="12dp">
 
             <TextView
                 android:id="@+id/color_chooser_color_rgb_textview_green"
@@ -110,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="12dp"
-            android:paddingTop="12dp" >
+            android:paddingTop="12dp">
 
             <TextView
                 android:id="@+id/color_chooser_color_rgb_textview_blue"
@@ -146,7 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="12dp"
-            android:paddingTop="12dp" >
+            android:paddingTop="12dp">
 
             <TextView
                 android:id="@+id/color_chooser_color_rgb_textview_alpha"
@@ -184,7 +182,30 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/pocketpaint_colorAccent"
                 tools:ignore="HardcodedText" />
+        </TableRow>
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/color_chooser_color_rgb_textview_hex"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/color_hex"
+                android:textColor="@color/pocketpaint_color_chooser_hex_black" />
+
+            <EditText
+                android:id="@+id/color_chooser_color_rgb_hex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:hint="#"
+                android:inputType="textNoSuggestions"
+                tools:ignore="HardcodedText"/>
         </TableRow>
     </TableLayout>
 

@@ -69,4 +69,8 @@
     <color name="pocketpaint_color_chooser_gray">#FFA3A3A3</color>
     <color name="pocketpaint_color_chooser_white">#ffffff</color>
     <color name="pocketpaint_color_chooser_transparent">#00000000</color>
+
+    <color name="pocketpaint_color_chooser_hex_wrong_value_red">#FFFE4A49</color>
+    <color name="pocketpaint_color_chooser_hex_correct_black">#FF000000</color>
+    <color name="pocketpaint_color_chooser_hex_black">#FF000000</color>
 </resources>

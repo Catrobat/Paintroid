@@ -42,6 +42,8 @@ public final class Constants {
 
 	public static final String PERMISSION_DIALOG_FRAGMENT_TAG = "permissiondialogfragment";
 
+	public static final int NOT_A_HEX_VALUE = 20000000;
+
 	public static final int INVALID_RESOURCE_ID = 0;
 
 	private Constants() {
