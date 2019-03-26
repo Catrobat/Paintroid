@@ -30,6 +30,7 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.tools.options.FillToolOptions;
 
@@ -46,7 +47,7 @@ public class DefaultFillToolOptions implements FillToolOptions {
 
 		colorToleranceSeekBar = fillToolOptionsView.findViewById(R.id.pocketpaint_color_tolerance_seek_bar);
 		colorToleranceEditText = fillToolOptionsView.findViewById(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input);
-		colorToleranceEditText.setFilters(new InputFilter[]{new NumberRangeFilter(0, 100)});
+		colorToleranceEditText.setFilters(new InputFilter[]{new DefaultNumberRangeFilter(0, 100)});
 		colorToleranceSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
