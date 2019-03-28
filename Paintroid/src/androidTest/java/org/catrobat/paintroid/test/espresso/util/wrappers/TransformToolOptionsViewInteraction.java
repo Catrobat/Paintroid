@@ -23,7 +23,11 @@ import org.catrobat.paintroid.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
 
 public final class TransformToolOptionsViewInteraction extends CustomViewInteraction {
 	private TransformToolOptionsViewInteraction() {
@@ -61,6 +65,24 @@ public final class TransformToolOptionsViewInteraction extends CustomViewInterac
 	public TransformToolOptionsViewInteraction performFlipHorizontal() {
 		onView(withId(R.id.pocketpaint_transform_flip_horizontal_btn))
 				.perform(click());
+		return this;
+	}
+
+	public TransformToolOptionsViewInteraction moveSliderTo(int moveTo) {
+		onView(withId(R.id.pocketpaint_transform_resize_seekbar))
+				.perform(setProgress(moveTo));
+		return this;
+	}
+
+	public TransformToolOptionsViewInteraction performApplyResize() {
+		onView(withId(R.id.pocketpaint_transform_apply_resize_btn))
+				.perform(click());
+		return this;
+	}
+
+	public TransformToolOptionsViewInteraction checkPercetageTextMatches(int expected) {
+		onView(withId(R.id.pocketpaint_transform_resize_percentage_text))
+				.check(matches(withText(Integer.toString(expected))));
 		return this;
 	}
 }

@@ -26,6 +26,7 @@ import android.support.test.espresso.PerformException;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.SeekBar;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
@@ -1259,5 +1260,75 @@ public class TransformToolIntegrationTest {
 		workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		assertThat(workingBitmap.getHeight(), lessThan(initialHeight));
 		assertThat(workingBitmap.getWidth(), equalTo(initialWidth));
+	}
+
+	@Test
+	public void testResizeImage() {
+		int width = layerModel.getWidth();
+		int height = layerModel.getHeight();
+
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.moveSliderTo(50);
+		onTransformToolOptionsView()
+				.performApplyResize();
+
+		int newWidth = (int) ((float) width / 100 * 50);
+		int newHeight = (int) ((float) height / 100 * 50);
+
+		assertEquals(newWidth, layerModel.getWidth());
+		assertEquals(newHeight, layerModel.getHeight());
+	}
+
+	@Test
+	public void testTryResizeImageToSizeZero() {
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.moveSliderTo(1);
+		onTransformToolOptionsView()
+				.performApplyResize();
+		onTransformToolOptionsView()
+				.moveSliderTo(1);
+		onTransformToolOptionsView()
+				.performApplyResize();
+
+		waitForToast(withText(R.string.resize_cannot_resize_to_this_size), 1000);
+	}
+
+	@Test
+	public void testSeekBarAndTextViewTheSame() {
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+
+		SeekBar seekBar = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_transform_resize_seekbar);
+		int progress = seekBar.getProgress();
+
+		onTransformToolOptionsView()
+				.checkPercetageTextMatches(progress);
+
+		onTransformToolOptionsView()
+				.moveSliderTo(1);
+
+		progress = seekBar.getProgress();
+		onTransformToolOptionsView()
+				.checkPercetageTextMatches(progress);
+
+		onTransformToolOptionsView()
+				.performApplyResize();
+		onTransformToolOptionsView()
+				.moveSliderTo(50);
+
+		progress = seekBar.getProgress();
+		onTransformToolOptionsView()
+				.checkPercetageTextMatches(progress);
+
+		onTransformToolOptionsView()
+				.performApplyResize();
+
+		progress = seekBar.getProgress();
+		onTransformToolOptionsView()
+				.checkPercetageTextMatches(progress);
 	}
 }

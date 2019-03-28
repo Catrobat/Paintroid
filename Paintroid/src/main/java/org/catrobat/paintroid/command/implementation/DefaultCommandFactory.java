@@ -100,8 +100,8 @@ public class DefaultCommandFactory implements CommandFactory {
 	}
 
 	@Override
-	public Command createResizeCommand(int resizeCoordinateXLeft, int resizeCoordinateYTop, int resizeCoordinateXRight, int resizeCoordinateYBottom, int maximumBitmapResolution) {
-		return new ResizeCommand(resizeCoordinateXLeft, resizeCoordinateYTop, resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution);
+	public Command createCropCommand(int resizeCoordinateXLeft, int resizeCoordinateYTop, int resizeCoordinateXRight, int resizeCoordinateYBottom, int maximumBitmapResolution) {
+		return new CropCommand(resizeCoordinateXLeft, resizeCoordinateYTop, resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution);
 	}
 
 	@Override
@@ -137,6 +137,11 @@ public class DefaultCommandFactory implements CommandFactory {
 		return new TextToolCommand(multilineText, commonFactory.createPaint(textPaint),
 				boxOffset, boxWidth, boxHeight, commonFactory.createPointF(toolPosition),
 				boxRotation);
+	}
+
+	@Override
+	public Command createResizeCommand(int newWidth, int newHeight) {
+		return new ResizeCommand(newWidth, newHeight);
 	}
 
 	@Override
