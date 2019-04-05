@@ -82,14 +82,16 @@
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_pocketpaint_tool_circle" />
+            android:src="@drawable/ic_pocketpaint_tool_circle"
+            android:contentDescription="@string/cap_circle" />
 
         <ImageButton
             android:id="@+id/pocketpaint_stroke_ibtn_rect"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_pocketpaint_tool_square" />
+            android:src="@drawable/ic_pocketpaint_tool_square"
+            android:contentDescription="@string/cap_square" />
     </LinearLayout>
 
     </LinearLayout>

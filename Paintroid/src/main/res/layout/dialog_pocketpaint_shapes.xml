@@ -75,14 +75,16 @@
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_pocketpaint_rectangle" />
+            android:src="@drawable/ic_pocketpaint_rectangle"
+            android:contentDescription="@string/shape_tool_dialog_rect_title" />
 
         <ImageButton
             android:id="@+id/pocketpaint_shape_ibtn_outline"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_pocketpaint_rectangle_out" />
+            android:src="@drawable/ic_pocketpaint_rectangle_out"
+            android:contentDescription="@string/shape_tool_dialog_outline_title" />
     </LinearLayout>
 
     <TextView
@@ -102,7 +104,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_pocketpaint_rectangle" />
+            android:src="@drawable/ic_pocketpaint_rectangle"
+            android:contentDescription="@string/shape_tool_dialog_rect_title" />
 
         <ImageButton
             android:id="@+id/pocketpaint_shapes_circle_btn"
@@ -110,7 +113,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_pocketpaint_circle"/>
+            android:src="@drawable/ic_pocketpaint_circle"
+            android:contentDescription="@string/shape_tool_dialog_ellipse_title" />
 
         <ImageButton
             android:id="@+id/pocketpaint_shapes_heart_btn"
@@ -118,7 +122,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_pocketpaint_heart"/>
+            android:src="@drawable/ic_pocketpaint_heart"
+            android:contentDescription="@string/shape_tool_dialog_heart_title" />
 
         <ImageButton
             android:id="@+id/pocketpaint_shapes_star_btn"
@@ -126,7 +131,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_pocketpaint_star"/>
+            android:src="@drawable/ic_pocketpaint_star"
+            android:contentDescription="@string/shape_tool_dialog_star_title" />
     </LinearLayout>
 
 </LinearLayout>

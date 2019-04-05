@@ -42,7 +42,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_pocketpaint_tool_resize_adjust"
-                android:theme="@style/PocketPaintHighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme"
+                android:contentDescription="@string/transform_tool_auto_crop_text" />
 
             <Space style="@style/PocketPaintToolHorizontalSpace" />
 
@@ -118,7 +119,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/ic_pocketpaint_tool_rotate_left"
-                android:theme="@style/PocketPaintHighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme"
+                android:contentDescription="@string/transform_tool_rotate_left" />
 
             <ImageButton
                 android:id="@+id/pocketpaint_transform_rotate_right_btn"
@@ -127,7 +129,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/ic_pocketpaint_rotate_right"
-                android:theme="@style/PocketPaintHighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme"
+                android:contentDescription="@string/transform_tool_rotate_right" />
 
             <ImageButton
                 android:id="@+id/pocketpaint_transform_flip_vertical_btn"
@@ -136,7 +139,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/ic_pocketpaint_tool_flip_vertical"
-                android:theme="@style/PocketPaintHighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme"
+                android:contentDescription="@string/transform_tool_flip_vertical" />
 
             <ImageButton
                 android:id="@+id/pocketpaint_transform_flip_horizontal_btn"
@@ -145,7 +149,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/ic_pocketpaint_tool_flip_horizontal"
-                android:theme="@style/PocketPaintHighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme"
+                android:contentDescription="@string/transform_tool_flip_horizontal" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
