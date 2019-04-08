@@ -463,6 +463,19 @@ public class BaseToolWithRectangleShapeToolTest {
 		assertNotEquals("Rectangle should rotate.", newRotation, 0);
 	}
 
+	@Test
+	public void testToolClicksOnTouchDownPosition() {
+		float initialToolPositionX = toolToTest.toolPosition.x;
+		float initialToolPositionY = toolToTest.toolPosition.y;
+
+		toolToTest.handleDown(new PointF(initialToolPositionX, initialToolPositionY));
+		toolToTest.handleMove(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
+		toolToTest.handleUp(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
+
+		assertEquals(toolToTest.toolPosition.x, initialToolPositionX, 0);
+		assertEquals(toolToTest.toolPosition.y, initialToolPositionY, 0);
+	}
+
 	private void doResize(float dragFromX, float dragToX, float dragFromY, float dragToY, boolean resizeWidth,
 			boolean resizeHeight, boolean resizeBigger, boolean isCorner) {
 

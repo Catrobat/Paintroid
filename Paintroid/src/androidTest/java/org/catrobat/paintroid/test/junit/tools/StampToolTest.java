@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.junit.tools;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.PointF;
+import android.os.Looper;
 import android.support.test.InstrumentationRegistry;
 import android.util.DisplayMetrics;
 import android.view.ViewConfiguration;
@@ -108,5 +109,20 @@ public class StampToolTest {
 	@Test
 	public void testShouldReturnCorrectToolType() {
 		assertEquals(ToolType.STAMP, tool.getToolType());
+	}
+
+	@Test
+	public void testToolClicksOnTouchDownPosition() {
+		Looper.prepare();
+
+		float initialToolPositionX = tool.toolPosition.x;
+		float initialToolPositionY = tool.toolPosition.y;
+
+		tool.handleDown(new PointF(initialToolPositionX, initialToolPositionY));
+		tool.handleMove(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
+		tool.handleUp(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
+
+		assertEquals(tool.toolPosition.x, initialToolPositionX, 0);
+		assertEquals(tool.toolPosition.y, initialToolPositionY, 0);
 	}
 }

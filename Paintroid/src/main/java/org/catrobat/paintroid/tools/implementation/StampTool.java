@@ -95,8 +95,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 				downTimer.cancel();
 			}
 			downTimer = new CountDownTimer(longPressTimeout, longPressTimeout * 2) {
-				float downToolPositionX = toolPosition.x;
-				float downToolPositionY = toolPosition.y;
 
 				@Override
 				public void onTick(long millisUntilFinished) {
@@ -107,7 +105,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 					if (movedDistance.x <= CLICK_IN_BOX_MOVE_TOLERANCE
 							&& movedDistance.y <= CLICK_IN_BOX_MOVE_TOLERANCE
 							&& boxContainsPoint(previousEventCoordinate)) {
-						onLongClickInBox(downToolPositionX, downToolPositionY);
+						onLongClickInBox(touchDownPositionX, touchDownPositionY);
 					}
 				}
 			}.start();

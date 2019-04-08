@@ -116,6 +116,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private int rectangleShrinkingOnHighlight;
 	private CountDownTimer downTimer;
 
+	protected float touchDownPositionX;
+	protected float touchDownPositionY;
+
 	public BaseToolWithRectangleShape(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
@@ -206,6 +209,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		movedDistance.set(0, 0);
 		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		currentAction = getAction(coordinate.x, coordinate.y);
+		touchDownPositionX = toolPosition.x;
+		touchDownPositionY = toolPosition.y;
 		return true;
 	}
 
@@ -251,6 +256,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
 				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 		if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y) {
+			toolPosition.x = touchDownPositionX;
+			toolPosition.y = touchDownPositionY;
 			onClick(coordinate);
 		}
 		return true;
