@@ -129,7 +129,7 @@ public class DefaultCommandFactory implements CommandFactory {
 
 	@Override
 	public Command createPathCommand(Paint paint, Path path) {
-		return new PathCommand(commonFactory.createPaint(paint), commonFactory.createPath(path), commonFactory);
+		return new PathCommand(commonFactory.createPaint(paint), commonFactory.createPath(path));
 	}
 
 	@Override

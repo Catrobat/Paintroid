@@ -22,6 +22,7 @@ package org.catrobat.paintroid.tools.implementation;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.model.LayerModel;
@@ -43,6 +44,14 @@ public class DefaultWorkspace implements Workspace {
 	@Override
 	public boolean contains(PointF point) {
 		return point.x < getWidth() && point.x >= 0 && point.y < getHeight() && point.y >= 0;
+	}
+
+	@Override
+	public boolean intersectsWith(RectF rectangle) {
+		return 0 < rectangle.right
+				&& rectangle.left < getWidth()
+				&& 0 < rectangle.bottom
+				&& rectangle.top < getHeight();
 	}
 
 	@Override

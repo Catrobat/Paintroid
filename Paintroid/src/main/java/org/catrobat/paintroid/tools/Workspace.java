@@ -21,9 +21,12 @@ package org.catrobat.paintroid.tools;
 
 import android.graphics.Bitmap;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 public interface Workspace {
 	boolean contains(PointF point);
+
+	boolean intersectsWith(RectF rectF);
 
 	int getHeight();
 

@@ -52,7 +52,7 @@ public class CursorTool extends BaseToolWithShape {
 
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public Path pathToDraw;
-	private boolean pathInsideBitmap;
+	private boolean pointInsideBitmap;
 	private int cursorToolPrimaryShapeColor;
 	@VisibleForTesting
 	public int cursorToolSecondaryShapeColor;
@@ -69,7 +69,7 @@ public class CursorTool extends BaseToolWithShape {
 		pathToDraw.incReserve(1);
 		cursorToolPrimaryShapeColor = contextCallback.getColor(R.color.pocketpaint_main_cursor_tool_inactive_primary_color);
 		cursorToolSecondaryShapeColor = Color.LTGRAY;
-		pathInsideBitmap = false;
+		pointInsideBitmap = false;
 
 		brushToolOptions.setBrushChangedListener(new CommonBrushChangedListener(this));
 		brushToolOptions.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
@@ -91,9 +91,9 @@ public class CursorTool extends BaseToolWithShape {
 		pathToDraw.moveTo(this.toolPosition.x, this.toolPosition.y);
 		previousEventCoordinate.set(coordinate);
 		movedDistance.set(0, 0);
-		pathInsideBitmap = false;
+		pointInsideBitmap = false;
 
-		pathInsideBitmap = workspace.contains(toolPosition);
+		pointInsideBitmap = workspace.contains(toolPosition);
 		return true;
 	}
 
@@ -105,8 +105,8 @@ public class CursorTool extends BaseToolWithShape {
 		float newCursorPositionX = this.toolPosition.x + vectorCX;
 		float newCursorPositionY = this.toolPosition.y + vectorCY;
 
-		if (!pathInsideBitmap && workspace.contains(toolPosition)) {
-			pathInsideBitmap = true;
+		if (!pointInsideBitmap && workspace.contains(toolPosition)) {
+			pointInsideBitmap = true;
 		}
 
 		PointF cursorSurfacePosition = workspace.getSurfacePointFromCanvasPoint(new PointF(newCursorPositionX, newCursorPositionY));
@@ -157,8 +157,8 @@ public class CursorTool extends BaseToolWithShape {
 	@Override
 	public boolean handleUp(PointF coordinate) {
 
-		if (!pathInsideBitmap && workspace.contains(toolPosition)) {
-			pathInsideBitmap = true;
+		if (!pointInsideBitmap && workspace.contains(toolPosition)) {
+			pointInsideBitmap = true;
 		}
 
 		movedDistance.set(
@@ -298,17 +298,23 @@ public class CursorTool extends BaseToolWithShape {
 
 	protected boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
-		if (!pathInsideBitmap) {
-			resetInternalState(StateChange.RESET_INTERNAL_STATE);
-			return false;
+
+		RectF bounds = new RectF();
+		pathToDraw.computeBounds(bounds, true);
+		bounds.inset(-toolPaint.getStrokeWidth(), -toolPaint.getStrokeWidth());
+
+		if (workspace.intersectsWith(bounds)) {
+			Command command = commandFactory.createPathCommand(toolPaint.getPaint(), pathToDraw);
+			commandManager.addCommand(command);
+			return true;
 		}
-		Command command = commandFactory.createPathCommand(toolPaint.getPaint(), pathToDraw);
-		commandManager.addCommand(command);
-		return true;
+
+		resetInternalState(StateChange.RESET_INTERNAL_STATE);
+		return false;
 	}
 
 	protected boolean addPointCommand(PointF coordinate) {
-		if (!pathInsideBitmap) {
+		if (!pointInsideBitmap) {
 			resetInternalState(StateChange.RESET_INTERNAL_STATE);
 			return false;
 		}

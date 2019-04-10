@@ -30,7 +30,6 @@ import android.graphics.RectF;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.PathCommand;
-import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.model.Layer;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
@@ -73,7 +72,7 @@ public class PathCommandTest {
 		Path pathUnderTest = new Path();
 		pathUnderTest.moveTo(1, 0);
 		pathUnderTest.lineTo(1, canvasBitmapUnderTest.getHeight());
-		commandUnderTest = new PathCommand(paintUnderTest, pathUnderTest, new CommonFactory());
+		commandUnderTest = new PathCommand(paintUnderTest, pathUnderTest);
 	}
 
 	@Test
@@ -86,7 +85,7 @@ public class PathCommandTest {
 		float bottom = canvasBitmapUnderTest.getHeight() + 100;
 		path.addRect(new RectF(left, top, right, bottom), Path.Direction.CW);
 
-		commandUnderTest = new PathCommand(paintUnderTest, path, new CommonFactory());
+		commandUnderTest = new PathCommand(paintUnderTest, path);
 
 		commandUnderTest.run(canvasUnderTest, null);
 	}
