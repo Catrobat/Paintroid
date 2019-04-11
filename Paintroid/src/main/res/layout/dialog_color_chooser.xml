@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/color_chooser_base_layout"
     android:layout_width="match_parent"
@@ -35,10 +35,18 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/pocketpaint_colorAccent"
+                android:text="@string/color_chooser_title"/>
+
             <org.catrobat.paintroid.dialog.colorpicker.ColorPickerView
                 android:id="@+id/color_chooser_color_picker_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -72,6 +80,6 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</FrameLayout>
+</LinearLayout>
 
 

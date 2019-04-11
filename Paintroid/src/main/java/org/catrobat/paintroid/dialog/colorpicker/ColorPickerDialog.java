@@ -101,13 +101,13 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setStyle(DialogFragment.STYLE_NORMAL, R.style.PocketPaintAlertDialog);
+		setStyle(DialogFragment.STYLE_NO_FRAME, R.style.PocketPaintColorChooserDialog);
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.dialog_color_chooser, container);
+		return inflater.inflate(R.layout.dialog_color_chooser, container, false);
 	}
 
 	@Override
