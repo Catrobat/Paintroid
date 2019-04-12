@@ -39,6 +39,7 @@
 package org.catrobat.paintroid.dialog.colorpicker;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -62,7 +63,7 @@ public class ColorPickerView extends LinearLayoutCompat {
 	private HSVSelectorView hsvSelectorView;
 	private TabHost tabHost;
 
-	private int selectedColor;
+	private int selectedColor = Color.BLACK;
 
 	private OnColorChangedListener listener;
 

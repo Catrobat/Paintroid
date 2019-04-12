@@ -295,4 +295,30 @@ public class ColorDialogIntegrationTest {
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS)))
 				.check(matches(isDisplayed()));
 	}
+
+	@Test
+	public void testColorPickerInitializesRgbTabTransparentColor() {
+		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
+		onColorPickerView()
+				.performOpenColorPicker();
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(presetColors.length() - 1);
+		onColorPickerView()
+				.onOkButton()
+				.perform(click());
+		onColorPickerView()
+				.performOpenColorPicker();
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(withId(R.id.color_chooser_rgb_red_value)).check(matches(withText(Integer.toString(Color.red(Color.TRANSPARENT)))));
+		onView(withId(R.id.color_chooser_rgb_green_value)).check(matches(withText(Integer.toString(Color.green(Color.TRANSPARENT)))));
+		onView(withId(R.id.color_chooser_rgb_blue_value)).check(matches(withText(Integer.toString(Color.blue(Color.TRANSPARENT)))));
+		onView(withId(R.id.color_chooser_rgb_alpha_value)).check(matches(
+				withText(
+						Integer.toString(
+								((int) (Color.alpha(Color.TRANSPARENT) / 2.55f))
+						)
+				)
+		));
+		presetColors.recycle();
+	}
 }
