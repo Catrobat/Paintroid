@@ -21,6 +21,7 @@ package org.catrobat.paintroid.ui.tools;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -51,6 +53,7 @@ public class DefaultTextToolOptions implements TextToolOptions {
 	private final ToggleButton italicToggleButton;
 	private final ToggleButton boldToggleButton;
 	private final Spinner textSizeSpinner;
+	private final Button doneButton;
 	private final List<String> fonts;
 
 	public DefaultTextToolOptions(ViewGroup rootView) {
@@ -64,6 +67,7 @@ public class DefaultTextToolOptions implements TextToolOptions {
 		italicToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
 		textSizeSpinner = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
+		doneButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_done_button);
 
 		underlinedToggleButton.setPaintFlags(underlinedToggleButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 		fonts = Arrays.asList(context.getResources().getStringArray(R.array.pocketpaint_main_text_tool_fonts));
@@ -142,6 +146,21 @@ public class DefaultTextToolOptions implements TextToolOptions {
 			}
 		});
 
+		doneButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				hideKeyboard();
+
+				final Handler handler = new Handler();
+				handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						notifyHideToolOptions();
+					}
+				}, 100);
+			}
+		});
+
 		final int[] intSizes = context.getResources().getIntArray(R.array.pocketpaint_text_tool_size_array);
 		ArrayList<String> stringSizes = new ArrayList<>();
 		String pixelString = context.getString(R.string.pixel);
@@ -199,6 +218,12 @@ public class DefaultTextToolOptions implements TextToolOptions {
 	private void notifyTextChanged(String text) {
 		if (callback != null) {
 			callback.setText(text);
+		}
+	}
+
+	private void notifyHideToolOptions() {
+		if (callback != null) {
+			callback.hideToolOptions();
 		}
 	}
 

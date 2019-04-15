@@ -36,5 +36,7 @@ public interface TextToolOptions {
 		void setBold(boolean bold);
 
 		void setTextSize(int size);
+
+		void hideToolOptions();
 	}
 }
