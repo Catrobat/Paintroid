@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import android.app.Activity;
+import android.view.ViewGroup;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandManager;
@@ -31,7 +32,9 @@ import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.BrushToolOptions;
 import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptions;
 
 public class DefaultToolFactory implements ToolFactory {
 
@@ -42,10 +45,11 @@ public class DefaultToolFactory implements ToolFactory {
 		ContextCallback contextCallback = new DefaultContextCallback(activity.getApplicationContext());
 		toolOptionsController.removeToolViews();
 		toolOptionsController.setToolName(toolType.getNameResource());
+		ViewGroup toolSpecificOptionsLayout = toolOptionsController.getToolSpecificOptionsLayout();
 
 		switch (toolType) {
 			case BRUSH:
-				tool = new BrushTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+				tool = new BrushTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			case CURSOR:
 				tool = new CursorTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
@@ -77,7 +81,7 @@ public class DefaultToolFactory implements ToolFactory {
 				tool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			case ERASER:
-				tool = new EraserTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+				tool = new EraserTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			case LINE:
 				tool = new LineTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
@@ -86,11 +90,15 @@ public class DefaultToolFactory implements ToolFactory {
 				tool = new TextTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			default:
-				tool = new BrushTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+				tool = new BrushTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 		}
 		tool.setupToolOptions();
 		toolOptionsController.resetToOrigin();
 		return tool;
+	}
+
+	private BrushToolOptions createBrushToolOptions(ViewGroup toolSpecificOptionsLayout) {
+		return new DefaultBrushToolOptions(toolSpecificOptionsLayout);
 	}
 }

@@ -95,7 +95,7 @@ public class BrushPickerIntegrationTest {
 
 	@Test
 	public void brushPickerDialogDefaultLayoutAndToolChanges() {
-		onView(withId(R.id.pocketpaint_drawer_preview))
+		onView(withId(R.id.pocketpaint_brush_tool_preview))
 				.check(matches(isDisplayed()));
 		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 				.check(matches(isDisplayed()))

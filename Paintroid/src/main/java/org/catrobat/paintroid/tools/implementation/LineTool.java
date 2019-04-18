@@ -28,20 +28,20 @@ import android.graphics.PointF;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.BrushToolOptions;
 import org.catrobat.paintroid.tools.options.ToolOptionsController;
-import org.catrobat.paintroid.ui.tools.DrawerPreview;
+import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptions;
 
 public class LineTool extends BaseTool {
 
 	protected PointF initialEventCoordinate;
 	protected PointF currentCoordinate;
 	protected boolean pathInsideBitmap;
-	private BrushPickerView brushPickerView;
+	private BrushToolOptions brushPickerView;
 
 	public LineTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
@@ -135,14 +135,14 @@ public class LineTool extends BaseTool {
 
 	@Override
 	public void setupToolOptions() {
-		brushPickerView = new BrushPickerView(toolSpecificOptionsLayout);
+		brushPickerView = new DefaultBrushToolOptions(toolSpecificOptionsLayout);
 		brushPickerView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	@Override
 	public void startTool() {
 		super.startTool();
-		brushPickerView.setBrushChangedListener(new BrushPickerView.OnBrushChangedListener() {
+		brushPickerView.setBrushChangedListener(new BrushToolOptions.OnBrushChangedListener() {
 			@Override
 			public void setCap(Cap strokeCap) {
 				changePaintStrokeCap(strokeCap);
@@ -154,7 +154,7 @@ public class LineTool extends BaseTool {
 			}
 		});
 
-		brushPickerView.setDrawerPreviewCallback(new DrawerPreview.Callback() {
+		brushPickerView.setBrushPreviewListener(new BrushToolOptions.OnBrushPreviewListener() {
 			@Override
 			public float getStrokeWidth() {
 				return toolPaint.getStrokeWidth();
@@ -181,6 +181,6 @@ public class LineTool extends BaseTool {
 	public void leaveTool() {
 		super.leaveTool();
 		brushPickerView.setBrushChangedListener(null);
-		brushPickerView.setDrawerPreviewCallback(null);
+		brushPickerView.setBrushPreviewListener(null);
 	}
 }

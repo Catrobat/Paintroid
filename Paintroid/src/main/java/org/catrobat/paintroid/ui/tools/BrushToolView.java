@@ -33,8 +33,10 @@ import android.view.View;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.options.BrushToolOptions;
+import org.catrobat.paintroid.tools.options.BrushToolPreview;
 
-public class DrawerPreview extends View {
+public class BrushToolView extends View implements BrushToolPreview {
 
 	private static final int BORDER = 2;
 
@@ -42,14 +44,14 @@ public class DrawerPreview extends View {
 	private Paint checkeredPattern;
 	private Paint borderPaint;
 	private Path path;
-	private Callback callback;
+	private BrushToolOptions.OnBrushPreviewListener callback;
 
-	public DrawerPreview(Context context) {
+	public BrushToolView(Context context) {
 		super(context);
 		init();
 	}
 
-	public DrawerPreview(Context context, AttributeSet attrs) {
+	public BrushToolView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
 	}
@@ -233,17 +235,8 @@ public class DrawerPreview extends View {
 		setMeasuredDimension(widthSize, (int) (widthSize * .25));
 	}
 
-	public void setCallback(Callback callback) {
+	@Override
+	public void setListener(BrushToolOptions.OnBrushPreviewListener callback) {
 		this.callback = callback;
-	}
-
-	public interface Callback {
-		float getStrokeWidth();
-
-		Paint.Cap getStrokeCap();
-
-		int getColor();
-
-		ToolType getToolType();
 	}
 }

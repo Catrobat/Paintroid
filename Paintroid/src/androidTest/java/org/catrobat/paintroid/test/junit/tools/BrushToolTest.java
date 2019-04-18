@@ -23,17 +23,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.PathCommand;
 import org.catrobat.paintroid.command.implementation.PointCommand;
-import org.catrobat.paintroid.listener.BrushPickerView;
 import org.catrobat.paintroid.test.junit.stubs.PathStub;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.Tool.StateChange;
@@ -42,17 +36,15 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.tools.implementation.BrushTool;
-import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
+import org.catrobat.paintroid.tools.options.BrushToolOptions;
 import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPaintEquals;
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEquals;
@@ -64,40 +56,37 @@ import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.class)
 public class BrushToolTest {
 	private static final float MOVE_TOLERANCE = Constants.MOVE_TOLERANCE;
-
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public MockitoRule mockito = MockitoJUnit.rule();
-
 	@Mock
 	private CommandManager commandManager;
-
-	private BrushTool toolToTest;
-	private Paint paint;
+	@Mock
 	private ToolPaint toolPaint;
+	@Mock
+	private BrushToolOptions brushToolOptions;
+	@Mock
+	private ToolOptionsController toolOptionsController;
+	@Mock
+	private Workspace workspace;
+	@Mock
+	private ContextCallback contextCallback;
 
-	@UiThreadTest
+	private Paint paint;
+	private BrushTool toolToTest;
+
 	@Before
 	public void setUp() {
-		MainActivity activity = activityTestRule.getActivity();
-		Workspace workspace = activity.workspace;
-		toolPaint = activity.toolPaint;
-		ToolOptionsController toolOptionsController = activity.toolOptionsController;
-		ContextCallback contextCallback = new DefaultContextCallback(InstrumentationRegistry.getTargetContext());
-		toolToTest = new BrushTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		toolToTest = new BrushTool(brushToolOptions, contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setStrokeCap(Paint.Cap.ROUND);
 		paint.setStrokeWidth(DefaultToolPaint.STROKE_25);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = toolToTest.getToolType();
@@ -105,19 +94,13 @@ public class BrushToolTest {
 		assertEquals(ToolType.BRUSH, toolType);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldReturnPaint() {
 		toolToTest.setDrawPaint(paint);
 
-		Paint drawPaint = toolPaint.getPaint();
-		assertEquals(paint.getColor(), drawPaint.getColor());
-		assertEquals(paint.getStrokeWidth(), drawPaint.getStrokeWidth(), Double.MIN_VALUE);
-		assertEquals(paint.getStrokeCap(), drawPaint.getStrokeCap());
-		assertEquals(paint.getShader(), drawPaint.getShader());
+		verify(toolPaint).setPaint(paint);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldMovePathOnDownEvent() {
 		PointF event = new PointF(0, 0);
@@ -131,7 +114,6 @@ public class BrushToolTest {
 		verify(stub).moveTo(event.x, event.y);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldNotAddCommandOnDownEvent() {
 		PointF event = new PointF(0, 0);
@@ -142,7 +124,6 @@ public class BrushToolTest {
 		verify(commandManager, never()).addCommand(any(Command.class));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldNotStartPathIfNoCoordinateOnDownEvent() {
 		PathStub pathStub = new PathStub();
@@ -156,7 +137,6 @@ public class BrushToolTest {
 		verify(stub, never()).moveTo(anyFloat(), anyFloat());
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldMovePathOnMoveEvent() {
 		PointF event1 = new PointF(0, 0);
@@ -173,7 +153,6 @@ public class BrushToolTest {
 		verify(stub).quadTo(event1.x, event1.y, event2.x, event2.y);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldNotAddCommandOnMoveEvent() {
 		PointF event = new PointF(0, 0);
@@ -185,7 +164,6 @@ public class BrushToolTest {
 		verify(commandManager, never()).addCommand(any(Command.class));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldNotMovePathIfNoCoordinateOnMoveEvent() {
 		PointF event = new PointF(0, 0);
@@ -199,10 +177,10 @@ public class BrushToolTest {
 		verify(pathStub.getStub(), never()).quadTo(anyFloat(), anyFloat(), anyFloat(), anyFloat());
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldMovePathOnUpEvent() {
-
+		when(workspace.contains(any(PointF.class))).thenReturn(true);
+		when(toolPaint.getPaint()).thenReturn(paint);
 		PointF event1 = new PointF(0, 0);
 		PointF event2 = new PointF(MOVE_TOLERANCE, MOVE_TOLERANCE);
 		PointF event3 = new PointF(MOVE_TOLERANCE * 2, -MOVE_TOLERANCE);
@@ -220,7 +198,6 @@ public class BrushToolTest {
 		verify(stub).lineTo(event3.x, event3.y);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldNotMovePathIfNoCoordinateOnUpEvent() {
 		PointF event = new PointF(0, 0);
@@ -235,9 +212,10 @@ public class BrushToolTest {
 		verify(pathStub.getStub(), never()).lineTo(anyFloat(), anyFloat());
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldAddCommandOnUpEvent() {
+		when(workspace.contains(any(PointF.class))).thenReturn(true);
+		when(toolPaint.getPaint()).thenReturn(paint);
 		PointF event = new PointF(0, 0);
 		PointF event1 = new PointF(MOVE_TOLERANCE + 0.1f, 0);
 		PointF event2 = new PointF(MOVE_TOLERANCE + 2, MOVE_TOLERANCE + 2);
@@ -256,7 +234,6 @@ public class BrushToolTest {
 		assertPaintEquals(this.paint, command.paint);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldNotAddCommandIfNoCoordinateOnUpEvent() {
 		PointF event = new PointF(0, 0);
@@ -269,33 +246,35 @@ public class BrushToolTest {
 		verify(commandManager, never()).addCommand(any(Command.class));
 	}
 
-	@UiThreadTest
 	@Test
-	public void testShouldAddCommandOnTabEvent() {
-		PointF tab = new PointF(5, 5);
+	public void testShouldAddCommandOnTapEvent() {
+		when(workspace.contains(any(PointF.class))).thenReturn(true);
+		when(toolPaint.getPaint()).thenReturn(paint);
+		PointF tap = new PointF(5, 5);
 
-		boolean returnValue1 = toolToTest.handleDown(tab);
-		boolean returnValue2 = toolToTest.handleUp(tab);
+		boolean returnValue1 = toolToTest.handleDown(tap);
+		boolean returnValue2 = toolToTest.handleUp(tap);
 
 		assertTrue(returnValue1);
 		assertTrue(returnValue2);
 		ArgumentCaptor<PointCommand> argument = ArgumentCaptor.forClass(PointCommand.class);
 		verify(commandManager).addCommand(argument.capture());
 		PointCommand command = argument.getValue();
-		assertEquals(tab, command.point);
-		assertPaintEquals(this.paint, command.paint);
+		assertEquals(tap, command.point);
+		assertPaintEquals(paint, command.paint);
 	}
 
-	@UiThreadTest
 	@Test
-	public void testShouldAddCommandOnTabWithinTolleranceEvent() {
-		PointF tab1 = new PointF(0, 0);
-		PointF tab2 = new PointF(MOVE_TOLERANCE - 0.1f, 0);
-		PointF tab3 = new PointF(MOVE_TOLERANCE - 0.1f, MOVE_TOLERANCE - 0.1f);
+	public void testShouldAddCommandOnTapWithinToleranceEvent() {
+		PointF tap1 = new PointF(0, 0);
+		PointF tap2 = new PointF(MOVE_TOLERANCE - 0.1f, 0);
+		PointF tap3 = new PointF(MOVE_TOLERANCE - 0.1f, MOVE_TOLERANCE - 0.1f);
+		when(workspace.contains(any(PointF.class))).thenReturn(true);
+		when(toolPaint.getPaint()).thenReturn(paint);
 
-		boolean returnValue1 = toolToTest.handleDown(tab1);
-		boolean returnValue2 = toolToTest.handleMove(tab2);
-		boolean returnValue3 = toolToTest.handleUp(tab3);
+		boolean returnValue1 = toolToTest.handleDown(tap1);
+		boolean returnValue2 = toolToTest.handleMove(tap2);
+		boolean returnValue3 = toolToTest.handleUp(tap3);
 
 		assertTrue(returnValue1);
 		assertTrue(returnValue2);
@@ -303,29 +282,29 @@ public class BrushToolTest {
 		ArgumentCaptor<PointCommand> argument = ArgumentCaptor.forClass(PointCommand.class);
 		verify(commandManager).addCommand(argument.capture());
 		PointCommand command = argument.getValue();
-		assertEquals(tab1, command.point);
-		assertPaintEquals(this.paint, command.paint);
+		assertEquals(tap1, command.point);
+		assertPaintEquals(paint, command.paint);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldAddPathCommandOnMultipleMovesWithinToleranceEvent() {
-		PointF tab1 = new PointF(7, 7);
-		PointF tab2 = new PointF(7, MOVE_TOLERANCE - 0.1f);
-		PointF tab3 = new PointF(7, 7);
-		PointF tab4 = new PointF(7, -MOVE_TOLERANCE + 0.1f);
-		PointF tab5 = new PointF(7, 7);
+		when(workspace.contains(any(PointF.class))).thenReturn(true);
+		when(toolPaint.getPaint()).thenReturn(paint);
+		PointF tap1 = new PointF(7, 7);
+		PointF tap2 = new PointF(7, MOVE_TOLERANCE - 0.1f);
+		PointF tap3 = new PointF(7, 7);
+		PointF tap4 = new PointF(7, -MOVE_TOLERANCE + 0.1f);
+		PointF tap5 = new PointF(7, 7);
 
-		toolToTest.handleDown(tab1);
-		toolToTest.handleMove(tab2);
-		toolToTest.handleMove(tab3);
-		toolToTest.handleMove(tab4);
-		toolToTest.handleUp(tab5);
+		toolToTest.handleDown(tap1);
+		toolToTest.handleMove(tap2);
+		toolToTest.handleMove(tap3);
+		toolToTest.handleMove(tap4);
+		toolToTest.handleUp(tap5);
 
 		verify(commandManager).addCommand(isA(PathCommand.class));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldRewindPathOnAppliedToBitmap() {
 		PathStub pathStub = new PathStub();
@@ -336,23 +315,17 @@ public class BrushToolTest {
 		verify(pathStub.getStub()).rewind();
 	}
 
-	@UiThreadTest
-	@Test
-	public void testShouldReturnBlackForForTopParameterButton() {
-		assertEquals(Color.BLACK, toolPaint.getColor());
-	}
-
-	@UiThreadTest
 	@Test
 	public void testShouldChangePaintFromBrushPicker() {
-		toolToTest.setupToolOptions();
-		toolToTest.startTool();
-		toolToTest.setDrawPaint(paint);
-		BrushPickerView brushPicker = toolToTest.brushPickerView;
-		BrushPickerView.OnBrushChangedListener onBrushChangedListener = brushPicker.brushChangedListener;
+		ArgumentCaptor<BrushToolOptions.OnBrushChangedListener> argumentCaptor =
+				ArgumentCaptor.forClass(BrushToolOptions.OnBrushChangedListener.class);
+		verify(brushToolOptions).setBrushChangedListener(argumentCaptor.capture());
+		BrushToolOptions.OnBrushChangedListener onBrushChangedListener = argumentCaptor.getValue();
+
 		onBrushChangedListener.setCap(Paint.Cap.ROUND);
 		onBrushChangedListener.setStrokeWidth(15);
-		assertEquals(Paint.Cap.ROUND, toolToTest.getDrawPaint().getStrokeCap());
-		assertEquals(15f, toolToTest.getDrawPaint().getStrokeWidth(), Double.MIN_VALUE);
+
+		verify(toolPaint).setStrokeCap(Paint.Cap.ROUND);
+		verify(toolPaint).setStrokeWidth(15f);
 	}
 }

@@ -17,52 +17,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools.implementation;
+package org.catrobat.paintroid.tools.common;
 
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.annotation.ColorInt;
 
-import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.BrushToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
-public class EraserTool extends BrushTool {
+public class CommonBrushPreviewListener implements BrushToolOptions.OnBrushPreviewListener {
+	private ToolType toolType;
+	private ToolPaint toolPaint;
 
-	@ColorInt
-	private int previousColor = Color.BLACK;
-
-	public EraserTool(BrushToolOptions brushToolOptions, ContextCallback contextCallback,
-			ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace,
-			CommandManager commandManager) {
-		super(brushToolOptions, contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+	public CommonBrushPreviewListener(ToolPaint toolPaint, ToolType toolType) {
+		this.toolType = toolType;
+		this.toolPaint = toolPaint;
 	}
 
 	@Override
-	public Paint getDrawPaint() {
-		Paint paint = super.getDrawPaint();
-		paint.setColor(previousColor);
-		return paint;
+	public float getStrokeWidth() {
+		return toolPaint.getStrokeWidth();
 	}
 
 	@Override
-	public void setDrawPaint(Paint paint) {
-		super.setDrawPaint(paint);
-		previousColor = paint.getColor();
+	public Paint.Cap getStrokeCap() {
+		return toolPaint.getStrokeCap();
 	}
 
 	@Override
-	public void changePaintColor(int color) {
-		super.changePaintColor(color);
-		previousColor = color;
+	public int getColor() {
+		return toolPaint.getColor();
 	}
 
 	@Override
 	public ToolType getToolType() {
-		return ToolType.ERASER;
+		return toolType;
 	}
 }
