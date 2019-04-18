@@ -20,7 +20,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Pintar</string>
+    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint</string>
     <string name="button_brush">Pincel</string>
     <string name="button_cursor">Cursor</string>
     <string name="button_pipette">Pipeta</string>
@@ -122,10 +122,10 @@
     <string name="lets_go">Vamos</string>
     <string name="next">Siguiente</string>
     <string name="skip">Ignorar</string>
-    <string name="pocketpaint_about_title">About</string>
+    <string name="pocketpaint_about_title">Acerca de</string>
     <string name="pocketpaint_about_version">Version %s</string>
     <string name="pocketpaint_about_license">GNU Affero General Public License, v3</string>
     <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
-    <string name="pocketpaint_about_url_license_description">Pocket Paint Source Code License</string>
+    <string name="pocketpaint_about_url_license_description">Licencia del código fuente de Pocket Paint</string>
     <string name="pocketpaint_about_url_catrobat_description">Acerca de Catrobat</string>
 </resources>
