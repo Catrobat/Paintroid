@@ -24,30 +24,24 @@ import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.VisibleForTesting;
 import android.view.ViewConfiguration;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.helper.Conversion;
 import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
-	public static final String BUNDLE_TOOL_READY_FOR_PASTE = "BUNDLE_TOOL_READY_FOR_PASTE";
-	private static final boolean ROTATION_ENABLED = true;
+	private static final String BUNDLE_TOOL_READY_FOR_PASTE = "BUNDLE_TOOL_READY_FOR_PASTE";
 	private static final String BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP";
-	protected static CreateAndSetBitmapAsyncTask createAndSetBitmapAsync = null;
+	private static final boolean ROTATION_ENABLED = true;
 	protected boolean readyForPaste;
 	protected boolean longClickAllowed = true;
 
@@ -62,10 +56,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 		longPressTimeout = ViewConfiguration.getLongPressTimeout();
 		setRotationEnabled(ROTATION_ENABLED);
 
-		setBitmap(Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
-				Config.ARGB_8888));
-
-		createAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
+		setBitmap(Bitmap.createBitmap((int) boxWidth, (int) boxHeight, Config.ARGB_8888));
 	}
 
 	public void setBitmapFromFile(Bitmap bitmap) {
@@ -73,70 +64,26 @@ public class StampTool extends BaseToolWithRectangleShape {
 		readyForPaste = true;
 	}
 
-	@VisibleForTesting
-	public void createAndSetBitmap() {
-		float boxRotation = (this.boxRotation % 90 + 90) % 90;
-
-		double rotationRadians = Math.toRadians(boxRotation);
-		double boundingBoxX = Math.abs(boxWidth * Math.sin(rotationRadians)
-				+ boxHeight * Math.cos(rotationRadians));
-
-		double boundingBoxY = Math.abs(boxWidth * Math.cos(rotationRadians)
-				+ boxHeight * Math.sin(rotationRadians));
-
-		double distanceToMassCentre = Math.hypot(
-				toolPosition.x + boundingBoxX / 2,
-				toolPosition.y + boundingBoxY / 2);
-
-		Bitmap tmpBitmap = Bitmap.createBitmap((int) distanceToMassCentre * 2,
-				(int) distanceToMassCentre * 2, Config.ARGB_8888);
-
-		Canvas tmpCanvas = new Canvas(tmpBitmap);
-
-		Rect rectSource = new Rect((int) toolPosition.x
-				- (int) distanceToMassCentre, (int) toolPosition.y
-				- (int) distanceToMassCentre, (int) toolPosition.x
-				+ (int) distanceToMassCentre, (int) toolPosition.y
-				+ (int) distanceToMassCentre);
-
-		Rect rectDest = new Rect(0, 0, (int) distanceToMassCentre * 2,
-				(int) distanceToMassCentre * 2);
-
-		tmpCanvas.save();
-		tmpCanvas.rotate(-this.boxRotation, (float) distanceToMassCentre,
-				(float) distanceToMassCentre);
-
-		Bitmap copyOfCurrentDrawingSurfaceBitmap = workspace.getBitmapOfCurrentLayer();
-		if (copyOfCurrentDrawingSurfaceBitmap == null || copyOfCurrentDrawingSurfaceBitmap.isRecycled()) {
-			return;
+	public void copyBoxContent() {
+		if (isDrawingBitmapReusable()) {
+			drawingBitmap.eraseColor(Color.TRANSPARENT);
+		} else {
+			drawingBitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight, Config.ARGB_8888);
 		}
-		tmpCanvas.drawBitmap(copyOfCurrentDrawingSurfaceBitmap, rectSource,
-				rectDest, null);
-		copyOfCurrentDrawingSurfaceBitmap.recycle();
 
-		tmpCanvas.restore();
+		Bitmap layerBitmap = workspace.getBitmapOfAllLayers();
 
-		// now get tmp back to bitmap, rotate and clip
-		if (canUseOldDrawingBitmap()) {
-			setBitmap(drawingBitmap = Bitmap.createBitmap((int) boxWidth,
-					(int) boxHeight, Config.ARGB_8888));
-		}
-		Canvas canvasDraw = new Canvas(drawingBitmap);
-
-		double left = distanceToMassCentre - boxWidth / 2;
-		double top = distanceToMassCentre - boxHeight / 2;
-		double right = distanceToMassCentre * 2 - left;
-		double bottom = distanceToMassCentre * 2 - top;
-		Rect rectSourceResult = new Rect((int) left, (int) top, (int) right,
-				(int) bottom);
-
-		Rect rectDestResult = new Rect(0, 0, (int) boxWidth, (int) boxHeight);
-
-		canvasDraw.drawBitmap(tmpBitmap, rectSourceResult, rectDestResult, null);
-
-		tmpBitmap.recycle();
+		Canvas canvas = new Canvas(drawingBitmap);
+		canvas.translate(-toolPosition.x + boxWidth / 2, -toolPosition.y + boxHeight / 2);
+		canvas.rotate(-boxRotation, toolPosition.x, toolPosition.y);
+		canvas.drawBitmap(layerBitmap, 0, 0, null);
 
 		readyForPaste = true;
+	}
+
+	private void pasteBoxContent() {
+		Command command = commandFactory.createStampCommand(drawingBitmap, toolPosition, boxWidth, boxHeight, boxRotation);
+		commandManager.addCommand(command);
 	}
 
 	@Override
@@ -150,6 +97,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 			downTimer = new CountDownTimer(longPressTimeout, longPressTimeout * 2) {
 				float downToolPositionX = toolPosition.x;
 				float downToolPositionY = toolPosition.y;
+
 				@Override
 				public void onTick(long millisUntilFinished) {
 				}
@@ -158,7 +106,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 				public void onFinish() {
 					if (movedDistance.x <= CLICK_IN_BOX_MOVE_TOLERANCE
 							&& movedDistance.y <= CLICK_IN_BOX_MOVE_TOLERANCE
-							&& isCoordinateInsideBox(previousEventCoordinate)) {
+							&& boxContainsPoint(previousEventCoordinate)) {
 						onLongClickInBox(downToolPositionX, downToolPositionY);
 					}
 				}
@@ -193,10 +141,10 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	@Override
 	protected void onClickInBox() {
-		if (!readyForPaste) {
+		if (!readyForPaste || drawingBitmap == null) {
 			contextCallback.showNotification(R.string.stamp_tool_copy_hint);
-		} else if (drawingBitmap != null && !drawingBitmap.isRecycled()) {
-			paste();
+		} else if (boxIntersectsWorkspace()) {
+			pasteBoxContent();
 			highlightBox();
 		}
 	}
@@ -206,29 +154,9 @@ public class StampTool extends BaseToolWithRectangleShape {
 		highlightBoxWhenClickInBox(true);
 		toolPosition.set(toolPositionX, toolPositionY);
 		workspace.invalidate();
-		copy();
-	}
 
-	private void copy() {
-		if (toolPosition.x - boxWidth / 2 < workspace.getWidth()
-				&& toolPosition.y - boxHeight / 2 < workspace.getHeight()
-				&& toolPosition.x + boxWidth / 2 >= 0
-				&& toolPosition.y + boxHeight / 2 >= 0
-				&& createAndSetBitmapAsync.getStatus() != AsyncTask.Status.RUNNING) {
-
-			createAndSetBitmapAsync = new CreateAndSetBitmapAsyncTask();
-			createAndSetBitmapAsync.execute();
-		}
-	}
-
-	private void paste() {
-		if (toolPosition.x - boxWidth / 2 < workspace.getWidth()
-				&& toolPosition.y - boxHeight / 2 < workspace.getHeight()
-				&& toolPosition.x + boxWidth / 2 >= 0
-				&& toolPosition.y + boxHeight / 2 >= 0) {
-
-			Command command = new StampCommand(drawingBitmap, Conversion.toPoint(toolPosition), boxWidth, boxHeight, boxRotation);
-			commandManager.addCommand(command);
+		if (boxIntersectsWorkspace()) {
+			copyBoxContent();
 		}
 	}
 
@@ -253,27 +181,9 @@ public class StampTool extends BaseToolWithRectangleShape {
 		}
 	}
 
-	private boolean canUseOldDrawingBitmap() {
-		if (drawingBitmap != null && !drawingBitmap.isRecycled()
+	private boolean isDrawingBitmapReusable() {
+		return drawingBitmap != null
 				&& drawingBitmap.getWidth() == (int) boxWidth
-				&& drawingBitmap.getHeight() == (int) boxHeight) {
-			drawingBitmap.eraseColor(Color.TRANSPARENT);
-			return false;
-		}
-		return true;
-	}
-
-	protected class CreateAndSetBitmapAsyncTask extends
-			AsyncTask<Void, Integer, Void> {
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			createAndSetBitmap();
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void aVoid) {
-			workspace.invalidate();
-		}
+				&& drawingBitmap.getHeight() == (int) boxHeight;
 	}
 }

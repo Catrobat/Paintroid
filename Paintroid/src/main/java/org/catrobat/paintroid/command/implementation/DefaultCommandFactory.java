@@ -31,6 +31,7 @@ import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
 import org.catrobat.paintroid.common.CommonFactory;
+import org.catrobat.paintroid.tools.helper.Conversion;
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory;
 
 import static android.graphics.Bitmap.Config.ARGB_8888;
@@ -136,5 +137,10 @@ public class DefaultCommandFactory implements CommandFactory {
 		return new TextToolCommand(multilineText, commonFactory.createPaint(textPaint),
 				boxOffset, boxWidth, boxHeight, commonFactory.createPointF(toolPosition),
 				boxRotation);
+	}
+
+	@Override
+	public Command createStampCommand(Bitmap bitmap, PointF toolPosition, float width, float height, float rotation) {
+		return new StampCommand(bitmap, Conversion.toPoint(toolPosition), width, height, rotation);
 	}
 }
