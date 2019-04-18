@@ -479,4 +479,9 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			}
 		});
 	}
+
+	@Override
+	protected void onClick(PointF coordinate) {
+		onClickInBox();
+	}
 }
