@@ -150,4 +150,6 @@
     <string name="pocketpaint_about_url_catrobat_description">About Catrobat</string>
     <string name="pocketpaint_about_url_license" translatable="false">&lt;a href=\"http://developer.catrobat.org/licenses\"&gt;%s&lt;/a&gt;</string>
     <string name="pocketpaint_about_url_catrobat" translatable="false">&lt;a href=\"http://catrobat.org/\"&gt;%s&lt;/a&gt;</string>
+
+    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
 </resources>

@@ -26,7 +26,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="${appName}"
         android:extractNativeLibs="false"
-        android:resizeableActivity="false"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
         <activity

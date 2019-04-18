@@ -30,6 +30,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.iotasks.CreateFileAsync;
 import org.catrobat.paintroid.iotasks.LoadImageAsync;
@@ -42,13 +43,13 @@ public interface MainActivityContracts {
 	interface Navigator {
 		void showColorPickerDialog();
 
-		void startLoadImageActivity(int requestCode);
+		void startLoadImageActivity(@ActivityRequestCode int requestCode);
 
-		void startImportImageActivity(int requestCode);
+		void startImportImageActivity(@ActivityRequestCode int requestCode);
 
 		void showAboutDialog();
 
-		void startWelcomeActivity();
+		void startWelcomeActivity(@ActivityRequestCode int requestCode);
 
 		void showIndeterminateProgressDialog();
 
@@ -71,8 +72,6 @@ public interface MainActivityContracts {
 		boolean doIHavePermission(String permission);
 
 		void finishActivity();
-
-		void recreateActivity();
 
 		void showSaveBeforeReturnToCatroidDialog();
 

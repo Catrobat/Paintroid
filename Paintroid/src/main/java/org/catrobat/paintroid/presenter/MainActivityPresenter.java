@@ -83,10 +83,10 @@ import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXT
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LANGUAGE;
+import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOAD_NEW;
@@ -227,7 +227,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void showHelpClicked() {
-		navigator.startWelcomeActivity();
+		navigator.startWelcomeActivity(REQUEST_CODE_INTRO);
 	}
 
 	@Override
@@ -262,30 +262,30 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void handleActivityResult(@ActivityRequestCode int requestCode, int resultCode, Intent data) {
-		if (resultCode != Activity.RESULT_OK) {
-			Log.d(MainActivity.TAG, "handleActivityResult: result not ok, most likely a dialog has been canceled");
-			return;
-		}
-
 		DisplayMetrics metrics = view.getDisplayMetrics();
 		int maxWidth = metrics.widthPixels;
 		int maxHeight = metrics.heightPixels;
 		switch (requestCode) {
 			case REQUEST_CODE_IMPORTPNG:
+				if (resultCode != Activity.RESULT_OK) {
+					return;
+				}
 				Uri selectedGalleryImageUri = data.getData();
 				Tool tool = toolFactory.createTool(ToolType.IMPORTPNG, toolOptionsController,
 						(Activity) view, commandManager, workspace, toolPaint);
 				switchTool(tool);
 				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, maxWidth, maxHeight, selectedGalleryImageUri);
 				break;
-			case REQUEST_CODE_FINISH:
-				navigator.finishActivity();
-				break;
-			case REQUEST_CODE_LANGUAGE:
-				navigator.recreateActivity();
-				break;
 			case REQUEST_CODE_LOAD_PICTURE:
+				if (resultCode != Activity.RESULT_OK) {
+					return;
+				}
 				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, maxWidth, maxHeight, data.getData());
+				break;
+			case REQUEST_CODE_INTRO:
+				if (resultCode == RESULT_INTRO_MW_NOT_SUPPORTED) {
+					navigator.showToast(R.string.pocketpaint_intro_split_screen_not_supported, Toast.LENGTH_LONG);
+				}
 				break;
 			default:
 				view.superHandleActivityResult(requestCode, resultCode, data);
