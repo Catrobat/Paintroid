@@ -65,7 +65,7 @@
     <string name="closing_security_question">Salvare le modifiche?</string>
     <string name="closing_catroid_security_question_title">Torna al progetto</string>
     <string name="menu_new_image">Nuova immagine</string>
-    <string name="menu_discard_image">Discard image</string>
+    <string name="menu_discard_image">Elimina immagine</string>
     <string name="menu_load_image">Carica immagine</string>
     <string name="menu_save_image">Salva immagine</string>
     <string name="menu_save_copy">Salva copia</string>
