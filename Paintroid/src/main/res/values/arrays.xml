@@ -44,9 +44,9 @@
 
     <!-- PocketPaint font chooser options -->
     <string-array name="pocketpaint_main_text_tool_fonts">
+        <item>@string/text_tool_dialog_font_sans_serif</item>
         <item>@string/text_tool_dialog_font_monospace</item>
         <item>@string/text_tool_dialog_font_serif</item>
-        <item>@string/text_tool_dialog_font_sans_serif</item>
         <item>@string/text_tool_dialog_font_dubai</item>
         <item>@string/text_tool_dialog_font_arabic_stc</item>
     </string-array>
