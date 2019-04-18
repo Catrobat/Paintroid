@@ -104,7 +104,7 @@
 
     <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
 
-    <string name="transform_tool_auto_crop_text">crop</string>
+    <string name="transform_tool_auto_crop_text">crop/enlarge</string>
     <string name="transform_width_text">Width</string>
     <string name="transform_height_text">Height</string>
     <string name="pixel">px</string>
