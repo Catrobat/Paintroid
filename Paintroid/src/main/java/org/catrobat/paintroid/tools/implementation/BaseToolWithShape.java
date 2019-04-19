@@ -29,7 +29,6 @@ import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolWithShape;
@@ -58,10 +57,7 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 
 		primaryShapeColor = contextCallback.getColor(R.color.pocketpaint_main_rectangle_tool_primary_color);
 		secondaryShapeColor = contextCallback.getColor(R.color.pocketpaint_colorAccent);
-		float actionBarHeight = Constants.ACTION_BAR_HEIGHT * metrics.density;
-		PointF surfaceToolPosition = new PointF(metrics.widthPixels / 2f, metrics.heightPixels
-				/ 2f - actionBarHeight);
-		toolPosition = workspace.getCanvasPointFromSurfacePoint(surfaceToolPosition);
+		toolPosition = new PointF(workspace.getWidth() / 2f, workspace.getHeight() / 2f);
 		linePaint = new Paint();
 		linePaint.setColor(primaryShapeColor);
 	}
@@ -70,8 +66,7 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	public abstract void drawShape(Canvas canvas);
 
 	float getStrokeWidthForZoom(float defaultStrokeWidth, float minStrokeWidth, float maxStrokeWidth) {
-		float strokeWidth = (defaultStrokeWidth * metrics.density)
-				/ workspace.getScale();
+		float strokeWidth = (defaultStrokeWidth * metrics.density) / workspace.getScale();
 		return Math.min(maxStrokeWidth, Math.max(minStrokeWidth, strokeWidth));
 	}
 

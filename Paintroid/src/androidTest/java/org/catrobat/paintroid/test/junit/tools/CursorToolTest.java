@@ -23,12 +23,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.PointCommand;
@@ -39,19 +34,18 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
+import org.catrobat.paintroid.tools.options.BrushToolOptions;
 import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,35 +53,36 @@ import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.class)
 public class CursorToolTest {
 	private static final float MOVE_TOLERANCE = Constants.MOVE_TOLERANCE;
-
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public MockitoRule mockito = MockitoJUnit.rule();
-
 	@Mock
 	private CommandManager commandManager;
+	@Mock
+	private ToolPaint toolPaint;
+	@Mock
+	private Workspace workspace;
+	@Mock
+	private BrushToolOptions brushToolOptions;
+	@Mock
+	private ToolOptionsController toolOptionsController;
+	@Mock
+	private ContextCallback contextCallback;
 
 	private CursorTool toolToTest;
-	private ToolPaint toolPaint;
 
-	@UiThreadTest
 	@Before
 	public void setUp() {
-		MainActivity activity = activityTestRule.getActivity();
-		Workspace workspace = activity.workspace;
-		toolPaint = activity.toolPaint;
-		ToolOptionsController toolOptionsController = activity.toolOptionsController;
-		ContextCallback contextCallback = new DefaultContextCallback(InstrumentationRegistry.getTargetContext());
-		toolToTest = new CursorTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		Paint paint = new Paint();
+		when(toolPaint.getPaint()).thenReturn(paint);
+		when(workspace.getHeight()).thenReturn(1920);
+		when(workspace.getWidth()).thenReturn(1080);
+
+		toolToTest = new CursorTool(brushToolOptions, contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
 		ToolType toolType = toolToTest.getToolType();
@@ -95,10 +90,10 @@ public class CursorToolTest {
 		assertEquals(ToolType.CURSOR, toolType);
 	}
 
-	@UiThreadTest
 	@Test
-	public void testShouldActivateCursorOnTabEvent() {
+	public void testShouldActivateCursorOnTapEvent() {
 		PointF point = new PointF(5, 5);
+		when(workspace.contains(any(PointF.class))).thenReturn(true);
 
 		assertTrue(toolToTest.handleDown(point));
 		assertTrue(toolToTest.handleUp(point));
@@ -107,9 +102,9 @@ public class CursorToolTest {
 		assertTrue(toolToTest.toolInDrawMode);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldActivateCursorOnTapEventOutsideDrawingSurface() {
+		when(workspace.contains(toolToTest.toolPosition)).thenReturn(true);
 		PointF point = new PointF(-5, -5);
 
 		assertTrue(toolToTest.handleDown(point));
@@ -119,9 +114,8 @@ public class CursorToolTest {
 		assertTrue(toolToTest.toolInDrawMode);
 	}
 
-	@UiThreadTest
 	@Test
-	public void testShouldNotActivateCursorOnTabEvent() {
+	public void testShouldNotActivateCursorOnTapEvent() {
 		PointF pointDown = new PointF(0, 0);
 		PointF pointUp = new PointF(pointDown.x + MOVE_TOLERANCE + 1, pointDown.y + MOVE_TOLERANCE + 1);
 
@@ -161,9 +155,19 @@ public class CursorToolTest {
 		assertFalse(toolToTest.toolInDrawMode);
 	}
 
-	@UiThreadTest
+	private static PointF copyPointF(PointF point) {
+		return new PointF(point.x, point.y);
+	}
+
 	@Test
 	public void testShouldMovePathOnUpEvent() {
+		when(workspace.getSurfacePointFromCanvasPoint(any(PointF.class))).thenAnswer(new Answer<PointF>() {
+			@Override
+			public PointF answer(InvocationOnMock invocation) {
+				return copyPointF((PointF) invocation.getArgument(0));
+			}
+		});
+
 		PointF event1 = new PointF(0, 0);
 		PointF event2 = new PointF(MOVE_TOLERANCE, MOVE_TOLERANCE);
 		PointF event3 = new PointF(MOVE_TOLERANCE * 2, -MOVE_TOLERANCE);
@@ -206,63 +210,47 @@ public class CursorToolTest {
 		verify(stub).lineTo(testCursorPosition.x, testCursorPosition.y);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldCheckIfColorChangesIfToolIsActive() {
+		when(workspace.contains(toolToTest.toolPosition)).thenReturn(true);
+		when(toolPaint.getColor()).thenReturn(Color.RED);
 
-		boolean checkIfInDrawMode = toolToTest.toolInDrawMode;
-		assertFalse(checkIfInDrawMode);
+		assertFalse(toolToTest.toolInDrawMode);
 
 		PointF point = new PointF(200, 200);
 		toolToTest.handleDown(point);
 		toolToTest.handleUp(point);
 
-		checkIfInDrawMode = toolToTest.toolInDrawMode;
-		assertTrue(checkIfInDrawMode);
-		Paint testmBitmapPaint = toolPaint.getPaint();
-		int testmSecondaryShapeColor = toolToTest.cursorToolSecondaryShapeColor;
-
-		assertEquals(testmBitmapPaint.getColor(), testmSecondaryShapeColor);
+		assertTrue(toolToTest.toolInDrawMode);
+		assertEquals(Color.RED, toolToTest.cursorToolSecondaryShapeColor);
 
 		toolToTest.handleDown(point);
 		toolToTest.handleUp(point);
 
-		checkIfInDrawMode = toolToTest.toolInDrawMode;
-		assertFalse(checkIfInDrawMode);
-		testmBitmapPaint = toolPaint.getPaint();
-		testmSecondaryShapeColor = toolToTest.cursorToolSecondaryShapeColor;
-		assertNotEquals(testmBitmapPaint.getColor(), testmSecondaryShapeColor);
+		assertFalse(toolToTest.toolInDrawMode);
+		assertEquals(Color.LTGRAY, toolToTest.cursorToolSecondaryShapeColor);
 
-		toolToTest.changePaintColor(Color.GREEN);
+		when(toolPaint.getColor()).thenReturn(Color.GREEN);
 		toolToTest.handleDown(point);
 		toolToTest.handleUp(point);
 
-		checkIfInDrawMode = toolToTest.toolInDrawMode;
-		assertTrue(checkIfInDrawMode);
-		Paint testmBitmapPaint2 = toolPaint.getPaint();
-		int testmSecondaryShapeColor2 = toolToTest.cursorToolSecondaryShapeColor;
-		assertEquals(testmBitmapPaint2.getColor(), testmSecondaryShapeColor2);
+		assertTrue(toolToTest.toolInDrawMode);
+		assertEquals(Color.GREEN, toolToTest.cursorToolSecondaryShapeColor);
 
 		toolToTest.handleDown(point);
 		toolToTest.handleUp(point);
 
-		checkIfInDrawMode = toolToTest.toolInDrawMode;
-		assertFalse(checkIfInDrawMode);
-		testmBitmapPaint2 = toolPaint.getPaint();
-		testmSecondaryShapeColor2 = toolToTest.cursorToolSecondaryShapeColor;
-		assertNotEquals(testmBitmapPaint2.getColor(), testmSecondaryShapeColor2);
+		assertFalse(toolToTest.toolInDrawMode);
+		assertEquals(Color.LTGRAY, toolToTest.cursorToolSecondaryShapeColor);
 
 		// test if color also changes if cursor already active
 		toolToTest.handleDown(point);
 		toolToTest.handleUp(point);
-		checkIfInDrawMode = toolToTest.toolInDrawMode;
-		assertTrue(checkIfInDrawMode);
+		assertTrue(toolToTest.toolInDrawMode);
 
+		when(toolPaint.getColor()).thenReturn(Color.CYAN);
 		toolToTest.changePaintColor(Color.CYAN);
 
-		Paint testmBitmapPaint3 = toolPaint.getPaint();
-		int testmSecondaryShapeColor3 = toolToTest.cursorToolSecondaryShapeColor;
-		assertEquals("If cursor already active and color gets changed, cursortool should change color immediately",
-				testmBitmapPaint3.getColor(), testmSecondaryShapeColor3);
+		assertEquals(Color.CYAN, toolToTest.cursorToolSecondaryShapeColor);
 	}
 }
