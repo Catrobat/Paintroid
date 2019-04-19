@@ -21,8 +21,11 @@ package org.catrobat.paintroid.dialog.colorpicker;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,6 +33,8 @@ import android.widget.TextView;
 import org.catrobat.paintroid.R;
 
 import java.util.Locale;
+
+import static org.catrobat.paintroid.common.Constants.NOT_A_HEX_VALUE;
 
 public class RgbSelectorView extends LinearLayout {
 
@@ -41,6 +46,7 @@ public class RgbSelectorView extends LinearLayout {
 	private TextView textViewGreen;
 	private TextView textViewBlue;
 	private TextView textViewAlpha;
+	private EditText editTextHex;
 	private OnColorChangedListener onColorChangedListener;
 
 	public RgbSelectorView(Context context) {
@@ -67,6 +73,9 @@ public class RgbSelectorView extends LinearLayout {
 		textViewGreen = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_green_value);
 		textViewBlue = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_blue_value);
 		textViewAlpha = (TextView) rgbView.findViewById(R.id.color_chooser_rgb_alpha_value);
+
+		editTextHex = (EditText) rgbView.findViewById(R.id.color_chooser_color_rgb_hex);
+		resetTextColor();
 
 		setSelectedColor(Color.BLACK);
 	}
@@ -98,6 +107,50 @@ public class RgbSelectorView extends LinearLayout {
 		seekBarGreen.setOnSeekBarChangeListener(seekBarListener);
 		seekBarBlue.setOnSeekBarChangeListener(seekBarListener);
 		seekBarAlpha.setOnSeekBarChangeListener(seekBarListener);
+
+		editTextHex.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+			@Override
+			public void afterTextChanged(Editable newText) {
+				if (editTextHex.getTag() == null) {
+					int color = parseInputToCheckIfHEX(newText.toString());
+					if (color != NOT_A_HEX_VALUE) {
+						setSelectedColor(color);
+						onColorChanged(color);
+						resetTextColor();
+					} else {
+						setTextColorToRed();
+					}
+				} else {
+					resetTextColor();
+				}
+			}
+		});
+	}
+
+	private int parseInputToCheckIfHEX(String newText) {
+		if (newText.length() != 9 || !newText.substring(0, 1).equals("#")) {
+			return NOT_A_HEX_VALUE;
+		}
+
+		try {
+			return Color.parseColor(newText);
+		} catch (IllegalArgumentException e) {
+			return NOT_A_HEX_VALUE;
+		}
+	}
+
+	private void resetTextColor() {
+		editTextHex.setTextColor(getResources().getColor(R.color.pocketpaint_color_chooser_hex_correct_black));
+	}
+
+	private void setTextColorToRed() {
+		editTextHex.setTextColor(getResources().getColor(R.color.pocketpaint_color_chooser_hex_wrong_value_red));
 	}
 
 	@Override
@@ -126,6 +179,10 @@ public class RgbSelectorView extends LinearLayout {
 		seekBarRed.setProgress(colorRed);
 		seekBarGreen.setProgress(colorGreen);
 		seekBarBlue.setProgress(colorBlue);
+
+		editTextHex.setTag("changed programmatically");
+		editTextHex.setText(String.format("#%02X%02X%02X%02X", colorAlpha, colorRed, colorGreen, colorBlue));
+		editTextHex.setTag(null);
 
 		setSelectedColorText(color);
 	}

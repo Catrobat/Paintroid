@@ -45,6 +45,7 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyLeftOf;
 import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyRightOf;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -240,6 +241,8 @@ public class LandscapeIntegrationTest {
 				.perform(click());
 		onView(withClassName(is(RgbSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
+
+		onView(withId(R.id.color_chooser_rgb_base_layout)).perform(swipeDown());
 
 		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset)))
 				.perform(click());

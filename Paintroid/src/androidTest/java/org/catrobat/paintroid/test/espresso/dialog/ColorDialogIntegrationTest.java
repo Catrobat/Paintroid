@@ -41,8 +41,10 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressBack;
+import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
+import static android.support.test.espresso.matcher.ViewMatchers.hasTextColor;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
@@ -50,6 +52,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
@@ -213,6 +216,7 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(isDisplayed()));
 
 		onView(withId(R.id.color_chooser_rgb_red_value)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_chooser_rgb_green_value)).check(matches(isDisplayed()));
@@ -260,6 +264,106 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
 		assertEquals("Selected color is not blue", toolReference.get().getDrawPaint().getColor(), Color.BLUE);
+
+		// Select color red #FFFF0000 by using hex input
+		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FFFF0000"));
+
+		assertEquals("Selected color is not red", toolReference.get().getDrawPaint().getColor(), Color.RED);
+	}
+
+	@Test
+	public void testHEXUpdatingOnColorChange() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
+
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(10);
+
+		int currentSelectColor = toolReference.get().getDrawPaint().getColor();
+
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
+
+		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(
+				withText(
+						String.format("#FF%06X", (0xFFFFFF & currentSelectColor)))));
+
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_hsv))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_HSV_SELECTOR_CLASS))).check(matches(isDisplayed()));
+
+		onColorPickerView().perform(touchCenterMiddle());
+
+		currentSelectColor = toolReference.get().getDrawPaint().getColor();
+
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
+
+		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(
+				withText(
+						String.format("#FF%06X", (0xFFFFFF & currentSelectColor)))));
+
+		onView(withId(R.id.color_chooser_color_rgb_seekbar_red)).perform(touchCenterLeft());
+		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).perform(touchCenterLeft());
+		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).perform(touchCenterLeft());
+		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
+
+		currentSelectColor = toolReference.get().getDrawPaint().getColor();
+
+		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(
+				withText(
+						String.format("#FF%06X", (0xFFFFFF & currentSelectColor)))));
+	}
+
+	@Test
+	public void testHEXEditTextMarkingWrongInput() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
+
+		//set to invalid length of 6 (alpha missing)
+		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FF0000"));
+		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_chooser_hex_wrong_value_red)));
+
+		//set to invalid value
+		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FFXXYYZZ"));
+		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_chooser_hex_wrong_value_red)));
+
+		//set to invalid value (# missing)
+		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("FF000000"));
+		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_chooser_hex_wrong_value_red)));
+	}
+
+	@Test
+	public void testHEXEditTextMarkingCorrectInputAfterWrongInput() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
+
+		//set to invalid length of 6 (alpha missing)
+		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FF0000"));
+
+		//set correct HEX value
+		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FF000000"));
+		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_chooser_hex_correct_black)));
+	}
+
+	@Test
+	public void testHEXEditTextInitialColorIsSetCorrectly() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
+
+		//Inital text color should be black
+		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_chooser_hex_correct_black)));
 	}
 
 	@Test
