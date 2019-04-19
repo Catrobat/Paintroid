@@ -33,8 +33,10 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.BrushToolOptions;
+import org.catrobat.paintroid.tools.options.TextToolOptions;
 import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptions;
+import org.catrobat.paintroid.ui.tools.DefaultTextToolOptions;
 
 public class DefaultToolFactory implements ToolFactory {
 
@@ -87,7 +89,7 @@ public class DefaultToolFactory implements ToolFactory {
 				tool = new LineTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			case TEXT:
-				tool = new TextTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+				tool = new TextTool(createTextToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			default:
 				tool = new BrushTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
@@ -96,6 +98,10 @@ public class DefaultToolFactory implements ToolFactory {
 		tool.setupToolOptions();
 		toolOptionsController.resetToOrigin();
 		return tool;
+	}
+
+	private TextToolOptions createTextToolOptions(ViewGroup toolSpecificOptionsLayout) {
+		return new DefaultTextToolOptions(toolSpecificOptionsLayout);
 	}
 
 	private BrushToolOptions createBrushToolOptions(ViewGroup toolSpecificOptionsLayout) {
