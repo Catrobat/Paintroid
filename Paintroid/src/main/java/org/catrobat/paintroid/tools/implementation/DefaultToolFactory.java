@@ -84,7 +84,7 @@ public class DefaultToolFactory implements ToolFactory {
 				tool = new EraserTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			case LINE:
-				tool = new LineTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+				tool = new LineTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			case TEXT:
 				tool = new TextTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
