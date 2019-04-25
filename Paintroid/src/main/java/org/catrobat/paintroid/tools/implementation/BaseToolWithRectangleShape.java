@@ -237,7 +237,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	protected void onClick(PointF coordinate) {
-		if (isCoordinateInsideBox(coordinate)) {
+		if (boxContainsPoint(coordinate)) {
 			onClickInBox();
 		}
 	}
@@ -256,11 +256,18 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		return true;
 	}
 
-	protected boolean isCoordinateInsideBox(PointF coordinate) {
+	protected boolean boxContainsPoint(PointF coordinate) {
 		return coordinate.x > toolPosition.x - boxWidth / 2
 				&& coordinate.x < toolPosition.x + boxWidth / 2
 				&& coordinate.y > toolPosition.y - boxHeight / 2
 				&& coordinate.y < toolPosition.y + boxHeight / 2;
+	}
+
+	protected boolean boxIntersectsWorkspace() {
+		return toolPosition.x - boxWidth / 2 < workspace.getWidth()
+				&& toolPosition.y - boxHeight / 2 < workspace.getHeight()
+				&& toolPosition.x + boxWidth / 2 >= 0
+				&& toolPosition.y + boxHeight / 2 >= 0;
 	}
 
 	@Override
@@ -316,9 +323,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				(-boxHeight + toolStrokeWidth) / 2, Op.DIFFERENCE);
 		canvas.rotate(-boxRotation);
 		canvas.translate(-toolPosition.x, -toolPosition.y);
-		canvas.drawRect(0, 0,
-				workspace.getWidth(),
-				workspace.getHeight(), backgroundPaint);
+		canvas.drawRect(0, 0, workspace.getWidth(), workspace.getHeight(), backgroundPaint);
 		canvas.restore();
 	}
 

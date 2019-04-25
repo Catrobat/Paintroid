@@ -63,4 +63,6 @@ public interface CommandFactory {
 	Command createPathCommand(Paint paint, Path path);
 
 	Command createTextToolCommand(String[] multilineText, Paint textPaint, int boxOffset, float boxWidth, float boxHeight, PointF toolPosition, float boxRotation);
+
+	Command createStampCommand(Bitmap bitmap, PointF toolPosition, float boxWidth, float boxHeight, float boxRotation);
 }

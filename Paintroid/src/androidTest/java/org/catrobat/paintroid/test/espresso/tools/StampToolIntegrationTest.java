@@ -107,7 +107,7 @@ public class StampToolIntegrationTest {
 		for (int rotationOfStampBox = MIN_ROTATION; rotationOfStampBox < MAX_ROTATION; rotationOfStampBox += ROTATION_STEPSIZE) {
 
 			stampTool.boxRotation = rotationOfStampBox;
-			stampTool.createAndSetBitmap();
+			stampTool.copyBoxContent();
 
 			Bitmap copyOfToolBitmap = stampTool.drawingBitmap.copy(Bitmap.Config.ARGB_8888, false);
 
