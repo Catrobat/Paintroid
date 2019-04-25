@@ -17,12 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools;
+package org.catrobat.paintroid.tools.options;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.implementation.ShapeTool;
 
-public interface ToolFactory {
-	Tool createTool(ToolType toolType, ToolOptionsController toolOptionsController, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback, ColorPickerDialog.OnColorPickedListener onColorPickedListener);
+public interface ShapeToolOptions {
+	void setShapeActivated(ShapeTool.BaseShape shape);
+
+	void setDrawTypeActivated(ShapeTool.ShapeDrawType drawType);
+
+	void setShapeOutlineWidth(int outlineWidth);
+
+	void setCallback(Callback callback);
+
+	interface Callback {
+		void setToolType(ShapeTool.BaseShape shape);
+
+		void setDrawType(ShapeTool.ShapeDrawType drawType);
+
+		void setOutlineWidth(int outlineWidth);
+	}
 }

@@ -25,9 +25,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
@@ -42,7 +40,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.CreateFileRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode;
@@ -57,19 +54,13 @@ import org.catrobat.paintroid.contract.MainActivityContracts.NavigationDrawerVie
 import org.catrobat.paintroid.contract.MainActivityContracts.Navigator;
 import org.catrobat.paintroid.contract.MainActivityContracts.Presenter;
 import org.catrobat.paintroid.contract.MainActivityContracts.TopBarViewHolder;
+import org.catrobat.paintroid.controller.ToolController;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.iotasks.CreateFileAsync.CreateFileCallback;
 import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback;
 import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolFactory;
-import org.catrobat.paintroid.tools.ToolPaint;
-import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.implementation.DefaultToolFactory;
-import org.catrobat.paintroid.tools.implementation.ImportTool;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
@@ -91,45 +82,33 @@ import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_DEF
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_NEW_EMPTY;
-import static org.catrobat.paintroid.tools.Tool.StateChange.NEW_IMAGE_LOADED;
-import static org.catrobat.paintroid.tools.Tool.StateChange.RESET_INTERNAL_STATE;
 
-public class MainActivityPresenter implements Presenter, SaveImageCallback, LoadImageCallback,
-		CreateFileCallback {
-
+public class MainActivityPresenter implements Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
 	private MainView view;
 	private Model model;
 	private Workspace workspace;
-	private ToolReference toolReference;
-	private final ToolOptionsController toolOptionsController;
 	private Navigator navigator;
 	private Interactor interactor;
 	private TopBarViewHolder topBarViewHolder;
-	private ToolPaint toolPaint;
 	private Perspective perspective;
 	private BottomBarViewHolder bottomBarViewHolder;
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
 	private NavigationDrawerViewHolder navigationDrawerViewHolder;
 
 	private CommandManager commandManager;
-	private CommandFactory commandFactory = new DefaultCommandFactory();
+	private CommandFactory commandFactory;
 	private boolean resetPerspectiveAfterNextCommand;
-	private Bundle toolBundle = new Bundle();
-	private ToolFactory toolFactory = new DefaultToolFactory();
+	private ToolController toolController;
 	private boolean focusAfterRecreate = true;
 
-	public MainActivityPresenter(MainView view, Model model, Workspace workspace,
-			ToolReference toolReference, ToolOptionsController toolOptionsController,
-			Navigator navigator, Interactor interactor,
-			TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
-			DrawerLayoutViewHolder drawerLayoutViewHolder,
-			NavigationDrawerViewHolder navigationDrawerViewHolder, CommandManager commandManager,
-			ToolPaint toolPaint, Perspective perspective) {
+	public MainActivityPresenter(MainView view, Model model, Workspace workspace, Navigator navigator,
+			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
+			DrawerLayoutViewHolder drawerLayoutViewHolder, NavigationDrawerViewHolder navigationDrawerViewHolder,
+			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective,
+			ToolController toolController) {
 		this.view = view;
 		this.model = model;
 		this.workspace = workspace;
-		this.toolReference = toolReference;
-		this.toolOptionsController = toolOptionsController;
 		this.navigator = navigator;
 		this.interactor = interactor;
 		this.bottomBarViewHolder = bottomBarViewHolder;
@@ -137,8 +116,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		this.navigationDrawerViewHolder = navigationDrawerViewHolder;
 		this.commandManager = commandManager;
 		this.topBarViewHolder = topBarViewHolder;
-		this.toolPaint = toolPaint;
 		this.perspective = perspective;
+		this.toolController = toolController;
+		this.commandFactory = commandFactory;
 	}
 
 	private boolean isImageUnchanged() {
@@ -271,9 +251,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					return;
 				}
 				Uri selectedGalleryImageUri = data.getData();
-				Tool tool = toolFactory.createTool(ToolType.IMPORTPNG, toolOptionsController,
-						(Activity) view, commandManager, workspace, toolPaint);
-				switchTool(tool);
+				setTool(ToolType.IMPORTPNG);
+				toolController.switchTool(ToolType.IMPORTPNG);
 				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, maxWidth, maxHeight, selectedGalleryImageUri);
 				break;
 			case REQUEST_CODE_LOAD_PICTURE:
@@ -336,10 +315,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			drawerLayoutViewHolder.closeDrawer(Gravity.END, true);
 		} else if (model.isFullscreen()) {
 			exitFullscreenClicked();
-		} else if (toolOptionsController.isVisible()) {
-			toolOptionsController.hideAnimated();
-		} else if (toolReference.get().getToolType() != ToolType.BRUSH) {
-			switchTool(ToolType.BRUSH);
+		} else if (toolController.toolOptionsVisible()) {
+			toolController.hideToolOptions();
+		} else if (!toolController.isDefaultTool()) {
+			setTool(ToolType.BRUSH);
+			toolController.switchTool(ToolType.BRUSH);
 		} else {
 			showSecurityQuestionBeforeExit();
 		}
@@ -355,8 +335,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void undoClicked() {
 		if (view.isKeyboardShown()) {
 			view.hideKeyboard();
-		} else if (toolOptionsController.isVisible()) {
-			toolOptionsController.hideAnimated();
+		} else if (toolController.toolOptionsVisible()) {
+			toolController.hideToolOptions();
 		} else {
 			commandManager.undo();
 		}
@@ -366,8 +346,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void redoClicked() {
 		if (view.isKeyboardShown()) {
 			view.hideKeyboard();
-		} else if (toolOptionsController.isVisible()) {
-			toolOptionsController.hideAnimated();
+		} else if (toolController.toolOptionsVisible()) {
+			toolController.hideToolOptions();
 		} else {
 			commandManager.redo();
 		}
@@ -396,7 +376,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 
 		model.setSaved(false);
-		toolReference.get().resetInternalState(RESET_INTERNAL_STATE);
+		toolController.resetToolInternalState();
 		view.refreshDrawingSurface();
 		refreshTopBarButtons();
 
@@ -421,7 +401,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				interactor.createFile(this, CREATE_FILE_DEFAULT, extraPictureName);
 			}
 		} else {
-			toolReference.get().resetInternalState(NEW_IMAGE_LOADED);
+			toolController.resetToolInternalStateOnImageLoaded();
 			model.setSavedPictureUri(null);
 		}
 	}
@@ -429,8 +409,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void finishInitialize() {
 		refreshTopBarButtons();
-		topBarViewHolder.setColorButtonColor(toolReference.get().getDrawPaint().getColor());
-		bottomBarViewHolder.selectToolButton(toolReference.get().getToolType());
+		topBarViewHolder.setColorButtonColor(toolController.getToolColor());
+		bottomBarViewHolder.selectToolButton(toolController.getToolType());
 
 		if (model.isFullscreen()) {
 			enterFullscreen();
@@ -462,8 +442,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		bottomBarViewHolder.show();
 		navigationDrawerViewHolder.hideExitFullscreen();
 		navigationDrawerViewHolder.showEnterFullscreen();
-		toolOptionsController.enable();
-
+		toolController.enableToolOptions();
 		perspective.exitFullscreen();
 	}
 
@@ -474,8 +453,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		bottomBarViewHolder.hide();
 		navigationDrawerViewHolder.showExitFullscreen();
 		navigationDrawerViewHolder.hideEnterFullscreen();
-
-		toolOptionsController.disable();
+		toolController.disableToolOptions();
 		perspective.enterFullscreen();
 	}
 
@@ -491,28 +469,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 		navigator.restoreFragmentListeners();
 
-		toolReference.get().resetInternalState(NEW_IMAGE_LOADED);
+		toolController.resetToolInternalStateOnImageLoaded();
 	}
 
 	@Override
 	public void onCreateTool() {
-		Bundle bundle = new Bundle();
-		ToolFactory toolFactory = new DefaultToolFactory();
-
-		if (toolReference.get() == null) {
-			toolReference.set(toolFactory.createTool(ToolType.BRUSH,
-					toolOptionsController, (Activity) view, commandManager, workspace, toolPaint));
-			toolReference.get().startTool();
-		} else {
-			Paint paint = toolReference.get().getDrawPaint();
-			toolReference.get().leaveTool();
-			toolReference.get().onSaveInstanceState(bundle);
-			toolReference.set(toolFactory.createTool(toolReference.get().getToolType(),
-					toolOptionsController, (Activity) view, commandManager, workspace, toolPaint));
-			toolReference.get().onRestoreInstanceState(bundle);
-			toolReference.get().startTool();
-			toolReference.get().setDrawPaint(paint);
-		}
+		toolController.createTool();
 	}
 
 	private void refreshTopBarButtons() {
@@ -532,12 +494,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void toolClicked(ToolType type) {
 		bottomBarViewHolder.cancelAnimation();
 
-		if (toolReference.get().getToolType() == type && type.hasOptions()) {
-			if (toolOptionsController.isVisible()) {
-				toolOptionsController.hideAnimated();
-			} else {
-				toolOptionsController.showAnimated();
-			}
+		if (toolController.getToolType() == type && toolController.hasToolOptions()) {
+			toolController.toggleToolOptions();
 		} else if (view.isKeyboardShown()) {
 			view.hideKeyboard();
 		} else {
@@ -549,15 +507,14 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (type == ToolType.IMPORTPNG) {
 			navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
 		} else {
-			Tool tool = toolFactory.createTool(type, toolOptionsController,
-					(Activity) view, commandManager, workspace, toolPaint);
-			switchTool(tool);
+			setTool(type);
+			toolController.switchTool(type);
 		}
 	}
 
 	@Override
 	public void gotFocus() {
-		ToolType currentToolType = toolReference.get().getToolType();
+		ToolType currentToolType = toolController.getToolType();
 		if (focusAfterRecreate) {
 			if (model.wasInitialAnimationPlayed()) {
 				bottomBarViewHolder.scrollToButton(currentToolType, false);
@@ -569,27 +526,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 	}
 
-	private void switchTool(Tool tool) {
-		Tool currentTool = toolReference.get();
-		Paint tempPaint = currentTool.getDrawPaint();
-
-		currentTool.leaveTool();
-		if (currentTool.getToolType() == tool.getToolType()) {
-			currentTool.onSaveInstanceState(toolBundle);
-			setTool(tool.getToolType());
-			toolReference.set(tool);
-			tool.onRestoreInstanceState(toolBundle);
-		} else {
-			toolBundle.clear();
-			setTool(tool.getToolType());
-			toolReference.set(tool);
-		}
-		tool.startTool();
-		tool.setDrawPaint(tempPaint);
-	}
-
 	private void setTool(ToolType toolType) {
-		final ToolType previousToolType = toolReference.get().getToolType();
+		final ToolType previousToolType = toolController.getToolType();
 
 		bottomBarViewHolder.deSelectToolButton(previousToolType);
 		bottomBarViewHolder.selectToolButton(toolType);
@@ -631,8 +569,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				model.setCameraImageUri(null);
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
-				if (toolReference.get() instanceof ImportTool) {
-					((ImportTool) toolReference.get()).setBitmapFromFile(bitmap);
+				if (toolController.getToolType() == ToolType.IMPORTPNG) {
+					toolController.setBitmapFromFile(bitmap);
 				} else {
 					Log.e(MainActivity.TAG, "importPngToFloatingBox: Current tool is no ImportTool as required");
 				}

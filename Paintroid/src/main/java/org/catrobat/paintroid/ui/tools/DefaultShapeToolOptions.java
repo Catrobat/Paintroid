@@ -1,28 +1,30 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.listener;
+package org.catrobat.paintroid.ui.tools;
 
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -31,13 +33,14 @@ import android.widget.TextView;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
 import org.catrobat.paintroid.tools.implementation.ShapeTool;
+import org.catrobat.paintroid.tools.options.ShapeToolOptions;
 
 import java.util.Locale;
 
-public class ShapeToolOptionsListener {
+public class DefaultShapeToolOptions implements ShapeToolOptions {
 	private static final int MIN_STROKE_WIDTH = 1;
 
-	private OnShapeToolOptionsChangedListener onShapeToolOptionsChangedListener;
+	private Callback callback;
 	private ImageButton squareButton;
 	private ImageButton circleButton;
 	private ImageButton heartButton;
@@ -51,26 +54,30 @@ public class ShapeToolOptionsListener {
 	private TextView shapeToolDialogTitle;
 	private TextView shapeToolFillOutline;
 
-	public ShapeToolOptionsListener(View shapeToolOptionsView) {
-		squareButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.pocketpaint_shapes_square_btn);
-		circleButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.pocketpaint_shapes_circle_btn);
-		heartButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.pocketpaint_shapes_heart_btn);
-		starButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.pocketpaint_shapes_star_btn);
-		fillButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.pocketpaint_shape_ibtn_fill);
-		outlineButton = (ImageButton) shapeToolOptionsView.findViewById(R.id.pocketpaint_shape_ibtn_outline);
-		shapeToolDialogTitle = (TextView) shapeToolOptionsView.findViewById(R.id.pocketpaint_shape_tool_dialog_title);
-		shapeToolFillOutline = (TextView) shapeToolOptionsView.findViewById(R.id.pocketpaint_shape_tool_fill_outline);
+	public DefaultShapeToolOptions(ViewGroup rootView) {
+		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
+		View shapeToolView = inflater.inflate(R.layout.dialog_pocketpaint_shapes, rootView);
 
-		outlineView = shapeToolOptionsView.findViewById(R.id.pocketpaint_outline_view_border);
-		outlineTextView = (TextView) shapeToolOptionsView.findViewById(R.id.pocketpaint_outline_view_text_view);
+		squareButton = shapeToolView.findViewById(R.id.pocketpaint_shapes_square_btn);
+		circleButton = shapeToolView.findViewById(R.id.pocketpaint_shapes_circle_btn);
+		heartButton = shapeToolView.findViewById(R.id.pocketpaint_shapes_heart_btn);
+		starButton = shapeToolView.findViewById(R.id.pocketpaint_shapes_star_btn);
+		fillButton = shapeToolView.findViewById(R.id.pocketpaint_shape_ibtn_fill);
+		outlineButton = shapeToolView.findViewById(R.id.pocketpaint_shape_ibtn_outline);
+		shapeToolDialogTitle = shapeToolView.findViewById(R.id.pocketpaint_shape_tool_dialog_title);
+		shapeToolFillOutline = shapeToolView.findViewById(R.id.pocketpaint_shape_tool_fill_outline);
 
-		outlineWidthSeekBar = (SeekBar) shapeToolOptionsView.findViewById(R.id.pocketpaint_shape_stroke_width_seek_bar);
-		outlineWidthEditText = (EditText) shapeToolOptionsView.findViewById(R.id.pocketpaint_shape_outline_edit);
+		outlineView = shapeToolView.findViewById(R.id.pocketpaint_outline_view_border);
+		outlineTextView = shapeToolView.findViewById(R.id.pocketpaint_outline_view_text_view);
+
+		outlineWidthSeekBar = shapeToolView.findViewById(R.id.pocketpaint_shape_stroke_width_seek_bar);
+		outlineWidthEditText = shapeToolView.findViewById(R.id.pocketpaint_shape_outline_edit);
 		outlineWidthEditText.setFilters(new InputFilter[]{new DefaultNumberRangeFilter(1, 100)});
 
 		int startingOutlineWidth = 25;
-		outlineWidthEditText.setText(String.format(Locale.getDefault(), "%d", (int) startingOutlineWidth));
+		outlineWidthEditText.setText(String.valueOf(startingOutlineWidth));
 		outlineWidthSeekBar.setProgress(startingOutlineWidth);
+
 		initializeListeners();
 		setShapeActivated(ShapeTool.BaseShape.RECTANGLE);
 		setDrawTypeActivated(ShapeTool.ShapeDrawType.FILL);
@@ -127,10 +134,12 @@ public class ShapeToolOptionsListener {
 			}
 
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) { }
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
 
 			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) { }
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
 		});
 		outlineWidthEditText.addTextChangedListener(new TextWatcher() {
 			@Override
@@ -156,17 +165,17 @@ public class ShapeToolOptionsListener {
 	}
 
 	private void onShapeClicked(ShapeTool.BaseShape shape) {
-		onShapeToolOptionsChangedListener.setToolType(shape);
+		callback.setToolType(shape);
 		setShapeActivated(shape);
 	}
 
 	private void onDrawTypeClicked(ShapeTool.ShapeDrawType drawType) {
-		onShapeToolOptionsChangedListener.setDrawType(drawType);
+		callback.setDrawType(drawType);
 		setDrawTypeActivated(drawType);
 	}
 
 	private void onOutlineWidthChanged(int outlineWidth) {
-		onShapeToolOptionsChangedListener.setOutlineWidth(outlineWidth);
+		callback.setOutlineWidth(outlineWidth);
 	}
 
 	private void resetShapeActivated() {
@@ -181,6 +190,7 @@ public class ShapeToolOptionsListener {
 		outlineButton.setSelected(false);
 	}
 
+	@Override
 	public void setShapeActivated(ShapeTool.BaseShape shape) {
 		resetShapeActivated();
 		switch (shape) {
@@ -206,6 +216,7 @@ public class ShapeToolOptionsListener {
 		}
 	}
 
+	@Override
 	public void setDrawTypeActivated(ShapeTool.ShapeDrawType drawType) {
 		resetDrawTypeActivated();
 		switch (drawType) {
@@ -239,18 +250,14 @@ public class ShapeToolOptionsListener {
 		}
 	}
 
+	@Override
 	public void setShapeOutlineWidth(int outlineWidth) {
 		outlineWidthSeekBar.setProgress(outlineWidth);
 		outlineWidthEditText.setText(String.format(Locale.getDefault(), "%d", (int) outlineWidth));
 	}
 
-	public void setOnShapeToolOptionsChangedListener(OnShapeToolOptionsChangedListener listener) {
-		onShapeToolOptionsChangedListener = listener;
-	}
-
-	public interface OnShapeToolOptionsChangedListener {
-		void setToolType(ShapeTool.BaseShape shape);
-		void setDrawType(ShapeTool.ShapeDrawType drawType);
-		void setOutlineWidth(int outlineWidth);
+	@Override
+	public void setCallback(Callback callback) {
+		this.callback = callback;
 	}
 }

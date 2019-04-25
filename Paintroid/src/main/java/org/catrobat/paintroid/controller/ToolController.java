@@ -17,12 +17,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools;
+package org.catrobat.paintroid.controller;
+
+import android.graphics.Bitmap;
 
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.ToolType;
 
-public interface ToolFactory {
-	Tool createTool(ToolType toolType, ToolOptionsController toolOptionsController, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback, ColorPickerDialog.OnColorPickedListener onColorPickedListener);
+public interface ToolController {
+	void setOnColorPickedListener(ColorPickerDialog.OnColorPickedListener onColorPickedListener);
+
+	void switchTool(ToolType toolType);
+
+	boolean isDefaultTool();
+
+	void hideToolOptions();
+
+	boolean toolOptionsVisible();
+
+	void resetToolInternalState();
+
+	void resetToolInternalStateOnImageLoaded();
+
+	int getToolColor();
+
+	ToolType getToolType();
+
+	void disableToolOptions();
+
+	void enableToolOptions();
+
+	void createTool();
+
+	void toggleToolOptions();
+
+	boolean hasToolOptions();
+
+	void setBitmapFromFile(Bitmap bitmap);
 }
