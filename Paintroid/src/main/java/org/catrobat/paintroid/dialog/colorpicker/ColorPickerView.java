@@ -64,6 +64,7 @@ public class ColorPickerView extends LinearLayoutCompat {
 	private TabHost tabHost;
 
 	private int selectedColor = Color.BLACK;
+	private int initialColor;
 
 	private OnColorChangedListener listener;
 
@@ -125,6 +126,14 @@ public class ColorPickerView extends LinearLayoutCompat {
 
 	public void setSelectedColor(int color) {
 		setSelectedColor(color, null);
+	}
+
+	public void setInitialColor(int initialColor) {
+		this.initialColor = initialColor;
+	}
+
+	public int getInitialColor() {
+		return initialColor;
 	}
 
 	private void init() {

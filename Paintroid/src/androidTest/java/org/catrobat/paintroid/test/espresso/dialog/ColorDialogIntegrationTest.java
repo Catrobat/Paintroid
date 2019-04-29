@@ -58,6 +58,7 @@ import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withTextColor;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -121,11 +122,65 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
-	public void testColorNewColorButtonChangesStandard() {
+	public void testColorSelectionChangesApplyButtonColor() {
 
 		onColorPickerView()
 				.performOpenColorPicker();
 
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
+
+		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors);
+
+			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
+
+			onView(allOf(withId(R.id.color_chooser_button_ok), instanceOf(Button.class)))
+					.check(matches(withBackgroundColor(arrayColor)));
+		}
+		presetColors.recycle();
+	}
+
+	@Test
+	public void testColorApplyButtonChangesStandard() {
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
+		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
+			onColorPickerView()
+					.performOpenColorPicker();
+
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors);
+
+			onColorPickerView()
+					.onOkButton()
+					.perform(click());
+
+			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
+			int selectedColor = toolReference.get().getDrawPaint().getColor();
+
+			assertEquals("Color in array and selected color not the same", arrayColor, selectedColor);
+		}
+		presetColors.recycle();
+	}
+
+	@Test
+	public void testCancelButtonHasInitialColor() {
+		int selectedColor = toolReference.get().getDrawPaint().getColor();
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onColorPickerView()
+				.checkCancelButtonColor(selectedColor);
+	}
+
+	@Test
+	public void testCancelButtonDoesNotChangeColor() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		int initialColor = toolReference.get().getDrawPaint().getColor();
 		final Resources resources = launchActivityRule.getActivity().getResources();
 		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
 		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
@@ -133,13 +188,8 @@ public class ColorDialogIntegrationTest {
 			onColorPickerView()
 					.performClickColorPickerPresetSelectorButton(counterColors);
 
-			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
-			int selectedColor = toolReference.get().getDrawPaint().getColor();
-
-			assertEquals("Color in array and selected color not the same", arrayColor, selectedColor);
-
-			onView(allOf(withId(R.id.color_chooser_button_ok), instanceOf(Button.class)))
-					.check(matches(withBackgroundColor(arrayColor)));
+			onView(allOf(withId(R.id.color_chooser_button_cancel), instanceOf(Button.class)))
+					.check(matches(withBackgroundColor(initialColor)));
 		}
 		presetColors.recycle();
 	}
@@ -190,11 +240,14 @@ public class ColorDialogIntegrationTest {
 		onView(isRoot()).perform(pressBack());
 
 		int currentSelectedColor = toolReference.get().getDrawPaint().getColor();
-		assertNotEquals("Selected color has not changed", expectedSelectedColor, currentSelectedColor);
+		assertEquals("Selected color has not changed", expectedSelectedColor, currentSelectedColor);
 	}
 
 	@Test
 	public void testIfRGBSeekBarsDoChangeColor() {
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
+
 		onColorPickerView()
 				.performOpenColorPicker();
 
@@ -224,15 +277,15 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_chooser_rgb_alpha_value)).check(matches(isDisplayed()));
 		onView(allOf(withText(TEXT_PERCENT_SIGN), hasSibling(withId(R.id.color_chooser_rgb_alpha_value)))).check(matches(isDisplayed()));
 
-		int currentSelectColor = toolReference.get().getDrawPaint().getColor();
+		int currentSelectedColor = presetColors.getColor(0, Color.BLACK);
 
-		onView(withId(R.id.color_chooser_rgb_red_value)).check(matches(withText(Integer.toString(Color.red(currentSelectColor)))));
-		onView(withId(R.id.color_chooser_rgb_green_value)).check(matches(withText(Integer.toString(Color.green(currentSelectColor)))));
-		onView(withId(R.id.color_chooser_rgb_blue_value)).check(matches(withText(Integer.toString(Color.blue(currentSelectColor)))));
+		onView(withId(R.id.color_chooser_rgb_red_value)).check(matches(withText(Integer.toString(Color.red(currentSelectedColor)))));
+		onView(withId(R.id.color_chooser_rgb_green_value)).check(matches(withText(Integer.toString(Color.green(currentSelectedColor)))));
+		onView(withId(R.id.color_chooser_rgb_blue_value)).check(matches(withText(Integer.toString(Color.blue(currentSelectedColor)))));
 		onView(withId(R.id.color_chooser_rgb_alpha_value)).check(matches(
 				withText(
 						Integer.toString(
-								((int) (Color.alpha(currentSelectColor) / 2.55f))
+								((int) (Color.alpha(currentSelectedColor) / 2.55f))
 						)
 				)
 		));
@@ -257,18 +310,27 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 		onView(withId(R.id.color_chooser_rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MAX)));
 
+		// Select color red #FFFF0000 by using hex input
+		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FFFF0000"));
+
+		onColorPickerView()
+				.checkApplyButtonColor(Color.RED);
+
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+
 		// Select color blue #FF0000FF by using seekbars
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_red)).perform(touchCenterLeft());
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).perform(touchCenterLeft());
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).perform(touchCenterRight());
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
+		assertNotEquals("Selected color changed to blue", toolReference.get().getDrawPaint().getColor(), Color.BLUE);
+
+		onColorPickerView()
+				.onOkButton()
+				.perform(click());
+
 		assertEquals("Selected color is not blue", toolReference.get().getDrawPaint().getColor(), Color.BLUE);
-
-		// Select color red #FFFF0000 by using hex input
-		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FFFF0000"));
-
-		assertEquals("Selected color is not red", toolReference.get().getDrawPaint().getColor(), Color.RED);
 	}
 
 	@Test
@@ -282,7 +344,14 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performClickColorPickerPresetSelectorButton(10);
 
+		onColorPickerView()
+				.onOkButton()
+				.perform(click());
+
 		int currentSelectColor = toolReference.get().getDrawPaint().getColor();
+
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
@@ -296,7 +365,14 @@ public class ColorDialogIntegrationTest {
 
 		onColorPickerView().perform(touchCenterMiddle());
 
+		onColorPickerView()
+				.onOkButton()
+				.perform(click());
+
 		currentSelectColor = toolReference.get().getDrawPaint().getColor();
+
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
@@ -310,7 +386,17 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).perform(touchCenterLeft());
 		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
+		onColorPickerView()
+				.onOkButton()
+				.perform(click());
+
 		currentSelectColor = toolReference.get().getDrawPaint().getColor();
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
 		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(
 				withText(
@@ -375,6 +461,24 @@ public class ColorDialogIntegrationTest {
 				.check(matches(isDisplayed()));
 		onColorPickerView()
 				.check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testStandardColorDoesNotChangeOnCancel() {
+		int initialColor = toolReference.get().getDrawPaint().getColor();
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(0);
+
+		onColorPickerView()
+				.onCancelButton()
+				.perform(click());
+
+		onToolProperties()
+				.checkMatchesColor(initialColor);
 	}
 
 	@Test

@@ -69,16 +69,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ColorPickerDialog extends AppCompatDialogFragment implements ColorPickerView.OnColorChangedListener {
-	private static final String INITIAL_COLOR_KEY = "InitialColor";
+	private static final String CURRENT_COLOR = "CurrentColor";
+	private static final String INITIAL_COLOR = "InitialColor";
 	@VisibleForTesting
 	public List<OnColorPickedListener> onColorPickedListener = new ArrayList<>();
 	private ColorPickerView colorPickerView;
-	private Button buttonNewColor;
+	private Button buttonApply;
+	private Button buttonCancel;
+	private int colorToApply;
 
 	public static ColorPickerDialog newInstance(@ColorInt int initialColor) {
 		ColorPickerDialog dialog = new ColorPickerDialog();
 		Bundle bundle = new Bundle();
-		bundle.putInt(INITIAL_COLOR_KEY, initialColor);
+		bundle.putInt(INITIAL_COLOR, initialColor);
+		bundle.putInt(CURRENT_COLOR, initialColor);
 		dialog.setArguments(bundle);
 		return dialog;
 	}
@@ -110,22 +114,34 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		buttonNewColor = view.findViewById(R.id.color_chooser_button_ok);
+		buttonApply = view.findViewById(R.id.color_chooser_button_ok);
 		colorPickerView = view.findViewById(R.id.color_chooser_color_picker_view);
+		buttonCancel = view.findViewById(R.id.color_chooser_button_cancel);
 
-		buttonNewColor.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dismiss();
-			}
-		});
+		buttonApply.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					updateColorChange(colorToApply);
+					dismiss();
+				}
+			});
+
+		buttonCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dismiss();
+				}
+			});
+
 		colorPickerView.setOnColorChangedListener(this);
 
 		if (savedInstanceState != null) {
-			setColor(savedInstanceState.getInt(INITIAL_COLOR_KEY, Color.BLACK));
+			setCurrentColor(savedInstanceState.getInt(CURRENT_COLOR, Color.BLACK));
+			setInitialColor(savedInstanceState.getInt(INITIAL_COLOR, Color.BLACK));
 		} else {
 			Bundle arguments = getArguments();
-			setColor(arguments.getInt(INITIAL_COLOR_KEY, Color.BLACK));
+			setCurrentColor(arguments.getInt(CURRENT_COLOR, Color.BLACK));
+			setInitialColor(arguments.getInt(INITIAL_COLOR, Color.BLACK));
 		}
 	}
 
@@ -141,29 +157,35 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putInt(INITIAL_COLOR_KEY, colorPickerView.getSelectedColor());
+		outState.putInt(CURRENT_COLOR, colorPickerView.getSelectedColor());
+		outState.putInt(INITIAL_COLOR, colorPickerView.getInitialColor());
 	}
 
-	public void setColor(int color) {
-		setButtonColor(color);
+	public void setInitialColor(int color) {
+		setButtonColor(color, buttonCancel);
+		colorPickerView.setInitialColor(color);
+	}
+
+	public void setCurrentColor(int color) {
+		setButtonColor(color, buttonApply);
 		colorPickerView.setSelectedColor(color);
 	}
 
-	private void setButtonColor(int color) {
-		buttonNewColor.setBackground(CustomColorDrawable.createDrawable(color));
+	private void setButtonColor(int color, Button button) {
+		button.setBackground(CustomColorDrawable.createDrawable(color));
 
 		int referenceColor = (Color.red(color) + Color.blue(color) + Color.green(color)) / 3;
 		if (referenceColor <= 128 && Color.alpha(color) > 5) {
-			buttonNewColor.setTextColor(Color.WHITE);
+			button.setTextColor(Color.WHITE);
 		} else {
-			buttonNewColor.setTextColor(Color.BLACK);
+			button.setTextColor(Color.BLACK);
 		}
 	}
 
 	@Override
 	public void colorChanged(int color) {
-		setButtonColor(color);
-		updateColorChange(color);
+		setButtonColor(color, buttonApply);
+		colorToApply = color;
 	}
 
 	public interface OnColorPickedListener {
