@@ -45,7 +45,8 @@ public enum ToolType {
 	SHAPE(R.string.button_shape, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_rectangle, R.drawable.pocketpaint_rectangle_tool_overlay, true),
 	TEXT(R.string.button_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_text, R.drawable.pocketpaint_text_tool_overlay, true),
 	LAYER(R.string.layers_title, R.string.help_content_layer, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_layers, INVALID_RESOURCE_ID, false),
-	COLORCHOOSER(R.string.color_chooser_title, R.string.help_content_color_chooser, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_color, INVALID_RESOURCE_ID, false);
+	COLORCHOOSER(R.string.color_chooser_title, R.string.help_content_color_chooser, true, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_color, INVALID_RESOURCE_ID, false),
+	HAND(R.string.button_hand, R.string.help_content_hand, false, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_hand, INVALID_RESOURCE_ID, false);
 
 	private int nameResource;
 	private int helpTextResource;

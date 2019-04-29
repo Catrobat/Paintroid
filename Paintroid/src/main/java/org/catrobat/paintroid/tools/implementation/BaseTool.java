@@ -170,4 +170,8 @@ public abstract class BaseTool implements Tool {
 	@Override
 	public void leaveTool() {
 	}
+
+	public boolean handToolMode() {
+		return false;
+	}
 }

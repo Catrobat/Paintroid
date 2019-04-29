@@ -284,12 +284,52 @@ public class DrawingSurfaceListenerTest {
 	}
 
 	@Test
+	public void testOnTouchMoveInHandMode() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
+
+		when(motionEvent.getX()).thenReturn(7f);
+		when(motionEvent.getY()).thenReturn(11f);
+		when(motionEvent.getPointerCount()).thenReturn(1);
+		when(currentTool.handToolMode()).thenReturn(true);
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		verify(currentTool, never()).handleTouch(any(PointF.class), anyInt());
+		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
+		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
+
+		verify(callback, never()).translatePerspective(anyFloat(), anyFloat());
+		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
+	}
+
+	@Test
 	public void testOnTouchMoveInPinchModeStopsAutoScroll() {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
 		MotionEvent motionEvent = mock(MotionEvent.class);
 
 		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
 		when(motionEvent.getPointerCount()).thenReturn(2);
+		when(motionEvent.getX()).thenReturn(50f);
+		when(autoScrollTask.isRunning()).thenReturn(true);
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		verify(autoScrollTask).stop();
+	}
+
+	@Test
+	public void testOnTouchMoveInHandModeStopsAutoScroll() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
+		when(motionEvent.getPointerCount()).thenReturn(1);
+		when(currentTool.handToolMode()).thenReturn(true);
 		when(motionEvent.getX()).thenReturn(50f);
 		when(autoScrollTask.isRunning()).thenReturn(true);
 
@@ -318,6 +358,35 @@ public class DrawingSurfaceListenerTest {
 		when(motionEvent.getY(0)).thenReturn(1f);
 		when(motionEvent.getX(1)).thenReturn(33f);
 		when(motionEvent.getY(1)).thenReturn(19f);
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		verify(currentTool, never()).handleTouch(any(PointF.class), anyInt());
+		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
+		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
+
+		verify(callback).translatePerspective(10, -10);
+		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
+	}
+
+	@Test
+	public void testOnTouchMoveTranslateInHandMode() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		MotionEvent motionEvent = mock(MotionEvent.class);
+
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
+
+		when(motionEvent.getX()).thenReturn(7f);
+		when(motionEvent.getY()).thenReturn(11f);
+
+		when(motionEvent.getPointerCount()).thenReturn(1);
+		when(currentTool.handToolMode()).thenReturn(true);
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+
+		when(motionEvent.getX()).thenReturn(17f);
+		when(motionEvent.getY()).thenReturn(1f);
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
