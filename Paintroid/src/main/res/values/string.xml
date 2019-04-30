@@ -33,7 +33,13 @@
     <string name="button_line">Line</string>
     <string name="button_text">Text</string>
     <string name="button_shape">Shapes</string>
+    <string name="button_scroll_left">Scroll left</string>
+    <string name="button_scroll_right">Scroll right</string>
+    <string name="button_layers">layers</string>
     <string name="done">Done</string>
+
+    <string name="cap_circle">Circle</string>
+    <string name="cap_square">Square</string>
 
     <string name="color_chooser_title">Color Chooser</string>
     <string name="color_red">Red</string>
@@ -105,11 +111,14 @@
 
     <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
 
+    <string name="transform_tool_rotate_left">rotate left</string>
+    <string name="transform_tool_rotate_right">rotate right</string>
+    <string name="transform_tool_flip_vertical">flip vertical</string>
+    <string name="transform_tool_flip_horizontal">flip horizontal</string>
     <string name="transform_tool_auto_crop_text">crop/enlarge</string>
     <string name="transform_width_text">Width</string>
     <string name="transform_height_text">Height</string>
     <string name="pixel">px</string>
-
 
     <string name="stamp_tool_copy_hint">Long press to copy content</string>
 
@@ -118,6 +127,7 @@
     <string name="layer_delete">Delete Layer</string>
     <string name="layer_too_many_layers">Too many layers</string>
     <string name="layer_merged">Layers merged</string>
+    <string name="layer_background">Layer background</string>
 
     <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
@@ -151,6 +161,11 @@
     <string name="pocketpaint_about_url_catrobat_description">About Catrobat</string>
     <string name="pocketpaint_about_url_license" translatable="false">&lt;a href=\"http://developer.catrobat.org/licenses\"&gt;%s&lt;/a&gt;</string>
     <string name="pocketpaint_about_url_catrobat" translatable="false">&lt;a href=\"http://catrobat.org/\"&gt;%s&lt;/a&gt;</string>
+
+    <string name="color_picker_tab_icon">Color Picker tab icon</string>
+
+    <string name="pocketpaint_logo">Pocket Paint logo</string>
+    <string name="pocketpaint_intro">Intro</string>
 
     <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
 

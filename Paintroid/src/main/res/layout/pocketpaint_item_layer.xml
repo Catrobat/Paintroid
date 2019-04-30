@@ -35,6 +35,7 @@
         android:layout_height="100dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:background="@drawable/pocketpaint_checkeredbg_repeat"/>
+        android:background="@drawable/pocketpaint_checkeredbg_repeat"
+        android:contentDescription="@string/layer_background" />
 
 </LinearLayout>
