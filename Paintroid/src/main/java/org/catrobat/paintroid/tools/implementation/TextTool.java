@@ -77,7 +77,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	public int textSize = 20;
 	private TextToolOptions textToolOptions;
 
-	public TextTool(TextToolOptions textToolOptions, ContextCallback contextCallback, ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+	public TextTool(TextToolOptions textToolOptions, ContextCallback contextCallback, final ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 
 		this.textToolOptions = textToolOptions;
@@ -147,6 +147,11 @@ public class TextTool extends BaseToolWithRectangleShape {
 						textSize = size;
 						textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
 						createAndSetBitmap();
+					}
+
+					@Override
+					public void hideToolOptions() {
+						toolOptionsController.hideAnimated();
 					}
 				};
 

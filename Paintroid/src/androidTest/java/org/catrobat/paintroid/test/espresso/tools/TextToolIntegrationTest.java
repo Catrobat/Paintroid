@@ -139,6 +139,24 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
+	public void testTextToolStillEditableAfterDoneButtonClicked() {
+		selectFormatting(FormattingOptions.ITALIC);
+		selectFormatting(FormattingOptions.BOLD);
+		selectFormatting(FormattingOptions.UNDERLINE);
+		enterTestText();
+
+		onView(withId(R.id.pocketpaint_text_tool_dialog_done_button))
+				.perform(click());
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		assertTrue(italicToggleButton.isChecked());
+		assertTrue(boldToggleButton.isChecked());
+		assertTrue(underlinedToggleButton.isChecked());
+		assertEquals(TEST_TEXT, textEditText.getText().toString());
+	}
+
+	@Test
 	public void testDialogKeyboardTextBoxAppearanceOnStartup() {
 		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).check(matches(hasFocus()));
 		checkTextBoxDimensionsAndDefaultPosition();
