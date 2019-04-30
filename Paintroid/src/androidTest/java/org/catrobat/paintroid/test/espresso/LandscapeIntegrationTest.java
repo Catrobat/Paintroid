@@ -205,14 +205,52 @@ public class LandscapeIntegrationTest {
 					.performClickColorPickerPresetSelectorButton(i);
 
 			if (colors[i] != Color.TRANSPARENT) {
-				int selectedColor = getCurrentTool().getDrawPaint().getColor();
-				assertEquals(colors[i], selectedColor);
-
 				onView(withId(R.id.color_chooser_button_ok))
 						.perform(scrollTo())
 						.check(matches(withBackgroundColor(colors[i])));
 			}
 		}
+	}
+
+	@Test
+	public void testOpenColorPickerDialogApplyColorInLandscape() {
+		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_chooser_preset_colors);
+
+		for (int i = 0; i < colors.length; i++) {
+			onColorPickerView()
+					.performOpenColorPicker();
+
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(i);
+
+			onColorPickerView()
+					.onOkButton()
+					.perform(scrollTo())
+					.perform(click());
+
+			int selectedColor = getCurrentTool().getDrawPaint().getColor();
+			assertEquals(colors[i], selectedColor);
+		}
+	}
+
+	@Test
+	public void testColorPickerCancelButtonKeepsColorInLandscape() {
+
+		int initialColor = getCurrentTool().getDrawPaint().getColor();
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(2);
+
+		onColorPickerView()
+				.checkCancelButtonColor(initialColor);
+
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		onColorPickerView()
+				.checkCancelButtonColor(initialColor);
 	}
 
 	@Test

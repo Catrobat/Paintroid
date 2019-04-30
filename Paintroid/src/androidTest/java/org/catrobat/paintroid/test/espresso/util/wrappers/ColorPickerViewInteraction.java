@@ -37,6 +37,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 
@@ -59,6 +60,20 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 		onView(withId(R.id.pocketpaint_btn_top_color))
 				.perform(click());
 		return this;
+	}
+
+	public ViewInteraction onCancelButton() {
+		return onView(withId(R.id.color_chooser_button_cancel));
+	}
+
+	public void checkCancelButtonColor(int color) {
+		onView(withId(R.id.color_chooser_button_cancel))
+				.check(matches(withBackgroundColor(color)));
+	}
+
+	public void checkApplyButtonColor(int color) {
+		onView(withId(R.id.color_chooser_button_ok))
+				.check(matches(withBackgroundColor(color)));
 	}
 
 	public ColorPickerViewInteraction performCloseColorPickerWithDialogButton() {
