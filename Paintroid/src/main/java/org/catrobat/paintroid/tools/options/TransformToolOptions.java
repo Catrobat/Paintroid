@@ -17,17 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.ui.tools;
+package org.catrobat.paintroid.tools.options;
 
-import android.text.InputFilter;
-import android.text.Spanned;
+import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
-public interface NumberRangeFilter extends InputFilter {
-	int getMax();
+public interface TransformToolOptions {
+	void setWidthFilter(NumberRangeFilter numberRangeFilter);
 
-	void setMax(int max);
+	void setHeightFilter(NumberRangeFilter numberRangeFilter);
 
-	@Override
-	CharSequence filter(CharSequence source, int start, int end,
-			Spanned dest, int dstart, int dend);
+	void setCallback(Callback callback);
+
+	void setWidth(int width);
+
+	void setHeight(int height);
+
+	interface Callback {
+		void autoCropClicked();
+
+		void rotateCounterClockwiseClicked();
+
+		void rotateClockwiseClicked();
+
+		void flipHorizontalClicked();
+
+		void flipVerticalClicked();
+
+		void setBoxWidth(float boxWidth);
+
+		void setBoxHeight(float boxHeight);
+	}
 }

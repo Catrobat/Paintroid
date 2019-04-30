@@ -34,6 +34,7 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
 import org.catrobat.paintroid.tools.options.BrushToolOptions;
 import org.catrobat.paintroid.tools.options.BrushToolPreview;
 
@@ -60,7 +61,7 @@ public final class DefaultBrushToolOptions implements BrushToolOptions {
 		brushWidthSeekBar = brushPickerView.findViewById(R.id.pocketpaint_stroke_width_seek_bar);
 		brushWidthSeekBar.setOnSeekBarChangeListener(new DefaultBrushToolOptions.OnBrushChangedWidthSeekBarListener());
 		brushSizeText = brushPickerView.findViewById(R.id.pocketpaint_stroke_width_width_text);
-		brushSizeText.setFilters(new InputFilter[]{new NumberRangeFilter(1, 100)});
+		brushSizeText.setFilters(new InputFilter[]{new DefaultNumberRangeFilter(1, 100)});
 		brushToolPreview = brushPickerView.findViewById(R.id.pocketpaint_brush_tool_preview);
 
 		buttonCircle.setOnClickListener(new View.OnClickListener() {

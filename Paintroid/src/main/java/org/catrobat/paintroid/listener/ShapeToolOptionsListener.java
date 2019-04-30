@@ -29,8 +29,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
 import org.catrobat.paintroid.tools.implementation.ShapeTool;
-import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
 import java.util.Locale;
 
@@ -66,7 +66,7 @@ public class ShapeToolOptionsListener {
 
 		outlineWidthSeekBar = (SeekBar) shapeToolOptionsView.findViewById(R.id.pocketpaint_shape_stroke_width_seek_bar);
 		outlineWidthEditText = (EditText) shapeToolOptionsView.findViewById(R.id.pocketpaint_shape_outline_edit);
-		outlineWidthEditText.setFilters(new InputFilter[]{new NumberRangeFilter(1, 100)});
+		outlineWidthEditText.setFilters(new InputFilter[]{new DefaultNumberRangeFilter(1, 100)});
 
 		int startingOutlineWidth = 25;
 		outlineWidthEditText.setText(String.format(Locale.getDefault(), "%d", (int) startingOutlineWidth));

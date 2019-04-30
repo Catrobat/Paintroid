@@ -17,17 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.ui.tools;
+package org.catrobat.paintroid.tools.helper;
 
-import android.text.InputFilter;
-import android.text.Spanned;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
 
-public interface NumberRangeFilter extends InputFilter {
-	int getMax();
-
-	void setMax(int max);
-
-	@Override
-	CharSequence filter(CharSequence source, int start, int end,
-			Spanned dest, int dstart, int dend);
+public interface CropAlgorithm {
+	Rect crop(Bitmap bitmap);
 }

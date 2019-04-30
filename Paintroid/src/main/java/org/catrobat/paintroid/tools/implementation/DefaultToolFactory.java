@@ -36,9 +36,11 @@ import org.catrobat.paintroid.tools.options.BrushToolOptions;
 import org.catrobat.paintroid.tools.options.FillToolOptions;
 import org.catrobat.paintroid.tools.options.TextToolOptions;
 import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.TransformToolOptions;
 import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptions;
 import org.catrobat.paintroid.ui.tools.DefaultFillToolOptions;
 import org.catrobat.paintroid.ui.tools.DefaultTextToolOptions;
+import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptions;
 
 public class DefaultToolFactory implements ToolFactory {
 
@@ -79,7 +81,7 @@ public class DefaultToolFactory implements ToolFactory {
 				tool = new FillTool(createFillToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			case TRANSFORM:
-				tool = new TransformTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+				tool = new TransformTool(createTransformToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
 			case SHAPE:
 				tool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
@@ -112,5 +114,9 @@ public class DefaultToolFactory implements ToolFactory {
 
 	private BrushToolOptions createBrushToolOptions(ViewGroup toolSpecificOptionsLayout) {
 		return new DefaultBrushToolOptions(toolSpecificOptionsLayout);
+	}
+
+	private TransformToolOptions createTransformToolOptions(ViewGroup toolSpecificOptionsLayout) {
+		return new DefaultTransformToolOptions(toolSpecificOptionsLayout);
 	}
 }
