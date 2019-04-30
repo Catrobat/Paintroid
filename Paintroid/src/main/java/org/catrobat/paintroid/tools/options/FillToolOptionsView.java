@@ -19,22 +19,10 @@
 
 package org.catrobat.paintroid.tools.options;
 
-import org.catrobat.paintroid.tools.implementation.ShapeTool;
-
-public interface ShapeToolOptions {
-	void setShapeActivated(ShapeTool.BaseShape shape);
-
-	void setDrawTypeActivated(ShapeTool.ShapeDrawType drawType);
-
-	void setShapeOutlineWidth(int outlineWidth);
-
+public interface FillToolOptionsView {
 	void setCallback(Callback callback);
 
 	interface Callback {
-		void setToolType(ShapeTool.BaseShape shape);
-
-		void setDrawType(ShapeTool.ShapeDrawType drawType);
-
-		void setOutlineWidth(int outlineWidth);
+		void onColorToleranceChanged(int colorTolerance);
 	}
 }

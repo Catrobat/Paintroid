@@ -33,11 +33,11 @@ import android.widget.TextView;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
 import org.catrobat.paintroid.tools.implementation.ShapeTool;
-import org.catrobat.paintroid.tools.options.ShapeToolOptions;
+import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
 
 import java.util.Locale;
 
-public class DefaultShapeToolOptions implements ShapeToolOptions {
+public class DefaultShapeToolOptionsView implements ShapeToolOptionsView {
 	private static final int MIN_STROKE_WIDTH = 1;
 
 	private Callback callback;
@@ -54,7 +54,7 @@ public class DefaultShapeToolOptions implements ShapeToolOptions {
 	private TextView shapeToolDialogTitle;
 	private TextView shapeToolFillOutline;
 
-	public DefaultShapeToolOptions(ViewGroup rootView) {
+	public DefaultShapeToolOptionsView(ViewGroup rootView) {
 		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
 		View shapeToolView = inflater.inflate(R.layout.dialog_pocketpaint_shapes, rootView);
 

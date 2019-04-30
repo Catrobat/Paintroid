@@ -31,7 +31,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -55,7 +55,7 @@ public class ToolControllerTest {
 	@Mock
 	public ToolReference toolReference;
 	@Mock
-	public ToolOptionsController toolOptionsController;
+	public ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	public ToolFactory toolFactory;
 	@Mock
@@ -72,7 +72,7 @@ public class ToolControllerTest {
 
 	@Test
 	public void testSetUp() {
-		verifyZeroInteractions(toolReference, toolOptionsController, toolFactory, commandManager, workspace, toolPaint,
+		verifyZeroInteractions(toolReference, toolOptionsViewController, toolFactory, commandManager, workspace, toolPaint,
 				contextCallback);
 		assertNotNull(toolController);
 	}
@@ -112,23 +112,23 @@ public class ToolControllerTest {
 	}
 
 	@Test
-	public void testHideToolOptionsCallsToolOptionsController() {
-		toolController.hideToolOptions();
+	public void testHideToolOptionsCallsToolOptionsViewController() {
+		toolController.hideToolOptionsView();
 
-		verify(toolOptionsController).hideAnimated();
-		verifyNoMoreInteractions(toolOptionsController);
+		verify(toolOptionsViewController).hideAnimated();
+		verifyNoMoreInteractions(toolOptionsViewController);
 	}
 
 	@Test
-	public void testToolOptionsControllerWhenOptionsVisibleReturnsTrue() {
-		when(toolOptionsController.isVisible()).thenReturn(true);
+	public void testToolOptionsViewControllerWhenOptionsVisibleReturnsTrue() {
+		when(toolOptionsViewController.isVisible()).thenReturn(true);
 
-		assertTrue(toolController.toolOptionsVisible());
+		assertTrue(toolController.toolOptionsViewVisible());
 	}
 
 	@Test
-	public void testToolOptionsControllerWhenOptionsNotVisibleReturnsFalse() {
-		assertFalse(toolController.toolOptionsVisible());
+	public void testToolOptionsViewControllerWhenOptionsNotVisibleReturnsFalse() {
+		assertFalse(toolController.toolOptionsViewVisible());
 	}
 
 	@Test
@@ -174,32 +174,32 @@ public class ToolControllerTest {
 
 	@Test
 	public void testDisableToolOptionsCallsOptions() {
-		toolController.disableToolOptions();
+		toolController.disableToolOptionsView();
 
-		verify(toolOptionsController).disable();
+		verify(toolOptionsViewController).disable();
 	}
 
 	@Test
 	public void testEnableToolOptionsCallsOptions() {
-		toolController.enableToolOptions();
+		toolController.enableToolOptionsView();
 
-		verify(toolOptionsController).enable();
+		verify(toolOptionsViewController).enable();
 	}
 
 	@Test
 	public void testToggleToolOptionsWhenNotVisibleThenShowOptions() {
-		toolController.toggleToolOptions();
+		toolController.toggleToolOptionsView();
 
-		verify(toolOptionsController).showAnimated();
+		verify(toolOptionsViewController).showAnimated();
 	}
 
 	@Test
 	public void testToggleToolOptionsWhenVisibleThenHideOptions() {
-		when(toolOptionsController.isVisible()).thenReturn(true);
+		when(toolOptionsViewController.isVisible()).thenReturn(true);
 
-		toolController.toggleToolOptions();
+		toolController.toggleToolOptionsView();
 
-		verify(toolOptionsController).hideAnimated();
+		verify(toolOptionsViewController).hideAnimated();
 	}
 
 	@Test
@@ -208,7 +208,7 @@ public class ToolControllerTest {
 		when(toolReference.get()).thenReturn(mock);
 		when(mock.getToolType()).thenReturn(ToolType.BRUSH, ToolType.IMPORTPNG);
 
-		assertTrue(toolController.hasToolOptions());
-		assertFalse(toolController.hasToolOptions());
+		assertTrue(toolController.hasToolOptionsView());
+		assertFalse(toolController.hasToolOptionsView());
 	}
 }

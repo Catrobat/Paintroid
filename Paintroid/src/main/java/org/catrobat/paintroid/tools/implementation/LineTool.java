@@ -35,21 +35,22 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener;
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener;
-import org.catrobat.paintroid.tools.options.BrushToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 public class LineTool extends BaseTool {
 
 	private PointF initialEventCoordinate;
 	private PointF currentCoordinate;
-	private BrushToolOptions brushToolOptions;
+	private BrushToolOptionsView brushToolOptionsView;
 
-	public LineTool(BrushToolOptions brushToolOptions, ContextCallback contextCallback, ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-		this.brushToolOptions = brushToolOptions;
+	public LineTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		this.brushToolOptionsView = brushToolOptionsView;
 
-		brushToolOptions.setBrushChangedListener(new CommonBrushChangedListener(this));
-		brushToolOptions.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
+		brushToolOptionsView.setBrushChangedListener(new CommonBrushChangedListener(this));
+		brushToolOptionsView.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
 	}
 
 	@Override
@@ -129,12 +130,12 @@ public class LineTool extends BaseTool {
 	@Override
 	public void changePaintColor(int color) {
 		super.changePaintColor(color);
-		brushToolOptions.invalidate();
+		brushToolOptionsView.invalidate();
 	}
 
 	@Override
 	public void setupToolOptions() {
-		brushToolOptions.setCurrentPaint(toolPaint.getPaint());
+		brushToolOptionsView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	@VisibleForTesting (otherwise = VisibleForTesting.NONE)

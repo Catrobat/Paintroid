@@ -72,7 +72,7 @@ import org.catrobat.paintroid.tools.implementation.DefaultToolFactory;
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
 import org.catrobat.paintroid.tools.implementation.DefaultToolReference;
 import org.catrobat.paintroid.tools.implementation.DefaultWorkspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.KeyboardListener;
@@ -82,7 +82,7 @@ import org.catrobat.paintroid.ui.MainActivityInteractor;
 import org.catrobat.paintroid.ui.MainActivityNavigator;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.dragndrop.DragAndDropListView;
-import org.catrobat.paintroid.ui.tools.DefaultToolOptionsController;
+import org.catrobat.paintroid.ui.tools.DefaultToolOptionsViewController;
 import org.catrobat.paintroid.ui.viewholder.BottomBarViewHolder;
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder;
 import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder;
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@VisibleForTesting
 	public ToolReference toolReference;
 	@VisibleForTesting
-	public ToolOptionsController toolOptionsController;
+	public ToolOptionsViewController toolOptionsViewController;
 
 	private LayerPresenter layerPresenter;
 	private DrawingSurface drawingSurface;
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		View bottomBarLayout = findViewById(R.id.pocketpaint_main_bottom_bar);
 		NavigationView navigationView = findViewById(R.id.pocketpaint_nav_view);
 
-		toolOptionsController = new DefaultToolOptionsController(this);
+		toolOptionsViewController = new DefaultToolOptionsViewController(this);
 		drawerLayoutViewHolder = new DrawerLayoutViewHolder(drawerLayout);
 		TopBarViewHolder topBarViewHolder = new TopBarViewHolder(topBarLayout);
 		BottomBarViewHolder bottomBarViewHolder = new BottomBarViewHolder(bottomBarLayout);
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		MainActivityContracts.Interactor interactor = new MainActivityInteractor();
 		model = new MainActivityModel();
 		ContextCallback contextCallback = new DefaultContextCallback(getApplicationContext());
-		ToolController toolController = new DefaultToolController(toolReference, toolOptionsController,
+		ToolController toolController = new DefaultToolController(toolReference, toolOptionsViewController,
 				new DefaultToolFactory(), commandManager, workspace, toolPaint, contextCallback);
 		presenter = new MainActivityPresenter(this, model, workspace,
 				navigator, interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	private void onCreateDrawingSurface() {
 		drawingSurface = findViewById(R.id.pocketpaint_drawing_surface_view);
-		drawingSurface.setArguments(layerModel, perspective, toolReference, toolOptionsController);
+		drawingSurface.setArguments(layerModel, perspective, toolReference, toolOptionsViewController);
 
 		appFragment.setPerspective(perspective);
 	}

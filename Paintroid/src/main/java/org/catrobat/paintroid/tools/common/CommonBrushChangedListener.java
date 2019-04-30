@@ -22,9 +22,9 @@ package org.catrobat.paintroid.tools.common;
 import android.graphics.Paint;
 
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.options.BrushToolOptions;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 
-public class CommonBrushChangedListener implements BrushToolOptions.OnBrushChangedListener {
+public class CommonBrushChangedListener implements BrushToolOptionsView.OnBrushChangedListener {
 	private Tool tool;
 
 	public CommonBrushChangedListener(Tool tool) {

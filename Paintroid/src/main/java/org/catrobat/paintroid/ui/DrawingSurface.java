@@ -49,7 +49,7 @@ import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTaskCall
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 import java.util.ListIterator;
 
@@ -67,7 +67,7 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	private Perspective perspective;
 	private DrawingSurfaceListener drawingSurfaceListener;
 	private ToolReference toolReference;
-	private ToolOptionsController toolOptionsController;
+	private ToolOptionsViewController toolOptionsViewController;
 
 	public DrawingSurface(Context context, AttributeSet attrSet) {
 		super(context, attrSet);
@@ -117,19 +117,19 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 			}
 
 			@Override
-			public ToolOptionsController getToolOptionsController() {
-				return toolOptionsController;
+			public ToolOptionsViewController getToolOptionsViewController() {
+				return toolOptionsViewController;
 			}
 		};
 		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, callback, density);
 		setOnTouchListener(drawingSurfaceListener);
 	}
 
-	public void setArguments(LayerContracts.Model layerModel, Perspective perspective, ToolReference toolReference, ToolOptionsController toolOptionsController) {
+	public void setArguments(LayerContracts.Model layerModel, Perspective perspective, ToolReference toolReference, ToolOptionsViewController toolOptionsViewController) {
 		this.layerModel = layerModel;
 		this.perspective = perspective;
 		this.toolReference = toolReference;
-		this.toolOptionsController = toolOptionsController;
+		this.toolOptionsViewController = toolOptionsViewController;
 	}
 
 	private synchronized void doDraw(Canvas surfaceViewCanvas) {

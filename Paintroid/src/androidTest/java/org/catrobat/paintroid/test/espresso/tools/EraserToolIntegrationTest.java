@@ -136,7 +136,7 @@ public class EraserToolIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.ERASER)
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 
 		onBrushPickerView().onStrokeWidthSeekBar()
 				.check(matches(allOf(isDisplayed(), withProgress(DEFAULT_STROKE_WIDTH))));
@@ -149,7 +149,7 @@ public class EraserToolIntegrationTest {
 				.check(matches(withProgress(newStrokeWidth)));
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onToolProperties()
 				.checkStrokeWidth(80);
@@ -171,13 +171,13 @@ public class EraserToolIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.ERASER)
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 
 		onBrushPickerView().onStrokeCapSquareView()
 				.perform(click());
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onToolProperties()
 				.checkCap(Cap.SQUARE);
@@ -199,7 +199,7 @@ public class EraserToolIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.ERASER)
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 
 		onBrushPickerView().onStrokeWidthTextView()
 				.check(matches(allOf(isDisplayed(), withText(TEXT_DEFAULT_STROKE_WIDTH))));
@@ -219,8 +219,8 @@ public class EraserToolIntegrationTest {
 				.checkCap(Cap.SQUARE);
 
 		onToolBarView()
-				.performCloseToolOptions()
-				.performOpenToolOptions();
+				.performCloseToolOptionsView()
+				.performOpenToolOptionsView();
 
 		onBrushPickerView().onStrokeWidthSeekBar()
 				.check(matches(withProgress(newStrokeWidth)));
@@ -239,7 +239,7 @@ public class EraserToolIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH)
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 
 		onBrushPickerView().onStrokeWidthSeekBar()
 				.check(matches(withProgress(eraserStrokeWidth)));

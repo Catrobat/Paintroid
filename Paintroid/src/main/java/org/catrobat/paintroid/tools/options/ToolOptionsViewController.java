@@ -23,7 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.ViewGroup;
 
-public interface ToolOptionsController {
+public interface ToolOptionsViewController {
 	void hideAnimated();
 
 	void disable();

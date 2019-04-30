@@ -29,7 +29,7 @@ import android.view.View.OnTouchListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.util.EnumSet;
@@ -96,10 +96,10 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		ToolOptionsController toolOptionsController = callback.getToolOptionsController();
+		ToolOptionsViewController toolOptionsViewController = callback.getToolOptionsViewController();
 
-		if (toolOptionsController.isVisible()) {
-			toolOptionsController.hideAnimated();
+		if (toolOptionsViewController.isVisible()) {
+			toolOptionsViewController.hideAnimated();
 			return false;
 		}
 
@@ -311,6 +311,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 		void convertToCanvasFromSurface(PointF surfacePoint);
 
-		ToolOptionsController getToolOptionsController();
+		ToolOptionsViewController getToolOptionsViewController();
 	}
 }

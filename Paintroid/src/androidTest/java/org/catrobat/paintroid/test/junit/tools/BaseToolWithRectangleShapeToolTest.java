@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,7 +67,7 @@ public class BaseToolWithRectangleShapeToolTest {
 	@Mock
 	private CommandManager commandManager;
 	@Mock
-	private ToolOptionsController toolOptionsController;
+	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 	@Mock
@@ -99,7 +99,7 @@ public class BaseToolWithRectangleShapeToolTest {
 			}
 		});
 
-		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.BRUSH, toolPaint, workspace, commandManager);
+		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH, toolPaint, workspace, commandManager);
 
 		toolPosition = toolToTest.toolPosition;
 		rectWidth = toolToTest.boxWidth;
@@ -162,7 +162,7 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		when(workspace.getScale()).thenReturn(0.8f, 0.15f, 0.1f);
 
-		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.SHAPE,
+		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.SHAPE,
 				toolPaint, workspace, commandManager);
 
 		float width = toolToTest.boxWidth;
@@ -170,7 +170,7 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		assertEquals("Width and Height should be the same with activating Rectangletool on low zoom out", width, height, Double.MIN_VALUE);
 
-		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.SHAPE,
+		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.SHAPE,
 				toolPaint, workspace, commandManager);
 
 		width = toolToTest.boxWidth;
@@ -180,7 +180,7 @@ public class BaseToolWithRectangleShapeToolTest {
 				"With zooming out a lot, height and width should not be the same anymore and adjust the ratio to the drawinSurface",
 				width, height);
 
-		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.SHAPE,
+		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.SHAPE,
 				toolPaint, workspace, commandManager);
 
 		float newWidth = toolToTest.boxWidth;
@@ -198,9 +198,9 @@ public class BaseToolWithRectangleShapeToolTest {
 	@Test
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() {
 		when(workspace.getScale()).thenReturn(1f, 2f);
-		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.BRUSH,
+		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
 				toolPaint, workspace, commandManager);
-		BaseToolWithRectangleShape rectTool2 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.BRUSH,
+		BaseToolWithRectangleShape rectTool2 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
 				toolPaint, workspace, commandManager);
 
 		assertTrue("rectangle should be smaller with scale 2",
@@ -212,9 +212,9 @@ public class BaseToolWithRectangleShapeToolTest {
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel05() {
 		when(workspace.getScale()).thenReturn(1f, 0.5f);
 
-		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.BRUSH,
+		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
 				toolPaint, workspace, commandManager);
-		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.BRUSH,
+		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
 				toolPaint, workspace, commandManager);
 		assertThat(rectTool1.boxWidth, is(lessThan(rectTool05.boxWidth)));
 		assertThat(rectTool1.boxHeight, is(lessThan(rectTool05.boxHeight)));
@@ -373,9 +373,9 @@ public class BaseToolWithRectangleShapeToolTest {
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 		private final ToolType toolType;
 
-		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback, ToolOptionsController toolOptionsController, ToolType toolType, ToolPaint toolPaint,
+		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint,
 				Workspace layerModelWrapper, CommandManager commandManager) {
-			super(contextCallback, toolOptionsController, toolPaint, layerModelWrapper, commandManager);
+			super(contextCallback, toolOptionsViewController, toolPaint, layerModelWrapper, commandManager);
 			this.toolType = toolType;
 		}
 

@@ -27,8 +27,8 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.ShapeTool;
-import org.catrobat.paintroid.tools.options.ShapeToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,9 +54,9 @@ public class ShapeToolTest {
 	@Mock
 	private CommandManager commandManager;
 	@Mock
-	private ShapeToolOptions shapeToolOptions;
+	private ShapeToolOptionsView shapeToolOptions;
 	@Mock
-	private ToolOptionsController toolOptionsController;
+	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 	@Mock
@@ -87,7 +87,7 @@ public class ShapeToolTest {
 		displayMetrics.widthPixels = 100;
 		displayMetrics.heightPixels = 100;
 
-		shapeTool = new ShapeTool(shapeToolOptions, contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		shapeTool = new ShapeTool(shapeToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		shapeTool.baseShape = shape;
 	}
 

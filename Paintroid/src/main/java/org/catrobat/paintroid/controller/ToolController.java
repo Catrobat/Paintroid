@@ -31,9 +31,9 @@ public interface ToolController {
 
 	boolean isDefaultTool();
 
-	void hideToolOptions();
+	void hideToolOptionsView();
 
-	boolean toolOptionsVisible();
+	boolean toolOptionsViewVisible();
 
 	void resetToolInternalState();
 
@@ -43,15 +43,15 @@ public interface ToolController {
 
 	ToolType getToolType();
 
-	void disableToolOptions();
+	void disableToolOptionsView();
 
-	void enableToolOptions();
+	void enableToolOptionsView();
 
 	void createTool();
 
-	void toggleToolOptions();
+	void toggleToolOptionsView();
 
-	boolean hasToolOptions();
+	boolean hasToolOptionsView();
 
 	void setBitmapFromFile(Bitmap bitmap);
 }

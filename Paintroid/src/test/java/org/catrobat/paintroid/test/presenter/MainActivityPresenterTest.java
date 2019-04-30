@@ -281,7 +281,7 @@ public class MainActivityPresenterTest {
 		verify(view).enterFullscreen();
 		verify(navigationDrawerViewHolder).hideEnterFullscreen();
 		verify(navigationDrawerViewHolder).showExitFullscreen();
-		verify(toolController).disableToolOptions();
+		verify(toolController).disableToolOptionsView();
 		verify(perspective).enterFullscreen();
 	}
 
@@ -294,7 +294,7 @@ public class MainActivityPresenterTest {
 		verify(view).exitFullscreen();
 		verify(navigationDrawerViewHolder).showEnterFullscreen();
 		verify(navigationDrawerViewHolder).hideExitFullscreen();
-		verify(toolController).enableToolOptions();
+		verify(toolController).enableToolOptionsView();
 		verify(perspective).exitFullscreen();
 	}
 
@@ -468,11 +468,11 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnBackPressedWhenToolOptionsShownThenHideToolOptions() {
-		when(toolController.toolOptionsVisible()).thenReturn(true);
+		when(toolController.toolOptionsViewVisible()).thenReturn(true);
 
 		presenter.onBackPressed();
 
-		verify(toolController).hideToolOptions();
+		verify(toolController).hideToolOptionsView();
 	}
 
 	@Test
@@ -781,11 +781,11 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testToolClickedWhenSameToolTypeThenToggleOptions() {
 		when(toolController.getToolType()).thenReturn(ToolType.TEXT);
-		when(toolController.hasToolOptions()).thenReturn(true);
+		when(toolController.hasToolOptionsView()).thenReturn(true);
 
 		presenter.toolClicked(ToolType.TEXT);
 
-		verify(toolController).toggleToolOptions();
+		verify(toolController).toggleToolOptionsView();
 	}
 
 	@Test

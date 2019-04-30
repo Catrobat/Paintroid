@@ -33,14 +33,14 @@ import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 import static org.catrobat.paintroid.tools.Tool.StateChange.NEW_IMAGE_LOADED;
 import static org.catrobat.paintroid.tools.Tool.StateChange.RESET_INTERNAL_STATE;
 
 public class DefaultToolController implements ToolController {
 	private ToolReference toolReference;
-	private ToolOptionsController toolOptionsController;
+	private ToolOptionsViewController toolOptionsViewController;
 	private ToolFactory toolFactory;
 	private CommandManager commandManager;
 	private Workspace workspace;
@@ -48,11 +48,11 @@ public class DefaultToolController implements ToolController {
 	private ContextCallback contextCallback;
 	private ColorPickerDialog.OnColorPickedListener onColorPickedListener;
 
-	public DefaultToolController(ToolReference toolReference, ToolOptionsController toolOptionsController,
+	public DefaultToolController(ToolReference toolReference, ToolOptionsViewController toolOptionsViewController,
 			ToolFactory toolFactory, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint,
 			ContextCallback contextCallback) {
 		this.toolReference = toolReference;
-		this.toolOptionsController = toolOptionsController;
+		this.toolOptionsViewController = toolOptionsViewController;
 		this.toolFactory = toolFactory;
 		this.commandManager = commandManager;
 		this.workspace = workspace;
@@ -67,8 +67,7 @@ public class DefaultToolController implements ToolController {
 
 	@Override
 	public void switchTool(ToolType toolType) {
-		Tool tool = toolFactory.createTool(toolType, toolOptionsController, commandManager, workspace, toolPaint, contextCallback, onColorPickedListener);
-		switchTool(tool);
+		switchTool(createAndSetupTool(toolType));
 	}
 
 	@Override
@@ -77,13 +76,13 @@ public class DefaultToolController implements ToolController {
 	}
 
 	@Override
-	public void hideToolOptions() {
-		toolOptionsController.hideAnimated();
+	public void hideToolOptionsView() {
+		toolOptionsViewController.hideAnimated();
 	}
 
 	@Override
-	public boolean toolOptionsVisible() {
-		return toolOptionsController.isVisible();
+	public boolean toolOptionsViewVisible() {
+		return toolOptionsViewController.isVisible();
 	}
 
 	@Override
@@ -125,13 +124,13 @@ public class DefaultToolController implements ToolController {
 	}
 
 	@Override
-	public void disableToolOptions() {
-		toolOptionsController.disable();
+	public void disableToolOptionsView() {
+		toolOptionsViewController.disable();
 	}
 
 	@Override
-	public void enableToolOptions() {
-		toolOptionsController.enable();
+	public void enableToolOptionsView() {
+		toolOptionsViewController.enable();
 	}
 
 	@Override
@@ -139,32 +138,40 @@ public class DefaultToolController implements ToolController {
 		Bundle bundle = new Bundle();
 
 		if (toolReference.get() == null) {
-			toolReference.set(toolFactory.createTool(ToolType.BRUSH,
-					toolOptionsController, commandManager, workspace, toolPaint, contextCallback, onColorPickedListener));
+			toolReference.set(createAndSetupTool(ToolType.BRUSH));
 			toolReference.get().startTool();
 		} else {
 			Paint paint = toolReference.get().getDrawPaint();
 			toolReference.get().leaveTool();
 			toolReference.get().onSaveInstanceState(bundle);
-			toolReference.set(toolFactory.createTool(toolReference.get().getToolType(),
-					toolOptionsController, commandManager, workspace, toolPaint, contextCallback, onColorPickedListener));
+			toolReference.set(createAndSetupTool(toolReference.get().getToolType()));
 			toolReference.get().onRestoreInstanceState(bundle);
 			toolReference.get().startTool();
 			toolReference.get().setDrawPaint(paint);
 		}
 	}
 
+	private Tool createAndSetupTool(ToolType toolType) {
+		Tool tool;
+		toolOptionsViewController.removeToolViews();
+		toolOptionsViewController.setToolName(toolType.getNameResource());
+		tool = toolFactory.createTool(toolType, toolOptionsViewController, commandManager, workspace, toolPaint, contextCallback, onColorPickedListener);
+		tool.setupToolOptions();
+		toolOptionsViewController.resetToOrigin();
+		return tool;
+	}
+
 	@Override
-	public void toggleToolOptions() {
-		if (toolOptionsController.isVisible()) {
-			toolOptionsController.hideAnimated();
+	public void toggleToolOptionsView() {
+		if (toolOptionsViewController.isVisible()) {
+			toolOptionsViewController.hideAnimated();
 		} else {
-			toolOptionsController.showAnimated();
+			toolOptionsViewController.showAnimated();
 		}
 	}
 
 	@Override
-	public boolean hasToolOptions() {
+	public boolean hasToolOptionsView() {
 		return getToolType().hasOptions();
 	}
 

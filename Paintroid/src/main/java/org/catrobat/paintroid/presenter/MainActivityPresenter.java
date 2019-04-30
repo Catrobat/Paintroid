@@ -315,8 +315,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			drawerLayoutViewHolder.closeDrawer(Gravity.END, true);
 		} else if (model.isFullscreen()) {
 			exitFullscreenClicked();
-		} else if (toolController.toolOptionsVisible()) {
-			toolController.hideToolOptions();
+		} else if (toolController.toolOptionsViewVisible()) {
+			toolController.hideToolOptionsView();
 		} else if (!toolController.isDefaultTool()) {
 			setTool(ToolType.BRUSH);
 			toolController.switchTool(ToolType.BRUSH);
@@ -335,8 +335,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void undoClicked() {
 		if (view.isKeyboardShown()) {
 			view.hideKeyboard();
-		} else if (toolController.toolOptionsVisible()) {
-			toolController.hideToolOptions();
+		} else if (toolController.toolOptionsViewVisible()) {
+			toolController.hideToolOptionsView();
 		} else {
 			commandManager.undo();
 		}
@@ -346,8 +346,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void redoClicked() {
 		if (view.isKeyboardShown()) {
 			view.hideKeyboard();
-		} else if (toolController.toolOptionsVisible()) {
-			toolController.hideToolOptions();
+		} else if (toolController.toolOptionsViewVisible()) {
+			toolController.hideToolOptionsView();
 		} else {
 			commandManager.redo();
 		}
@@ -442,7 +442,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		bottomBarViewHolder.show();
 		navigationDrawerViewHolder.hideExitFullscreen();
 		navigationDrawerViewHolder.showEnterFullscreen();
-		toolController.enableToolOptions();
+		toolController.enableToolOptionsView();
 		perspective.exitFullscreen();
 	}
 
@@ -453,7 +453,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		bottomBarViewHolder.hide();
 		navigationDrawerViewHolder.showExitFullscreen();
 		navigationDrawerViewHolder.hideEnterFullscreen();
-		toolController.disableToolOptions();
+		toolController.disableToolOptionsView();
 		perspective.enterFullscreen();
 	}
 
@@ -494,8 +494,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void toolClicked(ToolType type) {
 		bottomBarViewHolder.cancelAnimation();
 
-		if (toolController.getToolType() == type && toolController.hasToolOptions()) {
-			toolController.toggleToolOptions();
+		if (toolController.getToolType() == type && toolController.hasToolOptionsView()) {
+			toolController.toggleToolOptionsView();
 		} else if (view.isKeyboardShown()) {
 			view.hideKeyboard();
 		} else {

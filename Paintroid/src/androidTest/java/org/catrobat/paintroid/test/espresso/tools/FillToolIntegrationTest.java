@@ -228,13 +228,13 @@ public class FillToolIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.FILL)
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 
 		onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
 				.perform(replaceText(String.valueOf(100)));
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));

@@ -38,8 +38,8 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.helper.Conversion;
-import org.catrobat.paintroid.tools.options.ShapeToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 public class ShapeTool extends BaseToolWithRectangleShape {
 
@@ -54,14 +54,14 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 	public BaseShape baseShape;
 	private int shapeOutlineWidth = 25;
 	private ShapeDrawType shapeDrawType;
-	private ShapeToolOptions shapeToolOptions;
+	private ShapeToolOptionsView shapeToolOptionsView;
 	private Paint geometricFillCommandPaint;
 	private float previousBoxWidth;
 	private float previousBoxHeight;
 
-	public ShapeTool(ShapeToolOptions shapeToolOptions, ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+	public ShapeTool(ShapeToolOptionsView shapeToolOptionsView, ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 
@@ -71,9 +71,9 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 
 		shapeDrawType = ShapeDrawType.FILL;
 
-		this.shapeToolOptions = shapeToolOptions;
-		this.shapeToolOptions.setCallback(
-				new ShapeToolOptions.Callback() {
+		this.shapeToolOptionsView = shapeToolOptionsView;
+		this.shapeToolOptionsView.setCallback(
+				new ShapeToolOptionsView.Callback() {
 					@Override
 					public void setToolType(BaseShape shape) {
 						baseShape = shape;
@@ -198,9 +198,9 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 			this.shapeDrawType = shapeDrawType;
 			this.shapeOutlineWidth = shapeOutlineWidth;
 
-			shapeToolOptions.setShapeActivated(baseShape);
-			shapeToolOptions.setDrawTypeActivated(shapeDrawType);
-			shapeToolOptions.setShapeOutlineWidth(shapeOutlineWidth);
+			shapeToolOptionsView.setShapeActivated(baseShape);
+			shapeToolOptionsView.setDrawTypeActivated(shapeDrawType);
+			shapeToolOptionsView.setShapeOutlineWidth(shapeOutlineWidth);
 			createAndSetBitmap();
 		}
 	}
@@ -308,7 +308,7 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 		toolSpecificOptionsLayout.post(new Runnable() {
 			@Override
 			public void run() {
-				toolOptionsController.showAnimated();
+				toolOptionsViewController.showAnimated();
 			}
 		});
 	}

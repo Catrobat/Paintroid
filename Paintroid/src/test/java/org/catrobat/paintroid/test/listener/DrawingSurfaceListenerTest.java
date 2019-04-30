@@ -25,7 +25,7 @@ import android.view.MotionEvent;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask;
 import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +59,7 @@ public class DrawingSurfaceListenerTest {
 	private Tool currentTool;
 
 	@Mock
-	private ToolOptionsController toolOptionsController;
+	private ToolOptionsViewController toolOptionsViewController;
 
 	@Mock
 	private DrawingSurfaceListener.DrawingSurfaceListenerCallback callback;
@@ -70,8 +70,8 @@ public class DrawingSurfaceListenerTest {
 	public void setUp() {
 		when(callback.getCurrentTool())
 				.thenReturn(currentTool);
-		when(callback.getToolOptionsController())
-				.thenReturn(toolOptionsController);
+		when(callback.getToolOptionsViewController())
+				.thenReturn(toolOptionsViewController);
 
 		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, callback, DISPLAY_DENSITY);
 	}
@@ -510,12 +510,12 @@ public class DrawingSurfaceListenerTest {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
 		MotionEvent motionEvent = mock(MotionEvent.class);
 
-		when(toolOptionsController.isVisible()).thenReturn(true);
+		when(toolOptionsViewController.isVisible()).thenReturn(true);
 
 		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		assertFalse(onTouchResult);
-		verify(toolOptionsController).hideAnimated();
+		verify(toolOptionsViewController).hideAnimated();
 		verifyZeroInteractions(currentTool);
 	}
 }

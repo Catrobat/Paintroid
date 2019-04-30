@@ -48,7 +48,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 		return onView(withId(getCurrentToolType().getToolButtonID()));
 	}
 
-	public ViewInteraction onToolOptions() {
+	public ViewInteraction onToolOptionsView() {
 		return onView(withId(R.id.pocketpaint_layout_tool_options));
 	}
 
@@ -72,14 +72,14 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 		return getMainActivity().toolReference.get().getToolType();
 	}
 
-	public ToolBarViewInteraction performOpenToolOptions() {
-		onToolOptions()
+	public ToolBarViewInteraction performOpenToolOptionsView() {
+		onToolOptionsView()
 				.check(matches(not(isDisplayed())));
 		return performClickSelectedToolButton();
 	}
 
-	public ToolBarViewInteraction performCloseToolOptions() {
-		onToolOptions()
+	public ToolBarViewInteraction performCloseToolOptionsView() {
+		onToolOptionsView()
 				.check(matches(isDisplayed()));
 		return performClickSelectedToolButton();
 	}
