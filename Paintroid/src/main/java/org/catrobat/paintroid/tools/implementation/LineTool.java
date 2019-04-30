@@ -24,6 +24,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.RectF;
+import android.support.annotation.VisibleForTesting;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
@@ -40,7 +42,6 @@ public class LineTool extends BaseTool {
 
 	private PointF initialEventCoordinate;
 	private PointF currentCoordinate;
-	private boolean pathInsideBitmap;
 	private BrushToolOptions brushToolOptions;
 
 	public LineTool(BrushToolOptions brushToolOptions, ContextCallback contextCallback, ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
@@ -88,18 +89,12 @@ public class LineTool extends BaseTool {
 		}
 		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		pathInsideBitmap = false;
-
-		pathInsideBitmap = workspace.contains(coordinate);
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
 		currentCoordinate = new PointF(coordinate.x, coordinate.y);
-		if (!pathInsideBitmap && workspace.contains(coordinate)) {
-			pathInsideBitmap = true;
-		}
 		return true;
 	}
 
@@ -113,15 +108,15 @@ public class LineTool extends BaseTool {
 		finalPath.moveTo(initialEventCoordinate.x, initialEventCoordinate.y);
 		finalPath.lineTo(coordinate.x, coordinate.y);
 
-		if (!pathInsideBitmap && workspace.contains(coordinate)) {
-			pathInsideBitmap = true;
-		}
+		RectF bounds = new RectF();
+		finalPath.computeBounds(bounds, true);
+		bounds.inset(-toolPaint.getStrokeWidth(), -toolPaint.getStrokeWidth());
 
-		if (pathInsideBitmap) {
+		if (workspace.intersectsWith(bounds)) {
 			Command command = commandFactory.createPathCommand(toolPaint.getPaint(), finalPath);
 			commandManager.addCommand(command);
 		}
-
+		resetInternalState();
 		return true;
 	}
 
@@ -140,5 +135,15 @@ public class LineTool extends BaseTool {
 	@Override
 	public void setupToolOptions() {
 		brushToolOptions.setCurrentPaint(toolPaint.getPaint());
+	}
+
+	@VisibleForTesting (otherwise = VisibleForTesting.NONE)
+	public PointF getInitialEventCoordinate() {
+		return initialEventCoordinate;
+	}
+
+	@VisibleForTesting (otherwise = VisibleForTesting.NONE)
+	public PointF getCurrentCoordinate() {
+		return currentCoordinate;
 	}
 }
