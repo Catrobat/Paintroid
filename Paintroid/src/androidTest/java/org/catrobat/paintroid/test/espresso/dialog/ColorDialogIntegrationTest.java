@@ -505,6 +505,27 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
+	public void testColorPickerButtonTextChangesColor() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+
+		onView(withId(R.id.color_chooser_color_rgb_seekbar_red)).perform(touchCenterLeft());
+		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).perform(touchCenterLeft());
+		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).perform(touchCenterLeft());
+		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
+
+		onView(allOf(withId(R.id.color_chooser_button_ok), instanceOf(Button.class)))
+				.check(matches(withTextColor(Color.WHITE)));
+
+		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterLeft());
+
+		onView(allOf(withId(R.id.color_chooser_button_ok), instanceOf(Button.class)))
+				.check(matches(withTextColor(Color.BLACK)));
+	}
+
+	@Test
 	public void testColorPickerInitializesRgbTabTransparentColor() {
 		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
 		onColorPickerView()
