@@ -353,7 +353,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void undoClicked() {
-		if (toolOptionsController.isVisible()) {
+		if (view.isKeyboardShown()) {
+			view.hideKeyboard();
+		} else if (toolOptionsController.isVisible()) {
 			toolOptionsController.hideAnimated();
 		} else {
 			commandManager.undo();
@@ -362,7 +364,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void redoClicked() {
-		if (toolOptionsController.isVisible()) {
+		if (view.isKeyboardShown()) {
+			view.hideKeyboard();
+		} else if (toolOptionsController.isVisible()) {
 			toolOptionsController.hideAnimated();
 		} else {
 			commandManager.redo();
