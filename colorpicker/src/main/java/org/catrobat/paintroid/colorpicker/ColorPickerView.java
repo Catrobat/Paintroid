@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
@@ -144,6 +145,19 @@ public class ColorPickerView extends LinearLayoutCompat {
 		tabHost.addTab(preTab);
 		tabHost.addTab(hsvTab);
 		tabHost.addTab(rgbTab);
+		tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+			@Override
+			public void onTabChanged(String tabId) {
+				hideKeyboard();
+			}
+		});
+	}
+
+	private void hideKeyboard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (inputMethodManager != null) {
+			inputMethodManager.hideSoftInputFromWindow(getRootView().getWindowToken(), 0);
+		}
 	}
 
 	@Override
