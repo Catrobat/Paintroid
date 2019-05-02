@@ -466,6 +466,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	private void enterFullscreen() {
+		view.hideKeyboard();
 		view.enterFullscreen();
 		topBarViewHolder.hide();
 		bottomBarViewHolder.hide();
