@@ -507,12 +507,34 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
+	public void testUndoClickedWhenKeyboardOpenedThenCloseKeyboard() {
+		when(toolReference.get()).thenReturn(tool);
+		when(view.isKeyboardShown()).thenReturn(true);
+
+		presenter.undoClicked();
+
+		verify(view).hideKeyboard();
+		verifyZeroInteractions(commandManager);
+	}
+
+	@Test
 	public void testUndoClickedThenExecuteUndo() {
 		when(toolReference.get()).thenReturn(tool);
 
 		presenter.undoClicked();
 
 		verify(commandManager).undo();
+	}
+
+	@Test
+	public void testRedoClickedWhenKeyboardOpenedThenCloseKeyboard() {
+		when(toolReference.get()).thenReturn(tool);
+		when(view.isKeyboardShown()).thenReturn(true);
+
+		presenter.redoClicked();
+
+		verify(view).hideKeyboard();
+		verifyZeroInteractions(commandManager);
 	}
 
 	@Test
