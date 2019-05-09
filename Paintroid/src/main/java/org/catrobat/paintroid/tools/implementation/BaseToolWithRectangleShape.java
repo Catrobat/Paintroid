@@ -263,11 +263,20 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		return true;
 	}
 
-	protected boolean boxContainsPoint(PointF coordinate) {
-		return coordinate.x > toolPosition.x - boxWidth / 2
-				&& coordinate.x < toolPosition.x + boxWidth / 2
-				&& coordinate.y > toolPosition.y - boxHeight / 2
-				&& coordinate.y < toolPosition.y + boxHeight / 2;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public boolean boxContainsPoint(PointF coordinate) {
+		float relativeToOriginX = coordinate.x - toolPosition.x;
+		float relativeToOriginY = coordinate.y - toolPosition.y;
+
+		double radians = -(boxRotation * Math.PI / 180);
+
+		float rotatedX = (float) (relativeToOriginX * Math.cos(radians) - relativeToOriginY * Math.sin(radians)) + toolPosition.x;
+		float rotatedY = (float) (relativeToOriginX * Math.sin(radians) + relativeToOriginY * Math.cos(radians)) + toolPosition.y;
+
+		return rotatedX > toolPosition.x - boxWidth / 2
+				&& rotatedX < toolPosition.x + boxWidth / 2
+				&& rotatedY > toolPosition.y - boxHeight / 2
+				&& rotatedY < toolPosition.y + boxHeight / 2;
 	}
 
 	protected boolean boxIntersectsWorkspace() {

@@ -50,6 +50,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
@@ -461,6 +462,34 @@ public class BaseToolWithRectangleShapeToolTest {
 		toolToTest.handleUp(destinationPoint);
 		newRotation = toolToTest.boxRotation;
 		assertNotEquals("Rectangle should rotate.", newRotation, 0);
+	}
+
+	@UiThreadTest
+	@Test
+	public void testIsClickInsideBoxCalculatedCorrect() {
+		PointF topLeftCorner = new PointF(toolPosition.x - rectWidth / 2 + 20,
+				toolPosition.y - rectHeight / 2 + 20);
+
+		PointF pointInRotatedRectangle = new PointF(toolPosition.x,
+				toolPosition.y - rectHeight / 2);
+
+		PointF topLeftRotationPoint = new PointF(toolPosition.x - rectWidth / 2 - symbolDistance / 2,
+				toolPosition.y - rectHeight / 2 - symbolDistance / 2);
+
+		toolToTest.rotationEnabled = true;
+		toolToTest.handleDown(toolPosition);
+		toolToTest.handleUp(toolPosition);
+
+		assertTrue(toolToTest.boxContainsPoint(topLeftCorner));
+		assertFalse(toolToTest.boxContainsPoint(pointInRotatedRectangle));
+
+		//rotate right
+		toolToTest.handleDown(topLeftRotationPoint);
+		toolToTest.handleMove(new PointF(screenWidth / 2, topLeftRotationPoint.y));
+		toolToTest.handleUp(new PointF(screenWidth / 2, topLeftRotationPoint.y));
+
+		assertFalse(toolToTest.boxContainsPoint(topLeftCorner));
+		assertTrue(toolToTest.boxContainsPoint(pointInRotatedRectangle));
 	}
 
 	@Test
