@@ -286,6 +286,7 @@ public class MainActivityPresenterTest {
 
 		verify(model).setFullscreen(true);
 		verify(topBarViewHolder).hide();
+		verify(view).hideKeyboard();
 		verify(view).enterFullscreen();
 		verify(navigationDrawerViewHolder).hideEnterFullscreen();
 		verify(navigationDrawerViewHolder).showExitFullscreen();
