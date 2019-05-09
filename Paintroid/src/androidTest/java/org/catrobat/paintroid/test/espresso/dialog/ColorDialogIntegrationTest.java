@@ -29,9 +29,9 @@ import android.widget.Button;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
-import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
-import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.colorpicker.HSVColorPickerView;
+import org.catrobat.paintroid.colorpicker.PresetSelectorView;
+import org.catrobat.paintroid.colorpicker.RgbSelectorView;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.junit.Before;
 import org.junit.Rule;
@@ -111,13 +111,13 @@ public class ColorDialogIntegrationTest {
 
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_hsv))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_HSV_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 	}
 
@@ -128,15 +128,14 @@ public class ColorDialogIntegrationTest {
 				.performOpenColorPicker();
 
 		final Resources resources = launchActivityRule.getActivity().getResources();
-		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
-
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
 		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
 			onColorPickerView()
 					.performClickColorPickerPresetSelectorButton(counterColors);
 
 			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
 
-			onView(allOf(withId(R.id.color_chooser_button_ok), instanceOf(Button.class)))
+			onView(allOf(withId(R.id.color_picker_button_ok), instanceOf(Button.class)))
 					.check(matches(withBackgroundColor(arrayColor)));
 		}
 		presetColors.recycle();
@@ -145,7 +144,7 @@ public class ColorDialogIntegrationTest {
 	@Test
 	public void testColorApplyButtonChangesStandard() {
 		final Resources resources = launchActivityRule.getActivity().getResources();
-		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
 		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
 			onColorPickerView()
 					.performOpenColorPicker();
@@ -182,13 +181,13 @@ public class ColorDialogIntegrationTest {
 
 		int initialColor = toolReference.get().getDrawPaint().getColor();
 		final Resources resources = launchActivityRule.getActivity().getResources();
-		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
 		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
 
 			onColorPickerView()
 					.performClickColorPickerPresetSelectorButton(counterColors);
 
-			onView(allOf(withId(R.id.color_chooser_button_cancel), instanceOf(Button.class)))
+			onView(allOf(withId(R.id.color_picker_button_cancel), instanceOf(Button.class)))
 					.check(matches(withBackgroundColor(initialColor)));
 		}
 		presetColors.recycle();
@@ -200,7 +199,7 @@ public class ColorDialogIntegrationTest {
 				.performOpenColorPicker();
 
 		final Resources resources = launchActivityRule.getActivity().getResources();
-		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
 		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
 
 			onColorPickerView()
@@ -208,7 +207,7 @@ public class ColorDialogIntegrationTest {
 
 			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
 
-			onView(allOf(withId(R.id.color_chooser_button_ok), instanceOf(Button.class)))
+			onView(allOf(withId(R.id.color_picker_button_ok), instanceOf(Button.class)))
 					.check(matches(allOf(withTextColor(anyOf(is(Color.BLACK), is(Color.WHITE))),
 							not(allOf(withBackgroundColor(arrayColor), withTextColor(arrayColor))))
 							));
@@ -223,10 +222,10 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
+		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
 		int colorToSelectIndex = presetColors.length() / 2;
 		int colorToSelect = presetColors.getColor(colorToSelectIndex, Color.WHITE);
 		presetColors.recycle();
@@ -246,43 +245,43 @@ public class ColorDialogIntegrationTest {
 	@Test
 	public void testIfRGBSeekBarsDoChangeColor() {
 		final Resources resources = launchActivityRule.getActivity().getResources();
-		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
 
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
 		onColorPickerView()
 				.performClickColorPickerPresetSelectorButton(0);
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(withId(R.id.color_chooser_color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), withTextColor(getColorById(R.color.pocketpaint_color_chooser_rgb_red)))));
-		onView(withId(R.id.color_chooser_color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), withTextColor(getColorById(R.color.pocketpaint_color_chooser_rgb_green)))));
-		onView(withId(R.id.color_chooser_color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), withTextColor(getColorById(R.color.pocketpaint_color_chooser_rgb_blue)))));
-		onView(withId(R.id.color_chooser_color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.pocketpaint_color_chooser_rgb_alpha)))));
+		onView(withId(R.id.color_picker_color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_red)))));
+		onView(withId(R.id.color_picker_color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_green)))));
+		onView(withId(R.id.color_picker_color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_blue)))));
+		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_alpha)))));
 
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_red)).check(matches(isDisplayed()));
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).check(matches(isDisplayed()));
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).check(matches(isDisplayed()));
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).check(matches(isDisplayed()));
-		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(isDisplayed()));
 
-		onView(withId(R.id.color_chooser_rgb_red_value)).check(matches(isDisplayed()));
-		onView(withId(R.id.color_chooser_rgb_green_value)).check(matches(isDisplayed()));
-		onView(withId(R.id.color_chooser_rgb_blue_value)).check(matches(isDisplayed()));
-		onView(withId(R.id.color_chooser_rgb_alpha_value)).check(matches(isDisplayed()));
-		onView(allOf(withText(TEXT_PERCENT_SIGN), hasSibling(withId(R.id.color_chooser_rgb_alpha_value)))).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_rgb_red_value)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_rgb_green_value)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_rgb_blue_value)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(isDisplayed()));
+		onView(allOf(withText(TEXT_PERCENT_SIGN), hasSibling(withId(R.id.color_picker_rgb_alpha_value)))).check(matches(isDisplayed()));
 
 		int currentSelectedColor = presetColors.getColor(0, Color.BLACK);
 
-		onView(withId(R.id.color_chooser_rgb_red_value)).check(matches(withText(Integer.toString(Color.red(currentSelectedColor)))));
-		onView(withId(R.id.color_chooser_rgb_green_value)).check(matches(withText(Integer.toString(Color.green(currentSelectedColor)))));
-		onView(withId(R.id.color_chooser_rgb_blue_value)).check(matches(withText(Integer.toString(Color.blue(currentSelectedColor)))));
-		onView(withId(R.id.color_chooser_rgb_alpha_value)).check(matches(
+		onView(withId(R.id.color_picker_rgb_red_value)).check(matches(withText(Integer.toString(Color.red(currentSelectedColor)))));
+		onView(withId(R.id.color_picker_rgb_green_value)).check(matches(withText(Integer.toString(Color.green(currentSelectedColor)))));
+		onView(withId(R.id.color_picker_rgb_blue_value)).check(matches(withText(Integer.toString(Color.blue(currentSelectedColor)))));
+		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(
 				withText(
 						Integer.toString(
 								((int) (Color.alpha(currentSelectedColor) / 2.55f))
@@ -290,39 +289,39 @@ public class ColorDialogIntegrationTest {
 				)
 		));
 
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_red)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_rgb_red_value)).check(matches(withText(TEXT_RGB_MIN)));
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_red)).perform(touchCenterRight());
-		onView(withId(R.id.color_chooser_rgb_red_value)).check(matches(withText(TEXT_RGB_MAX)));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_rgb_red_value)).check(matches(withText(TEXT_RGB_MIN)));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_rgb_red_value)).check(matches(withText(TEXT_RGB_MAX)));
 
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_rgb_green_value)).check(matches(withText(TEXT_RGB_MIN)));
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).perform(touchCenterRight());
-		onView(withId(R.id.color_chooser_rgb_green_value)).check(matches(withText(TEXT_RGB_MAX)));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_rgb_green_value)).check(matches(withText(TEXT_RGB_MIN)));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_rgb_green_value)).check(matches(withText(TEXT_RGB_MAX)));
 
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_rgb_blue_value)).check(matches(withText(TEXT_RGB_MIN)));
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).perform(touchCenterRight());
-		onView(withId(R.id.color_chooser_rgb_blue_value)).check(matches(withText(TEXT_RGB_MAX)));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_rgb_blue_value)).check(matches(withText(TEXT_RGB_MIN)));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_rgb_blue_value)).check(matches(withText(TEXT_RGB_MAX)));
 
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MIN)));
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
-		onView(withId(R.id.color_chooser_rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MAX)));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MIN)));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MAX)));
 
 		// Select color red #FFFF0000 by using hex input
-		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FFFF0000"));
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("#FFFF0000"));
 
 		onColorPickerView()
 				.checkApplyButtonColor(Color.RED);
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 
 		// Select color blue #FF0000FF by using seekbars
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_red)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).perform(touchCenterRight());
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
 		assertNotEquals("Selected color changed to blue", toolReference.get().getDrawPaint().getColor(), Color.BLUE);
 
@@ -338,7 +337,7 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
 		onColorPickerView()
@@ -353,14 +352,14 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
 				withText(
 						String.format("#FF%06X", (0xFFFFFF & currentSelectColor)))));
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_hsv))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_HSV_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
 		onColorPickerView().perform(touchCenterMiddle());
@@ -374,17 +373,17 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
 				withText(
 						String.format("#FF%06X", (0xFFFFFF & currentSelectColor)))));
 
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_red)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
 		onColorPickerView()
 				.onOkButton()
@@ -395,10 +394,10 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
 				withText(
 						String.format("#FF%06X", (0xFFFFFF & currentSelectColor)))));
 	}
@@ -408,20 +407,20 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
 		//set to invalid length of 6 (alpha missing)
-		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FF0000"));
-		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_chooser_hex_wrong_value_red)));
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("#FF0000"));
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)));
 
 		//set to invalid value
-		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FFXXYYZZ"));
-		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_chooser_hex_wrong_value_red)));
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("#FFXXYYZZ"));
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)));
 
 		//set to invalid value (# missing)
-		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("FF000000"));
-		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_chooser_hex_wrong_value_red)));
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("FF000000"));
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)));
 	}
 
 	@Test
@@ -429,15 +428,15 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
 		//set to invalid length of 6 (alpha missing)
-		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FF0000"));
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("#FF0000"));
 
 		//set correct HEX value
-		onView(withId(R.id.color_chooser_color_rgb_hex)).perform(replaceText("#FF000000"));
-		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_chooser_hex_correct_black)));
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("#FF000000"));
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_picker_hex_correct_black)));
 	}
 
 	@Test
@@ -445,11 +444,11 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
 		//Inital text color should be black
-		onView(withId(R.id.color_chooser_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_chooser_hex_correct_black)));
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(hasTextColor(R.color.pocketpaint_color_picker_hex_correct_black)));
 	}
 
 	@Test
@@ -457,7 +456,7 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(withId(R.id.color_chooser_base_layout))
+		onView(withId(R.id.color_picker_base_layout))
 				.check(matches(isDisplayed()));
 		onColorPickerView()
 				.check(matches(isDisplayed()));
@@ -495,7 +494,7 @@ public class ColorDialogIntegrationTest {
 	public void testColorPickerTabRestoredOnOrientationChange() {
 		onColorPickerView()
 				.performOpenColorPicker();
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba)))
 				.perform(click());
 
 		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -509,25 +508,25 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_red)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_green)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_blue)).perform(touchCenterLeft());
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
-		onView(allOf(withId(R.id.color_chooser_button_ok), instanceOf(Button.class)))
+		onView(allOf(withId(R.id.color_picker_button_ok), instanceOf(Button.class)))
 				.check(matches(withTextColor(Color.WHITE)));
 
-		onView(withId(R.id.color_chooser_color_rgb_seekbar_alpha)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterLeft());
 
-		onView(allOf(withId(R.id.color_chooser_button_ok), instanceOf(Button.class)))
+		onView(allOf(withId(R.id.color_picker_button_ok), instanceOf(Button.class)))
 				.check(matches(withTextColor(Color.BLACK)));
 	}
 
 	@Test
 	public void testColorPickerInitializesRgbTabTransparentColor() {
-		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.pocketpaint_color_chooser_preset_colors);
+		TypedArray presetColors = launchActivityRule.getActivity().getResources().obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
 		onColorPickerView()
 				.performOpenColorPicker();
 		onColorPickerView()
@@ -537,11 +536,11 @@ public class ColorDialogIntegrationTest {
 				.perform(click());
 		onColorPickerView()
 				.performOpenColorPicker();
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba))).perform(click());
-		onView(withId(R.id.color_chooser_rgb_red_value)).check(matches(withText(Integer.toString(Color.red(Color.TRANSPARENT)))));
-		onView(withId(R.id.color_chooser_rgb_green_value)).check(matches(withText(Integer.toString(Color.green(Color.TRANSPARENT)))));
-		onView(withId(R.id.color_chooser_rgb_blue_value)).check(matches(withText(Integer.toString(Color.blue(Color.TRANSPARENT)))));
-		onView(withId(R.id.color_chooser_rgb_alpha_value)).check(matches(
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+		onView(withId(R.id.color_picker_rgb_red_value)).check(matches(withText(Integer.toString(Color.red(Color.TRANSPARENT)))));
+		onView(withId(R.id.color_picker_rgb_green_value)).check(matches(withText(Integer.toString(Color.green(Color.TRANSPARENT)))));
+		onView(withId(R.id.color_picker_rgb_blue_value)).check(matches(withText(Integer.toString(Color.blue(Color.TRANSPARENT)))));
+		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(
 				withText(
 						Integer.toString(
 								((int) (Color.alpha(Color.TRANSPARENT) / 2.55f))

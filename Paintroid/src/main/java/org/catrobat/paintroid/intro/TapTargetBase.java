@@ -154,7 +154,7 @@ public abstract class TapTargetBase {
 				.textTypeface(TapTargetStyle.TEXT_STYLE.getTypeface())
 				.cancelable(true)
 				.outerCircleColor(R.color.pocketpaint_background_color)
-				.targetCircleColor(R.color.pocketpaint_color_chooser_white);
+				.targetCircleColor(R.color.pocketpaint_color_picker_white);
 	}
 
 	static final class ToolTypeViewTuple {

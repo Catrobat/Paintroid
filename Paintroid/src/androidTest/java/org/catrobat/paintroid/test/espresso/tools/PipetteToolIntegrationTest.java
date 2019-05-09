@@ -79,7 +79,7 @@ public class PipetteToolIntegrationTest {
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
 		onToolProperties()
-				.setColorResource(R.color.pocketpaint_color_chooser_transparent)
+				.setColorResource(R.color.pocketpaint_color_picker_transparent)
 				.checkMatchesColor(Color.TRANSPARENT);
 		onToolBarView()
 				.performSelectTool(ToolType.PIPETTE);

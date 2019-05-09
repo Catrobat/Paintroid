@@ -16,27 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- *    This file incorporates work covered by the following copyright and
- *    permission notice:
- *
- *        Copyright (C) 2011 Devmil (Michael Lamers)
- *        Mail: develmil@googlemail.com
- *
- *        Licensed under the Apache License, Version 2.0 (the "License");
- *        you may not use this file except in compliance with the License.
- *        You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *        Unless required by applicable law or agreed to in writing, software
- *        distributed under the License is distributed on an "AS IS" BASIS,
- *        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *        See the License for the specific language governing permissions and
- *        limitations under the License.
- */
 
-package org.catrobat.paintroid.dialog.colorpicker;
+package org.catrobat.paintroid.colorpicker;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -50,8 +31,6 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
-
-import org.catrobat.paintroid.R;
 
 public class ColorPickerView extends LinearLayoutCompat {
 	private static final String RGB_TAG = "RGB";
@@ -79,8 +58,8 @@ public class ColorPickerView extends LinearLayoutCompat {
 	}
 
 	private static View createTabView(Context context, int iconResourceId) {
-		View tabView = inflate(context, R.layout.color_chooser_tab_image_only, null);
-		ImageView tabIcon = tabView.findViewById(R.id.color_chooser_tab_icon);
+		View tabView = inflate(context, R.layout.color_picker_tab_image_only, null);
+		ImageView tabIcon = tabView.findViewById(R.id.color_picker_tab_icon);
 		tabIcon.setBackgroundResource(iconResourceId);
 		return tabView;
 	}
@@ -137,27 +116,27 @@ public class ColorPickerView extends LinearLayoutCompat {
 	}
 
 	private void init() {
-		View tabView = inflate(getContext(), R.layout.color_chooser_colorselectview, null);
+		View tabView = inflate(getContext(), R.layout.color_picker_colorselectview, null);
 		addView(tabView);
 		rgbSelectorView = new RgbSelectorView(getContext());
 		preSelectorView = new PresetSelectorView(getContext());
 		hsvSelectorView = new HSVSelectorView(getContext());
 
-		tabHost = tabView.findViewById(R.id.color_chooser_colorview_tabColors);
+		tabHost = tabView.findViewById(R.id.color_picker_colorview_tabColors);
 		tabHost.setup();
 		ColorTabContentFactory factory = new ColorTabContentFactory();
 
-		View preTabView = createTabView(getContext(), R.drawable.ic_color_chooser_tab_preset);
+		View preTabView = createTabView(getContext(), R.drawable.ic_color_picker_tab_preset);
 		TabSpec preTab = tabHost.newTabSpec(PRE_TAG)
 				.setIndicator(preTabView)
 				.setContent(factory);
 
-		View hsvTabView = createTabView(getContext(), R.drawable.ic_color_chooser_tab_hsv);
+		View hsvTabView = createTabView(getContext(), R.drawable.ic_color_picker_tab_hsv);
 		TabSpec hsvTab = tabHost.newTabSpec(HSV_TAG)
 				.setIndicator(hsvTabView)
 				.setContent(factory);
 
-		View rgbTabView = createTabView(getContext(), R.drawable.ic_color_chooser_tab_rgba);
+		View rgbTabView = createTabView(getContext(), R.drawable.ic_color_picker_tab_rgba);
 		TabSpec rgbTab = tabHost.newTabSpec(RGB_TAG)
 				.setIndicator(rgbTabView)
 				.setContent(factory);

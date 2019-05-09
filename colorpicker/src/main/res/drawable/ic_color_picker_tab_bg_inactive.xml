@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
@@ -16,22 +15,10 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
-<resources>
-    <!-- PocketPaint font chooser options -->
-    <string-array name="pocketpaint_main_text_tool_fonts">
-        <item>@string/text_tool_dialog_font_sans_serif</item>
-        <item>@string/text_tool_dialog_font_monospace</item>
-        <item>@string/text_tool_dialog_font_serif</item>
-        <item>@string/text_tool_dialog_font_dubai</item>
-        <item>@string/text_tool_dialog_font_arabic_stc</item>
-    </string-array>
+ -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="line" >
+    <stroke android:color="?attr/colorAccent"
+        android:width="2dp"/>
 
-    <integer-array name="pocketpaint_text_tool_size_array" translatable="false">
-        <item>20</item>
-        <item>30</item>
-        <item>40</item>
-        <item>60</item>
-    </integer-array>
-
-</resources>
+</shape>

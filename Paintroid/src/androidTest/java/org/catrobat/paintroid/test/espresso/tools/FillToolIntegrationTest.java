@@ -132,13 +132,13 @@ public class FillToolIntegrationTest {
 				.performSelectTool(ToolType.FILL);
 
 		onToolProperties()
-				.setColorResource(R.color.pocketpaint_color_chooser_green1);
+				.setColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onDrawingSurfaceView()
-				.checkPixelColorResource(R.color.pocketpaint_color_chooser_green1, BitmapLocationProvider.MIDDLE)
+				.checkPixelColorResource(R.color.pocketpaint_color_picker_green1, BitmapLocationProvider.MIDDLE)
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE_RIGHT)
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
 	}
@@ -223,8 +223,8 @@ public class FillToolIntegrationTest {
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
 		onToolProperties()
-				.setColorResource(R.color.pocketpaint_color_chooser_brown2)
-				.checkMatchesColorResource(R.color.pocketpaint_color_chooser_brown2);
+				.setColorResource(R.color.pocketpaint_color_picker_brown2)
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_brown2);
 
 		onToolBarView()
 				.performSelectTool(ToolType.FILL)
@@ -239,8 +239,8 @@ public class FillToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onDrawingSurfaceView()
-				.checkPixelColorResource(R.color.pocketpaint_color_chooser_brown2, BitmapLocationProvider.MIDDLE)
-				.checkPixelColorResource(R.color.pocketpaint_color_chooser_brown2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
+				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown2, BitmapLocationProvider.MIDDLE)
+				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
 
 		onTopBarView()
 				.performUndo();
@@ -253,7 +253,7 @@ public class FillToolIntegrationTest {
 				.performRedo();
 
 		onDrawingSurfaceView()
-				.checkPixelColorResource(R.color.pocketpaint_color_chooser_brown2, BitmapLocationProvider.MIDDLE)
-				.checkPixelColorResource(R.color.pocketpaint_color_chooser_brown2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
+				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown2, BitmapLocationProvider.MIDDLE)
+				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
 	}
 }

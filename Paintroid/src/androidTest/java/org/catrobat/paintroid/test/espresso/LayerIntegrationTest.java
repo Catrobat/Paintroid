@@ -577,8 +577,8 @@ public class LayerIntegrationTest {
 				.performClose();
 
 		onToolProperties()
-				.setColorResource(R.color.pocketpaint_color_chooser_green1)
-				.checkMatchesColorResource(R.color.pocketpaint_color_chooser_green1);
+				.setColorResource(R.color.pocketpaint_color_picker_green1)
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -601,7 +601,7 @@ public class LayerIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkMatchesColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 	}
 
 	@Test

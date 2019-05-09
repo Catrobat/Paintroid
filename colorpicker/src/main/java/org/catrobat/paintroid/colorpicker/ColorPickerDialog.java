@@ -36,10 +36,12 @@
  *        limitations under the License.
  */
 
-package org.catrobat.paintroid.dialog.colorpicker;
+package org.catrobat.paintroid.colorpicker;
 
 import android.app.Dialog;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -55,15 +57,11 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +75,7 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	private Button buttonApply;
 	private Button buttonCancel;
 	private int colorToApply;
+	private Shader checkeredShader;
 
 	public static ColorPickerDialog newInstance(@ColorInt int initialColor) {
 		ColorPickerDialog dialog = new ColorPickerDialog();
@@ -101,22 +100,23 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setStyle(DialogFragment.STYLE_NORMAL, R.style.PocketPaintAlertDialog);
+		Bitmap checkeredBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
+		checkeredShader = new BitmapShader(checkeredBitmap, TileMode.REPEAT, TileMode.REPEAT);
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.dialog_color_chooser, container);
+		return inflater.inflate(R.layout.dialog_color_picker, container);
 	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		buttonApply = view.findViewById(R.id.color_chooser_button_ok);
-		colorPickerView = view.findViewById(R.id.color_chooser_color_picker_view);
-		buttonCancel = view.findViewById(R.id.color_chooser_button_cancel);
+		buttonApply = view.findViewById(R.id.color_picker_button_ok);
+		colorPickerView = view.findViewById(R.id.color_picker_view);
+		buttonCancel = view.findViewById(R.id.color_picker_button_cancel);
 
 		buttonApply.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -149,7 +149,7 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Dialog dialog = super.onCreateDialog(savedInstanceState);
-		dialog.setTitle(R.string.color_chooser_title);
+		dialog.setTitle(R.string.color_picker_title);
 		return dialog;
 	}
 
@@ -172,7 +172,7 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	}
 
 	private void setButtonColor(int color, Button button) {
-		button.setBackground(CustomColorDrawable.createDrawable(color));
+		button.setBackground(CustomColorDrawable.createDrawable(checkeredShader, color));
 
 		int grayScale = (int) (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color));
 
@@ -196,23 +196,21 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	static final class CustomColorDrawable extends ColorDrawable {
 		private Paint backgroundPaint;
 
-		private CustomColorDrawable(@ColorInt int color) {
+		private CustomColorDrawable(Shader checkeredShader, @ColorInt int color) {
 			super(color);
 
 			if (Color.alpha(getColor()) != 0xff) {
-				Shader backgroundShader = new BitmapShader(
-						PaintroidApplication.checkeredBackgroundBitmap, TileMode.REPEAT, TileMode.REPEAT);
 				backgroundPaint = new Paint();
-				backgroundPaint.setShader(backgroundShader);
+				backgroundPaint.setShader(checkeredShader);
 			}
 		}
 
-		static Drawable createDrawable(@ColorInt int color) {
+		static Drawable createDrawable(Shader checkeredShader, @ColorInt int color) {
 			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-				return new CustomColorDrawable(color);
+				return new CustomColorDrawable(checkeredShader, color);
 			} else {
 				return new RippleDrawable(ColorStateList.valueOf(Color.WHITE),
-						new CustomColorDrawable(color), null);
+						new CustomColorDrawable(checkeredShader, color), null);
 			}
 		}
 
