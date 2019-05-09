@@ -557,16 +557,6 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testShowColorPickerClickedWhenNoColorChangeAllowedThenIgnore() {
-		when(toolReference.get()).thenReturn(tool);
-		when(tool.getToolType()).thenReturn(ToolType.PIPETTE);
-
-		presenter.showColorPickerClicked();
-
-		verifyZeroInteractions(navigator, interactor, commandManager);
-	}
-
-	@Test
 	public void testShowLayerMenuClickedThenShowLayerDrawer() {
 		presenter.showLayerMenuClicked();
 
