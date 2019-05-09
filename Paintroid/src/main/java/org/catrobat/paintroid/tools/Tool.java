@@ -28,6 +28,8 @@ import android.os.Bundle;
 
 public interface Tool {
 
+	boolean handToolMode();
+
 	boolean handleDown(PointF coordinate);
 
 	boolean handleMove(PointF coordinate);

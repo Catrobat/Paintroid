@@ -95,6 +95,9 @@ public class DefaultToolFactory implements ToolFactory {
 			case TEXT:
 				tool = new TextTool(createTextToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;
+			case HAND:
+				tool = new HandTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+				break;
 			default:
 				tool = new BrushTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 				break;

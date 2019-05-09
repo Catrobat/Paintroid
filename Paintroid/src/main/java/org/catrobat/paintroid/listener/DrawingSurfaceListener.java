@@ -49,6 +49,9 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private float xMidPoint;
 	private float yMidPoint;
 
+	private float eventX;
+	private float eventY;
+
 	private PointF canvasTouchPoint;
 	private PointF eventTouchPoint;
 	private int drawerEdgeSize;
@@ -62,6 +65,11 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 		canvasTouchPoint = new PointF();
 		eventTouchPoint = new PointF();
+	}
+
+	private void newHandEvent(float x, float y) {
+		eventX = x;
+		eventY = y;
 	}
 
 	private float calculatePointerDistance(MotionEvent event) {
@@ -121,7 +129,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 				break;
 			case MotionEvent.ACTION_MOVE:
-				if (event.getPointerCount() == 1) {
+				if (event.getPointerCount() == 1 && !(currentTool.handToolMode())) {
 					if (touchMode == TouchMode.PINCH) {
 						break;
 					}
@@ -133,6 +141,17 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					}
 
 					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_MOVE);
+				} else if (event.getPointerCount() == 1 && (currentTool.handToolMode())) {
+					if (autoScrollTask.isRunning()) {
+						autoScrollTask.stop();
+					}
+
+					float xOld = eventX;
+					float yOld = eventY;
+					newHandEvent(event.getX(), event.getY());
+					if (xOld > 0 && eventX != xOld || yOld > 0 && eventY != yOld) {
+						callback.translatePerspective(eventX - xOld, eventY - yOld);
+					}
 				} else {
 					if (autoScrollTask.isRunning()) {
 						autoScrollTask.stop();
@@ -174,6 +193,8 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				pointerDistance = 0;
 				xMidPoint = 0;
 				yMidPoint = 0;
+				eventX = 0;
+				eventY = 0;
 				touchMode = TouchMode.DRAW;
 				break;
 		}
