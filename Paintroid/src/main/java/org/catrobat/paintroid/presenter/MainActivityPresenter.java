@@ -375,9 +375,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void showColorPickerClicked() {
-		if (toolReference.get().getToolType().isColorChangeAllowed()) {
-			navigator.showColorPickerDialog();
-		}
+		navigator.showColorPickerDialog();
 	}
 
 	@Override
