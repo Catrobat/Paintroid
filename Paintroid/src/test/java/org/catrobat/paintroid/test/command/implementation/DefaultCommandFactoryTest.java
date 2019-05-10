@@ -26,6 +26,7 @@ import android.graphics.PointF;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.AddLayerCommand;
 import org.catrobat.paintroid.command.implementation.CompositeCommand;
+import org.catrobat.paintroid.command.implementation.CropCommand;
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.MergeLayersCommand;
@@ -115,9 +116,9 @@ public class DefaultCommandFactoryTest {
 	}
 
 	@Test
-	public void testCreateResizeCommand() {
-		Command command = commandFactory.createResizeCommand(0, 0, 1, 1, 2);
-		assertThat(command, is(instanceOf(ResizeCommand.class)));
+	public void testCreateCropCommand() {
+		Command command = commandFactory.createCropCommand(0, 0, 1, 1, 2);
+		assertThat(command, is(instanceOf(CropCommand.class)));
 	}
 
 	@Test
@@ -127,5 +128,11 @@ public class DefaultCommandFactoryTest {
 
 		Command command = commandFactory.createPointCommand(paint, coordinate);
 		assertThat(command, is(instanceOf(PointCommand.class)));
+	}
+
+	@Test
+	public void testCreateResizeCommand() {
+		Command command = commandFactory.createResizeCommand(10, 20);
+		assertThat(command, is(instanceOf(ResizeCommand.class)));
 	}
 }

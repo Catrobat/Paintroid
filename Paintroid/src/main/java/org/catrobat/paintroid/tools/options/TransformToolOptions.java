@@ -43,6 +43,8 @@ public interface TransformToolOptions {
 
 		void flipVerticalClicked();
 
+		void applyResizeClicked(int resizePercentage);
+
 		void setBoxWidth(float boxWidth);
 
 		void setBoxHeight(float boxHeight);

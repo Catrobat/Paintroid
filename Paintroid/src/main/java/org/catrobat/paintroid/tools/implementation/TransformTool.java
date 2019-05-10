@@ -140,6 +140,11 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			public void setBoxHeight(float boxHeight) {
 				TransformTool.this.boxHeight = boxHeight;
 			}
+
+			@Override
+			public void applyResizeClicked(int resizePercentage) {
+				onApplyResizeClicked(resizePercentage);
+			}
 		});
 
 		rangeFilterHeight = new DefaultNumberRangeFilter(1, (int) (maximumBoxResolution / boxWidth));
@@ -220,7 +225,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			cropRunFinished = false;
 			initResizeBounds();
 			if (areResizeBordersValid()) {
-				Command resizeCommand = commandFactory.createResizeCommand(
+				Command resizeCommand = commandFactory.createCropCommand(
 						(int) Math.floor(resizeBoundWidthXLeft),
 						(int) Math.floor(resizeBoundHeightYTop),
 						(int) Math.floor(resizeBoundWidthXRight),
@@ -231,6 +236,18 @@ public class TransformTool extends BaseToolWithRectangleShape {
 				cropRunFinished = true;
 				contextCallback.showNotification(R.string.resize_nothing_to_resize);
 			}
+		}
+	}
+
+	private void onApplyResizeClicked(int resizePercentage) {
+		int newWidth = (int) ((float) workspace.getWidth() / 100 * resizePercentage);
+		int newHeight = (int) ((float) workspace.getHeight() / 100 * resizePercentage);
+
+		if (newWidth == 0 || newHeight == 0) {
+			contextCallback.showNotification(R.string.resize_cannot_resize_to_this_size);
+		} else {
+			Command command = commandFactory.createResizeCommand(newWidth, newHeight);
+			commandManager.addCommand(command);
 		}
 	}
 

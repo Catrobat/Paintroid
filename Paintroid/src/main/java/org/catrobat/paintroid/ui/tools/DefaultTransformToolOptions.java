@@ -27,12 +27,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.options.TransformToolOptions;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 public class DefaultTransformToolOptions implements TransformToolOptions {
 	private static final String TAG = DefaultTransformToolOptions.class.getSimpleName();
@@ -40,6 +43,8 @@ public class DefaultTransformToolOptions implements TransformToolOptions {
 	private final TransformToolSizeTextWatcher widthTextWatcher;
 	private EditText widthEditText;
 	private EditText heightEditText;
+	private SeekBar resizeSeekBar;
+	private TextView percentageText;
 
 	private Callback callback;
 
@@ -49,6 +54,9 @@ public class DefaultTransformToolOptions implements TransformToolOptions {
 
 		widthEditText = optionsView.findViewById(R.id.pocketpaint_transform_width_value);
 		heightEditText = optionsView.findViewById(R.id.pocketpaint_transform_height_value);
+		resizeSeekBar = optionsView.findViewById(R.id.pocketpaint_transform_resize_seekbar);
+		percentageText = optionsView.findViewById(R.id.pocketpaint_transform_resize_percentage_text);
+
 		widthTextWatcher = new TransformToolSizeTextWatcher() {
 			@Override
 			protected void setValue(float value) {
@@ -113,6 +121,34 @@ public class DefaultTransformToolOptions implements TransformToolOptions {
 						}
 					}
 				});
+		optionsView.findViewById(R.id.pocketpaint_transform_apply_resize_btn)
+				.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (callback != null) {
+							callback.applyResizeClicked(resizeSeekBar.getProgress());
+							resizeSeekBar.setProgress(100);
+						}
+					}
+				});
+		resizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				if (progress == 0) {
+					seekBar.setProgress(1);
+					return;
+				}
+				percentageText.setText(String.format(Locale.getDefault(), "%d", progress));
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+		});
 	}
 
 	@Override

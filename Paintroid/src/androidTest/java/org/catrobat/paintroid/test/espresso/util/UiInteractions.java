@@ -112,10 +112,6 @@ public final class UiInteractions {
 
 			@Override
 			public void perform(UiController uiController, View view) {
-				if (!(view instanceof SeekBar)) {
-					return;
-				}
-
 				((SeekBar) view).setProgress(progress);
 			}
 		};

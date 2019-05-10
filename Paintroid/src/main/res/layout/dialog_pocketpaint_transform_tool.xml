@@ -103,6 +103,55 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:text="@string/pixel" />
+
+            <Space style="@style/PocketPaintToolHorizontalSpace" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/PocketPaintToolSubtitle"
+            android:text="@string/transform_tool_resize_text" />
+
+        <View style="@style/PocketPaintToolSectionDivider"/>
+
+        <LinearLayout style="@style/PocketPaintToolSection">
+            <SeekBar
+                android:id="@+id/pocketpaint_transform_resize_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="100"
+                android:progress="100"
+                android:minHeight="30dip" />
+
+            <TextView
+                android:id="@+id/pocketpaint_transform_resize_percentage_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:saveEnabled="false"
+                android:textColor="@color/pocketpaint_colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="end"
+                android:text="100"
+                tools:ignore="HardCodedText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/pocketpaint_colorAccent"
+                android:text="%"
+                tools:ignore="HardcodedText"/>
+
+            <Space style="@style/PocketPaintToolHorizontalSpace"
+                android:layout_width="16dp" />
+
+            <Button
+                android:id="@+id/pocketpaint_transform_apply_resize_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_apply" />
         </LinearLayout>
 
         <TextView
