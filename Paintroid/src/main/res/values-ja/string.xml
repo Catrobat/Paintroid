@@ -34,12 +34,14 @@
     <string name="button_line">ライン</string>
     <string name="button_text">テキスト</string>
     <string name="button_shape">図形</string>
+    <string name="button_scroll_left">Scroll left</string>
+    <string name="button_scroll_right">Scroll right</string>
+    <string name="button_layers">レイヤー</string>
+    <string name="button_hand">Hand</string>
+    <string name="button_apply">Apply</string>
     <string name="done">完了</string>
-    <string name="color_chooser_title">色を選択</string>
-    <string name="color_red">赤</string>
-    <string name="color_green">緑</string>
-    <string name="color_blue">青</string>
-    <string name="color_alpha">透過度</string>
+    <string name="cap_circle">Circle</string>
+    <string name="cap_square">Square</string>
     <string name="dialog_tools_title">ツール</string>
     <string name="dialog_error_save_title">読み込み/保存のエラー</string>
     <string name="dialog_error_sdcard_text">イメージまたは SD カードをチェック ！</string>
@@ -61,6 +63,7 @@
     <string name="help_content_shape">図形を選択してタップすると、選択した図形を挿入します</string>
     <string name="help_content_layer">新しいレイヤーを作成、または既存のものを変更</string>
     <string name="help_content_color_chooser">色の選択または調整</string>
+    <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="closing_security_question_title">終了</string>
     <string name="closing_security_question">変更を保存しますか？</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
@@ -80,6 +83,7 @@
     <string name="save_button_text">保存</string>
     <string name="discard_button_text">破棄</string>
     <string name="resize_nothing_to_resize">サイズを変更するものはありません</string>
+    <string name="resize_cannot_resize_to_this_size">cannot resize to this size</string>
     <string name="resize_max_image_resolution_reached">最大の画像解像度に達しました</string>
     <string name="text_tool_dialog_input_title">テキスト:</string>
     <string name="text_tool_dialog_format_options">書式設定オプション:</string>
@@ -91,7 +95,12 @@
     <string name="shape_tool_dialog_fill_title">塗りつぶし</string>
     <string name="shape_tool_dialog_outline_title">Outline</string>
     <string name="fill_tool_dialog_color_tolerance_title">色の許容範囲</string>
-    <string name="transform_tool_auto_crop_text">crop</string>
+    <string name="transform_tool_rotate_left">rotate left</string>
+    <string name="transform_tool_rotate_right">rotate right</string>
+    <string name="transform_tool_flip_vertical">flip vertical</string>
+    <string name="transform_tool_flip_horizontal">flip horizontal</string>
+    <string name="transform_tool_resize_text">resize</string>
+    <string name="transform_tool_auto_crop_text">crop/enlarge</string>
     <string name="transform_width_text">Width</string>
     <string name="transform_height_text">Height</string>
     <string name="pixel">px</string>
@@ -101,6 +110,7 @@
     <string name="layer_delete">レイヤーを削除</string>
     <string name="layer_too_many_layers">レイヤーが多すぎます</string>
     <string name="layer_merged">レイヤーを統合</string>
+    <string name="layer_background">Layer background</string>
     <string name="dialog_shape_text">図形</string>
     <string name="dialog_loading_image_failed_title">イメージの読み込みエラー</string>
     <string name="dialog_loading_image_failed_text">有効なイメージ ファイルではありません。</string>
@@ -128,4 +138,7 @@
     <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
     <string name="pocketpaint_about_url_license_description">Pocket Paint Source Code License</string>
     <string name="pocketpaint_about_url_catrobat_description">キャトロバットについて</string>
+    <string name="pocketpaint_logo">Pocket Paint logo</string>
+    <string name="pocketpaint_intro">Intro</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
 </resources>

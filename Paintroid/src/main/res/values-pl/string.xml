@@ -34,12 +34,14 @@
     <string name="button_line">Linia</string>
     <string name="button_text">Tekst</string>
     <string name="button_shape">Kształty</string>
+    <string name="button_scroll_left">Scroll left</string>
+    <string name="button_scroll_right">Scroll right</string>
+    <string name="button_layers">warstw</string>
+    <string name="button_hand">Hand</string>
+    <string name="button_apply">Apply</string>
     <string name="done">Zrobione</string>
-    <string name="color_chooser_title">Wybór koloru</string>
-    <string name="color_red">Czerwony (Red)</string>
-    <string name="color_green">Zielony (Green)</string>
-    <string name="color_blue">Niebieski (Blue)</string>
-    <string name="color_alpha">Alfa</string>
+    <string name="cap_circle">Circle</string>
+    <string name="cap_square">Square</string>
     <string name="dialog_tools_title">Narzędzia</string>
     <string name="dialog_error_save_title">Błąd ładowania/zapisu pliku</string>
     <string name="dialog_error_sdcard_text">Sprawdź obraz lub kartę SD!</string>
@@ -61,6 +63,7 @@
     <string name="help_content_shape">Wybierz kształt i naciśnij, aby wstawić go</string>
     <string name="help_content_layer">Tworzenie nowych warstw lub modyfikowanie istniejących</string>
     <string name="help_content_color_chooser">Wybierz lub dostosuj kolor</string>
+    <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="closing_security_question_title">Opuść</string>
     <string name="closing_security_question">Zapisać zmiany?</string>
     <string name="closing_catroid_security_question_title">Powrót do projektu</string>
@@ -80,6 +83,7 @@
     <string name="save_button_text">Zapisz</string>
     <string name="discard_button_text">Odrzuć</string>
     <string name="resize_nothing_to_resize">nie ma niczego do zmiany rozmiaru</string>
+    <string name="resize_cannot_resize_to_this_size">cannot resize to this size</string>
     <string name="resize_max_image_resolution_reached">osiągnięto maksymalną rozdzielczość</string>
     <string name="text_tool_dialog_input_title">Twój tekst:</string>
     <string name="text_tool_dialog_format_options">Opcje formatowania:</string>
@@ -91,7 +95,12 @@
     <string name="shape_tool_dialog_fill_title">Zamaluj</string>
     <string name="shape_tool_dialog_outline_title">Zarys</string>
     <string name="fill_tool_dialog_color_tolerance_title">Tolerancja kolorów</string>
-    <string name="transform_tool_auto_crop_text">przytnij</string>
+    <string name="transform_tool_rotate_left">rotate left</string>
+    <string name="transform_tool_rotate_right">rotate right</string>
+    <string name="transform_tool_flip_vertical">flip vertical</string>
+    <string name="transform_tool_flip_horizontal">flip horizontal</string>
+    <string name="transform_tool_resize_text">resize</string>
+    <string name="transform_tool_auto_crop_text">crop/enlarge</string>
     <string name="transform_width_text">Szerokość</string>
     <string name="transform_height_text">Wysokość</string>
     <string name="pixel">px</string>
@@ -101,6 +110,7 @@
     <string name="layer_delete">Usuń Warstwę</string>
     <string name="layer_too_many_layers">Za dużo warstw</string>
     <string name="layer_merged">Scalone warstwy</string>
+    <string name="layer_background">Layer background</string>
     <string name="dialog_shape_text">Kształt</string>
     <string name="dialog_loading_image_failed_title">Błąd ładowania obrazu</string>
     <string name="dialog_loading_image_failed_text">Nieprawidłowy plik obrazu</string>
@@ -128,4 +138,7 @@
     <string name="pocketpaint_about_content">Pocket Paint jest edytorem graficznym, który jest częścią projektu Catrobat.\n\nCatrobat to wizualny język programowania i zestaw narzędzi twórczych dla smartfonów, tabletów i mobilnych przeglądarek.\n\nKod źródłowy Pocket Paint jest głównie na licencji %s.\nDokładne szczegóły licencji - patrz link poniżej.</string>
     <string name="pocketpaint_about_url_license_description">Licencja kodu źródłowego Pocket Paint</string>
     <string name="pocketpaint_about_url_catrobat_description">O Catrobat</string>
+    <string name="pocketpaint_logo">Pocket Paint logo</string>
+    <string name="pocketpaint_intro">Intro</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
 </resources>

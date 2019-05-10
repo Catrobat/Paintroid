@@ -34,12 +34,14 @@
     <string name="button_line">Mstari</string>
     <string name="button_text">Maandishi</string>
     <string name="button_shape">Maumbo</string>
+    <string name="button_scroll_left">Scroll left</string>
+    <string name="button_scroll_right">Scroll right</string>
+    <string name="button_layers">tabaka</string>
+    <string name="button_hand">Hand</string>
+    <string name="button_apply">Apply</string>
     <string name="done">Maliza</string>
-    <string name="color_chooser_title">Kichagua rangi</string>
-    <string name="color_red">Nyekundu</string>
-    <string name="color_green">Kijani</string>
-    <string name="color_blue">Bluu</string>
-    <string name="color_alpha">Alpha</string>
+    <string name="cap_circle">Circle</string>
+    <string name="cap_square">Square</string>
     <string name="dialog_tools_title">Zana</string>
     <string name="dialog_error_save_title">Kosa la kupakia/kuhifadhi faili</string>
     <string name="dialog_error_sdcard_text">Angalia picha au kadi ya SD!</string>
@@ -61,6 +63,7 @@
     <string name="help_content_shape">Chagua umbo na bofya ili kuingiza umbo lililoteuliwa</string>
     <string name="help_content_layer">Create new layers or modify existing ones</string>
     <string name="help_content_color_chooser">Select or adjust a color</string>
+    <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="closing_security_question_title">Aga</string>
     <string name="closing_security_question">Hifadhi mabadiliko?</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
@@ -80,6 +83,7 @@
     <string name="save_button_text">Hifadhi</string>
     <string name="discard_button_text">Tupa</string>
     <string name="resize_nothing_to_resize">hakuna kubadilisha ukubwa</string>
+    <string name="resize_cannot_resize_to_this_size">cannot resize to this size</string>
     <string name="resize_max_image_resolution_reached">kikomo cha muonekano wa picha kimefikiwa</string>
     <string name="text_tool_dialog_input_title">Maandishi yako:</string>
     <string name="text_tool_dialog_format_options">Machaguo ya umbiza:</string>
@@ -91,7 +95,12 @@
     <string name="shape_tool_dialog_fill_title">Jaza</string>
     <string name="shape_tool_dialog_outline_title">Outline</string>
     <string name="fill_tool_dialog_color_tolerance_title">Uvumilivu wa rangi</string>
-    <string name="transform_tool_auto_crop_text">crop</string>
+    <string name="transform_tool_rotate_left">rotate left</string>
+    <string name="transform_tool_rotate_right">rotate right</string>
+    <string name="transform_tool_flip_vertical">flip vertical</string>
+    <string name="transform_tool_flip_horizontal">flip horizontal</string>
+    <string name="transform_tool_resize_text">resize</string>
+    <string name="transform_tool_auto_crop_text">crop/enlarge</string>
     <string name="transform_width_text">Width</string>
     <string name="transform_height_text">Height</string>
     <string name="pixel">px</string>
@@ -101,6 +110,7 @@
     <string name="layer_delete">Futa tabaka</string>
     <string name="layer_too_many_layers">Safu nyingi sana</string>
     <string name="layer_merged">Safu zilizounganishwa</string>
+    <string name="layer_background">Layer background</string>
     <string name="dialog_shape_text">Umbo</string>
     <string name="dialog_loading_image_failed_title">Kosa kwenye upakiaji picha</string>
     <string name="dialog_loading_image_failed_text">Faili la picha si halali</string>
@@ -128,4 +138,7 @@
     <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones, tablets and mobile browsers.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
     <string name="pocketpaint_about_url_license_description">Pocket Paint Source Code License</string>
     <string name="pocketpaint_about_url_catrobat_description">Kuhusu Catrobat</string>
+    <string name="pocketpaint_logo">Pocket Paint logo</string>
+    <string name="pocketpaint_intro">Intro</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
 </resources>

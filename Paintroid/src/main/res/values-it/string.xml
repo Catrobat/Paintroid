@@ -34,12 +34,14 @@
     <string name="button_line">Linea</string>
     <string name="button_text">Testo</string>
     <string name="button_shape">Forme</string>
+    <string name="button_scroll_left">Scroll left</string>
+    <string name="button_scroll_right">Scroll right</string>
+    <string name="button_layers">layer</string>
+    <string name="button_hand">Hand</string>
+    <string name="button_apply">Applica</string>
     <string name="done">Fatto</string>
-    <string name="color_chooser_title">Selezione colori</string>
-    <string name="color_red">Rosso</string>
-    <string name="color_green">Verde</string>
-    <string name="color_blue">Blu</string>
-    <string name="color_alpha">Alpha (opacità)</string>
+    <string name="cap_circle">Circle</string>
+    <string name="cap_square">Square</string>
     <string name="dialog_tools_title">Strumenti</string>
     <string name="dialog_error_save_title">Errore durante il caricamento/salvataggio File</string>
     <string name="dialog_error_sdcard_text">Controllare l\'immagine o l\'SD-Card!</string>
@@ -61,6 +63,7 @@
     <string name="help_content_shape">Scegli una forma e tocca per inserire la forma selezionata</string>
     <string name="help_content_layer">Crea nuovi livelli o modifica quelli esistenti</string>
     <string name="help_content_color_chooser">Seleziona o modifica un colore</string>
+    <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="closing_security_question_title">Esci</string>
     <string name="closing_security_question">Salvare le modifiche?</string>
     <string name="closing_catroid_security_question_title">Torna al progetto</string>
@@ -80,6 +83,7 @@
     <string name="save_button_text">Salva</string>
     <string name="discard_button_text">Scarta</string>
     <string name="resize_nothing_to_resize">nulla da ridimensionare</string>
+    <string name="resize_cannot_resize_to_this_size">cannot resize to this size</string>
     <string name="resize_max_image_resolution_reached">si è raggiunta la risoluzione massima</string>
     <string name="text_tool_dialog_input_title">Il tuo testo:</string>
     <string name="text_tool_dialog_format_options">Opzioni di formattazione:</string>
@@ -91,7 +95,12 @@
     <string name="shape_tool_dialog_fill_title">Riempi</string>
     <string name="shape_tool_dialog_outline_title">Contorno</string>
     <string name="fill_tool_dialog_color_tolerance_title">Tolleranza colore</string>
-    <string name="transform_tool_auto_crop_text">ritaglia</string>
+    <string name="transform_tool_rotate_left">rotate left</string>
+    <string name="transform_tool_rotate_right">rotate right</string>
+    <string name="transform_tool_flip_vertical">flip vertical</string>
+    <string name="transform_tool_flip_horizontal">flip horizontal</string>
+    <string name="transform_tool_resize_text">resize</string>
+    <string name="transform_tool_auto_crop_text">crop/enlarge</string>
     <string name="transform_width_text">Larghezza</string>
     <string name="transform_height_text">Altezza</string>
     <string name="pixel">px</string>
@@ -101,6 +110,7 @@
     <string name="layer_delete">Elimina livello</string>
     <string name="layer_too_many_layers">Troppi livelli</string>
     <string name="layer_merged">Livelli uniti</string>
+    <string name="layer_background">Layer background</string>
     <string name="dialog_shape_text">Forma</string>
     <string name="dialog_loading_image_failed_title">Errore durante il caricamento dell\'immagine</string>
     <string name="dialog_loading_image_failed_text">Non è un file di immagine valido</string>
@@ -128,4 +138,7 @@
     <string name="pocketpaint_about_content">Pocket Paint è un editor di immagini che fa parte del progetto Catrobat.\n\nCatrobat è un linguaggio di programmazione visuale e un insieme di strumenti per la creatività utilizzabili da smartphone, tablet e altri dispositivi mobili.\n\nIl codice sorgente di Pocket Paint è rilasciato principalmente sotto la licenza %s.\nPer i dettagli della licenza seguire il link sotto-riportato.</string>
     <string name="pocketpaint_about_url_license_description">Licenza per il codice sorgente di Pocket Paint</string>
     <string name="pocketpaint_about_url_catrobat_description">Su Catrobat</string>
+    <string name="pocketpaint_logo">Pocket Paint logo</string>
+    <string name="pocketpaint_intro">Intro</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
 </resources>
