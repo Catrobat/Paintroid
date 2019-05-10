@@ -46,8 +46,8 @@ ext {
 
     androidSupportLibraryVersion = '26.1.0'
 
-    androidVersionCode = 28
-    androidVersionName = '2.3.2'
+    androidVersionCode = 29
+    androidVersionName = '2.4.0'
 }
 
 allprojects {
