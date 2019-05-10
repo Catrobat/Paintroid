@@ -65,6 +65,16 @@ public class DefaultWorkspace implements Workspace {
 	}
 
 	@Override
+	public int getSurfaceWidth() {
+		return perspective.getSurfaceWidth();
+	}
+
+	@Override
+	public int getSurfaceHeight() {
+		return perspective.getSurfaceHeight();
+	}
+
+	@Override
 	public Bitmap getBitmapOfAllLayers() {
 		return LayerModel.getBitmapOfAllLayersToSave(layerModel.getLayers());
 	}

@@ -99,59 +99,48 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		final float vectorCX = coordinate.x - previousEventCoordinate.x;
-		final float vectorCY = coordinate.y - previousEventCoordinate.y;
+		final float deltaX = coordinate.x - previousEventCoordinate.x;
+		final float deltaY = coordinate.y - previousEventCoordinate.y;
+		previousEventCoordinate.set(coordinate.x, coordinate.y);
+		pointInsideBitmap = pointInsideBitmap || workspace.contains(toolPosition);
 
-		float newCursorPositionX = this.toolPosition.x + vectorCX;
-		float newCursorPositionY = this.toolPosition.y + vectorCY;
-
-		if (!pointInsideBitmap && workspace.contains(toolPosition)) {
-			pointInsideBitmap = true;
-		}
-
-		PointF cursorSurfacePosition = workspace.getSurfacePointFromCanvasPoint(new PointF(newCursorPositionX, newCursorPositionY));
-
-		float surfaceWidth = workspace.getWidth();
-		float surfaceHeight = workspace.getHeight();
-
-		boolean slowCursor = false;
-		if (cursorSurfacePosition.x > surfaceWidth) {
-			cursorSurfacePosition.x = surfaceWidth;
-			slowCursor = true;
-		} else if (cursorSurfacePosition.x < 0) {
-			cursorSurfacePosition.x = 0;
-			slowCursor = true;
-		}
-		if (cursorSurfacePosition.y > surfaceHeight) {
-			cursorSurfacePosition.y = surfaceHeight;
-			slowCursor = true;
-		} else if (cursorSurfacePosition.y < 0) {
-			cursorSurfacePosition.y = 0;
-			slowCursor = true;
-		}
-
-		if (slowCursor) {
-			PointF cursorCanvasPosition = workspace.getCanvasPointFromSurfacePoint(cursorSurfacePosition);
-			newCursorPositionX = cursorCanvasPosition.x;
-			newCursorPositionY = cursorCanvasPosition.y;
-		}
-
-		toolPosition.set(newCursorPositionX, newCursorPositionY);
+		PointF newToolPosition = calculateNewClampedToolPosition(deltaX, deltaY);
 
 		if (toolInDrawMode) {
-			final float cx = (this.toolPosition.x + newCursorPositionX) / 2f;
-			final float cy = (this.toolPosition.y + newCursorPositionY) / 2f;
+			float dx = (toolPosition.x + newToolPosition.x) / 2f;
+			float dy = (toolPosition.y + newToolPosition.y) / 2f;
 
-			pathToDraw.quadTo(this.toolPosition.x, this.toolPosition.y, cx, cy);
+			pathToDraw.quadTo(toolPosition.x, toolPosition.y, dx, dy);
 			pathToDraw.incReserve(1);
 		}
 
-		movedDistance.set(
-				movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
-				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
-
-		previousEventCoordinate.set(coordinate.x, coordinate.y);
+		toolPosition.set(newToolPosition);
+		movedDistance.offset(Math.abs(deltaX), Math.abs(deltaY));
 		return true;
+	}
+
+	private PointF calculateNewClampedToolPosition(float deltaX, float deltaY) {
+		PointF newToolPosition = new PointF(toolPosition.x + deltaX, toolPosition.y + deltaY);
+
+		PointF toolSurfacePosition = workspace.getSurfacePointFromCanvasPoint(newToolPosition);
+		int surfaceWidth = workspace.getSurfaceWidth();
+		int surfaceHeight = workspace.getSurfaceHeight();
+
+		boolean positionOutsideBounds = !contains(toolSurfacePosition, surfaceWidth, surfaceHeight);
+		if (positionOutsideBounds) {
+			toolSurfacePosition.x = clamp(toolSurfacePosition.x, 0, surfaceWidth);
+			toolSurfacePosition.y = clamp(toolSurfacePosition.y, 0, surfaceHeight);
+			newToolPosition.set(workspace.getCanvasPointFromSurfacePoint(toolSurfacePosition));
+		}
+		return newToolPosition;
+	}
+
+	private float clamp(float value, float min, float max) {
+		return Math.min(max, Math.max(value, min));
+	}
+
+	private boolean contains(PointF point, int width, int height) {
+		return point.x >= 0 && point.y >= 0 && point.x < width && point.y < height;
 	}
 
 	@Override

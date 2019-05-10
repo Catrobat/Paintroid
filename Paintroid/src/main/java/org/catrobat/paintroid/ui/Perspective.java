@@ -34,9 +34,9 @@ public class Perspective {
 	private static final float ACTION_BAR_HEIGHT = Constants.ACTION_BAR_HEIGHT;
 
 	@VisibleForTesting
-	public float surfaceWidth;
+	public int surfaceWidth;
 	@VisibleForTesting
-	public float surfaceHeight;
+	public int surfaceHeight;
 	@VisibleForTesting
 	public float surfaceCenterX;
 	@VisibleForTesting
@@ -83,10 +83,10 @@ public class Perspective {
 			surfaceTranslationX = 0f;
 			surfaceTranslationY = -actionbarHeight;
 		} else {
-			surfaceTranslationX = surfaceWidth / 2 - bitmapWidth / 2;
+			surfaceTranslationX = surfaceWidth / 2f - bitmapWidth / 2;
 			initialTranslationX = surfaceTranslationX;
 
-			surfaceTranslationY = (surfaceHeight / 2 - bitmapHeight / 2);
+			surfaceTranslationY = (surfaceHeight / 2f - bitmapHeight / 2);
 			initialTranslationY = surfaceTranslationY;
 		}
 
@@ -103,7 +103,7 @@ public class Perspective {
 		surfaceTranslationY += dy / surfaceScale;
 
 		float xmax = (bitmapWidth / 2)
-				+ (((surfaceWidth / 2) - SCROLL_BORDER) / surfaceScale);
+				+ (((surfaceWidth / 2f) - SCROLL_BORDER) / surfaceScale);
 		if (surfaceTranslationX > (xmax + initialTranslationX)) {
 			surfaceTranslationX = xmax + initialTranslationX;
 		} else if (surfaceTranslationX < (-xmax + initialTranslationX)) {
@@ -111,7 +111,7 @@ public class Perspective {
 		}
 
 		float ymax = (bitmapHeight / 2)
-				+ (((surfaceHeight / 2) - SCROLL_BORDER) / surfaceScale);
+				+ (((surfaceHeight / 2f) - SCROLL_BORDER) / surfaceScale);
 		if (surfaceTranslationY > (ymax + initialTranslationY)) {
 			surfaceTranslationY = (ymax + initialTranslationY);
 		} else if (surfaceTranslationY < (-ymax + initialTranslationY)) {
@@ -156,7 +156,7 @@ public class Perspective {
 
 	public float getScaleForCenterBitmap() {
 		float ratioDependentScale;
-		float screenSizeRatio = surfaceWidth / surfaceHeight;
+		float screenSizeRatio = ((float) surfaceWidth) / surfaceHeight;
 		float bitmapSizeRatio = bitmapWidth / bitmapHeight;
 
 		if (screenSizeRatio > bitmapSizeRatio) {
@@ -207,5 +207,13 @@ public class Perspective {
 
 	public void setSurfaceTranslationY(float translationY) {
 		surfaceTranslationY = translationY;
+	}
+
+	public int getSurfaceWidth() {
+		return surfaceWidth;
+	}
+
+	public int getSurfaceHeight() {
+		return surfaceHeight;
 	}
 }

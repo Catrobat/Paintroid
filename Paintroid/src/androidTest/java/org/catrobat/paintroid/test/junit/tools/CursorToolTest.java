@@ -161,6 +161,8 @@ public class CursorToolTest {
 
 	@Test
 	public void testShouldMovePathOnUpEvent() {
+		when(workspace.getSurfaceHeight()).thenReturn(1920);
+		when(workspace.getSurfaceWidth()).thenReturn(1080);
 		when(workspace.getSurfacePointFromCanvasPoint(any(PointF.class))).thenAnswer(new Answer<PointF>() {
 			@Override
 			public PointF answer(InvocationOnMock invocation) {
