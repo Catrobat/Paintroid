@@ -34,12 +34,14 @@
     <string name="button_line">Линия</string>
     <string name="button_text">Текст</string>
     <string name="button_shape">Формы</string>
+    <string name="button_scroll_left">Scroll left</string>
+    <string name="button_scroll_right">Scroll right</string>
+    <string name="button_layers">слоёв</string>
+    <string name="button_hand">Hand</string>
+    <string name="button_apply">Применить</string>
     <string name="done">Готово</string>
-    <string name="color_chooser_title">Выбор цвета</string>
-    <string name="color_red">Красный</string>
-    <string name="color_green">Зелёный</string>
-    <string name="color_blue">Синий</string>
-    <string name="color_alpha">Прозрачность</string>
+    <string name="cap_circle">Circle</string>
+    <string name="cap_square">Square</string>
     <string name="dialog_tools_title">Инструменты</string>
     <string name="dialog_error_save_title">Ошибка загрузки/сохранения файла</string>
     <string name="dialog_error_sdcard_text">Проверьте изображение или SD-карту!</string>
@@ -61,6 +63,7 @@
     <string name="help_content_shape">Выберите форму и нажмите на нее, чтобы вставить выбранную форму</string>
     <string name="help_content_layer">Создать новые слои или изменить существующие</string>
     <string name="help_content_color_chooser">Выбрать или настроить цвет</string>
+    <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="closing_security_question_title">Выход</string>
     <string name="closing_security_question">Сохранить изменения?</string>
     <string name="closing_catroid_security_question_title">Вернуться к проекту</string>
@@ -80,6 +83,7 @@
     <string name="save_button_text">Сохранить</string>
     <string name="discard_button_text">Сброс</string>
     <string name="resize_nothing_to_resize">нечего менять</string>
+    <string name="resize_cannot_resize_to_this_size">cannot resize to this size</string>
     <string name="resize_max_image_resolution_reached">достигнуто максимальное разрешение изображения</string>
     <string name="text_tool_dialog_input_title">Ваш текст:</string>
     <string name="text_tool_dialog_format_options">Форматирование:</string>
@@ -91,7 +95,12 @@
     <string name="shape_tool_dialog_fill_title">Заливка</string>
     <string name="shape_tool_dialog_outline_title">План</string>
     <string name="fill_tool_dialog_color_tolerance_title">Допустимое отклонение по цвету</string>
-    <string name="transform_tool_auto_crop_text">обрезать</string>
+    <string name="transform_tool_rotate_left">rotate left</string>
+    <string name="transform_tool_rotate_right">rotate right</string>
+    <string name="transform_tool_flip_vertical">flip vertical</string>
+    <string name="transform_tool_flip_horizontal">flip horizontal</string>
+    <string name="transform_tool_resize_text">resize</string>
+    <string name="transform_tool_auto_crop_text">crop/enlarge</string>
     <string name="transform_width_text">Ширина</string>
     <string name="transform_height_text">Высота</string>
     <string name="pixel">пикс</string>
@@ -101,6 +110,7 @@
     <string name="layer_delete">Удалить слой</string>
     <string name="layer_too_many_layers">Слишком много слоев</string>
     <string name="layer_merged">Слои объединены</string>
+    <string name="layer_background">Layer background</string>
     <string name="dialog_shape_text">Фигура</string>
     <string name="dialog_loading_image_failed_title">Ошибка загрузки изображения</string>
     <string name="dialog_loading_image_failed_text">Недопустимый файл изображения</string>
@@ -128,4 +138,7 @@
     <string name="pocketpaint_about_content">Pocket Paint - библиотека редактирования изображений, который является частью проекта Catrobat.\n\nCatrobat - визуальный язык программирования и набор творческих инструментов для смартфонов, планшетов, и мобильных браузеров.\n\nИсходный код Pocket Paint в основном лицензирован под %s.\nДля получения подробностей о лицензии смотрите ссылку ниже.</string>
     <string name="pocketpaint_about_url_license_description">Лицензия исходного кода Pocket Paint</string>
     <string name="pocketpaint_about_url_catrobat_description">О проекте Catrobat</string>
+    <string name="pocketpaint_logo">Pocket Paint logo</string>
+    <string name="pocketpaint_intro">Intro</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
 </resources>
