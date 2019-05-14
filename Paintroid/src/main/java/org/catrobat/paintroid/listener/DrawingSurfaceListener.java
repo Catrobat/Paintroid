@@ -99,7 +99,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		ToolOptionsViewController toolOptionsViewController = callback.getToolOptionsViewController();
 
 		if (toolOptionsViewController.isVisible()) {
-			toolOptionsViewController.hideAnimated();
+			toolOptionsViewController.hide();
 			return false;
 		}
 
@@ -119,7 +119,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					return false;
 				}
 
-				currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_DOWN);
+				currentTool.handleDown(canvasTouchPoint);
 
 				if (autoScroll) {
 					autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y);
@@ -140,7 +140,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 						autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
 					}
 
-					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_MOVE);
+					currentTool.handleMove(canvasTouchPoint);
 				} else if (event.getPointerCount() == 1 && (currentTool.handToolMode())) {
 					if (autoScrollTask.isRunning()) {
 						autoScrollTask.stop();
@@ -185,7 +185,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				}
 
 				if (touchMode == TouchMode.DRAW) {
-					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_UP);
+					currentTool.handleUp(canvasTouchPoint);
 				} else {
 					currentTool.resetInternalState(StateChange.MOVE_CANCELED);
 				}

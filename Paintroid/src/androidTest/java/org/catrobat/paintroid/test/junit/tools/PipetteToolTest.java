@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,7 +64,7 @@ public class PipetteToolTest {
 	@Mock
 	private Workspace workspace;
 	@Mock
-	private ToolOptionsViewController toolOptionsViewController;
+	private ToolOptionsVisibilityController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 

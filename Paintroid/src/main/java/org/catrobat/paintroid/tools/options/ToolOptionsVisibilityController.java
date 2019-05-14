@@ -17,36 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools;
+package org.catrobat.paintroid.tools.options;
 
-import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Shader;
-import android.support.annotation.ColorInt;
+import android.support.annotation.Nullable;
 
-public interface ToolPaint {
+public interface ToolOptionsVisibilityController {
+	void hide();
 
-	Paint getPaint();
+	boolean isVisible();
 
-	void setPaint(Paint paint);
+	void setCallback(@Nullable Callback callback);
 
-	Paint getPreviewPaint();
+	void show();
 
-	int getColor();
+	void showDelayed();
 
-	void setColor(@ColorInt int color);
+	interface Callback {
+		void onHide();
 
-	PorterDuffXfermode getEraseXfermode();
-
-	int getPreviewColor();
-
-	float getStrokeWidth();
-
-	void setStrokeWidth(float strokeWidth);
-
-	Paint.Cap getStrokeCap();
-
-	void setStrokeCap(Paint.Cap strokeCap);
-
-	Shader getCheckeredShader();
+		void onShow();
+	}
 }

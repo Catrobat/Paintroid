@@ -76,7 +76,7 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 	}
 
 	@Override
-	public void hideAnimated() {
+	public void hide() {
 		if (!enabled) {
 			return;
 		}
@@ -102,7 +102,7 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 	}
 
 	@Override
-	public void showAnimated() {
+	public void show() {
 		if (!enabled) {
 			return;
 		}
@@ -120,6 +120,16 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 
 		animateBackgroundToColor(colorInactive);
 		notifyShow();
+	}
+
+	@Override
+	public void showDelayed() {
+		toolSpecificOptionsLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				show();
+			}
+		});
 	}
 
 	private void notifyHide() {

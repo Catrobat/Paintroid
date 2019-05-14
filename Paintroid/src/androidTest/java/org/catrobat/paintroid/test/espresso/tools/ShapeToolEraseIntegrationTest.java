@@ -21,68 +21,50 @@ package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Color;
 import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.drawable.DrawableShape;
-import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 
-import static org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider.withOffset;
+import java.util.Arrays;
+
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 
-@RunWith(AndroidJUnit4.class)
-public class ShapeToolIntegrationTest {
+@RunWith(Parameterized.class)
+public class ShapeToolEraseIntegrationTest {
+
+	@Parameter
+	public DrawableShape shape;
+
+	@Parameters(name = "{0}")
+	public static Iterable<Object[]> data() {
+		return Arrays.asList(new Object[][]{
+				{DrawableShape.RECTANGLE},
+				{DrawableShape.OVAL},
+				{DrawableShape.HEART},
+				{DrawableShape.STAR}
+		});
+	}
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-	private ToolReference toolReference;
-
-	@Before
-	public void setUp() {
-		MainActivity activity = launchActivityRule.getActivity();
-		toolReference = activity.toolReference;
-
-		onToolBarView()
-				.performSelectTool(ToolType.SHAPE);
-	}
 
 	@Test
-	public void testEllipseIsDrawnOnBitmap() {
-		onShapeToolOptionsView()
-				.performSelectShape(DrawableShape.OVAL);
-
-		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) toolReference.get();
-		float rectHeight = ellipseTool.boxHeight;
-
+	public void testEraseWithFilledShape() {
 		onToolBarView()
-				.performCloseToolOptionsView();
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
-				.checkPixelColor(Color.BLACK, withOffset(BitmapLocationProvider.MIDDLE, (int) (rectHeight / 2.5f), 0))
-				.checkPixelColor(Color.TRANSPARENT, withOffset(BitmapLocationProvider.MIDDLE, (int) (rectHeight / 2.5f), (int) (rectHeight / 2.5f)));
-	}
-
-	@Test
-	public void testUndoRedo() {
-		onToolBarView()
+				.performSelectTool(ToolType.SHAPE)
 				.performCloseToolOptionsView();
 
 		onDrawingSurfaceView()
@@ -91,46 +73,22 @@ public class ShapeToolIntegrationTest {
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
-		onTopBarView()
-				.performUndo();
+		onToolProperties()
+				.setColor(Color.TRANSPARENT);
+
+		onToolBarView()
+				.performOpenToolOptionsView();
+
+		onShapeToolOptionsView()
+				.performSelectShape(shape);
+
+		onToolBarView()
+				.performCloseToolOptionsView();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
-
-		onTopBarView()
-				.performRedo();
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-	}
-
-	@Test
-	public void testFilledRectChangesColor() {
-		onToolBarView()
-				.performCloseToolOptionsView();
-
-		onToolProperties()
-				.setColorResource(R.color.pocketpaint_color_picker_brown1);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
-
-		onDrawingSurfaceView()
-				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown1, BitmapLocationProvider.MIDDLE);
-	}
-
-	@Test
-	public void testDrawWithHeartShape() {
-		onShapeToolOptionsView()
-				.performSelectShape(DrawableShape.HEART);
-
-		onToolBarView()
-				.performCloseToolOptionsView();
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 	}
 }

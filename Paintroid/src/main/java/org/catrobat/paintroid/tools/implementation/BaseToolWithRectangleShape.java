@@ -43,7 +43,7 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ContextCallback.ScreenOrientation;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
@@ -97,9 +97,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	public float boxRotation; // in degree
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public Bitmap drawingBitmap;
-	@VisibleForTesting
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public float rotationSymbolDistance;
-	@VisibleForTesting
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public boolean rotationEnabled;
 	protected float boxResizeMargin;
 	protected float rotationSymbolWidth;
@@ -109,17 +109,17 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected RotatePosition rotatePosition;
 	protected Drawable overlayDrawable;
 	protected float maximumBoxResolution;
-	private boolean backgroundShadowEnabled;
-	private boolean resizePointsVisible;
-	private boolean respectMaximumBorderRatio;
-	private boolean respectMaximumBoxResolution;
-	private int rectangleShrinkingOnHighlight;
+	protected boolean backgroundShadowEnabled;
+	protected boolean resizePointsVisible;
+	protected boolean respectMaximumBorderRatio;
+	protected boolean respectMaximumBoxResolution;
+	protected int rectangleShrinkingOnHighlight;
 	private CountDownTimer downTimer;
 
 	protected float touchDownPositionX;
 	protected float touchDownPositionY;
 
-	public BaseToolWithRectangleShape(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
+	public BaseToolWithRectangleShape(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
@@ -313,13 +313,11 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			drawToolSpecifics(canvas, boxWidth, boxHeight);
 		}
 
-		if (drawingBitmap != null && rotationEnabled) {
+		if (rotationEnabled) {
 			drawRotationArrows(canvas, boxWidth, boxHeight);
 		}
 
-		if (drawingBitmap != null) {
-			drawBitmap(canvas, boxWidth, boxHeight);
-		}
+		drawBitmap(canvas, boxWidth, boxHeight);
 
 		if (overlayDrawable != null) {
 			drawOverlayDrawable(canvas, boxWidth, boxHeight, boxRotation);
@@ -384,10 +382,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	protected void drawBitmap(Canvas canvas, float boxWidth, float boxHeight) {
-		tempDrawingRectangle.set(-boxWidth / 2, -boxHeight / 2,
-				boxWidth / 2, boxHeight / 2);
-		canvas.clipRect(tempDrawingRectangle);
-		canvas.drawBitmap(drawingBitmap, null, tempDrawingRectangle, null);
+		if (drawingBitmap != null) {
+			tempDrawingRectangle.set(-boxWidth / 2, -boxHeight / 2,
+					boxWidth / 2, boxHeight / 2);
+			canvas.clipRect(tempDrawingRectangle);
+			canvas.drawBitmap(drawingBitmap, null, tempDrawingRectangle, null);
+		}
 	}
 
 	private void drawOverlayDrawable(Canvas canvas, float boxWidth, float boxHeight, float boxRotation) {
@@ -414,10 +414,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void rotate(float deltaX, float deltaY) {
-		if (drawingBitmap == null) {
-			return;
-		}
-
 		PointF currentPoint = new PointF(previousEventCoordinate.x, previousEventCoordinate.y);
 
 		double previousXLength = previousEventCoordinate.x - deltaX - toolPosition.x;
@@ -499,8 +495,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			return FloatingBoxAction.RESIZE;
 		}
 
-		// Only allow rotation if an image is present
-		if (drawingBitmap != null && rotationEnabled) {
+		if (rotationEnabled) {
 			PointF topLeftRotationPoint = new PointF(toolPosition.x - boxWidth / 2 - rotationSymbolDistance / 2,
 					toolPosition.y - boxHeight / 2 - rotationSymbolDistance / 2);
 			PointF topRightRotationPoint = new PointF(toolPosition.x + boxWidth / 2 + rotationSymbolDistance / 2,
@@ -668,26 +663,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		}
 	}
 
-	protected void setRotationEnabled(boolean rotationEnabled) {
-		this.rotationEnabled = rotationEnabled;
-	}
-
-	protected void setResizePointsVisible(boolean resizePointsVisible) {
-		this.resizePointsVisible = resizePointsVisible;
-	}
-
-	protected void setRespectMaximumBorderRatio(boolean respectMaximumBorderRatio) {
-		this.respectMaximumBorderRatio = respectMaximumBorderRatio;
-	}
-
-	protected void setRespectMaximumBoxResolution(boolean respectMaximumBoxResolution) {
-		this.respectMaximumBoxResolution = respectMaximumBoxResolution;
-	}
-
-	protected void setMaximumBoxResolution(float maximumBoxResolution) {
-		this.maximumBoxResolution = maximumBoxResolution;
-	}
-
 	protected void preventThatBoxGetsTooLarge(float oldWidth, float oldHeight, float oldPosX, float oldPosY) {
 		boxWidth = oldWidth;
 		boxHeight = oldHeight;
@@ -734,14 +709,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	@Override
-	public Point getAutoScrollDirection(float pointX, float pointY,
-			int viewWidth, int viewHeight) {
-
-		if (currentAction == FloatingBoxAction.MOVE
-				|| currentAction == FloatingBoxAction.RESIZE) {
-
-			return super.getAutoScrollDirection(pointX, pointY, viewWidth,
-					viewHeight);
+	public Point getAutoScrollDirection(float pointX, float pointY, int viewWidth, int viewHeight) {
+		if (currentAction == FloatingBoxAction.MOVE || currentAction == FloatingBoxAction.RESIZE) {
+			return super.getAutoScrollDirection(pointX, pointY, viewWidth, viewHeight);
 		}
 		return new Point(0, 0);
 	}
@@ -760,10 +730,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		boxWidth = bundle.getFloat(BUNDLE_BOX_WIDTH, boxWidth);
 		boxHeight = bundle.getFloat(BUNDLE_BOX_HEIGHT, boxHeight);
 		boxRotation = bundle.getFloat(BUNDLE_BOX_ROTATION, boxRotation);
-	}
-
-	@Override
-	public void setupToolOptions() {
 	}
 
 	@Override

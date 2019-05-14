@@ -17,36 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools;
+package org.catrobat.paintroid.tools.drawable;
 
+import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Shader;
-import android.support.annotation.ColorInt;
+import android.graphics.RectF;
 
-public interface ToolPaint {
-
-	Paint getPaint();
-
-	void setPaint(Paint paint);
-
-	Paint getPreviewPaint();
-
-	int getColor();
-
-	void setColor(@ColorInt int color);
-
-	PorterDuffXfermode getEraseXfermode();
-
-	int getPreviewColor();
-
-	float getStrokeWidth();
-
-	void setStrokeWidth(float strokeWidth);
-
-	Paint.Cap getStrokeCap();
-
-	void setStrokeCap(Paint.Cap strokeCap);
-
-	Shader getCheckeredShader();
+public interface ShapeDrawable {
+	void draw(Canvas canvas, RectF shapeRect, Paint drawPaint);
 }

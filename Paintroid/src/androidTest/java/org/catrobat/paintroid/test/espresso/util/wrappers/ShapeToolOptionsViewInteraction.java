@@ -20,7 +20,8 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.implementation.ShapeTool;
+import org.catrobat.paintroid.tools.drawable.DrawableShape;
+import org.catrobat.paintroid.tools.drawable.DrawableStyle;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -35,25 +36,39 @@ public final class ShapeToolOptionsViewInteraction extends CustomViewInteraction
 		return new ShapeToolOptionsViewInteraction();
 	}
 
-	public ShapeToolOptionsViewInteraction performSelectShape(ShapeTool.BaseShape shape) {
-		switch (shape) {
+	private int getButtonIdFromBaseShape(DrawableShape baseShape) {
+		switch (baseShape) {
 			case RECTANGLE:
-				onView(withId(R.id.pocketpaint_shapes_square_btn))
-						.perform(click());
-				break;
+				return R.id.pocketpaint_shapes_square_btn;
 			case OVAL:
-				onView(withId(R.id.pocketpaint_shapes_circle_btn))
-						.perform(click());
-				break;
+				return R.id.pocketpaint_shapes_circle_btn;
 			case HEART:
-				onView(withId(R.id.pocketpaint_shapes_heart_btn))
-						.perform(click());
-				break;
+				return R.id.pocketpaint_shapes_heart_btn;
 			case STAR:
-				onView(withId(R.id.pocketpaint_shapes_star_btn))
-						.perform(click());
-				break;
+				return R.id.pocketpaint_shapes_star_btn;
 		}
+		throw new IllegalArgumentException();
+	}
+
+	private int getButtonIdFromShapeDrawType(DrawableStyle shapeDrawType) {
+		switch (shapeDrawType) {
+			case STROKE:
+				return R.id.pocketpaint_shape_ibtn_outline;
+			case FILL:
+				return R.id.pocketpaint_shape_ibtn_fill;
+		}
+		throw new IllegalArgumentException();
+	}
+
+	public ShapeToolOptionsViewInteraction performSelectShape(DrawableShape shape) {
+		onView(withId(getButtonIdFromBaseShape(shape)))
+				.perform(click());
+		return this;
+	}
+
+	public ShapeToolOptionsViewInteraction performSelectShapeDrawType(DrawableStyle shapeDrawType) {
+		onView(withId(getButtonIdFromShapeDrawType(shapeDrawType)))
+				.perform(click());
 		return this;
 	}
 }
