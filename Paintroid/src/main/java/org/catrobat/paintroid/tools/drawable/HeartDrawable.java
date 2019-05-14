@@ -17,43 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.common;
+package org.catrobat.paintroid.tools.drawable;
 
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.RectF;
 
-public class CommonFactory {
-	public Canvas createCanvas() {
-		return new Canvas();
-	}
+public class HeartDrawable implements ShapeDrawable {
+	private Path path = new Path();
+	private Paint paint = new Paint();
 
-	public Bitmap createBitmap(int width, int height, Config config) {
-		return Bitmap.createBitmap(width, height, config);
-	}
+	@Override
+	public void draw(Canvas canvas, RectF shapeRect, Paint drawPaint) {
+		paint.set(drawPaint);
 
-	public Paint createPaint(Paint paint) {
-		return new Paint(paint);
-	}
+		float midWidth = shapeRect.width() / 2;
+		float height = shapeRect.height();
+		float width = shapeRect.width();
 
-	public PointF createPointF(PointF point) {
-		return new PointF(point.x, point.y);
-	}
+		path.reset();
+		path.moveTo(midWidth, height);
+		path.cubicTo(-0.2f * width, 4.5f * height / 8,
+				0.8f * width / 8, -1.5f * height / 8,
+				midWidth, 1.5f * height / 8);
+		path.cubicTo(7.2f * width / 8, -1.5f * height / 8,
+				1.2f * width, 4.5f * height / 8,
+				midWidth, height);
+		path.close();
 
-	public Point createPoint(int x, int y) {
-		return new Point(x, y);
-	}
-
-	public Path createPath(Path path) {
-		return new Path(path);
-	}
-
-	public RectF createRectF(RectF rect) {
-		return new RectF(rect);
+		path.offset(shapeRect.left, shapeRect.top);
+		canvas.drawPath(path, paint);
 	}
 }

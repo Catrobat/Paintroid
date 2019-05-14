@@ -35,19 +35,16 @@ import org.catrobat.paintroid.tools.ToolPaint;
 
 public class DefaultToolPaint implements ToolPaint {
 	public static final int STROKE_25 = 25;
+	private static final PorterDuffXfermode ERASE_XFERMODE = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 
-	private final PorterDuffXfermode eraseXfermode;
-	private final Paint checkeredPattern;
-	private Paint bitmapPaint = new Paint();
-	private Paint previewPaint = new Paint();
+	private final Shader checkeredShader;
+	private final Paint bitmapPaint = new Paint();
+	private final Paint previewPaint = new Paint();
 
 	public DefaultToolPaint(Context context) {
 		Resources resources = context.getResources();
 		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg);
-		BitmapShader shader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-		checkeredPattern = new Paint();
-		checkeredPattern.setShader(shader);
-		eraseXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+		checkeredShader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 
 		bitmapPaint.reset();
 		bitmapPaint.setAntiAlias(true);
@@ -57,6 +54,11 @@ public class DefaultToolPaint implements ToolPaint {
 		bitmapPaint.setStrokeCap(Paint.Cap.ROUND);
 		bitmapPaint.setStrokeWidth(STROKE_25);
 		previewPaint.set(bitmapPaint);
+	}
+
+	@Override
+	public PorterDuffXfermode getEraseXfermode() {
+		return ERASE_XFERMODE;
 	}
 
 	@Override
@@ -72,21 +74,16 @@ public class DefaultToolPaint implements ToolPaint {
 	@Override
 	public void setColor(int color) {
 		bitmapPaint.setColor(color);
+		previewPaint.set(bitmapPaint);
+		previewPaint.setXfermode(null);
 		if (Color.alpha(color) == 0) {
-			previewPaint.reset();
-			previewPaint.setStyle(bitmapPaint.getStyle());
-			previewPaint.setStrokeJoin(bitmapPaint.getStrokeJoin());
-			previewPaint.setStrokeCap(bitmapPaint.getStrokeCap());
-			previewPaint.setStrokeWidth(bitmapPaint.getStrokeWidth());
-			previewPaint.setShader(checkeredPattern.getShader());
+			previewPaint.setShader(checkeredShader);
 			previewPaint.setColor(Color.BLACK);
-			previewPaint.setAlpha(0);
 
-			bitmapPaint.setXfermode(eraseXfermode);
+			bitmapPaint.setXfermode(ERASE_XFERMODE);
 			bitmapPaint.setAlpha(0);
 		} else {
 			bitmapPaint.setXfermode(null);
-			previewPaint.set(bitmapPaint);
 		}
 	}
 
@@ -129,5 +126,10 @@ public class DefaultToolPaint implements ToolPaint {
 	@Override
 	public Paint getPreviewPaint() {
 		return previewPaint;
+	}
+
+	@Override
+	public Shader getCheckeredShader() {
+		return checkeredShader;
 	}
 }

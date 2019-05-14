@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.junit.tools;
+package org.catrobat.paintroid.test.junit.algorithm;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;

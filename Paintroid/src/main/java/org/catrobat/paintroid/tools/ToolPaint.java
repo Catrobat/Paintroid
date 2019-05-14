@@ -20,6 +20,8 @@
 package org.catrobat.paintroid.tools;
 
 import android.graphics.Paint;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Shader;
 import android.support.annotation.ColorInt;
 
 public interface ToolPaint {
@@ -34,6 +36,8 @@ public interface ToolPaint {
 
 	void setColor(@ColorInt int color);
 
+	PorterDuffXfermode getEraseXfermode();
+
 	int getPreviewColor();
 
 	float getStrokeWidth();
@@ -43,4 +47,6 @@ public interface ToolPaint {
 	Paint.Cap getStrokeCap();
 
 	void setStrokeCap(Paint.Cap strokeCap);
+
+	Shader getCheckeredShader();
 }

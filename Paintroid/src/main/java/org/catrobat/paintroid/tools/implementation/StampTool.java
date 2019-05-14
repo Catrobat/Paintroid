@@ -35,7 +35,7 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
@@ -49,12 +49,12 @@ public class StampTool extends BaseToolWithRectangleShape {
 	private CountDownTimer downTimer;
 	private boolean longClickPerformed;
 
-	public StampTool(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
+	public StampTool(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		readyForPaste = false;
 		longPressTimeout = ViewConfiguration.getLongPressTimeout();
-		setRotationEnabled(ROTATION_ENABLED);
+		this.rotationEnabled = ROTATION_ENABLED;
 
 		setBitmap(Bitmap.createBitmap((int) boxWidth, (int) boxHeight, Config.ARGB_8888));
 	}

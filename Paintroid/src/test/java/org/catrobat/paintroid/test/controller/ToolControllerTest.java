@@ -115,7 +115,7 @@ public class ToolControllerTest {
 	public void testHideToolOptionsCallsToolOptionsViewController() {
 		toolController.hideToolOptionsView();
 
-		verify(toolOptionsViewController).hideAnimated();
+		verify(toolOptionsViewController).hide();
 		verifyNoMoreInteractions(toolOptionsViewController);
 	}
 
@@ -190,7 +190,7 @@ public class ToolControllerTest {
 	public void testToggleToolOptionsWhenNotVisibleThenShowOptions() {
 		toolController.toggleToolOptionsView();
 
-		verify(toolOptionsViewController).showAnimated();
+		verify(toolOptionsViewController).show();
 	}
 
 	@Test
@@ -199,7 +199,7 @@ public class ToolControllerTest {
 
 		toolController.toggleToolOptionsView();
 
-		verify(toolOptionsViewController).hideAnimated();
+		verify(toolOptionsViewController).hide();
 	}
 
 	@Test

@@ -17,20 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.listener;
+package org.catrobat.paintroid.tools.options;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.contract.MainActivityContracts;
+import android.support.annotation.Nullable;
 
-public class PresenterColorPickedListener implements ColorPickerDialog.OnColorPickedListener {
-	private final MainActivityContracts.Presenter presenter;
+public interface ToolOptionsVisibilityController {
+	void hide();
 
-	public PresenterColorPickedListener(MainActivityContracts.Presenter presenter) {
-		this.presenter = presenter;
-	}
+	boolean isVisible();
 
-	@Override
-	public void colorChanged(int color) {
-		presenter.setBottomNavigationColor(color);
+	void setCallback(@Nullable Callback callback);
+
+	void show();
+
+	void showDelayed();
+
+	interface Callback {
+		void onHide();
+
+		void onShow();
 	}
 }
