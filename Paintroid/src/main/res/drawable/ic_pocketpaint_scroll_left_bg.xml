@@ -22,8 +22,8 @@
     <item>
         <shape>
             <gradient
-                android:startColor="@color/pocketpaint_background_color"
-                android:centerColor="@color/pocketpaint_background_color"
+                android:startColor="@color/pocketpaint_colorPrimary"
+                android:centerColor="@color/pocketpaint_colorPrimary"
                 android:endColor="@color/pocketpaint_main_bottom_bar_color_transparent"
                 android:centerX="50%"
                 android:type="linear"/>

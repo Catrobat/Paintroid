@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.PointF;
@@ -29,10 +30,10 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.common.Constants;
 import org.hamcrest.Matcher;
 
 import java.util.ArrayList;
@@ -71,9 +72,12 @@ public final class EspressoUtils {
 	 */
 	@Deprecated
 	public static float getActionbarHeight() {
-		Resources resources = InstrumentationRegistry.getTargetContext().getResources();
+		Context context = InstrumentationRegistry.getTargetContext();
+		TypedValue tv = new TypedValue();
+		context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+		Resources resources = context.getResources();
 		DisplayMetrics metrics = resources.getDisplayMetrics();
-		return (Constants.ACTION_BAR_HEIGHT * metrics.density);
+		return TypedValue.complexToDimensionPixelSize(tv.data, metrics);
 	}
 
 	/**

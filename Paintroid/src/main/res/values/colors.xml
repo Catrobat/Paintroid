@@ -20,11 +20,10 @@
 -->
 <resources>
     <!-- PocketPaint theme colors -->
-    <color name="pocketpaint_colorPrimary">#00838F</color>
+    <color name="pocketpaint_colorPrimary">#0097A7</color>
     <color name="pocketpaint_colorPrimaryDark">#00838F</color>
     <color name="pocketpaint_colorAccent">#33B5E5</color>
     <color name="pocketpaint_text_color_link">#E68B00</color>
-    <color name="pocketpaint_background_color">#0097A7</color>
 
     <!-- PocketPaint main activity -->
     <color name="pocketpaint_main_separator_color">#c8e8ff</color>

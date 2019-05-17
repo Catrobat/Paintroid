@@ -24,14 +24,11 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.support.annotation.VisibleForTesting;
 
-import org.catrobat.paintroid.common.Constants;
-
 public class Perspective {
 	public static final float MIN_SCALE = 0.1f;
 	public static final float MAX_SCALE = 100f;
 	private static final float SCROLL_BORDER = 50f;
 	private static final float BORDER_ZOOM_FACTOR = 0.95f;
-	private static final float ACTION_BAR_HEIGHT = Constants.ACTION_BAR_HEIGHT;
 
 	@VisibleForTesting
 	public int surfaceWidth;
@@ -53,15 +50,12 @@ public class Perspective {
 	private float initialTranslationX;
 	@VisibleForTesting
 	public float initialTranslationY;
-	private final float actionbarHeight;
 
-	public Perspective(float screenDensity, int bitmapWidth, int bitmapHeight) {
+	public Perspective(int bitmapWidth, int bitmapHeight) {
 		this.bitmapWidth = bitmapWidth;
 		this.bitmapHeight = bitmapHeight;
 		surfaceScale = 1f;
 		isFullscreen = false;
-
-		actionbarHeight = ACTION_BAR_HEIGHT * screenDensity;
 	}
 
 	public synchronized void setSurfaceFrame(Rect surfaceFrame) {
@@ -80,8 +74,8 @@ public class Perspective {
 		surfaceScale = 1f;
 
 		if (surfaceWidth == 0 || surfaceHeight == 0) {
-			surfaceTranslationX = 0f;
-			surfaceTranslationY = -actionbarHeight;
+			surfaceTranslationX = 0;
+			surfaceTranslationY = 0;
 		} else {
 			surfaceTranslationX = surfaceWidth / 2f - bitmapWidth / 2;
 			initialTranslationX = surfaceTranslationX;

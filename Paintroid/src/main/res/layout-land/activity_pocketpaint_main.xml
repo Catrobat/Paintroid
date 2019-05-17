@@ -17,91 +17,101 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/pocketpaint_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pocketpaint_main_layout"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/pocketpaint_drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/pocketpaint_layout_top_bar"
-            layout="@layout/pocketpaint_layout_top_bar"
-            android:layout_width="@dimen/pocketpaint_main_top_bar_landscape_width"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/pocketpaint_main_bottom_navigation" />
-
-        <org.catrobat.paintroid.ui.DrawingSurface
-            android:id="@+id/pocketpaint_drawing_surface_view"
+        <RelativeLayout
+            android:id="@+id/pocketpaint_main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/pocketpaint_main_bottom_navigation"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/pocketpaint_layout_top_bar"
-            android:background="@color/pocketpaint_main_drawing_surface_active" />
+            android:fitsSystemWindows="true">
 
-        <LinearLayout
-            android:id="@+id/pocketpaint_main_tool_options"
-            android:layout_width="match_parent"
+            <include
+                android:id="@+id/pocketpaint_layout_top_bar"
+                layout="@layout/pocketpaint_layout_top_bar"
+                android:layout_width="@dimen/pocketpaint_main_top_bar_landscape_width"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/pocketpaint_main_bottom_navigation" />
+
+            <org.catrobat.paintroid.ui.DrawingSurface
+                android:id="@+id/pocketpaint_drawing_surface_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/pocketpaint_main_bottom_navigation"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/pocketpaint_layout_top_bar"
+                android:background="@color/pocketpaint_main_drawing_surface_active" />
+
+            <LinearLayout
+                android:id="@+id/pocketpaint_main_tool_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/background_light"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical"
+                android:layout_toStartOf="@+id/pocketpaint_main_bottom_bar"
+                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/pocketpaint_main_bottom_navigation">
+
+                <include layout="@layout/pocketpaint_layout_tool_options"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/pocketpaint_main_bottom_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentEnd="true"
+                android:layout_above="@+id/pocketpaint_main_bottom_navigation"
+                android:background="@android:color/background_light"
+                android:visibility="gone">
+
+                <include layout="@layout/pocketpaint_layout_bottom_bar"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/pocketpaint_main_bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
+                android:background="?attr/colorPrimary"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true">
+
+                <include layout="@layout/pocketpaint_layout_bottom_navigation"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/pocketpaint_nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/pocketpaint_layout_nav_header"
+            app:menu="@menu/menu_pocketpaint_activity"
+            android:background="@color/pocketpaint_main_navigation_drawer_background" />
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/pocketpaint_nav_view_layer"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_light"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical"
-            android:layout_toStartOf="@+id/pocketpaint_main_bottom_bar"
-            android:layout_alignParentEnd="true"
-            android:layout_above="@+id/pocketpaint_main_bottom_navigation">
+            android:layout_gravity="end|center">
 
-            <include layout="@layout/pocketpaint_layout_tool_options"/>
-        </LinearLayout>
+            <include layout="@layout/pocketpaint_layout_main_menu_layer" />
+        </android.support.design.widget.NavigationView>
 
-        <LinearLayout
-            android:id="@+id/pocketpaint_main_bottom_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentEnd="true"
-            android:layout_above="@+id/pocketpaint_main_bottom_navigation"
-            android:background="@android:color/background_light"
-            android:visibility="gone">
+    </android.support.v4.widget.DrawerLayout>
 
-            <include layout="@layout/pocketpaint_layout_bottom_bar"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/pocketpaint_main_bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
-            android:background="@color/pocketpaint_background_color"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true">
-
-            <include layout="@layout/pocketpaint_layout_bottom_navigation"/>
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/pocketpaint_nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/pocketpaint_layout_nav_header"
-        app:menu="@menu/menu_pocketpaint_activity"
-        android:background="@color/pocketpaint_main_navigation_drawer_background" />
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/pocketpaint_nav_view_layer"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|center">
-
-        <include layout="@layout/pocketpaint_layout_main_menu_layer" />
-    </android.support.design.widget.NavigationView>
-
-</android.support.v4.widget.DrawerLayout>
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</RelativeLayout>

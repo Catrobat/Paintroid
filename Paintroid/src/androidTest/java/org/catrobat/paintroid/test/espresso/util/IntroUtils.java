@@ -26,6 +26,7 @@ import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -133,8 +134,10 @@ public final class IntroUtils {
 		final Context context = InstrumentationRegistry.getTargetContext();
 		final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		int radiusOffset = TapTargetBase.RADIUS_OFFSET;
-		float dimension = context.getResources().getDimension(R.dimen.pocketpaint_main_top_bar_height);
-		return WelcomeActivityHelper.calculateTapTargetRadius(dimension, metrics, radiusOffset);
+		TypedValue tv = new TypedValue();
+		context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+		int actionBarSize = TypedValue.complexToDimensionPixelSize(tv.data, metrics);
+		return WelcomeActivityHelper.calculateTapTargetRadius(actionBarSize, metrics, radiusOffset);
 	}
 
 	public static LinearLayout getBottomBarFromToolSlide(Activity activity) {

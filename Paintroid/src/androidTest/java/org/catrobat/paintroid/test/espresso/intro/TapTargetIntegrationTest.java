@@ -85,7 +85,7 @@ public class TapTargetIntegrationTest {
 	public void testRadiusBottomBar() {
 		IntroUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools));
 		TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
-		int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget();
+		int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget() - 3;
 		int actualRadius = tapTargetBottomBar.radius;
 		assertEquals("Radius calculated Wrong", expectedRadius, actualRadius);
 	}

@@ -57,7 +57,10 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +72,7 @@ import java.util.List;
 public final class ColorPickerDialog extends AppCompatDialogFragment implements ColorPickerView.OnColorChangedListener {
 	private static final String CURRENT_COLOR = "CurrentColor";
 	private static final String INITIAL_COLOR = "InitialColor";
+	private static final String SHOW_ACTION_BAR = "ShowActionBar";
 	@VisibleForTesting
 	public List<OnColorPickedListener> onColorPickedListener = new ArrayList<>();
 	private ColorPickerView colorPickerView;
@@ -78,10 +82,15 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	private Shader checkeredShader;
 
 	public static ColorPickerDialog newInstance(@ColorInt int initialColor) {
+		return newInstance(initialColor, false);
+	}
+
+	public static ColorPickerDialog newInstance(@ColorInt int initialColor, boolean showActionBar) {
 		ColorPickerDialog dialog = new ColorPickerDialog();
 		Bundle bundle = new Bundle();
 		bundle.putInt(INITIAL_COLOR, initialColor);
 		bundle.putInt(CURRENT_COLOR, initialColor);
+		bundle.putBoolean(SHOW_ACTION_BAR, showActionBar);
 		dialog.setArguments(bundle);
 		return dialog;
 	}
@@ -107,7 +116,7 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.dialog_color_picker, container);
+		return inflater.inflate(R.layout.dialog_color_picker, container, false);
 	}
 
 	@Override
@@ -145,6 +154,32 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 		}
 
 		colorToApply = colorPickerView.getInitialColor();
+
+		boolean showActionBar = getArguments().getBoolean(SHOW_ACTION_BAR);
+		Toolbar toolbar = view.findViewById(R.id.color_picker_toolbar);
+
+		if (getShowsDialog() || !showActionBar) {
+			toolbar.setVisibility(View.GONE);
+		} else {
+			AppCompatActivity activity = (AppCompatActivity) getActivity();
+			activity.setSupportActionBar(toolbar);
+
+			ActionBar supportActionBar = activity.getSupportActionBar();
+			if (supportActionBar != null) {
+				supportActionBar.setDisplayHomeAsUpEnabled(true);
+				supportActionBar.setDisplayShowHomeEnabled(true);
+				supportActionBar.setTitle(R.string.color_picker_title);
+			}
+		}
+	}
+
+	@Override
+	public void dismiss() {
+		if (getShowsDialog()) {
+			super.dismiss();
+		} else {
+			getActivity().getSupportFragmentManager().popBackStack();
+		}
 	}
 
 	@NonNull
