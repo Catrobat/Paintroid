@@ -40,11 +40,11 @@ buildscript {
 }
 
 ext {
-    androidCompileSdkVersion = 26
+    androidCompileSdkVersion = 28
     androidMinSdkVersion = 17
     androidTargetSdkVersion = 26
 
-    androidSupportLibraryVersion = '26.1.0'
+    androidSupportLibraryVersion = '28.0.0'
 
     androidVersionCode = 29
     androidVersionName = '2.4.0'

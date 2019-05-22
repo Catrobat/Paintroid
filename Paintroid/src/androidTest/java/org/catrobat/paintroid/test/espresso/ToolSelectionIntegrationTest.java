@@ -22,9 +22,6 @@ package org.catrobat.paintroid.test.espresso;
 import android.graphics.Color;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
 
 import junit.framework.AssertionFailedError;
 
@@ -32,7 +29,6 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
@@ -52,12 +48,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.clickOutside;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class ToolSelectionIntegrationTest {
@@ -71,48 +65,10 @@ public class ToolSelectionIntegrationTest {
 	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
-	private MainActivityHelper activityHelper;
-	private HorizontalScrollView scrollView;
-	private LinearLayout toolsLayout;
-
 	@Before
 	public void setUp() {
-		MainActivity activity = launchActivityRule.getActivity();
-		activityHelper = new MainActivityHelper(activity);
-
-		toolsLayout = activity.findViewById(R.id.pocketpaint_tools_layout);
-		scrollView = activity.findViewById(R.id.pocketpaint_bottom_bar_scroll_view);
-
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
-	}
-
-	private int getNumberOfNotVisibleTools() {
-		LinearLayout toolsLayout = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_tools_layout);
-		int toolCount = toolsLayout.getChildCount();
-		int numberOfNotVisibleTools = 0;
-		for (int i = 0; i < toolCount; i++) {
-			View toolButton = toolsLayout.getChildAt(i);
-			if (!toolButton.isShown()) {
-				numberOfNotVisibleTools++;
-			}
-		}
-		return numberOfNotVisibleTools;
-	}
-
-	private ToolType getToolTypeByButtonId(int id) {
-		ToolType retToolType = null;
-
-		for (ToolType toolType : ToolType.values()) {
-			if (toolType.getToolButtonID() == id) {
-				retToolType = toolType;
-				break;
-			}
-		}
-
-		assertNotNull(retToolType);
-
-		return retToolType;
 	}
 
 	@Test
@@ -137,34 +93,6 @@ public class ToolSelectionIntegrationTest {
 	}
 
 	@Test
-	public void testToolSelectionToolButtonCheckPosition() {
-		int toolCount = toolsLayout.getChildCount() - getNumberOfNotVisibleTools();
-		View toolButton = toolsLayout.getChildAt(toolCount / 2);
-
-		ToolType toolInMiddle = getToolTypeByButtonId(toolButton.getId());
-
-		if (toolsLayout.getWidth() > scrollView.getWidth() + toolsLayout.getChildAt(0).getWidth()) {
-			onToolBarView().performSelectTool(toolInMiddle);
-
-			int[] screenLocation = new int[2];
-			toolButton.getLocationOnScreen(screenLocation);
-
-			assertEquals("Tool button should be centered", activityHelper.getDisplayWidth() / 2, screenLocation[0] + toolButton.getWidth() / 2);
-		}
-
-		int scrollRight = 1;
-		int scrollLeft = -1;
-
-		onToolBarView().performSelectTool(ToolType.BRUSH);
-
-		assertFalse("Tool button should be most left", scrollView.canScrollHorizontally(scrollLeft));
-
-		onToolBarView().performSelectTool(ToolType.TRANSFORM);
-
-		assertFalse("Tool button should be most right", scrollView.canScrollHorizontally(scrollRight));
-	}
-
-	@Test
 	public void testToolSelectionToast() {
 		ToolType toolType = ToolType.CURSOR;
 		onToolBarView()
@@ -175,6 +103,8 @@ public class ToolSelectionIntegrationTest {
 
 	@Test
 	public void testToolSelectionNextArrowDisplayed() {
+		onBottomNavigationView()
+				.onToolsClicked();
 		try {
 			onView(withId(R.id.pocketpaint_bottom_next))
 					.check(matches(isCompletelyDisplayed()));
@@ -194,6 +124,8 @@ public class ToolSelectionIntegrationTest {
 
 	@Test
 	public void testToolSelectionPreviousArrowDisplayedOnEnd() {
+		onBottomNavigationView()
+				.onToolsClicked();
 		onView(withId(END))
 				.perform(scrollTo());
 		try {
@@ -211,6 +143,8 @@ public class ToolSelectionIntegrationTest {
 
 	@Test
 	public void testToolSelectionNextArrowNotDisplayedOnEnd() {
+		onBottomNavigationView()
+				.onToolsClicked();
 		onView(withId(START))
 				.perform(scrollTo());
 		try {
@@ -228,6 +162,8 @@ public class ToolSelectionIntegrationTest {
 
 	@Test
 	public void previousAndNextDisplayedOnScrollToMiddle() {
+		onBottomNavigationView()
+				.onToolsClicked();
 		onView(withId(MIDDLE))
 				.perform(scrollTo());
 		try {

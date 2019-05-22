@@ -33,6 +33,8 @@ public interface ToolController {
 
 	void hideToolOptionsView();
 
+	void showToolOptionsView();
+
 	boolean toolOptionsViewVisible();
 
 	void resetToolInternalState();

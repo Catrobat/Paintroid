@@ -46,6 +46,7 @@ import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.PermissionRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.SaveImageRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts.BottomBarViewHolder;
+import org.catrobat.paintroid.contract.MainActivityContracts.BottomNavigationViewHolder;
 import org.catrobat.paintroid.contract.MainActivityContracts.DrawerLayoutViewHolder;
 import org.catrobat.paintroid.contract.MainActivityContracts.Interactor;
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView;
@@ -94,6 +95,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private BottomBarViewHolder bottomBarViewHolder;
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
 	private NavigationDrawerViewHolder navigationDrawerViewHolder;
+	private BottomNavigationViewHolder bottomNavigationViewHolder;
 
 	private CommandManager commandManager;
 	private CommandFactory commandFactory;
@@ -104,8 +106,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public MainActivityPresenter(MainView view, Model model, Workspace workspace, Navigator navigator,
 			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
 			DrawerLayoutViewHolder drawerLayoutViewHolder, NavigationDrawerViewHolder navigationDrawerViewHolder,
-			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective,
-			ToolController toolController) {
+			BottomNavigationViewHolder bottomNavigationViewHolder, CommandFactory commandFactory,
+			CommandManager commandManager, Perspective perspective, ToolController toolController) {
 		this.view = view;
 		this.model = model;
 		this.workspace = workspace;
@@ -119,6 +121,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		this.perspective = perspective;
 		this.toolController = toolController;
 		this.commandFactory = commandFactory;
+		this.bottomNavigationViewHolder = bottomNavigationViewHolder;
 	}
 
 	private boolean isImageUnchanged() {
@@ -439,7 +442,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private void exitFullscreen() {
 		view.exitFullscreen();
 		topBarViewHolder.show();
-		bottomBarViewHolder.show();
+		bottomNavigationViewHolder.show();
 		navigationDrawerViewHolder.hideExitFullscreen();
 		navigationDrawerViewHolder.showEnterFullscreen();
 		toolController.enableToolOptionsView();
@@ -451,6 +454,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		view.enterFullscreen();
 		topBarViewHolder.hide();
 		bottomBarViewHolder.hide();
+		bottomNavigationViewHolder.hide();
 		navigationDrawerViewHolder.showExitFullscreen();
 		navigationDrawerViewHolder.hideEnterFullscreen();
 		toolController.disableToolOptionsView();
@@ -493,6 +497,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void toolClicked(ToolType type) {
 		bottomBarViewHolder.cancelAnimation();
+		bottomBarViewHolder.hide();
 
 		if (toolController.getToolType() == type && toolController.hasToolOptionsView()) {
 			toolController.toggleToolOptionsView();
@@ -646,5 +651,33 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public boolean isFinishing() {
 		return view.isFinishing();
+	}
+
+	@Override
+	public void actionToolsClicked() {
+		if (toolController.toolOptionsViewVisible()) {
+			toolController.hideToolOptionsView();
+		}
+
+		if (bottomBarViewHolder.isVisible()) {
+			bottomBarViewHolder.hide();
+		} else {
+			bottomBarViewHolder.show();
+		}
+	}
+
+	@Override
+	public void actionCurrentToolClicked() {
+		if (bottomBarViewHolder.isVisible()) {
+			bottomBarViewHolder.hide();
+		}
+
+		if (toolController.toolOptionsViewVisible()) {
+			toolController.hideToolOptionsView();
+		} else {
+			if (toolController.hasToolOptionsView()) {
+				toolController.showToolOptionsView();
+			}
+		}
 	}
 }

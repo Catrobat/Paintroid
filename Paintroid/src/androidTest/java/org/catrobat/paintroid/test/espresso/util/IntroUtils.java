@@ -138,11 +138,11 @@ public final class IntroUtils {
 	}
 
 	public static LinearLayout getBottomBarFromToolSlide(Activity activity) {
-		return (LinearLayout) getDescendantView(R.id.pocketpaint_intro_tools_bottom_bar, R.id.pocketpaint_tools_layout, activity);
+		return (LinearLayout) getDescendantView(R.id.pocketpaint_intro_tools_bottom_bar, R.id.pocketpaint_intro_tools_layout, activity);
 	}
 
 	public static LinearLayout getTopBarFromPossibilitiesSlide(Activity activity) {
-		return (LinearLayout) getDescendantView(R.id.pocketpaint_intro_possibilites_topbar, R.id.pocketpaint_top_bar_buttons, activity);
+		return (LinearLayout) getDescendantView(R.id.pocketpaint_intro_possibilites_topbar, R.id.pocketpaint_intro_top_bar_buttons, activity);
 	}
 
 	public static TapTargetBottomBar getTapTargetBottomBar(Activity activity) {

@@ -30,7 +30,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.HorizontalScrollView;
-import android.widget.ScrollView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;
@@ -75,6 +74,7 @@ public class BottomBarViewHolder implements MainActivityContracts.BottomBarViewH
 	public void selectToolButton(ToolType toolType) {
 		View buttonView = layout.findViewById(toolType.getToolButtonID());
 		buttonView.setSelected(true);
+		hide();
 	}
 
 	@Override
@@ -93,27 +93,19 @@ public class BottomBarViewHolder implements MainActivityContracts.BottomBarViewH
 	@Override
 	public void scrollToButton(ToolType toolType, boolean animate) {
 		View buttonView = layout.findViewById(toolType.getToolButtonID());
-		switch (orientation) {
-			case Configuration.ORIENTATION_LANDSCAPE:
-				ScrollView verticalScrollView = (ScrollView) scrollView;
-				int destinationY = getViewCenterYInScrollView(scrollView, buttonView);
-				if (animate) {
-					verticalScrollView.smoothScrollTo(0, destinationY);
-				} else {
-					verticalScrollView.scrollTo(0, destinationY);
-				}
-				break;
-			case Configuration.ORIENTATION_PORTRAIT:
-			default:
-				HorizontalScrollView horizontalScrollView = (HorizontalScrollView) scrollView;
-				int destinationX = getViewCenterXInScrollView(scrollView, buttonView);
-				if (animate) {
-					horizontalScrollView.smoothScrollTo(destinationX, 0);
-				} else {
-					horizontalScrollView.scrollTo(destinationX, 0);
-				}
-				break;
+
+		HorizontalScrollView horizontalScrollView = (HorizontalScrollView) scrollView;
+		int destinationX = getViewCenterXInScrollView(scrollView, buttonView);
+		if (animate) {
+			horizontalScrollView.smoothScrollTo(destinationX, 0);
+		} else {
+			horizontalScrollView.scrollTo(destinationX, 0);
 		}
+	}
+
+	@Override
+	public boolean isVisible() {
+		return layout.getVisibility() == View.VISIBLE;
 	}
 
 	private int viewGetEnd(View view) {

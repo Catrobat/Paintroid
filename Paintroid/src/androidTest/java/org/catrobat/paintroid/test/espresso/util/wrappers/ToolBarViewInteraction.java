@@ -32,6 +32,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getMainActivity;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.hamcrest.Matchers.not;
 
 public final class ToolBarViewInteraction extends CustomViewInteraction {
@@ -53,17 +54,19 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 	}
 
 	public ToolBarViewInteraction performClickSelectedToolButton() {
+		onBottomNavigationView()
+				.onToolsClicked();
 		onSelectedToolButton()
 				.perform(scrollTo(), click());
 		return this;
 	}
 
 	public ToolBarViewInteraction performSelectTool(ToolType toolType) {
-		onView(withId(toolType.getToolButtonID()))
-				.perform(scrollTo());
 		if (getCurrentToolType() != toolType) {
+			onBottomNavigationView()
+					.onToolsClicked();
 			onView(withId(toolType.getToolButtonID()))
-					.perform(click());
+					.perform(scrollTo(), click());
 		}
 		return this;
 	}
@@ -75,12 +78,16 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 	public ToolBarViewInteraction performOpenToolOptionsView() {
 		onToolOptionsView()
 				.check(matches(not(isDisplayed())));
-		return performClickSelectedToolButton();
+		onBottomNavigationView()
+				.onCurrentClicked();
+		return this;
 	}
 
 	public ToolBarViewInteraction performCloseToolOptionsView() {
 		onToolOptionsView()
 				.check(matches(isDisplayed()));
-		return performClickSelectedToolButton();
+		onBottomNavigationView()
+				.onCurrentClicked();
+		return this;
 	}
 }

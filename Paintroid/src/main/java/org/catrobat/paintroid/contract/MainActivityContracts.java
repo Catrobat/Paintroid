@@ -183,6 +183,10 @@ public interface MainActivityContracts {
 		void saveBeforeFinish();
 
 		void finishActivity();
+
+		void actionToolsClicked();
+
+		void actionCurrentToolClicked();
 	}
 
 	interface Model {
@@ -278,5 +282,13 @@ public interface MainActivityContracts {
 		void cancelAnimation();
 
 		void scrollToButton(ToolType toolType, boolean animate);
+
+		boolean isVisible();
+	}
+
+	interface BottomNavigationViewHolder {
+		void show();
+
+		void hide();
 	}
 }

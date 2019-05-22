@@ -47,7 +47,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyLeftOf;
-import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyRightOf;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
@@ -57,6 +56,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getMainActivity;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -94,33 +94,10 @@ public class LandscapeIntegrationTest {
 	}
 
 	@Test
-	public void testBottomBarPosition() {
-		onView(withId(R.id.pocketpaint_main_bottom_bar))
-				.check(matches(isDisplayed()))
-				.check(isCompletelyRightOf(withId(R.id.pocketpaint_drawing_surface_view)));
-	}
-
-	@Test
 	public void testTopBarPosition() {
 		onView(withId(R.id.pocketpaint_layout_top_bar))
 				.check(matches(isDisplayed()))
 				.check(isCompletelyLeftOf(withId(R.id.pocketpaint_drawing_surface_view)));
-	}
-
-	@Test
-	public void testToolBarOptionWidth() {
-		onToolBarView()
-				.performClickSelectedToolButton();
-
-		onView(withId(R.id.pocketpaint_main_tool_options))
-				.check(matches(isDisplayed()))
-				.check(isCompletelyRightOf(withId(R.id.pocketpaint_layout_top_bar)))
-				.check(isCompletelyLeftOf(withId(R.id.pocketpaint_main_bottom_bar)));
-
-		onView(withId(R.id.pocketpaint_layout_top_bar))
-				.check(matches(isDisplayed()));
-		onView(withId(R.id.pocketpaint_main_bottom_bar))
-				.check(matches(isDisplayed()));
 	}
 
 	@Test
@@ -148,8 +125,8 @@ public class LandscapeIntegrationTest {
 			onView(withId(R.id.pocketpaint_main_tool_options))
 					.check(matches(isDisplayed()));
 
-			onToolBarView()
-					.performClickSelectedToolButton();
+			onBottomNavigationView()
+					.onCurrentClicked();
 
 			onView(withId(R.id.pocketpaint_main_tool_options))
 					.check(matches(not(isDisplayed())));

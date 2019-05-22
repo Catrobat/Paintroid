@@ -81,6 +81,11 @@ public class DefaultToolController implements ToolController {
 	}
 
 	@Override
+	public void showToolOptionsView() {
+		toolOptionsViewController.showAnimated();
+	}
+
+	@Override
 	public boolean toolOptionsViewVisible() {
 		return toolOptionsViewController.isVisible();
 	}

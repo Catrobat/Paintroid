@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -16,18 +17,26 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
-    <!-- PocketPaint MainActivity -->
-    <dimen name="pocketpaint_main_bottom_bar_button_width">65dp</dimen>
-    <dimen name="pocketpaint_main_bottom_bar_height">50dp</dimen>
-    <dimen name="pocketpaint_main_top_bar_height">50dp</dimen>
-    <dimen name="pocketpaint_main_top_bar_landscape_width">50dp</dimen>
 
-    <!-- PocketPaint WelcomeActivity -->
-    <dimen name="pocketpaint_welcome_dots_height">35dp</dimen>
-    <dimen name="pocketpaint_welcome_navigation_height">40dp</dimen>
-    <dimen name="pocketpaint_welcome_margin_side">50dp</dimen>
-    <dimen name="pocketpaint_welcome_margin_top">100dp</dimen>
-    <dimen name="pocketpaint_welcome_margin_top_possibilities">50dp</dimen>
-    <dimen name="pocketpaint_welcome_margin_top_text">25dp</dimen>
-</resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_tools"
+        android:title="@string/bottom_navigation_tools"
+        android:icon="@drawable/ic_pocketpaint_tool_hand" />
+
+
+    <item
+        android:id="@+id/action_current_tool"
+        android:title="@string/bottom_navigation_current"
+        android:icon="@drawable/ic_pocketpaint_tool_hand" />
+
+    <item
+        android:id="@+id/action_color_picker"
+        android:title="@string/bottom_navigation_color"
+        android:icon="@drawable/ic_pocketpaint_tool_hand" />
+
+    <item
+        android:id="@+id/action_layers"
+        android:title="@string/bottom_navigation_layers"
+        android:icon="@drawable/ic_pocketpaint_layers" />
+</menu>
