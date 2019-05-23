@@ -19,13 +19,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="color_picker_title">Color Picker</string>
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
+    <string name="color_picker_title">Farbauswahl</string>
+    <string name="color_picker_tab_icon">Farbauswahl-Tab-Symbol</string>
     <string name="color_red">Rot</string>
     <string name="color_green">Grün</string>
     <string name="color_blue">Blau</string>
     <string name="color_alpha">Alpha</string>
     <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Apply</string>
+    <string name="color_picker_apply">Anwenden</string>
     <string name="color_picker_cancel">Abbrechen</string>
 </resources>
