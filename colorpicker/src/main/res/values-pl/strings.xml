@@ -20,12 +20,12 @@
 -->
 <resources>
     <string name="color_picker_title">Wybór kolorów</string>
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
+    <string name="color_picker_tab_icon">Ikona zakładki Wyboru kolorów</string>
     <string name="color_red">Czerwony (Red)</string>
     <string name="color_green">Zielony (Green)</string>
     <string name="color_blue">Niebieski</string>
     <string name="color_alpha">Alfa</string>
     <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Apply</string>
+    <string name="color_picker_apply">Zastosuj</string>
     <string name="color_picker_cancel">Anuluj</string>
 </resources>
