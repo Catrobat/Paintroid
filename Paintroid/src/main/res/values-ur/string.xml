@@ -34,12 +34,14 @@
     <string name="button_line">لکیر</string>
     <string name="button_text">متن</string>
     <string name="button_shape">شکل</string>
+    <string name="button_scroll_left">Scroll left</string>
+    <string name="button_scroll_right">Scroll right</string>
+    <string name="button_layers">layers</string>
+    <string name="button_hand">Hand</string>
+    <string name="button_apply">Apply</string>
     <string name="done">مکمل ہوا</string>
-    <string name="color_chooser_title">رنگ انتخاب کریں۔</string>
-    <string name="color_red">سرخ</string>
-    <string name="color_green">سبز</string>
-    <string name="color_blue">نیلا</string>
-    <string name="color_alpha">الفا</string>
+    <string name="cap_circle">Circle</string>
+    <string name="cap_square">Square</string>
     <string name="dialog_tools_title">اوزار</string>
     <string name="dialog_error_save_title">لادنے کی غلطٖی/فائل محفوظ کریں</string>
     <string name="dialog_error_sdcard_text">تصویر یا SD کارڈ چیک کریں!</string>
@@ -61,6 +63,7 @@
     <string name="help_content_shape">ایک شکل منتخب کریں اور منتخب شکل داخل کرنے کے لیے اس کا استعمال</string>
     <string name="help_content_layer">نئی تہوں کو تخلیق کریں یا موجودہ میں ترمیم کریں</string>
     <string name="help_content_color_chooser">منتخب کریں یا ایک رنگ کے مطابق بنائیں</string>
+    <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="closing_security_question_title">بندکریں</string>
     <string name="closing_security_question">سیدھا لکیر کھینچے؟</string>
     <string name="closing_catroid_security_question_title">پروجیکٹ پر واپس</string>
@@ -80,6 +83,7 @@
     <string name="save_button_text">محفوظ </string>
     <string name="discard_button_text">مسترد کریں</string>
     <string name="resize_nothing_to_resize">سائز تبدیل نہیں ہوا ہے۔</string>
+    <string name="resize_cannot_resize_to_this_size">cannot resize to this size</string>
     <string name="resize_max_image_resolution_reached">زیادہ سے زیادہ تصویر کے  ریسیلیوشن  تک پہنچ گئی</string>
     <string name="text_tool_dialog_input_title">آپ کا متن:</string>
     <string name="text_tool_dialog_format_options">وضع کرنے کے اختیارات:</string>
@@ -91,7 +95,12 @@
     <string name="shape_tool_dialog_fill_title">بھریں</string>
     <string name="shape_tool_dialog_outline_title">آؤٹ لائن</string>
     <string name="fill_tool_dialog_color_tolerance_title">رنگ  کی چھُوٹ</string>
-    <string name="transform_tool_auto_crop_text">کاٹنا</string>
+    <string name="transform_tool_rotate_left">rotate left</string>
+    <string name="transform_tool_rotate_right">rotate right</string>
+    <string name="transform_tool_flip_vertical">flip vertical</string>
+    <string name="transform_tool_flip_horizontal">flip horizontal</string>
+    <string name="transform_tool_resize_text">resize</string>
+    <string name="transform_tool_auto_crop_text">crop/enlarge</string>
     <string name="transform_width_text">چوڑائی</string>
     <string name="transform_height_text">اونچائی</string>
     <string name="pixel">پکسلز</string>
@@ -102,6 +111,7 @@
 تہه ختم کریں</string>
     <string name="layer_too_many_layers">بہت سے تہوں</string>
     <string name="layer_merged">تہوں میں ضم</string>
+    <string name="layer_background">Layer background</string>
     <string name="dialog_shape_text">شکل</string>
     <string name="dialog_loading_image_failed_title">تصویر لوڈ کرنے میں نقص</string>
     <string name="dialog_loading_image_failed_text">تصویر کی فائل موزوں نہيں</string>
@@ -129,4 +139,7 @@
     <string name="pocketpaint_about_content">پاکٹ پینٹ ایک تصویر ایڈٖیٹر ہے۔جو کہ کیٹروبیٹ کا حصہ ہے۔ کیٹروبیٹ ایک   ویوژل پروگرامنگ زبان ہے ۔جو اسمارٹ فون،ٹیبلٹ، اور موبائل براوزرکے لئے تحلیق آوزار تیار کرتا ہے۔ پاکٹ پینٹ کا سورس کوڈ بنیادی طور پر لائسنس یافتہ%s.\n  کے تحت۔ لائسنس کے عین مطابق تفصلات کے لیے نیچے دئیے گئے لنک دیکھیں۔ ایک تصویر ایڈٖیٹر ہے۔جو کہ کیٹروبیٹ کا حصہ ہے۔</string>
     <string name="pocketpaint_about_url_license_description">پاکٹ پینٹ سورس کوڈ لائسنس</string>
     <string name="pocketpaint_about_url_catrobat_description">کیٹروبیٹ کے بارے میں</string>
+    <string name="pocketpaint_logo">Pocket Paint logo</string>
+    <string name="pocketpaint_intro">Intro</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
 </resources>

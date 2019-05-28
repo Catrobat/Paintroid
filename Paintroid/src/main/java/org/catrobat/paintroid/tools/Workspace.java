@@ -32,6 +32,10 @@ public interface Workspace {
 
 	int getWidth();
 
+	int getSurfaceWidth();
+
+	int getSurfaceHeight();
+
 	Bitmap getBitmapOfAllLayers();
 
 	Bitmap getBitmapOfCurrentLayer();

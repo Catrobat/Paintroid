@@ -17,8 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="line" >
-    <stroke android:color="?attr/colorAccent"
-        android:width="5dp"/>
+    android:shape="line">
+    <stroke
+        android:width="5dp"
+        android:color="@color/pocketpaint_color_picker_accentColor" />
 
 </shape>
