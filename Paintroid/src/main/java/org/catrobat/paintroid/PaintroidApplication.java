@@ -21,20 +21,9 @@ package org.catrobat.paintroid;
 
 import android.graphics.Bitmap;
 
-import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.contract.LayerContracts;
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.ui.DrawingSurface;
-import org.catrobat.paintroid.ui.Perspective;
-
 import java.io.File;
 
 public final class PaintroidApplication {
-	public static DrawingSurface drawingSurface;
-	public static CommandManager commandManager;
-	public static Tool currentTool;
-	public static Perspective perspective;
-	public static LayerContracts.Model layerModel;
 	public static File cacheDir;
 	public static Bitmap checkeredBackgroundBitmap;
 

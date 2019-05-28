@@ -27,32 +27,35 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
+import org.catrobat.paintroid.tools.implementation.ShapeTool;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.BLACK_COLOR_PICKER_BUTTON_POSITION;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.TRANSPARENT_COLOR_PICKER_BUTTON_POSITION;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import static org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider.withOffset;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -60,159 +63,160 @@ public class RectangleFillToolIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+	private Workspace workspace;
+	private Perspective perspective;
+	private ToolReference toolReference;
 
 	@Before
 	public void setUp() {
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
+		MainActivity activity = launchActivityRule.getActivity();
+		workspace = activity.workspace;
+		perspective = activity.perspective;
+		toolReference = activity.toolReference;
 
-		selectTool(ToolType.BRUSH);
-		resetColorPicker();
-		resetDrawPaintAndBrushPickerView();
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 	}
 
 	@Test
 	public void testFilledRectIsCreated() {
-		selectTool(ToolType.SHAPE);
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
 
-		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) toolReference.get();
 		float rectWidth = rectangleFillTool.boxWidth;
 		float rectHeight = rectangleFillTool.boxHeight;
 		PointF rectPosition = rectangleFillTool.toolPosition;
 
-		assertNotEquals("Width should not be zero", rectWidth, 0.0f);
-		assertNotEquals("Height should not be zero", rectHeight, 0.0f);
-		assertNotNull("Position should not be NULL", rectPosition);
+		assertNotEquals(0.0f, rectWidth);
+		assertNotEquals(0.0f, rectHeight);
+		assertNotNull(rectPosition);
 	}
 
 	@Test
 	public void testEllipseIsDrawnOnBitmap() {
+		workspace.setScale(1.0f);
 
-		PaintroidApplication.perspective.setScale(1.0f);
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+		onShapeToolOptionsView()
+				.performSelectShape(ShapeTool.BaseShape.OVAL);
 
-		selectTool(ToolType.SHAPE);
-
-		onView(withId(R.id.pocketpaint_shapes_circle_btn)).perform(click());
-
-		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
-		PointF centerPointTool = ellipseTool.toolPosition;
+		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) toolReference.get();
 		float rectHeight = ellipseTool.boxHeight;
 
-		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);
-		int colorBeforeDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		onToolBarView()
+				.performCloseToolOptions();
 
-		clickSelectedToolButton();
-
-		onView(isRoot()).perform(touchAt(centerPointTool.x - 1, centerPointTool.y - 1));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
 		pressBack();
 
-		int colorPickerColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+		onToolProperties()
+				.checkMatchesColor(Color.BLACK);
 
-		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
+		onTopBarView()
+				.performUndo();
 
-		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor, colorAfterDrawing);
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 
-		onView(withId(R.id.pocketpaint_btn_top_undo)).perform(click());
+		onTopBarView()
+				.performRedo();
 
-		int colorAfterUndo = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
-		assertEquals(colorBeforeDrawing, colorAfterUndo);
-
-		onView(withId(R.id.pocketpaint_btn_top_redo)).perform(click());
-
-		int colorAfterRedo = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
-		assertEquals(colorPickerColor, colorAfterRedo);
-
-		pointUnderTest.x = centerPointTool.x + (rectHeight / 2.5f);
-		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
-		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor, colorAfterDrawing);
-
-		pointUnderTest.y = centerPointTool.y + (rectHeight / 2.5f);
-		// now the point under test is diagonal from the center -> if its a circle there should be no color
-		colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
-		assertTrue("Pixel should not have been filled for a circle", (colorPickerColor != colorAfterDrawing));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+				.checkPixelColor(Color.BLACK, withOffset(BitmapLocationProvider.MIDDLE, (int) (rectHeight / 2.5f), 0))
+				.checkPixelColor(Color.TRANSPARENT, withOffset(BitmapLocationProvider.MIDDLE, (int) (rectHeight / 2.5f), (int) (rectHeight / 2.5f)));
 	}
 
 	@Test
 	public void testRectOnBitmapHasSameColorAsInColorPickerAfterColorChange() {
-		int colorPickerColorBeforeChange = PaintroidApplication.currentTool.getDrawPaint().getColor();
+		onToolProperties()
+				.setColorResource(R.color.pocketpaint_color_picker_brown1)
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_brown1);
 
-		final int colorButtonPosition = 5;
-		selectColorPickerPresetSelectorColor(colorButtonPosition);
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
 
-		int colorPickerColorAfterChange = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertNotEquals("Colors should not be the same", colorPickerColorAfterChange, colorPickerColorBeforeChange);
+		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) toolReference.get();
 
-		selectTool(ToolType.SHAPE);
-
-		int colorInRectangleTool = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		assertEquals("Colors should be the same", colorPickerColorAfterChange, colorInRectangleTool);
-
-		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
-
-		float rectWidth = rectangleFillTool.boxWidth;
-		float rectHeight = rectangleFillTool.boxHeight;
 		Bitmap drawingBitmap = rectangleFillTool.drawingBitmap;
+		int colorInRectangle = drawingBitmap.getPixel(drawingBitmap.getWidth() / 2, drawingBitmap.getHeight() / 2);
 
-		int colorInRectangle = drawingBitmap.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
-		assertEquals("Colors should be the same", colorPickerColorAfterChange, colorInRectangle);
+		onToolProperties()
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_brown1)
+				.checkMatchesColor(colorInRectangle);
 	}
 
 	@Test
 	public void testFilledRectChangesColor() {
-		selectTool(ToolType.SHAPE);
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
 
-		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape rectangleFillTool = (BaseToolWithRectangleShape) toolReference.get();
 
-		int colorInRectangleTool = rectangleFillTool.getDrawPaint().getColor();
-
-		float rectWidth = rectangleFillTool.boxWidth;
-		float rectHeight = rectangleFillTool.boxHeight;
 		Bitmap drawingBitmap = rectangleFillTool.drawingBitmap;
+		int colorInRectangle = drawingBitmap.getPixel(drawingBitmap.getWidth() / 2, drawingBitmap.getHeight() / 2);
 
-		int colorInRectangle = drawingBitmap.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
-		assertEquals("Colors should be equal", colorInRectangleTool, colorInRectangle);
+		onToolProperties()
+				.checkMatchesColor(colorInRectangle)
+				.checkMatchesColor(Color.BLACK);
 
-		final int colorButtonPosition = 5;
-		selectColorPickerPresetSelectorColor(colorButtonPosition);
-
-		int colorInRectangleToolAfter = rectangleFillTool.getDrawPaint().getColor();
+		onToolProperties()
+				.setColorResource(R.color.pocketpaint_color_picker_brown1);
 
 		Bitmap drawingBitmapAfter = rectangleFillTool.drawingBitmap;
+		int colorInRectangleAfter = drawingBitmapAfter.getPixel(drawingBitmap.getWidth() / 2, drawingBitmap.getHeight() / 2);
 
-		int colorInRectangleAfter = drawingBitmapAfter.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
-
-		assertNotEquals("Colors should have changed", colorInRectangle, colorInRectangleAfter);
-		assertNotEquals("Colors should have changed", colorInRectangleTool, colorInRectangleToolAfter);
-		assertEquals("Colors should be equal", colorInRectangleTool, colorInRectangle);
+		onToolProperties()
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_brown1)
+				.checkMatchesColor(colorInRectangleAfter);
 	}
 
 	@Test
 	public void testEraseWithEllipse() {
-		selectTool(ToolType.SHAPE);
-		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_square_btn, false, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+		onShapeToolOptionsView()
+				.performSelectShape(ShapeTool.BaseShape.RECTANGLE);
+		selectShapeTypeAndDraw(false, Color.TRANSPARENT);
 
-		clickSelectedToolButton();
+		onToolBarView()
+				.performClickSelectedToolButton();
 
-		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_circle_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		onShapeToolOptionsView()
+				.performSelectShape(ShapeTool.BaseShape.OVAL);
+		selectShapeTypeAndDraw(true, Color.TRANSPARENT);
 	}
 
 	@Test
 	public void testDrawWithDrawableShape() {
-		selectTool(ToolType.SHAPE);
-		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_heart_btn, false, BLACK_COLOR_PICKER_BUTTON_POSITION);
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+		onShapeToolOptionsView()
+				.performSelectShape(ShapeTool.BaseShape.HEART);
+		selectShapeTypeAndDraw(false, Color.BLACK);
 	}
 
 	@Test
 	public void testCheckeredBackgroundWhenTransparentColorSelected() {
-		selectTool(ToolType.SHAPE);
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
 
-		onView(withId(R.id.pocketpaint_shapes_heart_btn)).perform(click());
+		onShapeToolOptionsView()
+				.performSelectShape(ShapeTool.BaseShape.HEART);
 
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 
-		selectColorPickerPresetSelectorColor(TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		onToolProperties()
+				.setColor(Color.TRANSPARENT);
 
-		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) toolReference.get();
 		Bitmap drawingBitmap = tool.drawingBitmap;
 		int width = drawingBitmap.getWidth();
 		int height = drawingBitmap.getHeight();
@@ -231,15 +235,21 @@ public class RectangleFillToolIntegrationTest {
 
 	@Test
 	public void testEraseWithHeartShape() {
-		PaintroidApplication.perspective.setScale(1.0f);
+		perspective.setScale(1.0f);
 
-		selectTool(ToolType.SHAPE);
-		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
-		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_square_btn, true, BLACK_COLOR_PICKER_BUTTON_POSITION);
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+		onShapeToolOptionsView()
+				.performSelectShape(ShapeTool.BaseShape.RECTANGLE);
+		selectShapeTypeAndDraw(true, Color.BLACK);
 
-		clickSelectedToolButton();
-		selectShapeTypeAndDraw(R.id.pocketpaint_shapes_heart_btn, true, TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		onToolBarView()
+				.performOpenToolOptions();
+		onShapeToolOptionsView()
+				.performSelectShape(ShapeTool.BaseShape.HEART);
+		selectShapeTypeAndDraw(true, Color.TRANSPARENT);
 
+		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) toolReference.get();
 		Bitmap drawingBitmap = tool.drawingBitmap;
 		int boxWidth = drawingBitmap.getWidth();
 		int boxHeight = drawingBitmap.getHeight();
@@ -248,7 +258,7 @@ public class RectangleFillToolIntegrationTest {
 		Point upperLeftPixel = new Point((int) (toolPosition.x - boxWidth / 4), (int) (toolPosition.y - boxHeight / 4));
 		Point upperRightPixel = new Point((int) (toolPosition.x + boxWidth / 4), (int) (toolPosition.y - boxHeight / 4));
 
-		Bitmap bitmap = PaintroidApplication.drawingSurface.getBitmapCopy();
+		Bitmap bitmap = workspace.getBitmapOfCurrentLayer();
 
 		int pixelColor = bitmap.getPixel(upperLeftPixel.x, upperLeftPixel.y);
 		assertEquals("Pixel should have been erased", Color.TRANSPARENT, pixelColor);
@@ -257,38 +267,36 @@ public class RectangleFillToolIntegrationTest {
 		assertEquals("Pixel should have been erased", Color.TRANSPARENT, pixelColor);
 	}
 
-	public void selectShapeTypeAndDraw(int shapeBtnId, boolean changeColor, int colorButtonPosition) {
-		onView(withId(shapeBtnId)).perform(click());
-
-		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) PaintroidApplication.currentTool;
+	public void selectShapeTypeAndDraw(boolean changeColor, int color) {
+		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) toolReference.get();
 		PointF centerPointTool = tool.toolPosition;
 
 		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);
 
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptions();
 
 		if (changeColor) {
-			selectColorPickerPresetSelectorColor(colorButtonPosition);
+			onToolProperties()
+					.setColor(color);
+
+			float rectWidth = tool.boxWidth;
+			float rectHeight = tool.boxHeight;
+			Bitmap drawingBitmap = tool.drawingBitmap;
+
+			int colorInRectangle = drawingBitmap.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
+			if (Color.alpha(color) == 0x00) {
+				assertThat(colorInRectangle, is(anyOf(is(Color.WHITE), is(0xFFC0C0C0))));
+			} else {
+				assertEquals(color, colorInRectangle);
+			}
 		}
 
-		float rectWidth = tool.boxWidth;
-		float rectHeight = tool.boxHeight;
-		Bitmap drawingBitmap = tool.drawingBitmap;
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		int colorInRectangleTool = tool.getDrawPaint().getColor();
-		int colorInRectangle = drawingBitmap.getPixel((int) (rectWidth / 2), (int) (rectHeight / 2));
-		if (Color.alpha(colorInRectangleTool) == 0x00) {
-			int checkeredWhite = Color.WHITE;
-			int checkeredGray = 0xFFC0C0C0;
-			assertTrue("Color should correspond to checkered pattern", colorInRectangle == checkeredGray || colorInRectangle == checkeredWhite);
-		} else {
-			assertEquals("Colors should be equal", colorInRectangleTool, colorInRectangle);
-		}
-
-		onView(isRoot()).perform(touchAt(centerPointTool.x - 1, centerPointTool.y - 1));
-
-		int colorPickerColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
-		int colorAfterDrawing = PaintroidApplication.drawingSurface.getPixel(pointUnderTest);
-		assertEquals("Pixel should have the same color as currently in color picker", colorPickerColor, colorAfterDrawing);
+		int colorAfterDrawing = workspace.getPixelOfCurrentLayer(pointUnderTest);
+		onToolProperties()
+				.checkMatchesColor(colorAfterDrawing);
 	}
 }

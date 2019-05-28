@@ -21,6 +21,7 @@ package org.catrobat.paintroid.contract;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
@@ -29,6 +30,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.iotasks.CreateFileAsync;
 import org.catrobat.paintroid.iotasks.LoadImageAsync;
@@ -41,13 +43,13 @@ public interface MainActivityContracts {
 	interface Navigator {
 		void showColorPickerDialog();
 
-		void startLoadImageActivity(int requestCode);
+		void startLoadImageActivity(@ActivityRequestCode int requestCode);
 
-		void startImportImageActivity(int requestCode);
+		void startImportImageActivity(@ActivityRequestCode int requestCode);
 
 		void showAboutDialog();
 
-		void startWelcomeActivity();
+		void startWelcomeActivity(@ActivityRequestCode int requestCode);
 
 		void showIndeterminateProgressDialog();
 
@@ -70,8 +72,6 @@ public interface MainActivityContracts {
 		boolean doIHavePermission(String permission);
 
 		void finishActivity();
-
-		void recreateActivity();
 
 		void showSaveBeforeReturnToCatroidDialog();
 
@@ -111,15 +111,15 @@ public interface MainActivityContracts {
 
 		void refreshDrawingSurface();
 
-		void enterFullScreen();
+		void enterFullscreen();
 
-		void exitFullScreen();
+		void exitFullscreen();
 	}
 
 	interface Presenter {
 		void initializeFromCleanState(String extraPicturePath, String extraPictureName);
 
-		void restoreState(boolean isFullScreen, boolean isSaved, boolean isOpenedFromCatroid,
+		void restoreState(boolean isFullscreen, boolean isSaved, boolean isOpenedFromCatroid,
 				boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri);
 
 		void finishInitialize();
@@ -198,9 +198,9 @@ public interface MainActivityContracts {
 
 		void setSaved(boolean saved);
 
-		boolean isFullScreen();
+		boolean isFullscreen();
 
-		void setFullScreen(boolean fullScreen);
+		void setFullscreen(boolean fullscreen);
 
 		boolean isOpenedFromCatroid();
 
@@ -212,11 +212,11 @@ public interface MainActivityContracts {
 	}
 
 	interface Interactor {
-		void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode);
+		void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Bitmap bitmap);
 
 		void createFile(CreateFileAsync.CreateFileCallback callback, int requestCode, @Nullable String filename);
 
-		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Uri uri);
+		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Bitmap bitmap, Uri uri);
 
 		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri);
 
@@ -255,13 +255,13 @@ public interface MainActivityContracts {
 
 		void setVersion(String versionString);
 
-		void showExitFullScreen();
+		void showExitFullscreen();
 
-		void hideExitFullScreen();
+		void hideExitFullscreen();
 
-		void showEnterFullScreen();
+		void showEnterFullscreen();
 
-		void hideEnterFullScreen();
+		void hideEnterFullscreen();
 	}
 
 	interface BottomBarViewHolder {

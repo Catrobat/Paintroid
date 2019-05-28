@@ -19,7 +19,7 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
@@ -29,14 +29,13 @@ import android.widget.LinearLayout;
 import junit.framework.AssertionFailedError;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,10 +49,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusbarHeight;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.clickOutside;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
@@ -72,37 +71,23 @@ public class ToolSelectionIntegrationTest {
 	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
-	private ActivityHelper activityHelper;
+	private MainActivityHelper activityHelper;
 	private HorizontalScrollView scrollView;
 	private LinearLayout toolsLayout;
 
 	@Before
 	public void setUp() {
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
+		MainActivity activity = launchActivityRule.getActivity();
+		activityHelper = new MainActivityHelper(activity);
 
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
-
-		toolsLayout = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_tools_layout);
-		scrollView = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_bottom_bar_scroll_view);
+		toolsLayout = activity.findViewById(R.id.pocketpaint_tools_layout);
+		scrollView = activity.findViewById(R.id.pocketpaint_bottom_bar_scroll_view);
 
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
 	}
 
-	@After
-	public void tearDown() {
-		activityHelper = null;
-	}
-
-	protected Tool getCurrentTool() {
-		return PaintroidApplication.currentTool;
-	}
-
-	protected boolean toolOptionsAreShown() {
-		return getCurrentTool().getToolOptionsAreShown();
-	}
-
-	protected int getNumberOfNotVisibleTools() {
+	private int getNumberOfNotVisibleTools() {
 		LinearLayout toolsLayout = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_tools_layout);
 		int toolCount = toolsLayout.getChildCount();
 		int numberOfNotVisibleTools = 0;
@@ -115,7 +100,7 @@ public class ToolSelectionIntegrationTest {
 		return numberOfNotVisibleTools;
 	}
 
-	public ToolType getToolTypeByButtonId(int id) {
+	private ToolType getToolTypeByButtonId(int id) {
 		ToolType retToolType = null;
 
 		for (ToolType toolType : ToolType.values()) {
@@ -131,26 +116,13 @@ public class ToolSelectionIntegrationTest {
 	}
 
 	@Test
-	public void testToolSelectionDrawingSurfaceDeactivatedWhenToolOptionsAreShown() throws NoSuchFieldException, IllegalAccessException {
-		Bitmap currentDrawingSurfaceBitmap = getWorkingBitmap();
-
-		int pixelBefore = currentDrawingSurfaceBitmap.getPixel(
-				currentDrawingSurfaceBitmap.getWidth() / 2,
-				currentDrawingSurfaceBitmap.getHeight() / 2
-		);
-
-		float posX = activityHelper.getDisplayWidth() / 2.0f;
-		float posY = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_main_tool_options).getY() + getStatusbarHeight() - 10;
-
-		UiInteractions.touchAt(posX, posY);
-
-		int pixelAfter = currentDrawingSurfaceBitmap.getPixel(
-				currentDrawingSurfaceBitmap.getWidth() / 2,
-				currentDrawingSurfaceBitmap.getHeight() / 2
-		);
-
-		assertEquals("Drawing Surface should have been deactivated", pixelBefore, pixelAfter);
-		assertFalse("Tool options should not be displayed", toolOptionsAreShown());
+	public void testToolSelectionDrawingSurfaceDeactivatedWhenToolOptionsAreShown() {
+		onToolBarView()
+				.performOpenToolOptions();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_TOP_MIDDLE);
 	}
 
 	@Test
@@ -164,7 +136,6 @@ public class ToolSelectionIntegrationTest {
 				.check(matches(not(isDisplayed())));
 	}
 
-	// TODO: Fails now an then, tool view not visible
 	@Test
 	public void testToolSelectionToolButtonCheckPosition() {
 		int toolCount = toolsLayout.getChildCount() - getNumberOfNotVisibleTools();

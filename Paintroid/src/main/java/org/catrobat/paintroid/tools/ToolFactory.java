@@ -21,6 +21,9 @@ package org.catrobat.paintroid.tools;
 
 import android.app.Activity;
 
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
+
 public interface ToolFactory {
-	Tool createTool(Activity activity, ToolType toolType);
+	Tool createTool(ToolType toolType, ToolOptionsController toolOptionsController, Activity activity, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint);
 }

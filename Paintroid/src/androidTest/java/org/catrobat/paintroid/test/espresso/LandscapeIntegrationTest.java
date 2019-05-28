@@ -1,4 +1,4 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -19,17 +19,22 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.support.annotation.ArrayRes;
+import android.support.annotation.ColorInt;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.HSVColorPickerView;
-import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
-import org.catrobat.paintroid.dialog.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.colorpicker.HSVColorPickerView;
+import org.catrobat.paintroid.colorpicker.PresetSelectorView;
+import org.catrobat.paintroid.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,6 +45,7 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyLeftOf;
 import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyRightOf;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -48,14 +54,10 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickColorPickerPresetSelectorButton;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getColorArrayFromResource;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openColorPickerDialog;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getMainActivity;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.allOf;
@@ -71,11 +73,18 @@ public class LandscapeIntegrationTest {
 
 	@Before
 	public void setUp() {
-		resetDrawPaintAndBrushPickerView();
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
 
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+	}
+
+	private Tool getCurrentTool() {
+		return getMainActivity().toolReference.get();
+	}
+
+	private ToolOptionsController getToolOptionsController() {
+		return getMainActivity().toolOptionsController;
 	}
 
 	@Test
@@ -100,7 +109,8 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testToolBarOptionWidth() {
-		openToolOptionsForCurrentTool();
+		onToolBarView()
+				.performClickSelectedToolButton();
 
 		onView(withId(R.id.pocketpaint_main_tool_options))
 				.check(matches(isDisplayed()))
@@ -125,18 +135,21 @@ public class LandscapeIntegrationTest {
 				continue;
 			}
 
-			selectTool(toolType);
+			onToolBarView()
+					.performSelectTool(toolType);
 
-			assertEquals(toolType, PaintroidApplication.currentTool.getToolType());
+			assertEquals(toolType, getCurrentTool().getToolType());
 
-			if (!PaintroidApplication.currentTool.getToolOptionsAreShown()) {
-				openToolOptionsForCurrentTool();
+			if (!getToolOptionsController().isVisible()) {
+				onToolBarView()
+						.performClickSelectedToolButton();
 			}
 
 			onView(withId(R.id.pocketpaint_main_tool_options))
 					.check(matches(isDisplayed()));
 
-			openToolOptionsForCurrentTool();
+			onToolBarView()
+					.performClickSelectedToolButton();
 
 			onView(withId(R.id.pocketpaint_main_tool_options))
 					.check(matches(not(isDisplayed())));
@@ -154,10 +167,11 @@ public class LandscapeIntegrationTest {
 				continue;
 			}
 
-			selectTool(toolType);
+			onToolBarView()
+					.performSelectTool(toolType);
 
 			setOrientation(SCREEN_ORIENTATION_PORTRAIT);
-			assertEquals(toolType, PaintroidApplication.currentTool.getToolType());
+			assertEquals(toolType, getCurrentTool().getToolType());
 			setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 		}
 	}
@@ -172,26 +186,26 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testOpenColorPickerDialogInLandscape() {
-		openColorPickerDialog();
+		onColorPickerView()
+				.performOpenColorPicker();
 
-		onView(withId(R.id.color_chooser_color_picker_view))
+		onView(withId(R.id.color_picker_view))
 				.check(matches(isDisplayed()));
 	}
 
 	@Test
 	public void testOpenColorPickerDialogChooseColorInLandscape() {
-		openColorPickerDialog();
+		onColorPickerView()
+				.performOpenColorPicker();
 
-		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_chooser_preset_colors);
+		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_picker_preset_colors);
 
 		for (int i = 0; i < colors.length; i++) {
-			clickColorPickerPresetSelectorButton(i);
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(i);
 
 			if (colors[i] != Color.TRANSPARENT) {
-				int selectedColor = PaintroidApplication.currentTool.getDrawPaint().getColor();
-				assertEquals(colors[i], selectedColor);
-
-				onView(withId(R.id.color_chooser_button_ok))
+				onView(withId(R.id.color_picker_button_ok))
 						.perform(scrollTo())
 						.check(matches(withBackgroundColor(colors[i])));
 			}
@@ -199,31 +213,76 @@ public class LandscapeIntegrationTest {
 	}
 
 	@Test
-	public void testScrollToColorChooserOk() {
-		openColorPickerDialog();
+	public void testOpenColorPickerDialogApplyColorInLandscape() {
+		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_picker_preset_colors);
 
-		onView(withId(R.id.color_chooser_button_ok))
+		for (int i = 0; i < colors.length; i++) {
+			onColorPickerView()
+					.performOpenColorPicker();
+
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(i);
+
+			onColorPickerView()
+					.onOkButton()
+					.perform(scrollTo())
+					.perform(click());
+
+			int selectedColor = getCurrentTool().getDrawPaint().getColor();
+			assertEquals(colors[i], selectedColor);
+		}
+	}
+
+	@Test
+	public void testColorPickerCancelButtonKeepsColorInLandscape() {
+
+		int initialColor = getCurrentTool().getDrawPaint().getColor();
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(2);
+
+		onColorPickerView()
+				.checkCancelButtonColor(initialColor);
+
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		onColorPickerView()
+				.checkCancelButtonColor(initialColor);
+	}
+
+	@Test
+	public void testScrollToColorChooserOk() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(withId(R.id.color_picker_button_ok))
 				.perform(scrollTo());
 	}
 
 	@Test
 	public void testColorPickerDialogSwitchTabsInLandscape() {
-		openColorPickerDialog();
+		onColorPickerView()
+				.performOpenColorPicker();
 
 		onView(withClassName(is(PresetSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_hsv)))
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv)))
 				.perform(click());
 		onView(withClassName(is(HSVColorPickerView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_rgba)))
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba)))
 				.perform(click());
 		onView(withClassName(is(RgbSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.color_chooser_tab_icon), withBackground(R.drawable.ic_color_chooser_tab_preset)))
+		onView(withId(R.id.color_picker_rgb_base_layout)).perform(swipeDown());
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset)))
 				.perform(click());
 		onView(withClassName(is(PresetSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
@@ -321,5 +380,20 @@ public class LandscapeIntegrationTest {
 
 	private void setOrientation(int orientation) {
 		activityTestRule.getActivity().setRequestedOrientation(orientation);
+	}
+
+	@ColorInt
+	private static int[] getColorArrayFromResource(Context context, @ArrayRes int id) {
+		TypedArray typedColors = context.getResources().obtainTypedArray(id);
+		try {
+			@ColorInt
+			int[] colors = new int[typedColors.length()];
+			for (int i = 0; i < typedColors.length(); i++) {
+				colors[i] = typedColors.getColor(i, Color.BLACK);
+			}
+			return colors;
+		} finally {
+			typedColors.recycle();
+		}
 	}
 }

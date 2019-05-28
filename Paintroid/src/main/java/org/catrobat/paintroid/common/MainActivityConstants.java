@@ -38,14 +38,15 @@ public final class MainActivityConstants {
 
 	public static final int REQUEST_CODE_IMPORTPNG = 1;
 	public static final int REQUEST_CODE_LOAD_PICTURE = 2;
-	public static final int REQUEST_CODE_FINISH = 3;
-	public static final int REQUEST_CODE_LANGUAGE = 4;
+	public static final int REQUEST_CODE_INTRO = 3;
 
 	public static final int PERMISSION_EXTERNAL_STORAGE_SAVE = 1;
 	public static final int PERMISSION_EXTERNAL_STORAGE_SAVE_COPY = 2;
 	public static final int PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW = 3;
 	public static final int PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY = 4;
 	public static final int PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH = 5;
+
+	public static final int RESULT_INTRO_MW_NOT_SUPPORTED = 10;
 
 	@IntDef({SAVE_IMAGE_DEFAULT, SAVE_IMAGE_NEW_EMPTY, SAVE_IMAGE_LOAD_NEW, SAVE_IMAGE_FINISH})
 	@Retention(RetentionPolicy.SOURCE)
@@ -62,7 +63,7 @@ public final class MainActivityConstants {
 	public @interface CreateFileRequestCode {
 	}
 
-	@IntDef({REQUEST_CODE_IMPORTPNG, REQUEST_CODE_LOAD_PICTURE, REQUEST_CODE_FINISH, REQUEST_CODE_LANGUAGE})
+	@IntDef({REQUEST_CODE_IMPORTPNG, REQUEST_CODE_LOAD_PICTURE, REQUEST_CODE_INTRO})
 	@Retention(RetentionPolicy.SOURCE)
 	public @interface ActivityRequestCode {
 	}

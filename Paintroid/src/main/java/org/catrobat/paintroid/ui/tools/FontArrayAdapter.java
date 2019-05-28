@@ -34,12 +34,19 @@ import org.catrobat.paintroid.R;
 import java.util.List;
 
 public class FontArrayAdapter extends ArrayAdapter<String> {
-	private int normalStyle = Typeface.NORMAL;
-	private Typeface sansSerifFontFace = Typeface.create(Typeface.SANS_SERIF, normalStyle);
-	private Typeface serifFontFace = Typeface.create(Typeface.SERIF, normalStyle);
-	private Typeface defaultFontFace = Typeface.create(Typeface.MONOSPACE, normalStyle);
-	private Typeface stcFontFace = ResourcesCompat.getFont(getContext(), R.font.stc_regular);
-	private Typeface dubaiFontFace = ResourcesCompat.getFont(getContext(), R.font.dubai);
+	private Typeface sansSerif = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+	private Typeface serif = Typeface.create(Typeface.SERIF, Typeface.NORMAL);
+	private Typeface monospace = Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL);
+	private Typeface stc = ResourcesCompat.getFont(getContext(), R.font.stc_regular);
+	private Typeface dubai = ResourcesCompat.getFont(getContext(), R.font.dubai);
+
+	private final Typeface[] typeFaces = {
+			sansSerif,
+			monospace,
+			serif,
+			dubai,
+			stc,
+	};
 
 	public FontArrayAdapter(@NonNull Context context, int resource, @NonNull List<String> objects) {
 		super(context, resource, objects);
@@ -48,23 +55,7 @@ public class FontArrayAdapter extends ArrayAdapter<String> {
 	@Override
 	public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 		TextView spinnerText = (TextView) super.getDropDownView(position, convertView, parent);
-		switch (position) {
-			case 1:
-				spinnerText.setTypeface(serifFontFace);
-				break;
-			case 2:
-				spinnerText.setTypeface(sansSerifFontFace);
-				break;
-			case 3:
-				spinnerText.setTypeface(dubaiFontFace);
-				break;
-			case 4:
-				spinnerText.setTypeface(stcFontFace);
-				break;
-			default:
-				spinnerText.setTypeface(defaultFontFace);
-				break;
-		}
+		spinnerText.setTypeface(typeFaces[position]);
 		return spinnerText;
 	}
 
@@ -72,23 +63,7 @@ public class FontArrayAdapter extends ArrayAdapter<String> {
 	@Override
 	public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 		TextView spinnerText = (TextView) super.getView(position, convertView, parent);
-		switch (position) {
-			case 1:
-				spinnerText.setTypeface(serifFontFace);
-				break;
-			case 2:
-				spinnerText.setTypeface(sansSerifFontFace);
-				break;
-			case 3:
-				spinnerText.setTypeface(dubaiFontFace);
-				break;
-			case 4:
-				spinnerText.setTypeface(stcFontFace);
-				break;
-			default:
-				spinnerText.setTypeface(defaultFontFace);
-				break;
-		}
+		spinnerText.setTypeface(typeFaces[position]);
 		return spinnerText;
 	}
 }

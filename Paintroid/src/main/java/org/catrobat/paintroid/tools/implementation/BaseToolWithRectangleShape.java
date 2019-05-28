@@ -19,9 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -38,22 +35,23 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.ColorRes;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.content.res.AppCompatResources;
 import android.util.DisplayMetrics;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
+import org.catrobat.paintroid.tools.ContextCallback.ScreenOrientation;
+import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
 import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
 public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 
-	@VisibleForTesting
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public static final float MAXIMUM_BORDER_RATIO = 2f;
-	@VisibleForTesting
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public static final int DEFAULT_BOX_RESIZE_MARGIN = 20;
 	protected static final int DEFAULT_RECTANGLE_MARGIN = 100;
 	protected static final float DEFAULT_TOOL_STROKE_WIDTH = 3f;
@@ -118,23 +116,26 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private int rectangleShrinkingOnHighlight;
 	private CountDownTimer downTimer;
 
-	public BaseToolWithRectangleShape(Context context, ToolType toolType) {
-		super(context, toolType);
+	protected float touchDownPositionX;
+	protected float touchDownPositionY;
 
-		final Resources resources = context.getResources();
-		int orientation = resources.getConfiguration().orientation;
-		float boxSize = orientation == Configuration.ORIENTATION_PORTRAIT
+	public BaseToolWithRectangleShape(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+
+		ScreenOrientation orientation = contextCallback.getOrientation();
+		float boxSize = orientation == ScreenOrientation.PORTRAIT
 				? metrics.widthPixels
 				: metrics.heightPixels;
-		boxWidth = boxSize / PaintroidApplication.perspective.getScale()
+		boxWidth = boxSize / workspace.getScale()
 				- getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN) * 2;
 		boxHeight = boxWidth;
 
 		if (DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO && (
-				boxHeight > PaintroidApplication.layerModel.getHeight() * MAXIMUM_BORDER_RATIO
-						|| boxWidth > PaintroidApplication.layerModel.getWidth() * MAXIMUM_BORDER_RATIO)) {
-			boxHeight = PaintroidApplication.layerModel.getHeight() * MAXIMUM_BORDER_RATIO;
-			boxWidth = PaintroidApplication.layerModel.getWidth() * MAXIMUM_BORDER_RATIO;
+				boxHeight > workspace.getHeight() * MAXIMUM_BORDER_RATIO
+						|| boxWidth > workspace.getWidth() * MAXIMUM_BORDER_RATIO)) {
+			boxHeight = workspace.getHeight() * MAXIMUM_BORDER_RATIO;
+			boxWidth = workspace.getWidth() * MAXIMUM_BORDER_RATIO;
 		}
 
 		rectangleShrinkingOnHighlight = DEFAULT_RECTANGLE_SHRINKING;
@@ -155,7 +156,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		maximumBoxResolution = DEFAULT_MAXIMUM_BOX_RESOLUTION;
 
 		initScaleDependedValues();
-		createOverlayBitmap();
+		createOverlayDrawable();
 
 		linePaint.reset();
 		linePaint.setDither(true);
@@ -200,7 +201,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			drawingBitmap = bitmap;
 		}
 
-		PaintroidApplication.drawingSurface.refreshDrawingSurface();
+		workspace.invalidate();
 	}
 
 	@Override
@@ -208,6 +209,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		movedDistance.set(0, 0);
 		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		currentAction = getAction(coordinate.x, coordinate.y);
+		touchDownPositionX = toolPosition.x;
+		touchDownPositionY = toolPosition.y;
 		return true;
 	}
 
@@ -238,6 +241,12 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		return true;
 	}
 
+	protected void onClick(PointF coordinate) {
+		if (boxContainsPoint(coordinate)) {
+			onClickInBox();
+		}
+	}
+
 	@Override
 	public boolean handleUp(PointF coordinate) {
 		if (previousEventCoordinate == null) {
@@ -246,18 +255,35 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		movedDistance.set(
 				movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
 				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
-		if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y
-				&& isCoordinateInsideBox(coordinate)) {
-			onClickInBox();
+		if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y) {
+			toolPosition.x = touchDownPositionX;
+			toolPosition.y = touchDownPositionY;
+			onClick(coordinate);
 		}
 		return true;
 	}
 
-	protected boolean isCoordinateInsideBox(PointF coordinate) {
-		return coordinate.x > toolPosition.x - boxWidth / 2
-				&& coordinate.x < toolPosition.x + boxWidth / 2
-				&& coordinate.y > toolPosition.y - boxHeight / 2
-				&& coordinate.y < toolPosition.y + boxHeight / 2;
+	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+	public boolean boxContainsPoint(PointF coordinate) {
+		float relativeToOriginX = coordinate.x - toolPosition.x;
+		float relativeToOriginY = coordinate.y - toolPosition.y;
+
+		double radians = -(boxRotation * Math.PI / 180);
+
+		float rotatedX = (float) (relativeToOriginX * Math.cos(radians) - relativeToOriginY * Math.sin(radians)) + toolPosition.x;
+		float rotatedY = (float) (relativeToOriginX * Math.sin(radians) + relativeToOriginY * Math.cos(radians)) + toolPosition.y;
+
+		return rotatedX > toolPosition.x - boxWidth / 2
+				&& rotatedX < toolPosition.x + boxWidth / 2
+				&& rotatedY > toolPosition.y - boxHeight / 2
+				&& rotatedY < toolPosition.y + boxHeight / 2;
+	}
+
+	protected boolean boxIntersectsWorkspace() {
+		return toolPosition.x - boxWidth / 2 < workspace.getWidth()
+				&& toolPosition.y - boxHeight / 2 < workspace.getHeight()
+				&& toolPosition.x + boxWidth / 2 >= 0
+				&& toolPosition.y + boxHeight / 2 >= 0;
 	}
 
 	@Override
@@ -294,8 +320,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (drawingBitmap != null) {
 			drawBitmap(canvas, boxWidth, boxHeight);
 		}
+
 		if (overlayDrawable != null) {
-			drawOverlayDrawable(canvas, boxWidth, boxHeight);
+			drawOverlayDrawable(canvas, boxWidth, boxHeight, boxRotation);
 		}
 
 		drawRectangle(canvas, boxWidth, boxHeight);
@@ -312,9 +339,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 				(-boxHeight + toolStrokeWidth) / 2, Op.DIFFERENCE);
 		canvas.rotate(-boxRotation);
 		canvas.translate(-toolPosition.x, -toolPosition.y);
-		canvas.drawRect(0, 0,
-				PaintroidApplication.layerModel.getWidth(),
-				PaintroidApplication.layerModel.getHeight(), backgroundPaint);
+		canvas.drawRect(0, 0, workspace.getWidth(), workspace.getHeight(), backgroundPaint);
 		canvas.restore();
 	}
 
@@ -365,10 +390,14 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.drawBitmap(drawingBitmap, null, tempDrawingRectangle, null);
 	}
 
-	private void drawOverlayDrawable(Canvas canvas, float boxWidth, float boxHeight) {
+	private void drawOverlayDrawable(Canvas canvas, float boxWidth, float boxHeight, float boxRotation) {
 		int size = (int) (Math.min(boxWidth, boxHeight) / 8);
+
+		canvas.save();
+		canvas.rotate(-boxRotation);
 		overlayDrawable.setBounds(-size, -size, size, size);
 		overlayDrawable.draw(canvas);
+		canvas.restore();
 	}
 
 	private void drawRectangle(Canvas canvas, float boxWidth, float boxHeight) {
@@ -500,11 +529,8 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	}
 
 	private void resize(float deltaX, float deltaY) {
-		final DrawingSurface drawingSurface = PaintroidApplication.drawingSurface;
-		final int drawingSurfaceBitmapWidth = drawingSurface.getBitmapWidth();
-		final int drawingSurfaceBitmapHeight = drawingSurface.getBitmapHeight();
-		final float maximumBorderRatioWidth = drawingSurfaceBitmapWidth * MAXIMUM_BORDER_RATIO;
-		final float maximumBorderRatioHeight = drawingSurfaceBitmapHeight * MAXIMUM_BORDER_RATIO;
+		final float maximumBorderRatioWidth = workspace.getWidth() * MAXIMUM_BORDER_RATIO;
+		final float maximumBorderRatioHeight = workspace.getHeight() * MAXIMUM_BORDER_RATIO;
 
 		double rotationRadian = Math.toRadians(boxRotation);
 		double deltaXCorrected = Math.cos(-rotationRadian) * deltaX
@@ -669,10 +695,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		toolPosition.y = oldPosY;
 	}
 
-	private void createOverlayBitmap() {
+	private void createOverlayDrawable() {
 		int overlayDrawableResource = getToolType().getOverlayDrawableResource();
 		if (overlayDrawableResource != INVALID_RESOURCE_ID) {
-			overlayDrawable = AppCompatResources.getDrawable(context, overlayDrawableResource);
+			overlayDrawable = contextCallback.getDrawable(overlayDrawableResource);
 			if (overlayDrawable != null) {
 				overlayDrawable.setFilterBitmap(false);
 			}
@@ -684,24 +710,23 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 			@Override
 			public void onTick(long millisUntilFinished) {
 				highlightBoxWhenClickInBox(true);
-				PaintroidApplication.drawingSurface.refreshDrawingSurface();
+				workspace.invalidate();
 			}
 
 			@Override
 			public void onFinish() {
 				highlightBoxWhenClickInBox(false);
-				PaintroidApplication.drawingSurface.refreshDrawingSurface();
+				workspace.invalidate();
 				downTimer.cancel();
 			}
 		}.start();
 	}
 
 	void highlightBoxWhenClickInBox(boolean highlight) {
-		final Resources resources = context.getResources();
 		final @ColorRes int colorId = highlight
 				? R.color.pocketpaint_main_rectangle_tool_highlight_color
 				: R.color.pocketpaint_main_rectangle_tool_accent_color;
-		secondaryShapeColor = ResourcesCompat.getColor(resources, colorId, null);
+		secondaryShapeColor = contextCallback.getColor(colorId);
 
 		rectangleShrinkingOnHighlight = highlight
 				? HIGHLIGHT_RECTANGLE_SHRINKING

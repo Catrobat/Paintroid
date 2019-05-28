@@ -39,8 +39,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withIndex;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -56,7 +56,8 @@ public class TextToolSizeSpinnerEnglishTest {
 	public void testEnglishNumberFormatOfSizeSpinner() throws Exception {
 		assertEquals(Locale.getDefault().getDisplayLanguage(), ENGLISHLOCALE.getDisplayLanguage());
 
-		selectTool(ToolType.TEXT);
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
 		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_text_size))
 				.check(matches(isClickable()))
 				.perform(click());

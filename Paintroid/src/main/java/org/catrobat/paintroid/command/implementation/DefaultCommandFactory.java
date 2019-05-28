@@ -31,6 +31,7 @@ import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
 import org.catrobat.paintroid.common.CommonFactory;
+import org.catrobat.paintroid.tools.helper.Conversion;
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory;
 
 import static android.graphics.Bitmap.Config.ARGB_8888;
@@ -99,8 +100,8 @@ public class DefaultCommandFactory implements CommandFactory {
 	}
 
 	@Override
-	public Command createResizeCommand(int resizeCoordinateXLeft, int resizeCoordinateYTop, int resizeCoordinateXRight, int resizeCoordinateYBottom, int maximumBitmapResolution) {
-		return new ResizeCommand(resizeCoordinateXLeft, resizeCoordinateYTop, resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution);
+	public Command createCropCommand(int resizeCoordinateXLeft, int resizeCoordinateYTop, int resizeCoordinateXRight, int resizeCoordinateYBottom, int maximumBitmapResolution) {
+		return new CropCommand(resizeCoordinateXLeft, resizeCoordinateYTop, resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution);
 	}
 
 	@Override
@@ -128,7 +129,7 @@ public class DefaultCommandFactory implements CommandFactory {
 
 	@Override
 	public Command createPathCommand(Paint paint, Path path) {
-		return new PathCommand(commonFactory.createPaint(paint), commonFactory.createPath(path), commonFactory);
+		return new PathCommand(commonFactory.createPaint(paint), commonFactory.createPath(path));
 	}
 
 	@Override
@@ -136,5 +137,15 @@ public class DefaultCommandFactory implements CommandFactory {
 		return new TextToolCommand(multilineText, commonFactory.createPaint(textPaint),
 				boxOffset, boxWidth, boxHeight, commonFactory.createPointF(toolPosition),
 				boxRotation);
+	}
+
+	@Override
+	public Command createResizeCommand(int newWidth, int newHeight) {
+		return new ResizeCommand(newWidth, newHeight);
+	}
+
+	@Override
+	public Command createStampCommand(Bitmap bitmap, PointF toolPosition, float width, float height, float rotation) {
+		return new StampCommand(bitmap, Conversion.toPoint(toolPosition), width, height, rotation);
 	}
 }

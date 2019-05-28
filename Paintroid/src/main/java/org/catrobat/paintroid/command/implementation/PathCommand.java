@@ -22,12 +22,9 @@ package org.catrobat.paintroid.command.implementation;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.support.annotation.VisibleForTesting;
 
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
 
 public class PathCommand implements Command {
@@ -35,33 +32,15 @@ public class PathCommand implements Command {
 	public Paint paint;
 	@VisibleForTesting
 	public Path path;
-	private CommonFactory commonFactory;
 
-	public PathCommand(Paint paint, Path path, CommonFactory commonFactory) {
+	public PathCommand(Paint paint, Path path) {
 		this.paint = paint;
 		this.path = path;
-		this.commonFactory = commonFactory;
 	}
 
 	@Override
 	public void run(Canvas canvas, LayerContracts.Model layerModel) {
-		RectF bounds = commonFactory.createRectF();
-		path.computeBounds(bounds, true);
-		Rect boundsCanvas = canvas.getClipBounds();
-
-		if (pathInCanvas(bounds, boundsCanvas)) {
-			canvas.drawPath(path, paint);
-		}
-	}
-
-	private boolean pathInCanvas(RectF rectangleBoundsPath, Rect rectangleBoundsCanvas) {
-		float strokeWidth = paint.getStrokeWidth();
-
-		rectangleBoundsPath.inset(-strokeWidth, -strokeWidth);
-		return rectangleBoundsCanvas.left < rectangleBoundsPath.right
-				&& rectangleBoundsPath.left < rectangleBoundsCanvas.right
-				&& rectangleBoundsCanvas.top < rectangleBoundsPath.bottom
-				&& rectangleBoundsPath.top < rectangleBoundsCanvas.bottom;
+		canvas.drawPath(path, paint);
 	}
 
 	@Override

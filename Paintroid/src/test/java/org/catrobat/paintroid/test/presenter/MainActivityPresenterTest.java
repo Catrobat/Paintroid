@@ -32,7 +32,6 @@ import android.support.v4.view.GravityCompat;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
@@ -41,8 +40,12 @@ import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.tools.Tool;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.Perspective;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -59,9 +62,9 @@ import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXT
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_FINISH;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LANGUAGE;
+import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOAD_NEW;
@@ -83,7 +86,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class MainActivityPresenterTest {
 	@Mock
 	private MainActivityContracts.MainView view;
@@ -107,18 +110,43 @@ public class MainActivityPresenterTest {
 	private MainActivityContracts.NavigationDrawerViewHolder navigationDrawerViewHolder;
 
 	@Mock
+	private Workspace workspace;
+
+	@Mock
+	private Perspective perspective;
+
+	@Mock
+	private ToolReference toolReference;
+
+	@Mock
+	private ToolOptionsController toolOptionsController;
+
+	@Mock
+	private Tool tool;
+
+	@Mock
 	private CommandManager commandManager;
 
 	@Mock
 	private MainActivityContracts.BottomBarViewHolder bottomBarViewHolder;
 
+	@Mock
+	private Bitmap bitmap;
+
 	@InjectMocks
 	private MainActivityPresenter presenter;
 
+	@Before
+	public void setUp() {
+		when(workspace.getBitmapOfAllLayers())
+				.thenReturn(bitmap);
+	}
+
 	@Test
 	public void testSetUp() {
-		verifyZeroInteractions(view, model, navigator, interactor, topBarViewHolder,
-				drawerLayoutViewHolder, navigationDrawerViewHolder, commandManager, bottomBarViewHolder);
+		verifyZeroInteractions(view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
+				drawerLayoutViewHolder, navigationDrawerViewHolder, commandManager, bottomBarViewHolder,
+				toolReference, tool);
 	}
 
 	@Test
@@ -235,7 +263,7 @@ public class MainActivityPresenterTest {
 	public void testSaveCopyClickedThenSaveImage() {
 		presenter.saveCopyClicked();
 
-		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT);
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, bitmap);
 		verifyNoMoreInteractions(interactor);
 	}
 
@@ -246,46 +274,46 @@ public class MainActivityPresenterTest {
 
 		presenter.saveImageClicked();
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, bitmap, uri);
 		verifyNoMoreInteractions(interactor);
 	}
 
 	@Test
 	public void testEnterFullscreenClicked() {
-		PaintroidApplication.currentTool = mock(Tool.class);
-		PaintroidApplication.perspective = mock(Perspective.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.enterFullscreenClicked();
 
-		verify(model).setFullScreen(true);
+		verify(model).setFullscreen(true);
 		verify(topBarViewHolder).hide();
-		verify(view).enterFullScreen();
-		verify(navigationDrawerViewHolder).hideEnterFullScreen();
-		verify(navigationDrawerViewHolder).showExitFullScreen();
-		verify(PaintroidApplication.currentTool).hide();
-		verify(PaintroidApplication.perspective).setFullscreen(true);
+		verify(view).hideKeyboard();
+		verify(view).enterFullscreen();
+		verify(navigationDrawerViewHolder).hideEnterFullscreen();
+		verify(navigationDrawerViewHolder).showExitFullscreen();
+		verify(toolOptionsController).disable();
+		verify(perspective).enterFullscreen();
 	}
 
 	@Test
 	public void testExitFullscreenClicked() {
-		PaintroidApplication.currentTool = mock(Tool.class);
-		PaintroidApplication.perspective = mock(Perspective.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.exitFullscreenClicked();
 
-		verify(model).setFullScreen(false);
+		verify(model).setFullscreen(false);
 		verify(topBarViewHolder).show();
-		verify(view).exitFullScreen();
-		verify(navigationDrawerViewHolder).showEnterFullScreen();
-		verify(navigationDrawerViewHolder).hideExitFullScreen();
-		verify(PaintroidApplication.perspective).setFullscreen(false);
+		verify(view).exitFullscreen();
+		verify(navigationDrawerViewHolder).showEnterFullscreen();
+		verify(navigationDrawerViewHolder).hideExitFullscreen();
+		verify(toolOptionsController).enable();
+		verify(perspective).exitFullscreen();
 	}
 
 	@Test
 	public void testShowHelpClickedThenStartWelcomeActivity() {
 		presenter.showHelpClicked();
 
-		verify(navigator).startWelcomeActivity();
+		verify(navigator).startWelcomeActivity(REQUEST_CODE_INTRO);
 		verifyNoMoreInteractions(navigator);
 	}
 
@@ -311,12 +339,12 @@ public class MainActivityPresenterTest {
 	public void testOnNewImageWhenCommandReturnsThenResetPerspective() {
 		DisplayMetrics metrics = mock(DisplayMetrics.class);
 		when(view.getDisplayMetrics()).thenReturn(metrics);
-		PaintroidApplication.perspective = mock(Perspective.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.onNewImage();
 		presenter.onCommandPostExecute();
 
-		verify(PaintroidApplication.perspective).resetScaleAndTranslation();
+		verify(workspace).resetPerspective();
 	}
 
 	@Test
@@ -351,25 +379,14 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testHandleActivityResultWhenFinishThenFinishActivity() {
+	public void testHandleActivityResultWhenUnhandledAndResultNotOKThenForwardResult() {
 		DisplayMetrics metrics = mock(DisplayMetrics.class);
 		when(view.getDisplayMetrics()).thenReturn(metrics);
 		Intent intent = mock(Intent.class);
 
-		presenter.handleActivityResult(REQUEST_CODE_FINISH, Activity.RESULT_OK, intent);
+		presenter.handleActivityResult(0, Activity.RESULT_CANCELED, intent);
 
-		verify(navigator).finishActivity();
-	}
-
-	@Test
-	public void testHandleActivityResultWhenLanguageThenRecreateActivity() {
-		DisplayMetrics metrics = mock(DisplayMetrics.class);
-		when(view.getDisplayMetrics()).thenReturn(metrics);
-		Intent intent = mock(Intent.class);
-
-		presenter.handleActivityResult(REQUEST_CODE_LANGUAGE, Activity.RESULT_OK, intent);
-
-		verify(navigator).recreateActivity();
+		verify(view).superHandleActivityResult(0, Activity.RESULT_CANCELED, intent);
 	}
 
 	@Test
@@ -389,17 +406,42 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandleActivityResultWhenResultNotOkThenDoNothing() {
+		DisplayMetrics metrics = mock(DisplayMetrics.class);
+		when(view.getDisplayMetrics()).thenReturn(metrics);
 		Intent intent = mock(Intent.class);
 
 		presenter.handleActivityResult(0, Activity.RESULT_CANCELED, intent);
 
-		verifyZeroInteractions(view, interactor, navigator);
+		verifyZeroInteractions(interactor, navigator);
+	}
+
+	@Test
+	public void testHandleActivityResultWhenRequestIntroAndResultOKThenDoNothing() {
+		DisplayMetrics metrics = mock(DisplayMetrics.class);
+		when(view.getDisplayMetrics()).thenReturn(metrics);
+		Intent intent = mock(Intent.class);
+
+		presenter.handleActivityResult(REQUEST_CODE_INTRO, Activity.RESULT_OK, intent);
+
+		verifyZeroInteractions(interactor, navigator);
+	}
+
+	@Test
+	public void testHandleActivityResultWhenRequestIntroAndResultSplitScreenNotSupportedThenShowToast() {
+		DisplayMetrics metrics = mock(DisplayMetrics.class);
+		when(view.getDisplayMetrics()).thenReturn(metrics);
+		Intent intent = mock(Intent.class);
+
+		presenter.handleActivityResult(REQUEST_CODE_INTRO, RESULT_INTRO_MW_NOT_SUPPORTED, intent);
+
+		verify(navigator).showToast(R.string.pocketpaint_intro_split_screen_not_supported, Toast.LENGTH_LONG);
+		verifyZeroInteractions(interactor, navigator);
 	}
 
 	@Test
 	public void testOnBackPressedWhenUntouchedThenFinishActivity() {
-		PaintroidApplication.currentTool = mock(Tool.class);
-		when(PaintroidApplication.currentTool.getToolType()).thenReturn(ToolType.BRUSH);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getToolType()).thenReturn(ToolType.BRUSH);
 
 		presenter.onBackPressed();
 
@@ -408,7 +450,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnBackPressedWhenStartDrawerOpenThenCloseDrawer() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 		when(drawerLayoutViewHolder.isDrawerOpen(GravityCompat.START)).thenReturn(true);
 
 		presenter.onBackPressed();
@@ -418,7 +460,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnBackPressedWhenEndDrawerOpenThenCloseDrawer() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 		when(drawerLayoutViewHolder.isDrawerOpen(GravityCompat.END)).thenReturn(true);
 
 		presenter.onBackPressed();
@@ -427,24 +469,23 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testOnBackPressedWhenIsFullScreenThenExitFullscreen() {
-		PaintroidApplication.currentTool = mock(Tool.class);
-		when(model.isFullScreen()).thenReturn(true);
+	public void testOnBackPressedWhenIsFullscreenThenExitFullscreen() {
+		when(toolReference.get()).thenReturn(tool);
+		when(model.isFullscreen()).thenReturn(true);
 
 		presenter.onBackPressed();
 
-		verify(model).setFullScreen(false);
+		verify(model).setFullscreen(false);
 	}
 
 	@Test
 	public void testOnBackPressedWhenToolOptionsShownThenHideToolOptions() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		when(currentTool.getToolOptionsAreShown()).thenReturn(true);
+		when(toolReference.get()).thenReturn(tool);
+		when(toolOptionsController.isVisible()).thenReturn(true);
 
 		presenter.onBackPressed();
 
-		verify(currentTool).toggleShowToolOptions();
+		verify(toolOptionsController).hideAnimated();
 	}
 
 	@Test
@@ -453,7 +494,7 @@ public class MainActivityPresenterTest {
 
 		presenter.saveImageConfirmClicked(0, uri);
 
-		verify(interactor).saveImage(presenter, 0, uri);
+		verify(interactor).saveImage(presenter, 0, bitmap, uri);
 	}
 
 	@Test
@@ -462,12 +503,23 @@ public class MainActivityPresenterTest {
 
 		presenter.saveImageConfirmClicked(-1, uri);
 
-		verify(interactor).saveImage(presenter, -1, uri);
+		verify(interactor).saveImage(presenter, -1, bitmap, uri);
+	}
+
+	@Test
+	public void testUndoClickedWhenKeyboardOpenedThenCloseKeyboard() {
+		when(toolReference.get()).thenReturn(tool);
+		when(view.isKeyboardShown()).thenReturn(true);
+
+		presenter.undoClicked();
+
+		verify(view).hideKeyboard();
+		verifyZeroInteractions(commandManager);
 	}
 
 	@Test
 	public void testUndoClickedThenExecuteUndo() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.undoClicked();
 
@@ -475,8 +527,19 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
+	public void testRedoClickedWhenKeyboardOpenedThenCloseKeyboard() {
+		when(toolReference.get()).thenReturn(tool);
+		when(view.isKeyboardShown()).thenReturn(true);
+
+		presenter.redoClicked();
+
+		verify(view).hideKeyboard();
+		verifyZeroInteractions(commandManager);
+	}
+
+	@Test
 	public void testRedoClickedThenExecuteRedo() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.redoClicked();
 
@@ -485,24 +548,12 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testShowColorPickerClickedWhenColorChangeAllowedThenShowColorPickerDialog() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		when(currentTool.getToolType()).thenReturn(ToolType.BRUSH);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getToolType()).thenReturn(ToolType.BRUSH);
 
 		presenter.showColorPickerClicked();
 
 		verify(navigator).showColorPickerDialog();
-	}
-
-	@Test
-	public void testShowColorPickerClickedWhenNoColorChangeAllowedThenIgnore() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		when(currentTool.getToolType()).thenReturn(ToolType.PIPETTE);
-
-		presenter.showColorPickerClicked();
-
-		verifyZeroInteractions(navigator, interactor, commandManager);
 	}
 
 	@Test
@@ -521,7 +572,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnCommandPostExecuteThenSetModelUnsaved() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.onCommandPostExecute();
 
@@ -530,16 +581,16 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnCommandPostExecuteThenResetInternalToolState() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.onCommandPostExecute();
 
-		verify(PaintroidApplication.currentTool).resetInternalState(RESET_INTERNAL_STATE);
+		verify(tool).resetInternalState(RESET_INTERNAL_STATE);
 	}
 
 	@Test
 	public void testOnCommandPostExecuteThenRefreshDrawingSurface() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.onCommandPostExecute();
 
@@ -548,7 +599,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnCommandPostExecuteThenSetUndoRedoButtons() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.onCommandPostExecute();
 
@@ -558,7 +609,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnCommandPostExecuteThenDismissDialog() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.onCommandPostExecute();
 
@@ -574,7 +625,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testInitializeFromCleanStateWhenDefaultThenUnsetSavedPictureUri() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.initializeFromCleanState(null, null);
 
@@ -584,12 +635,11 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testInitializeFromCleanStateWhenDefaultThenResetTool() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.initializeFromCleanState(null, null);
 
-		verify(currentTool).resetInternalState(NEW_IMAGE_LOADED);
+		verify(tool).resetInternalState(NEW_IMAGE_LOADED);
 	}
 
 	@Test
@@ -615,7 +665,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testRestoreStateThenRestoreFragmentListeners() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.restoreState(false, false, false, false, null, null);
 
@@ -626,11 +676,11 @@ public class MainActivityPresenterTest {
 	public void testRestoreStateThenSetModel() {
 		Uri savedPictureUri = mock(Uri.class);
 		Uri cameraImageUri = mock(Uri.class);
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.restoreState(false, false, false, false, savedPictureUri, cameraImageUri);
 
-		verify(model).setFullScreen(false);
+		verify(model).setFullscreen(false);
 		verify(model).setSaved(false);
 		verify(model).setOpenedFromCatroid(false);
 		verify(model).setInitialAnimationPlayed(false);
@@ -642,11 +692,11 @@ public class MainActivityPresenterTest {
 	public void testRestoreStateWhenStatesSetThenSetModel() {
 		Uri savedPictureUri = mock(Uri.class);
 		Uri cameraImageUri = mock(Uri.class);
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.restoreState(true, true, true, true, savedPictureUri, cameraImageUri);
 
-		verify(model).setFullScreen(true);
+		verify(model).setFullscreen(true);
 		verify(model).setSaved(true);
 		verify(model).setOpenedFromCatroid(true);
 		verify(model).setInitialAnimationPlayed(true);
@@ -656,19 +706,17 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testRestoreStateThenResetTool() {
-		PaintroidApplication.currentTool = mock(Tool.class);
+		when(toolReference.get()).thenReturn(tool);
 
 		presenter.restoreState(false, false, false, false, null, null);
 
-		verify(PaintroidApplication.currentTool).resetInternalState(NEW_IMAGE_LOADED);
+		verify(tool).resetInternalState(NEW_IMAGE_LOADED);
 	}
 
 	@Test
 	public void testFinishInitializeThensetUndoRedoButtons() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 
 		presenter.finishInitialize();
 
@@ -678,10 +726,8 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testFinishInitializeWhenUndoAvailableThensetUndoRedoButtons() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 		when(commandManager.isUndoAvailable()).thenReturn(true);
 
 		presenter.finishInitialize();
@@ -692,10 +738,8 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testFinishInitializeWhenRedoAvailableThensetUndoRedoButtons() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 		when(commandManager.isRedoAvailable()).thenReturn(true);
 
 		presenter.finishInitialize();
@@ -706,37 +750,31 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testFinishInitializeWhenNotFullscreenThenRestoreState() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 
 		presenter.finishInitialize();
 
-		verify(view).exitFullScreen();
+		verify(view).exitFullscreen();
 	}
 
 	@Test
 	public void testFinishInitializeWhenFullscreenThenRestoreState() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(mock(Paint.class));
-		when(model.isFullScreen()).thenReturn(true);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(model.isFullscreen()).thenReturn(true);
 
 		presenter.finishInitialize();
 
-		verify(view).enterFullScreen();
+		verify(view).enterFullscreen();
 	}
 
 	@Test
 	public void testFinishInitializeThenRestoreColorButtonColor() {
-		Tool currentTool = mock(Tool.class);
 		Paint paint = mock(Paint.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(paint);
-		when(model.isFullScreen()).thenReturn(true);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(paint);
+		when(model.isFullscreen()).thenReturn(true);
 		when(paint.getColor()).thenReturn(Color.RED);
 
 		presenter.finishInitialize();
@@ -746,11 +784,9 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testFinishInitializeThenRestoreSelectedTool() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(mock(Paint.class));
-		when(currentTool.getToolType()).thenReturn(ToolType.TEXT);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(tool.getToolType()).thenReturn(ToolType.TEXT);
 
 		presenter.finishInitialize();
 
@@ -759,10 +795,8 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testFinishInitializeWhenDefaultThenInitializeActionBarDefault() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 
 		presenter.finishInitialize();
 
@@ -771,10 +805,8 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testFinishInitializeWhenFromCatroidThenInitializeActionBarCatroid() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 
 		presenter.finishInitialize();
@@ -784,10 +816,8 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testFinishInitializeWhenDefaultThenRemoveCatroidNavigationItems() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 
 		presenter.finishInitialize();
 
@@ -797,10 +827,8 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testFinishInitializeWhenFromCatroidThenRemoveSaveNavigationItems() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		PaintroidApplication.perspective = mock(Perspective.class);
-		when(currentTool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 
 		presenter.finishInitialize();
@@ -811,9 +839,8 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testToolClickedThenCancelAnimation() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		when(currentTool.getToolType()).thenReturn(ToolType.BRUSH);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getToolType()).thenReturn(ToolType.BRUSH);
 
 		presenter.toolClicked(ToolType.BRUSH);
 
@@ -822,20 +849,18 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testToolClickedWhenSameToolTypeThenToggleOptions() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		when(currentTool.getToolType()).thenReturn(ToolType.BRUSH);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getToolType()).thenReturn(ToolType.BRUSH);
 
 		presenter.toolClicked(ToolType.BRUSH);
 
-		verify(currentTool).toggleShowToolOptions();
+		verify(toolOptionsController).showAnimated();
 	}
 
 	@Test
 	public void testToolClickedWhenKeyboardShownThenHideKeyboard() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		when(currentTool.getToolType()).thenReturn(ToolType.BRUSH);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getToolType()).thenReturn(ToolType.BRUSH);
 		when(view.isKeyboardShown()).thenReturn(true);
 
 		presenter.toolClicked(ToolType.ERASER);
@@ -845,9 +870,8 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testGotFocusThenPlayInitialAnimation() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		when(currentTool.getToolType()).thenReturn(ToolType.PIPETTE);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getToolType()).thenReturn(ToolType.PIPETTE);
 
 		presenter.gotFocus();
 
@@ -857,9 +881,8 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testGotFocusWhenAlreadyPlayedThenScrollToTool() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		when(currentTool.getToolType()).thenReturn(ToolType.ERASER);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getToolType()).thenReturn(ToolType.ERASER);
 		when(model.wasInitialAnimationPlayed()).thenReturn(true);
 
 		presenter.gotFocus();
@@ -870,9 +893,8 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testGotFocusWhenGotFocusBeforeThenDoNothing() {
-		Tool currentTool = mock(Tool.class);
-		PaintroidApplication.currentTool = currentTool;
-		when(currentTool.getToolType()).thenReturn(ToolType.LINE);
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getToolType()).thenReturn(ToolType.LINE);
 
 		presenter.gotFocus();
 		presenter.gotFocus();
@@ -991,7 +1013,7 @@ public class MainActivityPresenterTest {
 
 		Uri uri = model.getSavedPictureUri();
 
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(uri));
+		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(bitmap), eq(uri));
 	}
 
 	@Test
@@ -1011,7 +1033,7 @@ public class MainActivityPresenterTest {
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT));
+		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(bitmap));
 	}
 
 	@Test
@@ -1034,7 +1056,7 @@ public class MainActivityPresenterTest {
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, bitmap, uri);
 	}
 
 	@Test
@@ -1068,7 +1090,7 @@ public class MainActivityPresenterTest {
 				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[] {PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, bitmap, uri);
 	}
 
 	@Test
@@ -1091,7 +1113,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, bitmap, uri);
 	}
 
 	@Test
@@ -1131,7 +1153,7 @@ public class MainActivityPresenterTest {
 	public void testOnNavigationItemSelectedSaveCopyPermissionGranted() {
 		presenter.saveCopyClicked();
 
-		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT);
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, bitmap);
 	}
 
 	@Test
@@ -1151,7 +1173,7 @@ public class MainActivityPresenterTest {
 
 		presenter.saveImageClicked();
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, bitmap, uri);
 	}
 
 	@Test
@@ -1171,7 +1193,7 @@ public class MainActivityPresenterTest {
 
 		presenter.saveBeforeFinish();
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, bitmap, uri);
 	}
 
 	@Test
@@ -1191,7 +1213,7 @@ public class MainActivityPresenterTest {
 
 		presenter.saveBeforeNewImage();
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, bitmap, uri);
 	}
 
 	@Test
@@ -1211,7 +1233,7 @@ public class MainActivityPresenterTest {
 
 		presenter.saveBeforeLoadImage();
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, bitmap, uri);
 	}
 
 	@Test
@@ -1270,7 +1292,7 @@ public class MainActivityPresenterTest {
 		verify(model, never()).setSaved(anyBoolean());
 		verify(model, never()).setOpenedFromCatroid(anyBoolean());
 		verify(model, never()).setInitialAnimationPlayed(anyBoolean());
-		verify(model, never()).setFullScreen(anyBoolean());
+		verify(model, never()).setFullscreen(anyBoolean());
 	}
 
 	@Test

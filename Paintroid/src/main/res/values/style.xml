@@ -20,8 +20,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="PocketPaintTitleTextStyle">
-        <item name="android:textColor">@color/pocketpaint_colorAccent</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+    <item name="android:textColor">@color/pocketpaint_colorAccent</item>
+    <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
 
     <style name="PocketPaintAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -46,6 +46,7 @@
         <item name="android:windowBackground">@color/pocketpaint_background_color</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="dialogTheme">@style/PocketPaintAlertDialog</item>
         <item name="colorPrimary">@color/pocketpaint_colorPrimary</item>
         <item name="colorPrimaryDark">@color/pocketpaint_colorPrimaryDark</item>
         <item name="colorAccent">@color/pocketpaint_colorAccent</item>
@@ -60,13 +61,6 @@
         <item name="android:background">@color/pocketpaint_main_separator_color</item>
     </style>
 
-    <style name="PocketPaintDividerHorizontal" parent="PocketPaintDividerBase">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">2dp</item>
-        <item name="android:layout_marginEnd">16dp</item>
-        <item name="android:layout_marginStart">24dp</item>
-    </style>
-
     <style name="PocketPaintSelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
         <item name="android:background">@drawable/pocketpaint_attribute_button_selector</item>
     </style>
@@ -76,15 +70,54 @@
         <item name="color">@android:color/white</item>
     </style>
 
+    <style name="PocketPaintToolTitle" parent="PocketPaintToolSubtitle">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="PocketPaintToolSubtitle">
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/pocketpaint_colorAccent</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="PocketPaintToolSectionDivider" parent="PocketPaintDividerBase">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="PocketPaintToolSection">
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="PocketPaintToolHorizontalSpace">
+        <item name="android:layout_width">8dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="PocketPaintWelcomeHeader" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">@color/pocketpaint_color_chooser_white</item>
+        <item name="android:textColor">@color/pocketpaint_color_picker_white</item>
         <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="PocketPaintWelcomeText" parent="@android:style/TextAppearance.DeviceDefault.Medium">
-        <item name="android:textColor">@color/pocketpaint_color_chooser_white</item>
+        <item name="android:textColor">@color/pocketpaint_color_picker_white</item>
         <item name="android:fontFamily">sans-serif</item> <!--sans-serif is robot-->
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>

@@ -1,4 +1,4 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
@@ -25,6 +25,7 @@ import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandFactory;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.CommandManager.CommandListener;
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
@@ -32,8 +33,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.catrobat.paintroid.PaintroidApplication.commandManager;
-import static org.catrobat.paintroid.PaintroidApplication.layerModel;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -46,10 +45,15 @@ public class LayerTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 	private CommandFactory commandFactory;
+	private CommandManager commandManager;
+	private LayerContracts.Model layerModel;
 
 	@Before
 	public void setUp() {
 		commandFactory = new DefaultCommandFactory();
+		MainActivity activity = activityTestRule.getActivity();
+		commandManager = activity.commandManager;
+		layerModel = activity.layerModel;
 	}
 
 	@UiThreadTest

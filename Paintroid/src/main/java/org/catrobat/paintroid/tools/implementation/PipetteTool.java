@@ -19,23 +19,26 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.model.LayerModel;
+import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
 public class PipetteTool extends BaseTool {
 
 	private Bitmap surfaceBitmap;
 	private ColorPickerDialog.OnColorPickedListener listener;
 
-	public PipetteTool(Context context, ColorPickerDialog.OnColorPickedListener listener, ToolType toolType) {
-		super(context, toolType);
+	public PipetteTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager, ColorPickerDialog.OnColorPickedListener listener) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
 		this.listener = listener;
 
 		updateSurfaceBitmap();
@@ -43,6 +46,11 @@ public class PipetteTool extends BaseTool {
 
 	@Override
 	public void draw(Canvas canvas) {
+	}
+
+	@Override
+	public ToolType getToolType() {
+		return ToolType.PIPETTE;
 	}
 
 	@Override
@@ -65,8 +73,7 @@ public class PipetteTool extends BaseTool {
 			return false;
 		}
 
-		if (coordinate.x < 0 || coordinate.y < 0
-				|| coordinate.x >= surfaceBitmap.getWidth() || coordinate.y >= surfaceBitmap.getHeight()) {
+		if (!workspace.contains(coordinate)) {
 			return false;
 		}
 
@@ -78,7 +85,7 @@ public class PipetteTool extends BaseTool {
 	}
 
 	public void updateSurfaceBitmap() {
-		surfaceBitmap = LayerModel.getBitmapOfAllLayersToSave(PaintroidApplication.layerModel.getLayers());
+		surfaceBitmap = workspace.getBitmapOfAllLayers();
 	}
 
 	@Override

@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.ui;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import org.catrobat.paintroid.contract.MainActivityContracts;
@@ -29,8 +30,8 @@ import org.catrobat.paintroid.iotasks.SaveImageAsync;
 public class MainActivityInteractor implements MainActivityContracts.Interactor {
 
 	@Override
-	public void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode) {
-		new SaveImageAsync(callback, requestCode, null, true).execute();
+	public void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Bitmap bitmap) {
+		new SaveImageAsync(callback, requestCode, bitmap, null, true).execute();
 	}
 
 	@Override
@@ -39,8 +40,8 @@ public class MainActivityInteractor implements MainActivityContracts.Interactor 
 	}
 
 	@Override
-	public void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Uri uri) {
-		new SaveImageAsync(callback, requestCode, uri, false).execute();
+	public void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Bitmap bitmap, Uri uri) {
+		new SaveImageAsync(callback, requestCode, bitmap, uri, false).execute();
 	}
 
 	@Override

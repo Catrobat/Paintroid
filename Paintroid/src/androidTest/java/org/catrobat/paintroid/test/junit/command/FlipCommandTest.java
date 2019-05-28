@@ -19,13 +19,48 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.Color;
+
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
+import org.catrobat.paintroid.model.Layer;
+import org.catrobat.paintroid.model.LayerModel;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class FlipCommandTest extends CommandTestSetup {
+public class FlipCommandTest {
+
+	private static final int BITMAP_BASE_COLOR = Color.GREEN;
+	private static final int PAINT_BASE_COLOR = Color.BLUE;
+	private static final int INITIAL_HEIGHT = 80;
+	private static final int INITIAL_WIDTH = 80;
+
+	private Command commandUnderTest;
+	private Canvas canvasUnderTest;
+	private Bitmap bitmapUnderTest;
+	private LayerModel layerModel;
+
+	@Before
+	public void setUp() {
+		layerModel = new LayerModel();
+		layerModel.setWidth(INITIAL_WIDTH);
+		layerModel.setHeight(INITIAL_HEIGHT);
+
+		Bitmap canvasBitmapUnderTest = Bitmap.createBitmap(INITIAL_WIDTH, INITIAL_HEIGHT, Config.ARGB_8888);
+		canvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR);
+		bitmapUnderTest = canvasBitmapUnderTest.copy(Config.ARGB_8888, true);
+		Layer layerUnderTest = new Layer(bitmapUnderTest);
+		canvasUnderTest = new Canvas();
+		canvasUnderTest.setBitmap(canvasBitmapUnderTest);
+		layerModel.addLayerAt(0, layerUnderTest);
+		layerModel.setCurrentLayer(layerUnderTest);
+	}
 
 	@Test
 	public void testVerticalFlip() {

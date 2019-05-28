@@ -22,7 +22,6 @@ package org.catrobat.paintroid.test.command.implementation;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager.CommandListener;
 import org.catrobat.paintroid.command.implementation.DefaultCommandManager;
@@ -64,7 +63,6 @@ public class DefaultCommandManagerTest {
 	@Before
 	public void setUp() {
 		layerModel = new LayerModel();
-		PaintroidApplication.layerModel = layerModel;
 		commandManager = new DefaultCommandManager(commonFactory, layerModel);
 	}
 

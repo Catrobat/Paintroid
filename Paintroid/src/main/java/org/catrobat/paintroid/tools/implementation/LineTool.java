@@ -19,26 +19,37 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.graphics.RectF;
+import android.support.annotation.VisibleForTesting;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.listener.BrushPickerView;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.common.CommonBrushChangedListener;
+import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener;
+import org.catrobat.paintroid.tools.options.BrushToolOptions;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
 public class LineTool extends BaseTool {
 
-	protected PointF initialEventCoordinate;
-	protected PointF currentCoordinate;
-	protected boolean pathInsideBitmap;
-	private BrushPickerView brushPickerView;
+	private PointF initialEventCoordinate;
+	private PointF currentCoordinate;
+	private BrushToolOptions brushToolOptions;
 
-	public LineTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public LineTool(BrushToolOptions brushToolOptions, ContextCallback contextCallback, ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		this.brushToolOptions = brushToolOptions;
+
+		brushToolOptions.setBrushChangedListener(new CommonBrushChangedListener(this));
+		brushToolOptions.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
 	}
 
 	@Override
@@ -47,24 +58,28 @@ public class LineTool extends BaseTool {
 			return;
 		}
 
-		setPaintColor(CANVAS_PAINT.getColor());
+		setPaintColor(toolPaint.getPreviewColor());
 
 		canvas.save();
-		canvas.clipRect(0, 0,
-				PaintroidApplication.drawingSurface.getBitmapWidth(),
-				PaintroidApplication.drawingSurface.getBitmapHeight());
-		if (CANVAS_PAINT.getAlpha() == 0x00) {
-			CANVAS_PAINT.setColor(Color.BLACK);
+		canvas.clipRect(0, 0, workspace.getWidth(), workspace.getHeight());
+		if (toolPaint.getPreviewPaint().getAlpha() == 0x00) {
+			Paint previewPaint = toolPaint.getPreviewPaint();
+			previewPaint.setColor(Color.BLACK);
 			canvas.drawLine(initialEventCoordinate.x,
 					initialEventCoordinate.y, currentCoordinate.x,
-					currentCoordinate.y, CANVAS_PAINT);
-			CANVAS_PAINT.setColor(Color.TRANSPARENT);
+					currentCoordinate.y, previewPaint);
+			previewPaint.setColor(Color.TRANSPARENT);
 		} else {
 			canvas.drawLine(initialEventCoordinate.x,
 					initialEventCoordinate.y, currentCoordinate.x,
-					currentCoordinate.y, BITMAP_PAINT);
+					currentCoordinate.y, toolPaint.getPaint());
 		}
 		canvas.restore();
+	}
+
+	@Override
+	public ToolType getToolType() {
+		return ToolType.LINE;
 	}
 
 	@Override
@@ -74,18 +89,12 @@ public class LineTool extends BaseTool {
 		}
 		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		pathInsideBitmap = false;
-
-		pathInsideBitmap = checkPathInsideBitmap(coordinate);
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
 		currentCoordinate = new PointF(coordinate.x, coordinate.y);
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
-			pathInsideBitmap = true;
-		}
 		return true;
 	}
 
@@ -99,15 +108,15 @@ public class LineTool extends BaseTool {
 		finalPath.moveTo(initialEventCoordinate.x, initialEventCoordinate.y);
 		finalPath.lineTo(coordinate.x, coordinate.y);
 
-		if (!pathInsideBitmap && checkPathInsideBitmap(coordinate)) {
-			pathInsideBitmap = true;
-		}
+		RectF bounds = new RectF();
+		finalPath.computeBounds(bounds, true);
+		bounds.inset(-toolPaint.getStrokeWidth(), -toolPaint.getStrokeWidth());
 
-		if (pathInsideBitmap) {
-			Command command = commandFactory.createPathCommand(BITMAP_PAINT, finalPath);
-			PaintroidApplication.commandManager.addCommand(command);
+		if (workspace.intersectsWith(bounds)) {
+			Command command = commandFactory.createPathCommand(toolPaint.getPaint(), finalPath);
+			commandManager.addCommand(command);
 		}
-
+		resetInternalState();
 		return true;
 	}
 
@@ -120,24 +129,21 @@ public class LineTool extends BaseTool {
 	@Override
 	public void changePaintColor(int color) {
 		super.changePaintColor(color);
-		brushPickerView.invalidate();
+		brushToolOptions.invalidate();
 	}
 
 	@Override
 	public void setupToolOptions() {
-		brushPickerView = new BrushPickerView(toolSpecificOptionsLayout);
-		brushPickerView.setCurrentPaint(BITMAP_PAINT);
+		brushToolOptions.setCurrentPaint(toolPaint.getPaint());
 	}
 
-	@Override
-	public void startTool() {
-		super.startTool();
-		brushPickerView.addBrushChangedListener(onBrushChangedListener);
+	@VisibleForTesting (otherwise = VisibleForTesting.NONE)
+	public PointF getInitialEventCoordinate() {
+		return initialEventCoordinate;
 	}
 
-	@Override
-	public void leaveTool() {
-		super.leaveTool();
-		brushPickerView.removeBrushChangedListener(onBrushChangedListener);
+	@VisibleForTesting (otherwise = VisibleForTesting.NONE)
+	public PointF getCurrentCoordinate() {
+		return currentCoordinate;
 	}
 }

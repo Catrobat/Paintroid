@@ -24,7 +24,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.colorpicker.PresetSelectorView;
+import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -37,6 +37,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 
@@ -44,7 +45,7 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
 
 	protected ColorPickerViewInteraction() {
-		super(onView(withId(R.id.color_chooser_color_picker_view)));
+		super(onView(withId(R.id.color_picker_view)));
 	}
 
 	public static ColorPickerViewInteraction onColorPickerView() {
@@ -52,13 +53,27 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onOkButton() {
-		return onView(withId(R.id.color_chooser_button_ok));
+		return onView(withId(R.id.color_picker_button_ok));
 	}
 
 	public ColorPickerViewInteraction performOpenColorPicker() {
 		onView(withId(R.id.pocketpaint_btn_top_color))
 				.perform(click());
 		return this;
+	}
+
+	public ViewInteraction onCancelButton() {
+		return onView(withId(R.id.color_picker_button_cancel));
+	}
+
+	public void checkCancelButtonColor(int color) {
+		onView(withId(R.id.color_picker_button_cancel))
+				.check(matches(withBackgroundColor(color)));
+	}
+
+	public void checkApplyButtonColor(int color) {
+		onView(withId(R.id.color_picker_button_ok))
+				.check(matches(withBackgroundColor(color)));
 	}
 
 	public ColorPickerViewInteraction performCloseColorPickerWithDialogButton() {

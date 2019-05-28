@@ -24,6 +24,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
@@ -32,8 +33,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.TRANSPARENT_COLOR_PICKER_BUTTON_POSITION;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
@@ -56,7 +55,7 @@ public class PipetteToolIntegrationTest {
 	@Test
 	public void testEmpty() {
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
@@ -68,7 +67,7 @@ public class PipetteToolIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolProperties()
-				.checkColor(Color.TRANSPARENT);
+				.checkMatchesColor(Color.TRANSPARENT);
 	}
 
 	@Test
@@ -79,9 +78,9 @@ public class PipetteToolIntegrationTest {
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
-		selectColorPickerPresetSelectorColor(TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
 		onToolProperties()
-				.checkColor(Color.TRANSPARENT);
+				.setColorResource(R.color.pocketpaint_color_picker_transparent)
+				.checkMatchesColor(Color.TRANSPARENT);
 		onToolBarView()
 				.performSelectTool(ToolType.PIPETTE);
 
@@ -89,7 +88,7 @@ public class PipetteToolIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 	}
 
 	@Test
@@ -105,19 +104,20 @@ public class PipetteToolIntegrationTest {
 				.performAddLayer()
 				.performClose();
 
-		selectColorPickerPresetSelectorColor(TRANSPARENT_COLOR_PICKER_BUTTON_POSITION);
+		onToolProperties()
+				.setColor(Color.TRANSPARENT);
 		onToolBarView()
 				.performSelectTool(ToolType.PIPETTE);
 
 		onToolProperties()
-				.checkColor(Color.TRANSPARENT);
+				.checkMatchesColor(Color.TRANSPARENT);
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 	}
 
 	@Test
@@ -131,14 +131,14 @@ public class PipetteToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 
 		onTopBarView()
 				.performUndo();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.TRANSPARENT);
+				.checkMatchesColor(Color.TRANSPARENT);
 	}
 
 	@Test
@@ -152,7 +152,7 @@ public class PipetteToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 
 		onTopBarView()
 				.performUndo()
@@ -161,6 +161,6 @@ public class PipetteToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 	}
 }

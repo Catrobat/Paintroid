@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <array name="pocketpaint_color_picker_preset_colors">
+        <item name="blue1">@color/pocketpaint_color_picker_blue1</item>
+        <item name="blue2">@color/pocketpaint_color_picker_blue2</item>
+        <item name="green1">@color/pocketpaint_color_picker_green1</item>
+        <item name="green2">@color/pocketpaint_color_picker_green2</item>
+        <item name="brown1">@color/pocketpaint_color_picker_brown1</item>
+        <item name="brown2">@color/pocketpaint_color_picker_brown2</item>
+        <item name="brown3">@color/pocketpaint_color_picker_brown3</item>
+        <item name="brown4">@color/pocketpaint_color_picker_brown4</item>
+        <item name="purple1">@color/pocketpaint_color_picker_purple1</item>
+        <item name="purple2">@color/pocketpaint_color_picker_purple2</item>
+        <item name="purple3">@color/pocketpaint_color_picker_purple3</item>
+        <item name="purple4">@color/pocketpaint_color_picker_purple4</item>
+        <item name="red1">@color/pocketpaint_color_picker_red1</item>
+        <item name="orange1">@color/pocketpaint_color_picker_orange1</item>
+        <item name="orange2">@color/pocketpaint_color_picker_orange2</item>
+        <item name="yellow">@color/pocketpaint_color_picker_yellow</item>
+        <item name="black">@color/pocketpaint_color_picker_black</item>
+        <item name="darkgray">@color/pocketpaint_color_picker_gray</item>
+        <item name="white">@color/pocketpaint_color_picker_white</item>
+        <item name="transparent">@color/pocketpaint_color_picker_transparent</item>
+    </array>
+</resources>

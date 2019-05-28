@@ -26,18 +26,20 @@ import android.support.test.espresso.PerformException;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.widget.SeekBar;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
+import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.TransformTool;
-import org.junit.After;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,9 +49,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.GREEN_COLOR_PICKER_BUTTON_POSITION;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
@@ -61,6 +60,7 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesI
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
@@ -76,7 +76,7 @@ public class TransformToolIntegrationTest {
 
 	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
-	private ActivityHelper activityHelper;
+	private MainActivityHelper activityHelper;
 
 	private int displayWidth;
 	private int displayHeight;
@@ -84,6 +84,10 @@ public class TransformToolIntegrationTest {
 	private int initialWidth;
 	private int initialHeight;
 	private int maxBitmapSize;
+
+	private Perspective perspective;
+	private LayerContracts.Model layerModel;
+	private ToolReference toolReference;
 
 	private static void drawPlus(Bitmap bitmap, int lineLength) {
 		int horizontalStartX = bitmap.getWidth() / 4;
@@ -103,48 +107,52 @@ public class TransformToolIntegrationTest {
 				verticalStartY, 10, lineLength);
 	}
 
-	private static PointF getSurfacePointFromCanvasPoint(PointF point) {
-		return PaintroidApplication.perspective.getSurfacePointFromCanvasPoint(point);
+	private PointF getSurfacePointFromCanvasPoint(PointF point) {
+		return perspective.getSurfacePointFromCanvasPoint(point);
 	}
 
-	private static float getToolSelectionBoxWidth() {
-		return ((BaseToolWithRectangleShape) PaintroidApplication.currentTool).boxWidth;
+	private float getToolSelectionBoxWidth() {
+		return ((BaseToolWithRectangleShape) toolReference.get()).boxWidth;
 	}
 
-	private static void setToolSelectionBoxWidth(float width) {
-		((BaseToolWithRectangleShape) PaintroidApplication.currentTool).boxWidth = width;
+	private void setToolSelectionBoxWidth(float width) {
+		((BaseToolWithRectangleShape) toolReference.get()).boxWidth = width;
 	}
 
-	private static float getToolSelectionBoxHeight() {
-		return ((BaseToolWithRectangleShape) PaintroidApplication.currentTool).boxHeight;
+	private float getToolSelectionBoxHeight() {
+		return ((BaseToolWithRectangleShape) toolReference.get()).boxHeight;
 	}
 
-	private static void setToolSelectionBoxHeight(float height) {
-		((BaseToolWithRectangleShape) PaintroidApplication.currentTool).boxHeight = height;
+	private void setToolSelectionBoxHeight(float height) {
+		((BaseToolWithRectangleShape) toolReference.get()).boxHeight = height;
 	}
 
-	private static void setToolSelectionBoxDimensions(float width, float height) {
+	private void setToolSelectionBoxDimensions(float width, float height) {
 		BaseToolWithRectangleShape currentTool = (BaseToolWithRectangleShape)
-				PaintroidApplication.currentTool;
+				toolReference.get();
 		currentTool.boxWidth = width;
 		currentTool.boxHeight = height;
 	}
 
-	private static PointF getToolPosition() {
-		return ((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition;
+	private PointF getToolPosition() {
+		return ((BaseToolWithShape) toolReference.get()).toolPosition;
 	}
 
-	private static void setToolPosition(float x, float y) {
-		((BaseToolWithShape) PaintroidApplication.currentTool).toolPosition.set(x, y);
+	private void setToolPosition(float x, float y) {
+		((BaseToolWithShape) toolReference.get()).toolPosition.set(x, y);
 	}
 
-	private static PointF newPointF(PointF point) {
+	private PointF newPointF(PointF point) {
 		return new PointF(point.x, point.y);
 	}
 
 	@Before
 	public void setUp() {
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
+		MainActivity activity = launchActivityRule.getActivity();
+		activityHelper = new MainActivityHelper(activity);
+		perspective = activity.perspective;
+		layerModel = activity.layerModel;
+		toolReference = activity.toolReference;
 
 		displayWidth = activityHelper.getDisplayWidth();
 		displayHeight = activityHelper.getDisplayHeight();
@@ -152,17 +160,12 @@ public class TransformToolIntegrationTest {
 		maxBitmapSize = displayHeight * displayWidth
 				* (int) TransformTool.MAXIMUM_BITMAP_SIZE_FACTOR;
 
-		final Bitmap workingBitmap = getWorkingBitmap();
+		final Bitmap workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		initialWidth = workingBitmap.getWidth();
 		initialHeight = workingBitmap.getHeight();
 
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
-	}
-
-	@After
-	public void tearDown() {
-		activityHelper = null;
 	}
 
 	@Test
@@ -221,8 +224,8 @@ public class TransformToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
 
-		int width = getWorkingBitmap().getWidth();
-		int height = getWorkingBitmap().getHeight();
+		int width = layerModel.getCurrentLayer().getBitmap().getWidth();
+		int height = layerModel.getCurrentLayer().getBitmap().getHeight();
 		PointF position = newPointF(getToolPosition());
 
 		onTransformToolOptionsView()
@@ -303,7 +306,7 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testIfOnePixelIsFound() {
-		final Bitmap workingBitmap = getWorkingBitmap();
+		final Bitmap workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		workingBitmap.setPixel(initialWidth / 2, initialHeight / 2, Color.BLACK);
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -321,7 +324,7 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testIfMultiplePixelAreFound() {
-		final Bitmap workingBitmap = getWorkingBitmap();
+		final Bitmap workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		workingBitmap.setPixel(1, 1, Color.BLACK);
 		workingBitmap.setPixel(initialWidth - 1, initialHeight - 1, Color.BLACK);
 
@@ -339,7 +342,7 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testIfDrawingSurfaceBoundsAreFoundAndNotCropped() {
-		final Bitmap workingBitmap = getWorkingBitmap();
+		final Bitmap workingBitmap = layerModel.getCurrentLayer().getBitmap();
 
 		workingBitmap.setPixel(initialWidth / 2, 0, Color.BLACK);
 		workingBitmap.setPixel(0, initialHeight / 2, Color.BLACK);
@@ -362,7 +365,7 @@ public class TransformToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
 
-		Bitmap workingBitmap = getWorkingBitmap();
+		Bitmap workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		workingBitmap.eraseColor(Color.BLACK);
 
 		for (int indexWidth = 0; indexWidth < initialWidth; indexWidth++) {
@@ -376,7 +379,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.checkBitmapDimension(initialWidth, --initialHeight);
 
-		workingBitmap = getWorkingBitmap();
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
 
 		for (int indexWidth = 0; indexWidth < initialWidth; indexWidth++) {
 			workingBitmap.setPixel(indexWidth, initialHeight - 1, Color.TRANSPARENT);
@@ -391,7 +394,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.checkBitmapDimension(initialWidth, --initialHeight);
 
-		workingBitmap = getWorkingBitmap();
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
 
 		for (int indexHeight = 0; indexHeight < initialHeight; indexHeight++) {
 			workingBitmap.setPixel(0, indexHeight, Color.TRANSPARENT);
@@ -405,7 +408,7 @@ public class TransformToolIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 		onDrawingSurfaceView()
 				.checkBitmapDimension(--initialWidth, initialHeight);
-		workingBitmap = getWorkingBitmap();
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
 
 		for (int indexHeight = 0; indexHeight < initialHeight; indexHeight++) {
 			workingBitmap.setPixel(initialWidth - 1, indexHeight, Color.TRANSPARENT);
@@ -423,7 +426,7 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testSmallBitmapResizing() {
-		Bitmap workingBitmap = getWorkingBitmap();
+		Bitmap workingBitmap = layerModel.getCurrentLayer().getBitmap();
 
 		workingBitmap.setPixel(initialWidth / 2, initialHeight / 2, Color.BLACK);
 
@@ -446,7 +449,7 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testCenterBitmapAfterCropAndUndo() {
-		drawPlus(getWorkingBitmap(), initialWidth / 2);
+		drawPlus(layerModel.getCurrentLayer().getBitmap(), initialWidth / 2);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -455,7 +458,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		final Bitmap croppedBitmap = getWorkingBitmap();
+		final Bitmap croppedBitmap = layerModel.getCurrentLayer().getBitmap();
 
 		assertThat(initialHeight, greaterThan(croppedBitmap.getHeight()));
 		assertThat(initialWidth, greaterThan(croppedBitmap.getWidth()));
@@ -463,7 +466,7 @@ public class TransformToolIntegrationTest {
 		onTopBarView()
 				.performUndo();
 
-		Bitmap undoBitmap = getWorkingBitmap();
+		Bitmap undoBitmap = layerModel.getCurrentLayer().getBitmap();
 		assertEquals("undoBitmap.getHeight should be initialHeight", undoBitmap.getHeight(), initialHeight);
 		assertEquals("undoBitmap.getWidth should be initialWidth", undoBitmap.getWidth(), initialWidth);
 	}
@@ -474,7 +477,7 @@ public class TransformToolIntegrationTest {
 		final PointF originalBottomRight = getSurfacePointFromCanvasPoint(
 				new PointF(initialWidth - 1, initialHeight - 1));
 
-		final Bitmap workingBitmap = getWorkingBitmap();
+		final Bitmap workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		final int lineWidth = 10;
 		final int lineHeight = initialHeight / 2;
 		final int verticalStartX = (initialWidth - lineWidth);
@@ -495,7 +498,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		final Bitmap croppedBitmap = getWorkingBitmap();
+		final Bitmap croppedBitmap = layerModel.getCurrentLayer().getBitmap();
 		final PointF topLeft = getSurfacePointFromCanvasPoint(new PointF(0, 0));
 		final PointF bottomRight = getSurfacePointFromCanvasPoint(
 				new PointF(croppedBitmap.getWidth() - 1, croppedBitmap.getHeight() - 1));
@@ -517,7 +520,7 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testIfBordersAreAlignedCorrectAfterCrop() {
-		drawPlus(getWorkingBitmap(), initialWidth / 2);
+		drawPlus(layerModel.getCurrentLayer().getBitmap(), initialWidth / 2);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -526,10 +529,10 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		final Bitmap croppedBitmap = getWorkingBitmap();
+		final Bitmap croppedBitmap = layerModel.getCurrentLayer().getBitmap();
 		final int width = croppedBitmap.getWidth();
 		final int height = croppedBitmap.getHeight();
-		final TransformTool tool = (TransformTool) PaintroidApplication.currentTool;
+		final TransformTool tool = (TransformTool) toolReference.get();
 		assertEquals(0.0f, tool.resizeBoundWidthXLeft, Float.MIN_VALUE);
 		assertEquals(width - 1, tool.resizeBoundWidthXRight, Float.MIN_VALUE);
 		assertEquals(0.0f, tool.resizeBoundHeightYTop, Float.MIN_VALUE);
@@ -538,7 +541,7 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testMoveLeftCroppingBorderAndDoCrop() {
-		drawPlus(getWorkingBitmap(), initialWidth / 2);
+		drawPlus(layerModel.getCurrentLayer().getBitmap(), initialWidth / 2);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -547,7 +550,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		final int height = getWorkingBitmap().getHeight();
+		final int height = layerModel.getCurrentLayer().getBitmap().getHeight();
 		final PointF toolPosition = getToolPosition();
 
 		for (int i = 0; i < 4; i++) {
@@ -565,7 +568,7 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testMoveRightCroppingBorderAndDoCrop() {
-		drawPlus(getWorkingBitmap(), initialWidth / 2);
+		drawPlus(layerModel.getCurrentLayer().getBitmap(), initialWidth / 2);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -574,7 +577,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		final int height = getWorkingBitmap().getHeight();
+		final int height = layerModel.getCurrentLayer().getBitmap().getHeight();
 		final PointF toolPosition = getToolPosition();
 
 		for (int i = 0; i < 4; i++) {
@@ -592,7 +595,7 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testMoveTopCroppingBorderAndDoCrop() {
-		drawPlus(getWorkingBitmap(), initialWidth / 2);
+		drawPlus(layerModel.getCurrentLayer().getBitmap(), initialWidth / 2);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -601,7 +604,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		final int width = getWorkingBitmap().getWidth();
+		final int width = layerModel.getCurrentLayer().getBitmap().getWidth();
 		final PointF toolPosition = getToolPosition();
 
 		for (int i = 0; i < 4; i++) {
@@ -619,7 +622,7 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testMoveBottomCroppingBorderAndDoCrop() {
-		drawPlus(getWorkingBitmap(), initialWidth / 2);
+		drawPlus(layerModel.getCurrentLayer().getBitmap(), initialWidth / 2);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -628,7 +631,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		final int width = getWorkingBitmap().getWidth();
+		final int width = layerModel.getCurrentLayer().getBitmap().getWidth();
 		final PointF toolPosition = getToolPosition();
 
 		for (int i = 0; i < 4; i++) {
@@ -662,7 +665,7 @@ public class TransformToolIntegrationTest {
 
 		int cropSize = initialWidth / 8;
 		width -= cropSize;
-		getWorkingBitmap().setPixels(new int[cropSize * height],
+		layerModel.getCurrentLayer().getBitmap().setPixels(new int[cropSize * height],
 				0, cropSize, 0, 0, cropSize, height);
 
 		onToolBarView()
@@ -676,7 +679,7 @@ public class TransformToolIntegrationTest {
 
 		cropSize = initialHeight / 8;
 		height -= cropSize;
-		getWorkingBitmap().setPixels(new int[cropSize * width],
+		layerModel.getCurrentLayer().getBitmap().setPixels(new int[cropSize * width],
 				0, width, 0, 0, width, cropSize);
 
 		onToolBarView()
@@ -690,7 +693,7 @@ public class TransformToolIntegrationTest {
 
 		cropSize = initialWidth / 8;
 		width -= cropSize;
-		getWorkingBitmap().setPixels(new int[cropSize * height],
+		layerModel.getCurrentLayer().getBitmap().setPixels(new int[cropSize * height],
 				0, cropSize, width, 0, cropSize, height);
 
 		onToolBarView()
@@ -704,7 +707,7 @@ public class TransformToolIntegrationTest {
 
 		cropSize = initialHeight / 8;
 		height -= cropSize;
-		getWorkingBitmap().setPixels(new int[cropSize * width],
+		layerModel.getCurrentLayer().getBitmap().setPixels(new int[cropSize * width],
 				0, width, 0, height, width, cropSize);
 
 		onToolBarView()
@@ -723,18 +726,18 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM)
 				.performCloseToolOptions();
 
-		drawPlus(getWorkingBitmap(), initialWidth / 2);
+		drawPlus(layerModel.getCurrentLayer().getBitmap(), initialWidth / 2);
 
 		setToolSelectionBoxDimensions(initialWidth / 8, initialHeight / 8);
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		final Bitmap croppedBitmap = getWorkingBitmap();
+		final Bitmap croppedBitmap = layerModel.getCurrentLayer().getBitmap();
 		final int height = croppedBitmap.getHeight();
 		final int width = croppedBitmap.getWidth();
 
-		final TransformTool tool = (TransformTool) PaintroidApplication.currentTool;
+		final TransformTool tool = (TransformTool) toolReference.get();
 		assertEquals(0.0f, tool.resizeBoundWidthXLeft, Float.MIN_VALUE);
 		assertEquals(width - 1, tool.resizeBoundWidthXRight, Float.MIN_VALUE);
 		assertEquals(0.0f, tool.resizeBoundHeightYTop, Float.MIN_VALUE);
@@ -749,7 +752,7 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM)
 				.performCloseToolOptions();
 
-		PaintroidApplication.perspective.multiplyScale(.25f);
+		perspective.multiplyScale(.25f);
 
 		PointF dragFrom = getSurfacePointFromCanvasPoint(new PointF(initialWidth, initialHeight));
 		PointF dragTo = getSurfacePointFromCanvasPoint(new PointF(maxWidth + 10, initialHeight));
@@ -758,7 +761,7 @@ public class TransformToolIntegrationTest {
 				.perform(swipe(dragFrom, dragTo))
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		final Bitmap enlargedBitmap = getWorkingBitmap();
+		final Bitmap enlargedBitmap = layerModel.getCurrentLayer().getBitmap();
 		final int bitmapSize = enlargedBitmap.getHeight() + enlargedBitmap.getWidth();
 		assertTrue(bitmapSize < maxBitmapSize);
 	}
@@ -772,8 +775,8 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM)
 				.performCloseToolOptions();
 
-		final float zoomFactor = PaintroidApplication.perspective.getScaleForCenterBitmap() * .25f;
-		PaintroidApplication.perspective.setScale(zoomFactor);
+		final float zoomFactor = perspective.getScaleForCenterBitmap() * .25f;
+		perspective.setScale(zoomFactor);
 
 		PointF dragFrom = getSurfacePointFromCanvasPoint(new PointF(initialWidth, initialHeight));
 		PointF dragTo = getSurfacePointFromCanvasPoint(new PointF(maxWidth + 10, initialHeight));
@@ -804,9 +807,9 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		height = getWorkingBitmap().getHeight();
+		height = layerModel.getCurrentLayer().getBitmap().getHeight();
 		pixels = new int[height];
-		getWorkingBitmap().getPixels(pixels, 0, 1, 0, 0, 1, height);
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixels, 0, 1, 0, 0, 1, height);
 		for (int pixel : pixels) {
 			assertEquals(Color.TRANSPARENT, pixel);
 		}
@@ -815,10 +818,10 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		width = getWorkingBitmap().getWidth();
-		height = getWorkingBitmap().getHeight();
+		width = layerModel.getCurrentLayer().getBitmap().getWidth();
+		height = layerModel.getCurrentLayer().getBitmap().getHeight();
 		pixels = new int[height];
-		getWorkingBitmap().getPixels(pixels, 0, 1, width - 1, 0, 1, height);
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixels, 0, 1, width - 1, 0, 1, height);
 		for (int pixel : pixels) {
 			assertEquals(Color.TRANSPARENT, pixel);
 		}
@@ -827,9 +830,9 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		width = getWorkingBitmap().getWidth();
+		width = layerModel.getCurrentLayer().getBitmap().getWidth();
 		pixels = new int[width];
-		getWorkingBitmap().getPixels(pixels, 0, width, 0, 0, width, 1);
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixels, 0, width, 0, 0, width, 1);
 		for (int pixel : pixels) {
 			assertEquals(Color.TRANSPARENT, pixel);
 		}
@@ -838,10 +841,10 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		width = getWorkingBitmap().getWidth();
-		height = getWorkingBitmap().getHeight();
+		width = layerModel.getCurrentLayer().getBitmap().getWidth();
+		height = layerModel.getCurrentLayer().getBitmap().getHeight();
 		pixels = new int[width];
-		getWorkingBitmap().getPixels(pixels, 0, width, 0, height - 1, width, 1);
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixels, 0, width, 0, height - 1, width, 1);
 		for (int pixel : pixels) {
 			assertEquals(Color.TRANSPARENT, pixel);
 		}
@@ -881,7 +884,7 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM)
 				.performCloseToolOptions();
 
-		PaintroidApplication.perspective.multiplyScale(.25f);
+		perspective.multiplyScale(.25f);
 
 		setToolPosition(initialWidth + initialHeight / 2,
 				initialHeight + initialHeight / 2);
@@ -901,7 +904,7 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM)
 				.performCloseToolOptions();
 
-		PaintroidApplication.perspective.multiplyScale(.25f);
+		perspective.multiplyScale(.25f);
 
 		setToolPosition(initialWidth + initialHeight / 2,
 				initialHeight + initialHeight / 2);
@@ -963,7 +966,8 @@ public class TransformToolIntegrationTest {
 
 	@Test
 	public void testRotateLeft() {
-		selectColorPickerPresetSelectorColor(GREEN_COLOR_PICKER_BUTTON_POSITION);
+		onToolProperties()
+				.setColorResource(R.color.pocketpaint_color_picker_green1);
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT));
 
@@ -976,7 +980,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -987,7 +991,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -998,7 +1002,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -1009,12 +1013,13 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 	}
 
 	@Test
 	public void testRotateRight() {
-		selectColorPickerPresetSelectorColor(GREEN_COLOR_PICKER_BUTTON_POSITION);
+		onToolProperties()
+				.setColorResource(R.color.pocketpaint_color_picker_green1);
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT));
 
@@ -1027,7 +1032,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -1038,7 +1043,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -1049,7 +1054,7 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -1060,14 +1065,15 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 	}
 
 	@Test
 	public void testRotateMultipleColors() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT));
-		selectColorPickerPresetSelectorColor(GREEN_COLOR_PICKER_BUTTON_POSITION);
+		onToolProperties()
+				.setColorResource(R.color.pocketpaint_color_picker_green1);
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT));
 
@@ -1080,11 +1086,11 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT));
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -1095,11 +1101,11 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT));
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -1110,11 +1116,11 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT));
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
@@ -1125,11 +1131,11 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT));
 		onToolProperties()
-				.checkColor(Color.BLACK);
+				.checkMatchesColor(Color.BLACK);
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT));
 		onToolProperties()
-				.checkColorResource(R.color.pocketpaint_color_chooser_green1);
+				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 	}
 
 	@Test
@@ -1188,5 +1194,141 @@ public class TransformToolIntegrationTest {
 
 		onDrawingSurfaceView()
 				.checkLayerDimensions(initialHeight, initialWidth);
+	}
+
+	@Test
+	public void testCropWithClickOutsideToolbox() {
+
+		Bitmap workingBitmap;
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT));
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_RIGHT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT));
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+
+		onTransformToolOptionsView()
+				.performAutoCrop();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
+		initialWidth = workingBitmap.getWidth();
+		initialHeight = workingBitmap.getHeight();
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.LEFT_MIDDLE,
+						DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_LEFT));
+
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
+		assertThat(workingBitmap.getWidth(), lessThan(initialWidth));
+		assertThat(workingBitmap.getHeight(), equalTo(initialHeight));
+		initialWidth = workingBitmap.getWidth();
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.RIGHT_MIDDLE,
+						DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_RIGHT));
+
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
+		assertThat(workingBitmap.getWidth(), lessThan(initialWidth));
+		assertThat(workingBitmap.getHeight(), equalTo(initialHeight));
+		initialWidth = workingBitmap.getWidth();
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE,
+						DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_BOTTOM));
+
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
+		assertThat(workingBitmap.getHeight(), lessThan(initialHeight));
+		assertThat(workingBitmap.getWidth(), equalTo(initialWidth));
+		initialHeight = workingBitmap.getHeight();
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.TOP_MIDDLE,
+						DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_TOP));
+
+		workingBitmap = layerModel.getCurrentLayer().getBitmap();
+		assertThat(workingBitmap.getHeight(), lessThan(initialHeight));
+		assertThat(workingBitmap.getWidth(), equalTo(initialWidth));
+	}
+
+	@Test
+	public void testResizeImage() {
+		int width = layerModel.getWidth();
+		int height = layerModel.getHeight();
+
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.moveSliderTo(50);
+		onTransformToolOptionsView()
+				.performApplyResize();
+
+		int newWidth = (int) ((float) width / 100 * 50);
+		int newHeight = (int) ((float) height / 100 * 50);
+
+		assertEquals(newWidth, layerModel.getWidth());
+		assertEquals(newHeight, layerModel.getHeight());
+	}
+
+	@Test
+	public void testTryResizeImageToSizeZero() {
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.moveSliderTo(1);
+		onTransformToolOptionsView()
+				.performApplyResize();
+		onTransformToolOptionsView()
+				.moveSliderTo(1);
+		onTransformToolOptionsView()
+				.performApplyResize();
+
+		waitForToast(withText(R.string.resize_cannot_resize_to_this_size), 1000);
+	}
+
+	@Test
+	public void testSeekBarAndTextViewTheSame() {
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+
+		SeekBar seekBar = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_transform_resize_seekbar);
+		int progress = seekBar.getProgress();
+
+		onTransformToolOptionsView()
+				.checkPercetageTextMatches(progress);
+
+		onTransformToolOptionsView()
+				.moveSliderTo(1);
+
+		progress = seekBar.getProgress();
+		onTransformToolOptionsView()
+				.checkPercetageTextMatches(progress);
+
+		onTransformToolOptionsView()
+				.performApplyResize();
+		onTransformToolOptionsView()
+				.moveSliderTo(50);
+
+		progress = seekBar.getProgress();
+		onTransformToolOptionsView()
+				.checkPercetageTextMatches(progress);
+
+		onTransformToolOptionsView()
+				.performApplyResize();
+
+		progress = seekBar.getProgress();
+		onTransformToolOptionsView()
+				.checkPercetageTextMatches(progress);
 	}
 }

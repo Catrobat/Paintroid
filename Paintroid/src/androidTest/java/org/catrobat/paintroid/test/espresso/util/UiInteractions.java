@@ -112,10 +112,6 @@ public final class UiInteractions {
 
 			@Override
 			public void perform(UiController uiController, View view) {
-				if (!(view instanceof SeekBar)) {
-					return;
-				}
-
 				((SeekBar) view).setProgress(progress);
 			}
 		};
@@ -145,8 +141,7 @@ public final class UiInteractions {
 	}
 
 	public static ViewAction touchAt(final CoordinatesProvider provider) {
-		return actionWithAssertions(
-				new GeneralClickAction(Tap.SINGLE, provider, Press.FINGER, 0, 0));
+		return touchAt(provider, Tap.SINGLE);
 	}
 
 	public static ViewAction touchAt(final PointF coordinates) {
@@ -161,12 +156,21 @@ public final class UiInteractions {
 		return touchAt(x, y, Tap.SINGLE);
 	}
 
+	public static ViewAction touchLongAt(final CoordinatesProvider provider) {
+		return touchAt(provider, Tap.LONG);
+	}
+
 	public static ViewAction touchLongAt(final PointF coordinates) {
 		return touchAt(coordinates, Tap.LONG);
 	}
 
 	public static ViewAction touchLongAt(final float x, final float y) {
 		return touchAt(x, y, Tap.LONG);
+	}
+
+	public static ViewAction touchAt(final CoordinatesProvider provider, final Tapper tapStyle) {
+		return actionWithAssertions(
+				new GeneralClickAction(tapStyle, provider, Press.FINGER, 0, 0));
 	}
 
 	public static ViewAction touchAt(final PointF coordinates, final Tapper tapStyle) {

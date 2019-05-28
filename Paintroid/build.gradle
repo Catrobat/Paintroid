@@ -79,6 +79,7 @@ android {
 
     buildTypes {
         release {
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         signedRelease {
@@ -95,8 +96,7 @@ android {
     lintOptions {
         // specific ignores should be defined via lint.xml file
         lintConfig file('config/lint.xml')
-        ignore 'ClickableViewAccessibility', 'ContentDescription',
-                'StaticFieldLeak', 'GradleDependency', 'OldTargetApi'
+        ignore 'ClickableViewAccessibility', 'StaticFieldLeak', 'GradleDependency', 'OldTargetApi'
 
         textReport true
         xmlReport true
@@ -107,9 +107,10 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation "com.android.support:appcompat-v7:$androidSupportLibraryVersion"
+    implementation "com.android.support:design:$androidSupportLibraryVersion"
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.11.0'
+    implementation project(':colorpicker')
     debugImplementation 'com.android.support:multidex:1.0.3'
 
     testImplementation 'junit:junit:4.12'
@@ -142,6 +143,8 @@ publish {
     licences = ['AGPL-V3']
     desc = 'A graphical paint editor library for Android'
     website = 'https://github.com/Catrobat/Paintroid'
+    issueTracker = 'https://jira.catrob.at/browse/PAINTROID'
+    repository = "${website}.git"
 }
 
 if (project.hasProperty('jenkins')) {

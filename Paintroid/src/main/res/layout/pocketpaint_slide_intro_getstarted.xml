@@ -49,5 +49,6 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/pocketpaint_image_getstarded"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:contentDescription="@string/pocketpaint_intro" />
 </RelativeLayout>

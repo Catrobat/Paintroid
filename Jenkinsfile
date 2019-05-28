@@ -5,8 +5,6 @@ def reports = 'Paintroid/build/reports'
 // place the cobertura xml relative to the source, so that the source can be found
 def javaSrc = 'Paintroid/src/main/java'
 
-def debugApk = 'app/build/outputs/apk/debug/app-debug.apk'
-
 def junitAndCoverage(String jacocoXmlFile, String coverageName, String javaSrcLocation) {
     // Consume all test xml files. Otherwise tests would be tracked multiple
     // times if this function was called again.
@@ -56,7 +54,8 @@ pipeline {
         stage('Build Debug-APK') {
             steps {
                 sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
-                archiveArtifacts debugApk
+                renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                archiveArtifacts 'app/build/outputs/apk/debug/app-debug*.apk'
                 plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
                 plot csvFileName: 'apksize.csv', csvSeries: [[displayTableFlag: false, exclusionValues: 'kilobytes', file: 'Paintroid/build/outputs/apksize/*/*.csv', inclusionFlag: 'INCLUDE_BY_STRING', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'APK Size'
             }
@@ -69,9 +68,10 @@ pipeline {
 
             post {
                 always {
-                    pmd         canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "$reports/pmd.xml",        unHealthy: '', unstableTotalAll: '0'
-                    checkstyle  canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "$reports/checkstyle.xml", unHealthy: '', unstableTotalAll: '0'
-                    androidLint canComputeNew: false, canRunOnFailed: true, defaultEncoding: '', healthy: '', pattern: "$reports/lint*.xml",      unHealthy: '', unstableTotalAll: '0'
+                    recordIssues aggregatingResults: true, enabledForFailure: true, qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]],
+                                 tools: [androidLintParser(pattern: "$reports/lint*.xml"),
+                                         checkStyle(pattern: "$reports/checkstyle.xml"),
+                                         pmdParser(pattern: "$reports/pmd.xml")]
                 }
             }
         }

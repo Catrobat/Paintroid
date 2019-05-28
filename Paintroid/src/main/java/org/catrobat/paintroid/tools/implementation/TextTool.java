@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -28,18 +27,17 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ToggleButton;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.listener.TextToolOptionsListener;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.TextToolOptions;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 
 public class TextTool extends BaseToolWithRectangleShape {
 
@@ -65,8 +63,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private final Typeface stc;
 	private final Typeface dubai;
 
-	private TextToolOptionsListener textToolOptionsListener;
-
 	@VisibleForTesting
 	public String text = "";
 	@VisibleForTesting
@@ -79,92 +75,39 @@ public class TextTool extends BaseToolWithRectangleShape {
 	public boolean bold = false;
 	@VisibleForTesting
 	public int textSize = 20;
+	private TextToolOptions textToolOptions;
 
-	public TextTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public TextTool(TextToolOptions textToolOptions, ContextCallback contextCallback, final ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+
+		this.textToolOptions = textToolOptions;
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
 
-		stc = ResourcesCompat.getFont(context, R.font.stc_regular);
-		dubai = ResourcesCompat.getFont(context, R.font.dubai);
+		stc = contextCallback.getFont(R.font.stc_regular);
+		dubai = contextCallback.getFont(R.font.dubai);
 
 		textPaint = new Paint();
 		initializePaint();
 
 		createAndSetBitmap();
 		resetBoxPosition();
-	}
 
-	private void initializePaint() {
-		textPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
+		toolOptionsController.setCallback(new ToolOptionsController.Callback() {
+			@Override
+			public void onHide() {
+				createAndSetBitmap();
+			}
 
-		textPaint.setColor(CANVAS_PAINT.getColor());
-		textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
-		textPaint.setUnderlineText(underlined);
-		textPaint.setFakeBoldText(bold);
+			@Override
+			public void onShow() {
+				createAndSetBitmap();
+			}
+		});
 
-		updateTypeface();
-	}
-
-	private void createAndSetBitmap() {
-		String[] multilineText = getMultilineText();
-		float textDescent = textPaint.descent();
-		float textAscent = textPaint.ascent();
-
-		float upperBoxEdge = toolPosition.y - boxHeight / 2.0f;
-		float textHeight = textDescent - textAscent;
-		boxHeight = textHeight * multilineText.length + 2 * BOX_OFFSET;
-		toolPosition.y = upperBoxEdge + boxHeight / 2.0f;
-
-		float maxTextWidth = 0;
-		for (String str : multilineText) {
-			maxTextWidth = Math.max(maxTextWidth, textPaint.measureText(str));
-		}
-		boxWidth = maxTextWidth + 2 * BOX_OFFSET;
-
-		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
-				Bitmap.Config.ARGB_8888);
-		Canvas drawCanvas = new Canvas(bitmap);
-
-		for (int i = 0; i < multilineText.length; i++) {
-			drawCanvas.drawText(multilineText[i], BOX_OFFSET, BOX_OFFSET - textAscent + textHeight * i, textPaint);
-		}
-
-		setBitmap(bitmap);
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle bundle) {
-		super.onSaveInstanceState(bundle);
-		bundle.putBoolean(BUNDLE_TOOL_UNDERLINED, underlined);
-		bundle.putBoolean(BUNDLE_TOOL_ITALIC, italic);
-		bundle.putBoolean(BUNDLE_TOOL_BOLD, bold);
-		bundle.putString(BUNDLE_TOOL_TEXT, text);
-		bundle.putInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
-		bundle.putString(BUNDLE_TOOL_FONT, font);
-	}
-
-	@Override
-	public void onRestoreInstanceState(Bundle bundle) {
-		super.onRestoreInstanceState(bundle);
-		underlined = bundle.getBoolean(BUNDLE_TOOL_UNDERLINED, underlined);
-		italic = bundle.getBoolean(BUNDLE_TOOL_ITALIC, italic);
-		bold = bundle.getBoolean(BUNDLE_TOOL_BOLD, bold);
-		text = bundle.getString(BUNDLE_TOOL_TEXT, text);
-		textSize = bundle.getInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
-		font = bundle.getString(BUNDLE_TOOL_FONT, font);
-
-		textToolOptionsListener.setState(bold, italic, underlined, text, textSize, font);
-		textPaint.setUnderlineText(underlined);
-		textPaint.setFakeBoldText(bold);
-		updateTypeface();
-		createAndSetBitmap();
-	}
-
-	private void setupOnTextToolDialogChangedListener() {
-		TextToolOptionsListener.OnTextToolOptionsChangedListener onTextToolOptionsChangedListener =
-				new TextToolOptionsListener.OnTextToolOptionsChangedListener() {
+		TextToolOptions.Callback callback =
+				new TextToolOptions.Callback() {
 					@Override
 					public void setText(String text) {
 						TextTool.this.text = text;
@@ -205,8 +148,79 @@ public class TextTool extends BaseToolWithRectangleShape {
 						textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
 						createAndSetBitmap();
 					}
+
+					@Override
+					public void hideToolOptions() {
+						toolOptionsController.hideAnimated();
+					}
 				};
-		textToolOptionsListener.setOnTextToolOptionsChangedListener(onTextToolOptionsChangedListener);
+
+		textToolOptions.setCallback(callback);
+	}
+
+	private void initializePaint() {
+		textPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
+
+		textPaint.setColor(toolPaint.getPreviewColor());
+		textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
+		textPaint.setUnderlineText(underlined);
+		textPaint.setFakeBoldText(bold);
+
+		updateTypeface();
+	}
+
+	private void createAndSetBitmap() {
+		String[] multilineText = getMultilineText();
+		float textDescent = textPaint.descent();
+		float textAscent = textPaint.ascent();
+
+		float upperBoxEdge = toolPosition.y - boxHeight / 2.0f;
+		float textHeight = textDescent - textAscent;
+		boxHeight = textHeight * multilineText.length + 2 * BOX_OFFSET;
+		toolPosition.y = upperBoxEdge + boxHeight / 2.0f;
+
+		float maxTextWidth = 0;
+		for (String str : multilineText) {
+			maxTextWidth = Math.max(maxTextWidth, textPaint.measureText(str));
+		}
+		boxWidth = maxTextWidth + 2 * BOX_OFFSET;
+
+		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight, Bitmap.Config.ARGB_8888);
+		Canvas drawCanvas = new Canvas(bitmap);
+
+		for (int i = 0; i < multilineText.length; i++) {
+			drawCanvas.drawText(multilineText[i], BOX_OFFSET, BOX_OFFSET - textAscent + textHeight * i, textPaint);
+		}
+
+		setBitmap(bitmap);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle bundle) {
+		super.onSaveInstanceState(bundle);
+		bundle.putBoolean(BUNDLE_TOOL_UNDERLINED, underlined);
+		bundle.putBoolean(BUNDLE_TOOL_ITALIC, italic);
+		bundle.putBoolean(BUNDLE_TOOL_BOLD, bold);
+		bundle.putString(BUNDLE_TOOL_TEXT, text);
+		bundle.putInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
+		bundle.putString(BUNDLE_TOOL_FONT, font);
+	}
+
+	@Override
+	public void onRestoreInstanceState(Bundle bundle) {
+		super.onRestoreInstanceState(bundle);
+		underlined = bundle.getBoolean(BUNDLE_TOOL_UNDERLINED, underlined);
+		italic = bundle.getBoolean(BUNDLE_TOOL_ITALIC, italic);
+		bold = bundle.getBoolean(BUNDLE_TOOL_BOLD, bold);
+		text = bundle.getString(BUNDLE_TOOL_TEXT, text);
+		textSize = bundle.getInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
+		font = bundle.getString(BUNDLE_TOOL_FONT, font);
+
+		textToolOptions.setState(bold, italic, underlined, text, textSize, font);
+		textPaint.setUnderlineText(underlined);
+		textPaint.setFakeBoldText(bold);
+		updateTypeface();
+		createAndSetBitmap();
 	}
 
 	private void updateTypeface() {
@@ -253,7 +267,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		float width = boxWidth;
 		float height = boxHeight;
 		PointF position = new PointF(toolPosition.x, toolPosition.y);
-		textPaint.setColor(CANVAS_PAINT.getColor());
+		textPaint.setColor(toolPaint.getPreviewColor());
 		createAndSetBitmap();
 		toolPosition.set(position);
 		boxWidth = width;
@@ -275,45 +289,34 @@ public class TextTool extends BaseToolWithRectangleShape {
 		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
 		Command command = commandFactory.createTextToolCommand(getMultilineText(), textPaint, BOX_OFFSET, boxWidth,
 				boxHeight, toolPosition, boxRotation);
-		PaintroidApplication.commandManager.addCommand(command);
+		commandManager.addCommand(command);
 	}
 
 	@VisibleForTesting
 	public void resetBoxPosition() {
-		DrawingSurface surface = PaintroidApplication.drawingSurface;
-		toolPosition.x = surface.getBitmapWidth() / 2.0f;
+		toolPosition.x = workspace.getWidth() / 2.0f;
 		toolPosition.y = boxHeight / 2.0f + MARGIN_TOP;
 	}
 
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = LayoutInflater.from(context);
-		View textToolOptionsView = inflater.inflate(R.layout.dialog_pocketpaint_text_tool, toolSpecificOptionsLayout);
-
-		ToggleButton underlinedButton = (ToggleButton) textToolOptionsView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
-		underlinedButton.setPaintFlags(underlinedButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
-		textToolOptionsListener = new TextToolOptionsListener(context, textToolOptionsView);
-		setupOnTextToolDialogChangedListener();
-
 		toolSpecificOptionsLayout.post(new Runnable() {
 			@Override
 			public void run() {
-				toggleShowToolOptions();
+				toolOptionsController.showAnimated();
 			}
 		});
 	}
 
 	@Override
-	public void toggleShowToolOptions() {
-		super.toggleShowToolOptions();
-		createAndSetBitmap();
+	public void setDrawPaint(Paint paint) {
+		super.setDrawPaint(paint);
+		textPaint.setColor(toolPaint.getPreviewColor());
 	}
 
 	@Override
-	public void setDrawPaint(Paint paint) {
-		super.setDrawPaint(paint);
-		textPaint.setColor(CANVAS_PAINT.getColor());
+	public ToolType getToolType() {
+		return ToolType.TEXT;
 	}
 
 	@Override

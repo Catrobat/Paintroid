@@ -53,22 +53,22 @@ public class NavigationViewViewHolder implements MainActivityContracts.Navigatio
 	}
 
 	@Override
-	public void showExitFullScreen() {
+	public void showExitFullscreen() {
 		navigationMenuExitFullscreen.setVisible(true);
 	}
 
 	@Override
-	public void hideExitFullScreen() {
+	public void hideExitFullscreen() {
 		navigationMenuExitFullscreen.setVisible(false);
 	}
 
 	@Override
-	public void showEnterFullScreen() {
+	public void showEnterFullscreen() {
 		navigationMenuEnterFullscreen.setVisible(true);
 	}
 
 	@Override
-	public void hideEnterFullScreen() {
+	public void hideEnterFullscreen() {
 		navigationMenuEnterFullscreen.setVisible(false);
 	}
 }

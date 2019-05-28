@@ -1,18 +1,18 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -57,9 +57,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getDescendantView;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.shouldStartSequence;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.selectViewPagerPage;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.isNotVisible;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
@@ -172,6 +171,22 @@ public final class IntroUtils {
 		}
 
 		throw new IndexOutOfBoundsException("No Index Found");
+	}
+
+	public static View getDescendantView(int ancestorResource, int targetResource, Activity activity) {
+		return activity.findViewById(ancestorResource).findViewById(targetResource);
+	}
+
+	public static void changeIntroPage(int page) {
+		onView(withId(R.id.pocketpaint_view_pager)).perform(selectViewPagerPage(page));
+	}
+
+	public static void checkViewMatchesText(final int viewResourceId, final int stringResourceId) {
+		onView(withId(viewResourceId)).check(matches(withText(stringResourceId)));
+	}
+
+	public static void shouldStartSequence(boolean start) {
+		TapTargetTopBar.firsTimeSequence = start;
 	}
 
 	private enum TapTargetTextType {

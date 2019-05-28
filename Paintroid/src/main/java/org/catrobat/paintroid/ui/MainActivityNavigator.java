@@ -32,10 +32,11 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
+import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.common.Constants;
+import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
@@ -45,16 +46,18 @@ import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDialogType;
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
-import org.catrobat.paintroid.dialog.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.tools.ToolReference;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
 public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	private MainActivity mainActivity;
+	private final ToolReference toolReference;
 
-	public MainActivityNavigator(MainActivity mainActivity) {
+	public MainActivityNavigator(MainActivity mainActivity, ToolReference toolReference) {
 		this.mainActivity = mainActivity;
+		this.toolReference = toolReference;
 	}
 
 	@Override
@@ -62,7 +65,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
 		Fragment fragment = fragmentManager.findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
 		if (fragment == null) {
-			ColorPickerDialog dialog = ColorPickerDialog.newInstance(PaintroidApplication.currentTool.getDrawPaint().getColor());
+			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor());
 			setupColorPickerDialogListeners(dialog);
 			dialog.show(fragmentManager, Constants.COLOR_PICKER_DIALOG_TAG);
 		}
@@ -72,14 +75,14 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		dialog.addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
-				PaintroidApplication.currentTool.changePaintColor(color);
+				toolReference.get().changePaintColor(color);
 				mainActivity.getPresenter().setTopBarColor(color);
 			}
 		});
 	}
 
 	@Override
-	public void startLoadImageActivity(int requestCode) {
+	public void startLoadImageActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -87,7 +90,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void startImportImageActivity(int requestCode) {
+	public void startImportImageActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -95,10 +98,10 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void startWelcomeActivity() {
+	public void startWelcomeActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(mainActivity.getApplicationContext(), WelcomeActivity.class);
 		intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-		mainActivity.startActivity(intent);
+		mainActivity.startActivityForResult(intent, requestCode);
 	}
 
 	@Override
@@ -182,11 +185,6 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void finishActivity() {
 		mainActivity.finish();
-	}
-
-	@Override
-	public void recreateActivity() {
-		mainActivity.recreate();
 	}
 
 	@Override

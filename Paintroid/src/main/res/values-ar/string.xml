@@ -34,12 +34,14 @@
     <string name="button_line">خط رسم</string>
     <string name="button_text">النص</string>
     <string name="button_shape">الأشكال</string>
+    <string name="button_scroll_left">Scroll left</string>
+    <string name="button_scroll_right">Scroll right</string>
+    <string name="button_layers">طبقات</string>
+    <string name="button_hand">Hand</string>
+    <string name="button_apply">تطبيق</string>
     <string name="done">موافق</string>
-    <string name="color_chooser_title">مُنتقي اللون</string>
-    <string name="color_red">أحمر</string>
-    <string name="color_green">أخضر</string>
-    <string name="color_blue">أزرق</string>
-    <string name="color_alpha">ألفا</string>
+    <string name="cap_circle">Circle</string>
+    <string name="cap_square">Square</string>
     <string name="dialog_tools_title">أدوات</string>
     <string name="dialog_error_save_title">خطأ في استيراد/حفظ الملف</string>
     <string name="dialog_error_sdcard_text">تحقق من بطاقة الذاكرة SD أو الصورة!</string>
@@ -61,11 +63,12 @@
     <string name="help_content_shape">اختر شكل و اضغط عليه ليتم إدراج الشكل المحدد</string>
     <string name="help_content_layer">إنشاء طبقات جديدة أو تعديل أحد الطبقات الحالية</string>
     <string name="help_content_color_chooser">تحديد أو ضبط اللون</string>
+    <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="closing_security_question_title">إنهاء/خروج</string>
     <string name="closing_security_question">حفظ التغييرات؟</string>
     <string name="closing_catroid_security_question_title">الرجوع إلى البرنامج</string>
     <string name="menu_new_image">صورة جديدة</string>
-    <string name="menu_discard_image">Discard image</string>
+    <string name="menu_discard_image">تجاهل التغييرات</string>
     <string name="menu_load_image">استيراد صورة</string>
     <string name="menu_save_image">حفظ الصورة</string>
     <string name="menu_save_copy">حفظ كـ نسخة</string>
@@ -80,6 +83,7 @@
     <string name="save_button_text">حفظ</string>
     <string name="discard_button_text">تجاهل</string>
     <string name="resize_nothing_to_resize">لا يوجد شيء لتغيير حجمه</string>
+    <string name="resize_cannot_resize_to_this_size">cannot resize to this size</string>
     <string name="resize_max_image_resolution_reached">الوصول الى الحد الأقصى لدقة الشاشة</string>
     <string name="text_tool_dialog_input_title">النص الخاص بك:</string>
     <string name="text_tool_dialog_format_options">خيارات التنسيق:</string>
@@ -91,7 +95,12 @@
     <string name="shape_tool_dialog_fill_title">تعبئة</string>
     <string name="shape_tool_dialog_outline_title">خط محيطي</string>
     <string name="fill_tool_dialog_color_tolerance_title">تفاوت اللون</string>
-    <string name="transform_tool_auto_crop_text">قص</string>
+    <string name="transform_tool_rotate_left">rotate left</string>
+    <string name="transform_tool_rotate_right">rotate right</string>
+    <string name="transform_tool_flip_vertical">flip vertical</string>
+    <string name="transform_tool_flip_horizontal">flip horizontal</string>
+    <string name="transform_tool_resize_text">resize</string>
+    <string name="transform_tool_auto_crop_text">crop/enlarge</string>
     <string name="transform_width_text">العرض</string>
     <string name="transform_height_text">الارتفاع</string>
     <string name="pixel">بكسل</string>
@@ -101,6 +110,7 @@
     <string name="layer_delete">حذف الطبقة</string>
     <string name="layer_too_many_layers">طبقات عديدة</string>
     <string name="layer_merged">تم دمج الطبقات</string>
+    <string name="layer_background">Layer background</string>
     <string name="dialog_shape_text">الشكل</string>
     <string name="dialog_loading_image_failed_title">خطأ في استيراد الصورة</string>
     <string name="dialog_loading_image_failed_text">ليس ملف صورة صالح</string>
@@ -128,4 +138,7 @@
     <string name="pocketpaint_about_content">بوكت بينت هو مكتبة تحرير صور وهو جزء من مشروع الكاتروبات.\n\n كاتروبات هو لغة برمجة مرئية ومجموعة من أدوات الإبداع للأجهزة الذكية والأجهزة اللوحية، ومستعرضات الهاتف.\n\n النص المصدري لبرمجية \"بوكت بينت\" مرخص ومحمي تحت %s.\n لمعرفة تفاصيل أدق حول الرخصة قم بزيارة الرابط في الأسفل.\n\n.</string>
     <string name="pocketpaint_about_url_license_description">رخصة النص الأصلي لبرنامج بوكت بينت</string>
     <string name="pocketpaint_about_url_catrobat_description">حول كاتروبات</string>
+    <string name="pocketpaint_logo">Pocket Paint logo</string>
+    <string name="pocketpaint_intro">Intro</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
 </resources>

@@ -18,6 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,203 +29,177 @@
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="24dip"
-            android:layout_marginTop="0dp"
-            android:text="@string/transform_tool_auto_crop_text"
-            android:textAllCaps="true"
-            android:textColor="@color/pocketpaint_colorAccent"
-            android:textStyle="bold" />
+            style="@style/PocketPaintToolSubtitle"
+            android:text="@string/transform_tool_auto_crop_text" />
 
-        <View style="@style/PocketPaintDividerHorizontal"/>
+        <View style="@style/PocketPaintToolSectionDivider"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin="15dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:weightSum="5"
-            android:baselineAligned="false">
-
-            <TableRow
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
+        <LinearLayout style="@style/PocketPaintToolSection">
 
             <ImageButton
                 android:id="@+id/pocketpaint_transform_auto_crop_btn"
                 style="?android:borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_pocketpaint_tool_resize_adjust"
+                android:theme="@style/PocketPaintHighlightColorTheme"
+                android:contentDescription="@string/transform_tool_auto_crop_text" />
+
+            <Space style="@style/PocketPaintToolHorizontalSpace" />
+
+            <TextView
+                android:id="@+id/pocketpaint_transform_width_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/pocketpaint_transform_width_value"
+                android:text="@string/transform_width_text"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/pocketpaint_transform_width_value"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:minHeight="0dp"
-                android:padding="2dp"
-                android:src="@drawable/ic_pocketpaint_tool_resize_adjust"
-                android:theme="@style/PocketPaintHighlightColorTheme" />
-            </TableRow>
+                android:layout_weight="4"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:textAlignment="textEnd"
+                android:textColor="@color/pocketpaint_colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="100" />
 
-            <TableRow
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/pixel" />
+
+            <Space style="@style/PocketPaintToolHorizontalSpace"
+                android:layout_width="16dp" />
+
+            <TextView
+                android:id="@+id/pocketpaint_transform_height_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/pocketpaint_transform_height_value"
+                android:text="@string/transform_height_text"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/pocketpaint_transform_height_value"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:weightSum="2.5"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:textAlignment="textEnd"
+                android:textColor="@color/pocketpaint_colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="100" />
 
-                <TextView
-                    android:id="@+id/pocketpaint_transform_width_text"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:labelFor="@+id/pocketpaint_transform_width_value"
-                    android:layout_weight="1"
-                    android:text="@string/transform_width_text"
-                    android:textSize="14sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="@string/pixel" />
 
-                <EditText
-                    android:id="@+id/pocketpaint_transform_width_value"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:layout_weight="1"
-                    android:textColor="@color/pocketpaint_colorAccent"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textSize="14sp"
-                    android:layout_weight="0.5"
-                    android:text="@string/pixel" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:weightSum="2.5"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/pocketpaint_transform_height_text"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:labelFor="@+id/pocketpaint_transform_height_value"
-                    android:layout_weight="1"
-                    android:text="@string/transform_height_text"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/pocketpaint_transform_height_value"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:imeOptions="actionDone"
-                    android:layout_weight="1"
-                    android:inputType="number"
-                    android:textColor="@color/pocketpaint_colorAccent"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.5"
-                    android:textSize="14sp"
-                    android:text="@string/pixel" />
-            </TableRow>
-
+            <Space style="@style/PocketPaintToolHorizontalSpace" />
         </LinearLayout>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="24dip"
-            android:layout_marginTop="5dp"
-            android:text="@string/button_transform"
-            android:textAllCaps="true"
-            android:textColor="@color/pocketpaint_colorAccent"
-            android:textStyle="bold" />
+            style="@style/PocketPaintToolSubtitle"
+            android:text="@string/transform_tool_resize_text" />
 
-        <View style="@style/PocketPaintDividerHorizontal"/>
+        <View style="@style/PocketPaintToolSectionDivider"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin="15dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:weightSum="4">
+        <LinearLayout style="@style/PocketPaintToolSection">
+            <SeekBar
+                android:id="@+id/pocketpaint_transform_resize_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="100"
+                android:progress="100"
+                android:minHeight="30dip" />
 
+            <TextView
+                android:id="@+id/pocketpaint_transform_resize_percentage_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:saveEnabled="false"
+                android:textColor="@color/pocketpaint_colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="end"
+                android:text="100"
+                tools:ignore="HardCodedText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/pocketpaint_colorAccent"
+                android:text="%"
+                tools:ignore="HardcodedText"/>
+
+            <Space style="@style/PocketPaintToolHorizontalSpace"
+                android:layout_width="16dp" />
+
+            <Button
+                android:id="@+id/pocketpaint_transform_apply_resize_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_apply" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/PocketPaintToolSubtitle"
+            android:text="@string/button_transform" />
+
+        <View style="@style/PocketPaintToolSectionDivider"/>
+
+        <LinearLayout style="@style/PocketPaintToolSection">
             <ImageButton
                 android:id="@+id/pocketpaint_transform_rotate_left_btn"
                 style="?android:borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:minHeight="0dp"
-                android:padding="2dp"
                 android:src="@drawable/ic_pocketpaint_tool_rotate_left"
-                android:theme="@style/PocketPaintHighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme"
+                android:contentDescription="@string/transform_tool_rotate_left" />
 
             <ImageButton
                 android:id="@+id/pocketpaint_transform_rotate_right_btn"
                 style="?android:borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:minHeight="0dp"
-                android:padding="2dp"
                 android:src="@drawable/ic_pocketpaint_rotate_right"
-                android:theme="@style/PocketPaintHighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme"
+                android:contentDescription="@string/transform_tool_rotate_right" />
 
             <ImageButton
                 android:id="@+id/pocketpaint_transform_flip_vertical_btn"
                 style="?android:borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:minHeight="0dp"
-                android:padding="2dp"
                 android:src="@drawable/ic_pocketpaint_tool_flip_vertical"
-                android:theme="@style/PocketPaintHighlightColorTheme" />
+                android:theme="@style/PocketPaintHighlightColorTheme"
+                android:contentDescription="@string/transform_tool_flip_vertical" />
 
             <ImageButton
                 android:id="@+id/pocketpaint_transform_flip_horizontal_btn"
                 style="?android:borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:minHeight="0dp"
-                android:padding="2dp"
                 android:src="@drawable/ic_pocketpaint_tool_flip_horizontal"
-                android:theme="@style/PocketPaintHighlightColorTheme" />
-
-
+                android:theme="@style/PocketPaintHighlightColorTheme"
+                android:contentDescription="@string/transform_tool_flip_horizontal" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

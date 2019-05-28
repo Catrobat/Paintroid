@@ -59,8 +59,14 @@ import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.model.MainActivityModel;
 import org.catrobat.paintroid.presenter.LayerPresenter;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
+import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
+import org.catrobat.paintroid.tools.implementation.DefaultToolReference;
+import org.catrobat.paintroid.tools.implementation.DefaultWorkspace;
+import org.catrobat.paintroid.tools.options.ToolOptionsController;
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.KeyboardListener;
@@ -70,6 +76,7 @@ import org.catrobat.paintroid.ui.MainActivityInteractor;
 import org.catrobat.paintroid.ui.MainActivityNavigator;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.dragndrop.DragAndDropListView;
+import org.catrobat.paintroid.ui.tools.DefaultToolOptionsController;
 import org.catrobat.paintroid.ui.viewholder.BottomBarViewHolder;
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder;
 import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder;
@@ -96,10 +103,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	@VisibleForTesting
 	public MainActivityContracts.Model model;
+	@VisibleForTesting
+	public Perspective perspective;
+	@VisibleForTesting
+	public Workspace workspace;
+	@VisibleForTesting
+	public LayerContracts.Model layerModel;
+	@VisibleForTesting
+	public CommandManager commandManager;
+	@VisibleForTesting
+	public ToolPaint toolPaint;
+	@VisibleForTesting
+	public ToolReference toolReference;
+	@VisibleForTesting
+	public ToolOptionsController toolOptionsController;
+
 	private LayerPresenter layerPresenter;
 	private DrawingSurface drawingSurface;
-	private CommandManager commandManager;
-	private LayerContracts.Model layerModel;
 	private MainActivityContracts.Presenter presenter;
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
 	private Handler handler = new Handler();
@@ -136,9 +156,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		super.onCreate(savedInstanceState);
 
 		getAppFragment();
-		appFragment.setCacheDir(getCacheDir());
-		appFragment.setCheckeredBackgroundBitmap(BitmapFactory.decodeResource(getResources(), R.drawable
-				.pocketpaint_checkeredbg));
+		PaintroidApplication.cacheDir = getCacheDir();
+		PaintroidApplication.checkeredBackgroundBitmap =
+				BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
 		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();
@@ -155,14 +175,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			String pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME);
 			presenter.initializeFromCleanState(picturePath, pictureName);
 		} else {
-			boolean isFullScreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false);
+			boolean isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false);
 			boolean isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false);
 			boolean isOpenedFromCatroid = savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false);
 			boolean wasInitialAnimationPlayed = savedInstanceState.getBoolean(WAS_INITIAL_ANIMATION_PLAYED, false);
 			Uri savedPictureUri = savedInstanceState.getParcelable(SAVED_PICTURE_URI_KEY);
 			Uri cameraImageUri = savedInstanceState.getParcelable(CAMERA_IMAGE_URI_KEY);
 
-			presenter.restoreState(isFullScreen, isSaved, isOpenedFromCatroid,
+			presenter.restoreState(isFullscreen, isSaved, isOpenedFromCatroid,
 					wasInitialAnimationPlayed, savedPictureUri, cameraImageUri);
 		}
 
@@ -198,6 +218,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		} else {
 			commandManager = appFragment.getCommandManager();
 		}
+		if (appFragment.getToolPaint() == null) {
+			appFragment.setToolPaint(new DefaultToolPaint(getApplicationContext()));
+		}
+		toolPaint = appFragment.getToolPaint();
+		if (appFragment.getCurrentTool() == null) {
+			appFragment.setCurrentTool(new DefaultToolReference());
+		}
+		toolReference = appFragment.getCurrentTool();
 	}
 
 	private void onCreateMainView() {
@@ -206,16 +234,26 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		View bottomBarLayout = findViewById(R.id.pocketpaint_main_bottom_bar);
 		NavigationView navigationView = findViewById(R.id.pocketpaint_nav_view);
 
+		toolOptionsController = new DefaultToolOptionsController(this);
 		drawerLayoutViewHolder = new DrawerLayoutViewHolder(drawerLayout);
 		TopBarViewHolder topBarViewHolder = new TopBarViewHolder(topBarLayout);
 		BottomBarViewHolder bottomBarViewHolder = new BottomBarViewHolder(bottomBarLayout);
 		NavigationViewViewHolder navigationDrawerViewHolder = new NavigationViewViewHolder(navigationView);
 
-		MainActivityContracts.Navigator navigator = new MainActivityNavigator(this);
+		float density = getResources().getDisplayMetrics().density;
+		perspective = new Perspective(density, layerModel.getWidth(), layerModel.getHeight());
+		workspace = new DefaultWorkspace(layerModel, perspective, new DefaultWorkspace.Listener() {
+			@Override
+			public void invalidate() {
+				drawingSurface.refreshDrawingSurface();
+			}
+		});
+		MainActivityContracts.Navigator navigator = new MainActivityNavigator(this, toolReference);
 		MainActivityContracts.Interactor interactor = new MainActivityInteractor();
 		model = new MainActivityModel();
-		presenter = new MainActivityPresenter(this, model, navigator, interactor, topBarViewHolder,
-				bottomBarViewHolder, drawerLayoutViewHolder, navigationDrawerViewHolder, commandManager);
+		presenter = new MainActivityPresenter(this, model, workspace, toolReference, toolOptionsController,
+				navigator, interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
+				navigationDrawerViewHolder, commandManager, toolPaint, perspective);
 
 		keyboardListener = new KeyboardListener(drawerLayout);
 		setTopBarListeners(topBarViewHolder);
@@ -243,11 +281,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	private void onCreateDrawingSurface() {
 		drawingSurface = findViewById(R.id.pocketpaint_drawing_surface_view);
-		drawingSurface.setLayerModel(layerModel);
+		drawingSurface.setArguments(layerModel, perspective, toolReference, toolOptionsController);
 
-		DisplayMetrics metrics = getResources().getDisplayMetrics();
-		appFragment.setDrawingSurface(drawingSurface);
-		appFragment.setPerspective(new Perspective(drawingSurface.getHolder().getSurfaceFrame(), metrics.density));
+		appFragment.setPerspective(perspective);
 	}
 
 	private void setLayerMenuListeners(LayerMenuViewHolder layerMenuViewHolder) {
@@ -378,7 +414,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		commandManager.removeCommandListener(this);
 
 		if (isFinishing()) {
-			BaseTool.reset();
 			commandManager.shutdown();
 			appFragment.setCurrentTool(null);
 			appFragment.setCommandManager(null);
@@ -421,7 +456,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	protected void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putBoolean(IS_FULLSCREEN_KEY, model.isFullScreen());
+		outState.putBoolean(IS_FULLSCREEN_KEY, model.isFullscreen());
 		outState.putBoolean(IS_SAVED_KEY, model.isSaved());
 		outState.putBoolean(IS_OPENED_FROM_CATROID_KEY, model.isOpenedFromCatroid());
 		outState.putBoolean(WAS_INITIAL_ANIMATION_PLAYED, model.wasInitialAnimationPlayed());
@@ -475,14 +510,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	@Override
-	public void enterFullScreen() {
+	public void enterFullscreen() {
 		drawingSurface.disableAutoScroll();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 	}
 
 	@Override
-	public void exitFullScreen() {
+	public void exitFullscreen() {
 		drawingSurface.enableAutoScroll();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
