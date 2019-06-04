@@ -54,19 +54,25 @@ import org.catrobat.paintroid.command.implementation.DefaultCommandManager;
 import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.contract.MainActivityContracts;
+import org.catrobat.paintroid.controller.DefaultToolController;
+import org.catrobat.paintroid.controller.ToolController;
 import org.catrobat.paintroid.listener.BottomBarScrollListener;
+import org.catrobat.paintroid.listener.PresenterColorPickedListener;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.model.MainActivityModel;
 import org.catrobat.paintroid.presenter.LayerPresenter;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
+import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
+import org.catrobat.paintroid.tools.implementation.DefaultToolFactory;
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
 import org.catrobat.paintroid.tools.implementation.DefaultToolReference;
 import org.catrobat.paintroid.tools.implementation.DefaultWorkspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.KeyboardListener;
@@ -76,7 +82,7 @@ import org.catrobat.paintroid.ui.MainActivityInteractor;
 import org.catrobat.paintroid.ui.MainActivityNavigator;
 import org.catrobat.paintroid.ui.Perspective;
 import org.catrobat.paintroid.ui.dragndrop.DragAndDropListView;
-import org.catrobat.paintroid.ui.tools.DefaultToolOptionsController;
+import org.catrobat.paintroid.ui.tools.DefaultToolOptionsViewController;
 import org.catrobat.paintroid.ui.viewholder.BottomBarViewHolder;
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder;
 import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder;
@@ -116,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@VisibleForTesting
 	public ToolReference toolReference;
 	@VisibleForTesting
-	public ToolOptionsController toolOptionsController;
+	public ToolOptionsViewController toolOptionsViewController;
 
 	private LayerPresenter layerPresenter;
 	private DrawingSurface drawingSurface;
@@ -234,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		View bottomBarLayout = findViewById(R.id.pocketpaint_main_bottom_bar);
 		NavigationView navigationView = findViewById(R.id.pocketpaint_nav_view);
 
-		toolOptionsController = new DefaultToolOptionsController(this);
+		toolOptionsViewController = new DefaultToolOptionsViewController(this);
 		drawerLayoutViewHolder = new DrawerLayoutViewHolder(drawerLayout);
 		TopBarViewHolder topBarViewHolder = new TopBarViewHolder(topBarLayout);
 		BottomBarViewHolder bottomBarViewHolder = new BottomBarViewHolder(bottomBarLayout);
@@ -251,9 +257,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		MainActivityContracts.Navigator navigator = new MainActivityNavigator(this, toolReference);
 		MainActivityContracts.Interactor interactor = new MainActivityInteractor();
 		model = new MainActivityModel();
-		presenter = new MainActivityPresenter(this, model, workspace, toolReference, toolOptionsController,
+		ContextCallback contextCallback = new DefaultContextCallback(getApplicationContext());
+		ToolController toolController = new DefaultToolController(toolReference, toolOptionsViewController,
+				new DefaultToolFactory(), commandManager, workspace, toolPaint, contextCallback);
+		presenter = new MainActivityPresenter(this, model, workspace,
 				navigator, interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
-				navigationDrawerViewHolder, commandManager, toolPaint, perspective);
+				navigationDrawerViewHolder, new DefaultCommandFactory(), commandManager, perspective, toolController);
+		toolController.setOnColorPickedListener(new PresenterColorPickedListener(presenter));
 
 		keyboardListener = new KeyboardListener(drawerLayout);
 		setTopBarListeners(topBarViewHolder);
@@ -281,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	private void onCreateDrawingSurface() {
 		drawingSurface = findViewById(R.id.pocketpaint_drawing_surface_view);
-		drawingSurface.setArguments(layerModel, perspective, toolReference, toolOptionsController);
+		drawingSurface.setArguments(layerModel, perspective, toolReference, toolOptionsViewController);
 
 		appFragment.setPerspective(perspective);
 	}

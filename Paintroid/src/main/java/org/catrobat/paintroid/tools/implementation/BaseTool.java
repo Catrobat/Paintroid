@@ -38,7 +38,7 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 public abstract class BaseTool implements Tool {
 	protected final int scrollTolerance;
@@ -49,14 +49,14 @@ public abstract class BaseTool implements Tool {
 	protected CommandManager commandManager;
 	protected Workspace workspace;
 	protected ContextCallback contextCallback;
-	protected ToolOptionsController toolOptionsController;
+	protected ToolOptionsViewController toolOptionsViewController;
 	protected ToolPaint toolPaint;
 	protected Shader checkeredShader;
 
-	public BaseTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+	public BaseTool(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		this.contextCallback = contextCallback;
-		this.toolOptionsController = toolOptionsController;
+		this.toolOptionsViewController = toolOptionsViewController;
 		this.toolPaint = toolPaint;
 		this.workspace = workspace;
 		this.commandManager = commandManager;
@@ -67,7 +67,7 @@ public abstract class BaseTool implements Tool {
 		movedDistance = new PointF(0f, 0f);
 		previousEventCoordinate = new PointF(0f, 0f);
 
-		toolSpecificOptionsLayout = toolOptionsController.getToolSpecificOptionsLayout();
+		toolSpecificOptionsLayout = toolOptionsViewController.getToolSpecificOptionsLayout();
 	}
 
 	@Override

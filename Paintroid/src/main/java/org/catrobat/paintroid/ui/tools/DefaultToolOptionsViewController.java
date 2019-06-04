@@ -33,9 +33,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
-public class DefaultToolOptionsController implements ToolOptionsController {
+public class DefaultToolOptionsViewController implements ToolOptionsViewController {
 	private final Activity activity;
 
 	private final TextView toolOptionsTextView;
@@ -51,7 +51,7 @@ public class DefaultToolOptionsController implements ToolOptionsController {
 	private boolean enabled = true;
 	private Callback callback;
 
-	public DefaultToolOptionsController(Activity activity) {
+	public DefaultToolOptionsViewController(Activity activity) {
 		this.activity = activity;
 
 		drawingSurfaceView = activity.findViewById(R.id.pocketpaint_drawing_surface_view);

@@ -19,34 +19,32 @@
 
 package org.catrobat.paintroid.tools.options;
 
-import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
+import android.graphics.Paint;
 
-public interface TransformToolOptions {
-	void setWidthFilter(NumberRangeFilter numberRangeFilter);
+import org.catrobat.paintroid.tools.ToolType;
 
-	void setHeightFilter(NumberRangeFilter numberRangeFilter);
+public interface BrushToolOptionsView {
+	void invalidate();
 
-	void setCallback(Callback callback);
+	void setCurrentPaint(Paint paint);
 
-	void setWidth(int width);
+	void setBrushChangedListener(OnBrushChangedListener onBrushChangedListener);
 
-	void setHeight(int height);
+	void setBrushPreviewListener(OnBrushPreviewListener onBrushPreviewListener);
 
-	interface Callback {
-		void autoCropClicked();
+	interface OnBrushChangedListener {
+		void setCap(Paint.Cap strokeCap);
 
-		void rotateCounterClockwiseClicked();
+		void setStrokeWidth(int strokeWidth);
+	}
 
-		void rotateClockwiseClicked();
+	interface OnBrushPreviewListener {
+		float getStrokeWidth();
 
-		void flipHorizontalClicked();
+		Paint.Cap getStrokeCap();
 
-		void flipVerticalClicked();
+		int getColor();
 
-		void applyResizeClicked(int resizePercentage);
-
-		void setBoxWidth(float boxWidth);
-
-		void setBoxHeight(float boxHeight);
+		ToolType getToolType();
 	}
 }

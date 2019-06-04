@@ -34,8 +34,8 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.catrobat.paintroid.tools.options.BrushToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,9 +65,9 @@ public class CursorToolTest {
 	@Mock
 	private Workspace workspace;
 	@Mock
-	private BrushToolOptions brushToolOptions;
+	private BrushToolOptionsView brushToolOptionsView;
 	@Mock
-	private ToolOptionsController toolOptionsController;
+	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 
@@ -80,7 +80,7 @@ public class CursorToolTest {
 		when(workspace.getHeight()).thenReturn(1920);
 		when(workspace.getWidth()).thenReturn(1080);
 
-		toolToTest = new CursorTool(brushToolOptions, contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		toolToTest = new CursorTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 	}
 
 	@Test

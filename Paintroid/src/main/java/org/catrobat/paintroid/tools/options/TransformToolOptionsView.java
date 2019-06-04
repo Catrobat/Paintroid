@@ -19,24 +19,34 @@
 
 package org.catrobat.paintroid.tools.options;
 
-public interface TextToolOptions {
-	void setState(boolean bold, boolean italic, boolean underlined, String text, int textSize, String font);
+import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
-	void setCallback(Callback listener);
+public interface TransformToolOptionsView {
+	void setWidthFilter(NumberRangeFilter numberRangeFilter);
+
+	void setHeightFilter(NumberRangeFilter numberRangeFilter);
+
+	void setCallback(Callback callback);
+
+	void setWidth(int width);
+
+	void setHeight(int height);
 
 	interface Callback {
-		void setText(String text);
+		void autoCropClicked();
 
-		void setFont(String font);
+		void rotateCounterClockwiseClicked();
 
-		void setUnderlined(boolean underlined);
+		void rotateClockwiseClicked();
 
-		void setItalic(boolean italic);
+		void flipHorizontalClicked();
 
-		void setBold(boolean bold);
+		void flipVerticalClicked();
 
-		void setTextSize(int size);
+		void applyResizeClicked(int resizePercentage);
 
-		void hideToolOptions();
+		void setBoxWidth(float boxWidth);
+
+		void setBoxHeight(float boxHeight);
 	}
 }

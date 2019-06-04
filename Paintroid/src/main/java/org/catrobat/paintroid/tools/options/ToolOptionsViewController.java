@@ -19,8 +19,34 @@
 
 package org.catrobat.paintroid.tools.options;
 
-public interface BrushToolPreview {
-	void setListener(BrushToolOptionsView.OnBrushPreviewListener callback);
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.view.ViewGroup;
 
-	void invalidate();
+public interface ToolOptionsViewController {
+	void hideAnimated();
+
+	void disable();
+
+	void enable();
+
+	void resetToOrigin();
+
+	void showAnimated();
+
+	void removeToolViews();
+
+	void setToolName(@StringRes int id);
+
+	boolean isVisible();
+
+	void setCallback(@Nullable Callback callback);
+
+	ViewGroup getToolSpecificOptionsLayout();
+
+	interface Callback {
+		void onHide();
+
+		void onShow();
+	}
 }

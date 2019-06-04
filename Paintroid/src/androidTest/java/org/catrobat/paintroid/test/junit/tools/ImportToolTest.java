@@ -28,7 +28,7 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +47,7 @@ public class ImportToolTest {
 	@Mock
 	private ToolPaint toolPaint;
 	@Mock
-	private ToolOptionsController toolOptionsController;
+	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 	@Mock
@@ -73,7 +73,7 @@ public class ImportToolTest {
 		when(workspace.getHeight()).thenReturn(30);
 		when(workspace.getScale()).thenReturn(1f);
 
-		tool = new ImportTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		tool = new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 	}
 
 	@Test

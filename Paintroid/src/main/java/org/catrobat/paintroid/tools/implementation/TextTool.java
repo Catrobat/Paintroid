@@ -36,8 +36,8 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.TextToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.TextToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 public class TextTool extends BaseToolWithRectangleShape {
 
@@ -75,12 +75,13 @@ public class TextTool extends BaseToolWithRectangleShape {
 	public boolean bold = false;
 	@VisibleForTesting
 	public int textSize = 20;
-	private TextToolOptions textToolOptions;
+	private TextToolOptionsView textToolOptionsView;
 
-	public TextTool(TextToolOptions textToolOptions, ContextCallback contextCallback, final ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+	public TextTool(TextToolOptionsView textToolOptionsView, ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
-		this.textToolOptions = textToolOptions;
+		this.textToolOptionsView = textToolOptionsView;
 
 		setRotationEnabled(ROTATION_ENABLED);
 		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
@@ -94,7 +95,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		createAndSetBitmap();
 		resetBoxPosition();
 
-		toolOptionsController.setCallback(new ToolOptionsController.Callback() {
+		toolOptionsViewController.setCallback(new ToolOptionsViewController.Callback() {
 			@Override
 			public void onHide() {
 				createAndSetBitmap();
@@ -106,8 +107,8 @@ public class TextTool extends BaseToolWithRectangleShape {
 			}
 		});
 
-		TextToolOptions.Callback callback =
-				new TextToolOptions.Callback() {
+		TextToolOptionsView.Callback callback =
+				new TextToolOptionsView.Callback() {
 					@Override
 					public void setText(String text) {
 						TextTool.this.text = text;
@@ -151,11 +152,11 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 					@Override
 					public void hideToolOptions() {
-						toolOptionsController.hideAnimated();
+						TextTool.this.toolOptionsViewController.hideAnimated();
 					}
 				};
 
-		textToolOptions.setCallback(callback);
+		textToolOptionsView.setCallback(callback);
 	}
 
 	private void initializePaint() {
@@ -216,7 +217,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		textSize = bundle.getInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
 		font = bundle.getString(BUNDLE_TOOL_FONT, font);
 
-		textToolOptions.setState(bold, italic, underlined, text, textSize, font);
+		textToolOptionsView.setState(bold, italic, underlined, text, textSize, font);
 		textPaint.setUnderlineText(underlined);
 		textPaint.setFakeBoldText(bold);
 		updateTypeface();
@@ -303,7 +304,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		toolSpecificOptionsLayout.post(new Runnable() {
 			@Override
 			public void run() {
-				toolOptionsController.showAnimated();
+				toolOptionsViewController.showAnimated();
 			}
 		});
 	}

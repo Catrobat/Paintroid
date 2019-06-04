@@ -23,9 +23,9 @@ import android.graphics.Paint;
 
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.options.BrushToolOptions;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 
-public class CommonBrushPreviewListener implements BrushToolOptions.OnBrushPreviewListener {
+public class CommonBrushPreviewListener implements BrushToolOptionsView.OnBrushPreviewListener {
 	private ToolType toolType;
 	private ToolPaint toolPaint;
 

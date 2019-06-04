@@ -17,34 +17,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.tools.options;
+package org.catrobat.paintroid.controller;
 
-import android.graphics.Paint;
+import android.graphics.Bitmap;
 
+import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.tools.ToolType;
 
-public interface BrushToolOptions {
-	void invalidate();
+public interface ToolController {
+	void setOnColorPickedListener(ColorPickerDialog.OnColorPickedListener onColorPickedListener);
 
-	void setCurrentPaint(Paint paint);
+	void switchTool(ToolType toolType);
 
-	void setBrushChangedListener(OnBrushChangedListener onBrushChangedListener);
+	boolean isDefaultTool();
 
-	void setBrushPreviewListener(OnBrushPreviewListener onBrushPreviewListener);
+	void hideToolOptionsView();
 
-	interface OnBrushChangedListener {
-		void setCap(Paint.Cap strokeCap);
+	boolean toolOptionsViewVisible();
 
-		void setStrokeWidth(int strokeWidth);
-	}
+	void resetToolInternalState();
 
-	interface OnBrushPreviewListener {
-		float getStrokeWidth();
+	void resetToolInternalStateOnImageLoaded();
 
-		Paint.Cap getStrokeCap();
+	int getToolColor();
 
-		int getColor();
+	ToolType getToolType();
 
-		ToolType getToolType();
-	}
+	void disableToolOptionsView();
+
+	void enableToolOptionsView();
+
+	void createTool();
+
+	void toggleToolOptionsView();
+
+	boolean hasToolOptionsView();
+
+	void setBitmapFromFile(Bitmap bitmap);
 }

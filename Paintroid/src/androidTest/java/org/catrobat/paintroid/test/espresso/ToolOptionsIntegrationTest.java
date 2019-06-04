@@ -66,7 +66,7 @@ public class ToolOptionsIntegrationTest {
 	public boolean toolOptionsShownInitially;
 
 	@Parameter(2)
-	public boolean hasToolOptions;
+	public boolean hasToolOptionsView;
 
 	private File testImageFile;
 
@@ -117,14 +117,14 @@ public class ToolOptionsIntegrationTest {
 
 		if (!toolOptionsShownInitially) {
 			onToolBarView()
-					.performOpenToolOptions();
+					.performOpenToolOptionsView();
 		}
 
-		if (hasToolOptions) {
-			onToolBarView().onToolOptions()
+		if (hasToolOptionsView) {
+			onToolBarView().onToolOptionsView()
 					.check(matches(isDisplayed()));
 		} else {
-			onToolBarView().onToolOptions()
+			onToolBarView().onToolOptionsView()
 					.check(matches(not(isDisplayed())));
 		}
 	}

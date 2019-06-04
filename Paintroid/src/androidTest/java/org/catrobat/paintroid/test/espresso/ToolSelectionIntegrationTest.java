@@ -118,7 +118,7 @@ public class ToolSelectionIntegrationTest {
 	@Test
 	public void testToolSelectionDrawingSurfaceDeactivatedWhenToolOptionsAreShown() {
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
 		onDrawingSurfaceView()
@@ -128,7 +128,7 @@ public class ToolSelectionIntegrationTest {
 	@Test
 	public void testToolSelectionToolOptionsDisappearWhenClickedOutside() {
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 
 		onView(withId(R.id.pocketpaint_layout_tool_options))
 				.check(matches(isDisplayed()))

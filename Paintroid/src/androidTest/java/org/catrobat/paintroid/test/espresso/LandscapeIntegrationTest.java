@@ -34,7 +34,7 @@ import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.colorpicker.RgbSelectorView;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -83,8 +83,8 @@ public class LandscapeIntegrationTest {
 		return getMainActivity().toolReference.get();
 	}
 
-	private ToolOptionsController getToolOptionsController() {
-		return getMainActivity().toolOptionsController;
+	private ToolOptionsViewController getToolOptionsViewController() {
+		return getMainActivity().toolOptionsViewController;
 	}
 
 	@Test
@@ -140,7 +140,7 @@ public class LandscapeIntegrationTest {
 
 			assertEquals(toolType, getCurrentTool().getToolType());
 
-			if (!getToolOptionsController().isVisible()) {
+			if (!getToolOptionsViewController().isVisible()) {
 				onToolBarView()
 						.performClickSelectedToolButton();
 			}
@@ -305,8 +305,8 @@ public class LandscapeIntegrationTest {
 		onView(withText(R.string.menu_show_menu)).perform(click());
 
 		onToolBarView()
-				.performOpenToolOptions()
-				.performCloseToolOptions();
+				.performOpenToolOptionsView()
+				.performCloseToolOptionsView();
 	}
 
 	@Test
@@ -326,8 +326,8 @@ public class LandscapeIntegrationTest {
 		onView(withText(R.string.menu_show_menu)).perform(click());
 
 		onToolBarView()
-				.performOpenToolOptions()
-				.performCloseToolOptions();
+				.performOpenToolOptionsView()
+				.performCloseToolOptionsView();
 	}
 
 	@Test
@@ -350,8 +350,8 @@ public class LandscapeIntegrationTest {
 		onView(withText(R.string.menu_show_menu)).perform(click());
 
 		onToolBarView()
-				.performOpenToolOptions()
-				.performCloseToolOptions();
+				.performOpenToolOptionsView()
+				.performCloseToolOptionsView();
 	}
 
 	@Test
@@ -374,8 +374,8 @@ public class LandscapeIntegrationTest {
 		onView(withText(R.string.menu_show_menu)).perform(click());
 
 		onToolBarView()
-				.performOpenToolOptions()
-				.performCloseToolOptions();
+				.performOpenToolOptionsView()
+				.performCloseToolOptionsView();
 	}
 
 	private void setOrientation(int orientation) {
