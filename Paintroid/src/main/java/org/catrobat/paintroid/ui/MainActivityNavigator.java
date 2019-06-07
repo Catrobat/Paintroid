@@ -24,9 +24,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -54,6 +56,7 @@ import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	private MainActivity mainActivity;
 	private final ToolReference toolReference;
+	private AppCompatDialog progressDialog;
 
 	public MainActivityNavigator(MainActivity mainActivity, ToolReference toolReference) {
 		this.mainActivity = mainActivity;
@@ -67,7 +70,14 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		if (fragment == null) {
 			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor());
 			setupColorPickerDialogListeners(dialog);
-			dialog.show(fragmentManager, Constants.COLOR_PICKER_DIALOG_TAG);
+			showDialogFragmentSafely(dialog, Constants.COLOR_PICKER_DIALOG_TAG);
+		}
+	}
+
+	private void showDialogFragmentSafely(DialogFragment dialog, String tag) {
+		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
+		if (!fragmentManager.isStateSaved()) {
+			dialog.show(fragmentManager, tag);
 		}
 	}
 
@@ -110,27 +120,20 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		about.show(mainActivity.getSupportFragmentManager(), Constants.ABOUT_DIALOG_FRAGMENT_TAG);
 	}
 
-	private Fragment getIndeterminateProgressFragment() {
-		FragmentManager supportFragmentManager = mainActivity.getSupportFragmentManager();
-		return supportFragmentManager.findFragmentByTag(Constants.INDETERMINATE_FRAGMENT_TAG);
-	}
-
 	@Override
 	public void showIndeterminateProgressDialog() {
-		Fragment fragment = getIndeterminateProgressFragment();
-		if (fragment == null) {
-			AppCompatDialogFragment dialog = IndeterminateProgressDialog.newInstance();
-			dialog.show(mainActivity.getSupportFragmentManager(), Constants.INDETERMINATE_FRAGMENT_TAG);
+		if (progressDialog == null) {
+			progressDialog = IndeterminateProgressDialog.newInstance(mainActivity);
 		}
+		progressDialog.show();
 	}
 
 	@Override
 	public void dismissIndeterminateProgressDialog() {
-		Fragment fragment = getIndeterminateProgressFragment();
-		if (fragment != null) {
-			AppCompatDialogFragment dialog = (AppCompatDialogFragment) fragment;
-			dialog.dismissAllowingStateLoss();
+		if (progressDialog != null) {
+			progressDialog.dismiss();
 		}
+		progressDialog = null;
 	}
 
 	@Override
@@ -150,20 +153,20 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showSaveErrorDialog() {
 		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.WARNING,
 				R.string.dialog_error_sdcard_text, R.string.dialog_error_save_title);
-		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_DIALOG_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, Constants.SAVE_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showLoadErrorDialog() {
 		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.WARNING,
 				R.string.dialog_loading_image_failed_title, R.string.dialog_loading_image_failed_text);
-		dialog.show(mainActivity.getSupportFragmentManager(), Constants.LOAD_DIALOG_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, Constants.LOAD_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode) {
 		AppCompatDialogFragment dialog = PermissionInfoDialog.newInstance(permissionType, permissions, requestCode);
-		dialog.show(mainActivity.getSupportFragmentManager(), Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
@@ -191,26 +194,26 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showSaveBeforeReturnToCatroidDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(
 				SaveBeforeFinishDialogType.BACK_TO_POCKET_CODE);
-		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showSaveBeforeFinishDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(
 				SaveBeforeFinishDialogType.FINISH);
-		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showSaveBeforeNewImageDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeNewImageDialog.newInstance();
-		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showSaveBeforeLoadImageDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance();
-		dialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_QUESTION_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
