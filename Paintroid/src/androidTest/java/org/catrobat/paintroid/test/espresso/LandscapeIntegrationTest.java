@@ -355,6 +355,25 @@ public class LandscapeIntegrationTest {
 				.performCloseToolOptionsView();
 	}
 
+	@Test
+	public void testIfCurrentToolIsShownInBottomNavigation() {
+
+		for (ToolType toolType : ToolType.values()) {
+			if (toolType == ToolType.IMPORTPNG
+					|| toolType == ToolType.COLORCHOOSER
+					|| toolType == ToolType.REDO
+					|| toolType == ToolType.UNDO
+					|| toolType == ToolType.LAYER) {
+				continue;
+			}
+
+			onToolBarView()
+					.performSelectTool(toolType);
+			onBottomNavigationView()
+					.checkShowsCurrentTool(toolType);
+		}
+	}
+
 	private void setOrientation(int orientation) {
 		activityTestRule.getActivity().setRequestedOrientation(orientation);
 	}

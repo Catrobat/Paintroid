@@ -278,5 +278,11 @@ public interface MainActivityContracts {
 		void show();
 
 		void hide();
+
+		void showCurrentTool(ToolType toolType);
+	}
+
+	interface BottomNavigationAppearance {
+		void showCurrentTool(ToolType toolType);
 	}
 }

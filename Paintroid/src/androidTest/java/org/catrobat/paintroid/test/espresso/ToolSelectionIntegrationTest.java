@@ -44,6 +44,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.clickOutside;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.not;
@@ -90,5 +91,24 @@ public class ToolSelectionIntegrationTest {
 				.performSelectTool(toolType);
 
 		waitForToast(withText(toolType.getNameResource()), 1000);
+	}
+
+	@Test
+	public void testIfCurrentToolIsShownInBottomNavigation() {
+
+		for (ToolType toolType : ToolType.values()) {
+			if (toolType == ToolType.IMPORTPNG
+					|| toolType == ToolType.COLORCHOOSER
+					|| toolType == ToolType.REDO
+					|| toolType == ToolType.UNDO
+					|| toolType == ToolType.LAYER) {
+				continue;
+			}
+
+			onToolBarView()
+					.performSelectTool(toolType);
+			onBottomNavigationView()
+					.checkShowsCurrentTool(toolType);
+		}
 	}
 }

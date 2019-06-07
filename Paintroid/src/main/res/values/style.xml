@@ -63,6 +63,10 @@
         <item name="android:background">@drawable/pocketpaint_attribute_button_selector</item>
     </style>
 
+    <style name="BottomNavigationViewLabel" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="PocketPaintToolSelectionButton" parent="Base.Widget.AppCompat.Button.Borderless">
         <item name="android:background">?selectableItemBackgroundBorderless</item>
         <item name="android:layout_weight">1</item>
