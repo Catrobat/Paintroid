@@ -23,8 +23,6 @@ import android.graphics.Color;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import junit.framework.AssertionFailedError;
-
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
@@ -38,9 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -48,17 +44,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.clickOutside;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 public class ToolSelectionIntegrationTest {
-	private static final int START = R.id.pocketpaint_tools_brush;
-	private static final int MIDDLE = R.id.pocketpaint_tools_cursor;
-	private static final int END = R.id.pocketpaint_tools_import;
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -99,84 +90,5 @@ public class ToolSelectionIntegrationTest {
 				.performSelectTool(toolType);
 
 		waitForToast(withText(toolType.getNameResource()), 1000);
-	}
-
-	@Test
-	public void testToolSelectionNextArrowDisplayed() {
-		onBottomNavigationView()
-				.onToolsClicked();
-		try {
-			onView(withId(R.id.pocketpaint_bottom_next))
-					.check(matches(isCompletelyDisplayed()));
-		} catch (AssertionFailedError e) {
-			onView(withId(START))
-					.check(matches(isCompletelyDisplayed()));
-			onView(withId(END))
-					.check(matches(isCompletelyDisplayed()));
-		}
-	}
-
-	@Test
-	public void testToolSelectionPreviousArrowNotDisplayed() {
-		onView(withId(R.id.pocketpaint_bottom_previous))
-				.check(matches(not(isDisplayed())));
-	}
-
-	@Test
-	public void testToolSelectionPreviousArrowDisplayedOnEnd() {
-		onBottomNavigationView()
-				.onToolsClicked();
-		onView(withId(END))
-				.perform(scrollTo());
-		try {
-			onView(withId(R.id.pocketpaint_bottom_previous))
-					.check(matches(isCompletelyDisplayed()));
-			onView(withId(R.id.pocketpaint_bottom_next))
-					.check(matches(not(isDisplayed())));
-		} catch (AssertionFailedError e) {
-			onView(withId(START))
-					.check(matches(isCompletelyDisplayed()));
-			onView(withId(END))
-					.check(matches(isCompletelyDisplayed()));
-		}
-	}
-
-	@Test
-	public void testToolSelectionNextArrowNotDisplayedOnEnd() {
-		onBottomNavigationView()
-				.onToolsClicked();
-		onView(withId(START))
-				.perform(scrollTo());
-		try {
-			onView(withId(R.id.pocketpaint_bottom_previous))
-					.check(matches(not(isDisplayed())));
-			onView(withId(R.id.pocketpaint_bottom_next))
-					.check(matches(isCompletelyDisplayed()));
-		} catch (AssertionFailedError e) {
-			onView(withId(START))
-					.check(matches(isCompletelyDisplayed()));
-			onView(withId(END))
-					.check(matches(isCompletelyDisplayed()));
-		}
-	}
-
-	@Test
-	public void previousAndNextDisplayedOnScrollToMiddle() {
-		onBottomNavigationView()
-				.onToolsClicked();
-		onView(withId(MIDDLE))
-				.perform(scrollTo());
-		try {
-			onView(withId(R.id.pocketpaint_bottom_previous))
-					.check(matches(isCompletelyDisplayed()));
-			onView(withId(R.id.pocketpaint_bottom_next))
-					.check(matches(isCompletelyDisplayed()));
-		} catch (AssertionFailedError e) {
-
-			onView(withId(START))
-					.check(matches(isCompletelyDisplayed()));
-			onView(withId(END))
-					.check(matches(isCompletelyDisplayed()));
-		}
 	}
 }

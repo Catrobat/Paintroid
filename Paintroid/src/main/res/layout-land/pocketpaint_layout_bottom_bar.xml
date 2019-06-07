@@ -79,11 +79,7 @@
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_line"/>
         </LinearLayout>
-    </TableRow>
 
-    <TableRow
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp">
         <LinearLayout
             android:id="@+id/pocketpaint_tools_rectangle"
             tools:ignore="UseCompoundDrawables"
@@ -109,7 +105,11 @@
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_fill"/>
         </LinearLayout>
+    </TableRow>
 
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
         <LinearLayout
             android:id="@+id/pocketpaint_tools_pipette"
             tools:ignore="UseCompoundDrawables"
@@ -135,11 +135,7 @@
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_cursor"/>
         </LinearLayout>
-    </TableRow>
 
-    <TableRow
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp">
         <LinearLayout
             android:id="@+id/pocketpaint_tools_text"
             tools:ignore="UseCompoundDrawables"

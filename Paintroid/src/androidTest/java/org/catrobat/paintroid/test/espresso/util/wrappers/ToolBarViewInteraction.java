@@ -26,7 +26,6 @@ import org.catrobat.paintroid.tools.ToolType;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -57,7 +56,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 		onBottomNavigationView()
 				.onToolsClicked();
 		onSelectedToolButton()
-				.perform(scrollTo(), click());
+				.perform(click());
 		return this;
 	}
 
@@ -66,7 +65,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 			onBottomNavigationView()
 					.onToolsClicked();
 			onView(withId(toolType.getToolButtonID()))
-					.perform(scrollTo(), click());
+					.perform(click());
 		}
 		return this;
 	}
