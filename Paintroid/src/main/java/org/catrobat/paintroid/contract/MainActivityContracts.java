@@ -24,11 +24,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
+import android.view.Menu;
 
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
@@ -123,6 +123,8 @@ public interface MainActivityContracts {
 				boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri);
 
 		void finishInitialize();
+
+		void removeMoreOptionsItems(Menu menu);
 
 		void loadImageClicked();
 
@@ -241,6 +243,10 @@ public interface MainActivityContracts {
 		void show();
 
 		int getHeight();
+
+		void removeStandaloneMenuItems(Menu menu);
+
+		void removeCatroidMenuItems(Menu menu);
 	}
 
 	interface DrawerLayoutViewHolder {
@@ -250,20 +256,6 @@ public interface MainActivityContracts {
 		boolean isDrawerOpen(int gravity);
 
 		void openDrawer(int gravity);
-	}
-
-	interface NavigationDrawerViewHolder {
-		void removeItem(@IdRes int id);
-
-		void setVersion(String versionString);
-
-		void showExitFullscreen();
-
-		void hideExitFullscreen();
-
-		void showEnterFullscreen();
-
-		void hideEnterFullscreen();
 	}
 
 	interface BottomBarViewHolder {

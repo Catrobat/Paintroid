@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pocketpaint_nav_back_to_pocket_code"
+        android:title="@string/menu_back" />
+    <item
+        android:id="@+id/pocketpaint_nav_save_image"
+        android:title="@string/menu_save_image" />
+    <item
+        android:id="@+id/pocketpaint_nav_export"
+        android:title="@string/menu_export" />
+    <item
+        android:id="@+id/pocketpaint_nav_save_duplicate"
+        android:title="@string/menu_save_copy" />
+    <item
+        android:id="@+id/pocketpaint_nav_open_image"
+        android:title="@string/menu_load_image" />
+    <item
+        android:id="@+id/pocketpaint_nav_new_image"
+        android:title="@string/menu_new_image" />
+    <item
+        android:id="@+id/pocketpaint_nav_discard_image"
+        android:title="@string/menu_discard_image" />
+    <item
+        android:id="@+id/pocketpaint_nav_fullscreen_mode"
+        android:title="@string/menu_hide_menu" />
+    <item
+        android:id="@+id/pocketpaint_nav_help"
+        android:title="@string/help_title" />
+    <item
+        android:id="@+id/pocketpaint_nav_about"
+        android:title="@string/pocketpaint_menu_about" />
+</menu>

@@ -32,9 +32,9 @@ import android.support.v4.view.GravityCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.widget.Toast;
 
-import org.catrobat.paintroid.BuildConfig;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -51,7 +51,6 @@ import org.catrobat.paintroid.contract.MainActivityContracts.DrawerLayoutViewHol
 import org.catrobat.paintroid.contract.MainActivityContracts.Interactor;
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView;
 import org.catrobat.paintroid.contract.MainActivityContracts.Model;
-import org.catrobat.paintroid.contract.MainActivityContracts.NavigationDrawerViewHolder;
 import org.catrobat.paintroid.contract.MainActivityContracts.Navigator;
 import org.catrobat.paintroid.contract.MainActivityContracts.Presenter;
 import org.catrobat.paintroid.contract.MainActivityContracts.TopBarViewHolder;
@@ -94,7 +93,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private Perspective perspective;
 	private BottomBarViewHolder bottomBarViewHolder;
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
-	private NavigationDrawerViewHolder navigationDrawerViewHolder;
 	private BottomNavigationViewHolder bottomNavigationViewHolder;
 
 	private CommandManager commandManager;
@@ -104,9 +102,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	public MainActivityPresenter(MainView view, Model model, Workspace workspace, Navigator navigator,
 			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
-			DrawerLayoutViewHolder drawerLayoutViewHolder, NavigationDrawerViewHolder navigationDrawerViewHolder,
-			BottomNavigationViewHolder bottomNavigationViewHolder, CommandFactory commandFactory,
-			CommandManager commandManager, Perspective perspective, ToolController toolController) {
+			DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
+			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController) {
 		this.view = view;
 		this.model = model;
 		this.workspace = workspace;
@@ -114,7 +111,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		this.interactor = interactor;
 		this.bottomBarViewHolder = bottomBarViewHolder;
 		this.drawerLayoutViewHolder = drawerLayoutViewHolder;
-		this.navigationDrawerViewHolder = navigationDrawerViewHolder;
 		this.commandManager = commandManager;
 		this.topBarViewHolder = topBarViewHolder;
 		this.perspective = perspective;
@@ -420,17 +416,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			exitFullscreen();
 		}
 
-		if (model.isOpenedFromCatroid()) {
-			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_save_image);
-			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_save_duplicate);
-			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_new_image);
-		} else {
-			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
-			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_export);
-			navigationDrawerViewHolder.removeItem(R.id.pocketpaint_nav_discard_image);
-		}
-		navigationDrawerViewHolder.setVersion(BuildConfig.VERSION_NAME);
-
 		view.initializeActionBar(model.isOpenedFromCatroid());
 
 		if (commandManager.isBusy()) {
@@ -438,12 +423,19 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 	}
 
+	@Override
+	public void removeMoreOptionsItems(Menu menu) {
+		if (model.isOpenedFromCatroid()) {
+			topBarViewHolder.removeStandaloneMenuItems(menu);
+		} else {
+			topBarViewHolder.removeCatroidMenuItems(menu);
+		}
+	}
+
 	private void exitFullscreen() {
 		view.exitFullscreen();
 		topBarViewHolder.show();
 		bottomNavigationViewHolder.show();
-		navigationDrawerViewHolder.hideExitFullscreen();
-		navigationDrawerViewHolder.showEnterFullscreen();
 		toolController.enableToolOptionsView();
 		perspective.exitFullscreen();
 	}
@@ -454,8 +446,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		topBarViewHolder.hide();
 		bottomBarViewHolder.hide();
 		bottomNavigationViewHolder.hide();
-		navigationDrawerViewHolder.showExitFullscreen();
-		navigationDrawerViewHolder.hideEnterFullscreen();
 		toolController.disableToolOptionsView();
 		perspective.enterFullscreen();
 	}

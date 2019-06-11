@@ -74,7 +74,6 @@
     <string name="menu_save_image">Save image</string>
     <string name="menu_save_copy">Save copy</string>
     <string name="menu_hide_menu">Fullscreen</string>
-    <string name="menu_show_menu">Exit fullscreen</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">Export</string>
@@ -162,7 +161,6 @@
     <string name="pocketpaint_about_url_license" translatable="false">&lt;a href=\"http://developer.catrobat.org/licenses\"&gt;%s&lt;/a&gt;</string>
     <string name="pocketpaint_about_url_catrobat" translatable="false">&lt;a href=\"http://catrobat.org/\"&gt;%s&lt;/a&gt;</string>
 
-    <string name="pocketpaint_logo">Pocket Paint logo</string>
     <string name="pocketpaint_intro">Intro</string>
 
     <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
