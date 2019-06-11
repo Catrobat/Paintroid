@@ -98,8 +98,6 @@ public class MainActivityPresenterTest {
 	@Mock
 	private MainActivityContracts.DrawerLayoutViewHolder drawerLayoutViewHolder;
 	@Mock
-	private MainActivityContracts.NavigationDrawerViewHolder navigationDrawerViewHolder;
-	@Mock
 	private Workspace workspace;
 	@Mock
 	private Perspective perspective;
@@ -128,7 +126,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testSetUp() {
 		verifyZeroInteractions(view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
-				drawerLayoutViewHolder, navigationDrawerViewHolder, commandFactory, commandManager, bottomBarViewHolder,
+				drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
 				bottomNavigationViewHolder, toolController);
 	}
 
@@ -281,8 +279,6 @@ public class MainActivityPresenterTest {
 		verify(topBarViewHolder).hide();
 		verify(view).hideKeyboard();
 		verify(view).enterFullscreen();
-		verify(navigationDrawerViewHolder).hideEnterFullscreen();
-		verify(navigationDrawerViewHolder).showExitFullscreen();
 		verify(toolController).disableToolOptionsView();
 		verify(perspective).enterFullscreen();
 	}
@@ -294,8 +290,6 @@ public class MainActivityPresenterTest {
 		verify(model).setFullscreen(false);
 		verify(topBarViewHolder).show();
 		verify(view).exitFullscreen();
-		verify(navigationDrawerViewHolder).showEnterFullscreen();
-		verify(navigationDrawerViewHolder).hideExitFullscreen();
 		verify(toolController).enableToolOptionsView();
 		verify(perspective).exitFullscreen();
 	}
@@ -755,20 +749,20 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testFinishInitializeWhenDefaultThenRemoveCatroidNavigationItems() {
-		presenter.finishInitialize();
+		presenter.removeMoreOptionsItems();
 
-		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_export);
-		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
+		verify(topBarViewHolder).removeItem(R.id.pocketpaint_nav_export);
+		verify(topBarViewHolder).removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
 	}
 
 	@Test
 	public void testFinishInitializeWhenFromCatroidThenRemoveSaveNavigationItems() {
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 
-		presenter.finishInitialize();
+		presenter.removeMoreOptionsItems();
 
-		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_save_image);
-		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_save_duplicate);
+		verify(topBarViewHolder).removeItem(R.id.pocketpaint_nav_save_image);
+		verify(topBarViewHolder).removeItem(R.id.pocketpaint_nav_save_duplicate);
 	}
 
 	@Test
@@ -862,7 +856,7 @@ public class MainActivityPresenterTest {
 		presenter.onLoadImagePreExecute(LOAD_IMAGE_DEFAULT);
 
 		verifyZeroInteractions(view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
-				drawerLayoutViewHolder, navigationDrawerViewHolder, commandFactory, commandManager, bottomBarViewHolder,
+				drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
 				toolController);
 	}
 

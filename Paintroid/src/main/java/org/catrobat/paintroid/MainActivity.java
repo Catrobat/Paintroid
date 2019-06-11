@@ -27,19 +27,17 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.TooltipCompat;
 import android.util.DisplayMetrics;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +86,6 @@ import org.catrobat.paintroid.ui.viewholder.BottomBarViewHolder;
 import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder;
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder;
 import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder;
-import org.catrobat.paintroid.ui.viewholder.NavigationViewViewHolder;
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.io.File;
@@ -130,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private DrawingSurface drawingSurface;
 	private MainActivityContracts.Presenter presenter;
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
-	private Handler handler = new Handler();
 	private KeyboardListener keyboardListener;
 	private PaintroidApplicationFragment appFragment;
 
@@ -195,8 +191,43 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		}
 
 		commandManager.addCommandListener(this);
-
 		presenter.finishInitialize();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_pocketpaint_more_options, menu);
+		presenter.removeMoreOptionsItems();
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+		int i = item.getItemId();
+		if (i == R.id.pocketpaint_nav_back_to_pocket_code) {
+			presenter.backToPocketCodeClicked();
+		} else if (i == R.id.pocketpaint_nav_export) {
+			presenter.saveCopyClicked();
+		} else if (i == R.id.pocketpaint_nav_save_image) {
+			presenter.saveImageClicked();
+		} else if (i == R.id.pocketpaint_nav_save_duplicate) {
+			presenter.saveCopyClicked();
+		} else if (i == R.id.pocketpaint_nav_open_image) {
+			presenter.loadImageClicked();
+		} else if (i == R.id.pocketpaint_nav_new_image) {
+			presenter.newImageClicked();
+		} else if (i == R.id.pocketpaint_nav_discard_image) {
+			presenter.discardImageClicked();
+		} else if (i == R.id.pocketpaint_nav_fullscreen_mode) {
+			presenter.enterFullscreenClicked();
+		} else if (i == R.id.pocketpaint_nav_help) {
+			presenter.showHelpClicked();
+		} else if (i == R.id.pocketpaint_nav_about) {
+			presenter.showAboutClicked();
+		} else {
+			return false;
+		}
+		return true;
 	}
 
 	private void getAppFragment() {
@@ -237,21 +268,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	private void onCreateMainView() {
+		Context context = getApplicationContext();
 		DrawerLayout drawerLayout = findViewById(R.id.pocketpaint_drawer_layout);
 		ViewGroup topBarLayout = findViewById(R.id.pocketpaint_layout_top_bar);
 		View bottomBarLayout = findViewById(R.id.pocketpaint_main_bottom_bar);
-		NavigationView navigationView = findViewById(R.id.pocketpaint_nav_view);
 		View bottomNavigationView = findViewById(R.id.pocketpaint_main_bottom_navigation);
 
 		toolOptionsViewController = new DefaultToolOptionsViewController(this);
 		drawerLayoutViewHolder = new DrawerLayoutViewHolder(drawerLayout);
 		TopBarViewHolder topBarViewHolder = new TopBarViewHolder(topBarLayout);
 		BottomBarViewHolder bottomBarViewHolder = new BottomBarViewHolder(bottomBarLayout);
-		NavigationViewViewHolder navigationDrawerViewHolder = new NavigationViewViewHolder(navigationView);
 		BottomNavigationViewHolder bottomNavigationViewHolder = new BottomNavigationViewHolder(bottomNavigationView);
 
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			bottomNavigationViewHolder.setLandscapeStyle(getApplicationContext());
+			bottomNavigationViewHolder.setLandscapeStyle(context);
 		}
 
 		float density = getResources().getDisplayMetrics().density;
@@ -265,19 +295,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		MainActivityContracts.Navigator navigator = new MainActivityNavigator(this, toolReference);
 		MainActivityContracts.Interactor interactor = new MainActivityInteractor();
 		model = new MainActivityModel();
-		ContextCallback contextCallback = new DefaultContextCallback(getApplicationContext());
+		ContextCallback contextCallback = new DefaultContextCallback(context);
 		ToolController toolController = new DefaultToolController(toolReference, toolOptionsViewController,
 				new DefaultToolFactory(), commandManager, workspace, toolPaint, contextCallback);
 		presenter = new MainActivityPresenter(this, model, workspace,
 				navigator, interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
-				navigationDrawerViewHolder, bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, toolController);
+				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, toolController);
 		toolController.setOnColorPickedListener(new PresenterColorPickedListener(presenter));
 
 		keyboardListener = new KeyboardListener(drawerLayout);
 		setTopBarListeners(topBarViewHolder);
 		setBottomBarListeners(bottomBarViewHolder);
-		setNavigationViewListeners(navigationDrawerViewHolder);
 		setBottomNavigationListeners(bottomNavigationViewHolder);
+		setActionBarToolTips(topBarViewHolder, context);
 	}
 
 	private void onCreateLayerMenu() {
@@ -318,6 +348,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 				layerPresenter.removeLayer();
 			}
 		});
+	}
+
+	private void setActionBarToolTips(TopBarViewHolder topBar, Context context) {
+		TooltipCompat.setTooltipText(topBar.undoButton, context.getString(R.string.button_undo));
+		TooltipCompat.setTooltipText(topBar.redoButton, context.getString(R.string.button_redo));
+		TooltipCompat.setTooltipText(topBar.colorButton, context.getString(R.string.bottom_navigation_color));
+		TooltipCompat.setTooltipText(topBar.layerButton, context.getString(R.string.button_layers));
 	}
 
 	private void setTopBarListeners(TopBarViewHolder topBar) {
@@ -390,23 +427,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 				});
 	}
 
-	private void setNavigationViewListeners(NavigationViewViewHolder navigationDrawerViewHolder) {
-		navigationDrawerViewHolder.navigationView.setNavigationItemSelectedListener(
-				new NavigationView.OnNavigationItemSelectedListener() {
-					@Override
-					public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-						drawerLayoutViewHolder.closeDrawer(GravityCompat.START, true);
-						handler.postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								MainActivity.this.onNavigationItemSelected(item);
-							}
-						}, 250);
-						return true;
-					}
-				});
-	}
-
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		if (hasFocus) {
@@ -419,19 +439,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		Toolbar toolbar = findViewById(R.id.pocketpaint_toolbar);
 		setSupportActionBar(toolbar);
 
-		boolean showHome = model.isOpenedFromCatroid();
 		ActionBar supportActionBar = getSupportActionBar();
 		if (supportActionBar != null) {
 			supportActionBar.setDisplayShowTitleEnabled(false);
-			supportActionBar.setDisplayHomeAsUpEnabled(true);
+			supportActionBar.setDisplayHomeAsUpEnabled(false);
 			supportActionBar.setHomeButtonEnabled(true);
-			supportActionBar.setDisplayShowHomeEnabled(showHome);
+			supportActionBar.setDisplayShowHomeEnabled(false);
 		}
-
-		ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
-				drawerLayoutViewHolder.drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
-		actionBarDrawerToggle.setDrawerSlideAnimationEnabled(false);
-		actionBarDrawerToggle.syncState();
 	}
 
 	@Override
@@ -459,35 +473,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		}
 
 		super.onDestroy();
-	}
-
-	private void onNavigationItemSelected(@NonNull MenuItem item) {
-		int i = item.getItemId();
-		if (i == R.id.pocketpaint_nav_back_to_pocket_code) {
-			presenter.backToPocketCodeClicked();
-		} else if (i == R.id.pocketpaint_nav_export) {
-			presenter.saveCopyClicked();
-		} else if (i == R.id.pocketpaint_nav_save_image) {
-			presenter.saveImageClicked();
-		} else if (i == R.id.pocketpaint_nav_save_duplicate) {
-			presenter.saveCopyClicked();
-		} else if (i == R.id.pocketpaint_nav_open_image) {
-			presenter.loadImageClicked();
-		} else if (i == R.id.pocketpaint_nav_new_image) {
-			presenter.newImageClicked();
-		} else if (i == R.id.pocketpaint_nav_discard_image) {
-			presenter.discardImageClicked();
-		} else if (i == R.id.pocketpaint_nav_fullscreen_mode) {
-			presenter.enterFullscreenClicked();
-		} else if (i == R.id.pocketpaint_nav_exit_fullscreen_mode) {
-			presenter.exitFullscreenClicked();
-		} else if (i == R.id.pocketpaint_nav_help) {
-			presenter.showHelpClicked();
-		} else if (i == R.id.pocketpaint_nav_about) {
-			presenter.showAboutClicked();
-		} else {
-			throw new IllegalArgumentException();
-		}
 	}
 
 	@Override

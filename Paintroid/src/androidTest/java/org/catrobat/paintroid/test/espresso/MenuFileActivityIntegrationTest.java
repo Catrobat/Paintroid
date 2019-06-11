@@ -67,8 +67,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
@@ -112,8 +112,8 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_new_image))
 				.perform(click());
@@ -130,8 +130,8 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_load_image))
 				.perform(click());
@@ -154,8 +154,8 @@ public class MenuFileActivityIntegrationTest {
 		Instrumentation.ActivityResult resultCancel = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, new Intent());
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultCancel);
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_load_image)).perform(click());
 		onView(withText(R.string.discard_button_text)).perform(click());
@@ -177,8 +177,8 @@ public class MenuFileActivityIntegrationTest {
 		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_load_image)).perform(click());
 		onView(withText(R.string.discard_button_text)).perform(click());
@@ -193,8 +193,8 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_load_image)).perform(click());
 
@@ -206,8 +206,8 @@ public class MenuFileActivityIntegrationTest {
 
 	@Test
 	public void testOnHelp() {
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 		onView(withText(R.string.help_title)).perform(click());
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 	}
@@ -220,8 +220,9 @@ public class MenuFileActivityIntegrationTest {
 		Bitmap imageBefore = activity.layerModel.getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
+
 		onView(withText(R.string.help_title)).perform(click());
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		onView(withText(R.string.skip)).perform(click());
@@ -238,8 +239,9 @@ public class MenuFileActivityIntegrationTest {
 		Bitmap imageBefore = activity.layerModel.getCurrentLayer().getBitmap();
 		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
+
 		onView(withText(R.string.help_title)).perform(click());
 		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
 		pressBack();
@@ -253,8 +255,8 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_new_image)).perform(click());
 
@@ -272,8 +274,8 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_new_image))
 				.perform(click());
@@ -293,8 +295,8 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_new_image)).perform(click());
 
@@ -319,8 +321,8 @@ public class MenuFileActivityIntegrationTest {
 
 		pressMenuKey();
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
@@ -336,8 +338,8 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
@@ -351,8 +353,8 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
@@ -365,8 +367,8 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_save_copy)).perform(click());
 
@@ -384,8 +386,8 @@ public class MenuFileActivityIntegrationTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 		assertNotNull(activity.model.getSavedPictureUri());
@@ -422,8 +424,8 @@ public class MenuFileActivityIntegrationTest {
 		Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_load_image))
 				.perform(click());

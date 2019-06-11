@@ -53,8 +53,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
@@ -99,8 +99,8 @@ public class OpenedFromPocketCodeWithImageTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_back)).perform(click());
 
@@ -125,8 +125,8 @@ public class OpenedFromPocketCodeWithImageTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_back)).perform(click());
 

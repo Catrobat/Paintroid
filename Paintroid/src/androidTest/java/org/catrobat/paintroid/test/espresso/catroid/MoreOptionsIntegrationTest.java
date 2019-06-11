@@ -41,17 +41,15 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
-import static org.hamcrest.Matchers.not;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 
 @RunWith(AndroidJUnit4.class)
-public class NavigationDrawerIntegrationTest {
+public class MoreOptionsIntegrationTest {
 
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
@@ -70,9 +68,9 @@ public class NavigationDrawerIntegrationTest {
 	}
 
 	@Test
-	public void testNavigationDrawerAllItemsExist() {
-		onNavigationDrawer()
-				.performOpen();
+	public void testMoreOptionsAllItemsExist() {
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_hide_menu)).check(matches(isDisplayed()));
@@ -89,17 +87,15 @@ public class NavigationDrawerIntegrationTest {
 	}
 
 	@Test
-	public void testNavigationDrawerDiscardImage() {
+	public void testMoreOptionsDiscardImage() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 		onView(withText(R.string.menu_discard_image))
 				.perform(click());
-		onNavigationDrawer()
-				.check(matches(not(isOpen())));
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 	}

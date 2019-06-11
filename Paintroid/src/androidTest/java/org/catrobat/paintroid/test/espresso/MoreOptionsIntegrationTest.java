@@ -37,18 +37,13 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.DrawerActions.close;
-import static android.support.test.espresso.contrib.DrawerActions.open;
-import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
-import static org.hamcrest.Matchers.not;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 
 @RunWith(AndroidJUnit4.class)
-public class NavigationDrawerIntegrationTest {
+public class MoreOptionsIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -60,29 +55,22 @@ public class NavigationDrawerIntegrationTest {
 
 	@Before
 	public void setUp() {
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 	}
 
 	@Test
-	public void testNavigationDrawerOpenAndClose() {
-		onNavigationDrawer()
-				.check(matches(isOpen()))
-				.perform(close())
-				.check(matches(not(isOpen())));
-	}
+	public void testMoreOptionsCloseOnBack() {
+		onView(withText(R.string.menu_load_image))
+				.check(matches(isDisplayed()));
 
-	@Test
-	public void testNavigationDrawerCloseOnBack() {
-		onNavigationDrawer()
-				.check(matches(isOpen()));
 		pressBack();
-		onNavigationDrawer()
-				.check(matches(not(isOpen())));
+		onView(withText(R.string.menu_load_image))
+				.check(doesNotExist());
 	}
 
 	@Test
-	public void testNavigationDrawerAllItemsExist() {
+	public void testMoreOptionsAllItemsExist() {
 		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_hide_menu)).check(matches(isDisplayed()));
 		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
@@ -98,36 +86,27 @@ public class NavigationDrawerIntegrationTest {
 	}
 
 	@Test
-	public void testNavigationDrawerItemHelpClick() {
+	public void testMoreOptionsItemHelpClick() {
 		onView(withText(R.string.help_title)).perform(click());
 	}
 
 	@Test
-	public void testNavigationDrawerItemAboutClick() {
+	public void testMoreOptionsItemAboutClick() {
 		onView(withText(R.string.pocketpaint_about_title)).perform(click());
 	}
 
 	@Test
-	public void testNavigationDrawerItemFullscreenClick() {
-		onView(withText(R.string.menu_hide_menu)).perform(click());
-		onView(withId(R.id.pocketpaint_drawer_layout)).perform(open());
-		onView(withText(R.string.menu_show_menu)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_hide_menu)).check(doesNotExist());
-		onView(withText(R.string.menu_show_menu)).perform(click());
-	}
-
-	@Test
-	public void testNavigationDrawerItemNewImageClick() {
+	public void testMoreOptionsItemNewImageClick() {
 		onView(withText(R.string.menu_new_image)).perform(click());
 	}
 
 	@Test
-	public void testNavigationDrawerItemMenuSaveClick() {
+	public void testMoreOptionsItemMenuSaveClick() {
 		onView(withText(R.string.menu_save_image)).perform(click());
 	}
 
 	@Test
-	public void testNavigationDrawerItemMenuCopyClick() {
+	public void testMoreOptionsItemMenuCopyClick() {
 		onView(withText(R.string.menu_save_copy)).perform(click());
 	}
 }

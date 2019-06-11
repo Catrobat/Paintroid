@@ -23,7 +23,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:id="@+id/pocketpaint_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,18 +32,19 @@
         <include
             android:id="@+id/pocketpaint_layout_top_bar"
             layout="@layout/pocketpaint_layout_top_bar"
-            android:layout_width="@dimen/pocketpaint_main_top_bar_landscape_width"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/pocketpaint_main_bottom_navigation" />
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pocketpaint_main_top_bar_height"
+            android:layout_alignParentTop="true" />
 
         <org.catrobat.paintroid.ui.DrawingSurface
             android:id="@+id/pocketpaint_drawing_surface_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
             android:layout_above="@+id/pocketpaint_main_bottom_navigation"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/pocketpaint_layout_top_bar"
+            android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/pocketpaint_layout_top_bar"
             android:background="@color/pocketpaint_main_drawing_surface_active" />
 
         <LinearLayout
@@ -85,15 +86,6 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/pocketpaint_nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/pocketpaint_layout_nav_header"
-        app:menu="@menu/menu_pocketpaint_activity"
-        android:background="@color/pocketpaint_main_navigation_drawer_background" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/pocketpaint_nav_view_layer"

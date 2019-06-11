@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.ui.viewholder;
 
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -33,6 +35,7 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 	public final ColorButton colorButton;
 	public final ImageButton layerButton;
 	public final ViewGroup layout;
+	public final Menu moreOptions;
 
 	public TopBarViewHolder(ViewGroup layout) {
 		this.layout = layout;
@@ -40,6 +43,7 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 		redoButton = layout.findViewById(R.id.pocketpaint_btn_top_redo);
 		colorButton = layout.findViewById(R.id.pocketpaint_btn_top_color);
 		layerButton = layout.findViewById(R.id.pocketpaint_btn_top_layers);
+		moreOptions = ((Toolbar) layout.findViewById(R.id.pocketpaint_toolbar)).getMenu();
 	}
 
 	@Override
@@ -80,5 +84,10 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 	@Override
 	public int getHeight() {
 		return layout.getHeight();
+	}
+
+	@Override
+	public void removeItem(int item) {
+		moreOptions.removeItem(item);
 	}
 }

@@ -47,7 +47,6 @@ import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
@@ -164,8 +163,8 @@ public class LayerIntegrationTest {
 		onLayerMenuView().onButtonDelete()
 				.check(matches(allOf(isEnabled(), withDrawable(R.drawable.ic_pocketpaint_layers_delete))));
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 		onView(withText(R.string.menu_new_image))
 				.perform(click());
 		onView(withText(R.string.discard_button_text))
@@ -318,8 +317,8 @@ public class LayerIntegrationTest {
 				.checkLayerCount(4)
 				.performClose();
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 		onView(withText(R.string.menu_new_image))
 				.perform(click());
 		onView(withText(R.string.discard_button_text))
@@ -348,8 +347,8 @@ public class LayerIntegrationTest {
 				.checkLayerCount(4)
 				.performClose();
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 		onView(withText(R.string.menu_new_image))
 				.perform(click());
 		onView(withText(R.string.save_button_text))

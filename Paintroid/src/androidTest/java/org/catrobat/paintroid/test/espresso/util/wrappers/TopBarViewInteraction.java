@@ -59,4 +59,10 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 				.perform(click());
 		return this;
 	}
+
+	public TopBarViewInteraction onMoreOptionsClicked() {
+		onView(withId(R.id.pocketpaint_toolbar))
+				.perform(click());
+		return this;
+	}
 }

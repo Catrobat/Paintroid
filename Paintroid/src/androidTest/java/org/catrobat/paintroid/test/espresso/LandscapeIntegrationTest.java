@@ -43,10 +43,11 @@ import org.junit.runner.RunWith;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeDown;
-import static android.support.test.espresso.assertion.PositionAssertions.isCompletelyLeftOf;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
@@ -58,8 +59,8 @@ import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -91,13 +92,6 @@ public class LandscapeIntegrationTest {
 	public void testLandscapeMode() {
 		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
-	}
-
-	@Test
-	public void testTopBarPosition() {
-		onView(withId(R.id.pocketpaint_layout_top_bar))
-				.check(matches(isDisplayed()))
-				.check(isCompletelyLeftOf(withId(R.id.pocketpaint_drawing_surface_view)));
 	}
 
 	@Test
@@ -154,11 +148,22 @@ public class LandscapeIntegrationTest {
 	}
 
 	@Test
-	public void testNavigationDrawerAppears() {
-		onView(withId(R.id.pocketpaint_toolbar))
-				.perform(click());
-		onView(withId(R.id.pocketpaint_nav_view))
-				.check(matches(isDisplayed()));
+	public void testMoreOptionsDrawerAppearsAndAllItemsExist() {
+		onTopBarView()
+				.onMoreOptionsClicked();
+
+		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
+		onView(withText(R.string.menu_hide_menu)).check(matches(isDisplayed()));
+		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
+		onView(withText(R.string.pocketpaint_menu_about)).check(matches(isDisplayed()));
+
+		onView(withText(R.string.menu_save_image)).check(matches(isDisplayed()));
+		onView(withText(R.string.menu_save_copy)).check(matches(isDisplayed()));
+		onView(withText(R.string.menu_new_image)).check(matches(isDisplayed()));
+
+		onView(withText(R.string.menu_back)).check(doesNotExist());
+		onView(withText(R.string.menu_discard_image)).check(doesNotExist());
+		onView(withText(R.string.menu_export)).check(doesNotExist());
 	}
 
 	@Test
@@ -269,17 +274,14 @@ public class LandscapeIntegrationTest {
 	public void testFullscreenPortraitOrientationChangeWithBrush() {
 		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_hide_menu)).perform(click());
 
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 
-		onNavigationDrawer()
-				.performOpen();
-
-		onView(withText(R.string.menu_show_menu)).perform(click());
+		pressBack();
 
 		onToolBarView()
 				.performOpenToolOptionsView()
@@ -290,17 +292,14 @@ public class LandscapeIntegrationTest {
 	public void testFullscreenLandscapeOrientationChangeWithBrush() {
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_hide_menu)).perform(click());
 
 		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 
-		onNavigationDrawer()
-				.performOpen();
-
-		onView(withText(R.string.menu_show_menu)).perform(click());
+		pressBack();
 
 		onToolBarView()
 				.performOpenToolOptionsView()
@@ -314,17 +313,14 @@ public class LandscapeIntegrationTest {
 
 		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_hide_menu)).perform(click());
 
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 
-		onNavigationDrawer()
-				.performOpen();
-
-		onView(withText(R.string.menu_show_menu)).perform(click());
+		pressBack();
 
 		onToolBarView()
 				.performOpenToolOptionsView()
@@ -338,17 +334,14 @@ public class LandscapeIntegrationTest {
 
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 
-		onNavigationDrawer()
-				.performOpen();
+		onTopBarView()
+				.onMoreOptionsClicked();
 
 		onView(withText(R.string.menu_hide_menu)).perform(click());
 
 		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 
-		onNavigationDrawer()
-				.performOpen();
-
-		onView(withText(R.string.menu_show_menu)).perform(click());
+		pressBack();
 
 		onToolBarView()
 				.performOpenToolOptionsView()

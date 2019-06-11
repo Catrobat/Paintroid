@@ -79,16 +79,6 @@
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/pocketpaint_nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/pocketpaint_layout_nav_header"
-        app:menu="@menu/menu_pocketpaint_activity"
-        android:background="@color/pocketpaint_main_navigation_drawer_background">
-    </android.support.design.widget.NavigationView>
-
-    <android.support.design.widget.NavigationView
         android:id="@+id/pocketpaint_nav_view_layer"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
