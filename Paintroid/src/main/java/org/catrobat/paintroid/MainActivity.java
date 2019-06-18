@@ -347,7 +347,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		TooltipCompat.setTooltipText(topBar.undoButton, context.getString(R.string.button_undo));
 		TooltipCompat.setTooltipText(topBar.redoButton, context.getString(R.string.button_redo));
 		TooltipCompat.setTooltipText(topBar.colorButton, context.getString(R.string.bottom_navigation_color));
-		TooltipCompat.setTooltipText(topBar.layerButton, context.getString(R.string.button_layers));
 	}
 
 	private void setTopBarListeners(TopBarViewHolder topBar) {
@@ -367,12 +366,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			@Override
 			public void onClick(View v) {
 				presenter.showColorPickerClicked();
-			}
-		});
-		topBar.layerButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				presenter.showLayerMenuClicked();
 			}
 		});
 	}
