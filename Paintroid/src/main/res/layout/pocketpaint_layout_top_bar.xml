@@ -28,6 +28,13 @@
     tools:showIn="@layout/activity_pocketpaint_main"
     android:orientation="horizontal"
     android:weightSum="4">
+    <TextView
+        android:id="@+id/pocketpaint_textview_top"
+        style="@style/PocketPaintActionBarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pocketpaint_app_name"/>
+
     <ImageButton
         android:id="@+id/pocketpaint_btn_top_undo"
         style="?actionButtonStyle"

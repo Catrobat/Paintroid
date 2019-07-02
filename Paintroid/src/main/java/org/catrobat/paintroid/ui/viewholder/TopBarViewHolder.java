@@ -23,12 +23,14 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.ui.button.ColorButton;
 
 public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder {
+	public final TextView title;
 	public final ImageButton undoButton;
 	public final ImageButton redoButton;
 	public final ColorButton colorButton;
@@ -37,6 +39,7 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 
 	public TopBarViewHolder(ViewGroup layout) {
 		this.layout = layout;
+		title = layout.findViewById(R.id.pocketpaint_textview_top);
 		undoButton = layout.findViewById(R.id.pocketpaint_btn_top_undo);
 		redoButton = layout.findViewById(R.id.pocketpaint_btn_top_redo);
 		colorButton = layout.findViewById(R.id.pocketpaint_btn_top_color);
@@ -95,5 +98,10 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 		menu.removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
 		menu.removeItem(R.id.pocketpaint_nav_export);
 		menu.removeItem(R.id.pocketpaint_nav_discard_image);
+	}
+
+	@Override
+	public void hideTitleIfNotStandalone() {
+		title.setVisibility(View.GONE);
 	}
 }
