@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -16,18 +17,20 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
-    <!-- PocketPaint MainActivity -->
-    <dimen name="pocketpaint_main_bottom_bar_button_width">65dp</dimen>
-    <dimen name="pocketpaint_main_bottom_bar_height">50dp</dimen>
-    <dimen name="pocketpaint_main_top_bar_height">50dp</dimen>
-    <dimen name="pocketpaint_main_top_bar_landscape_width">50dp</dimen>
 
-    <!-- PocketPaint WelcomeActivity -->
-    <dimen name="pocketpaint_welcome_dots_height">35dp</dimen>
-    <dimen name="pocketpaint_welcome_navigation_height">40dp</dimen>
-    <dimen name="pocketpaint_welcome_margin_side">50dp</dimen>
-    <dimen name="pocketpaint_welcome_margin_top">100dp</dimen>
-    <dimen name="pocketpaint_welcome_margin_top_possibilities">50dp</dimen>
-    <dimen name="pocketpaint_welcome_margin_top_text">25dp</dimen>
-</resources>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/pocketpaint_bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
+        app:menu="@menu/menu_pocketpaint_bottom_navigation"/>
+</RelativeLayout>

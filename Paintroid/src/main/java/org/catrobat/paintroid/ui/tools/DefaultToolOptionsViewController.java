@@ -22,7 +22,6 @@ package org.catrobat.paintroid.ui.tools;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -36,11 +35,9 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 public class DefaultToolOptionsViewController implements ToolOptionsViewController {
-	private final Activity activity;
-
 	private final TextView toolOptionsTextView;
 	private final ViewGroup toolSpecificOptionsLayout;
-	private final ViewGroup mainBottomBar;
+	private final ViewGroup bottomNavigation;
 	private final ViewGroup mainToolOptions;
 	private final View drawingSurfaceView;
 
@@ -52,10 +49,8 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 	private Callback callback;
 
 	public DefaultToolOptionsViewController(Activity activity) {
-		this.activity = activity;
-
 		drawingSurfaceView = activity.findViewById(R.id.pocketpaint_drawing_surface_view);
-		mainBottomBar = activity.findViewById(R.id.pocketpaint_main_bottom_bar);
+		bottomNavigation = activity.findViewById(R.id.pocketpaint_main_bottom_navigation);
 		mainToolOptions = activity.findViewById(R.id.pocketpaint_main_tool_options);
 		toolOptionsTextView = activity.findViewById(R.id.pocketpaint_layout_tool_options_name);
 		toolSpecificOptionsLayout = activity.findViewById(R.id.pocketpaint_layout_tool_specific_options);
@@ -77,7 +72,7 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 		toolOptionsShown = false;
 		mainToolOptions.setVisibility(View.INVISIBLE);
 		drawingSurfaceView.setBackgroundColor(colorActive);
-		mainToolOptions.setY(mainBottomBar.getY() + mainBottomBar.getHeight());
+		mainToolOptions.setY(bottomNavigation.getY() + bottomNavigation.getHeight());
 	}
 
 	@Override
@@ -87,7 +82,7 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 		}
 
 		toolOptionsShown = false;
-		mainToolOptions.animate().y(mainBottomBar.getY() + mainBottomBar.getHeight());
+		mainToolOptions.animate().y(bottomNavigation.getY() + bottomNavigation.getHeight());
 		animateBackgroundToColor(colorActive);
 		notifyHide();
 	}
@@ -117,10 +112,7 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 		mainToolOptions.post(new Runnable() {
 			@Override
 			public void run() {
-				int orientation = activity.getResources().getConfiguration().orientation;
-				float yPos = orientation == Configuration.ORIENTATION_PORTRAIT
-						? mainBottomBar.getY() - mainToolOptions.getHeight()
-						: mainBottomBar.getHeight() - mainToolOptions.getHeight();
+				float yPos = bottomNavigation.getY() - mainToolOptions.getHeight();
 				mainToolOptions.animate().y(yPos);
 				mainToolOptions.setVisibility(View.VISIBLE);
 			}
