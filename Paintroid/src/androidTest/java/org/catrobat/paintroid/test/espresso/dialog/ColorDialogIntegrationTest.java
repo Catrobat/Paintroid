@@ -23,6 +23,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.Button;
@@ -102,6 +103,18 @@ public class ColorDialogIntegrationTest {
 				.performOpenColorPicker();
 
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testCorrectColorAfterApplyWithoutNewColorSelected() {
+		Paint initialPaint = toolReference.get().getDrawPaint();
+
+		onColorPickerView()
+				.performOpenColorPicker()
+				.onOkButton()
+				.perform(click());
+
+		assertEquals(initialPaint.getColor(), toolReference.get().getDrawPaint().getColor());
 	}
 
 	@Test
