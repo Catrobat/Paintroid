@@ -21,8 +21,10 @@ package org.catrobat.paintroid.test.espresso.dialog;
 
 import android.content.res.Resources;
 import android.graphics.PointF;
+import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.MainActivity;
@@ -47,14 +49,16 @@ public class IndeterminateProgressDialogIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-	private IndeterminateProgressDialog dialog;
+	private AlertDialog dialog;
 
+	@UiThreadTest
 	@Before
 	public void setUp() {
-		dialog = IndeterminateProgressDialog.newInstance();
-		dialog.show(activityTestRule.getActivity().getSupportFragmentManager(), "testdialog");
+		dialog = IndeterminateProgressDialog.newInstance(activityTestRule.getActivity());
+		dialog.show();
 	}
 
+	@UiThreadTest
 	@After
 	public void tearDown() {
 		dialog.dismiss();

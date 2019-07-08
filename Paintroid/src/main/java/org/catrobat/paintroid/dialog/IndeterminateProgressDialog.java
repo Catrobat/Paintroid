@@ -20,52 +20,47 @@
 package org.catrobat.paintroid.dialog;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatDialog;
-import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v7.app.AlertDialog;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import org.catrobat.paintroid.R;
 
-public class IndeterminateProgressDialog extends AppCompatDialogFragment {
-
-	public static IndeterminateProgressDialog newInstance() {
-		return new IndeterminateProgressDialog();
+public final class IndeterminateProgressDialog {
+	private IndeterminateProgressDialog() {
 	}
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setCancelable(false);
-	}
-
-	@NonNull
-	@Override
 	@SuppressLint("InflateParams")
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		LayoutInflater inflater = getActivity().getLayoutInflater();
+	public static AlertDialog newInstance(Context context) {
+		final LayoutInflater inflater = LayoutInflater.from(context);
 		View layout = inflater.inflate(R.layout.pocketpaint_layout_indeterminate, null);
 
-		// Remove this section once AppCompat supports tinting Progressbars
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
 			ProgressBar progressBar = layout.findViewById(R.id.pocketpaint_progress_bar);
 			if (progressBar != null) {
+				int accentColor = getAccentColor(context);
 				Drawable drawable = progressBar.getIndeterminateDrawable();
-				int toolTextColor = ContextCompat.getColor(getContext(), R.color.pocketpaint_colorAccent);
-				drawable.setColorFilter(toolTextColor, PorterDuff.Mode.SRC_IN);
+				drawable.setColorFilter(accentColor, PorterDuff.Mode.SRC_IN);
 			}
 		}
-		Dialog dialog = new AppCompatDialog(getContext(), R.style.PocketPaintProgressDialog);
-		dialog.setContentView(layout);
-		return dialog;
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.PocketPaintProgressDialog);
+		builder.setCancelable(false);
+		builder.setView(R.layout.pocketpaint_layout_indeterminate);
+		return builder.create();
+	}
+
+	private static int getAccentColor(Context context) {
+		final TypedValue value = new TypedValue();
+		Resources.Theme theme = context.getTheme();
+		theme.resolveAttribute(R.attr.colorAccent, value, true);
+		return value.data;
 	}
 }
