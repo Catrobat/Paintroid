@@ -101,7 +101,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private CommandFactory commandFactory;
 	private boolean resetPerspectiveAfterNextCommand;
 	private ToolController toolController;
-	private boolean focusAfterRecreate = true;
 
 	public MainActivityPresenter(MainView view, Model model, Workspace workspace, Navigator navigator,
 			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
@@ -413,7 +412,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void finishInitialize() {
 		refreshTopBarButtons();
 		topBarViewHolder.setColorButtonColor(toolController.getToolColor());
-		bottomBarViewHolder.selectToolButton(toolController.getToolType());
 
 		if (model.isFullscreen()) {
 			enterFullscreen();
@@ -496,7 +494,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void toolClicked(ToolType type) {
-		bottomBarViewHolder.cancelAnimation();
 		bottomBarViewHolder.hide();
 
 		if (toolController.getToolType() == type && toolController.hasToolOptionsView()) {
@@ -517,26 +514,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 	}
 
-	@Override
-	public void gotFocus() {
-		ToolType currentToolType = toolController.getToolType();
-		if (focusAfterRecreate) {
-			if (model.wasInitialAnimationPlayed()) {
-				bottomBarViewHolder.scrollToButton(currentToolType, false);
-			} else {
-				bottomBarViewHolder.startAnimation(currentToolType);
-				model.setInitialAnimationPlayed(true);
-			}
-			focusAfterRecreate = false;
-		}
-	}
-
 	private void setTool(ToolType toolType) {
-		final ToolType previousToolType = toolController.getToolType();
-
-		bottomBarViewHolder.deSelectToolButton(previousToolType);
-		bottomBarViewHolder.selectToolButton(toolType);
-		bottomBarViewHolder.scrollToButton(toolType, true);
+		bottomBarViewHolder.hide();
 
 		int offset = topBarViewHolder.getHeight();
 		navigator.showToolChangeToast(offset, toolType.getNameResource());

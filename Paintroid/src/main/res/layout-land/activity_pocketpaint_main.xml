@@ -63,11 +63,11 @@
         <LinearLayout
             android:id="@+id/pocketpaint_main_bottom_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_alignParentEnd="true"
             android:layout_above="@+id/pocketpaint_main_bottom_navigation"
-            android:background="@color/pocketpaint_background_color"
+            android:background="@android:color/background_light"
             android:visibility="gone">
 
             <include layout="@layout/pocketpaint_layout_bottom_bar"/>
