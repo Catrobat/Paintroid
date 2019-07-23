@@ -386,7 +386,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected void drawBitmap(Canvas canvas, float boxWidth, float boxHeight) {
 		tempDrawingRectangle.set(-boxWidth / 2, -boxHeight / 2,
 				boxWidth / 2, boxHeight / 2);
-		canvas.clipRect(tempDrawingRectangle, Op.UNION);
+		canvas.clipRect(tempDrawingRectangle);
 		canvas.drawBitmap(drawingBitmap, null, tempDrawingRectangle, null);
 	}
 
