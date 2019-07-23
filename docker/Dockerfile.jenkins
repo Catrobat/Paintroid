@@ -41,9 +41,13 @@ ARG _SDKMANAGER=$ANDROID_SDK_ROOT/tools/bin/sdkmanager
 #
 
 # curl/openssh-client: upload to web/share
+# x11-commons/x11-utils/libpulse0 needed to start emulator
 RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         openssh-client \
+        x11-common \
+        x11-utils \
+        libpulse0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Fastlane

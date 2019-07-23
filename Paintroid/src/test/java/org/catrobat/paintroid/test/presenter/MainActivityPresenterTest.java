@@ -714,7 +714,7 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testFinishInitializeThensetUndoRedoButtons() {
+	public void testFinishInitializeThenSetUndoRedoButtons() {
 		when(toolReference.get()).thenReturn(tool);
 		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 
@@ -725,7 +725,7 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testFinishInitializeWhenUndoAvailableThensetUndoRedoButtons() {
+	public void testFinishInitializeWhenUndoAvailableThenSetUndoRedoButtons() {
 		when(toolReference.get()).thenReturn(tool);
 		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 		when(commandManager.isUndoAvailable()).thenReturn(true);
@@ -737,7 +737,7 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testFinishInitializeWhenRedoAvailableThensetUndoRedoButtons() {
+	public void testFinishInitializeWhenRedoAvailableThenSetUndoRedoButtons() {
 		when(toolReference.get()).thenReturn(tool);
 		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
 		when(commandManager.isRedoAvailable()).thenReturn(true);
@@ -835,6 +835,27 @@ public class MainActivityPresenterTest {
 
 		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_save_image);
 		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_save_duplicate);
+	}
+
+	@Test
+	public void testFinishInitializeWhenCommandManagerBusyRestoreProgressDialog() {
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
+		when(commandManager.isBusy()).thenReturn(true);
+
+		presenter.finishInitialize();
+
+		verify(navigator).showIndeterminateProgressDialog();
+	}
+
+	@Test
+	public void testFinishInitializeWhenCommandManagerIdleThenDoNothing() {
+		when(toolReference.get()).thenReturn(tool);
+		when(tool.getDrawPaint()).thenReturn(mock(Paint.class));
+
+		presenter.finishInitialize();
+
+		verify(navigator, never()).showIndeterminateProgressDialog();
 	}
 
 	@Test
