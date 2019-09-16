@@ -84,6 +84,15 @@
                 android:textOn="@string/text_tool_dialog_bold_shortcut"
                 android:textOff="@string/text_tool_dialog_bold_shortcut"
                 android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/pocketpaint_text_tool_dialog_toggle_strike_through"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textOn="@string/text_tool_dialog_strike_through_shortcut"
+                android:textOff="@string/text_tool_dialog_strike_through_shortcut"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <TextView
