@@ -19,34 +19,24 @@
 
 package org.catrobat.paintroid.tools.options;
 
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.view.ViewGroup;
+public interface TextToolOptionsView {
+	void setState(boolean bold, boolean italic, boolean underlined, String text, int textSize, String font);
 
-public interface ToolOptionsController {
-	void hideAnimated();
-
-	void disable();
-
-	void enable();
-
-	void resetToOrigin();
-
-	void showAnimated();
-
-	void removeToolViews();
-
-	void setToolName(@StringRes int id);
-
-	boolean isVisible();
-
-	void setCallback(@Nullable Callback callback);
-
-	ViewGroup getToolSpecificOptionsLayout();
+	void setCallback(Callback listener);
 
 	interface Callback {
-		void onHide();
+		void setText(String text);
 
-		void onShow();
+		void setFont(String font);
+
+		void setUnderlined(boolean underlined);
+
+		void setItalic(boolean italic);
+
+		void setBold(boolean bold);
+
+		void setTextSize(int size);
+
+		void hideToolOptions();
 	}
 }

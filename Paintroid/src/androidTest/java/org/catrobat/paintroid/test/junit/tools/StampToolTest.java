@@ -33,7 +33,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.StampTool;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +55,7 @@ public class StampToolTest {
 	@Mock
 	private Workspace workspace;
 	@Mock
-	private ToolOptionsController toolOptionsController;
+	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 	@Mock
@@ -78,7 +78,7 @@ public class StampToolTest {
 			}
 		});
 
-		tool = new StampTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		tool = new StampTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 	}
 
 	@Test

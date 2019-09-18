@@ -35,14 +35,14 @@ import android.widget.SeekBar;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
-import org.catrobat.paintroid.tools.options.BrushToolOptions;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.BrushToolPreview;
 
 import java.util.Locale;
 
-public final class DefaultBrushToolOptions implements BrushToolOptions {
+public final class DefaultBrushToolOptionsView implements BrushToolOptionsView {
 	private static final int MIN_BRUSH_SIZE = 1;
-	private static final String TAG = DefaultBrushToolOptions.class.getSimpleName();
+	private static final String TAG = DefaultBrushToolOptionsView.class.getSimpleName();
 
 	private final EditText brushSizeText;
 	private final SeekBar brushWidthSeekBar;
@@ -50,16 +50,16 @@ public final class DefaultBrushToolOptions implements BrushToolOptions {
 	private final ImageButton buttonRect;
 	private final BrushToolPreview brushToolPreview;
 	@VisibleForTesting
-	public BrushToolOptions.OnBrushChangedListener brushChangedListener;
+	public BrushToolOptionsView.OnBrushChangedListener brushChangedListener;
 
-	public DefaultBrushToolOptions(ViewGroup rootView) {
+	public DefaultBrushToolOptionsView(ViewGroup rootView) {
 		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
 		View brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_stroke, rootView, true);
 
 		buttonCircle = brushPickerView.findViewById(R.id.pocketpaint_stroke_ibtn_circle);
 		buttonRect = brushPickerView.findViewById(R.id.pocketpaint_stroke_ibtn_rect);
 		brushWidthSeekBar = brushPickerView.findViewById(R.id.pocketpaint_stroke_width_seek_bar);
-		brushWidthSeekBar.setOnSeekBarChangeListener(new DefaultBrushToolOptions.OnBrushChangedWidthSeekBarListener());
+		brushWidthSeekBar.setOnSeekBarChangeListener(new DefaultBrushToolOptionsView.OnBrushChangedWidthSeekBarListener());
 		brushSizeText = brushPickerView.findViewById(R.id.pocketpaint_stroke_width_width_text);
 		brushSizeText.setFilters(new InputFilter[]{new DefaultNumberRangeFilter(1, 100)});
 		brushToolPreview = brushPickerView.findViewById(R.id.pocketpaint_brush_tool_preview);
@@ -128,7 +128,7 @@ public final class DefaultBrushToolOptions implements BrushToolOptions {
 	}
 
 	@Override
-	public void setBrushChangedListener(BrushToolOptions.OnBrushChangedListener brushChangedListener) {
+	public void setBrushChangedListener(BrushToolOptionsView.OnBrushChangedListener brushChangedListener) {
 		this.brushChangedListener = brushChangedListener;
 	}
 

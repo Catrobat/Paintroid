@@ -31,14 +31,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.options.TransformToolOptions;
+import org.catrobat.paintroid.tools.options.TransformToolOptionsView;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-public class DefaultTransformToolOptions implements TransformToolOptions {
-	private static final String TAG = DefaultTransformToolOptions.class.getSimpleName();
+public class DefaultTransformToolOptionsView implements TransformToolOptionsView {
+	private static final String TAG = DefaultTransformToolOptionsView.class.getSimpleName();
 	private final TransformToolSizeTextWatcher heightTextWatcher;
 	private final TransformToolSizeTextWatcher widthTextWatcher;
 	private EditText widthEditText;
@@ -48,7 +48,7 @@ public class DefaultTransformToolOptions implements TransformToolOptions {
 
 	private Callback callback;
 
-	public DefaultTransformToolOptions(ViewGroup rootView) {
+	public DefaultTransformToolOptionsView(ViewGroup rootView) {
 		LayoutInflater inflater = LayoutInflater.from(rootView.getContext());
 		View optionsView = inflater.inflate(R.layout.dialog_pocketpaint_transform_tool, rootView);
 

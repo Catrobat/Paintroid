@@ -419,7 +419,7 @@ public class LayerIntegrationTest {
 				.performClose();
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
 		onDrawingSurfaceView()
@@ -622,7 +622,7 @@ public class LayerIntegrationTest {
 				.checkLayerDimensions(bitmapHeight, bitmapWidth);
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 		onTopBarView()
 				.performUndo();
 

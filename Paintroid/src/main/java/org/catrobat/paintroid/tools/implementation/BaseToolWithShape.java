@@ -33,7 +33,7 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolWithShape;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {
 
@@ -49,9 +49,9 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	final Paint linePaint;
 	final DisplayMetrics metrics;
 
-	public BaseToolWithShape(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+	public BaseToolWithShape(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
 		metrics = contextCallback.getDisplayMetrics();
 

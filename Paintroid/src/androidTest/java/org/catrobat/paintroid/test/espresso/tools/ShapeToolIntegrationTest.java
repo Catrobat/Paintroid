@@ -86,7 +86,7 @@ public class ShapeToolIntegrationTest {
 				.perform(click())
 				.check(matches(isSelected()));
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
@@ -102,7 +102,7 @@ public class ShapeToolIntegrationTest {
 				.check(matches(isSelected()));
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
@@ -118,7 +118,7 @@ public class ShapeToolIntegrationTest {
 				.perform(click())
 				.check(matches(isSelected()));
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
@@ -132,7 +132,7 @@ public class ShapeToolIntegrationTest {
 				.check(matches(isSelected()));
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));

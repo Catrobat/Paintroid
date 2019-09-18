@@ -175,7 +175,7 @@ public class ToolOnBackPressedIntegrationTest {
 	public void testToolOptionsDisappearWhenBackPressed() {
 		onToolBarView()
 				.performSelectTool(ToolType.CURSOR)
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 
 		onView(withId(R.id.pocketpaint_layout_tool_options_name))
 				.check(matches(withText(R.string.button_cursor)));
@@ -306,10 +306,10 @@ public class ToolOnBackPressedIntegrationTest {
 	public void testCloseToolOptionOnBackPressed() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
-		onToolBarView().onToolOptions()
+		onToolBarView().onToolOptionsView()
 				.check(matches(isDisplayed()));
 		pressBack();
-		onToolBarView().onToolOptions()
+		onToolBarView().onToolOptionsView()
 				.check(matches(not(isDisplayed())));
 	}
 
@@ -319,12 +319,12 @@ public class ToolOnBackPressedIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 		onToolBarView()
 				.performSelectTool(ToolType.TEXT);
-		onToolBarView().onToolOptions()
+		onToolBarView().onToolOptionsView()
 				.check(matches(isDisplayed()));
 		onTopBarView().onUndoButton()
 				.check(matches(allOf(isDisplayed(), isEnabled())))
 				.perform(click());
-		onToolBarView().onToolOptions()
+		onToolBarView().onToolOptionsView()
 				.check(matches(not(isDisplayed())));
 	}
 }

@@ -36,7 +36,7 @@
             android:id="@+id/pocketpaint_drawing_surface_view"
             android:layout_below="@+id/pocketpaint_layout_top_bar"
             android:layout_alignParentStart="true"
-            android:layout_above="@+id/pocketpaint_main_bottom_bar"
+            android:layout_above="@+id/pocketpaint_main_bottom_navigation"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -56,14 +56,26 @@
         <LinearLayout
             android:id="@+id/pocketpaint_main_bottom_bar"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/background_light"
+            android:layout_above="@+id/pocketpaint_main_bottom_navigation"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentStart="true"
+            android:visibility="gone">
+
+            <include layout="@layout/pocketpaint_layout_bottom_bar"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_main_bottom_navigation"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
             android:background="@color/pocketpaint_background_color"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true">
 
-            <include layout="@layout/pocketpaint_layout_bottom_bar"/>
+            <include layout="@layout/pocketpaint_layout_bottom_navigation"/>
         </LinearLayout>
-
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView

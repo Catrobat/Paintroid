@@ -64,7 +64,7 @@ public class BrushPickerIntegrationTest {
 	public void setUp() {
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH)
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 	}
 
 	private Paint getCurrentToolBitmapPaint() {
@@ -125,7 +125,7 @@ public class BrushPickerIntegrationTest {
 		assertStrokePaint(getCurrentToolCanvasPaint(), MAX_STROKE_WIDTH, Cap.SQUARE);
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), MAX_STROKE_WIDTH, Cap.SQUARE);
 	}
@@ -141,16 +141,16 @@ public class BrushPickerIntegrationTest {
 		assertStrokePaint(getCurrentToolCanvasPaint(), newStrokeWidth, Cap.SQUARE);
 
 		onToolBarView()
-				.performCloseToolOptions()
+				.performCloseToolOptionsView()
 				.performSelectTool(ToolType.CURSOR)
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 
 		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 				.check(matches(withProgress(newStrokeWidth)));
 		assertStrokePaint(getCurrentToolCanvasPaint(), newStrokeWidth, Cap.SQUARE);
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 	}
 
 	@Test
@@ -159,7 +159,7 @@ public class BrushPickerIntegrationTest {
 		setStrokeWidth(MIN_STROKE_WIDTH);
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 	}
 
 	@Test
@@ -168,7 +168,7 @@ public class BrushPickerIntegrationTest {
 				.perform(touchCenterLeft());
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		Paint bitmapPaint = getCurrentToolBitmapPaint();
 		Paint canvasPaint = getCurrentToolCanvasPaint();
@@ -192,12 +192,12 @@ public class BrushPickerIntegrationTest {
 				.check(matches(not(isSelected())));
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), DEFAULT_STROKE_WIDTH, Cap.SQUARE);
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 
 		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
 				.perform(click())
@@ -209,7 +209,7 @@ public class BrushPickerIntegrationTest {
 		assertStrokePaint(getCurrentToolCanvasPaint(), DEFAULT_STROKE_WIDTH, Cap.ROUND);
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		assertStrokePaint(getCurrentToolCanvasPaint(), DEFAULT_STROKE_WIDTH, Cap.ROUND);
 	}

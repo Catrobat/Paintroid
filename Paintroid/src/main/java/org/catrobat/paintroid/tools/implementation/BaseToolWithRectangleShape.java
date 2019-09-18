@@ -43,7 +43,7 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ContextCallback.ScreenOrientation;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
@@ -119,9 +119,9 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected float touchDownPositionX;
 	protected float touchDownPositionY;
 
-	public BaseToolWithRectangleShape(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+	public BaseToolWithRectangleShape(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
 		ScreenOrientation orientation = contextCallback.getOrientation();
 		float boxSize = orientation == ScreenOrientation.PORTRAIT

@@ -21,7 +21,7 @@ package org.catrobat.paintroid.tools.options;
 
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
-public interface TransformToolOptions {
+public interface TransformToolOptionsView {
 	void setWidthFilter(NumberRangeFilter numberRangeFilter);
 
 	void setHeightFilter(NumberRangeFilter numberRangeFilter);

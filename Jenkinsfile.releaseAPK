@@ -94,6 +94,23 @@ pipeline {
                 }
             }
         }
+
+        stage('Bintray upload') {
+            when {
+                environment name: 'APPROVE_UPLOAD_APK', value: 'yes'
+            }
+            steps {
+                script {
+                    sh '''
+                            set +x
+                            ./gradlew bintrayUpload \
+                            -PbintrayUser=$bintrayUser \
+                            -PbintrayKey=$bintrayKey \
+                            -PdryRun=false
+                    '''
+                }
+            }
+        }
     }
 
     post {

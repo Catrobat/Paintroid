@@ -174,8 +174,6 @@ public interface MainActivityContracts {
 
 		void toolClicked(ToolType toolType);
 
-		void gotFocus();
-
 		void saveBeforeLoadImage();
 
 		void saveBeforeNewImage();
@@ -183,6 +181,10 @@ public interface MainActivityContracts {
 		void saveBeforeFinish();
 
 		void finishActivity();
+
+		void actionToolsClicked();
+
+		void actionCurrentToolClicked();
 	}
 
 	interface Model {
@@ -269,14 +271,12 @@ public interface MainActivityContracts {
 
 		void hide();
 
-		void startAnimation(ToolType toolType);
+		boolean isVisible();
+	}
 
-		void selectToolButton(ToolType toolType);
+	interface BottomNavigationViewHolder {
+		void show();
 
-		void deSelectToolButton(ToolType toolType);
-
-		void cancelAnimation();
-
-		void scrollToButton(ToolType toolType, boolean animate);
+		void hide();
 	}
 }

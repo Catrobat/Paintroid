@@ -22,31 +22,25 @@ package org.catrobat.paintroid.test.junit.tools;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.PointF;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.util.DisplayMetrics;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
-import org.catrobat.paintroid.ui.Perspective;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertEquals;
@@ -55,50 +49,58 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.class)
 public class BaseToolWithRectangleShapeToolTest {
 	private static final int RESIZE_MOVE_DISTANCE = 50;
-
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public MockitoRule mockito = MockitoJUnit.rule();
-
-	@Mock
-	private CommandManager commandManager;
-
-	private BaseToolWithRectangleShape toolToTest;
-	private float screenWidth = 1;
-	private float screenHeight = 1;
-	private PointF toolPosition;
+	private int screenWidth;
+	private int screenHeight;
 	private float rectWidth;
 	private float rectHeight;
 	private float rotation;
 	private float symbolDistance;
 
-	private Workspace workspace;
-	private Perspective perspective;
-	private ToolPaint toolPaint;
-	private ToolOptionsController toolOptionsController;
-	private ContextCallback contextCallback;
+	private PointF toolPosition;
 
-	@UiThreadTest
+	@Mock
+	private CommandManager commandManager;
+	@Mock
+	private ToolOptionsViewController toolOptionsViewController;
+	@Mock
+	private ContextCallback contextCallback;
+	@Mock
+	private Workspace workspace;
+	@Mock
+	private ToolPaint toolPaint;
+	@Mock
+	private DisplayMetrics metrics;
+
+	private BaseToolWithRectangleShape toolToTest;
+
 	@Before
 	public void setUp() {
-		MainActivity activity = activityTestRule.getActivity();
-		workspace = activity.workspace;
-		perspective = activity.perspective;
-		toolPaint = activity.toolPaint;
-		toolOptionsController = activity.toolOptionsController;
-		contextCallback = new DefaultContextCallback(InstrumentationRegistry.getTargetContext());
-		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.BRUSH, toolPaint, workspace, commandManager);
-
-		DisplayMetrics metrics = InstrumentationRegistry.getTargetContext()
-				.getResources().getDisplayMetrics();
+		metrics.heightPixels = 1920;
+		metrics.widthPixels = 1080;
+		metrics.density = 1;
 		screenWidth = metrics.widthPixels;
 		screenHeight = metrics.heightPixels;
+		when(contextCallback.getOrientation()).thenReturn(ContextCallback.ScreenOrientation.PORTRAIT);
+		when(contextCallback.getDisplayMetrics()).thenReturn(metrics);
+		when(workspace.getScale()).thenReturn(1f);
+		when(workspace.getWidth()).thenReturn(screenWidth);
+		when(workspace.getHeight()).thenReturn(screenHeight);
+		when(workspace.contains(any(PointF.class))).thenAnswer(new Answer<Boolean>() {
+			@Override
+			public Boolean answer(InvocationOnMock invocation) {
+				PointF point = invocation.getArgument(0);
+				return point.x >= 0 && point.y >= 0 && point.x < screenWidth && point.y < screenHeight;
+			}
+		});
+
+		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH, toolPaint, workspace, commandManager);
+
 		toolPosition = toolToTest.toolPosition;
 		rectWidth = toolToTest.boxWidth;
 		rectHeight = toolToTest.boxHeight;
@@ -106,124 +108,10 @@ public class BaseToolWithRectangleShapeToolTest {
 		symbolDistance = toolToTest.rotationSymbolDistance;
 	}
 
-	@UiThreadTest
-	@Test
-	public void testResizeRectangle() {
-
-		float rectWidth = toolToTest.boxWidth;
-		float rectHeight = toolToTest.boxHeight;
-		PointF rectPosition = toolToTest.toolPosition;
-
-		// resize bigger top left only on Y-coordinate
-		float dragFromX = rectPosition.x - rectWidth / 2;
-		float dragToX = dragFromX;
-		float dragFromY = rectPosition.y - rectHeight / 2;
-		float dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
-
-		// resize smaller top left only on Y-coordinate
-		dragToX = dragFromX;
-		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
-
-		// resize bigger top left only on X-coordinate
-		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-		dragToY = dragFromY;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
-
-		// resize smaller top left only on X-coordinate
-		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		dragToY = dragFromY;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
-
-		// resize bigger top center
-		dragFromX = rectPosition.x;
-		dragToX = dragFromX;
-		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, true, false);
-
-		// resize smaller top center;
-		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false, false);
-
-		// resize bigger top right
-		dragFromX = rectPosition.x + rectWidth / 2;
-		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		dragToY = dragFromY - RESIZE_MOVE_DISTANCE / 2;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
-
-		// resize smaller top right
-		dragToX = dragFromX - RESIZE_MOVE_DISTANCE / 2;
-		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
-
-		// resize bigger center right
-		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		dragFromY = rectPosition.y;
-		dragToY = dragFromY;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true, false);
-
-		// resize smaller center right
-		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false, false);
-
-		// resize bigger bottom right
-		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		dragFromY = rectPosition.y + rectHeight / 2;
-		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
-
-		// resize smaller bottom right
-		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
-
-		// resize bigger bottom center
-		dragFromX = rectPosition.x;
-		dragToX = dragFromX;
-		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, true, false);
-
-		// resize smaller bottom center
-		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, false, true, false, false);
-
-		// resize bigger bottom left only on Y-coordinate
-		dragFromX = rectPosition.x - rectWidth / 2;
-		dragFromY = rectPosition.y + rectHeight / 2;
-		dragToX = dragFromX;
-		dragToY = dragFromY + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
-
-		// resize smaller bottom left only on Y-coordinate
-		dragToX = dragFromX;
-		dragToY = dragFromY - RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
-
-		// resize bigger bottom left only on X-coordinate
-		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-		dragToY = dragFromY;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, true, true);
-
-		// resize smaller bottom left only on X-coordinate
-		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		dragToY = dragFromY;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, true, false, true);
-
-		// resize bigger center left
-		dragToX = dragFromX - RESIZE_MOVE_DISTANCE;
-		dragFromY = rectPosition.y;
-		dragToY = dragFromY;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, true, false);
-
-		// resize smaller center left
-		dragToX = dragFromX + RESIZE_MOVE_DISTANCE;
-		doResize(dragFromX, dragToX, dragFromY, dragToY, true, false, false, false);
-	}
-
-	@UiThreadTest
 	@Test
 	public void testResizeRectangleMinimumSizeBiggerThanMargin() {
+		when(workspace.contains(any(PointF.class))).thenReturn(true);
+
 		float rectWidth = toolToTest.boxWidth;
 		float rectHeight = toolToTest.boxHeight;
 		PointF rectPosition = toolToTest.toolPosition;
@@ -241,11 +129,10 @@ public class BaseToolWithRectangleShapeToolTest {
 		float newHeight = toolToTest.boxHeight;
 		float boxResizeMargin = BaseToolWithRectangleShape.DEFAULT_BOX_RESIZE_MARGIN;
 
-		assertTrue("new width should be bigger or equal to the resize margin", newWidth >= boxResizeMargin);
-		assertTrue("new height should be bigger or equal to the resize margin", newHeight >= boxResizeMargin);
+		assertThat(newHeight, is(greaterThanOrEqualTo(boxResizeMargin)));
+		assertThat(newWidth, is(greaterThanOrEqualTo(boxResizeMargin)));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testMoveRectangle() {
 		float rectWidth = toolToTest.boxWidth;
@@ -270,14 +157,12 @@ public class BaseToolWithRectangleShapeToolTest {
 		assertTrue("position should have moved", (newPosition.x == dragToX) && (newPosition.y == dragToY));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testRectangleSizeMaximumWhenZoomed() {
 
-		float scale = 0.8f;
-		perspective.setScale(scale);
+		when(workspace.getScale()).thenReturn(0.8f, 0.15f, 0.1f);
 
-		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.SHAPE,
+		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.SHAPE,
 				toolPaint, workspace, commandManager);
 
 		float width = toolToTest.boxWidth;
@@ -285,10 +170,7 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		assertEquals("Width and Height should be the same with activating Rectangletool on low zoom out", width, height, Double.MIN_VALUE);
 
-		scale = 0.15f;
-		perspective.setScale(scale);
-
-		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.SHAPE,
+		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.SHAPE,
 				toolPaint, workspace, commandManager);
 
 		width = toolToTest.boxWidth;
@@ -298,10 +180,7 @@ public class BaseToolWithRectangleShapeToolTest {
 				"With zooming out a lot, height and width should not be the same anymore and adjust the ratio to the drawinSurface",
 				width, height);
 
-		scale = 0.1f;
-		perspective.setScale(scale);
-
-		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.SHAPE,
+		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.SHAPE,
 				toolPaint, workspace, commandManager);
 
 		float newWidth = toolToTest.boxWidth;
@@ -316,40 +195,31 @@ public class BaseToolWithRectangleShapeToolTest {
 				newHeight, height, Double.MIN_VALUE);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() {
-		float scale = 1f;
-		perspective.setScale(scale);
-		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.BRUSH,
+		when(workspace.getScale()).thenReturn(1f, 2f);
+		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
 				toolPaint, workspace, commandManager);
-		scale = 2f;
-		perspective.setScale(scale);
+		BaseToolWithRectangleShape rectTool2 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
+				toolPaint, workspace, commandManager);
 
-		BaseToolWithRectangleShape rectTool2 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.BRUSH,
-				toolPaint, workspace, commandManager);
 		assertTrue("rectangle should be smaller with scale 2",
 				(rectTool1.boxWidth > rectTool2.boxWidth)
 						&& (rectTool1.boxHeight > rectTool2.boxHeight));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel05() {
-		float scale = 1f;
-		perspective.setScale(scale);
+		when(workspace.getScale()).thenReturn(1f, 0.5f);
 
-		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.BRUSH,
+		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
 				toolPaint, workspace, commandManager);
-		scale = 0.5f;
-		perspective.setScale(scale);
-		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsController, ToolType.BRUSH,
+		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
 				toolPaint, workspace, commandManager);
 		assertThat(rectTool1.boxWidth, is(lessThan(rectTool05.boxWidth)));
 		assertThat(rectTool1.boxHeight, is(lessThan(rectTool05.boxHeight)));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testRotateRectangleRight() {
 
@@ -368,10 +238,8 @@ public class BaseToolWithRectangleShapeToolTest {
 		assertThat(newRotation, is(greaterThan(rotation)));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testRotateRectangleLeft() {
-
 		toolToTest.rotationEnabled = true;
 		toolToTest.handleDown(toolPosition);
 		toolToTest.handleUp(toolPosition);
@@ -381,13 +249,12 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		// try rotate left
 		toolToTest.handleDown(topLeftRotationPoint);
-		toolToTest.handleMove(new PointF(topLeftRotationPoint.x, screenHeight / 2));
-		toolToTest.handleUp(new PointF(topLeftRotationPoint.x, screenHeight / 2));
+		toolToTest.handleMove(new PointF(topLeftRotationPoint.x, screenHeight / 2f));
+		toolToTest.handleUp(new PointF(topLeftRotationPoint.x, screenHeight / 2f));
 		float newRotation = toolToTest.boxRotation;
 		assertThat(newRotation, is(lessThan(rotation)));
 	}
 
-	@UiThreadTest
 	@Test
 	public void testRotateRectangle() {
 
@@ -437,7 +304,6 @@ public class BaseToolWithRectangleShapeToolTest {
 		assertEquals("Rotation value should be 0 degree.", newRotation, 0, Float.MIN_VALUE);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testRotateOnlyNearCorner() {
 
@@ -464,7 +330,6 @@ public class BaseToolWithRectangleShapeToolTest {
 		assertNotEquals("Rectangle should rotate.", newRotation, 0);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testIsClickInsideBoxCalculatedCorrect() {
 		PointF topLeftCorner = new PointF(toolPosition.x - rectWidth / 2 + 20,
@@ -505,66 +370,12 @@ public class BaseToolWithRectangleShapeToolTest {
 		assertEquals(toolToTest.toolPosition.y, initialToolPositionY, 0);
 	}
 
-	private void doResize(float dragFromX, float dragToX, float dragFromY, float dragToY, boolean resizeWidth,
-			boolean resizeHeight, boolean resizeBigger, boolean isCorner) {
-
-		float rectWidth = toolToTest.boxWidth;
-		float rectHeight = toolToTest.boxHeight;
-		PointF rectPosition = toolToTest.toolPosition;
-
-		PointF pointDown = new PointF(dragFromX, dragFromY);
-		PointF pointMoveTo = new PointF(dragToX, dragToY);
-
-		toolToTest.handleDown(pointDown);
-		toolToTest.handleMove(pointMoveTo);
-		toolToTest.handleUp(pointMoveTo);
-
-		float newWidth = toolToTest.boxWidth;
-		float newHeight = toolToTest.boxHeight;
-		PointF newPosition = toolToTest.toolPosition;
-
-		if (resizeBigger) {
-			if (resizeWidth) {
-				assertTrue("new width should be bigger", newWidth > rectWidth);
-			} else {
-				assertEquals("height should not have changed", newWidth, rectWidth, Float.MIN_VALUE);
-			}
-			if (resizeHeight) {
-				assertTrue("new width should be bigger", newHeight > rectHeight);
-			} else {
-				assertEquals("height should not have changed", newHeight, rectHeight, Float.MIN_VALUE);
-			}
-			if (isCorner) {
-				assertEquals("resizing should be in aspect ratio", newHeight, newWidth, Float.MIN_VALUE);
-			}
-		} else {
-			if (resizeWidth) {
-				assertTrue("new height should be smaller", newWidth < rectWidth);
-			} else {
-				assertEquals("height should not have changed", newWidth, rectWidth, Float.MIN_VALUE);
-			}
-			if (resizeHeight) {
-				assertTrue("new width should be smaller", newHeight < rectHeight);
-			} else {
-				assertEquals("height should not have changed", newHeight, rectHeight, Float.MIN_VALUE);
-			}
-			if (isCorner) {
-				assertEquals("resizing should be in aspect ratio", newHeight, newWidth, Float.MIN_VALUE);
-			}
-		}
-
-		assertEquals("position should be the same", newPosition.x, rectPosition.x, Float.MIN_VALUE);
-		assertEquals("position should be the same", newPosition.y, rectPosition.y, Float.MIN_VALUE);
-		toolToTest.boxWidth = rectWidth;
-		toolToTest.boxHeight = rectHeight;
-	}
-
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 		private final ToolType toolType;
 
-		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
-				ToolType toolType, ToolPaint toolPaint, Workspace layerModelWrapper, CommandManager commandManager) {
-			super(contextCallback, toolOptionsController, toolPaint, layerModelWrapper, commandManager);
+		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint,
+				Workspace layerModelWrapper, CommandManager commandManager) {
+			super(contextCallback, toolOptionsViewController, toolPaint, layerModelWrapper, commandManager);
 			this.toolType = toolType;
 		}
 

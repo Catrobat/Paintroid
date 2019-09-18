@@ -32,16 +32,16 @@ import android.widget.SeekBar;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
 import org.catrobat.paintroid.tools.implementation.FillTool;
-import org.catrobat.paintroid.tools.options.FillToolOptions;
+import org.catrobat.paintroid.tools.options.FillToolOptionsView;
 
 import java.util.Locale;
 
-public class DefaultFillToolOptions implements FillToolOptions {
+public class DefaultFillToolOptionsView implements FillToolOptionsView {
 	private SeekBar colorToleranceSeekBar;
 	private EditText colorToleranceEditText;
 	private Callback callback;
 
-	public DefaultFillToolOptions(ViewGroup toolSpecificOptionsLayout) {
+	public DefaultFillToolOptionsView(ViewGroup toolSpecificOptionsLayout) {
 		LayoutInflater inflater = LayoutInflater.from(toolSpecificOptionsLayout.getContext());
 		View fillToolOptionsView = inflater.inflate(R.layout.dialog_pocketpaint_fill_tool, toolSpecificOptionsLayout);
 

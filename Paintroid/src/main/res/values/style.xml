@@ -65,6 +65,29 @@
         <item name="android:background">@drawable/pocketpaint_attribute_button_selector</item>
     </style>
 
+    <style name="PocketPaintToolSelectionButton" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PocketPaintToolSelectionButtonImageView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:tint">@android:color/black</item>
+    </style>
+
+    <style name="PocketPaintToolSelectionButtonTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
     <style name="PocketPaintDrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">false</item>
         <item name="color">@android:color/white</item>

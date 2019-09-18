@@ -19,10 +19,32 @@
 
 package org.catrobat.paintroid.tools.options;
 
-public interface FillToolOptions {
-	void setCallback(Callback callback);
+import android.graphics.Paint;
 
-	interface Callback {
-		void onColorToleranceChanged(int colorTolerance);
+import org.catrobat.paintroid.tools.ToolType;
+
+public interface BrushToolOptionsView {
+	void invalidate();
+
+	void setCurrentPaint(Paint paint);
+
+	void setBrushChangedListener(OnBrushChangedListener onBrushChangedListener);
+
+	void setBrushPreviewListener(OnBrushPreviewListener onBrushPreviewListener);
+
+	interface OnBrushChangedListener {
+		void setCap(Paint.Cap strokeCap);
+
+		void setStrokeWidth(int strokeWidth);
+	}
+
+	interface OnBrushPreviewListener {
+		float getStrokeWidth();
+
+		Paint.Cap getStrokeCap();
+
+		int getColor();
+
+		ToolType getToolType();
 	}
 }

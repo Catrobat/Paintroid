@@ -19,24 +19,10 @@
 
 package org.catrobat.paintroid.tools.options;
 
-public interface TextToolOptions {
-	void setState(boolean bold, boolean italic, boolean underlined, String text, int textSize, String font);
-
-	void setCallback(Callback listener);
+public interface FillToolOptionsView {
+	void setCallback(Callback callback);
 
 	interface Callback {
-		void setText(String text);
-
-		void setFont(String font);
-
-		void setUnderlined(boolean underlined);
-
-		void setItalic(boolean italic);
-
-		void setBold(boolean bold);
-
-		void setTextSize(int size);
-
-		void hideToolOptions();
+		void onColorToleranceChanged(int colorTolerance);
 	}
 }

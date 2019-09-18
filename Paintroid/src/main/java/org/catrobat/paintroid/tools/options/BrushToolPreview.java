@@ -20,7 +20,7 @@
 package org.catrobat.paintroid.tools.options;
 
 public interface BrushToolPreview {
-	void setListener(BrushToolOptions.OnBrushPreviewListener callback);
+	void setListener(BrushToolOptionsView.OnBrushPreviewListener callback);
 
 	void invalidate();
 }

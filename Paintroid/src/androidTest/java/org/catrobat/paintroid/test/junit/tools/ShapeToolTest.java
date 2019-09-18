@@ -19,103 +19,87 @@
 
 package org.catrobat.paintroid.test.junit.tools;
 
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.util.DisplayMetrics;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
-import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
 import org.catrobat.paintroid.tools.implementation.ShapeTool;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(Parameterized.class)
 public class ShapeToolTest {
-
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
 	@Rule
 	public MockitoRule mockito = MockitoJUnit.rule();
-
+	@Parameter
+	public ShapeTool.BaseShape shape;
 	@Mock
 	private CommandManager commandManager;
+	@Mock
+	private ShapeToolOptionsView shapeToolOptions;
+	@Mock
+	private ToolOptionsViewController toolOptionsViewController;
+	@Mock
+	private ContextCallback contextCallback;
+	@Mock
+	private Workspace workspace;
+	@Mock
+	private ToolPaint toolPaint;
+	@Mock
+	private DisplayMetrics displayMetrics;
+	private ShapeTool shapeTool;
 
-	private ShapeTool rectangleShapeTool;
-	private ShapeTool ovalShapeTool;
-	private ShapeTool heartShapeTool;
-	private ShapeTool starShapeTool;
+	@Parameters(name = "{0}")
+	public static Iterable<ShapeTool.BaseShape> data() {
+		return Arrays.asList(
+				ShapeTool.BaseShape.RECTANGLE,
+				ShapeTool.BaseShape.OVAL,
+				ShapeTool.BaseShape.HEART,
+				ShapeTool.BaseShape.STAR
+		);
+	}
 
-	@UiThreadTest
 	@Before
 	public void setUp() {
-		MainActivity activity = activityTestRule.getActivity();
-		Workspace workspace = activity.workspace;
-		ToolPaint toolPaint = activity.toolPaint;
-		ToolOptionsController toolOptionsController = activity.toolOptionsController;
-		ContextCallback contextCallback = new DefaultContextCallback(InstrumentationRegistry.getTargetContext());
+		when(workspace.getWidth()).thenReturn(100);
+		when(workspace.getHeight()).thenReturn(100);
+		when(workspace.getScale()).thenReturn(1f);
 
-		rectangleShapeTool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-		rectangleShapeTool.baseShape = ShapeTool.BaseShape.RECTANGLE;
+		when(contextCallback.getDisplayMetrics()).thenReturn(displayMetrics);
+		displayMetrics.widthPixels = 100;
+		displayMetrics.heightPixels = 100;
 
-		ovalShapeTool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-		ovalShapeTool.baseShape = ShapeTool.BaseShape.OVAL;
-
-		heartShapeTool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-		heartShapeTool.baseShape = ShapeTool.BaseShape.HEART;
-
-		starShapeTool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-		starShapeTool.baseShape = ShapeTool.BaseShape.STAR;
+		shapeTool = new ShapeTool(shapeToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		shapeTool.baseShape = shape;
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
-		ToolType toolTypeRect = rectangleShapeTool.getToolType();
-		assertEquals(ToolType.SHAPE, toolTypeRect);
-		toolTypeRect = ovalShapeTool.getToolType();
-		assertEquals(ToolType.SHAPE, toolTypeRect);
-		toolTypeRect = heartShapeTool.getToolType();
-		assertEquals(ToolType.SHAPE, toolTypeRect);
-		toolTypeRect = starShapeTool.getToolType();
-		assertEquals(ToolType.SHAPE, toolTypeRect);
-
-		ShapeTool.BaseShape rectangleShape = rectangleShapeTool.getBaseShape();
-		assertEquals(ShapeTool.BaseShape.RECTANGLE, rectangleShape);
-		ShapeTool.BaseShape ovalShape = ovalShapeTool.getBaseShape();
-		assertEquals(ShapeTool.BaseShape.OVAL, ovalShape);
-		ShapeTool.BaseShape heartShape = heartShapeTool.getBaseShape();
-		assertEquals(ShapeTool.BaseShape.HEART, heartShape);
-		ShapeTool.BaseShape starShape = starShapeTool.getBaseShape();
-		assertEquals(ShapeTool.BaseShape.STAR, starShape);
+		ToolType toolType = shapeTool.getToolType();
+		assertEquals(ToolType.SHAPE, toolType);
 	}
 
-	@UiThreadTest
 	@Test
-	public void testColorChangeWorks() {
-		Paint red = new Paint();
-		red.setColor(Color.RED);
-		rectangleShapeTool.setDrawPaint(red);
-		MainActivity activity = activityTestRule.getActivity();
-		Tool currentTool = activity.toolReference.get();
-		int color = currentTool.getDrawPaint().getColor();
-		assertEquals("Red colour expected", Color.RED, color);
+	public void testShouldReturnCorrectBaseShape() {
+		ShapeTool.BaseShape baseShape = shapeTool.getBaseShape();
+		assertEquals(shape, baseShape);
 	}
 }

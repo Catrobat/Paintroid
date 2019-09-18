@@ -19,19 +19,23 @@
 
 package org.catrobat.paintroid.test.junit.model;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.test.annotation.UiThreadTest;
-import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.CommandManager.CommandListener;
+import org.catrobat.paintroid.command.implementation.AsyncCommandManager;
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
+import org.catrobat.paintroid.command.implementation.DefaultCommandManager;
+import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
+import org.catrobat.paintroid.model.Layer;
+import org.catrobat.paintroid.model.LayerModel;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -40,10 +44,8 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
+@RunWith(AndroidJUnit4.class)
 public class LayerTest {
-
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 	private CommandFactory commandFactory;
 	private CommandManager commandManager;
 	private LayerContracts.Model layerModel;
@@ -51,12 +53,16 @@ public class LayerTest {
 	@Before
 	public void setUp() {
 		commandFactory = new DefaultCommandFactory();
-		MainActivity activity = activityTestRule.getActivity();
-		commandManager = activity.commandManager;
-		layerModel = activity.layerModel;
+		layerModel = new LayerModel();
+		layerModel.setWidth(200);
+		layerModel.setHeight(200);
+		Layer layer = new Layer(Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888));
+		layerModel.addLayerAt(0, layer);
+		layerModel.setCurrentLayer(layer);
+
+		commandManager = new AsyncCommandManager(new DefaultCommandManager(new CommonFactory(), layerModel), layerModel);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testCreateManyLayers() {
 		for (int i = 0; i < 100; i++) {
@@ -69,13 +75,8 @@ public class LayerTest {
 	public void testMoveLayer() {
 		final CommandListener listener = mock(CommandListener.class);
 
-		activityTestRule.getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				commandManager.addCommandListener(listener);
-				commandManager.addCommand(commandFactory.createAddLayerCommand());
-			}
-		});
+		commandManager.addCommandListener(listener);
+		commandManager.addCommand(commandFactory.createAddLayerCommand());
 
 		verify(listener, timeout(1000)).commandPostExecute();
 		assertThat(layerModel.getLayerCount(), is(2));
@@ -85,12 +86,7 @@ public class LayerTest {
 
 		reset(listener);
 
-		activityTestRule.getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				commandManager.addCommand(commandFactory.createReorderLayersCommand(0, 1));
-			}
-		});
+		commandManager.addCommand(commandFactory.createReorderLayersCommand(0, 1));
 
 		verify(listener, timeout(1000)).commandPostExecute();
 		assertThat(layerModel.getLayerCount(), is(2));
@@ -106,13 +102,8 @@ public class LayerTest {
 		firstLayer.getBitmap().setPixel(1, 1, Color.BLACK);
 		firstLayer.getBitmap().setPixel(1, 2, Color.BLACK);
 
-		activityTestRule.getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				commandManager.addCommandListener(listener);
-				commandManager.addCommand(commandFactory.createAddLayerCommand());
-			}
-		});
+		commandManager.addCommandListener(listener);
+		commandManager.addCommand(commandFactory.createAddLayerCommand());
 
 		verify(listener, timeout(1000)).commandPostExecute();
 
@@ -124,12 +115,7 @@ public class LayerTest {
 
 		reset(listener);
 
-		activityTestRule.getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				commandManager.addCommand(commandFactory.createMergeLayersCommand(0, 1));
-			}
-		});
+		commandManager.addCommand(commandFactory.createMergeLayersCommand(0, 1));
 
 		verify(listener, timeout(1000)).commandPostExecute();
 
