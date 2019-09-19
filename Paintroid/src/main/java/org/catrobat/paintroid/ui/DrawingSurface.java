@@ -159,7 +159,10 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 					surfaceViewCanvas.drawBitmap(iterator.previous().getBitmap(), 0, 0, null);
 				}
 
-				toolReference.get().draw(surfaceViewCanvas);
+				Tool tool = toolReference.get();
+				if (tool != null) {
+					tool.draw(surfaceViewCanvas);
+				}
 			}
 		}
 	}

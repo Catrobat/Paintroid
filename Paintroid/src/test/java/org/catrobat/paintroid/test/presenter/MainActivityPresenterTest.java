@@ -693,7 +693,7 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testFinishInitializeWhenRedoAvailableThensetUndoRedoButtons() {
+	public void testFinishInitializeWhenRedoAvailableThenSetUndoRedoButtons() {
 		when(commandManager.isRedoAvailable()).thenReturn(true);
 
 		presenter.finishInitialize();
@@ -760,6 +760,22 @@ public class MainActivityPresenterTest {
 
 		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_save_image);
 		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_save_duplicate);
+	}
+
+	@Test
+	public void testFinishInitializeWhenCommandManagerBusyRestoreProgressDialog() {
+		when(commandManager.isBusy()).thenReturn(true);
+
+		presenter.finishInitialize();
+
+		verify(navigator).showIndeterminateProgressDialog();
+	}
+
+	@Test
+	public void testFinishInitializeWhenCommandManagerIdleThenDoNothing() {
+		presenter.finishInitialize();
+
+		verify(navigator, never()).showIndeterminateProgressDialog();
 	}
 
 	@Test
