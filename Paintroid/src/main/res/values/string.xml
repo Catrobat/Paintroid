@@ -165,4 +165,10 @@
     <string name="pocketpaint_intro">Intro</string>
 
     <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
+
+    <string name="bottom_navigation_tools">Tools</string>
+    <string name="bottom_navigation_current">Current</string>
+    <string name="bottom_navigation_color">Color</string>
+    <string name="bottom_navigation_layers">Layers</string>
+    <string name="bottom_navigation_item">Item for Bottom Navigation</string>
 </resources>

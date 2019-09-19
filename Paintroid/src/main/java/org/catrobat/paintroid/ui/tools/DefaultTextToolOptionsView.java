@@ -37,14 +37,14 @@ import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.options.TextToolOptions;
+import org.catrobat.paintroid.tools.options.TextToolOptionsView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class DefaultTextToolOptions implements TextToolOptions {
+public class DefaultTextToolOptionsView implements TextToolOptionsView {
 	private final Context context;
 	private Callback callback;
 	private final EditText textEditText;
@@ -56,7 +56,7 @@ public class DefaultTextToolOptions implements TextToolOptions {
 	private final Button doneButton;
 	private final List<String> fonts;
 
-	public DefaultTextToolOptions(ViewGroup rootView) {
+	public DefaultTextToolOptionsView(ViewGroup rootView) {
 		context = rootView.getContext();
 		LayoutInflater inflater = LayoutInflater.from(context);
 		View textToolView = inflater.inflate(R.layout.dialog_pocketpaint_text_tool, rootView);

@@ -29,18 +29,22 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <include layout="@layout/pocketpaint_layout_top_bar"
-            android:id="@+id/pocketpaint_layout_top_bar"/>
+        <include
+            android:id="@+id/pocketpaint_layout_top_bar"
+            layout="@layout/pocketpaint_layout_top_bar"
+            android:layout_width="@dimen/pocketpaint_main_top_bar_landscape_width"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/pocketpaint_main_bottom_navigation" />
 
         <org.catrobat.paintroid.ui.DrawingSurface
             android:id="@+id/pocketpaint_drawing_surface_view"
-            android:layout_width="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/pocketpaint_main_drawing_surface_active"
+            android:layout_above="@+id/pocketpaint_main_bottom_navigation"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/pocketpaint_layout_top_bar"
-            android:layout_toStartOf="@+id/pocketpaint_main_bottom_bar" />
+            android:background="@color/pocketpaint_main_drawing_surface_active" />
 
         <LinearLayout
             android:id="@+id/pocketpaint_main_tool_options"
@@ -50,19 +54,34 @@
             android:layout_alignParentBottom="true"
             android:orientation="vertical"
             android:layout_toStartOf="@+id/pocketpaint_main_bottom_bar"
-            android:layout_toEndOf="@+id/pocketpaint_layout_top_bar">
+            android:layout_alignParentEnd="true"
+            android:layout_above="@+id/pocketpaint_main_bottom_navigation">
 
             <include layout="@layout/pocketpaint_layout_tool_options"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/pocketpaint_main_bottom_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_alignParentEnd="true">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            android:layout_above="@+id/pocketpaint_main_bottom_navigation"
+            android:background="@android:color/background_light"
+            android:visibility="gone">
 
             <include layout="@layout/pocketpaint_layout_bottom_bar"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_main_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
+            android:background="@color/pocketpaint_background_color"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true">
+
+            <include layout="@layout/pocketpaint_layout_bottom_navigation"/>
         </LinearLayout>
 
     </RelativeLayout>

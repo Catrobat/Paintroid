@@ -78,7 +78,7 @@ public class WelcomeActivity extends AppCompatActivity {
 			if (state == ViewPager.SCROLL_STATE_IDLE) {
 				if (layouts[pos] == R.layout.pocketpaint_slide_intro_possibilities) {
 					View layout = findViewById(R.id.pocketpaint_intro_possibilites_topbar);
-					LinearLayout view = layout.findViewById(R.id.pocketpaint_top_bar_buttons);
+					LinearLayout view = layout.findViewById(R.id.pocketpaint_intro_top_bar_buttons);
 					final View fadeView = findViewById(R.id.pocketpaint_intro_possibilities_textview);
 
 					TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
@@ -86,7 +86,7 @@ public class WelcomeActivity extends AppCompatActivity {
 					target.initTargetView();
 				} else if (layouts[pos] == R.layout.pocketpaint_slide_intro_tools) {
 					View layout = findViewById(R.id.pocketpaint_intro_tools_bottom_bar);
-					LinearLayout view = layout.findViewById(R.id.pocketpaint_tools_layout);
+					LinearLayout view = layout.findViewById(R.id.pocketpaint_intro_tools_layout);
 					final View fadeView = findViewById(R.id.pocketpaint_intro_tools_textview);
 
 					TapTargetBottomBar target = new TapTargetBottomBar(view, fadeView,

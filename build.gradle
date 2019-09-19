@@ -32,7 +32,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.1.4'
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.3'
         classpath 'com.novoda:bintray-release:0.8.1'
-        classpath 'org.catrobat.gradle.androidemulators:android-emulators-gradle:1.1.0'
+        classpath 'org.catrobat.gradle.androidemulators:android-emulators-gradle:1.6.1'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.4'
         classpath 'com.vanniktech:gradle-android-apk-size-plugin:0.4.0'
 
@@ -40,11 +40,11 @@ buildscript {
 }
 
 ext {
-    androidCompileSdkVersion = 26
+    androidCompileSdkVersion = 28
     androidMinSdkVersion = 17
     androidTargetSdkVersion = 26
 
-    androidSupportLibraryVersion = '26.1.0'
+    androidSupportLibraryVersion = '28.0.0'
 
     androidVersionCode = 30
     androidVersionName = '2.4.1'

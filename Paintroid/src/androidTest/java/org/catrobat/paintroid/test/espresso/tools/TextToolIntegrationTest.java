@@ -239,7 +239,7 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.SIZE_40);
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		PointF boxPosition = getToolMemberBoxPosition();
 		PointF newBoxPosition = new PointF(boxPosition.x + 20, boxPosition.y + 20);
@@ -248,7 +248,7 @@ public class TextToolIntegrationTest {
 		setToolMemberBoxWidth(50.0f);
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 
 		assertEquals(TEST_TEXT, textEditText.getText().toString());
 		assertEquals(FONT_SANS_SERIF, fontSpinner.getSelectedItem());
@@ -446,7 +446,7 @@ public class TextToolIntegrationTest {
 		enterMultilineTestText();
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		Bitmap bitmap = getToolMemberDrawingBitmap();
 		int[] pixelsTool = new int[bitmap.getWidth()];
@@ -486,7 +486,7 @@ public class TextToolIntegrationTest {
 		enterTestText();
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		float newBoxWidth = getToolMemberBoxWidth() * 1.5f;
 		float newBoxHeight = getToolMemberBoxHeight() * 1.5f;
@@ -532,7 +532,7 @@ public class TextToolIntegrationTest {
 		enterMultilineTestText();
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		String[] expectedTextSplitUp = {"testing", "multiline", "text", "", "123"};
 		String[] actualTextSplitUp = getToolMemberMultilineText();

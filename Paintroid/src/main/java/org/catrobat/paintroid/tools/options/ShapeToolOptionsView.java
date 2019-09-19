@@ -19,32 +19,22 @@
 
 package org.catrobat.paintroid.tools.options;
 
-import android.graphics.Paint;
+import org.catrobat.paintroid.tools.implementation.ShapeTool;
 
-import org.catrobat.paintroid.tools.ToolType;
+public interface ShapeToolOptionsView {
+	void setShapeActivated(ShapeTool.BaseShape shape);
 
-public interface BrushToolOptions {
-	void invalidate();
+	void setDrawTypeActivated(ShapeTool.ShapeDrawType drawType);
 
-	void setCurrentPaint(Paint paint);
+	void setShapeOutlineWidth(int outlineWidth);
 
-	void setBrushChangedListener(OnBrushChangedListener onBrushChangedListener);
+	void setCallback(Callback callback);
 
-	void setBrushPreviewListener(OnBrushPreviewListener onBrushPreviewListener);
+	interface Callback {
+		void setToolType(ShapeTool.BaseShape shape);
 
-	interface OnBrushChangedListener {
-		void setCap(Paint.Cap strokeCap);
+		void setDrawType(ShapeTool.ShapeDrawType drawType);
 
-		void setStrokeWidth(int strokeWidth);
-	}
-
-	interface OnBrushPreviewListener {
-		float getStrokeWidth();
-
-		Paint.Cap getStrokeCap();
-
-		int getColor();
-
-		ToolType getToolType();
+		void setOutlineWidth(int outlineWidth);
 	}
 }

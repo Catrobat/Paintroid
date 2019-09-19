@@ -27,8 +27,8 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.FillTool;
-import org.catrobat.paintroid.tools.options.FillToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.FillToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -40,11 +40,11 @@ import static org.junit.Assert.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class FillToolTest {
 	@Mock
-	public FillToolOptions fillToolOptions;
+	public FillToolOptionsView fillToolOptions;
 	@Mock
 	public ContextCallback contextCallback;
 	@Mock
-	public ToolOptionsController toolOptionsController;
+	public ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	public Workspace workspace;
 	@Mock

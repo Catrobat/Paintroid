@@ -143,6 +143,8 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 			setCurrentColor(arguments.getInt(CURRENT_COLOR, Color.BLACK));
 			setInitialColor(arguments.getInt(INITIAL_COLOR, Color.BLACK));
 		}
+
+		colorToApply = colorPickerView.getInitialColor();
 	}
 
 	@NonNull

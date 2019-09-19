@@ -29,8 +29,8 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.FillToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.FillToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 public class FillTool extends BaseTool {
 
@@ -40,12 +40,12 @@ public class FillTool extends BaseTool {
 	@VisibleForTesting
 	public float colorTolerance = MAX_ABSOLUTE_TOLERANCE * DEFAULT_TOLERANCE_IN_PERCENT / 100.0f;
 
-	public FillTool(FillToolOptions fillToolOptions, ContextCallback contextCallback,
-			ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace,
+	public FillTool(FillToolOptionsView fillToolOptionsView, ContextCallback contextCallback,
+			ToolOptionsViewController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
 			CommandManager commandManager) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
-		fillToolOptions.setCallback(new FillToolOptions.Callback() {
+		fillToolOptionsView.setCallback(new FillToolOptionsView.Callback() {
 			@Override
 			public void onColorToleranceChanged(int colorTolerance) {
 				updateColorTolerance(colorTolerance);

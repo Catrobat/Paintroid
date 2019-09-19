@@ -19,11 +19,12 @@
 
 package org.catrobat.paintroid.tools;
 
-import android.app.Activity;
-
+import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 public interface ToolFactory {
-	Tool createTool(ToolType toolType, ToolOptionsController toolOptionsController, Activity activity, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint);
+	Tool createTool(ToolType toolType, ToolOptionsViewController toolOptionsViewController, CommandManager commandManager,
+			Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback,
+			ColorPickerDialog.OnColorPickedListener onColorPickedListener);
 }

@@ -34,8 +34,8 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener;
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener;
-import org.catrobat.paintroid.tools.options.BrushToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 import static org.catrobat.paintroid.tools.common.Constants.MOVE_TOLERANCE;
 
@@ -46,21 +46,21 @@ public class BrushTool extends BaseTool {
 	protected final PointF drawToolMovedDistance;
 	protected PointF initialEventCoordinate;
 	protected boolean pathInsideBitmap;
-	protected BrushToolOptions brushToolOptions;
+	protected BrushToolOptionsView brushToolOptionsView;
 
-	public BrushTool(BrushToolOptions brushToolOptions, ContextCallback contextCallback,
-			ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace,
+	public BrushTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback,
+			ToolOptionsViewController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
 			CommandManager commandManager) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-		this.brushToolOptions = brushToolOptions;
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		this.brushToolOptionsView = brushToolOptionsView;
 
 		pathToDraw = new Path();
 		pathToDraw.incReserve(1);
 		drawToolMovedDistance = new PointF(0f, 0f);
 		pathInsideBitmap = false;
 
-		brushToolOptions.setBrushChangedListener(new CommonBrushChangedListener(this));
-		brushToolOptions.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
+		brushToolOptionsView.setBrushChangedListener(new CommonBrushChangedListener(this));
+		brushToolOptionsView.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class BrushTool extends BaseTool {
 
 	@Override
 	public void setupToolOptions() {
-		brushToolOptions.setCurrentPaint(toolPaint.getPaint());
+		brushToolOptionsView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	@Override
@@ -181,6 +181,6 @@ public class BrushTool extends BaseTool {
 	@Override
 	public void changePaintColor(int color) {
 		super.changePaintColor(color);
-		brushToolOptions.invalidate();
+		brushToolOptionsView.invalidate();
 	}
 }

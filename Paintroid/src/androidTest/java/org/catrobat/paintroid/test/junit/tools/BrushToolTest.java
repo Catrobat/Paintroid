@@ -37,8 +37,8 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.tools.implementation.BrushTool;
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
-import org.catrobat.paintroid.tools.options.BrushToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,9 +66,9 @@ public class BrushToolTest {
 	@Mock
 	private ToolPaint toolPaint;
 	@Mock
-	private BrushToolOptions brushToolOptions;
+	private BrushToolOptionsView brushToolOptionsView;
 	@Mock
-	private ToolOptionsController toolOptionsController;
+	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	private Workspace workspace;
 	@Mock
@@ -79,7 +79,7 @@ public class BrushToolTest {
 
 	@Before
 	public void setUp() {
-		toolToTest = new BrushTool(brushToolOptions, contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		toolToTest = new BrushTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
@@ -317,10 +317,10 @@ public class BrushToolTest {
 
 	@Test
 	public void testShouldChangePaintFromBrushPicker() {
-		ArgumentCaptor<BrushToolOptions.OnBrushChangedListener> argumentCaptor =
-				ArgumentCaptor.forClass(BrushToolOptions.OnBrushChangedListener.class);
-		verify(brushToolOptions).setBrushChangedListener(argumentCaptor.capture());
-		BrushToolOptions.OnBrushChangedListener onBrushChangedListener = argumentCaptor.getValue();
+		ArgumentCaptor<BrushToolOptionsView.OnBrushChangedListener> argumentCaptor =
+				ArgumentCaptor.forClass(BrushToolOptionsView.OnBrushChangedListener.class);
+		verify(brushToolOptionsView).setBrushChangedListener(argumentCaptor.capture());
+		BrushToolOptionsView.OnBrushChangedListener onBrushChangedListener = argumentCaptor.getValue();
 
 		onBrushChangedListener.setCap(Paint.Cap.ROUND);
 		onBrushChangedListener.setStrokeWidth(15);

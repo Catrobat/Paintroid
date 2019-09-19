@@ -33,7 +33,7 @@ import android.view.View;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.options.BrushToolOptions;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.BrushToolPreview;
 
 public class BrushToolView extends View implements BrushToolPreview {
@@ -44,7 +44,7 @@ public class BrushToolView extends View implements BrushToolPreview {
 	private Paint checkeredPattern;
 	private Paint borderPaint;
 	private Path path;
-	private BrushToolOptions.OnBrushPreviewListener callback;
+	private BrushToolOptionsView.OnBrushPreviewListener callback;
 
 	public BrushToolView(Context context) {
 		super(context);
@@ -236,7 +236,7 @@ public class BrushToolView extends View implements BrushToolPreview {
 	}
 
 	@Override
-	public void setListener(BrushToolOptions.OnBrushPreviewListener callback) {
+	public void setListener(BrushToolOptionsView.OnBrushPreviewListener callback) {
 		this.callback = callback;
 	}
 }

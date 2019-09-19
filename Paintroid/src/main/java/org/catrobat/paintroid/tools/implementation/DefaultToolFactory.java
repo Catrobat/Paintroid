@@ -19,107 +19,81 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.app.Activity;
 import android.view.ViewGroup;
 
-import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolFactory;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.BrushToolOptions;
-import org.catrobat.paintroid.tools.options.FillToolOptions;
-import org.catrobat.paintroid.tools.options.TextToolOptions;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
-import org.catrobat.paintroid.tools.options.TransformToolOptions;
-import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptions;
-import org.catrobat.paintroid.ui.tools.DefaultFillToolOptions;
-import org.catrobat.paintroid.ui.tools.DefaultTextToolOptions;
-import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptions;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
+import org.catrobat.paintroid.tools.options.FillToolOptionsView;
+import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
+import org.catrobat.paintroid.tools.options.TextToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.TransformToolOptionsView;
+import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptionsView;
+import org.catrobat.paintroid.ui.tools.DefaultFillToolOptionsView;
+import org.catrobat.paintroid.ui.tools.DefaultShapeToolOptionsView;
+import org.catrobat.paintroid.ui.tools.DefaultTextToolOptionsView;
+import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptionsView;
 
 public class DefaultToolFactory implements ToolFactory {
 
 	@Override
-	public Tool createTool(ToolType toolType, ToolOptionsController toolOptionsController, Activity activity, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint) {
-		Tool tool;
-
-		ContextCallback contextCallback = new DefaultContextCallback(activity.getApplicationContext());
-		toolOptionsController.removeToolViews();
-		toolOptionsController.setToolName(toolType.getNameResource());
-		ViewGroup toolSpecificOptionsLayout = toolOptionsController.getToolSpecificOptionsLayout();
+	public Tool createTool(ToolType toolType, ToolOptionsViewController toolOptionsViewController, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback, ColorPickerDialog.OnColorPickedListener onColorPickedListener) {
+		ViewGroup toolLayout = toolOptionsViewController.getToolSpecificOptionsLayout();
 
 		switch (toolType) {
 			case BRUSH:
-				tool = new BrushTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new BrushTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case CURSOR:
-				tool = new CursorTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new CursorTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case STAMP:
-				tool = new StampTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new StampTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case IMPORTPNG:
-				tool = new ImportTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case PIPETTE:
-				final MainActivity mainActivity = (MainActivity) activity;
-				final MainActivityContracts.Presenter presenter = mainActivity.getPresenter();
-				ColorPickerDialog.OnColorPickedListener listener = new ColorPickerDialog.OnColorPickedListener() {
-					@Override
-					public void colorChanged(int color) {
-						presenter.setTopBarColor(color);
-					}
-				};
-				tool = new PipetteTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager, listener);
-				break;
+				return new PipetteTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, onColorPickedListener);
 			case FILL:
-				tool = new FillTool(createFillToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new FillTool(createFillToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case TRANSFORM:
-				tool = new TransformTool(createTransformToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new TransformTool(createTransformToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case SHAPE:
-				tool = new ShapeTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new ShapeTool(createShapeToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case ERASER:
-				tool = new EraserTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new EraserTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case LINE:
-				tool = new LineTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new LineTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case TEXT:
-				tool = new TextTool(createTextToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new TextTool(createTextToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case HAND:
-				tool = new HandTool(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new HandTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			default:
-				tool = new BrushTool(createBrushToolOptions(toolSpecificOptionsLayout), contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
-				break;
+				return new BrushTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		}
-		tool.setupToolOptions();
-		toolOptionsController.resetToOrigin();
-		return tool;
 	}
 
-	private FillToolOptions createFillToolOptions(ViewGroup toolSpecificOptionsLayout) {
-		return new DefaultFillToolOptions(toolSpecificOptionsLayout);
+	private BrushToolOptionsView createBrushToolOptionsView(ViewGroup toolLayout) {
+		return new DefaultBrushToolOptionsView(toolLayout);
 	}
 
-	private TextToolOptions createTextToolOptions(ViewGroup toolSpecificOptionsLayout) {
-		return new DefaultTextToolOptions(toolSpecificOptionsLayout);
+	private FillToolOptionsView createFillToolOptionsView(ViewGroup toolLayout) {
+		return new DefaultFillToolOptionsView(toolLayout);
 	}
 
-	private BrushToolOptions createBrushToolOptions(ViewGroup toolSpecificOptionsLayout) {
-		return new DefaultBrushToolOptions(toolSpecificOptionsLayout);
+	private ShapeToolOptionsView createShapeToolOptionsView(ViewGroup toolLayout) {
+		return new DefaultShapeToolOptionsView(toolLayout);
 	}
 
-	private TransformToolOptions createTransformToolOptions(ViewGroup toolSpecificOptionsLayout) {
-		return new DefaultTransformToolOptions(toolSpecificOptionsLayout);
+	private TextToolOptionsView createTextToolOptionsView(ViewGroup toolLayout) {
+		return new DefaultTextToolOptionsView(toolLayout);
+	}
+
+	private TransformToolOptionsView createTransformToolOptionsView(ViewGroup toolLayout) {
+		return new DefaultTransformToolOptionsView(toolLayout);
 	}
 }

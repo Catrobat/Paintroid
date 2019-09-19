@@ -30,19 +30,16 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
-import android.view.LayoutInflater;
-import android.view.View;
 
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.listener.ShapeToolOptionsListener;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.helper.Conversion;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 public class ShapeTool extends BaseToolWithRectangleShape {
 
@@ -57,14 +54,14 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 	public BaseShape baseShape;
 	private int shapeOutlineWidth = 25;
 	private ShapeDrawType shapeDrawType;
-	private ShapeToolOptionsListener shapeToolOptionsListener;
+	private ShapeToolOptionsView shapeToolOptionsView;
 	private Paint geometricFillCommandPaint;
 	private float previousBoxWidth;
 	private float previousBoxHeight;
 
-	public ShapeTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+	public ShapeTool(ShapeToolOptionsView shapeToolOptionsView, ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
 		setRotationEnabled(ROTATION_ENABLED);
 
@@ -73,6 +70,28 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 		}
 
 		shapeDrawType = ShapeDrawType.FILL;
+
+		this.shapeToolOptionsView = shapeToolOptionsView;
+		this.shapeToolOptionsView.setCallback(
+				new ShapeToolOptionsView.Callback() {
+					@Override
+					public void setToolType(BaseShape shape) {
+						baseShape = shape;
+						createAndSetBitmap();
+					}
+
+					@Override
+					public void setDrawType(ShapeDrawType drawType) {
+						shapeDrawType = drawType;
+						createAndSetBitmap();
+					}
+
+					@Override
+					public void setOutlineWidth(int outlineWidth) {
+						shapeOutlineWidth = outlineWidth;
+						createAndSetBitmap();
+					}
+				});
 
 		createAndSetBitmap();
 	}
@@ -94,30 +113,8 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 		createAndSetBitmap();
 	}
 
-	private void setupOnShapeToolDialogChangedListener() {
-		shapeToolOptionsListener.setOnShapeToolOptionsChangedListener(
-				new ShapeToolOptionsListener.OnShapeToolOptionsChangedListener() {
-					@Override
-					public void setToolType(BaseShape shape) {
-						baseShape = shape;
-						createAndSetBitmap();
-					}
-					@Override
-					public void setDrawType(ShapeDrawType drawType) {
-						shapeDrawType = drawType;
-						createAndSetBitmap();
-					}
-					@Override
-					public void setOutlineWidth(int outlineWidth) {
-						shapeOutlineWidth = outlineWidth;
-						createAndSetBitmap();
-					}
-				});
-	}
-
 	private void createAndSetBitmap() {
-		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight,
-				Bitmap.Config.ARGB_8888);
+		Bitmap bitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight, Bitmap.Config.ARGB_8888);
 		Canvas drawCanvas = new Canvas(bitmap);
 
 		RectF shapeRect;
@@ -201,9 +198,9 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 			this.shapeDrawType = shapeDrawType;
 			this.shapeOutlineWidth = shapeOutlineWidth;
 
-			shapeToolOptionsListener.setShapeActivated(baseShape);
-			shapeToolOptionsListener.setDrawTypeActivated(shapeDrawType);
-			shapeToolOptionsListener.setShapeOutlineWidth(shapeOutlineWidth);
+			shapeToolOptionsView.setShapeActivated(baseShape);
+			shapeToolOptionsView.setDrawTypeActivated(shapeDrawType);
+			shapeToolOptionsView.setShapeOutlineWidth(shapeOutlineWidth);
 			createAndSetBitmap();
 		}
 	}
@@ -236,7 +233,7 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 
 		Path path = new Path();
 
-		switch (type){
+		switch (type) {
 			case STAR:
 				path.moveTo(midWidth, zeroHeight);
 				path.lineTo(midWidth + width / 8, midHeight - height / 8);
@@ -308,15 +305,10 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 
 	@Override
 	public void setupToolOptions() {
-		LayoutInflater inflater = LayoutInflater.from(toolSpecificOptionsLayout.getContext());
-		View shapeToolOptionView = inflater.inflate(R.layout.dialog_pocketpaint_shapes, toolSpecificOptionsLayout);
-
-		shapeToolOptionsListener = new ShapeToolOptionsListener(shapeToolOptionView);
-		setupOnShapeToolDialogChangedListener();
 		toolSpecificOptionsLayout.post(new Runnable() {
 			@Override
 			public void run() {
-				toolOptionsController.showAnimated();
+				toolOptionsViewController.showAnimated();
 			}
 		});
 	}

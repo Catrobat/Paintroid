@@ -69,7 +69,7 @@ public abstract class TapTargetBase {
 		this.radius = calculateTapTargetRadius(targetView.getHeight(), metrics, RADIUS_OFFSET);
 		bottomBarView = activity.findViewById(bottomBarResourceId);
 		bottomScrollBar = (BottomBarHorizontalScrollView)
-				bottomBarView.findViewById(R.id.pocketpaint_bottom_bar_scroll_view);
+				bottomBarView.findViewById(R.id.pocketpaint_intro_bottom_bar_scroll_view);
 	}
 
 	private static ToolTypeViewTuple getToolTypeFromView(View view) {
@@ -125,8 +125,8 @@ public abstract class TapTargetBase {
 	}
 
 	private void setBottomBarListener() {
-		final View previous = bottomBarView.findViewById(R.id.pocketpaint_bottom_previous);
-		final View next = bottomBarView.findViewById(R.id.pocketpaint_bottom_next);
+		final View previous = bottomBarView.findViewById(R.id.pocketpaint_intro_bottom_previous);
+		final View next = bottomBarView.findViewById(R.id.pocketpaint_intro_bottom_next);
 		bottomScrollBar.setScrollStateListener(new BottomBarScrollListener(previous, next));
 	}
 

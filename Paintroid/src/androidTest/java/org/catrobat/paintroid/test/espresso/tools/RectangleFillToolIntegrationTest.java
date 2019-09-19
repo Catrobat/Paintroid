@@ -106,7 +106,7 @@ public class RectangleFillToolIntegrationTest {
 		float rectHeight = ellipseTool.boxHeight;
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
@@ -211,7 +211,7 @@ public class RectangleFillToolIntegrationTest {
 				.performSelectShape(ShapeTool.BaseShape.HEART);
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onToolProperties()
 				.setColor(Color.TRANSPARENT);
@@ -244,7 +244,7 @@ public class RectangleFillToolIntegrationTest {
 		selectShapeTypeAndDraw(true, Color.BLACK);
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onShapeToolOptionsView()
 				.performSelectShape(ShapeTool.BaseShape.HEART);
 		selectShapeTypeAndDraw(true, Color.TRANSPARENT);
@@ -274,7 +274,7 @@ public class RectangleFillToolIntegrationTest {
 		PointF pointUnderTest = new PointF(centerPointTool.x, centerPointTool.y);
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		if (changeColor) {
 			onToolProperties()
