@@ -75,6 +75,7 @@
     <string name="menu_save_copy">Save copy</string>
     <string name="menu_hide_menu">Fullscreen</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
+    <string name="menu_rate_us">Rate us!</string>
     <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">Export</string>
     <string name="saved">Image saved</string>
