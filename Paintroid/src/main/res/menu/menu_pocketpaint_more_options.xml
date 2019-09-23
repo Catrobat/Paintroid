@@ -27,7 +27,8 @@
         android:title="@string/menu_rate_us"/>
     <item
         android:id="@+id/pocketpaint_nav_help"
-        android:title="@string/help_title" />
+        android:title="@string/help_title"
+        android:enabled="false"/>
     <item
         android:id="@+id/pocketpaint_nav_about"
         android:title="@string/pocketpaint_menu_about" />
