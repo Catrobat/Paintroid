@@ -52,6 +52,7 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 	private final ToggleButton underlinedToggleButton;
 	private final ToggleButton italicToggleButton;
 	private final ToggleButton boldToggleButton;
+	private final ToggleButton strikeThroughToggleButton;
 	private final Spinner textSizeSpinner;
 	private final Button doneButton;
 	private final List<String> fonts;
@@ -66,6 +67,7 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 		underlinedToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		italicToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
+		strikeThroughToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_strike_through);
 		textSizeSpinner = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
 		doneButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_done_button);
 
@@ -146,6 +148,16 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 			}
 		});
 
+		strikeThroughToggleButton.setPaintFlags(strikeThroughToggleButton.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		strikeThroughToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				boolean strikeThrough = ((Checkable) v).isChecked();
+				notifyStrikeThroughChanged(strikeThrough);
+				hideKeyboard();
+			}
+		});
+
 		doneButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -206,6 +218,12 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 	private void notifyBoldChanged(boolean bold) {
 		if (callback != null) {
 			callback.setBold(bold);
+		}
+	}
+
+	private void notifyStrikeThroughChanged(boolean strikeThrough) {
+		if (callback != null) {
+			callback.setStrikeThrough(strikeThrough);
 		}
 	}
 

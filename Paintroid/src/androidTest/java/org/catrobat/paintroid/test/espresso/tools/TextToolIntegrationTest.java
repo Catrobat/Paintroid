@@ -109,6 +109,7 @@ public class TextToolIntegrationTest {
 	private ToggleButton underlinedToggleButton;
 	private ToggleButton italicToggleButton;
 	private ToggleButton boldToggleButton;
+	private ToggleButton strikeThroughToggleButton;
 	private Spinner textSizeSpinner;
 	private Perspective perspective;
 	private LayerContracts.Model layerModel;
@@ -133,6 +134,7 @@ public class TextToolIntegrationTest {
 		underlinedToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		italicToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
+		strikeThroughToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_strike_through);
 		textSizeSpinner = activity.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
 
 		textTool.resetBoxPosition();
@@ -143,6 +145,8 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
 		selectFormatting(FormattingOptions.UNDERLINE);
+		selectFormatting(FormattingOptions.STRIKETHROUGH);
+
 		enterTestText();
 
 		onView(withId(R.id.pocketpaint_text_tool_dialog_done_button))
@@ -153,6 +157,7 @@ public class TextToolIntegrationTest {
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
 		assertTrue(underlinedToggleButton.isChecked());
+		assertTrue(strikeThroughToggleButton.isChecked());
 		assertEquals(TEST_TEXT, textEditText.getText().toString());
 	}
 
@@ -177,10 +182,13 @@ public class TextToolIntegrationTest {
 				.check(matches(isNotChecked()));
 		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_italic))
 				.check(matches(isNotChecked()));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_strike_through))
+				.check(matches(isNotChecked()));
 
 		assertFalse(textTool.underlined);
 		assertFalse(textTool.italic);
 		assertFalse(textTool.bold);
+		assertFalse(textTool.strikeThrough);
 
 		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_text_size))
 				.check(matches(withSpinnerText(TEXT_SIZE_20_STRING)));
@@ -199,6 +207,7 @@ public class TextToolIntegrationTest {
 		assertTrue(textTool.underlined);
 		assertTrue(underlinedToggleButton.isChecked());
 		assertEquals(getFontString(FormattingOptions.UNDERLINE), underlinedToggleButton.getText().toString());
+
 		selectFormatting(FormattingOptions.UNDERLINE);
 		assertFalse(textTool.underlined);
 		assertFalse(underlinedToggleButton.isChecked());
@@ -224,6 +233,16 @@ public class TextToolIntegrationTest {
 		assertFalse(boldToggleButton.isChecked());
 		assertEquals(getFontString(FormattingOptions.BOLD), boldToggleButton.getText().toString());
 
+		selectFormatting(FormattingOptions.STRIKETHROUGH);
+		assertTrue(getToolMemberStrikeThrough());
+		assertTrue(strikeThroughToggleButton.isChecked());
+		assertEquals(getFontString(FormattingOptions.STRIKETHROUGH), strikeThroughToggleButton.getText().toString());
+
+		selectFormatting(FormattingOptions.STRIKETHROUGH);
+		assertFalse(getToolMemberStrikeThrough());
+		assertFalse(strikeThroughToggleButton.isChecked());
+		assertEquals(getFontString(FormattingOptions.STRIKETHROUGH), strikeThroughToggleButton.getText().toString());
+
 		selectFormatting(FormattingOptions.SIZE_30);
 		assertEquals("Tool member has wrong value for text size", TEXT_SIZE_30, getToolMemberTextSize());
 		assertEquals("Wrong current item of text size spinner", TEXT_SIZE_30_STRING, textSizeSpinner.getSelectedItem());
@@ -236,6 +255,7 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.UNDERLINE);
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
+		selectFormatting(FormattingOptions.STRIKETHROUGH);
 		selectFormatting(FormattingOptions.SIZE_40);
 
 		onToolBarView()
@@ -255,8 +275,8 @@ public class TextToolIntegrationTest {
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
-		assertEquals("Wrong text size selected after reopen dialog",
-				String.valueOf(TEXT_SIZE_40_STRING), textSizeSpinner.getSelectedItem());
+		assertTrue(strikeThroughToggleButton.isChecked());
+		assertEquals("Wrong text size selected after reopen dialog", TEXT_SIZE_40_STRING, textSizeSpinner.getSelectedItem());
 		checkTextBoxDimensions();
 	}
 
@@ -267,6 +287,7 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.UNDERLINE);
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
+		selectFormatting(FormattingOptions.STRIKETHROUGH);
 		selectFormatting(FormattingOptions.SIZE_40);
 
 		final PointF toolMemberBoxPosition = getToolMemberBoxPosition();
@@ -281,6 +302,7 @@ public class TextToolIntegrationTest {
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
+		assertTrue(strikeThroughToggleButton.isChecked());
 		assertEquals("Wrong text size selected after reopen dialog", TEXT_SIZE_40_STRING, textSizeSpinner.getSelectedItem());
 
 		assertEquals(expectedPosition, getToolMemberBoxPosition());
@@ -292,8 +314,9 @@ public class TextToolIntegrationTest {
 		enterTestText();
 
 		assertFalse(underlinedToggleButton.isChecked());
-		assertFalse(underlinedToggleButton.isChecked());
-		assertFalse(underlinedToggleButton.isChecked());
+		assertFalse(boldToggleButton.isChecked());
+		assertFalse(italicToggleButton.isChecked());
+		assertFalse(strikeThroughToggleButton.isChecked());
 
 		ArrayList<FormattingOptions> fonts = new ArrayList<>();
 		fonts.add(FormattingOptions.SERIF);
@@ -312,6 +335,15 @@ public class TextToolIntegrationTest {
 
 			Bitmap bitmap = getToolMemberDrawingBitmap();
 			pixelsBefore = new int[bitmap.getHeight()];
+			bitmap.getPixels(pixelsBefore, 0, 1, textTool.BOX_OFFSET, 0, 1, bitmap.getHeight());
+			selectFormatting(FormattingOptions.STRIKETHROUGH);
+			assertTrue(strikeThroughToggleButton.isChecked());
+			bitmap = getToolMemberDrawingBitmap();
+			pixelsAfter = new int[bitmap.getHeight()];
+			bitmap.getPixels(pixelsAfter, 0, 1, textTool.BOX_OFFSET, 0, 1, bitmap.getHeight());
+			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
+
+			pixelsBefore = new int[bitmap.getHeight()];
 			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
 			selectFormatting(FormattingOptions.UNDERLINE);
 			assertTrue(underlinedToggleButton.isChecked());
@@ -322,7 +354,7 @@ public class TextToolIntegrationTest {
 
 			boxWidth = getToolMemberBoxWidth();
 			selectFormatting(FormattingOptions.ITALIC);
-			assertTrue(underlinedToggleButton.isChecked());
+			assertTrue(italicToggleButton.isChecked());
 			if (font != FormattingOptions.MONOSPACE) {
 				assertTrue(getToolMemberBoxWidth() < boxWidth);
 			} else {
@@ -332,7 +364,7 @@ public class TextToolIntegrationTest {
 			pixelsBefore = new int[bitmap.getWidth()];
 			bitmap.getPixels(pixelsBefore, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
 			selectFormatting(FormattingOptions.BOLD);
-			assertTrue(underlinedToggleButton.isChecked());
+			assertTrue(boldToggleButton.isChecked());
 			bitmap = getToolMemberDrawingBitmap();
 			pixelsAfter = new int[bitmap.getWidth()];
 			bitmap.getPixels(pixelsAfter, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
@@ -341,9 +373,11 @@ public class TextToolIntegrationTest {
 			selectFormatting(FormattingOptions.UNDERLINE);
 			assertFalse(underlinedToggleButton.isChecked());
 			selectFormatting(FormattingOptions.ITALIC);
-			assertFalse(underlinedToggleButton.isChecked());
+			assertFalse(italicToggleButton.isChecked());
 			selectFormatting(FormattingOptions.BOLD);
-			assertFalse(underlinedToggleButton.isChecked());
+			assertFalse(boldToggleButton.isChecked());
+			selectFormatting(FormattingOptions.STRIKETHROUGH);
+			assertFalse(strikeThroughToggleButton.isChecked());
 		}
 	}
 
@@ -352,8 +386,9 @@ public class TextToolIntegrationTest {
 		enterArabicTestText();
 
 		assertFalse(underlinedToggleButton.isChecked());
-		assertFalse(underlinedToggleButton.isChecked());
-		assertFalse(underlinedToggleButton.isChecked());
+		assertFalse(boldToggleButton.isChecked());
+		assertFalse(italicToggleButton.isChecked());
+		assertFalse(strikeThroughToggleButton.isChecked());
 
 		List<FormattingOptions> fonts = Arrays.asList(FormattingOptions.STC, FormattingOptions.DUBAI);
 
@@ -369,8 +404,16 @@ public class TextToolIntegrationTest {
 
 			Bitmap bitmap = getToolMemberDrawingBitmap();
 			pixelsBefore = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
+			bitmap.getPixels(pixelsBefore, 0, 1, textTool.BOX_OFFSET, 0, 1, bitmap.getHeight());
+			selectFormatting(FormattingOptions.STRIKETHROUGH);
+			assertTrue(strikeThroughToggleButton.isChecked());
+			bitmap = getToolMemberDrawingBitmap();
+			pixelsAfter = new int[bitmap.getHeight()];
+			bitmap.getPixels(pixelsAfter, 0, 1, textTool.BOX_OFFSET, 0, 1, bitmap.getHeight());
+			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
 
+			pixelsBefore = new int[bitmap.getHeight()];
+			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
 			selectFormatting(FormattingOptions.UNDERLINE);
 			assertTrue(underlinedToggleButton.isChecked());
 			bitmap = getToolMemberDrawingBitmap();
@@ -380,7 +423,7 @@ public class TextToolIntegrationTest {
 
 			boxWidth = getToolMemberBoxWidth();
 			selectFormatting(FormattingOptions.ITALIC);
-			assertTrue(underlinedToggleButton.isChecked());
+			assertTrue(italicToggleButton.isChecked());
 			if (font != FormattingOptions.DUBAI) {
 				assertEquals(getToolMemberBoxWidth(), boxWidth, Float.MIN_VALUE);
 			} else {
@@ -390,7 +433,7 @@ public class TextToolIntegrationTest {
 			pixelsBefore = new int[bitmap.getWidth()];
 			bitmap.getPixels(pixelsBefore, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
 			selectFormatting(FormattingOptions.BOLD);
-			assertTrue(underlinedToggleButton.isChecked());
+			assertTrue(boldToggleButton.isChecked());
 			bitmap = getToolMemberDrawingBitmap();
 			pixelsAfter = new int[bitmap.getWidth()];
 			bitmap.getPixels(pixelsAfter, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
@@ -399,9 +442,11 @@ public class TextToolIntegrationTest {
 			selectFormatting(FormattingOptions.UNDERLINE);
 			assertFalse(underlinedToggleButton.isChecked());
 			selectFormatting(FormattingOptions.ITALIC);
-			assertFalse(underlinedToggleButton.isChecked());
+			assertFalse(italicToggleButton.isChecked());
 			selectFormatting(FormattingOptions.BOLD);
-			assertFalse(underlinedToggleButton.isChecked());
+			assertFalse(boldToggleButton.isChecked());
+			selectFormatting(FormattingOptions.STRIKETHROUGH);
+			assertFalse(strikeThroughToggleButton.isChecked());
 		}
 	}
 
@@ -660,6 +705,7 @@ public class TextToolIntegrationTest {
 			case UNDERLINE:
 			case ITALIC:
 			case BOLD:
+			case STRIKETHROUGH:
 				onView(withText(getFontString(format))).perform(click());
 				break;
 			case SIZE_20:
@@ -694,6 +740,8 @@ public class TextToolIntegrationTest {
 				return activity.getString(R.string.text_tool_dialog_italic_shortcut);
 			case BOLD:
 				return activity.getString(R.string.text_tool_dialog_bold_shortcut);
+			case STRIKETHROUGH:
+				return activity.getString(R.string.text_tool_dialog_strike_through_shortcut);
 			case SIZE_20:
 				return String.valueOf(TEXT_SIZE_20_STRING);
 			case SIZE_30:
@@ -750,6 +798,10 @@ public class TextToolIntegrationTest {
 		return textTool.bold;
 	}
 
+	private boolean getToolMemberStrikeThrough() {
+		return textTool.strikeThrough;
+	}
+
 	private int getToolMemberTextSize() {
 		return textTool.textSize;
 	}
@@ -763,6 +815,6 @@ public class TextToolIntegrationTest {
 	}
 
 	private enum FormattingOptions {
-		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, STC, DUBAI, SIZE_20, SIZE_30, SIZE_40, SIZE_60
+		UNDERLINE, ITALIC, BOLD, STRIKETHROUGH, MONOSPACE, SERIF, SANS_SERIF, STC, DUBAI, SIZE_20, SIZE_30, SIZE_40, SIZE_60
 	}
 }

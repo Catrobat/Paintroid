@@ -93,6 +93,7 @@
     <string name="text_tool_dialog_underline_shortcut" translatable="false">U</string>
     <string name="text_tool_dialog_italic_shortcut" translatable="false">I</string>
     <string name="text_tool_dialog_bold_shortcut" translatable="false">B</string>
+    <string name="text_tool_dialog_strike_through_shortcut" translatable="false">abc</string>
     <string name="text_tool_dialog_input_hint">Tap here to write</string>
     <string name="text_tool_dialog_font_monospace" translatable="false">Monospace</string>
     <string name="text_tool_dialog_font_serif" translatable="false">Serif</string>
