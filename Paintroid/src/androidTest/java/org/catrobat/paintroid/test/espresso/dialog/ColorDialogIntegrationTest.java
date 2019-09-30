@@ -562,4 +562,17 @@ public class ColorDialogIntegrationTest {
 		));
 		presetColors.recycle();
 	}
+
+	@Test
+	public void testInsertInvalidHexInputAndSlideSeekbar() {
+		onColorPickerView()
+				.performOpenColorPicker();
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("#FFFF0000xxxx"));
+
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
+				withText(
+						String.format("#FF%06X", (0xFFFFFF & 0xFF0000FF)))));
+	}
 }
