@@ -48,6 +48,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         x11-common \
         x11-utils \
         libpulse0 \
+        libxcursor-dev \
+        libnss3-dev \
+        libasound2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Fastlane
