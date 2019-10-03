@@ -29,7 +29,6 @@ public final class Constants {
 
 	public static final String EXT_STORAGE_DIRECTORY_NAME = "Pocket Paint";
 	public static final String TEMP_PICTURE_NAME = "catroidTemp";
-	public static final float ACTION_BAR_HEIGHT = 50.0f;
 	public static final File MEDIA_DIRECTORY = new File(Environment.getExternalStorageDirectory(), EXT_STORAGE_DIRECTORY_NAME);
 
 	public static final String ABOUT_DIALOG_FRAGMENT_TAG = "aboutdialogfragment";

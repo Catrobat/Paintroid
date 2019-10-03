@@ -16,17 +16,14 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape>
-            <gradient
-                android:startColor="@color/pocketpaint_main_bottom_bar_color_transparent"
-                android:centerColor="@color/pocketpaint_colorPrimary"
-                android:endColor="@color/pocketpaint_colorPrimary"
-                android:centerX="50%"
-                android:type="linear"/>
-        </shape>
-    </item>
-</selector>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="150">
+    <translate
+        android:fromYDelta="0"
+        android:toYDelta="50%" />
+
+    <alpha
+        android:fromAlpha="1.0"
+        android:toAlpha="0" />
+</set>

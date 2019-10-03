@@ -43,14 +43,12 @@
     <style name="PocketPaintTheme" parent="PocketPaintTheme.Base" />
 
     <style name="PocketPaintTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@color/pocketpaint_background_color</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>
         <item name="dialogTheme">@style/PocketPaintAlertDialog</item>
         <item name="colorPrimary">@color/pocketpaint_colorPrimary</item>
         <item name="colorPrimaryDark">@color/pocketpaint_colorPrimaryDark</item>
         <item name="colorAccent">@color/pocketpaint_colorAccent</item>
-        <item name="drawerArrowStyle">@style/PocketPaintDrawerArrowStyle</item>
+        <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
     <style name="PocketPaintHighlightColorTheme" parent="PocketPaintTheme">
@@ -86,11 +84,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="PocketPaintDrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">false</item>
-        <item name="color">@android:color/white</item>
     </style>
 
     <style name="PocketPaintToolTitle" parent="PocketPaintToolSubtitle">
@@ -147,12 +140,12 @@
     </style>
 
     <style name="PocketPaintWelcomeActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:colorBackground">@color/pocketpaint_background_color</item>
-        <item name="android:windowBackground">@color/pocketpaint_background_color</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
+        <item name="colorPrimary">@color/pocketpaint_colorPrimary</item>
+        <item name="android:colorBackground">@color/pocketpaint_colorPrimary</item>
+        <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
 </resources>

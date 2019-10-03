@@ -17,28 +17,42 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/color_picker_base_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:clickable="true"
+    android:focusable="true">
 
-    <ScrollView
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/color_picker_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
+        android:layout_height="?attr/actionBarSize"
+        android:theme="?attr/actionBarStyle"
+        android:background="?attr/colorPrimary" />
 
-        <LinearLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/color_picker_toolbar"
+        android:padding="16dp">
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <org.catrobat.paintroid.colorpicker.ColorPickerView
-                android:id="@+id/color_picker_view"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <org.catrobat.paintroid.colorpicker.ColorPickerView
+                    android:id="@+id/color_picker_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -46,32 +60,33 @@
                     android:layout_marginTop="16dp"
                     android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/color_picker_button_cancel"
-                    style="?android:borderlessButtonStyle"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@null"
-                    tools:background="@android:color/darker_gray"
-                    android:text="@string/color_picker_cancel"
-                    android:textSize="14sp" />
+                    <Button
+                        android:id="@+id/color_picker_button_cancel"
+                        style="?android:borderlessButtonStyle"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@null"
+                        tools:background="@android:color/darker_gray"
+                        android:text="@string/color_picker_cancel"
+                        android:textSize="14sp" />
 
-                <Button
-                    android:id="@+id/color_picker_button_ok"
-                    style="?android:borderlessButtonStyle"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_marginStart="8dp"
-                    android:background="@null"
-                    tools:background="@android:color/darker_gray"
-                    android:text="@string/color_picker_apply"
-                    android:textSize="14sp" />
+                    <Button
+                        android:id="@+id/color_picker_button_ok"
+                        style="?android:borderlessButtonStyle"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@null"
+                        tools:background="@android:color/darker_gray"
+                        android:text="@string/color_picker_apply"
+                        android:textSize="14sp" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-</FrameLayout>
+        </ScrollView>
+    </FrameLayout>
+</RelativeLayout>
 
 

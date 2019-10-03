@@ -26,6 +26,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="2dp"
+    android:theme="?attr/actionBarStyle"
     tools:showIn="@layout/activity_pocketpaint_main">
 
     <android.support.v7.widget.Toolbar

@@ -153,7 +153,7 @@ public abstract class TapTargetBase {
 				.descriptionTextSize(TapTargetStyle.TEXT_STYLE.getTextSize())
 				.textTypeface(TapTargetStyle.TEXT_STYLE.getTypeface())
 				.cancelable(true)
-				.outerCircleColor(R.color.pocketpaint_background_color)
+				.outerCircleColor(R.color.pocketpaint_colorPrimary)
 				.targetCircleColor(R.color.pocketpaint_color_picker_white);
 	}
 

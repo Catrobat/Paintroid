@@ -40,7 +40,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class PerspectiveTests {
 
-	private static final float SCREEN_DENSITY = 2f;
 	private static final int SURFACE_WIDTH = 10;
 	private static final int SURFACE_HEIGHT = 100;
 	private static final float EXACT_CENTER_X = 5f;
@@ -63,7 +62,7 @@ public class PerspectiveTests {
 		when(surfaceFrame.exactCenterY()).thenReturn(EXACT_CENTER_Y);
 		when(holder.getSurfaceFrame()).thenReturn(surfaceFrame);
 
-		perspective = new Perspective(SCREEN_DENSITY, 0, 0);
+		perspective = new Perspective(0, 0);
 		perspective.setSurfaceFrame(surfaceFrame);
 	}
 

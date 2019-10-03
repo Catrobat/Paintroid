@@ -65,12 +65,10 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void showColorPickerDialog() {
-		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
-		Fragment fragment = fragmentManager.findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
-		if (fragment == null) {
-			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor());
+		if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null) {
+			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor(), true);
 			setupColorPickerDialogListeners(dialog);
-			showDialogFragmentSafely(dialog, Constants.COLOR_PICKER_DIALOG_TAG);
+			showFragment(dialog, Constants.COLOR_PICKER_DIALOG_TAG);
 		}
 	}
 
@@ -79,6 +77,19 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		if (!fragmentManager.isStateSaved()) {
 			dialog.show(fragmentManager, tag);
 		}
+	}
+
+	private void showFragment(Fragment fragment, String tag) {
+		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
+		fragmentManager.beginTransaction()
+				.setCustomAnimations(R.anim.slide_to_top, R.anim.slide_to_bottom, R.anim.slide_to_top, R.anim.slide_to_bottom)
+				.addToBackStack(null)
+				.add(R.id.fragment_container, fragment, tag)
+				.commit();
+	}
+
+	private Fragment findFragmentByTag(String tag) {
+		return mainActivity.getSupportFragmentManager().findFragmentByTag(tag);
 	}
 
 	private void setupColorPickerDialogListeners(ColorPickerDialog dialog) {
@@ -181,8 +192,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public boolean doIHavePermission(String permission) {
-		return ContextCompat.checkSelfPermission(mainActivity,
-				permission) == PackageManager.PERMISSION_GRANTED;
+		return ContextCompat.checkSelfPermission(mainActivity, permission) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	@Override
@@ -236,8 +246,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void restoreFragmentListeners() {
-		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
-		Fragment fragment = fragmentManager.findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
+		Fragment fragment = findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
 		if (fragment != null) {
 			setupColorPickerDialogListeners((ColorPickerDialog) fragment);
 		}
