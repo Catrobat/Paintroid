@@ -346,6 +346,21 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
+	public void testHEXEditTextMaxInputLength() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
+
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("#0123456789ABCDEF01234"));
+
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
+				withText(
+						String.format("#0123456789ABCDEF0"))));
+	}
+
+	@Test
 	public void testHEXUpdatingOnColorChange() {
 		onColorPickerView()
 				.performOpenColorPicker();
