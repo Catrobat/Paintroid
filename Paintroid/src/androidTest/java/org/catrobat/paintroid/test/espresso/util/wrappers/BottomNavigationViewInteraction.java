@@ -22,12 +22,17 @@ package org.catrobat.paintroid.test.espresso.util.wrappers;
 import android.support.test.espresso.ViewInteraction;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.tools.ToolType;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
 import static org.hamcrest.Matchers.allOf;
 
 public final class BottomNavigationViewInteraction extends CustomViewInteraction {
@@ -47,6 +52,14 @@ public final class BottomNavigationViewInteraction extends CustomViewInteraction
 	public ViewInteraction onCurrentClicked() {
 		return onView(allOf(withId(R.id.icon), isDescendantOfA(withId(R.id.action_current_tool))))
 				.perform(click());
+	}
+
+	public ViewInteraction checkShowsCurrentTool(ToolType toolType) {
+		onView(allOf(withId(R.id.icon), isDescendantOfA(withId(R.id.action_current_tool))))
+				.check(matches(withDrawable(toolType.getDrawableResource())));
+
+		return onView(withId(R.id.action_current_tool))
+				.check(matches(hasDescendant(withText(toolType.getNameResource()))));
 	}
 
 	public ViewInteraction onColorClicked() {

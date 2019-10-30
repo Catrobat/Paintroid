@@ -20,27 +20,29 @@
 package org.catrobat.paintroid.ui.viewholder;
 
 import android.content.Context;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.BottomNavigationLandscape;
+import org.catrobat.paintroid.ui.BottomNavigationPortrait;
+
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
 public class BottomNavigationViewHolder implements MainActivityContracts.BottomNavigationViewHolder {
 	public final View layout;
 	private final BottomNavigationView bottomNavigationView;
-	private final BottomNavigationMenuView bottomNavigationMenuView;
+	private int orientation;
+	private MainActivityContracts.BottomNavigationAppearance bottomNavigation;
 
-	public BottomNavigationViewHolder(View layout) {
+	public BottomNavigationViewHolder(View layout, int orientation, Context context) {
 		this.layout = layout;
 		this.bottomNavigationView = layout.findViewById(R.id.pocketpaint_bottom_navigation);
-		this.bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+		this.orientation = orientation;
+
+		setAppearance(context);
 	}
 
 	@Override
@@ -53,22 +55,20 @@ public class BottomNavigationViewHolder implements MainActivityContracts.BottomN
 		layout.setVisibility(View.GONE);
 	}
 
+	@Override
+	public void showCurrentTool(ToolType toolType) {
+		bottomNavigation.showCurrentTool(toolType);
+	}
+
 	public BottomNavigationView getBottomNavigationView() {
 		return bottomNavigationView;
 	}
 
-	public void setLandscapeStyle(Context context) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		Menu menu = bottomNavigationView.getMenu();
-		for (int i = 0; i < menu.size(); i++) {
-			BottomNavigationItemView item = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(i);
-			View itemBottomNavigation = inflater.inflate(R.layout.pocketpaint_layout_bottom_navigation_item, bottomNavigationMenuView, false);
-			ImageView icon = itemBottomNavigation.findViewById(R.id.icon);
-			TextView text = itemBottomNavigation.findViewById(R.id.title);
-			icon.setImageDrawable(menu.getItem(i).getIcon());
-			text.setText(menu.getItem(i).getTitle());
-			item.removeAllViews();
-			item.addView(itemBottomNavigation);
+	private void setAppearance(Context context) {
+		if (orientation == SCREEN_ORIENTATION_PORTRAIT) {
+			bottomNavigation = new BottomNavigationPortrait(bottomNavigationView);
+		} else {
+			bottomNavigation = new BottomNavigationLandscape(context, bottomNavigationView);
 		}
 	}
 }

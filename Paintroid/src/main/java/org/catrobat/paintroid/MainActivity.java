@@ -21,7 +21,6 @@ package org.catrobat.paintroid;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
@@ -246,11 +245,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		TopBarViewHolder topBarViewHolder = new TopBarViewHolder(topBarLayout);
 		BottomBarViewHolder bottomBarViewHolder = new BottomBarViewHolder(bottomBarLayout);
 		NavigationViewViewHolder navigationDrawerViewHolder = new NavigationViewViewHolder(navigationView);
-		BottomNavigationViewHolder bottomNavigationViewHolder = new BottomNavigationViewHolder(bottomNavigationView);
-
-		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			bottomNavigationViewHolder.setLandscapeStyle(getApplicationContext());
-		}
+		BottomNavigationViewHolder bottomNavigationViewHolder = new BottomNavigationViewHolder(bottomNavigationView, getResources().getConfiguration().orientation, getApplicationContext());
 
 		perspective = new Perspective(layerModel.getWidth(), layerModel.getHeight());
 		workspace = new DefaultWorkspace(layerModel, perspective, new DefaultWorkspace.Listener() {
