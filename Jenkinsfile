@@ -19,7 +19,15 @@ def junitAndCoverage(String jacocoXmlFile, String coverageName, String javaSrcLo
     sh "./buildScripts/cover2cover.py '$jacocoXmlFile' '$coverageFile'"
 }
 
+def useDebugLabelParameter(defaultLabel){
+    return env.DEBUG_LABEL?.trim() ? env.DEBUG_LABEL : defaultLabel
+}
+
 pipeline {
+    parameters {
+        string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
+    }
+
     agent {
         dockerfile {
             filename 'Dockerfile.jenkins'
@@ -35,7 +43,7 @@ pipeline {
             // Ensure that each executor has its own gradle cache to not affect other builds
             // that run concurrently.
             args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
-            label 'LimitedEmulator'
+            label useDebugLabelParameter('LimitedEmulator')
         }
     }
 
