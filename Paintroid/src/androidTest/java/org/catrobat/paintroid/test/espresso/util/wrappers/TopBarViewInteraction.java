@@ -47,10 +47,6 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 		return onView(withId(R.id.pocketpaint_btn_top_redo));
 	}
 
-	public ViewInteraction onPaletteButton() {
-		return onView(withId(R.id.pocketpaint_btn_top_color_palette));
-	}
-
 	public TopBarViewInteraction performUndo() {
 		onUndoButton()
 				.perform(click());

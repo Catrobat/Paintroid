@@ -26,8 +26,7 @@
         android:title="@string/menu_try_pocket_code"/>
     <item
         android:id="@+id/pocketpaint_options_help"
-        android:title="@string/help_title"
-        android:enabled="false"/>
+        android:title="@string/help_title"/>
     <item
         android:id="@+id/pocketpaint_options_about"
         android:title="@string/pocketpaint_menu_about" />

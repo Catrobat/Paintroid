@@ -33,9 +33,6 @@
     <string name="button_line">Line</string>
     <string name="button_text">Text</string>
     <string name="button_shape">Shapes</string>
-    <string name="button_scroll_left">Scroll left</string>
-    <string name="button_scroll_right">Scroll right</string>
-    <string name="button_layers">layers</string>
     <string name="button_hand">Hand</string>
     <string name="button_apply">Apply</string>
     <string name="done">Done</string>
@@ -143,7 +140,7 @@
     <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new start the intro or just skip it if you are already familiar with Pocket Paint.</string>
     <string name="intro_tool_more_information">Click on a Tool to get more information</string>
     <string name="more_possibilities">More possibilities</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu, undo or redo changes, change the color, or show the layers dialog.</string>
+    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
     <string name="landscape">Landscape</string>
     <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
     <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
@@ -170,4 +167,11 @@
     <string name="bottom_navigation_color">Color</string>
     <string name="bottom_navigation_layers">Layers</string>
     <string name="bottom_navigation_item">Item for Bottom Navigation</string>
+
+    <string name="intro_bottom_navigation_tools_description">Switch to the tool you want to use.</string>
+    <string name="intro_bottom_navigation_current_description">Shows the currently used tool and opens its options.</string>
+    <string name="intro_bottom_navigation_color_description">Shows the currently used color and opens the color picker.</string>
+    <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
+
+    <string name="pocketpaint_tool_icon_description">Current tool icon</string>
 </resources>
