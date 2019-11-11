@@ -58,7 +58,7 @@ public class ActivityRecreationTest {
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
 				{"Welcome", R.layout.pocketpaint_slide_intro_welcome, R.id.pocketpaint_intro_welcome_text},
-				{"Tools", R.layout.pocketpaint_slide_intro_tools, R.id.pocketpaint_intro_tools_textview},
+				{"Tools", R.layout.pocketpaint_slide_intro_tools_selection, R.id.pocketpaint_intro_tools_textview},
 				{"Possibilities", R.layout.pocketpaint_slide_intro_possibilities, R.id.pocketpaint_intro_possibilities_textview},
 				{"Landscape", R.layout.pocketpaint_slide_intro_landscape, R.id.pocketpaint_intro_landscape_text},
 				{"Getstarted", R.layout.pocketpaint_slide_intro_getstarted, R.id.pocketpaint_intro_started_text}

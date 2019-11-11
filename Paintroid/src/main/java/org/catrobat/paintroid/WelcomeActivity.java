@@ -24,6 +24,9 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
+import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -32,13 +35,17 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
-import org.catrobat.paintroid.intro.TapTargetBottomBar;
 import org.catrobat.paintroid.intro.TapTargetStyle;
 import org.catrobat.paintroid.intro.TapTargetTopBar;
+import org.catrobat.paintroid.tools.ToolType;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
 import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.getSpFromDimension;
@@ -56,6 +63,11 @@ public class WelcomeActivity extends AppCompatActivity {
 	public int[] layouts;
 	private Button btnSkip;
 	private Button btnNext;
+
+	private ConstraintLayout animationStartLayout;
+	private ConstraintSet animationStartSet = new ConstraintSet();
+	private ConstraintSet animationDetailSet = new ConstraintSet();
+
 	ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
 		int pos;
 
@@ -84,14 +96,42 @@ public class WelcomeActivity extends AppCompatActivity {
 					TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
 							WelcomeActivity.this, R.id.pocketpaint_intro_possibilities_bottom_bar);
 					target.initTargetView();
-				} else if (layouts[pos] == R.layout.pocketpaint_slide_intro_tools) {
-					View layout = findViewById(R.id.pocketpaint_intro_tools_bottom_bar);
-					LinearLayout view = layout.findViewById(R.id.pocketpaint_intro_tools_layout);
-					final View fadeView = findViewById(R.id.pocketpaint_intro_tools_textview);
+				} else if (layouts[pos] == R.layout.pocketpaint_slide_intro_tools_selection) {
+					animationStartLayout = findViewById(R.id.pocketpaint_slide_intro_tools_selection);
+					animationStartSet.clone(animationStartLayout);
+					animationDetailSet.load(getApplicationContext(), R.layout.pocketpaint_slide_intro_tools_detail);
 
-					TapTargetBottomBar target = new TapTargetBottomBar(view, fadeView,
-							WelcomeActivity.this, R.id.pocketpaint_intro_tools_bottom_bar);
-					target.initTargetView();
+					View view = findViewById(R.id.pocketpaint_intro_bottom_bar);
+
+					animationStartLayout.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							TransitionManager.beginDelayedTransition(animationStartLayout);
+							animationStartSet.applyTo(animationStartLayout);
+						}
+					});
+
+					ToolType[] toolTypes = ToolType.values();
+					for (final ToolType type : toolTypes) {
+						View toolButton = view.findViewById(type.getToolButtonID());
+						if (toolButton == null) {
+							continue;
+						}
+
+						toolButton.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								TextView tv_toolName = animationStartLayout.findViewById(R.id.pocketpaint_textview_intro_tools_title);
+								tv_toolName.setText(type.getNameResource());
+								TextView tv_toolDescription = animationStartLayout.findViewById(R.id.pocketpaint_textview_intro_tools_description);
+								tv_toolDescription.setText(type.getHelpTextResource());
+								ImageView iv_icon = animationStartLayout.findViewById(R.id.pocketpaint_imageview_intro_tools_icon);
+								iv_icon.setImageResource(type.getDrawableResource());
+								TransitionManager.beginDelayedTransition(animationStartLayout);
+								animationDetailSet.applyTo(animationStartLayout);
+							}
+						});
+					}
 				}
 			}
 		}
@@ -127,7 +167,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 		layouts = new int[]{
 				R.layout.pocketpaint_slide_intro_welcome,
-				R.layout.pocketpaint_slide_intro_tools,
+				R.layout.pocketpaint_slide_intro_tools_selection,
 				R.layout.pocketpaint_slide_intro_possibilities,
 				R.layout.pocketpaint_slide_intro_landscape,
 				R.layout.pocketpaint_slide_intro_getstarted};

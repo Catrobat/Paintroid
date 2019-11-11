@@ -64,7 +64,7 @@ public class ToolsTapTargetTest {
 
 	@Before
 	public void setUp() {
-		changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools));
+		changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools_selection));
 	}
 
 	@Test

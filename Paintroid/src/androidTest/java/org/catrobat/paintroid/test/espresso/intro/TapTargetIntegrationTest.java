@@ -49,7 +49,7 @@ public class TapTargetIntegrationTest {
 
 	@Test
 	public void numberTapTargetsBottomBar() {
-		IntroUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools));
+		IntroUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools_selection));
 		LinearLayout targetItemView = IntroUtils.getBottomBarFromToolSlide(activityRule.getActivity());
 		TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
 		tapTargetBottomBar.initTargetView();
@@ -83,7 +83,7 @@ public class TapTargetIntegrationTest {
 
 	@Test
 	public void testRadiusBottomBar() {
-		IntroUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools));
+		IntroUtils.changeIntroPage(getPageIndexFromLayout(activityRule.getLayouts(), R.layout.pocketpaint_slide_intro_tools_selection));
 		TapTargetBottomBar tapTargetBottomBar = IntroUtils.getTapTargetBottomBar(activityRule.getActivity());
 		int expectedRadius = IntroUtils.getExpectedRadiusForTapTarget() - 3;
 		int actualRadius = tapTargetBottomBar.radius;

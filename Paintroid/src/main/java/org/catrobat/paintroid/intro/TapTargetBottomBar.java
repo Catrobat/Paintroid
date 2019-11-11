@@ -32,8 +32,6 @@ public class TapTargetBottomBar extends TapTargetBase {
 			int bottomScrollBarResourceId) {
 		super(tapTargetView, fadeView, activity, bottomScrollBarResourceId);
 
-		bottomScrollBar = (BottomBarHorizontalScrollView)
-				activity.findViewById(R.id.pocketpaint_intro_tools_bottom_bar)
-						.findViewById(R.id.pocketpaint_intro_bottom_bar_scroll_view);
+
 	}
 }
