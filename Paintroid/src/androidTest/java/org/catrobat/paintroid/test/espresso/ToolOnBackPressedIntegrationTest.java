@@ -50,7 +50,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.open;
 import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
-import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
@@ -61,7 +60,6 @@ import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ConfirmQuitDialogInteraction.onConfirmQuitDialog;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.NavigationDrawerInteraction.onNavigationDrawer;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
@@ -273,22 +271,12 @@ public class ToolOnBackPressedIntegrationTest {
 	}
 
 	@Test
-	public void testCloseNavigationDrawerOnBackPressed() {
-		onNavigationDrawer()
-				.perform(open(Gravity.START))
-				.check(matches(isOpen()));
-		pressBack();
-		onNavigationDrawer()
-				.check(matches(isClosed()));
-	}
-
-	@Test
 	public void testCloseLayerDialogOnBackPressed() {
-		onNavigationDrawer()
+		onView(withId(R.id.pocketpaint_drawer_layout))
 				.perform(open(Gravity.END))
 				.check(matches(isDisplayed()));
 		pressBack();
-		onNavigationDrawer()
+		onView(withId(R.id.pocketpaint_drawer_layout))
 				.check(matches(isClosed()));
 	}
 

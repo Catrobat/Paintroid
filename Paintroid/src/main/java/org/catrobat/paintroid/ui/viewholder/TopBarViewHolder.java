@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.ui.viewholder;
 
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -80,5 +81,19 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 	@Override
 	public int getHeight() {
 		return layout.getHeight();
+	}
+
+	@Override
+	public void removeStandaloneMenuItems(Menu menu) {
+		menu.removeItem(R.id.pocketpaint_nav_save_image);
+		menu.removeItem(R.id.pocketpaint_nav_save_duplicate);
+		menu.removeItem(R.id.pocketpaint_nav_new_image);
+	}
+
+	@Override
+	public void removeCatroidMenuItems(Menu menu) {
+		menu.removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
+		menu.removeItem(R.id.pocketpaint_nav_export);
+		menu.removeItem(R.id.pocketpaint_nav_discard_image);
 	}
 }

@@ -29,6 +29,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.view.GravityCompat;
 import android.util.DisplayMetrics;
+import android.view.Menu;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.R;
@@ -98,8 +99,6 @@ public class MainActivityPresenterTest {
 	@Mock
 	private MainActivityContracts.DrawerLayoutViewHolder drawerLayoutViewHolder;
 	@Mock
-	private MainActivityContracts.NavigationDrawerViewHolder navigationDrawerViewHolder;
-	@Mock
 	private Workspace workspace;
 	@Mock
 	private Perspective perspective;
@@ -115,6 +114,8 @@ public class MainActivityPresenterTest {
 	private MainActivityContracts.BottomNavigationViewHolder bottomNavigationViewHolder;
 	@Mock
 	private Bitmap bitmap;
+	@Mock
+	private Menu menu;
 
 	@InjectMocks
 	private MainActivityPresenter presenter;
@@ -128,7 +129,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testSetUp() {
 		verifyZeroInteractions(view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
-				drawerLayoutViewHolder, navigationDrawerViewHolder, commandFactory, commandManager, bottomBarViewHolder,
+				drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
 				bottomNavigationViewHolder, toolController);
 	}
 
@@ -281,8 +282,6 @@ public class MainActivityPresenterTest {
 		verify(topBarViewHolder).hide();
 		verify(view).hideKeyboard();
 		verify(view).enterFullscreen();
-		verify(navigationDrawerViewHolder).hideEnterFullscreen();
-		verify(navigationDrawerViewHolder).showExitFullscreen();
 		verify(toolController).disableToolOptionsView();
 		verify(perspective).enterFullscreen();
 	}
@@ -294,8 +293,6 @@ public class MainActivityPresenterTest {
 		verify(model).setFullscreen(false);
 		verify(topBarViewHolder).show();
 		verify(view).exitFullscreen();
-		verify(navigationDrawerViewHolder).showEnterFullscreen();
-		verify(navigationDrawerViewHolder).hideExitFullscreen();
 		verify(toolController).enableToolOptionsView();
 		verify(perspective).exitFullscreen();
 	}
@@ -746,20 +743,18 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testFinishInitializeWhenDefaultThenRemoveCatroidNavigationItems() {
-		presenter.finishInitialize();
+		presenter.removeMoreOptionsItems(menu);
 
-		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_export);
-		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
+		verify(topBarViewHolder).removeCatroidMenuItems(menu);
 	}
 
 	@Test
 	public void testFinishInitializeWhenFromCatroidThenRemoveSaveNavigationItems() {
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 
-		presenter.finishInitialize();
+		presenter.removeMoreOptionsItems(menu);
 
-		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_save_image);
-		verify(navigationDrawerViewHolder).removeItem(R.id.pocketpaint_nav_save_duplicate);
+		verify(topBarViewHolder).removeStandaloneMenuItems(menu);
 	}
 
 	@Test
@@ -828,7 +823,7 @@ public class MainActivityPresenterTest {
 		presenter.onLoadImagePreExecute(LOAD_IMAGE_DEFAULT);
 
 		verifyZeroInteractions(view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
-				drawerLayoutViewHolder, navigationDrawerViewHolder, commandFactory, commandManager, bottomBarViewHolder,
+				drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
 				toolController);
 	}
 
@@ -938,8 +933,8 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testHandlePermissionResultSavePermissionGranted() {
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_GRANTED});
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_GRANTED});
 
 		Uri uri = model.getSavedPictureUri();
 
@@ -949,19 +944,19 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testHandlePermissionResultSavePermissionNotGranted() {
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_DENIED});
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE
 		);
 	}
 
 	@Test
 	public void testHandlePermissionResultSaveCopyPermissionGranted() {
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_GRANTED});
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_GRANTED});
 
 		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(bitmap));
 	}
@@ -969,11 +964,11 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testHandlePermissionResultSaveCopyPermissionNotGranted() {
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_DENIED});
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
 		);
 	}
 
@@ -983,8 +978,8 @@ public class MainActivityPresenterTest {
 		when(model.getSavedPictureUri()).thenReturn(uri);
 
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_GRANTED});
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_GRANTED});
 
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, bitmap, uri);
 	}
@@ -992,22 +987,22 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testHandlePermissionResultSaveBeforeFinishPermissionNotGranted() {
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_DENIED});
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
 		);
 	}
 
 	@Test
 	public void testHandlePermissionResultSaveBeforeLoadNewPermissionNotGranted() {
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_DENIED});
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
 		);
 	}
 
@@ -1017,8 +1012,8 @@ public class MainActivityPresenterTest {
 		when(model.getSavedPictureUri()).thenReturn(uri);
 
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_GRANTED});
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_GRANTED});
 
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, bitmap, uri);
 	}
@@ -1026,11 +1021,11 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testHandlePermissionResultSaveBeforeNewEmptyPermissionNotGranted() {
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},
-				new int[] {PackageManager.PERMISSION_DENIED});
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
+				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
 		);
 	}
 
