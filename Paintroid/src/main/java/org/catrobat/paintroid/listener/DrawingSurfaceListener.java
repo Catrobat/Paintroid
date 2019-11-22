@@ -142,12 +142,21 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_MOVE);
 				} else if (event.getPointerCount() == 1 && (currentTool.handToolMode())) {
+					float xOld;
+					float yOld;
 					if (autoScrollTask.isRunning()) {
 						autoScrollTask.stop();
 					}
 
-					float xOld = eventX;
-					float yOld = eventY;
+					if (touchMode == TouchMode.PINCH) {
+						xOld = 0;
+						yOld = 0;
+						touchMode = TouchMode.DRAW;
+					} else {
+						xOld = eventX;
+						yOld = eventY;
+					}
+
 					newHandEvent(event.getX(), event.getY());
 					if (xOld > 0 && eventX != xOld || yOld > 0 && eventY != yOld) {
 						callback.translatePerspective(eventX - xOld, eventY - yOld);
