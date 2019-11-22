@@ -86,6 +86,8 @@ public interface MainActivityContracts {
 		void showToolChangeToast(int offset, int idRes);
 
 		void broadcastAddPictureToGallery(Uri uri);
+
+		void rateUsClicked();
 	}
 
 	interface MainView {
@@ -187,6 +189,8 @@ public interface MainActivityContracts {
 		void actionToolsClicked();
 
 		void actionCurrentToolClicked();
+
+		void rateUsClicked();
 	}
 
 	interface Model {

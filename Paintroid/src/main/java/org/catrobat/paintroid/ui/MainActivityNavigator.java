@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.ui;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -249,6 +250,20 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Fragment fragment = findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
 		if (fragment != null) {
 			setupColorPickerDialogListeners((ColorPickerDialog) fragment);
+		}
+	}
+
+	@Override
+	public void rateUsClicked() {
+		Uri uriPlayStore = Uri.parse("market://details?id=" + mainActivity.getPackageName());
+		Intent openPlayStore = new Intent(Intent.ACTION_VIEW, uriPlayStore);
+
+		try {
+			mainActivity.startActivity(openPlayStore);
+		} catch (ActivityNotFoundException e) {
+			Uri uriNoPlayStore = Uri.parse("http://play.google.com/store/apps/details?id=" + mainActivity.getPackageName());
+			Intent noPlayStoreInstalled = new Intent(Intent.ACTION_VIEW, uriNoPlayStore);
+			mainActivity.startActivity(noPlayStoreInstalled);
 		}
 	}
 }

@@ -1322,6 +1322,13 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
+	public void testOnRateUsClicked() {
+		presenter.rateUsClicked();
+
+		verify(navigator).rateUsClicked();
+	}
+
+	@Test
 	public void testGetContentResolver() {
 		ContentResolver resolver = mock(ContentResolver.class);
 		when(view.getContentResolver()).thenReturn(resolver);

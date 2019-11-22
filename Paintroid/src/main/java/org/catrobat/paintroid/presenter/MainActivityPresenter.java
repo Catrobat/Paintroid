@@ -651,4 +651,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			}
 		}
 	}
+
+	@Override
+	public void rateUsClicked() {
+		navigator.rateUsClicked();
+	}
 }
