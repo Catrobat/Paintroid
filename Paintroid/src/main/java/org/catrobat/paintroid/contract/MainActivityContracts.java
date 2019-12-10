@@ -65,11 +65,15 @@ public interface MainActivityContracts {
 
 		void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode);
 
+		void showRequestPermanentlyDeniedPermissionRationaleDialog();
+
 		void askForPermission(String[] permissions, int requestCode);
 
 		boolean isSdkAboveOrEqualM();
 
 		boolean doIHavePermission(String permission);
+
+		boolean isPermissionPermanentlyDenied(String[] permission);
 
 		void finishActivity();
 
