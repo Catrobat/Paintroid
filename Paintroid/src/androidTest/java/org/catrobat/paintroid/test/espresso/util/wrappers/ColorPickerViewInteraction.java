@@ -38,6 +38,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 
@@ -57,8 +58,8 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	}
 
 	public ColorPickerViewInteraction performOpenColorPicker() {
-		onView(withId(R.id.pocketpaint_btn_top_color))
-				.perform(click());
+		onBottomNavigationView()
+				.onColorClicked();
 		return this;
 	}
 

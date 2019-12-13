@@ -578,9 +578,9 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testSetTopBarColorThenSetColorButtonColor() {
-		presenter.setTopBarColor(Color.GREEN);
+		presenter.setBottomNavigationColor(Color.GREEN);
 
-		verify(topBarViewHolder).setColorButtonColor(Color.GREEN);
+		verify(bottomNavigationViewHolder).setColorButtonColor(Color.GREEN);
 	}
 
 	@Test
@@ -722,7 +722,7 @@ public class MainActivityPresenterTest {
 
 		presenter.finishInitialize();
 
-		verify(topBarViewHolder).setColorButtonColor(Color.RED);
+		verify(bottomNavigationViewHolder).setColorButtonColor(Color.RED);
 	}
 
 	@Test

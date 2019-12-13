@@ -172,7 +172,7 @@ public interface MainActivityContracts {
 
 		void onCommandPostExecute();
 
-		void setTopBarColor(int color);
+		void setBottomNavigationColor(int color);
 
 		void onCreateTool();
 
@@ -240,8 +240,6 @@ public interface MainActivityContracts {
 
 		void disableRedoButton();
 
-		void setColorButtonColor(@ColorInt int color);
-
 		void hide();
 
 		void show();
@@ -278,6 +276,8 @@ public interface MainActivityContracts {
 		void hide();
 
 		void showCurrentTool(ToolType toolType);
+
+		void setColorButtonColor(@ColorInt int color);
 	}
 
 	interface BottomNavigationAppearance {
