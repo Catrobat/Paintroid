@@ -254,6 +254,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	private void askForWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
+		if (model.isOpenedFromCatroid() && requestCode == PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH) {
+			handleRequestPermissionsResult(requestCode,
+					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+					new int[]{PackageManager.PERMISSION_GRANTED});
+			return;
+		}
+
 		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 			navigator.askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
 		} else {
