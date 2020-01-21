@@ -49,6 +49,8 @@
         <item name="colorPrimaryDark">@color/pocketpaint_colorPrimaryDark</item>
         <item name="colorAccent">@color/pocketpaint_colorAccent</item>
         <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:itemBackground">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="PocketPaintHighlightColorTheme" parent="PocketPaintTheme">
