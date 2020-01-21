@@ -427,6 +427,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void removeMoreOptionsItems(Menu menu) {
 		if (model.isOpenedFromCatroid()) {
 			topBarViewHolder.removeStandaloneMenuItems(menu);
+			topBarViewHolder.hideTitleIfNotStandalone();
 		} else {
 			topBarViewHolder.removeCatroidMenuItems(menu);
 		}

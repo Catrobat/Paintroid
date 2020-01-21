@@ -251,6 +251,8 @@ public interface MainActivityContracts {
 		void removeStandaloneMenuItems(Menu menu);
 
 		void removeCatroidMenuItems(Menu menu);
+
+		void hideTitleIfNotStandalone();
 	}
 
 	interface DrawerLayoutViewHolder {
