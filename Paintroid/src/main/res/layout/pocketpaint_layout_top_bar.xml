@@ -27,7 +27,7 @@
     android:theme="?attr/actionBarStyle"
     tools:showIn="@layout/activity_pocketpaint_main"
     android:orientation="horizontal"
-    android:weightSum="4">
+    android:weightSum="3">
     <TextView
         android:id="@+id/pocketpaint_textview_top"
         style="@style/PocketPaintActionBarTitle"
@@ -72,15 +72,6 @@
             android:src="@drawable/ic_pocketpaint_color_palette"
             app:tint="@android:color/white" />
     </FrameLayout>
-
-    <ImageButton
-        android:id="@+id/pocketpaint_btn_top_layers"
-        style="?actionButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:src="@drawable/ic_pocketpaint_layers"
-        android:contentDescription="@string/button_layers" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/pocketpaint_toolbar"

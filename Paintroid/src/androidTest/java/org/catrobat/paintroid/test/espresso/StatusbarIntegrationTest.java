@@ -54,6 +54,5 @@ public class StatusbarIntegrationTest {
 		onView(withId(R.id.pocketpaint_btn_top_undo)).check(matches(isDisplayed()));
 		onView(withId(R.id.pocketpaint_btn_top_redo)).check(matches(isDisplayed()));
 		onView(withId(R.id.pocketpaint_btn_top_color)).check(matches(isDisplayed()));
-		onView(withId(R.id.pocketpaint_btn_top_layers)).check(matches(isDisplayed()));
 	}
 }

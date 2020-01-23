@@ -36,16 +36,19 @@ import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
+import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
+
 @RunWith(AndroidJUnit4.class)
-public class ButtonTopLayersRtlLayoutTest {
+public class ButtonLayersRtlLayoutTest {
 	@Rule
 	public ActivityTestRule<MainActivity> mainActivityActivityTestRule =
 			new RtlActivityTestRule<>(MainActivity.class, "ar");
 
 	@Test
-	public void testButtonTopLayers() {
-		onView(withId(R.id.pocketpaint_btn_top_layers))
-				.perform(click());
+	public void testButtonLayers() {
+		onBottomNavigationView()
+				.onLayersClicked();
+
 		onView(withId(R.id.pocketpaint_nav_view_layer))
 				.check(matches(isCompletelyDisplayed()));
 
