@@ -46,7 +46,6 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.BrushPickerView
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
@@ -249,19 +248,5 @@ public class EraserToolIntegrationTest {
 		onToolProperties()
 				.checkCap(Cap.ROUND)
 				.checkStrokeWidth(eraserStrokeWidth);
-	}
-
-	@Test
-	public void testColorPickerIcon() {
-		onTopBarView().onPaletteButton()
-				.check(matches(isDisplayed()));
-		onToolBarView()
-				.performSelectTool(ToolType.ERASER);
-		onTopBarView().onPaletteButton()
-				.check(matches(isDisplayed()));
-		onToolBarView()
-				.performSelectTool(ToolType.BRUSH);
-		onTopBarView().onPaletteButton()
-				.check(matches(isDisplayed()));
 	}
 }

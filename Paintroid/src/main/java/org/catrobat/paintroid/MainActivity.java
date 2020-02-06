@@ -346,7 +346,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private void setActionBarToolTips(TopBarViewHolder topBar, Context context) {
 		TooltipCompat.setTooltipText(topBar.undoButton, context.getString(R.string.button_undo));
 		TooltipCompat.setTooltipText(topBar.redoButton, context.getString(R.string.button_redo));
-		TooltipCompat.setTooltipText(topBar.colorButton, context.getString(R.string.bottom_navigation_color));
 	}
 
 	private void setTopBarListeners(TopBarViewHolder topBar) {
@@ -360,12 +359,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			@Override
 			public void onClick(View v) {
 				presenter.redoClicked();
-			}
-		});
-		topBar.colorButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				presenter.showColorPickerClicked();
 			}
 		});
 	}

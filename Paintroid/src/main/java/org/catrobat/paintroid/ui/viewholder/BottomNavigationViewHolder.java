@@ -20,8 +20,12 @@
 package org.catrobat.paintroid.ui.viewholder;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.view.View;
+import android.widget.ImageView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;
@@ -32,10 +36,11 @@ import org.catrobat.paintroid.ui.BottomNavigationPortrait;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
 public class BottomNavigationViewHolder implements MainActivityContracts.BottomNavigationViewHolder {
-	public final View layout;
+	private final View layout;
 	private final BottomNavigationView bottomNavigationView;
 	private int orientation;
 	private MainActivityContracts.BottomNavigationAppearance bottomNavigation;
+	private ImageView colorButton;
 
 	public BottomNavigationViewHolder(View layout, int orientation, Context context) {
 		this.layout = layout;
@@ -43,6 +48,12 @@ public class BottomNavigationViewHolder implements MainActivityContracts.BottomN
 		this.orientation = orientation;
 
 		setAppearance(context);
+
+		BottomNavigationMenuView bottomNavigationMenuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+		BottomNavigationItemView item = (BottomNavigationItemView) bottomNavigationMenuView.getChildAt(2);
+		colorButton = item.findViewById(R.id.icon);
+
+		initColorButton();
 	}
 
 	@Override
@@ -58,6 +69,17 @@ public class BottomNavigationViewHolder implements MainActivityContracts.BottomN
 	@Override
 	public void showCurrentTool(ToolType toolType) {
 		bottomNavigation.showCurrentTool(toolType);
+	}
+
+	@Override
+	public void setColorButtonColor(int color) {
+		colorButton.setColorFilter(color);
+	}
+
+	private void initColorButton() {
+		colorButton.setScaleType(ImageView.ScaleType.FIT_XY);
+		colorButton.setBackgroundColor(Color.WHITE);
+		colorButton.setPadding(2, 2, 2, 2);
 	}
 
 	public BottomNavigationView getBottomNavigationView() {

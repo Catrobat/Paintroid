@@ -382,8 +382,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void setTopBarColor(int color) {
-		topBarViewHolder.setColorButtonColor(color);
+	public void setBottomNavigationColor(int color) {
+		bottomNavigationViewHolder.setColorButtonColor(color);
 	}
 
 	@Override
@@ -407,7 +407,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void finishInitialize() {
 		refreshTopBarButtons();
-		topBarViewHolder.setColorButtonColor(toolController.getToolColor());
+		bottomNavigationViewHolder.setColorButtonColor(toolController.getToolColor());
 		bottomNavigationViewHolder.showCurrentTool(toolController.getToolType());
 
 		if (model.isFullscreen()) {
