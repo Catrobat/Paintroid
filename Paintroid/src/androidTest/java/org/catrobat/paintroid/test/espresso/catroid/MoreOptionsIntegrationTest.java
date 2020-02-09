@@ -77,7 +77,6 @@ public class MoreOptionsIntegrationTest {
 		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
 		onView(withText(R.string.pocketpaint_menu_about)).check(matches(isDisplayed()));
 
-		onView(withText(R.string.menu_back)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_discard_image)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_export)).check(matches(isDisplayed()));
 

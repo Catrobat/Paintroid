@@ -67,7 +67,6 @@
     <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="closing_security_question_title">Quit</string>
     <string name="closing_security_question">Save Changes?</string>
-    <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="menu_new_image">New image</string>
     <string name="menu_discard_image">Discard image</string>
     <string name="menu_load_image">Load image</string>
@@ -76,7 +75,6 @@
     <string name="menu_hide_menu">Fullscreen</string>
     <string name="pocketpaint_menu_about">@string/pocketpaint_about_title</string>
     <string name="menu_rate_us">Rate us!</string>
-    <string name="menu_back">@string/closing_catroid_security_question_title</string>
     <string name="menu_export">Export</string>
     <string name="saved">Image saved</string>
     <string name="copy">Copy saved</string>

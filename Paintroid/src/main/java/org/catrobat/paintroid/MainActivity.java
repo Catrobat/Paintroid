@@ -200,9 +200,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		int i = item.getItemId();
-		if (i == R.id.pocketpaint_nav_back_to_pocket_code) {
-			presenter.backToPocketCodeClicked();
-		} else if (i == R.id.pocketpaint_nav_export) {
+		if (i == R.id.pocketpaint_nav_export) {
 			presenter.saveCopyClicked();
 		} else if (i == R.id.pocketpaint_nav_save_image) {
 			presenter.saveImageClicked();
@@ -222,6 +220,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			presenter.showHelpClicked();
 		} else if (i == R.id.pocketpaint_nav_about) {
 			presenter.showAboutClicked();
+		} else if (i == android.R.id.home) {
+			presenter.backToPocketCodeClicked();
 		} else {
 			return false;
 		}
@@ -409,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		ActionBar supportActionBar = getSupportActionBar();
 		if (supportActionBar != null) {
 			supportActionBar.setDisplayShowTitleEnabled(false);
-			supportActionBar.setDisplayHomeAsUpEnabled(false);
+			supportActionBar.setDisplayHomeAsUpEnabled(isOpenedFromCatroid);
 			supportActionBar.setHomeButtonEnabled(true);
 			supportActionBar.setDisplayShowHomeEnabled(false);
 		}

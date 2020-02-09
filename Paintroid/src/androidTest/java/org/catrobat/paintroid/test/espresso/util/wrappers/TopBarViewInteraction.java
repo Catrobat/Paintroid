@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 
 import org.catrobat.paintroid.R;
@@ -64,6 +65,11 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 
 	public TopBarViewInteraction performOpenMoreOptions() {
 		openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+		return this;
+	}
+
+	public TopBarViewInteraction onHomeClicked() {
+		Espresso.pressBack();
 		return this;
 	}
 }

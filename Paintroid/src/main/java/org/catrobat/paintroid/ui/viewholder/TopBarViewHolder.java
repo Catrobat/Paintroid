@@ -85,7 +85,6 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 
 	@Override
 	public void removeCatroidMenuItems(Menu menu) {
-		menu.removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
 		menu.removeItem(R.id.pocketpaint_nav_export);
 		menu.removeItem(R.id.pocketpaint_nav_discard_image);
 	}

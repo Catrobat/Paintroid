@@ -1,8 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/pocketpaint_nav_back_to_pocket_code"
-        android:title="@string/menu_back" />
-    <item
         android:id="@+id/pocketpaint_nav_save_image"
         android:title="@string/menu_save_image" />
     <item
