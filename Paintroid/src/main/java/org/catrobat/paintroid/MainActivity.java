@@ -222,6 +222,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			presenter.showHelpClicked();
 		} else if (i == R.id.pocketpaint_nav_about) {
 			presenter.showAboutClicked();
+		} else if (i == android.R.id.home) {
+			onBackPressed();
 		} else {
 			return false;
 		}
