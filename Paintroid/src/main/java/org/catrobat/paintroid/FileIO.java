@@ -114,37 +114,9 @@ public final class FileIO {
 		}
 	}
 
-	private static int calculateSampleSize(int width, int height, int maxWidth, int maxHeight) {
-		int sampleSize = 1;
-		while (width > maxWidth || height > maxHeight) {
-			width /= 2;
-			height /= 2;
-			sampleSize *= 2;
-		}
-		return sampleSize;
-	}
-
 	public static Bitmap getBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri) throws IOException {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inMutable = true;
-		return enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options));
-	}
-
-	public static Bitmap getBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, int maxWidth, int maxHeight) throws IOException {
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		decodeBitmapFromUri(resolver, bitmapUri, options);
-		if (options.outHeight < 0 || options.outWidth < 0) {
-			throw new IOException("Can't load bitmap from uri");
-		}
-
-		int sampleSize = calculateSampleSize(options.outWidth, options.outHeight,
-				maxWidth, maxHeight);
-
-		options.inMutable = true;
-		options.inJustDecodeBounds = false;
-		options.inSampleSize = sampleSize;
-
 		return enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options));
 	}
 

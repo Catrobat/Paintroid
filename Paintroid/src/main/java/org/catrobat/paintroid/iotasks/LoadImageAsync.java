@@ -33,26 +33,13 @@ import java.lang.ref.WeakReference;
 public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 	private static final String TAG = LoadImageAsync.class.getSimpleName();
 	private WeakReference<LoadImageCallback> callbackRef;
-	private int maxWidth;
-	private int maxHeight;
 	private int requestCode;
 	private Uri uri;
-	private boolean scaleImage;
-
-	public LoadImageAsync(LoadImageCallback callback, int requestCode, int maxWidth, int maxHeight, Uri uri) {
-		this.callbackRef = new WeakReference<>(callback);
-		this.requestCode = requestCode;
-		this.uri = uri;
-		this.maxWidth = maxWidth;
-		this.maxHeight = maxHeight;
-		this.scaleImage = true;
-	}
 
 	public LoadImageAsync(LoadImageCallback callback, int requestCode, Uri uri) {
 		this.callbackRef = new WeakReference<>(callback);
 		this.requestCode = requestCode;
 		this.uri = uri;
-		this.scaleImage = false;
 	}
 
 	@Override
@@ -79,11 +66,7 @@ public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 
 		try {
 			ContentResolver resolver = callback.getContentResolver();
-			if (scaleImage) {
-				return FileIO.getBitmapFromUri(resolver, uri, maxWidth, maxHeight);
-			} else {
-				return FileIO.getBitmapFromUri(resolver, uri);
-			}
+			return FileIO.getBitmapFromUri(resolver, uri);
 		} catch (IOException e) {
 			Log.e(TAG, "Can't load image file", e);
 			return null;

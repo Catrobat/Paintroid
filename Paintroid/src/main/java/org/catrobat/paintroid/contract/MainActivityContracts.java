@@ -227,8 +227,6 @@ public interface MainActivityContracts {
 		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Bitmap bitmap, Uri uri);
 
 		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri);
-
-		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, int maxWidth, int maxHeight, Uri uri);
 	}
 
 	interface TopBarViewHolder {

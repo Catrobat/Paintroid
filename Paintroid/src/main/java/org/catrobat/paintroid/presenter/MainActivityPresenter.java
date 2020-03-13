@@ -240,9 +240,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void handleActivityResult(@ActivityRequestCode int requestCode, int resultCode, Intent data) {
-		DisplayMetrics metrics = view.getDisplayMetrics();
-		int maxWidth = metrics.widthPixels;
-		int maxHeight = metrics.heightPixels;
 		switch (requestCode) {
 			case REQUEST_CODE_IMPORTPNG:
 				if (resultCode != Activity.RESULT_OK) {
@@ -251,13 +248,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				Uri selectedGalleryImageUri = data.getData();
 				setTool(ToolType.IMPORTPNG);
 				toolController.switchTool(ToolType.IMPORTPNG);
-				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, maxWidth, maxHeight, selectedGalleryImageUri);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, selectedGalleryImageUri);
 				break;
 			case REQUEST_CODE_LOAD_PICTURE:
 				if (resultCode != Activity.RESULT_OK) {
 					return;
 				}
-				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, maxWidth, maxHeight, data.getData());
+				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, data.getData());
 				break;
 			case REQUEST_CODE_INTRO:
 				if (resultCode == RESULT_INTRO_MW_NOT_SUPPORTED) {
@@ -520,12 +517,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			return;
 		}
 
-		switch (requestCode) {
-			case CREATE_FILE_DEFAULT:
-				model.setSavedPictureUri(view.getUriFromFile(file));
-				break;
-			default:
-				throw new IllegalArgumentException();
+		if (requestCode == CREATE_FILE_DEFAULT) {
+			model.setSavedPictureUri(view.getUriFromFile(file));
+		} else {
+			throw new IllegalArgumentException();
 		}
 	}
 

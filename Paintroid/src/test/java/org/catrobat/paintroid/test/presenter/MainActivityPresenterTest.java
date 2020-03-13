@@ -383,8 +383,6 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testHandleActivityResultWhenLoadPictureThenLoadIntentPicture() {
 		DisplayMetrics metrics = mock(DisplayMetrics.class);
-		metrics.widthPixels = 13;
-		metrics.heightPixels = 17;
 		when(view.getDisplayMetrics()).thenReturn(metrics);
 		Intent intent = mock(Intent.class);
 		Uri uri = mock(Uri.class);
@@ -392,7 +390,7 @@ public class MainActivityPresenterTest {
 
 		presenter.handleActivityResult(REQUEST_CODE_LOAD_PICTURE, Activity.RESULT_OK, intent);
 
-		verify(interactor).loadFile(presenter, LOAD_IMAGE_DEFAULT, 13, 17, uri);
+		verify(interactor).loadFile(presenter, LOAD_IMAGE_DEFAULT, uri);
 	}
 
 	@Test
