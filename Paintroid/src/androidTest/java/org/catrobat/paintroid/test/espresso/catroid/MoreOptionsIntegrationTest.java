@@ -39,13 +39,11 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.OptionsMenuViewInteraction.onOptionsMenu;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 
 @RunWith(AndroidJUnit4.class)
@@ -72,17 +70,19 @@ public class MoreOptionsIntegrationTest {
 		onTopBarView()
 				.performOpenMoreOptions();
 
-		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_hide_menu)).check(matches(isDisplayed()));
-		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
-		onView(withText(R.string.pocketpaint_menu_about)).check(matches(isDisplayed()));
+		onOptionsMenu()
+				.checkItemExists(R.string.menu_load_image)
+				.checkItemExists(R.string.menu_hide_menu)
+				.checkItemExists(R.string.help_title)
+				.checkItemExists(R.string.pocketpaint_menu_about)
+				.checkItemExists(R.string.menu_rate_us)
 
-		onView(withText(R.string.menu_discard_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_export)).check(matches(isDisplayed()));
+				.checkItemDoesNotExist(R.string.menu_save_image)
+				.checkItemDoesNotExist(R.string.menu_save_copy)
+				.checkItemDoesNotExist(R.string.menu_new_image)
 
-		onView(withText(R.string.menu_save_image)).check(doesNotExist());
-		onView(withText(R.string.menu_save_copy)).check(doesNotExist());
-		onView(withText(R.string.menu_new_image)).check(doesNotExist());
+				.checkItemExists(R.string.menu_discard_image)
+				.checkItemExists(R.string.menu_export);
 	}
 
 	@Test

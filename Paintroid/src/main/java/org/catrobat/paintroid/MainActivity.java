@@ -200,25 +200,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		int i = item.getItemId();
-		if (i == R.id.pocketpaint_nav_export) {
+		if (i == R.id.pocketpaint_options_export) {
 			presenter.saveCopyClicked();
-		} else if (i == R.id.pocketpaint_nav_save_image) {
+		} else if (i == R.id.pocketpaint_options_save_image) {
 			presenter.saveImageClicked();
-		} else if (i == R.id.pocketpaint_nav_save_duplicate) {
+		} else if (i == R.id.pocketpaint_options_save_duplicate) {
 			presenter.saveCopyClicked();
-		} else if (i == R.id.pocketpaint_nav_open_image) {
+		} else if (i == R.id.pocketpaint_options_open_image) {
 			presenter.loadImageClicked();
-		} else if (i == R.id.pocketpaint_nav_new_image) {
+		} else if (i == R.id.pocketpaint_options_new_image) {
 			presenter.newImageClicked();
-		} else if (i == R.id.pocketpaint_nav_discard_image) {
+		} else if (i == R.id.pocketpaint_options_discard_image) {
 			presenter.discardImageClicked();
-		} else if (i == R.id.pocketpaint_nav_fullscreen_mode) {
+		} else if (i == R.id.pocketpaint_options_fullscreen_mode) {
 			presenter.enterFullscreenClicked();
-		} else if (i == R.id.pocketpaint_nav_rate_us) {
+		} else if (i == R.id.pocketpaint_options_rate_us) {
 			presenter.rateUsClicked();
-		} else if (i == R.id.pocketpaint_nav_help) {
+		} else if (i == R.id.pocketpaint_options_try_pocket_code) {
+			presenter.visitPocketCodeClicked();
+		} else if (i == R.id.pocketpaint_options_help) {
 			presenter.showHelpClicked();
-		} else if (i == R.id.pocketpaint_nav_about) {
+		} else if (i == R.id.pocketpaint_options_about) {
 			presenter.showAboutClicked();
 		} else if (i == android.R.id.home) {
 			presenter.backToPocketCodeClicked();
