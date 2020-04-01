@@ -161,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();
-
 		onCreateMainView();
 		onCreateLayerMenu();
 		onCreateDrawingSurface();
@@ -293,9 +292,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		ContextCallback contextCallback = new DefaultContextCallback(context);
 		ToolController toolController = new DefaultToolController(toolReference, toolOptionsViewController,
 				new DefaultToolFactory(), commandManager, workspace, toolPaint, contextCallback);
+		UserPreferences preferences = new UserPreferences(getPreferences(Context.MODE_PRIVATE));
+
 		presenter = new MainActivityPresenter(this, model, workspace,
 				navigator, interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
-				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, toolController);
+				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, toolController, preferences);
 		toolController.setOnColorPickedListener(new PresenterColorPickedListener(presenter));
 
 		keyboardListener = new KeyboardListener(drawerLayout);

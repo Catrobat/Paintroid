@@ -42,9 +42,12 @@ import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
+import org.catrobat.paintroid.dialog.FeedbackDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.LikeUsDialog;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
+import org.catrobat.paintroid.dialog.RateUsDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDialogType;
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
@@ -143,6 +146,24 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showAboutDialog() {
 		AboutDialog about = AboutDialog.newInstance();
 		about.show(mainActivity.getSupportFragmentManager(), Constants.ABOUT_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showLikeUsDialog() {
+		LikeUsDialog likeUsDialog = LikeUsDialog.newInstance();
+		likeUsDialog.show(mainActivity.getSupportFragmentManager(), Constants.LIKE_US_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showRateUsDialog() {
+		RateUsDialog rateUsDialog = RateUsDialog.newInstance();
+		rateUsDialog.show(mainActivity.getSupportFragmentManager(), Constants.RATE_US_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showFeedbackDialog() {
+		FeedbackDialog feedbackDialog = FeedbackDialog.newInstance();
+		feedbackDialog.show(mainActivity.getSupportFragmentManager(), Constants.FEEDBACK_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override

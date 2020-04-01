@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.UserPreferences;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -116,6 +117,8 @@ public class MainActivityPresenterTest {
 	private Bitmap bitmap;
 	@Mock
 	private Menu menu;
+	@Mock
+	private UserPreferences sharedPreferences;
 
 	@InjectMocks
 	private MainActivityPresenter presenter;
@@ -130,7 +133,7 @@ public class MainActivityPresenterTest {
 	public void testSetUp() {
 		verifyZeroInteractions(view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
 				drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
-				bottomNavigationViewHolder, toolController);
+				bottomNavigationViewHolder, toolController, sharedPreferences);
 	}
 
 	@Test

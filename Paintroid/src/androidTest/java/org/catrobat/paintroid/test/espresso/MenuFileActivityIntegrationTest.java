@@ -317,6 +317,9 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
+		onView(withText(R.string.pocketpaint_no)).perform(click());
+		onView(withText(R.string.pocketpaint_ok)).perform(click());
+
 		assertNotNull(activity.model.getSavedPictureUri());
 
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());

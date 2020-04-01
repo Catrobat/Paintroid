@@ -165,6 +165,15 @@
 
     <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen</string>
 
+    <string name="pocketpaint_like_us">Do you like Pocket Paint?</string>
+    <string name="pocketpaint_rate_us">Would you like to rate Pocket Paint?</string>
+    <string name="pocketpaint_feedback">We\'re sorry to hear that! If you want to share your experience with us please write to contact@catrobat.org</string>
+    <string name="pocketpaint_yes">Yes</string>
+    <string name="pocketpaint_no">No</string>
+    <string name="pocketpaint_ok">@android:string/ok</string>
+    <string name="pocketpaint_not_now">Not now</string>
+    <string name="pocketpaint_rate_us_title">Rate Us</string>
+
     <string name="bottom_navigation_tools">Tools</string>
     <string name="bottom_navigation_current">Current</string>
     <string name="bottom_navigation_color">Color</string>
