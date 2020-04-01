@@ -21,17 +21,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/pocketpaint_intro_top_bar"
-        android:id="@+id/pocketpaint_intro_possibilites_topbar"/>
+    <include layout="@layout/pocketpaint_layout_top_bar"
+        android:id="@+id/pocketpaint_intro_possibilities_topbar"/>
 
     <LinearLayout
-        android:id="@+id/pocketpaint_intro_possibilities_bottom_bar"
+        android:id="@+id/pocketpaint_intro_possibilities_bottom_bar_ll"
         android:layout_width="match_parent"
         android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true">
 
-        <include layout="@layout/pocketpaint_intro_bottom_bar" />
+        <include android:id="@+id/pocketpaint_intro_possibilities_bottom_bar"
+            layout="@layout/pocketpaint_layout_bottom_navigation" />
     </LinearLayout>
 
     <LinearLayout
@@ -39,8 +40,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:background="@color/pocketpaint_main_drawing_surface_background"
-        android:layout_above="@id/pocketpaint_intro_possibilities_bottom_bar"
-        android:layout_below="@id/pocketpaint_intro_possibilites_topbar">
+        android:layout_above="@id/pocketpaint_intro_possibilities_bottom_bar_ll"
+        android:layout_below="@id/pocketpaint_intro_possibilities_topbar">
 
         <View
             android:layout_width="match_parent"
@@ -64,7 +65,8 @@
         android:paddingEnd="@dimen/pocketpaint_welcome_margin_side"
         android:paddingStart="@dimen/pocketpaint_welcome_margin_side"
         android:paddingTop="@dimen/pocketpaint_welcome_margin_top_possibilities"
-        android:layout_below="@id/pocketpaint_intro_possibilites_topbar"
+        android:layout_below="@id/pocketpaint_intro_possibilities_topbar"
+        android:layout_above="@id/pocketpaint_intro_possibilities_bottom_bar_ll"
         android:visibility="visible">
 
         <TextView
@@ -85,5 +87,4 @@
             android:text="@string/intro_possibilities_text"/>
 
     </RelativeLayout>
-
 </RelativeLayout>

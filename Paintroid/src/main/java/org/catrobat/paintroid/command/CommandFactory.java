@@ -24,9 +24,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.RectF;
 
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
+import org.catrobat.paintroid.tools.drawable.ShapeDrawable;
 
 public interface CommandFactory {
 
@@ -58,7 +60,7 @@ public interface CommandFactory {
 
 	Command createFillCommand(int x, int y, Paint paint, float colorTolerance);
 
-	Command createGeometricFillCommand(Bitmap bitmap, Point position, float boxWidth, float boxHeight, float boxRotation, Paint paint);
+	Command createGeometricFillCommand(ShapeDrawable shapeDrawable, Point position, RectF box, float boxRotation, Paint paint);
 
 	Command createPathCommand(Paint paint, Path path);
 

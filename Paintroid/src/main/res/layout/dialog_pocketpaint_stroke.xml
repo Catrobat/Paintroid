@@ -59,11 +59,12 @@
             android:inputType="number"
             android:imeOptions="actionDone"
             android:saveEnabled="false"
-            android:textColor="@color/pocketpaint_colorAccent"
+            android:textColor="?attr/colorAccent"
             android:textSize="14sp"
             android:textStyle="bold"
             tools:ignore="LabelFor"
-            tools:text="100" />
+            tools:text="100"
+            android:importantForAutofill="no"/>
     </LinearLayout>
 
     <TextView

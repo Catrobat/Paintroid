@@ -35,6 +35,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.assertListViewCount;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.hamcrest.Matchers.instanceOf;
 
 public final class LayerMenuViewInteraction extends CustomViewInteraction {
@@ -71,8 +72,8 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	}
 
 	public LayerMenuViewInteraction performOpen() {
-		onView(withId(R.id.pocketpaint_btn_top_layers))
-				.perform(click());
+		onBottomNavigationView()
+				.onLayersClicked();
 		check(matches(isDisplayed()));
 		return this;
 	}

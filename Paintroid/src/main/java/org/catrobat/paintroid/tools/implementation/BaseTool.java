@@ -24,12 +24,8 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.Shader;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.ViewGroup;
 
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -38,22 +34,22 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.common.PointScrollBehavior;
+import org.catrobat.paintroid.tools.common.ScrollBehavior;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 public abstract class BaseTool implements Tool {
-	protected final int scrollTolerance;
 	protected final PointF movedDistance;
-	protected ViewGroup toolSpecificOptionsLayout;
+	protected ScrollBehavior scrollBehavior;
 	protected PointF previousEventCoordinate;
 	protected CommandFactory commandFactory = new DefaultCommandFactory();
 	protected CommandManager commandManager;
 	protected Workspace workspace;
 	protected ContextCallback contextCallback;
-	protected ToolOptionsViewController toolOptionsViewController;
+	protected ToolOptionsVisibilityController toolOptionsViewController;
 	protected ToolPaint toolPaint;
-	protected Shader checkeredShader;
 
-	public BaseTool(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
+	public BaseTool(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		this.contextCallback = contextCallback;
 		this.toolOptionsViewController = toolOptionsViewController;
@@ -61,13 +57,11 @@ public abstract class BaseTool implements Tool {
 		this.workspace = workspace;
 		this.commandManager = commandManager;
 
-		checkeredShader = contextCallback.getCheckeredBitmapShader();
-		scrollTolerance = contextCallback.getScrollTolerance();
+		int scrollTolerance = contextCallback.getScrollTolerance();
+		scrollBehavior = new PointScrollBehavior(scrollTolerance);
 
 		movedDistance = new PointF(0f, 0f);
 		previousEventCoordinate = new PointF(0f, 0f);
-
-		toolSpecificOptionsLayout = toolOptionsViewController.getToolSpecificOptionsLayout();
 	}
 
 	@Override
@@ -80,10 +74,6 @@ public abstract class BaseTool implements Tool {
 
 	@Override
 	public void changePaintColor(@ColorInt int color) {
-		setPaintColor(color);
-	}
-
-	void setPaintColor(@ColorInt int color) {
 		toolPaint.setColor(color);
 	}
 
@@ -103,14 +93,10 @@ public abstract class BaseTool implements Tool {
 	}
 
 	@Override
-	public void setDrawPaint(Paint paint) {
-		toolPaint.setPaint(paint);
-	}
-
-	@Override
 	public abstract void draw(Canvas canvas);
 
-	protected abstract void resetInternalState();
+	protected void resetInternalState() {
+	}
 
 	@Override
 	public void resetInternalState(StateChange stateChange) {
@@ -121,54 +107,7 @@ public abstract class BaseTool implements Tool {
 
 	@Override
 	public Point getAutoScrollDirection(float pointX, float pointY, int viewWidth, int viewHeight) {
-		int deltaX = 0;
-		int deltaY = 0;
-
-		if (pointX < scrollTolerance) {
-			deltaX = 1;
-		}
-		if (pointX > viewWidth - scrollTolerance) {
-			deltaX = -1;
-		}
-
-		if (pointY < scrollTolerance) {
-			deltaY = 1;
-		}
-
-		if (pointY > viewHeight - scrollTolerance) {
-			deltaY = -1;
-		}
-
-		return new Point(deltaX, deltaY);
-	}
-
-	@Override
-	public boolean handleTouch(PointF coordinate, int motionEventType) {
-		if (coordinate == null) {
-			return false;
-		}
-
-		switch (motionEventType) {
-			case MotionEvent.ACTION_DOWN:
-				return handleDown(coordinate);
-			case MotionEvent.ACTION_MOVE:
-				return handleMove(coordinate);
-			case MotionEvent.ACTION_UP:
-				return handleUp(coordinate);
-
-			default:
-				Log.e("Handling Touch Event", "Unexpected motion event!");
-				return false;
-		}
-	}
-
-	@Override
-	public void startTool() {
-		workspace.invalidate();
-	}
-
-	@Override
-	public void leaveTool() {
+		return scrollBehavior.getScrollDirection(pointX, pointY, viewWidth, viewHeight);
 	}
 
 	public boolean handToolMode() {

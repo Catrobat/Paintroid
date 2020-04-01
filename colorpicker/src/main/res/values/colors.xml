@@ -18,10 +18,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <!-- Referencing theme colors is not possible in drawables < v21 -->
-    <!-- https://issuetracker.google.com/issues/36941443 -->
-    <color name="pocketpaint_color_picker_accentColor">#33B5E5</color>
-
     <color name="pocketpaint_color_picker_rgb_red">#FFEB4618</color>
     <color name="pocketpaint_color_picker_rgb_green">#FF078707</color>
     <color name="pocketpaint_color_picker_rgb_blue">#FF0284e7</color>

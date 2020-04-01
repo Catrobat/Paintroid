@@ -31,6 +31,10 @@
         <ignore regexp="res/values/string.xml$" />
     </issue>
 
+    <issue id="Untranslatable">
+        <ignore regexp="res/values-.*/string.xml$" />
+    </issue>
+
     <issue id="ShowToast">
         <ignore path="src/main/java/org/catrobat/paintroid/ui/ToastFactory.java" />
     </issue>

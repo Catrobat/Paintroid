@@ -20,12 +20,14 @@
 package org.catrobat.paintroid.test.espresso;
 
 import android.Manifest;
+import android.content.Context;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -40,6 +42,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.catrobat.paintroid.test.espresso.util.wrappers.OptionsMenuViewInteraction.onOptionsMenu;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 
 @RunWith(AndroidJUnit4.class)
@@ -57,6 +60,19 @@ public class MoreOptionsIntegrationTest {
 	public void setUp() {
 		onTopBarView()
 				.performOpenMoreOptions();
+
+		activityTestRule.getActivity().getPreferences(Context.MODE_PRIVATE)
+				.edit()
+				.clear()
+				.commit();
+	}
+
+	@After
+	public void tearDown() {
+		activityTestRule.getActivity().getPreferences(Context.MODE_PRIVATE)
+				.edit()
+				.clear()
+				.commit();
 	}
 
 	@Test
@@ -71,18 +87,18 @@ public class MoreOptionsIntegrationTest {
 
 	@Test
 	public void testMoreOptionsAllItemsExist() {
-		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_hide_menu)).check(matches(isDisplayed()));
-		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
-		onView(withText(R.string.pocketpaint_menu_about)).check(matches(isDisplayed()));
+		onOptionsMenu()
+				.checkItemExists(R.string.menu_load_image)
+				.checkItemExists(R.string.menu_hide_menu)
+				.checkItemExists(R.string.help_title)
+				.checkItemExists(R.string.pocketpaint_menu_about)
+				.checkItemExists(R.string.menu_rate_us)
+				.checkItemExists(R.string.menu_save_image)
+				.checkItemExists(R.string.menu_save_copy)
+				.checkItemExists(R.string.menu_new_image)
 
-		onView(withText(R.string.menu_save_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_save_copy)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_new_image)).check(matches(isDisplayed()));
-
-		onView(withText(R.string.menu_back)).check(doesNotExist());
-		onView(withText(R.string.menu_discard_image)).check(doesNotExist());
-		onView(withText(R.string.menu_export)).check(doesNotExist());
+				.checkItemDoesNotExist(R.string.menu_discard_image)
+				.checkItemDoesNotExist(R.string.menu_export);
 	}
 
 	@Test
@@ -108,5 +124,38 @@ public class MoreOptionsIntegrationTest {
 	@Test
 	public void testMoreOptionsItemMenuCopyClick() {
 		onView(withText(R.string.menu_save_copy)).perform(click());
+	}
+
+	@Test
+	public void testShowLikeUsDialogOnFirstSave() {
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.pocketpaint_like_us)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testShowRateUsDialogOnLikeUsDialogPositiveButtonPressed() {
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.pocketpaint_yes)).perform(click());
+		onView(withText(R.string.pocketpaint_rate_us)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testShowFeedbackDialogOnLikeUsDialogNegativeButtonPressed() {
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.pocketpaint_no)).perform(click());
+		onView(withText(R.string.pocketpaint_feedback)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testLikeUsDialogNotShownOnSecondSave() {
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.pocketpaint_like_us)).check(matches(isDisplayed()));
+		pressBack();
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.pocketpaint_like_us)).check(doesNotExist());
 	}
 }

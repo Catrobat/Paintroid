@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.presenter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -32,7 +33,9 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.FileIODataTransfer;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.UserPreferences;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -116,6 +119,10 @@ public class MainActivityPresenterTest {
 	private Bitmap bitmap;
 	@Mock
 	private Menu menu;
+	@Mock
+	private UserPreferences sharedPreferences;
+	@Mock
+	private Context context;
 
 	@InjectMocks
 	private MainActivityPresenter presenter;
@@ -130,7 +137,7 @@ public class MainActivityPresenterTest {
 	public void testSetUp() {
 		verifyZeroInteractions(view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
 				drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
-				bottomNavigationViewHolder, toolController);
+				bottomNavigationViewHolder, toolController, sharedPreferences);
 	}
 
 	@Test
@@ -390,7 +397,7 @@ public class MainActivityPresenterTest {
 
 		presenter.handleActivityResult(REQUEST_CODE_LOAD_PICTURE, Activity.RESULT_OK, intent);
 
-		verify(interactor).loadFile(presenter, LOAD_IMAGE_DEFAULT, uri);
+		verify(interactor).loadFile(presenter, LOAD_IMAGE_DEFAULT, uri, context, false);
 	}
 
 	@Test
@@ -576,9 +583,9 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testSetTopBarColorThenSetColorButtonColor() {
-		presenter.setTopBarColor(Color.GREEN);
+		presenter.setBottomNavigationColor(Color.GREEN);
 
-		verify(topBarViewHolder).setColorButtonColor(Color.GREEN);
+		verify(bottomNavigationViewHolder).setColorButtonColor(Color.GREEN);
 	}
 
 	@Test
@@ -614,7 +621,7 @@ public class MainActivityPresenterTest {
 
 		verify(model).setOpenedFromCatroid(true);
 		verify(model).setSavedPictureUri(uri);
-		verify(interactor).loadFile(presenter, LOAD_IMAGE_CATROID, uri);
+		verify(interactor).loadFile(presenter, LOAD_IMAGE_CATROID, uri, context, false);
 	}
 
 	@Test
@@ -720,7 +727,7 @@ public class MainActivityPresenterTest {
 
 		presenter.finishInitialize();
 
-		verify(topBarViewHolder).setColorButtonColor(Color.RED);
+		verify(bottomNavigationViewHolder).setColorButtonColor(Color.RED);
 	}
 
 	@Test
@@ -827,7 +834,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnLoadImagePostExecuteWhenFailedThenShowDialog() {
-		presenter.onLoadImagePostExecute(0, null, null);
+		presenter.onLoadImagePostExecute(0, null, new FileIODataTransfer(null, false));
 
 		verify(navigator).showLoadErrorDialog();
 	}
@@ -836,8 +843,9 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenDefaultThenResetModelUris() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
+		FileIODataTransfer result = new FileIODataTransfer(bitmap, false);
 
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, bitmap);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, result);
 
 		verify(model).setSavedPictureUri(null);
 		verify(model).setCameraImageUri(null);
@@ -849,8 +857,9 @@ public class MainActivityPresenterTest {
 		Bitmap bitmap = mock(Bitmap.class);
 		Command command = mock(Command.class);
 		when(commandFactory.createInitCommand(bitmap)).thenReturn(command);
+		FileIODataTransfer result = new FileIODataTransfer(bitmap, false);
 
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, bitmap);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, result);
 
 		verify(commandManager).setInitialStateCommand(command);
 		verify(commandManager).reset();
@@ -862,19 +871,28 @@ public class MainActivityPresenterTest {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
 		when(toolController.getToolType()).thenReturn(ToolType.IMPORTPNG);
-
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, bitmap);
+		FileIODataTransfer result = new FileIODataTransfer(bitmap, false);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, result);
 
 		verify(toolController).setBitmapFromFile(bitmap);
 		verifyZeroInteractions(commandManager);
 	}
 
 	@Test
+	public void testScaleImageDialog() {
+		Uri uri = mock(Uri.class);
+		Bitmap bitmap = mock(Bitmap.class);
+		FileIODataTransfer result = new FileIODataTransfer(bitmap, true);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, result);
+		verify(navigator).showScaleImageRequestDialog(uri, LOAD_IMAGE_IMPORTPNG);
+	}
+
+	@Test
 	public void testOnLoadImagePostExecuteWhenImportAndNotImportToolSetThenIgnore() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
-
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, bitmap);
+		FileIODataTransfer result = new FileIODataTransfer(bitmap, false);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, result);
 
 		verify(toolController, never()).setBitmapFromFile(any(Bitmap.class));
 		verifyZeroInteractions(commandManager);
@@ -884,8 +902,8 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenCatroidThenSetModelUris() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
-
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, bitmap);
+		FileIODataTransfer result = new FileIODataTransfer(bitmap, false);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, result);
 
 		verify(model).setSavedPictureUri(uri);
 		verify(model).setCameraImageUri(null);
@@ -897,9 +915,9 @@ public class MainActivityPresenterTest {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
 		Command command = mock(Command.class);
+		FileIODataTransfer result = new FileIODataTransfer(bitmap, false);
 		when(commandFactory.createInitCommand(bitmap)).thenReturn(command);
-
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, bitmap);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, result);
 
 		verify(commandManager).setInitialStateCommand(command);
 		verify(commandManager).reset();
@@ -910,8 +928,8 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenInvalidRequestThenThrowException() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
-
-		presenter.onLoadImagePostExecute(0, uri, bitmap);
+		FileIODataTransfer result = new FileIODataTransfer(bitmap, false);
+		presenter.onLoadImagePostExecute(0, uri, result);
 	}
 
 	@Test
@@ -940,13 +958,24 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testHandlePermissionResultSavePermissionNotGranted() {
+	public void testHandlePermissionResultSavePermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
+	}
 
+	@Test
+	public void testHandlePermissionResultSavePermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE
+				permission, PERMISSION_EXTERNAL_STORAGE_SAVE
 		);
 	}
 
@@ -961,13 +990,26 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandlePermissionResultSaveCopyPermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+				permission, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
 		);
+	}
+
+	@Test
+	public void testHandlePermissionResultSaveCopyPermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
 	}
 
 	@Test
@@ -984,24 +1026,50 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandlePermissionResultSaveBeforeFinishPermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
+				permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
 		);
 	}
 
 	@Test
+	public void testHandlePermissionResultSaveBeforeFinishPermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
+	}
+
+	@Test
 	public void testHandlePermissionResultSaveBeforeLoadNewPermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
+				permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
 		);
+	}
+
+	@Test
+	public void testHandlePermissionResultSaveBeforeLoadNewPermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
 	}
 
 	@Test
@@ -1018,13 +1086,26 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandlePermissionResultSaveBeforeNewEmptyPermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
+				permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
 		);
+	}
+
+	@Test
+	public void testHandlePermissionResultSaveBeforeNewEmptyPermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
 	}
 
 	@Test
@@ -1083,6 +1164,28 @@ public class MainActivityPresenterTest {
 	public void testOnNavigationItemSelectedSaveCopyPermissionNotGranted() {
 		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
 		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+
+		presenter.saveCopyClicked();
+
+		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
+	}
+
+	@Test
+	public void testNoPermissionCheckOnSaveBeforeFinishWhenOpenedFromCatroid() {
+		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(model.isOpenedFromCatroid()).thenReturn(true);
+
+		presenter.saveBeforeFinish();
+
+		verify(interactor).saveImage(any(MainActivityPresenter.class), anyInt(), any(Bitmap.class), eq((Uri) null));
+	}
+
+	@Test
+	public void testPermissionCheckOnExportWhenOpenedFromCatroid() {
+		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(model.isOpenedFromCatroid()).thenReturn(true);
 
 		presenter.saveCopyClicked();
 

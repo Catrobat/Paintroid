@@ -20,26 +20,31 @@
 package org.catrobat.paintroid.iotasks;
 
 import android.content.ContentResolver;
-import android.graphics.Bitmap;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.FileIODataTransfer;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
+public class LoadImageAsync extends AsyncTask<Void, Void, FileIODataTransfer> {
 	private static final String TAG = LoadImageAsync.class.getSimpleName();
 	private WeakReference<LoadImageCallback> callbackRef;
 	private int requestCode;
 	private Uri uri;
+	private Context context;
+	private boolean scale;
 
-	public LoadImageAsync(LoadImageCallback callback, int requestCode, Uri uri) {
+	public LoadImageAsync(LoadImageCallback callback, int requestCode, Uri uri, Context context, boolean scale) {
 		this.callbackRef = new WeakReference<>(callback);
 		this.requestCode = requestCode;
 		this.uri = uri;
+		this.context = context;
+		this.scale = scale;
 	}
 
 	@Override
@@ -53,7 +58,7 @@ public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 	}
 
 	@Override
-	protected Bitmap doInBackground(Void... voids) {
+	protected FileIODataTransfer doInBackground(Void... voids) {
 		LoadImageCallback callback = callbackRef.get();
 		if (callback == null || callback.isFinishing()) {
 			return null;
@@ -64,17 +69,27 @@ public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 			return null;
 		}
 
-		try {
-			ContentResolver resolver = callback.getContentResolver();
-			return FileIO.getBitmapFromUri(resolver, uri);
-		} catch (IOException e) {
-			Log.e(TAG, "Can't load image file", e);
-			return null;
+		if (scale) {
+			try {
+				ContentResolver resolver = callback.getContentResolver();
+				return FileIO.getScaledBitmapFromUri(resolver, uri, context);
+			} catch (IOException e) {
+				Log.e(TAG, "Can't load image file", e);
+				return null;
+			}
+		} else {
+			try {
+				ContentResolver resolver = callback.getContentResolver();
+				return FileIO.getBitmapFromUri(resolver, uri, context);
+			} catch (IOException e) {
+				Log.e(TAG, "Can't load image file", e);
+				return null;
+			}
 		}
 	}
 
 	@Override
-	protected void onPostExecute(Bitmap result) {
+	protected void onPostExecute(FileIODataTransfer result) {
 		LoadImageCallback callback = callbackRef.get();
 		if (callback != null && !callback.isFinishing()) {
 			callback.onLoadImagePostExecute(requestCode, uri, result);
@@ -82,7 +97,7 @@ public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 	}
 
 	public interface LoadImageCallback {
-		void onLoadImagePostExecute(int requestCode, Uri uri, Bitmap result);
+		void onLoadImagePostExecute(int requestCode, Uri uri, FileIODataTransfer result);
 		void onLoadImagePreExecute(int requestCode);
 		ContentResolver getContentResolver();
 		boolean isFinishing();

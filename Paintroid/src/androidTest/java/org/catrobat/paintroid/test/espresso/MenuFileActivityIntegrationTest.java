@@ -33,13 +33,13 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,11 +57,10 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.pressMenuKey;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.RootMatchers.isDialog;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -69,6 +68,7 @@ import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
@@ -189,6 +189,27 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	@Test
+	@Ignore("bitmap to large for jenkins")
+	public void testLoadTooLargeImage() {
+		Intent intent = new Intent();
+		intent.setData(Uri.fromFile(createTooLargeTestImageFile()));
+		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_load_image)).perform(click());
+
+		onView(withText(android.R.string.ok)).inRoot(isDialog())
+				.check(matches(isDisplayed()))
+				.perform(click());
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+	}
+
+	@Test
 	public void testLoadImageDialogOnBackPressed() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -205,49 +226,10 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	@Test
-	public void testOnHelp() {
+	public void testOnHelpDisabled() {
 		onTopBarView()
 				.performOpenMoreOptions();
-		onView(withText(R.string.help_title)).perform(click());
-		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
-	}
-
-	@Test
-	public void testImageUnchangedAfterHelpSkip() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		Bitmap imageBefore = activity.layerModel.getCurrentLayer().getBitmap();
-		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
-
-		onTopBarView()
-				.performOpenMoreOptions();
-
-		onView(withText(R.string.help_title)).perform(click());
-		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
-		onView(withText(R.string.skip)).perform(click());
-
-		Bitmap imageAfter = activity.layerModel.getCurrentLayer().getBitmap();
-		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
-	}
-
-	@Test
-	public void testImageUnchangedAfterHelpAbort() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		Bitmap imageBefore = activity.layerModel.getCurrentLayer().getBitmap();
-		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
-
-		onTopBarView()
-				.performOpenMoreOptions();
-
-		onView(withText(R.string.help_title)).perform(click());
-		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
-		pressBack();
-
-		Bitmap imageAfter = activity.layerModel.getCurrentLayer().getBitmap();
-		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
+		onView(withText(R.string.help_title)).check(matches(not(isClickable())));
 	}
 
 	@Test
@@ -358,6 +340,9 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
+		onView(withText(R.string.pocketpaint_no)).perform(click());
+		onView(withText(R.string.pocketpaint_ok)).perform(click());
+
 		assertNotNull(activity.model.getSavedPictureUri());
 
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());
@@ -404,6 +389,24 @@ public class MenuFileActivityIntegrationTest {
 		File imageFile = new File(Environment.getExternalStorageDirectory()
 				+ "/PocketCodePaintTest/", "testfile.jpg");
 		Bitmap bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
+		try {
+			imageFile.getParentFile().mkdirs();
+			imageFile.createNewFile();
+			OutputStream outputStream = new FileOutputStream(imageFile);
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream));
+			outputStream.close();
+		} catch (IOException e) {
+			throw new AssertionError("Picture file could not be created.", e);
+		}
+		deletionFileList.add(imageFile);
+		return imageFile;
+	}
+
+	@SuppressWarnings("ResultOfMethodCallIgnored")
+	private File createTooLargeTestImageFile() {
+		File imageFile = new File(Environment.getExternalStorageDirectory()
+				+ "/PocketCodePaintTest/", "testfile2.jpg");
+		Bitmap bitmap = Bitmap.createBitmap(5100, 5100, Bitmap.Config.ARGB_8888);
 		try {
 			imageFile.getParentFile().mkdirs();
 			imageFile.createNewFile();

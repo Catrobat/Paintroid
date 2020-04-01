@@ -22,6 +22,7 @@ package org.catrobat.paintroid.presenter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -35,8 +36,10 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.FileIODataTransfer;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.UserPreferences;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -65,6 +68,7 @@ import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
 
+import static org.catrobat.paintroid.common.Constants.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
@@ -99,11 +103,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private CommandFactory commandFactory;
 	private boolean resetPerspectiveAfterNextCommand;
 	private ToolController toolController;
+	private Context context;
+	private UserPreferences sharedPreferences;
 
 	public MainActivityPresenter(MainView view, Model model, Workspace workspace, Navigator navigator,
 			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
 			DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
-			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController) {
+			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController, UserPreferences sharedPreferences, Context context) {
 		this.view = view;
 		this.model = model;
 		this.workspace = workspace;
@@ -117,6 +123,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		this.toolController = toolController;
 		this.commandFactory = commandFactory;
 		this.bottomNavigationViewHolder = bottomNavigationViewHolder;
+		this.context = context;
+		this.sharedPreferences = sharedPreferences;
 	}
 
 	private boolean isImageUnchanged() {
@@ -140,6 +148,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void loadNewImage() {
 		navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+	}
+
+	@Override
+	public Context getContext() {
+		return this.context;
 	}
 
 	@Override
@@ -184,6 +197,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void saveImageClicked() {
 		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE);
+		showLikeUsDialogIfFirstTimeSave();
+	}
+
+	private void showLikeUsDialogIfFirstTimeSave() {
+		boolean dialogHasBeenShown = sharedPreferences.getBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, false);
+
+		if (!dialogHasBeenShown && !model.isOpenedFromCatroid()) {
+			navigator.showLikeUsDialog();
+
+			sharedPreferences.setBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, true);
+		}
 	}
 
 	@Override
@@ -214,6 +238,16 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
+	public void showRateUsDialog() {
+		navigator.showRateUsDialog();
+	}
+
+	@Override
+	public void showFeedbackDialog() {
+		navigator.showFeedbackDialog();
+	}
+
+	@Override
 	public void onNewImage() {
 		DisplayMetrics metrics = view.getDisplayMetrics();
 		resetPerspectiveAfterNextCommand = true;
@@ -229,6 +263,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	private void askForWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
+		if (model.isOpenedFromCatroid() && requestCode == PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH) {
+			handleRequestPermissionsResult(requestCode,
+					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+					new int[]{PackageManager.PERMISSION_GRANTED});
+			return;
+		}
+
 		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 			navigator.askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
 		} else {
@@ -248,13 +289,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				Uri selectedGalleryImageUri = data.getData();
 				setTool(ToolType.IMPORTPNG);
 				toolController.switchTool(ToolType.IMPORTPNG);
-				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, selectedGalleryImageUri);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, selectedGalleryImageUri, getContext(), false);
 				break;
 			case REQUEST_CODE_LOAD_PICTURE:
 				if (resultCode != Activity.RESULT_OK) {
 					return;
 				}
-				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, data.getData());
+				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, data.getData(), getContext(), false);
 				break;
 			case REQUEST_CODE_INTRO:
 				if (resultCode == RESULT_INTRO_MW_NOT_SUPPORTED) {
@@ -263,6 +304,24 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				break;
 			default:
 				view.superHandleActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	@Override
+	public void loadScaledImage(Uri uri, @LoadImageRequestCode int requestCode) {
+		switch (requestCode) {
+			case LOAD_IMAGE_IMPORTPNG:
+				setTool(ToolType.IMPORTPNG);
+				toolController.switchTool(ToolType.IMPORTPNG);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, uri, context, true);
+				break;
+			case LOAD_IMAGE_CATROID:
+			case LOAD_IMAGE_DEFAULT:
+				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, uri, context, true);
+				break;
+			default:
+				Log.e(MainActivity.TAG, "wrong request code for loading pictures");
+				break;
 		}
 	}
 
@@ -294,8 +353,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 						break;
 				}
 			} else {
-				navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-						permissions, requestCode);
+				if (navigator.isPermissionPermanentlyDenied(permissions)) {
+					navigator.showRequestPermanentlyDeniedPermissionRationaleDialog();
+				} else {
+					navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+							permissions, requestCode);
+				}
 			}
 		} else {
 			view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -350,7 +413,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void showColorPickerClicked() {
-		navigator.showColorPickerDialog();
+		if (model.isOpenedFromCatroid()) {
+			navigator.showColorPickerDialogFullscreen();
+		} else {
+			navigator.showColorPickerDialog();
+		}
 	}
 
 	@Override
@@ -379,8 +446,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void setTopBarColor(int color) {
-		topBarViewHolder.setColorButtonColor(color);
+	public void setBottomNavigationColor(int color) {
+		bottomNavigationViewHolder.setColorButtonColor(color);
 	}
 
 	@Override
@@ -391,7 +458,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			File imageFile = new File(extraPicturePath);
 			if (imageFile.exists()) {
 				model.setSavedPictureUri(view.getUriFromFile(imageFile));
-				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri());
+				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri(), context, false);
 			} else {
 				interactor.createFile(this, CREATE_FILE_DEFAULT, extraPictureName);
 			}
@@ -404,7 +471,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void finishInitialize() {
 		refreshTopBarButtons();
-		topBarViewHolder.setColorButtonColor(toolController.getToolColor());
+		bottomNavigationViewHolder.setColorButtonColor(toolController.getToolColor());
 		bottomNavigationViewHolder.showCurrentTool(toolController.getToolType());
 
 		if (model.isFullscreen()) {
@@ -424,6 +491,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void removeMoreOptionsItems(Menu menu) {
 		if (model.isOpenedFromCatroid()) {
 			topBarViewHolder.removeStandaloneMenuItems(menu);
+			topBarViewHolder.hideTitleIfNotStandalone();
 		} else {
 			topBarViewHolder.removeCatroidMenuItems(menu);
 		}
@@ -525,11 +593,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void onLoadImagePostExecute(@LoadImageRequestCode int requestCode, Uri uri, Bitmap bitmap) {
-		if (bitmap == null) {
+	public void onLoadImagePostExecute(@LoadImageRequestCode int requestCode, Uri uri, FileIODataTransfer result) {
+
+		if (result.getToBeScaled()) {
+			navigator.showScaleImageRequestDialog(uri, requestCode);
+			return;
+		}
+		if (result.getBitmap() == null) {
 			navigator.showLoadErrorDialog();
 			return;
 		}
+		Bitmap bitmap = result.getBitmap();
 
 		switch (requestCode) {
 			case LOAD_IMAGE_DEFAULT:
@@ -650,5 +724,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void rateUsClicked() {
 		navigator.rateUsClicked();
+	}
+
+	@Override
+	public void visitPocketCodeClicked() {
+		navigator.visitPocketCodeClicked();
 	}
 }

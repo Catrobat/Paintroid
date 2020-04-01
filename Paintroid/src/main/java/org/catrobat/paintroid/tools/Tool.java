@@ -36,8 +36,6 @@ public interface Tool {
 
 	boolean handleUp(PointF coordinate);
 
-	boolean handleTouch(PointF coordinate, int motionEventType);
-
 	void changePaintColor(int color);
 
 	void changePaintStrokeWidth(int strokeWidth);
@@ -45,8 +43,6 @@ public interface Tool {
 	void changePaintStrokeCap(Cap cap);
 
 	Paint getDrawPaint();
-
-	void setDrawPaint(Paint paint);
 
 	void draw(Canvas canvas);
 
@@ -59,12 +55,6 @@ public interface Tool {
 	void onSaveInstanceState(Bundle bundle);
 
 	void onRestoreInstanceState(Bundle bundle);
-
-	void setupToolOptions();
-
-	void startTool();
-
-	void leaveTool();
 
 	enum StateChange {
 		ALL, RESET_INTERNAL_STATE, NEW_IMAGE_LOADED, MOVE_CANCELED

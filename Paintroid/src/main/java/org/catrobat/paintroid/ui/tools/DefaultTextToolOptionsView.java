@@ -29,7 +29,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.EditText;
@@ -39,23 +38,25 @@ import android.widget.ToggleButton;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.options.TextToolOptionsView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class DefaultTextToolOptionsView implements TextToolOptionsView {
 	private final Context context;
 	private Callback callback;
 	private final EditText textEditText;
+	private final EditText fontSizeText;
 	private final Spinner fontSpinner;
 	private final ToggleButton underlinedToggleButton;
 	private final ToggleButton italicToggleButton;
 	private final ToggleButton boldToggleButton;
 	private final ToggleButton strikeThroughToggleButton;
-	private final Spinner textSizeSpinner;
 	private final Button doneButton;
 	private final List<String> fonts;
+	private static final String DEFAULT_TEXTSIZE = "20";
+	private static final String MAX_TEXTSIZE = "300";
+	private static final int MIN_FONT_SIZE = 1;
+	private static final int MAX_FONT_SIZE = 300;
 
 	public DefaultTextToolOptionsView(ViewGroup rootView) {
 		context = rootView.getContext();
@@ -68,8 +69,9 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 		italicToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
 		strikeThroughToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_strike_through);
-		textSizeSpinner = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_text_size);
 		doneButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_done_button);
+		fontSizeText = textToolView.findViewById(R.id.pocketpaint_font_size_text);
+		fontSizeText.setText(DEFAULT_TEXTSIZE);
 
 		underlinedToggleButton.setPaintFlags(underlinedToggleButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 		fonts = Arrays.asList(context.getResources().getStringArray(R.array.pocketpaint_main_text_tool_fonts));
@@ -173,26 +175,30 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 			}
 		});
 
-		final int[] intSizes = context.getResources().getIntArray(R.array.pocketpaint_text_tool_size_array);
-		ArrayList<String> stringSizes = new ArrayList<>();
-		String pixelString = context.getString(R.string.pixel);
-		for (int size : intSizes) {
-			stringSizes.add(String.format(Locale.getDefault(), "%d", size) + pixelString);
-		}
-
-		ArrayAdapter<String> textSizeArrayAdapter = new ArrayAdapter<>(context,
-				android.R.layout.simple_list_item_activated_1, stringSizes);
-		textSizeSpinner.setAdapter(textSizeArrayAdapter);
-
-		textSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		fontSizeText.addTextChangedListener(new TextWatcher() {
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				int textSize = intSizes[position];
-				notifyTextSizeChanged(textSize);
+			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
+			public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+				String sizeText = fontSizeText.getText().toString();
+				int sizeTextInt;
+				try {
+					sizeTextInt = Integer.parseInt(sizeText);
+				} catch (NumberFormatException exp) {
+					sizeTextInt = MIN_FONT_SIZE;
+				}
+				if (sizeTextInt > MAX_FONT_SIZE) {
+					sizeTextInt = MAX_FONT_SIZE;
+					fontSizeText.setText(MAX_TEXTSIZE);
+					fontSizeText.setSelection(MAX_TEXTSIZE.length());
+				}
+				notifyTextSizeChanged(sizeTextInt);
 			}
 		});
 	}
@@ -252,6 +258,7 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 		underlinedToggleButton.setChecked(underlined);
 		textEditText.setText(text);
 		fontSpinner.setSelection(fonts.indexOf(font));
+		fontSizeText.setText(DEFAULT_TEXTSIZE);
 	}
 
 	@Override

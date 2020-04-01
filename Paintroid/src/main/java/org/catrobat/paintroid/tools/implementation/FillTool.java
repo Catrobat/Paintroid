@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.FillToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 public class FillTool extends BaseTool {
 
@@ -41,7 +41,7 @@ public class FillTool extends BaseTool {
 	public float colorTolerance = MAX_ABSOLUTE_TOLERANCE * DEFAULT_TOLERANCE_IN_PERCENT / 100.0f;
 
 	public FillTool(FillToolOptionsView fillToolOptionsView, ContextCallback contextCallback,
-			ToolOptionsViewController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
+			ToolOptionsVisibilityController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
 			CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
@@ -93,9 +93,5 @@ public class FillTool extends BaseTool {
 	@Override
 	public ToolType getToolType() {
 		return ToolType.FILL;
-	}
-
-	@Override
-	public void setupToolOptions() {
 	}
 }

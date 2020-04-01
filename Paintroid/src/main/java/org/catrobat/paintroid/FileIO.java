@@ -19,7 +19,9 @@
 
 package org.catrobat.paintroid;
 
+import android.app.ActivityManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -114,10 +116,75 @@ public final class FileIO {
 		}
 	}
 
-	public static Bitmap getBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri) throws IOException {
+	private static int calculateSampleSize(int width, int height, int maxWidth, int maxHeight) {
+		int sampleSize = 1;
+		while (width > maxWidth || height > maxHeight) {
+			width /= 2;
+			height /= 2;
+			sampleSize *= 2;
+		}
+		return sampleSize;
+	}
+
+	public static FileIODataTransfer getBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
+		long requiredMemory;
+		long availableMemory;
+		boolean scaling = false;
+
+		ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		activityManager.getMemoryInfo(mi);
 		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		decodeBitmapFromUri(resolver, bitmapUri, options);
+		if (options.outHeight < 0 || options.outWidth < 0) {
+			throw new IOException("Can't load bitmap from uri");
+		}
+
+		if (((mi.availMem - mi.threshold) * 0.9) > 5000 * 5000 * 4) {
+			availableMemory = (long) 5000 * 5000 * 4;
+		} else {
+			availableMemory = (long) ((mi.availMem - mi.threshold) * 0.9);
+		}
+		requiredMemory = options.outWidth * options.outHeight * 4;
+		if (requiredMemory > availableMemory) {
+			scaling = true;
+		}
+
 		options.inMutable = true;
-		return enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options));
+		options.inJustDecodeBounds = false;
+
+		return new FileIODataTransfer(enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options)), scaling);
+	}
+
+	public static FileIODataTransfer getScaledBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
+		float heightToWidthFactor;
+		float availablePixels;
+		float availableHeight;
+		float availableWidth;
+		float availableMemory;
+
+		ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		activityManager.getMemoryInfo(mi);
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		decodeBitmapFromUri(resolver, bitmapUri, options);
+		if (options.outHeight <= 0 || options.outWidth <= 0) {
+			throw new IOException("Can't load bitmap from uri");
+		}
+		Runtime info = Runtime.getRuntime();
+		availableMemory = (float) ((info.maxMemory() - info.totalMemory() + info.freeMemory()) * 0.9);
+		heightToWidthFactor = (float) (options.outWidth / (options.outHeight * 1.0));
+		availablePixels = (float) ((availableMemory * 0.9) / 4.0); //4 byte per pixel, 10% safety buffer on memory
+		availableHeight = (float) Math.sqrt(availablePixels / heightToWidthFactor);
+		availableWidth = availablePixels / availableHeight;
+		int sampleSize = calculateSampleSize(options.outWidth, options.outHeight,
+				(int) availableWidth, (int) availableHeight);
+		options.inMutable = true;
+		options.inJustDecodeBounds = false;
+		options.inSampleSize = sampleSize;
+
+		return new FileIODataTransfer(enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options)), false);
 	}
 
 	public static Bitmap getBitmapFromFile(File bitmapFile) {

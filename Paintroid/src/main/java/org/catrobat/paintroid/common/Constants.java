@@ -32,16 +32,22 @@ public final class Constants {
 	public static final File MEDIA_DIRECTORY = new File(Environment.getExternalStorageDirectory(), EXT_STORAGE_DIRECTORY_NAME);
 
 	public static final String ABOUT_DIALOG_FRAGMENT_TAG = "aboutdialogfragment";
+	public static final String LIKE_US_DIALOG_FRAGMENT_TAG = "likeusdialogfragment";
+	public static final String RATE_US_DIALOG_FRAGMENT_TAG = "rateusdialogfragment";
+	public static final String FEEDBACK_DIALOG_FRAGMENT_TAG = "feedbackdialogfragment";
 	public static final String SAVE_DIALOG_FRAGMENT_TAG = "savedialogerror";
 	public static final String LOAD_DIALOG_FRAGMENT_TAG = "loadbitmapdialogerror";
 	public static final String COLOR_PICKER_DIALOG_TAG = "ColorPickerDialogTag";
 	public static final String INDETERMINATE_FRAGMENT_TAG = "indeterminatefragment";
 	public static final String SAVE_QUESTION_FRAGMENT_TAG = "savebeforequitfragment";
 	public static final String CHOOSE_IMAGE_FRAGMENT_TAG = "chooseimagefragment";
+	public static final String SCALE_IMAGE_FRAGMENT_TAG = "scaleimagefragment";
 
 	public static final String PERMISSION_DIALOG_FRAGMENT_TAG = "permissiondialogfragment";
 
 	public static final int INVALID_RESOURCE_ID = 0;
+
+	public static final String SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG = "showlikeusdialog";
 
 	private Constants() {
 		throw new AssertionError();

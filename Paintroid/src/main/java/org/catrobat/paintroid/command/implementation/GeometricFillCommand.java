@@ -19,28 +19,30 @@
 
 package org.catrobat.paintroid.command.implementation;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
+import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.contract.LayerContracts;
+import org.catrobat.paintroid.tools.drawable.ShapeDrawable;
 
-public class GeometricFillCommand extends BaseCommand {
+public class GeometricFillCommand implements Command {
 	private final float boxRotation;
 	private final RectF boxRect;
 	private final int pointX;
 	private final int pointY;
-	private final Paint geometricFillPaint;
+	private final Paint paint;
+	private final ShapeDrawable shapeDrawable;
 
-	public GeometricFillCommand(Bitmap bitmap, int pointX, int pointY, RectF boxRect,
+	public GeometricFillCommand(ShapeDrawable shapeDrawable, int pointX, int pointY, RectF boxRect,
 			float boxRotation, Paint paint) {
 		this.pointX = pointX;
 		this.pointY = pointY;
 		this.boxRect = boxRect;
-		this.bitmap = bitmap;
+		this.shapeDrawable = shapeDrawable;
 		this.boxRotation = boxRotation;
-		geometricFillPaint = paint;
+		this.paint = paint;
 	}
 
 	@Override
@@ -48,7 +50,12 @@ public class GeometricFillCommand extends BaseCommand {
 		canvas.save();
 		canvas.translate(pointX, pointY);
 		canvas.rotate(boxRotation);
-		canvas.drawBitmap(bitmap, null, boxRect, geometricFillPaint);
+		shapeDrawable.draw(canvas, boxRect, paint);
 		canvas.restore();
+	}
+
+	@Override
+	public void freeResources() {
+		//No resources to free
 	}
 }

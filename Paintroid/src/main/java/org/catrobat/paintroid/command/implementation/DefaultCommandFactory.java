@@ -31,6 +31,7 @@ import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
 import org.catrobat.paintroid.common.CommonFactory;
+import org.catrobat.paintroid.tools.drawable.ShapeDrawable;
 import org.catrobat.paintroid.tools.helper.Conversion;
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory;
 
@@ -120,11 +121,9 @@ public class DefaultCommandFactory implements CommandFactory {
 	}
 
 	@Override
-	public Command createGeometricFillCommand(Bitmap bitmap, Point position, float boxWidth, float boxHeight, float boxRotation, Paint paint) {
-		Bitmap bitmapCopy = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-		RectF destRectF = commonFactory.createRectF(-boxWidth / 2f, -boxHeight / 2f, boxWidth / 2f, boxHeight / 2f);
-		return new GeometricFillCommand(bitmapCopy, position.x, position.y, destRectF, boxRotation,
-				commonFactory.createPaint(paint));
+	public Command createGeometricFillCommand(ShapeDrawable shapeDrawable, Point position, RectF box, float boxRotation, Paint paint) {
+		RectF destRectF = commonFactory.createRectF(box);
+		return new GeometricFillCommand(shapeDrawable, position.x, position.y, destRectF, boxRotation, commonFactory.createPaint(paint));
 	}
 
 	@Override

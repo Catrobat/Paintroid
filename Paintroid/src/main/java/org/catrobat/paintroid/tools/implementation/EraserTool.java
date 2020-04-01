@@ -21,7 +21,6 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.annotation.ColorInt;
 
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
@@ -29,36 +28,32 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 public class EraserTool extends BrushTool {
-
-	@ColorInt
-	private int previousColor = Color.BLACK;
+	private Paint previewPaint = new Paint();
+	private Paint bitmapPaint = new Paint();
 
 	public EraserTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback,
-			ToolOptionsViewController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
+			ToolOptionsVisibilityController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
 			CommandManager commandManager) {
 		super(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 	}
 
 	@Override
-	public Paint getDrawPaint() {
-		Paint paint = super.getDrawPaint();
-		paint.setColor(previousColor);
-		return paint;
+	protected Paint getPreviewPaint() {
+		previewPaint.set(super.getPreviewPaint());
+		previewPaint.setColor(Color.BLACK);
+		previewPaint.setShader(toolPaint.getCheckeredShader());
+		return previewPaint;
 	}
 
 	@Override
-	public void setDrawPaint(Paint paint) {
-		super.setDrawPaint(paint);
-		previousColor = paint.getColor();
-	}
-
-	@Override
-	public void changePaintColor(int color) {
-		super.changePaintColor(color);
-		previousColor = color;
+	protected Paint getBitmapPaint() {
+		bitmapPaint.set(super.getBitmapPaint());
+		bitmapPaint.setXfermode(toolPaint.getEraseXfermode());
+		bitmapPaint.setAlpha(0);
+		return bitmapPaint;
 	}
 
 	@Override

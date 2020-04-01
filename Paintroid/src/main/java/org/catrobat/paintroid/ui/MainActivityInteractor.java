@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.ui;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
@@ -45,7 +46,7 @@ public class MainActivityInteractor implements MainActivityContracts.Interactor 
 	}
 
 	@Override
-	public void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri) {
-		new LoadImageAsync(callback, requestCode, uri).execute();
+	public void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri, Context context, boolean scale) {
+		new LoadImageAsync(callback, requestCode, uri, context, scale).execute();
 	}
 }

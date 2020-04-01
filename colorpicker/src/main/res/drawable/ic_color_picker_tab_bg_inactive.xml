@@ -20,6 +20,6 @@
     android:shape="line">
     <stroke
         android:width="2dp"
-        android:color="@color/pocketpaint_color_picker_accentColor" />
+        android:color="?attr/colorAccent" />
 
 </shape>

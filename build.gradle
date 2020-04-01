@@ -24,25 +24,18 @@ buildscript {
         jcenter()
     }
     dependencies {
-        // CAUTION
-        // Increasing the android gradle plugin version number may or may not break the
-        // tests on Kitkat.
-        // See https://github.com/googlesamples/android-testing/issues/179
-        // Temporary workaround in `gradle.properties` file, which has to be removed in 3.2.x
-        classpath 'com.android.tools.build:gradle:3.1.4'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.3'
-        classpath 'com.novoda:bintray-release:0.8.1'
+        classpath 'com.android.tools.build:gradle:3.6.3'
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
         classpath 'org.catrobat.gradle.androidemulators:android-emulators-gradle:1.6.2'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.4'
-        classpath 'com.vanniktech:gradle-android-apk-size-plugin:0.4.0'
-
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:1.0.2'
+        classpath 'com.novoda:bintray-release:0.9.2'
     }
 }
 
 ext {
     androidCompileSdkVersion = 28
-    androidMinSdkVersion = 17
-    androidTargetSdkVersion = 26
+    androidMinSdkVersion = 21
+    androidTargetSdkVersion = 28
 
     androidSupportLibraryVersion = '28.0.0'
 

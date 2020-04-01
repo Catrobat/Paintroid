@@ -23,24 +23,22 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;
-import org.catrobat.paintroid.ui.button.ColorButton;
 
 public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder {
+	public final TextView title;
 	public final ImageButton undoButton;
 	public final ImageButton redoButton;
-	public final ColorButton colorButton;
-	public final ImageButton layerButton;
 	public final ViewGroup layout;
 
 	public TopBarViewHolder(ViewGroup layout) {
 		this.layout = layout;
+		title = layout.findViewById(R.id.pocketpaint_textview_top);
 		undoButton = layout.findViewById(R.id.pocketpaint_btn_top_undo);
 		redoButton = layout.findViewById(R.id.pocketpaint_btn_top_redo);
-		colorButton = layout.findViewById(R.id.pocketpaint_btn_top_color);
-		layerButton = layout.findViewById(R.id.pocketpaint_btn_top_layers);
 	}
 
 	@Override
@@ -64,11 +62,6 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 	}
 
 	@Override
-	public void setColorButtonColor(int color) {
-		colorButton.colorChanged(color);
-	}
-
-	@Override
 	public void hide() {
 		layout.setVisibility(View.GONE);
 	}
@@ -85,15 +78,21 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 
 	@Override
 	public void removeStandaloneMenuItems(Menu menu) {
-		menu.removeItem(R.id.pocketpaint_nav_save_image);
-		menu.removeItem(R.id.pocketpaint_nav_save_duplicate);
-		menu.removeItem(R.id.pocketpaint_nav_new_image);
+		menu.removeItem(R.id.pocketpaint_options_save_image);
+		menu.removeItem(R.id.pocketpaint_options_save_duplicate);
+		menu.removeItem(R.id.pocketpaint_options_new_image);
+		menu.removeItem(R.id.pocketpaint_options_try_pocket_code);
+		menu.removeItem(R.id.pocketpaint_options_rate_us);
 	}
 
 	@Override
 	public void removeCatroidMenuItems(Menu menu) {
-		menu.removeItem(R.id.pocketpaint_nav_back_to_pocket_code);
-		menu.removeItem(R.id.pocketpaint_nav_export);
-		menu.removeItem(R.id.pocketpaint_nav_discard_image);
+		menu.removeItem(R.id.pocketpaint_options_export);
+		menu.removeItem(R.id.pocketpaint_options_discard_image);
+	}
+
+	@Override
+	public void hideTitleIfNotStandalone() {
+		title.setVisibility(View.GONE);
 	}
 }
