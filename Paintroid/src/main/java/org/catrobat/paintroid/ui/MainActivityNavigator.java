@@ -103,6 +103,19 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		});
 	}
 
+	private void openPlayStore(String applicationId) {
+		Uri uriPlayStore = Uri.parse("market://details?id=" + applicationId);
+		Intent openPlayStore = new Intent(Intent.ACTION_VIEW, uriPlayStore);
+
+		try {
+			mainActivity.startActivity(openPlayStore);
+		} catch (ActivityNotFoundException e) {
+			Uri uriNoPlayStore = Uri.parse("http://play.google.com/store/apps/details?id=" + applicationId);
+			Intent noPlayStoreInstalled = new Intent(Intent.ACTION_VIEW, uriNoPlayStore);
+			mainActivity.startActivity(noPlayStoreInstalled);
+		}
+	}
+
 	@Override
 	public void startLoadImageActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -255,15 +268,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void rateUsClicked() {
-		Uri uriPlayStore = Uri.parse("market://details?id=" + mainActivity.getPackageName());
-		Intent openPlayStore = new Intent(Intent.ACTION_VIEW, uriPlayStore);
+		openPlayStore(mainActivity.getPackageName());
+	}
 
-		try {
-			mainActivity.startActivity(openPlayStore);
-		} catch (ActivityNotFoundException e) {
-			Uri uriNoPlayStore = Uri.parse("http://play.google.com/store/apps/details?id=" + mainActivity.getPackageName());
-			Intent noPlayStoreInstalled = new Intent(Intent.ACTION_VIEW, uriNoPlayStore);
-			mainActivity.startActivity(noPlayStoreInstalled);
-		}
+	@Override
+	public void visitPocketCodeClicked() {
+		openPlayStore("org.catrobat.catroid");
 	}
 }
