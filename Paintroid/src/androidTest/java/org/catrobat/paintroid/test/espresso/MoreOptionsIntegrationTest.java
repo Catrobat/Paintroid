@@ -80,7 +80,6 @@ public class MoreOptionsIntegrationTest {
 		onView(withText(R.string.menu_save_copy)).check(matches(isDisplayed()));
 		onView(withText(R.string.menu_new_image)).check(matches(isDisplayed()));
 
-		onView(withText(R.string.menu_back)).check(doesNotExist());
 		onView(withText(R.string.menu_discard_image)).check(doesNotExist());
 		onView(withText(R.string.menu_export)).check(doesNotExist());
 	}

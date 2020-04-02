@@ -27,5 +27,6 @@ public class OpenedFromCatroid extends MainActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		model.setOpenedFromCatroid(true);
+		initializeActionBar(true);
 	}
 }
