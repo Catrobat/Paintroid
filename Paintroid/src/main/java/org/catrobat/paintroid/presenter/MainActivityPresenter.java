@@ -297,8 +297,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 						break;
 				}
 			} else {
-				navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-						permissions, requestCode);
+				if (navigator.isPermissionPermanentlyDenied(permissions)) {
+					navigator.showRequestPermanentlyDeniedPermissionRationaleDialog();
+				} else {
+					navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+							permissions, requestCode);
+				}
 			}
 		} else {
 			view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
