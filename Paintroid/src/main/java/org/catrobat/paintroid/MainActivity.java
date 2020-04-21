@@ -266,8 +266,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		toolReference = appFragment.getCurrentTool();
 	}
 
+	public String getName() {
+		return this.getPackageName();
+	}
+
 	private void onCreateMainView() {
-		Context context = getApplicationContext();
+		Context context = this;
 		DrawerLayout drawerLayout = findViewById(R.id.pocketpaint_drawer_layout);
 		ViewGroup topBarLayout = findViewById(R.id.pocketpaint_layout_top_bar);
 		View bottomBarLayout = findViewById(R.id.pocketpaint_main_bottom_bar);

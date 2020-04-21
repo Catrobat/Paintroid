@@ -26,12 +26,10 @@
     <application
         android:largeHeap="true"
         android:supportsRtl="true">
-
         <activity
             android:name=".WelcomeActivity"
-            android:theme="@style/PocketPaintSplashTheme"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/PocketPaintSplashTheme" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/PocketPaintSplashTheme">
@@ -46,5 +44,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

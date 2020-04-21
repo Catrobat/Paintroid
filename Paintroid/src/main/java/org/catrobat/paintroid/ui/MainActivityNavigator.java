@@ -46,6 +46,7 @@ import org.catrobat.paintroid.dialog.FeedbackDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.LikeUsDialog;
+import org.catrobat.paintroid.dialog.PermanentDenialPermissionInfoDialog;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.dialog.RateUsDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
@@ -216,6 +217,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
+	public void showRequestPermanentlyDeniedPermissionRationaleDialog() {
+		AppCompatDialogFragment dialog = PermanentDenialPermissionInfoDialog.newInstance(mainActivity.getName());
+		showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
 	public void askForPermission(String[] permissions, int requestCode) {
 		ActivityCompat.requestPermissions(mainActivity, permissions, requestCode);
 	}
@@ -228,6 +235,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public boolean doIHavePermission(String permission) {
 		return ContextCompat.checkSelfPermission(mainActivity, permission) == PackageManager.PERMISSION_GRANTED;
+	}
+
+	@Override
+	public boolean isPermissionPermanentlyDenied(String[] permissions) {
+		return !ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, permissions[0]);
 	}
 
 	@Override
