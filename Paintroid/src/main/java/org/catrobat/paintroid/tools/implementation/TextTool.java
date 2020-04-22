@@ -24,7 +24,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
@@ -268,13 +267,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 					Log.e("Can't set custom font", "dubai");
 				}
 				break;
-		}
-
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-			if (font.equals("Monospace")) {
-				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
-			}
-			textPaint.setTextSkewX(textSkewX);
 		}
 	}
 
