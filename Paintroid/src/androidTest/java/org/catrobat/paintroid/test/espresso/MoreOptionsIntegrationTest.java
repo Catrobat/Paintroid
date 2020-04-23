@@ -20,12 +20,14 @@
 package org.catrobat.paintroid.test.espresso;
 
 import android.Manifest;
+import android.content.Context;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -58,6 +60,19 @@ public class MoreOptionsIntegrationTest {
 	public void setUp() {
 		onTopBarView()
 				.performOpenMoreOptions();
+
+		activityTestRule.getActivity().getPreferences(Context.MODE_PRIVATE)
+				.edit()
+				.clear()
+				.commit();
+	}
+
+	@After
+	public void tearDown() {
+		activityTestRule.getActivity().getPreferences(Context.MODE_PRIVATE)
+				.edit()
+				.clear()
+				.commit();
 	}
 
 	@Test
@@ -109,5 +124,38 @@ public class MoreOptionsIntegrationTest {
 	@Test
 	public void testMoreOptionsItemMenuCopyClick() {
 		onView(withText(R.string.menu_save_copy)).perform(click());
+	}
+
+	@Test
+	public void testShowLikeUsDialogOnFirstSave() {
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.pocketpaint_like_us)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testShowRateUsDialogOnLikeUsDialogPositiveButtonPressed() {
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.pocketpaint_yes)).perform(click());
+		onView(withText(R.string.pocketpaint_rate_us)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testShowFeedbackDialogOnLikeUsDialogNegativeButtonPressed() {
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.pocketpaint_no)).perform(click());
+		onView(withText(R.string.pocketpaint_feedback)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testLikeUsDialogNotShownOnSecondSave() {
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.pocketpaint_like_us)).check(matches(isDisplayed()));
+		pressBack();
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.pocketpaint_like_us)).check(doesNotExist());
 	}
 }
