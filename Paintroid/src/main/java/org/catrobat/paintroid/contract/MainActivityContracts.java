@@ -43,6 +43,8 @@ public interface MainActivityContracts {
 	interface Navigator {
 		void showColorPickerDialog();
 
+		void showColorPickerDialogFullscreen();
+
 		void startLoadImageActivity(@ActivityRequestCode int requestCode);
 
 		void startImportImageActivity(@ActivityRequestCode int requestCode);
