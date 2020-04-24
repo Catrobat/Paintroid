@@ -123,6 +123,18 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 		drawPaint.setColor(toolPaint.getPreviewColor());
 		drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
 
+		geometricFillCommandPaint = new Paint(Paint.DITHER_FLAG);
+		if (Color.alpha(toolPaint.getPreviewColor()) == 0x00) {
+			int colorWithMaxAlpha = Color.BLACK;
+			geometricFillCommandPaint.setColor(colorWithMaxAlpha);
+			geometricFillCommandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
+			geometricFillCommandPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
+
+			drawPaint.reset();
+			drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
+			drawPaint.setShader(checkeredShader);
+		}
+
 		switch (shapeDrawType) {
 			case FILL:
 				drawPaint.setStyle(Style.FILL);
@@ -134,18 +146,6 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 				break;
 			default:
 				break;
-		}
-
-		geometricFillCommandPaint = new Paint(Paint.DITHER_FLAG);
-		if (Color.alpha(toolPaint.getPreviewColor()) == 0x00) {
-			int colorWithMaxAlpha = Color.BLACK;
-			geometricFillCommandPaint.setColor(colorWithMaxAlpha);
-			geometricFillCommandPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
-			geometricFillCommandPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
-
-			drawPaint.reset();
-			drawPaint.setAntiAlias(DEFAULT_ANTIALIASING_ON);
-			drawPaint.setShader(checkeredShader);
 		}
 
 		shapeRect = new RectF(0, 0, boxWidth, boxHeight);
