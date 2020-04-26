@@ -56,4 +56,18 @@ public final class ShapeToolOptionsViewInteraction extends CustomViewInteraction
 		}
 		return this;
 	}
+
+	public ShapeToolOptionsViewInteraction performSelectContour(ShapeTool.ShapeDrawType shape) {
+		switch (shape) {
+			case OUTLINE:
+				onView(withId(R.id.pocketpaint_shape_ibtn_outline))
+						.perform(click());
+				break;
+			case FILL:
+				onView(withId(R.id.pocketpaint_shape_ibtn_fill))
+						.perform(click());
+				break;
+		}
+		return this;
+	}
 }
