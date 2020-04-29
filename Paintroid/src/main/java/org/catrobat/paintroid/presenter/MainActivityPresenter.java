@@ -382,7 +382,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void showColorPickerClicked() {
-		navigator.showColorPickerDialog();
+		if (model.isOpenedFromCatroid()) {
+			navigator.showColorPickerDialogFullscreen();
+		} else {
+			navigator.showColorPickerDialog();
+		}
 	}
 
 	@Override

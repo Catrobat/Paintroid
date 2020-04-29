@@ -73,6 +73,15 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null) {
 			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor(), true);
 			setupColorPickerDialogListeners(dialog);
+			showDialogFragmentSafely(dialog, Constants.COLOR_PICKER_DIALOG_TAG);
+		}
+	}
+
+	@Override
+	public void showColorPickerDialogFullscreen() {
+		if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null) {
+			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor(), true);
+			setupColorPickerDialogListeners(dialog);
 			showFragment(dialog, Constants.COLOR_PICKER_DIALOG_TAG);
 		}
 	}
