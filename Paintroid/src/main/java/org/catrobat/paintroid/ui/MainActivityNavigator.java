@@ -133,7 +133,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void startLoadImageActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 		mainActivity.startActivityForResult(intent, requestCode);
 	}
 
@@ -141,7 +141,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void startImportImageActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 		mainActivity.startActivityForResult(intent, requestCode);
 	}
 

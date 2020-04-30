@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:imeOptions="actionDone"
-            android:textColor="@color/pocketpaint_colorAccent"
+            android:textColor="?attr/colorAccent"
             android:textSize="14sp"
             android:textStyle="bold"
             android:minEms="3"

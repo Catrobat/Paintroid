@@ -21,7 +21,6 @@ package org.catrobat.paintroid;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -156,8 +155,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		getAppFragment();
 		PaintroidApplication.cacheDir = getCacheDir();
-		PaintroidApplication.checkeredBackgroundBitmap =
-				BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
+
 		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();

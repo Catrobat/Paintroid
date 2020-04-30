@@ -59,7 +59,7 @@
             android:saveEnabled="false"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="@color/pocketpaint_colorAccent" />
+            android:textColor="?attr/colorAccent"/>
     </LinearLayout>
 
     </LinearLayout>

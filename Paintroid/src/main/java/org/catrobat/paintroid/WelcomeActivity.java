@@ -155,10 +155,7 @@ public class WelcomeActivity extends AppCompatActivity {
 		setTheme(R.style.PocketPaintWelcomeActivityTheme);
 		super.onCreate(savedInstanceState);
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-					| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-		}
+		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInMultiWindowMode()) {
 			setResult(RESULT_INTRO_MW_NOT_SUPPORTED);
@@ -282,11 +279,9 @@ public class WelcomeActivity extends AppCompatActivity {
 	}
 
 	private void changeStatusBarColor() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			Window window = getWindow();
-			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-			window.setStatusBarColor(Color.TRANSPARENT);
-		}
+		Window window = getWindow();
+		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+		window.setStatusBarColor(Color.TRANSPARENT);
 	}
 
 	@Override
