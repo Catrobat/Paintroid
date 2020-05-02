@@ -19,10 +19,12 @@
 
 package org.catrobat.paintroid;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 public class OpenedFromCatroid extends MainActivity {
 
+	@SuppressLint("VisibleForTests")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

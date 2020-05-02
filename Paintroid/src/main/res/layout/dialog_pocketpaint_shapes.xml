@@ -55,7 +55,8 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:minEms="3"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"
+            android:importantForAutofill="no"/>
     </LinearLayout>
 
     <TextView
