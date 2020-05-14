@@ -63,7 +63,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:textAlignment="textEnd"
-                android:textColor="@color/pocketpaint_colorAccent"
+                android:textColor="?attr/colorAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="100" />
@@ -93,7 +93,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:textAlignment="textEnd"
-                android:textColor="@color/pocketpaint_colorAccent"
+                android:textColor="?attr/colorAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="100" />
@@ -128,7 +128,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:saveEnabled="false"
-                android:textColor="@color/pocketpaint_colorAccent"
+                android:textColor="?attr/colorAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:gravity="end"
@@ -140,7 +140,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@color/pocketpaint_colorAccent"
+                android:textColor="?attr/colorAccent"
                 android:text="%"
                 tools:ignore="HardcodedText"/>
 

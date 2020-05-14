@@ -21,7 +21,6 @@ package org.catrobat.paintroid;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -156,12 +155,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		getAppFragment();
 		PaintroidApplication.cacheDir = getCacheDir();
-		PaintroidApplication.checkeredBackgroundBitmap =
-				BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
+
 		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();
-
 		onCreateMainView();
 		onCreateLayerMenu();
 		onCreateDrawingSurface();
@@ -200,27 +197,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		int i = item.getItemId();
-		if (i == R.id.pocketpaint_nav_back_to_pocket_code) {
-			presenter.backToPocketCodeClicked();
-		} else if (i == R.id.pocketpaint_nav_export) {
+		if (i == R.id.pocketpaint_options_export) {
 			presenter.saveCopyClicked();
-		} else if (i == R.id.pocketpaint_nav_save_image) {
+		} else if (i == R.id.pocketpaint_options_save_image) {
 			presenter.saveImageClicked();
-		} else if (i == R.id.pocketpaint_nav_save_duplicate) {
+		} else if (i == R.id.pocketpaint_options_save_duplicate) {
 			presenter.saveCopyClicked();
-		} else if (i == R.id.pocketpaint_nav_open_image) {
+		} else if (i == R.id.pocketpaint_options_open_image) {
 			presenter.loadImageClicked();
-		} else if (i == R.id.pocketpaint_nav_new_image) {
+		} else if (i == R.id.pocketpaint_options_new_image) {
 			presenter.newImageClicked();
-		} else if (i == R.id.pocketpaint_nav_discard_image) {
+		} else if (i == R.id.pocketpaint_options_discard_image) {
 			presenter.discardImageClicked();
-		} else if (i == R.id.pocketpaint_nav_fullscreen_mode) {
+		} else if (i == R.id.pocketpaint_options_fullscreen_mode) {
 			presenter.enterFullscreenClicked();
-		} else if (i == R.id.pocketpaint_nav_rate_us) {
+		} else if (i == R.id.pocketpaint_options_rate_us) {
 			presenter.rateUsClicked();
-		} else if (i == R.id.pocketpaint_nav_help) {
+		} else if (i == R.id.pocketpaint_options_try_pocket_code) {
+			presenter.visitPocketCodeClicked();
+		} else if (i == R.id.pocketpaint_options_help) {
 			presenter.showHelpClicked();
-		} else if (i == R.id.pocketpaint_nav_about) {
+		} else if (i == R.id.pocketpaint_options_about) {
 			presenter.showAboutClicked();
 		} else if (i == android.R.id.home) {
 			onBackPressed();
@@ -267,8 +264,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		toolReference = appFragment.getCurrentTool();
 	}
 
+	public String getName() {
+		return this.getPackageName();
+	}
+
 	private void onCreateMainView() {
-		Context context = getApplicationContext();
+		Context context = this;
 		DrawerLayout drawerLayout = findViewById(R.id.pocketpaint_drawer_layout);
 		ViewGroup topBarLayout = findViewById(R.id.pocketpaint_layout_top_bar);
 		View bottomBarLayout = findViewById(R.id.pocketpaint_main_bottom_bar);
@@ -293,9 +294,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		ContextCallback contextCallback = new DefaultContextCallback(context);
 		ToolController toolController = new DefaultToolController(toolReference, toolOptionsViewController,
 				new DefaultToolFactory(), commandManager, workspace, toolPaint, contextCallback);
+		UserPreferences preferences = new UserPreferences(getPreferences(Context.MODE_PRIVATE));
+
 		presenter = new MainActivityPresenter(this, model, workspace,
 				navigator, interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
-				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, toolController);
+				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, toolController, preferences);
 		toolController.setOnColorPickedListener(new PresenterColorPickedListener(presenter));
 
 		keyboardListener = new KeyboardListener(drawerLayout);
@@ -348,8 +351,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private void setActionBarToolTips(TopBarViewHolder topBar, Context context) {
 		TooltipCompat.setTooltipText(topBar.undoButton, context.getString(R.string.button_undo));
 		TooltipCompat.setTooltipText(topBar.redoButton, context.getString(R.string.button_redo));
-		TooltipCompat.setTooltipText(topBar.colorButton, context.getString(R.string.bottom_navigation_color));
-		TooltipCompat.setTooltipText(topBar.layerButton, context.getString(R.string.button_layers));
 	}
 
 	private void setTopBarListeners(TopBarViewHolder topBar) {
@@ -363,18 +364,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			@Override
 			public void onClick(View v) {
 				presenter.redoClicked();
-			}
-		});
-		topBar.colorButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				presenter.showColorPickerClicked();
-			}
-		});
-		topBar.layerButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				presenter.showLayerMenuClicked();
 			}
 		});
 	}
@@ -425,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		ActionBar supportActionBar = getSupportActionBar();
 		if (supportActionBar != null) {
 			supportActionBar.setDisplayShowTitleEnabled(false);
-			supportActionBar.setDisplayHomeAsUpEnabled(false);
+			supportActionBar.setDisplayHomeAsUpEnabled(isOpenedFromCatroid);
 			supportActionBar.setHomeButtonEnabled(true);
 			supportActionBar.setDisplayShowHomeEnabled(false);
 		}

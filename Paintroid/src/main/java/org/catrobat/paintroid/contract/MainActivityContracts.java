@@ -43,11 +43,19 @@ public interface MainActivityContracts {
 	interface Navigator {
 		void showColorPickerDialog();
 
+		void showColorPickerDialogFullscreen();
+
 		void startLoadImageActivity(@ActivityRequestCode int requestCode);
 
 		void startImportImageActivity(@ActivityRequestCode int requestCode);
 
 		void showAboutDialog();
+
+		void showLikeUsDialog();
+
+		void showRateUsDialog();
+
+		void showFeedbackDialog();
 
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
 
@@ -65,11 +73,15 @@ public interface MainActivityContracts {
 
 		void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode);
 
+		void showRequestPermanentlyDeniedPermissionRationaleDialog();
+
 		void askForPermission(String[] permissions, int requestCode);
 
 		boolean isSdkAboveOrEqualM();
 
 		boolean doIHavePermission(String permission);
+
+		boolean isPermissionPermanentlyDenied(String[] permission);
 
 		void finishActivity();
 
@@ -88,6 +100,8 @@ public interface MainActivityContracts {
 		void broadcastAddPictureToGallery(Uri uri);
 
 		void rateUsClicked();
+
+		void visitPocketCodeClicked();
 	}
 
 	interface MainView {
@@ -150,6 +164,10 @@ public interface MainActivityContracts {
 
 		void showAboutClicked();
 
+		void showRateUsDialog();
+
+		void showFeedbackDialog();
+
 		void onNewImage();
 
 		void handleActivityResult(int requestCode, int resultCode, Intent data);
@@ -172,7 +190,7 @@ public interface MainActivityContracts {
 
 		void onCommandPostExecute();
 
-		void setTopBarColor(int color);
+		void setBottomNavigationColor(int color);
 
 		void onCreateTool();
 
@@ -191,6 +209,8 @@ public interface MainActivityContracts {
 		void actionCurrentToolClicked();
 
 		void rateUsClicked();
+
+		void visitPocketCodeClicked();
 	}
 
 	interface Model {
@@ -240,8 +260,6 @@ public interface MainActivityContracts {
 
 		void disableRedoButton();
 
-		void setColorButtonColor(@ColorInt int color);
-
 		void hide();
 
 		void show();
@@ -251,6 +269,8 @@ public interface MainActivityContracts {
 		void removeStandaloneMenuItems(Menu menu);
 
 		void removeCatroidMenuItems(Menu menu);
+
+		void hideTitleIfNotStandalone();
 	}
 
 	interface DrawerLayoutViewHolder {
@@ -276,6 +296,8 @@ public interface MainActivityContracts {
 		void hide();
 
 		void showCurrentTool(ToolType toolType);
+
+		void setColorButtonColor(@ColorInt int color);
 	}
 
 	interface BottomNavigationAppearance {

@@ -100,9 +100,7 @@ public class OpenedFromPocketCodeWithImageTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onTopBarView()
-				.performOpenMoreOptions();
-
-		onView(withText(R.string.menu_back)).perform(click());
+			.onHomeClicked();
 
 		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
 		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
@@ -126,9 +124,7 @@ public class OpenedFromPocketCodeWithImageTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onTopBarView()
-				.performOpenMoreOptions();
-
-		onView(withText(R.string.menu_back)).perform(click());
+			.onHomeClicked();
 
 		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
 		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));

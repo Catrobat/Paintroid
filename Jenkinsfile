@@ -63,7 +63,7 @@ pipeline {
             steps {
                 sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
                 renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-                archiveArtifacts 'app/build/outputs/apk/debug/app-debug*.apk'
+                archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
                 plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
                 plot csvFileName: 'apksize.csv', csvSeries: [[displayTableFlag: false, exclusionValues: 'kilobytes', file: 'Paintroid/build/outputs/apksize/*/*.csv', inclusionFlag: 'INCLUDE_BY_STRING', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'APK Size'
             }

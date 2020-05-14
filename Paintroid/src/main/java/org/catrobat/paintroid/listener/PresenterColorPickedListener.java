@@ -12,6 +12,6 @@ public class PresenterColorPickedListener implements ColorPickerDialog.OnColorPi
 
 	@Override
 	public void colorChanged(int color) {
-		presenter.setTopBarColor(color);
+		presenter.setBottomNavigationColor(color);
 	}
 }
