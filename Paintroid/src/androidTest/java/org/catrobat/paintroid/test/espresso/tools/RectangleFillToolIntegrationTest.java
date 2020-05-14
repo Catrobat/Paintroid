@@ -153,6 +153,45 @@ public class RectangleFillToolIntegrationTest {
 	}
 
 	@Test
+	public void testShapeWithOutlineAlsoWorksWithTransparentColor() {
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+		onShapeToolOptionsView()
+				.performSelectShape(ShapeTool.BaseShape.RECTANGLE);
+		onShapeToolOptionsView()
+				.performSelectContour(ShapeTool.ShapeDrawType.FILL);
+		onToolProperties()
+				.setColor(Color.BLACK);
+		drawShape();
+		checkWorkspaceAtCenterPositionHasColor(Color.BLACK);
+
+		onToolBarView()
+				.performClickSelectedToolButton();
+
+		onShapeToolOptionsView()
+				.performSelectShape(ShapeTool.BaseShape.OVAL);
+		onShapeToolOptionsView()
+				.performSelectContour(ShapeTool.ShapeDrawType.OUTLINE);
+		onToolProperties()
+				.setColor(Color.TRANSPARENT);
+		drawShape();
+		checkWorkspaceAtCenterPositionHasColor(Color.BLACK);
+
+		BaseToolWithRectangleShape tool = (BaseToolWithRectangleShape) toolReference.get();
+		Bitmap drawingBitmap = tool.drawingBitmap;
+
+		Bitmap bitmap = workspace.getBitmapOfCurrentLayer();
+
+		int pointX = bitmap.getWidth() / 2 - drawingBitmap.getWidth() / 2;
+		int pointY = bitmap.getHeight() / 2 - drawingBitmap.getHeight() / 2;
+
+		Point topMiddlePointInRectangle = new Point(pointX, pointY);
+
+		int colorInRectangle = bitmap.getPixel(topMiddlePointInRectangle.x, topMiddlePointInRectangle.y);
+		assertThat(colorInRectangle, is(Color.TRANSPARENT));
+	}
+
+	@Test
 	public void testFilledRectChangesColor() {
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
@@ -265,6 +304,24 @@ public class RectangleFillToolIntegrationTest {
 
 		pixelColor = bitmap.getPixel(upperRightPixel.x, upperRightPixel.y);
 		assertEquals("Pixel should have been erased", Color.TRANSPARENT, pixelColor);
+	}
+
+	public void drawShape() {
+		onToolBarView()
+				.performCloseToolOptionsView();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+	}
+
+	public void checkWorkspaceAtCenterPositionHasColor(int color) {
+		Bitmap bitmap = workspace.getBitmapOfCurrentLayer();
+
+		int colorInRectangle = bitmap.getPixel(bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+		if (Color.alpha(color) == 0x00) {
+			assertThat(colorInRectangle, is(anyOf(is(Color.WHITE), is(0xFFC0C0C0))));
+		} else {
+			assertEquals(color, colorInRectangle);
+		}
 	}
 
 	public void selectShapeTypeAndDraw(boolean changeColor, int color) {

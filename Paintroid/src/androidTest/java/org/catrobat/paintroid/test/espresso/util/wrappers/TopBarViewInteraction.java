@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 
 import org.catrobat.paintroid.R;
@@ -46,10 +47,6 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 		return onView(withId(R.id.pocketpaint_btn_top_redo));
 	}
 
-	public ViewInteraction onPaletteButton() {
-		return onView(withId(R.id.pocketpaint_btn_top_color_palette));
-	}
-
 	public TopBarViewInteraction performUndo() {
 		onUndoButton()
 				.perform(click());
@@ -64,6 +61,11 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 
 	public TopBarViewInteraction performOpenMoreOptions() {
 		openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+		return this;
+	}
+
+	public TopBarViewInteraction onHomeClicked() {
+		Espresso.pressBack();
 		return this;
 	}
 }

@@ -50,7 +50,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasTextColor;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -497,7 +496,9 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(withContentDescription(R.string.abc_action_bar_up_description)).perform(click());
+		onColorPickerView()
+				.onCancelButton()
+				.perform(click());
 
 		onColorPickerView()
 				.check(doesNotExist());

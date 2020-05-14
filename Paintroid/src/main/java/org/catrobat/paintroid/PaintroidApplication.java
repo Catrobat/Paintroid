@@ -19,13 +19,10 @@
 
 package org.catrobat.paintroid;
 
-import android.graphics.Bitmap;
-
 import java.io.File;
 
 public final class PaintroidApplication {
 	public static File cacheDir;
-	public static Bitmap checkeredBackgroundBitmap;
 
 	private PaintroidApplication() {
 		throw new IllegalArgumentException();

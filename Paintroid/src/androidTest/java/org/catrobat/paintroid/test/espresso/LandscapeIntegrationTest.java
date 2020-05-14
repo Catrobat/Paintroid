@@ -47,7 +47,6 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.swipeDown;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
@@ -59,6 +58,7 @@ import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.OptionsMenuViewInteraction.onOptionsMenu;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
@@ -152,18 +152,18 @@ public class LandscapeIntegrationTest {
 		onTopBarView()
 				.performOpenMoreOptions();
 
-		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_hide_menu)).check(matches(isDisplayed()));
-		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
-		onView(withText(R.string.pocketpaint_menu_about)).check(matches(isDisplayed()));
+		onOptionsMenu()
+				.checkItemExists(R.string.menu_load_image)
+				.checkItemExists(R.string.menu_hide_menu)
+				.checkItemExists(R.string.help_title)
+				.checkItemExists(R.string.pocketpaint_menu_about)
+				.checkItemExists(R.string.menu_rate_us)
+				.checkItemExists(R.string.menu_save_image)
+				.checkItemExists(R.string.menu_save_copy)
+				.checkItemExists(R.string.menu_new_image)
 
-		onView(withText(R.string.menu_save_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_save_copy)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_new_image)).check(matches(isDisplayed()));
-
-		onView(withText(R.string.menu_back)).check(doesNotExist());
-		onView(withText(R.string.menu_discard_image)).check(doesNotExist());
-		onView(withText(R.string.menu_export)).check(doesNotExist());
+				.checkItemDoesNotExist(R.string.menu_discard_image)
+				.checkItemDoesNotExist(R.string.menu_export);
 	}
 
 	@Test

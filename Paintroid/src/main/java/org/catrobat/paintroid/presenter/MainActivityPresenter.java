@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.UserPreferences;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -65,6 +66,7 @@ import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
 
+import static org.catrobat.paintroid.common.Constants.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
@@ -99,11 +101,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private CommandFactory commandFactory;
 	private boolean resetPerspectiveAfterNextCommand;
 	private ToolController toolController;
+	private UserPreferences sharedPreferences;
 
 	public MainActivityPresenter(MainView view, Model model, Workspace workspace, Navigator navigator,
 			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
 			DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
-			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController) {
+			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController, UserPreferences sharedPreferences) {
 		this.view = view;
 		this.model = model;
 		this.workspace = workspace;
@@ -117,6 +120,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		this.toolController = toolController;
 		this.commandFactory = commandFactory;
 		this.bottomNavigationViewHolder = bottomNavigationViewHolder;
+		this.sharedPreferences = sharedPreferences;
 	}
 
 	private boolean isImageUnchanged() {
@@ -184,6 +188,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void saveImageClicked() {
 		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE);
+		showLikeUsDialogIfFirstTimeSave();
+	}
+
+	private void showLikeUsDialogIfFirstTimeSave() {
+		boolean dialogHasBeenShown = sharedPreferences.getBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, false);
+
+		if (!dialogHasBeenShown && !model.isOpenedFromCatroid()) {
+			navigator.showLikeUsDialog();
+
+			sharedPreferences.setBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, true);
+		}
 	}
 
 	@Override
@@ -211,6 +226,16 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void showAboutClicked() {
 		navigator.showAboutDialog();
+	}
+
+	@Override
+	public void showRateUsDialog() {
+		navigator.showRateUsDialog();
+	}
+
+	@Override
+	public void showFeedbackDialog() {
+		navigator.showFeedbackDialog();
 	}
 
 	@Override
@@ -297,8 +322,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 						break;
 				}
 			} else {
-				navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-						permissions, requestCode);
+				if (navigator.isPermissionPermanentlyDenied(permissions)) {
+					navigator.showRequestPermanentlyDeniedPermissionRationaleDialog();
+				} else {
+					navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+							permissions, requestCode);
+				}
 			}
 		} else {
 			view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -353,7 +382,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void showColorPickerClicked() {
-		navigator.showColorPickerDialog();
+		if (model.isOpenedFromCatroid()) {
+			navigator.showColorPickerDialogFullscreen();
+		} else {
+			navigator.showColorPickerDialog();
+		}
 	}
 
 	@Override
@@ -382,8 +415,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void setTopBarColor(int color) {
-		topBarViewHolder.setColorButtonColor(color);
+	public void setBottomNavigationColor(int color) {
+		bottomNavigationViewHolder.setColorButtonColor(color);
 	}
 
 	@Override
@@ -407,7 +440,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void finishInitialize() {
 		refreshTopBarButtons();
-		topBarViewHolder.setColorButtonColor(toolController.getToolColor());
+		bottomNavigationViewHolder.setColorButtonColor(toolController.getToolColor());
 		bottomNavigationViewHolder.showCurrentTool(toolController.getToolType());
 
 		if (model.isFullscreen()) {
@@ -427,6 +460,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void removeMoreOptionsItems(Menu menu) {
 		if (model.isOpenedFromCatroid()) {
 			topBarViewHolder.removeStandaloneMenuItems(menu);
+			topBarViewHolder.hideTitleIfNotStandalone();
 		} else {
 			topBarViewHolder.removeCatroidMenuItems(menu);
 		}
@@ -655,5 +689,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void rateUsClicked() {
 		navigator.rateUsClicked();
+	}
+
+	@Override
+	public void visitPocketCodeClicked() {
+		navigator.visitPocketCodeClicked();
 	}
 }

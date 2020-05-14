@@ -243,12 +243,8 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 		}
 
 		static Drawable createDrawable(Shader checkeredShader, @ColorInt int color) {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-				return new CustomColorDrawable(checkeredShader, color);
-			} else {
-				return new RippleDrawable(ColorStateList.valueOf(Color.WHITE),
-						new CustomColorDrawable(checkeredShader, color), null);
-			}
+			return new RippleDrawable(ColorStateList.valueOf(Color.WHITE),
+					new CustomColorDrawable(checkeredShader, color), null);
 		}
 
 		@Override

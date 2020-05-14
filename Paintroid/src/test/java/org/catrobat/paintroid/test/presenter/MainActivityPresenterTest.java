@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.UserPreferences;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -116,6 +117,8 @@ public class MainActivityPresenterTest {
 	private Bitmap bitmap;
 	@Mock
 	private Menu menu;
+	@Mock
+	private UserPreferences sharedPreferences;
 
 	@InjectMocks
 	private MainActivityPresenter presenter;
@@ -130,7 +133,7 @@ public class MainActivityPresenterTest {
 	public void testSetUp() {
 		verifyZeroInteractions(view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
 				drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
-				bottomNavigationViewHolder, toolController);
+				bottomNavigationViewHolder, toolController, sharedPreferences);
 	}
 
 	@Test
@@ -578,9 +581,9 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testSetTopBarColorThenSetColorButtonColor() {
-		presenter.setTopBarColor(Color.GREEN);
+		presenter.setBottomNavigationColor(Color.GREEN);
 
-		verify(topBarViewHolder).setColorButtonColor(Color.GREEN);
+		verify(bottomNavigationViewHolder).setColorButtonColor(Color.GREEN);
 	}
 
 	@Test
@@ -722,7 +725,7 @@ public class MainActivityPresenterTest {
 
 		presenter.finishInitialize();
 
-		verify(topBarViewHolder).setColorButtonColor(Color.RED);
+		verify(bottomNavigationViewHolder).setColorButtonColor(Color.RED);
 	}
 
 	@Test
@@ -942,13 +945,24 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testHandlePermissionResultSavePermissionNotGranted() {
+	public void testHandlePermissionResultSavePermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
+	}
 
+	@Test
+	public void testHandlePermissionResultSavePermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE
+				permission, PERMISSION_EXTERNAL_STORAGE_SAVE
 		);
 	}
 
@@ -963,13 +977,26 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandlePermissionResultSaveCopyPermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+				permission, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
 		);
+	}
+
+	@Test
+	public void testHandlePermissionResultSaveCopyPermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
 	}
 
 	@Test
@@ -986,24 +1013,50 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandlePermissionResultSaveBeforeFinishPermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
+				permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
 		);
 	}
 
 	@Test
+	public void testHandlePermissionResultSaveBeforeFinishPermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
+	}
+
+	@Test
 	public void testHandlePermissionResultSaveBeforeLoadNewPermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
+				permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
 		);
+	}
+
+	@Test
+	public void testHandlePermissionResultSaveBeforeLoadNewPermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
 	}
 
 	@Test
@@ -1020,13 +1073,26 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandlePermissionResultSaveBeforeNewEmptyPermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
 
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
+				permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
 		);
+	}
+
+	@Test
+	public void testHandlePermissionResultSaveBeforeNewEmptyPermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
+		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
 	}
 
 	@Test

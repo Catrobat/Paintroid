@@ -38,9 +38,21 @@
 
     <style name="PocketPaintSplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/pocketpaint_splash</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="PocketPaintTheme" parent="PocketPaintTheme.Base" />
+    <style name="PocketPaintTheme" parent="PocketPaintTheme.Base">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+    </style>
+
+    <style name="PocketPaintSelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/pocketpaint_selectable_button_bg</item>
+    </style>
 
     <style name="PocketPaintTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>
@@ -49,6 +61,8 @@
         <item name="colorPrimaryDark">@color/pocketpaint_colorPrimaryDark</item>
         <item name="colorAccent">@color/pocketpaint_colorAccent</item>
         <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:itemBackground">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="PocketPaintHighlightColorTheme" parent="PocketPaintTheme">
@@ -57,10 +71,6 @@
 
     <style name="PocketPaintDividerBase">
         <item name="android:background">@color/pocketpaint_main_separator_color</item>
-    </style>
-
-    <style name="PocketPaintSelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/pocketpaint_attribute_button_selector</item>
     </style>
 
     <style name="BottomNavigationViewLabel" parent="@style/TextAppearance.AppCompat.Caption">
@@ -75,6 +85,11 @@
         <item name="android:orientation">vertical</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PocketPaintActionBarTitle" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
     </style>
 
     <style name="PocketPaintToolSelectionButtonImageView">
