@@ -32,6 +32,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,6 +83,7 @@ public class LayerIntegrationTest {
 				.check(matches(isDisplayed()));
 	}
 
+	@Ignore
 	@Test
 	public void testInitialSetup() {
 		onLayerMenuView()
@@ -114,6 +116,7 @@ public class LayerIntegrationTest {
 				.checkLayerCount(4);
 	}
 
+	@Ignore
 	@Test
 	public void testButtonsAddOneLayer() {
 		onLayerMenuView()
@@ -148,6 +151,7 @@ public class LayerIntegrationTest {
 				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))));
 	}
 
+	@Ignore
 	@Test
 	public void testButtonsAfterNewImage() {
 		onLayerMenuView()
