@@ -32,7 +32,6 @@ import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

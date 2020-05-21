@@ -41,7 +41,6 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.TransformTool;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
