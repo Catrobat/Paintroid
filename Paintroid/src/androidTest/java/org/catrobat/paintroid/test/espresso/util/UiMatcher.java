@@ -436,6 +436,10 @@ public final class UiMatcher {
 					Bitmap targetBitmap = ((BitmapDrawable) targetDrawable).getBitmap();
 					expectedBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
 					return targetBitmap.sameAs(expectedBitmap);
+				} else if (targetDrawable instanceof StateListDrawable) {
+					Bitmap targetBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
+					expectedBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
+					return targetBitmap.sameAs(expectedBitmap);
 				} else if (targetDrawable instanceof VectorDrawable) {
 					Bitmap targetBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
 					expectedBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);

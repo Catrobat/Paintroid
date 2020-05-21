@@ -1139,7 +1139,6 @@ public class TransformToolIntegrationTest {
 				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 	}
 
-	@Ignore
 	@Test
 	public void testRotateMultipleLayersUndoRedoWhenRotatingWasNotLastCommand() {
 		onLayerMenuView()

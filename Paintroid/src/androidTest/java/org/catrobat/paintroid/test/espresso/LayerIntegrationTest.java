@@ -83,7 +83,6 @@ public class LayerIntegrationTest {
 				.check(matches(isDisplayed()));
 	}
 
-	@Ignore
 	@Test
 	public void testInitialSetup() {
 		onLayerMenuView()
@@ -116,7 +115,6 @@ public class LayerIntegrationTest {
 				.checkLayerCount(4);
 	}
 
-	@Ignore
 	@Test
 	public void testButtonsAddOneLayer() {
 		onLayerMenuView()
@@ -151,7 +149,6 @@ public class LayerIntegrationTest {
 				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))));
 	}
 
-	@Ignore
 	@Test
 	public void testButtonsAfterNewImage() {
 		onLayerMenuView()
