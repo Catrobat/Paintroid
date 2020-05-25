@@ -32,6 +32,7 @@ import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,6 +73,7 @@ public class UndoRedoIntegrationTest {
 				.performSelectTool(ToolType.BRUSH);
 	}
 
+	@Ignore
 	@Test
 	public void testUndoRedoIconsWhenSwitchToLandscapeMode() {
 		assertEquals(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, activityHelper.getScreenOrientation());
@@ -139,6 +141,7 @@ public class UndoRedoIntegrationTest {
 				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo_disabled), not(isEnabled()))));
 	}
 
+	@Ignore
 	@Test
 	public void testDisableEnableUndo() {
 		onTopBarView().onUndoButton()
@@ -157,6 +160,7 @@ public class UndoRedoIntegrationTest {
 				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo_disabled), not(isEnabled()))));
 	}
 
+	@Ignore
 	@Test
 	public void testDisableEnableRedo() {
 		onTopBarView().onRedoButton()
