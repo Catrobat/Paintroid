@@ -20,6 +20,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_alignParentBottom="true"
     android:fadeScrollbars="false">
 
@@ -48,10 +49,20 @@
 
             <Space style="@style/PocketPaintToolHorizontalSpace"/>
 
-            <Spinner
-                android:id="@+id/pocketpaint_text_tool_dialog_spinner_text_size"
+            <EditText
+                android:id="@+id/pocketpaint_font_size_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:minEms="3"
+                android:maxLength="3"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+                android:saveEnabled="false"
+                android:textColor="@color/pocketpaint_colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="LabelFor"/>
+
         </LinearLayout>
 
         <LinearLayout
