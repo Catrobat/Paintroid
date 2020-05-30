@@ -59,7 +59,8 @@
             android:saveEnabled="false"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="?attr/colorAccent"/>
+            android:textColor="?attr/colorAccent"
+            android:importantForAutofill="no" />
     </LinearLayout>
 
     </LinearLayout>

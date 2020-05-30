@@ -61,6 +61,7 @@
                 android:textColor="@color/pocketpaint_colorAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                android:importantForAutofill="no"
                 tools:ignore="LabelFor"/>
 
         </LinearLayout>
@@ -124,7 +125,8 @@
                 android:layout_toStartOf="@+id/pocketpaint_text_tool_dialog_done_button"
                 android:hint="@string/text_tool_dialog_input_hint"
                 android:imeOptions="flagNoExtractUi"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:importantForAutofill="no" />
 
             <Button
                 android:id="@+id/pocketpaint_text_tool_dialog_done_button"
