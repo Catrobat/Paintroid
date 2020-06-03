@@ -31,11 +31,10 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
-import org.catrobat.paintroid.tools.ToolWithShape;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
-public abstract class BaseToolWithShape extends BaseTool implements ToolWithShape {
+public abstract class BaseToolWithShape extends BaseTool {
 
 	private static final String BUNDLE_TOOL_POSITION_X = "TOOL_POSITION_X";
 	private static final String BUNDLE_TOOL_POSITION_Y = "TOOL_POSITION_Y";
@@ -49,7 +48,7 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	final Paint linePaint;
 	final DisplayMetrics metrics;
 
-	public BaseToolWithShape(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
+	public BaseToolWithShape(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
@@ -62,7 +61,6 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 		linePaint.setColor(primaryShapeColor);
 	}
 
-	@Override
 	public abstract void drawShape(Canvas canvas);
 
 	float getStrokeWidthForZoom(float defaultStrokeWidth, float minStrokeWidth, float maxStrokeWidth) {
@@ -92,29 +90,9 @@ public abstract class BaseToolWithShape extends BaseTool implements ToolWithShap
 	}
 
 	@Override
-	public Point getAutoScrollDirection(float pointX, float pointY,
-			int viewWidth, int viewHeight) {
-
-		int deltaX = 0;
-		int deltaY = 0;
-		PointF surfaceToolPosition = workspace.getSurfacePointFromCanvasPoint(new PointF(toolPosition.x, toolPosition.y));
-
-		if (surfaceToolPosition.x < scrollTolerance) {
-			deltaX = 1;
-		}
-		if (surfaceToolPosition.x > viewWidth - scrollTolerance) {
-			deltaX = -1;
-		}
-
-		if (surfaceToolPosition.y < scrollTolerance) {
-			deltaY = 1;
-		}
-
-		if (surfaceToolPosition.y > viewHeight - scrollTolerance) {
-			deltaY = -1;
-		}
-
-		return new Point(deltaX, deltaY);
+	public Point getAutoScrollDirection(float pointX, float pointY, int viewWidth, int viewHeight) {
+		PointF surfaceToolPosition = workspace.getSurfacePointFromCanvasPoint(toolPosition);
+		return scrollBehavior.getScrollDirection(surfaceToolPosition.x, surfaceToolPosition.y, viewWidth, viewHeight);
 	}
 	protected abstract void onClickInBox();
 

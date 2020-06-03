@@ -17,20 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.listener;
+package org.catrobat.paintroid.tools.drawable;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.contract.MainActivityContracts;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
 
-public class PresenterColorPickedListener implements ColorPickerDialog.OnColorPickedListener {
-	private final MainActivityContracts.Presenter presenter;
-
-	public PresenterColorPickedListener(MainActivityContracts.Presenter presenter) {
-		this.presenter = presenter;
-	}
-
+public class RectangleDrawable implements ShapeDrawable {
 	@Override
-	public void colorChanged(int color) {
-		presenter.setBottomNavigationColor(color);
+	public void draw(Canvas canvas, RectF shapeRect, Paint drawPaint) {
+		canvas.drawRect(shapeRect, drawPaint);
 	}
 }

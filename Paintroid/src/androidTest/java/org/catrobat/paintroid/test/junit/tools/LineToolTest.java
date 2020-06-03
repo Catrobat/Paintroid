@@ -27,7 +27,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.LineTool;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +47,7 @@ public class LineToolTest {
 	@Mock
 	private BrushToolOptionsView brushToolOptions;
 	@Mock
-	private ToolOptionsViewController toolOptionsController;
+	private ToolOptionsVisibilityController toolOptionsController;
 	@Mock
 	private Workspace workspace;
 	@Mock

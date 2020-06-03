@@ -35,7 +35,7 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,7 +67,7 @@ public class CursorToolTest {
 	@Mock
 	private BrushToolOptionsView brushToolOptionsView;
 	@Mock
-	private ToolOptionsViewController toolOptionsViewController;
+	private ToolOptionsVisibilityController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 

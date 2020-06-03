@@ -17,20 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.listener;
+package org.catrobat.paintroid.tools.drawable;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
-import org.catrobat.paintroid.contract.MainActivityContracts;
-
-public class PresenterColorPickedListener implements ColorPickerDialog.OnColorPickedListener {
-	private final MainActivityContracts.Presenter presenter;
-
-	public PresenterColorPickedListener(MainActivityContracts.Presenter presenter) {
-		this.presenter = presenter;
-	}
-
-	@Override
-	public void colorChanged(int color) {
-		presenter.setBottomNavigationColor(color);
+public class DrawableFactory {
+	public ShapeDrawable createDrawable(DrawableShape shape) {
+		switch (shape) {
+			case RECTANGLE:
+				return new RectangleDrawable();
+			case OVAL:
+				return new OvalDrawable();
+			case HEART:
+				return new HeartDrawable();
+			case STAR:
+				return new StarDrawable();
+		}
+		throw new IllegalArgumentException();
 	}
 }

@@ -38,7 +38,7 @@ import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.tools.implementation.BrushTool;
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,7 +68,7 @@ public class BrushToolTest {
 	@Mock
 	private BrushToolOptionsView brushToolOptionsView;
 	@Mock
-	private ToolOptionsViewController toolOptionsViewController;
+	private ToolOptionsVisibilityController toolOptionsViewController;
 	@Mock
 	private Workspace workspace;
 	@Mock
@@ -92,13 +92,6 @@ public class BrushToolTest {
 		ToolType toolType = toolToTest.getToolType();
 
 		assertEquals(ToolType.BRUSH, toolType);
-	}
-
-	@Test
-	public void testShouldReturnPaint() {
-		toolToTest.setDrawPaint(paint);
-
-		verify(toolPaint).setPaint(paint);
 	}
 
 	@Test

@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -35,7 +34,7 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener;
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 import static org.catrobat.paintroid.tools.common.Constants.MOVE_TOLERANCE;
 
@@ -43,13 +42,13 @@ public class BrushTool extends BaseTool {
 
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
 	public Path pathToDraw;
-	protected final PointF drawToolMovedDistance;
-	protected PointF initialEventCoordinate;
-	protected boolean pathInsideBitmap;
-	protected BrushToolOptionsView brushToolOptionsView;
+	private final PointF drawToolMovedDistance;
+	private PointF initialEventCoordinate;
+	private boolean pathInsideBitmap;
+	private BrushToolOptionsView brushToolOptionsView;
 
 	public BrushTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback,
-			ToolOptionsViewController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
+			ToolOptionsVisibilityController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
 			CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		this.brushToolOptionsView = brushToolOptionsView;
@@ -61,37 +60,20 @@ public class BrushTool extends BaseTool {
 
 		brushToolOptionsView.setBrushChangedListener(new CommonBrushChangedListener(this));
 		brushToolOptionsView.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
+		brushToolOptionsView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		setPaintColor(toolPaint.getPreviewColor());
-
-		if (getToolType() == ToolType.ERASER && toolPaint.getPreviewColor() != Color.TRANSPARENT) {
-			setPaintColor(Color.TRANSPARENT);
-		}
-
 		canvas.save();
 		canvas.clipRect(0, 0, workspace.getWidth(), workspace.getHeight());
-		if (toolPaint.getPreviewColor() == Color.TRANSPARENT) {
-			Paint previewPaint = toolPaint.getPreviewPaint();
-			previewPaint.setColor(Color.BLACK);
-			canvas.drawPath(pathToDraw, previewPaint);
-			previewPaint.setColor(Color.TRANSPARENT);
-		} else {
-			canvas.drawPath(pathToDraw, toolPaint.getPaint());
-		}
+		canvas.drawPath(pathToDraw, getPreviewPaint());
 		canvas.restore();
 	}
 
 	@Override
 	public ToolType getToolType() {
 		return ToolType.BRUSH;
-	}
-
-	@Override
-	public void setupToolOptions() {
-		brushToolOptionsView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	@Override
@@ -150,23 +132,31 @@ public class BrushTool extends BaseTool {
 		return returnValue;
 	}
 
-	protected boolean addPathCommand(PointF coordinate) {
+	protected Paint getPreviewPaint() {
+		return toolPaint.getPreviewPaint();
+	}
+
+	protected Paint getBitmapPaint() {
+		return toolPaint.getPaint();
+	}
+
+	private boolean addPathCommand(PointF coordinate) {
 		pathToDraw.lineTo(coordinate.x, coordinate.y);
 		if (!pathInsideBitmap) {
 			resetInternalState(StateChange.RESET_INTERNAL_STATE);
 			return false;
 		}
-		Command command = commandFactory.createPathCommand(toolPaint.getPaint(), pathToDraw);
+		Command command = commandFactory.createPathCommand(getBitmapPaint(), pathToDraw);
 		commandManager.addCommand(command);
 		return true;
 	}
 
-	protected boolean addPointCommand(PointF coordinate) {
+	private boolean addPointCommand(PointF coordinate) {
 		if (!pathInsideBitmap) {
 			resetInternalState(StateChange.RESET_INTERNAL_STATE);
 			return false;
 		}
-		Command command = commandFactory.createPointCommand(toolPaint.getPaint(), coordinate);
+		Command command = commandFactory.createPointCommand(getBitmapPaint(), coordinate);
 		commandManager.addCommand(command);
 		return true;
 	}

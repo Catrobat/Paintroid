@@ -28,7 +28,7 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +47,7 @@ public class ImportToolTest {
 	@Mock
 	private ToolPaint toolPaint;
 	@Mock
-	private ToolOptionsViewController toolOptionsViewController;
+	private ToolOptionsVisibilityController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 	@Mock

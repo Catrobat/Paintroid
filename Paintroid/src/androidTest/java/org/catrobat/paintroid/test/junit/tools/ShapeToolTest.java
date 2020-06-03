@@ -26,9 +26,10 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.drawable.DrawableShape;
 import org.catrobat.paintroid.tools.implementation.ShapeTool;
 import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,13 +51,13 @@ public class ShapeToolTest {
 	@Rule
 	public MockitoRule mockito = MockitoJUnit.rule();
 	@Parameter
-	public ShapeTool.BaseShape shape;
+	public DrawableShape shape;
 	@Mock
 	private CommandManager commandManager;
 	@Mock
 	private ShapeToolOptionsView shapeToolOptions;
 	@Mock
-	private ToolOptionsViewController toolOptionsViewController;
+	private ToolOptionsVisibilityController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 	@Mock
@@ -68,12 +69,12 @@ public class ShapeToolTest {
 	private ShapeTool shapeTool;
 
 	@Parameters(name = "{0}")
-	public static Iterable<ShapeTool.BaseShape> data() {
+	public static Iterable<DrawableShape> data() {
 		return Arrays.asList(
-				ShapeTool.BaseShape.RECTANGLE,
-				ShapeTool.BaseShape.OVAL,
-				ShapeTool.BaseShape.HEART,
-				ShapeTool.BaseShape.STAR
+				DrawableShape.RECTANGLE,
+				DrawableShape.OVAL,
+				DrawableShape.HEART,
+				DrawableShape.STAR
 		);
 	}
 
@@ -88,7 +89,7 @@ public class ShapeToolTest {
 		displayMetrics.heightPixels = 100;
 
 		shapeTool = new ShapeTool(shapeToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
-		shapeTool.baseShape = shape;
+		shapeTool.setBaseShape(shape);
 	}
 
 	@Test
@@ -99,7 +100,7 @@ public class ShapeToolTest {
 
 	@Test
 	public void testShouldReturnCorrectBaseShape() {
-		ShapeTool.BaseShape baseShape = shapeTool.getBaseShape();
+		DrawableShape baseShape = shapeTool.getBaseShape();
 		assertEquals(shape, baseShape);
 	}
 }
