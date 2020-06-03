@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
+import android.support.test.espresso.ViewAction;
+
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.drawable.DrawableShape;
 import org.catrobat.paintroid.tools.drawable.DrawableStyle;
@@ -70,5 +72,10 @@ public final class ShapeToolOptionsViewInteraction extends CustomViewInteraction
 		onView(withId(getButtonIdFromShapeDrawType(shapeDrawType)))
 				.perform(click());
 		return this;
+	}
+
+	public void performSetOutlineWidth(ViewAction setWidth) {
+		onView(withId(R.id.pocketpaint_shape_stroke_width_seek_bar))
+				.perform(setWidth);
 	}
 }
