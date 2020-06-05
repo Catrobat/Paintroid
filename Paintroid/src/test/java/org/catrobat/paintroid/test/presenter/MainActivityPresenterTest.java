@@ -1158,6 +1158,28 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
+	public void testNoPermissionCheckOnSaveBeforeFinishWhenOpenedFromCatroid() {
+		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(model.isOpenedFromCatroid()).thenReturn(true);
+
+		presenter.saveBeforeFinish();
+
+		verify(interactor).saveImage(any(MainActivityPresenter.class), anyInt(), any(Bitmap.class), eq((Uri) null));
+	}
+
+	@Test
+	public void testPermissionCheckOnExportWhenOpenedFromCatroid() {
+		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(model.isOpenedFromCatroid()).thenReturn(true);
+
+		presenter.saveCopyClicked();
+
+		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
+	}
+
+	@Test
 	public void testOnNavigationItemSelectedSavePermissionGranted() {
 		Uri uri = mock(Uri.class);
 		when(model.getSavedPictureUri()).thenReturn(uri);
