@@ -71,7 +71,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 			drawingBitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight, Config.ARGB_8888);
 		}
 
-		Bitmap layerBitmap = workspace.getBitmapOfAllLayers();
+		Bitmap layerBitmap = workspace.getBitmapOfCurrentLayer();
 
 		Canvas canvas = new Canvas(drawingBitmap);
 		canvas.translate(-toolPosition.x + boxWidth / 2, -toolPosition.y + boxHeight / 2);

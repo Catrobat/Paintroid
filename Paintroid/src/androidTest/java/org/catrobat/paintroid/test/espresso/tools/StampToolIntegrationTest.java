@@ -47,11 +47,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getScreenPointFromSurfaceCoordinates;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -166,41 +166,52 @@ public class StampToolIntegrationTest {
 
 	@Test
 	public void testCopyPixel() {
-		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(perspective.surfaceCenterX, perspective.surfaceCenterY);
-		onView(isRoot()).perform(touchAt(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET));
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolBarView()
 				.performSelectTool(ToolType.STAMP);
 
-		StampTool stampTool = (StampTool) toolReference.get();
-		PointF toolPosition = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
-		stampTool.toolPosition.set(toolPosition);
-
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION, tapStampLong));
 
-		PointF pixelCoordinateToControlColor = new PointF(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET);
-		PointF surfacePoint = getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
-		int pixelToControl = workspace.getPixelOfCurrentLayer(workspace.getCanvasPointFromSurfacePoint(surfacePoint));
-
-		assertEquals("First Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
-
-		int moveOffset = 100;
-
-		toolPosition.y = toolPosition.y - moveOffset;
-		stampTool.toolPosition.set(toolPosition);
+		StampTool stampTool = (StampTool) toolReference.get();
+		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		toolPosition.y = toolPosition.y - moveOffset;
-		stampTool.toolPosition.set(toolPosition);
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, stampTool.toolPosition.x, stampTool.toolPosition.y);
+	}
 
-		pixelCoordinateToControlColor = new PointF(toolPosition.x, toolPosition.y + moveOffset + Y_CLICK_OFFSET);
-		surfacePoint = getSurfacePointFromScreenPoint(pixelCoordinateToControlColor);
-		pixelToControl = workspace.getPixelOfCurrentLayer(workspace.getCanvasPointFromSurfacePoint(surfacePoint));
+	@Test
+	public void testStampToolNotCapturingOtherLayers() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		assertEquals("Second Pixel not Black after using Stamp for copying", Color.BLACK, pixelToControl);
+		onToolBarView()
+				.performSelectTool(ToolType.STAMP);
+
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer();
+
+		onLayerMenuView()
+				.performClose();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION, tapStampLong));
+
+		StampTool stampTool = (StampTool) toolReference.get();
+		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
 	}
 
 	@Test
