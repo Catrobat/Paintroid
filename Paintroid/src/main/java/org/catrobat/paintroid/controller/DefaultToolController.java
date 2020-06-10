@@ -180,8 +180,8 @@ public class DefaultToolController implements ToolController {
 	}
 
 	@Override
-	public void setBitmapFromFile(Bitmap bitmap) {
+	public void setBitmapFromSource(Bitmap bitmap) {
 		ImportTool importTool = (ImportTool) toolReference.get();
-		importTool.setBitmapFromFile(bitmap);
+		importTool.setBitmapFromSource(bitmap);
 	}
 }

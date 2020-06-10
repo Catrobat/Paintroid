@@ -106,6 +106,10 @@ public interface MainActivityContracts {
 		void broadcastAddPictureToGallery(Uri uri);
 
 		void rateUsClicked();
+
+		void showImageImportDialog();
+
+		void showCatroidMediaGallery();
 	}
 
 	interface MainView {
@@ -217,6 +221,14 @@ public interface MainActivityContracts {
 		void actionCurrentToolClicked();
 
 		void rateUsClicked();
+
+		void importFromGalleryClicked();
+
+		void showImportDialog();
+
+		void importStickersClicked();
+
+		void bitmapLoadedFromSource(Bitmap loadedImage);
 
 		void setLayerAdapter(LayerAdapter layerAdapter);
 	}

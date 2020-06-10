@@ -84,7 +84,7 @@ public class ToolOptionsIntegrationTest {
 				{ToolType.STAMP, false, false},
 				{ToolType.ERASER, false, true},
 				{ToolType.TEXT, true, true},
-				{ToolType.IMPORTPNG, false, false}
+				{ToolType.HAND, false, false}
 		});
 	}
 

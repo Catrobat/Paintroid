@@ -55,5 +55,5 @@ public interface ToolController {
 
 	boolean hasToolOptionsView();
 
-	void setBitmapFromFile(Bitmap bitmap);
+	void setBitmapFromSource(Bitmap bitmap);
 }

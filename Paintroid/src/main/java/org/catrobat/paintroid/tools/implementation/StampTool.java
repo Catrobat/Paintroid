@@ -59,11 +59,6 @@ public class StampTool extends BaseToolWithRectangleShape {
 		setBitmap(Bitmap.createBitmap((int) boxWidth, (int) boxHeight, Config.ARGB_8888));
 	}
 
-	public void setBitmapFromFile(Bitmap bitmap) {
-		super.setBitmap(bitmap);
-		readyForPaste = true;
-	}
-
 	public void copyBoxContent() {
 		if (isDrawingBitmapReusable()) {
 			drawingBitmap.eraseColor(Color.TRANSPARENT);
