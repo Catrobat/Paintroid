@@ -1,33 +1,6 @@
 #!groovy
 
-def reports = 'Paintroid/build/reports'
-
-// place the cobertura xml relative to the source, so that the source can be found
-def javaSrc = 'Paintroid/src/main/java'
-
-def junitAndCoverage(String jacocoXmlFile, String coverageName, String javaSrcLocation) {
-    // Consume all test xml files. Otherwise tests would be tracked multiple
-    // times if this function was called again.
-    String testPattern = '**/*TEST*.xml'
-    junit testResults: testPattern, allowEmptyResults: true
-    cleanWs patterns: [[pattern: testPattern, type: 'INCLUDE']]
-
-    String coverageFile = "$javaSrcLocation/coverage_${coverageName}.xml"
-    // Convert the JaCoCo coverate to the Cobertura XML file format.
-    // This is done since the Jenkins JaCoCo plugin does not work well.
-    // See also JENKINS-212 on jira.catrob.at
-    sh "./buildScripts/cover2cover.py '$jacocoXmlFile' '$coverageFile'"
-}
-
-def useDebugLabelParameter(defaultLabel){
-    return env.DEBUG_LABEL?.trim() ? env.DEBUG_LABEL : defaultLabel
-}
-
 pipeline {
-    parameters {
-        string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
-    }
-
     agent {
         dockerfile {
             filename 'Dockerfile.jenkins'
@@ -42,9 +15,26 @@ pipeline {
             additionalBuildArgs '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --build-arg KVM_GROUP_ID=$(getent group kvm | cut -d: -f3)'
             // Ensure that each executor has its own gradle cache to not affect other builds
             // that run concurrently.
-            args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
-            label useDebugLabelParameter('LimitedEmulator')
+            args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle'
         }
+    }
+
+    environment {
+        //////// Build specific variables ////////
+        //////////// May be edited by the developer on changing the build steps
+        // modulename
+        GRADLE_PROJECT_MODULE_NAME = "Paintroid"
+        GRADLE_APP_MODULE_NAME = "app"
+
+        // APK build output locations
+        APK_LOCATION_DEBUG = "${env.GRADLE_APP_MODULE_NAME}/build/outputs/apk/debug/app-debug.apk"
+
+        // Code coverage
+        JACOCO_XML = "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/coverage/debug/report.xml"
+        JACOCO_UNIT_XML = "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml"
+
+        // place the cobertura xml relative to the source, so that the source can be found
+        JAVA_SRC = "${env.GRADLE_PROJECT_MODULE_NAME}/src/main/java"
     }
 
     options {
@@ -53,66 +43,71 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '30'))
     }
 
-    triggers {
-        cron(env.BRANCH_NAME == 'develop' ? '@midnight' : '')
-        issueCommentTrigger('.*test this please.*')
-    }
-
     stages {
-        stage('Build Debug-APK') {
+        stage('Prepare build') {
             steps {
-                sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
-                renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-                archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
-                plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
-            }
-        }
-
-        stage('Static Analysis') {
-            steps {
-                sh './gradlew pmd checkstyle lint'
-            }
-
-            post {
-                always {
-                    recordIssues aggregatingResults: true, enabledForFailure: true, qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]],
-                                 tools: [androidLintParser(pattern: "$reports/lint*.xml"),
-                                         checkStyle(pattern: "$reports/checkstyle.xml"),
-                                         pmdParser(pattern: "$reports/pmd.xml")]
+                script {
+                    currentBuild.displayName = "#${env.BUILD_NUMBER} | ${env.gitBranch}"
                 }
             }
         }
 
-        stage('Tests') {
-            stages {
-                stage('Unit Tests') {
-                    steps {
-                        sh './gradlew -PenableCoverage -Pjenkins jacocoTestDebugUnitTestReport'
-                    }
-                    post {
-                        always {
-                            junitAndCoverage "$reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml", 'unit', javaSrc
-                        }
+        stage('Build signed APK') {
+            steps {
+                // Build, zipalign and sign releasable APK
+                withCredentials([file(credentialsId: 'a925b6e8-b3c6-407e-8cad-65886e330037', variable: 'SIGNING_KEYSTORE')]) {
+                    script {
+                        sh '''
+                            set +x
+                            ./gradlew assembleSignedRelease \
+                            -PsigningKeystore=${SIGNING_KEYSTORE} \
+                            -PsigningKeystorePassword=$signingKeystorePassword \
+                            -PsigningKeyAlias=$signingKeyAlias \
+                            -PsigningKeyPassword=$signingKeyPassword
+                        '''
                     }
                 }
+                archiveArtifacts artifacts: 'app/build/outputs/apk/signedRelease/app-signedRelease.apk', fingerprint: true
+            }
+        }
 
-                stage('Device Tests') {
-                    steps {
-                        sh './gradlew -PenableCoverage -Pjenkins startEmulator adbDisableAnimationsGlobally createDebugCoverageReport'
-                    }
-                    post {
-                        always {
-                            sh './gradlew stopEmulator'
-                            junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
-                            archiveArtifacts 'logcat.txt'
-                        }
-                    }
+        stage('Approve upload') {
+            options {
+                timeout(time: 60, unit: 'MINUTES')
+            }
+            steps {
+                script {
+                    env.APPROVE_UPLOAD_APK = input message: 'User input required',
+                            parameters: [choice(name: 'Upload', choices: 'no\nyes',
+                                    description: 'Do you want to upload this APK to Alpha Channel on Google Play?')]
                 }
             }
+        }
 
-            post {
-                always {
-                    step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: "$javaSrc/coverage*.xml", failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false, failNoReports: false])
+        stage('Upload AKP to Alpha') {
+            when {
+                environment name: 'APPROVE_UPLOAD_APK', value: 'yes'
+            }
+            steps {
+                script {
+                    sh 'fastlane android upload_APK_Paintroid'
+                }
+            }
+        }
+
+        stage('Bintray upload') {
+            when {
+                environment name: 'APPROVE_UPLOAD_APK', value: 'yes'
+            }
+            steps {
+                script {
+                    sh '''
+                            set +x
+                            ./gradlew bintrayUpload \
+                            -PbintrayUser=$bintrayUser \
+                            -PbintrayKey=$bintrayKey \
+                            -PdryRun=false
+                    '''
                 }
             }
         }
@@ -120,10 +115,8 @@ pipeline {
 
     post {
         always {
-            step([$class: 'LogParserPublisher', failBuildOnError: true, projectRulePath: 'buildScripts/log_parser_rules', unstableOnWarning: true, useProjectRule: true])
-        }
-        changed {
-            notifyChat()
+            // clean workspace
+            deleteDir()
         }
     }
 }
