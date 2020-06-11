@@ -22,7 +22,7 @@
     <item
         android:id="@+id/action_tools"
         android:title="@string/bottom_navigation_tools"
-        android:icon="@drawable/ic_pocketpaint_tool_hand" />
+        android:icon="@drawable/ic_pocketpaint_tools" />
 
     <item
         android:id="@+id/action_current_tool"
