@@ -35,6 +35,7 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,6 +90,7 @@ public class StampToolIntegrationTest {
 		toolReference = activity.toolReference;
 	}
 
+	@Ignore("Causes crashes on jenkins")
 	@Test
 	public void testBoundingboxAlgorithm() {
 		perspective.setScale(1.0f);
