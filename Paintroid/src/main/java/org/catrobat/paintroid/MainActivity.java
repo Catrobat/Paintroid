@@ -413,7 +413,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		ActionBar supportActionBar = getSupportActionBar();
 		if (supportActionBar != null) {
-			supportActionBar.setDisplayShowTitleEnabled(false);
+			supportActionBar.setDisplayShowTitleEnabled(!isOpenedFromCatroid);
 			supportActionBar.setDisplayHomeAsUpEnabled(isOpenedFromCatroid);
 			supportActionBar.setHomeButtonEnabled(true);
 			supportActionBar.setDisplayShowHomeEnabled(false);
