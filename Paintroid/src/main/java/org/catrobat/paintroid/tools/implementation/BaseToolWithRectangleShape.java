@@ -60,7 +60,7 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected static final int DEFAULT_ROTATION_SYMBOL_DISTANCE = 20;
 	protected static final int DEFAULT_ROTATION_SYMBOL_WIDTH = 30;
 	protected static final float DEFAULT_MAXIMUM_BOX_RESOLUTION = 0;
-	protected static final int CLICK_IN_BOX_MOVE_TOLERANCE = 10;
+	protected static final int CLICK_IN_BOX_MOVE_TOLERANCE = 0;
 	protected static final int DEFAULT_RECTANGLE_SHRINKING = 0;
 	protected static final int HIGHLIGHT_RECTANGLE_SHRINKING = 5;
 
