@@ -28,14 +28,6 @@ import android.graphics.BitmapShader;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.FontRes;
-import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.content.res.AppCompatResources;
 import android.util.DisplayMetrics;
 import android.widget.Toast;
 
@@ -43,6 +35,15 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.ui.ToastFactory;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.FontRes;
+import androidx.annotation.StringRes;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 public class DefaultContextCallback implements ContextCallback {
 	private Shader checkeredBitmapShader;

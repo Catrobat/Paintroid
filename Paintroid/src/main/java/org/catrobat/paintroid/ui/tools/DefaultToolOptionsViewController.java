@@ -23,9 +23,6 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +30,10 @@ import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
 
 public class DefaultToolOptionsViewController implements ToolOptionsViewController {
 	private final TextView toolOptionsTextView;

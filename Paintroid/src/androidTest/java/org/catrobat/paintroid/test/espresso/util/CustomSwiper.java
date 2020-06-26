@@ -20,10 +20,11 @@
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.os.SystemClock;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.action.MotionEvents;
-import android.support.test.espresso.action.Swiper;
 import android.view.MotionEvent;
+
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.action.MotionEvents;
+import androidx.test.espresso.action.Swiper;
 
 public enum CustomSwiper implements Swiper {
 	ACCURATE {

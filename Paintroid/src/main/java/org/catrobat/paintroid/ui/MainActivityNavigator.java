@@ -24,13 +24,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatDialog;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -54,6 +47,14 @@ import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDial
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.tools.ToolReference;
+
+import androidx.appcompat.app.AppCompatDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;

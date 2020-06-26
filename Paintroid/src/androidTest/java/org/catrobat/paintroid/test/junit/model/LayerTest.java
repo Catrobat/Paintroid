@@ -21,7 +21,6 @@ package org.catrobat.paintroid.test.junit.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -36,6 +35,8 @@ import org.catrobat.paintroid.model.LayerModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

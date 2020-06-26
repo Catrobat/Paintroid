@@ -21,11 +21,12 @@ package org.catrobat.paintroid.ui.viewholder;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
-import android.support.design.widget.BottomNavigationView;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;

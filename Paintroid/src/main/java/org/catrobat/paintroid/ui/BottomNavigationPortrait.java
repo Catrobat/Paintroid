@@ -1,8 +1,9 @@
 package org.catrobat.paintroid.ui;
 
-import android.support.design.widget.BottomNavigationView;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;

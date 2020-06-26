@@ -19,8 +19,9 @@
 
 package org.catrobat.paintroid.tools.options;
 
-import android.support.annotation.StringRes;
 import android.view.ViewGroup;
+
+import androidx.annotation.StringRes;
 
 public interface ToolOptionsViewController extends ToolOptionsVisibilityController {
 	void disable();

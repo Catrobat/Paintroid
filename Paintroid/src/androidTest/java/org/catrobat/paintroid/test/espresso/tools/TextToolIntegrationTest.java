@@ -25,10 +25,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
-import android.support.test.espresso.Espresso;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.v4.content.res.ResourcesCompat;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
@@ -51,18 +47,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup;
-import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
-import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
-import static android.support.test.espresso.matcher.ViewMatchers.withHint;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.test.espresso.Espresso;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
@@ -78,6 +66,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.ViewMatchers.hasFocus;
+import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.withHint;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class TextToolIntegrationTest {

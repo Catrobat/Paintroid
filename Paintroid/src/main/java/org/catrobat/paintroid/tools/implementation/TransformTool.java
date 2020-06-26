@@ -24,7 +24,6 @@ import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
-import android.support.annotation.VisibleForTesting;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -42,6 +41,8 @@ import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 import org.catrobat.paintroid.tools.options.TransformToolOptionsView;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
+
+import androidx.annotation.VisibleForTesting;
 
 public class TransformTool extends BaseToolWithRectangleShape {
 

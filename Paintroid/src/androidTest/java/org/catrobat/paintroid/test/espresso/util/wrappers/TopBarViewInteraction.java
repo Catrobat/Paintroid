@@ -19,16 +19,16 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.ViewInteraction;
-
 import org.catrobat.paintroid.R;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import androidx.test.espresso.Espresso;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.platform.app.InstrumentationRegistry;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public final class TopBarViewInteraction extends CustomViewInteraction {
 	private TopBarViewInteraction() {
@@ -60,7 +60,7 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 	}
 
 	public TopBarViewInteraction performOpenMoreOptions() {
-		openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getTargetContext());
+		openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().getTargetContext());
 		return this;
 	}
 

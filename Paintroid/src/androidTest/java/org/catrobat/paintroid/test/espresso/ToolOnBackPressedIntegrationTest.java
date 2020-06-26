@@ -22,10 +22,6 @@ package org.catrobat.paintroid.test.espresso;
 import android.Manifest;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.test.espresso.Espresso;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.view.Gravity;
 
 import org.catrobat.paintroid.MainActivity;
@@ -43,18 +39,10 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.contrib.DrawerActions.open;
-import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import androidx.test.espresso.Espresso;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
@@ -70,6 +58,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.contrib.DrawerActions.open;
+import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class ToolOnBackPressedIntegrationTest {

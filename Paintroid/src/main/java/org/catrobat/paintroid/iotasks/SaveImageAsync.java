@@ -23,13 +23,14 @@ import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.Nullable;
 
 public class SaveImageAsync extends AsyncTask<Void, Void, Uri> {
 	private static final String TAG = SaveImageAsync.class.getSimpleName();

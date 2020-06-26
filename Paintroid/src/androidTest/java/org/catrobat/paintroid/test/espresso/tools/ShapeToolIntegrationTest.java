@@ -20,8 +20,6 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Color;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
@@ -37,6 +35,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider.withOffset;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;

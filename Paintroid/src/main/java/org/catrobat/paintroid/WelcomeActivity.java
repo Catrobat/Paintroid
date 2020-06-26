@@ -22,12 +22,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -39,10 +33,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
 import org.catrobat.paintroid.tools.ToolType;
 
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
 

@@ -22,7 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.DrawerLayout
+    <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/pocketpaint_drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -91,16 +91,16 @@
 
     </RelativeLayout>
 
-    <android.support.design.widget.NavigationView
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/pocketpaint_nav_view_layer"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center">
 
         <include layout="@layout/pocketpaint_layout_main_menu_layer" />
-    </android.support.design.widget.NavigationView>
+    </com.google.android.material.navigation.NavigationView>
 
-    </android.support.v4.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
     <FrameLayout
         android:id="@+id/fragment_container"
