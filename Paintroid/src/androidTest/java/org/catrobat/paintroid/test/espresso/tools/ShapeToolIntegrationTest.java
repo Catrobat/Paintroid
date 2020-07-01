@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -29,7 +30,6 @@ import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.drawable.DrawableShape;
 import org.catrobat.paintroid.tools.drawable.DrawableStyle;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
@@ -40,11 +40,14 @@ import org.junit.runner.RunWith;
 
 import static org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider.withOffset;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ShapeToolIntegrationTest {
@@ -52,16 +55,22 @@ public class ShapeToolIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 	private ToolReference toolReference;
-	private Workspace workspace;
 
 	@Before
 	public void setUp() {
 		MainActivity activity = launchActivityRule.getActivity();
 		toolReference = activity.toolReference;
-		workspace = activity.workspace;
 
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
+	}
+
+	private Paint getCurrentToolBitmapPaint() {
+		return launchActivityRule.getActivity().toolPaint.getPaint();
+	}
+
+	private Paint getCurrentToolCanvasPaint() {
+		return launchActivityRule.getActivity().toolPaint.getPreviewPaint();
 	}
 
 	@Test
@@ -136,6 +145,24 @@ public class ShapeToolIntegrationTest {
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+	}
+
+	@Test
+	public void testAntiAliasingIsOffIfShapeOutlineWidthIsOne() {
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+		onShapeToolOptionsView()
+				.performSelectShapeDrawType(DrawableStyle.STROKE);
+		onShapeToolOptionsView()
+				.performSetOutlineWidth(touchCenterLeft());
+
+		drawShape();
+
+		Paint bitmapPaint = getCurrentToolBitmapPaint();
+		Paint canvasPaint = getCurrentToolCanvasPaint();
+
+		assertFalse("BITMAP_PAINT antialiasing should be off", bitmapPaint.isAntiAlias());
+		assertTrue("CANVAS_PAINT antialiasing should be on", canvasPaint.isAntiAlias());
 	}
 
 	@Test

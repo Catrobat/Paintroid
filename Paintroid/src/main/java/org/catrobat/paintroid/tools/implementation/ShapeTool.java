@@ -162,6 +162,8 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 				paint.setStrokeWidth(shapeOutlineWidth);
 				paint.setStrokeCap(Paint.Cap.BUTT);
 				paint.setStrokeJoin(Paint.Join.MITER);
+				boolean antiAlias = (shapeOutlineWidth > 1);
+				paint.setAntiAlias(antiAlias);
 				break;
 			default:
 				break;
@@ -180,7 +182,7 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 				&& toolPosition.x + boxWidth / 2 >= 0
 				&& toolPosition.y + boxHeight / 2 >= 0) {
 
-			Paint paint = new Paint(toolPaint.getPaint());
+			Paint paint = toolPaint.getPaint();
 			RectF shapeRect = new RectF();
 			preparePaint(paint);
 			prepareShapeRectangle(shapeRect, boxWidth, boxHeight);
