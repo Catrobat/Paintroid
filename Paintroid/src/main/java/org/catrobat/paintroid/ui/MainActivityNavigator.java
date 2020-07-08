@@ -77,29 +77,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		}
 	}
 
-	@Override
-	public void showColorPickerDialogFullscreen() {
-		if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null) {
-			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor(), true);
-			setupColorPickerDialogListeners(dialog);
-			showFragment(dialog, Constants.COLOR_PICKER_DIALOG_TAG);
-		}
-	}
-
 	private void showDialogFragmentSafely(DialogFragment dialog, String tag) {
 		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
 		if (!fragmentManager.isStateSaved()) {
 			dialog.show(fragmentManager, tag);
 		}
-	}
-
-	private void showFragment(Fragment fragment, String tag) {
-		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
-		fragmentManager.beginTransaction()
-				.setCustomAnimations(R.anim.slide_to_top, R.anim.slide_to_bottom, R.anim.slide_to_top, R.anim.slide_to_bottom)
-				.addToBackStack(null)
-				.add(R.id.fragment_container, fragment, tag)
-				.commit();
 	}
 
 	private Fragment findFragmentByTag(String tag) {
