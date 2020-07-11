@@ -19,24 +19,24 @@
 
 package org.catrobat.paintroid.ui.viewholder;
 
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 
 public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder {
-	public final TextView title;
+	public final Toolbar toolbar;
 	public final ImageButton undoButton;
 	public final ImageButton redoButton;
 	public final ViewGroup layout;
 
 	public TopBarViewHolder(ViewGroup layout) {
 		this.layout = layout;
-		title = layout.findViewById(R.id.pocketpaint_textview_top);
+		toolbar = layout.findViewById(R.id.pocketpaint_toolbar);
 		undoButton = layout.findViewById(R.id.pocketpaint_btn_top_undo);
 		redoButton = layout.findViewById(R.id.pocketpaint_btn_top_redo);
 	}
@@ -93,6 +93,6 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 
 	@Override
 	public void hideTitleIfNotStandalone() {
-		title.setVisibility(View.GONE);
+		toolbar.setTitle("");
 	}
 }
