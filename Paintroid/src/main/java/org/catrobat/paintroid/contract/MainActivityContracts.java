@@ -24,11 +24,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
+import android.view.Menu;
 
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
@@ -49,6 +49,12 @@ public interface MainActivityContracts {
 
 		void showAboutDialog();
 
+		void showLikeUsDialog();
+
+		void showRateUsDialog();
+
+		void showFeedbackDialog();
+
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
 
 		void showIndeterminateProgressDialog();
@@ -65,11 +71,15 @@ public interface MainActivityContracts {
 
 		void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode);
 
+		void showRequestPermanentlyDeniedPermissionRationaleDialog();
+
 		void askForPermission(String[] permissions, int requestCode);
 
 		boolean isSdkAboveOrEqualM();
 
 		boolean doIHavePermission(String permission);
+
+		boolean isPermissionPermanentlyDenied(String[] permission);
 
 		void finishActivity();
 
@@ -86,6 +96,10 @@ public interface MainActivityContracts {
 		void showToolChangeToast(int offset, int idRes);
 
 		void broadcastAddPictureToGallery(Uri uri);
+
+		void rateUsClicked();
+
+		void visitPocketCodeClicked();
 	}
 
 	interface MainView {
@@ -124,6 +138,8 @@ public interface MainActivityContracts {
 
 		void finishInitialize();
 
+		void removeMoreOptionsItems(Menu menu);
+
 		void loadImageClicked();
 
 		void loadNewImage();
@@ -145,6 +161,10 @@ public interface MainActivityContracts {
 		void showHelpClicked();
 
 		void showAboutClicked();
+
+		void showRateUsDialog();
+
+		void showFeedbackDialog();
 
 		void onNewImage();
 
@@ -168,13 +188,11 @@ public interface MainActivityContracts {
 
 		void onCommandPostExecute();
 
-		void setTopBarColor(int color);
+		void setBottomNavigationColor(int color);
 
 		void onCreateTool();
 
 		void toolClicked(ToolType toolType);
-
-		void gotFocus();
 
 		void saveBeforeLoadImage();
 
@@ -183,6 +201,14 @@ public interface MainActivityContracts {
 		void saveBeforeFinish();
 
 		void finishActivity();
+
+		void actionToolsClicked();
+
+		void actionCurrentToolClicked();
+
+		void rateUsClicked();
+
+		void visitPocketCodeClicked();
 	}
 
 	interface Model {
@@ -232,13 +258,17 @@ public interface MainActivityContracts {
 
 		void disableRedoButton();
 
-		void setColorButtonColor(@ColorInt int color);
-
 		void hide();
 
 		void show();
 
 		int getHeight();
+
+		void removeStandaloneMenuItems(Menu menu);
+
+		void removeCatroidMenuItems(Menu menu);
+
+		void hideTitleIfNotStandalone();
 	}
 
 	interface DrawerLayoutViewHolder {
@@ -250,33 +280,25 @@ public interface MainActivityContracts {
 		void openDrawer(int gravity);
 	}
 
-	interface NavigationDrawerViewHolder {
-		void removeItem(@IdRes int id);
-
-		void setVersion(String versionString);
-
-		void showExitFullscreen();
-
-		void hideExitFullscreen();
-
-		void showEnterFullscreen();
-
-		void hideEnterFullscreen();
-	}
-
 	interface BottomBarViewHolder {
 		void show();
 
 		void hide();
 
-		void startAnimation(ToolType toolType);
+		boolean isVisible();
+	}
 
-		void selectToolButton(ToolType toolType);
+	interface BottomNavigationViewHolder {
+		void show();
 
-		void deSelectToolButton(ToolType toolType);
+		void hide();
 
-		void cancelAnimation();
+		void showCurrentTool(ToolType toolType);
 
-		void scrollToButton(ToolType toolType, boolean animate);
+		void setColorButtonColor(@ColorInt int color);
+	}
+
+	interface BottomNavigationAppearance {
+		void showCurrentTool(ToolType toolType);
 	}
 }

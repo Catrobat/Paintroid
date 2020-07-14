@@ -29,16 +29,16 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 public class PipetteTool extends BaseTool {
 
 	private Bitmap surfaceBitmap;
 	private ColorPickerDialog.OnColorPickedListener listener;
 
-	public PipetteTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+	public PipetteTool(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager, ColorPickerDialog.OnColorPickedListener listener) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		this.listener = listener;
 
 		updateSurfaceBitmap();
@@ -91,9 +91,5 @@ public class PipetteTool extends BaseTool {
 	@Override
 	public void resetInternalState() {
 		updateSurfaceBitmap();
-	}
-
-	@Override
-	public void setupToolOptions() {
 	}
 }

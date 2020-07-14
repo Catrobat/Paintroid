@@ -38,8 +38,9 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.helper.CropAlgorithm;
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
 import org.catrobat.paintroid.tools.helper.JavaCropAlgorithm;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
-import org.catrobat.paintroid.tools.options.TransformToolOptions;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.tools.options.TransformToolOptionsView;
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
 public class TransformTool extends BaseToolWithRectangleShape {
@@ -64,19 +65,20 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private boolean cropRunFinished = false;
 	private boolean maxImageResolutionInformationAlreadyShown = false;
 
-	private TransformToolOptions transformToolOptions;
+	private TransformToolOptionsView transformToolOptionsView;
 	private NumberRangeFilter rangeFilterHeight;
 	private NumberRangeFilter rangeFilterWidth;
 	private final CropAlgorithm cropAlgorithm;
 
-	public TransformTool(TransformToolOptions transformToolOptions, final ContextCallback contextCallback, ToolOptionsController toolOptionsController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+	public TransformTool(TransformToolOptionsView transformToolOptionsView, final ContextCallback contextCallback,
+			ToolOptionsVisibilityController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
-		this.transformToolOptions = transformToolOptions;
+		this.transformToolOptionsView = transformToolOptionsView;
 
-		setRotationEnabled(ROTATION_ENABLED);
-		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
-		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
+		this.rotationEnabled = ROTATION_ENABLED;
+		this.resizePointsVisible = RESIZE_POINTS_VISIBLE;
+		this.respectMaximumBorderRatio = RESPECT_MAXIMUM_BORDER_RATIO;
 
 		boxHeight = workspace.getHeight();
 		boxWidth = workspace.getWidth();
@@ -89,11 +91,11 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 		cropRunFinished = true;
 
-		setMaximumBoxResolution(metrics.widthPixels * metrics.heightPixels * MAXIMUM_BITMAP_SIZE_FACTOR);
-		setRespectMaximumBoxResolution(RESPECT_MAXIMUM_BOX_RESOLUTION);
+		this.maximumBoxResolution = metrics.widthPixels * metrics.heightPixels * MAXIMUM_BITMAP_SIZE_FACTOR;
+		this.respectMaximumBoxResolution = RESPECT_MAXIMUM_BOX_RESOLUTION;
 		initResizeBounds();
 
-		toolOptionsController.setCallback(new ToolOptionsController.Callback() {
+		toolOptionsViewController.setCallback(new ToolOptionsViewController.Callback() {
 			@Override
 			public void onHide() {
 				contextCallback.showNotification(R.string.transform_info_text, ContextCallback.NotificationDuration.LONG);
@@ -105,7 +107,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			}
 		});
 
-		transformToolOptions.setCallback(new TransformToolOptions.Callback() {
+		transformToolOptionsView.setCallback(new TransformToolOptionsView.Callback() {
 			@Override
 			public void autoCropClicked() {
 				autoCrop();
@@ -150,10 +152,11 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		rangeFilterHeight = new DefaultNumberRangeFilter(1, (int) (maximumBoxResolution / boxWidth));
 		rangeFilterWidth = new DefaultNumberRangeFilter(1, (int) (maximumBoxResolution / boxHeight));
 
-		transformToolOptions.setHeightFilter(rangeFilterHeight);
-		transformToolOptions.setWidthFilter(rangeFilterWidth);
+		transformToolOptionsView.setHeightFilter(rangeFilterHeight);
+		transformToolOptionsView.setWidthFilter(rangeFilterWidth);
 
 		updateToolOptions();
+		toolOptionsViewController.showDelayed();
 	}
 
 	@Override
@@ -298,7 +301,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			@Override
 			protected void onPostExecute(Void result) {
 				workspace.invalidate();
-				toolOptionsController.hideAnimated();
+				toolOptionsViewController.hide();
 			}
 		}.execute();
 	}
@@ -360,22 +363,12 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		return ToolType.TRANSFORM;
 	}
 
-	@Override
-	public void setupToolOptions() {
-		toolSpecificOptionsLayout.post(new Runnable() {
-			@Override
-			public void run() {
-				toolOptionsController.showAnimated();
-			}
-		});
-	}
-
 	private void updateToolOptions() {
 		rangeFilterHeight.setMax((int) (maximumBoxResolution / boxWidth));
 		rangeFilterWidth.setMax((int) (maximumBoxResolution / boxHeight));
 
-		transformToolOptions.setWidth((int) boxWidth);
-		transformToolOptions.setHeight((int) boxHeight);
+		transformToolOptionsView.setWidth((int) boxWidth);
+		transformToolOptionsView.setHeight((int) boxHeight);
 	}
 
 	@Override

@@ -41,6 +41,7 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.TransformTool;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -244,7 +245,7 @@ public class TransformToolIntegrationTest {
 	public void testWhenNoPixelIsOnBitmap() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
@@ -259,7 +260,7 @@ public class TransformToolIntegrationTest {
 	public void testWhenNoPixelIsOnBitmapToasts() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		waitForToast(withText(R.string.transform_info_text), 1000);
 
@@ -273,7 +274,7 @@ public class TransformToolIntegrationTest {
 	public void testChangeCroppingHeightAndCheckWidth() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		float boundingBoxWidth = getToolSelectionBoxWidth();
 		float boundingBoxHeight = getToolSelectionBoxHeight();
@@ -290,7 +291,7 @@ public class TransformToolIntegrationTest {
 	public void testMoveCroppingBordersOnEmptyBitmapAndDoCrop() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		int width = initialWidth / 2;
 		int height = initialHeight / 2;
@@ -386,7 +387,7 @@ public class TransformToolIntegrationTest {
 		}
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
 		onDrawingSurfaceView()
@@ -401,7 +402,7 @@ public class TransformToolIntegrationTest {
 		}
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
 		onDrawingSurfaceView()
@@ -415,7 +416,7 @@ public class TransformToolIntegrationTest {
 		}
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
 		onDrawingSurfaceView()
@@ -669,7 +670,7 @@ public class TransformToolIntegrationTest {
 				0, cropSize, 0, 0, cropSize, height);
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
 		onDrawingSurfaceView()
@@ -683,7 +684,7 @@ public class TransformToolIntegrationTest {
 				0, width, 0, 0, width, cropSize);
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
 		onDrawingSurfaceView()
@@ -697,7 +698,7 @@ public class TransformToolIntegrationTest {
 				0, cropSize, width, 0, cropSize, height);
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
 		onDrawingSurfaceView()
@@ -711,7 +712,7 @@ public class TransformToolIntegrationTest {
 				0, width, 0, height, width, cropSize);
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
 		onDrawingSurfaceView()
@@ -724,7 +725,7 @@ public class TransformToolIntegrationTest {
 	public void testResizeBordersMatchBitmapBordersAfterCrop() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		drawPlus(layerModel.getCurrentLayer().getBitmap(), initialWidth / 2);
 
@@ -750,7 +751,7 @@ public class TransformToolIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		perspective.multiplyScale(.25f);
 
@@ -773,7 +774,7 @@ public class TransformToolIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		final float zoomFactor = perspective.getScaleForCenterBitmap() * .25f;
 		perspective.setScale(zoomFactor);
@@ -796,7 +797,7 @@ public class TransformToolIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		PointF toolPosition = newPointF(getToolPosition());
 		int[] pixels;
@@ -859,7 +860,7 @@ public class TransformToolIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		setToolPosition(initialWidth, initialHeight);
 
@@ -870,7 +871,7 @@ public class TransformToolIntegrationTest {
 				.checkBitmapDimension(initialWidth, initialHeight);
 
 		onToolBarView()
-				.performOpenToolOptions();
+				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
 
@@ -882,7 +883,7 @@ public class TransformToolIntegrationTest {
 	public void testResizeBoxCompletelyOutsideBitmap() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		perspective.multiplyScale(.25f);
 
@@ -902,7 +903,7 @@ public class TransformToolIntegrationTest {
 	public void testResizeBoxCompletelyOutsideBitmapToast() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		perspective.multiplyScale(.25f);
 
@@ -952,7 +953,7 @@ public class TransformToolIntegrationTest {
 				.checkBitmapDimension(initialHeight, initialWidth);
 
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 		onTopBarView()
 				.performUndo();
 		onDrawingSurfaceView()
@@ -1138,6 +1139,7 @@ public class TransformToolIntegrationTest {
 				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 	}
 
+	@Ignore("Unstable")
 	@Test
 	public void testRotateMultipleLayersUndoRedoWhenRotatingWasNotLastCommand() {
 		onLayerMenuView()

@@ -178,9 +178,17 @@ public class RgbSelectorView extends LinearLayout {
 		seekBarGreen.setProgress(colorGreen);
 		seekBarBlue.setProgress(colorBlue);
 
+		int currentCursorPosition = editTextHex.getSelectionStart();
 		editTextHex.setTag("changed programmatically");
 		editTextHex.setText(String.format("#%02X%02X%02X%02X", colorAlpha, colorRed, colorGreen, colorBlue));
 		editTextHex.setTag(null);
+
+		int editTextHexLength = editTextHex.getText().length();
+		if(currentCursorPosition > editTextHexLength) {
+			currentCursorPosition = editTextHexLength;
+		}
+
+		editTextHex.setSelection(currentCursorPosition);
 
 		setSelectedColorText(color);
 	}

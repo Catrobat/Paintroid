@@ -19,27 +19,26 @@
 
 package org.catrobat.paintroid.ui.viewholder;
 
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;
-import org.catrobat.paintroid.ui.button.ColorButton;
 
 public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder {
+	public final Toolbar toolbar;
 	public final ImageButton undoButton;
 	public final ImageButton redoButton;
-	public final ColorButton colorButton;
-	public final ImageButton layerButton;
 	public final ViewGroup layout;
 
 	public TopBarViewHolder(ViewGroup layout) {
 		this.layout = layout;
+		toolbar = layout.findViewById(R.id.pocketpaint_toolbar);
 		undoButton = layout.findViewById(R.id.pocketpaint_btn_top_undo);
 		redoButton = layout.findViewById(R.id.pocketpaint_btn_top_redo);
-		colorButton = layout.findViewById(R.id.pocketpaint_btn_top_color);
-		layerButton = layout.findViewById(R.id.pocketpaint_btn_top_layers);
 	}
 
 	@Override
@@ -63,11 +62,6 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 	}
 
 	@Override
-	public void setColorButtonColor(int color) {
-		colorButton.colorChanged(color);
-	}
-
-	@Override
 	public void hide() {
 		layout.setVisibility(View.GONE);
 	}
@@ -80,5 +74,25 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 	@Override
 	public int getHeight() {
 		return layout.getHeight();
+	}
+
+	@Override
+	public void removeStandaloneMenuItems(Menu menu) {
+		menu.removeItem(R.id.pocketpaint_options_save_image);
+		menu.removeItem(R.id.pocketpaint_options_save_duplicate);
+		menu.removeItem(R.id.pocketpaint_options_new_image);
+		menu.removeItem(R.id.pocketpaint_options_try_pocket_code);
+		menu.removeItem(R.id.pocketpaint_options_rate_us);
+	}
+
+	@Override
+	public void removeCatroidMenuItems(Menu menu) {
+		menu.removeItem(R.id.pocketpaint_options_export);
+		menu.removeItem(R.id.pocketpaint_options_discard_image);
+	}
+
+	@Override
+	public void hideTitleIfNotStandalone() {
+		toolbar.setTitle("");
 	}
 }

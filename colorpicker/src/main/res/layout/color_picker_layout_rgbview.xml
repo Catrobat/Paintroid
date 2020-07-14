@@ -205,6 +205,7 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:hint="#"
                 android:inputType="textNoSuggestions"
+                android:maxLength="18"
                 tools:ignore="HardcodedText"/>
         </TableRow>
     </TableLayout>

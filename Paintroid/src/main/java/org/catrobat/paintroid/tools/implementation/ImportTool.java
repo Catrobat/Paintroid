@@ -26,13 +26,13 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 public class ImportTool extends StampTool {
 
-	public ImportTool(ContextCallback contextCallback, ToolOptionsController toolOptionsController,
+	public ImportTool(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
-		super(contextCallback, toolOptionsController, toolPaint, workspace, commandManager);
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		readyForPaste = true;
 		longClickAllowed = false;
 	}

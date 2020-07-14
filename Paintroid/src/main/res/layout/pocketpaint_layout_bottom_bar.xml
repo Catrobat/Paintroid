@@ -18,154 +18,178 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:orientation="horizontal"
+    android:id="@+id/pocketpaint_tools_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:showIn="@layout/activity_pocketpaint_main">
 
-    <org.catrobat.paintroid.ui.BottomBarHorizontalScrollView
-        android:id="@+id/pocketpaint_bottom_bar_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:saveEnabled="false"
-        android:scrollbars="none">
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_brush"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_brush"
+                android:contentDescription="@string/button_brush"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_brush"/>
+        </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/pocketpaint_tools_layout"
-            android:layout_gravity="fill"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_brush"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_brush"
-                android:contentDescription="@string/button_brush" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_hand"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
+            android:id="@+id/pocketpaint_tools_hand"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
                 android:src="@drawable/ic_pocketpaint_tool_hand"
                 android:contentDescription="@string/button_hand"/>
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_eraser"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_eraser"
-                android:contentDescription="@string/button_eraser" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_line"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_line"
-                android:contentDescription="@string/button_line" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_rectangle"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_rectangle"
-                android:contentDescription="@string/button_shape" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_fill"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_fill"
-                android:contentDescription="@string/button_fill" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_pipette"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_pipette"
-                android:contentDescription="@string/button_pipette" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_cursor"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_cursor"
-                android:contentDescription="@string/button_cursor" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_text"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_text"
-                android:contentDescription="@string/button_text" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_stamp"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_stamp"
-                android:contentDescription="@string/button_stamp" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_transform"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_transform"
-                android:contentDescription="@string/button_transform" />
-
-            <ImageButton
-                android:id="@+id/pocketpaint_tools_import"
-                style="@style/PocketPaintSelectableButton"
-                android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_pocketpaint_tool_import"
-                android:contentDescription="@string/button_import_image" />
-
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_hand"/>
         </LinearLayout>
-    </org.catrobat.paintroid.ui.BottomBarHorizontalScrollView>
 
-    <FrameLayout
-        android:id="@+id/pocketpaint_bottom_previous"
-        android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:background="@drawable/ic_pocketpaint_scroll_left_bg"
-        tools:ignore="RtlHardcoded, InconsistentLayout">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:src="@drawable/ic_pocketpaint_scroll_left"
-            android:contentDescription="@string/button_scroll_left" />
-    </FrameLayout>
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_eraser"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_eraser"
+                android:contentDescription="@string/button_eraser"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_eraser"/>
+        </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/pocketpaint_bottom_next"
-        android:layout_width="@dimen/pocketpaint_main_bottom_bar_button_width"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/ic_pocketpaint_scroll_right_bg"
-        tools:ignore="RtlHardcoded, InconsistentLayout">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:src="@drawable/ic_pocketpaint_scroll_right"
-            android:contentDescription="@string/button_scroll_right" />
-    </FrameLayout>
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_line"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_line"
+                android:contentDescription="@string/button_line"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_line"/>
+        </LinearLayout>
+    </TableRow>
 
-</RelativeLayout>
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_rectangle"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_rectangle"
+                android:contentDescription="@string/button_shape"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_shape"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_fill"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_fill"
+                android:contentDescription="@string/button_fill"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_fill"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_pipette"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_pipette"
+                android:contentDescription="@string/button_pipette"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_pipette"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_cursor"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_cursor"
+                android:contentDescription="@string/button_cursor"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_cursor"/>
+        </LinearLayout>
+    </TableRow>
+
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_text"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_text"
+                android:contentDescription="@string/button_text"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_text"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_stamp"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_stamp"
+                android:contentDescription="@string/button_stamp"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_stamp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_transform"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_transform"
+                android:contentDescription="@string/button_transform"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_transform"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_import"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_import"
+                android:contentDescription="@string/button_import_image"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_import_image" />
+        </LinearLayout>
+    </TableRow>
+</TableLayout>

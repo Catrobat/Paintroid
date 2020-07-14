@@ -48,22 +48,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         x11-common \
         x11-utils \
         libpulse0 \
+        libxcursor-dev \
+        libnss3-dev \
+        libasound2 \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Fastlane
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        rubygems \
-        ruby-dev \
-        g++ \
-        make \
-        less \
-    && rm -rf /var/lib/apt/lists/* \
-    && gem update --system \
-    && gem install fastlane -NV \
-    && apt-get purge -y --auto-remove \
-        ruby-dev \
-        g++ \
-        make
 
 # User Management
 # ---------------
@@ -119,3 +107,6 @@ RUN if [ ! -z "$SDKMANAGER_PACKAGES" ]; then yes | $_SDKMANAGER $SDKMANAGER_PACK
 #       We still use it here to ensure that these settings
 #       are respected, no matter what is configured elsewhere.
 ENV _JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
+
+# Accept SDK licenses
+RUN yes | $_SDKMANAGER --licenses

@@ -29,8 +29,9 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:contentDescription="@string/layer_new"
-        android:padding="0dp"
+        android:padding="5dp"
         android:scaleType="fitXY"
+        android:tint="@android:color/white"
         android:src="@drawable/ic_pocketpaint_layers_add_selector"
         android:theme="@style/PocketPaintHighlightColorTheme" />
 
@@ -41,8 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/pocketpaint_layer_side_nav_button_add"
         android:contentDescription="@string/layer_delete"
-        android:padding="0dp"
+        android:padding="5dp"
         android:scaleType="fitXY"
+        android:tint="@android:color/white"
         android:src="@drawable/ic_pocketpaint_layers_delete_selector"
         android:theme="@style/PocketPaintHighlightColorTheme" />
 

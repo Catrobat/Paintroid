@@ -20,6 +20,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_alignParentBottom="true"
     android:fadeScrollbars="false">
 
@@ -48,10 +49,21 @@
 
             <Space style="@style/PocketPaintToolHorizontalSpace"/>
 
-            <Spinner
-                android:id="@+id/pocketpaint_text_tool_dialog_spinner_text_size"
+            <EditText
+                android:id="@+id/pocketpaint_font_size_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:minEms="3"
+                android:maxLength="3"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+                android:saveEnabled="false"
+                android:textColor="@color/pocketpaint_colorAccent"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:importantForAutofill="no"
+                tools:ignore="LabelFor"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -84,6 +96,15 @@
                 android:textOn="@string/text_tool_dialog_bold_shortcut"
                 android:textOff="@string/text_tool_dialog_bold_shortcut"
                 android:layout_weight="1" />
+
+            <ToggleButton
+                android:id="@+id/pocketpaint_text_tool_dialog_toggle_strike_through"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textStyle="normal"
+                android:textOn="@string/text_tool_dialog_strike_through_shortcut"
+                android:textOff="@string/text_tool_dialog_strike_through_shortcut"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <TextView
@@ -104,7 +125,8 @@
                 android:layout_toStartOf="@+id/pocketpaint_text_tool_dialog_done_button"
                 android:hint="@string/text_tool_dialog_input_hint"
                 android:imeOptions="flagNoExtractUi"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:importantForAutofill="no" />
 
             <Button
                 android:id="@+id/pocketpaint_text_tool_dialog_done_button"

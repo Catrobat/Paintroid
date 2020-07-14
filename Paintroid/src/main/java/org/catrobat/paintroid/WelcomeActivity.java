@@ -18,32 +18,33 @@
  */
 package org.catrobat.paintroid;
 
-import android.content.res.TypedArray;
+import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.catrobat.paintroid.intro.IntroPageViewAdapter;
-import org.catrobat.paintroid.intro.TapTargetBottomBar;
-import org.catrobat.paintroid.intro.TapTargetStyle;
-import org.catrobat.paintroid.intro.TapTargetTopBar;
+import org.catrobat.paintroid.tools.ToolType;
+
+import java.util.Locale;
 
 import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
-import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.getSpFromDimension;
-import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.isRTL;
-import static org.catrobat.paintroid.intro.helper.WelcomeActivityHelper.reverseArray;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -56,6 +57,7 @@ public class WelcomeActivity extends AppCompatActivity {
 	public int[] layouts;
 	private Button btnSkip;
 	private Button btnNext;
+
 	ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
 		int pos;
 
@@ -76,22 +78,73 @@ public class WelcomeActivity extends AppCompatActivity {
 		@Override
 		public void onPageScrollStateChanged(int state) {
 			if (state == ViewPager.SCROLL_STATE_IDLE) {
+				final ToolType[] toolTypes = ToolType.values();
 				if (layouts[pos] == R.layout.pocketpaint_slide_intro_possibilities) {
-					View layout = findViewById(R.id.pocketpaint_intro_possibilites_topbar);
-					LinearLayout view = layout.findViewById(R.id.pocketpaint_top_bar_buttons);
-					final View fadeView = findViewById(R.id.pocketpaint_intro_possibilities_textview);
+					final TextView head = findViewById(R.id.pocketpaint_intro_possibilities_head);
+					final TextView description = findViewById(R.id.pocketpaint_intro_possibilities_text);
 
-					TapTargetTopBar target = new TapTargetTopBar(view, fadeView,
-							WelcomeActivity.this, R.id.pocketpaint_intro_possibilities_bottom_bar);
-					target.initTargetView();
-				} else if (layouts[pos] == R.layout.pocketpaint_slide_intro_tools) {
-					View layout = findViewById(R.id.pocketpaint_intro_tools_bottom_bar);
-					LinearLayout view = layout.findViewById(R.id.pocketpaint_tools_layout);
-					final View fadeView = findViewById(R.id.pocketpaint_intro_tools_textview);
+					LinearLayout topbar = findViewById(R.id.pocketpaint_intro_possibilities_topbar);
+					final ImageButton undo = topbar.findViewById(R.id.pocketpaint_btn_top_undo);
+					final ImageButton redo = topbar.findViewById(R.id.pocketpaint_btn_top_redo);
 
-					TapTargetBottomBar target = new TapTargetBottomBar(view, fadeView,
-							WelcomeActivity.this, R.id.pocketpaint_intro_tools_bottom_bar);
-					target.initTargetView();
+					undo.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							head.setText(ToolType.UNDO.getNameResource());
+							description.setText(ToolType.UNDO.getHelpTextResource());
+						}
+					});
+
+					redo.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							head.setText(ToolType.REDO.getNameResource());
+							description.setText(ToolType.REDO.getHelpTextResource());
+						}
+					});
+
+					RelativeLayout relativeLayout = findViewById(R.id.pocketpaint_intro_possibilities_bottom_bar);
+					BottomNavigationView navigationView = relativeLayout.findViewById(R.id.pocketpaint_bottom_navigation);
+
+					navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+						@Override
+						public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+							head.setText(menuItem.getTitle());
+
+							if (menuItem.getItemId() == R.id.action_tools) {
+								description.setText(getResources().getText(R.string.intro_bottom_navigation_tools_description));
+							} else if (menuItem.getItemId() == R.id.action_current_tool) {
+								description.setText(getResources().getText(R.string.intro_bottom_navigation_current_description));
+							} else if (menuItem.getItemId() == R.id.action_color_picker) {
+								description.setText(getResources().getText(R.string.intro_bottom_navigation_color_description));
+							} else {
+								description.setText(getResources().getText(R.string.intro_bottom_navigation_layers_description));
+							}
+
+							return false;
+						}
+					});
+				} else if (layouts[pos] == R.layout.pocketpaint_slide_intro_tools_selection) {
+
+					View view = findViewById(R.id.pocketpaint_intro_bottom_bar);
+					for (final ToolType type : toolTypes) {
+						View toolButton = view.findViewById(type.getToolButtonID());
+						if (toolButton == null) {
+							continue;
+						}
+
+						toolButton.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								TextView toolName = findViewById(R.id.pocketpaint_textview_intro_tools_header);
+								toolName.setText(type.getNameResource());
+								TextView toolDescription = findViewById(R.id.pocketpaint_tools_info_description);
+								toolDescription.setText(type.getHelpTextResource());
+								ImageView icon = findViewById(R.id.pocketpaint_tools_info_icon);
+								icon.setImageResource(type.getDrawableResource());
+							}
+						});
+					}
 				}
 			}
 		}
@@ -102,12 +155,7 @@ public class WelcomeActivity extends AppCompatActivity {
 		setTheme(R.style.PocketPaintWelcomeActivityTheme);
 		super.onCreate(savedInstanceState);
 
-		getStyleAttributesFromXml();
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-					| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-		}
+		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInMultiWindowMode()) {
 			setResult(RESULT_INTRO_MW_NOT_SUPPORTED);
@@ -127,8 +175,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
 		layouts = new int[]{
 				R.layout.pocketpaint_slide_intro_welcome,
-				R.layout.pocketpaint_slide_intro_tools,
 				R.layout.pocketpaint_slide_intro_possibilities,
+				R.layout.pocketpaint_slide_intro_tools_selection,
 				R.layout.pocketpaint_slide_intro_landscape,
 				R.layout.pocketpaint_slide_intro_getstarted};
 
@@ -184,6 +232,30 @@ public class WelcomeActivity extends AppCompatActivity {
 		}
 	}
 
+	public static void reverseArray(int[] array) {
+		for (int i = 0; i < array.length / 2; i++) {
+			int temp = array[i];
+			array[i] = array[array.length - i - 1];
+			array[array.length - i - 1] = temp;
+		}
+	}
+
+	private static boolean defaultLocaleIsRTL() {
+		Locale locale = Locale.getDefault();
+		if (locale.toString().isEmpty()) {
+			return false;
+		}
+		final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
+		return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT
+				|| directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
+	}
+
+	public static boolean isRTL(Context context) {
+		final int layoutDirection = context.getResources().getConfiguration().getLayoutDirection();
+		boolean layoutDirectionIsRTL = (layoutDirection == View.LAYOUT_DIRECTION_RTL);
+		return layoutDirectionIsRTL || defaultLocaleIsRTL();
+	}
+
 	private void addBottomDots(int currentPage) {
 		TextView[] dots = new TextView[layouts.length];
 		int currentIndex = getDotsIndex(currentPage);
@@ -207,41 +279,14 @@ public class WelcomeActivity extends AppCompatActivity {
 	}
 
 	private void changeStatusBarColor() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			Window window = getWindow();
-			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-			window.setStatusBarColor(Color.TRANSPARENT);
-		}
-	}
-
-	private void getStyleAttributesFromXml() {
-		final DisplayMetrics metrics = getBaseContext().getResources().getDisplayMetrics();
-		for (TapTargetStyle text : TapTargetStyle.values()) {
-			TypedArray attribute = obtainStyledAttributes(text.getResourceId(), R.styleable.PocketPaintWelcomeAttributes);
-
-			int textSizeDp = (int) attribute.getDimension(R.styleable.PocketPaintWelcomeAttributes_android_textSize, 16);
-			int textStyle = attribute.getInt(R.styleable.PocketPaintWelcomeAttributes_android_textStyle, 0);
-			int color = attribute.getColor(R.styleable.PocketPaintWelcomeAttributes_android_textColor, Color.WHITE);
-			String fontFamilyName = attribute.getString(R.styleable.PocketPaintWelcomeAttributes_android_fontFamily);
-			Typeface typeface = Typeface.create(fontFamilyName, textStyle);
-
-			text.setTextColor(color);
-			text.setTextSize(getSpFromDimension(textSizeDp, metrics));
-			text.setTypeface(typeface);
-
-			attribute.recycle();
-		}
+		Window window = getWindow();
+		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+		window.setStatusBarColor(Color.TRANSPARENT);
 	}
 
 	@Override
 	public void onBackPressed() {
 		finish();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		TapTargetTopBar.resetSequenceState();
 	}
 
 	int getDotsIndex(int position) {

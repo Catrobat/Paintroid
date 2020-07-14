@@ -28,16 +28,20 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.VectorDrawable;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.Root;
 import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.espresso.util.HumanReadables;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.WindowManager;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -426,12 +430,15 @@ public final class UiMatcher {
 					return false;
 				}
 
-				Bitmap expectedBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
+				Bitmap expectedBitmap;
+
 				if (targetDrawable instanceof BitmapDrawable) {
 					Bitmap targetBitmap = ((BitmapDrawable) targetDrawable).getBitmap();
+					expectedBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
 					return targetBitmap.sameAs(expectedBitmap);
-				} else if (targetDrawable instanceof StateListDrawable) {
-					Bitmap targetBitmap = ((BitmapDrawable) targetDrawable.getCurrent()).getBitmap();
+				} else if (targetDrawable instanceof VectorDrawable) {
+					Bitmap targetBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
+					expectedBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
 					return targetBitmap.sameAs(expectedBitmap);
 				}
 				return false;
@@ -446,6 +453,11 @@ public final class UiMatcher {
 					description.appendText(resourceName);
 					description.appendText("]");
 				}
+			}
+
+			private Bitmap vectorToBitmap(VectorDrawable vectorDrawable) {
+				return Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+						vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
 			}
 		};
 	}
@@ -520,6 +532,38 @@ public final class UiMatcher {
 				int viewEndX = viewStartX + view.getWidth();
 
 				return (viewStartX > displayMiddle) && (viewEndX > displayMiddle);
+			}
+		};
+	}
+
+	public static Matcher<View> withAdaptedData(final int resourceId) {
+		return new TypeSafeMatcher<View>() {
+
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("with class name: ");
+			}
+
+			@Override
+			public boolean matchesSafely(View view) {
+				String resourceName;
+
+				if (!(view instanceof AdapterView)) {
+					return false;
+				}
+
+				Resources resources = view.getContext().getResources();
+				resourceName = resources.getString(resourceId);
+
+				@SuppressWarnings("rawtypes")
+				Adapter adapter = ((AdapterView) view).getAdapter();
+				for (int i = 0; i < adapter.getCount(); i++) {
+					if (resourceName.equals(((MenuItem) adapter.getItem(i)).getTitle().toString())) {
+						return true;
+					}
+				}
+
+				return false;
 			}
 		};
 	}

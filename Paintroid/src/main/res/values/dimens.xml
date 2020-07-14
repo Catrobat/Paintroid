@@ -18,11 +18,9 @@
 -->
 <resources>
     <!-- PocketPaint MainActivity -->
-    <dimen name="pocketpaint_main_bottom_bar_button_width">65dp</dimen>
     <dimen name="pocketpaint_main_bottom_bar_height">50dp</dimen>
+    <dimen name="pocketpaint_bottom_navigation_icon_size">24dp</dimen>
     <dimen name="pocketpaint_main_top_bar_height">50dp</dimen>
-    <dimen name="pocketpaint_main_bottom_bar_landscape_button_width">50dp</dimen>
-    <dimen name="pocketpaint_main_bottom_bar_landscape_button_height">65dp</dimen>
 
     <!-- PocketPaint WelcomeActivity -->
     <dimen name="pocketpaint_welcome_dots_height">35dp</dimen>

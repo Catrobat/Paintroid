@@ -29,7 +29,7 @@ import android.view.View.OnTouchListener;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.options.ToolOptionsController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.util.EnumSet;
@@ -96,10 +96,10 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		ToolOptionsController toolOptionsController = callback.getToolOptionsController();
+		ToolOptionsViewController toolOptionsViewController = callback.getToolOptionsViewController();
 
-		if (toolOptionsController.isVisible()) {
-			toolOptionsController.hideAnimated();
+		if (toolOptionsViewController.isVisible()) {
+			toolOptionsViewController.hide();
 			return false;
 		}
 
@@ -119,7 +119,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					return false;
 				}
 
-				currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_DOWN);
+				currentTool.handleDown(canvasTouchPoint);
 
 				if (autoScroll) {
 					autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y);
@@ -140,14 +140,23 @@ public class DrawingSurfaceListener implements OnTouchListener {
 						autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
 					}
 
-					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_MOVE);
+					currentTool.handleMove(canvasTouchPoint);
 				} else if (event.getPointerCount() == 1 && (currentTool.handToolMode())) {
+					float xOld;
+					float yOld;
 					if (autoScrollTask.isRunning()) {
 						autoScrollTask.stop();
 					}
 
-					float xOld = eventX;
-					float yOld = eventY;
+					if (touchMode == TouchMode.PINCH) {
+						xOld = 0;
+						yOld = 0;
+						touchMode = TouchMode.DRAW;
+					} else {
+						xOld = eventX;
+						yOld = eventY;
+					}
+
 					newHandEvent(event.getX(), event.getY());
 					if (xOld > 0 && eventX != xOld || yOld > 0 && eventY != yOld) {
 						callback.translatePerspective(eventX - xOld, eventY - yOld);
@@ -185,7 +194,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				}
 
 				if (touchMode == TouchMode.DRAW) {
-					currentTool.handleTouch(canvasTouchPoint, MotionEvent.ACTION_UP);
+					currentTool.handleUp(canvasTouchPoint);
 				} else {
 					currentTool.resetInternalState(StateChange.MOVE_CANCELED);
 				}
@@ -311,6 +320,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 		void convertToCanvasFromSurface(PointF surfacePoint);
 
-		ToolOptionsController getToolOptionsController();
+		ToolOptionsViewController getToolOptionsViewController();
 	}
 }

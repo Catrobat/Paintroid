@@ -47,6 +47,7 @@ android {
         versionCode rootProject.ext.androidVersionCode
         versionName rootProject.ext.androidVersionName
         manifestPlaceholders += [appName: appName]
+        setProperty("archivesBaseName", "paintroid")
     }
 
     signingConfigs {

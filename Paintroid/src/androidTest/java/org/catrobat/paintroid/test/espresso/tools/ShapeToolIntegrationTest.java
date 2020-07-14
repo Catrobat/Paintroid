@@ -1,142 +1,201 @@
-/**
- * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
- * (<http://developer.catrobat.org/credits>)
- * <p>
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- * <p>
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- * <p>
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/*
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.espresso.tools;
 
-import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.drawable.DrawableShape;
+import org.catrobat.paintroid.tools.drawable.DrawableStyle;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
+import static org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider.withOffset;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.runners.Parameterized.Parameter;
-import static org.junit.runners.Parameterized.Parameters;
 
-@RunWith(Parameterized.class)
+@RunWith(AndroidJUnit4.class)
 public class ShapeToolIntegrationTest {
 
 	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Parameter
-	public int shape;
-	@Parameter(1)
-	public String shapeName;
-
-	private Workspace workspace;
-
-	@Parameters(name = "{1}")
-	public static Iterable<Object[]> data() {
-		return Arrays.asList(new Object[][]{
-				{R.id.pocketpaint_shapes_square_btn, "Square"},
-				{R.id.pocketpaint_shapes_circle_btn, "Circle"},
-				{R.id.pocketpaint_shapes_heart_btn, "Heart"},
-				{R.id.pocketpaint_shapes_star_btn, "Star"}
-		});
-	}
+	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+	private ToolReference toolReference;
 
 	@Before
 	public void setUp() {
-		workspace = activityTestRule.getActivity().workspace;
+		MainActivity activity = launchActivityRule.getActivity();
+		toolReference = activity.toolReference;
+
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
 	}
 
-	@Test
-	public void testRememberShapeAfterOrientationChange() {
-		onView(withId(shape))
-				.perform(click())
-				.check(matches(isSelected()));
-		onToolBarView()
-				.performCloseToolOptions();
+	private Paint getCurrentToolBitmapPaint() {
+		return launchActivityRule.getActivity().toolPaint.getPaint();
+	}
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
-
-		Bitmap expectedBitmap = workspace.getBitmapOfCurrentLayer();
-
-		onTopBarView()
-				.performUndo();
-
-		activityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-		onView(withId(shape))
-				.check(matches(isSelected()));
-
-		onToolBarView()
-				.performCloseToolOptions();
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
-
-		assertTrue(expectedBitmap.sameAs(workspace.getBitmapOfCurrentLayer()));
+	private Paint getCurrentToolCanvasPaint() {
+		return launchActivityRule.getActivity().toolPaint.getPreviewPaint();
 	}
 
 	@Test
-	public void testRememberOutlineShapeAfterOrientationChange() {
-		onView(withId(R.id.pocketpaint_shape_ibtn_outline))
-				.perform(click());
-		onView(withId(shape))
-				.perform(click())
-				.check(matches(isSelected()));
+	public void testEllipseIsDrawnOnBitmap() {
+		onShapeToolOptionsView()
+				.performSelectShape(DrawableShape.OVAL);
+
+		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) toolReference.get();
+		float rectHeight = ellipseTool.boxHeight;
+
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		Bitmap expectedBitmap = workspace.getBitmapOfCurrentLayer();
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+				.checkPixelColor(Color.BLACK, withOffset(BitmapLocationProvider.MIDDLE, (int) (rectHeight / 2.5f), 0))
+				.checkPixelColor(Color.TRANSPARENT, withOffset(BitmapLocationProvider.MIDDLE, (int) (rectHeight / 2.5f), (int) (rectHeight / 2.5f)));
+	}
+
+	@Test
+	public void testUndoRedo() {
+		onToolBarView()
+				.performCloseToolOptionsView();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+
 		onTopBarView()
 				.performUndo();
 
-		activityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		onView(withId(shape))
-				.check(matches(isSelected()));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 
+		onTopBarView()
+				.performRedo();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+	}
+
+	@Test
+	public void testFilledRectChangesColor() {
 		onToolBarView()
-				.performCloseToolOptions();
+				.performCloseToolOptionsView();
+
+		onToolProperties()
+				.setColorResource(R.color.pocketpaint_color_picker_brown1);
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 
-		assertTrue(expectedBitmap.sameAs(workspace.getBitmapOfCurrentLayer()));
+		onDrawingSurfaceView()
+				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown1, BitmapLocationProvider.MIDDLE);
+	}
+
+	@Test
+	public void testDrawWithHeartShape() {
+		onShapeToolOptionsView()
+				.performSelectShape(DrawableShape.HEART);
+
+		onToolBarView()
+				.performCloseToolOptionsView();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+	}
+
+	@Test
+	public void testAntiAliasingIsOffIfShapeOutlineWidthIsOne() {
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+		onShapeToolOptionsView()
+				.performSelectShapeDrawType(DrawableStyle.STROKE);
+		onShapeToolOptionsView()
+				.performSetOutlineWidth(touchCenterLeft());
+
+		drawShape();
+
+		Paint bitmapPaint = getCurrentToolBitmapPaint();
+		Paint canvasPaint = getCurrentToolCanvasPaint();
+
+		assertFalse("BITMAP_PAINT antialiasing should be off", bitmapPaint.isAntiAlias());
+		assertTrue("CANVAS_PAINT antialiasing should be on", canvasPaint.isAntiAlias());
+	}
+
+	@Test
+	public void testShapeWithOutlineAlsoWorksWithTransparentColor() {
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+		onShapeToolOptionsView()
+				.performSelectShape(DrawableShape.RECTANGLE);
+		onShapeToolOptionsView()
+				.performSelectShapeDrawType(DrawableStyle.FILL);
+		onToolProperties()
+				.setColor(Color.BLACK);
+		drawShape();
+		onToolBarView()
+				.performClickSelectedToolButton();
+
+		onShapeToolOptionsView()
+				.performSelectShape(DrawableShape.OVAL);
+		onShapeToolOptionsView()
+				.performSelectShapeDrawType(DrawableStyle.STROKE);
+		onToolProperties()
+				.setColor(Color.TRANSPARENT);
+		drawShape();
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, DrawingSurfaceLocationProvider.TOOL_POSITION);
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, DrawingSurfaceLocationProvider.TOP_MIDDLE);
+	}
+
+	public void drawShape() {
+		onToolBarView()
+				.performCloseToolOptionsView();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
 	}
 }

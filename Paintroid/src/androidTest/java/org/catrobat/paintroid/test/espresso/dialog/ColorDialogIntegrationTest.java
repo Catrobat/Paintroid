@@ -23,6 +23,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.Button;
@@ -102,6 +103,18 @@ public class ColorDialogIntegrationTest {
 				.performOpenColorPicker();
 
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testCorrectColorAfterApplyWithoutNewColorSelected() {
+		Paint initialPaint = toolReference.get().getDrawPaint();
+
+		onColorPickerView()
+				.performOpenColorPicker()
+				.onOkButton()
+				.perform(click());
+
+		assertEquals(initialPaint.getColor(), toolReference.get().getDrawPaint().getColor());
 	}
 
 	@Test
@@ -333,6 +346,21 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
+	public void testHEXEditTextMaxInputLength() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
+
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("#0123456789ABCDEF01234"));
+
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
+				withText(
+						String.format("#0123456789ABCDEF0"))));
+	}
+
+	@Test
 	public void testHEXUpdatingOnColorChange() {
 		onColorPickerView()
 				.performOpenColorPicker();
@@ -548,5 +576,18 @@ public class ColorDialogIntegrationTest {
 				)
 		));
 		presetColors.recycle();
+	}
+
+	@Test
+	public void testInsertInvalidHexInputAndSlideSeekbar() {
+		onColorPickerView()
+				.performOpenColorPicker();
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("#FFFF0000xxxx"));
+
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
+				withText(
+						String.format("#FF%06X", (0xFFFFFF & 0xFF0000FF)))));
 	}
 }
