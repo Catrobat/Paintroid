@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="color_picker_title">색상 선택기</string>
+    <string name="color_picker_tab_icon">색상 선택기 아이콘</string>
+    <string name="color_red">빨강</string>
+    <string name="color_green">초록</string>
+    <string name="color_blue">파랑</string>
+    <string name="color_alpha">투명도</string>
+    <string name="color_hex">헥사편집기</string>
+    <string name="color_picker_apply">사용하기</string>
+    <string name="color_picker_cancel">취소</string>
+</resources>
