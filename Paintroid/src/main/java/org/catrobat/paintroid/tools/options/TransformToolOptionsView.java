@@ -48,5 +48,7 @@ public interface TransformToolOptionsView {
 		void setBoxWidth(float boxWidth);
 
 		void setBoxHeight(float boxHeight);
+
+		void hideToolOptions();
 	}
 }
