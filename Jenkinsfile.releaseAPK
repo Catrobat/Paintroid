@@ -27,7 +27,7 @@ pipeline {
         GRADLE_APP_MODULE_NAME = "app"
 
         // APK build output locations
-        APK_LOCATION_DEBUG = "${env.GRADLE_APP_MODULE_NAME}/build/outputs/apk/debug/app-debug.apk"
+        APK_LOCATION_DEBUG = "${env.GRADLE_APP_MODULE_NAME}/build/outputs/apk/debug/paintroid-debug.apk"
 
         // Code coverage
         JACOCO_XML = "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/coverage/debug/report.xml"
@@ -67,7 +67,7 @@ pipeline {
                         '''
                     }
                 }
-                archiveArtifacts artifacts: 'app/build/outputs/apk/signedRelease/app-signedRelease.apk', fingerprint: true
+                archiveArtifacts artifacts: 'app/build/outputs/apk/signedRelease/paintroid-signedRelease.apk', fingerprint: true
             }
         }
 
