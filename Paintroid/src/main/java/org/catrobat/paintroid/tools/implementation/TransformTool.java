@@ -144,6 +144,11 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			}
 
 			@Override
+			public void hideToolOptions() {
+				TransformTool.this.toolOptionsViewController.hide();
+			}
+
+			@Override
 			public void applyResizeClicked(int resizePercentage) {
 				onApplyResizeClicked(resizePercentage);
 			}

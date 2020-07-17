@@ -128,6 +128,7 @@ public class DefaultTransformToolOptionsView implements TransformToolOptionsView
 						if (callback != null) {
 							callback.applyResizeClicked(resizeSeekBar.getProgress());
 							resizeSeekBar.setProgress(100);
+							callback.hideToolOptions();
 						}
 					}
 				});
