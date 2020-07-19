@@ -50,6 +50,7 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 	private final ShapeToolOptionsView shapeToolOptionsView;
 
 	private final Paint shapePreviewPaint = new Paint();
+	private final Paint shapeBitmapPaint = new Paint();
 	private final RectF shapePreviewRect = new RectF();
 	private final DrawableFactory drawableFactory = new DrawableFactory();
 
@@ -96,6 +97,10 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 	public void setBaseShape(DrawableShape shape) {
 		baseShape = shape;
 		shapeDrawable = drawableFactory.createDrawable(shape);
+	}
+
+	public Paint getShapeBitmapPaint() {
+		return shapeBitmapPaint;
 	}
 
 	@Override
@@ -182,13 +187,13 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 				&& toolPosition.x + boxWidth / 2 >= 0
 				&& toolPosition.y + boxHeight / 2 >= 0) {
 
-			Paint paint = toolPaint.getPaint();
+			shapeBitmapPaint.set(toolPaint.getPaint());
 			RectF shapeRect = new RectF();
-			preparePaint(paint);
+			preparePaint(shapeBitmapPaint);
 			prepareShapeRectangle(shapeRect, boxWidth, boxHeight);
 
 			Command command = commandFactory.createGeometricFillCommand(shapeDrawable,
-					Conversion.toPoint(toolPosition), shapeRect, boxRotation, paint);
+					Conversion.toPoint(toolPosition), shapeRect, boxRotation, shapeBitmapPaint);
 			commandManager.addCommand(command);
 			highlightBox();
 		}
