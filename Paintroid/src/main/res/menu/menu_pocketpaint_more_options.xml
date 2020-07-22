@@ -30,4 +30,7 @@
     <item
         android:id="@+id/pocketpaint_options_about"
         android:title="@string/pocketpaint_menu_about" />
+    <item
+        android:id="@+id/pocketpaint_options_feedback"
+        android:title="@string/menu_feedback" />
 </menu>

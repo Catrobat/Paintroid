@@ -238,7 +238,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		navigator.showFeedbackDialog();
 	}
 
-	@Override
+    @Override
+    public void sendFeedback() {
+		navigator.sendFeedback();
+    }
+
+    @Override
 	public void onNewImage() {
 		DisplayMetrics metrics = view.getDisplayMetrics();
 		resetPerspectiveAfterNextCommand = true;

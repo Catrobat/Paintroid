@@ -158,7 +158,15 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		feedbackDialog.show(mainActivity.getSupportFragmentManager(), Constants.FEEDBACK_DIALOG_FRAGMENT_TAG);
 	}
 
-	@Override
+    @Override
+    public void sendFeedback() {
+		Intent intent = new Intent(Intent.ACTION_SENDTO);
+		Uri data = Uri.parse("mailto:support-paintroid@catrobat.org");
+		intent.setData(data);
+		mainActivity.startActivity(intent);
+    }
+
+    @Override
 	public void showIndeterminateProgressDialog() {
 		if (progressDialog == null) {
 			progressDialog = IndeterminateProgressDialog.newInstance(mainActivity);

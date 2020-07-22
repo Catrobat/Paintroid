@@ -20,7 +20,11 @@
 package org.catrobat.paintroid.test.espresso;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.rule.GrantPermissionRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -34,7 +38,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasShortClassName;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
+import static org.hamcrest.Matchers.allOf;
+
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -96,6 +108,7 @@ public class MoreOptionsIntegrationTest {
 				.checkItemExists(R.string.menu_save_image)
 				.checkItemExists(R.string.menu_save_copy)
 				.checkItemExists(R.string.menu_new_image)
+				.checkItemExists(R.string.menu_feedback)
 
 				.checkItemDoesNotExist(R.string.menu_discard_image)
 				.checkItemDoesNotExist(R.string.menu_export);
@@ -124,6 +137,16 @@ public class MoreOptionsIntegrationTest {
 	@Test
 	public void testMoreOptionsItemMenuCopyClick() {
 		onView(withText(R.string.menu_save_copy)).perform(click());
+	}
+	@Test
+	public void testMoreOptionsFeedbackClick() {
+		onView(withText(R.string.menu_feedback)).perform(click());
+		Intents.init();
+		intended(allOf(
+				hasAction(Intent.ACTION_SENDTO)
+				));
+		Intents.release();
+
 	}
 
 	@Test
@@ -158,4 +181,5 @@ public class MoreOptionsIntegrationTest {
 		onView(withText(R.string.menu_save_image)).perform(click());
 		onView(withText(R.string.pocketpaint_like_us)).check(doesNotExist());
 	}
+
 }

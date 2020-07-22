@@ -55,6 +55,8 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
+		void sendFeedback();
+
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
 
 		void showIndeterminateProgressDialog();
@@ -165,6 +167,8 @@ public interface MainActivityContracts {
 		void showRateUsDialog();
 
 		void showFeedbackDialog();
+
+		void sendFeedback();
 
 		void onNewImage();
 
