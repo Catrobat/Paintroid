@@ -33,6 +33,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.drawable.DrawableShape;
 import org.catrobat.paintroid.tools.drawable.DrawableStyle;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
+import org.catrobat.paintroid.tools.implementation.ShapeTool;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,6 +48,7 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInte
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -66,11 +68,11 @@ public class ShapeToolIntegrationTest {
 	}
 
 	private Paint getCurrentToolBitmapPaint() {
-		return launchActivityRule.getActivity().toolPaint.getPaint();
+		return ((ShapeTool) toolReference.get()).getShapeBitmapPaint();
 	}
 
-	private Paint getCurrentToolCanvasPaint() {
-		return launchActivityRule.getActivity().toolPaint.getPreviewPaint();
+	private Paint getToolPaint() {
+		return launchActivityRule.getActivity().toolPaint.getPaint();
 	}
 
 	@Test
@@ -159,10 +161,25 @@ public class ShapeToolIntegrationTest {
 		drawShape();
 
 		Paint bitmapPaint = getCurrentToolBitmapPaint();
-		Paint canvasPaint = getCurrentToolCanvasPaint();
+		Paint toolPaint = getToolPaint();
 
 		assertFalse("BITMAP_PAINT antialiasing should be off", bitmapPaint.isAntiAlias());
-		assertTrue("CANVAS_PAINT antialiasing should be on", canvasPaint.isAntiAlias());
+		assertTrue("TOOL_PAINT antialiasing should be on", toolPaint.isAntiAlias());
+	}
+
+	@Test
+	public void testDoNotUseRegularToolPaintInShapeTool() {
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+		onShapeToolOptionsView()
+				.performSelectShapeDrawType(DrawableStyle.FILL);
+
+		drawShape();
+
+		Paint bitmapPaint = getCurrentToolBitmapPaint();
+		Paint toolPaint = getToolPaint();
+
+		assertNotEquals("bitmapPaint and toolPaint should differ", bitmapPaint, toolPaint);
 	}
 
 	@Test

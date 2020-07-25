@@ -102,7 +102,6 @@ public class TextToolIntegrationTest {
 	private ToggleButton underlinedToggleButton;
 	private ToggleButton italicToggleButton;
 	private ToggleButton boldToggleButton;
-	private ToggleButton strikeThroughToggleButton;
 	private EditText textSize;
 	private Perspective perspective;
 	private LayerContracts.Model layerModel;
@@ -127,7 +126,6 @@ public class TextToolIntegrationTest {
 		underlinedToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		italicToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
-		strikeThroughToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_strike_through);
 		textSize = activity.findViewById(R.id.pocketpaint_font_size_text);
 		textTool.resetBoxPosition();
 	}
@@ -137,7 +135,6 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
 		selectFormatting(FormattingOptions.UNDERLINE);
-		selectFormatting(FormattingOptions.STRIKETHROUGH);
 
 		enterTestText();
 
@@ -149,7 +146,6 @@ public class TextToolIntegrationTest {
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
 		assertTrue(underlinedToggleButton.isChecked());
-		assertTrue(strikeThroughToggleButton.isChecked());
 		assertEquals(TEST_TEXT, textEditText.getText().toString());
 	}
 
@@ -174,13 +170,10 @@ public class TextToolIntegrationTest {
 				.check(matches(isNotChecked()));
 		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_italic))
 				.check(matches(isNotChecked()));
-		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_strike_through))
-				.check(matches(isNotChecked()));
 
 		assertFalse(textTool.underlined);
 		assertFalse(textTool.italic);
 		assertFalse(textTool.bold);
-		assertFalse(textTool.strikeThrough);
 	}
 
 	@Test
@@ -221,16 +214,6 @@ public class TextToolIntegrationTest {
 		assertFalse(getToolMemberBold());
 		assertFalse(boldToggleButton.isChecked());
 		assertEquals(getFontString(FormattingOptions.BOLD), boldToggleButton.getText().toString());
-
-		selectFormatting(FormattingOptions.STRIKETHROUGH);
-		assertTrue(getToolMemberStrikeThrough());
-		assertTrue(strikeThroughToggleButton.isChecked());
-		assertEquals(getFontString(FormattingOptions.STRIKETHROUGH), strikeThroughToggleButton.getText().toString());
-
-		selectFormatting(FormattingOptions.STRIKETHROUGH);
-		assertFalse(getToolMemberStrikeThrough());
-		assertFalse(strikeThroughToggleButton.isChecked());
-		assertEquals(getFontString(FormattingOptions.STRIKETHROUGH), strikeThroughToggleButton.getText().toString());
 	}
 
 	@Test
@@ -240,7 +223,6 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.UNDERLINE);
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
-		selectFormatting(FormattingOptions.STRIKETHROUGH);
 
 		onToolBarView()
 				.performCloseToolOptionsView();
@@ -259,7 +241,6 @@ public class TextToolIntegrationTest {
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
-		assertTrue(strikeThroughToggleButton.isChecked());
 		checkTextBoxDimensions();
 	}
 
@@ -270,7 +251,6 @@ public class TextToolIntegrationTest {
 		selectFormatting(FormattingOptions.UNDERLINE);
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
-		selectFormatting(FormattingOptions.STRIKETHROUGH);
 
 		final PointF toolMemberBoxPosition = getToolMemberBoxPosition();
 		PointF expectedPosition = new PointF(toolMemberBoxPosition.x, toolMemberBoxPosition.y);
@@ -284,7 +264,6 @@ public class TextToolIntegrationTest {
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
-		assertTrue(strikeThroughToggleButton.isChecked());
 
 		assertEquals(expectedPosition, getToolMemberBoxPosition());
 		checkTextBoxDimensions();
@@ -297,7 +276,6 @@ public class TextToolIntegrationTest {
 		assertFalse(underlinedToggleButton.isChecked());
 		assertFalse(boldToggleButton.isChecked());
 		assertFalse(italicToggleButton.isChecked());
-		assertFalse(strikeThroughToggleButton.isChecked());
 
 		ArrayList<FormattingOptions> fonts = new ArrayList<>();
 		fonts.add(FormattingOptions.SERIF);
@@ -315,14 +293,6 @@ public class TextToolIntegrationTest {
 			assertFalse(boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
 
 			Bitmap bitmap = getToolMemberDrawingBitmap();
-			pixelsBefore = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsBefore, 0, 1, textTool.BOX_OFFSET, 0, 1, bitmap.getHeight());
-			selectFormatting(FormattingOptions.STRIKETHROUGH);
-			assertTrue(strikeThroughToggleButton.isChecked());
-			bitmap = getToolMemberDrawingBitmap();
-			pixelsAfter = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsAfter, 0, 1, textTool.BOX_OFFSET, 0, 1, bitmap.getHeight());
-			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
 
 			pixelsBefore = new int[bitmap.getHeight()];
 			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
@@ -357,8 +327,6 @@ public class TextToolIntegrationTest {
 			assertFalse(italicToggleButton.isChecked());
 			selectFormatting(FormattingOptions.BOLD);
 			assertFalse(boldToggleButton.isChecked());
-			selectFormatting(FormattingOptions.STRIKETHROUGH);
-			assertFalse(strikeThroughToggleButton.isChecked());
 		}
 	}
 
@@ -369,7 +337,6 @@ public class TextToolIntegrationTest {
 		assertFalse(underlinedToggleButton.isChecked());
 		assertFalse(boldToggleButton.isChecked());
 		assertFalse(italicToggleButton.isChecked());
-		assertFalse(strikeThroughToggleButton.isChecked());
 
 		List<FormattingOptions> fonts = Arrays.asList(FormattingOptions.STC, FormattingOptions.DUBAI);
 
@@ -384,14 +351,6 @@ public class TextToolIntegrationTest {
 			assertFalse(boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
 
 			Bitmap bitmap = getToolMemberDrawingBitmap();
-			pixelsBefore = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsBefore, 0, 1, textTool.BOX_OFFSET, 0, 1, bitmap.getHeight());
-			selectFormatting(FormattingOptions.STRIKETHROUGH);
-			assertTrue(strikeThroughToggleButton.isChecked());
-			bitmap = getToolMemberDrawingBitmap();
-			pixelsAfter = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsAfter, 0, 1, textTool.BOX_OFFSET, 0, 1, bitmap.getHeight());
-			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
 
 			pixelsBefore = new int[bitmap.getHeight()];
 			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
@@ -426,8 +385,6 @@ public class TextToolIntegrationTest {
 			assertFalse(italicToggleButton.isChecked());
 			selectFormatting(FormattingOptions.BOLD);
 			assertFalse(boldToggleButton.isChecked());
-			selectFormatting(FormattingOptions.STRIKETHROUGH);
-			assertFalse(strikeThroughToggleButton.isChecked());
 		}
 	}
 
@@ -685,7 +642,6 @@ public class TextToolIntegrationTest {
 			case UNDERLINE:
 			case ITALIC:
 			case BOLD:
-			case STRIKETHROUGH:
 				onView(withText(getFontString(format))).perform(click());
 				break;
 			default:
@@ -711,8 +667,6 @@ public class TextToolIntegrationTest {
 				return activity.getString(R.string.text_tool_dialog_italic_shortcut);
 			case BOLD:
 				return activity.getString(R.string.text_tool_dialog_bold_shortcut);
-			case STRIKETHROUGH:
-				return activity.getString(R.string.text_tool_dialog_strike_through_shortcut);
 			default:
 				return null;
 		}
@@ -760,10 +714,6 @@ public class TextToolIntegrationTest {
 		return textTool.bold;
 	}
 
-	private boolean getToolMemberStrikeThrough() {
-		return textTool.strikeThrough;
-	}
-
 	private Bitmap getToolMemberDrawingBitmap() {
 		return textTool.drawingBitmap;
 	}
@@ -773,6 +723,6 @@ public class TextToolIntegrationTest {
 	}
 
 	private enum FormattingOptions {
-		UNDERLINE, ITALIC, BOLD, STRIKETHROUGH, MONOSPACE, SERIF, SANS_SERIF, STC, DUBAI
+		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, STC, DUBAI
 	}
 }

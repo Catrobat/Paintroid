@@ -242,6 +242,19 @@ public class TransformToolIntegrationTest {
 	}
 
 	@Test
+	public void testToolsMenuClosedOnApply() {
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.moveSliderTo(50);
+		onTransformToolOptionsView()
+				.performApplyResize();
+
+		onTransformToolOptionsView()
+				.checkIsNotDisplayed();
+	}
+
+	@Test
 	public void testWhenNoPixelIsOnBitmap() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
@@ -1308,14 +1321,14 @@ public class TransformToolIntegrationTest {
 		int progress = seekBar.getProgress();
 
 		onTransformToolOptionsView()
-				.checkPercetageTextMatches(progress);
+				.checkPercentageTextMatches(progress);
 
 		onTransformToolOptionsView()
 				.moveSliderTo(1);
 
 		progress = seekBar.getProgress();
 		onTransformToolOptionsView()
-				.checkPercetageTextMatches(progress);
+				.checkPercentageTextMatches(progress);
 
 		onTransformToolOptionsView()
 				.performApplyResize();
@@ -1324,13 +1337,13 @@ public class TransformToolIntegrationTest {
 
 		progress = seekBar.getProgress();
 		onTransformToolOptionsView()
-				.checkPercetageTextMatches(progress);
+				.checkPercentageTextMatches(progress);
 
 		onTransformToolOptionsView()
 				.performApplyResize();
 
 		progress = seekBar.getProgress();
 		onTransformToolOptionsView()
-				.checkPercetageTextMatches(progress);
+				.checkPercentageTextMatches(progress);
 	}
 }

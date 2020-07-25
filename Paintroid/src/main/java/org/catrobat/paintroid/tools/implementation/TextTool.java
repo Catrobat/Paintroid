@@ -53,7 +53,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private static final String BUNDLE_TOOL_UNDERLINED = "BUNDLE_TOOL_UNDERLINED";
 	private static final String BUNDLE_TOOL_ITALIC = "BUNDLE_TOOL_ITALIC";
 	private static final String BUNDLE_TOOL_BOLD = "BUNDLE_TOOL_BOLD";
-	private static final String BUNDLE_TOOL_STRIKETHROUGH = "BUNDLE_TOOL_STRIKETHROUGH";
 	private static final String BUNDLE_TOOL_TEXT = "BUNDLE_TOOL_TEXT";
 	private static final String BUNDLE_TOOL_TEXT_SIZE = "BUNDLE_TOOL_TEXT_SIZE";
 	private static final String BUNDLE_TOOL_FONT = "BUNDLE_TOOL_FONT";
@@ -73,8 +72,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 	public boolean italic = false;
 	@VisibleForTesting
 	public boolean bold = false;
-	@VisibleForTesting
-	public boolean strikeThrough = false;
 	@VisibleForTesting
 	public int textSize = 20;
 	private TextToolOptionsView textToolOptionsView;
@@ -146,13 +143,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 					}
 
 					@Override
-					public void setStrikeThrough(boolean strikeThrough) {
-						TextTool.this.strikeThrough = strikeThrough;
-						textPaint.setStrikeThruText(TextTool.this.strikeThrough);
-						createAndSetBitmap();
-					}
-
-					@Override
 					public void setTextSize(int size) {
 						textSize = size;
 						textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
@@ -176,7 +166,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
 		textPaint.setUnderlineText(underlined);
 		textPaint.setFakeBoldText(bold);
-		textPaint.setStrikeThruText(strikeThrough);
 
 		updateTypeface();
 	}
@@ -213,7 +202,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		bundle.putBoolean(BUNDLE_TOOL_UNDERLINED, underlined);
 		bundle.putBoolean(BUNDLE_TOOL_ITALIC, italic);
 		bundle.putBoolean(BUNDLE_TOOL_BOLD, bold);
-		bundle.putBoolean(BUNDLE_TOOL_STRIKETHROUGH, strikeThrough);
 		bundle.putString(BUNDLE_TOOL_TEXT, text);
 		bundle.putInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
 		bundle.putString(BUNDLE_TOOL_FONT, font);
@@ -225,7 +213,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		underlined = bundle.getBoolean(BUNDLE_TOOL_UNDERLINED, underlined);
 		italic = bundle.getBoolean(BUNDLE_TOOL_ITALIC, italic);
 		bold = bundle.getBoolean(BUNDLE_TOOL_BOLD, bold);
-		strikeThrough = bundle.getBoolean(BUNDLE_TOOL_STRIKETHROUGH, strikeThrough);
 		text = bundle.getString(BUNDLE_TOOL_TEXT, text);
 		textSize = bundle.getInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
 		font = bundle.getString(BUNDLE_TOOL_FONT, font);
@@ -233,7 +220,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		textToolOptionsView.setState(bold, italic, underlined, text, textSize, font);
 		textPaint.setUnderlineText(underlined);
 		textPaint.setFakeBoldText(bold);
-		textPaint.setStrikeThruText(strikeThrough);
 		updateTypeface();
 		createAndSetBitmap();
 	}
