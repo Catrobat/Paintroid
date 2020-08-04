@@ -557,12 +557,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			return;
 		}
 
-		switch (requestCode) {
-			case CREATE_FILE_DEFAULT:
-				model.setSavedPictureUri(view.getUriFromFile(file));
-				break;
-			default:
-				throw new IllegalArgumentException();
+		if (requestCode == CREATE_FILE_DEFAULT) {
+			model.setSavedPictureUri(view.getUriFromFile(file));
+		} else {
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -692,10 +690,5 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void rateUsClicked() {
 		navigator.rateUsClicked();
-	}
-
-	@Override
-	public void visitPocketCodeClicked() {
-		navigator.visitPocketCodeClicked();
 	}
 }
