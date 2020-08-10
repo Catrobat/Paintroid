@@ -41,7 +41,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider.withOffset;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView;
@@ -87,8 +86,8 @@ public class ShapeToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptionsView();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
@@ -101,8 +100,8 @@ public class ShapeToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptionsView();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
@@ -128,8 +127,8 @@ public class ShapeToolIntegrationTest {
 		onToolProperties()
 				.setColorResource(R.color.pocketpaint_color_picker_brown1);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown1, BitmapLocationProvider.MIDDLE);
@@ -143,8 +142,8 @@ public class ShapeToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptionsView();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
@@ -213,7 +212,7 @@ public class ShapeToolIntegrationTest {
 	public void drawShape() {
 		onToolBarView()
 				.performCloseToolOptionsView();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 	}
 }

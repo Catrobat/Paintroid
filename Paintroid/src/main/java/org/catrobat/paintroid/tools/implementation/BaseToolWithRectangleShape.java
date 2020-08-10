@@ -233,12 +233,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		return true;
 	}
 
-	protected void onClick(PointF coordinate) {
-		if (boxContainsPoint(coordinate)) {
-			onClickInBox();
-		}
-	}
-
 	@Override
 	public boolean handleUp(PointF coordinate) {
 		if (previousEventCoordinate == null) {
@@ -250,7 +244,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y) {
 			toolPosition.x = touchDownPositionX;
 			toolPosition.y = touchDownPositionY;
-			onClick(coordinate);
 		}
 		return true;
 	}

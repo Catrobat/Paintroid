@@ -373,8 +373,8 @@ public class BaseToolWithRectangleShapeToolTest {
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 		private final ToolType toolType;
 
-		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint,
-				Workspace layerModelWrapper, CommandManager commandManager) {
+		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback,
+										ToolOptionsVisibilityController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint, Workspace layerModelWrapper, CommandManager commandManager) {
 			super(contextCallback, toolOptionsViewController, toolPaint, layerModelWrapper, commandManager);
 			this.toolType = toolType;
 		}
@@ -384,7 +384,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		}
 
 		@Override
-		protected void onClickInBox() {
+		public void onClickOnButton() {
 			drawingBitmap = Bitmap.createBitmap(1, 1, Config.ALPHA_8);
 		}
 

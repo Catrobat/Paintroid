@@ -47,10 +47,10 @@ import androidx.test.rule.ActivityTestRule;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getScreenPointFromSurfaceCoordinates;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -182,8 +182,8 @@ public class StampToolIntegrationTest {
 		StampTool stampTool = (StampTool) toolReference.get();
 		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, stampTool.toolPosition.x, stampTool.toolPosition.y);
@@ -210,8 +210,8 @@ public class StampToolIntegrationTest {
 		StampTool stampTool = (StampTool) toolReference.get();
 		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
@@ -235,8 +235,8 @@ public class StampToolIntegrationTest {
 		stampTool.boxWidth = (int) (bitmapWidth * STAMP_RESIZE_FACTOR);
 		stampTool.boxHeight = (int) (bitmapHeight * STAMP_RESIZE_FACTOR);
 
-		onDrawingSurfaceView()
-				.perform(touchLongAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		assertNotNull(stampTool.drawingBitmap);
 	}
@@ -246,8 +246,8 @@ public class StampToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.STAMP);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		waitForToast(withText(R.string.stamp_tool_copy_hint), 3000);
 	}

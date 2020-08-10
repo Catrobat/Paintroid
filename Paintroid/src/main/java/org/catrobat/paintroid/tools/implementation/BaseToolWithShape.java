@@ -95,7 +95,8 @@ public abstract class BaseToolWithShape extends BaseTool {
 		PointF surfaceToolPosition = workspace.getSurfacePointFromCanvasPoint(toolPosition);
 		return scrollBehavior.getScrollDirection(surfaceToolPosition.x, surfaceToolPosition.y, viewWidth, viewHeight);
 	}
-	protected abstract void onClickInBox();
+
+	public abstract void onClickOnButton();
 
 	protected void drawToolSpecifics(Canvas canvas, float boxWidth, float boxHeight) {
 	}

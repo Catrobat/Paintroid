@@ -385,8 +385,9 @@ public class LayerIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
@@ -424,8 +425,8 @@ public class LayerIntegrationTest {
 				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));

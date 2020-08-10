@@ -35,6 +35,7 @@
     <string name="button_shape">Shapes</string>
     <string name="button_hand">Hand</string>
     <string name="button_apply">Apply</string>
+    <string name="button_checkmark">Checkmark</string>
     <string name="done">Done</string>
 
     <string name="cap_circle">Circle</string>

@@ -23,7 +23,6 @@ import android.graphics.Color;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.drawable.DrawableShape;
 import org.junit.Rule;
@@ -37,11 +36,11 @@ import java.util.Arrays;
 
 import androidx.test.rule.ActivityTestRule;
 
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 
 @RunWith(Parameterized.class)
 public class ShapeToolEraseIntegrationTest {
@@ -64,12 +63,13 @@ public class ShapeToolEraseIntegrationTest {
 
 	@Test
 	public void testEraseWithFilledShape() {
+
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE)
 				.performCloseToolOptionsView();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
@@ -86,8 +86,8 @@ public class ShapeToolEraseIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptionsView();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);

@@ -50,7 +50,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 	private boolean longClickPerformed;
 
 	public StampTool(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
-			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+					ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		readyForPaste = false;
 		longPressTimeout = ViewConfiguration.getLongPressTimeout();
@@ -138,7 +138,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	protected void onClickInBox() {
+	public void onClickOnButton() {
 		if (!readyForPaste || drawingBitmap == null) {
 			contextCallback.showNotification(R.string.stamp_tool_copy_hint);
 		} else if (boxIntersectsWorkspace()) {
