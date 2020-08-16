@@ -98,8 +98,6 @@ public interface MainActivityContracts {
 		void broadcastAddPictureToGallery(Uri uri);
 
 		void rateUsClicked();
-
-		void visitPocketCodeClicked();
 	}
 
 	interface MainView {
@@ -207,8 +205,6 @@ public interface MainActivityContracts {
 		void actionCurrentToolClicked();
 
 		void rateUsClicked();
-
-		void visitPocketCodeClicked();
 	}
 
 	interface Model {

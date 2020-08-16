@@ -294,9 +294,4 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void rateUsClicked() {
 		openPlayStore(mainActivity.getPackageName());
 	}
-
-	@Override
-	public void visitPocketCodeClicked() {
-		openPlayStore("org.catrobat.catroid");
-	}
 }

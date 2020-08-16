@@ -213,8 +213,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			presenter.enterFullscreenClicked();
 		} else if (i == R.id.pocketpaint_options_rate_us) {
 			presenter.rateUsClicked();
-		} else if (i == R.id.pocketpaint_options_try_pocket_code) {
-			presenter.visitPocketCodeClicked();
 		} else if (i == R.id.pocketpaint_options_help) {
 			presenter.showHelpClicked();
 		} else if (i == R.id.pocketpaint_options_about) {
