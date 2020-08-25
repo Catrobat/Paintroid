@@ -1,11 +1,12 @@
 package org.catrobat.paintroid.contract;
 
 import android.graphics.Bitmap;
-import android.support.annotation.StringRes;
 import android.view.View;
 
 import java.util.List;
 import java.util.ListIterator;
+
+import androidx.annotation.StringRes;
 
 public interface LayerContracts {
 	interface Adapter {

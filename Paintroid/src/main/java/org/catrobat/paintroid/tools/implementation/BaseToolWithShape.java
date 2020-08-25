@@ -24,7 +24,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.R;
@@ -33,6 +32,8 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.VisibleForTesting;
 
 public abstract class BaseToolWithShape extends BaseTool {
 

@@ -21,7 +21,6 @@ package org.catrobat.paintroid.test.junit.algorithm;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithm;
 import org.catrobat.paintroid.tools.implementation.FillTool;
@@ -29,6 +28,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Queue;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

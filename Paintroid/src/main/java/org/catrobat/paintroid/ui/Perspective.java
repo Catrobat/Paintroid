@@ -22,7 +22,8 @@ package org.catrobat.paintroid.ui;
 import android.graphics.Canvas;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.support.annotation.VisibleForTesting;
+
+import androidx.annotation.VisibleForTesting;
 
 public class Perspective {
 	public static final float MIN_SCALE = 0.1f;

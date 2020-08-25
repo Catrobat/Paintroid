@@ -19,11 +19,12 @@
 
 package org.catrobat.paintroid.intro;
 
-import android.support.annotation.VisibleForTesting;
-import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.VisibleForTesting;
+import androidx.viewpager.widget.PagerAdapter;
 
 public class IntroPageViewAdapter extends PagerAdapter {
 	@VisibleForTesting

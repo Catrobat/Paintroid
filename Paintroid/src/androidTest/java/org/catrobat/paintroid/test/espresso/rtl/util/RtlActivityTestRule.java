@@ -21,12 +21,13 @@ package org.catrobat.paintroid.test.espresso.rtl.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.test.espresso.util.LanguageSupport;
 
 import java.util.Locale;
+
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 public class RtlActivityTestRule<T extends Activity> extends ActivityTestRule<T> {
 	private final String language;
@@ -41,7 +42,7 @@ public class RtlActivityTestRule<T extends Activity> extends ActivityTestRule<T>
 		super.beforeActivityLaunched();
 
 		Locale locale = new Locale(language);
-		Context targetContext = InstrumentationRegistry.getTargetContext();
+		Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 		LanguageSupport.setLocale(targetContext, locale);
 	}
 
@@ -49,7 +50,7 @@ public class RtlActivityTestRule<T extends Activity> extends ActivityTestRule<T>
 	protected void afterActivityFinished() {
 		super.afterActivityFinished();
 
-		Context targetContext = InstrumentationRegistry.getTargetContext();
+		Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 		LanguageSupport.setLocale(targetContext, new Locale("en"));
 	}
 }
