@@ -212,7 +212,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		} else if (i == R.id.pocketpaint_options_discard_image) {
 			presenter.discardImageClicked();
 		} else if (i == R.id.pocketpaint_options_fullscreen_mode) {
-			presenter.enterFullscreenClicked();
+			presenter.FullScreenPermissionClicked();
+			//presenter.enterFullscreenClicked();
 		} else if (i == R.id.pocketpaint_options_rate_us) {
 			presenter.rateUsClicked();
 		} else if (i == R.id.pocketpaint_options_help) {
@@ -512,6 +513,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@Override
 	public void enterFullscreen() {
 		drawingSurface.disableAutoScroll();
+
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 	}

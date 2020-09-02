@@ -43,6 +43,7 @@ import org.catrobat.paintroid.common.MainActivityConstants.CreateFileRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.PermissionRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.SaveImageRequestCode;
+import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.contract.MainActivityContracts.BottomBarViewHolder;
 import org.catrobat.paintroid.contract.MainActivityContracts.BottomNavigationViewHolder;
 import org.catrobat.paintroid.contract.MainActivityContracts.DrawerLayoutViewHolder;
@@ -237,6 +238,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void showFeedbackDialog() {
 		navigator.showFeedbackDialog();
+	}
+
+	@Override
+	public void showFullScreenPermissionDialog() {
+		navigator.showFullScreenPermissionDialog();
 	}
 
 	@Override
@@ -691,5 +697,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void rateUsClicked() {
 		navigator.rateUsClicked();
+	}
+
+	@Override
+	public void FullScreenPermissionClicked() {
+		navigator.FullScreenPermissionClicked();
 	}
 }

@@ -56,6 +56,8 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
+		void showFullScreenPermissionDialog();
+
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
 
 		void showIndeterminateProgressDialog();
@@ -99,6 +101,8 @@ public interface MainActivityContracts {
 		void broadcastAddPictureToGallery(Uri uri);
 
 		void rateUsClicked();
+
+		void FullScreenPermissionClicked();
 	}
 
 	interface MainView {
@@ -163,6 +167,8 @@ public interface MainActivityContracts {
 
 		void showRateUsDialog();
 
+		void showFullScreenPermissionDialog();
+
 		void showFeedbackDialog();
 
 		void onNewImage();
@@ -206,6 +212,8 @@ public interface MainActivityContracts {
 		void actionCurrentToolClicked();
 
 		void rateUsClicked();
+
+		void FullScreenPermissionClicked();
 	}
 
 	interface Model {

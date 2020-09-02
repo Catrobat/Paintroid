@@ -36,6 +36,7 @@ import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
 import org.catrobat.paintroid.dialog.FeedbackDialog;
+import org.catrobat.paintroid.dialog.FullScreenPermissionDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.LikeUsDialog;
@@ -157,6 +158,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showFeedbackDialog() {
 		FeedbackDialog feedbackDialog = FeedbackDialog.newInstance();
 		feedbackDialog.show(mainActivity.getSupportFragmentManager(), Constants.FEEDBACK_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showFullScreenPermissionDialog() {
+		FullScreenPermissionDialog fullscreenPermission = FullScreenPermissionDialog.newInstance();
+		fullscreenPermission.show(mainActivity.getSupportFragmentManager(), Constants.FULLSCREEN_PERMISSION_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
@@ -294,5 +301,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void rateUsClicked() {
 		openPlayStore(mainActivity.getPackageName());
+	}
+
+	@Override
+	public void FullScreenPermissionClicked() {
+		FragmentManager manager = mainActivity.getSupportFragmentManager();
+		FullScreenPermissionDialog fullscreenPermission = FullScreenPermissionDialog.newInstance();
+		fullscreenPermission.show(manager, Constants.FULLSCREEN_PERMISSION_DIALOG_FRAGMENT_TAG);
 	}
 }
