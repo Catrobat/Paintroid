@@ -21,10 +21,11 @@ package org.catrobat.paintroid.tools.helper;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.support.annotation.VisibleForTesting;
 
 import java.util.LinkedList;
 import java.util.Queue;
+
+import androidx.annotation.VisibleForTesting;
 
 public class JavaFillAlgorithm implements FillAlgorithm {
 	private static final boolean UP = true;

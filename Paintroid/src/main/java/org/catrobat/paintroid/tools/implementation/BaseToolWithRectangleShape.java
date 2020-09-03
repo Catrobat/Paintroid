@@ -33,8 +33,6 @@ import android.graphics.Region.Op;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.ColorRes;
-import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.R;
@@ -44,6 +42,9 @@ import org.catrobat.paintroid.tools.ContextCallback.ScreenOrientation;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.VisibleForTesting;
 
 import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 

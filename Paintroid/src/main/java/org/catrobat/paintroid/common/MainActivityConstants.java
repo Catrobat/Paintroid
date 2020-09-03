@@ -19,10 +19,10 @@
 
 package org.catrobat.paintroid.common;
 
-import android.support.annotation.IntDef;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
 
 public final class MainActivityConstants {
 	public static final int SAVE_IMAGE_DEFAULT = 1;

@@ -23,7 +23,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import org.catrobat.paintroid.command.Command;
@@ -32,6 +31,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Random;
+
+import androidx.annotation.VisibleForTesting;
 
 public abstract class BaseCommand implements Command {
 	private static final String TAG = BaseCommand.class.getSimpleName();

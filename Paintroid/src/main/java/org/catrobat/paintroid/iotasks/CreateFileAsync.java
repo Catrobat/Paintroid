@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.iotasks;
 
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
@@ -28,6 +27,8 @@ import org.catrobat.paintroid.FileIO;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.Nullable;
 
 public class CreateFileAsync extends AsyncTask<Void, Void, File> {
 	private static final String TAG = CreateFileAsync.class.getSimpleName();

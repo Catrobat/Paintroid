@@ -25,7 +25,6 @@ import android.graphics.Paint.Cap;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -37,6 +36,8 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.PointScrollBehavior;
 import org.catrobat.paintroid.tools.common.ScrollBehavior;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.ColorInt;
 
 public abstract class BaseTool implements Tool {
 	protected final PointF movedDistance;

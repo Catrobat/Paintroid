@@ -22,10 +22,11 @@ package org.catrobat.paintroid.dialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 
 import org.catrobat.paintroid.R;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 public class SaveBeforeNewImageDialog extends MainActivityDialogFragment {
 	public static SaveBeforeNewImageDialog newInstance() {

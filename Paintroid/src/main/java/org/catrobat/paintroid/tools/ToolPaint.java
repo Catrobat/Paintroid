@@ -22,7 +22,8 @@ package org.catrobat.paintroid.tools;
 import android.graphics.Paint;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Shader;
-import android.support.annotation.ColorInt;
+
+import androidx.annotation.ColorInt;
 
 public interface ToolPaint {
 

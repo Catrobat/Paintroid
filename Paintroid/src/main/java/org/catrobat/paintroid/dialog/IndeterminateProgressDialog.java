@@ -21,9 +21,10 @@ package org.catrobat.paintroid.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
 
 import org.catrobat.paintroid.R;
+
+import androidx.appcompat.app.AlertDialog;
 
 public final class IndeterminateProgressDialog {
 	private IndeterminateProgressDialog() {

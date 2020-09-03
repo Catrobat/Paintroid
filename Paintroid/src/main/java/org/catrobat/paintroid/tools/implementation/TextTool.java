@@ -25,7 +25,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import org.catrobat.paintroid.R;
@@ -37,6 +36,8 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.TextToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.VisibleForTesting;
 
 public class TextTool extends BaseToolWithRectangleShape {
 

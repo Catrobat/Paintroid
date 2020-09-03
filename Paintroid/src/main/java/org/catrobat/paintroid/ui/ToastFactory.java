@@ -20,8 +20,9 @@
 package org.catrobat.paintroid.ui;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
 import android.widget.Toast;
+
+import androidx.annotation.StringRes;
 
 public final class ToastFactory {
 	private static Toast currentToast;

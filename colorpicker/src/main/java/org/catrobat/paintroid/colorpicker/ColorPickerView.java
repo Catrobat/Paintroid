@@ -23,8 +23,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -32,6 +30,9 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.LinearLayoutCompat;
 
 public class ColorPickerView extends LinearLayoutCompat {
 	private static final String RGB_TAG = "RGB";

@@ -20,13 +20,14 @@
 package org.catrobat.paintroid;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.ui.Perspective;
+
+import androidx.fragment.app.Fragment;
 
 public class PaintroidApplicationFragment extends Fragment {
 	private CommandManager commandManager;

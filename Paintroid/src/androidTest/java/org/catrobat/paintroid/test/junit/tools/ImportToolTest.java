@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.test.junit.tools;
 
 import android.graphics.Bitmap;
-import android.support.test.annotation.UiThreadTest;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.command.CommandManager;
@@ -34,6 +33,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import androidx.test.annotation.UiThreadTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;

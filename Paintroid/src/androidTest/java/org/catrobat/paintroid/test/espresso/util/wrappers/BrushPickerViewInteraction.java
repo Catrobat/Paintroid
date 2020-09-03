@@ -19,12 +19,12 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
-import android.support.test.espresso.ViewInteraction;
-
 import org.catrobat.paintroid.R;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import androidx.test.espresso.ViewInteraction;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public final class BrushPickerViewInteraction extends CustomViewInteraction {
 	private BrushPickerViewInteraction() {
