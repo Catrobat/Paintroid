@@ -302,11 +302,4 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void rateUsClicked() {
 		openPlayStore(mainActivity.getPackageName());
 	}
-
-	@Override
-	public void FullScreenPermissionClicked() {
-		FragmentManager manager = mainActivity.getSupportFragmentManager();
-		FullScreenPermissionDialog fullscreenPermission = FullScreenPermissionDialog.newInstance();
-		fullscreenPermission.show(manager, Constants.FULLSCREEN_PERMISSION_DIALOG_FRAGMENT_TAG);
-	}
 }

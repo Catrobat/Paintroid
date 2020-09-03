@@ -212,8 +212,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		} else if (i == R.id.pocketpaint_options_discard_image) {
 			presenter.discardImageClicked();
 		} else if (i == R.id.pocketpaint_options_fullscreen_mode) {
-			presenter.FullScreenPermissionClicked();
-			//presenter.enterFullscreenClicked();
+			presenter.showFullScreenPermissionClicked();
 		} else if (i == R.id.pocketpaint_options_rate_us) {
 			presenter.rateUsClicked();
 		} else if (i == R.id.pocketpaint_options_help) {

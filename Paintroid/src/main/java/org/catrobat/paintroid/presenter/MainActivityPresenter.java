@@ -241,7 +241,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void showFullScreenPermissionDialog() {
+	public void showFullScreenPermissionClicked() {
 		navigator.showFullScreenPermissionDialog();
 	}
 
@@ -697,10 +697,5 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void rateUsClicked() {
 		navigator.rateUsClicked();
-	}
-
-	@Override
-	public void FullScreenPermissionClicked() {
-		navigator.FullScreenPermissionClicked();
 	}
 }

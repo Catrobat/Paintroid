@@ -101,8 +101,6 @@ public interface MainActivityContracts {
 		void broadcastAddPictureToGallery(Uri uri);
 
 		void rateUsClicked();
-
-		void FullScreenPermissionClicked();
 	}
 
 	interface MainView {
@@ -167,7 +165,7 @@ public interface MainActivityContracts {
 
 		void showRateUsDialog();
 
-		void showFullScreenPermissionDialog();
+		void showFullScreenPermissionClicked();
 
 		void showFeedbackDialog();
 
@@ -212,8 +210,6 @@ public interface MainActivityContracts {
 		void actionCurrentToolClicked();
 
 		void rateUsClicked();
-
-		void FullScreenPermissionClicked();
 	}
 
 	interface Model {
