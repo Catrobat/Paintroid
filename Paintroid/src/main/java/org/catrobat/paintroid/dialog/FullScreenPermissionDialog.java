@@ -23,7 +23,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -35,32 +34,27 @@ public class FullScreenPermissionDialog extends MainActivityDialogFragment {
         return new FullScreenPermissionDialog();
     }
 
-    @NonNull
     @Override
     @SuppressLint("InflateParams")
     public Dialog onCreateDialog(Bundle savedInsance) {
-        @SuppressLint("InflateParams") View view = LayoutInflater.from(getActivity())
-                .inflate(R.layout.dialog_pocketpaint_fullscreen_permission, null);
-
-        DialogInterface.OnClickListener listener_accept = new DialogInterface.OnClickListener() {
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                getPresenter().enterFullscreenClicked();
-                dismiss();
-            }
-        };
-
-        DialogInterface.OnClickListener listerner_decline = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int which) {
-                dismiss();
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getPresenter().enterFullscreenClicked();
+                        dismiss();
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dismiss();
+                }
             }
         };
 
         return new AlertDialog.Builder(getActivity())
-                .setView(view)
-                .setPositiveButton(R.string.pocketpaint_accept, listener_accept)
-                .setNegativeButton(R.string.pocketpaint_decline, listerner_decline)
+                .setTitle(R.string.pocketpaint_permission_title)
+                .setMessage(R.string.permission_info_full_screen_text)
+                .setPositiveButton(R.string.pocketpaint_accept, listener)
+                .setNegativeButton(R.string.pocketpaint_decline, listener)
                 .create();
     }
 }
