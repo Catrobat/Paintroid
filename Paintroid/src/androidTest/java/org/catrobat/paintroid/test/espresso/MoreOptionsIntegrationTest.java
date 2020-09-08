@@ -20,7 +20,10 @@
 package org.catrobat.paintroid.test.espresso;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Context;
+import android.content.Intent;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
@@ -31,6 +34,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.intent.Intents;
+import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -97,6 +102,7 @@ public class MoreOptionsIntegrationTest {
 				.checkItemExists(R.string.menu_save_image)
 				.checkItemExists(R.string.menu_save_copy)
 				.checkItemExists(R.string.menu_new_image)
+				.checkItemExists(R.string.menu_feedback)
 
 				.checkItemDoesNotExist(R.string.menu_discard_image)
 				.checkItemDoesNotExist(R.string.menu_export);
@@ -125,6 +131,19 @@ public class MoreOptionsIntegrationTest {
 	@Test
 	public void testMoreOptionsItemMenuCopyClick() {
 		onView(withText(R.string.menu_save_copy)).perform(click());
+	}
+	@Test
+	public void testMoreOptionsFeedbackClick() {
+		Intent intent = new Intent();
+		Intents.init();
+		Instrumentation.ActivityResult intentResult = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+
+		Intents.intending(IntentMatchers.anyIntent()).respondWith(intentResult);
+
+		onView(withText(R.string.menu_feedback)).perform(click());
+
+		Intents.intended(IntentMatchers.hasAction(Intent.ACTION_SENDTO));
+		Intents.release();
 	}
 
 	@Test
