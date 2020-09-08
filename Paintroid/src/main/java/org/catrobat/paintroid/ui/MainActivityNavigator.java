@@ -22,11 +22,13 @@ package org.catrobat.paintroid.ui;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
@@ -133,6 +135,20 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Intent intent = new Intent(mainActivity.getApplicationContext(), WelcomeActivity.class);
 		intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		mainActivity.startActivityForResult(intent, requestCode);
+	}
+
+	@Override
+	public void startShareImageActivity(Bitmap bitmap) {
+		Uri uri = FileIO.saveBitmapToCache(bitmap, mainActivity);
+		if (uri != null) {
+			Intent shareIntent = new Intent();
+			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+			shareIntent.setDataAndType(uri, mainActivity.getContentResolver().getType(uri));
+			shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			shareIntent.setAction(Intent.ACTION_SEND);
+			String chooserTitle = mainActivity.getResources().getString(R.string.share_image_via_text);
+			mainActivity.startActivity(Intent.createChooser(shareIntent, chooserTitle));
+		}
 	}
 
 	@Override

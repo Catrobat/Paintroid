@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import org.catrobat.paintroid.common.Constants;
 
@@ -42,6 +43,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 
 public final class FileIO {
 	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_MM_dd_hhmmss";
@@ -109,6 +111,24 @@ public final class FileIO {
 		}
 
 		return imageUri;
+	}
+
+	public static Uri saveBitmapToCache(Bitmap bitmap, MainActivity mainActivity) {
+		Uri uri = null;
+		try {
+			File cachePath = new File(mainActivity.getCacheDir(), "images");
+			cachePath.mkdirs();
+			FileOutputStream stream = new FileOutputStream(cachePath + "/image.png");
+			saveBitmapToStream(stream, bitmap);
+			stream.close();
+			File imagePath = new File(mainActivity.getCacheDir(), "images");
+			File newFile = new File(imagePath, "image.png");
+			String fileProviderString = mainActivity.getApplicationContext().getPackageName() + ".fileprovider";
+			uri = FileProvider.getUriForFile(mainActivity.getApplicationContext(), fileProviderString, newFile);
+		} catch (IOException e) {
+			Log.e("Can not write", "Can not write png to stream.", e);
+		}
+		return uri;
 	}
 
 	public static String getDefaultFileName() {

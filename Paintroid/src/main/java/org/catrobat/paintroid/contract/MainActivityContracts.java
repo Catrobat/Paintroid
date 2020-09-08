@@ -60,6 +60,8 @@ public interface MainActivityContracts {
 
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
 
+		void startShareImageActivity(Bitmap bitmap);
+
 		void showIndeterminateProgressDialog();
 
 		void dismissIndeterminateProgressDialog();
@@ -154,6 +156,8 @@ public interface MainActivityContracts {
 		void saveCopyClicked();
 
 		void saveImageClicked();
+
+		void shareImageClicked();
 
 		void enterFullscreenClicked();
 
