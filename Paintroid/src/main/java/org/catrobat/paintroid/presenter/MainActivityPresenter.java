@@ -192,6 +192,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		showLikeUsDialogIfFirstTimeSave();
 	}
 
+	@Override
+	public void shareImageClicked() {
+		Bitmap bitmap = workspace.getBitmapOfAllLayers();
+		navigator.startShareImageActivity(bitmap);
+	}
+
 	private void showLikeUsDialogIfFirstTimeSave() {
 		boolean dialogHasBeenShown = sharedPreferences.getBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, false);
 

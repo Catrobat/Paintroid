@@ -22,11 +22,13 @@ package org.catrobat.paintroid.ui;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
@@ -48,6 +50,7 @@ import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.tools.ToolReference;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.app.ActivityCompat;
@@ -133,6 +136,20 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Intent intent = new Intent(mainActivity.getApplicationContext(), WelcomeActivity.class);
 		intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		mainActivity.startActivityForResult(intent, requestCode);
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.Q)
+	@Override
+	public void startShareImageActivity(Bitmap bitmap) {
+		Uri uri = FileIO.saveBitmapToCache(bitmap, mainActivity);
+		if (uri != null) {
+			Intent shareIntent = new Intent();
+			shareIntent.setAction(Intent.ACTION_SEND);
+			shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			shareIntent.setDataAndType(uri, mainActivity.getContentResolver().getType(uri));
+			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+			mainActivity.startActivity(Intent.createChooser(shareIntent, "Send image via"));
+		}
 	}
 
 	@Override

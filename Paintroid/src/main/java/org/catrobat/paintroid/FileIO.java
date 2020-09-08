@@ -23,6 +23,8 @@ import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
+import android.util.Log;
 
 import org.catrobat.paintroid.common.Constants;
 
@@ -36,6 +38,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
 
 public final class FileIO {
 	private static final String DEFAULT_FILENAME_TIME_FORMAT = "yyyy_MM_dd_hhmmss";
@@ -51,7 +55,6 @@ public final class FileIO {
 		if (bitmap == null || bitmap.isRecycled()) {
 			throw new IllegalArgumentException("Bitmap is invalid");
 		}
-
 		if (!bitmap.compress(COMPRESS_FORMAT, COMPRESS_QUALITY, outputStream)) {
 			throw new IOException("Can not write png to stream.");
 		}
@@ -83,6 +86,24 @@ public final class FileIO {
 			outputStream.close();
 		}
 		return Uri.fromFile(file);
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.Q)
+	public static Uri saveBitmapToCache(Bitmap bitmap, MainActivity mainActivity) {
+		Uri uri = null;
+		try {
+			File cachePath = new File(mainActivity.getCacheDir(), "images");
+			cachePath.mkdirs();
+			FileOutputStream stream = new FileOutputStream(cachePath + "/image.png");
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			stream.close();
+			File imagePath = new File(mainActivity.getCacheDir(), "images");
+			File newFile = new File(imagePath, "image.png");
+			uri = FileProvider.getUriForFile(mainActivity, "$(applicationId).org.catrobat.paintroid", newFile);
+		} catch (IOException e) {
+			Log.e("Can not write", "Can not write png to stream.", e);
+		}
+		return uri;
 	}
 
 	public static String getDefaultFileName() {
