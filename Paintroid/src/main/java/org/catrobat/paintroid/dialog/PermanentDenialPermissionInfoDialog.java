@@ -37,14 +37,16 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 public class PermanentDenialPermissionInfoDialog extends AppCompatDialogFragment {
 
 	private String context;
+	private static int message;
 
-	public static PermanentDenialPermissionInfoDialog newInstance(String context) {
+	public static PermanentDenialPermissionInfoDialog newInstance(String context, int messageId) {
 
 		PermanentDenialPermissionInfoDialog permissionInfoDialog = new PermanentDenialPermissionInfoDialog();
 		Bundle bundle = new Bundle();
 		bundle.putString("context", context);
 		permissionInfoDialog.setArguments(bundle);
 		Log.d("context:", context);
+		message = messageId;
 		return permissionInfoDialog;
 	}
 
@@ -59,7 +61,7 @@ public class PermanentDenialPermissionInfoDialog extends AppCompatDialogFragment
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		return new AlertDialog.Builder(getContext(), R.style.PocketPaintAlertDialog)
-				.setMessage(R.string.permission_info_permanent_denial_text)
+				.setMessage(message)
 				.setPositiveButton(R.string.dialog_settings, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {

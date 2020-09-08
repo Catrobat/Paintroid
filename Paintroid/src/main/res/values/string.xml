@@ -133,7 +133,8 @@
     <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
     <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
         As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
-
+    <string name="permission_info_full_screen_text" translatable="false">Please give permission to the app to use the full screen of your device to be able to use the full screen mode.</string>
+    <string name="permission_info_full_screen_denial_text" translatable="false">This app needs the requested permission to be able to use the full screen mode. As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
 
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
@@ -173,13 +174,7 @@
     <string name="pocketpaint_no">No</string>
     <string name="pocketpaint_ok"  translatable="false">@android:string/ok</string>
     <string name="pocketpaint_not_now">Not now</string>
-    <string name="pocketpaint_accept" translatable="false">Accept</string>
-    <string name="pocketpaint_decline" translatable="false">Decline</string>
     <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
-    <string name="pocketpaint_permission_title" translatable="false">Permission</string>
-
-    <string name="permission_info_full_screen_text" translatable="false">Please give permission to the app to use the full screen of your device to be able to use the full screen mode.</string>
-    <string name="permission_info_full_screen_denial_text" translatable="false">This app needs the requested permission to be able to use the full screen mode. As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
 
     <string name="bottom_navigation_tools">Tools</string>
     <string name="bottom_navigation_current">Current</string>

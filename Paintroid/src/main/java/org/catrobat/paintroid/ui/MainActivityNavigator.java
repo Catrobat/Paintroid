@@ -36,7 +36,6 @@ import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
 import org.catrobat.paintroid.dialog.FeedbackDialog;
-import org.catrobat.paintroid.dialog.FullScreenPermissionDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.LikeUsDialog;
@@ -161,12 +160,6 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void showFullScreenPermissionDialog() {
-		FullScreenPermissionDialog fullscreenPermission = FullScreenPermissionDialog.newInstance();
-		fullscreenPermission.show(mainActivity.getSupportFragmentManager(), Constants.FULLSCREEN_PERMISSION_DIALOG_FRAGMENT_TAG);
-	}
-
-	@Override
 	public void showIndeterminateProgressDialog() {
 		if (progressDialog == null) {
 			progressDialog = IndeterminateProgressDialog.newInstance(mainActivity);
@@ -216,8 +209,20 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
+	public void showFullScreenPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode) {
+		AppCompatDialogFragment dialog = PermissionInfoDialog.newInstance(permissionType, permissions, requestCode);
+		showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
 	public void showRequestPermanentlyDeniedPermissionRationaleDialog() {
-		AppCompatDialogFragment dialog = PermanentDenialPermissionInfoDialog.newInstance(mainActivity.getName());
+		AppCompatDialogFragment dialog = PermanentDenialPermissionInfoDialog.newInstance(mainActivity.getName(), R.string.permission_info_permanent_denial_text);
+		showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showFullScreenPermissionPermanentlyDeniedRationaleDialog() {
+		AppCompatDialogFragment dialog = PermanentDenialPermissionInfoDialog.newInstance(mainActivity.getName(), R.string.permission_info_full_screen_denial_text);
 		showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
 	}
 

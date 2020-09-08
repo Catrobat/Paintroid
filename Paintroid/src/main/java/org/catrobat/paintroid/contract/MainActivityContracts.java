@@ -56,8 +56,6 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
-		void showFullScreenPermissionDialog();
-
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
 
 		void showIndeterminateProgressDialog();
@@ -75,6 +73,10 @@ public interface MainActivityContracts {
 		void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode);
 
 		void showRequestPermanentlyDeniedPermissionRationaleDialog();
+
+		void showFullScreenPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode);
+
+		void showFullScreenPermissionPermanentlyDeniedRationaleDialog();
 
 		void askForPermission(String[] permissions, int requestCode);
 
@@ -165,7 +167,7 @@ public interface MainActivityContracts {
 
 		void showRateUsDialog();
 
-		void showFullScreenPermissionClicked();
+		void showFullScreenClicked();
 
 		void showFeedbackDialog();
 

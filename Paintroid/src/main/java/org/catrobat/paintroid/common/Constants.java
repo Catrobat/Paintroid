@@ -35,7 +35,6 @@ public final class Constants {
 	public static final String LIKE_US_DIALOG_FRAGMENT_TAG = "likeusdialogfragment";
 	public static final String RATE_US_DIALOG_FRAGMENT_TAG = "rateusdialogfragment";
 	public static final String FEEDBACK_DIALOG_FRAGMENT_TAG = "feedbackdialogfragment";
-	public static final String FULLSCREEN_PERMISSION_DIALOG_FRAGMENT_TAG = "fullscreeenpermissionfragment";
 	public static final String SAVE_DIALOG_FRAGMENT_TAG = "savedialogerror";
 	public static final String LOAD_DIALOG_FRAGMENT_TAG = "loadbitmapdialogerror";
 	public static final String COLOR_PICKER_DIALOG_TAG = "ColorPickerDialogTag";

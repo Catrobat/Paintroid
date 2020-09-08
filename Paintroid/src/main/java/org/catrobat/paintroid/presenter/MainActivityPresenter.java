@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -66,6 +67,7 @@ import java.io.File;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.view.GravityCompat;
 
 import static org.catrobat.paintroid.common.Constants.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG;
@@ -78,6 +80,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXT
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_FULL_SCREEN_INTENT_CONFIRMED;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
@@ -193,6 +196,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		showLikeUsDialogIfFirstTimeSave();
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.Q)
+	@Override
+	public void showFullScreenClicked() {
+		askForFullScreenPermission(PERMISSION_FULL_SCREEN_INTENT_CONFIRMED);
+	}
+
 	private void showLikeUsDialogIfFirstTimeSave() {
 		boolean dialogHasBeenShown = sharedPreferences.getBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, false);
 
@@ -241,11 +250,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void showFullScreenPermissionClicked() {
-		navigator.showFullScreenPermissionDialog();
-	}
-
-	@Override
 	public void onNewImage() {
 		DisplayMetrics metrics = view.getDisplayMetrics();
 		resetPerspectiveAfterNextCommand = true;
@@ -273,6 +277,24 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		} else {
 			handleRequestPermissionsResult(requestCode,
 					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+					new int[]{PackageManager.PERMISSION_GRANTED});
+		}
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.Q)
+	private void askForFullScreenPermission(@PermissionRequestCode int requestCode) {
+		if (model.isOpenedFromCatroid() && requestCode == PERMISSION_FULL_SCREEN_INTENT_CONFIRMED) {
+			handleRequestPermissionsResult(requestCode,
+					new String[]{Manifest.permission.USE_FULL_SCREEN_INTENT},
+					new int[]{PackageManager.PERMISSION_GRANTED});
+			return;
+		}
+
+		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.USE_FULL_SCREEN_INTENT)) {
+			navigator.askForPermission(new String[]{Manifest.permission.USE_FULL_SCREEN_INTENT}, requestCode);
+		} else {
+			handleRequestPermissionsResult(requestCode,
+					new String[]{Manifest.permission.USE_FULL_SCREEN_INTENT},
 					new int[]{PackageManager.PERMISSION_GRANTED});
 		}
 	}
@@ -310,7 +332,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void handleRequestPermissionsResult(@PermissionRequestCode int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		if (permissions.length == 1 && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+		if (permissions.length == 1 && (permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) || permissions[0].equals(Manifest.permission.USE_FULL_SCREEN_INTENT))) {
 			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				Bitmap bitmap;
 				switch (requestCode) {
@@ -331,16 +353,29 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
 						saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, model.getSavedPictureUri());
 						break;
+					case PERMISSION_FULL_SCREEN_INTENT_CONFIRMED:
+						enterFullscreenClicked();
+						break;
 					default:
 						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
 						break;
 				}
 			} else {
-				if (navigator.isPermissionPermanentlyDenied(permissions)) {
-					navigator.showRequestPermanentlyDeniedPermissionRationaleDialog();
-				} else {
-					navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-							permissions, requestCode);
+				if(requestCode == PERMISSION_FULL_SCREEN_INTENT_CONFIRMED) {
+					if (navigator.isPermissionPermanentlyDenied(permissions)) {
+						navigator.showFullScreenPermissionPermanentlyDeniedRationaleDialog();
+					} else {
+						navigator.showFullScreenPermissionRationaleDialog(PermissionInfoDialog.PermissionType.FULL_SCREEN,
+								permissions, requestCode);
+					}
+				}
+				else {
+					if (navigator.isPermissionPermanentlyDenied(permissions)) {
+						navigator.showRequestPermanentlyDeniedPermissionRationaleDialog();
+					} else {
+						navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+								permissions, requestCode);
+					}
 				}
 			}
 		} else {

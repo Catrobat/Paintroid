@@ -81,7 +81,9 @@ public class PermissionInfoDialog extends AppCompatDialogFragment {
 
 	public enum PermissionType {
 		EXTERNAL_STORAGE(R.drawable.ic_pocketpaint_dialog_info,
-				R.string.permission_info_external_storage_text);
+				R.string.permission_info_external_storage_text),
+		FULL_SCREEN(R.drawable.ic_pocketpaint_dialog_info,
+				R.string.permission_info_full_screen_text);
 
 		private int iconResource;
 		private int messageResource;
