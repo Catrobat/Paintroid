@@ -256,6 +256,14 @@ public class TransformToolIntegrationTest {
 	}
 
 	@Test
+	public void testAutoTextIsShown() {
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.checkAutoDisplayed();
+	}
+
+	@Test
 	public void testWhenNoPixelIsOnBitmap() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
