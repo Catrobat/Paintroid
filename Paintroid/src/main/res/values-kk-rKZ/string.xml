@@ -69,7 +69,8 @@
     <string name="menu_save_image">Save image</string>
     <string name="menu_save_copy">Save copy</string>
     <string name="menu_hide_menu">Fullscreen</string>
-    <string name="menu_rate_us">Rate us!</string>
+    <string name="menu_rate_us">Бізді бағалаңыз!</string>
+    <string name="menu_try_pocket_code">Try Pocket Code!</string>
     <string name="menu_export">Export</string>
     <string name="saved">Image saved</string>
     <string name="copy">Copy saved</string>
@@ -131,7 +132,7 @@
     <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
     <string name="intro_get_started">Get started and create a new masterpiece.</string>
     <string name="lets_go">Let\'s go</string>
-    <string name="next">Next</string>
+    <string name="next">Келесі</string>
     <string name="skip">Skip</string>
     <string name="pocketpaint_about_title">About</string>
     <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>

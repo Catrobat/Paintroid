@@ -70,6 +70,7 @@
     <string name="menu_save_copy">Zapisz kopię</string>
     <string name="menu_hide_menu">Cały ekran</string>
     <string name="menu_rate_us">Oceń nas!</string>
+    <string name="menu_try_pocket_code">Wypróbuj Pocket Code! </string>
     <string name="menu_export">Eksportuj</string>
     <string name="saved">Obraz zapisany</string>
     <string name="copy">Kopia zapisana</string>
@@ -111,7 +112,7 @@
     <string name="layer_background">Warstwa tła</string>
     <string name="dialog_shape_text">Kształt</string>
     <string name="dialog_loading_image_failed_title">Błąd ładowania obrazu</string>
-    <string name="dialog_loading_image_failed_text">Not a valid image</string>
+    <string name="dialog_loading_image_failed_text">Brak zdjęcia</string>
     <string name="dialog_settings">Ustawienia</string>
     <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
     <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
@@ -130,7 +131,7 @@
     <string name="intro_landscape_text">Pocket Paint umożliwia również rysowanie w trybie poziomym, aby zapewnić największą wygodę malowania.</string>
     <string name="enjoy_pocket_paint">Wszystko ustawione. Ciesz się Pocket Paint.</string>
     <string name="intro_get_started">Rozpocznij i stwórz nowe arcydzieło.</string>
-    <string name="lets_go">Let\'s go</string>
+    <string name="lets_go">Zaczynajmy!</string>
     <string name="next">Dalej</string>
     <string name="skip">Pomiń</string>
     <string name="pocketpaint_about_title">O programie</string>
@@ -139,8 +140,8 @@
     <string name="pocketpaint_about_url_catrobat_description">O Catrobat</string>
     <string name="pocketpaint_intro">Wstęp</string>
     <string name="pocketpaint_intro_split_screen_not_supported">Intro nie obsługuje dzielonego ekranu</string>
-    <string name="pocketpaint_like_us">Do you like Pocket Paint?</string>
-    <string name="pocketpaint_rate_us">Would you like to rate Pocket Paint?</string>
+    <string name="pocketpaint_like_us">Lubisz Kieszonkowe Malowanie? </string>
+    <string name="pocketpaint_rate_us">Czy chcesz ocenić Kieszonkowe Malowanie? </string>
     <string name="pocketpaint_feedback">We are sorry to hear that. If you want to share your experience with us, please write to contact@catrobat.org</string>
     <string name="pocketpaint_yes">Tak</string>
     <string name="pocketpaint_no">Nie</string>

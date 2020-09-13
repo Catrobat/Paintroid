@@ -70,6 +70,7 @@
     <string name="menu_save_copy">복사본 저장</string>
     <string name="menu_hide_menu">전체 화면</string>
     <string name="menu_rate_us">평가하기</string>
+    <string name="menu_try_pocket_code">Try Pocket Code!</string>
     <string name="menu_export">내보내기</string>
     <string name="saved">이미지가 저장되었습니다</string>
     <string name="copy">복사본이 저장되었습니다</string>

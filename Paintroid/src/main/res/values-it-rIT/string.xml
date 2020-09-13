@@ -70,6 +70,7 @@
     <string name="menu_save_copy">Salva copia</string>
     <string name="menu_hide_menu">Schermo intero</string>
     <string name="menu_rate_us">Valutaci!</string>
+    <string name="menu_try_pocket_code">Prova Pocket Code!</string>
     <string name="menu_export">Esporta</string>
     <string name="saved">Immagine salvata</string>
     <string name="copy">Copia salvata</string>
@@ -111,11 +112,11 @@
     <string name="layer_background">Sfondo del livello</string>
     <string name="dialog_shape_text">Forma</string>
     <string name="dialog_loading_image_failed_title">Errore durante il caricamento dell\'immagine</string>
-    <string name="dialog_loading_image_failed_text">Not a valid image</string>
+    <string name="dialog_loading_image_failed_text">Imagine non valida</string>
     <string name="dialog_settings">Impostazioni</string>
-    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
-    <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
-        As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
+    <string name="permission_info_external_storage_text">Questa app necessita delle autorizzazioni richieste per funzionare al meglio. Per poter salvare le immagini nella memoria locale, ha bisogno dei diritti di lettura e di scrittura.</string>
+    <string name="permission_info_permanent_denial_text">Questa app necessita delle autorizzazioni richieste per funzionare al meglio. Per poter salvare le immagini nella memoria locale, ha bisogno dei diritti di lettura e di scrittura.
+   Siccome hai negato il permesso senza possibilità di richiederlo nuovamente, vai sulle impostazioni del telefono per dare i permessi richiesti e usare le funzionalità associate.</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Apri il menù di navigazione</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Chiudi il menù di navigazione</string>
     <string name="transform_info_text">Trascina i bordi nella nuova posizione, quindi tocca per ingrandire o ritagliare l\'area dell\'immagine.</string>
@@ -125,35 +126,35 @@
     <string name="intro_welcome_text">Con Pocket Paint non ci sono limiti alla tua creatività. Se sei nuovo guarda l\'intro; saltala se hai già familiarità con il programma.</string>
     <string name="intro_tool_more_information">Fai clic su uno strumento per ottenere ulteriori informazioni</string>
     <string name="more_possibilities">Ulteriori possibilità</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
+    <string name="intro_possibilities_text">Usa la barra superiore per aprire il menu principale e per annullare o ripetere le modifiche</string>
     <string name="landscape">Orizzontale</string>
     <string name="intro_landscape_text">Pocket Paint supporta il disegno in modalità orizzontale per una migliore esperienza di disegno.</string>
     <string name="enjoy_pocket_paint">Sei pronto. Divertiti con Pocket Paint.</string>
     <string name="intro_get_started">Inizia e crea un nuovo capolavoro.</string>
-    <string name="lets_go">Let\'s go</string>
+    <string name="lets_go">Procedi</string>
     <string name="next">Avanti</string>
     <string name="skip">Ignora</string>
     <string name="pocketpaint_about_title">Informazioni</string>
-    <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
+    <string name="pocketpaint_about_content">Pocket Paint è un editor di immagini che fa parte del progetto Catrobat.\n\nCatrobat è un linguaggio di programmazione visuale e un insieme di strumenti per la creatività utilizzabili da smartphone.\n\nIl codice sorgente di Pocket Paint è rilasciato principalmente sotto la licenza %s.\nPer i dettagli della licenza seguire il link sotto-riportato.</string>
     <string name="pocketpaint_about_url_license_description">Licenza per il codice sorgente di Pocket Paint</string>
     <string name="pocketpaint_about_url_catrobat_description">Su Catrobat</string>
     <string name="pocketpaint_intro">Introduzione</string>
     <string name="pocketpaint_intro_split_screen_not_supported">L\'introduzione non supporta la schermata di divisione</string>
-    <string name="pocketpaint_like_us">Do you like Pocket Paint?</string>
-    <string name="pocketpaint_rate_us">Would you like to rate Pocket Paint?</string>
-    <string name="pocketpaint_feedback">We are sorry to hear that. If you want to share your experience with us, please write to contact@catrobat.org</string>
+    <string name="pocketpaint_like_us">Ti piace Pocket Paint?</string>
+    <string name="pocketpaint_rate_us">Vorresti valutare Pocket Paint?</string>
+    <string name="pocketpaint_feedback">Ci dispiace sentirlo. Se vuoi condividere la tua esperienza con noi, per cortesia scrivi a contact@catrobat.org</string>
     <string name="pocketpaint_yes">Si</string>
     <string name="pocketpaint_no">No</string>
-    <string name="pocketpaint_not_now">Not now</string>
-    <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
+    <string name="pocketpaint_not_now">Non ora</string>
+    <string name="pocketpaint_rate_us_title">Valuta Pocket Paint</string>
     <string name="bottom_navigation_tools">Strumenti</string>
-    <string name="bottom_navigation_current">Current</string>
-    <string name="bottom_navigation_color">Color</string>
+    <string name="bottom_navigation_current">Attuale</string>
+    <string name="bottom_navigation_color">Colore</string>
     <string name="bottom_navigation_layers">Livelli</string>
-    <string name="bottom_navigation_item">Item for bottom navigation</string>
-    <string name="intro_bottom_navigation_tools_description">Switch to the tool you want to use.</string>
-    <string name="intro_bottom_navigation_current_description">Shows the currently used tool and opens its options.</string>
-    <string name="intro_bottom_navigation_color_description">Shows the currently used color and opens the color picker.</string>
-    <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
-    <string name="pocketpaint_tool_icon_description">Current tool icon</string>
+    <string name="bottom_navigation_item">Elemento per navigazione</string>
+    <string name="intro_bottom_navigation_tools_description">Passa allo strumento che vuoi usare.</string>
+    <string name="intro_bottom_navigation_current_description">Mostra lo strumento in uso e apre le sue opzioni.</string>
+    <string name="intro_bottom_navigation_color_description">Mostra il colore in uso e il selettore dei colori.</string>
+    <string name="intro_bottom_navigation_layers_description">Apre il menu dei livelli e permette la loro gestione.</string>
+    <string name="pocketpaint_tool_icon_description">Icona strumento corrente</string>
 </resources>

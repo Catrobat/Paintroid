@@ -70,6 +70,7 @@
     <string name="menu_save_copy">コピーを保存</string>
     <string name="menu_hide_menu">全画面表示</string>
     <string name="menu_rate_us">アプリを評価して！</string>
+    <string name="menu_try_pocket_code">Try Pocket Code!</string>
     <string name="menu_export">エクスポート</string>
     <string name="saved">画像を保存しました。</string>
     <string name="copy">コピーが保存されました。</string>
