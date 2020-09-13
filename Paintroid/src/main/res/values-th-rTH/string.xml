@@ -70,6 +70,7 @@
     <string name="menu_save_copy">บันทึกสำเนา</string>
     <string name="menu_hide_menu">เต็มจอ</string>
     <string name="menu_rate_us">ให้คะแนนเรา</string>
+    <string name="menu_try_pocket_code">ทดสอบ Pocket Code!</string>
     <string name="menu_export">ส่งออก</string>
     <string name="saved">บันทึกภาพแล้ว</string>
     <string name="copy">บันทึกสำเนาแล้ว</string>
@@ -84,7 +85,7 @@
     <string name="text_tool_dialog_underline_shortcut">U</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
-    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
+    <string name="text_tool_dialog_strike_through_shortcut">a b c</string>
     <string name="text_tool_dialog_input_hint">แตะที่นี่เพื่อเขียน</string>
     <string name="shape_tool_dialog_rect_title">สี่เหลี่ยมผืนผ้า</string>
     <string name="shape_tool_dialog_ellipse_title">รูปวงรี</string>
@@ -111,11 +112,11 @@
     <string name="layer_background">เลเยอร์พื้นกลัง</string>
     <string name="dialog_shape_text">รูปร่าง</string>
     <string name="dialog_loading_image_failed_title">ข้อผิดพลาดในการโหลดภาพ</string>
-    <string name="dialog_loading_image_failed_text">Not a valid image</string>
+    <string name="dialog_loading_image_failed_text">ไม่ใช่รูปภาพที่ถูกต้อง</string>
     <string name="dialog_settings">การตั้งค่า</string>
-    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
-    <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
-        As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
+    <string name="permission_info_external_storage_text">แอปนี้ต้องการสิทธิ์ที่ร้องขอเพื่อให้สามารถทำงานได้อย่างถูกต้อง ในการบันทึกภาพไปยังหน่วยความจำภายในแอปจำเป็นต้องมีสิทธิ์ในการอ่านและเขียน</string>
+    <string name="permission_info_permanent_denial_text">แอปนี้ต้องการสิทธิ์ที่ร้องขอเพื่อให้สามารถทำงานได้อย่างถูกต้อง ในการบันทึกภาพไปยังหน่วยความจำภายในแอปจำเป็นต้องมีสิทธิ์ในการอ่านและเขียน
+         เนื่องจากคุณปฏิเสธการอนุญาตไม่ต้องถามอีกโปรดไปที่การตั้งค่าโทรศัพท์และให้สิทธิ์ที่จำเป็นหากคุณต้องการใช้ฟังก์ชั่นที่เกี่ยวข้อง</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">ลากขอบไปยังตำแหน่งใหม่จากนั้นแตะเพื่อขยายหรือครอบตัดพื้นที่ภาพ</string>
@@ -125,35 +126,35 @@
     <string name="intro_welcome_text">ด้วย Pocket Paint ไม่มีข้อ จำกัด ในการสร้างสรรค์ของคุณ หากคุณเพิ่งเริ่มใช้งานอินโทรหรือแค่ข้ามมันไปถ้าคุณคุ้นเคยกับ Pocket Paint</string>
     <string name="intro_tool_more_information">คลิกที่เครื่องมือเพื่อรับข้อมูลเพิ่มเติม</string>
     <string name="more_possibilities">ความเป็นไปได้มากขึ้น</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
+    <string name="intro_possibilities_text">ใช้แถบด้านบนเพื่อเปิดเมนูหลักและเลิกทำการเปลี่ยนแปลงหรือทำซ้ำ</string>
     <string name="landscape">ทิวทัศน์</string>
     <string name="intro_landscape_text">Pocket Paint ยังรองรับการวาดในโหมดแนวนอนเพื่อให้ประสบการณ์การวาดภาพที่ดีที่สุด</string>
     <string name="enjoy_pocket_paint">คุณพร้อมแล้ว เพลิดเพลินไปกับ Pocket Paint</string>
     <string name="intro_get_started">เริ่มต้นและสร้างผลงานใหม่</string>
-    <string name="lets_go">Let\'s go</string>
+    <string name="lets_go">ไปกันเลย</string>
     <string name="next">ถัดไป</string>
     <string name="skip">ข้าม</string>
     <string name="pocketpaint_about_title">เกี่ยวกับ</string>
-    <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
+    <string name="pocketpaint_about_content">Pocket Paint เป็นห้องสมุดแก้ไขรูปภาพที่เป็นส่วนหนึ่งของโครงการ Catrobat \n \n Catrobat เป็นภาษาโปรแกรมภาพและชุดเครื่องมือความคิดสร้างสรรค์สำหรับสมาร์ทโฟน \n \n ซอร์สโค้ดของ Pocket Paint ได้รับอนุญาตภายใต้ %s \n สำหรับรายละเอียดที่ถูกต้องของใบอนุญาตโปรดดูที่ลิงก์ด้านล่าง</string>
     <string name="pocketpaint_about_url_license_description">สัญญาอนุญาตของรหัสต้นฉบับโปรแกรม Pocket Code</string>
     <string name="pocketpaint_about_url_catrobat_description">เกี่ยวกับ Catrobat</string>
     <string name="pocketpaint_intro">บทนำ</string>
     <string name="pocketpaint_intro_split_screen_not_supported">คำนำไม่รองรับหน้าจอแยก</string>
-    <string name="pocketpaint_like_us">Do you like Pocket Paint?</string>
-    <string name="pocketpaint_rate_us">Would you like to rate Pocket Paint?</string>
-    <string name="pocketpaint_feedback">We are sorry to hear that. If you want to share your experience with us, please write to contact@catrobat.org</string>
+    <string name="pocketpaint_like_us">คุณชอบ Pocket Paint ไหม?</string>
+    <string name="pocketpaint_rate_us">คุณต้องการให้คะแนน Pocket Paint หรือไม่</string>
+    <string name="pocketpaint_feedback">เราจะเสียใจที่ได้ทราบว่า. หากคุณต้องการแบ่งปันประสบการณ์ของคุณกับเราโปรดเขียนถึง contact@catrobat.org</string>
     <string name="pocketpaint_yes">ใช่</string>
     <string name="pocketpaint_no">ไม่ใช่</string>
-    <string name="pocketpaint_not_now">Not now</string>
-    <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
+    <string name="pocketpaint_not_now">ไม่ใช่ตอนนี้</string>
+    <string name="pocketpaint_rate_us_title">ให้คะแนน Pocket Paint</string>
     <string name="bottom_navigation_tools">เครื่องมือ</string>
-    <string name="bottom_navigation_current">Current</string>
-    <string name="bottom_navigation_color">Color</string>
+    <string name="bottom_navigation_current">ปัจจุบัน</string>
+    <string name="bottom_navigation_color">สี</string>
     <string name="bottom_navigation_layers">เลเยอร์</string>
-    <string name="bottom_navigation_item">Item for bottom navigation</string>
-    <string name="intro_bottom_navigation_tools_description">Switch to the tool you want to use.</string>
-    <string name="intro_bottom_navigation_current_description">Shows the currently used tool and opens its options.</string>
-    <string name="intro_bottom_navigation_color_description">Shows the currently used color and opens the color picker.</string>
-    <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
-    <string name="pocketpaint_tool_icon_description">Current tool icon</string>
+    <string name="bottom_navigation_item">รายการสำหรับการแนะนำด้านล่าง</string>
+    <string name="intro_bottom_navigation_tools_description">สลับเป็นเครื่องมือที่คุณต้องการใช้</string>
+    <string name="intro_bottom_navigation_current_description">แสดงเครื่องมือที่ใช้ในปัจจุบันและเปิดตัวเลือก</string>
+    <string name="intro_bottom_navigation_color_description">แสดงสีที่ใช้ในปัจจุบันและเปิดตัวเลือกสี</string>
+    <string name="intro_bottom_navigation_layers_description">เปิดเมนูเลเยอร์และช่วยให้คุณจัดการเลเยอร์ของคุณ</string>
+    <string name="pocketpaint_tool_icon_description">ไอคอนเครื่องมือปัจจุบัน</string>
 </resources>
