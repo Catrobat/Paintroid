@@ -328,6 +328,7 @@ public class TextToolIntegrationTest {
 			assertFalse(italicToggleButton.isChecked());
 			selectFormatting(FormattingOptions.BOLD);
 			assertFalse(boldToggleButton.isChecked());
+
 		}
 	}
 
