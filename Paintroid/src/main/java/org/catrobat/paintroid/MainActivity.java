@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +51,7 @@ import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.model.MainActivityModel;
 import org.catrobat.paintroid.presenter.LayerPresenter;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
+import org.catrobat.paintroid.runnable.IdleRunnable;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolReference;
@@ -129,6 +131,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private BottomNavigationViewHolder bottomNavigationViewHolder;
 
 	private Runnable deferredRequestPermissionsResult;
+	private IdleRunnable idleRunnable;
+
+	private int lastInteractionTime;
 
 	@Override
 	public MainActivityContracts.Presenter getPresenter() {
@@ -174,6 +179,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			String picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH);
 			String pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME);
 			presenter.initializeFromCleanState(picturePath, pictureName);
+
+			if (FileIO.checkForTemporaryFile(this)) {
+				presenter.showTempFileDialog();
+			}
 		} else {
 			boolean isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false);
 			boolean isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false);
@@ -188,6 +197,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		commandManager.addCommandListener(this);
 
+		setLastInteractionTime(0);
+		startInactivityDetectThread();
+
 		presenter.finishInitialize();
 	}
 
@@ -196,6 +208,53 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		getMenuInflater().inflate(R.menu.menu_pocketpaint_more_options, menu);
 		presenter.removeMoreOptionsItems(menu);
 		return true;
+	}
+
+	private long getLastInteractionTime() {
+		return lastInteractionTime;
+	}
+
+	private synchronized void setLastInteractionTime(int lastInteractionTime) {
+		this.lastInteractionTime = lastInteractionTime;
+	}
+
+	private synchronized void addLastInteractionTime(int lastInteractionTime) {
+		this.lastInteractionTime = this.lastInteractionTime + lastInteractionTime;
+	}
+
+	private void startInactivityDetectThread() {
+		idleRunnable = new IdleRunnable() {
+			@Override
+			public void run() {
+				while (isRunning()) {
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						Log.d(TAG, "Thread could not sleep.");
+					}
+
+					addLastInteractionTime(5);
+					if (getLastInteractionTime() >= 120) {
+							if (FileIO.temporaryFileName == null) {
+								presenter.saveNewTemporaryImage();
+							} else {
+								presenter.saveIntoExistingTemporaryFile();
+							}
+
+						setLastInteractionTime(0);
+					}
+				}
+			}
+		};
+
+		Thread idleDetectThread = new Thread(idleRunnable);
+		idleDetectThread.start();
+	}
+
+	@Override
+	public void onUserInteraction() {
+		super.onUserInteraction();
+		setLastInteractionTime(0);
 	}
 
 	@Override
@@ -452,6 +511,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@Override
 	protected void onDestroy() {
 		commandManager.removeCommandListener(this);
+		idleRunnable.stopThread();
 
 		if (isFinishing()) {
 			commandManager.shutdown();

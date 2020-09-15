@@ -48,6 +48,7 @@ import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDialogType;
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
+import org.catrobat.paintroid.dialog.TemporaryFileDialog;
 import org.catrobat.paintroid.tools.ToolReference;
 
 import androidx.appcompat.app.AppCompatDialog;
@@ -173,6 +174,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showFeedbackDialog() {
 		FeedbackDialog feedbackDialog = FeedbackDialog.newInstance();
 		feedbackDialog.show(mainActivity.getSupportFragmentManager(), Constants.FEEDBACK_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showTemporaryFileDialog() {
+		TemporaryFileDialog temporaryFileDialog = TemporaryFileDialog.newInstance();
+		temporaryFileDialog.show(mainActivity.getSupportFragmentManager(), Constants.TEMPORARY_FILE_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override

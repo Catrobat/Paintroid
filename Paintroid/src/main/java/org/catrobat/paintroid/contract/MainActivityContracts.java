@@ -57,6 +57,8 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
+		void showTemporaryFileDialog();
+
 		void sendFeedback();
 
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
@@ -158,6 +160,10 @@ public interface MainActivityContracts {
 
 		void saveImageClicked();
 
+		void saveNewTemporaryImage();
+
+		void saveIntoExistingTemporaryFile();
+
 		void shareImageClicked();
 
 		void enterFullscreenClicked();
@@ -171,6 +177,10 @@ public interface MainActivityContracts {
 		void showAboutClicked();
 
 		void showRateUsDialog();
+
+		void showTempFileDialog();
+
+		void openTempFile();
 
 		void showFeedbackDialog();
 

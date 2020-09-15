@@ -27,6 +27,8 @@ public final class Constants {
 	public static final String PAINTROID_PICTURE_PATH = "org.catrobat.extra.PAINTROID_PICTURE_PATH";
 	public static final String PAINTROID_PICTURE_NAME = "org.catrobat.extra.PAINTROID_PICTURE_NAME";
 
+	public static final String TEMP_PICTURE_DIRECTORY_NAME = "Temp Images";
+	public static final String TEMP_DIRECTORY_PICTURE_NAME = "temporary_saved";
 	public static final String TEMP_PICTURE_NAME = "catroidTemp";
 	public static final File MEDIA_DIRECTORY = new File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_PICTURES);
 
@@ -40,6 +42,7 @@ public final class Constants {
 	public static final String INDETERMINATE_FRAGMENT_TAG = "indeterminatefragment";
 	public static final String SAVE_QUESTION_FRAGMENT_TAG = "savebeforequitfragment";
 	public static final String CHOOSE_IMAGE_FRAGMENT_TAG = "chooseimagefragment";
+	public static final String TEMPORARY_FILE_DIALOG_FRAGMENT_TAG = "temporaryfiledialogfragment";
 
 	public static final String PERMISSION_DIALOG_FRAGMENT_TAG = "permissiondialogfragment";
 

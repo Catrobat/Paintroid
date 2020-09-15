@@ -50,6 +50,7 @@ public final class FileIO {
 	private static final String ENDING = ".png";
 	private static final int COMPRESS_QUALITY = 100;
 	private static final Bitmap.CompressFormat COMPRESS_FORMAT = Bitmap.CompressFormat.PNG;
+	public static Uri temporaryFileName = null;
 
 	private FileIO() {
 		throw new AssertionError();
@@ -110,7 +111,50 @@ public final class FileIO {
 			imageUri = Uri.fromFile(file);
 		}
 
+		if (temporaryFileName != null) {
+			File tempFile = new File(temporaryFileName.getPath());
+			if (!tempFile.delete()) {
+				throw new IOException("Can not delete temporary file.");
+			}
+		}
+
 		return imageUri;
+	}
+
+	public static Uri saveTemporaryPictureFile(Bitmap bitmap, Activity activity) {
+		Uri uri = null;
+
+		try {
+			File tempPath = new File(activity.getFilesDir(), Constants.TEMP_PICTURE_DIRECTORY_NAME);
+			tempPath.mkdirs();
+
+			String filename = Constants.TEMP_DIRECTORY_PICTURE_NAME + ENDING;
+			File imageFile = new File(tempPath, filename);
+			FileOutputStream fos = new FileOutputStream(imageFile);
+			bitmap.compress(COMPRESS_FORMAT, COMPRESS_QUALITY, fos);
+			fos.close();
+
+			uri = Uri.fromFile(imageFile);
+		} catch (IOException e) {
+			Log.e("Can not write", "Can't write to stream", e);
+		}
+
+		return uri;
+	}
+
+	public static boolean checkForTemporaryFile(Activity activity) {
+		File tempPath = new File(activity.getFilesDir(), Constants.TEMP_PICTURE_DIRECTORY_NAME);
+		if (!tempPath.exists()) {
+			return false;
+		}
+
+		File[] fileList = tempPath.listFiles();
+		if (fileList.length > 0) {
+			temporaryFileName = Uri.fromFile(fileList[0]);
+			return true;
+		}
+
+		return false;
 	}
 
 	public static Uri saveBitmapToCache(Bitmap bitmap, MainActivity mainActivity) {

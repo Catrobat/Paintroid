@@ -32,12 +32,14 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.UserPreferences;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.CreateFileRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode;
@@ -63,6 +65,7 @@ import org.catrobat.paintroid.ui.LayerAdapter;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
+import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -172,6 +175,22 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
 	}
 
+	@Override
+	public void saveNewTemporaryImage() {
+		Bitmap bitmap = workspace.getBitmapOfAllLayers();
+		FileIO.temporaryFileName = FileIO.saveTemporaryPictureFile(bitmap, (Activity) view);
+	}
+
+	@Override
+	public void saveIntoExistingTemporaryFile() {
+		Bitmap bitmap = workspace.getBitmapOfAllLayers();
+		try {
+			FileIO.saveBitmapToUri(FileIO.temporaryFileName, view.getContentResolver(), bitmap);
+		} catch (IOException e) {
+			Log.e(MainActivity.TAG, "Can't save temporary image file", e);
+		}
+	}
+
 	private void showSecurityQuestionBeforeExit() {
 		if (isImageUnchanged() || model.isSaved()) {
 			finishActivity();
@@ -252,6 +271,24 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
+	public void showTempFileDialog() {
+		navigator.showTemporaryFileDialog();
+	}
+
+	@Override
+	public void openTempFile() {
+		MainActivity activity = (MainActivity) view;
+		File tempPath = new File(activity.getFilesDir(), Constants.TEMP_PICTURE_DIRECTORY_NAME);
+		File tempFile = tempPath.listFiles()[0];
+
+		DisplayMetrics metrics = view.getDisplayMetrics();
+		int maxWidth = metrics.widthPixels;
+		int maxHeight = metrics.heightPixels;
+
+		interactor.loadFile(this, LOAD_IMAGE_DEFAULT, maxWidth, maxHeight, Uri.fromFile(tempFile));
+	}
+
+	@Override
 	public void showFeedbackDialog() {
 		navigator.showFeedbackDialog();
 	}
@@ -269,6 +306,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 		commandManager.setInitialStateCommand(initCommand);
 		commandManager.reset();
+		FileIO.temporaryFileName = null;
 	}
 
 	@Override

@@ -173,6 +173,9 @@
 
     <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen.</string>
 
+    <string name="pocketpaint_temporary_files_title">Temporary File</string>
+    <string name="pocketpaint_temporary_file_dialog">You worked on a file before. Would you like to keep working on that file?</string>
+
     <string name="pocketpaint_like_us">Do you like Pocket Paint?</string>
     <string name="pocketpaint_rate_us">Would you like to rate Pocket Paint?</string>
     <string name="pocketpaint_feedback">We are sorry to hear that. If you want to share your experience with us, please write to contact@catrobat.org</string>
