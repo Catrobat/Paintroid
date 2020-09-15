@@ -53,6 +53,7 @@ import static org.hamcrest.Matchers.not;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -658,5 +659,83 @@ public class LayerIntegrationTest {
 
 		onDrawingSurfaceView()
 				.checkLayerDimensions(bitmapHeight, bitmapWidth);
+	}
+
+	@Test
+	public void testHideLayer() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.performClose();
+
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+
+		onDrawingSurfaceView().perform(click());
+		onDrawingSurfaceView().checkPixelColor(Color.BLACK, 1, 1);
+
+		onLayerMenuView()
+				.performOpen()
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, 1, 1);
+	}
+
+	@Test
+	public void testHideThenUnhideLayer() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.performClose();
+
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+
+		onDrawingSurfaceView().perform(click());
+		onDrawingSurfaceView().checkPixelColor(Color.BLACK, 1, 1);
+
+		onLayerMenuView()
+				.performOpen()
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, 1, 1);
+
+		onLayerMenuView()
+				.performOpen()
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onDrawingSurfaceView().checkPixelColor(Color.BLACK, 1, 1);
+	}
+
+	@Test
+	public void testTryMergeOrReorderWhileALayerIsHidden() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.perfomToggleLayerVisibility(0)
+				.performLongClickLayer(0);
+
+		onView(withText(R.string.no_longclick_on_hidden_layer)).inRoot(withDecorView(not(launchActivityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testTryChangeToolWhileALayerIsHidden() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onToolBarView()
+				.onToolsClicked();
+
+		onView(withText(R.string.no_tools_on_hidden_layer)).inRoot(withDecorView(not(launchActivityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
 	}
 }

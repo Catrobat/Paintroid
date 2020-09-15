@@ -59,6 +59,7 @@ import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback;
 import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.ui.LayerAdapter;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
@@ -99,6 +100,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private BottomBarViewHolder bottomBarViewHolder;
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
 	private BottomNavigationViewHolder bottomNavigationViewHolder;
+	private LayerAdapter layerAdapter;
 
 	private CommandManager commandManager;
 	private CommandFactory commandFactory;
@@ -134,6 +136,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void loadImageClicked() {
 		switchBetweenVersions(PERMISSION_REQUEST_CODE_LOAD_PICTURE);
+		setFirstCheckBoxInLayerMenu();
+	}
+
+	public void setFirstCheckBoxInLayerMenu() {
+		if (layerAdapter != null && layerAdapter.getViewHolderAt(0) != null) {
+			layerAdapter.getViewHolderAt(0).setCheckBox(true);
+		}
 	}
 
 	@Override
@@ -144,14 +153,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void loadNewImage() {
 		navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+		setFirstCheckBoxInLayerMenu();
 	}
 
 	@Override
 	public void newImageClicked() {
 		if (isImageUnchanged() || model.isSaved()) {
 			onNewImage();
+			setFirstCheckBoxInLayerMenu();
 		} else {
 			navigator.showSaveBeforeNewImageDialog();
+			setFirstCheckBoxInLayerMenu();
 		}
 	}
 
@@ -285,8 +297,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			if (requestCode == PERMISSION_REQUEST_CODE_LOAD_PICTURE) {
 				if (isImageUnchanged() || model.isSaved()) {
 					navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+					setFirstCheckBoxInLayerMenu();
 				} else {
 					navigator.showSaveBeforeLoadImageDialog();
+					setFirstCheckBoxInLayerMenu();
 				}
 			} else {
 				askForReadAndWriteExternalStoragePermission(requestCode);
@@ -735,6 +749,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (bottomBarViewHolder.isVisible()) {
 			bottomBarViewHolder.hide();
 		} else {
+			if (!layerAdapter.getPresenter().getLayerItem(workspace.getCurrentLayerIndex()).getCheckBox()) {
+				navigator.showToast(R.string.no_tools_on_hidden_layer, Toast.LENGTH_SHORT);
+				return;
+			}
 			bottomBarViewHolder.show();
 		}
 	}
@@ -757,5 +775,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void rateUsClicked() {
 		navigator.rateUsClicked();
+	}
+
+	public void setLayerAdapter(LayerAdapter layerAdapter) {
+		this.layerAdapter = layerAdapter;
 	}
 }

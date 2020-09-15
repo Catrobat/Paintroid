@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.presenter;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -29,8 +30,12 @@ import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.contract.LayerContracts.LayerViewHolder;
 import org.catrobat.paintroid.contract.LayerContracts.Model;
+import org.catrobat.paintroid.controller.DefaultToolController;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.dragndrop.DragAndDropPresenter;
 import org.catrobat.paintroid.ui.dragndrop.ListItemLongClickHandler;
+import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +51,9 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 	private LayerContracts.Adapter adapter;
 	private List<LayerContracts.Layer> layers;
 	private LayerContracts.Navigator navigator;
+	private DrawingSurface drawingSurface;
+	private DefaultToolController defaultToolController;
+	private BottomNavigationViewHolder bottomNavigationViewHolder;
 
 	public LayerPresenter(Model model, ListItemLongClickHandler listItemLongClickHandler, LayerContracts.LayerMenuViewHolder layerMenuViewHolder, CommandManager commandManager, CommandFactory commandFactory, LayerContracts.Navigator navigator) {
 		this.model = model;
@@ -57,8 +65,29 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		this.navigator = navigator;
 	}
 
+	@Override
+	public LayerPresenter getPresenter() {
+		return this;
+	}
+
+	@Override
 	public void setAdapter(LayerContracts.Adapter adapter) {
 		this.adapter = adapter;
+	}
+
+	@Override
+	public void setDrawingSurface(DrawingSurface drawingSurface) {
+		this.drawingSurface = drawingSurface;
+	}
+
+	@Override
+	public void setDefaultToolController(DefaultToolController defaultToolController) {
+		this.defaultToolController = defaultToolController;
+	}
+
+	@Override
+	public void setbottomNavigationViewHolder(BottomNavigationViewHolder bottomNavigationViewHolder) {
+		this.bottomNavigationViewHolder = bottomNavigationViewHolder;
 	}
 
 	@Override
@@ -66,12 +95,17 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		LayerContracts.Layer layer = getLayerItem(position);
 
 		if (layer == model.getCurrentLayer()) {
-			viewHolder.setSelected();
+			viewHolder.setSelected(position, bottomNavigationViewHolder, defaultToolController);
 		} else {
 			viewHolder.setDeselected();
 		}
-
-		viewHolder.setBitmap(layer.getBitmap());
+		if (!layers.get(position).getCheckBox()) {
+			viewHolder.setBitmap(layer.getTransparentBitmap());
+			viewHolder.setCheckBox(false);
+		} else {
+			viewHolder.setBitmap(layer.getBitmap());
+			viewHolder.setCheckBox(true);
+		}
 	}
 
 	@Override
@@ -118,15 +152,49 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		if (getLayerCount() > 1) {
 			LayerContracts.Layer layerToDelete = model.getCurrentLayer();
 			int index = model.getLayerIndexOf(layerToDelete);
-
 			commandManager.addCommand(commandFactory.createRemoveLayerCommand(index));
+		}
+	}
+
+	@Override
+	public void hideLayer(int position) {
+		LayerContracts.Layer destinationLayer = model.getLayerAt(position);
+		Bitmap bitmapCopy = destinationLayer.getTransparentBitmap();
+		destinationLayer.switchBitmaps(false);
+		destinationLayer.setBitmap(bitmapCopy);
+		destinationLayer.setCheckBox(false);
+
+		drawingSurface.refreshDrawingSurface();
+
+		if (model.getCurrentLayer().equals(destinationLayer)) {
+			defaultToolController.switchTool(ToolType.HAND);
+			bottomNavigationViewHolder.showCurrentTool(ToolType.HAND);
+		}
+	}
+
+	@Override
+	public void unhideLayer(int position, LayerViewHolder viewHolder) {
+		LayerContracts.Layer destinationLayer = model.getLayerAt(position);
+		destinationLayer.switchBitmaps(true);
+		Bitmap bitmapToAdd = destinationLayer.getBitmap();
+		destinationLayer.setBitmap(bitmapToAdd);
+		destinationLayer.setCheckBox(true);
+
+		viewHolder.setBitmap(bitmapToAdd);
+
+		drawingSurface.refreshDrawingSurface();
+
+		if (model.getCurrentLayer().equals(destinationLayer)) {
+			defaultToolController.switchTool(ToolType.BRUSH);
+			bottomNavigationViewHolder.showCurrentTool(ToolType.BRUSH);
 		}
 	}
 
 	@Override
 	public int swapItemsVisually(int position, int swapWith) {
 		LayerContracts.Layer tempLayer = layers.get(position);
-		layers.set(position, layers.get(swapWith));
+		LayerContracts.Layer swapWithLayer = layers.get(swapWith);
+		layers.set(position, swapWithLayer);
 		layers.set(swapWith, tempLayer);
 		return swapWith;
 	}
@@ -135,7 +203,6 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 	public void mergeItems(int position, int mergeWith) {
 		LayerContracts.Layer actualLayer = layers.get(mergeWith);
 		int actualPosition = model.getLayerIndexOf(actualLayer);
-
 		if (position != actualPosition) {
 			commandManager.addCommand(commandFactory.createMergeLayersCommand(position, actualPosition));
 
@@ -165,9 +232,18 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 			Log.e(TAG, "onLongClickLayerAtPosition at invalid position");
 			return;
 		}
-
-		if (getLayerCount() > 1) {
-			listItemLongClickHandler.handleOnItemLongClick(position, view);
+		boolean isAllowedToLongclick = true;
+		for (int i = 0; i < layers.size(); i++) {
+			if (!layers.get(i).getCheckBox()) {
+				isAllowedToLongclick = false;
+			}
+		}
+		if (isAllowedToLongclick) {
+			if (getLayerCount() > 1) {
+				listItemLongClickHandler.handleOnItemLongClick(position, view);
+			}
+		} else {
+			navigator.showToast(R.string.no_longclick_on_hidden_layer, Toast.LENGTH_SHORT);
 		}
 	}
 
@@ -195,6 +271,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		}
 		refreshLayerMenuViewHolder();
 		adapter.notifyDataSetChanged();
+
 		listItemLongClickHandler.stopDragging();
 	}
 }

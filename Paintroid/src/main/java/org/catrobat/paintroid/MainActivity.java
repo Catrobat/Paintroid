@@ -45,7 +45,6 @@ import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.controller.DefaultToolController;
-import org.catrobat.paintroid.controller.ToolController;
 import org.catrobat.paintroid.listener.PresenterColorPickedListener;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.model.MainActivityModel;
@@ -125,6 +124,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
 	private KeyboardListener keyboardListener;
 	private PaintroidApplicationFragment appFragment;
+	private DefaultToolController defaultToolController;
+	private BottomNavigationViewHolder bottomNavigationViewHolder;
 
 	private Runnable deferredRequestPermissionsResult;
 
@@ -281,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		drawerLayoutViewHolder = new DrawerLayoutViewHolder(drawerLayout);
 		TopBarViewHolder topBarViewHolder = new TopBarViewHolder(topBarLayout);
 		BottomBarViewHolder bottomBarViewHolder = new BottomBarViewHolder(bottomBarLayout);
-		BottomNavigationViewHolder bottomNavigationViewHolder = new BottomNavigationViewHolder(bottomNavigationView, getResources().getConfiguration().orientation, getApplicationContext());
+		bottomNavigationViewHolder = new BottomNavigationViewHolder(bottomNavigationView, getResources().getConfiguration().orientation, getApplicationContext());
 
 		perspective = new Perspective(layerModel.getWidth(), layerModel.getHeight());
 		workspace = new DefaultWorkspace(layerModel, perspective, new DefaultWorkspace.Listener() {
@@ -294,14 +295,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		MainActivityContracts.Interactor interactor = new MainActivityInteractor();
 		model = new MainActivityModel();
 		ContextCallback contextCallback = new DefaultContextCallback(context);
-		ToolController toolController = new DefaultToolController(toolReference, toolOptionsViewController,
+		this.defaultToolController = new DefaultToolController(toolReference, toolOptionsViewController,
 				new DefaultToolFactory(), commandManager, workspace, toolPaint, contextCallback);
 		UserPreferences preferences = new UserPreferences(getPreferences(Context.MODE_PRIVATE));
 
 		presenter = new MainActivityPresenter(this, this, model, workspace,
 				navigator, interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
-				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, toolController, preferences);
-		toolController.setOnColorPickedListener(new PresenterColorPickedListener(presenter));
+				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, defaultToolController, preferences);
+		defaultToolController.setOnColorPickedListener(new PresenterColorPickedListener(presenter));
 
 		keyboardListener = new KeyboardListener(drawerLayout);
 		setTopBarListeners(topBarViewHolder);
@@ -316,10 +317,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		LayerMenuViewHolder layerMenuViewHolder = new LayerMenuViewHolder(layerLayout);
 		LayerNavigator layerNavigator = new LayerNavigator(getApplicationContext());
-
 		layerPresenter = new LayerPresenter(layerModel, layerListView, layerMenuViewHolder,
 				commandManager, new DefaultCommandFactory(), layerNavigator);
 		LayerAdapter layerAdapter = new LayerAdapter(layerPresenter);
+		presenter.setLayerAdapter(layerAdapter);
 		layerPresenter.setAdapter(layerAdapter);
 		layerListView.setPresenter(layerPresenter);
 		layerListView.setAdapter(layerAdapter);
@@ -331,8 +332,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private void onCreateDrawingSurface() {
 		drawingSurface = findViewById(R.id.pocketpaint_drawing_surface_view);
 		drawingSurface.setArguments(layerModel, perspective, toolReference, toolOptionsViewController);
+		layerPresenter.setDrawingSurface(drawingSurface);
 
 		appFragment.setPerspective(perspective);
+		layerPresenter.setDefaultToolController(defaultToolController);
+		layerPresenter.setbottomNavigationViewHolder(bottomNavigationViewHolder);
 	}
 
 	private void setLayerMenuListeners(LayerMenuViewHolder layerMenuViewHolder) {

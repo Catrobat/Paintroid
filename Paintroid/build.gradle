@@ -103,6 +103,10 @@ android {
         xmlOutput file("build/reports/lint-report.xml")
         htmlOutput file("build/reports/lint-report.html")
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {

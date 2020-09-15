@@ -26,6 +26,7 @@ package org.catrobat.paintroid.ui.dragndrop;
 import android.view.View;
 
 public interface DragAndDropPresenter {
+
 	int swapItemsVisually(int position, int swapWith);
 
 	void mergeItems(int position, int mergeWith);
