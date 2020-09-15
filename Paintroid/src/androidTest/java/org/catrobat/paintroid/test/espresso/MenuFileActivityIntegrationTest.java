@@ -19,19 +19,23 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -41,7 +45,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -81,9 +84,7 @@ public class MenuFileActivityIntegrationTest {
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE);
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	private MainActivity activity;
 
@@ -172,7 +173,7 @@ public class MenuFileActivityIntegrationTest {
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 
 		Intent intent = new Intent();
-		intent.setData(Uri.fromFile(createTestImageFile()));
+		intent.setData(createTestImageFile());
 		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
 
@@ -362,28 +363,37 @@ public class MenuFileActivityIntegrationTest {
 		onView(withText(R.string.menu_quit)).check(matches(isDisplayed()));
 	}
 
-	@SuppressWarnings("ResultOfMethodCallIgnored")
-	private File createTestImageFile() {
-		File imageFile = new File(Environment.getExternalStorageDirectory()
-				+ "/PocketCodePaintTest/", "testfile.jpg");
+	private Uri createTestImageFile() {
 		Bitmap bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
+
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, "testfile.jpg");
+		contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+		}
+
+		ContentResolver resolver = activity.getContentResolver();
+		Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
 		try {
-			imageFile.getParentFile().mkdirs();
-			imageFile.createNewFile();
-			OutputStream outputStream = new FileOutputStream(imageFile);
-			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream));
-			outputStream.close();
+			OutputStream fos = resolver.openOutputStream(Objects.requireNonNull(imageUri));
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos));
+			assert fos != null;
+			fos.close();
 		} catch (IOException e) {
 			throw new AssertionError("Picture file could not be created.", e);
 		}
+
+		File imageFile = new File(imageUri.getPath(), "testfile.jpg");
+
 		deletionFileList.add(imageFile);
-		return imageFile;
+		return imageUri;
 	}
 
 	@Test
 	public void testLoadImageTransparency() {
 		Intent intent = new Intent();
-		intent.setData(Uri.fromFile(createTestImageFile()));
+		intent.setData(createTestImageFile());
 		Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
 

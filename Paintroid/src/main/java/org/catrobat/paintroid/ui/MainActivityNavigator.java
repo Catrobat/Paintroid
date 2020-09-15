@@ -233,6 +233,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
+	public boolean isSdkAboveOrEqualQ() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+	}
+
+	@Override
 	public boolean doIHavePermission(String permission) {
 		return ContextCompat.checkSelfPermission(mainActivity, permission) == PackageManager.PERMISSION_GRANTED;
 	}

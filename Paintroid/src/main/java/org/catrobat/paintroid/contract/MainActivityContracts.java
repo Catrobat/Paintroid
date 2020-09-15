@@ -80,6 +80,8 @@ public interface MainActivityContracts {
 
 		boolean isSdkAboveOrEqualM();
 
+		boolean isSdkAboveOrEqualQ();
+
 		boolean doIHavePermission(String permission);
 
 		boolean isPermissionPermanentlyDenied(String[] permission);

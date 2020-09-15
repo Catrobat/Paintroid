@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.Manifest;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.Gravity;
@@ -28,6 +27,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
@@ -81,9 +81,7 @@ public class ToolOnBackPressedIntegrationTest {
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE);
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	private File saveFile = null;
 	private ToolReference toolReference;
@@ -197,8 +195,7 @@ public class ToolOnBackPressedIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		String pathToFile =
-				Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-						+ Constants.EXT_STORAGE_DIRECTORY_NAME
+				launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 						+ File.separator
 						+ Constants.TEMP_PICTURE_NAME
 						+ FILE_ENDING;
