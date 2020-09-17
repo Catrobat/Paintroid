@@ -25,15 +25,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.TooltipCompat;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
@@ -85,6 +78,15 @@ import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder;
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.io.File;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_NAME;
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_PATH;
@@ -213,14 +215,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			presenter.enterFullscreenClicked();
 		} else if (i == R.id.pocketpaint_options_rate_us) {
 			presenter.rateUsClicked();
-		} else if (i == R.id.pocketpaint_options_try_pocket_code) {
-			presenter.visitPocketCodeClicked();
 		} else if (i == R.id.pocketpaint_options_help) {
 			presenter.showHelpClicked();
 		} else if (i == R.id.pocketpaint_options_about) {
 			presenter.showAboutClicked();
 		} else if (i == android.R.id.home) {
 			presenter.backToPocketCodeClicked();
+		} else if (i == R.id.pocketpaint_options_feedback) {
+			presenter.sendFeedback();
 		} else {
 			return false;
 		}

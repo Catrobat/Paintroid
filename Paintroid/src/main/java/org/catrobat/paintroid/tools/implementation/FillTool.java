@@ -21,7 +21,6 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.support.annotation.VisibleForTesting;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
@@ -31,6 +30,8 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.FillToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.VisibleForTesting;
 
 public class FillTool extends BaseTool {
 

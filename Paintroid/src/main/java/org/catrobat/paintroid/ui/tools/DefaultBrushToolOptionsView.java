@@ -21,7 +21,6 @@ package org.catrobat.paintroid.ui.tools;
 
 import android.graphics.Paint;
 import android.graphics.Paint.Cap;
-import android.support.annotation.VisibleForTesting;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -39,6 +38,8 @@ import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.BrushToolPreview;
 
 import java.util.Locale;
+
+import androidx.annotation.VisibleForTesting;
 
 public final class DefaultBrushToolOptionsView implements BrushToolOptionsView {
 	private static final int MIN_BRUSH_SIZE = 1;

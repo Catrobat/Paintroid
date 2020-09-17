@@ -19,19 +19,20 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
-import android.support.test.espresso.ViewAssertion;
-import android.support.test.espresso.ViewInteraction;
 import android.widget.Button;
 
 import org.catrobat.paintroid.R;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.RootMatchers.isDialog;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import androidx.test.espresso.ViewAssertion;
+import androidx.test.espresso.ViewInteraction;
 
 import static org.hamcrest.Matchers.allOf;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 public final class ConfirmQuitDialogInteraction extends CustomViewInteraction {
 	private ConfirmQuitDialogInteraction() {

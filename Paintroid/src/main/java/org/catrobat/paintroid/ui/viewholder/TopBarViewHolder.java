@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.ui.viewholder;
 
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,8 @@ import android.widget.ImageButton;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.MainActivityContracts;
+
+import androidx.appcompat.widget.Toolbar;
 
 public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder {
 	public final Toolbar toolbar;
@@ -81,7 +82,6 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 		menu.removeItem(R.id.pocketpaint_options_save_image);
 		menu.removeItem(R.id.pocketpaint_options_save_duplicate);
 		menu.removeItem(R.id.pocketpaint_options_new_image);
-		menu.removeItem(R.id.pocketpaint_options_try_pocket_code);
 		menu.removeItem(R.id.pocketpaint_options_rate_us);
 	}
 

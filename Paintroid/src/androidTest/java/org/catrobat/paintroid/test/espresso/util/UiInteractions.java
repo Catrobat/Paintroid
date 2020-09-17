@@ -21,22 +21,6 @@ package org.catrobat.paintroid.test.espresso.util;
 
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.support.test.espresso.NoMatchingViewException;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.ViewAssertion;
-import android.support.test.espresso.action.CoordinatesProvider;
-import android.support.test.espresso.action.GeneralClickAction;
-import android.support.test.espresso.action.GeneralLocation;
-import android.support.test.espresso.action.GeneralSwipeAction;
-import android.support.test.espresso.action.MotionEvents;
-import android.support.test.espresso.action.Press;
-import android.support.test.espresso.action.ScrollToAction;
-import android.support.test.espresso.action.Swipe;
-import android.support.test.espresso.action.Tap;
-import android.support.test.espresso.action.Tapper;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.v4.view.ViewPager;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,14 +30,31 @@ import android.widget.SeekBar;
 
 import org.hamcrest.Matcher;
 
-import static android.support.test.espresso.action.ViewActions.actionWithAssertions;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.ViewAssertion;
+import androidx.test.espresso.action.CoordinatesProvider;
+import androidx.test.espresso.action.GeneralClickAction;
+import androidx.test.espresso.action.GeneralLocation;
+import androidx.test.espresso.action.GeneralSwipeAction;
+import androidx.test.espresso.action.MotionEvents;
+import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.ScrollToAction;
+import androidx.test.espresso.action.Swipe;
+import androidx.test.espresso.action.Tap;
+import androidx.test.espresso.action.Tapper;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.viewpager.widget.ViewPager;
 
 import static org.catrobat.paintroid.test.espresso.util.CustomSwiper.ACCURATE;
 import static org.hamcrest.Matchers.is;
+
+import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 
 public final class UiInteractions {
 

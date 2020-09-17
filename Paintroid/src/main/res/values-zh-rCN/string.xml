@@ -70,7 +70,7 @@
     <string name="menu_save_copy">保存副本</string>
     <string name="menu_hide_menu">全屏</string>
     <string name="menu_rate_us">给我们评分！</string>
-    <string name="menu_try_pocket_code">Try Pocket Code!</string>
+    <string name="menu_try_pocket_code">尝试口袋编程！</string>
     <string name="menu_export">导出</string>
     <string name="saved">图像已保存</string>
     <string name="copy">副本已保存</string>
@@ -112,11 +112,11 @@
     <string name="layer_background">图层背景</string>
     <string name="dialog_shape_text">形状</string>
     <string name="dialog_loading_image_failed_title">加载图像时出错</string>
-    <string name="dialog_loading_image_failed_text">Not a valid image</string>
+    <string name="dialog_loading_image_failed_text">不是有效的图像</string>
     <string name="dialog_settings">设置</string>
-    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
-    <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
-        As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
+    <string name="permission_info_external_storage_text">此应用需要所请求的权限才能正常运行。 为了将图像保存到本地内存，应用需要读写权限。</string>
+    <string name="permission_info_permanent_denial_text">此应用需要所请求的权限才能正常运行。 为了将图像保存到本地内存，应用需要读写权限。
+        因为您拒绝了权限，所以不再询问。 如果您想要使用相关的功能，请前往您的手机设置并授予所需的权限。</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">将边缘拖动到新位置，然后点击可放大或裁剪图像。</string>
@@ -126,35 +126,35 @@
     <string name="intro_welcome_text">口袋画板将给予您无限的创造力。如果您是初次使用请看介绍，如果你已经熟悉口袋画板了请跳过介绍。</string>
     <string name="intro_tool_more_information">点击工具获得更多信息</string>
     <string name="more_possibilities">更多的可能性</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
+    <string name="intro_possibilities_text">使用顶部栏打开主菜单并撤销或重做更改</string>
     <string name="landscape">横向</string>
     <string name="intro_landscape_text">口袋画板也支持在横向模式下绘画，给您最好的绘画体验。</string>
     <string name="enjoy_pocket_paint">一切就绪。请体验口袋绘图的乐趣。</string>
     <string name="intro_get_started">开始并创建一个新的杰作。</string>
-    <string name="lets_go">Let\'s go</string>
+    <string name="lets_go">开始</string>
     <string name="next">下一步</string>
     <string name="skip">跳过</string>
     <string name="pocketpaint_about_title">关于统计</string>
     <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
     <string name="pocketpaint_about_url_license_description">口袋画板源代码许可证</string>
     <string name="pocketpaint_about_url_catrobat_description">关于 Catrobat</string>
-    <string name="pocketpaint_intro">Intro</string>
-    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen.</string>
-    <string name="pocketpaint_like_us">Do you like Pocket Paint?</string>
-    <string name="pocketpaint_rate_us">Would you like to rate Pocket Paint?</string>
-    <string name="pocketpaint_feedback">We are sorry to hear that. If you want to share your experience with us, please write to contact@catrobat.org</string>
+    <string name="pocketpaint_intro">前奏</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">应用不支持分屏。</string>
+    <string name="pocketpaint_like_us">您喜欢口袋画板吗？</string>
+    <string name="pocketpaint_rate_us">您想要给口袋画打分吗？</string>
+    <string name="pocketpaint_feedback">我们很抱歉听到这个消息。如果您想要与我们分享您的经验，请写到 contact@catrobat.org</string>
     <string name="pocketpaint_yes">是</string>
     <string name="pocketpaint_no">否</string>
-    <string name="pocketpaint_not_now">Not now</string>
-    <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
+    <string name="pocketpaint_not_now">先跳过</string>
+    <string name="pocketpaint_rate_us_title">给口袋油漆评分</string>
     <string name="bottom_navigation_tools">工具</string>
-    <string name="bottom_navigation_current">Current</string>
-    <string name="bottom_navigation_color">Color</string>
+    <string name="bottom_navigation_current">当前</string>
+    <string name="bottom_navigation_color">颜色</string>
     <string name="bottom_navigation_layers">图层</string>
-    <string name="bottom_navigation_item">Item for bottom navigation</string>
-    <string name="intro_bottom_navigation_tools_description">Switch to the tool you want to use.</string>
-    <string name="intro_bottom_navigation_current_description">Shows the currently used tool and opens its options.</string>
-    <string name="intro_bottom_navigation_color_description">Shows the currently used color and opens the color picker.</string>
-    <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
-    <string name="pocketpaint_tool_icon_description">Current tool icon</string>
+    <string name="bottom_navigation_item">底部导航项目</string>
+    <string name="intro_bottom_navigation_tools_description">切换到您想要使用的工具。</string>
+    <string name="intro_bottom_navigation_current_description">显示当前使用的工具并打开其选项。</string>
+    <string name="intro_bottom_navigation_color_description">显示当前使用的颜色并打开颜色选择器。</string>
+    <string name="intro_bottom_navigation_layers_description">打开图层菜单并让您管理图层。</string>
+    <string name="pocketpaint_tool_icon_description">当前工具图标</string>
 </resources>

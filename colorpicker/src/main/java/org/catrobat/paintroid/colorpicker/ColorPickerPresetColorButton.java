@@ -25,9 +25,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Color;
 import android.graphics.Shader.TileMode;
-import android.support.annotation.ColorInt;
-import android.support.v7.appcompat.R;
-import android.support.v7.widget.AppCompatImageButton;
+
+import androidx.annotation.ColorInt;
+import androidx.appcompat.widget.AppCompatImageButton;
 
 public class ColorPickerPresetColorButton extends AppCompatImageButton {
 

@@ -1,17 +1,18 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
-import android.support.annotation.StringRes;
-import android.support.test.espresso.ViewInteraction;
-import android.support.v7.widget.MenuPopupWindow;
 import android.view.View;
 
 import org.hamcrest.CoreMatchers;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import androidx.annotation.StringRes;
+import androidx.appcompat.widget.MenuPopupWindow;
+import androidx.test.espresso.ViewInteraction;
 
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withAdaptedData;
 import static org.hamcrest.Matchers.not;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 
 public final class OptionsMenuViewInteraction {
 	static ViewInteraction optionsMenu;

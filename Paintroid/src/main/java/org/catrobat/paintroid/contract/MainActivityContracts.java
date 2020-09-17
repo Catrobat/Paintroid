@@ -23,10 +23,6 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 
@@ -38,6 +34,11 @@ import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.tools.ToolType;
 
 import java.io.File;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 public interface MainActivityContracts {
 	interface Navigator {
@@ -54,6 +55,8 @@ public interface MainActivityContracts {
 		void showRateUsDialog();
 
 		void showFeedbackDialog();
+
+		void sendFeedback();
 
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
 
@@ -98,8 +101,6 @@ public interface MainActivityContracts {
 		void broadcastAddPictureToGallery(Uri uri);
 
 		void rateUsClicked();
-
-		void visitPocketCodeClicked();
 	}
 
 	interface MainView {
@@ -166,6 +167,8 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
+		void sendFeedback();
+
 		void onNewImage();
 
 		void handleActivityResult(int requestCode, int resultCode, Intent data);
@@ -207,8 +210,6 @@ public interface MainActivityContracts {
 		void actionCurrentToolClicked();
 
 		void rateUsClicked();
-
-		void visitPocketCodeClicked();
 	}
 
 	interface Model {

@@ -26,9 +26,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.GravityCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -65,6 +62,10 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
 
 import static org.catrobat.paintroid.common.Constants.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
@@ -236,6 +237,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void showFeedbackDialog() {
 		navigator.showFeedbackDialog();
+	}
+
+	@Override
+	public void sendFeedback() {
+		navigator.sendFeedback();
 	}
 
 	@Override
@@ -557,12 +563,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			return;
 		}
 
-		switch (requestCode) {
-			case CREATE_FILE_DEFAULT:
-				model.setSavedPictureUri(view.getUriFromFile(file));
-				break;
-			default:
-				throw new IllegalArgumentException();
+		if (requestCode == CREATE_FILE_DEFAULT) {
+			model.setSavedPictureUri(view.getUriFromFile(file));
+		} else {
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -692,10 +696,5 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void rateUsClicked() {
 		navigator.rateUsClicked();
-	}
-
-	@Override
-	public void visitPocketCodeClicked() {
-		navigator.visitPocketCodeClicked();
 	}
 }

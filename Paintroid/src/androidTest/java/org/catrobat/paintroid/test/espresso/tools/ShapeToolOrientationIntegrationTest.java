@@ -21,7 +21,6 @@ package org.catrobat.paintroid.test.espresso.tools;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
@@ -38,10 +37,7 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
@@ -51,6 +47,11 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInter
 import static org.junit.Assert.assertTrue;
 import static org.junit.runners.Parameterized.Parameter;
 import static org.junit.runners.Parameterized.Parameters;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isSelected;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(Parameterized.class)
 public class ShapeToolOrientationIntegrationTest {

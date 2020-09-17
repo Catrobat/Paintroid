@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 
-<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pocketpaint_layout_top_bar"
@@ -25,7 +25,7 @@
     android:layout_height="wrap_content"
     tools:showIn="@layout/activity_pocketpaint_main">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/pocketpaint_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,5 +56,5 @@
                 android:src="@drawable/ic_pocketpaint_redo_selector"
                 android:tint="@android:color/white" />
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
-</android.support.design.widget.AppBarLayout>
+    </androidx.appcompat.widget.Toolbar>
+</com.google.android.material.appbar.AppBarLayout>

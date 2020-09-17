@@ -19,8 +19,9 @@
 
 package org.catrobat.paintroid.test.espresso.util;
 
-import android.support.test.espresso.action.CoordinatesProvider;
 import android.view.View;
+
+import androidx.test.espresso.action.CoordinatesProvider;
 
 public class OffsetLocationProvider implements CoordinatesProvider {
 	private final CoordinatesProvider locationProvider;

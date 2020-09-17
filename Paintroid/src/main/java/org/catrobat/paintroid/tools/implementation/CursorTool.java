@@ -26,7 +26,6 @@ import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.support.annotation.VisibleForTesting;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -39,6 +38,8 @@ import org.catrobat.paintroid.tools.common.CommonBrushChangedListener;
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.VisibleForTesting;
 
 import static org.catrobat.paintroid.tools.common.Constants.MOVE_TOLERANCE;
 

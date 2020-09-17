@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Color;
-import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
@@ -35,6 +34,8 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 import java.util.Arrays;
+
+import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;

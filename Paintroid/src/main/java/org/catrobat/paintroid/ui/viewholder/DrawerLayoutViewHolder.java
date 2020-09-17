@@ -19,9 +19,9 @@
 
 package org.catrobat.paintroid.ui.viewholder;
 
-import android.support.v4.widget.DrawerLayout;
-
 import org.catrobat.paintroid.contract.MainActivityContracts;
+
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public class DrawerLayoutViewHolder implements MainActivityContracts.DrawerLayoutViewHolder {
 	public final DrawerLayout drawerLayout;

@@ -22,12 +22,13 @@
         android:title="@string/menu_hide_menu" />
     <item android:id="@+id/pocketpaint_options_rate_us"
         android:title="@string/menu_rate_us"/>
-    <item android:id="@+id/pocketpaint_options_try_pocket_code"
-        android:title="@string/menu_try_pocket_code"/>
     <item
         android:id="@+id/pocketpaint_options_help"
         android:title="@string/help_title"/>
     <item
         android:id="@+id/pocketpaint_options_about"
         android:title="@string/pocketpaint_menu_about" />
+    <item
+        android:id="@+id/pocketpaint_options_feedback"
+        android:title="@string/menu_feedback" />
 </menu>

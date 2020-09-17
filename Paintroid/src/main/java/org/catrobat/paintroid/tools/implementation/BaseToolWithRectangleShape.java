@@ -29,12 +29,9 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.graphics.Region.Op;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.ColorRes;
-import android.support.annotation.VisibleForTesting;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.R;
@@ -44,6 +41,9 @@ import org.catrobat.paintroid.tools.ContextCallback.ScreenOrientation;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.VisibleForTesting;
 
 import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
@@ -67,7 +67,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected static final boolean DEFAULT_ANTIALIASING_ON = true;
 
 	private static final boolean DEFAULT_ROTATION_ENABLED = false;
-	private static final boolean DEFAULT_BACKGROUND_SHADOW_ENABLED = true;
 	private static final boolean DEFAULT_RESIZE_POINTS_VISIBLE = true;
 	private static final boolean DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO = true;
 	private static final boolean DEFAULT_RESPECT_MAXIMUM_BOX_RESOLUTION = false;
@@ -86,7 +85,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	private final Paint arrowPaint;
 	private final Path arcPath;
 	private final Path arrowPath;
-	private final Paint backgroundPaint;
 	private final RectF tempDrawingRectangle;
 	private final PointF tempToolPosition;
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
@@ -109,7 +107,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 	protected RotatePosition rotatePosition;
 	protected Drawable overlayDrawable;
 	protected float maximumBoxResolution;
-	protected boolean backgroundShadowEnabled;
 	protected boolean resizePointsVisible;
 	protected boolean respectMaximumBorderRatio;
 	protected boolean respectMaximumBoxResolution;
@@ -149,7 +146,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		resizeAction = ResizeAction.NONE;
 
 		rotationEnabled = DEFAULT_ROTATION_ENABLED;
-		backgroundShadowEnabled = DEFAULT_BACKGROUND_SHADOW_ENABLED;
 		resizePointsVisible = DEFAULT_RESIZE_POINTS_VISIBLE;
 		respectMaximumBorderRatio = DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO;
 		respectMaximumBoxResolution = DEFAULT_RESPECT_MAXIMUM_BOX_RESOLUTION;
@@ -171,10 +167,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		arrowPaint = new Paint();
 		arrowPaint.setColor(Color.WHITE);
 		arrowPaint.setStyle(Paint.Style.FILL);
-
-		backgroundPaint = new Paint();
-		backgroundPaint.setColor(Color.argb(128, 0, 0, 0));
-		backgroundPaint.setStyle(Style.FILL);
 
 		arcPath = new Path();
 		arrowPath = new Path();
@@ -305,10 +297,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		canvas.translate(tempToolPosition.x, tempToolPosition.y);
 		canvas.rotate(boxRotation);
 
-		if (backgroundShadowEnabled) {
-			drawBackgroundShadow(canvas, boxWidth, boxHeight, boxRotation, tempToolPosition);
-		}
-
 		if (resizePointsVisible) {
 			drawToolSpecifics(canvas, boxWidth, boxHeight);
 		}
@@ -326,18 +314,6 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		drawRectangle(canvas, boxWidth, boxHeight);
 		drawToolSpecifics(canvas, boxWidth, boxHeight);
 
-		canvas.restore();
-	}
-
-	private void drawBackgroundShadow(Canvas canvas, float boxWidth, float boxHeight, float boxRotation, PointF toolPosition) {
-		canvas.save();
-		canvas.clipRect((-boxWidth + toolStrokeWidth) / 2,
-				(boxHeight - toolStrokeWidth) / 2,
-				(boxWidth - toolStrokeWidth) / 2,
-				(-boxHeight + toolStrokeWidth) / 2, Op.DIFFERENCE);
-		canvas.rotate(-boxRotation);
-		canvas.translate(-toolPosition.x, -toolPosition.y);
-		canvas.drawRect(0, 0, workspace.getWidth(), workspace.getHeight(), backgroundPaint);
 		canvas.restore();
 	}
 

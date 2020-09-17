@@ -20,11 +20,6 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import android.graphics.Bitmap;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.action.CoordinatesProvider;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
@@ -34,12 +29,18 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.core.content.ContextCompat;
+import androidx.test.espresso.action.CoordinatesProvider;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import static org.catrobat.paintroid.test.espresso.util.MainActivityHelper.getMainActivityFromView;
 import static org.hamcrest.Matchers.is;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 
@@ -70,8 +71,26 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 		return this;
 	}
 
+	public DrawingSurfaceInteraction checkPixelColor(@ColorInt final int expectedColor, final float x, final float y) {
+		check(matches(new TypeSafeMatcher<View>() {
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
+			}
+
+			@Override
+			protected boolean matchesSafely(View view) {
+				MainActivity activity = getMainActivityFromView(view);
+				LayerContracts.Layer currentLayer = activity.layerModel.getCurrentLayer();
+				int actualColor = currentLayer.getBitmap().getPixel((int) x, (int) y);
+				return expectedColor == actualColor;
+			}
+		}));
+		return this;
+	}
+
 	public DrawingSurfaceInteraction checkPixelColorResource(@ColorRes int expectedColorRes, CoordinatesProvider coordinateProvider) {
-		int expectedColor = ContextCompat.getColor(InstrumentationRegistry.getTargetContext(), expectedColorRes);
+		int expectedColor = ContextCompat.getColor(InstrumentationRegistry.getInstrumentation().getTargetContext(), expectedColorRes);
 		return checkPixelColor(expectedColor, coordinateProvider);
 	}
 

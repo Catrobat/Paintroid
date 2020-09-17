@@ -24,7 +24,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.FillCommand;
@@ -40,6 +39,8 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;

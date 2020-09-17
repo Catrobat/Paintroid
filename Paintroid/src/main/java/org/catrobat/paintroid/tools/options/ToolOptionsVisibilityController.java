@@ -19,7 +19,7 @@
 
 package org.catrobat.paintroid.tools.options;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public interface ToolOptionsVisibilityController {
 	void hide();
