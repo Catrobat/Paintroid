@@ -70,6 +70,7 @@
     <string name="menu_save_copy">Guardar copia</string>
     <string name="menu_hide_menu">Pantalla Completa</string>
     <string name="menu_rate_us">Valóranos!</string>
+    <string name="menu_try_pocket_code">Try Pocket Code!</string>
     <string name="menu_export">Exportar</string>
     <string name="saved">Imagen guardada</string>
     <string name="copy">Copia guardada</string>

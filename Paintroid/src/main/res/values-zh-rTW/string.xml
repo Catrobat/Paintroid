@@ -70,6 +70,7 @@
     <string name="menu_save_copy">儲存副本</string>
     <string name="menu_hide_menu">全螢幕顯示</string>
     <string name="menu_rate_us">對我們評分！</string>
+    <string name="menu_try_pocket_code">Try Pocket Code!</string>
     <string name="menu_export">匯出</string>
     <string name="saved">圖檔已儲存</string>
     <string name="copy">副本已儲存</string>
