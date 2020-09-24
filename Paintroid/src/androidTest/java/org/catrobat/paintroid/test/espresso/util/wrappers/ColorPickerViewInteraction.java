@@ -25,16 +25,17 @@ import android.widget.TableRow;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 
-import androidx.test.espresso.ViewInteraction;
-
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 
+import androidx.test.espresso.ViewInteraction;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
@@ -54,8 +55,12 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 		return new ColorPickerViewInteraction();
 	}
 
-	public ViewInteraction onOkButton() {
-		return onView(withId(R.id.color_picker_button_ok));
+	public ViewInteraction onPositiveButton() {
+		return onView(withId(android.R.id.button1))
+				// to avoid following exception when running on emulator:
+				// Caused by: java.lang.SecurityException:
+				// Injecting to another application requires INJECT_EVENTS permission
+				.perform(closeSoftKeyboard());
 	}
 
 	public ColorPickerViewInteraction performOpenColorPicker() {
@@ -64,23 +69,27 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
-	public ViewInteraction onCancelButton() {
-		return onView(withId(R.id.color_picker_button_cancel));
+	public ViewInteraction onNegativeButton() {
+		return onView(withId(android.R.id.button2))
+				// to avoid following exception when running on emulator:
+				// Caused by: java.lang.SecurityException:
+				// Injecting to another application requires INJECT_EVENTS permission
+				.perform(closeSoftKeyboard());
 	}
 
-	public void checkCancelButtonColor(int color) {
-		onView(withId(R.id.color_picker_button_cancel))
+	public void checkCurrentViewColor(int color) {
+		onView(withId(R.id.color_picker_current_color_view))
 				.check(matches(withBackgroundColor(color)));
 	}
 
-	public void checkApplyButtonColor(int color) {
-		onView(withId(R.id.color_picker_button_ok))
+	public void checkNewColorViewColor(int color) {
+		onView(withId(R.id.color_picker_new_color_view))
 				.check(matches(withBackgroundColor(color)));
 	}
 
 	public ColorPickerViewInteraction performCloseColorPickerWithDialogButton() {
 		check(matches(isDisplayed()));
-		onOkButton()
+		onPositiveButton()
 				.perform(click());
 		return this;
 	}
@@ -93,6 +102,7 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 				isDescendantOfA(isAssignableFrom(TableLayout.class)),
 				isDescendantOfA(isAssignableFrom(TableRow.class)),
 				hasTablePosition(colorButtonRowPosition, colorButtonColPosition)))
+				.perform(closeSoftKeyboard())
 				.perform(scrollTo())
 				.perform(click());
 		return this;

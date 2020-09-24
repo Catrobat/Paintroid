@@ -54,13 +54,14 @@
         <item name="android:background">@drawable/pocketpaint_selectable_button_bg</item>
     </style>
 
-    <style name="PocketPaintTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="PocketPaintTheme.Base" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>
         <item name="dialogTheme">@style/PocketPaintAlertDialog</item>
         <item name="colorPrimary">@color/pocketpaint_colorPrimary</item>
         <item name="colorPrimaryDark">@color/pocketpaint_colorPrimaryDark</item>
         <item name="colorAccent">@color/pocketpaint_colorAccent</item>
         <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="colorSurface">@color/design_default_color_surface</item>
     </style>
 
     <style name="PocketPaintHighlightColorTheme" parent="PocketPaintTheme">

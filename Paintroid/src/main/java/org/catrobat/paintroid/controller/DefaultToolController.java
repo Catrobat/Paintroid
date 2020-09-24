@@ -22,7 +22,7 @@ package org.catrobat.paintroid.controller;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.Tool;
@@ -46,7 +46,7 @@ public class DefaultToolController implements ToolController {
 	private Workspace workspace;
 	private ToolPaint toolPaint;
 	private ContextCallback contextCallback;
-	private ColorPickerDialog.OnColorPickedListener onColorPickedListener;
+	private OnColorPickedListener onColorPickedListener;
 
 	public DefaultToolController(ToolReference toolReference, ToolOptionsViewController toolOptionsViewController,
 			ToolFactory toolFactory, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint,
@@ -61,7 +61,7 @@ public class DefaultToolController implements ToolController {
 	}
 
 	@Override
-	public void setOnColorPickedListener(ColorPickerDialog.OnColorPickedListener onColorPickedListener) {
+	public void setOnColorPickedListener(OnColorPickedListener onColorPickedListener) {
 		this.onColorPickedListener = onColorPickedListener;
 	}
 

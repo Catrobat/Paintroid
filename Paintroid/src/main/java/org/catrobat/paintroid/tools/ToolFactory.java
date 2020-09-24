@@ -19,12 +19,12 @@
 
 package org.catrobat.paintroid.tools;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 public interface ToolFactory {
 	Tool createTool(ToolType toolType, ToolOptionsViewController toolOptionsViewController, CommandManager commandManager,
 			Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback,
-			ColorPickerDialog.OnColorPickedListener onColorPickedListener);
+			OnColorPickedListener onColorPickedListener);
 }

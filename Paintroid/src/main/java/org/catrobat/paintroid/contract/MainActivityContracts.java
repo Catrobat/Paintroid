@@ -231,6 +231,8 @@ public interface MainActivityContracts {
 		void bitmapLoadedFromSource(Bitmap loadedImage);
 
 		void setLayerAdapter(LayerAdapter layerAdapter);
+
+		Bitmap getBitmap();
 	}
 
 	interface Model {

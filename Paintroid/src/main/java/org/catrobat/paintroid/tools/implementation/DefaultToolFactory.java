@@ -21,7 +21,7 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.view.ViewGroup;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.Tool;
@@ -44,7 +44,7 @@ import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptionsView;
 public class DefaultToolFactory implements ToolFactory {
 
 	@Override
-	public Tool createTool(ToolType toolType, ToolOptionsViewController toolOptionsViewController, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback, ColorPickerDialog.OnColorPickedListener onColorPickedListener) {
+	public Tool createTool(ToolType toolType, ToolOptionsViewController toolOptionsViewController, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback, OnColorPickedListener onColorPickedListener) {
 		ViewGroup toolLayout = toolOptionsViewController.getToolSpecificOptionsLayout();
 
 		switch (toolType) {

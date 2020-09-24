@@ -21,11 +21,11 @@ package org.catrobat.paintroid.controller;
 
 import android.graphics.Bitmap;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.tools.ToolType;
 
 public interface ToolController {
-	void setOnColorPickedListener(ColorPickerDialog.OnColorPickedListener onColorPickedListener);
+	void setOnColorPickedListener(OnColorPickedListener onColorPickedListener);
 
 	void switchTool(ToolType toolType, boolean backPressed);
 
