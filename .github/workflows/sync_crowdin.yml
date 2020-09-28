@@ -1,0 +1,58 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ** Synchronize Crowdin translation **
+#
+# Crowdin is a platform to manage the translation process in the Catroweb project:
+#
+#   1. We upload our english (base) translation files
+#   2. Users worldwide translate our provided strings
+#   3. We download the translations (In case translations are missing english is the fallback)
+#
+# This GitHub Action uses the official action from Crowdin to automate step 1 and 2.
+# A pull request is created/updated automatically containing all new translations.
+#
+# - Secrets required!
+#
+name: Synchronize Crowdin
+
+#
+# New base strings could be uploaded on the merge of a new feature.
+# However, the translation download process is independent from a pull request.
+# Hence, keeping a consistent schedule once a day is more than enough.
+#
+# In case, an additional run is required, a manual dispatch trigger is also enabled.
+#
+on:
+  schedule:
+    - cron:  '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+
+  #
+  # - Two-way synchronization:
+  #     -- In case of new strings in the repo, they are uploaded to Crowdin
+  #     -- In case of new translation, a pull request containing all changes will be created or updated
+  #
+  # - The crowdin configuration is in `crowdin.yml`. However, without credentials!
+  #
+  # - The credentials are provided as secrets to the action as environment variables.
+  #   In case they must be updated, talk to a product owner.
+  #
+  synchronize-with-crowdin:
+    # Only should run on the main repo. (Running without the secrets would result in a fail anyway!)
+    if: github.repository == 'Catrobat/Paintroid'
+
+    name: Synchronize Crowdin Translations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: crowdin/github-action@1.0.10
+        with:
+          upload_translations: true
+          download_translations: true
+          config: 'crowdin.yml'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
