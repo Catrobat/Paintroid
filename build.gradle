@@ -44,11 +44,12 @@ ext {
 }
 
 if(project.hasProperty("snapshot")) {
-    androidVersionName = '2.4.1-LOCAL'
+    androidVersionName = androidVersionName + '-LOCAL'
 }
 
 allprojects {
     repositories {
+        mavenLocal()
         google()
         jcenter()
     }
