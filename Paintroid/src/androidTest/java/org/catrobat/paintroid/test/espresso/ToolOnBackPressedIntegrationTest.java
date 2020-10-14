@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.view.Gravity;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
@@ -30,6 +31,7 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
+import org.hamcrest.core.AllOf;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -52,6 +54,7 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInte
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
@@ -59,13 +62,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerActions.open;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
@@ -144,6 +150,8 @@ public class ToolOnBackPressedIntegrationTest {
 		saveFile = new File(pathToFile);
 
 		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(saveFile));
+		FileIO.currentFileNamePng = Constants.TEMP_PICTURE_NAME + FILE_ENDING;
+		FileIO.uriFilePng = Uri.fromFile(saveFile);
 		long oldFileSize = saveFile.length();
 
 		onDrawingSurfaceView()
@@ -152,6 +160,23 @@ public class ToolOnBackPressedIntegrationTest {
 		Espresso.pressBack();
 
 		onConfirmQuitDialog().onPositiveButton()
+				.perform(click());
+
+		onView(withId(R.id.pocketpaint_save_info_title)).check(matches(isDisplayed()));
+		onView(withId(R.id.pocketpaint_image_name_save_text)).check(matches(isDisplayed()));
+		onView(withId(R.id.pocketpaint_save_dialog_spinner)).check(matches(isDisplayed()));
+
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.perform(click());
+		onData(AllOf.allOf(is(instanceOf(String.class)),
+				is("png"))).inRoot(isPlatformPopup()).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText(Constants.TEMP_PICTURE_NAME));
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+
+		onView(withText(R.string.overwrite_button_text))
 				.perform(click());
 
 		long actualFileSize = saveFile.length();

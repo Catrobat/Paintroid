@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.ui;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -34,6 +35,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.common.Constants;
+import org.catrobat.paintroid.common.MainActivityConstants;
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
@@ -41,14 +43,18 @@ import org.catrobat.paintroid.dialog.FeedbackDialog;
 import org.catrobat.paintroid.dialog.ImportImageDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
+import org.catrobat.paintroid.dialog.JpgInfoDialog;
 import org.catrobat.paintroid.dialog.LikeUsDialog;
+import org.catrobat.paintroid.dialog.OverwriteDialog;
 import org.catrobat.paintroid.dialog.PermanentDenialPermissionInfoDialog;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
+import org.catrobat.paintroid.dialog.PngInfoDialog;
 import org.catrobat.paintroid.dialog.RateUsDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDialogType;
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
+import org.catrobat.paintroid.dialog.SaveInformationDialog;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment;
 
@@ -230,6 +236,24 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
+	public void showOverwriteDialog(int permissionCode) {
+		OverwriteDialog overwriteDialog = OverwriteDialog.newInstance(permissionCode);
+		overwriteDialog.show(mainActivity.getSupportFragmentManager(), Constants.OVERWRITE_INFORMATION_DIALOG_TAG);
+	}
+
+	@Override
+	public void showPngInformationDialog() {
+		PngInfoDialog pngInfoDialog = PngInfoDialog.newInstance();
+		pngInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.PNG_INFORMATION_DIALOG_TAG);
+	}
+
+	@Override
+	public void showJpgInformationDialog() {
+		JpgInfoDialog jpgInfoDialog = JpgInfoDialog.newInstance();
+		jpgInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.JPG_INFORMATION_DIALOG_TAG);
+	}
+
+	@Override
 	public void sendFeedback() {
 		Intent intent = new Intent(Intent.ACTION_SENDTO);
 		Uri data = Uri.parse("mailto:support-paintroid@catrobat.org");
@@ -352,6 +376,32 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showSaveBeforeLoadImageDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance();
 		showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG);
+	}
+
+	@SuppressLint("VisibleForTests")
+	@Override
+	public void showSaveImageInformationDialogWhenStandalone(int permissionCode, int imageNumber) {
+		Uri uri = mainActivity.model.getSavedPictureUri();
+		if (uri != null) {
+			FileIO.parseFileName(uri, mainActivity.getContentResolver());
+		}
+
+		if (mainActivity.model.isOpenedFromCatroid()) {
+			FileIO.filename = "image" + imageNumber;
+			FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+			FileIO.ending = ".png";
+			FileIO.catroidFlag = true;
+			mainActivity.getPresenter().switchBetweenVersions(permissionCode);
+			return;
+		}
+
+		boolean isStandard = false;
+		if (permissionCode == MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
+			isStandard = true;
+		}
+
+		SaveInformationDialog saveInfodialog = SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard);
+		saveInfodialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_INFORMATION_DIALOG_TAG);
 	}
 
 	@Override

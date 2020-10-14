@@ -357,6 +357,8 @@ public class LayerIntegrationTest {
 				.perform(click());
 		onView(withText(R.string.save_button_text))
 				.perform(click());
+		onView(withText(R.string.save_button_text))
+				.perform(click());
 
 		onToolBarView()
 				.performSelectTool(ToolType.PIPETTE);

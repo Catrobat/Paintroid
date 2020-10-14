@@ -32,6 +32,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.UserPreferences;
@@ -68,7 +69,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 
-import static org.catrobat.paintroid.common.Constants.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
@@ -147,7 +147,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveBeforeLoadImage() {
-		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
+		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, getImageNumber());
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveBeforeNewImage() {
-		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
+		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, getImageNumber());
 	}
 
 	private void showSecurityQuestionBeforeExit() {
@@ -189,18 +189,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveBeforeFinish() {
-		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
+		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, getImageNumber());
 	}
 
 	@Override
 	public void saveCopyClicked() {
-		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
+		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, getImageNumber());
 	}
 
 	@Override
 	public void saveImageClicked() {
-		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
-		showLikeUsDialogIfFirstTimeSave();
+		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, getImageNumber());
 	}
 
 	@Override
@@ -210,13 +209,30 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	private void showLikeUsDialogIfFirstTimeSave() {
-		boolean dialogHasBeenShown = sharedPreferences.getBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, false);
+		boolean dialogHasBeenShown = sharedPreferences.getPreferenceLikeUsDialogValue();
 
 		if (!dialogHasBeenShown && !model.isOpenedFromCatroid()) {
 			navigator.showLikeUsDialog();
 
-			sharedPreferences.setBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, true);
+			sharedPreferences.setPreferenceLikeUsDialogValue();
 		}
+	}
+
+	@Override
+	public int getImageNumber() {
+		int imageNumber = sharedPreferences.getPreferenceImageNumber();
+
+		if (imageNumber == 0) {
+			countUpImageNumber();
+		}
+
+		return sharedPreferences.getPreferenceImageNumber();
+	}
+
+	private void countUpImageNumber() {
+		int imageNumber = sharedPreferences.getPreferenceImageNumber();
+		imageNumber++;
+		sharedPreferences.setPreferenceImageNumber(imageNumber);
 	}
 
 	@Override
@@ -257,6 +273,21 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
+	public void showOverwriteDialog(int permissionCode) {
+		navigator.showOverwriteDialog(permissionCode);
+	}
+
+	@Override
+	public void showPngInformationDialog() {
+		navigator.showPngInformationDialog();
+	}
+
+	@Override
+	public void showJpgInformationDialog() {
+		navigator.showJpgInformationDialog();
+	}
+
+	@Override
 	public void sendFeedback() {
 		navigator.sendFeedback();
 	}
@@ -266,6 +297,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		DisplayMetrics metrics = view.getDisplayMetrics();
 		resetPerspectiveAfterNextCommand = true;
 		model.setSavedPictureUri(null);
+		FileIO.filename = "image";
+		FileIO.uriFileJpg = null;
+		FileIO.uriFilePng = null;
+		FileIO.currentFileNameJpg = null;
+		FileIO.currentFileNamePng = null;
 		Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 		commandManager.setInitialStateCommand(initCommand);
 		commandManager.reset();
@@ -276,7 +312,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		commandManager.addCommand(commandFactory.createResetCommand());
 	}
 
-	private void switchBetweenVersions(@PermissionRequestCode int requestCode) {
+	@Override
+	public void switchBetweenVersions(@PermissionRequestCode int requestCode) {
 		if (navigator.isSdkAboveOrEqualQ()) {
 			switch (requestCode) {
 				case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
@@ -284,19 +321,25 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE:
 					saveImageConfirmClicked(SAVE_IMAGE_DEFAULT, model.getSavedPictureUri());
+					checkforDefaultFilename();
+					showLikeUsDialogIfFirstTimeSave();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
 					Bitmap bitmap = workspace.getBitmapOfAllLayers();
 					interactor.saveCopy(this, SAVE_IMAGE_DEFAULT, bitmap);
+					checkforDefaultFilename();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW:
 					saveImageConfirmClicked(SAVE_IMAGE_LOAD_NEW, model.getSavedPictureUri());
+					checkforDefaultFilename();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
 					saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, model.getSavedPictureUri());
+					checkforDefaultFilename();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
 					saveImageConfirmClicked(SAVE_IMAGE_FINISH, model.getSavedPictureUri());
+					checkforDefaultFilename();
 					break;
 			}
 		} else {
@@ -344,6 +387,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 	}
 
+	private void checkforDefaultFilename() {
+		String standard = "image" + getImageNumber();
+		if (FileIO.filename.equals(standard)) {
+			countUpImageNumber();
+		}
+	}
+
 	@Override
 	public void handleActivityResult(@ActivityRequestCode int requestCode, int resultCode, Intent data) {
 		DisplayMetrics metrics = view.getDisplayMetrics();
@@ -385,19 +435,25 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					case PERMISSION_EXTERNAL_STORAGE_SAVE:
 						bitmap = workspace.getBitmapOfAllLayers();
 						interactor.saveImage(this, SAVE_IMAGE_DEFAULT, bitmap, model.getSavedPictureUri());
+						checkforDefaultFilename();
+						showLikeUsDialogIfFirstTimeSave();
 						break;
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
 						bitmap = workspace.getBitmapOfAllLayers();
 						interactor.saveCopy(this, SAVE_IMAGE_DEFAULT, bitmap);
+						checkforDefaultFilename();
 						break;
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
 						saveImageConfirmClicked(SAVE_IMAGE_FINISH, model.getSavedPictureUri());
+						checkforDefaultFilename();
 						break;
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW:
 						saveImageConfirmClicked(SAVE_IMAGE_LOAD_NEW, model.getSavedPictureUri());
+						checkforDefaultFilename();
 						break;
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
 						saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, model.getSavedPictureUri());
+						checkforDefaultFilename();
 						break;
 					case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
 						if (isImageUnchanged() || model.isSaved()) {
@@ -505,6 +561,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			File imageFile = new File(extraPicturePath);
 			if (imageFile.exists()) {
 				model.setSavedPictureUri(view.getUriFromFile(imageFile));
+
 				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri());
 			} else {
 				interactor.createFile(this, CREATE_FILE_DEFAULT, extraPictureName);

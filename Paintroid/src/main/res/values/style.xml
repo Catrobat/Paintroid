@@ -183,4 +183,8 @@
         <item name="android:topDark">@android:color/transparent</item>
     </style>
 
+    <style name="PocketpaintSpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/ic_pocketpaint_dropdown_arrow_modified</item>
+        <item name="android:gravity">right</item>
+    </style>
 </resources>
