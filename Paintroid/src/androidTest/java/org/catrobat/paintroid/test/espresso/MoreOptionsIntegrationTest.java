@@ -26,6 +26,7 @@ import android.content.Intent;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -34,6 +35,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertTrue;
 
 import androidx.test.espresso.intent.Intents;
@@ -49,12 +53,16 @@ import androidx.test.uiautomator.UiSelector;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.OptionsMenuViewInteraction.onOptionsMenu;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
@@ -163,12 +171,56 @@ public class MoreOptionsIntegrationTest {
 	@Test
 	public void testShowLikeUsDialogOnFirstSave() {
 		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.save_button_text)).perform(click());
 		onView(withText(R.string.pocketpaint_like_us)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testSaveDialogAppearsOnSaveImageClick() {
+		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.dialog_save_image_name)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testSaveDialogAppearsOnSaveCopyClick() {
+		onView(withText(R.string.menu_save_copy)).perform(click());
+		onView(withText(R.string.dialog_save_image_name)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testSaveDialogSavesChanges() {
+		onView(withText(R.string.menu_save_image)).perform(click());
+
+		onView(withId(R.id.pocketpaint_save_info_title)).check(matches(isDisplayed()));
+		onView(withId(R.id.pocketpaint_image_name_save_text)).check(matches(isDisplayed()));
+		onView(withId(R.id.pocketpaint_save_dialog_spinner)).check(matches(isDisplayed()));
+
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.perform(click());
+		onData(allOf(is(instanceOf(String.class)),
+				is("png"))).inRoot(isPlatformPopup()).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText(Constants.TEMP_PICTURE_NAME));
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+		pressBack();
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_save_image)).perform(click());
+
+		onView(withText("png")).check(matches(isDisplayed()));
+		onView(withText(Constants.TEMP_PICTURE_NAME)).check(matches(isDisplayed()));
 	}
 
 	@Test
 	public void testShowRateUsDialogOnLikeUsDialogPositiveButtonPressed() {
 		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("1"));
+		onView(withText(R.string.save_button_text)).perform(click());
 		onView(withText(R.string.pocketpaint_yes)).perform(click());
 		onView(withText(R.string.pocketpaint_rate_us)).check(matches(isDisplayed()));
 	}
@@ -176,6 +228,9 @@ public class MoreOptionsIntegrationTest {
 	@Test
 	public void testShowFeedbackDialogOnLikeUsDialogNegativeButtonPressed() {
 		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("12"));
+		onView(withText(R.string.save_button_text)).perform(click());
 		onView(withText(R.string.pocketpaint_no)).perform(click());
 		onView(withText(R.string.pocketpaint_feedback)).check(matches(isDisplayed()));
 	}
@@ -183,6 +238,10 @@ public class MoreOptionsIntegrationTest {
 	@Test
 	public void testLikeUsDialogNotShownOnSecondSave() {
 		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("123"));
+		onView(withText(R.string.save_button_text)).perform(click());
+
 		onView(withText(R.string.pocketpaint_like_us)).check(matches(isDisplayed()));
 		pressBack();
 
@@ -191,5 +250,6 @@ public class MoreOptionsIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 		onView(withText(R.string.pocketpaint_like_us)).check(doesNotExist());
+		onView(withText(R.string.save_button_text)).perform(click());
 	}
 }

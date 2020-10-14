@@ -26,6 +26,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.common.Constants;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -63,17 +64,45 @@ public class SaveImageAsync extends AsyncTask<Void, Void, Uri> {
 		SaveImageCallback callback = callbackRef.get();
 		if (callback != null && !callback.isFinishing()) {
 			try {
-				if (uri != null) {
+				String fileName = FileIO.getDefaultFileName();
+				int fileExistsValue = FileIO.checkIfDifferentFile(fileName);
+
+				if (uri != null && FileIO.catroidFlag) {
+					return FileIO.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
+				} else if (uri != null && fileExistsValue != Constants.IS_NO_FILE) {
+					setUriToFormatUri(fileExistsValue);
 					return FileIO.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
 				} else {
-					String fileName = FileIO.getDefaultFileName();
-					return FileIO.saveBitmapToFile(fileName, bitmap, callback.getContentResolver());
+
+					Uri imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.getContentResolver());
+
+					if (FileIO.ending.equals(".png")) {
+						FileIO.currentFileNamePng = fileName;
+						FileIO.uriFilePng = imageUri;
+					} else {
+						FileIO.currentFileNameJpg = fileName;
+						FileIO.uriFileJpg = imageUri;
+					}
+
+					return imageUri;
 				}
 			} catch (IOException e) {
 				Log.d(TAG, "Can't save image file", e);
 			}
 		}
 		return null;
+	}
+
+	private void setUriToFormatUri(int formatcode) {
+		if (formatcode == Constants.IS_JPG) {
+			if (FileIO.uriFileJpg != null) {
+				uri = FileIO.uriFileJpg;
+			}
+		} else {
+			if (FileIO.uriFilePng != null) {
+				uri = FileIO.uriFilePng;
+			}
+		}
 	}
 
 	@Override
