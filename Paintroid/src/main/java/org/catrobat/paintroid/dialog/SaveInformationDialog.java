@@ -45,6 +45,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+
 public class SaveInformationDialog extends MainActivityDialogFragment implements AdapterView.OnItemSelectedListener, SeekBar.OnSeekBarChangeListener {
 
 	private Spinner mySpinner;
@@ -121,7 +123,7 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 			public void onClick(DialogInterface dialog, int which) {
 				FileIO.filename = imageName.getText().toString();
 
-				if (FileIO.checkIfDifferentFile(FileIO.getDefaultFileName()) != Constants.IS_NO_FILE) {
+				if (permission != PERMISSION_EXTERNAL_STORAGE_SAVE_COPY && FileIO.checkIfDifferentFile(FileIO.getDefaultFileName()) != Constants.IS_NO_FILE) {
 					getPresenter().showOverwriteDialog(permission);
 				} else {
 					getPresenter().switchBetweenVersions(permission);

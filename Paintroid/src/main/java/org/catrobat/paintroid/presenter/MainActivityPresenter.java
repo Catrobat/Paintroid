@@ -147,7 +147,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveBeforeLoadImage() {
-		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, getImageNumber());
+		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, getImageNumber(), false);
 	}
 
 	@Override
@@ -169,7 +169,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveBeforeNewImage() {
-		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, getImageNumber());
+		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, getImageNumber(), false);
 	}
 
 	private void showSecurityQuestionBeforeExit() {
@@ -189,17 +189,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveBeforeFinish() {
-		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, getImageNumber());
+		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, getImageNumber(), false);
 	}
 
 	@Override
-	public void saveCopyClicked() {
-		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, getImageNumber());
+	public void saveCopyClicked(boolean isExport) {
+		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, getImageNumber(), isExport);
 	}
 
 	@Override
 	public void saveImageClicked() {
-		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, getImageNumber());
+		navigator.showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, getImageNumber(), false);
 	}
 
 	@Override

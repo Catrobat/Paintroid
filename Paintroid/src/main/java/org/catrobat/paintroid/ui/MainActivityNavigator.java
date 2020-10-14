@@ -383,13 +383,13 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@SuppressLint("VisibleForTests")
 	@Override
-	public void showSaveImageInformationDialogWhenStandalone(int permissionCode, int imageNumber) {
+	public void showSaveImageInformationDialogWhenStandalone(int permissionCode, int imageNumber, boolean isExport) {
 		Uri uri = mainActivity.model.getSavedPictureUri();
 		if (uri != null) {
 			FileIO.parseFileName(uri, mainActivity.getContentResolver());
 		}
 
-		if (mainActivity.model.isOpenedFromCatroid()) {
+		if (!isExport && mainActivity.model.isOpenedFromCatroid()) {
 			FileIO.filename = "image" + imageNumber;
 			FileIO.compressFormat = Bitmap.CompressFormat.PNG;
 			FileIO.ending = ".png";
@@ -399,7 +399,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		}
 
 		boolean isStandard = false;
-		if (permissionCode == MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
+		if (permissionCode == MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY && !isExport) {
 			isStandard = true;
 		}
 

@@ -105,7 +105,7 @@ public interface MainActivityContracts {
 
 		void showSaveBeforeLoadImageDialog();
 
-		void showSaveImageInformationDialogWhenStandalone(int permissionCode, int imageNumber);
+		void showSaveImageInformationDialogWhenStandalone(int permissionCode, int imageNumber, boolean isExport);
 
 		void restoreFragmentListeners();
 
@@ -166,7 +166,7 @@ public interface MainActivityContracts {
 
 		void discardImageClicked();
 
-		void saveCopyClicked();
+		void saveCopyClicked(boolean isExport);
 
 		void saveImageClicked();
 
@@ -248,7 +248,7 @@ public interface MainActivityContracts {
 
 		int getImageNumber();
 
-    Bitmap getBitmap();
+		Bitmap getBitmap();
 	}
 
 	interface Model {
