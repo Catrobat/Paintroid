@@ -53,20 +53,16 @@
 
     </RelativeLayout>
 
-    <com.google.android.material.card.MaterialCardView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/margin_16dp"
-        app:cardCornerRadius="0dp"
-        app:strokeColor="@color/pocketpaint_color_picker_black"
-        app:strokeWidth="1dp">
+        android:layout_height="match_parent">
 
         <org.catrobat.paintroid.colorpicker.ZoomableImageView
             android:id="@+id/previewSurface"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </com.google.android.material.card.MaterialCardView>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:transitionName="previewSurface" />
+    </FrameLayout>
 
 </LinearLayout>

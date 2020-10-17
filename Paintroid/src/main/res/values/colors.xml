@@ -39,4 +39,6 @@
     <!-- PocketPaint welcome activity -->
     <color name="pocketpaint_welcome_dot_active">#ffffffff</color>
     <color name="pocketpaint_welcome_dot_inactive">#64ffffff</color>
+    <!-- PocketPaint Toggle Button -->
+    <color name="pocketpaint_lighter_gray">#DFDADA</color>
 </resources>

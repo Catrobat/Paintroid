@@ -54,7 +54,7 @@
         <item name="android:background">@drawable/pocketpaint_selectable_button_bg</item>
     </style>
 
-    <style name="PocketPaintTheme.Base" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+    <style name="PocketPaintTheme.Base" parent="Theme.MaterialComponents.NoActionBar.Bridge">
         <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>
         <item name="dialogTheme">@style/PocketPaintAlertDialog</item>
         <item name="colorPrimary">@color/pocketpaint_colorPrimary</item>
@@ -62,6 +62,50 @@
         <item name="colorAccent">@color/pocketpaint_colorAccent</item>
         <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="colorSurface">@color/design_default_color_surface</item>
+        <item name="seekBarStyle">@style/CustomSeekBarStyle</item>
+        <item name="editTextStyle">@style/CustomEditTextStyle</item>
+        <item name="spinnerStyle">@style/CustomSpinnerStyle</item>
+        <item name="android:textViewStyle">@style/CustomTextViewStyle</item>
+        <item name="android:buttonStyleToggle">@style/CustomToggleButtonStyle</item>
+        <item name="android:buttonStyle">@style/CustomButtonStyle</item>
+        <item name="colorControlNormal">@android:color/black</item>
+        <item name="colorControlActivated">?colorAccent</item>
+        <item name="bottomNavigationStyle">@style/CustomBottomNavigationViewStyle</item>
+        <item name="colorButtonNormal">@color/pocketpaint_lighter_gray</item>
+    </style>
+
+    <style name="CustomBottomNavigationViewStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="backgroundTint">@color/pocketpaint_colorPrimary</item>
+    </style>
+
+    <style name="CustomToggleButtonStyle" parent="android:Widget.Material.Light.Button.Toggle">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="background">@drawable/btn_toggle_material_background</item>
+    </style>
+
+    <style name="CustomButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="backgroundTint">@color/pocketpaint_lighter_gray</item>
+    </style>
+
+    <style name="CustomTextViewStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    <style name="CustomSpinnerStyle" parent="Widget.AppCompat.Spinner">
+        <item name="backgroundTint">@android:color/darker_gray</item>
+        <item name="android:popupBackground">@android:color/white</item>
+    </style>
+
+    <style name="CustomEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="backgroundTint">?colorAccent</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">@android:color/darker_gray</item>
+    </style>
+
+    <style name="CustomSeekBarStyle" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressBackgroundTint">@color/pocketpaint_color_picker_gray</item>
+        <item name="android:progressTint">?attr/colorAccent</item>
+        <item name="android:colorControlActivated">?attr/colorAccent</item>
     </style>
 
     <style name="PocketPaintHighlightColorTheme" parent="PocketPaintTheme">
@@ -152,7 +196,7 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="PocketPaintWelcomeActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="PocketPaintWelcomeActivityTheme" parent="Theme.MaterialComponents.NoActionBar.Bridge">
         <item name="colorPrimary">@color/pocketpaint_colorPrimary</item>
         <item name="android:colorBackground">@color/pocketpaint_colorPrimary</item>
         <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>
