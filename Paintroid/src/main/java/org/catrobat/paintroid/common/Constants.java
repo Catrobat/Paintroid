@@ -27,9 +27,8 @@ public final class Constants {
 	public static final String PAINTROID_PICTURE_PATH = "org.catrobat.extra.PAINTROID_PICTURE_PATH";
 	public static final String PAINTROID_PICTURE_NAME = "org.catrobat.extra.PAINTROID_PICTURE_NAME";
 
-	public static final String EXT_STORAGE_DIRECTORY_NAME = "Pocket Paint";
 	public static final String TEMP_PICTURE_NAME = "catroidTemp";
-	public static final File MEDIA_DIRECTORY = new File(Environment.getExternalStorageDirectory(), EXT_STORAGE_DIRECTORY_NAME);
+	public static final File MEDIA_DIRECTORY = new File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_PICTURES);
 
 	public static final String ABOUT_DIALOG_FRAGMENT_TAG = "aboutdialogfragment";
 	public static final String LIKE_US_DIALOG_FRAGMENT_TAG = "likeusdialogfragment";

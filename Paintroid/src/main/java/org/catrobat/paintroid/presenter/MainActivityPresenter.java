@@ -77,6 +77,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXT
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
@@ -87,6 +88,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOA
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_NEW_EMPTY;
 
 public class MainActivityPresenter implements Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
+	private Activity fileActivity;
 	private MainView view;
 	private Model model;
 	private Workspace workspace;
@@ -104,10 +106,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private ToolController toolController;
 	private UserPreferences sharedPreferences;
 
-	public MainActivityPresenter(MainView view, Model model, Workspace workspace, Navigator navigator,
+	public MainActivityPresenter(Activity activity, MainView view, Model model, Workspace workspace, Navigator navigator,
 			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
 			DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
 			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController, UserPreferences sharedPreferences) {
+		this.fileActivity = activity;
 		this.view = view;
 		this.model = model;
 		this.workspace = workspace;
@@ -130,16 +133,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void loadImageClicked() {
-		if (isImageUnchanged() || model.isSaved()) {
-			navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
-		} else {
-			navigator.showSaveBeforeLoadImageDialog();
-		}
+		switchBetweenVersions(PERMISSION_REQUEST_CODE_LOAD_PICTURE);
 	}
 
 	@Override
 	public void saveBeforeLoadImage() {
-		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
+		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
 	}
 
 	@Override
@@ -158,7 +157,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveBeforeNewImage() {
-		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
+		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
 	}
 
 	private void showSecurityQuestionBeforeExit() {
@@ -178,17 +177,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveBeforeFinish() {
-		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
+		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
 	}
 
 	@Override
 	public void saveCopyClicked() {
-		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
+		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
 	}
 
 	@Override
 	public void saveImageClicked() {
-		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE);
+		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
 		showLikeUsDialogIfFirstTimeSave();
 	}
 
@@ -259,20 +258,69 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		commandManager.addCommand(commandFactory.createResetCommand());
 	}
 
-	private void askForWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
+	private void switchBetweenVersions(@PermissionRequestCode int requestCode) {
+		if (navigator.isSdkAboveOrEqualQ()) {
+			switch (requestCode) {
+				case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
+					askForReadAndWriteExternalStoragePermission(PERMISSION_REQUEST_CODE_LOAD_PICTURE);
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE:
+					saveImageConfirmClicked(SAVE_IMAGE_DEFAULT, model.getSavedPictureUri());
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
+					Bitmap bitmap = workspace.getBitmapOfAllLayers();
+					interactor.saveCopy(this, SAVE_IMAGE_DEFAULT, bitmap);
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW:
+					saveImageConfirmClicked(SAVE_IMAGE_LOAD_NEW, model.getSavedPictureUri());
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
+					saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, model.getSavedPictureUri());
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
+					saveImageConfirmClicked(SAVE_IMAGE_FINISH, model.getSavedPictureUri());
+					break;
+			}
+		} else {
+			if (requestCode == PERMISSION_REQUEST_CODE_LOAD_PICTURE) {
+				if (isImageUnchanged() || model.isSaved()) {
+					navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+				} else {
+					navigator.showSaveBeforeLoadImageDialog();
+				}
+			} else {
+				askForReadAndWriteExternalStoragePermission(requestCode);
+			}
+		}
+	}
+
+	private void askForReadAndWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
 		if (model.isOpenedFromCatroid() && requestCode == PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH) {
-			handleRequestPermissionsResult(requestCode,
-					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-					new int[]{PackageManager.PERMISSION_GRANTED});
+			if (!navigator.isSdkAboveOrEqualQ()) {
+				handleRequestPermissionsResult(requestCode,
+						new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+						new int[]{PackageManager.PERMISSION_GRANTED});
+			}
+
 			return;
 		}
 
-		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-			navigator.askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+		if (navigator.isSdkAboveOrEqualQ()) {
+			if (!navigator.doIHavePermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+				navigator.askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestCode);
+			} else {
+				handleRequestPermissionsResult(requestCode,
+						new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+						new int[]{PackageManager.PERMISSION_GRANTED});
+			}
 		} else {
-			handleRequestPermissionsResult(requestCode,
-					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-					new int[]{PackageManager.PERMISSION_GRANTED});
+			if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+				navigator.askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+			} else {
+				handleRequestPermissionsResult(requestCode,
+						new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+						new int[]{PackageManager.PERMISSION_GRANTED});
+			}
 		}
 	}
 
@@ -309,7 +357,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void handleRequestPermissionsResult(@PermissionRequestCode int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		if (permissions.length == 1 && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+		if (permissions.length == 1 && (permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE)
+				|| permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE))) {
 			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				Bitmap bitmap;
 				switch (requestCode) {
@@ -329,6 +378,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 						break;
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
 						saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, model.getSavedPictureUri());
+						break;
+					case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
+						if (isImageUnchanged() || model.isSaved()) {
+							navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+						} else {
+							navigator.showSaveBeforeLoadImageDialog();
+						}
 						break;
 					default:
 						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -658,6 +714,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public ContentResolver getContentResolver() {
 		return view.getContentResolver();
+	}
+
+	@Override
+	public Activity getFileActivity() {
+		return fileActivity;
 	}
 
 	@Override

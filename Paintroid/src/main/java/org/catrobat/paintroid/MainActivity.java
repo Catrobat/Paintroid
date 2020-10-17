@@ -298,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 				new DefaultToolFactory(), commandManager, workspace, toolPaint, contextCallback);
 		UserPreferences preferences = new UserPreferences(getPreferences(Context.MODE_PRIVATE));
 
-		presenter = new MainActivityPresenter(this, model, workspace,
+		presenter = new MainActivityPresenter(this, this, model, workspace,
 				navigator, interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
 				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, toolController, preferences);
 		toolController.setOnColorPickedListener(new PresenterColorPickedListener(presenter));
