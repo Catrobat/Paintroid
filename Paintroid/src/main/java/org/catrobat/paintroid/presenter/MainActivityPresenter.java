@@ -489,8 +489,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			drawerLayoutViewHolder.closeDrawer(Gravity.END, true);
 		} else if (model.isFullscreen()) {
 			exitFullscreenClicked();
-		} else if (toolController.toolOptionsViewVisible()) {
-			toolController.hideToolOptionsView();
 		} else if (!toolController.isDefaultTool()) {
 			setTool(ToolType.BRUSH);
 			toolController.switchTool(ToolType.BRUSH, true);

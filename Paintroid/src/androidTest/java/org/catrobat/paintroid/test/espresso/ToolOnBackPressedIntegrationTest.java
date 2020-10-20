@@ -192,6 +192,18 @@ public class ToolOnBackPressedIntegrationTest {
 	}
 
 	@Test
+	public void testToolOptionsGoBackWhenBackPressed() {
+		onToolBarView()
+				.performSelectTool(ToolType.CURSOR);
+
+		assertEquals(toolReference.get().getToolType(), ToolType.CURSOR);
+
+		Espresso.pressBack();
+
+		assertEquals(toolReference.get().getToolType(), ToolType.BRUSH);
+	}
+
+	@Test
 	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -233,16 +245,5 @@ public class ToolOnBackPressedIntegrationTest {
 				.perform(closeSoftKeyboard())
 				.perform(ViewActions.pressBack())
 				.check(doesNotExist());
-	}
-
-	@Test
-	public void testCloseToolOptionOnBackPressed() {
-		onToolBarView()
-				.performSelectTool(ToolType.TRANSFORM);
-		onToolBarView().onToolOptionsView()
-				.check(matches(isDisplayed()));
-		pressBack();
-		onToolBarView().onToolOptionsView()
-				.check(matches(not(isDisplayed())));
 	}
 }

@@ -74,14 +74,14 @@ public class ToolOptionsIntegrationTest {
 	@Parameters(name = "{0}")
 	public static Iterable<Object[]> data() {
 		return Arrays.asList(new Object[][]{
-				{ToolType.BRUSH, false, true},
+				{ToolType.BRUSH, true, true},
 				{ToolType.SHAPE, true, true},
 				{ToolType.TRANSFORM, true, true},
-				{ToolType.LINE, false, true},
-				{ToolType.CURSOR, false, true},
-				{ToolType.FILL, false, true},
+				{ToolType.LINE, true, true},
+				{ToolType.CURSOR, true, true},
+				{ToolType.FILL, true, true},
 				{ToolType.STAMP, true, true},
-				{ToolType.ERASER, false, true},
+				{ToolType.ERASER, true, true},
 				{ToolType.TEXT, true, true},
 				{ToolType.HAND, false, false}
 		});

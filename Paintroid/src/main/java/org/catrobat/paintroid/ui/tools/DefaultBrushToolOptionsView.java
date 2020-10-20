@@ -29,8 +29,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
+
+import com.google.android.material.chip.Chip;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
@@ -47,8 +48,8 @@ public final class DefaultBrushToolOptionsView implements BrushToolOptionsView {
 
 	private final EditText brushSizeText;
 	private final SeekBar brushWidthSeekBar;
-	private final ImageButton buttonCircle;
-	private final ImageButton buttonRect;
+	private final Chip buttonCircle;
+	private final Chip buttonRect;
 	private final BrushToolPreview brushToolPreview;
 	@VisibleForTesting
 	public BrushToolOptionsView.OnBrushChangedListener brushChangedListener;

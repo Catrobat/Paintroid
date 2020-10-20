@@ -63,7 +63,7 @@ public class ScrollingViewIntegrationTest {
 
 	@Test
 	public void testScrollingViewDrawTool() {
-
+		onToolBarView().performCloseToolOptionsView();
 		final int perspectiveScale = 5;
 		perspective.setScale(perspectiveScale);
 
@@ -120,7 +120,7 @@ public class ScrollingViewIntegrationTest {
 	public void testScrollingViewCursorTool() {
 		final int perspectiveScale = 5;
 		perspective.setScale(perspectiveScale);
-
+		onToolBarView().performCloseToolOptionsView();
 		float surfaceWidth = perspective.surfaceWidth;
 		float surfaceHeight = perspective.surfaceHeight;
 
@@ -156,7 +156,7 @@ public class ScrollingViewIntegrationTest {
 
 		onToolBarView()
 				.performSelectTool(ToolType.CURSOR);
-
+		onToolBarView().performCloseToolOptionsView();
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(rightMiddle);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(leftMiddle);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(topMiddle);

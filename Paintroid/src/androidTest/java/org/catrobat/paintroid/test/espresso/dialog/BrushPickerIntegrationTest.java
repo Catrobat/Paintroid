@@ -64,8 +64,7 @@ public class BrushPickerIntegrationTest {
 	@Before
 	public void setUp() {
 		onToolBarView()
-				.performSelectTool(ToolType.BRUSH)
-				.performOpenToolOptionsView();
+				.performSelectTool(ToolType.BRUSH);
 	}
 
 	private Paint getCurrentToolBitmapPaint() {
@@ -143,8 +142,7 @@ public class BrushPickerIntegrationTest {
 
 		onToolBarView()
 				.performCloseToolOptionsView()
-				.performSelectTool(ToolType.CURSOR)
-				.performOpenToolOptionsView();
+				.performSelectTool(ToolType.CURSOR);
 
 		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 				.check(matches(withProgress(newStrokeWidth)));

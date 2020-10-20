@@ -29,8 +29,8 @@
         android:id="@+id/pocketpaint_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:theme="@style/PocketPaintTheme"
+        app:popupTheme="@style/DropdownMenu"
         app:title="@string/pocketpaint_app_name">
 
         <LinearLayout

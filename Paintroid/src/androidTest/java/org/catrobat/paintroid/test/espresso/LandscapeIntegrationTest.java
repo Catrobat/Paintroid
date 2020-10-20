@@ -117,13 +117,13 @@ public class LandscapeIntegrationTest {
 						.performClickSelectedToolButton();
 			}
 
-			onView(withId(R.id.pocketpaint_main_tool_options))
+			onView(withId(R.id.pocketpaint_layout_tool_specific_options))
 					.check(matches(isDisplayed()));
 
 			onBottomNavigationView()
 					.onCurrentClicked();
 
-			onView(withId(R.id.pocketpaint_main_tool_options))
+			onView(withId(R.id.pocketpaint_layout_tool_specific_options))
 					.check(matches(not(isDisplayed())));
 		}
 	}
@@ -268,8 +268,7 @@ public class LandscapeIntegrationTest {
 				.checkItemExists(R.string.menu_new_image)
 				.checkItemExists(R.string.share_image_menu)
 
-				.checkItemDoesNotExist(R.string.menu_discard_image)
-				.checkItemDoesNotExist(R.string.menu_export);
+				.checkItemDoesNotExist(R.string.menu_discard_image);
 	}
 
 	@Test
