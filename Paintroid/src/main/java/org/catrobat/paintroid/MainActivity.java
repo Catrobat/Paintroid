@@ -221,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			presenter.showAboutClicked();
 		} else if (i == android.R.id.home) {
 			presenter.backToPocketCodeClicked();
+		} else if (i == R.id.pocketpaint_share_image_button) {
+			presenter.shareImageClicked();
 		} else if (i == R.id.pocketpaint_options_feedback) {
 			presenter.sendFeedback();
 		} else {
