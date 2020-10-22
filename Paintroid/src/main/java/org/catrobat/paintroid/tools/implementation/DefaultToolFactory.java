@@ -48,8 +48,6 @@ public class DefaultToolFactory implements ToolFactory {
 		ViewGroup toolLayout = toolOptionsViewController.getToolSpecificOptionsLayout();
 
 		switch (toolType) {
-			case BRUSH:
-				return new BrushTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case CURSOR:
 				return new CursorTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case STAMP:

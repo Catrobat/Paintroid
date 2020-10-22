@@ -259,7 +259,7 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
-	protected void onClickInBox() {
+	public void onClickOnButton() {
 	}
 
 	@Override

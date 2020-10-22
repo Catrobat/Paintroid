@@ -149,6 +149,17 @@ public class DefaultToolController implements ToolController {
 		Tool tool;
 		toolOptionsViewController.removeToolViews();
 		toolOptionsViewController.setToolName(toolType.getNameResource());
+
+		if (toolType == ToolType.TEXT
+				|| toolType == ToolType.TRANSFORM
+				|| toolType == ToolType.SHAPE
+				|| toolType == ToolType.STAMP
+				|| toolType == ToolType.IMPORTPNG) {
+			toolOptionsViewController.showCheckmark();
+		} else {
+			toolOptionsViewController.hideCheckmark();
+		}
+
 		tool = toolFactory.createTool(toolType, toolOptionsViewController, commandManager, workspace, toolPaint, contextCallback, onColorPickedListener);
 		toolOptionsViewController.resetToOrigin();
 		return tool;

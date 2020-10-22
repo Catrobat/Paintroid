@@ -21,6 +21,7 @@ package org.catrobat.paintroid.ui.tools;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.view.MotionEvent;
@@ -41,6 +42,7 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 	private final ViewGroup bottomNavigation;
 	private final ViewGroup mainToolOptions;
 	private final View drawingSurfaceView;
+	private final View topBarSpecificViewCheckmark;
 
 	private final int colorActive;
 	private final int colorInactive;
@@ -55,11 +57,13 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 		mainToolOptions = activity.findViewById(R.id.pocketpaint_main_tool_options);
 		toolOptionsTextView = activity.findViewById(R.id.pocketpaint_layout_tool_options_name);
 		toolSpecificOptionsLayout = activity.findViewById(R.id.pocketpaint_layout_tool_specific_options);
+		topBarSpecificViewCheckmark = activity.findViewById(R.id.pocketpaint_btn_top_checkmark);
 
 		colorActive = ContextCompat.getColor(activity, R.color.pocketpaint_main_drawing_surface_active);
 		colorInactive = ContextCompat.getColor(activity, R.color.pocketpaint_main_drawing_surface_inactive);
 
 		mainToolOptions.setOnTouchListener(new View.OnTouchListener() {
+			@SuppressLint("ClickableViewAccessibility")
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				return true;
@@ -178,5 +182,15 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 	@Override
 	public ViewGroup getToolSpecificOptionsLayout() {
 		return toolSpecificOptionsLayout;
+	}
+
+	@Override
+	public void showCheckmark() {
+		topBarSpecificViewCheckmark.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public void hideCheckmark() {
+		topBarSpecificViewCheckmark.setVisibility(View.GONE);
 	}
 }

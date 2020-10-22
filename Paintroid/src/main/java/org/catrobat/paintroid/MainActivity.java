@@ -56,6 +56,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
 import org.catrobat.paintroid.tools.implementation.DefaultToolFactory;
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
@@ -368,6 +369,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			@Override
 			public void onClick(View v) {
 				presenter.redoClicked();
+			}
+		});
+		topBar.checkmarkButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				BaseToolWithShape tool = (BaseToolWithShape) toolReference.get();
+				tool.onClickOnButton();
 			}
 		});
 	}

@@ -181,7 +181,7 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	protected void onClickInBox() {
+	public void onClickOnButton() {
 		if (toolPosition.x - boxWidth / 2 <= workspace.getWidth()
 				&& toolPosition.y - boxHeight / 2 <= workspace.getHeight()
 				&& toolPosition.x + boxWidth / 2 >= 0

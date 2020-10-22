@@ -279,7 +279,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	protected void onClickInBox() {
+	public void onClickOnButton() {
 		highlightBox();
 		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
 		Command command = commandFactory.createTextToolCommand(getMultilineText(), textPaint, BOX_OFFSET, boxWidth,

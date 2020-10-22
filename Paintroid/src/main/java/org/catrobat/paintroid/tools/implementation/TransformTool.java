@@ -72,7 +72,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	private final CropAlgorithm cropAlgorithm;
 
 	public TransformTool(TransformToolOptionsView transformToolOptionsView, final ContextCallback contextCallback,
-			ToolOptionsVisibilityController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+						ToolOptionsVisibilityController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
 		this.transformToolOptionsView = transformToolOptionsView;
@@ -350,7 +350,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	protected void onClickInBox() {
+	public void onClickOnButton() {
 		executeResizeCommand();
 	}
 
@@ -375,10 +375,5 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 		transformToolOptionsView.setWidth((int) boxWidth);
 		transformToolOptionsView.setHeight((int) boxHeight);
-	}
-
-	@Override
-	protected void onClick(PointF coordinate) {
-		onClickInBox();
 	}
 }

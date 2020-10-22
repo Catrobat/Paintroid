@@ -34,5 +34,9 @@ public interface ToolOptionsViewController extends ToolOptionsVisibilityControll
 
 	void setToolName(@StringRes int id);
 
+	void showCheckmark();
+
+	void hideCheckmark();
+
 	ViewGroup getToolSpecificOptionsLayout();
 }

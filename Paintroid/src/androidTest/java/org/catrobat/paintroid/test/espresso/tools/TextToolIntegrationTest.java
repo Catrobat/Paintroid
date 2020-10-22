@@ -32,7 +32,6 @@ import android.widget.ToggleButton;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.LayerContracts;
-import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
@@ -53,8 +52,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
@@ -444,8 +441,8 @@ public class TextToolIntegrationTest {
 		canvasPoint.y = (float) Math.round(canvasPoint.y);
 		setToolMemberBoxPosition(canvasPoint);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		int surfaceBitmapWidth = layerModel.getWidth();
 		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
