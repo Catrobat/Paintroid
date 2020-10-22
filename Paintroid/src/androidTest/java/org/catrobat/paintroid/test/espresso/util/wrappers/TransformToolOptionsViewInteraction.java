@@ -46,6 +46,12 @@ public final class TransformToolOptionsViewInteraction extends CustomViewInterac
 		return this;
 	}
 
+	public TransformToolOptionsViewInteraction checkAutoDisplayed() {
+		onView(withText(R.string.transform_auto_crop_text))
+				.check(matches(isDisplayed()));
+		return this;
+	}
+
 	public TransformToolOptionsViewInteraction performRotateClockwise() {
 		onView(withId(R.id.pocketpaint_transform_rotate_right_btn))
 				.perform(click());
