@@ -55,11 +55,11 @@
     <string name="help_content_fill">Tap on the image to fill an area with the selected color.</string>
     <string name="help_content_cursor">Position the cursor where you want to draw. Tap to activate the cursor. Move your finger to draw. Tap again to deactivate.</string>
     <string name="help_content_transform">Use to transform the image.</string>
-    <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and tap again to stamp.</string>
+    <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and click on the checkmark to stamp.</string>
     <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
     <string name="help_content_line">Draw a straight line.</string>
-    <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
-    <string name="help_content_shape">Choose a shape and tap it to insert the selected shape.</string>
+    <string name="help_content_text">Write text and format it. Resize the text box afterwards. Click on the checkmark to insert the text on the image.</string>
+    <string name="help_content_shape">Choose a shape and click on the checkmark to insert the selected shape.</string>
     <string name="help_content_layer">Create new layers or modify existing ones.</string>
     <string name="help_content_color_chooser">Select or adjust a color.</string>
     <string name="help_content_hand">Move your finger to move the canvas.</string>
@@ -142,7 +142,7 @@
 
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
-    <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+    <string name="transform_info_text">Drag edges to their new position, click on the checkmark to enlarge or crop the image area.</string>
     <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
     <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
     <string name="welcome_to_pocket_paint">Welcome To Pocket Paint</string>
