@@ -19,23 +19,33 @@
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pocketpaint_item_layer_background"
-    android:layout_width="wrap_content"
+    android:layout_width="150dp"
     android:layout_height="wrap_content"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:paddingStart="5dp"
-    android:paddingEnd="5dp"
-    android:gravity="center_vertical"
     android:background="@drawable/pocketpaint_attribute_button_selector"
-    android:orientation="horizontal">
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="5dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="5dp"
+    android:paddingBottom="10dp"
+    android:descendantFocusability="blocksDescendants" >
+
+    <CheckBox
+        android:id="@+id/pocketpaint_checkbox_layer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:translationX="3dp"
+        android:checked="true"/>
 
     <ImageView
         android:id="@+id/pocketpaint_item_layer_image"
         android:layout_width="75dp"
         android:layout_height="100dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
+        android:adjustViewBounds="false"
         android:background="@drawable/pocketpaint_checkeredbg_repeat"
-        android:contentDescription="@string/layer_background" />
-
+        android:contentDescription="@string/layer_background"
+        android:scaleType="fitXY"
+        android:translationX="20dp"
+        android:focusable="false" />
 </LinearLayout>

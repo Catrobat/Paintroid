@@ -60,6 +60,12 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
+	public ToolBarViewInteraction onToolsClicked() {
+		onBottomNavigationView()
+				.onToolsClicked();
+		return this;
+	}
+
 	public ToolBarViewInteraction performSelectTool(ToolType toolType) {
 		if (getCurrentToolType() != toolType) {
 			onBottomNavigationView()

@@ -40,6 +40,8 @@ public interface Workspace {
 
 	Bitmap getBitmapOfCurrentLayer();
 
+	int getCurrentLayerIndex();
+
 	int getPixelOfCurrentLayer(PointF coordinate);
 
 	void resetPerspective();

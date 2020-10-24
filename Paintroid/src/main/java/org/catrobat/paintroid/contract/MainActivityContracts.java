@@ -32,6 +32,7 @@ import org.catrobat.paintroid.iotasks.CreateFileAsync;
 import org.catrobat.paintroid.iotasks.LoadImageAsync;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.LayerAdapter;
 
 import java.io.File;
 
@@ -216,6 +217,8 @@ public interface MainActivityContracts {
 		void actionCurrentToolClicked();
 
 		void rateUsClicked();
+
+		void setLayerAdapter(LayerAdapter layerAdapter);
 	}
 
 	interface Model {

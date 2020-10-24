@@ -104,6 +104,7 @@
     <string name="transform_height_text">Höhe</string>
     <string name="pixel">px</string>
     <string name="stamp_tool_copy_hint">Lange drücken um Inhalte zu kopieren</string>
+    <string name="share_image_title">Send image via</string>
     <string name="layers_title">Ebenen</string>
     <string name="layer_new">Neue Ebene</string>
     <string name="layer_delete">Ebene löschen</string>

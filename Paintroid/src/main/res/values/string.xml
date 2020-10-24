@@ -68,6 +68,8 @@
     <string name="closing_security_question">Save changes?</string>
     <string name="menu_new_image">New image</string>
     <string name="menu_discard_image">Discard image</string>
+    <string name="no_longclick_on_hidden_layer">You are only able to merge or reorder if all layers are visible</string>
+    <string name="no_tools_on_hidden_layer">No tools are available on hidden layer</string>
     <string name="menu_load_image">Load image</string>
     <string name="menu_save_image">Save image</string>
     <string name="menu_save_copy">Save copy</string>
