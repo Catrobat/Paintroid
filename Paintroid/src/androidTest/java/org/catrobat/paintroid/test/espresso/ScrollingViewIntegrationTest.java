@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.content.res.TypedArray;
 import android.graphics.PointF;
 
 import org.catrobat.paintroid.MainActivity;
@@ -33,9 +34,6 @@ import org.junit.runner.RunWith;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getActionbarHeight;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusbarHeight;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -52,6 +50,7 @@ public class ScrollingViewIntegrationTest {
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 	private int drawerEdgeSize;
 	private Perspective perspective;
+	private MainActivity mainActivity;
 
 	@Before
 	public void setUp() {
@@ -59,6 +58,7 @@ public class ScrollingViewIntegrationTest {
 		float displayDensity = activity.getResources().getDisplayMetrics().density;
 		perspective = activity.perspective;
 		drawerEdgeSize = (int) (20 * displayDensity + 0.5f);
+		mainActivity = launchActivityRule.getActivity();
 	}
 
 	@Test
@@ -74,8 +74,17 @@ public class ScrollingViewIntegrationTest {
 		float xLeft = 1 + drawerEdgeSize;
 		float xMiddle = surfaceWidth / 2;
 
-		final float actionBarHeight = getActionbarHeight();
-		final float statusBarHeight = getStatusbarHeight();
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 
 		float yMiddle = (surfaceHeight / 2 + actionBarHeight + statusBarHeight);
 		float yTop = (actionBarHeight + statusBarHeight);
@@ -115,10 +124,19 @@ public class ScrollingViewIntegrationTest {
 		float surfaceWidth = perspective.surfaceWidth;
 		float surfaceHeight = perspective.surfaceHeight;
 
-		final float actionBarHeight = getActionbarHeight();
-		final float statusBarHeight = getStatusbarHeight();
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
 
-		float xRight = surfaceWidth - 1;
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		float xRight = surfaceWidth - 100;
 		float xLeft = 1;
 		float xMiddle = surfaceWidth / 2;
 
@@ -157,7 +175,19 @@ public class ScrollingViewIntegrationTest {
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(PointF clickPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(clickPoint);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(perspective.surfaceCenterX, perspective.surfaceCenterY + actionBarHeight + statusBarHeight);
 
 		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
@@ -171,7 +201,19 @@ public class ScrollingViewIntegrationTest {
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasChangedInXOrY(PointF clickPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(clickPoint);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(perspective.surfaceCenterX, perspective.surfaceCenterY + actionBarHeight + statusBarHeight);
 
 		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
@@ -183,7 +225,19 @@ public class ScrollingViewIntegrationTest {
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasNotChanged(PointF clickPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(clickPoint);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(perspective.surfaceCenterX, perspective.surfaceCenterY + actionBarHeight + statusBarHeight);
 
 		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
@@ -197,12 +251,24 @@ public class ScrollingViewIntegrationTest {
 	}
 
 	public void dragAndCheckIfCanvasHasMovedInXAndY(PointF fromPoint, PointF toPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
 		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
-		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
+		PointF endPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
 		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
 		assertNotEquals("scrolling did not work in x", startPointCanvas.x, endPointCanvas.x);
@@ -210,12 +276,24 @@ public class ScrollingViewIntegrationTest {
 	}
 
 	public void dragAndCheckIfCanvasHasMovedInXOrY(PointF fromPoint, PointF toPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
 		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
-		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
+		PointF endPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
 		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
 		String message = "startX(" + startPointCanvas.x + ") != endX(" + endPointCanvas.x
@@ -224,12 +302,24 @@ public class ScrollingViewIntegrationTest {
 	}
 
 	public void dragAndCheckIfCanvasHasNotMoved(PointF fromPoint, PointF toPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
 		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
-		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
+		PointF endPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
 		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
 		float delta = 0.5f;

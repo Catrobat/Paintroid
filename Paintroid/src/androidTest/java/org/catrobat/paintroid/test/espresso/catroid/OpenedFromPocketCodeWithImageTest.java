@@ -19,9 +19,9 @@
 
 package org.catrobat.paintroid.test.espresso.catroid;
 
-import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 
-import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
@@ -31,7 +31,6 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,6 +60,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class OpenedFromPocketCodeWithImageTest {
 
+	private static final String IMAGE_NAME = "testFile";
+	private static final String FILE_ENDING = ".png";
+
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, true);
 
@@ -71,10 +73,15 @@ public class OpenedFromPocketCodeWithImageTest {
 
 	@Before
 	public void setUp() {
-		imageFile = createImageFile();
+		String pathToFile =
+				launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+						+ File.separator
+						+ IMAGE_NAME
+						+ FILE_ENDING;
 
-		Intent extras = new Intent();
-		extras.putExtra(Constants.PAINTROID_PICTURE_PATH, imageFile.getAbsolutePath());
+		imageFile = new File(pathToFile);
+		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(imageFile));
+		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
 
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
@@ -87,7 +94,6 @@ public class OpenedFromPocketCodeWithImageTest {
 		}
 	}
 
-	@Ignore("Unstable")
 	@Test
 	public void testSave() {
 		onDrawingSurfaceView()
@@ -128,13 +134,5 @@ public class OpenedFromPocketCodeWithImageTest {
 
 		assertThat("Image modified", imageFile.lastModified(), equalTo(lastModifiedBefore));
 		assertThat("Saved image length changed", imageFile.length(), equalTo(fileSizeBefore));
-	}
-
-	private File createImageFile() {
-		try {
-			return FileIO.createNewEmptyPictureFile("testFile", launchActivityRule.getActivity());
-		} catch (NullPointerException e) {
-			throw new AssertionError("Could not create temp file", e);
-		}
 	}
 }

@@ -115,35 +115,6 @@ public class DrawingSurfaceListenerTest {
 		when(motionEvent.getX()).thenReturn(20 * DISPLAY_DENSITY - 1);
 		when(motionEvent.getY()).thenReturn(5f);
 
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-
-		verifyNoMoreInteractions(autoScrollTask, currentTool);
-	}
-
-	@Test
-	public void testOnTouchMoveIgnoredIfInsideDrawerLeftEdge() {
-		DrawingSurface drawingSurface = mock(DrawingSurface.class);
-		MotionEvent motionEvent = mock(MotionEvent.class);
-
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
-		when(motionEvent.getX()).thenReturn(20 * DISPLAY_DENSITY - 1);
-		when(motionEvent.getY()).thenReturn(5f);
-
-		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-
-		assertFalse(onTouchResult);
-		verifyNoMoreInteractions(autoScrollTask, currentTool);
-	}
-
-	@Test
-	public void testOnTouchCancelIgnoredIfInsideDrawerLeftEdge() {
-		DrawingSurface drawingSurface = mock(DrawingSurface.class);
-		MotionEvent motionEvent = mock(MotionEvent.class);
-
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
-		when(motionEvent.getX()).thenReturn(20 * DISPLAY_DENSITY - 1);
-		when(motionEvent.getY()).thenReturn(5f);
-
 		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		assertFalse(onTouchResult);
@@ -152,39 +123,6 @@ public class DrawingSurfaceListenerTest {
 
 	@Test
 	public void testOnTouchDownIgnoredIfInsideDrawerRightEdge() {
-		DrawingSurface drawingSurface = mock(DrawingSurface.class);
-		MotionEvent motionEvent = mock(MotionEvent.class);
-
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
-		when(motionEvent.getX()).thenReturn(67f);
-		when(motionEvent.getY()).thenReturn(5f);
-
-		when(drawingSurface.getWidth()).thenReturn((int) (67 + 20 * DISPLAY_DENSITY - 1));
-
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-
-		verifyNoMoreInteractions(autoScrollTask, currentTool);
-	}
-
-	@Test
-	public void testOnTouchMoveIgnoredIfInsideDrawerRightEdge() {
-		DrawingSurface drawingSurface = mock(DrawingSurface.class);
-		MotionEvent motionEvent = mock(MotionEvent.class);
-
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
-		when(motionEvent.getX()).thenReturn(67f);
-		when(motionEvent.getY()).thenReturn(5f);
-
-		when(drawingSurface.getWidth()).thenReturn((int) (67 + 20 * DISPLAY_DENSITY - 1));
-
-		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-
-		assertFalse(onTouchResult);
-		verifyNoMoreInteractions(autoScrollTask, currentTool);
-	}
-
-	@Test
-	public void testOnTouchCancelIgnoredIfInsideDrawerRightEdge() {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
 		MotionEvent motionEvent = mock(MotionEvent.class);
 

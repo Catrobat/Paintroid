@@ -78,7 +78,7 @@ public class ToolControllerTest {
 	}
 
 	@Test
-	public void testIsDefaultToolWhenBrushReturnsTrue() {
+	public void testIsBrushDefaultTool() {
 		Tool tool = mock(Tool.class);
 		when(tool.getToolType()).thenReturn(ToolType.BRUSH);
 		when(toolReference.get()).thenReturn(tool);
@@ -87,20 +87,34 @@ public class ToolControllerTest {
 	}
 
 	@Test
-	public void testIsDefaultToolWhenNotBrushReturnsFalse() {
+	public void testAllOtherToolsAreNotDefault() {
 		Tool tool = mock(Tool.class);
 		when(tool.getToolType()).thenReturn(
-				ToolType.CURSOR,
-				ToolType.ERASER,
-				ToolType.FILL,
-				ToolType.LINE,
 				ToolType.PIPETTE,
-				ToolType.SHAPE,
+				ToolType.UNDO,
+				ToolType.REDO,
+				ToolType.FILL,
 				ToolType.STAMP,
-				ToolType.TEXT
+				ToolType.LINE,
+				ToolType.CURSOR,
+				ToolType.IMPORTPNG,
+				ToolType.TRANSFORM,
+				ToolType.ERASER,
+				ToolType.SHAPE,
+				ToolType.TEXT,
+				ToolType.LAYER,
+				ToolType.COLORCHOOSER,
+				ToolType.HAND
 		);
 		when(toolReference.get()).thenReturn(tool);
 
+		assertFalse(toolController.isDefaultTool());
+		assertFalse(toolController.isDefaultTool());
+		assertFalse(toolController.isDefaultTool());
+		assertFalse(toolController.isDefaultTool());
+		assertFalse(toolController.isDefaultTool());
+		assertFalse(toolController.isDefaultTool());
+		assertFalse(toolController.isDefaultTool());
 		assertFalse(toolController.isDefaultTool());
 		assertFalse(toolController.isDefaultTool());
 		assertFalse(toolController.isDefaultTool());

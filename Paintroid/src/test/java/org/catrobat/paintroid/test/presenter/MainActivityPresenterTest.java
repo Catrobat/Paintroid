@@ -776,7 +776,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnCreateFilePostExecuteWhenFailedThenShowDialog() {
-		presenter.onCreateFilePostExecute(0, null);
+		presenter.onCreateFilePostExecute(CREATE_FILE_DEFAULT, null);
 
 		verify(navigator).showSaveErrorDialog();
 	}

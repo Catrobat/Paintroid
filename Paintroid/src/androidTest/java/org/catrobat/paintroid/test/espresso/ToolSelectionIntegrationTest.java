@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.test.espresso;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,9 +39,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class ToolSelectionIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Before
 	public void setUp() {

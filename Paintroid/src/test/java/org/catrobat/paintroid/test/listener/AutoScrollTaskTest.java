@@ -181,7 +181,7 @@ public class AutoScrollTaskTest {
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testStartAlreadyStarted() {
+	public void testStartWhenAlreadyRunning() {
 		autoScrollTask.setEventPoint(3f, 5f);
 		autoScrollTask.setViewDimensions(39, 42);
 

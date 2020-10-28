@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -311,6 +312,11 @@ public class MenuFileActivityIntegrationTest {
 
 	@Test
 	public void testSaveCopy() {
+		launchActivityRule.getActivity().getPreferences(Context.MODE_PRIVATE)
+				.edit()
+				.clear()
+				.commit();
+
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
