@@ -114,7 +114,7 @@ public final class FileIO {
 		if (temporaryFileName != null) {
 			File tempFile = new File(temporaryFileName.getPath());
 			if (!tempFile.delete()) {
-				throw new IOException("Can not delete temporary file.");
+				throw new IOException("Cannot delete temporary file.");
 			}
 		}
 
@@ -136,7 +136,7 @@ public final class FileIO {
 
 			uri = Uri.fromFile(imageFile);
 		} catch (IOException e) {
-			Log.e("Can not write", "Can't write to stream", e);
+			Log.e("Cannot write", "Can't write to stream", e);
 		}
 
 		return uri;
