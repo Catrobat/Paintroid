@@ -46,6 +46,7 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.JpgInfoDialog;
 import org.catrobat.paintroid.dialog.LikeUsDialog;
+import org.catrobat.paintroid.dialog.OraInfoDialog;
 import org.catrobat.paintroid.dialog.OverwriteDialog;
 import org.catrobat.paintroid.dialog.PermanentDenialPermissionInfoDialog;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
@@ -182,7 +183,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void startLoadImageActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		intent.setType("image/*");
+		intent.setType("*/*");
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 		mainActivity.startActivityForResult(intent, requestCode);
 	}
@@ -256,6 +257,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showJpgInformationDialog() {
 		JpgInfoDialog jpgInfoDialog = JpgInfoDialog.newInstance();
 		jpgInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.JPG_INFORMATION_DIALOG_TAG);
+	}
+
+	@Override
+	public void showOraInformationDialog() {
+		OraInfoDialog oraInfoDialog = OraInfoDialog.newInstance();
+		oraInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.ORA_INFORMATION_DIALOG_TAG);
 	}
 
 	@Override
@@ -389,6 +396,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 			FileIO.compressFormat = Bitmap.CompressFormat.PNG;
 			FileIO.ending = ".png";
 			FileIO.catroidFlag = true;
+			FileIO.isCatrobatImage = false;
 			mainActivity.getPresenter().switchBetweenVersions(permissionCode);
 			return;
 		}

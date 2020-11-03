@@ -159,6 +159,9 @@
     <string name="pocketpaint_jpg_message_dialog">Takes up <b>minimal storage space</b>. <b>No transparency</b> is remembered.</string>
     <string name="pocketpaint_png_title_dialog" translatable="false">png</string>
     <string name="pocketpaint_png_message_dialog">Lossless compression. Transparency is preserved.</string>
+    <string name="pocketpaint_ora_title_dialog" translatable="false">Ora</string>
+    <string name="pocketpaint_ora_message_dialog">Need a break and want to <b>continue later?</b> This format remembers all your <b>layers</b>. <b>Keep in mind that it can only be opened by apps that support Openraster.</b></string>
+
 
     <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
     <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.

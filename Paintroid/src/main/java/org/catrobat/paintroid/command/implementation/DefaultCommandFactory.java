@@ -35,6 +35,8 @@ import org.catrobat.paintroid.tools.drawable.ShapeDrawable;
 import org.catrobat.paintroid.tools.helper.Conversion;
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory;
 
+import java.util.List;
+
 import static android.graphics.Bitmap.Config.ARGB_8888;
 
 public class DefaultCommandFactory implements CommandFactory {
@@ -54,6 +56,14 @@ public class DefaultCommandFactory implements CommandFactory {
 		CompositeCommand command = new CompositeCommand();
 		command.addCommand(new SetDimensionCommand(bitmap.getWidth(), bitmap.getHeight()));
 		command.addCommand(new LoadCommand(bitmap.copy(ARGB_8888, false)));
+		return command;
+	}
+
+	@Override
+	public Command createInitCommand(List<Bitmap> bitmapList) {
+		CompositeCommand command = new CompositeCommand();
+		command.addCommand(new SetDimensionCommand(bitmapList.get(0).getWidth(), bitmapList.get(0).getHeight()));
+		command.addCommand(new LoadBitmapListCommand(bitmapList));
 		return command;
 	}
 

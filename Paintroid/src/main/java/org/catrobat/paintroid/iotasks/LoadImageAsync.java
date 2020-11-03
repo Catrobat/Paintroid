@@ -20,17 +20,18 @@
 package org.catrobat.paintroid.iotasks;
 
 import android.content.ContentResolver;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import org.catrobat.paintroid.FileIO;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 
-public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
+public class LoadImageAsync extends AsyncTask<Void, Void, BitmapReturnValue> {
 	private static final String TAG = LoadImageAsync.class.getSimpleName();
 	private WeakReference<LoadImageCallback> callbackRef;
 	private int maxWidth;
@@ -66,7 +67,7 @@ public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 	}
 
 	@Override
-	protected Bitmap doInBackground(Void... voids) {
+	protected BitmapReturnValue doInBackground(Void... voids) {
 		LoadImageCallback callback = callbackRef.get();
 		if (callback == null || callback.isFinishing()) {
 			return null;
@@ -81,11 +82,27 @@ public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 			ContentResolver resolver = callback.getContentResolver();
 			FileIO.filename = "image";
 
-			if (scaleImage) {
-				return FileIO.getBitmapFromUri(resolver, uri, maxWidth, maxHeight);
+			String mimeType;
+			if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+				mimeType = resolver.getType(uri);
 			} else {
-				return FileIO.getBitmapFromUri(resolver, uri);
+				String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+				mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US));
 			}
+			BitmapReturnValue returnValue;
+
+			if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
+				returnValue = new BitmapReturnValue(
+						OpenRasterFileFormatConversion.importOraFile(resolver, uri, maxWidth, maxHeight, scaleImage), null);
+			} else {
+				if (scaleImage) {
+					returnValue = new BitmapReturnValue(null, FileIO.getBitmapFromUri(resolver, uri, maxWidth, maxHeight));
+				} else {
+					returnValue = new BitmapReturnValue(null, FileIO.getBitmapFromUri(resolver, uri));
+				}
+			}
+
+			return returnValue;
 		} catch (IOException e) {
 			Log.e(TAG, "Can't load image file", e);
 			return null;
@@ -93,7 +110,7 @@ public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 	}
 
 	@Override
-	protected void onPostExecute(Bitmap result) {
+	protected void onPostExecute(BitmapReturnValue result) {
 		LoadImageCallback callback = callbackRef.get();
 		if (callback != null && !callback.isFinishing()) {
 			callback.onLoadImagePostExecute(requestCode, uri, result);
@@ -101,7 +118,7 @@ public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 	}
 
 	public interface LoadImageCallback {
-		void onLoadImagePostExecute(int requestCode, Uri uri, Bitmap result);
+		void onLoadImagePostExecute(int requestCode, Uri uri, BitmapReturnValue result);
 		void onLoadImagePreExecute(int requestCode);
 		ContentResolver getContentResolver();
 		boolean isFinishing();

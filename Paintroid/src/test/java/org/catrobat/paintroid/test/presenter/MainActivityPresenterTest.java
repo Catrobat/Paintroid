@@ -39,6 +39,7 @@ import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.controller.ToolController;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
+import org.catrobat.paintroid.iotasks.BitmapReturnValue;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.tools.ToolType;
@@ -255,7 +256,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
-		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, bitmap);
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace);
 		verifyNoMoreInteractions(interactor);
 	}
 
@@ -268,7 +269,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, bitmap, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, uri);
 
 		verifyNoMoreInteractions(interactor);
 	}
@@ -470,7 +471,7 @@ public class MainActivityPresenterTest {
 
 		presenter.saveImageConfirmClicked(0, uri);
 
-		verify(interactor).saveImage(presenter, 0, bitmap, uri);
+		verify(interactor).saveImage(presenter, 0, workspace, uri);
 	}
 
 	@Test
@@ -479,7 +480,21 @@ public class MainActivityPresenterTest {
 
 		presenter.saveImageConfirmClicked(-1, uri);
 
-		verify(interactor).saveImage(presenter, -1, bitmap, uri);
+		verify(interactor).saveImage(presenter, -1, workspace, uri);
+	}
+
+	@Test
+	public void testSaveCopyConfirmCLickedThenSaveImage() {
+		presenter.saveCopyConfirmClicked(0);
+
+		verify(interactor).saveCopy(presenter, 0, workspace);
+	}
+
+	@Test
+	public void testSaveCopyConfirmClickedThenUseRequestCode() {
+		presenter.saveCopyConfirmClicked(-1);
+
+		verify(interactor).saveCopy(presenter, -1, workspace);
 	}
 
 	@Test
@@ -814,8 +829,9 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenDefaultThenResetModelUris() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
 
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, bitmap);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, returnValue);
 
 		verify(model).setSavedPictureUri(null);
 		verify(model).setCameraImageUri(null);
@@ -825,10 +841,11 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenDefaultThenResetCommandManager() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
 		Command command = mock(Command.class);
 		when(commandFactory.createInitCommand(bitmap)).thenReturn(command);
 
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, bitmap);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, returnValue);
 
 		verify(commandManager).setInitialStateCommand(command);
 		verify(commandManager).reset();
@@ -839,9 +856,10 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenImportThenSetBitmap() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
 		when(toolController.getToolType()).thenReturn(ToolType.IMPORTPNG);
 
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, bitmap);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, returnValue);
 
 		verify(toolController).setBitmapFromSource(bitmap);
 		verifyZeroInteractions(commandManager);
@@ -851,8 +869,9 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenImportAndNotImportToolSetThenIgnore() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
 
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, bitmap);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, returnValue);
 
 		verify(toolController, never()).setBitmapFromSource(any(Bitmap.class));
 		verifyZeroInteractions(commandManager);
@@ -862,8 +881,9 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenCatroidThenSetModelUris() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
 
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, bitmap);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, returnValue);
 
 		verify(model).setSavedPictureUri(uri);
 		verify(model).setCameraImageUri(null);
@@ -874,10 +894,11 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenCatroidThenResetCommandManager() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
 		Command command = mock(Command.class);
 		when(commandFactory.createInitCommand(bitmap)).thenReturn(command);
 
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, bitmap);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, returnValue);
 
 		verify(commandManager).setInitialStateCommand(command);
 		verify(commandManager).reset();
@@ -888,8 +909,9 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenInvalidRequestThenThrowException() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
 
-		presenter.onLoadImagePostExecute(0, uri, bitmap);
+		presenter.onLoadImagePostExecute(0, uri, returnValue);
 	}
 
 	@Test
@@ -945,7 +967,7 @@ public class MainActivityPresenterTest {
 
 		Uri uri = model.getSavedPictureUri();
 
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(bitmap), eq(uri));
+		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(uri));
 	}
 
 	@Test
@@ -976,7 +998,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(bitmap));
+		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace));
 	}
 
 	@Test
@@ -1012,7 +1034,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, bitmap, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, uri);
 	}
 
 	@Test
@@ -1072,7 +1094,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, bitmap, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, uri);
 	}
 
 	@Test
@@ -1108,7 +1130,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, bitmap, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, uri);
 	}
 
 	@Test
@@ -1150,7 +1172,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
-		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, bitmap);
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace);
 	}
 
 	@Test
@@ -1175,7 +1197,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
-		verify(interactor).saveImage(any(MainActivityPresenter.class), anyInt(), any(Bitmap.class), eq((Uri) null));
+		verify(interactor).saveImage(any(MainActivityPresenter.class), anyInt(), any(Workspace.class), eq((Uri) null));
 	}
 
 	@Test
@@ -1200,7 +1222,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, bitmap, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, uri);
 	}
 
 	@Test
@@ -1224,7 +1246,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, bitmap, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, uri);
 	}
 
 	@Test
@@ -1248,7 +1270,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, bitmap, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, uri);
 	}
 
 	@Test
@@ -1272,7 +1294,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, bitmap, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, uri);
 	}
 
 	@Test
