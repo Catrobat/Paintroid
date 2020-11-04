@@ -38,6 +38,7 @@ import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
 import org.catrobat.paintroid.dialog.FeedbackDialog;
+import org.catrobat.paintroid.dialog.ImportImageDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.LikeUsDialog;
@@ -49,6 +50,7 @@ import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDial
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.tools.ToolReference;
+import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment;
 
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -80,6 +82,39 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		}
 	}
 
+	@Override
+	public void showCatroidMediaGallery() {
+		if (findFragmentByTag(Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG) == null) {
+			CatroidMediaGalleryFragment fragment = new CatroidMediaGalleryFragment();
+			fragment.setMediaGalleryListener(new CatroidMediaGalleryFragment.MediaGalleryListener() {
+				@Override
+				public void bitmapLoadedFromSource(Bitmap loadedBitmap) {
+					mainActivity.getPresenter().bitmapLoadedFromSource(loadedBitmap);
+				}
+
+				@Override
+				public void showProgressDialog() {
+					showIndeterminateProgressDialog();
+				}
+
+				@Override
+				public void dissmissProgressDialog() {
+					dismissIndeterminateProgressDialog();
+				}
+			});
+			showFragment(fragment, Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG);
+		}
+	}
+
+	private void showFragment(Fragment fragment, String tag) {
+		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
+		fragmentManager.beginTransaction()
+				.setCustomAnimations(R.anim.slide_to_top, R.anim.slide_to_bottom, R.anim.slide_to_top, R.anim.slide_to_bottom)
+				.addToBackStack(null)
+				.add(R.id.fragment_container, fragment, tag)
+				.commit();
+	}
+
 	private void showDialogFragmentSafely(DialogFragment dialog, String tag) {
 		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
 		if (!fragmentManager.isStateSaved()) {
@@ -97,6 +132,25 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 			public void colorChanged(int color) {
 				toolReference.get().changePaintColor(color);
 				mainActivity.getPresenter().setBottomNavigationColor(color);
+			}
+		});
+	}
+
+	private void setupCatroidMediaGalleryListeners(CatroidMediaGalleryFragment dialog) {
+		dialog.setMediaGalleryListener(new CatroidMediaGalleryFragment.MediaGalleryListener() {
+			@Override
+			public void bitmapLoadedFromSource(Bitmap loadedBitmap) {
+				mainActivity.getPresenter().bitmapLoadedFromSource(loadedBitmap);
+			}
+
+			@Override
+			public void showProgressDialog() {
+				showIndeterminateProgressDialog();
+			}
+
+			@Override
+			public void dissmissProgressDialog() {
+				dismissIndeterminateProgressDialog();
 			}
 		});
 	}
@@ -181,6 +235,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Uri data = Uri.parse("mailto:support-paintroid@catrobat.org");
 		intent.setData(data);
 		mainActivity.startActivity(intent);
+	}
+
+	@Override
+	public void showImageImportDialog() {
+		ImportImageDialog importImage = ImportImageDialog.newInstance();
+		importImage.show(mainActivity.getSupportFragmentManager(), Constants.ABOUT_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
@@ -317,6 +377,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Fragment fragment = findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
 		if (fragment != null) {
 			setupColorPickerDialogListeners((ColorPickerDialog) fragment);
+		}
+
+		fragment = findFragmentByTag(Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG);
+		if (fragment != null) {
+			setupCatroidMediaGalleryListeners((CatroidMediaGalleryFragment) fragment);
 		}
 	}
 

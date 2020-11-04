@@ -38,9 +38,15 @@
     <string name="button_checkmark">Checkmark</string>
     <string name="done">Done</string>
 
+    <string name="gallery">Gallery</string>
+    <string name="load_sticker_error">Could not load Sticker</string>
+    <string name="error_unknown_error">Something went wrong.</string>
+
     <string name="cap_circle">Circle</string>
     <string name="cap_square">Square</string>
 
+    <string name="stickers">Stickers</string>
+    <string name="dialog_import_image_title" translatable="false">@string/button_import_image</string>
     <string name="dialog_tools_title">Tools</string>
     <string name="dialog_error_save_title">Error load/save file</string>
     <string name="dialog_error_sdcard_text">Check image or SD-card!</string>
@@ -179,6 +185,7 @@
     <string name="pocketpaint_yes">Yes</string>
     <string name="pocketpaint_no">No</string>
     <string name="pocketpaint_ok"  translatable="false">@android:string/ok</string>
+    <string name="pocketpaint_cancel">Cancel</string>
     <string name="pocketpaint_not_now">Not now</string>
     <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
 

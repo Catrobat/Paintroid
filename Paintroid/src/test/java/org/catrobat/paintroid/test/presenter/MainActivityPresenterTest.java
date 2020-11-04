@@ -872,7 +872,7 @@ public class MainActivityPresenterTest {
 
 		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, bitmap);
 
-		verify(toolController).setBitmapFromFile(bitmap);
+		verify(toolController).setBitmapFromSource(bitmap);
 		verifyZeroInteractions(commandManager);
 	}
 
@@ -883,7 +883,7 @@ public class MainActivityPresenterTest {
 
 		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, bitmap);
 
-		verify(toolController, never()).setBitmapFromFile(any(Bitmap.class));
+		verify(toolController, never()).setBitmapFromSource(any(Bitmap.class));
 		verifyZeroInteractions(commandManager);
 	}
 

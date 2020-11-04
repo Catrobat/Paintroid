@@ -29,6 +29,7 @@ public final class Constants {
 
 	public static final String TEMP_PICTURE_NAME = "catroidTemp";
 	public static final File MEDIA_DIRECTORY = new File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_PICTURES);
+	public static final String MEDIA_GALLEY_URL = "https://share.catrob.at/pocketcode/media-library/looks";
 
 	public static final String ABOUT_DIALOG_FRAGMENT_TAG = "aboutdialogfragment";
 	public static final String LIKE_US_DIALOG_FRAGMENT_TAG = "likeusdialogfragment";
@@ -37,9 +38,8 @@ public final class Constants {
 	public static final String SAVE_DIALOG_FRAGMENT_TAG = "savedialogerror";
 	public static final String LOAD_DIALOG_FRAGMENT_TAG = "loadbitmapdialogerror";
 	public static final String COLOR_PICKER_DIALOG_TAG = "ColorPickerDialogTag";
-	public static final String INDETERMINATE_FRAGMENT_TAG = "indeterminatefragment";
 	public static final String SAVE_QUESTION_FRAGMENT_TAG = "savebeforequitfragment";
-	public static final String CHOOSE_IMAGE_FRAGMENT_TAG = "chooseimagefragment";
+	public static final String CATROID_MEDIA_GALLERY_FRAGMENT_TAG = "catroidmediagalleryfragment";
 
 	public static final String PERMISSION_DIALOG_FRAGMENT_TAG = "permissiondialogfragment";
 

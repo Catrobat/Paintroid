@@ -616,11 +616,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	private void switchTool(ToolType type) {
+		setTool(type);
+		toolController.switchTool(type);
+
 		if (type == ToolType.IMPORTPNG) {
-			navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
-		} else {
-			setTool(type);
-			toolController.switchTool(type);
+			showImportDialog();
 		}
 	}
 
@@ -663,7 +663,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {
-					toolController.setBitmapFromFile(bitmap);
+					toolController.setBitmapFromSource(bitmap);
 				} else {
 					Log.e(MainActivity.TAG, "importPngToFloatingBox: Current tool is no ImportTool as required");
 				}
@@ -765,6 +765,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void actionCurrentToolClicked() {
+		if (toolController.getToolType() == ToolType.IMPORTPNG) {
+			showImportDialog();
+			return;
+		}
+
 		if (bottomBarViewHolder.isVisible()) {
 			bottomBarViewHolder.hide();
 		}
@@ -785,5 +790,25 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	public void setLayerAdapter(LayerAdapter layerAdapter) {
 		this.layerAdapter = layerAdapter;
+	}
+
+	@Override
+	public void importFromGalleryClicked() {
+		navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
+	}
+
+	@Override
+	public void showImportDialog() {
+		navigator.showImageImportDialog();
+	}
+
+	@Override
+	public void importStickersClicked() {
+		navigator.showCatroidMediaGallery();
+	}
+
+	@Override
+	public void bitmapLoadedFromSource(Bitmap loadedImage) {
+		toolController.setBitmapFromSource(loadedImage);
 	}
 }

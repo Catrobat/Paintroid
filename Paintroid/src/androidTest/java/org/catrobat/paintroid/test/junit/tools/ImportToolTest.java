@@ -83,7 +83,7 @@ public class ImportToolTest {
 		final int height = drawingSurfaceHeight;
 
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		tool.setBitmapFromFile(bitmap);
+		tool.setBitmapFromSource(bitmap);
 
 		assertEquals(width, tool.boxWidth, Float.MIN_VALUE);
 		assertEquals(height, tool.boxHeight, Float.MIN_VALUE);
@@ -96,7 +96,7 @@ public class ImportToolTest {
 		final int minSize = ImportTool.DEFAULT_BOX_RESIZE_MARGIN;
 
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		tool.setBitmapFromFile(bitmap);
+		tool.setBitmapFromSource(bitmap);
 
 		assertEquals(minSize, tool.boxWidth, Float.MIN_VALUE);
 		assertEquals(minSize, tool.boxHeight, Float.MIN_VALUE);
@@ -108,7 +108,7 @@ public class ImportToolTest {
 		final int height = (int) (drawingSurfaceHeight * ImportTool.MAXIMUM_BORDER_RATIO);
 
 		Bitmap bitmap = Bitmap.createBitmap(width + 1, height + 1, Bitmap.Config.ARGB_8888);
-		tool.setBitmapFromFile(bitmap);
+		tool.setBitmapFromSource(bitmap);
 
 		assertEquals(width, tool.boxWidth, Float.MIN_VALUE);
 		assertEquals(height, tool.boxHeight, Float.MIN_VALUE);
