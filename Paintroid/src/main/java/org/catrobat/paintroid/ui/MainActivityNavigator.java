@@ -332,13 +332,6 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void showSaveBeforeReturnToCatroidDialog() {
-		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(
-				SaveBeforeFinishDialogType.BACK_TO_POCKET_CODE);
-		showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG);
-	}
-
-	@Override
 	public void showSaveBeforeFinishDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(
 				SaveBeforeFinishDialogType.FINISH);
