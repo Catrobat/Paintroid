@@ -114,18 +114,10 @@
                 android:id="@+id/pocketpaint_text_tool_dialog_input_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/pocketpaint_text_tool_dialog_done_button"
                 android:hint="@string/text_tool_dialog_input_hint"
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textMultiLine"
                 android:importantForAutofill="no" />
-
-            <Button
-                android:id="@+id/pocketpaint_text_tool_dialog_done_button"
-                android:layout_alignParentEnd="true"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/done"/>
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>

@@ -21,7 +21,6 @@ package org.catrobat.paintroid.ui.tools;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -29,7 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -50,7 +48,6 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 	private final ToggleButton underlinedToggleButton;
 	private final ToggleButton italicToggleButton;
 	private final ToggleButton boldToggleButton;
-	private final Button doneButton;
 	private final List<String> fonts;
 	private static final String DEFAULT_TEXTSIZE = "20";
 	private static final String MAX_TEXTSIZE = "300";
@@ -67,7 +64,6 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 		underlinedToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		italicToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
-		doneButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_done_button);
 		fontSizeText = textToolView.findViewById(R.id.pocketpaint_font_size_text);
 		fontSizeText.setText(DEFAULT_TEXTSIZE);
 
@@ -148,21 +144,6 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 			}
 		});
 
-		doneButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				hideKeyboard();
-
-				final Handler handler = new Handler();
-				handler.postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						notifyHideToolOptions();
-					}
-				}, 100);
-			}
-		});
-
 		fontSizeText.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -224,12 +205,6 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 	private void notifyTextChanged(String text) {
 		if (callback != null) {
 			callback.setText(text);
-		}
-	}
-
-	private void notifyHideToolOptions() {
-		if (callback != null) {
-			callback.hideToolOptions();
 		}
 	}
 
