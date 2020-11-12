@@ -64,6 +64,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -98,6 +99,7 @@ public class TextToolIntegrationTest {
 
 	private MainActivityHelper activityHelper;
 	private TextTool textTool;
+	private TextTool textToolAfterZoom;
 	private EditText textEditText;
 	private Spinner fontSpinner;
 	private ToggleButton underlinedToggleButton;
@@ -525,6 +527,62 @@ public class TextToolIntegrationTest {
 		checkTextBoxDimensionsAndDefaultPosition();
 	}
 
+	@Test
+	public void testTextToolDoesNotResetPerspectiveScale() {
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		float scale = 2.0f;
+
+		activity.perspective.setScale(scale);
+		activity.perspective.setSurfaceTranslationY(200);
+		activity.perspective.setSurfaceTranslationX(50);
+		activity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		assertEquals(scale, activity.perspective.getScale(), 0.0001f);
+	}
+
+	@Test
+	public void testTextToolBoxIsPlacedCorrectlyWhenZoomedIn() {
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		PointF initialPosition = getToolMemberBoxPosition();
+
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		float scale = 2.0f;
+
+		activity.perspective.setScale(scale);
+		activity.perspective.setSurfaceTranslationY(200);
+		activity.perspective.setSurfaceTranslationX(50);
+		activity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		textToolAfterZoom = (TextTool) activity.toolReference.get();
+
+		PointF positionAfterZoom = getToolMemberBoxPosition();
+
+		assertEquals(scale, activity.perspective.getScale(), 0.0001f);
+
+		onTopBarView()
+				.performClickCheckmark();
+
+		assertNotEquals(initialPosition, positionAfterZoom);
+	}
+
 	private void checkTextBoxDimensions() {
 		int boxOffset = TextTool.BOX_OFFSET;
 		int textSizeMagnificationFactor = TextTool.TEXT_SIZE_MAGNIFICATION_FACTOR;
@@ -699,7 +757,11 @@ public class TextToolIntegrationTest {
 	}
 
 	private PointF getToolMemberBoxPosition() {
-		return textTool.toolPosition;
+		if (textToolAfterZoom != null) {
+			return textToolAfterZoom.toolPosition;
+		} else {
+			return textTool.toolPosition;
+		}
 	}
 
 	private void setToolMemberBoxPosition(PointF position) {

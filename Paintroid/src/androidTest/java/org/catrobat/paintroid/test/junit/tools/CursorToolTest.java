@@ -36,6 +36,7 @@ import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,6 +80,7 @@ public class CursorToolTest {
 		when(toolPaint.getPaint()).thenReturn(paint);
 		when(workspace.getHeight()).thenReturn(1920);
 		when(workspace.getWidth()).thenReturn(1080);
+		when(workspace.getPerspective()).thenReturn(new Perspective(1080, 1920));
 
 		toolToTest = new CursorTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 	}

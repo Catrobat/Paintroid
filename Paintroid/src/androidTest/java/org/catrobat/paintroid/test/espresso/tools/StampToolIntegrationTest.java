@@ -79,15 +79,16 @@ public class StampToolIntegrationTest {
 	private Workspace workspace;
 	private Perspective perspective;
 	private ToolReference toolReference;
+	private MainActivity mainActivity;
 
 	@Before
 	public void setUp() {
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
-		MainActivity activity = launchActivityRule.getActivity();
-		workspace = activity.workspace;
-		perspective = activity.perspective;
-		toolReference = activity.toolReference;
+		mainActivity = launchActivityRule.getActivity();
+		workspace = mainActivity.workspace;
+		perspective = mainActivity.perspective;
+		toolReference = mainActivity.toolReference;
 	}
 
 	@Ignore("Causes crashes on jenkins")
@@ -271,12 +272,26 @@ public class StampToolIntegrationTest {
 
 		assertFalse(expectedBitmap.sameAs(emptyBitmap));
 
-		launchActivityRule.getActivity()
-				.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		mainActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		Bitmap actualBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
 				toolReference.get()).drawingBitmap);
 
 		assertTrue(expectedBitmap.sameAs(actualBitmap));
+	}
+
+	@Test
+	public void testStampToolDoesNotResetPerspectiveScale() {
+		float scale = 2.0f;
+
+		perspective.setScale(scale);
+		perspective.setSurfaceTranslationX(50);
+		perspective.setSurfaceTranslationY(200);
+		mainActivity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.STAMP);
+
+		assertEquals(scale, perspective.getScale(), 0.0001f);
 	}
 }
