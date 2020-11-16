@@ -125,7 +125,7 @@ public class LayerAdapter extends BaseAdapter implements LayerContracts.Adapter 
 		@Override
 		public void setSelected(int position, BottomNavigationViewHolder bottomNavigationViewHolder, DefaultToolController defaultToolController) {
 			if (!layerPresenter.getLayerItem(position).getCheckBox()) {
-				defaultToolController.switchTool(ToolType.HAND);
+				defaultToolController.switchTool(ToolType.HAND, false);
 				bottomNavigationViewHolder.showCurrentTool(ToolType.HAND);
 			}
 			layerBackground.setBackgroundColor(Color.BLUE);

@@ -27,7 +27,7 @@ import org.catrobat.paintroid.tools.ToolType;
 public interface ToolController {
 	void setOnColorPickedListener(ColorPickerDialog.OnColorPickedListener onColorPickedListener);
 
-	void switchTool(ToolType toolType);
+	void switchTool(ToolType toolType, boolean backPressed);
 
 	boolean isDefaultTool();
 
