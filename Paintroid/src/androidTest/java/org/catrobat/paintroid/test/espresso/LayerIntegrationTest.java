@@ -19,29 +19,24 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.Manifest;
 import android.graphics.Color;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.rule.GrantPermissionRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
@@ -55,15 +50,21 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
 @RunWith(AndroidJUnit4.class)
 public class LayerIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE);
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	private int bitmapHeight;
 	private int bitmapWidth;
@@ -82,6 +83,7 @@ public class LayerIntegrationTest {
 				.check(matches(isDisplayed()));
 	}
 
+	@Ignore("Unstable")
 	@Test
 	public void testInitialSetup() {
 		onLayerMenuView()
@@ -114,6 +116,7 @@ public class LayerIntegrationTest {
 				.checkLayerCount(4);
 	}
 
+	@Ignore("Unstable")
 	@Test
 	public void testButtonsAddOneLayer() {
 		onLayerMenuView()
@@ -148,6 +151,7 @@ public class LayerIntegrationTest {
 				.check(matches(allOf(not(isEnabled()), withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled))));
 	}
 
+	@Ignore("Unstable")
 	@Test
 	public void testButtonsAfterNewImage() {
 		onLayerMenuView()
@@ -382,8 +386,9 @@ public class LayerIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
@@ -421,8 +426,8 @@ public class LayerIntegrationTest {
 				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
@@ -655,5 +660,83 @@ public class LayerIntegrationTest {
 
 		onDrawingSurfaceView()
 				.checkLayerDimensions(bitmapHeight, bitmapWidth);
+	}
+
+	@Test
+	public void testHideLayer() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.performClose();
+
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+
+		onDrawingSurfaceView().perform(click());
+		onDrawingSurfaceView().checkPixelColor(Color.BLACK, 1, 1);
+
+		onLayerMenuView()
+				.performOpen()
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, 1, 1);
+	}
+
+	@Test
+	public void testHideThenUnhideLayer() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.performClose();
+
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+
+		onDrawingSurfaceView().perform(click());
+		onDrawingSurfaceView().checkPixelColor(Color.BLACK, 1, 1);
+
+		onLayerMenuView()
+				.performOpen()
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, 1, 1);
+
+		onLayerMenuView()
+				.performOpen()
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onDrawingSurfaceView().checkPixelColor(Color.BLACK, 1, 1);
+	}
+
+	@Test
+	public void testTryMergeOrReorderWhileALayerIsHidden() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.perfomToggleLayerVisibility(0)
+				.performLongClickLayer(0);
+
+		onView(withText(R.string.no_longclick_on_hidden_layer)).inRoot(withDecorView(not(launchActivityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testTryChangeToolWhileALayerIsHidden() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onToolBarView()
+				.onToolsClicked();
+
+		onView(withText(R.string.no_tools_on_hidden_layer)).inRoot(withDecorView(not(launchActivityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
 	}
 }

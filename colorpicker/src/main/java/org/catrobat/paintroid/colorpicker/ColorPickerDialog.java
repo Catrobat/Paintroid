@@ -51,16 +51,7 @@ import android.graphics.Shader.TileMode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +59,15 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.appcompat.widget.Toolbar;
 
 public final class ColorPickerDialog extends AppCompatDialogFragment implements ColorPickerView.OnColorChangedListener {
 	private static final String CURRENT_COLOR = "CurrentColor";
@@ -243,12 +243,8 @@ public final class ColorPickerDialog extends AppCompatDialogFragment implements 
 		}
 
 		static Drawable createDrawable(Shader checkeredShader, @ColorInt int color) {
-			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-				return new CustomColorDrawable(checkeredShader, color);
-			} else {
-				return new RippleDrawable(ColorStateList.valueOf(Color.WHITE),
-						new CustomColorDrawable(checkeredShader, color), null);
-			}
+			return new RippleDrawable(ColorStateList.valueOf(Color.WHITE),
+					new CustomColorDrawable(checkeredShader, color), null);
 		}
 
 		@Override

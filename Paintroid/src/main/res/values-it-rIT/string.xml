@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint</string>
+    <string name="button_brush">Pennello</string>
+    <string name="button_cursor">Cursore</string>
+    <string name="button_pipette">Pipetta</string>
+    <string name="button_undo">Annulla</string>
+    <string name="button_redo">Ripeti</string>
+    <string name="button_stamp">Timbro</string>
+    <string name="button_import_image">Importa immagine</string>
+    <string name="button_eraser">Cancella</string>
+    <string name="button_transform">Trasforma</string>
+    <string name="button_fill">Riempi</string>
+    <string name="button_line">Linea</string>
+    <string name="button_text">Testo</string>
+    <string name="button_shape">Forme</string>
+    <string name="button_hand">Mano</string>
+    <string name="button_apply">Applica</string>
+    <string name="done">Fatto</string>
+    <string name="cap_circle">Cerchio</string>
+    <string name="cap_square">Quadrato</string>
+    <string name="dialog_tools_title">Strumenti</string>
+    <string name="dialog_error_save_title">Errore durante il caricamento/salvataggio File</string>
+    <string name="dialog_error_sdcard_text">Controllare l\'immagine o l\'SD-Card!</string>
+    <string name="dialog_brush_width_text">Spessore del tratto</string>
+    <string name="dialog_warning_new_image">Salvare le modifiche?</string>
+    <string name="help_title">Guida</string>
+    <string name="help_content_eraser">Rimuovere parti dell\'immagine come con una gomma da cancellare.</string>
+    <string name="help_content_brush">Cliccare sui simboli sulla barra inferiore per modificare il colore o la dimensione del pennello.</string>
+    <string name="help_content_eyedropper">Cliccare sull\'immagine per selezionare un colore.</string>
+    <string name="help_content_undo">Cliccare per annullare l\'azione precedente.</string>
+    <string name="help_content_redo">Fare clic per ripristinare un\'azione annullata.</string>
+    <string name="help_content_fill">Cliccare sull\'immagine per riempire un\'area con il colore selezionato.</string>
+    <string name="help_content_cursor">Posizionare il cursore dove si vuole disegnare. Fare clic per attivare il cursore. Spostare il dito per disegnare. Cliccare di nuovo per disattivare.</string>
+    <string name="help_content_transform">Utilizzalo per trasformare l\'immagine.</string>
+    <string name="help_content_stamp">Sposta e ridimensiona il rettangolo per coprire l\'area che si desidera duplicare. Premi a lungo per selezionare l\'area. Sposta e tocca di nuovo per duplicare.</string>
+    <string name="help_content_import_png">Importare un\'immagine dalla galleria per lo strumento timbro.</string>
+    <string name="help_content_line">Disegnare una linea retta.</string>
+    <string name="help_content_text">Scrivi testo e formattalo. In seguito, ridimensiona la casella di testo. Toccare per inserire il testo sull\'immagine.</string>
+    <string name="help_content_shape">Scegli una forma e tocca per inserire la forma selezionata</string>
+    <string name="help_content_layer">Crea nuovi livelli o modifica quelli esistenti</string>
+    <string name="help_content_color_chooser">Seleziona o modifica un colore</string>
+    <string name="help_content_hand">Sposta il dito per spostare il canvas.</string>
+    <string name="closing_catroid_security_question_title">Torna al progetto</string>
+    <string name="closing_security_question_title">Esci</string>
+    <string name="closing_security_question">Salvare le modifiche?</string>
+    <string name="menu_new_image">Nuova immagine</string>
+    <string name="menu_discard_image">Elimina immagine</string>
+    <string name="menu_load_image">Carica immagine</string>
+    <string name="menu_save_image">Salva immagine</string>
+    <string name="menu_save_copy">Salva copia</string>
+    <string name="menu_hide_menu">Schermo intero</string>
+    <string name="menu_rate_us">Valutaci!</string>
+    <string name="menu_try_pocket_code">Prova Pocket Code!</string>
+    <string name="menu_export">Esporta</string>
+    <string name="saved">Immagine salvata</string>
+    <string name="copy">Copia salvata</string>
+    <string name="menu_quit">Esci</string>
+    <string name="save_button_text">Salva</string>
+    <string name="discard_button_text">Scarta</string>
+    <string name="resize_nothing_to_resize">nulla da ridimensionare</string>
+    <string name="resize_cannot_resize_to_this_size">non si può ridimensionare a questa dimensione</string>
+    <string name="resize_max_image_resolution_reached">si è raggiunta la risoluzione massima</string>
+    <string name="text_tool_dialog_input_title">Il tuo testo:</string>
+    <string name="text_tool_dialog_format_options">Opzioni di formattazione:</string>
+    <string name="text_tool_dialog_underline_shortcut">U</string>
+    <string name="text_tool_dialog_italic_shortcut">I</string>
+    <string name="text_tool_dialog_bold_shortcut">B</string>
+    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
+    <string name="text_tool_dialog_input_hint">Toccare qui per scrivere</string>
+    <string name="shape_tool_dialog_rect_title">Rettangolo</string>
+    <string name="shape_tool_dialog_ellipse_title">Ellisse</string>
+    <string name="shape_tool_dialog_star_title">Stella</string>
+    <string name="shape_tool_dialog_heart_title">Cuore</string>
+    <string name="shape_tool_dialog_fill_title">Riempi</string>
+    <string name="shape_tool_dialog_outline_title">Contorno</string>
+    <string name="fill_tool_dialog_color_tolerance_title">Tolleranza colore</string>
+    <string name="transform_tool_rotate_left">ruota a sinistra</string>
+    <string name="transform_tool_rotate_right">ruota a destra</string>
+    <string name="transform_tool_flip_vertical">rifletti verticalmente</string>
+    <string name="transform_tool_flip_horizontal">rifletti orizzontalmente</string>
+    <string name="transform_tool_resize_text">ridimensiona</string>
+    <string name="transform_tool_auto_crop_text">ritaglia/allunga</string>
+    <string name="transform_width_text">Larghezza</string>
+    <string name="transform_height_text">Altezza</string>
+    <string name="pixel">px</string>
+    <string name="stamp_tool_copy_hint">Premi a lungo per copiare il contenuto</string>
+    <string name="layers_title">Livelli</string>
+    <string name="layer_new">Nuovo livello</string>
+    <string name="layer_delete">Elimina livello</string>
+    <string name="layer_too_many_layers">Troppi livelli</string>
+    <string name="layer_merged">Livelli uniti</string>
+    <string name="layer_background">Sfondo del livello</string>
+    <string name="dialog_shape_text">Forma</string>
+    <string name="dialog_loading_image_failed_title">Errore durante il caricamento dell\'immagine</string>
+    <string name="dialog_loading_image_failed_text">Imagine non valida</string>
+    <string name="dialog_settings">Impostazioni</string>
+    <string name="permission_info_external_storage_text">Questa app necessita delle autorizzazioni richieste per funzionare al meglio. Per poter salvare le immagini nella memoria locale, ha bisogno dei diritti di lettura e di scrittura.</string>
+    <string name="permission_info_permanent_denial_text">Questa app necessita delle autorizzazioni richieste per funzionare al meglio. Per poter salvare le immagini nella memoria locale, ha bisogno dei diritti di lettura e di scrittura.
+   Siccome hai negato il permesso senza possibilità di richiederlo nuovamente, vai sulle impostazioni del telefono per dare i permessi richiesti e usare le funzionalità associate.</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">Apri il menù di navigazione</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">Chiudi il menù di navigazione</string>
+    <string name="transform_info_text">Trascina i bordi nella nuova posizione, quindi tocca per ingrandire o ritagliare l\'area dell\'immagine.</string>
+    <string name="cursor_draw_inactive">Pan per posizionare, quindi tocca per iniziare a dipingere.</string>
+    <string name="cursor_draw_active">Pan per disegnare, quindi tocca di nuovo per interrompere.</string>
+    <string name="welcome_to_pocket_paint">Benvenuto a Pocket Paint</string>
+    <string name="intro_welcome_text">Con Pocket Paint non ci sono limiti alla tua creatività. Se sei nuovo guarda l\'intro; saltala se hai già familiarità con il programma.</string>
+    <string name="intro_tool_more_information">Fai clic su uno strumento per ottenere ulteriori informazioni</string>
+    <string name="more_possibilities">Ulteriori possibilità</string>
+    <string name="intro_possibilities_text">Usa la barra superiore per aprire il menu principale e per annullare o ripetere le modifiche</string>
+    <string name="landscape">Orizzontale</string>
+    <string name="intro_landscape_text">Pocket Paint supporta il disegno in modalità orizzontale per una migliore esperienza di disegno.</string>
+    <string name="enjoy_pocket_paint">Sei pronto. Divertiti con Pocket Paint.</string>
+    <string name="intro_get_started">Inizia e crea un nuovo capolavoro.</string>
+    <string name="lets_go">Procedi</string>
+    <string name="next">Avanti</string>
+    <string name="skip">Ignora</string>
+    <string name="pocketpaint_about_title">Informazioni</string>
+    <string name="pocketpaint_about_content">Pocket Paint è un editor di immagini che fa parte del progetto Catrobat.\n\nCatrobat è un linguaggio di programmazione visuale e un insieme di strumenti per la creatività utilizzabili da smartphone.\n\nIl codice sorgente di Pocket Paint è rilasciato principalmente sotto la licenza %s.\nPer i dettagli della licenza seguire il link sotto-riportato.</string>
+    <string name="pocketpaint_about_url_license_description">Licenza per il codice sorgente di Pocket Paint</string>
+    <string name="pocketpaint_about_url_catrobat_description">Su Catrobat</string>
+    <string name="pocketpaint_intro">Introduzione</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">L\'introduzione non supporta la schermata di divisione</string>
+    <string name="pocketpaint_like_us">Ti piace Pocket Paint?</string>
+    <string name="pocketpaint_rate_us">Vorresti valutare Pocket Paint?</string>
+    <string name="pocketpaint_feedback">Ci dispiace sentirlo. Se vuoi condividere la tua esperienza con noi, per cortesia scrivi a contact@catrobat.org</string>
+    <string name="pocketpaint_yes">Si</string>
+    <string name="pocketpaint_no">No</string>
+    <string name="pocketpaint_not_now">Non ora</string>
+    <string name="pocketpaint_rate_us_title">Valuta Pocket Paint</string>
+    <string name="bottom_navigation_tools">Strumenti</string>
+    <string name="bottom_navigation_current">Attuale</string>
+    <string name="bottom_navigation_color">Colore</string>
+    <string name="bottom_navigation_layers">Livelli</string>
+    <string name="bottom_navigation_item">Elemento per navigazione</string>
+    <string name="intro_bottom_navigation_tools_description">Passa allo strumento che vuoi usare.</string>
+    <string name="intro_bottom_navigation_current_description">Mostra lo strumento in uso e apre le sue opzioni.</string>
+    <string name="intro_bottom_navigation_color_description">Mostra il colore in uso e il selettore dei colori.</string>
+    <string name="intro_bottom_navigation_layers_description">Apre il menu dei livelli e permette la loro gestione.</string>
+    <string name="pocketpaint_tool_icon_description">Icona strumento corrente</string>
+</resources>

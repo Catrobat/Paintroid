@@ -29,9 +29,10 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/bottom_navigation_item"/>
+        android:layout_width="@dimen/pocketpaint_bottom_navigation_icon_size"
+        android:layout_height="@dimen/pocketpaint_bottom_navigation_icon_size"
+        android:contentDescription="@string/bottom_navigation_item"
+        android:tint="@android:color/white"/>
 
     <Space style="@style/PocketPaintToolHorizontalSpace" />
 

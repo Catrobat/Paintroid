@@ -22,10 +22,11 @@ package org.catrobat.paintroid.command.implementation;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import android.support.annotation.VisibleForTesting;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.contract.LayerContracts;
+
+import androidx.annotation.VisibleForTesting;
 
 public class PointCommand implements Command {
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)

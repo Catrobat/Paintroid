@@ -36,7 +36,6 @@ import android.graphics.Shader;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -52,6 +51,8 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 import java.util.ListIterator;
+
+import androidx.core.content.ContextCompat;
 
 public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callback {
 	private final Rect canvasRect = new Rect();

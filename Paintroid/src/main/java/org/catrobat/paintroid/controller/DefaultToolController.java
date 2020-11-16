@@ -20,7 +20,6 @@
 package org.catrobat.paintroid.controller;
 
 import android.graphics.Bitmap;
-import android.graphics.Paint;
 import android.os.Bundle;
 
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
@@ -77,12 +76,12 @@ public class DefaultToolController implements ToolController {
 
 	@Override
 	public void hideToolOptionsView() {
-		toolOptionsViewController.hideAnimated();
+		toolOptionsViewController.hide();
 	}
 
 	@Override
 	public void showToolOptionsView() {
-		toolOptionsViewController.showAnimated();
+		toolOptionsViewController.show();
 	}
 
 	@Override
@@ -106,21 +105,16 @@ public class DefaultToolController implements ToolController {
 	}
 
 	private void switchTool(Tool tool) {
-		Bundle toolBundle = new Bundle();
 		Tool currentTool = toolReference.get();
-		Paint tempPaint = currentTool.getDrawPaint();
 
-		currentTool.leaveTool();
 		if (currentTool.getToolType() == tool.getToolType()) {
+			Bundle toolBundle = new Bundle();
 			currentTool.onSaveInstanceState(toolBundle);
-			toolReference.set(tool);
 			tool.onRestoreInstanceState(toolBundle);
-		} else {
-			toolBundle.clear();
-			toolReference.set(tool);
 		}
-		tool.startTool();
-		tool.setDrawPaint(tempPaint);
+		toolReference.set(tool);
+
+		workspace.invalidate();
 	}
 
 	@Override
@@ -140,28 +134,33 @@ public class DefaultToolController implements ToolController {
 
 	@Override
 	public void createTool() {
-		Bundle bundle = new Bundle();
-
 		if (toolReference.get() == null) {
 			toolReference.set(createAndSetupTool(ToolType.BRUSH));
-			toolReference.get().startTool();
 		} else {
-			Paint paint = toolReference.get().getDrawPaint();
-			toolReference.get().leaveTool();
+			Bundle bundle = new Bundle();
 			toolReference.get().onSaveInstanceState(bundle);
 			toolReference.set(createAndSetupTool(toolReference.get().getToolType()));
 			toolReference.get().onRestoreInstanceState(bundle);
-			toolReference.get().startTool();
-			toolReference.get().setDrawPaint(paint);
 		}
+		workspace.invalidate();
 	}
 
 	private Tool createAndSetupTool(ToolType toolType) {
 		Tool tool;
 		toolOptionsViewController.removeToolViews();
 		toolOptionsViewController.setToolName(toolType.getNameResource());
+
+		if (toolType == ToolType.TEXT
+				|| toolType == ToolType.TRANSFORM
+				|| toolType == ToolType.SHAPE
+				|| toolType == ToolType.STAMP
+				|| toolType == ToolType.IMPORTPNG) {
+			toolOptionsViewController.showCheckmark();
+		} else {
+			toolOptionsViewController.hideCheckmark();
+		}
+
 		tool = toolFactory.createTool(toolType, toolOptionsViewController, commandManager, workspace, toolPaint, contextCallback, onColorPickedListener);
-		tool.setupToolOptions();
 		toolOptionsViewController.resetToOrigin();
 		return tool;
 	}
@@ -169,9 +168,9 @@ public class DefaultToolController implements ToolController {
 	@Override
 	public void toggleToolOptionsView() {
 		if (toolOptionsViewController.isVisible()) {
-			toolOptionsViewController.hideAnimated();
+			toolOptionsViewController.hide();
 		} else {
-			toolOptionsViewController.showAnimated();
+			toolOptionsViewController.show();
 		}
 	}
 
@@ -181,8 +180,8 @@ public class DefaultToolController implements ToolController {
 	}
 
 	@Override
-	public void setBitmapFromFile(Bitmap bitmap) {
+	public void setBitmapFromSource(Bitmap bitmap) {
 		ImportTool importTool = (ImportTool) toolReference.get();
-		importTool.setBitmapFromFile(bitmap);
+		importTool.setBitmapFromSource(bitmap);
 	}
 }

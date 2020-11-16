@@ -19,14 +19,14 @@
 
 package org.catrobat.paintroid.tools;
 
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.StringRes;
-
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 
 import java.util.EnumSet;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.StringRes;
 
 import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
@@ -44,8 +44,8 @@ public enum ToolType {
 	ERASER(R.string.button_eraser, R.string.help_content_eraser, R.drawable.ic_pocketpaint_tool_eraser, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_eraser, INVALID_RESOURCE_ID, true),
 	SHAPE(R.string.button_shape, R.string.help_content_shape, R.drawable.ic_pocketpaint_tool_rectangle, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_rectangle, R.drawable.pocketpaint_rectangle_tool_overlay, true),
 	TEXT(R.string.button_text, R.string.help_content_text, R.drawable.ic_pocketpaint_tool_text, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_text, R.drawable.pocketpaint_text_tool_overlay, true),
-	LAYER(R.string.layers_title, R.string.help_content_layer, R.drawable.ic_pocketpaint_layers, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_layers, INVALID_RESOURCE_ID, false),
-	COLORCHOOSER(R.string.color_picker_title, R.string.help_content_color_chooser, R.drawable.ic_pocketpaint_color_palette, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_color, INVALID_RESOURCE_ID, false),
+	LAYER(R.string.layers_title, R.string.help_content_layer, R.drawable.ic_pocketpaint_layers, EnumSet.of(StateChange.ALL), INVALID_RESOURCE_ID, INVALID_RESOURCE_ID, false),
+	COLORCHOOSER(R.string.color_picker_title, R.string.help_content_color_chooser, R.drawable.ic_pocketpaint_color_palette, EnumSet.of(StateChange.ALL), INVALID_RESOURCE_ID, INVALID_RESOURCE_ID, false),
 	HAND(R.string.button_hand, R.string.help_content_hand, R.drawable.ic_pocketpaint_tool_hand, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_hand, INVALID_RESOURCE_ID, false);
 
 	private int nameResource;

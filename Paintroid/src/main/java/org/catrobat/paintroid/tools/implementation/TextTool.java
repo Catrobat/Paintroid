@@ -24,9 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import org.catrobat.paintroid.R;
@@ -37,7 +35,9 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.TextToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.VisibleForTesting;
 
 public class TextTool extends BaseToolWithRectangleShape {
 
@@ -54,7 +54,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 	private static final String BUNDLE_TOOL_UNDERLINED = "BUNDLE_TOOL_UNDERLINED";
 	private static final String BUNDLE_TOOL_ITALIC = "BUNDLE_TOOL_ITALIC";
 	private static final String BUNDLE_TOOL_BOLD = "BUNDLE_TOOL_BOLD";
-	private static final String BUNDLE_TOOL_STRIKETHROUGH = "BUNDLE_TOOL_STRIKETHROUGH";
 	private static final String BUNDLE_TOOL_TEXT = "BUNDLE_TOOL_TEXT";
 	private static final String BUNDLE_TOOL_TEXT_SIZE = "BUNDLE_TOOL_TEXT_SIZE";
 	private static final String BUNDLE_TOOL_FONT = "BUNDLE_TOOL_FONT";
@@ -75,19 +74,17 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@VisibleForTesting
 	public boolean bold = false;
 	@VisibleForTesting
-	public boolean strikeThrough = false;
-	@VisibleForTesting
 	public int textSize = 20;
 	private TextToolOptionsView textToolOptionsView;
 
-	public TextTool(TextToolOptionsView textToolOptionsView, ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
+	public TextTool(TextToolOptionsView textToolOptionsView, ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
 		this.textToolOptionsView = textToolOptionsView;
 
-		setRotationEnabled(ROTATION_ENABLED);
-		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
+		this.rotationEnabled = ROTATION_ENABLED;
+		this.resizePointsVisible = RESIZE_POINTS_VISIBLE;
 
 		stc = contextCallback.getFont(R.font.stc_regular);
 		dubai = contextCallback.getFont(R.font.dubai);
@@ -98,7 +95,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 		createAndSetBitmap();
 		resetBoxPosition();
 
-		toolOptionsViewController.setCallback(new ToolOptionsViewController.Callback() {
+		toolOptionsViewController.setCallback(new ToolOptionsVisibilityController.Callback() {
 			@Override
 			public void onHide() {
 				createAndSetBitmap();
@@ -147,13 +144,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 					}
 
 					@Override
-					public void setStrikeThrough(boolean strikeThrough) {
-						TextTool.this.strikeThrough = strikeThrough;
-						textPaint.setStrikeThruText(TextTool.this.strikeThrough);
-						createAndSetBitmap();
-					}
-
-					@Override
 					public void setTextSize(int size) {
 						textSize = size;
 						textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
@@ -162,11 +152,12 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 					@Override
 					public void hideToolOptions() {
-						TextTool.this.toolOptionsViewController.hideAnimated();
+						TextTool.this.toolOptionsViewController.hide();
 					}
 				};
 
 		textToolOptionsView.setCallback(callback);
+		toolOptionsViewController.showDelayed();
 	}
 
 	private void initializePaint() {
@@ -176,7 +167,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		textPaint.setTextSize(textSize * TEXT_SIZE_MAGNIFICATION_FACTOR);
 		textPaint.setUnderlineText(underlined);
 		textPaint.setFakeBoldText(bold);
-		textPaint.setStrikeThruText(strikeThrough);
 
 		updateTypeface();
 	}
@@ -213,7 +203,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		bundle.putBoolean(BUNDLE_TOOL_UNDERLINED, underlined);
 		bundle.putBoolean(BUNDLE_TOOL_ITALIC, italic);
 		bundle.putBoolean(BUNDLE_TOOL_BOLD, bold);
-		bundle.putBoolean(BUNDLE_TOOL_STRIKETHROUGH, strikeThrough);
 		bundle.putString(BUNDLE_TOOL_TEXT, text);
 		bundle.putInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
 		bundle.putString(BUNDLE_TOOL_FONT, font);
@@ -225,7 +214,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		underlined = bundle.getBoolean(BUNDLE_TOOL_UNDERLINED, underlined);
 		italic = bundle.getBoolean(BUNDLE_TOOL_ITALIC, italic);
 		bold = bundle.getBoolean(BUNDLE_TOOL_BOLD, bold);
-		strikeThrough = bundle.getBoolean(BUNDLE_TOOL_STRIKETHROUGH, strikeThrough);
 		text = bundle.getString(BUNDLE_TOOL_TEXT, text);
 		textSize = bundle.getInt(BUNDLE_TOOL_TEXT_SIZE, textSize);
 		font = bundle.getString(BUNDLE_TOOL_FONT, font);
@@ -233,7 +221,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 		textToolOptionsView.setState(bold, italic, underlined, text, textSize, font);
 		textPaint.setUnderlineText(underlined);
 		textPaint.setFakeBoldText(bold);
-		textPaint.setStrikeThruText(strikeThrough);
 		updateTypeface();
 		createAndSetBitmap();
 	}
@@ -269,13 +256,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 				}
 				break;
 		}
-
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-			if (font.equals("Monospace")) {
-				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
-			}
-			textPaint.setTextSkewX(textSkewX);
-		}
 	}
 
 	private void changeTextColor() {
@@ -299,7 +279,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	protected void onClickInBox() {
+	public void onClickOnButton() {
 		highlightBox();
 		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
 		Command command = commandFactory.createTextToolCommand(getMultilineText(), textPaint, BOX_OFFSET, boxWidth,
@@ -311,22 +291,6 @@ public class TextTool extends BaseToolWithRectangleShape {
 	public void resetBoxPosition() {
 		toolPosition.x = workspace.getWidth() / 2.0f;
 		toolPosition.y = boxHeight / 2.0f + MARGIN_TOP;
-	}
-
-	@Override
-	public void setupToolOptions() {
-		toolSpecificOptionsLayout.post(new Runnable() {
-			@Override
-			public void run() {
-				toolOptionsViewController.showAnimated();
-			}
-		});
-	}
-
-	@Override
-	public void setDrawPaint(Paint paint) {
-		super.setDrawPaint(paint);
-		textPaint.setColor(toolPaint.getPreviewColor());
 	}
 
 	@Override

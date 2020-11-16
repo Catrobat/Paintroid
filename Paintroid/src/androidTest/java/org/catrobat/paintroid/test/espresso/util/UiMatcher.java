@@ -29,16 +29,13 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.VectorDrawable;
-import android.support.test.espresso.NoMatchingViewException;
-import android.support.test.espresso.Root;
-import android.support.test.espresso.ViewAssertion;
-import android.support.test.espresso.matcher.BoundedMatcher;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.espresso.util.HumanReadables;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.WindowManager;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -49,10 +46,17 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.Root;
+import androidx.test.espresso.ViewAssertion;
+import androidx.test.espresso.matcher.BoundedMatcher;
+import androidx.test.espresso.matcher.ViewMatchers;
+import androidx.test.espresso.util.HumanReadables;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 
 public final class UiMatcher {
 
@@ -433,10 +437,6 @@ public final class UiMatcher {
 					Bitmap targetBitmap = ((BitmapDrawable) targetDrawable).getBitmap();
 					expectedBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
 					return targetBitmap.sameAs(expectedBitmap);
-				} else if (targetDrawable instanceof StateListDrawable) {
-					Bitmap targetBitmap = ((BitmapDrawable) targetDrawable.getCurrent()).getBitmap();
-					expectedBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
-					return targetBitmap.sameAs(expectedBitmap);
 				} else if (targetDrawable instanceof VectorDrawable) {
 					Bitmap targetBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
 					expectedBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
@@ -466,7 +466,7 @@ public final class UiMatcher {
 	/**
 	 * Matches {@link Root}s that are toasts (i.e. is not a window of the currently resumed activity).
 	 *
-	 * @see android.support.test.espresso.matcher.RootMatchers#isDialog()
+	 * @see androidx.test.espresso.matcher.RootMatchers#isDialog()
 	 */
 	public static Matcher<Root> isToast() {
 		return new TypeSafeMatcher<Root>() {
@@ -533,6 +533,38 @@ public final class UiMatcher {
 				int viewEndX = viewStartX + view.getWidth();
 
 				return (viewStartX > displayMiddle) && (viewEndX > displayMiddle);
+			}
+		};
+	}
+
+	public static Matcher<View> withAdaptedData(final int resourceId) {
+		return new TypeSafeMatcher<View>() {
+
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("with class name: ");
+			}
+
+			@Override
+			public boolean matchesSafely(View view) {
+				String resourceName;
+
+				if (!(view instanceof AdapterView)) {
+					return false;
+				}
+
+				Resources resources = view.getContext().getResources();
+				resourceName = resources.getString(resourceId);
+
+				@SuppressWarnings("rawtypes")
+				Adapter adapter = ((AdapterView) view).getAdapter();
+				for (int i = 0; i < adapter.getCount(); i++) {
+					if (resourceName.equals(((MenuItem) adapter.getItem(i)).getTitle().toString())) {
+						return true;
+					}
+				}
+
+				return false;
 			}
 		};
 	}

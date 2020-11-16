@@ -21,13 +21,11 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.support.annotation.VisibleForTesting;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
@@ -39,7 +37,9 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener;
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.VisibleForTesting;
 
 import static org.catrobat.paintroid.tools.common.Constants.MOVE_TOLERANCE;
 
@@ -60,7 +60,7 @@ public class CursorTool extends BaseToolWithShape {
 	public boolean toolInDrawMode = false;
 	private BrushToolOptionsView brushToolOptionsView;
 
-	public CursorTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
+	public CursorTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		this.brushToolOptionsView = brushToolOptionsView;
@@ -73,6 +73,7 @@ public class CursorTool extends BaseToolWithShape {
 
 		brushToolOptionsView.setBrushChangedListener(new CommonBrushChangedListener(this));
 		brushToolOptionsView.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
+		brushToolOptionsView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	@Override
@@ -258,23 +259,15 @@ public class CursorTool extends BaseToolWithShape {
 	}
 
 	@Override
-	protected void onClickInBox() {
+	public void onClickOnButton() {
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		setPaintColor(toolPaint.getPreviewColor());
 		if (toolInDrawMode) {
 			canvas.save();
 			canvas.clipRect(0, 0, workspace.getWidth(), workspace.getHeight());
-			if (toolPaint.getPreviewColor() == Color.TRANSPARENT) {
-				Paint previewPaint = toolPaint.getPreviewPaint();
-				previewPaint.setColor(Color.BLACK);
-				canvas.drawPath(pathToDraw, previewPaint);
-				previewPaint.setColor(Color.TRANSPARENT);
-			} else {
-				canvas.drawPath(pathToDraw, toolPaint.getPaint());
-			}
+			canvas.drawPath(pathToDraw, toolPaint.getPreviewPaint());
 			canvas.restore();
 		}
 		drawShape(canvas);
@@ -331,10 +324,5 @@ public class CursorTool extends BaseToolWithShape {
 				addPointCommand(toolPosition);
 			}
 		}
-	}
-
-	@Override
-	public void setupToolOptions() {
-		brushToolOptionsView.setCurrentPaint(toolPaint.getPaint());
 	}
 }

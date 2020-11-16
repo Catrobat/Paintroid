@@ -21,8 +21,6 @@ package org.catrobat.paintroid.test.espresso.tools;
 
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
@@ -32,11 +30,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isSelected;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.DEFAULT_STROKE_WIDTH;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
@@ -46,8 +41,13 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.BrushPickerView
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
+
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isSelected;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class EraserToolIntegrationTest {
@@ -249,19 +249,5 @@ public class EraserToolIntegrationTest {
 		onToolProperties()
 				.checkCap(Cap.ROUND)
 				.checkStrokeWidth(eraserStrokeWidth);
-	}
-
-	@Test
-	public void testColorPickerIcon() {
-		onTopBarView().onPaletteButton()
-				.check(matches(isDisplayed()));
-		onToolBarView()
-				.performSelectTool(ToolType.ERASER);
-		onTopBarView().onPaletteButton()
-				.check(matches(isDisplayed()));
-		onToolBarView()
-				.performSelectTool(ToolType.BRUSH);
-		onTopBarView().onPaletteButton()
-				.check(matches(isDisplayed()));
 	}
 }

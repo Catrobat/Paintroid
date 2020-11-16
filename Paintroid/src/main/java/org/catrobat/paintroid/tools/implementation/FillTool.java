@@ -21,7 +21,6 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.graphics.Canvas;
 import android.graphics.PointF;
-import android.support.annotation.VisibleForTesting;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
@@ -30,7 +29,9 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.FillToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.VisibleForTesting;
 
 public class FillTool extends BaseTool {
 
@@ -41,7 +42,7 @@ public class FillTool extends BaseTool {
 	public float colorTolerance = MAX_ABSOLUTE_TOLERANCE * DEFAULT_TOLERANCE_IN_PERCENT / 100.0f;
 
 	public FillTool(FillToolOptionsView fillToolOptionsView, ContextCallback contextCallback,
-			ToolOptionsViewController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
+			ToolOptionsVisibilityController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
 			CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
@@ -93,9 +94,5 @@ public class FillTool extends BaseTool {
 	@Override
 	public ToolType getToolType() {
 		return ToolType.FILL;
-	}
-
-	@Override
-	public void setupToolOptions() {
 	}
 }

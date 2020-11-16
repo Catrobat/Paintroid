@@ -45,19 +45,15 @@ public class CommonFactory {
 		return new PointF(point.x, point.y);
 	}
 
-	public RectF createRectF(float left, float top, float right, float bottom) {
-		return new RectF(left, top, right, bottom);
-	}
-
 	public Point createPoint(int x, int y) {
 		return new Point(x, y);
 	}
 
-	public RectF createRectF() {
-		return new RectF();
-	}
-
 	public Path createPath(Path path) {
 		return new Path(path);
+	}
+
+	public RectF createRectF(RectF rect) {
+		return new RectF(rect);
 	}
 }

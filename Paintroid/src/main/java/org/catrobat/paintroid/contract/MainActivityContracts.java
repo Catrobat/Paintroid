@@ -20,15 +20,17 @@
 package org.catrobat.paintroid.contract;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
 import android.view.Menu;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
@@ -36,6 +38,7 @@ import org.catrobat.paintroid.iotasks.CreateFileAsync;
 import org.catrobat.paintroid.iotasks.LoadImageAsync;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.LayerAdapter;
 
 import java.io.File;
 
@@ -49,7 +52,17 @@ public interface MainActivityContracts {
 
 		void showAboutDialog();
 
+		void showLikeUsDialog();
+
+		void showRateUsDialog();
+
+		void showFeedbackDialog();
+
+		void sendFeedback();
+
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
+
+		void startShareImageActivity(Bitmap bitmap);
 
 		void showIndeterminateProgressDialog();
 
@@ -65,11 +78,17 @@ public interface MainActivityContracts {
 
 		void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode);
 
+		void showRequestPermanentlyDeniedPermissionRationaleDialog();
+
 		void askForPermission(String[] permissions, int requestCode);
 
 		boolean isSdkAboveOrEqualM();
 
+		boolean isSdkAboveOrEqualQ();
+
 		boolean doIHavePermission(String permission);
+
+		boolean isPermissionPermanentlyDenied(String[] permission);
 
 		void finishActivity();
 
@@ -81,6 +100,8 @@ public interface MainActivityContracts {
 
 		void showSaveBeforeLoadImageDialog();
 
+		void showScaleImageRequestDialog(Uri uri, int requestCode);
+
 		void restoreFragmentListeners();
 
 		void showToolChangeToast(int offset, int idRes);
@@ -88,6 +109,10 @@ public interface MainActivityContracts {
 		void broadcastAddPictureToGallery(Uri uri);
 
 		void rateUsClicked();
+
+		void showImageImportDialog();
+
+		void showCatroidMediaGallery();
 	}
 
 	interface MainView {
@@ -122,7 +147,7 @@ public interface MainActivityContracts {
 		void initializeFromCleanState(String extraPicturePath, String extraPictureName);
 
 		void restoreState(boolean isFullscreen, boolean isSaved, boolean isOpenedFromCatroid,
-				boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri);
+		                  boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri);
 
 		void finishInitialize();
 
@@ -132,6 +157,8 @@ public interface MainActivityContracts {
 
 		void loadNewImage();
 
+		Context getContext();
+
 		void newImageClicked();
 
 		void discardImageClicked();
@@ -139,6 +166,8 @@ public interface MainActivityContracts {
 		void saveCopyClicked();
 
 		void saveImageClicked();
+
+		void shareImageClicked();
 
 		void enterFullscreenClicked();
 
@@ -149,6 +178,12 @@ public interface MainActivityContracts {
 		void showHelpClicked();
 
 		void showAboutClicked();
+
+		void showRateUsDialog();
+
+		void showFeedbackDialog();
+
+		void sendFeedback();
 
 		void onNewImage();
 
@@ -172,7 +207,7 @@ public interface MainActivityContracts {
 
 		void onCommandPostExecute();
 
-		void setTopBarColor(int color);
+		void setBottomNavigationColor(int color);
 
 		void onCreateTool();
 
@@ -191,6 +226,18 @@ public interface MainActivityContracts {
 		void actionCurrentToolClicked();
 
 		void rateUsClicked();
+
+		void importFromGalleryClicked();
+
+		void showImportDialog();
+
+		void importStickersClicked();
+
+		void loadScaledImage(Uri uri, @ActivityRequestCode int requestCode);
+
+		void bitmapLoadedFromSource(Bitmap loadedImage);
+
+		void setLayerAdapter(LayerAdapter layerAdapter);
 	}
 
 	interface Model {
@@ -226,7 +273,7 @@ public interface MainActivityContracts {
 
 		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Bitmap bitmap, Uri uri);
 
-		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri);
+		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri, Context context, boolean scale);
 	}
 
 	interface TopBarViewHolder {
@@ -238,8 +285,6 @@ public interface MainActivityContracts {
 
 		void disableRedoButton();
 
-		void setColorButtonColor(@ColorInt int color);
-
 		void hide();
 
 		void show();
@@ -249,6 +294,8 @@ public interface MainActivityContracts {
 		void removeStandaloneMenuItems(Menu menu);
 
 		void removeCatroidMenuItems(Menu menu);
+
+		void hideTitleIfNotStandalone();
 	}
 
 	interface DrawerLayoutViewHolder {
@@ -274,6 +321,8 @@ public interface MainActivityContracts {
 		void hide();
 
 		void showCurrentTool(ToolType toolType);
+
+		void setColorButtonColor(@ColorInt int color);
 	}
 
 	interface BottomNavigationAppearance {

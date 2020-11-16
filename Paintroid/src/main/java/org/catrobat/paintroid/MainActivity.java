@@ -21,20 +21,10 @@ package org.catrobat.paintroid;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.TooltipCompat;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
@@ -53,7 +45,6 @@ import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.controller.DefaultToolController;
-import org.catrobat.paintroid.controller.ToolController;
 import org.catrobat.paintroid.listener.PresenterColorPickedListener;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.model.MainActivityModel;
@@ -64,6 +55,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.DefaultContextCallback;
 import org.catrobat.paintroid.tools.implementation.DefaultToolFactory;
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
@@ -86,6 +78,15 @@ import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder;
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.io.File;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_NAME;
 import static org.catrobat.paintroid.common.Constants.PAINTROID_PICTURE_PATH;
@@ -124,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
 	private KeyboardListener keyboardListener;
 	private PaintroidApplicationFragment appFragment;
+	private DefaultToolController defaultToolController;
+	private BottomNavigationViewHolder bottomNavigationViewHolder;
 
 	private Runnable deferredRequestPermissionsResult;
 
@@ -156,12 +159,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		getAppFragment();
 		PaintroidApplication.cacheDir = getCacheDir();
-		PaintroidApplication.checkeredBackgroundBitmap =
-				BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
+
 		setContentView(R.layout.activity_pocketpaint_main);
 
 		onCreateGlobals();
-
 		onCreateMainView();
 		onCreateLayerMenu();
 		onCreateDrawingSurface();
@@ -200,28 +201,32 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		int i = item.getItemId();
-		if (i == R.id.pocketpaint_nav_back_to_pocket_code) {
-			presenter.backToPocketCodeClicked();
-		} else if (i == R.id.pocketpaint_nav_export) {
+		if (i == R.id.pocketpaint_options_export) {
 			presenter.saveCopyClicked();
-		} else if (i == R.id.pocketpaint_nav_save_image) {
+		} else if (i == R.id.pocketpaint_options_save_image) {
 			presenter.saveImageClicked();
-		} else if (i == R.id.pocketpaint_nav_save_duplicate) {
+		} else if (i == R.id.pocketpaint_options_save_duplicate) {
 			presenter.saveCopyClicked();
-		} else if (i == R.id.pocketpaint_nav_open_image) {
+		} else if (i == R.id.pocketpaint_options_open_image) {
 			presenter.loadImageClicked();
-		} else if (i == R.id.pocketpaint_nav_new_image) {
+		} else if (i == R.id.pocketpaint_options_new_image) {
 			presenter.newImageClicked();
-		} else if (i == R.id.pocketpaint_nav_discard_image) {
+		} else if (i == R.id.pocketpaint_options_discard_image) {
 			presenter.discardImageClicked();
-		} else if (i == R.id.pocketpaint_nav_fullscreen_mode) {
+		} else if (i == R.id.pocketpaint_options_fullscreen_mode) {
 			presenter.enterFullscreenClicked();
-		} else if (i == R.id.pocketpaint_nav_rate_us) {
+		} else if (i == R.id.pocketpaint_options_rate_us) {
 			presenter.rateUsClicked();
-		} else if (i == R.id.pocketpaint_nav_help) {
+		} else if (i == R.id.pocketpaint_options_help) {
 			presenter.showHelpClicked();
-		} else if (i == R.id.pocketpaint_nav_about) {
+		} else if (i == R.id.pocketpaint_options_about) {
 			presenter.showAboutClicked();
+		} else if (i == android.R.id.home) {
+			presenter.backToPocketCodeClicked();
+		} else if (i == R.id.pocketpaint_share_image_button) {
+			presenter.shareImageClicked();
+		} else if (i == R.id.pocketpaint_options_feedback) {
+			presenter.sendFeedback();
 		} else {
 			return false;
 		}
@@ -265,8 +270,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		toolReference = appFragment.getCurrentTool();
 	}
 
+	public String getName() {
+		return this.getPackageName();
+	}
+
 	private void onCreateMainView() {
-		Context context = getApplicationContext();
+		Context context = this;
 		DrawerLayout drawerLayout = findViewById(R.id.pocketpaint_drawer_layout);
 		ViewGroup topBarLayout = findViewById(R.id.pocketpaint_layout_top_bar);
 		View bottomBarLayout = findViewById(R.id.pocketpaint_main_bottom_bar);
@@ -276,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		drawerLayoutViewHolder = new DrawerLayoutViewHolder(drawerLayout);
 		TopBarViewHolder topBarViewHolder = new TopBarViewHolder(topBarLayout);
 		BottomBarViewHolder bottomBarViewHolder = new BottomBarViewHolder(bottomBarLayout);
-		BottomNavigationViewHolder bottomNavigationViewHolder = new BottomNavigationViewHolder(bottomNavigationView, getResources().getConfiguration().orientation, getApplicationContext());
+		bottomNavigationViewHolder = new BottomNavigationViewHolder(bottomNavigationView, getResources().getConfiguration().orientation, getApplicationContext());
 
 		perspective = new Perspective(layerModel.getWidth(), layerModel.getHeight());
 		workspace = new DefaultWorkspace(layerModel, perspective, new DefaultWorkspace.Listener() {
@@ -289,12 +298,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		MainActivityContracts.Interactor interactor = new MainActivityInteractor();
 		model = new MainActivityModel();
 		ContextCallback contextCallback = new DefaultContextCallback(context);
-		ToolController toolController = new DefaultToolController(toolReference, toolOptionsViewController,
+		this.defaultToolController = new DefaultToolController(toolReference, toolOptionsViewController,
 				new DefaultToolFactory(), commandManager, workspace, toolPaint, contextCallback);
-		presenter = new MainActivityPresenter(this, model, workspace,
+		UserPreferences preferences = new UserPreferences(getPreferences(Context.MODE_PRIVATE));
+
+		presenter = new MainActivityPresenter(this, this, model, workspace,
 				navigator, interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
-				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, toolController);
-		toolController.setOnColorPickedListener(new PresenterColorPickedListener(presenter));
+				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, defaultToolController, preferences);
+		defaultToolController.setOnColorPickedListener(new PresenterColorPickedListener(presenter));
 
 		keyboardListener = new KeyboardListener(drawerLayout);
 		setTopBarListeners(topBarViewHolder);
@@ -309,10 +320,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		LayerMenuViewHolder layerMenuViewHolder = new LayerMenuViewHolder(layerLayout);
 		LayerNavigator layerNavigator = new LayerNavigator(getApplicationContext());
-
 		layerPresenter = new LayerPresenter(layerModel, layerListView, layerMenuViewHolder,
 				commandManager, new DefaultCommandFactory(), layerNavigator);
 		LayerAdapter layerAdapter = new LayerAdapter(layerPresenter);
+		presenter.setLayerAdapter(layerAdapter);
 		layerPresenter.setAdapter(layerAdapter);
 		layerListView.setPresenter(layerPresenter);
 		layerListView.setAdapter(layerAdapter);
@@ -324,8 +335,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private void onCreateDrawingSurface() {
 		drawingSurface = findViewById(R.id.pocketpaint_drawing_surface_view);
 		drawingSurface.setArguments(layerModel, perspective, toolReference, toolOptionsViewController);
+		layerPresenter.setDrawingSurface(drawingSurface);
 
 		appFragment.setPerspective(perspective);
+		layerPresenter.setDefaultToolController(defaultToolController);
+		layerPresenter.setbottomNavigationViewHolder(bottomNavigationViewHolder);
 	}
 
 	private void setLayerMenuListeners(LayerMenuViewHolder layerMenuViewHolder) {
@@ -346,8 +360,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private void setActionBarToolTips(TopBarViewHolder topBar, Context context) {
 		TooltipCompat.setTooltipText(topBar.undoButton, context.getString(R.string.button_undo));
 		TooltipCompat.setTooltipText(topBar.redoButton, context.getString(R.string.button_redo));
-		TooltipCompat.setTooltipText(topBar.colorButton, context.getString(R.string.bottom_navigation_color));
-		TooltipCompat.setTooltipText(topBar.layerButton, context.getString(R.string.button_layers));
 	}
 
 	private void setTopBarListeners(TopBarViewHolder topBar) {
@@ -363,16 +375,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 				presenter.redoClicked();
 			}
 		});
-		topBar.colorButton.setOnClickListener(new View.OnClickListener() {
+		topBar.checkmarkButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				presenter.showColorPickerClicked();
-			}
-		});
-		topBar.layerButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				presenter.showLayerMenuClicked();
+				BaseToolWithShape tool = (BaseToolWithShape) toolReference.get();
+				tool.onClickOnButton();
 			}
 		});
 	}
@@ -422,8 +429,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		ActionBar supportActionBar = getSupportActionBar();
 		if (supportActionBar != null) {
-			supportActionBar.setDisplayShowTitleEnabled(false);
-			supportActionBar.setDisplayHomeAsUpEnabled(false);
+			supportActionBar.setDisplayShowTitleEnabled(!isOpenedFromCatroid);
+			supportActionBar.setDisplayHomeAsUpEnabled(isOpenedFromCatroid);
 			supportActionBar.setHomeButtonEnabled(true);
 			supportActionBar.setDisplayShowHomeEnabled(false);
 		}

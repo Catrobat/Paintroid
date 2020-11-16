@@ -22,8 +22,7 @@
     <item
         android:id="@+id/action_tools"
         android:title="@string/bottom_navigation_tools"
-        android:icon="@drawable/ic_pocketpaint_tool_hand" />
-
+        android:icon="@drawable/ic_pocketpaint_tools" />
 
     <item
         android:id="@+id/action_current_tool"
@@ -33,7 +32,7 @@
     <item
         android:id="@+id/action_color_picker"
         android:title="@string/bottom_navigation_color"
-        android:icon="@drawable/ic_pocketpaint_tool_hand" />
+        android:icon="@drawable/pocketpaint_checkeredbg_repeat" />
 
     <item
         android:id="@+id/action_layers"

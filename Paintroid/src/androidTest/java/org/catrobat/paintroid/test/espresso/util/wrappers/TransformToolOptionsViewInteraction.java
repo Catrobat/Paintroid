@@ -21,13 +21,15 @@ package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import org.catrobat.paintroid.R;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
+import static org.hamcrest.Matchers.not;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 public final class TransformToolOptionsViewInteraction extends CustomViewInteraction {
 	private TransformToolOptionsViewInteraction() {
@@ -41,6 +43,12 @@ public final class TransformToolOptionsViewInteraction extends CustomViewInterac
 	public TransformToolOptionsViewInteraction performAutoCrop() {
 		onView(withId(R.id.pocketpaint_transform_auto_crop_btn))
 				.perform(click());
+		return this;
+	}
+
+	public TransformToolOptionsViewInteraction checkAutoDisplayed() {
+		onView(withText(R.string.transform_auto_crop_text))
+				.check(matches(isDisplayed()));
 		return this;
 	}
 
@@ -80,9 +88,21 @@ public final class TransformToolOptionsViewInteraction extends CustomViewInterac
 		return this;
 	}
 
-	public TransformToolOptionsViewInteraction checkPercetageTextMatches(int expected) {
+	public TransformToolOptionsViewInteraction checkPercentageTextMatches(int expected) {
 		onView(withId(R.id.pocketpaint_transform_resize_percentage_text))
 				.check(matches(withText(Integer.toString(expected))));
+		return this;
+	}
+
+	public TransformToolOptionsViewInteraction checkIsDisplayed() {
+		onView(withId(R.id.pocketpaint_main_tool_options))
+				.check(matches(isDisplayed()));
+		return this;
+	}
+
+	public TransformToolOptionsViewInteraction checkIsNotDisplayed() {
+		onView(withId(R.id.pocketpaint_main_tool_options))
+				.check(matches(not(isDisplayed())));
 		return this;
 	}
 }

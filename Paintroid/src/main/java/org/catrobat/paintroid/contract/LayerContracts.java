@@ -1,14 +1,20 @@
 package org.catrobat.paintroid.contract;
 
 import android.graphics.Bitmap;
-import android.support.annotation.StringRes;
 import android.view.View;
+
+import org.catrobat.paintroid.controller.DefaultToolController;
+import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder;
 
 import java.util.List;
 import java.util.ListIterator;
 
+import androidx.annotation.StringRes;
+
 public interface LayerContracts {
 	interface Adapter {
+
 		void notifyDataSetChanged();
 
 		LayerViewHolder getViewHolderAt(int position);
@@ -30,12 +36,26 @@ public interface LayerContracts {
 
 		void removeLayer();
 
+		void hideLayer(int position);
+
+		void unhideLayer(int position, LayerViewHolder viewHolder);
+
 		void setAdapter(LayerContracts.Adapter layerAdapter);
 
+		void setDrawingSurface(DrawingSurface drawingSurface);
+
 		void invalidate();
+
+		void setDefaultToolController(DefaultToolController defaultToolController);
+
+		void setbottomNavigationViewHolder(BottomNavigationViewHolder bottomNavigationViewHolder);
+
+		LayerContracts.Presenter getPresenter();
 	}
 
 	interface LayerViewHolder {
+
+		void setSelected(int position, BottomNavigationViewHolder bottomNavigationViewHolder, DefaultToolController defaultToolController);
 
 		void setSelected();
 
@@ -46,6 +66,10 @@ public interface LayerContracts {
 		View getView();
 
 		void setMergable();
+
+		Bitmap getBitmap();
+
+		void setCheckBox(boolean setTo);
 	}
 
 	interface LayerMenuViewHolder {
@@ -64,6 +88,14 @@ public interface LayerContracts {
 		Bitmap getBitmap();
 
 		void setBitmap(Bitmap bitmap);
+
+		Bitmap getTransparentBitmap();
+
+		void switchBitmaps(boolean isUnhide);
+
+		void setCheckBox(boolean setTo);
+
+		boolean getCheckBox();
 	}
 
 	interface Model {

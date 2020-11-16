@@ -19,34 +19,39 @@
 
 package org.catrobat.paintroid.test.espresso.catroid;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.GrantPermissionRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.junit.Assert.assertTrue;
+
+import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiSelector;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.OptionsMenuViewInteraction.onOptionsMenu;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class MoreOptionsIntegrationTest {
@@ -55,9 +60,7 @@ public class MoreOptionsIntegrationTest {
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE);
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	@Before
 	public void setUp() {
@@ -72,18 +75,20 @@ public class MoreOptionsIntegrationTest {
 		onTopBarView()
 				.performOpenMoreOptions();
 
-		onView(withText(R.string.menu_load_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_hide_menu)).check(matches(isDisplayed()));
-		onView(withText(R.string.help_title)).check(matches(isDisplayed()));
-		onView(withText(R.string.pocketpaint_menu_about)).check(matches(isDisplayed()));
+		onOptionsMenu()
+				.checkItemExists(R.string.menu_load_image)
+				.checkItemExists(R.string.menu_hide_menu)
+				.checkItemExists(R.string.help_title)
+				.checkItemExists(R.string.pocketpaint_menu_about)
+				.checkItemExists(R.string.share_image_menu)
 
-		onView(withText(R.string.menu_back)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_discard_image)).check(matches(isDisplayed()));
-		onView(withText(R.string.menu_export)).check(matches(isDisplayed()));
+				.checkItemDoesNotExist(R.string.menu_save_image)
+				.checkItemDoesNotExist(R.string.menu_save_copy)
+				.checkItemDoesNotExist(R.string.menu_new_image)
+				.checkItemDoesNotExist(R.string.menu_rate_us)
 
-		onView(withText(R.string.menu_save_image)).check(doesNotExist());
-		onView(withText(R.string.menu_save_copy)).check(doesNotExist());
-		onView(withText(R.string.menu_new_image)).check(doesNotExist());
+				.checkItemExists(R.string.menu_discard_image)
+				.checkItemExists(R.string.menu_export);
 	}
 
 	@Test
@@ -98,5 +103,21 @@ public class MoreOptionsIntegrationTest {
 				.perform(click());
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
+	}
+
+	@Test
+	public void testMoreOptionsShareImageClick() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText("Share image"))
+				.perform(click());
+		UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+		UiObject uiObject = mDevice.findObject(new UiSelector());
+		assertTrue(uiObject.exists());
+		mDevice.pressBack();
 	}
 }

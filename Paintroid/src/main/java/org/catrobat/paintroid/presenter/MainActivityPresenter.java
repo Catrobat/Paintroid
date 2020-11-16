@@ -22,21 +22,25 @@ package org.catrobat.paintroid.presenter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.GravityCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+
+import org.catrobat.paintroid.FileIODataTransfer;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.UserPreferences;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -61,10 +65,12 @@ import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback;
 import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.ui.LayerAdapter;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
 
+import static org.catrobat.paintroid.common.Constants.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG;
 import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
 import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
@@ -74,6 +80,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXT
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
@@ -84,6 +91,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOA
 import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_NEW_EMPTY;
 
 public class MainActivityPresenter implements Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
+	private Activity fileActivity;
 	private MainView view;
 	private Model model;
 	private Workspace workspace;
@@ -94,16 +102,19 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private BottomBarViewHolder bottomBarViewHolder;
 	private DrawerLayoutViewHolder drawerLayoutViewHolder;
 	private BottomNavigationViewHolder bottomNavigationViewHolder;
+	private LayerAdapter layerAdapter;
 
 	private CommandManager commandManager;
 	private CommandFactory commandFactory;
 	private boolean resetPerspectiveAfterNextCommand;
 	private ToolController toolController;
+	private Context context;
+	private UserPreferences sharedPreferences;
 
-	public MainActivityPresenter(MainView view, Model model, Workspace workspace, Navigator navigator,
+	public MainActivityPresenter(MainView view, Context context, Model model, Workspace workspace, Navigator navigator,
 			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
 			DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
-			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController) {
+			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController, UserPreferences sharedPreferences) {
 		this.view = view;
 		this.model = model;
 		this.workspace = workspace;
@@ -117,6 +128,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		this.toolController = toolController;
 		this.commandFactory = commandFactory;
 		this.bottomNavigationViewHolder = bottomNavigationViewHolder;
+		this.context = context;
+		this.sharedPreferences = sharedPreferences;
 	}
 
 	private boolean isImageUnchanged() {
@@ -125,35 +138,47 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void loadImageClicked() {
-		if (isImageUnchanged() || model.isSaved()) {
-			navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
-		} else {
-			navigator.showSaveBeforeLoadImageDialog();
+		switchBetweenVersions(PERMISSION_REQUEST_CODE_LOAD_PICTURE);
+		setFirstCheckBoxInLayerMenu();
+	}
+
+	public void setFirstCheckBoxInLayerMenu() {
+		if (layerAdapter != null && layerAdapter.getViewHolderAt(0) != null) {
+			layerAdapter.getViewHolderAt(0).setCheckBox(true);
 		}
 	}
 
 	@Override
 	public void saveBeforeLoadImage() {
-		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
+		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
 	}
 
 	@Override
 	public void loadNewImage() {
 		navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+		setFirstCheckBoxInLayerMenu();
 	}
+
+	@Override
+	public Context getContext() {
+		return this.context;
+	}
+
 
 	@Override
 	public void newImageClicked() {
 		if (isImageUnchanged() || model.isSaved()) {
 			onNewImage();
+			setFirstCheckBoxInLayerMenu();
 		} else {
 			navigator.showSaveBeforeNewImageDialog();
+			setFirstCheckBoxInLayerMenu();
 		}
 	}
 
 	@Override
 	public void saveBeforeNewImage() {
-		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
+		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
 	}
 
 	private void showSecurityQuestionBeforeExit() {
@@ -173,17 +198,34 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveBeforeFinish() {
-		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
+		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
 	}
 
 	@Override
 	public void saveCopyClicked() {
-		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
+		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
 	}
 
 	@Override
 	public void saveImageClicked() {
-		askForWriteExternalStoragePermission(PERMISSION_EXTERNAL_STORAGE_SAVE);
+		switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
+		showLikeUsDialogIfFirstTimeSave();
+	}
+
+	@Override
+	public void shareImageClicked() {
+		Bitmap bitmap = workspace.getBitmapOfAllLayers();
+		navigator.startShareImageActivity(bitmap);
+	}
+
+	private void showLikeUsDialogIfFirstTimeSave() {
+		boolean dialogHasBeenShown = sharedPreferences.getBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, false);
+
+		if (!dialogHasBeenShown && !model.isOpenedFromCatroid()) {
+			navigator.showLikeUsDialog();
+
+			sharedPreferences.setBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, true);
+		}
 	}
 
 	@Override
@@ -214,6 +256,21 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
+	public void showRateUsDialog() {
+		navigator.showRateUsDialog();
+	}
+
+	@Override
+	public void showFeedbackDialog() {
+		navigator.showFeedbackDialog();
+	}
+
+	@Override
+	public void sendFeedback() {
+		navigator.sendFeedback();
+	}
+
+	@Override
 	public void onNewImage() {
 		DisplayMetrics metrics = view.getDisplayMetrics();
 		resetPerspectiveAfterNextCommand = true;
@@ -228,13 +285,71 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		commandManager.addCommand(commandFactory.createResetCommand());
 	}
 
-	private void askForWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
-		if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-			navigator.askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+	private void switchBetweenVersions(@PermissionRequestCode int requestCode) {
+		if (navigator.isSdkAboveOrEqualQ()) {
+			switch (requestCode) {
+				case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
+					askForReadAndWriteExternalStoragePermission(PERMISSION_REQUEST_CODE_LOAD_PICTURE);
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE:
+					saveImageConfirmClicked(SAVE_IMAGE_DEFAULT, model.getSavedPictureUri());
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
+					Bitmap bitmap = workspace.getBitmapOfAllLayers();
+					interactor.saveCopy(this, SAVE_IMAGE_DEFAULT, bitmap);
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW:
+					saveImageConfirmClicked(SAVE_IMAGE_LOAD_NEW, model.getSavedPictureUri());
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
+					saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, model.getSavedPictureUri());
+					break;
+				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
+					saveImageConfirmClicked(SAVE_IMAGE_FINISH, model.getSavedPictureUri());
+					break;
+			}
 		} else {
-			handleRequestPermissionsResult(requestCode,
-					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-					new int[]{PackageManager.PERMISSION_GRANTED});
+			if (requestCode == PERMISSION_REQUEST_CODE_LOAD_PICTURE) {
+				if (isImageUnchanged() || model.isSaved()) {
+					navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+					setFirstCheckBoxInLayerMenu();
+				} else {
+					navigator.showSaveBeforeLoadImageDialog();
+					setFirstCheckBoxInLayerMenu();
+				}
+			} else {
+				askForReadAndWriteExternalStoragePermission(requestCode);
+			}
+		}
+	}
+
+	private void askForReadAndWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
+		if (model.isOpenedFromCatroid() && requestCode == PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH) {
+			if (!navigator.isSdkAboveOrEqualQ()) {
+				handleRequestPermissionsResult(requestCode,
+						new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+						new int[]{PackageManager.PERMISSION_GRANTED});
+			}
+
+			return;
+		}
+
+		if (navigator.isSdkAboveOrEqualQ()) {
+			if (!navigator.doIHavePermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+				navigator.askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestCode);
+			} else {
+				handleRequestPermissionsResult(requestCode,
+						new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+						new int[]{PackageManager.PERMISSION_GRANTED});
+			}
+		} else {
+			if (navigator.isSdkAboveOrEqualM() && !navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+				navigator.askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+			} else {
+				handleRequestPermissionsResult(requestCode,
+						new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+						new int[]{PackageManager.PERMISSION_GRANTED});
+			}
 		}
 	}
 
@@ -248,13 +363,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				Uri selectedGalleryImageUri = data.getData();
 				setTool(ToolType.IMPORTPNG);
 				toolController.switchTool(ToolType.IMPORTPNG);
-				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, selectedGalleryImageUri);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, selectedGalleryImageUri, getContext(), false);
 				break;
 			case REQUEST_CODE_LOAD_PICTURE:
 				if (resultCode != Activity.RESULT_OK) {
 					return;
 				}
-				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, data.getData());
+				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, data.getData(), getContext(), false);
 				break;
 			case REQUEST_CODE_INTRO:
 				if (resultCode == RESULT_INTRO_MW_NOT_SUPPORTED) {
@@ -267,8 +382,27 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
+	public void loadScaledImage(Uri uri, @LoadImageRequestCode int requestCode) {
+		switch (requestCode) {
+			case LOAD_IMAGE_IMPORTPNG:
+				setTool(ToolType.IMPORTPNG);
+				toolController.switchTool(ToolType.IMPORTPNG);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, uri, context, true);
+				break;
+			case LOAD_IMAGE_CATROID:
+			case LOAD_IMAGE_DEFAULT:
+				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, uri, context, true);
+				break;
+			default:
+				Log.e(MainActivity.TAG, "wrong request code for loading pictures");
+				break;
+		}
+	}
+
+	@Override
 	public void handleRequestPermissionsResult(@PermissionRequestCode int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		if (permissions.length == 1 && permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+		if (permissions.length == 1 && (permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE)
+				|| permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE))) {
 			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 				Bitmap bitmap;
 				switch (requestCode) {
@@ -289,13 +423,24 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
 						saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, model.getSavedPictureUri());
 						break;
+					case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
+						if (isImageUnchanged() || model.isSaved()) {
+							navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+						} else {
+							navigator.showSaveBeforeLoadImageDialog();
+						}
+						break;
 					default:
 						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
 						break;
 				}
 			} else {
-				navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-						permissions, requestCode);
+				if (navigator.isPermissionPermanentlyDenied(permissions)) {
+					navigator.showRequestPermanentlyDeniedPermissionRationaleDialog();
+				} else {
+					navigator.showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+							permissions, requestCode);
+				}
 			}
 		} else {
 			view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -379,8 +524,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void setTopBarColor(int color) {
-		topBarViewHolder.setColorButtonColor(color);
+	public void setBottomNavigationColor(int color) {
+		bottomNavigationViewHolder.setColorButtonColor(color);
 	}
 
 	@Override
@@ -391,7 +536,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			File imageFile = new File(extraPicturePath);
 			if (imageFile.exists()) {
 				model.setSavedPictureUri(view.getUriFromFile(imageFile));
-				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri());
+				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri(), context, false);
 			} else {
 				interactor.createFile(this, CREATE_FILE_DEFAULT, extraPictureName);
 			}
@@ -404,7 +549,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void finishInitialize() {
 		refreshTopBarButtons();
-		topBarViewHolder.setColorButtonColor(toolController.getToolColor());
+		bottomNavigationViewHolder.setColorButtonColor(toolController.getToolColor());
 		bottomNavigationViewHolder.showCurrentTool(toolController.getToolType());
 
 		if (model.isFullscreen()) {
@@ -424,6 +569,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void removeMoreOptionsItems(Menu menu) {
 		if (model.isOpenedFromCatroid()) {
 			topBarViewHolder.removeStandaloneMenuItems(menu);
+			topBarViewHolder.hideTitleIfNotStandalone();
 		} else {
 			topBarViewHolder.removeCatroidMenuItems(menu);
 		}
@@ -449,7 +595,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void restoreState(boolean isFullscreen, boolean isSaved, boolean isOpenedFromCatroid,
-			boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri) {
+	                         boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri) {
 		model.setFullscreen(isFullscreen);
 		model.setSaved(isSaved);
 		model.setOpenedFromCatroid(isOpenedFromCatroid);
@@ -494,11 +640,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	private void switchTool(ToolType type) {
+		setTool(type);
+		toolController.switchTool(type);
+
 		if (type == ToolType.IMPORTPNG) {
-			navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
-		} else {
-			setTool(type);
-			toolController.switchTool(type);
+			showImportDialog();
 		}
 	}
 
@@ -525,11 +671,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void onLoadImagePostExecute(@LoadImageRequestCode int requestCode, Uri uri, Bitmap bitmap) {
-		if (bitmap == null) {
+	public void onLoadImagePostExecute(@LoadImageRequestCode int requestCode, Uri uri, FileIODataTransfer result) {
+
+		if (result.getToBeScaled()) {
+			navigator.showScaleImageRequestDialog(uri, requestCode);
+			return;
+		}
+		if (result.getBitmap() == null) {
 			navigator.showLoadErrorDialog();
 			return;
 		}
+		Bitmap bitmap = result.getBitmap();
 
 		switch (requestCode) {
 			case LOAD_IMAGE_DEFAULT:
@@ -541,7 +693,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {
-					toolController.setBitmapFromFile(bitmap);
+					toolController.setBitmapFromSource(bitmap);
 				} else {
 					Log.e(MainActivity.TAG, "importPngToFloatingBox: Current tool is no ImportTool as required");
 				}
@@ -615,6 +767,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
+	public Activity getFileActivity() {
+		return fileActivity;
+	}
+
+	@Override
 	public boolean isFinishing() {
 		return view.isFinishing();
 	}
@@ -628,12 +785,21 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (bottomBarViewHolder.isVisible()) {
 			bottomBarViewHolder.hide();
 		} else {
+			if (!layerAdapter.getPresenter().getLayerItem(workspace.getCurrentLayerIndex()).getCheckBox()) {
+				navigator.showToast(R.string.no_tools_on_hidden_layer, Toast.LENGTH_SHORT);
+				return;
+			}
 			bottomBarViewHolder.show();
 		}
 	}
 
 	@Override
 	public void actionCurrentToolClicked() {
+		if (toolController.getToolType() == ToolType.IMPORTPNG) {
+			showImportDialog();
+			return;
+		}
+
 		if (bottomBarViewHolder.isVisible()) {
 			bottomBarViewHolder.hide();
 		}
@@ -650,5 +816,29 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void rateUsClicked() {
 		navigator.rateUsClicked();
+	}
+
+	public void setLayerAdapter(LayerAdapter layerAdapter) {
+		this.layerAdapter = layerAdapter;
+	}
+
+	@Override
+	public void importFromGalleryClicked() {
+		navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
+	}
+
+	@Override
+	public void showImportDialog() {
+		navigator.showImageImportDialog();
+	}
+
+	@Override
+	public void importStickersClicked() {
+		navigator.showCatroidMediaGallery();
+	}
+
+	@Override
+	public void bitmapLoadedFromSource(Bitmap loadedImage) {
+		toolController.setBitmapFromSource(loadedImage);
 	}
 }

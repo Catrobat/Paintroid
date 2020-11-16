@@ -19,23 +19,30 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
-import android.support.test.espresso.DataInteraction;
-import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.DrawerActions;
 import android.view.Gravity;
+import android.view.View;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.model.Layer;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import androidx.test.espresso.DataInteraction;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.contrib.DrawerActions;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.assertListViewCount;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.hamcrest.Matchers.instanceOf;
+
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.longClick;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	private LayerMenuViewInteraction() {
@@ -71,8 +78,8 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	}
 
 	public LayerMenuViewInteraction performOpen() {
-		onView(withId(R.id.pocketpaint_btn_top_layers))
-				.perform(click());
+		onBottomNavigationView()
+				.onLayersClicked();
 		check(matches(isDisplayed()));
 		return this;
 	}
@@ -91,6 +98,13 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
+	public LayerMenuViewInteraction performLongClickLayer(int listPosition) {
+		check(matches(isDisplayed()));
+		onLayerAt(listPosition)
+				.perform(longClick());
+		return this;
+	}
+
 	public LayerMenuViewInteraction performAddLayer() {
 		check(matches(isDisplayed()));
 		onButtonAdd()
@@ -103,5 +117,29 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		onButtonDelete()
 				.perform(click());
 		return this;
+	}
+
+	public LayerMenuViewInteraction perfomToggleLayerVisibility(int position) {
+		check(matches(isDisplayed()));
+		onView(withIndex(withId(R.id.pocketpaint_checkbox_layer), position)).perform(click());
+		return this;
+	}
+
+	public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
+		return new TypeSafeMatcher<View>() {
+			int currentIndex = 0;
+
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("with index: ");
+				description.appendValue(index);
+				matcher.describeTo(description);
+			}
+
+			@Override
+			public boolean matchesSafely(View view) {
+				return matcher.matches(view) && currentIndex++ == index;
+			}
+		};
 	}
 }

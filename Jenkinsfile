@@ -26,6 +26,7 @@ def useDebugLabelParameter(defaultLabel){
 pipeline {
     parameters {
         string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
+        string name: 'BUILD_WITH_CATROID', defaultValue: 'no', description: 'When set to \'yes\' the the current Paintroid build will be build with the current develop Branch of Catroid'
     }
 
     agent {
@@ -63,9 +64,23 @@ pipeline {
             steps {
                 sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
                 renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-                archiveArtifacts 'app/build/outputs/apk/debug/app-debug*.apk'
+                archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
                 plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
-                plot csvFileName: 'apksize.csv', csvSeries: [[displayTableFlag: false, exclusionValues: 'kilobytes', file: 'Paintroid/build/outputs/apksize/*/*.csv', inclusionFlag: 'INCLUDE_BY_STRING', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'APK Size'
+            }
+        }
+
+        stage('Build with Catroid') {
+            when {
+                environment name: 'BUILD_WITH_CATROID', value: 'yes'
+            }
+            steps {
+                sh './gradlew publishToMavenLocal -Psnapshot'
+                sh 'rm -rf Catroid; mkdir Catroid'
+                dir('Catroid') {
+                    git branch: 'develop', url: 'https://github.com/Catrobat/Catroid.git'
+                    sh "./gradlew -PpaintroidLocal assembleCatroidDebug"
+                    archiveArtifacts 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk'
+                }
             }
         }
 

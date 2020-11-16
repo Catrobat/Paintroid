@@ -95,7 +95,7 @@ public class LayerPresenterTest {
 		Layer firstLayer = mock(Layer.class);
 
 		Bitmap firstLayerBitmap = mock(Bitmap.class);
-		when(firstLayer.getBitmap()).thenReturn(firstLayerBitmap);
+		when(firstLayer.getTransparentBitmap()).thenReturn(firstLayerBitmap);
 
 		layerModel.addLayerAt(0, firstLayer);
 		layerModel.setCurrentLayer(firstLayer);
@@ -103,8 +103,9 @@ public class LayerPresenterTest {
 		createPresenter();
 		layerPresenter.onBindLayerViewHolderAtPosition(0, layerViewHolder);
 
-		verify(layerViewHolder).setSelected();
+		verify(layerViewHolder).setSelected(0, null, null);
 		verify(layerViewHolder).setBitmap(firstLayerBitmap);
+		verify(layerViewHolder).setCheckBox(false);
 		verifyNoMoreInteractions(layerViewHolder);
 		verifyZeroInteractions(commandManager, commandFactory, layerAdapter,
 				listItemLongClickHandler, layerMenuViewHolder);
@@ -116,7 +117,7 @@ public class LayerPresenterTest {
 		Layer firstLayer = mock(Layer.class);
 		Layer secondLayer = mock(Layer.class);
 		Bitmap secondLayerBitmap = mock(Bitmap.class);
-		when(secondLayer.getBitmap()).thenReturn(secondLayerBitmap);
+		when(secondLayer.getTransparentBitmap()).thenReturn(secondLayerBitmap);
 		layerModel.addLayerAt(0, firstLayer);
 		layerModel.addLayerAt(1, secondLayer);
 		layerModel.setCurrentLayer(firstLayer);
@@ -125,9 +126,10 @@ public class LayerPresenterTest {
 		layerPresenter.onBindLayerViewHolderAtPosition(1, layerViewHolder);
 
 		verify(layerViewHolder).setDeselected();
-		verify(layerViewHolder).setBitmap(secondLayerBitmap);
+		verify(layerViewHolder).setBitmap(secondLayer.getTransparentBitmap());
+		verify(layerViewHolder).setCheckBox(false);
 		verifyNoMoreInteractions(layerViewHolder);
-		verifyZeroInteractions(firstLayer, commandManager, commandFactory, layerAdapter,
+		verifyZeroInteractions(firstLayer, commandManager, layerAdapter,
 				listItemLongClickHandler, layerMenuViewHolder);
 	}
 
@@ -265,9 +267,12 @@ public class LayerPresenterTest {
 	@Test
 	public void testOnLongClickLayerAtPosition() {
 		View view = mock(View.class);
-		layerModel.addLayerAt(0, mock(Layer.class));
-		layerModel.addLayerAt(1, mock(Layer.class));
-
+		Layer firstLayer = new Layer(null);
+		Layer secondLayer = new Layer(null);
+		firstLayer.setCheckBox(true);
+		secondLayer.setCheckBox(true);
+		layerModel.addLayerAt(0, firstLayer);
+		layerModel.addLayerAt(1, secondLayer);
 		createPresenter();
 		layerPresenter.onLongClickLayerAtPosition(0, view);
 
@@ -378,6 +383,7 @@ public class LayerPresenterTest {
 	public void testMergeItems() {
 		Layer firstLayer = mock(Layer.class);
 		Layer secondLayer = mock(Layer.class);
+
 		layerModel.addLayerAt(0, firstLayer);
 		layerModel.addLayerAt(1, secondLayer);
 		Command command = mock(Command.class);
@@ -419,11 +425,10 @@ public class LayerPresenterTest {
 		createPresenter();
 		layerPresenter.swapItemsVisually(0, 1);
 		layerPresenter.mergeItems(0, 0);
-
 		verify(commandManager).addCommand(command);
 		verify(navigator).showToast(R.string.layer_merged, Toast.LENGTH_SHORT);
-		verifyNoMoreInteractions(commandManager);
-		verifyZeroInteractions(layerMenuViewHolder, firstLayer, secondLayer, thirdLayer, command);
+		verifyNoMoreInteractions(commandManager, firstLayer, secondLayer, thirdLayer);
+		verifyZeroInteractions(layerMenuViewHolder, command);
 	}
 
 	@Test

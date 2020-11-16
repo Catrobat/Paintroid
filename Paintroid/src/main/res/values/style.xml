@@ -38,9 +38,21 @@
 
     <style name="PocketPaintSplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/pocketpaint_splash</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="PocketPaintTheme" parent="PocketPaintTheme.Base" />
+    <style name="PocketPaintTheme" parent="PocketPaintTheme.Base">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+    </style>
+
+    <style name="PocketPaintSelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/pocketpaint_selectable_button_bg</item>
+    </style>
 
     <style name="PocketPaintTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>
@@ -57,10 +69,6 @@
 
     <style name="PocketPaintDividerBase">
         <item name="android:background">@color/pocketpaint_main_separator_color</item>
-    </style>
-
-    <style name="PocketPaintSelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/pocketpaint_attribute_button_selector</item>
     </style>
 
     <style name="BottomNavigationViewLabel" parent="@style/TextAppearance.AppCompat.Caption">
@@ -150,6 +158,29 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="WebViewLoadingCircle" parent="android:Theme.Holo.Dialog">
+        <item name="android:alertDialogStyle">@style/WebViewLoadingCircleStyle</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:textColorPrimary">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:textColor">@android:color/transparent</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="WebViewLoadingCircleStyle">
+        <item name="android:bottomBright">@android:color/transparent</item>
+        <item name="android:bottomDark">@android:color/transparent</item>
+        <item name="android:bottomMedium">@android:color/transparent</item>
+        <item name="android:centerBright">@android:color/transparent</item>
+        <item name="android:centerDark">@android:color/transparent</item>
+        <item name="android:centerMedium">@android:color/transparent</item>
+        <item name="android:fullBright">@android:color/transparent</item>
+        <item name="android:fullDark">@android:color/transparent</item>
+        <item name="android:topBright">@android:color/transparent</item>
+        <item name="android:topDark">@android:color/transparent</item>
     </style>
 
 </resources>

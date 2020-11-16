@@ -20,12 +20,13 @@
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.graphics.PointF;
-import android.support.test.espresso.action.CoordinatesProvider;
 import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
+
+import androidx.test.espresso.action.CoordinatesProvider;
 
 import static org.catrobat.paintroid.test.espresso.util.MainActivityHelper.getMainActivityFromView;
 import static org.catrobat.paintroid.test.espresso.util.PositionCoordinatesProvider.calculateViewOffset;

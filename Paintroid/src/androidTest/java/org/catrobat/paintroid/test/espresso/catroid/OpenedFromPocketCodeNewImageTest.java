@@ -19,17 +19,14 @@
 
 package org.catrobat.paintroid.test.espresso.catroid;
 
-import android.Manifest;
 import android.content.Intent;
-import android.os.Environment;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.GrantPermissionRule;
-import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -39,12 +36,9 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
@@ -52,6 +46,13 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInter
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class OpenedFromPocketCodeNewImageTest {
@@ -62,9 +63,7 @@ public class OpenedFromPocketCodeNewImageTest {
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE);
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	private File imageFile = null;
 
@@ -92,10 +91,7 @@ public class OpenedFromPocketCodeNewImageTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onTopBarView()
-				.performOpenMoreOptions();
-
-		onView(withText(R.string.menu_back))
-				.perform(click());
+			.onHomeClicked();
 
 		onView(withText(R.string.save_button_text))
 				.check(matches(isDisplayed()));
@@ -113,8 +109,10 @@ public class OpenedFromPocketCodeNewImageTest {
 	}
 
 	private File getImageFile(String filename) {
-		return new File(Environment.getExternalStorageDirectory(), File.separatorChar
-				+ Constants.EXT_STORAGE_DIRECTORY_NAME
-				+ File.separatorChar + filename + ".png");
+		try {
+			return FileIO.createNewEmptyPictureFile(filename, launchActivityRule.getActivity());
+		} catch (NullPointerException e) {
+			throw new AssertionError("Could not create temp file", e);
+		}
 	}
 }

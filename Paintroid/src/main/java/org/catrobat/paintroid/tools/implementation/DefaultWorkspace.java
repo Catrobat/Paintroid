@@ -85,6 +85,11 @@ public class DefaultWorkspace implements Workspace {
 	}
 
 	@Override
+	public int getCurrentLayerIndex() {
+		return layerModel.getLayerIndexOf(layerModel.getCurrentLayer());
+	}
+
+	@Override
 	public void resetPerspective() {
 		perspective.setBitmapDimensions(getWidth(), getHeight());
 		perspective.resetScaleAndTranslation();

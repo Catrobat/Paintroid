@@ -20,12 +20,9 @@
 package org.catrobat.paintroid.tools.implementation;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.support.annotation.VisibleForTesting;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
@@ -36,7 +33,9 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener;
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.VisibleForTesting;
 
 public class LineTool extends BaseTool {
 
@@ -44,13 +43,14 @@ public class LineTool extends BaseTool {
 	private PointF currentCoordinate;
 	private BrushToolOptionsView brushToolOptionsView;
 
-	public LineTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
+	public LineTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		this.brushToolOptionsView = brushToolOptionsView;
 
 		brushToolOptionsView.setBrushChangedListener(new CommonBrushChangedListener(this));
 		brushToolOptionsView.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
+		brushToolOptionsView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	@Override
@@ -59,22 +59,11 @@ public class LineTool extends BaseTool {
 			return;
 		}
 
-		setPaintColor(toolPaint.getPreviewColor());
-
 		canvas.save();
 		canvas.clipRect(0, 0, workspace.getWidth(), workspace.getHeight());
-		if (toolPaint.getPreviewPaint().getAlpha() == 0x00) {
-			Paint previewPaint = toolPaint.getPreviewPaint();
-			previewPaint.setColor(Color.BLACK);
-			canvas.drawLine(initialEventCoordinate.x,
-					initialEventCoordinate.y, currentCoordinate.x,
-					currentCoordinate.y, previewPaint);
-			previewPaint.setColor(Color.TRANSPARENT);
-		} else {
-			canvas.drawLine(initialEventCoordinate.x,
-					initialEventCoordinate.y, currentCoordinate.x,
-					currentCoordinate.y, toolPaint.getPaint());
-		}
+		canvas.drawLine(initialEventCoordinate.x,
+				initialEventCoordinate.y, currentCoordinate.x,
+				currentCoordinate.y, toolPaint.getPreviewPaint());
 		canvas.restore();
 	}
 
@@ -131,11 +120,6 @@ public class LineTool extends BaseTool {
 	public void changePaintColor(int color) {
 		super.changePaintColor(color);
 		brushToolOptionsView.invalidate();
-	}
-
-	@Override
-	public void setupToolOptions() {
-		brushToolOptionsView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	@VisibleForTesting (otherwise = VisibleForTesting.NONE)

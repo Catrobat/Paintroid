@@ -21,7 +21,6 @@ package org.catrobat.paintroid.test.junit.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -36,6 +35,8 @@ import org.catrobat.paintroid.model.LayerModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -126,5 +127,32 @@ public class LayerTest {
 		assertThat(firstLayer.getBitmap().getPixel(1, 2), is(Color.BLACK));
 		assertThat(firstLayer.getBitmap().getPixel(2, 1), is(Color.BLUE));
 		assertThat(firstLayer.getBitmap().getPixel(1, 1), is(Color.BLUE));
+	}
+
+	@Test
+	public void testHideThenUnhideLayer() {
+		LayerContracts.Layer layerToHide = layerModel.getLayerAt(0);
+
+		layerToHide.getBitmap().setPixel(1, 1, Color.BLACK);
+		layerToHide.getBitmap().setPixel(2, 1, Color.BLACK);
+		layerToHide.getBitmap().setPixel(3, 1, Color.BLACK);
+		layerToHide.getBitmap().setPixel(4, 1, Color.BLACK);
+
+		Bitmap bitmapCopy = layerToHide.getTransparentBitmap();
+
+		layerToHide.switchBitmaps(false);
+		layerToHide.setBitmap(bitmapCopy);
+
+		assertThat(layerToHide.getBitmap().getPixel(1, 1), is(Color.TRANSPARENT));
+		assertThat(layerToHide.getBitmap().getPixel(2, 1), is(Color.TRANSPARENT));
+		assertThat(layerToHide.getBitmap().getPixel(3, 1), is(Color.TRANSPARENT));
+		assertThat(layerToHide.getBitmap().getPixel(4, 1), is(Color.TRANSPARENT));
+
+		layerToHide.switchBitmaps(true);
+
+		assertThat(layerToHide.getBitmap().getPixel(1, 1), is(Color.BLACK));
+		assertThat(layerToHide.getBitmap().getPixel(2, 1), is(Color.BLACK));
+		assertThat(layerToHide.getBitmap().getPixel(3, 1), is(Color.BLACK));
+		assertThat(layerToHide.getBitmap().getPixel(4, 1), is(Color.BLACK));
 	}
 }

@@ -19,23 +19,23 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.GrantPermissionRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.provider.MediaStore;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -45,34 +45,36 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.pressMenuKey;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.ComponentNameMatchers.hasClassName;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.pressMenuKey;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class MenuFileActivityIntegrationTest {
@@ -82,9 +84,7 @@ public class MenuFileActivityIntegrationTest {
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE);
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	private MainActivity activity;
 
@@ -173,7 +173,7 @@ public class MenuFileActivityIntegrationTest {
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 
 		Intent intent = new Intent();
-		intent.setData(Uri.fromFile(createTestImageFile()));
+		intent.setData(createTestImageFile());
 		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
 
@@ -205,49 +205,10 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	@Test
-	public void testOnHelp() {
+	public void testOnHelpDisabled() {
 		onTopBarView()
 				.performOpenMoreOptions();
-		onView(withText(R.string.help_title)).perform(click());
-		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
-	}
-
-	@Test
-	public void testImageUnchangedAfterHelpSkip() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		Bitmap imageBefore = activity.layerModel.getCurrentLayer().getBitmap();
-		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
-
-		onTopBarView()
-				.performOpenMoreOptions();
-
-		onView(withText(R.string.help_title)).perform(click());
-		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
-		onView(withText(R.string.skip)).perform(click());
-
-		Bitmap imageAfter = activity.layerModel.getCurrentLayer().getBitmap();
-		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
-	}
-
-	@Test
-	public void testImageUnchangedAfterHelpAbort() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		Bitmap imageBefore = activity.layerModel.getCurrentLayer().getBitmap();
-		imageBefore = imageBefore.copy(imageBefore.getConfig(), imageBefore.isMutable());
-
-		onTopBarView()
-				.performOpenMoreOptions();
-
-		onView(withText(R.string.help_title)).perform(click());
-		intended(hasComponent(hasClassName(WelcomeActivity.class.getName())));
-		pressBack();
-
-		Bitmap imageAfter = activity.layerModel.getCurrentLayer().getBitmap();
-		assertTrue("Image should not have changed", imageBefore.sameAs(imageAfter));
+		onView(withText(R.string.help_title)).check(matches(not(isClickable())));
 	}
 
 	@Test
@@ -358,6 +319,9 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
+		onView(withText(R.string.pocketpaint_no)).perform(click());
+		onView(withText(R.string.pocketpaint_ok)).perform(click());
+
 		assertNotNull(activity.model.getSavedPictureUri());
 
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());
@@ -399,28 +363,37 @@ public class MenuFileActivityIntegrationTest {
 		onView(withText(R.string.menu_quit)).check(matches(isDisplayed()));
 	}
 
-	@SuppressWarnings("ResultOfMethodCallIgnored")
-	private File createTestImageFile() {
-		File imageFile = new File(Environment.getExternalStorageDirectory()
-				+ "/PocketCodePaintTest/", "testfile.jpg");
+	private Uri createTestImageFile() {
 		Bitmap bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
+
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, "testfile.jpg");
+		contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+		}
+
+		ContentResolver resolver = activity.getContentResolver();
+		Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
 		try {
-			imageFile.getParentFile().mkdirs();
-			imageFile.createNewFile();
-			OutputStream outputStream = new FileOutputStream(imageFile);
-			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream));
-			outputStream.close();
+			OutputStream fos = resolver.openOutputStream(Objects.requireNonNull(imageUri));
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos));
+			assert fos != null;
+			fos.close();
 		} catch (IOException e) {
 			throw new AssertionError("Picture file could not be created.", e);
 		}
+
+		File imageFile = new File(imageUri.getPath(), "testfile.jpg");
+
 		deletionFileList.add(imageFile);
-		return imageFile;
+		return imageUri;
 	}
 
 	@Test
 	public void testLoadImageTransparency() {
 		Intent intent = new Intent();
-		intent.setData(Uri.fromFile(createTestImageFile()));
+		intent.setData(createTestImageFile());
 		Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
 

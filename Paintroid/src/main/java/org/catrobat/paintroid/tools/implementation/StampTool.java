@@ -35,7 +35,7 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 public class StampTool extends BaseToolWithRectangleShape {
 
@@ -49,19 +49,14 @@ public class StampTool extends BaseToolWithRectangleShape {
 	private CountDownTimer downTimer;
 	private boolean longClickPerformed;
 
-	public StampTool(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController,
-			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+	public StampTool(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
+					ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		readyForPaste = false;
 		longPressTimeout = ViewConfiguration.getLongPressTimeout();
-		setRotationEnabled(ROTATION_ENABLED);
+		this.rotationEnabled = ROTATION_ENABLED;
 
 		setBitmap(Bitmap.createBitmap((int) boxWidth, (int) boxHeight, Config.ARGB_8888));
-	}
-
-	public void setBitmapFromFile(Bitmap bitmap) {
-		super.setBitmap(bitmap);
-		readyForPaste = true;
 	}
 
 	public void copyBoxContent() {
@@ -71,7 +66,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 			drawingBitmap = Bitmap.createBitmap((int) boxWidth, (int) boxHeight, Config.ARGB_8888);
 		}
 
-		Bitmap layerBitmap = workspace.getBitmapOfAllLayers();
+		Bitmap layerBitmap = workspace.getBitmapOfCurrentLayer();
 
 		Canvas canvas = new Canvas(drawingBitmap);
 		canvas.translate(-toolPosition.x + boxWidth / 2, -toolPosition.y + boxHeight / 2);
@@ -138,7 +133,7 @@ public class StampTool extends BaseToolWithRectangleShape {
 	}
 
 	@Override
-	protected void onClickInBox() {
+	public void onClickOnButton() {
 		if (!readyForPaste || drawingBitmap == null) {
 			contextCallback.showNotification(R.string.stamp_tool_copy_hint);
 		} else if (boxIntersectsWorkspace()) {

@@ -18,22 +18,34 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.catrobat.paintroid"
     android:installLocation="auto">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission  android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 
     <application
         android:largeHeap="true"
         android:supportsRtl="true">
-
+        <provider
+            android:name=".MyProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"/>
+        </provider>
         <activity
             android:name=".WelcomeActivity"
-            android:theme="@style/PocketPaintSplashTheme"
-            android:screenOrientation="portrait" />
-
+            android:screenOrientation="portrait"
+            android:theme="@style/PocketPaintSplashTheme" />
         <activity
             android:name=".MainActivity"
+            tools:replace="android:name"
             android:theme="@style/PocketPaintSplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
@@ -46,5 +58,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

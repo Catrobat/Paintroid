@@ -35,8 +35,6 @@ public interface TextToolOptionsView {
 
 		void setBold(boolean bold);
 
-		void setStrikeThrough(boolean strikeThrough);
-
 		void setTextSize(int size);
 
 		void hideToolOptions();

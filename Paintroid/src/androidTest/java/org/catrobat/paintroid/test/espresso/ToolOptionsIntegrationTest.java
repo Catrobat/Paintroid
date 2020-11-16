@@ -24,8 +24,6 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.tools.ToolType;
@@ -42,16 +40,19 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertTrue;
 import static org.junit.runners.Parameterized.Parameter;
 import static org.junit.runners.Parameterized.Parameters;
+
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 
 @RunWith(Parameterized.class)
 public class ToolOptionsIntegrationTest {
@@ -83,7 +84,7 @@ public class ToolOptionsIntegrationTest {
 				{ToolType.STAMP, false, false},
 				{ToolType.ERASER, false, true},
 				{ToolType.TEXT, true, true},
-				{ToolType.IMPORTPNG, false, false}
+				{ToolType.HAND, false, false}
 		});
 	}
 
