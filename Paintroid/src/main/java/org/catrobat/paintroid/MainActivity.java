@@ -470,11 +470,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	@Override
-	public void commandPreExecute() {
-		presenter.onCommandPreExecute();
-	}
-
-	@Override
 	public void commandPostExecute() {
 		if (!isFinishing()) {
 			layerPresenter.invalidate();
