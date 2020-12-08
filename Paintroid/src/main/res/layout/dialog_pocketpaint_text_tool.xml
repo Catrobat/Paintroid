@@ -30,6 +30,7 @@
         android:orientation="vertical"
         android:clickable="true"
         android:focusable="true"
+        android:background="@android:color/white"
         android:focusableInTouchMode="true">
 
         <TextView

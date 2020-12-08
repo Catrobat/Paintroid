@@ -151,7 +151,7 @@
         <item name="android:textStyle">normal</item>
     </style>
 
-    <style name="PocketPaintWelcomeActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="PocketPaintWelcomeActivityTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/pocketpaint_colorPrimary</item>
         <item name="android:colorBackground">@color/pocketpaint_colorPrimary</item>
         <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>

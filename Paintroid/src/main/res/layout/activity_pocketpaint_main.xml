@@ -46,16 +46,8 @@
                 android:layout_height="match_parent"
                 android:background="@color/pocketpaint_main_drawing_surface_active" />
 
-            <LinearLayout
-                android:id="@+id/pocketpaint_main_tool_options"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
-                android:layout_alignParentBottom="true"
-                android:background="@android:color/background_light">
-
-                <include layout="@layout/pocketpaint_layout_tool_options"/>
-            </LinearLayout>
+            <include layout="@layout/pocketpaint_layout_tool_options"
+                android:id="@+id/pocketpaint_main_tool_options"/>
 
             <LinearLayout
                 android:id="@+id/pocketpaint_main_bottom_bar"

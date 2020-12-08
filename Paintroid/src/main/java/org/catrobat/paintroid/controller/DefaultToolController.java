@@ -148,12 +148,10 @@ public class DefaultToolController implements ToolController {
 	private Tool createAndSetupTool(ToolType toolType) {
 		Tool tool;
 		toolOptionsViewController.removeToolViews();
-		toolOptionsViewController.setToolName(toolType.getNameResource());
 
 		if (toolType == ToolType.TEXT
 				|| toolType == ToolType.TRANSFORM
 				|| toolType == ToolType.SHAPE
-				|| toolType == ToolType.STAMP
 				|| toolType == ToolType.IMPORTPNG) {
 			toolOptionsViewController.showCheckmark();
 		} else {
