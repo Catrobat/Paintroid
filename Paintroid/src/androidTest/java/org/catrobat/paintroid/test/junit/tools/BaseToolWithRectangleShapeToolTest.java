@@ -31,6 +31,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,6 +91,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		when(contextCallback.getDisplayMetrics()).thenReturn(metrics);
 		when(workspace.getScale()).thenReturn(1f);
 		when(workspace.getWidth()).thenReturn(screenWidth);
+		when(workspace.getPerspective()).thenReturn(new Perspective(screenWidth, screenHeight));
 		when(workspace.getHeight()).thenReturn(screenHeight);
 		when(workspace.contains(any(PointF.class))).thenAnswer(new Answer<Boolean>() {
 			@Override
