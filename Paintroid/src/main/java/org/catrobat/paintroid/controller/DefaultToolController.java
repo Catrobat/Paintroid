@@ -31,6 +31,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
@@ -65,8 +66,8 @@ public class DefaultToolController implements ToolController {
 	}
 
 	@Override
-	public void switchTool(ToolType toolType) {
-		switchTool(createAndSetupTool(toolType));
+	public void switchTool(ToolType toolType, boolean backPressed) {
+		switchTool(createAndSetupTool(toolType), backPressed);
 	}
 
 	@Override
@@ -104,8 +105,15 @@ public class DefaultToolController implements ToolController {
 		return toolReference.get().getDrawPaint().getColor();
 	}
 
-	private void switchTool(Tool tool) {
+	private void switchTool(Tool tool, boolean backPressed) {
 		Tool currentTool = toolReference.get();
+		ToolType currentToolType = currentTool.getToolType();
+
+		if ((currentToolType == ToolType.TEXT || currentToolType == ToolType.TRANSFORM
+				|| currentToolType == ToolType.IMPORTPNG || currentToolType == ToolType.SHAPE) && !backPressed) {
+			BaseToolWithShape toolToApply = (BaseToolWithShape) currentTool;
+			toolToApply.onClickOnButton();
+		}
 
 		if (currentTool.getToolType() == tool.getToolType()) {
 			Bundle toolBundle = new Bundle();

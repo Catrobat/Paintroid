@@ -70,6 +70,7 @@ import static org.junit.Assert.fail;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -525,6 +526,36 @@ public class TextToolIntegrationTest {
 		assertArrayEquals(expectedTextSplitUp, actualTextSplitUp);
 
 		checkTextBoxDimensionsAndDefaultPosition();
+	}
+
+	@Test
+	public void testTextToolAppliedWhenSelectingOtherTool() {
+		enterTestText();
+
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		int surfaceBitmapWidth = layerModel.getWidth();
+		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) textTool.toolPosition.y, surfaceBitmapWidth, 1);
+		int numberOfBlackPixels = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+		assertTrue(numberOfBlackPixels > 0);
+	}
+
+	@Test
+	public void testTextToolNotAppliedWhenPressingBack() {
+		enterTestText();
+
+		onToolBarView()
+				.performCloseToolOptionsView();
+
+		pressBack();
+
+		int surfaceBitmapWidth = layerModel.getWidth();
+		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) textTool.toolPosition.y, surfaceBitmapWidth, 1);
+		int numberOfBlackPixels = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+		assertEquals(0, numberOfBlackPixels);
 	}
 
 	@Test

@@ -167,7 +167,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		drawingSurface.refreshDrawingSurface();
 
 		if (model.getCurrentLayer().equals(destinationLayer)) {
-			defaultToolController.switchTool(ToolType.HAND);
+			defaultToolController.switchTool(ToolType.HAND, false);
 			bottomNavigationViewHolder.showCurrentTool(ToolType.HAND);
 		}
 	}
@@ -185,7 +185,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		drawingSurface.refreshDrawingSurface();
 
 		if (model.getCurrentLayer().equals(destinationLayer)) {
-			defaultToolController.switchTool(ToolType.BRUSH);
+			defaultToolController.switchTool(ToolType.BRUSH, false);
 			bottomNavigationViewHolder.showCurrentTool(ToolType.BRUSH);
 		}
 	}

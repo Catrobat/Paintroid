@@ -356,7 +356,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				}
 				Uri selectedGalleryImageUri = data.getData();
 				setTool(ToolType.IMPORTPNG);
-				toolController.switchTool(ToolType.IMPORTPNG);
+				toolController.switchTool(ToolType.IMPORTPNG, false);
 				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, maxWidth, maxHeight, selectedGalleryImageUri);
 				break;
 			case REQUEST_CODE_LOAD_PICTURE:
@@ -435,7 +435,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			toolController.hideToolOptionsView();
 		} else if (!toolController.isDefaultTool()) {
 			setTool(ToolType.BRUSH);
-			toolController.switchTool(ToolType.BRUSH);
+			toolController.switchTool(ToolType.BRUSH, true);
 		} else {
 			showSecurityQuestionBeforeExit();
 		}
@@ -617,7 +617,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	private void switchTool(ToolType type) {
 		setTool(type);
-		toolController.switchTool(type);
+		toolController.switchTool(type, false);
 
 		if (type == ToolType.IMPORTPNG) {
 			showImportDialog();
