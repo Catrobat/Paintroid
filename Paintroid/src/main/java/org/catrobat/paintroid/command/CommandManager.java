@@ -44,8 +44,6 @@ public interface CommandManager {
 	boolean isBusy();
 
 	interface CommandListener {
-		void commandPreExecute();
-
 		void commandPostExecute();
 	}
 }

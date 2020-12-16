@@ -198,8 +198,6 @@ public interface MainActivityContracts {
 
 		void showLayerMenuClicked();
 
-		void onCommandPreExecute();
-
 		void onCommandPostExecute();
 
 		void setBottomNavigationColor(int color);

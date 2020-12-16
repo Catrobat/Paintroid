@@ -98,7 +98,7 @@ public class AsyncCommandManager implements CommandManager {
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected void onPreExecute() {
-				notifyCommandPreExecute();
+				busy = true;
 			}
 
 			@Override
@@ -128,7 +128,7 @@ public class AsyncCommandManager implements CommandManager {
 
 			@Override
 			protected void onPreExecute() {
-				notifyCommandPreExecute();
+				busy = true;
 			}
 
 			@Override
@@ -175,11 +175,6 @@ public class AsyncCommandManager implements CommandManager {
 
 	private void notifyCommandPreExecute() {
 		busy = true;
-		if (!shuttingDown) {
-			for (CommandListener listener : commandListeners) {
-				listener.commandPreExecute();
-			}
-		}
 	}
 
 	private void notifyCommandPostExecute() {

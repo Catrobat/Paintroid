@@ -480,11 +480,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void onCommandPreExecute() {
-		navigator.showIndeterminateProgressDialog();
-	}
-
-	@Override
 	public void onCommandPostExecute() {
 		if (resetPerspectiveAfterNextCommand) {
 			resetPerspectiveAfterNextCommand = false;
@@ -495,8 +490,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		toolController.resetToolInternalState();
 		view.refreshDrawingSurface();
 		refreshTopBarButtons();
-
-		navigator.dismissIndeterminateProgressDialog();
 	}
 
 	@Override
