@@ -33,6 +33,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
@@ -76,7 +77,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void showColorPickerDialog() {
 		if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null) {
-			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor(), true);
+			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor());
 			setupColorPickerDialogListeners(dialog);
 			showDialogFragmentSafely(dialog, Constants.COLOR_PICKER_DIALOG_TAG);
 		}
@@ -127,13 +128,15 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	private void setupColorPickerDialogListeners(ColorPickerDialog dialog) {
-		dialog.addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+		dialog.addOnColorPickedListener(new OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
 				toolReference.get().changePaintColor(color);
 				mainActivity.getPresenter().setBottomNavigationColor(color);
 			}
 		});
+
+		dialog.setBitmap(mainActivity.getPresenter().getBitmap());
 	}
 
 	private void setupCatroidMediaGalleryListeners(CatroidMediaGalleryFragment dialog) {

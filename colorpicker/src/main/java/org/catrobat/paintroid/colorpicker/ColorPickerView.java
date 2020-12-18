@@ -212,10 +212,6 @@ public class ColorPickerView extends LinearLayoutCompat {
 		setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
 	}
 
-	public interface OnColorChangedListener {
-		void colorChanged(int color);
-	}
-
 	class ColorTabContentFactory implements TabContentFactory {
 		@Override
 		public View createTabContent(String tag) {

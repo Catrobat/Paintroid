@@ -804,4 +804,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void bitmapLoadedFromSource(Bitmap loadedImage) {
 		toolController.setBitmapFromSource(loadedImage);
 	}
+
+	@Override
+	public Bitmap getBitmap() {
+		return workspace.getBitmapOfAllLayers();
+	}
 }
