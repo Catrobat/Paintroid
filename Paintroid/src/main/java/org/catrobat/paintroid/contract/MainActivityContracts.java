@@ -32,6 +32,7 @@ import org.catrobat.paintroid.iotasks.CreateFileAsync;
 import org.catrobat.paintroid.iotasks.LoadImageAsync;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.LayerAdapter;
 
 import java.io.File;
 
@@ -60,6 +61,8 @@ public interface MainActivityContracts {
 
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
 
+		void startShareImageActivity(Bitmap bitmap);
+
 		void showIndeterminateProgressDialog();
 
 		void dismissIndeterminateProgressDialog();
@@ -79,6 +82,8 @@ public interface MainActivityContracts {
 		void askForPermission(String[] permissions, int requestCode);
 
 		boolean isSdkAboveOrEqualM();
+
+		boolean isSdkAboveOrEqualQ();
 
 		boolean doIHavePermission(String permission);
 
@@ -101,6 +106,10 @@ public interface MainActivityContracts {
 		void broadcastAddPictureToGallery(Uri uri);
 
 		void rateUsClicked();
+
+		void showImageImportDialog();
+
+		void showCatroidMediaGallery();
 	}
 
 	interface MainView {
@@ -153,6 +162,8 @@ public interface MainActivityContracts {
 
 		void saveImageClicked();
 
+		void shareImageClicked();
+
 		void enterFullscreenClicked();
 
 		void exitFullscreenClicked();
@@ -187,8 +198,6 @@ public interface MainActivityContracts {
 
 		void showLayerMenuClicked();
 
-		void onCommandPreExecute();
-
 		void onCommandPostExecute();
 
 		void setBottomNavigationColor(int color);
@@ -210,6 +219,18 @@ public interface MainActivityContracts {
 		void actionCurrentToolClicked();
 
 		void rateUsClicked();
+
+		void importFromGalleryClicked();
+
+		void showImportDialog();
+
+		void importStickersClicked();
+
+		void bitmapLoadedFromSource(Bitmap loadedImage);
+
+		void setLayerAdapter(LayerAdapter layerAdapter);
+
+		Bitmap getBitmap();
 	}
 
 	interface Model {

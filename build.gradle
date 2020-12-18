@@ -19,6 +19,7 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext.kotlin_version = '1.4.21'
     repositories {
         google()
         jcenter()
@@ -29,26 +30,28 @@ buildscript {
         classpath 'org.catrobat.gradle.androidemulators:android-emulators-gradle:1.6.2'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:1.0.2'
         classpath 'com.novoda:bintray-release:0.9.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 ext {
-    androidCompileSdkVersion = 28
+    androidCompileSdkVersion = 29
     androidMinSdkVersion = 21
-    androidTargetSdkVersion = 28
+    androidTargetSdkVersion = 29
 
     androidSupportLibraryVersion = '28.0.0'
 
-    androidVersionCode = 33
-    androidVersionName = '2.5.2'
+    androidVersionCode = 34
+    androidVersionName = '2.5.3'
 }
 
 if(project.hasProperty("snapshot")) {
-    androidVersionName = '2.4.1-LOCAL'
+    androidVersionName = androidVersionName + '-LOCAL'
 }
 
 allprojects {
     repositories {
+        mavenLocal()
         google()
         jcenter()
     }

@@ -47,6 +47,10 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 		return onView(withId(R.id.pocketpaint_btn_top_redo));
 	}
 
+	public ViewInteraction onCheckmarkButton() {
+		return onView(withId(R.id.pocketpaint_btn_top_checkmark));
+	}
+
 	public TopBarViewInteraction performUndo() {
 		onUndoButton()
 				.perform(click());
@@ -55,6 +59,12 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 
 	public TopBarViewInteraction performRedo() {
 		onRedoButton()
+				.perform(click());
+		return this;
+	}
+
+	public TopBarViewInteraction performClickCheckmark() {
+		onCheckmarkButton()
 				.perform(click());
 		return this;
 	}

@@ -19,13 +19,7 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.graphics.Color;
-
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
@@ -37,17 +31,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.clickOutside;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
-import static org.hamcrest.Matchers.not;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
@@ -62,27 +48,6 @@ public class ToolSelectionIntegrationTest {
 	public void setUp() {
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
-	}
-
-	@Test
-	public void testToolSelectionDrawingSurfaceDeactivatedWhenToolOptionsAreShown() {
-		onToolBarView()
-				.performOpenToolOptionsView();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_TOP_MIDDLE);
-	}
-
-	@Test
-	public void testToolSelectionToolOptionsDisappearWhenClickedOutside() {
-		onToolBarView()
-				.performOpenToolOptionsView();
-
-		onView(withId(R.id.pocketpaint_layout_tool_options))
-				.check(matches(isDisplayed()))
-				.perform(clickOutside(UiInteractions.Direction.ABOVE))
-				.check(matches(not(isDisplayed())));
 	}
 
 	@Test

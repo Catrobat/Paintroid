@@ -19,52 +19,31 @@
 
 package org.catrobat.paintroid.ui.tools;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.graphics.drawable.ColorDrawable;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.core.content.ContextCompat;
 
 public class DefaultToolOptionsViewController implements ToolOptionsViewController {
-	private final TextView toolOptionsTextView;
 	private final ViewGroup toolSpecificOptionsLayout;
 	private final ViewGroup bottomNavigation;
 	private final ViewGroup mainToolOptions;
-	private final View drawingSurfaceView;
-
-	private final int colorActive;
-	private final int colorInactive;
+	private final View topBarSpecificViewCheckmark;
 
 	private boolean toolOptionsShown;
 	private boolean enabled = true;
 	private Callback callback;
 
 	public DefaultToolOptionsViewController(Activity activity) {
-		drawingSurfaceView = activity.findViewById(R.id.pocketpaint_drawing_surface_view);
 		bottomNavigation = activity.findViewById(R.id.pocketpaint_main_bottom_navigation);
 		mainToolOptions = activity.findViewById(R.id.pocketpaint_main_tool_options);
-		toolOptionsTextView = activity.findViewById(R.id.pocketpaint_layout_tool_options_name);
 		toolSpecificOptionsLayout = activity.findViewById(R.id.pocketpaint_layout_tool_specific_options);
+		topBarSpecificViewCheckmark = activity.findViewById(R.id.pocketpaint_btn_top_checkmark);
 
-		colorActive = ContextCompat.getColor(activity, R.color.pocketpaint_main_drawing_surface_active);
-		colorInactive = ContextCompat.getColor(activity, R.color.pocketpaint_main_drawing_surface_inactive);
-
-		mainToolOptions.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				return true;
-			}
-		});
 		mainToolOptions.setVisibility(View.INVISIBLE);
 	}
 
@@ -72,7 +51,6 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 	public void resetToOrigin() {
 		toolOptionsShown = false;
 		mainToolOptions.setVisibility(View.INVISIBLE);
-		drawingSurfaceView.setBackgroundColor(colorActive);
 		mainToolOptions.setY(bottomNavigation.getY() + bottomNavigation.getHeight());
 	}
 
@@ -84,7 +62,6 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 
 		toolOptionsShown = false;
 		mainToolOptions.animate().y(bottomNavigation.getY() + bottomNavigation.getHeight());
-		animateBackgroundToColor(colorActive);
 		notifyHide();
 	}
 
@@ -119,7 +96,6 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 			}
 		});
 
-		animateBackgroundToColor(colorInactive);
 		notifyShow();
 	}
 
@@ -152,22 +128,8 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 	}
 
 	@Override
-	public void setToolName(@StringRes int id) {
-		toolOptionsTextView.setText(id);
-	}
-
-	@Override
 	public boolean isVisible() {
 		return toolOptionsShown;
-	}
-
-	private void animateBackgroundToColor(int color) {
-		int colorFrom = ((ColorDrawable) drawingSurfaceView.getBackground()).getColor();
-
-		ObjectAnimator backgroundColorAnimator = ObjectAnimator.ofObject(
-				drawingSurfaceView, "backgroundColor", new ArgbEvaluator(), colorFrom, color);
-		backgroundColorAnimator.setDuration(250);
-		backgroundColorAnimator.start();
 	}
 
 	@Override
@@ -178,5 +140,15 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 	@Override
 	public ViewGroup getToolSpecificOptionsLayout() {
 		return toolSpecificOptionsLayout;
+	}
+
+	@Override
+	public void showCheckmark() {
+		topBarSpecificViewCheckmark.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public void hideCheckmark() {
+		topBarSpecificViewCheckmark.setVisibility(View.GONE);
 	}
 }

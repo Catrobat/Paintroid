@@ -26,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusableInTouchMode="true"
+        android:background="@android:color/white"
         android:orientation="vertical">
 
         <TextView
@@ -36,14 +37,17 @@
 
         <LinearLayout style="@style/PocketPaintToolSection">
 
-            <ImageButton
+            <Button
                 android:id="@+id/pocketpaint_transform_auto_crop_btn"
                 style="?android:borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_pocketpaint_tool_resize_adjust"
-                android:theme="@style/PocketPaintHighlightColorTheme"
-                android:contentDescription="@string/transform_tool_auto_crop_text" />
+                android:contentDescription="@string/transform_tool_auto_crop_text"
+                android:drawableTop="@drawable/ic_pocketpaint_tool_resize_adjust"
+                android:text="@string/transform_auto_crop_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="?attr/colorAccent"
+                android:textSize="14sp" />
 
             <Space style="@style/PocketPaintToolHorizontalSpace" />
 
@@ -53,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:labelFor="@+id/pocketpaint_transform_width_value"
                 android:text="@string/transform_width_text"
+                android:textColor="?attr/colorAccent"
                 android:textSize="14sp" />
 
             <EditText
@@ -72,8 +77,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:text="@string/pixel" />
+                android:text="@string/pixel"
+                android:textColor="?attr/colorAccent"
+                android:textSize="14sp" />
 
             <Space style="@style/PocketPaintToolHorizontalSpace"
                 android:layout_width="16dp" />
@@ -84,6 +90,7 @@
                 android:layout_height="wrap_content"
                 android:labelFor="@+id/pocketpaint_transform_height_value"
                 android:text="@string/transform_height_text"
+                android:textColor="?attr/colorAccent"
                 android:textSize="14sp" />
 
             <EditText
@@ -103,8 +110,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:text="@string/pixel" />
+                android:text="@string/pixel"
+                android:textColor="?attr/colorAccent"
+                android:textSize="14sp" />
 
             <Space style="@style/PocketPaintToolHorizontalSpace" />
         </LinearLayout>

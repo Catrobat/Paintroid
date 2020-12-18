@@ -28,6 +28,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,6 +74,7 @@ public class ImportToolTest {
 		when(workspace.getWidth()).thenReturn(20);
 		when(workspace.getHeight()).thenReturn(30);
 		when(workspace.getScale()).thenReturn(1f);
+		when(workspace.getPerspective()).thenReturn(new Perspective(20, 30));
 
 		tool = new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 	}
@@ -83,7 +85,7 @@ public class ImportToolTest {
 		final int height = drawingSurfaceHeight;
 
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		tool.setBitmapFromFile(bitmap);
+		tool.setBitmapFromSource(bitmap);
 
 		assertEquals(width, tool.boxWidth, Float.MIN_VALUE);
 		assertEquals(height, tool.boxHeight, Float.MIN_VALUE);
@@ -96,7 +98,7 @@ public class ImportToolTest {
 		final int minSize = ImportTool.DEFAULT_BOX_RESIZE_MARGIN;
 
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-		tool.setBitmapFromFile(bitmap);
+		tool.setBitmapFromSource(bitmap);
 
 		assertEquals(minSize, tool.boxWidth, Float.MIN_VALUE);
 		assertEquals(minSize, tool.boxHeight, Float.MIN_VALUE);
@@ -108,7 +110,7 @@ public class ImportToolTest {
 		final int height = (int) (drawingSurfaceHeight * ImportTool.MAXIMUM_BORDER_RATIO);
 
 		Bitmap bitmap = Bitmap.createBitmap(width + 1, height + 1, Bitmap.Config.ARGB_8888);
-		tool.setBitmapFromFile(bitmap);
+		tool.setBitmapFromSource(bitmap);
 
 		assertEquals(width, tool.boxWidth, Float.MIN_VALUE);
 		assertEquals(height, tool.boxHeight, Float.MIN_VALUE);

@@ -17,18 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid;
+package org.catrobat.paintroid.colorpicker
 
-import android.annotation.SuppressLint;
-import android.os.Bundle;
+interface OnColorChangedListener {
+    fun colorChanged(color: Int)
+}
 
-public class OpenedFromCatroid extends MainActivity {
+interface OnColorPickedListener {
+    fun colorChanged(color: Int)
+}
 
-	@SuppressLint("VisibleForTests")
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		model.setOpenedFromCatroid(true);
-		initializeActionBar(true);
-	}
+interface OnImageViewPointClickedListener {
+    fun colorChanged(color: Int)
 }

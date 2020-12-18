@@ -19,10 +19,10 @@
 
 package org.catrobat.paintroid.listener;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 
-public class PresenterColorPickedListener implements ColorPickerDialog.OnColorPickedListener {
+public class PresenterColorPickedListener implements OnColorPickedListener {
 	private final MainActivityContracts.Presenter presenter;
 
 	public PresenterColorPickedListener(MainActivityContracts.Presenter presenter) {

@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
@@ -27,6 +26,7 @@ import android.content.Intent;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -34,11 +34,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertTrue;
+
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiSelector;
 
 import static org.catrobat.paintroid.test.espresso.util.wrappers.OptionsMenuViewInteraction.onOptionsMenu;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
@@ -58,9 +64,7 @@ public class MoreOptionsIntegrationTest {
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE);
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	@Before
 	public void setUp() {
@@ -103,6 +107,7 @@ public class MoreOptionsIntegrationTest {
 				.checkItemExists(R.string.menu_save_copy)
 				.checkItemExists(R.string.menu_new_image)
 				.checkItemExists(R.string.menu_feedback)
+				.checkItemExists(R.string.share_image_menu)
 
 				.checkItemDoesNotExist(R.string.menu_discard_image)
 				.checkItemDoesNotExist(R.string.menu_export);
@@ -116,6 +121,15 @@ public class MoreOptionsIntegrationTest {
 	@Test
 	public void testMoreOptionsItemAboutClick() {
 		onView(withText(R.string.pocketpaint_about_title)).perform(click());
+	}
+
+	@Test
+	public void testMoreOptionsShareImageClicked() {
+		onView(withText(R.string.share_image_menu)).perform(click());
+		UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+		UiObject uiObject = mDevice.findObject(new UiSelector());
+		assertTrue(uiObject.exists());
+		mDevice.pressBack();
 	}
 
 	@Test

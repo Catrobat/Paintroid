@@ -64,11 +64,13 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -98,6 +100,7 @@ public class TextToolIntegrationTest {
 
 	private MainActivityHelper activityHelper;
 	private TextTool textTool;
+	private TextTool textToolAfterZoom;
 	private EditText textEditText;
 	private Spinner fontSpinner;
 	private ToggleButton underlinedToggleButton;
@@ -132,15 +135,14 @@ public class TextToolIntegrationTest {
 	}
 
 	@Test
-	public void testTextToolStillEditableAfterDoneButtonClicked() {
+	public void testTextToolStillEditableAfterClosingTextTool() {
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
 		selectFormatting(FormattingOptions.UNDERLINE);
-
 		enterTestText();
 
-		onView(withId(R.id.pocketpaint_text_tool_dialog_done_button))
-				.perform(click());
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE));
 		onToolBarView()
 				.performSelectTool(ToolType.TEXT);
 
@@ -444,8 +446,8 @@ public class TextToolIntegrationTest {
 		canvasPoint.y = (float) Math.round(canvasPoint.y);
 		setToolMemberBoxPosition(canvasPoint);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		int surfaceBitmapWidth = layerModel.getWidth();
 		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
@@ -524,6 +526,92 @@ public class TextToolIntegrationTest {
 		assertArrayEquals(expectedTextSplitUp, actualTextSplitUp);
 
 		checkTextBoxDimensionsAndDefaultPosition();
+	}
+
+	@Test
+	public void testTextToolAppliedWhenSelectingOtherTool() {
+		enterTestText();
+
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		int surfaceBitmapWidth = layerModel.getWidth();
+		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) textTool.toolPosition.y, surfaceBitmapWidth, 1);
+		int numberOfBlackPixels = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+		assertTrue(numberOfBlackPixels > 0);
+	}
+
+	@Test
+	public void testTextToolNotAppliedWhenPressingBack() {
+		enterTestText();
+
+		onToolBarView()
+				.performCloseToolOptionsView();
+
+		pressBack();
+
+		int surfaceBitmapWidth = layerModel.getWidth();
+		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) textTool.toolPosition.y, surfaceBitmapWidth, 1);
+		int numberOfBlackPixels = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+		assertEquals(0, numberOfBlackPixels);
+	}
+
+	@Test
+	public void testTextToolDoesNotResetPerspectiveScale() {
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		float scale = 2.0f;
+
+		activity.perspective.setScale(scale);
+		activity.perspective.setSurfaceTranslationY(200);
+		activity.perspective.setSurfaceTranslationX(50);
+		activity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		assertEquals(scale, activity.perspective.getScale(), 0.0001f);
+	}
+
+	@Test
+	public void testTextToolBoxIsPlacedCorrectlyWhenZoomedIn() {
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		PointF initialPosition = getToolMemberBoxPosition();
+
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		float scale = 2.0f;
+
+		activity.perspective.setScale(scale);
+		activity.perspective.setSurfaceTranslationY(200);
+		activity.perspective.setSurfaceTranslationX(50);
+		activity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		textToolAfterZoom = (TextTool) activity.toolReference.get();
+
+		PointF positionAfterZoom = getToolMemberBoxPosition();
+
+		assertEquals(scale, activity.perspective.getScale(), 0.0001f);
+
+		onTopBarView()
+				.performClickCheckmark();
+
+		assertNotEquals(initialPosition, positionAfterZoom);
 	}
 
 	private void checkTextBoxDimensions() {
@@ -700,7 +788,11 @@ public class TextToolIntegrationTest {
 	}
 
 	private PointF getToolMemberBoxPosition() {
-		return textTool.toolPosition;
+		if (textToolAfterZoom != null) {
+			return textToolAfterZoom.toolPosition;
+		} else {
+			return textTool.toolPosition;
+		}
 	}
 
 	private void setToolMemberBoxPosition(PointF position) {

@@ -31,6 +31,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,6 +91,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		when(contextCallback.getDisplayMetrics()).thenReturn(metrics);
 		when(workspace.getScale()).thenReturn(1f);
 		when(workspace.getWidth()).thenReturn(screenWidth);
+		when(workspace.getPerspective()).thenReturn(new Perspective(screenWidth, screenHeight));
 		when(workspace.getHeight()).thenReturn(screenHeight);
 		when(workspace.contains(any(PointF.class))).thenAnswer(new Answer<Boolean>() {
 			@Override
@@ -373,8 +375,8 @@ public class BaseToolWithRectangleShapeToolTest {
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 		private final ToolType toolType;
 
-		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint,
-				Workspace layerModelWrapper, CommandManager commandManager) {
+		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback,
+										ToolOptionsVisibilityController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint, Workspace layerModelWrapper, CommandManager commandManager) {
 			super(contextCallback, toolOptionsViewController, toolPaint, layerModelWrapper, commandManager);
 			this.toolType = toolType;
 		}
@@ -384,7 +386,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		}
 
 		@Override
-		protected void onClickInBox() {
+		public void onClickOnButton() {
 			drawingBitmap = Bitmap.createBitmap(1, 1, Config.ALPHA_8);
 		}
 

@@ -90,6 +90,7 @@ public class TransformToolIntegrationTest {
 	private Perspective perspective;
 	private LayerContracts.Model layerModel;
 	private ToolReference toolReference;
+	private MainActivity mainActivity;
 
 	private static void drawPlus(Bitmap bitmap, int lineLength) {
 		int horizontalStartX = bitmap.getWidth() / 4;
@@ -150,11 +151,11 @@ public class TransformToolIntegrationTest {
 
 	@Before
 	public void setUp() {
-		MainActivity activity = launchActivityRule.getActivity();
-		activityHelper = new MainActivityHelper(activity);
-		perspective = activity.perspective;
-		layerModel = activity.layerModel;
-		toolReference = activity.toolReference;
+		mainActivity = launchActivityRule.getActivity();
+		activityHelper = new MainActivityHelper(mainActivity);
+		perspective = mainActivity.perspective;
+		layerModel = mainActivity.layerModel;
+		toolReference = mainActivity.toolReference;
 
 		displayWidth = activityHelper.getDisplayWidth();
 		displayHeight = activityHelper.getDisplayHeight();
@@ -256,6 +257,14 @@ public class TransformToolIntegrationTest {
 	}
 
 	@Test
+	public void testAutoTextIsShown() {
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+		onTransformToolOptionsView()
+				.checkAutoDisplayed();
+	}
+
+	@Test
 	public void testWhenNoPixelIsOnBitmap() {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM)
@@ -278,8 +287,8 @@ public class TransformToolIntegrationTest {
 
 		waitForToast(withText(R.string.transform_info_text), 1000);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		waitForToast(withText(R.string.resize_nothing_to_resize), 1000);
 	}
@@ -311,8 +320,8 @@ public class TransformToolIntegrationTest {
 		int height = initialHeight / 2;
 		setToolSelectionBoxDimensions(width, height);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkBitmapDimension(width, height)
@@ -331,8 +340,8 @@ public class TransformToolIntegrationTest {
 		assertEquals(1, getToolSelectionBoxWidth(), Float.MIN_VALUE);
 		assertEquals(1, getToolSelectionBoxHeight(), Float.MIN_VALUE);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(1, 1);
 	}
@@ -348,8 +357,8 @@ public class TransformToolIntegrationTest {
 		onTransformToolOptionsView()
 				.performAutoCrop();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkBitmapDimension(initialWidth - 1, initialHeight - 1);
@@ -389,8 +398,8 @@ public class TransformToolIntegrationTest {
 
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(initialWidth, --initialHeight);
 
@@ -404,8 +413,8 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(initialWidth, --initialHeight);
 
@@ -419,8 +428,8 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(--initialWidth, initialHeight);
 		workingBitmap = layerModel.getCurrentLayer().getBitmap();
@@ -433,8 +442,8 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(--initialWidth, initialHeight);
 	}
@@ -450,14 +459,14 @@ public class TransformToolIntegrationTest {
 		onTransformToolOptionsView()
 				.performAutoCrop();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(1, 1);
 
 		setToolSelectionBoxDimensions(initialWidth, initialHeight);
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(initialWidth, initialHeight);
 	}
@@ -470,8 +479,8 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		final Bitmap croppedBitmap = layerModel.getCurrentLayer().getBitmap();
 
@@ -510,8 +519,8 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		final Bitmap croppedBitmap = layerModel.getCurrentLayer().getBitmap();
 		final PointF topLeft = getSurfacePointFromCanvasPoint(new PointF(0, 0));
@@ -562,8 +571,8 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		final int height = layerModel.getCurrentLayer().getBitmap().getHeight();
 		final PointF toolPosition = getToolPosition();
@@ -573,8 +582,8 @@ public class TransformToolIntegrationTest {
 			setToolSelectionBoxWidth(newSelectionBoxWidth);
 			toolPosition.x += newSelectionBoxWidth / 2;
 
-			onDrawingSurfaceView()
-					.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+			onTopBarView()
+					.performClickCheckmark();
 
 			onDrawingSurfaceView()
 					.checkBitmapDimension((int) (newSelectionBoxWidth + .5f), height);
@@ -589,8 +598,8 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		final int height = layerModel.getCurrentLayer().getBitmap().getHeight();
 		final PointF toolPosition = getToolPosition();
@@ -600,8 +609,8 @@ public class TransformToolIntegrationTest {
 			setToolSelectionBoxWidth(newSelectionBoxWidth);
 			toolPosition.x -= newSelectionBoxWidth / 2;
 
-			onDrawingSurfaceView()
-					.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+			onTopBarView()
+					.performClickCheckmark();
 
 			onDrawingSurfaceView()
 					.checkBitmapDimension((int) newSelectionBoxWidth, height);
@@ -616,8 +625,8 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		final int width = layerModel.getCurrentLayer().getBitmap().getWidth();
 		final PointF toolPosition = getToolPosition();
@@ -627,8 +636,8 @@ public class TransformToolIntegrationTest {
 			setToolSelectionBoxHeight(newSelectionBoxHeight);
 			toolPosition.y += newSelectionBoxHeight / 2;
 
-			onDrawingSurfaceView()
-					.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+			onTopBarView()
+					.performClickCheckmark();
 
 			onDrawingSurfaceView()
 					.checkBitmapDimension(width, (int) (newSelectionBoxHeight + .5f));
@@ -643,8 +652,8 @@ public class TransformToolIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		final int width = layerModel.getCurrentLayer().getBitmap().getWidth();
 		final PointF toolPosition = getToolPosition();
@@ -654,8 +663,8 @@ public class TransformToolIntegrationTest {
 			setToolSelectionBoxHeight(newSelectionBoxHeight);
 			toolPosition.y += newSelectionBoxHeight / 2;
 
-			onDrawingSurfaceView()
-					.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+			onTopBarView()
+					.performClickCheckmark();
 
 			onDrawingSurfaceView()
 					.checkBitmapDimension(width, (int) (newSelectionBoxHeight + .5f));
@@ -687,8 +696,8 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(width, height);
 
@@ -701,8 +710,8 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(width, height);
 
@@ -715,8 +724,8 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(width, height);
 
@@ -729,8 +738,8 @@ public class TransformToolIntegrationTest {
 				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onTopBarView()
+				.performClickCheckmark();
 		onDrawingSurfaceView()
 				.checkBitmapDimension(width, height);
 	}
@@ -819,8 +828,8 @@ public class TransformToolIntegrationTest {
 		int width;
 
 		setToolPosition(toolPosition.x - 1, toolPosition.y);
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		height = layerModel.getCurrentLayer().getBitmap().getHeight();
 		pixels = new int[height];
@@ -830,8 +839,8 @@ public class TransformToolIntegrationTest {
 		}
 
 		setToolPosition(toolPosition.x + 1, toolPosition.y);
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		width = layerModel.getCurrentLayer().getBitmap().getWidth();
 		height = layerModel.getCurrentLayer().getBitmap().getHeight();
@@ -842,8 +851,8 @@ public class TransformToolIntegrationTest {
 		}
 
 		setToolPosition(toolPosition.x, toolPosition.y - 1);
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		width = layerModel.getCurrentLayer().getBitmap().getWidth();
 		pixels = new int[width];
@@ -853,8 +862,8 @@ public class TransformToolIntegrationTest {
 		}
 
 		setToolPosition(toolPosition.x, toolPosition.y + 1);
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		width = layerModel.getCurrentLayer().getBitmap().getWidth();
 		height = layerModel.getCurrentLayer().getBitmap().getHeight();
@@ -878,8 +887,8 @@ public class TransformToolIntegrationTest {
 
 		setToolPosition(initialWidth, initialHeight);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkBitmapDimension(initialWidth, initialHeight);
@@ -924,8 +933,8 @@ public class TransformToolIntegrationTest {
 		setToolPosition(initialWidth + initialHeight / 2,
 				initialHeight + initialHeight / 2);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		waitForToast(withText(R.string.resize_nothing_to_resize), 1000);
 	}
@@ -1230,6 +1239,8 @@ public class TransformToolIntegrationTest {
 				.performAutoCrop();
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 		workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		initialWidth = workingBitmap.getWidth();
 		initialHeight = workingBitmap.getHeight();
@@ -1239,6 +1250,8 @@ public class TransformToolIntegrationTest {
 						DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_LEFT));
+		onTopBarView()
+				.performClickCheckmark();
 
 		workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		assertThat(workingBitmap.getWidth(), lessThan(initialWidth));
@@ -1250,6 +1263,8 @@ public class TransformToolIntegrationTest {
 						DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_RIGHT));
+		onTopBarView()
+				.performClickCheckmark();
 
 		workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		assertThat(workingBitmap.getWidth(), lessThan(initialWidth));
@@ -1261,6 +1276,8 @@ public class TransformToolIntegrationTest {
 						DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE));
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_BOTTOM));
+		onTopBarView()
+				.performClickCheckmark();
 
 		workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		assertThat(workingBitmap.getHeight(), lessThan(initialHeight));
@@ -1272,6 +1289,8 @@ public class TransformToolIntegrationTest {
 						DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_TOP));
+		onTopBarView()
+				.performClickCheckmark();
 
 		workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		assertThat(workingBitmap.getHeight(), lessThan(initialHeight));
@@ -1320,7 +1339,7 @@ public class TransformToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
 
-		SeekBar seekBar = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_transform_resize_seekbar);
+		SeekBar seekBar = mainActivity.findViewById(R.id.pocketpaint_transform_resize_seekbar);
 		int progress = seekBar.getProgress();
 
 		onTransformToolOptionsView()
@@ -1348,5 +1367,20 @@ public class TransformToolIntegrationTest {
 		progress = seekBar.getProgress();
 		onTransformToolOptionsView()
 				.checkPercentageTextMatches(progress);
+	}
+
+	@Test
+	public void testTransformToolDoesNotResetPerspectiveScale() {
+		float scale = 2.0f;
+
+		perspective.setScale(scale);
+		perspective.setSurfaceTranslationX(50);
+		perspective.setSurfaceTranslationY(200);
+		mainActivity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+
+		assertEquals(scale, perspective.getScale(), 0.0001f);
 	}
 }

@@ -36,7 +36,7 @@ public enum ToolType {
 	UNDO(R.string.button_undo, R.string.help_content_undo, R.drawable.ic_pocketpaint_undo, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_undo, INVALID_RESOURCE_ID, false),
 	REDO(R.string.button_redo, R.string.help_content_redo, R.drawable.ic_pocketpaint_redo, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_redo, INVALID_RESOURCE_ID, false),
 	FILL(R.string.button_fill, R.string.help_content_fill, R.drawable.ic_pocketpaint_tool_fill, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_fill, INVALID_RESOURCE_ID, true),
-	STAMP(R.string.button_stamp, R.string.help_content_stamp, R.drawable.ic_pocketpaint_tool_stamp, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_stamp, R.drawable.pocketpaint_stamp_tool_overlay, false),
+	STAMP(R.string.button_stamp, R.string.help_content_stamp, R.drawable.ic_pocketpaint_tool_stamp, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_stamp, R.drawable.pocketpaint_stamp_tool_overlay, true),
 	LINE(R.string.button_line, R.string.help_content_line, R.drawable.ic_pocketpaint_tool_line, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_line, INVALID_RESOURCE_ID, true),
 	CURSOR(R.string.button_cursor, R.string.help_content_cursor, R.drawable.ic_pocketpaint_tool_cursor, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_cursor, INVALID_RESOURCE_ID, true),
 	IMPORTPNG(R.string.button_import_image, R.string.help_content_import_png, R.drawable.ic_pocketpaint_tool_import, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_import, R.drawable.pocketpaint_import_tool_overlay, false),

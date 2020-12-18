@@ -81,10 +81,10 @@ public class ToolOptionsIntegrationTest {
 				{ToolType.CURSOR, false, true},
 				{ToolType.FILL, false, true},
 				{ToolType.PIPETTE, false, false},
-				{ToolType.STAMP, false, false},
+				{ToolType.STAMP, true, true},
 				{ToolType.ERASER, false, true},
 				{ToolType.TEXT, true, true},
-				{ToolType.IMPORTPNG, false, false}
+				{ToolType.HAND, false, false}
 		});
 	}
 

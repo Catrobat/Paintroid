@@ -33,6 +33,7 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 	public final Toolbar toolbar;
 	public final ImageButton undoButton;
 	public final ImageButton redoButton;
+	public final ImageButton checkmarkButton;
 	public final ViewGroup layout;
 
 	public TopBarViewHolder(ViewGroup layout) {
@@ -40,6 +41,7 @@ public class TopBarViewHolder implements MainActivityContracts.TopBarViewHolder 
 		toolbar = layout.findViewById(R.id.pocketpaint_toolbar);
 		undoButton = layout.findViewById(R.id.pocketpaint_btn_top_undo);
 		redoButton = layout.findViewById(R.id.pocketpaint_btn_top_redo);
+		checkmarkButton = layout.findViewById(R.id.pocketpaint_btn_top_checkmark);
 	}
 
 	@Override

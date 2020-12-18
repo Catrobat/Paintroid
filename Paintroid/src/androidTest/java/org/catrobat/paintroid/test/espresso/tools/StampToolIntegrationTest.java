@@ -25,9 +25,9 @@ import android.graphics.Color;
 import android.graphics.PointF;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
+import org.catrobat.paintroid.test.espresso.util.wrappers.StampToolViewInteraction;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
@@ -35,6 +35,7 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,11 +45,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getScreenPointFromSurfaceCoordinates;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.StampToolViewInteraction.Companion;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -57,7 +57,6 @@ import static org.junit.Assert.assertTrue;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class StampToolIntegrationTest {
@@ -78,17 +77,19 @@ public class StampToolIntegrationTest {
 	private Workspace workspace;
 	private Perspective perspective;
 	private ToolReference toolReference;
+	private MainActivity mainActivity;
 
 	@Before
 	public void setUp() {
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
-		MainActivity activity = launchActivityRule.getActivity();
-		workspace = activity.workspace;
-		perspective = activity.perspective;
-		toolReference = activity.toolReference;
+		mainActivity = launchActivityRule.getActivity();
+		workspace = mainActivity.workspace;
+		perspective = mainActivity.perspective;
+		toolReference = mainActivity.toolReference;
 	}
 
+	@Ignore("Causes crashes on jenkins")
 	@Test
 	public void testBoundingboxAlgorithm() {
 		perspective.setScale(1.0f);
@@ -174,14 +175,17 @@ public class StampToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.STAMP);
 
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+				.performCopy();
+
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION, tapStampLong));
 
 		StampTool stampTool = (StampTool) toolReference.get();
 		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+				.performPaste();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, stampTool.toolPosition.x, stampTool.toolPosition.y);
@@ -202,14 +206,14 @@ public class StampToolIntegrationTest {
 		onLayerMenuView()
 				.performClose();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION, tapStampLong));
+		Companion.onStampToolViewInteraction()
+				.performCopy();
 
 		StampTool stampTool = (StampTool) toolReference.get();
 		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		Companion.onStampToolViewInteraction()
+				.performPaste();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
@@ -233,21 +237,10 @@ public class StampToolIntegrationTest {
 		stampTool.boxWidth = (int) (bitmapWidth * STAMP_RESIZE_FACTOR);
 		stampTool.boxHeight = (int) (bitmapHeight * STAMP_RESIZE_FACTOR);
 
-		onDrawingSurfaceView()
-				.perform(touchLongAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		Companion.onStampToolViewInteraction()
+				.performPaste();
 
 		assertNotNull(stampTool.drawingBitmap);
-	}
-
-	@Test
-	public void testCopyToastIsShown() {
-		onToolBarView()
-				.performSelectTool(ToolType.STAMP);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
-
-		waitForToast(withText(R.string.stamp_tool_copy_hint), 3000);
 	}
 
 	@Test
@@ -261,20 +254,34 @@ public class StampToolIntegrationTest {
 		Bitmap emptyBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
 				toolReference.get()).drawingBitmap);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION, tapStampLong));
+		Companion.onStampToolViewInteraction()
+				.performCopy();
 
 		Bitmap expectedBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
 				toolReference.get()).drawingBitmap);
 
 		assertFalse(expectedBitmap.sameAs(emptyBitmap));
 
-		launchActivityRule.getActivity()
-				.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		mainActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		Bitmap actualBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
 				toolReference.get()).drawingBitmap);
 
 		assertTrue(expectedBitmap.sameAs(actualBitmap));
+	}
+
+	@Test
+	public void testStampToolDoesNotResetPerspectiveScale() {
+		float scale = 2.0f;
+
+		perspective.setScale(scale);
+		perspective.setSurfaceTranslationX(50);
+		perspective.setSurfaceTranslationY(200);
+		mainActivity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.STAMP);
+
+		assertEquals(scale, perspective.getScale(), 0.0001f);
 	}
 }

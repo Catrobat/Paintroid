@@ -19,12 +19,12 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.Manifest;
 import android.graphics.Color;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.junit.Before;
@@ -53,6 +53,7 @@ import static org.hamcrest.Matchers.not;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.withDecorView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -63,9 +64,7 @@ public class LayerIntegrationTest {
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE);
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	private int bitmapHeight;
 	private int bitmapWidth;
@@ -387,8 +386,9 @@ public class LayerIntegrationTest {
 				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
@@ -426,8 +426,8 @@ public class LayerIntegrationTest {
 				.performOpenToolOptionsView();
 		onTransformToolOptionsView()
 				.performAutoCrop();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkThatLayerDimensions(lessThan(bitmapWidth), lessThan(bitmapHeight));
@@ -660,5 +660,83 @@ public class LayerIntegrationTest {
 
 		onDrawingSurfaceView()
 				.checkLayerDimensions(bitmapHeight, bitmapWidth);
+	}
+
+	@Test
+	public void testHideLayer() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.performClose();
+
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+
+		onDrawingSurfaceView().perform(click());
+		onDrawingSurfaceView().checkPixelColor(Color.BLACK, 1, 1);
+
+		onLayerMenuView()
+				.performOpen()
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, 1, 1);
+	}
+
+	@Test
+	public void testHideThenUnhideLayer() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.performClose();
+
+		onToolBarView()
+				.performSelectTool(ToolType.FILL);
+
+		onDrawingSurfaceView().perform(click());
+		onDrawingSurfaceView().checkPixelColor(Color.BLACK, 1, 1);
+
+		onLayerMenuView()
+				.performOpen()
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, 1, 1);
+
+		onLayerMenuView()
+				.performOpen()
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onDrawingSurfaceView().checkPixelColor(Color.BLACK, 1, 1);
+	}
+
+	@Test
+	public void testTryMergeOrReorderWhileALayerIsHidden() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.perfomToggleLayerVisibility(0)
+				.performLongClickLayer(0);
+
+		onView(withText(R.string.no_longclick_on_hidden_layer)).inRoot(withDecorView(not(launchActivityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testTryChangeToolWhileALayerIsHidden() {
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.checkLayerCount(2)
+				.perfomToggleLayerVisibility(0)
+				.performClose();
+
+		onToolBarView()
+				.onToolsClicked();
+
+		onView(withText(R.string.no_tools_on_hidden_layer)).inRoot(withDecorView(not(launchActivityRule.getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
 	}
 }

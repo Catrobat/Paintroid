@@ -207,8 +207,12 @@ public class DrawingSurface extends SurfaceView implements SurfaceHolder.Callbac
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 		surfaceReady = true;
+		ToolType currentToolType = toolReference.get().getToolType();
+
+		if (currentToolType != ToolType.IMPORTPNG && currentToolType != ToolType.TRANSFORM && currentToolType != ToolType.TEXT) {
+			perspective.resetScaleAndTranslation();
+		}
 		perspective.setSurfaceFrame(holder.getSurfaceFrame());
-		perspective.resetScaleAndTranslation();
 
 		if (drawingThread != null) {
 			drawingThread.start();

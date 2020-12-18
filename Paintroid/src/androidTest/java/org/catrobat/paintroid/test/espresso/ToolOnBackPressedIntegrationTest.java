@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.Manifest;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.Gravity;
@@ -28,6 +27,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
@@ -40,6 +40,7 @@ import org.junit.runner.RunWith;
 import java.io.File;
 
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -49,8 +50,6 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerView
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ConfirmQuitDialogInteraction.onConfirmQuitDialog;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -62,13 +61,13 @@ import static org.junit.Assert.assertTrue;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerActions.open;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -81,9 +80,7 @@ public class ToolOnBackPressedIntegrationTest {
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE);
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	private File saveFile = null;
 	private ToolReference toolReference;
@@ -171,34 +168,12 @@ public class ToolOnBackPressedIntegrationTest {
 	}
 
 	@Test
-	public void testToolOptionsDisappearWhenBackPressed() {
-		onToolBarView()
-				.performSelectTool(ToolType.CURSOR)
-				.performOpenToolOptionsView();
-
-		onView(withId(R.id.pocketpaint_layout_tool_options_name))
-				.check(matches(withText(R.string.button_cursor)));
-
-		Espresso.pressBack();
-
-		assertEquals(toolReference.get().getToolType(), ToolType.CURSOR);
-
-		onView(withId(R.id.pocketpaint_main_tool_options)).check(matches(not(isDisplayed())));
-		onView(withId(R.id.pocketpaint_layout_tool_options_name)).check(matches(not(isDisplayed())));
-
-		Espresso.pressBack();
-
-		assertEquals(toolReference.get().getToolType(), ToolType.BRUSH);
-	}
-
-	@Test
 	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		String pathToFile =
-				Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-						+ Constants.EXT_STORAGE_DIRECTORY_NAME
+				launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 						+ File.separator
 						+ Constants.TEMP_PICTURE_NAME
 						+ FILE_ENDING;
@@ -286,8 +261,10 @@ public class ToolOnBackPressedIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker()
 				.check(matches(isDisplayed()));
-		pressBack();
+
 		onColorPickerView()
+				.perform(closeSoftKeyboard())
+				.perform(ViewActions.pressBack())
 				.check(doesNotExist());
 	}
 
@@ -298,21 +275,6 @@ public class ToolOnBackPressedIntegrationTest {
 		onToolBarView().onToolOptionsView()
 				.check(matches(isDisplayed()));
 		pressBack();
-		onToolBarView().onToolOptionsView()
-				.check(matches(not(isDisplayed())));
-	}
-
-	@Test
-	public void testCloseToolOptionsOnUndoPressed() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-		onToolBarView()
-				.performSelectTool(ToolType.TEXT);
-		onToolBarView().onToolOptionsView()
-				.check(matches(isDisplayed()));
-		onTopBarView().onUndoButton()
-				.check(matches(allOf(isDisplayed(), isEnabled())))
-				.perform(click());
 		onToolBarView().onToolOptionsView()
 				.check(matches(not(isDisplayed())));
 	}

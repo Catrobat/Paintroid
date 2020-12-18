@@ -41,6 +41,10 @@ public class DefaultWorkspace implements Workspace {
 		this.listener = listener;
 	}
 
+	public Perspective getPerspective() {
+		return perspective;
+	}
+
 	@Override
 	public boolean contains(PointF point) {
 		return point.x < getWidth() && point.x >= 0 && point.y < getHeight() && point.y >= 0;
@@ -82,6 +86,11 @@ public class DefaultWorkspace implements Workspace {
 	@Override
 	public Bitmap getBitmapOfCurrentLayer() {
 		return Bitmap.createBitmap(layerModel.getCurrentLayer().getBitmap());
+	}
+
+	@Override
+	public int getCurrentLayerIndex() {
+		return layerModel.getLayerIndexOf(layerModel.getCurrentLayer());
 	}
 
 	@Override

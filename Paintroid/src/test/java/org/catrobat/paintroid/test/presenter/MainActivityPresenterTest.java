@@ -64,6 +64,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXT
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
@@ -470,15 +471,6 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testOnBackPressedWhenToolOptionsShownThenHideToolOptions() {
-		when(toolController.toolOptionsViewVisible()).thenReturn(true);
-
-		presenter.onBackPressed();
-
-		verify(toolController).hideToolOptionsView();
-	}
-
-	@Test
 	public void testSaveImageConfirmClickedThenSaveImage() {
 		Uri uri = mock(Uri.class);
 
@@ -538,13 +530,6 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testOnCommandPreExecuteThenShowProgressDialog() {
-		presenter.onCommandPreExecute();
-
-		verify(navigator).showIndeterminateProgressDialog();
-	}
-
-	@Test
 	public void testOnCommandPostExecuteThenSetModelUnsaved() {
 		presenter.onCommandPostExecute();
 
@@ -571,13 +556,6 @@ public class MainActivityPresenterTest {
 
 		verify(topBarViewHolder).disableRedoButton();
 		verify(topBarViewHolder).disableUndoButton();
-	}
-
-	@Test
-	public void testOnCommandPostExecuteThenDismissDialog() {
-		presenter.onCommandPostExecute();
-
-		verify(navigator).dismissIndeterminateProgressDialog();
 	}
 
 	@Test
@@ -871,7 +849,7 @@ public class MainActivityPresenterTest {
 
 		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, bitmap);
 
-		verify(toolController).setBitmapFromFile(bitmap);
+		verify(toolController).setBitmapFromSource(bitmap);
 		verifyZeroInteractions(commandManager);
 	}
 
@@ -882,7 +860,7 @@ public class MainActivityPresenterTest {
 
 		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, bitmap);
 
-		verify(toolController, never()).setBitmapFromFile(any(Bitmap.class));
+		verify(toolController, never()).setBitmapFromSource(any(Bitmap.class));
 		verifyZeroInteractions(commandManager);
 	}
 
@@ -932,6 +910,37 @@ public class MainActivityPresenterTest {
 		presenter.onSaveImagePostExecute(0, null, false);
 
 		verify(navigator).showSaveErrorDialog();
+	}
+
+	@Test
+	public void testHandlePermissionResultLoadPermissionGranted() {
+		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_LOAD_PICTURE,
+				new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_GRANTED});
+
+		verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+	}
+
+	@Test
+	public void testHandlePermissionResultLoadPermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
+		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_LOAD_PICTURE,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
+	}
+
+	@Test
+	public void testHandlePermissionResultLoadPermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
+		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_LOAD_PICTURE,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				permission, PERMISSION_REQUEST_CODE_LOAD_PICTURE
+		);
 	}
 
 	@Test
@@ -1111,11 +1120,11 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testHandlePermissionResultWhenStoragePermissionGrantedAndRequestCodeUnknownThenCallBaseHandle() {
 		presenter.handleRequestPermissionsResult(100,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
 		verify(view).superHandleRequestPermissionsResult(100,
-				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+				new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 	}
 

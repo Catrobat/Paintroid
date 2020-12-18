@@ -19,7 +19,6 @@
 
 package org.catrobat.paintroid.test.espresso.catroid;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 
@@ -28,15 +27,22 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertTrue;
+
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.GrantPermissionRule;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiSelector;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
@@ -54,9 +60,7 @@ public class MoreOptionsIntegrationTest {
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(
-			Manifest.permission.WRITE_EXTERNAL_STORAGE,
-			Manifest.permission.READ_EXTERNAL_STORAGE);
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	@Before
 	public void setUp() {
@@ -76,6 +80,7 @@ public class MoreOptionsIntegrationTest {
 				.checkItemExists(R.string.menu_hide_menu)
 				.checkItemExists(R.string.help_title)
 				.checkItemExists(R.string.pocketpaint_menu_about)
+				.checkItemExists(R.string.share_image_menu)
 
 				.checkItemDoesNotExist(R.string.menu_save_image)
 				.checkItemDoesNotExist(R.string.menu_save_copy)
@@ -98,5 +103,21 @@ public class MoreOptionsIntegrationTest {
 				.perform(click());
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
+	}
+
+	@Test
+	public void testMoreOptionsShareImageClick() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText("Share image"))
+				.perform(click());
+		UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+		UiObject uiObject = mDevice.findObject(new UiSelector());
+		assertTrue(uiObject.exists());
+		mDevice.pressBack();
 	}
 }

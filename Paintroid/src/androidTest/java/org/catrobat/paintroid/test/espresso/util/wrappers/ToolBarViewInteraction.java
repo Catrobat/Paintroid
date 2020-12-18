@@ -49,7 +49,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 	}
 
 	public ViewInteraction onToolOptionsView() {
-		return onView(withId(R.id.pocketpaint_layout_tool_options));
+		return onView(withId(R.id.pocketpaint_layout_tool_specific_options));
 	}
 
 	public ToolBarViewInteraction performClickSelectedToolButton() {
@@ -57,6 +57,12 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 				.onToolsClicked();
 		onSelectedToolButton()
 				.perform(click());
+		return this;
+	}
+
+	public ToolBarViewInteraction onToolsClicked() {
+		onBottomNavigationView()
+				.onToolsClicked();
 		return this;
 	}
 

@@ -29,7 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LayerTest {
@@ -45,7 +45,10 @@ public class LayerTest {
 
 		assertEquals(bitmap, layer.getBitmap());
 		assertEquals(secondBitmap, secondLayer.getBitmap());
-		verifyZeroInteractions(bitmap, secondBitmap);
+		verify(secondBitmap).getWidth();
+		verify(secondBitmap).getHeight();
+		verify(bitmap).getWidth();
+		verify(bitmap).getHeight();
 	}
 
 	@Test
@@ -56,6 +59,7 @@ public class LayerTest {
 		layer.setBitmap(secondBitmap);
 
 		assertEquals(secondBitmap, layer.getBitmap());
-		verifyZeroInteractions(bitmap, secondBitmap);
+		verify(bitmap).getWidth();
+		verify(bitmap).getHeight();
 	}
 }

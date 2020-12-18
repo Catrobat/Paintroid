@@ -19,11 +19,13 @@
 
 package org.catrobat.paintroid.test.espresso.util;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.PointF;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -38,6 +40,7 @@ import java.util.List;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.runner.lifecycle.Stage;
 
@@ -130,5 +133,14 @@ public final class EspressoUtils {
 
 	public static Configuration getConfiguration() {
 		return InstrumentationRegistry.getInstrumentation().getTargetContext().getResources().getConfiguration();
+	}
+
+	public static GrantPermissionRule grantPermissionRulesVersionCheck() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			return GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE);
+		} else {
+			return GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+					Manifest.permission.READ_EXTERNAL_STORAGE);
+		}
 	}
 }

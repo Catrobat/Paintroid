@@ -51,19 +51,9 @@
             android:layout_alignParentEnd="true"
             android:background="@color/pocketpaint_main_drawing_surface_active" />
 
-        <LinearLayout
-            android:id="@+id/pocketpaint_main_tool_options"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/background_light"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical"
-            android:layout_toStartOf="@+id/pocketpaint_main_bottom_bar"
-            android:layout_alignParentEnd="true"
-            android:layout_above="@+id/pocketpaint_main_bottom_navigation">
 
-            <include layout="@layout/pocketpaint_layout_tool_options"/>
-        </LinearLayout>
+        <include layout="@layout/pocketpaint_layout_tool_options"
+            android:id="@+id/pocketpaint_main_tool_options"/>
 
         <LinearLayout
             android:id="@+id/pocketpaint_main_bottom_bar"
@@ -93,7 +83,7 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/pocketpaint_nav_view_layer"
-        android:layout_width="100dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center">
 

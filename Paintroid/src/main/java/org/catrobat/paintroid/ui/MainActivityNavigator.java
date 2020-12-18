@@ -22,20 +22,24 @@ package org.catrobat.paintroid.ui;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
 import org.catrobat.paintroid.dialog.FeedbackDialog;
+import org.catrobat.paintroid.dialog.ImportImageDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.LikeUsDialog;
@@ -47,6 +51,7 @@ import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDial
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.tools.ToolReference;
+import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment;
 
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -72,10 +77,43 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void showColorPickerDialog() {
 		if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null) {
-			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor(), true);
+			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor());
 			setupColorPickerDialogListeners(dialog);
 			showDialogFragmentSafely(dialog, Constants.COLOR_PICKER_DIALOG_TAG);
 		}
+	}
+
+	@Override
+	public void showCatroidMediaGallery() {
+		if (findFragmentByTag(Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG) == null) {
+			CatroidMediaGalleryFragment fragment = new CatroidMediaGalleryFragment();
+			fragment.setMediaGalleryListener(new CatroidMediaGalleryFragment.MediaGalleryListener() {
+				@Override
+				public void bitmapLoadedFromSource(Bitmap loadedBitmap) {
+					mainActivity.getPresenter().bitmapLoadedFromSource(loadedBitmap);
+				}
+
+				@Override
+				public void showProgressDialog() {
+					showIndeterminateProgressDialog();
+				}
+
+				@Override
+				public void dissmissProgressDialog() {
+					dismissIndeterminateProgressDialog();
+				}
+			});
+			showFragment(fragment, Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG);
+		}
+	}
+
+	private void showFragment(Fragment fragment, String tag) {
+		FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
+		fragmentManager.beginTransaction()
+				.setCustomAnimations(R.anim.slide_to_top, R.anim.slide_to_bottom, R.anim.slide_to_top, R.anim.slide_to_bottom)
+				.addToBackStack(null)
+				.add(R.id.fragment_container, fragment, tag)
+				.commit();
 	}
 
 	private void showDialogFragmentSafely(DialogFragment dialog, String tag) {
@@ -90,11 +128,32 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	private void setupColorPickerDialogListeners(ColorPickerDialog dialog) {
-		dialog.addOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+		dialog.addOnColorPickedListener(new OnColorPickedListener() {
 			@Override
 			public void colorChanged(int color) {
 				toolReference.get().changePaintColor(color);
 				mainActivity.getPresenter().setBottomNavigationColor(color);
+			}
+		});
+
+		dialog.setBitmap(mainActivity.getPresenter().getBitmap());
+	}
+
+	private void setupCatroidMediaGalleryListeners(CatroidMediaGalleryFragment dialog) {
+		dialog.setMediaGalleryListener(new CatroidMediaGalleryFragment.MediaGalleryListener() {
+			@Override
+			public void bitmapLoadedFromSource(Bitmap loadedBitmap) {
+				mainActivity.getPresenter().bitmapLoadedFromSource(loadedBitmap);
+			}
+
+			@Override
+			public void showProgressDialog() {
+				showIndeterminateProgressDialog();
+			}
+
+			@Override
+			public void dissmissProgressDialog() {
+				dismissIndeterminateProgressDialog();
 			}
 		});
 	}
@@ -136,6 +195,20 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
+	public void startShareImageActivity(Bitmap bitmap) {
+		Uri uri = FileIO.saveBitmapToCache(bitmap, mainActivity);
+		if (uri != null) {
+			Intent shareIntent = new Intent();
+			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+			shareIntent.setDataAndType(uri, mainActivity.getContentResolver().getType(uri));
+			shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			shareIntent.setAction(Intent.ACTION_SEND);
+			String chooserTitle = mainActivity.getResources().getString(R.string.share_image_via_text);
+			mainActivity.startActivity(Intent.createChooser(shareIntent, chooserTitle));
+		}
+	}
+
+	@Override
 	public void showAboutDialog() {
 		AboutDialog about = AboutDialog.newInstance();
 		about.show(mainActivity.getSupportFragmentManager(), Constants.ABOUT_DIALOG_FRAGMENT_TAG);
@@ -165,6 +238,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Uri data = Uri.parse("mailto:support-paintroid@catrobat.org");
 		intent.setData(data);
 		mainActivity.startActivity(intent);
+	}
+
+	@Override
+	public void showImageImportDialog() {
+		ImportImageDialog importImage = ImportImageDialog.newInstance();
+		importImage.show(mainActivity.getSupportFragmentManager(), Constants.ABOUT_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
@@ -233,6 +312,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
+	public boolean isSdkAboveOrEqualQ() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+	}
+
+	@Override
 	public boolean doIHavePermission(String permission) {
 		return ContextCompat.checkSelfPermission(mainActivity, permission) == PackageManager.PERMISSION_GRANTED;
 	}
@@ -296,6 +380,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		Fragment fragment = findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
 		if (fragment != null) {
 			setupColorPickerDialogListeners((ColorPickerDialog) fragment);
+		}
+
+		fragment = findFragmentByTag(Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG);
+		if (fragment != null) {
+			setupCatroidMediaGalleryListeners((CatroidMediaGalleryFragment) fragment);
 		}
 	}
 

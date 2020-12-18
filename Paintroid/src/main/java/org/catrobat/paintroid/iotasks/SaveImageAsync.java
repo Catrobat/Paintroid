@@ -67,7 +67,7 @@ public class SaveImageAsync extends AsyncTask<Void, Void, Uri> {
 					return FileIO.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
 				} else {
 					String fileName = FileIO.getDefaultFileName();
-					return FileIO.saveBitmapToFile(fileName, bitmap);
+					return FileIO.saveBitmapToFile(fileName, bitmap, callback.getContentResolver());
 				}
 			} catch (IOException e) {
 				Log.d(TAG, "Can't save image file", e);

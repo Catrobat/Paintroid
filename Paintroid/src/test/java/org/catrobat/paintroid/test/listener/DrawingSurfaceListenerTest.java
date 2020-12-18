@@ -508,18 +508,4 @@ public class DrawingSurfaceListenerTest {
 
 		verify(autoScrollTask, never()).start();
 	}
-
-	@Test
-	public void testOnTouchWhenToolOptionsShownThenHideToolOptions() {
-		DrawingSurface drawingSurface = mock(DrawingSurface.class);
-		MotionEvent motionEvent = mock(MotionEvent.class);
-
-		when(toolOptionsViewController.isVisible()).thenReturn(true);
-
-		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-
-		assertFalse(onTouchResult);
-		verify(toolOptionsViewController).hide();
-		verifyZeroInteractions(currentTool);
-	}
 }

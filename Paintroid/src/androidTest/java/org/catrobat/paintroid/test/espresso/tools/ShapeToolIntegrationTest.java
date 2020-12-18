@@ -41,7 +41,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider.withOffset;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView;
@@ -58,11 +57,12 @@ public class ShapeToolIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 	private ToolReference toolReference;
+	private MainActivity mainActivity;
 
 	@Before
 	public void setUp() {
-		MainActivity activity = launchActivityRule.getActivity();
-		toolReference = activity.toolReference;
+		mainActivity = launchActivityRule.getActivity();
+		toolReference = mainActivity.toolReference;
 
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
@@ -73,7 +73,7 @@ public class ShapeToolIntegrationTest {
 	}
 
 	private Paint getToolPaint() {
-		return launchActivityRule.getActivity().toolPaint.getPaint();
+		return mainActivity.toolPaint.getPaint();
 	}
 
 	@Test
@@ -87,8 +87,8 @@ public class ShapeToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptionsView();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
@@ -101,8 +101,8 @@ public class ShapeToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptionsView();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
@@ -128,8 +128,8 @@ public class ShapeToolIntegrationTest {
 		onToolProperties()
 				.setColorResource(R.color.pocketpaint_color_picker_brown1);
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown1, BitmapLocationProvider.MIDDLE);
@@ -143,8 +143,8 @@ public class ShapeToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptionsView();
 
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
@@ -210,10 +210,34 @@ public class ShapeToolIntegrationTest {
 				.checkPixelColor(Color.TRANSPARENT, DrawingSurfaceLocationProvider.TOP_MIDDLE);
 	}
 
+	@Test
+	public void testShapeToolBoxGetsPlacedCorrectWhenZoomedIn() {
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		mainActivity.perspective.setSurfaceTranslationY(200);
+		mainActivity.perspective.setSurfaceTranslationX(50);
+		mainActivity.perspective.setScale(2.0f);
+		mainActivity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+		onShapeToolOptionsView()
+				.performSelectShape(DrawableShape.RECTANGLE);
+		onShapeToolOptionsView()
+				.performSelectShapeDrawType(DrawableStyle.FILL);
+		onTopBarView()
+				.performClickCheckmark();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, mainActivity.perspective.surfaceCenterX - mainActivity.perspective.surfaceTranslationX,
+						mainActivity.perspective.surfaceCenterY - mainActivity.perspective.surfaceTranslationY);
+	}
+
 	public void drawShape() {
 		onToolBarView()
 				.performCloseToolOptionsView();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION));
+		onTopBarView()
+				.performClickCheckmark();
 	}
 }

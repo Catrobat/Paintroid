@@ -21,7 +21,7 @@ package org.catrobat.paintroid.tools.implementation;
 
 import android.view.ViewGroup;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.Tool;
@@ -32,28 +32,28 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.FillToolOptionsView;
 import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
+import org.catrobat.paintroid.tools.options.StampToolOptionsView;
 import org.catrobat.paintroid.tools.options.TextToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.tools.options.TransformToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultFillToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultShapeToolOptionsView;
+import org.catrobat.paintroid.ui.tools.DefaultStampToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultTextToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptionsView;
 
 public class DefaultToolFactory implements ToolFactory {
 
 	@Override
-	public Tool createTool(ToolType toolType, ToolOptionsViewController toolOptionsViewController, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback, ColorPickerDialog.OnColorPickedListener onColorPickedListener) {
+	public Tool createTool(ToolType toolType, ToolOptionsViewController toolOptionsViewController, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback, OnColorPickedListener onColorPickedListener) {
 		ViewGroup toolLayout = toolOptionsViewController.getToolSpecificOptionsLayout();
 
 		switch (toolType) {
-			case BRUSH:
-				return new BrushTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case CURSOR:
 				return new CursorTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case STAMP:
-				return new StampTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new StampTool(createStampToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case IMPORTPNG:
 				return new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case PIPETTE:
@@ -95,5 +95,9 @@ public class DefaultToolFactory implements ToolFactory {
 
 	private TransformToolOptionsView createTransformToolOptionsView(ViewGroup toolLayout) {
 		return new DefaultTransformToolOptionsView(toolLayout);
+	}
+
+	private StampToolOptionsView createStampToolOptionsView(ViewGroup toolLayout) {
+		return new DefaultStampToolOptionsView(toolLayout);
 	}
 }

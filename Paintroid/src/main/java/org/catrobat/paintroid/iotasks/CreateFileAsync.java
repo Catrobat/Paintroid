@@ -19,13 +19,13 @@
 
 package org.catrobat.paintroid.iotasks;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import androidx.annotation.Nullable;
@@ -44,9 +44,10 @@ public class CreateFileAsync extends AsyncTask<Void, Void, File> {
 
 	@Override
 	protected File doInBackground(Void... voids) {
+		CreateFileCallback callback = callbackRef.get();
 		try {
-			return FileIO.createNewEmptyPictureFile(filename);
-		} catch (IOException e) {
+			return FileIO.createNewEmptyPictureFile(filename, callback.getFileActivity());
+		} catch (NullPointerException e) {
 			Log.e(TAG, "Can't create file", e);
 		}
 		return null;
@@ -62,6 +63,7 @@ public class CreateFileAsync extends AsyncTask<Void, Void, File> {
 
 	public interface CreateFileCallback {
 		void onCreateFilePostExecute(int requestCode, File file);
+		Activity getFileActivity();
 		boolean isFinishing();
 	}
 }

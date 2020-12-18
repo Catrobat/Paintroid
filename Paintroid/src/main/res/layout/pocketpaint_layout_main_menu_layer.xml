@@ -24,35 +24,54 @@
     android:layout_height="wrap_content">
 
     <ImageButton
-        android:id="@+id/pocketpaint_layer_side_nav_button_add"
+        android:id="@+id/pocketpaint_layer_side_nav_button_visibility"
         style="?borderlessButtonStyle"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:contentDescription="@string/layer_new"
         android:padding="5dp"
         android:scaleType="fitXY"
-        android:tint="@android:color/white"
+        android:src="@drawable/ic_pocketpaint_layers_visibility"
+        android:theme="@style/PocketPaintHighlightColorTheme"
+        android:tint="@android:color/white" />
+
+
+    <ImageButton
+        android:id="@+id/pocketpaint_layer_side_nav_button_add"
+        style="?borderlessButtonStyle"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-2dp"
+        android:layout_toEndOf="@+id/pocketpaint_layer_side_nav_button_visibility"
+        android:contentDescription="@string/layer_new"
+        android:padding="5dp"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_pocketpaint_layers_add_selector"
-        android:theme="@style/PocketPaintHighlightColorTheme" />
+        android:theme="@style/PocketPaintHighlightColorTheme"
+        android:tint="@android:color/white" />
 
     <ImageButton
         android:id="@+id/pocketpaint_layer_side_nav_button_delete"
         style="?borderlessButtonStyle"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/pocketpaint_layer_side_nav_button_add"
+        android:layout_marginStart="-1dp"
+        android:layout_toEndOf="@+id/pocketpaint_layer_side_nav_button_add"
         android:contentDescription="@string/layer_delete"
         android:padding="5dp"
         android:scaleType="fitXY"
-        android:tint="@android:color/white"
         android:src="@drawable/ic_pocketpaint_layers_delete_selector"
-        android:theme="@style/PocketPaintHighlightColorTheme" />
+        android:theme="@style/PocketPaintHighlightColorTheme"
+        android:tint="@android:color/white" />
 
     <org.catrobat.paintroid.ui.dragndrop.DragAndDropListView
         android:id="@+id/pocketpaint_layer_side_nav_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/pocketpaint_layer_side_nav_button_add"
-        android:splitMotionEvents="false"
-        tools:listitem="@layout/pocketpaint_item_layer" />
+        android:splitMotionEvents="true"
+        tools:listitem="@layout/pocketpaint_item_layer">
+
+    </org.catrobat.paintroid.ui.dragndrop.DragAndDropListView>
+
 </RelativeLayout>
