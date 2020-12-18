@@ -28,10 +28,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
-
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.junit.Assert.assertEquals;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -46,9 +47,11 @@ public class ImportToolIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class, "ar");
+	private MainActivity mainActivity;
 
 	@Before
 	public void setUp() {
+		mainActivity = launchActivityRule.getActivity();
 		onToolBarView()
 				.performSelectTool(ToolType.IMPORTPNG);
 	}
@@ -65,5 +68,24 @@ public class ImportToolIntegrationTest {
 
 		onView(withId(R.id.pocketpaint_dialog_import_stickers)).check(doesNotExist());
 		onView(withId(R.id.pocketpaint_dialog_import_gallery)).check(doesNotExist());
+	}
+
+	@Test
+	public void testImportDoesNotResetPerspectiveScale() {
+		onView(withText(R.string.pocketpaint_cancel)).perform(click());
+
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		float scale = 2.0f;
+		mainActivity.perspective.setScale(scale);
+		mainActivity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.IMPORTPNG);
+
+		onView(withText(R.string.pocketpaint_cancel)).perform(click());
+
+		assertEquals(scale, mainActivity.perspective.getScale(), Float.MIN_VALUE);
 	}
 }

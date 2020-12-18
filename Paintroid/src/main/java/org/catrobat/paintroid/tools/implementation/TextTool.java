@@ -289,8 +289,10 @@ public class TextTool extends BaseToolWithRectangleShape {
 
 	@VisibleForTesting
 	public void resetBoxPosition() {
-		toolPosition.x = workspace.getWidth() / 2.0f;
-		toolPosition.y = boxHeight / 2.0f + MARGIN_TOP;
+		if (workspace.getScale() <= 1) {
+			toolPosition.x = workspace.getWidth() / 2.0f;
+			toolPosition.y = boxHeight / 2.0f + MARGIN_TOP;
+		}
 	}
 
 	@Override

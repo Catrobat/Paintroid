@@ -356,7 +356,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				}
 				Uri selectedGalleryImageUri = data.getData();
 				setTool(ToolType.IMPORTPNG);
-				toolController.switchTool(ToolType.IMPORTPNG);
+				toolController.switchTool(ToolType.IMPORTPNG, false);
 				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, maxWidth, maxHeight, selectedGalleryImageUri);
 				break;
 			case REQUEST_CODE_LOAD_PICTURE:
@@ -435,7 +435,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			toolController.hideToolOptionsView();
 		} else if (!toolController.isDefaultTool()) {
 			setTool(ToolType.BRUSH);
-			toolController.switchTool(ToolType.BRUSH);
+			toolController.switchTool(ToolType.BRUSH, true);
 		} else {
 			showSecurityQuestionBeforeExit();
 		}
@@ -476,11 +476,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void onCommandPreExecute() {
-		navigator.showIndeterminateProgressDialog();
-	}
-
-	@Override
 	public void onCommandPostExecute() {
 		if (resetPerspectiveAfterNextCommand) {
 			resetPerspectiveAfterNextCommand = false;
@@ -491,8 +486,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		toolController.resetToolInternalState();
 		view.refreshDrawingSurface();
 		refreshTopBarButtons();
-
-		navigator.dismissIndeterminateProgressDialog();
 	}
 
 	@Override
@@ -613,7 +606,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	private void switchTool(ToolType type) {
 		setTool(type);
-		toolController.switchTool(type);
+		toolController.switchTool(type, false);
 
 		if (type == ToolType.IMPORTPNG) {
 			showImportDialog();
@@ -806,5 +799,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void bitmapLoadedFromSource(Bitmap loadedImage) {
 		toolController.setBitmapFromSource(loadedImage);
+	}
+
+	@Override
+	public Bitmap getBitmap() {
+		return workspace.getBitmapOfAllLayers();
 	}
 }

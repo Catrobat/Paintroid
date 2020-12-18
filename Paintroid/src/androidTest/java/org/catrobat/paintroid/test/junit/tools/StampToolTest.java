@@ -34,6 +34,7 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.tools.options.StampToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -76,6 +77,7 @@ public class StampToolTest {
 		when(workspace.getScale()).thenReturn(1f);
 		when(workspace.getWidth()).thenReturn(200);
 		when(workspace.getHeight()).thenReturn(300);
+		when(workspace.getPerspective()).thenReturn(new Perspective(200, 300));
 		when(workspace.getCanvasPointFromSurfacePoint(any(PointF.class))).then(new Answer<PointF>() {
 			@Override
 			public PointF answer(InvocationOnMock invocation) {

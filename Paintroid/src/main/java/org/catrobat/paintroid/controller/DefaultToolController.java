@@ -22,7 +22,7 @@ package org.catrobat.paintroid.controller;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.Tool;
@@ -31,6 +31,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
@@ -45,7 +46,7 @@ public class DefaultToolController implements ToolController {
 	private Workspace workspace;
 	private ToolPaint toolPaint;
 	private ContextCallback contextCallback;
-	private ColorPickerDialog.OnColorPickedListener onColorPickedListener;
+	private OnColorPickedListener onColorPickedListener;
 
 	public DefaultToolController(ToolReference toolReference, ToolOptionsViewController toolOptionsViewController,
 			ToolFactory toolFactory, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint,
@@ -60,13 +61,13 @@ public class DefaultToolController implements ToolController {
 	}
 
 	@Override
-	public void setOnColorPickedListener(ColorPickerDialog.OnColorPickedListener onColorPickedListener) {
+	public void setOnColorPickedListener(OnColorPickedListener onColorPickedListener) {
 		this.onColorPickedListener = onColorPickedListener;
 	}
 
 	@Override
-	public void switchTool(ToolType toolType) {
-		switchTool(createAndSetupTool(toolType));
+	public void switchTool(ToolType toolType, boolean backPressed) {
+		switchTool(createAndSetupTool(toolType), backPressed);
 	}
 
 	@Override
@@ -104,8 +105,15 @@ public class DefaultToolController implements ToolController {
 		return toolReference.get().getDrawPaint().getColor();
 	}
 
-	private void switchTool(Tool tool) {
+	private void switchTool(Tool tool, boolean backPressed) {
 		Tool currentTool = toolReference.get();
+		ToolType currentToolType = currentTool.getToolType();
+
+		if ((currentToolType == ToolType.TEXT || currentToolType == ToolType.TRANSFORM
+				|| currentToolType == ToolType.IMPORTPNG || currentToolType == ToolType.SHAPE) && !backPressed) {
+			BaseToolWithShape toolToApply = (BaseToolWithShape) currentTool;
+			toolToApply.onClickOnButton();
+		}
 
 		if (currentTool.getToolType() == tool.getToolType()) {
 			Bundle toolBundle = new Bundle();

@@ -88,8 +88,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 		cropAlgorithm = new JavaCropAlgorithm();
 
-		resetScaleAndTranslation();
-
 		cropRunFinished = true;
 
 		this.maximumBoxResolution = metrics.widthPixels * metrics.heightPixels * MAXIMUM_BITMAP_SIZE_FACTOR;

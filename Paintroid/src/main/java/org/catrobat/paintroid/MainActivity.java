@@ -21,11 +21,13 @@ package org.catrobat.paintroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -78,6 +80,8 @@ import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder;
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -127,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private PaintroidApplicationFragment appFragment;
 	private DefaultToolController defaultToolController;
 	private BottomNavigationViewHolder bottomNavigationViewHolder;
+	private CommandFactory commandFactory;
 
 	private Runnable deferredRequestPermissionsResult;
 
@@ -169,7 +174,35 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		presenter.onCreateTool();
 
-		if (savedInstanceState == null) {
+		Intent receivedIntent = getIntent();
+		String receivedAction = receivedIntent.getAction();
+		String receivedType = receivedIntent.getType();
+
+		if (receivedAction != null && receivedType != null && (receivedAction.equals(Intent.ACTION_SEND) || receivedAction.equals(Intent.ACTION_EDIT)) && receivedType.startsWith("image/")) {
+			Uri receivedUri = receivedIntent
+					.getParcelableExtra(Intent.EXTRA_STREAM);
+
+			if (receivedUri == null) {
+				receivedUri = receivedIntent.getData();
+			}
+
+			Objects.requireNonNull(receivedUri);
+			Bitmap receivedBitmap = null;
+
+			try {
+				receivedBitmap = FileIO.getBitmapFromUri(getContentResolver(), receivedUri);
+			} catch (IOException e) {
+				Log.e("Can not read", "Unable to retrieve Bitmap from Uri");
+			}
+
+			commandManager.setInitialStateCommand(commandFactory.createInitCommand(receivedBitmap));
+			commandManager.reset();
+			model.setSavedPictureUri(null);
+			model.setCameraImageUri(null);
+			workspace.resetPerspective();
+
+			presenter.initializeFromCleanState(null, null);
+		} else if (savedInstanceState == null) {
 			Intent intent = getIntent();
 			String picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH);
 			String pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME);
@@ -250,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		if (appFragment.getCommandManager() == null) {
 			DisplayMetrics metrics = getResources().getDisplayMetrics();
 
-			CommandFactory commandFactory = new DefaultCommandFactory();
+			commandFactory = new DefaultCommandFactory();
 			CommandManager synchronousCommandManager = new DefaultCommandManager(new CommonFactory(), layerModel);
 			commandManager = new AsyncCommandManager(synchronousCommandManager, layerModel);
 			Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
@@ -437,11 +470,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	}
 
 	@Override
-	public void commandPreExecute() {
-		presenter.onCommandPreExecute();
-	}
-
-	@Override
 	public void commandPostExecute() {
 		if (!isFinishing()) {
 			layerPresenter.invalidate();
@@ -487,6 +515,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		presenter.handleActivityResult(requestCode, resultCode, data);
 	}
 

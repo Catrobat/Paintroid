@@ -57,7 +57,7 @@ check.dependsOn 'checkstyle'
 check.dependsOn 'pmd'
 
 jacoco {
-    toolVersion = "0.8.1"
+    toolVersion = "0.8.5"
 }
 
 jacocoAndroidUnitTestReport {

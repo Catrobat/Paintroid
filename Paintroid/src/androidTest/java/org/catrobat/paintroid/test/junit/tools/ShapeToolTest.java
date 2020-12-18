@@ -30,6 +30,7 @@ import org.catrobat.paintroid.tools.drawable.DrawableShape;
 import org.catrobat.paintroid.tools.implementation.ShapeTool;
 import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -83,6 +84,7 @@ public class ShapeToolTest {
 		when(workspace.getWidth()).thenReturn(100);
 		when(workspace.getHeight()).thenReturn(100);
 		when(workspace.getScale()).thenReturn(1f);
+		when(workspace.getPerspective()).thenReturn(new Perspective(100, 100));
 
 		when(contextCallback.getDisplayMetrics()).thenReturn(displayMetrics);
 		displayMetrics.widthPixels = 100;

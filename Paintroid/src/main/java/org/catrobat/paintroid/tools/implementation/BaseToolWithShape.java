@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.tools.implementation;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -32,6 +33,7 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.ui.Perspective;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -49,15 +51,22 @@ public abstract class BaseToolWithShape extends BaseTool {
 	final Paint linePaint;
 	final DisplayMetrics metrics;
 
-	public BaseToolWithShape(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
-			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+	@SuppressLint("VisibleForTests")
+	public BaseToolWithShape(ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
 		metrics = contextCallback.getDisplayMetrics();
 
 		primaryShapeColor = contextCallback.getColor(R.color.pocketpaint_main_rectangle_tool_primary_color);
 		secondaryShapeColor = contextCallback.getColor(R.color.pocketpaint_colorAccent);
-		toolPosition = new PointF(workspace.getWidth() / 2f, workspace.getHeight() / 2f);
+		Perspective perspective = workspace.getPerspective();
+
+		if (perspective.getScale() > 1) {
+			toolPosition = new PointF(perspective.surfaceCenterX - perspective.surfaceTranslationX, perspective.surfaceCenterY - perspective.surfaceTranslationY);
+		} else {
+			toolPosition = new PointF(workspace.getWidth() / 2f, workspace.getHeight() / 2f);
+		}
+
 		linePaint = new Paint();
 		linePaint.setColor(primaryShapeColor);
 	}

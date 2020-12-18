@@ -90,6 +90,7 @@ public class TransformToolIntegrationTest {
 	private Perspective perspective;
 	private LayerContracts.Model layerModel;
 	private ToolReference toolReference;
+	private MainActivity mainActivity;
 
 	private static void drawPlus(Bitmap bitmap, int lineLength) {
 		int horizontalStartX = bitmap.getWidth() / 4;
@@ -150,11 +151,11 @@ public class TransformToolIntegrationTest {
 
 	@Before
 	public void setUp() {
-		MainActivity activity = launchActivityRule.getActivity();
-		activityHelper = new MainActivityHelper(activity);
-		perspective = activity.perspective;
-		layerModel = activity.layerModel;
-		toolReference = activity.toolReference;
+		mainActivity = launchActivityRule.getActivity();
+		activityHelper = new MainActivityHelper(mainActivity);
+		perspective = mainActivity.perspective;
+		layerModel = mainActivity.layerModel;
+		toolReference = mainActivity.toolReference;
 
 		displayWidth = activityHelper.getDisplayWidth();
 		displayHeight = activityHelper.getDisplayHeight();
@@ -1338,7 +1339,7 @@ public class TransformToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.TRANSFORM);
 
-		SeekBar seekBar = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_transform_resize_seekbar);
+		SeekBar seekBar = mainActivity.findViewById(R.id.pocketpaint_transform_resize_seekbar);
 		int progress = seekBar.getProgress();
 
 		onTransformToolOptionsView()
@@ -1366,5 +1367,20 @@ public class TransformToolIntegrationTest {
 		progress = seekBar.getProgress();
 		onTransformToolOptionsView()
 				.checkPercentageTextMatches(progress);
+	}
+
+	@Test
+	public void testTransformToolDoesNotResetPerspectiveScale() {
+		float scale = 2.0f;
+
+		perspective.setScale(scale);
+		perspective.setSurfaceTranslationX(50);
+		perspective.setSurfaceTranslationY(200);
+		mainActivity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+
+		assertEquals(scale, perspective.getScale(), 0.0001f);
 	}
 }

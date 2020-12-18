@@ -23,6 +23,8 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import org.catrobat.paintroid.ui.Perspective;
+
 public interface Workspace {
 	boolean contains(PointF point);
 
@@ -57,4 +59,6 @@ public interface Workspace {
 	PointF getCanvasPointFromSurfacePoint(PointF surfacePoint);
 
 	void invalidate();
+
+	Perspective getPerspective();
 }

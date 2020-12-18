@@ -530,13 +530,6 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testOnCommandPreExecuteThenShowProgressDialog() {
-		presenter.onCommandPreExecute();
-
-		verify(navigator).showIndeterminateProgressDialog();
-	}
-
-	@Test
 	public void testOnCommandPostExecuteThenSetModelUnsaved() {
 		presenter.onCommandPostExecute();
 
@@ -563,13 +556,6 @@ public class MainActivityPresenterTest {
 
 		verify(topBarViewHolder).disableRedoButton();
 		verify(topBarViewHolder).disableUndoButton();
-	}
-
-	@Test
-	public void testOnCommandPostExecuteThenDismissDialog() {
-		presenter.onCommandPostExecute();
-
-		verify(navigator).dismissIndeterminateProgressDialog();
 	}
 
 	@Test
