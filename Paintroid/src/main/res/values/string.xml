@@ -46,6 +46,9 @@
     <string name="cap_circle">Circle</string>
     <string name="cap_square">Square</string>
 
+    <string name="stamptool_paste">Paste</string>
+    <string name="stamptool_copy">Copy</string>
+
     <string name="stickers">Stickers</string>
     <string name="dialog_import_image_title" translatable="false">@string/button_import_image</string>
     <string name="dialog_save_image_title" translatable="false">@string/menu_save_image</string>

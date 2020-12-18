@@ -52,8 +52,6 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerView
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ConfirmQuitDialogInteraction.onConfirmQuitDialog;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -76,7 +74,6 @@ import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -196,27 +193,6 @@ public class ToolOnBackPressedIntegrationTest {
 	}
 
 	@Test
-	public void testToolOptionsDisappearWhenBackPressed() {
-		onToolBarView()
-				.performSelectTool(ToolType.CURSOR)
-				.performOpenToolOptionsView();
-
-		onView(withId(R.id.pocketpaint_layout_tool_options_name))
-				.check(matches(withText(R.string.button_cursor)));
-
-		Espresso.pressBack();
-
-		assertEquals(toolReference.get().getToolType(), ToolType.CURSOR);
-
-		onView(withId(R.id.pocketpaint_main_tool_options)).check(matches(not(isDisplayed())));
-		onView(withId(R.id.pocketpaint_layout_tool_options_name)).check(matches(not(isDisplayed())));
-
-		Espresso.pressBack();
-
-		assertEquals(toolReference.get().getToolType(), ToolType.BRUSH);
-	}
-
-	@Test
 	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -324,21 +300,6 @@ public class ToolOnBackPressedIntegrationTest {
 		onToolBarView().onToolOptionsView()
 				.check(matches(isDisplayed()));
 		pressBack();
-		onToolBarView().onToolOptionsView()
-				.check(matches(not(isDisplayed())));
-	}
-
-	@Test
-	public void testCloseToolOptionsOnUndoPressed() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-		onToolBarView()
-				.performSelectTool(ToolType.TEXT);
-		onToolBarView().onToolOptionsView()
-				.check(matches(isDisplayed()));
-		onTopBarView().onUndoButton()
-				.check(matches(allOf(isDisplayed(), isEnabled())))
-				.perform(click());
 		onToolBarView().onToolOptionsView()
 				.check(matches(not(isDisplayed())));
 	}

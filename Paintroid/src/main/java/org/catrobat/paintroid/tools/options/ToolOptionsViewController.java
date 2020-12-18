@@ -21,8 +21,6 @@ package org.catrobat.paintroid.tools.options;
 
 import android.view.ViewGroup;
 
-import androidx.annotation.StringRes;
-
 public interface ToolOptionsViewController extends ToolOptionsVisibilityController {
 	void disable();
 
@@ -31,8 +29,6 @@ public interface ToolOptionsViewController extends ToolOptionsVisibilityControll
 	void resetToOrigin();
 
 	void removeToolViews();
-
-	void setToolName(@StringRes int id);
 
 	void showCheckmark();
 

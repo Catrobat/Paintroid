@@ -476,15 +476,6 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testOnBackPressedWhenToolOptionsShownThenHideToolOptions() {
-		when(toolController.toolOptionsViewVisible()).thenReturn(true);
-
-		presenter.onBackPressed();
-
-		verify(toolController).hideToolOptionsView();
-	}
-
-	@Test
 	public void testSaveImageConfirmClickedThenSaveImage() {
 		Uri uri = mock(Uri.class);
 
