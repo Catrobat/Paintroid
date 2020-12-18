@@ -516,6 +516,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		presenter.handleActivityResult(requestCode, resultCode, data);
 	}
 

@@ -247,6 +247,8 @@ public interface MainActivityContracts {
 		void setLayerAdapter(LayerAdapter layerAdapter);
 
 		int getImageNumber();
+
+    Bitmap getBitmap();
 	}
 
 	interface Model {

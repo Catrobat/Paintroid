@@ -42,6 +42,7 @@ import org.junit.runner.RunWith;
 import java.io.File;
 
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -67,6 +68,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.DrawerActions.open;
@@ -308,8 +310,10 @@ public class ToolOnBackPressedIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker()
 				.check(matches(isDisplayed()));
-		pressBack();
+
 		onColorPickerView()
+				.perform(closeSoftKeyboard())
+				.perform(ViewActions.pressBack())
 				.check(doesNotExist());
 	}
 

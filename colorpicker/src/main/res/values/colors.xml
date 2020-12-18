@@ -47,4 +47,11 @@
     <color name="pocketpaint_color_picker_hex_wrong_value_red">#FFFE4A49</color>
     <color name="pocketpaint_color_picker_hex_correct_black">#FF000000</color>
     <color name="pocketpaint_color_picker_hex_black">#FF000000</color>
+    <color name="pocketpaint_color_picker_separation_color">#B8B8B8</color>
+
+    <color name="pocketpaint_color_picker_actionbar_color">#0097A7</color>
+    <color name="pocketpaint_color_picker_btn_color">#DFDADA</color>
+
+    <color name="pocketpaint_color_picker_surface_background">#D3D3D3</color>
+
 </resources>

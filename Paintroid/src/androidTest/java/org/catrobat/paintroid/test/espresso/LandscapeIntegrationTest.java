@@ -189,7 +189,7 @@ public class LandscapeIntegrationTest {
 					.performClickColorPickerPresetSelectorButton(i);
 
 			if (colors[i] != Color.TRANSPARENT) {
-				onView(withId(R.id.color_picker_button_ok))
+				onView(withId(R.id.color_picker_new_color_view))
 						.perform(scrollTo())
 						.check(matches(withBackgroundColor(colors[i])));
 			}
@@ -208,7 +208,7 @@ public class LandscapeIntegrationTest {
 					.performClickColorPickerPresetSelectorButton(i);
 
 			onColorPickerView()
-					.onOkButton()
+					.onPositiveButton()
 					.perform(scrollTo())
 					.perform(click());
 
@@ -229,12 +229,12 @@ public class LandscapeIntegrationTest {
 				.performClickColorPickerPresetSelectorButton(2);
 
 		onColorPickerView()
-				.checkCancelButtonColor(initialColor);
+				.checkCurrentViewColor(initialColor);
 
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 
 		onColorPickerView()
-				.checkCancelButtonColor(initialColor);
+				.checkCurrentViewColor(initialColor);
 	}
 
 	@Test
@@ -242,7 +242,7 @@ public class LandscapeIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		onView(withId(R.id.color_picker_button_ok))
+		onView(withText(R.string.color_picker_apply))
 				.perform(scrollTo());
 	}
 

@@ -17,20 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.listener;
+package org.catrobat.paintroid.colorpicker
 
-import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
-import org.catrobat.paintroid.contract.MainActivityContracts;
+interface OnColorChangedListener {
+    fun colorChanged(color: Int)
+}
 
-public class PresenterColorPickedListener implements OnColorPickedListener {
-	private final MainActivityContracts.Presenter presenter;
+interface OnColorPickedListener {
+    fun colorChanged(color: Int)
+}
 
-	public PresenterColorPickedListener(MainActivityContracts.Presenter presenter) {
-		this.presenter = presenter;
-	}
-
-	@Override
-	public void colorChanged(int color) {
-		presenter.setBottomNavigationColor(color);
-	}
+interface OnImageViewPointClickedListener {
+    fun colorChanged(color: Int)
 }
