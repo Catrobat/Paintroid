@@ -96,13 +96,6 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
-		ToolOptionsViewController toolOptionsViewController = callback.getToolOptionsViewController();
-
-		if (toolOptionsViewController.isVisible()) {
-			toolOptionsViewController.hide();
-			return false;
-		}
-
 		DrawingSurface drawingSurface = (DrawingSurface) view;
 		Tool currentTool = callback.getCurrentTool();
 
