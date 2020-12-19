@@ -192,6 +192,30 @@ public class StampToolIntegrationTest {
 	}
 
 	@Test
+	public void testCutAndPastePixel() {
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolBarView()
+				.performSelectTool(ToolType.STAMP);
+
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+				.performCut();
+
+		StampTool stampTool = (StampTool) toolReference.get();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, stampTool.toolPosition.x, stampTool.toolPosition.y);
+
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+				.performPaste();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, stampTool.toolPosition.x, stampTool.toolPosition.y);
+	}
+
+	@Test
 	public void testStampToolNotCapturingOtherLayers() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));

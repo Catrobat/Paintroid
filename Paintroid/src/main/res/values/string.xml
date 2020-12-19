@@ -47,6 +47,7 @@
 
     <string name="stamptool_paste">Paste</string>
     <string name="stamptool_copy">Copy</string>
+    <string name="stamptool_cut">Cut</string>
 
     <string name="stickers">Stickers</string>
     <string name="dialog_import_image_title" translatable="false">@string/button_import_image</string>

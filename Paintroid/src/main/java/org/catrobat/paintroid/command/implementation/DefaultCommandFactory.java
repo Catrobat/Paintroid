@@ -147,4 +147,9 @@ public class DefaultCommandFactory implements CommandFactory {
 	public Command createStampCommand(Bitmap bitmap, PointF toolPosition, float width, float height, float rotation) {
 		return new StampCommand(bitmap, Conversion.toPoint(toolPosition), width, height, rotation);
 	}
+
+	@Override
+	public Command createCutCommand(PointF toolPosition, float boxWidth, float boxHeight, float boxRotation) {
+		return new CutCommand(Conversion.toPoint(toolPosition), boxWidth, boxHeight, boxRotation);
+	}
 }
