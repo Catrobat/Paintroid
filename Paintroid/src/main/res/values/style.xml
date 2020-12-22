@@ -54,6 +54,10 @@
         <item name="android:background">@drawable/pocketpaint_selectable_button_bg</item>
     </style>
 
+    <style name="OptionsViewTextFieldTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="hintEnabled">false</item>
+    </style>
+
     <style name="PocketPaintTheme.Base" parent="Theme.MaterialComponents.NoActionBar.Bridge">
         <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>
         <item name="dialogTheme">@style/PocketPaintAlertDialog</item>

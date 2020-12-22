@@ -70,5 +70,7 @@ public interface CommandFactory {
 
 	Command createStampCommand(Bitmap bitmap, PointF toolPosition, float boxWidth, float boxHeight, float boxRotation);
 
+	Command createSprayCommand(float[] sprayedPoints, Paint paint);
+
 	Command createCutCommand(PointF toolPosition, float boxWidth, float boxHeight, float boxRotation);
 }

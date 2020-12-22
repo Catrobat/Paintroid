@@ -20,7 +20,7 @@
 task checkstyle(type: Checkstyle) {
     configFile file('config/checkstyle.xml')
     source '.'
-    include '**/*.java', '**/*.xml', '**/*.gradle'
+    include '**/*.java', '**/*.kt', '**/*.xml', '**/*.gradle'
     exclude '**/gen/**', '**/build/**', 'libraryProjects/**', '**/.idea/**'
 
     classpath = files()

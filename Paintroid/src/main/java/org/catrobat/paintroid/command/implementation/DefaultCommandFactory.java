@@ -149,6 +149,11 @@ public class DefaultCommandFactory implements CommandFactory {
 	}
 
 	@Override
+	public Command createSprayCommand(float[] sprayedPoints, Paint paint) {
+		return new SprayCommand(sprayedPoints, paint);
+	}
+
+	@Override
 	public Command createCutCommand(PointF toolPosition, float boxWidth, float boxHeight, float boxRotation) {
 		return new CutCommand(Conversion.toPoint(toolPosition), boxWidth, boxHeight, boxRotation);
 	}

@@ -63,6 +63,7 @@ public class ToolSelectionIntegrationTest {
 					|| toolType == ToolType.COLORCHOOSER
 					|| toolType == ToolType.REDO
 					|| toolType == ToolType.UNDO
+					|| toolType == ToolType.PIPETTE
 					|| toolType == ToolType.LAYER) {
 				continue;
 			}

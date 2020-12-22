@@ -34,7 +34,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.catrobat.paintroid.test.utils.PointFAnswer.setPointFTo;
 import static org.catrobat.paintroid.test.utils.PointFMatcher.pointFEquals;
 import static org.catrobat.paintroid.tools.ToolType.FILL;
-import static org.catrobat.paintroid.tools.ToolType.PIPETTE;
 import static org.catrobat.paintroid.tools.ToolType.TRANSFORM;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -207,7 +206,7 @@ public class AutoScrollTaskTest {
 
 	@Test
 	public void testStartIgnoredTools() {
-		when(callback.getCurrentToolType()).thenReturn(PIPETTE, FILL, TRANSFORM);
+		when(callback.getCurrentToolType()).thenReturn(FILL, TRANSFORM);
 
 		autoScrollTask.setEventPoint(3f, 5f);
 		autoScrollTask.setViewDimensions(39, 42);

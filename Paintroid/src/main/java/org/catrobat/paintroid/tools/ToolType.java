@@ -31,7 +31,7 @@ import androidx.annotation.StringRes;
 import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
 public enum ToolType {
-	PIPETTE(R.string.button_pipette, R.string.help_content_eyedropper, R.drawable.ic_pocketpaint_tool_pipette, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_pipette, INVALID_RESOURCE_ID, false),
+	PIPETTE(R.string.button_pipette, R.string.help_content_eyedropper, R.drawable.ic_pocketpaint_tool_pipette, EnumSet.of(StateChange.ALL), 1, INVALID_RESOURCE_ID, false),
 	BRUSH(R.string.button_brush, R.string.help_content_brush, R.drawable.ic_pocketpaint_tool_brush, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_brush, INVALID_RESOURCE_ID, true),
 	UNDO(R.string.button_undo, R.string.help_content_undo, R.drawable.ic_pocketpaint_undo, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_undo, INVALID_RESOURCE_ID, false),
 	REDO(R.string.button_redo, R.string.help_content_redo, R.drawable.ic_pocketpaint_redo, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_redo, INVALID_RESOURCE_ID, false),
@@ -46,7 +46,8 @@ public enum ToolType {
 	TEXT(R.string.button_text, R.string.help_content_text, R.drawable.ic_pocketpaint_tool_text, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_text, R.drawable.pocketpaint_text_tool_overlay, true),
 	LAYER(R.string.layers_title, R.string.help_content_layer, R.drawable.ic_pocketpaint_layers, EnumSet.of(StateChange.ALL), INVALID_RESOURCE_ID, INVALID_RESOURCE_ID, false),
 	COLORCHOOSER(R.string.color_picker_title, R.string.help_content_color_chooser, R.drawable.ic_pocketpaint_color_palette, EnumSet.of(StateChange.ALL), INVALID_RESOURCE_ID, INVALID_RESOURCE_ID, false),
-	HAND(R.string.button_hand, R.string.help_content_hand, R.drawable.ic_pocketpaint_tool_hand, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_hand, INVALID_RESOURCE_ID, false);
+	HAND(R.string.button_hand, R.string.help_content_hand, R.drawable.ic_pocketpaint_tool_hand, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_hand, INVALID_RESOURCE_ID, false),
+	SPRAY(R.string.button_spray_can, R.string.help_content_spray_can, R.drawable.ic_pocketpaint_tool_spray_can, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_spray_can, INVALID_RESOURCE_ID, true);
 
 	private int nameResource;
 	private int helpTextResource;
