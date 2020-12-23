@@ -16,25 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.dialog
 
-package org.catrobat.paintroid.dialog;
+import android.annotation.SuppressLint
+import android.content.Context
+import androidx.appcompat.app.AlertDialog
+import org.catrobat.paintroid.R
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-
-import org.catrobat.paintroid.R;
-
-import androidx.appcompat.app.AlertDialog;
-
-public final class IndeterminateProgressDialog {
-	private IndeterminateProgressDialog() {
-	}
-
+object IndeterminateProgressDialog {
+    @JvmStatic
 	@SuppressLint("InflateParams")
-	public static AlertDialog newInstance(Context context) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.PocketPaintProgressDialog);
-		builder.setCancelable(false);
-		builder.setView(R.layout.pocketpaint_layout_indeterminate);
-		return builder.create();
-	}
+    fun newInstance(context: Context?): AlertDialog {
+        val builder = AlertDialog.Builder(context!!, R.style.PocketPaintProgressDialog)
+        builder.setCancelable(false)
+        builder.setView(R.layout.pocketpaint_layout_indeterminate)
+        return builder.create()
+    }
 }
