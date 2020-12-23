@@ -16,30 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.dialog
 
-package org.catrobat.paintroid.dialog;
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatDialogFragment
+import org.catrobat.paintroid.contract.MainActivityContracts
+import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 
-import android.os.Bundle;
+open class MainActivityDialogFragment : AppCompatDialogFragment() {
+    var presenter: MainActivityContracts.Presenter? = null
+        private set
 
-import org.catrobat.paintroid.contract.MainActivityContracts;
-
-import androidx.appcompat.app.AppCompatDialogFragment;
-
-public class MainActivityDialogFragment extends AppCompatDialogFragment {
-	private MainActivityContracts.Presenter presenter;
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-
-		MainActivityContracts.MainView activity = (MainActivityContracts.MainView) getActivity();
-		if (activity == null) {
-			throw new IllegalArgumentException("Parent activity must implement MainActivityContracts.MainView");
-		}
-		presenter = activity.getPresenter();
-	}
-
-	public MainActivityContracts.Presenter getPresenter() {
-		return presenter;
-	}
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val activity = activity as MainView?
+                ?: throw IllegalArgumentException("Parent activity must implement MainActivityContracts.MainView")
+        presenter = activity.presenter
+    }
 }
