@@ -19,7 +19,14 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import org.catrobat.paintroid.R;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
 import static org.hamcrest.Matchers.not;
@@ -91,6 +98,48 @@ public final class TransformToolOptionsViewInteraction extends CustomViewInterac
 	public TransformToolOptionsViewInteraction checkPercentageTextMatches(int expected) {
 		onView(withId(R.id.pocketpaint_transform_resize_percentage_text))
 				.check(matches(withText(Integer.toString(expected))));
+		return this;
+	}
+
+	public TransformToolOptionsViewInteraction checkLayerWidthMatches(int expected) {
+		Integer expectedValue = expected;
+		onView(withId(R.id.pocketpaint_transform_width_value))
+				.check(matches(hasValueEqualTo(expectedValue.toString())));
+		return this;
+	}
+
+	Matcher<View> hasValueEqualTo(final String content) {
+
+		return new TypeSafeMatcher<View>() {
+
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("Has EditText/TextView the value:  " + content);
+			}
+
+			@Override
+			public boolean matchesSafely(View view) {
+				if (!(view instanceof TextView) && !(view instanceof EditText)) {
+					return false;
+				}
+				if (view != null) {
+					String text;
+					if (view instanceof TextView) {
+						text = ((TextView) view).getText().toString();
+					} else {
+						text = ((EditText) view).getText().toString();
+					}
+					return text.matches(content);
+				}
+				return false;
+			}
+		};
+	}
+
+	public TransformToolOptionsViewInteraction checkLayerHeightMatches(int expected) {
+		Integer expectedValue = expected;
+		onView(withId(R.id.pocketpaint_transform_height_value))
+				.check(matches(hasValueEqualTo(expectedValue.toString())));
 		return this;
 	}
 
