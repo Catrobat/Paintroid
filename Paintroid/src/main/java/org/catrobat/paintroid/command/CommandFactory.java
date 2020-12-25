@@ -69,4 +69,6 @@ public interface CommandFactory {
 	Command createResizeCommand(int newWidth, int newHeight);
 
 	Command createStampCommand(Bitmap bitmap, PointF toolPosition, float boxWidth, float boxHeight, float boxRotation);
+
+	Command createCutCommand(PointF toolPosition, float boxWidth, float boxHeight, float boxRotation);
 }

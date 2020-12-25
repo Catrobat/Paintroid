@@ -20,6 +20,12 @@ class StampToolViewInteraction(viewInteraction: ViewInteraction) : CustomViewInt
         return this
     }
 
+    fun performCut(): StampToolViewInteraction {
+        onView(withId(R.id.action_cut))
+                .perform(click())
+        return this
+    }
+
     fun performPaste(): StampToolViewInteraction {
         onView(withId(R.id.action_paste))
                 .perform(click())

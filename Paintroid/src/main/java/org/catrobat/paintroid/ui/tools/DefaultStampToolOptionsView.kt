@@ -10,11 +10,16 @@ import org.catrobat.paintroid.tools.options.StampToolOptionsView
 class DefaultStampToolOptionsView(rootView: ViewGroup) : StampToolOptionsView {
     private val pasteChip: Chip
     private val copyChip: Chip
+    private val cutChip: Chip
     private var callback: StampToolOptionsView.Callback? = null
 
     private fun initializeListeners() {
         copyChip.setOnClickListener {
             callback?.copyClicked()
+        }
+
+        cutChip.setOnClickListener {
+            callback?.cutClicked()
         }
 
         pasteChip.setOnClickListener {
@@ -35,6 +40,7 @@ class DefaultStampToolOptionsView(rootView: ViewGroup) : StampToolOptionsView {
         val stampToolOptionsView: View = inflater.inflate(R.layout.dialog_pocketpaint_stamp_tool, rootView)
         copyChip = stampToolOptionsView.findViewById(R.id.action_copy)
         pasteChip = stampToolOptionsView.findViewById(R.id.action_paste)
+        cutChip = stampToolOptionsView.findViewById(R.id.action_cut)
         enablePaste(false)
         initializeListeners()
     }
