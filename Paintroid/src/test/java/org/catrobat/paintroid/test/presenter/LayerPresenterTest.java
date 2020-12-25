@@ -40,6 +40,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -182,12 +183,11 @@ public class LayerPresenterTest {
 		layerModel.addLayerAt(1, mock(Layer.class));
 		layerModel.addLayerAt(2, mock(Layer.class));
 		layerModel.addLayerAt(3, mock(Layer.class));
-		layerModel.addLayerAt(4, mock(Layer.class));
 
 		createPresenter();
 		int result = layerPresenter.getLayerCount();
 
-		assertEquals(5, result);
+		assertEquals(4, result);
 	}
 
 	@Test
@@ -269,8 +269,8 @@ public class LayerPresenterTest {
 		View view = mock(View.class);
 		Layer firstLayer = new Layer(null);
 		Layer secondLayer = new Layer(null);
-		firstLayer.setCheckBox(true);
-		secondLayer.setCheckBox(true);
+		assertTrue(firstLayer.getCheckBox());
+		assertTrue(secondLayer.getCheckBox());
 		layerModel.addLayerAt(0, firstLayer);
 		layerModel.addLayerAt(1, secondLayer);
 		createPresenter();

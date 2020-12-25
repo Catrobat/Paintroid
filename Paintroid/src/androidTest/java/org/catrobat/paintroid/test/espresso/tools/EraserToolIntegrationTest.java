@@ -58,7 +58,7 @@ public class EraserToolIntegrationTest {
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Test
-	public void testEraseNothing() {
+	public void testEraseOnEmptyBitmap() {
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 
@@ -73,7 +73,7 @@ public class EraserToolIntegrationTest {
 	}
 
 	@Test
-	public void testErase() {
+	public void testEraseSinglePixel() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
@@ -128,6 +128,11 @@ public class EraserToolIntegrationTest {
 
 	@Test
 	public void testChangeEraserBrushSize() {
+		int newStrokeWidth = 90;
+		onBrushPickerView().onStrokeWidthSeekBar()
+				.perform(setProgress(newStrokeWidth))
+				.check(matches(withProgress(newStrokeWidth)));
+
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
@@ -139,11 +144,11 @@ public class EraserToolIntegrationTest {
 				.performOpenToolOptionsView();
 
 		onBrushPickerView().onStrokeWidthSeekBar()
-				.check(matches(allOf(isDisplayed(), withProgress(DEFAULT_STROKE_WIDTH))));
+				.check(matches(allOf(isDisplayed(), withProgress(newStrokeWidth))));
 		onBrushPickerView().onStrokeWidthTextView()
-				.check(matches(allOf(isDisplayed(), withText(TEXT_DEFAULT_STROKE_WIDTH))));
+				.check(matches(allOf(isDisplayed(), withText(Integer.toString(newStrokeWidth)))));
 
-		int newStrokeWidth = 80;
+		newStrokeWidth = 80;
 		onBrushPickerView().onStrokeWidthSeekBar()
 				.perform(setProgress(newStrokeWidth))
 				.check(matches(withProgress(newStrokeWidth)));
@@ -163,11 +168,19 @@ public class EraserToolIntegrationTest {
 
 	@Test
 	public void testChangeEraserBrushForm() {
+		onBrushPickerView()
+				.onStrokeWidthSeekBar()
+				.perform(setProgress(70));
+
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+
+		onBrushPickerView()
+				.onStrokeWidthSeekBar()
+				.perform(setProgress(50));
 
 		onToolBarView()
 				.performSelectTool(ToolType.ERASER)

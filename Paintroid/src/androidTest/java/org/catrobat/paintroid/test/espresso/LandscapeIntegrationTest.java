@@ -44,7 +44,6 @@ import androidx.test.rule.ActivityTestRule;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getMainActivity;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
@@ -61,7 +60,6 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
@@ -71,33 +69,33 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class LandscapeIntegrationTest {
 
+	private MainActivity mainActivity;
+
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-	@Before
-	public void setUp() {
-		onToolBarView()
-				.performSelectTool(ToolType.BRUSH);
-
-		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
-	}
-
 	private Tool getCurrentTool() {
-		return getMainActivity().toolReference.get();
+		return mainActivity.toolReference.get();
 	}
 
 	private ToolOptionsViewController getToolOptionsViewController() {
-		return getMainActivity().toolOptionsViewController;
+		return mainActivity.toolOptionsViewController;
+	}
+
+	@Before
+	public void setUp() {
+		mainActivity = activityTestRule.getActivity();
 	}
 
 	@Test
 	public void testLandscapeMode() {
-		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 	}
 
 	@Test
 	public void testTools() {
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 		for (ToolType toolType : ToolType.values()) {
 			if (toolType == ToolType.IMPORTPNG
 					|| toolType == ToolType.COLORCHOOSER
@@ -130,27 +128,130 @@ public class LandscapeIntegrationTest {
 	}
 
 	@Test
-	public void testCorrectSelectionInBothOrientations() {
-		for (ToolType toolType : ToolType.values()) {
-			if (toolType == ToolType.IMPORTPNG
-					|| toolType == ToolType.COLORCHOOSER
-					|| toolType == ToolType.REDO
-					|| toolType == ToolType.UNDO
-					|| toolType == ToolType.LAYER) {
-				continue;
-			}
+	public void testCorrectSelectionInBothOrientationsBrushTool() {
+		ToolType toolType = ToolType.BRUSH;
 
-			onToolBarView()
-					.performSelectTool(toolType);
+		onToolBarView()
+			.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 
-			setOrientation(SCREEN_ORIENTATION_PORTRAIT);
-			assertEquals(toolType, getCurrentTool().getToolType());
-			setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
-		}
+		assertEquals(toolType, getCurrentTool().getToolType());
+	}
+
+	@Test
+	public void testCorrectSelectionInBothOrientationsCursorTool() {
+		ToolType toolType = ToolType.CURSOR;
+
+		onToolBarView()
+				.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(toolType, getCurrentTool().getToolType());
+	}
+
+	@Test
+	public void testCorrectSelectionInBothOrientationsTransformTool() {
+		ToolType toolType = ToolType.TRANSFORM;
+
+		onToolBarView()
+				.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(toolType, getCurrentTool().getToolType());
+	}
+
+	@Test
+	public void testCorrectSelectionInBothOrientationsFillTool() {
+		ToolType toolType = ToolType.FILL;
+
+		onToolBarView()
+				.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(toolType, getCurrentTool().getToolType());
+	}
+
+	@Test
+	public void testCorrectSelectionInBothOrientationsHandTool() {
+		ToolType toolType = ToolType.HAND;
+
+		onToolBarView()
+				.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(toolType, getCurrentTool().getToolType());
+	}
+
+	@Test
+	public void testCorrectSelectionInBothOrientationsEraserTool() {
+		ToolType toolType = ToolType.ERASER;
+
+		onToolBarView()
+				.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(toolType, getCurrentTool().getToolType());
+	}
+
+	@Test
+	public void testCorrectSelectionInBothOrientationsLineTool() {
+		ToolType toolType = ToolType.LINE;
+
+		onToolBarView()
+				.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(toolType, getCurrentTool().getToolType());
+	}
+
+	@Test
+	public void testCorrectSelectionInBothOrientationsPipetteTool() {
+		ToolType toolType = ToolType.PIPETTE;
+
+		onToolBarView()
+				.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(toolType, getCurrentTool().getToolType());
+	}
+
+	@Test
+	public void testCorrectSelectionInBothOrientationsShapeTool() {
+		ToolType toolType = ToolType.SHAPE;
+
+		onToolBarView()
+				.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(toolType, getCurrentTool().getToolType());
+	}
+
+	@Test
+	public void testCorrectSelectionInBothOrientationsStampTool() {
+		ToolType toolType = ToolType.STAMP;
+
+		onToolBarView()
+				.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(toolType, getCurrentTool().getToolType());
+	}
+
+	@Test
+	public void testCorrectSelectionInBothOrientationsTextTool() {
+		ToolType toolType = ToolType.TEXT;
+
+		onToolBarView()
+				.performSelectTool(toolType);
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
+		assertEquals(toolType, getCurrentTool().getToolType());
 	}
 
 	@Test
 	public void testMoreOptionsDrawerAppearsAndAllItemsExist() {
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
+
 		onTopBarView()
 				.performOpenMoreOptions();
 
@@ -163,6 +264,7 @@ public class LandscapeIntegrationTest {
 				.checkItemExists(R.string.menu_save_image)
 				.checkItemExists(R.string.menu_save_copy)
 				.checkItemExists(R.string.menu_new_image)
+				.checkItemExists(R.string.share_image_menu)
 
 				.checkItemDoesNotExist(R.string.menu_discard_image)
 				.checkItemDoesNotExist(R.string.menu_export);
@@ -170,6 +272,7 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testOpenColorPickerDialogInLandscape() {
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 		onColorPickerView()
 				.performOpenColorPicker();
 
@@ -179,6 +282,7 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testOpenColorPickerDialogChooseColorInLandscape() {
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 		onColorPickerView()
 				.performOpenColorPicker();
 
@@ -198,6 +302,7 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testOpenColorPickerDialogApplyColorInLandscape() {
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 		int[] colors = getColorArrayFromResource(activityTestRule.getActivity(), R.array.pocketpaint_color_picker_preset_colors);
 
 		for (int i = 0; i < colors.length; i++) {
@@ -239,6 +344,7 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testScrollToColorChooserOk() {
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 		onColorPickerView()
 				.performOpenColorPicker();
 
@@ -248,6 +354,7 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testColorPickerDialogSwitchTabsInLandscape() {
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 		onColorPickerView()
 				.performOpenColorPicker();
 
@@ -263,18 +370,11 @@ public class LandscapeIntegrationTest {
 				.perform(click());
 		onView(withClassName(is(RgbSelectorView.class.getName())))
 				.check(matches(isDisplayed()));
-
-		onView(withId(R.id.color_picker_rgb_base_layout)).perform(swipeDown());
-
-		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset)))
-				.perform(click());
-		onView(withClassName(is(PresetSelectorView.class.getName())))
-				.check(matches(isDisplayed()));
+		pressBack();
 	}
 
 	@Test
 	public void testFullscreenPortraitOrientationChangeWithBrush() {
-		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 
 		onTopBarView()
 				.performOpenMoreOptions();
@@ -302,18 +402,12 @@ public class LandscapeIntegrationTest {
 		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 
 		pressBack();
-
-		onToolBarView()
-				.performOpenToolOptionsView()
-				.performCloseToolOptionsView();
 	}
 
 	@Test
 	public void testFullscreenPortraitOrientationChangeWithShape() {
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
-
-		setOrientation(SCREEN_ORIENTATION_PORTRAIT);
 
 		onTopBarView()
 				.performOpenMoreOptions();
@@ -352,7 +446,7 @@ public class LandscapeIntegrationTest {
 
 	@Test
 	public void testIfCurrentToolIsShownInBottomNavigation() {
-
+		setOrientation(SCREEN_ORIENTATION_LANDSCAPE);
 		for (ToolType toolType : ToolType.values()) {
 			if (toolType == ToolType.IMPORTPNG
 					|| toolType == ToolType.COLORCHOOSER

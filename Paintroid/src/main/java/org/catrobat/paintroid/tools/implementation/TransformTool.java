@@ -65,6 +65,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 	private boolean cropRunFinished = false;
 	private boolean maxImageResolutionInformationAlreadyShown = false;
+	private boolean zeroSizeBitmap = false;
 
 	private TransformToolOptionsView transformToolOptionsView;
 	private NumberRangeFilter rangeFilterHeight;
@@ -97,7 +98,11 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		toolOptionsViewController.setCallback(new ToolOptionsViewController.Callback() {
 			@Override
 			public void onHide() {
-				contextCallback.showNotification(R.string.transform_info_text, ContextCallback.NotificationDuration.LONG);
+				if (!zeroSizeBitmap) {
+					contextCallback.showNotification(R.string.transform_info_text, ContextCallback.NotificationDuration.LONG);
+				} else {
+					zeroSizeBitmap = false;
+				}
 			}
 
 			@Override
@@ -251,7 +256,8 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		int newHeight = (int) ((float) workspace.getHeight() / 100 * resizePercentage);
 
 		if (newWidth == 0 || newHeight == 0) {
-			contextCallback.showNotification(R.string.resize_cannot_resize_to_this_size);
+			zeroSizeBitmap = true;
+			contextCallback.showNotification(R.string.resize_cannot_resize_to_this_size, ContextCallback.NotificationDuration.LONG);
 		} else {
 			Command command = commandFactory.createResizeCommand(newWidth, newHeight);
 			commandManager.addCommand(command);

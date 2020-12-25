@@ -26,51 +26,39 @@ import android.graphics.PointF;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.espresso.util.wrappers.StampToolViewInteraction;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.drawable.DrawableShape;
+import org.catrobat.paintroid.tools.drawable.DrawableStyle;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import androidx.test.espresso.action.Tapper;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getScreenPointFromSurfaceCoordinates;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.StampToolViewInteraction.Companion;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
-
 @RunWith(AndroidJUnit4.class)
 public class StampToolIntegrationTest {
 
-	private static final int Y_CLICK_OFFSET = 25;
 	private static final float SCALE_25 = 0.25f;
 	private static final float STAMP_RESIZE_FACTOR = 1.5f;
-	// Rotation test
-	private static final float SQUARE_LENGTH = 300;
-	private static final int MIN_ROTATION = -450;
-	private static final int MAX_ROTATION = 450;
-	private static final int ROTATION_STEPSIZE = 30;
-	private static final float ROTATION_TOLERANCE = 10;
-	private static Tapper tapStampLong = UiInteractions.DefinedLongTap.withPressTimeout(1500);
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -89,81 +77,37 @@ public class StampToolIntegrationTest {
 		toolReference = mainActivity.toolReference;
 	}
 
-	@Ignore("Causes crashes on jenkins")
 	@Test
-	public void testBoundingboxAlgorithm() {
-		perspective.setScale(1.0f);
+	public void testBorders() {
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
 
-		PointF surfaceCenterPoint = getScreenPointFromSurfaceCoordinates(perspective.surfaceCenterX, perspective.surfaceCenterY);
-		onView(isRoot()).perform(touchAt(surfaceCenterPoint.x, surfaceCenterPoint.y - Y_CLICK_OFFSET - (SQUARE_LENGTH / 3)));
+		onShapeToolOptionsView()
+				.performSelectShape(DrawableShape.RECTANGLE)
+				.performSelectShapeDrawType(DrawableStyle.STROKE);
+
+		onTopBarView()
+				.performClickCheckmark();
 
 		onToolBarView()
 				.performSelectTool(ToolType.STAMP);
 
 		StampTool stampTool = (StampTool) toolReference.get();
+		stampTool.boxHeight -= 25;
+		stampTool.boxWidth -= 25;
 
-		stampTool.toolPosition.set(surfaceCenterPoint);
-		stampTool.boxWidth = SQUARE_LENGTH;
-		stampTool.boxHeight = SQUARE_LENGTH;
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+				.performCopy();
 
-		for (int rotationOfStampBox = MIN_ROTATION; rotationOfStampBox < MAX_ROTATION; rotationOfStampBox += ROTATION_STEPSIZE) {
+		int topLeft = stampTool.drawingBitmap.getPixel(0, 0);
+		int topRight = stampTool.drawingBitmap.getPixel(stampTool.drawingBitmap.getWidth() - 1, 0);
+		int bottomLeft = stampTool.drawingBitmap.getPixel(0, stampTool.drawingBitmap.getHeight() - 1);
+		int bottomRight = stampTool.drawingBitmap.getPixel(stampTool.drawingBitmap.getWidth() - 1, stampTool.drawingBitmap.getHeight() - 1);
 
-			stampTool.boxRotation = rotationOfStampBox;
-			stampTool.copyBoxContent();
-
-			Bitmap copyOfToolBitmap = stampTool.drawingBitmap.copy(Bitmap.Config.ARGB_8888, false);
-
-			float width = copyOfToolBitmap.getWidth();
-			float height = copyOfToolBitmap.getHeight();
-
-			// Find one of the black pixels
-
-			PointF pixelFound = null;
-			int[] pixelLine = new int[(int) width + 1];
-			for (int drawingBitmapYCoordinate = 0; drawingBitmapYCoordinate < height; drawingBitmapYCoordinate++) {
-				copyOfToolBitmap.getPixels(pixelLine, 0, (int) width, 0, drawingBitmapYCoordinate, (int) width, 1);
-				for (int drawingBitmapXCoordinate = 0; drawingBitmapXCoordinate < width; drawingBitmapXCoordinate++) {
-					int pixelColor = pixelLine[drawingBitmapXCoordinate];
-					if (pixelColor != 0) {
-						pixelFound = new PointF(drawingBitmapXCoordinate, drawingBitmapYCoordinate);
-						break;
-					}
-				}
-				if (pixelFound != null) {
-					break;
-				}
-			}
-
-			copyOfToolBitmap.recycle();
-
-			assertNotNull("The drawn black spot should be found by the stamp, but was not in the Bitmap after rotation", pixelFound);
-
-			// Check if the line from found pixel to center has a fitting rotation value
-
-			// angle of line = (x, y) to vector = (a,b) = (0,1)
-			float x = (SQUARE_LENGTH / 2) - pixelFound.x;
-			float y = (SQUARE_LENGTH / 2) - pixelFound.y;
-			float a = 0f;
-			float b = 1f;
-
-			double angle = Math.acos((x * a + y * b) / (Math.sqrt(x * x + y * y) * Math.sqrt(a * a + b * b)));
-			angle = Math.toDegrees(angle);
-
-			float rotationPositive = rotationOfStampBox;
-			if (rotationPositive < 0.0) {
-				rotationPositive = -rotationPositive;
-			}
-
-			while (rotationPositive > 360.0) {
-				rotationPositive -= 360.0;
-			}
-
-			if (rotationPositive > 180.0) {
-				rotationPositive = 360 - rotationPositive;
-			}
-
-			assertEquals(rotationPositive, angle, ROTATION_TOLERANCE);
-		}
+		assertEquals(topLeft, Color.BLACK);
+		assertEquals(topRight, Color.BLACK);
+		assertEquals(bottomLeft, Color.BLACK);
+		assertEquals(bottomRight, Color.BLACK);
 	}
 
 	@Test
@@ -177,9 +121,6 @@ public class StampToolIntegrationTest {
 
 		StampToolViewInteraction.Companion.onStampToolViewInteraction()
 				.performCopy();
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION, tapStampLong));
 
 		StampTool stampTool = (StampTool) toolReference.get();
 		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
@@ -230,13 +171,13 @@ public class StampToolIntegrationTest {
 		onLayerMenuView()
 				.performClose();
 
-		Companion.onStampToolViewInteraction()
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
 				.performCopy();
 
 		StampTool stampTool = (StampTool) toolReference.get();
 		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
 
-		Companion.onStampToolViewInteraction()
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
 				.performPaste();
 
 		onDrawingSurfaceView()
@@ -261,7 +202,7 @@ public class StampToolIntegrationTest {
 		stampTool.boxWidth = (int) (bitmapWidth * STAMP_RESIZE_FACTOR);
 		stampTool.boxHeight = (int) (bitmapHeight * STAMP_RESIZE_FACTOR);
 
-		Companion.onStampToolViewInteraction()
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
 				.performPaste();
 
 		assertNotNull(stampTool.drawingBitmap);
@@ -278,7 +219,7 @@ public class StampToolIntegrationTest {
 		Bitmap emptyBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
 				toolReference.get()).drawingBitmap);
 
-		Companion.onStampToolViewInteraction()
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
 				.performCopy();
 
 		Bitmap expectedBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)

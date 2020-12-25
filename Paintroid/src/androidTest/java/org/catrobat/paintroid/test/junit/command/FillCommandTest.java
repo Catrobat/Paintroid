@@ -33,6 +33,7 @@ import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -371,6 +372,7 @@ public class FillCommandTest {
 		}
 	}
 
+	@Ignore("Flaky test, sometimes fails on Jenkins. runtime.gc() is not an assurance that memory will be freed might.")
 	@Test
 	public void testCommandsDoNotLeakMemory() {
 		List<Command> commands = new LinkedList<>();

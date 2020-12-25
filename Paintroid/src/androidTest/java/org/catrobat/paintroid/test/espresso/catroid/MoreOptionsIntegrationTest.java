@@ -66,7 +66,7 @@ public class MoreOptionsIntegrationTest {
 	public void setUp() {
 		Intent intent = new Intent();
 		intent.putExtra(Constants.PAINTROID_PICTURE_PATH, "");
-		intent.putExtra(Constants.PAINTROID_PICTURE_NAME, "Look456");
+		intent.putExtra(Constants.PAINTROID_PICTURE_NAME, "testFile");
 		launchActivityRule.launchActivity(intent);
 	}
 

@@ -81,12 +81,12 @@ public class DefaultCommandManagerTest {
 	}
 
 	@Test
-	public void testIsUndoAvailable() {
+	public void testUndoInitiallyNotAvailable() {
 		assertFalse(commandManager.isUndoAvailable());
 	}
 
 	@Test
-	public void testIsRedoAvailable() {
+	public void testRedoInitiallyNotAvailable() {
 		assertFalse(commandManager.isRedoAvailable());
 	}
 
