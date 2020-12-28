@@ -91,8 +91,6 @@ public interface MainActivityContracts {
 
 		void finishActivity();
 
-		void showSaveBeforeReturnToCatroidDialog();
-
 		void showSaveBeforeFinishDialog();
 
 		void showSaveBeforeNewImageDialog();

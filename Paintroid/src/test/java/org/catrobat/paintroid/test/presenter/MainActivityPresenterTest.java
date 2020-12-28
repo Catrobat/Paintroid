@@ -224,17 +224,6 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testBackToCatroidClickedWhenUndoAvailableAndOpenedFromCatroidThenShowSaveBeforeReturnDialog() {
-		when(model.isOpenedFromCatroid()).thenReturn(true);
-		when(commandManager.isUndoAvailable()).thenReturn(true);
-
-		presenter.backToPocketCodeClicked();
-
-		verify(navigator).showSaveBeforeReturnToCatroidDialog();
-		verifyNoMoreInteractions(navigator);
-	}
-
-	@Test
 	public void testLoadImageClickedLoad() {
 		presenter.loadImageClicked();
 

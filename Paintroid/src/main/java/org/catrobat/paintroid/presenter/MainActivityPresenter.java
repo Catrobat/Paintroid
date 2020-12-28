@@ -176,7 +176,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (isImageUnchanged() || model.isSaved()) {
 			finishActivity();
 		} else if (model.isOpenedFromCatroid()) {
-			navigator.showSaveBeforeReturnToCatroidDialog();
+			saveBeforeFinish();
 		} else {
 			navigator.showSaveBeforeFinishDialog();
 		}
