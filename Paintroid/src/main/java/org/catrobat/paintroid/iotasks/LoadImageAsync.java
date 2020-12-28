@@ -79,6 +79,8 @@ public class LoadImageAsync extends AsyncTask<Void, Void, Bitmap> {
 
 		try {
 			ContentResolver resolver = callback.getContentResolver();
+			FileIO.filename = "image";
+
 			if (scaleImage) {
 				return FileIO.getBitmapFromUri(resolver, uri, maxWidth, maxHeight);
 			} else {
