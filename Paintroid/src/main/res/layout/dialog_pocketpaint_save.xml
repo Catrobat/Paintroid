@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:layout_width="244dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="27dp">
+
+        <TextView
+            android:id="@+id/pocketpaint_save_info_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/dialog_save_image_name"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/pocketpaint_image_name_save_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_vertical"
+            android:layout_marginTop="19dp"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:textSize="14sp"
+            tools:ignore="LabelFor" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="244dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="27dp">
+
+        <TextView
+            android:id="@+id/pocketpaint_image_format_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:text="@string/dialog_save_image_format"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/pocketpaint_save_dialog_spinner"
+            style="@style/PocketpaintSpinnerTheme"
+            android:layout_width="117dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:textSize="14sp"
+            android:theme="@style/CustomTextViewStyle"
+            android:spinnerMode="dropdown" />
+
+        <ImageButton
+            android:id="@+id/pocketpaint_btn_save_info"
+            style="@style/PocketPaintSelectableButton"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="96dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="11dp"
+            android:layout_toEndOf="@+id/pocketpaint_save_dialog_spinner"
+            android:contentDescription="@string/button_info"
+            android:src="@drawable/ic_pocketpaint_save_info" />
+
+        <View
+            android:layout_width="111dp"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="3dp"
+            android:background="@color/pocketpaint_main_drawing_surface_inactive" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/pocketpaint_save_format_specific_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

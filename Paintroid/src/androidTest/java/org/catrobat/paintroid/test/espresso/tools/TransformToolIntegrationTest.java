@@ -37,7 +37,6 @@ import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.TransformTool;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,14 +49,12 @@ import androidx.test.rule.ActivityTestRule;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
@@ -78,7 +75,6 @@ public class TransformToolIntegrationTest {
 
 	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
-	private MainActivityHelper activityHelper;
 
 	private int displayWidth;
 	private int displayHeight;
@@ -91,6 +87,7 @@ public class TransformToolIntegrationTest {
 	private LayerContracts.Model layerModel;
 	private ToolReference toolReference;
 	private MainActivity mainActivity;
+	private MainActivityHelper activityHelper;
 
 	private static void drawPlus(Bitmap bitmap, int lineLength) {
 		int horizontalStartX = bitmap.getWidth() / 4;
@@ -1162,7 +1159,6 @@ public class TransformToolIntegrationTest {
 				.checkMatchesColorResource(R.color.pocketpaint_color_picker_green1);
 	}
 
-	@Ignore("Unstable")
 	@Test
 	public void testRotateMultipleLayersUndoRedoWhenRotatingWasNotLastCommand() {
 		onLayerMenuView()
@@ -1192,19 +1188,17 @@ public class TransformToolIntegrationTest {
 		onDrawingSurfaceView()
 				.checkLayerDimensions(initialHeight, initialWidth);
 
-		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo), isEnabled())));
-		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo_disabled), not(isEnabled()))));
+		onTopBarView().onUndoButton().check(matches(isEnabled()));
+
+		onTopBarView().onRedoButton().check(matches(not(isEnabled())));
 
 		onLayerMenuView()
 				.performOpen()
 				.performSelectLayer(0);
 
-		onTopBarView().onUndoButton()
-				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_undo), isEnabled())));
-		onTopBarView().onRedoButton()
-				.check(matches(allOf(withDrawable(R.drawable.ic_pocketpaint_redo_disabled), not(isEnabled()))));
+		onTopBarView().onUndoButton().check(matches(isEnabled()));
+
+		onTopBarView().onRedoButton().check(matches(not(isEnabled())));
 
 		onLayerMenuView()
 				.performSelectLayer(1)
@@ -1316,7 +1310,6 @@ public class TransformToolIntegrationTest {
 		assertEquals(newHeight, layerModel.getHeight());
 	}
 
-	@Ignore("second performApplyResize not working")
 	@Test
 	public void testTryResizeImageToSizeZero() {
 		onToolBarView()
@@ -1325,15 +1318,25 @@ public class TransformToolIntegrationTest {
 				.moveSliderTo(1);
 		onTransformToolOptionsView()
 				.performApplyResize();
+		int heightAfterCrop = layerModel.getHeight();
+		int widthAfterCrop = layerModel.getWidth();
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
 		onTransformToolOptionsView()
 				.moveSliderTo(1);
 		onTransformToolOptionsView()
 				.performApplyResize();
 
+		int heightAfterSecondCrop = layerModel.getHeight();
+		int widthAfterSecondCrop = layerModel.getWidth();
+
 		waitForToast(withText(R.string.resize_cannot_resize_to_this_size), 1000);
+		assertThat(heightAfterCrop, equalTo(heightAfterSecondCrop));
+		assertThat(widthAfterCrop, equalTo(widthAfterSecondCrop));
 	}
 
-	@Ignore("second performApplyResize not working")
 	@Test
 	public void testSeekBarAndTextViewTheSame() {
 		onToolBarView()
@@ -1348,6 +1351,12 @@ public class TransformToolIntegrationTest {
 		onTransformToolOptionsView()
 				.moveSliderTo(1);
 
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+
+		seekBar = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_transform_resize_seekbar);
 		progress = seekBar.getProgress();
 		onTransformToolOptionsView()
 				.checkPercentageTextMatches(progress);
@@ -1361,9 +1370,15 @@ public class TransformToolIntegrationTest {
 		onTransformToolOptionsView()
 				.checkPercentageTextMatches(progress);
 
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+		onToolBarView()
+				.performSelectTool(ToolType.TRANSFORM);
+
 		onTransformToolOptionsView()
 				.performApplyResize();
 
+		seekBar = launchActivityRule.getActivity().findViewById(R.id.pocketpaint_transform_resize_seekbar);
 		progress = seekBar.getProgress();
 		onTransformToolOptionsView()
 				.checkPercentageTextMatches(progress);

@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.content.pm.ActivityInfo;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -52,7 +53,6 @@ import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -85,6 +85,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class TextToolIntegrationTest {
 	private static final String TEST_TEXT = "testing 123";
+	private static final String TEST_TEXT_ADVANCED = "testing 123 new";
 	private static final String TEST_ARABIC_TEXT = "السلام عليكم 123";
 	private static final String TEST_TEXT_MULTILINE = "testing\nmultiline\ntext\n\n123";
 
@@ -143,13 +144,13 @@ public class TextToolIntegrationTest {
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE));
-		onToolBarView()
-				.performSelectTool(ToolType.TEXT);
+
+		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(replaceText(TEST_TEXT_ADVANCED));
 
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
 		assertTrue(underlinedToggleButton.isChecked());
-		assertEquals(TEST_TEXT, textEditText.getText().toString());
+		assertEquals(TEST_TEXT_ADVANCED, textEditText.getText().toString());
 	}
 
 	@Test
@@ -231,7 +232,7 @@ public class TextToolIntegrationTest {
 				.performCloseToolOptionsView();
 
 		PointF boxPosition = getToolMemberBoxPosition();
-		PointF newBoxPosition = new PointF(boxPosition.x + 20, boxPosition.y + 20);
+		PointF newBoxPosition = new PointF(boxPosition.x + 100, boxPosition.y + 200);
 		setToolMemberBoxPosition(newBoxPosition);
 		setToolMemberBoxHeight(50.0f);
 		setToolMemberBoxWidth(50.0f);
@@ -368,7 +369,7 @@ public class TextToolIntegrationTest {
 			selectFormatting(FormattingOptions.ITALIC);
 			assertTrue(italicToggleButton.isChecked());
 			if (font != FormattingOptions.DUBAI) {
-				assertEquals(getToolMemberBoxWidth(), boxWidth, Float.MIN_VALUE);
+				assertEquals(getToolMemberBoxWidth(), boxWidth, 5);
 			} else {
 				assertTrue(getToolMemberItalic());
 			}
@@ -441,7 +442,18 @@ public class TextToolIntegrationTest {
 		int numberOfBlackPixels = countPixelsWithColor(pixelsTool, Color.BLACK);
 
 		PointF screenPoint = new PointF(activityHelper.getDisplayWidth() / 2.0f, activityHelper.getDisplayHeight() / 2.0f);
-		PointF canvasPoint = perspective.getCanvasPointFromSurfacePoint(getSurfacePointFromScreenPoint(screenPoint));
+		int statusBarHeight = 0;
+		int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = activity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+		PointF canvasPoint = new PointF(screenPoint.x, screenPoint.y - actionBarHeight - statusBarHeight);
 		canvasPoint.x = (float) Math.round(canvasPoint.x);
 		canvasPoint.y = (float) Math.round(canvasPoint.y);
 		setToolMemberBoxPosition(canvasPoint);

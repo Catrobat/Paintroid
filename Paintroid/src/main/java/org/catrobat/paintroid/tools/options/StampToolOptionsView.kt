@@ -10,6 +10,8 @@ interface StampToolOptionsView {
 
         fun copyClicked()
 
+        fun cutClicked()
+
         fun pasteClicked()
     }
 }

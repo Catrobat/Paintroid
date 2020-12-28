@@ -55,7 +55,7 @@ public class PipetteToolIntegrationTest {
 	}
 
 	@Test
-	public void testEmpty() {
+	public void testOnEmptyBitmap() {
 		onToolProperties()
 				.checkMatchesColor(Color.BLACK);
 
@@ -74,11 +74,13 @@ public class PipetteToolIntegrationTest {
 
 	@Test
 	public void testPipetteAfterBrushOnSingleLayer() {
+		onToolProperties()
+				.setColor(Color.RED);
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+				.checkPixelColor(Color.RED, BitmapLocationProvider.MIDDLE);
 
 		onToolProperties()
 				.setColorResource(R.color.pocketpaint_color_picker_transparent)
@@ -90,7 +92,7 @@ public class PipetteToolIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolProperties()
-				.checkMatchesColor(Color.BLACK);
+				.checkMatchesColor(Color.RED);
 	}
 
 	@Test
@@ -122,9 +124,35 @@ public class PipetteToolIntegrationTest {
 				.checkMatchesColor(Color.BLACK);
 	}
 
-	@Ignore("sometimes causes crash on jenkins")
+	@Ignore("Flaky on Jenkins, for further information https://github.com/Catrobat/Paintroid/pull/794")
 	@Test
 	public void testPipetteAfterUndo() {
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolBarView()
+				.performSelectTool(ToolType.PIPETTE);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onToolProperties()
+				.checkMatchesColor(Color.BLACK);
+
+		onTopBarView()
+				.performUndo();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onToolProperties()
+				.checkMatchesColor(Color.TRANSPARENT);
+	}
+
+	@Ignore("Flaky on Jenkins, for further information https://github.com/Catrobat/Paintroid/pull/794")
+	@Test
+	public void testPipetteAfterRedo() {
+
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
@@ -138,28 +166,8 @@ public class PipetteToolIntegrationTest {
 
 		onTopBarView()
 				.performUndo();
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-		onToolProperties()
-				.checkMatchesColor(Color.TRANSPARENT);
-	}
-
-	@Ignore("sometimes causes crash on jenkins")
-	@Test
-	public void testPipetteAfterRedo() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onToolBarView()
-				.performSelectTool(ToolType.PIPETTE);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-		onToolProperties()
-				.checkMatchesColor(Color.BLACK);
 
 		onTopBarView()
-				.performUndo()
 				.performRedo();
 
 		onDrawingSurfaceView()

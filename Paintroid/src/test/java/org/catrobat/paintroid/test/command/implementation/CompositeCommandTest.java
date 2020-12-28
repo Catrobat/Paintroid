@@ -52,7 +52,7 @@ public class CompositeCommandTest {
 	}
 
 	@Test
-	public void testRunAfterAdd() {
+	public void testRunAfterAddWithoutCurrentLayer() {
 		Canvas canvas = mock(Canvas.class);
 		LayerModel layerModel = new LayerModel();
 		Command firstCommand = mock(Command.class);

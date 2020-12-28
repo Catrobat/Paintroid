@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso.dialog;
 
 import android.content.res.Resources;
 import android.graphics.PointF;
+import android.os.Build;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.MainActivity;
@@ -32,6 +33,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -67,25 +69,33 @@ public class IndeterminateProgressDialogIntegrationTest {
 
 	@Test
 	public void testDialogIsShown() {
-		onView(withId(R.id.pocketpaint_progress_bar))
-				.check(matches(isDisplayed()));
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			onView(withId(R.id.pocketpaint_progress_bar))
+					.check(matches(isDisplayed()));
+		}
 	}
 
+	@RequiresApi(Build.VERSION_CODES.N)
 	@Test
 	public void testDialogIsNotCancelableOnBack() {
-		pressBack();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			pressBack();
 
-		onView(withId(R.id.pocketpaint_progress_bar))
-				.check(matches(isDisplayed()));
+			onView(withId(R.id.pocketpaint_progress_bar))
+					.check(matches(isDisplayed()));
+		}
 	}
 
+	@RequiresApi(Build.VERSION_CODES.N)
 	@Test
 	public void testDialogIsNotCancelable() {
-		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
-		PointF point = new PointF(-metrics.widthPixels / 4, -metrics.heightPixels / 4);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+			PointF point = new PointF((float) -metrics.widthPixels / 4, (float) -metrics.heightPixels / 4);
 
-		onView(withId(R.id.pocketpaint_progress_bar))
-				.perform(touchAt(point))
-				.check(matches(isDisplayed()));
+			onView(withId(R.id.pocketpaint_progress_bar))
+					.perform(touchAt(point))
+					.check(matches(isDisplayed()));
+		}
 	}
 }

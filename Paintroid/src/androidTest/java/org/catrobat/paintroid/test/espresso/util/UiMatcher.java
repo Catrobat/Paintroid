@@ -52,6 +52,7 @@ import androidx.test.espresso.ViewAssertion;
 import androidx.test.espresso.matcher.BoundedMatcher;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.espresso.util.HumanReadables;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -437,7 +438,11 @@ public final class UiMatcher {
 					Bitmap targetBitmap = ((BitmapDrawable) targetDrawable).getBitmap();
 					expectedBitmap = ((BitmapDrawable) expectedDrawable).getBitmap();
 					return targetBitmap.sameAs(expectedBitmap);
-				} else if (targetDrawable instanceof VectorDrawable) {
+				} else if (targetDrawable instanceof VectorDrawable || targetDrawable instanceof VectorDrawableCompat) {
+					Bitmap targetBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
+					expectedBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
+					return targetBitmap.sameAs(expectedBitmap);
+				} else if (targetDrawable instanceof StateListDrawable) {
 					Bitmap targetBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
 					expectedBitmap = vectorToBitmap((VectorDrawable) expectedDrawable);
 					return targetBitmap.sameAs(expectedBitmap);

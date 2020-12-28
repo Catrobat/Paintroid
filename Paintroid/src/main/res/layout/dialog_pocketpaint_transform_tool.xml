@@ -161,7 +161,9 @@
                 android:id="@+id/pocketpaint_transform_apply_resize_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/button_apply" />
+                android:clickable="true"
+                android:text="@string/button_apply"
+                android:focusable="true" />
         </LinearLayout>
 
         <TextView

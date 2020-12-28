@@ -190,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			Bitmap receivedBitmap = null;
 
 			try {
+				FileIO.filename = "image";
 				receivedBitmap = FileIO.getBitmapFromUri(getContentResolver(), receivedUri);
 			} catch (IOException e) {
 				Log.e("Can not read", "Unable to retrieve Bitmap from Uri");
@@ -235,11 +236,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		int i = item.getItemId();
 		if (i == R.id.pocketpaint_options_export) {
-			presenter.saveCopyClicked();
+			presenter.saveCopyClicked(true);
 		} else if (i == R.id.pocketpaint_options_save_image) {
 			presenter.saveImageClicked();
 		} else if (i == R.id.pocketpaint_options_save_duplicate) {
-			presenter.saveCopyClicked();
+			presenter.saveCopyClicked(false);
 		} else if (i == R.id.pocketpaint_options_open_image) {
 			presenter.loadImageClicked();
 		} else if (i == R.id.pocketpaint_options_new_image) {

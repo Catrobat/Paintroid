@@ -19,11 +19,10 @@
 
 package org.catrobat.paintroid.test.espresso.catroid;
 
-import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 
-import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
@@ -31,13 +30,13 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
@@ -45,21 +44,17 @@ import androidx.test.rule.GrantPermissionRule;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
 @RunWith(AndroidJUnit4.class)
 public class OpenedFromPocketCodeWithImageTest {
+
+	private static final String IMAGE_NAME = "testFile";
+	private static final String FILE_ENDING = ".png";
 
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, true);
@@ -71,10 +66,15 @@ public class OpenedFromPocketCodeWithImageTest {
 
 	@Before
 	public void setUp() {
-		imageFile = createImageFile();
+		String pathToFile =
+				launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+						+ File.separator
+						+ IMAGE_NAME
+						+ FILE_ENDING;
 
-		Intent extras = new Intent();
-		extras.putExtra(Constants.PAINTROID_PICTURE_PATH, imageFile.getAbsolutePath());
+		imageFile = new File(pathToFile);
+		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(imageFile));
+		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
 
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
@@ -87,24 +87,16 @@ public class OpenedFromPocketCodeWithImageTest {
 		}
 	}
 
-	@Ignore("Unstable")
 	@Test
 	public void testSave() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onTopBarView()
-			.onHomeClicked();
-
-		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
-		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
-
 		long lastModifiedBefore = imageFile.lastModified();
 		long fileSizeBefore = imageFile.length();
 
-		onView(withText(R.string.save_button_text)).perform(click());
+		Espresso.pressBackUnconditionally();
 
-		assertTrue(launchActivityRule.getActivity().isFinishing());
 		String path = launchActivityRule.getActivityResult().getResultData().getStringExtra(Constants.PAINTROID_PICTURE_PATH);
 		assertEquals(imageFile.getAbsolutePath(), path);
 
@@ -117,24 +109,12 @@ public class OpenedFromPocketCodeWithImageTest {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onTopBarView()
-			.onHomeClicked();
-
-		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
-		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
+		Espresso.pressBackUnconditionally();
 
 		long lastModifiedBefore = imageFile.lastModified();
 		long fileSizeBefore = imageFile.length();
 
 		assertThat("Image modified", imageFile.lastModified(), equalTo(lastModifiedBefore));
 		assertThat("Saved image length changed", imageFile.length(), equalTo(fileSizeBefore));
-	}
-
-	private File createImageFile() {
-		try {
-			return FileIO.createNewEmptyPictureFile("testFile", launchActivityRule.getActivity());
-		} catch (NullPointerException e) {
-			throw new AssertionError("Could not create temp file", e);
-		}
 	}
 }

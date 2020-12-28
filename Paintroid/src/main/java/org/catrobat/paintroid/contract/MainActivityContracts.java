@@ -57,6 +57,12 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
+		void showOverwriteDialog(int permissionCode);
+
+		void showPngInformationDialog();
+
+		void showJpgInformationDialog();
+
 		void sendFeedback();
 
 		void startWelcomeActivity(@ActivityRequestCode int requestCode);
@@ -91,13 +97,13 @@ public interface MainActivityContracts {
 
 		void finishActivity();
 
-		void showSaveBeforeReturnToCatroidDialog();
-
 		void showSaveBeforeFinishDialog();
 
 		void showSaveBeforeNewImageDialog();
 
 		void showSaveBeforeLoadImageDialog();
+
+		void showSaveImageInformationDialogWhenStandalone(int permissionCode, int imageNumber, boolean isExport);
 
 		void restoreFragmentListeners();
 
@@ -158,7 +164,7 @@ public interface MainActivityContracts {
 
 		void discardImageClicked();
 
-		void saveCopyClicked();
+		void saveCopyClicked(boolean isExport);
 
 		void saveImageClicked();
 
@@ -178,9 +184,17 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
+		void showOverwriteDialog(int permissionCode);
+
+		void showPngInformationDialog();
+
+		void showJpgInformationDialog();
+
 		void sendFeedback();
 
 		void onNewImage();
+
+		void switchBetweenVersions(int requestCode);
 
 		void handleActivityResult(int requestCode, int resultCode, Intent data);
 
@@ -229,6 +243,8 @@ public interface MainActivityContracts {
 		void bitmapLoadedFromSource(Bitmap loadedImage);
 
 		void setLayerAdapter(LayerAdapter layerAdapter);
+
+		int getImageNumber();
 
 		Bitmap getBitmap();
 	}

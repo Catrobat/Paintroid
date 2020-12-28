@@ -28,38 +28,42 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LayerTest {
 
 	@Mock
-	private Bitmap bitmap;
+	private Bitmap firstBitmap;
+
+	@Mock
+	private Bitmap secondBitmap;
 
 	@Test
 	public void testGetBitmap() {
-		Bitmap secondBitmap = mock(Bitmap.class);
-		Layer layer = new Layer(bitmap);
+		Layer firstLayer = new Layer(firstBitmap);
 		Layer secondLayer = new Layer(secondBitmap);
 
-		assertEquals(bitmap, layer.getBitmap());
+		assertEquals(firstBitmap, firstLayer.getBitmap());
 		assertEquals(secondBitmap, secondLayer.getBitmap());
+		assertTrue(firstLayer.getCheckBox());
+		assertTrue(secondLayer.getCheckBox());
 		verify(secondBitmap).getWidth();
 		verify(secondBitmap).getHeight();
-		verify(bitmap).getWidth();
-		verify(bitmap).getHeight();
+		verify(firstBitmap).getWidth();
+		verify(firstBitmap).getHeight();
 	}
 
 	@Test
 	public void testSetBitmap() {
-		Bitmap secondBitmap = mock(Bitmap.class);
-		Layer layer = new Layer(bitmap);
+		Layer layer = new Layer(firstBitmap);
 
 		layer.setBitmap(secondBitmap);
 
 		assertEquals(secondBitmap, layer.getBitmap());
-		verify(bitmap).getWidth();
-		verify(bitmap).getHeight();
+		assertTrue(layer.getCheckBox());
+		verify(firstBitmap).getWidth();
+		verify(firstBitmap).getHeight();
 	}
 }

@@ -40,8 +40,8 @@ public class StampTool extends BaseToolWithRectangleShape {
 	private static final String BUNDLE_TOOL_READY_FOR_PASTE = "BUNDLE_TOOL_READY_FOR_PASTE";
 	private static final String BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP";
 	private static final boolean ROTATION_ENABLED = true;
+	private final StampToolOptionsView stampToolOptionsView;
 	protected boolean readyForPaste;
-	private StampToolOptionsView stampToolOptionsView;
 
 	public StampTool(StampToolOptionsView stampToolOptionsView, ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 					ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
@@ -59,6 +59,14 @@ public class StampTool extends BaseToolWithRectangleShape {
 						public void copyClicked() {
 							highlightBox();
 							copyBoxContent();
+							StampTool.this.stampToolOptionsView.enablePaste(true);
+						}
+
+						@Override
+						public void cutClicked() {
+							highlightBox();
+							copyBoxContent();
+							cutBoxContent();
 							StampTool.this.stampToolOptionsView.enablePaste(true);
 						}
 
@@ -94,6 +102,11 @@ public class StampTool extends BaseToolWithRectangleShape {
 
 	private void pasteBoxContent() {
 		Command command = commandFactory.createStampCommand(drawingBitmap, toolPosition, boxWidth, boxHeight, boxRotation);
+		commandManager.addCommand(command);
+	}
+
+	private void cutBoxContent() {
+		Command command = commandFactory.createCutCommand(toolPosition, boxWidth, boxHeight, boxRotation);
 		commandManager.addCommand(command);
 	}
 

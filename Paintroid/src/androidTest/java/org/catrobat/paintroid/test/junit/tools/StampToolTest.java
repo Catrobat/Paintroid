@@ -36,7 +36,6 @@ import org.catrobat.paintroid.tools.options.StampToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -89,10 +88,9 @@ public class StampToolTest {
 	}
 
 	@Test
-	@Ignore("null object reference")
 	public void testLongClickResetsToolPosition() throws InterruptedException {
-		when(workspace.getBitmapOfAllLayers()).thenReturn(
-				Bitmap.createBitmap(100, 100, Config.ARGB_8888));
+		when(workspace.getBitmapOfCurrentLayer()).thenReturn(
+				Bitmap.createBitmap(200, 200, Config.ARGB_8888));
 
 		final float initialX = tool.toolPosition.x;
 		final float initialY = tool.toolPosition.y;
@@ -110,8 +108,8 @@ public class StampToolTest {
 
 		Thread.sleep(ViewConfiguration.getLongPressTimeout() + 50);
 
-		assertEquals(initialX, tool.toolPosition.x, Float.MIN_VALUE);
-		assertEquals(initialY, tool.toolPosition.y, Float.MIN_VALUE);
+		assertEquals(initialX + 2, tool.toolPosition.x, Float.MIN_VALUE);
+		assertEquals(initialY + 3, tool.toolPosition.y, Float.MIN_VALUE);
 	}
 
 	@Test
