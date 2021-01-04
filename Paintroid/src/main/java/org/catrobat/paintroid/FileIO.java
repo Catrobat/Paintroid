@@ -105,7 +105,6 @@ public final class FileIO {
 			ContentValues contentValues = new ContentValues();
 			contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
 			contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/*");
-
 			contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
 
 			imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
