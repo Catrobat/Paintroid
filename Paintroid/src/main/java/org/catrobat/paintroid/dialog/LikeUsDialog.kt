@@ -12,11 +12,11 @@ class LikeUsDialog : MainActivityDialogFragment() {
 		return AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
 				.setMessage(getString(R.string.pocketpaint_like_us))
 				.setTitle(getString(R.string.pocketpaint_rate_us_title))
-				.setPositiveButton(R.string.pocketpaint_yes) { dialog, which ->
+				.setPositiveButton(R.string.pocketpaint_yes) { _, _ ->
 					presenter.showRateUsDialog()
 					dismiss()
 				}
-				.setNegativeButton(R.string.pocketpaint_no) { dialog, which ->
+				.setNegativeButton(R.string.pocketpaint_no) { _, _ ->
 					presenter.showFeedbackDialog()
 					dismiss()
 				}

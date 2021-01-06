@@ -70,7 +70,7 @@ class AboutDialog : AppCompatDialogFragment() {
 		return AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
 				.setTitle(R.string.pocketpaint_about_title)
 				.setView(layout)
-				.setPositiveButton(R.string.done) { dialog, which -> dismiss() }
+				.setPositiveButton(R.string.done) { _, _ -> dismiss() }
 				.create()
 	}
 
