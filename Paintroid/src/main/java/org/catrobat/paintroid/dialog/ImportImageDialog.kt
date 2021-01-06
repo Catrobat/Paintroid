@@ -31,7 +31,7 @@ class ImportImageDialog : MainActivityDialogFragment() {
 		return AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
 				.setTitle(R.string.dialog_import_image_title)
 				.setView(layout)
-				.setNegativeButton(R.string.pocketpaint_cancel) { dialog, which -> dismiss() }
+				.setNegativeButton(R.string.pocketpaint_cancel) { _, _ -> dismiss() }
 				.create()
 	}
 

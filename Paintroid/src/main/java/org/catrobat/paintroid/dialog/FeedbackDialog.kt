@@ -13,7 +13,7 @@ class FeedbackDialog : AppCompatDialogFragment() {
 		return AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
 				.setMessage(R.string.pocketpaint_feedback)
 				.setTitle(R.string.pocketpaint_rate_us_title)
-				.setPositiveButton(R.string.pocketpaint_ok)  { dialog, which -> dismiss() }
+				.setPositiveButton(R.string.pocketpaint_ok)  { _, _ -> dismiss() }
 				.create()
 	}
 
