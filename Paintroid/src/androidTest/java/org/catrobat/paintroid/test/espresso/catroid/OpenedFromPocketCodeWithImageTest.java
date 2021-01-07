@@ -26,6 +26,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Environment;
 
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
@@ -76,6 +77,8 @@ public class OpenedFromPocketCodeWithImageTest {
 
 	private static final String IMAGE_NAME = "testFile";
 	private static final String IMAGE_TO_LOAD_NAME = "loadFile";
+	private static final String ENDING_PNG = "png";
+	private static final String ENDING_JPG = "jpg";
 
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, true);
@@ -114,7 +117,7 @@ public class OpenedFromPocketCodeWithImageTest {
 	}
 
 	@Test
-	public void testSave() {
+	public void testSavePNG() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
@@ -126,10 +129,33 @@ public class OpenedFromPocketCodeWithImageTest {
 	}
 
 	@Test
-	public void testLoadWithoutChange() {
+	public void testSaveJPG() {
+		deletionFileList.clear();
+		String pathToJpegFile =
+				launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+						+ File.separator
+						+ IMAGE_NAME
+						+ "." + ENDING_JPG;
+
+		imageFile = new File(pathToJpegFile);
+		deletionFileList.add(imageFile);
+		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(imageFile));
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
 		long lastModifiedBefore = imageFile.lastModified();
 		long fileSizeBefore = imageFile.length();
-		createImageIntent();
+
+		Espresso.pressBackUnconditionally();
+		verifyImageFile(lastModifiedBefore, fileSizeBefore);
+	}
+
+	@Test
+	public void testLoadWithoutChangePNG() {
+		long lastModifiedBefore = imageFile.lastModified();
+		long fileSizeBefore = imageFile.length();
+		createImageIntent(ENDING_PNG);
 
 		onTopBarView()
 				.performOpenMoreOptions();
@@ -145,10 +171,52 @@ public class OpenedFromPocketCodeWithImageTest {
 	}
 
 	@Test
-	public void testLoadWithChange() {
+	public void testLoadWithoutChangeJPG() {
 		long lastModifiedBefore = imageFile.lastModified();
 		long fileSizeBefore = imageFile.length();
-		createImageIntent();
+		createImageIntent(ENDING_JPG);
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_load_image)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.WHITE, BitmapLocationProvider.MIDDLE);
+
+		Espresso.pressBackUnconditionally();
+		verifyImageFile(lastModifiedBefore, fileSizeBefore);
+	}
+
+	@Test
+	public void testLoadWithChangeJPG() {
+		long lastModifiedBefore = imageFile.lastModified();
+		long fileSizeBefore = imageFile.length();
+		createImageIntent(ENDING_JPG);
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_load_image)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.WHITE, BitmapLocationProvider.MIDDLE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+
+		Espresso.pressBackUnconditionally();
+		verifyImageFile(lastModifiedBefore, fileSizeBefore);
+	}
+
+	@Test
+	public void testLoadWithChangePNG() {
+		long lastModifiedBefore = imageFile.lastModified();
+		long fileSizeBefore = imageFile.length();
+		createImageIntent(ENDING_PNG);
 
 		onTopBarView()
 				.performOpenMoreOptions();
@@ -189,24 +257,34 @@ public class OpenedFromPocketCodeWithImageTest {
 		}
 	}
 
-	private void createImageIntent() {
+	private void createImageIntent(String ending) {
 		Intent intent = new Intent();
-		intent.setData(createTestImageFile());
+		intent.setData(createTestImageFile(ending));
 		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
 	}
 
-	private Uri createTestImageFile() {
+	private Uri createTestImageFile(String ending) {
 		Bitmap bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		canvas.drawColor(Color.WHITE);
 		canvas.drawBitmap(bitmap, 0F, 0F, null);
+		File imageFile = null;
+		if (ending.equals("jpg") || ending.equals("jpeg")) {
+			imageFile = new File(activity.getExternalFilesDir(null).getAbsolutePath(), IMAGE_TO_LOAD_NAME + ".jpg");
+		} else {
+			imageFile = new File(activity.getExternalFilesDir(null).getAbsolutePath(), IMAGE_TO_LOAD_NAME + ".png");
+		}
 
-		File imageFile = new File(activity.getExternalFilesDir(null).getAbsolutePath(), IMAGE_TO_LOAD_NAME + ".jpg");
 		Uri imageUri = Uri.fromFile(imageFile);
 		try {
 			OutputStream fos = activity.getContentResolver().openOutputStream(Objects.requireNonNull(imageUri));
-			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos));
+			if (ending.equals("jpg") || ending.equals("jpeg")) {
+				assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos));
+			} else {
+				assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos));
+			}
+
 			assert fos != null;
 			fos.close();
 		} catch (IOException e) {
