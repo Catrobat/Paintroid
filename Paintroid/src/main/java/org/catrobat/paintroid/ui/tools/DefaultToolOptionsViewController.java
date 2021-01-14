@@ -33,6 +33,7 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 	private final ViewGroup bottomNavigation;
 	private final ViewGroup mainToolOptions;
 	private final View topBarSpecificViewCheckmark;
+	private final View topBarSpecificViewCancel;
 
 	private boolean toolOptionsShown;
 	private boolean enabled = true;
@@ -43,6 +44,7 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 		mainToolOptions = activity.findViewById(R.id.pocketpaint_main_tool_options);
 		toolSpecificOptionsLayout = activity.findViewById(R.id.pocketpaint_layout_tool_specific_options);
 		topBarSpecificViewCheckmark = activity.findViewById(R.id.pocketpaint_btn_top_checkmark);
+		topBarSpecificViewCancel = activity.findViewById(R.id.pocketpaint_btn_top_cancel);
 
 		mainToolOptions.setVisibility(View.INVISIBLE);
 	}
@@ -150,5 +152,15 @@ public class DefaultToolOptionsViewController implements ToolOptionsViewControll
 	@Override
 	public void hideCheckmark() {
 		topBarSpecificViewCheckmark.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void showCancelmark() {
+		topBarSpecificViewCancel.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public void hideCancelmark() {
+		topBarSpecificViewCancel.setVisibility(View.GONE);
 	}
 }

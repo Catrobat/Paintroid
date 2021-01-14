@@ -165,6 +165,21 @@ public class DefaultToolController implements ToolController {
 		} else {
 			toolOptionsViewController.hideCheckmark();
 		}
+		if (toolType == ToolType.PIPETTE
+				||toolType == ToolType.FILL
+				||toolType == ToolType.STAMP
+				||toolType == ToolType.LINE
+				||toolType == ToolType.CURSOR
+				||toolType == ToolType.ERASER
+				||toolType == ToolType.HAND
+				||toolType == ToolType.TEXT
+				|| toolType == ToolType.TRANSFORM
+				|| toolType == ToolType.SHAPE
+				|| toolType == ToolType.IMPORTPNG) {
+			toolOptionsViewController.showCancelmark();
+		} else {
+			toolOptionsViewController.hideCancelmark();
+		}
 
 		tool = toolFactory.createTool(toolType, toolOptionsViewController, commandManager, workspace, toolPaint, contextCallback, onColorPickedListener);
 		toolOptionsViewController.resetToOrigin();

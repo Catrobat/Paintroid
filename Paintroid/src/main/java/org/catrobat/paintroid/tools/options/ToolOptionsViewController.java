@@ -34,5 +34,9 @@ public interface ToolOptionsViewController extends ToolOptionsVisibilityControll
 
 	void hideCheckmark();
 
+	void showCancelmark();
+
+	void hideCancelmark();
+
 	ViewGroup getToolSpecificOptionsLayout();
 }

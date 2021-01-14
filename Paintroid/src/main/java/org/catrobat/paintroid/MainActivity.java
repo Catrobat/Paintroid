@@ -132,6 +132,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 	private DefaultToolController defaultToolController;
 	private BottomNavigationViewHolder bottomNavigationViewHolder;
 	private CommandFactory commandFactory;
+	private BottomBarViewHolder bottomBarViewHolder;
+	private TopBarViewHolder topBarViewHolder;
+	private MainActivityContracts.Navigator navigator;
 
 	private Runnable deferredRequestPermissionsResult;
 
@@ -317,8 +320,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		toolOptionsViewController = new DefaultToolOptionsViewController(this);
 		drawerLayoutViewHolder = new DrawerLayoutViewHolder(drawerLayout);
-		TopBarViewHolder topBarViewHolder = new TopBarViewHolder(topBarLayout);
-		BottomBarViewHolder bottomBarViewHolder = new BottomBarViewHolder(bottomBarLayout);
+		topBarViewHolder = new TopBarViewHolder(topBarLayout);
+		bottomBarViewHolder = new BottomBarViewHolder(bottomBarLayout);
 		bottomNavigationViewHolder = new BottomNavigationViewHolder(bottomNavigationView, getResources().getConfiguration().orientation, getApplicationContext());
 
 		perspective = new Perspective(layerModel.getWidth(), layerModel.getHeight());
@@ -328,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 				drawingSurface.refreshDrawingSurface();
 			}
 		});
-		MainActivityContracts.Navigator navigator = new MainActivityNavigator(this, toolReference);
+		navigator = new MainActivityNavigator(this, toolReference);
 		MainActivityContracts.Interactor interactor = new MainActivityInteractor();
 		model = new MainActivityModel();
 		ContextCallback contextCallback = new DefaultContextCallback(context);
@@ -346,6 +349,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		setBottomBarListeners(bottomBarViewHolder);
 		setBottomNavigationListeners(bottomNavigationViewHolder);
 		setActionBarToolTips(topBarViewHolder, context);
+	}
+
+	private void setTool(ToolType toolType) {
+		bottomBarViewHolder.hide();
+		bottomNavigationViewHolder.showCurrentTool(toolType);
+
+		int offset = topBarViewHolder.getHeight();
+		navigator.showToolChangeToast(offset, toolType.getNameResource());
 	}
 
 	private void onCreateLayerMenu() {
@@ -414,6 +425,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 			public void onClick(View v) {
 				BaseToolWithShape tool = (BaseToolWithShape) toolReference.get();
 				tool.onClickOnButton();
+			}
+		});
+		topBar.cancelButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				toolOptionsViewController.resetToOrigin();
+				setTool(ToolType.BRUSH);
+				defaultToolController.switchTool(ToolType.BRUSH, true);
 			}
 		});
 	}
