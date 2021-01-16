@@ -17,33 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.command;
-
-public interface CommandManager {
-
-	void addCommandListener(CommandListener commandListener);
-
-	void removeCommandListener(CommandListener commandListener);
-
-	boolean isUndoAvailable();
-
-	boolean isRedoAvailable();
-
-	void addCommand(Command command);
-
-	void undo();
-
-	void redo();
-
-	void reset();
-
-	void shutdown();
-
-	void setInitialStateCommand(Command command);
-
-	boolean isBusy();
-
-	interface CommandListener {
-		void commandPostExecute();
-	}
+package org.catrobat.paintroid.command
+interface CommandManager {
+  val isUndoAvailable:Boolean
+  val isRedoAvailable:Boolean
+  val isBusy:Boolean
+  fun addCommandListener(commandListener:CommandListener)
+  fun removeCommandListener(commandListener:CommandListener)
+  fun addCommand(command:Command)
+  fun undo()
+  fun redo()
+  fun reset()
+  fun shutdown()
+  fun setInitialStateCommand(command:Command)
+  interface CommandListener {
+    fun commandPostExecute()
+  }
 }
