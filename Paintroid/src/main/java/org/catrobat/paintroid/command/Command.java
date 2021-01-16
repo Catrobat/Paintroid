@@ -17,15 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.command;
-
-import android.graphics.Canvas;
-
-import org.catrobat.paintroid.contract.LayerContracts;
-
-public interface Command {
-
-	void run(Canvas canvas, LayerContracts.Model layerModel);
-
-	void freeResources();
+package org.catrobat.paintroid.command
+import android.graphics.Canvas
+import org.catrobat.paintroid.contract.LayerContracts
+interface Command {
+  fun run(canvas:Canvas, layerModel:LayerContracts.Model)
+  fun freeResources()
 }
