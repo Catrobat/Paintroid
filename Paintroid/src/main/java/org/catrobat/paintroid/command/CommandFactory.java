@@ -17,58 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.command;
-
-import android.graphics.Bitmap;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.graphics.RectF;
-
-import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
-import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
-import org.catrobat.paintroid.tools.drawable.ShapeDrawable;
-
-public interface CommandFactory {
-
-	Command createInitCommand(int width, int height);
-
-	Command createInitCommand(Bitmap bitmap);
-
-	Command createResetCommand();
-
-	Command createAddLayerCommand();
-
-	Command createSelectLayerCommand(int position);
-
-	Command createRemoveLayerCommand(int index);
-
-	Command createReorderLayersCommand(int position, int swapWith);
-
-	Command createMergeLayersCommand(int position, int mergeWith);
-
-	Command createRotateCommand(RotateDirection rotateDirection);
-
-	Command createFlipCommand(FlipDirection flipDirection);
-
-	Command createCropCommand(int resizeCoordinateXLeft, int resizeCoordinateYTop,
-			int resizeCoordinateXRight, int resizeCoordinateYBottom,
-			int maximumBitmapResolution);
-
-	Command createPointCommand(Paint paint, PointF coordinate);
-
-	Command createFillCommand(int x, int y, Paint paint, float colorTolerance);
-
-	Command createGeometricFillCommand(ShapeDrawable shapeDrawable, Point position, RectF box, float boxRotation, Paint paint);
-
-	Command createPathCommand(Paint paint, Path path);
-
-	Command createTextToolCommand(String[] multilineText, Paint textPaint, int boxOffset, float boxWidth, float boxHeight, PointF toolPosition, float boxRotation);
-
-	Command createResizeCommand(int newWidth, int newHeight);
-
-	Command createStampCommand(Bitmap bitmap, PointF toolPosition, float boxWidth, float boxHeight, float boxRotation);
-
-	Command createCutCommand(PointF toolPosition, float boxWidth, float boxHeight, float boxRotation);
+package org.catrobat.paintroid.command
+import android.graphics.Bitmap
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.Point
+import android.graphics.PointF
+import android.graphics.RectF
+import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection
+import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection
+import org.catrobat.paintroid.tools.drawable.ShapeDrawable
+interface CommandFactory {
+  fun createInitCommand(width:Int, height:Int):Command
+  fun createInitCommand(bitmap:Bitmap):Command
+  fun createResetCommand():Command
+  fun createAddLayerCommand():Command
+  fun createSelectLayerCommand(position:Int):Command
+  fun createRemoveLayerCommand(index:Int):Command
+  fun createReorderLayersCommand(position:Int, swapWith:Int):Command
+  fun createMergeLayersCommand(position:Int, mergeWith:Int):Command
+  fun createRotateCommand(rotateDirection:RotateDirection):Command
+  fun createFlipCommand(flipDirection:FlipDirection):Command
+  fun createCropCommand(resizeCoordinateXLeft:Int, resizeCoordinateYTop:Int,
+                        resizeCoordinateXRight:Int, resizeCoordinateYBottom:Int,
+                        maximumBitmapResolution:Int):Command
+  fun createPointCommand(paint:Paint, coordinate:PointF):Command
+  fun createFillCommand(x:Int, y:Int, paint:Paint, colorTolerance:Float):Command
+  fun createGeometricFillCommand(shapeDrawable:ShapeDrawable, position:Point, box:RectF, boxRotation:Float, paint:Paint):Command
+  fun createPathCommand(paint:Paint, path:Path):Command
+  fun createTextToolCommand(multilineText:Array<String>, textPaint:Paint, boxOffset:Int, boxWidth:Float, boxHeight:Float, toolPosition:PointF, boxRotation:Float):Command
+  fun createResizeCommand(newWidth:Int, newHeight:Int):Command
+  fun createStampCommand(bitmap:Bitmap, toolPosition:PointF, boxWidth:Float, boxHeight:Float, boxRotation:Float):Command
+  fun createCutCommand(toolPosition:PointF, boxWidth:Float, boxHeight:Float, boxRotation:Float):Command
 }
