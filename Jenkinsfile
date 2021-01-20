@@ -43,7 +43,7 @@ pipeline {
             additionalBuildArgs '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --build-arg KVM_GROUP_ID=$(getent group kvm | cut -d: -f3)'
             // Ensure that each executor has its own gradle cache to not affect other builds
             // that run concurrently.
-            args '--device /dev/kvm:/dev/kvm -v /var/local/container_shared/gradle_cache/$EXECUTOR_NUMBER:/home/user/.gradle -m=6.5G'
+            args '--device /dev/kvm:/dev/kvm -m=6.5G'
             label useDebugLabelParameter('LimitedEmulator')
         }
     }
@@ -63,7 +63,6 @@ pipeline {
         stage('Build Debug-APK') {
             steps {
                 sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
-                renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                 archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
                 plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
             }
