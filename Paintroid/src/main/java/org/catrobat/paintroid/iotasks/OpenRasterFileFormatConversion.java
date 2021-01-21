@@ -111,7 +111,7 @@ public final class OpenRasterFileFormatConversion {
 			//applefile has no file ending. which is important for api level 30.
 			// we can't save an application file in media directory so we have to save it in downloads.
 			contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName);
-			contentValues.put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/Pocket_Paint");
+			contentValues.put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
 			contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/applefile");
 
 			imageUri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
