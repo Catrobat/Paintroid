@@ -55,6 +55,7 @@ import org.catrobat.paintroid.contract.MainActivityContracts.Presenter;
 import org.catrobat.paintroid.contract.MainActivityContracts.TopBarViewHolder;
 import org.catrobat.paintroid.controller.ToolController;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
+import org.catrobat.paintroid.iotasks.BitmapReturnValue;
 import org.catrobat.paintroid.iotasks.CreateFileAsync.CreateFileCallback;
 import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback;
 import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback;
@@ -288,6 +289,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
+	public void showOraInformationDialog() {
+		navigator.showOraInformationDialog();
+	}
+
+	@Override
 	public void sendFeedback() {
 		navigator.sendFeedback();
 	}
@@ -325,8 +331,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					showLikeUsDialogIfFirstTimeSave();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
-					Bitmap bitmap = workspace.getBitmapOfAllLayers();
-					interactor.saveCopy(this, SAVE_IMAGE_DEFAULT, bitmap);
+					saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT);
 					checkforDefaultFilename();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW:
@@ -430,17 +435,14 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (permissions.length == 1 && (permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE)
 				|| permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE))) {
 			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-				Bitmap bitmap;
 				switch (requestCode) {
 					case PERMISSION_EXTERNAL_STORAGE_SAVE:
-						bitmap = workspace.getBitmapOfAllLayers();
-						interactor.saveImage(this, SAVE_IMAGE_DEFAULT, bitmap, model.getSavedPictureUri());
+						saveImageConfirmClicked(SAVE_IMAGE_DEFAULT, model.getSavedPictureUri());
 						checkforDefaultFilename();
 						showLikeUsDialogIfFirstTimeSave();
 						break;
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
-						bitmap = workspace.getBitmapOfAllLayers();
-						interactor.saveCopy(this, SAVE_IMAGE_DEFAULT, bitmap);
+						saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT);
 						checkforDefaultFilename();
 						break;
 					case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
@@ -499,8 +501,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveImageConfirmClicked(int requestCode, Uri uri) {
-		Bitmap bitmap = workspace.getBitmapOfAllLayers();
-		interactor.saveImage(this, requestCode, bitmap, uri);
+		interactor.saveImage(this, requestCode, workspace, uri);
+	}
+
+	@Override
+	public void saveCopyConfirmClicked(int requestCode) {
+		interactor.saveCopy(this, requestCode, workspace);
 	}
 
 	@Override
@@ -693,7 +699,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void onLoadImagePostExecute(@LoadImageRequestCode int requestCode, Uri uri, Bitmap bitmap) {
+	public void onLoadImagePostExecute(@LoadImageRequestCode int requestCode, Uri uri, BitmapReturnValue bitmap) {
 		if (bitmap == null) {
 			navigator.showLoadErrorDialog();
 			return;
@@ -702,21 +708,25 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		switch (requestCode) {
 			case LOAD_IMAGE_DEFAULT:
 				resetPerspectiveAfterNextCommand = true;
-				commandManager.setInitialStateCommand(commandFactory.createInitCommand(bitmap));
+				if (bitmap.bitmap != null) {
+					commandManager.setInitialStateCommand(commandFactory.createInitCommand(bitmap.bitmap));
+				} else {
+					commandManager.setInitialStateCommand(commandFactory.createInitCommand(bitmap.bitmapList));
+				}
 				commandManager.reset();
 				model.setSavedPictureUri(null);
 				model.setCameraImageUri(null);
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {
-					toolController.setBitmapFromSource(bitmap);
+					toolController.setBitmapFromSource(bitmap.bitmap);
 				} else {
 					Log.e(MainActivity.TAG, "importPngToFloatingBox: Current tool is no ImportTool as required");
 				}
 				break;
 			case LOAD_IMAGE_CATROID:
 				resetPerspectiveAfterNextCommand = true;
-				commandManager.setInitialStateCommand(commandFactory.createInitCommand(bitmap));
+				commandManager.setInitialStateCommand(commandFactory.createInitCommand(bitmap.bitmap));
 				commandManager.reset();
 				model.setSavedPictureUri(uri);
 				model.setCameraImageUri(null);

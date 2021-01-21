@@ -32,6 +32,7 @@ import org.catrobat.paintroid.iotasks.CreateFileAsync;
 import org.catrobat.paintroid.iotasks.LoadImageAsync;
 import org.catrobat.paintroid.iotasks.SaveImageAsync;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.ui.LayerAdapter;
 
 import java.io.File;
@@ -62,6 +63,8 @@ public interface MainActivityContracts {
 		void showPngInformationDialog();
 
 		void showJpgInformationDialog();
+
+		void showOraInformationDialog();
 
 		void sendFeedback();
 
@@ -190,6 +193,8 @@ public interface MainActivityContracts {
 
 		void showJpgInformationDialog();
 
+		void showOraInformationDialog();
+
 		void sendFeedback();
 
 		void onNewImage();
@@ -203,6 +208,8 @@ public interface MainActivityContracts {
 		void onBackPressed();
 
 		void saveImageConfirmClicked(int requestCode, Uri uri);
+
+		void saveCopyConfirmClicked(int requestCode);
 
 		void undoClicked();
 
@@ -276,11 +283,11 @@ public interface MainActivityContracts {
 	}
 
 	interface Interactor {
-		void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Bitmap bitmap);
+		void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace);
 
 		void createFile(CreateFileAsync.CreateFileCallback callback, int requestCode, @Nullable String filename);
 
-		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Bitmap bitmap, Uri uri);
+		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace, Uri uri);
 
 		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri);
 

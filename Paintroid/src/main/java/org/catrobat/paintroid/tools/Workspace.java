@@ -25,6 +25,8 @@ import android.graphics.RectF;
 
 import org.catrobat.paintroid.ui.Perspective;
 
+import java.util.List;
+
 public interface Workspace {
 	boolean contains(PointF point);
 
@@ -39,6 +41,8 @@ public interface Workspace {
 	int getSurfaceHeight();
 
 	Bitmap getBitmapOfAllLayers();
+
+	List<Bitmap> getBitmapLisOfAllLayers();
 
 	Bitmap getBitmapOfCurrentLayer();
 

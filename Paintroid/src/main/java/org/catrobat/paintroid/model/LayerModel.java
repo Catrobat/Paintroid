@@ -132,4 +132,14 @@ public class LayerModel implements LayerContracts.Model {
 
 		return bitmap;
 	}
+
+	public static List<Bitmap> getBitmapListOfAllLayers(List<LayerContracts.Layer> layers) {
+		List<Bitmap> bitmapList = new ArrayList<>();
+
+		for (LayerContracts.Layer layer : layers) {
+			bitmapList.add(layer.getBitmap());
+		}
+
+		return bitmapList;
+	}
 }

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.contract.LayerContracts.LayerViewHolder;
 import org.catrobat.paintroid.contract.LayerContracts.Model;
@@ -42,7 +43,6 @@ import java.util.List;
 
 public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPresenter {
 	private static final String TAG = LayerPresenter.class.getSimpleName();
-	private static final int MAX_LAYERS = 4;
 	private final CommandManager commandManager;
 	private final CommandFactory commandFactory;
 	private final Model model;
@@ -110,7 +110,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 
 	@Override
 	public void refreshLayerMenuViewHolder() {
-		if (getLayerCount() < MAX_LAYERS) {
+		if (getLayerCount() < Constants.MAX_LAYERS) {
 			layerMenuViewHolder.enableAddLayerButton();
 		} else {
 			layerMenuViewHolder.disableAddLayerButton();
@@ -140,7 +140,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 
 	@Override
 	public void addLayer() {
-		if (getLayerCount() < MAX_LAYERS) {
+		if (getLayerCount() < Constants.MAX_LAYERS) {
 			commandManager.addCommand(commandFactory.createAddLayerCommand());
 		} else {
 			navigator.showToast(R.string.layer_too_many_layers, Toast.LENGTH_SHORT);

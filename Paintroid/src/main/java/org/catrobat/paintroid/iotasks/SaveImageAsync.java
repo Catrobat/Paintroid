@@ -27,9 +27,11 @@ import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.common.Constants;
+import org.catrobat.paintroid.tools.Workspace;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 
@@ -39,14 +41,14 @@ public class SaveImageAsync extends AsyncTask<Void, Void, Uri> {
 	private int requestCode;
 	private Uri uri;
 	private boolean saveAsCopy;
-	private Bitmap bitmap;
+	private Workspace workspace;
 
-	public SaveImageAsync(SaveImageCallback activity, int requestCode, Bitmap bitmap, @Nullable Uri uri, boolean saveAsCopy) {
+	public SaveImageAsync(SaveImageCallback activity, int requestCode, Workspace workspace, @Nullable Uri uri, boolean saveAsCopy) {
 		this.callbackRef = new WeakReference<>(activity);
 		this.requestCode = requestCode;
 		this.uri = uri;
 		this.saveAsCopy = saveAsCopy;
-		this.bitmap = bitmap;
+		this.workspace = workspace;
 	}
 
 	@Override
@@ -64,32 +66,49 @@ public class SaveImageAsync extends AsyncTask<Void, Void, Uri> {
 		SaveImageCallback callback = callbackRef.get();
 		if (callback != null && !callback.isFinishing()) {
 			try {
+				Bitmap bitmap = workspace.getBitmapOfAllLayers();
 				String fileName = FileIO.getDefaultFileName();
 				int fileExistsValue = FileIO.checkIfDifferentFile(fileName);
 
-				if (uri != null && FileIO.catroidFlag) {
-					return FileIO.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
-				} else if (uri != null && fileExistsValue != Constants.IS_NO_FILE) {
-					setUriToFormatUri(fileExistsValue);
-					return FileIO.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
-				} else {
+				if (FileIO.isCatrobatImage) {
+					List<Bitmap> bitmapList = workspace.getBitmapLisOfAllLayers();
 
-					Uri imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.getContentResolver());
-
-					if (FileIO.ending.equals(".png")) {
-						FileIO.currentFileNamePng = fileName;
-						FileIO.uriFilePng = imageUri;
+					if (uri != null && fileExistsValue == Constants.IS_ORA) {
+						setUriToFormatUri(fileExistsValue);
+						return OpenRasterFileFormatConversion.saveOraFileToUri(bitmapList, uri, fileName, bitmap, callback.getContentResolver());
 					} else {
-						FileIO.currentFileNameJpg = fileName;
-						FileIO.uriFileJpg = imageUri;
-					}
+						Uri imageUri = OpenRasterFileFormatConversion.exportToOraFile(bitmapList, fileName, bitmap, callback.getContentResolver());
 
-					return imageUri;
+						FileIO.currentFileNameOra = fileName;
+						FileIO.uriFileOra = imageUri;
+
+						return imageUri;
+					}
+				} else {
+					if (uri != null && FileIO.catroidFlag) {
+						return FileIO.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
+					} else if (uri != null && fileExistsValue != Constants.IS_NO_FILE) {
+						setUriToFormatUri(fileExistsValue);
+						return FileIO.saveBitmapToUri(uri, callback.getContentResolver(), bitmap);
+					} else {
+						Uri imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.getContentResolver());
+
+						if (FileIO.ending.equals(".png")) {
+							FileIO.currentFileNamePng = fileName;
+							FileIO.uriFilePng = imageUri;
+						} else {
+							FileIO.currentFileNameJpg = fileName;
+							FileIO.uriFileJpg = imageUri;
+						}
+
+						return imageUri;
+					}
 				}
 			} catch (IOException e) {
 				Log.d(TAG, "Can't save image file", e);
 			}
 		}
+
 		return null;
 	}
 
@@ -98,9 +117,13 @@ public class SaveImageAsync extends AsyncTask<Void, Void, Uri> {
 			if (FileIO.uriFileJpg != null) {
 				uri = FileIO.uriFileJpg;
 			}
-		} else {
+		} else if (formatcode == Constants.IS_PNG) {
 			if (FileIO.uriFilePng != null) {
 				uri = FileIO.uriFilePng;
+			}
+		} else {
+			if (FileIO.uriFileOra != null) {
+				uri = FileIO.uriFileOra;
 			}
 		}
 	}

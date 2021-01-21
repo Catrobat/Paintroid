@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,11 +52,14 @@ public final class FileIO {
 	public static int compressQuality = 100;
 	public static Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
 	public static boolean catroidFlag = false;
+	public static boolean isCatrobatImage = false;
 
 	public static String currentFileNameJpg = null;
 	public static String currentFileNamePng = null;
+	public static String currentFileNameOra = null;
 	public static Uri uriFileJpg = null;
 	public static Uri uriFilePng = null;
+	public static Uri uriFileOra = null;
 
 	private FileIO() {
 		throw new AssertionError();
@@ -219,7 +222,7 @@ public final class FileIO {
 	}
 
 	public static int checkIfDifferentFile(String filename) {
-		if (currentFileNamePng == null && currentFileNameJpg == null) {
+		if (currentFileNamePng == null && currentFileNameJpg == null && currentFileNameOra == null) {
 			return Constants.IS_NO_FILE;
 		}
 
@@ -231,10 +234,14 @@ public final class FileIO {
 			return Constants.IS_PNG;
 		}
 
+		if (currentFileNameOra != null && currentFileNameOra.equals(filename)) {
+			return Constants.IS_ORA;
+		}
+
 		return Constants.IS_NO_FILE;
 	}
 
-	private static int calculateSampleSize(int width, int height, int maxWidth, int maxHeight) {
+	public static int calculateSampleSize(int width, int height, int maxWidth, int maxHeight) {
 		int sampleSize = 1;
 		while (width > maxWidth || height > maxHeight) {
 			width /= 2;
@@ -274,7 +281,7 @@ public final class FileIO {
 		return enableAlpha(BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options));
 	}
 
-	private static Bitmap enableAlpha(Bitmap bitmap) {
+	public static Bitmap enableAlpha(Bitmap bitmap) {
 		if (bitmap != null) {
 			bitmap.setHasAlpha(true);
 		}

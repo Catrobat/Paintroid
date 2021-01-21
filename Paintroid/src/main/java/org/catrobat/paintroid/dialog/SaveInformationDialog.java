@@ -63,6 +63,7 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 
 	public static SaveInformationDialog newInstance(int permissionCode, int imageNumber, boolean isStandard) {
 		if (isStandard) {
+			FileIO.isCatrobatImage = false;
 			FileIO.filename = "image";
 			FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
 			FileIO.ending = ".jpg";
@@ -99,7 +100,9 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		initializeViews(view);
 		initializeFunctioning();
 
-		if (FileIO.compressFormat == Bitmap.CompressFormat.PNG) {
+		if (FileIO.isCatrobatImage) {
+			mySpinner.setSelection(2);
+		} else if (FileIO.compressFormat == Bitmap.CompressFormat.PNG) {
 			mySpinner.setSelection(1);
 		} else {
 			mySpinner.setSelection(0);
@@ -158,6 +161,7 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		List<String> spinnerArray = new ArrayList<>();
 		spinnerArray.add("jpg");
 		spinnerArray.add("png");
+		spinnerArray.add("ora");
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<>(mySpinner.getContext(),
 				android.R.layout.simple_spinner_item, spinnerArray);
@@ -175,7 +179,9 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		informationButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (FileIO.compressFormat == Bitmap.CompressFormat.JPEG) {
+				if (FileIO.isCatrobatImage) {
+					getPresenter().showOraInformationDialog();
+				} else if (FileIO.compressFormat == Bitmap.CompressFormat.JPEG) {
 					getPresenter().showJpgInformationDialog();
 				} else {
 					getPresenter().showPngInformationDialog();
@@ -193,12 +199,20 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 				specificFormatLayout.removeAllViews();
 				specificFormatLayout.addView(jpgView);
 				FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
+				FileIO.isCatrobatImage = false;
 				FileIO.ending = ".jpg";
 				break;
 			case "png":
 				specificFormatLayout.removeAllViews();
 				FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+				FileIO.isCatrobatImage = false;
 				FileIO.ending = ".png";
+				break;
+			case "ora":
+				specificFormatLayout.removeAllViews();
+				FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+				FileIO.isCatrobatImage = true;
+				FileIO.ending = ".ora";
 				break;
 		}
 	}

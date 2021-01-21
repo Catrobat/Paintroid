@@ -29,6 +29,8 @@ import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.ui.Perspective;
 
+import java.util.List;
+
 public class DefaultWorkspace implements Workspace {
 
 	private final LayerContracts.Model layerModel;
@@ -81,6 +83,11 @@ public class DefaultWorkspace implements Workspace {
 	@Override
 	public Bitmap getBitmapOfAllLayers() {
 		return LayerModel.getBitmapOfAllLayersToSave(layerModel.getLayers());
+	}
+
+	@Override
+	public List<Bitmap> getBitmapLisOfAllLayers() {
+		return LayerModel.getBitmapListOfAllLayers(layerModel.getLayers());
 	}
 
 	@Override
