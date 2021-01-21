@@ -31,7 +31,7 @@ platform :android do
             package_name:               'org.catrobat.paintroid',
             track:                      'alpha',
             json_key_data:              ENV['googlePlayJsonKey'],
-            apk_paths:                  './app/build/outputs/apk/signedRelease/app-signedRelease.apk',
+            apk_paths:                  './app/build/outputs/apk/signedRelease/paintroid-signedRelease.apk',
             skip_upload_apk:            'false',
             skip_upload_metadata:       'true',
             skip_upload_images:         'true',
