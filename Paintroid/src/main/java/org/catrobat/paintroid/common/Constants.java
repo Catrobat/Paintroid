@@ -43,6 +43,7 @@ public final class Constants {
 	public static final String OVERWRITE_INFORMATION_DIALOG_TAG = "saveinformationdialogfragment";
 	public static final String PNG_INFORMATION_DIALOG_TAG = "pnginformationdialogfragment";
 	public static final String JPG_INFORMATION_DIALOG_TAG = "jpginformationdialogfragment";
+	public static final String ORA_INFORMATION_DIALOG_TAG = "orainformationdialogfragment";
 	public static final String CATROID_MEDIA_GALLERY_FRAGMENT_TAG = "catroidmediagalleryfragment";
 
 	public static final String PERMISSION_DIALOG_FRAGMENT_TAG = "permissiondialogfragment";
@@ -54,7 +55,10 @@ public final class Constants {
 
 	public static final int IS_JPG = 0;
 	public static final int IS_PNG = 1;
+	public static final int IS_ORA = 2;
 	public static final int IS_NO_FILE = -1;
+
+	public static final int MAX_LAYERS = 4;
 
 	private Constants() {
 		throw new AssertionError();

@@ -111,16 +111,16 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp">
         <LinearLayout
-            android:id="@+id/pocketpaint_tools_pipette"
+            android:id="@+id/pocketpaint_tools_spray_can"
             tools:ignore="UseCompoundDrawables"
             style="@style/PocketPaintToolSelectionButton">
             <ImageView
                 style="@style/PocketPaintToolSelectionButtonImageView"
-                android:src="@drawable/ic_pocketpaint_tool_pipette"
-                android:contentDescription="@string/button_pipette"/>
+                android:src="@drawable/ic_pocketpaint_tool_spray_can"
+                android:contentDescription="@string/button_spray_can"/>
             <TextView
                 style="@style/PocketPaintToolSelectionButtonTextView"
-                android:text="@string/button_pipette"/>
+                android:text="@string/button_spray_can"/>
         </LinearLayout>
 
         <LinearLayout

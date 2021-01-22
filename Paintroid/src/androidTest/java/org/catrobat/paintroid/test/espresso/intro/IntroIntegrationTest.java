@@ -71,7 +71,7 @@ public class IntroIntegrationTest {
 				.check(matches(isDisplayed()));
 
 		for (ToolType toolType: ToolType.values()) {
-			if (!toolType.equals(ToolType.UNDO) && !toolType.equals(ToolType.REDO) && !toolType.equals(ToolType.LAYER) && !toolType.equals(ToolType.COLORCHOOSER)) {
+			if (!toolType.equals(ToolType.UNDO) && !toolType.equals(ToolType.REDO) && !toolType.equals(ToolType.LAYER) && !toolType.equals(ToolType.COLORCHOOSER) && !toolType.equals(ToolType.PIPETTE)) {
 				onView(withId(toolType.getToolButtonID())).perform(click());
 				onView(withText(toolType.getHelpTextResource())).check(matches(isDisplayed()));
 			}

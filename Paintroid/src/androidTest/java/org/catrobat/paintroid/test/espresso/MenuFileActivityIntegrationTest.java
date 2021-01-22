@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -348,14 +348,14 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.save_button_text)).perform(click());
 
-		onView(withText(R.string.pocketpaint_no)).perform(click());
-		onView(withText(R.string.pocketpaint_ok)).perform(click());
-
 		assertNotNull(activity.model.getSavedPictureUri());
 
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 
 		File oldFile = new File(activity.model.getSavedPictureUri().toString());
+
+		onView(withText(R.string.pocketpaint_no)).perform(click());
+		onView(withText(R.string.pocketpaint_ok)).perform(click());
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE));
@@ -384,6 +384,10 @@ public class MenuFileActivityIntegrationTest {
 				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
+
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("AskForSaveAfterSavedOnce"));
+
 		onView(withText(R.string.save_button_text)).perform(click());
 
 		assertNotNull(activity.model.getSavedPictureUri());
@@ -517,6 +521,9 @@ public class MenuFileActivityIntegrationTest {
 				is("jpg"))).inRoot(isPlatformPopup()).perform(click());
 		onView(withId(R.id.pocketpaint_image_name_save_text))
 				.perform(replaceText(Constants.TEMP_PICTURE_NAME));
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
 
 		assertNotNull(activity.model.getSavedPictureUri());
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());

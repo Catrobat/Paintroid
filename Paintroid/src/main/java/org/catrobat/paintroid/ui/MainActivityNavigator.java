@@ -23,9 +23,11 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.OpenableColumns;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -46,6 +48,7 @@ import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
 import org.catrobat.paintroid.dialog.InfoDialog;
 import org.catrobat.paintroid.dialog.JpgInfoDialog;
 import org.catrobat.paintroid.dialog.LikeUsDialog;
+import org.catrobat.paintroid.dialog.OraInfoDialog;
 import org.catrobat.paintroid.dialog.OverwriteDialog;
 import org.catrobat.paintroid.dialog.PermanentDenialPermissionInfoDialog;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
@@ -58,6 +61,8 @@ import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.dialog.SaveInformationDialog;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment;
+
+import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -182,7 +187,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void startLoadImageActivity(@ActivityRequestCode int requestCode) {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		intent.setType("image/*");
+		intent.setType("*/*");
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
 		mainActivity.startActivityForResult(intent, requestCode);
 	}
@@ -256,6 +261,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showJpgInformationDialog() {
 		JpgInfoDialog jpgInfoDialog = JpgInfoDialog.newInstance();
 		jpgInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.JPG_INFORMATION_DIALOG_TAG);
+	}
+
+	@Override
+	public void showOraInformationDialog() {
+		OraInfoDialog oraInfoDialog = OraInfoDialog.newInstance();
+		oraInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.ORA_INFORMATION_DIALOG_TAG);
 	}
 
 	@Override
@@ -385,10 +396,21 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		}
 
 		if (!isExport && mainActivity.model.isOpenedFromCatroid()) {
+			String name = getFileName(uri);
+			if (name != null && (name.endsWith("jpg") || name.endsWith("jpeg"))) {
+				FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
+				FileIO.ending = ".jpg";
+			} else if (name != null && name.endsWith("png")) {
+				FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+				FileIO.ending = ".png";
+			} else {
+				FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+				FileIO.ending = ".png";
+			}
 			FileIO.filename = "image" + imageNumber;
-			FileIO.compressFormat = Bitmap.CompressFormat.PNG;
-			FileIO.ending = ".png";
+
 			FileIO.catroidFlag = true;
+			FileIO.isCatrobatImage = false;
 			mainActivity.getPresenter().switchBetweenVersions(permissionCode);
 			return;
 		}
@@ -400,6 +422,29 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 		SaveInformationDialog saveInfodialog = SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard);
 		saveInfodialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_INFORMATION_DIALOG_TAG);
+	}
+
+	public String getFileName(Uri uri) {
+		String result = null;
+		if (Objects.equals(uri.getScheme(), "content")) {
+			Cursor cursor = mainActivity.getContentResolver().query(uri, null, null, null, null);
+			try {
+				if (cursor != null && cursor.moveToFirst()) {
+					result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+		if (result == null) {
+			result = uri.getPath();
+			assert result != null;
+			int cut = result.lastIndexOf('/');
+			if (cut != -1) {
+				result = result.substring(cut + 1);
+			}
+		}
+		return result;
 	}
 
 	@Override

@@ -30,11 +30,15 @@ import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable;
 
+import java.util.List;
+
 public interface CommandFactory {
 
 	Command createInitCommand(int width, int height);
 
 	Command createInitCommand(Bitmap bitmap);
+
+	Command createInitCommand(List<Bitmap> bitmapList);
 
 	Command createResetCommand();
 
@@ -69,6 +73,8 @@ public interface CommandFactory {
 	Command createResizeCommand(int newWidth, int newHeight);
 
 	Command createStampCommand(Bitmap bitmap, PointF toolPosition, float boxWidth, float boxHeight, float boxRotation);
+
+	Command createSprayCommand(float[] sprayedPoints, Paint paint);
 
 	Command createCutCommand(PointF toolPosition, float boxWidth, float boxHeight, float boxRotation);
 }
