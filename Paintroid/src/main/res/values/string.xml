@@ -35,6 +35,7 @@
     <string name="button_text">Text</string>
     <string name="button_shape">Shapes</string>
     <string name="button_hand">Hand</string>
+    <string name="button_spray_can">Spray can</string>
     <string name="button_apply">Apply</string>
     <string name="button_checkmark">Checkmark</string>
     <string name="done">Done</string>
@@ -75,6 +76,8 @@
     <string name="help_content_layer">Create new layers or modify existing ones.</string>
     <string name="help_content_color_chooser">Select or adjust a color.</string>
     <string name="help_content_hand">Move your finger to move the canvas.</string>
+    <string name="help_content_spray_can">Move your finger on the image to create a spray can pattern.</string>
+    <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="closing_security_question_title">Quit</string>
     <string name="closing_security_question">Save changes?</string>
     <string name="menu_new_image">New image</string>

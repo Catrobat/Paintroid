@@ -32,6 +32,7 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.FillToolOptionsView;
 import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
+import org.catrobat.paintroid.tools.options.SprayToolOptionsView;
 import org.catrobat.paintroid.tools.options.StampToolOptionsView;
 import org.catrobat.paintroid.tools.options.TextToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
@@ -39,6 +40,7 @@ import org.catrobat.paintroid.tools.options.TransformToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultFillToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultShapeToolOptionsView;
+import org.catrobat.paintroid.ui.tools.DefaultSprayToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultStampToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultTextToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptionsView;
@@ -72,6 +74,8 @@ public class DefaultToolFactory implements ToolFactory {
 				return new TextTool(createTextToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case HAND:
 				return new HandTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+			case SPRAY:
+				return new SprayTool(createSprayToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			default:
 				return new BrushTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		}
@@ -99,5 +103,9 @@ public class DefaultToolFactory implements ToolFactory {
 
 	private StampToolOptionsView createStampToolOptionsView(ViewGroup toolLayout) {
 		return new DefaultStampToolOptionsView(toolLayout);
+	}
+
+	private SprayToolOptionsView createSprayToolOptionsView(ViewGroup toolLayout) {
+		return new DefaultSprayToolOptionsView(toolLayout);
 	}
 }

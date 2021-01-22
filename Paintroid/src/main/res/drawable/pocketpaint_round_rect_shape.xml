@@ -1,4 +1,4 @@
-/**
+<!--
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -15,20 +15,16 @@
  *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
 
-package org.catrobat.paintroid.test.utils;
+    <solid android:color="#ffffff" />
 
-import java.lang.reflect.Field;
+    <corners
+        android:bottomLeftRadius="8dp"
+        android:bottomRightRadius="8dp"
+        android:topLeftRadius="8dp"
+        android:topRightRadius="8dp" />
 
-public final class PrivateAccess {
-	private PrivateAccess() {
-	}
-
-	public static Object getMemberValue(Class<?> classFromObject, Object object, String fieldName)
-			throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		Field field = classFromObject.getDeclaredField(fieldName);
-		field.setAccessible(true);
-		return field.get(object);
-	}
-}
+</shape>

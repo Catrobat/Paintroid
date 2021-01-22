@@ -80,7 +80,6 @@ public class ToolOptionsIntegrationTest {
 				{ToolType.LINE, false, true},
 				{ToolType.CURSOR, false, true},
 				{ToolType.FILL, false, true},
-				{ToolType.PIPETTE, false, false},
 				{ToolType.STAMP, true, true},
 				{ToolType.ERASER, false, true},
 				{ToolType.TEXT, true, true},

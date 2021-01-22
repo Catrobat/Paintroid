@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/pocketpaint_spray_radius_text_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        style="@style/OptionsViewTextFieldTheme">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/pocketpaint_radius_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:textAlignment="center"
+            android:inputType="number"
+            android:padding="4dp"
+            android:minEms="3"
+            android:saveEnabled="false"
+            android:background="@drawable/pocketpaint_round_rect_shape"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            tools:ignore="LabelFor"
+            tools:text="100" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <SeekBar
+        android:id="@+id/pocketpaint_spray_radius_seek_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:minHeight="30dip"
+        android:layout_alignTop="@id/pocketpaint_spray_radius_text_layout"
+        android:layout_toEndOf="@+id/pocketpaint_spray_radius_text_layout"
+        android:layout_alignBottom="@id/pocketpaint_spray_radius_text_layout"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

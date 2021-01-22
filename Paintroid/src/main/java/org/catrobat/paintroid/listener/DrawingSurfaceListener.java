@@ -35,7 +35,6 @@ import org.catrobat.paintroid.ui.DrawingSurface;
 import java.util.EnumSet;
 
 import static org.catrobat.paintroid.tools.ToolType.FILL;
-import static org.catrobat.paintroid.tools.ToolType.PIPETTE;
 import static org.catrobat.paintroid.tools.ToolType.TRANSFORM;
 
 public class DrawingSurfaceListener implements OnTouchListener {
@@ -219,7 +218,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		private float pointY;
 		private int width;
 		private int height;
-		private EnumSet<ToolType> ignoredTools = EnumSet.of(PIPETTE, FILL, TRANSFORM);
+		private EnumSet<ToolType> ignoredTools = EnumSet.of(FILL, TRANSFORM);
 		private final PointF newMovePoint;
 
 		private final Handler handler;
