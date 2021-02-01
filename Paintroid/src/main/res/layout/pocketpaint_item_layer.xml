@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pocketpaint_item_layer_background"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/pocketpaint_attribute_button_selector"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="5dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="5dp"
+    android:paddingBottom="10dp"
+    android:descendantFocusability="blocksDescendants" >
+
+    <CheckBox
+        android:id="@+id/pocketpaint_checkbox_layer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:translationX="3dp"
+        android:checked="true"/>
+
+    <ImageView
+        android:id="@+id/pocketpaint_item_layer_image"
+        android:layout_width="75dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="false"
+        android:background="@drawable/pocketpaint_checkeredbg_repeat"
+        android:contentDescription="@string/layer_background"
+        android:scaleType="fitXY"
+        android:translationX="20dp"
+        android:focusable="false" />
+</LinearLayout>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/color_picker_rgb_base_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="1000dp"
+        android:layout_height="1dp" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="1">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/color_picker_color_rgb_textview_red"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:text="@string/color_red"
+                android:textColor="@color/pocketpaint_color_picker_rgb_red"
+                android:paddingStart="0dp"
+                android:paddingEnd="5dp" />
+
+            <SeekBar
+                android:id="@+id/color_picker_color_rgb_seekbar_red"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:max="255" />
+
+            <TextView
+                android:id="@+id/color_picker_rgb_red_value"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_span="2"
+                android:gravity="center_vertical|end"
+                android:text="255"
+                android:textColor="?attr/colorAccent"
+                tools:ignore="HardcodedText" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/color_picker_color_rgb_textview_green"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:text="@string/color_green"
+                android:textColor="@color/pocketpaint_color_picker_rgb_green"
+                android:paddingStart="0dp"
+                android:paddingEnd="5dp" />
+
+            <SeekBar
+                android:id="@+id/color_picker_color_rgb_seekbar_green"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:max="255" />
+
+            <TextView
+                android:id="@+id/color_picker_rgb_green_value"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_span="2"
+                android:gravity="center_vertical|end"
+                android:text="255"
+                android:textColor="?attr/colorAccent"
+                tools:ignore="HardcodedText" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/color_picker_color_rgb_textview_blue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:text="@string/color_blue"
+                android:textColor="@color/pocketpaint_color_picker_rgb_blue"
+                android:paddingStart="0dp"
+                android:paddingEnd="5dp" />
+
+            <SeekBar
+                android:id="@+id/color_picker_color_rgb_seekbar_blue"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:max="255" />
+
+            <TextView
+                android:id="@+id/color_picker_rgb_blue_value"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_span="2"
+                android:gravity="center_vertical|end"
+                android:text="255"
+                android:textColor="?attr/colorAccent"
+                tools:ignore="HardcodedText" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/color_picker_color_rgb_textview_alpha"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:text="@string/color_alpha"
+                android:textColor="@color/pocketpaint_color_picker_rgb_alpha"
+                android:paddingStart="0dp"
+                android:paddingEnd="5dp" />
+
+            <SeekBar
+                android:id="@+id/color_picker_color_rgb_seekbar_alpha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:max="255" />
+
+            <TextView
+                android:id="@+id/color_picker_rgb_alpha_value"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical|end"
+                android:text="100"
+                android:textColor="?attr/colorAccent"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical|start"
+                android:gravity="center_vertical|start"
+                android:text="%"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?attr/colorAccent"
+                tools:ignore="HardcodedText" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/color_picker_color_rgb_textview_hex"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/color_hex"
+                android:textColor="@color/pocketpaint_color_picker_hex_black" />
+
+            <EditText
+                android:id="@+id/color_picker_color_rgb_hex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:hint="#"
+                android:inputType="textNoSuggestions"
+                android:maxLength="18"
+                tools:ignore="HardcodedText"/>
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

@@ -1,65 +1,90 @@
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.catrobat.paintroid.test.espresso;
 
+import android.content.res.TypedArray;
 import android.graphics.PointF;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getActionbarHeight;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromSurfacePoint;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getStatusbarHeight;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfaceHeight;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfacePointFromScreenPoint;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getSurfaceWidth;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+
 @RunWith(AndroidJUnit4.class)
 public class ScrollingViewIntegrationTest {
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	private int drawerEdgeSize;
+	private Perspective perspective;
+	private MainActivity mainActivity;
 
 	@Before
 	public void setUp() {
-		selectTool(ToolType.BRUSH);
+		MainActivity activity = launchActivityRule.getActivity();
+		float displayDensity = activity.getResources().getDisplayMetrics().density;
+		perspective = activity.perspective;
+		drawerEdgeSize = (int) (20 * displayDensity + 0.5f);
+		mainActivity = launchActivityRule.getActivity();
 	}
 
 	@Test
-	public void testScrollingViewDrawTool() throws NoSuchFieldException, IllegalAccessException {
+	public void testScrollingViewDrawTool() {
 
 		final int perspectiveScale = 5;
-		PaintroidApplication.perspective.setScale(perspectiveScale);
+		perspective.setScale(perspectiveScale);
 
-		float surfaceWidth = getSurfaceWidth();
-		float surfaceHeight = getSurfaceHeight();
+		float surfaceWidth = perspective.surfaceWidth;
+		float surfaceHeight = perspective.surfaceHeight;
 
-		float xRight = surfaceWidth - 1;
-		float xLeft = 1;
+		float xRight = surfaceWidth - 1 - drawerEdgeSize;
+		float xLeft = 1 + drawerEdgeSize;
 		float xMiddle = surfaceWidth / 2;
 
-		final float actionBarHeight = getActionbarHeight();
-		final float statusBarHeight = getStatusbarHeight();
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 
 		float yMiddle = (surfaceHeight / 2 + actionBarHeight + statusBarHeight);
 		float yTop = (actionBarHeight + statusBarHeight);
@@ -74,6 +99,9 @@ public class ScrollingViewIntegrationTest {
 		PointF bottomRight = new PointF(xRight, yBottom);
 		PointF bottomLeft = new PointF(xLeft, yBottom);
 		PointF topRight = new PointF(xRight, yTop);
+
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
 
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(middle);
 
@@ -86,98 +114,29 @@ public class ScrollingViewIntegrationTest {
 		longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(topLeft);
 		longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(bottomLeft);
 		longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(topRight);
-
-//		dragAndCheckIfCanvasHasMovedInXOrY(middle, rightMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(rightMiddle, middle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(middle, leftMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(leftMiddle, middle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(middle, topMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(topMiddle, middle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(middle, bottomMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(bottomMiddle, middle);
-
-//		dragAndCheckIfCanvasHasMovedInXAndY(middle, topRight);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topRight, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(middle, bottomRight);
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomRight, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(middle, bottomLeft);
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomLeft, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(middle, topLeft);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topLeft, middle);
-	}
-
-	@Ignore
-	@Test
-	public void testScrollingViewRectTool() throws NoSuchFieldException, IllegalAccessException {
-
-		final int perspectiveScale = 5;
-		PaintroidApplication.perspective.setScale(perspectiveScale);
-
-		float surfaceWidth = getSurfaceWidth();
-		float surfaceHeight = getSurfaceHeight();
-
-		float distanceToLayerView = 60;
-		float distanceToNavigationDrawer = 60;
-		float xRight = surfaceWidth - distanceToLayerView;
-		float xLeft = distanceToNavigationDrawer;
-		float xMiddle = surfaceWidth / 2;
-
-		final float actionBarHeight = getActionbarHeight();
-		final float statusBarHeight = getStatusbarHeight();
-
-		float yMiddle = (surfaceHeight / 2 + actionBarHeight + statusBarHeight);
-		float yTop = (actionBarHeight + statusBarHeight);
-		float yBottom = surfaceHeight + yTop - 1;
-
-		PointF middle = new PointF(xMiddle, yMiddle);
-		PointF rightMiddle = new PointF(xRight, yMiddle);
-		PointF leftMiddle = new PointF(xLeft, yMiddle);
-		PointF topMiddle = new PointF(xMiddle, yTop);
-		PointF bottomMiddle = new PointF(xMiddle, yBottom);
-		PointF topLeft = new PointF(xLeft, yTop);
-		PointF bottomRight = new PointF(xRight, yBottom);
-		PointF bottomLeft = new PointF(xLeft, yBottom);
-		PointF topRight = new PointF(xRight, yTop);
-
-		selectTool(ToolType.SHAPE);
-		clickSelectedToolButton();
-
-		dragAndCheckIfCanvasHasMovedInXOrY(middle, rightMiddle);
-		dragAndCheckIfCanvasHasMovedInXOrY(rightMiddle, middle);
-		dragAndCheckIfCanvasHasMovedInXOrY(middle, leftMiddle);
-		dragAndCheckIfCanvasHasMovedInXOrY(leftMiddle, middle);
-		dragAndCheckIfCanvasHasMovedInXOrY(middle, topMiddle);
-		dragAndCheckIfCanvasHasMovedInXOrY(topMiddle, middle);
-		dragAndCheckIfCanvasHasMovedInXOrY(middle, bottomMiddle);
-		dragAndCheckIfCanvasHasMovedInXOrY(bottomMiddle, middle);
-
-		dragAndCheckIfCanvasHasMovedInXAndY(middle, topRight);
-		dragAndCheckIfCanvasHasMovedInXAndY(topRight, middle);
-		dragAndCheckIfCanvasHasMovedInXAndY(middle, bottomRight);
-		dragAndCheckIfCanvasHasMovedInXAndY(bottomRight, middle);
-		dragAndCheckIfCanvasHasMovedInXAndY(middle, bottomLeft);
-		dragAndCheckIfCanvasHasMovedInXAndY(bottomLeft, middle);
-		dragAndCheckIfCanvasHasMovedInXAndY(middle, topLeft);
-		dragAndCheckIfCanvasHasMovedInXAndY(topLeft, middle);
-
-		/*dragAndCheckIfCanvasHasNotMoved(topLeft, topRight);
-		dragAndCheckIfCanvasHasNotMoved(bottomRight, topRight);
-		dragAndCheckIfCanvasHasNotMoved(bottomRight, bottomLeft);
-		dragAndCheckIfCanvasHasNotMoved(topLeft, bottomLeft);*/
 	}
 
 	@Test
-	public void testScrollingViewCursorTool() throws NoSuchFieldException, IllegalAccessException {
+	public void testScrollingViewCursorTool() {
 		final int perspectiveScale = 5;
-		PaintroidApplication.perspective.setScale(perspectiveScale);
+		perspective.setScale(perspectiveScale);
 
-		float surfaceWidth = getSurfaceWidth();
-		float surfaceHeight = getSurfaceHeight();
+		float surfaceWidth = perspective.surfaceWidth;
+		float surfaceHeight = perspective.surfaceHeight;
 
-		final float actionBarHeight = getActionbarHeight();
-		final float statusBarHeight = getStatusbarHeight();
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
 
-		float xRight = surfaceWidth - 1;
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		float xRight = surfaceWidth - 100;
 		float xLeft = 1;
 		float xMiddle = surfaceWidth / 2;
 
@@ -195,7 +154,8 @@ public class ScrollingViewIntegrationTest {
 		PointF bottomLeft = new PointF(xLeft, yBottom);
 		PointF topRight = new PointF(xRight, yTop);
 
-		selectTool(ToolType.CURSOR);
+		onToolBarView()
+				.performSelectTool(ToolType.CURSOR);
 
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(rightMiddle);
 		longpressOnPointAndCheckIfCanvasPointHasNotChanged(leftMiddle);
@@ -210,31 +170,30 @@ public class ScrollingViewIntegrationTest {
 		dragAndCheckIfCanvasHasMovedInXOrY(topMiddle, middle);
 		dragAndCheckIfCanvasHasMovedInXOrY(topMiddle, bottomMiddle);
 		dragAndCheckIfCanvasHasMovedInXOrY(bottomMiddle, middle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(rightMiddle, leftMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(leftMiddle, middle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(leftMiddle, rightMiddle);
-//		dragAndCheckIfCanvasHasMovedInXOrY(rightMiddle, middle);
-
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomLeft, topRight);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topRight, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topRight, bottomLeft);
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomLeft, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomRight, topLeft);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topLeft, middle);
-//		dragAndCheckIfCanvasHasMovedInXAndY(topLeft, bottomRight);
-//		dragAndCheckIfCanvasHasMovedInXAndY(bottomRight, middle);
 
 		onView(isRoot()).perform(touchCenterMiddle());
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(PointF clickPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(clickPoint);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
 
-		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(perspective.surfaceCenterX, perspective.surfaceCenterY + actionBarHeight + statusBarHeight);
+
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(touchLongAt(clickPoint.x, clickPoint.y));
 
-		PointF endPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		float delta = 0.5f;
 		assertNotEquals("view should scroll in x", startPointCanvas.x, endPointCanvas.x, delta);
@@ -242,25 +201,49 @@ public class ScrollingViewIntegrationTest {
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasChangedInXOrY(PointF clickPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(clickPoint);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
 
-		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(perspective.surfaceCenterX, perspective.surfaceCenterY + actionBarHeight + statusBarHeight);
+
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(touchLongAt(clickPoint.x, clickPoint.y));
 
-		PointF endPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		assertTrue("scrolling did not work", (startPointCanvas.x != endPointCanvas.x) || (startPointCanvas.y != endPointCanvas.y));
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasNotChanged(PointF clickPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(clickPoint);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
 
-		PointF startPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(perspective.surfaceCenterX, perspective.surfaceCenterY + actionBarHeight + statusBarHeight);
+
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(touchLongAt(clickPoint.x, clickPoint.y));
 
-		PointF endPointCanvas = getCanvasPointFromSurfacePoint(startPointSurface);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		float delta = 0.5f;
 		assertEquals("view should not scroll in x", startPointCanvas.x, endPointCanvas.x, delta);
@@ -268,38 +251,76 @@ public class ScrollingViewIntegrationTest {
 	}
 
 	public void dragAndCheckIfCanvasHasMovedInXAndY(PointF fromPoint, PointF toPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF startPointCanvas  = getCanvasPointFromSurfacePoint(startPointSurface);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
-		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF endPointCanvas  = getCanvasPointFromSurfacePoint(endPointSurface);
+		PointF endPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
-		assertTrue("scrolling did not work in x", startPointCanvas.x != endPointCanvas.x);
-		assertTrue("scrolling did not work in y", startPointCanvas.y != endPointCanvas.y);
+		assertNotEquals("scrolling did not work in x", startPointCanvas.x, endPointCanvas.x);
+		assertNotEquals("scrolling did not work in y", startPointCanvas.y, endPointCanvas.y);
 	}
 
 	public void dragAndCheckIfCanvasHasMovedInXOrY(PointF fromPoint, PointF toPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF startPointCanvas  = getCanvasPointFromSurfacePoint(startPointSurface);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
-		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF endPointCanvas  = getCanvasPointFromSurfacePoint(endPointSurface);
+		PointF endPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
-		assertTrue("scrolling did not work", (startPointCanvas.x != endPointCanvas.x) || (startPointCanvas.y != endPointCanvas.y));
+		String message = "startX(" + startPointCanvas.x + ") != endX(" + endPointCanvas.x
+				+ ") || startY(" + startPointCanvas.y + ") != endY(" + endPointCanvas.y + ")";
+		assertTrue(message, (startPointCanvas.x != endPointCanvas.x) || (startPointCanvas.y != endPointCanvas.y));
 	}
 
 	public void dragAndCheckIfCanvasHasNotMoved(PointF fromPoint, PointF toPoint) {
-		PointF startPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF startPointCanvas  = getCanvasPointFromSurfacePoint(startPointSurface);
+		int statusBarHeight = 0;
+		int resourceId = mainActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = mainActivity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+
+		PointF startPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
+		PointF startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
 		onView(isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint));
 
-		PointF endPointSurface = getSurfacePointFromScreenPoint(fromPoint);
-		PointF endPointCanvas  = getCanvasPointFromSurfacePoint(endPointSurface);
+		PointF endPointSurface = new PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight);
+		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface);
 
 		float delta = 0.5f;
 		assertEquals("view should not scroll but did it in x direction", startPointCanvas.x, endPointCanvas.x, delta);

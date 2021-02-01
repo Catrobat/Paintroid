@@ -1,257 +1,260 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.junit.tools;
 
-import java.util.List;
-
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.PointCommand;
-import org.catrobat.paintroid.test.junit.stubs.PathStub;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseTool;
-import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
-import org.catrobat.paintroid.tools.implementation.CursorTool;
-import org.junit.Before;
-import org.junit.Test;
-
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PointF;
-import android.support.test.annotation.UiThreadTest;
 
-import static org.junit.Assert.*;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.command.implementation.PointCommand;
+import org.catrobat.paintroid.test.junit.stubs.PathStub;
+import org.catrobat.paintroid.tools.ContextCallback;
+import org.catrobat.paintroid.tools.ToolPaint;
+import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.common.Constants;
+import org.catrobat.paintroid.tools.implementation.CursorTool;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.ui.Perspective;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
-public class CursorToolTest extends BaseToolTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyFloat;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
+public class CursorToolTest {
+	private static final float MOVE_TOLERANCE = Constants.MOVE_TOLERANCE;
+	@Mock
+	private CommandManager commandManager;
+	@Mock
+	private ToolPaint toolPaint;
+	@Mock
+	private Workspace workspace;
+	@Mock
+	private BrushToolOptionsView brushToolOptionsView;
+	@Mock
+	private ToolOptionsVisibilityController toolOptionsViewController;
+	@Mock
+	private ContextCallback contextCallback;
 
-	public CursorToolTest() {
-		super();
-	}
+	private CursorTool toolToTest;
 
-	@UiThreadTest
-	@Override
 	@Before
-	public void setUp() throws Exception {
-		mToolToTest = new CursorTool(this.getActivity(), ToolType.CURSOR);
-		super.setUp();
+	public void setUp() {
+		Paint paint = new Paint();
+		when(toolPaint.getPaint()).thenReturn(paint);
+		when(workspace.getHeight()).thenReturn(1920);
+		when(workspace.getWidth()).thenReturn(1080);
+		when(workspace.getPerspective()).thenReturn(new Perspective(1080, 1920));
+
+		toolToTest = new CursorTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 	}
 
-	@UiThreadTest
 	@Test
 	public void testShouldReturnCorrectToolType() {
-		ToolType toolType = mToolToTest.getToolType();
+		ToolType toolType = toolToTest.getToolType();
 
 		assertEquals(ToolType.CURSOR, toolType);
 	}
 
-	@UiThreadTest
 	@Test
-	public void testShouldActivateCursorOnTabEvent() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldActivateCursorOnTapEvent() {
 		PointF point = new PointF(5, 5);
+		when(workspace.contains(any(PointF.class))).thenReturn(true);
 
-		boolean handleDownEventResult = this.mToolToTest.handleDown(point);
-		boolean handleUpEventResult = this.mToolToTest.handleUp(point);
+		assertTrue(toolToTest.handleDown(point));
+		assertTrue(toolToTest.handleUp(point));
 
-		assertTrue(handleDownEventResult);
-		assertTrue(handleUpEventResult);
-
-		assertEquals(1, mCommandManagerStub.getCallCount("commitCommandToLayer"));
-		Command command = (Command) mCommandManagerStub.getCall("commitCommandToLayer", 0).get(1);
-		assertTrue(command instanceof PointCommand);
-		boolean draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
-		assertTrue(draw);
+		verify(commandManager).addCommand(isA(PointCommand.class));
+		assertTrue(toolToTest.toolInDrawMode);
 	}
 
-	@UiThreadTest
 	@Test
-	public void testShouldNotActivateCursorOnTabEvent() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldActivateCursorOnTapEventOutsideDrawingSurface() {
+		when(workspace.contains(toolToTest.toolPosition)).thenReturn(true);
+		PointF point = new PointF(-5, -5);
+
+		assertTrue(toolToTest.handleDown(point));
+		assertTrue(toolToTest.handleUp(point));
+
+		verify(commandManager).addCommand(isA(PointCommand.class));
+		assertTrue(toolToTest.toolInDrawMode);
+	}
+
+	@Test
+	public void testShouldNotActivateCursorOnTapEvent() {
 		PointF pointDown = new PointF(0, 0);
 		PointF pointUp = new PointF(pointDown.x + MOVE_TOLERANCE + 1, pointDown.y + MOVE_TOLERANCE + 1);
 
 		// +/+
-		boolean handleDownEventResult = this.mToolToTest.handleDown(pointDown);
-		boolean handleUpEventResult = this.mToolToTest.handleUp(pointUp);
+		assertTrue(toolToTest.handleDown(pointDown));
+		assertTrue(toolToTest.handleUp(pointUp));
 
-		assertTrue(handleDownEventResult);
-		assertTrue(handleUpEventResult);
-
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
-		boolean draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
-		assertFalse(draw);
+		verify(commandManager, never()).addCommand(any(Command.class));
+		assertFalse(toolToTest.toolInDrawMode);
 
 		// +/0
 		pointUp.set(pointDown.x + MOVE_TOLERANCE + 1, pointDown.y);
 
-		handleDownEventResult = this.mToolToTest.handleDown(pointDown);
-		handleUpEventResult = this.mToolToTest.handleUp(pointUp);
+		assertTrue(toolToTest.handleDown(pointDown));
+		assertTrue(toolToTest.handleUp(pointUp));
 
-		assertTrue(handleDownEventResult);
-		assertTrue(handleUpEventResult);
+		verify(commandManager, never()).addCommand(any(Command.class));
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
-
-		draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
-		assertFalse(draw);
+		assertFalse(toolToTest.toolInDrawMode);
 
 		// 0/+
 		pointUp.set(pointDown.x, pointDown.y + MOVE_TOLERANCE + 1);
-		handleDownEventResult = this.mToolToTest.handleDown(pointDown);
-		handleUpEventResult = this.mToolToTest.handleUp(pointUp);
 
-		assertTrue(handleDownEventResult);
-		assertTrue(handleUpEventResult);
+		assertTrue(toolToTest.handleDown(pointDown));
+		assertTrue(toolToTest.handleUp(pointUp));
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
-		draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
-		assertFalse(draw);
+		verify(commandManager, never()).addCommand(any(Command.class));
+		assertFalse(toolToTest.toolInDrawMode);
 
 		// -/-
 		pointUp.set(pointDown.x - MOVE_TOLERANCE - 1, pointDown.y - MOVE_TOLERANCE - 1);
-		handleDownEventResult = this.mToolToTest.handleDown(pointDown);
-		handleUpEventResult = this.mToolToTest.handleUp(pointUp);
 
-		assertTrue(handleDownEventResult);
-		assertTrue(handleUpEventResult);
+		assertTrue(toolToTest.handleDown(pointDown));
+		assertTrue(toolToTest.handleUp(pointUp));
 
-		assertEquals(0, mCommandManagerStub.getCallCount("commitCommandToLayer"));
-		draw = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode");
-		assertFalse(draw);
+		verify(commandManager, never()).addCommand(any(Command.class));
+		assertFalse(toolToTest.toolInDrawMode);
 	}
 
-	@UiThreadTest
+	private static PointF copyPointF(PointF point) {
+		return new PointF(point.x, point.y);
+	}
+
 	@Test
-	public void testShouldMovePathOnUpEvent() throws SecurityException, IllegalArgumentException, NoSuchFieldException,
-			IllegalAccessException {
+	public void testShouldMovePathOnUpEvent() {
+		when(workspace.getSurfaceHeight()).thenReturn(1920);
+		when(workspace.getSurfaceWidth()).thenReturn(1080);
+		when(workspace.getSurfacePointFromCanvasPoint(any(PointF.class))).thenAnswer(new Answer<PointF>() {
+			@Override
+			public PointF answer(InvocationOnMock invocation) {
+				return copyPointF((PointF) invocation.getArgument(0));
+			}
+		});
+
 		PointF event1 = new PointF(0, 0);
 		PointF event2 = new PointF(MOVE_TOLERANCE, MOVE_TOLERANCE);
 		PointF event3 = new PointF(MOVE_TOLERANCE * 2, -MOVE_TOLERANCE);
 		PointF testCursorPosition = new PointF();
-		PointF actualCursorPosition = (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, this.mToolToTest,
-				"mToolPosition");
+		PointF actualCursorPosition = toolToTest.toolPosition;
 		assertNotNull(actualCursorPosition);
 		testCursorPosition.set(actualCursorPosition);
 		PathStub pathStub = new PathStub();
-		PrivateAccess.setMemberValue(CursorTool.class, this.mToolToTest, "pathToDraw", pathStub);
-		assertFalse(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
+		toolToTest.pathToDraw = pathStub;
+		assertFalse(toolToTest.toolInDrawMode);
 
 		// e1
-		boolean returnValue = mToolToTest.handleDown(event1);
+		boolean returnValue = toolToTest.handleDown(event1);
 		assertTrue(returnValue);
-		assertFalse(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
-		returnValue = mToolToTest.handleUp(event1);
-		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
+		assertFalse(toolToTest.toolInDrawMode);
+		returnValue = toolToTest.handleUp(event1);
+		assertTrue(toolToTest.toolInDrawMode);
 		assertTrue(returnValue);
 		assertEquals(testCursorPosition.x, actualCursorPosition.x, Double.MIN_VALUE);
 		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);
 		// e2
-		returnValue = mToolToTest.handleMove(event2);
+		returnValue = toolToTest.handleMove(event2);
 		float vectorCX = event2.x - event1.x;
 		float vectorCY = event2.y - event1.y;
 		testCursorPosition.set(testCursorPosition.x + vectorCX, testCursorPosition.y + vectorCY);
 		assertEquals(testCursorPosition.x, actualCursorPosition.x, Double.MIN_VALUE);
 		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);
-		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
+		assertTrue(toolToTest.toolInDrawMode);
 		assertTrue(returnValue);
 		// e3
-		returnValue = mToolToTest.handleUp(event3);
-		assertTrue(PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest, "toolInDrawMode"));
+		returnValue = toolToTest.handleUp(event3);
+		assertTrue(toolToTest.toolInDrawMode);
 		assertTrue(returnValue);
 		assertEquals(testCursorPosition.x, actualCursorPosition.x, Double.MIN_VALUE);
 		assertEquals(testCursorPosition.y, actualCursorPosition.y, Double.MIN_VALUE);
 
-		assertEquals(1, pathStub.getCallCount("moveTo"));
-		assertEquals(1, pathStub.getCallCount("quadTo"));
-		assertEquals(1, pathStub.getCallCount("lineTo"));
-		List<Object> arguments = pathStub.getCall("lineTo", 0);
-		assertEquals(testCursorPosition.x, arguments.get(0));
-		assertEquals(testCursorPosition.y, arguments.get(1));
+		Path stub = pathStub.getStub();
+		verify(stub).moveTo(anyFloat(), anyFloat());
+		verify(stub).quadTo(anyFloat(), anyFloat(), anyFloat(), anyFloat());
+		verify(stub).lineTo(testCursorPosition.x, testCursorPosition.y);
 	}
 
-	@UiThreadTest
 	@Test
-	public void testShouldCheckIfColorChangesIfToolIsActive() throws SecurityException, IllegalArgumentException,
-			NoSuchFieldException, IllegalAccessException {
+	public void testShouldCheckIfColorChangesIfToolIsActive() {
+		when(workspace.contains(toolToTest.toolPosition)).thenReturn(true);
+		when(toolPaint.getColor()).thenReturn(Color.RED);
 
-		boolean checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, this.mToolToTest,
-				"toolInDrawMode");
-		assertFalse(checkIfInDrawMode);
+		assertFalse(toolToTest.toolInDrawMode);
 
 		PointF point = new PointF(200, 200);
-		mToolToTest.handleDown(point);
-		mToolToTest.handleUp(point);
+		toolToTest.handleDown(point);
+		toolToTest.handleUp(point);
 
-		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
-		assertTrue(checkIfInDrawMode);
-		Paint testmBitmapPaint = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
-		int testmSecondaryShapeColor = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
-				"mSecondaryShapeColor"));
+		assertTrue(toolToTest.toolInDrawMode);
+		assertEquals(Color.RED, toolToTest.cursorToolSecondaryShapeColor);
 
-		assertEquals(testmBitmapPaint.getColor(), testmSecondaryShapeColor);
+		toolToTest.handleDown(point);
+		toolToTest.handleUp(point);
 
-		mToolToTest.handleDown(point);
-		mToolToTest.handleUp(point);
+		assertFalse(toolToTest.toolInDrawMode);
+		assertEquals(Color.LTGRAY, toolToTest.cursorToolSecondaryShapeColor);
 
-		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
-		assertFalse(checkIfInDrawMode);
-		testmBitmapPaint = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
-		testmSecondaryShapeColor = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
-				"mSecondaryShapeColor"));
-		assertTrue(testmBitmapPaint.getColor() != testmSecondaryShapeColor);
+		when(toolPaint.getColor()).thenReturn(Color.GREEN);
+		toolToTest.handleDown(point);
+		toolToTest.handleUp(point);
 
-		mToolToTest.changePaintColor(Color.GREEN);
-		mToolToTest.handleDown(point);
-		mToolToTest.handleUp(point);
+		assertTrue(toolToTest.toolInDrawMode);
+		assertEquals(Color.GREEN, toolToTest.cursorToolSecondaryShapeColor);
 
-		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
-		assertTrue(checkIfInDrawMode);
-		Paint testmBitmapPaint2 = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
-		int testmSecondaryShapeColor2 = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
-				"mSecondaryShapeColor"));
-		assertEquals(testmBitmapPaint2.getColor(), testmSecondaryShapeColor2);
+		toolToTest.handleDown(point);
+		toolToTest.handleUp(point);
 
-		mToolToTest.handleDown(point);
-		mToolToTest.handleUp(point);
-
-		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
-		assertFalse(checkIfInDrawMode);
-		testmBitmapPaint2 = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
-		testmSecondaryShapeColor2 = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
-				"mSecondaryShapeColor"));
-		assertTrue(testmBitmapPaint2.getColor() != testmSecondaryShapeColor2);
+		assertFalse(toolToTest.toolInDrawMode);
+		assertEquals(Color.LTGRAY, toolToTest.cursorToolSecondaryShapeColor);
 
 		// test if color also changes if cursor already active
-		mToolToTest.handleDown(point);
-		mToolToTest.handleUp(point);
-		checkIfInDrawMode = PrivateAccess.getMemberValueBoolean(CursorTool.class, mToolToTest, "toolInDrawMode");
-		assertTrue(checkIfInDrawMode);
+		toolToTest.handleDown(point);
+		toolToTest.handleUp(point);
+		assertTrue(toolToTest.toolInDrawMode);
 
-		mToolToTest.changePaintColor(Color.CYAN);
+		when(toolPaint.getColor()).thenReturn(Color.CYAN);
+		toolToTest.changePaintColor(Color.CYAN);
 
-		Paint testmBitmapPaint3 = (Paint) (PrivateAccess.getMemberValue(BaseTool.class, mToolToTest, "mBitmapPaint"));
-		int testmSecondaryShapeColor3 = (Integer) (PrivateAccess.getMemberValue(CursorTool.class, mToolToTest,
-				"mSecondaryShapeColor"));
-		assertEquals("If cursor already active and color gets changed, cursortool should change color immediately",
-				testmBitmapPaint3.getColor(), testmSecondaryShapeColor3);
-
+		assertEquals(Color.CYAN, toolToTest.cursorToolSecondaryShapeColor);
 	}
 }

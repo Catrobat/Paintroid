@@ -1,83 +1,63 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PointF;
 
-import org.catrobat.paintroid.PaintroidApplication;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
-public class EraserTool extends DrawTool {
+public class EraserTool extends BrushTool {
+	private Paint previewPaint = new Paint();
+	private Paint bitmapPaint = new Paint();
 
-	protected Paint mPreviousPaint;
-
-	public EraserTool(Context context, ToolType toolType) {
-		super(context, toolType);
-
-		mPreviousPaint = new Paint(
-				PaintroidApplication.currentTool.getDrawPaint());
-
-		changePaintColor(Color.TRANSPARENT);
-
-		mCanvasPaint.setStrokeCap(mPreviousPaint.getStrokeCap());
-		mCanvasPaint.setStrokeWidth(mPreviousPaint.getStrokeWidth());
-
+	public EraserTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback,
+			ToolOptionsVisibilityController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace,
+			CommandManager commandManager) {
+		super(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 	}
 
 	@Override
-	public void draw(Canvas canvas) {
-		super.draw(canvas);
+	protected Paint getPreviewPaint() {
+		previewPaint.set(super.getPreviewPaint());
+		previewPaint.setColor(Color.BLACK);
+		previewPaint.setShader(toolPaint.getCheckeredShader());
+		return previewPaint;
 	}
 
 	@Override
-	public boolean handleDown(PointF coordinate) {
-		return (super.handleDown(coordinate));
+	protected Paint getBitmapPaint() {
+		bitmapPaint.set(super.getBitmapPaint());
+		bitmapPaint.setXfermode(toolPaint.getEraseXfermode());
+		bitmapPaint.setAlpha(0);
+		return bitmapPaint;
 	}
 
 	@Override
-	public boolean handleMove(PointF coordinate) {
-		return (super.handleMove(coordinate));
-	}
-
-	@Override
-	public boolean handleUp(PointF coordinate) {
-		return (super.handleUp(coordinate));
-	}
-
-	@Override
-	public void resetInternalState(StateChange stateChange) {
-		super.resetInternalState(stateChange);
-	}
-
-	@Override
-	public Paint getDrawPaint() {
-		return new Paint(this.mPreviousPaint);
-	}
-
-	@Override
-	public void setDrawPaint(Paint paint) {
-		changePaintColor(Color.TRANSPARENT);
-		// previous paint object has already been saved in constructor
+	public ToolType getToolType() {
+		return ToolType.ERASER;
 	}
 }

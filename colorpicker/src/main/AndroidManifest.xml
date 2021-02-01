@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.catrobat.paintroid.colorpicker">
+
+    <application>
+        <activity
+            android:name=".ColorPickerPreviewActivity"
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge" />
+    </application>
+
+</manifest>

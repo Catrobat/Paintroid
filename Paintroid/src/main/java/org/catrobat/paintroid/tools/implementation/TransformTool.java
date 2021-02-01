@@ -1,581 +1,383 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.AsyncTask;
-import android.view.Display;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.LayerBitmapCommand;
-import org.catrobat.paintroid.command.implementation.BaseCommand;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.FlipCommand;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.listener.TransformToolOptionsListener;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.tools.ContextCallback;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.helper.CropAlgorithm;
+import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
+import org.catrobat.paintroid.tools.helper.JavaCropAlgorithm;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.tools.options.TransformToolOptionsView;
+import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
 
-import java.util.List;
-import java.util.Observable;
+import androidx.annotation.VisibleForTesting;
 
 public class TransformTool extends BaseToolWithRectangleShape {
 
+	public static final String TAG = TransformTool.class.getSimpleName();
+	@VisibleForTesting
+	public static final float MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f;
 	private static final float START_ZOOM_FACTOR = 0.95f;
 	private static final boolean ROTATION_ENABLED = false;
-	private static final boolean RESPECT_IMAGE_BORDERS = false;
 	private static final boolean RESIZE_POINTS_VISIBLE = false;
 	private static final boolean RESPECT_MAXIMUM_BORDER_RATIO = false;
 	private static final boolean RESPECT_MAXIMUM_BOX_RESOLUTION = true;
-	private static final float MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f;
+	@VisibleForTesting
+	public float resizeBoundWidthXLeft;
+	@VisibleForTesting
+	public float resizeBoundWidthXRight = 0;
+	@VisibleForTesting
+	public float resizeBoundHeightYTop;
+	@VisibleForTesting
+	public float resizeBoundHeightYBottom = 0;
 
-	private float mResizeBoundWidthXLeft;
-	private float mResizeBoundWidthXRight = 0;
-	private float mResizeBoundHeightYTop;
-	private float mResizeBoundHeightYBottom = 0;
-	private int mIntermediateResizeBoundWidthXLeft;
-	private int mIntermediateResizeBoundWidthXRight;
-	private int mIntermediateResizeBoundHeightYTop;
-	private int mIntermediateResizeBoundHeightYBottom;
+	private boolean cropRunFinished = false;
+	private boolean maxImageResolutionInformationAlreadyShown = false;
+	private boolean zeroSizeBitmap = false;
 
-	private boolean mCropRunFinished = false;
-	private boolean mResizeInformationAlreadyShown = false;
-	private boolean mMaxImageResolutionInformationAlreadyShown = false;
+	private TransformToolOptionsView transformToolOptionsView;
+	private NumberRangeFilter rangeFilterHeight;
+	private NumberRangeFilter rangeFilterWidth;
+	private final CropAlgorithm cropAlgorithm;
 
-	private View mTransformToolOptionView;
+	public TransformTool(TransformToolOptionsView transformToolOptionsView, final ContextCallback contextCallback,
+						ToolOptionsVisibilityController toolOptionsViewController, ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
-	public TransformTool(Context context, ToolType toolType) {
-		super(context, toolType);
+		this.transformToolOptionsView = transformToolOptionsView;
 
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mTransformToolOptionView = inflater.inflate(R.layout.dialog_transform_tool, null);
-		mToolSpecificOptionsLayout.addView(mTransformToolOptionView);
+		this.rotationEnabled = ROTATION_ENABLED;
+		this.resizePointsVisible = RESIZE_POINTS_VISIBLE;
+		this.respectMaximumBorderRatio = RESPECT_MAXIMUM_BORDER_RATIO;
 
-		TransformToolOptionsListener.init(mContext, mTransformToolOptionView);
+		boxHeight = workspace.getHeight();
+		boxWidth = workspace.getWidth();
+		toolPosition.x = boxWidth / 2f;
+		toolPosition.y = boxHeight / 2f;
 
-		setRotationEnabled(ROTATION_ENABLED);
-		setRespectImageBounds(RESPECT_IMAGE_BORDERS);
-		setResizePointsVisible(RESIZE_POINTS_VISIBLE);
-		setRespectMaximumBorderRatio(RESPECT_MAXIMUM_BORDER_RATIO);
+		cropAlgorithm = new JavaCropAlgorithm();
 
-		if (!PaintroidApplication.drawingSurface.isBitmapNull()) {
-			mBoxHeight = (PaintroidApplication.drawingSurface.getBitmapHeight());
-			mBoxWidth = (PaintroidApplication.drawingSurface.getBitmapWidth());
-		}
-		mToolPosition.x = mBoxWidth / 2f;
-		mToolPosition.y = mBoxHeight / 2f;
+		cropRunFinished = true;
 
-		resetScaleAndTranslation();
-
-		mCropRunFinished = true;
-
-		DisplayResizeInformationAsyncTask displayResizeInformation = new DisplayResizeInformationAsyncTask();
-		displayResizeInformation.execute();
-
-		Display display = ((Activity) mContext).getWindowManager().getDefaultDisplay();
-		Point displaySize = new Point();
-		display.getSize(displaySize);
-		int displayWidth = displaySize.x;
-		int displayHeight = displaySize.y;
-		setMaximumBoxResolution(displayWidth * displayHeight * MAXIMUM_BITMAP_SIZE_FACTOR);
-		setRespectMaximumBoxResolution(RESPECT_MAXIMUM_BOX_RESOLUTION);
+		this.maximumBoxResolution = metrics.widthPixels * metrics.heightPixels * MAXIMUM_BITMAP_SIZE_FACTOR;
+		this.respectMaximumBoxResolution = RESPECT_MAXIMUM_BOX_RESOLUTION;
 		initResizeBounds();
+
+		toolOptionsViewController.setCallback(new ToolOptionsViewController.Callback() {
+			@Override
+			public void onHide() {
+				if (!zeroSizeBitmap) {
+					contextCallback.showNotification(R.string.transform_info_text, ContextCallback.NotificationDuration.LONG);
+				} else {
+					zeroSizeBitmap = false;
+				}
+			}
+
+			@Override
+			public void onShow() {
+				updateToolOptions();
+			}
+		});
+
+		transformToolOptionsView.setCallback(new TransformToolOptionsView.Callback() {
+			@Override
+			public void autoCropClicked() {
+				autoCrop();
+			}
+
+			@Override
+			public void rotateCounterClockwiseClicked() {
+				rotateCounterClockWise();
+			}
+
+			@Override
+			public void rotateClockwiseClicked() {
+				rotateClockWise();
+			}
+
+			@Override
+			public void flipHorizontalClicked() {
+				flipHorizontal();
+			}
+
+			@Override
+			public void flipVerticalClicked() {
+				flipVertical();
+			}
+
+			@Override
+			public void setBoxWidth(float boxWidth) {
+				TransformTool.this.boxWidth = boxWidth;
+			}
+
+			@Override
+			public void setBoxHeight(float boxHeight) {
+				TransformTool.this.boxHeight = boxHeight;
+			}
+
+			@Override
+			public void hideToolOptions() {
+				TransformTool.this.toolOptionsViewController.hide();
+			}
+
+			@Override
+			public void applyResizeClicked(int resizePercentage) {
+				onApplyResizeClicked(resizePercentage);
+			}
+		});
+
+		rangeFilterHeight = new DefaultNumberRangeFilter(1, (int) (maximumBoxResolution / boxWidth));
+		rangeFilterWidth = new DefaultNumberRangeFilter(1, (int) (maximumBoxResolution / boxHeight));
+
+		transformToolOptionsView.setHeightFilter(rangeFilterHeight);
+		transformToolOptionsView.setWidthFilter(rangeFilterWidth);
+
+		updateToolOptions();
+		toolOptionsViewController.showDelayed();
 	}
 
 	@Override
 	public void resetInternalState() {
-		resetScaleAndTranslation();
+		initialiseResizingState();
 	}
 
 	@Override
-	protected void drawToolSpecifics(Canvas canvas) {
-		if (mCropRunFinished) {
-			mLinePaint.setColor(mPrimaryShapeColor);
-			mLinePaint.setStrokeWidth(mToolStrokeWidth * 2);
+	protected void drawToolSpecifics(Canvas canvas, float boxWidth, float boxHeight) {
+		if (cropRunFinished) {
+			linePaint.setColor(primaryShapeColor);
+			linePaint.setStrokeWidth(toolStrokeWidth * 2);
 
-			PointF rightTopPoint = new PointF(-mBoxWidth / 2, -mBoxHeight / 2);
-
-			float tempWidth = mBoxWidth;
+			PointF rightTopPoint = new PointF(-boxWidth / 2, -boxHeight / 2);
 
 			for (int lines = 0; lines < 4; lines++) {
-				float resizeLineLengthHeight = mBoxHeight / 10;
-				float resizeLineLengthWidth = mBoxWidth / 10;
+				float resizeLineLengthHeight = boxHeight / 10;
+				float resizeLineLengthWidth = boxWidth / 10;
 
-				canvas.drawLine(rightTopPoint.x - mToolStrokeWidth / 2,
+				canvas.drawLine(rightTopPoint.x - toolStrokeWidth / 2,
 						rightTopPoint.y, rightTopPoint.x + resizeLineLengthWidth,
-						rightTopPoint.y, mLinePaint);
+						rightTopPoint.y, linePaint);
 
 				canvas.drawLine(rightTopPoint.x, rightTopPoint.y
-								- mToolStrokeWidth / 2, rightTopPoint.x,
-						rightTopPoint.y + resizeLineLengthHeight, mLinePaint);
+								- toolStrokeWidth / 2, rightTopPoint.x,
+						rightTopPoint.y + resizeLineLengthHeight, linePaint);
 
-				canvas.drawLine(rightTopPoint.x + mBoxWidth / 2
+				canvas.drawLine(rightTopPoint.x + boxWidth / 2
 								- resizeLineLengthWidth, rightTopPoint.y, rightTopPoint.x
-								+ mBoxWidth / 2 + resizeLineLengthWidth, rightTopPoint.y,
-						mLinePaint);
+								+ boxWidth / 2 + resizeLineLengthWidth, rightTopPoint.y,
+						linePaint);
 				canvas.rotate(90);
 				float tempX = rightTopPoint.x;
 				rightTopPoint.x = rightTopPoint.y;
 				rightTopPoint.y = tempX;
-				float tempHeight = mBoxHeight;
-				mBoxHeight = mBoxWidth;
-				mBoxWidth = tempHeight;
+				float tempHeight = boxHeight;
+				boxHeight = boxWidth;
+				boxWidth = tempHeight;
 			}
-			mBoxWidth = tempWidth;
 		}
 	}
 
 	private void resetScaleAndTranslation() {
-		PaintroidApplication.perspective.resetScaleAndTranslation();
-		float zoomFactor = PaintroidApplication.perspective
-				.getScaleForCenterBitmap() * START_ZOOM_FACTOR;
-		PaintroidApplication.perspective.setScale(zoomFactor);
+		workspace.resetPerspective();
+		float zoomFactor = workspace.getScaleForCenterBitmap() * START_ZOOM_FACTOR;
+		workspace.setScale(zoomFactor);
 	}
 
 	private void initialiseResizingState() {
-		mCropRunFinished = false;
-		mResizeBoundWidthXRight = 0;
-		mResizeBoundHeightYBottom = 0;
-		mResizeBoundWidthXLeft = PaintroidApplication.drawingSurface
-				.getBitmapWidth();
-		mResizeBoundHeightYTop = PaintroidApplication.drawingSurface
-				.getBitmapHeight();
-		mIntermediateResizeBoundWidthXLeft = 0;
-		mIntermediateResizeBoundWidthXRight = PaintroidApplication.drawingSurface
-				.getBitmapWidth();
-		mIntermediateResizeBoundHeightYTop = 0;
-		mIntermediateResizeBoundHeightYBottom = PaintroidApplication.drawingSurface
-				.getBitmapHeight();
+		cropRunFinished = false;
+		resizeBoundWidthXRight = 0;
+		resizeBoundHeightYBottom = 0;
+		resizeBoundWidthXLeft = workspace.getWidth();
+		resizeBoundHeightYTop = workspace.getHeight();
 		resetScaleAndTranslation();
+		resizeBoundWidthXRight = workspace.getWidth() - 1;
+		resizeBoundHeightYBottom = workspace.getHeight() - 1;
+		resizeBoundWidthXLeft = 0f;
+		resizeBoundHeightYTop = 0f;
+		setRectangle(new RectF(resizeBoundWidthXLeft,
+				resizeBoundHeightYTop, resizeBoundWidthXRight,
+				resizeBoundHeightYBottom));
+		cropRunFinished = true;
+		updateToolOptions();
 	}
 
-	protected void displayToastInformation(int stringID) {
-		LayoutInflater inflater = (LayoutInflater) mContext
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout layout = (LinearLayout) inflater.inflate(
-				R.layout.image_toast_layout, (ViewGroup) ((Activity) mContext)
-						.findViewById(R.id.image_toast_layout_root));
-
-		if (stringID != R.string.resize_to_resize_tap_text) {
-			ImageView toastImage = (ImageView) layout.findViewById(R.id.toast_image);
-			toastImage.setVisibility(View.GONE);
-
-			TextView text = (TextView) layout.findViewById(R.id.toast_text);
-			text.setText(mContext.getText(stringID));
-		}
-
-		Toast toast = new Toast(mContext);
-		toast.setDuration(Toast.LENGTH_SHORT);
-		toast.setView(layout);
-		toast.show();
-	}
-
-	protected void executeResizeCommand() {
-		if (mCropRunFinished == true) {
-			mCropRunFinished = false;
+	private void executeResizeCommand() {
+		if (cropRunFinished) {
+			cropRunFinished = false;
 			initResizeBounds();
 			if (areResizeBordersValid()) {
-
-				for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-					Command resizeCommand = new ResizeCommand((int) Math.floor(mResizeBoundWidthXLeft),
-							(int) Math.floor(mResizeBoundHeightYTop),
-							(int) Math.floor(mResizeBoundWidthXRight),
-							(int) Math.floor(mResizeBoundHeightYBottom),
-							(int) mMaximumBoxResolution);
-
-					if (layer.getSelected()) {
-						((ResizeCommand) resizeCommand).addObserver(this);
-					}
-					PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), resizeCommand);
-				}
-
+				Command resizeCommand = commandFactory.createCropCommand(
+						(int) Math.floor(resizeBoundWidthXLeft),
+						(int) Math.floor(resizeBoundHeightYTop),
+						(int) Math.floor(resizeBoundWidthXRight),
+						(int) Math.floor(resizeBoundHeightYBottom),
+						(int) maximumBoxResolution);
+				commandManager.addCommand(resizeCommand);
 			} else {
-				mCropRunFinished = true;
-				displayToastInformation(R.string.resize_nothing_to_resize);
+				cropRunFinished = true;
+				contextCallback.showNotification(R.string.resize_nothing_to_resize);
 			}
 		}
 	}
 
-	private void flip(FlipCommand.FlipDirection flipDirection) {
-		Command command = new FlipCommand(flipDirection);
-		IndeterminateProgressDialog.getInstance().show();
-		((FlipCommand) command).addObserver(this);
-		Layer layer = LayerListener.getInstance().getCurrentLayer();
-		PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+	private void onApplyResizeClicked(int resizePercentage) {
+		int newWidth = (int) ((float) workspace.getWidth() / 100 * resizePercentage);
+		int newHeight = (int) ((float) workspace.getHeight() / 100 * resizePercentage);
+
+		if (newWidth == 0 || newHeight == 0) {
+			zeroSizeBitmap = true;
+			contextCallback.showNotification(R.string.resize_cannot_resize_to_this_size, ContextCallback.NotificationDuration.LONG);
+		} else {
+			Command command = commandFactory.createResizeCommand(newWidth, newHeight);
+			commandManager.addCommand(command);
+		}
 	}
 
-	private void rotate(RotateCommand.RotateDirection rotateDirection) {
-		IndeterminateProgressDialog.getInstance().show();
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			Command command = new RotateCommand(rotateDirection);
+	private void flipHorizontal() {
+		Command command = commandFactory.createFlipCommand(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
+		commandManager.addCommand(command);
+	}
 
-			if (layer.getSelected()) {
-				((RotateCommand) command).addObserver(this);
+	private void flipVertical() {
+		Command command = commandFactory.createFlipCommand(FlipCommand.FlipDirection.FLIP_VERTICAL);
+		commandManager.addCommand(command);
+	}
+
+	private void rotateCounterClockWise() {
+		Command command = commandFactory.createRotateCommand(RotateCommand.RotateDirection.ROTATE_LEFT);
+		commandManager.addCommand(command);
+
+		swapWidthAndHeight();
+	}
+
+	private void rotateClockWise() {
+		Command command = commandFactory.createRotateCommand(RotateCommand.RotateDirection.ROTATE_RIGHT);
+		commandManager.addCommand(command);
+
+		swapWidthAndHeight();
+	}
+
+	private void swapWidthAndHeight() {
+		float tempBoxWidth = boxWidth;
+		boxWidth = boxHeight;
+		boxHeight = tempBoxWidth;
+	}
+
+	private void autoCrop() {
+		new AsyncTask<Void, Void, Void>() {
+			@Override
+			protected Void doInBackground(Void... params) {
+				Rect shapeBounds = cropAlgorithm.crop(workspace.getBitmapOfAllLayers());
+				if (shapeBounds != null) {
+					boxWidth = shapeBounds.width() + 1;
+					boxHeight = shapeBounds.height() + 1;
+					toolPosition.x = shapeBounds.left + (shapeBounds.width() + 1) / 2.0f;
+					toolPosition.y = shapeBounds.top + (shapeBounds.height() + 1) / 2.0f;
+				}
+				return null;
 			}
-			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
-		}
+
+			@Override
+			protected void onPostExecute(Void result) {
+				workspace.invalidate();
+				toolOptionsViewController.hide();
+			}
+		}.execute();
 	}
 
 	private boolean areResizeBordersValid() {
-		if (mResizeBoundWidthXRight < mResizeBoundWidthXLeft
-				|| mResizeBoundHeightYTop > mResizeBoundHeightYBottom) {
+		if (resizeBoundWidthXRight < resizeBoundWidthXLeft
+				|| resizeBoundHeightYTop > resizeBoundHeightYBottom) {
 			return false;
 		}
-		if (mResizeBoundWidthXLeft >= PaintroidApplication.drawingSurface.getBitmapWidth() ||
-				mResizeBoundWidthXRight < 0 || mResizeBoundHeightYBottom < 0 ||
-				mResizeBoundHeightYTop >= PaintroidApplication.drawingSurface.getBitmapHeight()) {
+		if (resizeBoundWidthXLeft >= workspace.getWidth()
+				|| resizeBoundWidthXRight < 0 || resizeBoundHeightYBottom < 0
+				|| resizeBoundHeightYTop >= workspace.getHeight()) {
 			return false;
 		}
-		if (mResizeBoundWidthXLeft == 0 && mResizeBoundHeightYTop == 0 &&
-				mResizeBoundWidthXRight == PaintroidApplication.drawingSurface.getBitmapWidth() - 1 &&
-				mResizeBoundHeightYBottom == PaintroidApplication.drawingSurface.getBitmapHeight() - 1) {
+		if (resizeBoundWidthXLeft == 0 && resizeBoundHeightYTop == 0
+				&& resizeBoundWidthXRight == workspace.getWidth() - 1
+				&& resizeBoundHeightYBottom == workspace.getHeight() - 1) {
 			return false;
 		}
-		if ((mResizeBoundWidthXRight + 1 - mResizeBoundWidthXLeft)
-				* (mResizeBoundHeightYBottom + 1 - mResizeBoundHeightYTop) > mMaximumBoxResolution) {
+		if ((resizeBoundWidthXRight + 1 - resizeBoundWidthXLeft)
+				* (resizeBoundHeightYBottom + 1 - resizeBoundHeightYTop) > maximumBoxResolution) {
 			return false;
 		}
 
 		return true;
 	}
 
-	@Override
-	public void update(Observable observable, Object data) {
-		super.update(observable, data);
-		if (data instanceof BaseCommand.NOTIFY_STATES) {
-			if (BaseCommand.NOTIFY_STATES.COMMAND_DONE == data
-					|| BaseCommand.NOTIFY_STATES.COMMAND_FAILED == data) {
-				initialiseResizingState();
-				mResizeBoundWidthXRight = Float
-						.valueOf(PaintroidApplication.drawingSurface
-								.getBitmapWidth() - 1);
-				mResizeBoundHeightYBottom = Float
-						.valueOf(PaintroidApplication.drawingSurface
-								.getBitmapHeight() - 1);
-				mResizeBoundWidthXLeft = 0f;
-				mResizeBoundHeightYTop = 0f;
-				setRectangle(new RectF(mResizeBoundWidthXLeft,
-						mResizeBoundHeightYTop, mResizeBoundWidthXRight,
-						mResizeBoundHeightYBottom));
-				mCropRunFinished = true;
-			}
-		}
-	}
-
-	protected class DisplayResizeInformationAsyncTask extends
-			AsyncTask<Void, Integer, Void> {
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void nothing) {
-			if (!mResizeInformationAlreadyShown) {
-				//displayToastInformation(R.string.resize_to_resize_tap_text);
-				mResizeInformationAlreadyShown = true;
-			}
-		}
-	}
-
 	private void setRectangle(RectF rectangle) {
-		mBoxWidth = rectangle.right - rectangle.left + 1f;
-		mBoxHeight = rectangle.bottom - rectangle.top + 1f;
-		mToolPosition.x = rectangle.left + mBoxWidth / 2f;
-		mToolPosition.y = rectangle.top + mBoxHeight / 2f;
+		boxWidth = rectangle.right - rectangle.left + 1f;
+		boxHeight = rectangle.bottom - rectangle.top + 1f;
+		toolPosition.x = rectangle.left + boxWidth / 2f;
+		toolPosition.y = rectangle.top + boxHeight / 2f;
 	}
 
 	private void initResizeBounds() {
-		mResizeBoundWidthXLeft = mToolPosition.x - mBoxWidth / 2f;
-		mResizeBoundWidthXRight = mToolPosition.x + mBoxWidth / 2f - 1f;
-		mResizeBoundHeightYTop = mToolPosition.y - mBoxHeight / 2f;
-		mResizeBoundHeightYBottom = mToolPosition.y + mBoxHeight / 2f - 1f;
+		resizeBoundWidthXLeft = toolPosition.x - boxWidth / 2f;
+		resizeBoundWidthXRight = toolPosition.x + boxWidth / 2f - 1f;
+		resizeBoundHeightYTop = toolPosition.y - boxHeight / 2f;
+		resizeBoundHeightYBottom = toolPosition.y + boxHeight / 2f - 1f;
 	}
 
 	@Override
-	protected void onClickInBox() {
+	public void onClickOnButton() {
 		executeResizeCommand();
 	}
 
 	@Override
 	protected void preventThatBoxGetsTooLarge(float oldWidth, float oldHeight,
-											  float oldPosX, float oldPosY) {
+			float oldPosX, float oldPosY) {
 		super.preventThatBoxGetsTooLarge(oldWidth, oldHeight, oldPosX, oldPosY);
-		if (!mMaxImageResolutionInformationAlreadyShown) {
-			displayToastInformation(R.string.resize_max_image_resolution_reached);
-			mMaxImageResolutionInformationAlreadyShown = true;
+		if (!maxImageResolutionInformationAlreadyShown) {
+			contextCallback.showNotification(R.string.resize_max_image_resolution_reached);
+			maxImageResolutionInformationAlreadyShown = true;
 		}
 	}
 
 	@Override
-	public void setupToolOptions() {
-		TransformToolOptionsListener.getInstance().getFlipVerticalButton()
-				.setOnTouchListener(new View.OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						switch (event.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								v.setBackgroundColor(mContext.getResources()
-										.getColor(R.color.bottom_bar_button_activated));
-								break;
-							case MotionEvent.ACTION_UP:
-								v.setBackgroundColor(mContext.getResources()
-										.getColor(R.color.transparent));
-								flip(FlipCommand.FlipDirection.FLIP_VERTICAL);
-								break;
-							default:
-								return false;
-						}
-						return true;
-					}
-				});
-
-
-		TransformToolOptionsListener.getInstance().getFlipHorizontalButton()
-				.setOnTouchListener(new View.OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						switch (event.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								v.setBackgroundColor(mContext.getResources()
-										.getColor(R.color.bottom_bar_button_activated));
-								break;
-							case MotionEvent.ACTION_UP:
-								v.setBackgroundColor(mContext.getResources()
-										.getColor(R.color.transparent));
-								flip(FlipCommand.FlipDirection.FLIP_HORIZONTAL);
-								break;
-							default:
-								return false;
-						}
-						return true;
-					}
-				});
-
-		TransformToolOptionsListener.getInstance().getRotateLeftButton()
-				.setOnTouchListener(new View.OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						switch (event.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
-								break;
-							case MotionEvent.ACTION_UP:
-								v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
-								rotate(RotateCommand.RotateDirection.ROTATE_LEFT);
-								break;
-							default:
-								return false;
-						}
-						return true;
-					}
-				});
-
-		TransformToolOptionsListener.getInstance().getRotateRightButton()
-				.setOnTouchListener(new View.OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						switch (event.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								v.setBackgroundColor(mContext.getResources().getColor(R.color.bottom_bar_button_activated));
-								break;
-							case MotionEvent.ACTION_UP:
-								v.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
-								rotate(RotateCommand.RotateDirection.ROTATE_RIGHT);
-								break;
-							default:
-								return false;
-						}
-						return true;
-					}
-				});
-
-		mToolSpecificOptionsLayout.post(new Runnable() {
-			@Override
-			public void run() {
-				toggleShowToolOptions();
-			}
-		});
+	public ToolType getToolType() {
+		return ToolType.TRANSFORM;
 	}
 
-	@Override
-	public void toggleShowToolOptions() {
-		super.toggleShowToolOptions();
-		if (!mToolOptionsShown) {
-			Toast.makeText(mContext, R.string.transform_info_text, Toast.LENGTH_LONG).show();
-		}
+	private void updateToolOptions() {
+		rangeFilterHeight.setMax((int) (maximumBoxResolution / boxWidth));
+		rangeFilterWidth.setMax((int) (maximumBoxResolution / boxHeight));
+
+		transformToolOptionsView.setWidth((int) boxWidth);
+		transformToolOptionsView.setHeight((int) boxHeight);
 	}
-
-	public static void undoResizeCommand(Layer undoLayer, ResizeCommand undoCommand) {
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			if (layer == undoLayer) {
-				continue;
-			}
-
-			LayerCommand layerCommand = new LayerCommand(layer);
-			LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
-			List<Command> layerCommands = layerBitmapCommand.getLayerCommands();
-
-			if (!layerCommands.isEmpty()) {
-				int indexOfLastElement = layerCommands.size() - 1;
-				Command lastCommand = layerCommands.get(indexOfLastElement);
-				if (lastCommand instanceof ResizeCommand) {
-					layerBitmapCommand.addCommandToUndoList();
-					LayerListener.getInstance().selectLayer(layer);
-					layerBitmapCommand.clearLayerBitmap();
-					layerBitmapCommand.runAllCommands();
-					continue;
-				}
-			}
-
-			int undoWidth = undoLayer.getImage().getWidth();
-			int undoHeight = undoLayer.getImage().getHeight();
-			int currentWidth = layer.getImage().getWidth();
-			int currentHeight = layer.getImage().getHeight();
-
-			Command resizeCommand = new ResizeCommand(
-					-undoCommand.getResizeCoordinateXLeft(),
-					-undoCommand.getResizeCoordinateYTop(),
-					currentWidth - (undoCommand.getResizeCoordinateXRight() - undoWidth),
-					currentHeight - (undoCommand.getResizeCoordinateYBottom() - undoHeight),
-					undoCommand.getMaximumBitmapResolution());
-
-			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), resizeCommand);
-		}
-
-		if (!undoLayer.getSelected()) {
-			LayerListener.getInstance().selectLayer(undoLayer);
-		}
-	}
-
-	public static void redoResizeCommand(Layer redoLayer, ResizeCommand redoCommand) {
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			if (layer == redoLayer) {
-				continue;
-			}
-
-			LayerCommand layerCommand = new LayerCommand(layer);
-			LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
-			List<Command> undoCommands = layerBitmapCommand.getLayerUndoCommands();
-
-			if (!undoCommands.isEmpty()) {
-				Command firstCommand = undoCommands.get(0);
-				if (firstCommand instanceof ResizeCommand) {
-					firstCommand.run(PaintroidApplication.drawingSurface.getCanvas(), layer);
-					layerBitmapCommand.addCommandToRedoList();
-					continue;
-				}
-			}
-
-			Command resizeCommand = new ResizeCommand(
-					redoCommand.getResizeCoordinateXLeft(),
-					redoCommand.getResizeCoordinateYTop(),
-					redoCommand.getResizeCoordinateXRight(),
-					redoCommand.getResizeCoordinateYBottom(),
-					redoCommand.getMaximumBitmapResolution());
-
-			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), resizeCommand);
-		}
-	}
-
-	public static void undoRotateCommand(Layer undoLayer, RotateCommand undoCommand) {
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			if (layer == undoLayer) {
-				continue;
-			}
-
-			LayerCommand layerCommand = new LayerCommand(layer);
-			LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
-			List<Command> layerCommands = layerBitmapCommand.getLayerCommands();
-
-			if (!layerCommands.isEmpty()) {
-				int indexOfLastElement = layerCommands.size() - 1;
-				Command lastCommand = layerCommands.get(indexOfLastElement);
-				if (lastCommand instanceof RotateCommand) {
-					layerBitmapCommand.addCommandToUndoList();
-					LayerListener.getInstance().selectLayer(layer);
-					layerBitmapCommand.clearLayerBitmap();
-					layerBitmapCommand.runAllCommands();
-					continue;
-				}
-			}
-
-			RotateCommand.RotateDirection rotateDirection = null;
-			switch (undoCommand.getRotateDirection()) {
-				case ROTATE_LEFT:
-					rotateDirection = RotateCommand.RotateDirection.ROTATE_RIGHT;
-					break;
-				case ROTATE_RIGHT:
-					rotateDirection = RotateCommand.RotateDirection.ROTATE_LEFT;
-			}
-
-			Command rotateCommand = new RotateCommand(rotateDirection);
-			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), rotateCommand);
-		}
-
-		if (!undoLayer.getSelected()) {
-			LayerListener.getInstance().selectLayer(undoLayer);
-		}
-	}
-
-	public static void redoRotateCommand(Layer redoLayer, RotateCommand redoCommand) {
-		for (Layer layer : LayerListener.getInstance().getAdapter().getLayers()) {
-			if (layer == redoLayer) {
-				continue;
-			}
-
-			LayerCommand layerCommand = new LayerCommand(layer);
-			LayerBitmapCommand layerBitmapCommand = PaintroidApplication.commandManager.getLayerBitmapCommand(layerCommand);
-			List<Command> undoCommands = layerBitmapCommand.getLayerUndoCommands();
-
-			if (!undoCommands.isEmpty()) {
-				Command firstCommand = undoCommands.get(0);
-				if (firstCommand instanceof RotateCommand) {
-					firstCommand.run(PaintroidApplication.drawingSurface.getCanvas(), layer);
-					layerBitmapCommand.addCommandToRedoList();
-					continue;
-				}
-			}
-
-			Command rotateCommand = new RotateCommand(redoCommand.getRotateDirection());
-			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), rotateCommand);
-		}
-	}
-
 }

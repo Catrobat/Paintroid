@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+    <color name="pocketpaint_color_picker_rgb_red">#FFEB4618</color>
+    <color name="pocketpaint_color_picker_rgb_green">#FF078707</color>
+    <color name="pocketpaint_color_picker_rgb_blue">#FF0284e7</color>
+    <color name="pocketpaint_color_picker_rgb_alpha">#FFCCCCCC</color>
+
+    <color name="pocketpaint_color_picker_blue1">#FF0074CD</color>
+    <color name="pocketpaint_color_picker_blue2">#FF00B4F1</color>
+    <color name="pocketpaint_color_picker_green1">#FF078707</color>
+    <color name="pocketpaint_color_picker_green2">#FF8EC430</color>
+    <color name="pocketpaint_color_picker_brown1">#FF61290E</color>
+    <color name="pocketpaint_color_picker_brown2">#FFA84818</color>
+    <color name="pocketpaint_color_picker_brown3">#FFDEAE66</color>
+    <color name="pocketpaint_color_picker_brown4">#FFF0E4A8</color>
+    <color name="pocketpaint_color_picker_purple1">#FF7D1379</color>
+    <color name="pocketpaint_color_picker_purple2">#FFA743D1</color>
+    <color name="pocketpaint_color_picker_purple3">#FFCA0186</color>
+    <color name="pocketpaint_color_picker_purple4">#FFEB90D3</color>
+    <color name="pocketpaint_color_picker_red1">#FFC5060E</color>
+    <color name="pocketpaint_color_picker_orange1">#FFEB4618</color>
+    <color name="pocketpaint_color_picker_orange2">#FFF9921C</color>
+    <color name="pocketpaint_color_picker_yellow">#FFF3D605</color>
+    <color name="pocketpaint_color_picker_black">#FF000000</color>
+    <color name="pocketpaint_color_picker_gray">#FFA3A3A3</color>
+    <color name="pocketpaint_color_picker_white">#ffffff</color>
+    <color name="pocketpaint_color_picker_transparent">#00000000</color>
+
+    <color name="pocketpaint_color_picker_hex_wrong_value_red">#FFFE4A49</color>
+    <color name="pocketpaint_color_picker_hex_correct_black">#FF000000</color>
+    <color name="pocketpaint_color_picker_hex_black">#FF000000</color>
+    <color name="pocketpaint_color_picker_separation_color">#B8B8B8</color>
+
+    <color name="pocketpaint_color_picker_actionbar_color">#0097A7</color>
+    <color name="pocketpaint_color_picker_btn_color">#DFDADA</color>
+
+    <color name="pocketpaint_color_picker_surface_background">#D3D3D3</color>
+
+</resources>

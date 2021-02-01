@@ -19,48 +19,44 @@
 
 package org.catrobat.paintroid.intro;
 
-import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.VisibleForTesting;
+import androidx.viewpager.widget.PagerAdapter;
+
 public class IntroPageViewAdapter extends PagerAdapter {
-    private Context context;
-    private int[] layouts;
+	@VisibleForTesting
+	public int[] layouts;
 
-    public IntroPageViewAdapter(Context context, int[] layouts) {
-        this.context = context;
-        this.layouts = layouts;
-    }
+	public IntroPageViewAdapter(int[] layouts) {
+		this.layouts = new int[layouts.length];
+		System.arraycopy(layouts, 0, this.layouts, 0, this.layouts.length);
+	}
 
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        LayoutInflater layoutInflater =
-                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	@Override
+	public Object instantiateItem(ViewGroup container, int position) {
+		LayoutInflater layoutInflater = LayoutInflater.from(container.getContext());
 
-        View view = layoutInflater.inflate(layouts[position], container, false);
-        container.addView(view);
-        return view;
-    }
+		View view = layoutInflater.inflate(layouts[position], container, false);
+		container.addView(view);
+		return view;
+	}
 
-    @Override
-    public int getCount() {
-        return layouts.length;
-    }
+	@Override
+	public int getCount() {
+		return layouts.length;
+	}
 
-    @Override
-    public boolean isViewFromObject(View view, Object obj) {
-        return view == obj;
-    }
+	@Override
+	public boolean isViewFromObject(View view, Object obj) {
+		return view == obj;
+	}
 
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        View view = (View) object;
-        container.removeView(view);
-    }
-
-
+	@Override
+	public void destroyItem(ViewGroup container, int position, Object object) {
+		View view = (View) object;
+		container.removeView(view);
+	}
 }

@@ -1,69 +1,75 @@
-/**
+/*
  * Paintroid: An image manipulation application for Android.
  * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools.implementation;
 
-import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.widget.LinearLayout;
+import android.graphics.RectF;
 
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.LayerCommand;
-import org.catrobat.paintroid.command.implementation.PathCommand;
-import org.catrobat.paintroid.dialog.LayersDialog;
-import org.catrobat.paintroid.listener.LayerListener;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.tools.ContextCallback;
+import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.common.CommonBrushChangedListener;
+import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener;
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import androidx.annotation.VisibleForTesting;
 
 public class LineTool extends BaseTool {
 
-	protected PointF mInitialEventCoordinate;
-	protected PointF mCurrentCoordinate;
-	protected boolean pathInsideBitmap;
+	private PointF initialEventCoordinate;
+	private PointF currentCoordinate;
+	private BrushToolOptionsView brushToolOptionsView;
 
-	public LineTool(Context context, ToolType toolType) {
-		super(context, toolType);
+	public LineTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
+			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
+		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		this.brushToolOptionsView = brushToolOptionsView;
+
+		brushToolOptionsView.setBrushChangedListener(new CommonBrushChangedListener(this));
+		brushToolOptionsView.setBrushPreviewListener(new CommonBrushPreviewListener(toolPaint, getToolType()));
+		brushToolOptionsView.setCurrentPaint(toolPaint.getPaint());
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		if (mInitialEventCoordinate == null || mCurrentCoordinate == null) {
+		if (initialEventCoordinate == null || currentCoordinate == null) {
 			return;
 		}
 
-		changePaintColor(mCanvasPaint.getColor());
+		canvas.save();
+		canvas.clipRect(0, 0, workspace.getWidth(), workspace.getHeight());
+		canvas.drawLine(initialEventCoordinate.x,
+				initialEventCoordinate.y, currentCoordinate.x,
+				currentCoordinate.y, toolPaint.getPreviewPaint());
+		canvas.restore();
+	}
 
-		if (mCanvasPaint.getAlpha() == 0x00) {
-			mCanvasPaint.setColor(Color.BLACK);
-			canvas.drawLine(mInitialEventCoordinate.x,
-					mInitialEventCoordinate.y, mCurrentCoordinate.x,
-					mCurrentCoordinate.y, mCanvasPaint);
-			mCanvasPaint.setColor(Color.TRANSPARENT);
-		} else {
-			canvas.drawLine(mInitialEventCoordinate.x,
-					mInitialEventCoordinate.y, mCurrentCoordinate.x,
-					mCurrentCoordinate.y, mBitmapPaint);
-		}
+	@Override
+	public ToolType getToolType() {
+		return ToolType.LINE;
 	}
 
 	@Override
@@ -71,54 +77,58 @@ public class LineTool extends BaseTool {
 		if (coordinate == null) {
 			return false;
 		}
-		mInitialEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		mPreviousEventCoordinate = new PointF(coordinate.x, coordinate.y);
-		pathInsideBitmap = false;
-
-		pathInsideBitmap = checkPathInsideBitmap(coordinate);
+		initialEventCoordinate = new PointF(coordinate.x, coordinate.y);
+		previousEventCoordinate = new PointF(coordinate.x, coordinate.y);
 		return true;
 	}
 
 	@Override
 	public boolean handleMove(PointF coordinate) {
-		mCurrentCoordinate = new PointF(coordinate.x, coordinate.y);
-		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
-			pathInsideBitmap = true;
-		}
+		currentCoordinate = new PointF(coordinate.x, coordinate.y);
 		return true;
 	}
 
 	@Override
 	public boolean handleUp(PointF coordinate) {
-		if (mInitialEventCoordinate == null || mPreviousEventCoordinate == null
+		if (initialEventCoordinate == null || previousEventCoordinate == null
 				|| coordinate == null) {
 			return false;
 		}
 		Path finalPath = new Path();
-		finalPath.moveTo(mInitialEventCoordinate.x, mInitialEventCoordinate.y);
+		finalPath.moveTo(initialEventCoordinate.x, initialEventCoordinate.y);
 		finalPath.lineTo(coordinate.x, coordinate.y);
 
-		if (pathInsideBitmap == false && checkPathInsideBitmap(coordinate)) {
-			pathInsideBitmap = true;
-		}
+		RectF bounds = new RectF();
+		finalPath.computeBounds(bounds, true);
+		bounds.inset(-toolPaint.getStrokeWidth(), -toolPaint.getStrokeWidth());
 
-		if (pathInsideBitmap) {
-			Command command = new PathCommand(mBitmapPaint, finalPath);
-			Layer layer = LayerListener.getInstance().getCurrentLayer();
-			PaintroidApplication.commandManager.commitCommandToLayer(new LayerCommand(layer), command);
+		if (workspace.intersectsWith(bounds)) {
+			Command command = commandFactory.createPathCommand(toolPaint.getPaint(), finalPath);
+			commandManager.addCommand(command);
 		}
-
+		resetInternalState();
 		return true;
 	}
 
 	@Override
 	public void resetInternalState() {
-		mInitialEventCoordinate = null;
-		mCurrentCoordinate = null;
+		initialEventCoordinate = null;
+		currentCoordinate = null;
 	}
 
 	@Override
-	public void setupToolOptions() {
-		addBrushPickerToToolOptions();
+	public void changePaintColor(int color) {
+		super.changePaintColor(color);
+		brushToolOptionsView.invalidate();
+	}
+
+	@VisibleForTesting (otherwise = VisibleForTesting.NONE)
+	public PointF getInitialEventCoordinate() {
+		return initialEventCoordinate;
+	}
+
+	@VisibleForTesting (otherwise = VisibleForTesting.NONE)
+	public PointF getCurrentCoordinate() {
+		return currentCoordinate;
 	}
 }

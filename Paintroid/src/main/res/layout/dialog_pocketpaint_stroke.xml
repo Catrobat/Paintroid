@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<ScrollView xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:focusableInTouchMode="true">
+
+    <org.catrobat.paintroid.ui.tools.BrushToolView
+        android:id="@+id/pocketpaint_brush_tool_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        style="@style/PocketPaintToolSubtitle"
+        android:text="@string/dialog_brush_width_text" />
+
+    <View style="@style/PocketPaintToolSectionDivider"/>
+
+    <LinearLayout
+        style="@style/PocketPaintToolSection">
+
+        <SeekBar
+            android:id="@+id/pocketpaint_stroke_width_seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100"
+            android:minHeight="30dip"/>
+
+        <Space style="@style/PocketPaintToolHorizontalSpace"/>
+
+        <EditText
+            android:id="@+id/pocketpaint_stroke_width_width_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minEms="3"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:saveEnabled="false"
+            android:textColor="?attr/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:ignore="LabelFor"
+            tools:text="100"
+            android:importantForAutofill="no"/>
+    </LinearLayout>
+
+    <TextView
+        style="@style/PocketPaintToolSubtitle"
+        android:text="@string/dialog_shape_text" />
+
+    <View style="@style/PocketPaintToolSectionDivider"/>
+
+    <LinearLayout
+        style="@style/PocketPaintToolSection"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center">
+
+        <ImageButton
+            android:id="@+id/pocketpaint_stroke_ibtn_circle"
+            style="@style/PocketPaintSelectableButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_pocketpaint_tool_circle"
+            android:contentDescription="@string/cap_circle" />
+
+        <ImageButton
+            android:id="@+id/pocketpaint_stroke_ibtn_rect"
+            style="@style/PocketPaintSelectableButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_pocketpaint_tool_square"
+            android:contentDescription="@string/cap_square" />
+    </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

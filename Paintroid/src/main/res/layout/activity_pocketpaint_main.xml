@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/pocketpaint_drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/pocketpaint_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
+
+            <include layout="@layout/pocketpaint_layout_top_bar"
+                android:id="@+id/pocketpaint_layout_top_bar" />
+
+            <org.catrobat.paintroid.ui.DrawingSurface
+                android:id="@+id/pocketpaint_drawing_surface_view"
+                android:layout_below="@+id/pocketpaint_layout_top_bar"
+                android:layout_alignParentStart="true"
+                android:layout_above="@+id/pocketpaint_main_bottom_navigation"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/pocketpaint_main_drawing_surface_active" />
+
+            <include layout="@layout/pocketpaint_layout_tool_options"
+                android:id="@+id/pocketpaint_main_tool_options"/>
+
+            <LinearLayout
+                android:id="@+id/pocketpaint_main_bottom_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/pocketpaint_main_bottom_navigation"
+                android:background="@android:color/background_light"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentStart="true"
+                android:visibility="gone">
+
+                <include layout="@layout/pocketpaint_layout_bottom_bar"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/pocketpaint_main_bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
+                android:background="?attr/colorPrimary"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true">
+
+                <include layout="@layout/pocketpaint_layout_bottom_navigation"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/pocketpaint_nav_view_layer"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center">
+
+            <include layout="@layout/pocketpaint_layout_main_menu_layer"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.navigation.NavigationView>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</RelativeLayout>

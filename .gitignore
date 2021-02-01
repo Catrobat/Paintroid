@@ -15,7 +15,6 @@ bin/
 gen/
 
 # Local configuration file (sdk path, etc)
-lint.xml
 
 # Intellij files
 *.iml
@@ -25,3 +24,13 @@ local.properties
 build/
 .gradle/
 .externalNativeBuild/
+
+# Cache for build scripts
+__pycache__
+
+#Fastlane
+fastlane/*
+!fastlane/Appfile
+!fastlane/Fastfile
+!fastlane/staticContent/
+Gemfile

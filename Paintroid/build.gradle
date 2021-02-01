@@ -1,123 +1,164 @@
-//noinspection GradleDependency
-apply plugin: 'com.android.application'
-apply from: 'adb_tasks.gradle'
+/**
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-def appId = 'org.catrobat.paintroid'
-def appName = '@string/app_name'
+apply plugin: 'org.catrobat.gradle.androidemulators'
 
-// When -Pindependent was provided on the gradle command the APP name is changed.
-// This allows to have multiple Paintroid versions installed in parallel for testing purposes.
-// Furthermore these installations do not interfere with the actual Paintroid app.
-if (project.hasProperty('independent')) {
-    def today = new Date()
-    appId += '.independent_' + today.format('YYYYMMdd_HHmm')
-    appName = property('independent') ?: 'Paint ' + today.format('MMdd HH:mm')
+emulators {
+    install project.hasProperty('installSdk')
+
+    dependencies {
+        sdk()
+    }
+
+    emulator 'android24', {
+        avd {
+            systemImage = 'system-images;android-24;default;x86_64'
+            sdcardSizeMb = 200
+            hardwareProperties += ['hw.ramSize': 800, 'vm.heapSize': 128]
+            screenDensity = 'xhdpi'
+        }
+
+        parameters {
+            resolution = '768x1280'
+            language = 'en'
+            country = 'US'
+        }
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'jacoco-android'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'kotlin-android'
+
+apply from: 'gradle/adb_tasks.gradle'
+apply from: 'gradle/code_quality_tasks.gradle'
+
+check.dependsOn 'checkstyle'
+check.dependsOn 'pmd'
+
+jacoco {
+    toolVersion = "0.8.5"
+}
+
+jacocoAndroidUnitTestReport {
+    csv.enabled false
+    html.enabled true
+    xml.enabled true
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    compileSdkVersion rootProject.ext.androidCompileSdkVersion
 
     defaultConfig {
-        applicationId appId
-        minSdkVersion 16
-        targetSdkVersion 22
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 18
-        versionName "1.1.15"
-        manifestPlaceholders += [appName: appName]
-        externalNativeBuild {
-            cmake {
-                cppFlags "-fexceptions"
-            }
-        }
-    }
-
-    sourceSets {
-        main {
-            java {
-                srcDir 'src/main/java'
-            }
-
-            resources {
-                srcDir 'src/main/res'
-            }
-
-        }
-
-        androidTest {
-            if (file('../testexclusions.txt').exists()) {
-                java.exclude file('../testexclusions.txt').readLines()
-            }
-        }
-    }
-
-    lintOptions {
-        ignore 'MissingTranslation'
-        disable "ResourceType"
+        minSdkVersion rootProject.ext.androidMinSdkVersion
+        targetSdkVersion rootProject.ext.androidTargetSdkVersion
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        versionCode rootProject.ext.androidVersionCode
+        versionName rootProject.ext.androidVersionName
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        signedRelease {
+        }
+        debug {
+            testCoverageEnabled = project.hasProperty('enableCoverage')
+            // Multidex is required as espresso and mockito/bytebuddy are adding more functions
+            // than should be allowed by law.
+            // See https://github.com/mockito/mockito/issues/1112
+            multiDexEnabled true
         }
     }
 
-    externalNativeBuild {
-        cmake {
-            path 'CMakeLists.txt'
-        }
+    lintOptions {
+        // specific ignores should be defined via lint.xml file
+        lintConfig file('config/lint.xml')
+        ignore 'ClickableViewAccessibility', 'StaticFieldLeak', 'GradleDependency', 'OldTargetApi'
+
+        textReport true
+        xmlReport true
+        htmlReport true
+        xmlOutput file("build/reports/lint-report.xml")
+        htmlOutput file("build/reports/lint-report.html")
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.4.0'
-    compile 'com.jaredrummler:material-spinner:1.1.0'
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.9.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation project(':colorpicker')
 
-    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.6.3'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.8'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8'
 
-    androidTestCompile 'com.android.support.test:runner:1.0.0'
-    androidTestCompile 'com.android.support.test:rules:1.0.0'
+    debugImplementation 'androidx.multidex:multidex:2.0.0'
 
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.0'
-    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:3.0.0'
-    androidTestCompile 'com.android.support.test.espresso:espresso-intents:3.0.0'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.18.3'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.1.1'
+    androidTestImplementation 'org.mockito:mockito-android:2.18.3'
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
+
+    pmd 'net.sourceforge.pmd:pmd-core:5.8.1'
+    pmd 'net.sourceforge.pmd:pmd-java:5.8.1'
+
+    checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
 }
 
-    // Note that espresso-idling-resource is used in the code under test.
-//    compile "com.android.support.test.espresso:espresso-idling-resource:$espressoVersion";
+tasks.withType(Javadoc).all {
+    enabled = false
+}
 
-
-tasks.whenTaskAdded { task ->
-    if(task.name.startsWith('assembleDebugAndroidTest')) {
-        verifyAnimationScalePermissionGranted.shouldRunAfter adbGrantAnimationScalePermission
-
-        task.dependsOn adbGrantAnimationScalePermission
-        task.dependsOn verifyAnimationScalePermissionGranted
-    }
+publish {
+    userOrg = 'catrobat'
+    repoName = 'Paintroid'
+    groupId = 'org.catrobat.paintroid'
+    artifactId = 'paintroid'
+    publishVersion = rootProject.ext.androidVersionName
+    licences = ['AGPL-V3']
+    desc = 'A graphical paint editor library for Android'
+    website = 'https://github.com/Catrobat/Paintroid'
+    issueTracker = 'https://jira.catrob.at/browse/PAINTROID'
+    repository = "${website}.git"
 }
 
 if (project.hasProperty('jenkins')) {
-    project.android.dexOptions.preDexLibraries = false
+    android.dexOptions.preDexLibraries = false
 }
-//else {
-//    //not a jenkins build, remove animation scale permission
-//    android.applicationVariants.all { variant ->
-//        println "Removing the SET_ANIMATION_SCALE permission for $variant.name"
-//
-//        variant.outputs[0].processManifest.doLast {
-//            def generatedContent = manifestOutputFile.getText()
-//            generatedContent = generatedContent.replace('<uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />', '')
-//            if (generatedContent.contains('SET_ANIMATION_SCALE')) {
-//                throw new RuntimeException("Error in removing animation scale permission!")
-//            }
-//            manifestOutputFile.write(generatedContent)
-//        }
-//    }
-//}

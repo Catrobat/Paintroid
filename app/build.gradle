@@ -1,0 +1,84 @@
+/**
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+apply plugin: 'com.android.application'
+
+ext {
+    appId = 'org.catrobat.paintroid'
+    appName = '@string/pocketpaint_app_name'
+}
+
+// When -Pindependent was provided on the gradle command the APP name is changed.
+// This allows to have multiple Paintroid versions installed in parallel for testing purposes.
+// Furthermore these installations do not interfere with the actual Paintroid app.
+if (project.hasProperty('independent')) {
+    def today = new Date()
+    appId += '.independent_' + today.format('YYYYMMdd_HHmm')
+    appName = property('independent') ?: 'Paint ' + today.format('MMdd HH:mm')
+}
+
+if (!project.hasProperty("signingKeystore")) {
+    ext.signingKeystore = "dummyKeystore"
+}
+
+android {
+    compileSdkVersion rootProject.ext.androidCompileSdkVersion
+    defaultConfig {
+        applicationId appId
+        minSdkVersion rootProject.ext.androidMinSdkVersion
+        //noinspection OldTargetApi
+        targetSdkVersion rootProject.ext.androidTargetSdkVersion
+        versionCode rootProject.ext.androidVersionCode
+        versionName rootProject.ext.androidVersionName
+        manifestPlaceholders += [appName: appName]
+        setProperty("archivesBaseName", "paintroid")
+    }
+
+    signingConfigs {
+        signedRelease {
+            storeFile file(project.property("signingKeystore"))
+            storePassword ""
+            keyAlias ""
+            keyPassword ""
+        }
+    }
+
+    if (project.hasProperty("signingKeystore") && project.hasProperty("signingKeystorePassword") &&
+            project.hasProperty("signingKeyAlias") && project.hasProperty("signingKeyPassword")) {
+        android.signingConfigs.signedRelease.storePassword = project.property("signingKeystorePassword")
+        android.signingConfigs.signedRelease.keyAlias = project.property("signingKeyAlias")
+        android.signingConfigs.signedRelease.keyPassword = project.property("signingKeyPassword")
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        signedRelease.initWith(buildTypes.release)
+        signedRelease {
+            signingConfig signingConfigs.signedRelease
+        }
+    }
+}
+
+dependencies {
+    implementation project(':Paintroid')
+}

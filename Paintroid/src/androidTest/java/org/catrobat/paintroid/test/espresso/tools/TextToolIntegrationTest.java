@@ -1,53 +1,44 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.espresso.tools;
 
+import android.content.pm.ActivityInfo;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.IdlingResource;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.ToggleButton;
 
-import com.jaredrummler.materialspinner.MaterialSpinner;
-
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.espresso.util.DialogHiddenIdlingResource;
-import org.catrobat.paintroid.test.utils.PrivateAccess;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
+import org.catrobat.paintroid.contract.LayerContracts;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
+import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.TextTool;
-import org.junit.After;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,232 +46,242 @@ import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.replaceText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.hasFocus;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.COLOR_CHOOSER_PRESET_BLACK_BUTTON_ID;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.clickSelectedToolButton;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openToolOptionsForCurrentTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetDrawPaintAndBrushPickerView;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectColorPickerPresetSelectorColor;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.test.espresso.Espresso;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.ViewMatchers.hasFocus;
+import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
+import static androidx.test.espresso.matcher.ViewMatchers.withHint;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class TextToolIntegrationTest {
 	private static final String TEST_TEXT = "testing 123";
+	private static final String TEST_TEXT_ADVANCED = "testing 123 new";
 	private static final String TEST_ARABIC_TEXT = "السلام عليكم 123";
 	private static final String TEST_TEXT_MULTILINE = "testing\nmultiline\ntext\n\n123";
 
 	private static final String FONT_MONOSPACE = "Monospace";
 	private static final String FONT_SERIF = "Serif";
 	private static final String FONT_SANS_SERIF = "Sans Serif";
-	private static final String FONT_ALARABIYA = "Alarabiya";
-	private static final String FONT_DUBAI ="Dubai";
-
-	private static final int TEXT_SIZE_20 = 20;
-	private static final int TEXT_SIZE_30 = 30;
-	private static final int TEXT_SIZE_40 = 40;
-	private static final int TEXT_SIZE_60 = 60;
+	private static final String FONT_STC = "STC";
+	private static final String FONT_DUBAI = "Dubai";
 
 	private static final double EQUALS_DELTA = 0.25d;
-
-	private enum FormattingOptions {
-		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, ALARABIYA, DUBAI, SIZE_20, SIZE_30, SIZE_40, SIZE_60
-	}
-
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
-
-	private ActivityHelper activityHelper;
-
-	private IdlingResource dialogWait;
-
-	private TextTool mTextTool;
-	private EditText mTextEditText;
-	private MaterialSpinner mFontSpinner;
-	private ToggleButton mUnderlinedToggleButton;
-	private ToggleButton mItalicToggleButton;
-	private ToggleButton mBoldToggleButton;
-	private MaterialSpinner mTextSizeSpinner;
+	private MainActivityHelper activityHelper;
+	private TextTool textTool;
+	private TextTool textToolAfterZoom;
+	private EditText textEditText;
+	private Spinner fontSpinner;
+	private ToggleButton underlinedToggleButton;
+	private ToggleButton italicToggleButton;
+	private ToggleButton boldToggleButton;
+	private EditText textSize;
+	private Perspective perspective;
+	private LayerContracts.Model layerModel;
+	private MainActivity activity;
+	private ToolReference toolReference;
 
 	@Before
 	public void setUp() {
-		dialogWait = new DialogHiddenIdlingResource(IndeterminateProgressDialog.getInstance());
-		Espresso.registerIdlingResources(dialogWait);
+		activity = launchActivityRule.getActivity();
+		activityHelper = new MainActivityHelper(activity);
+		perspective = activity.perspective;
+		layerModel = activity.layerModel;
+		toolReference = activity.toolReference;
 
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
 
-		PaintroidApplication.drawingSurface.destroyDrawingCache();
+		textTool = (TextTool) toolReference.get();
 
-		resetColorPicker();
-		resetDrawPaintAndBrushPickerView();
-
-		selectTool(ToolType.TEXT);
-		mTextTool = (TextTool) PaintroidApplication.currentTool;
-
-		mTextEditText = (EditText) activityHelper.findViewById(R.id.text_tool_dialog_input_text);
-		mFontSpinner = (MaterialSpinner) activityHelper.findViewById(R.id.text_tool_dialog_spinner_font);
-		mUnderlinedToggleButton = (ToggleButton) activityHelper.findViewById(R.id.text_tool_dialog_toggle_underlined);
-		mItalicToggleButton = (ToggleButton) activityHelper.findViewById(R.id.text_tool_dialog_toggle_italic);
-		mBoldToggleButton = (ToggleButton) activityHelper.findViewById(R.id.text_tool_dialog_toggle_bold);
-		mTextSizeSpinner = (MaterialSpinner) activityHelper.findViewById(R.id.text_tool_dialog_spinner_text_size);
-
-		mTextTool.resetBoxPosition();
-	}
-
-	@After
-	public void tearDown() {
-		Espresso.unregisterIdlingResources(dialogWait);
-
-		activityHelper = null;
+		textEditText = activity.findViewById(R.id.pocketpaint_text_tool_dialog_input_text);
+		fontSpinner = activity.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_font);
+		underlinedToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
+		italicToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
+		boldToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
+		textSize = activity.findViewById(R.id.pocketpaint_font_size_text);
+		textTool.resetBoxPosition();
 	}
 
 	@Test
-	public void testDialogKeyboardTextBoxAppearanceOnStartup() throws NoSuchFieldException, IllegalAccessException {
-		onView(withId(R.id.text_tool_dialog_input_text)).check(matches(hasFocus()));
+	public void testTextToolStillEditableAfterClosingTextTool() {
+		selectFormatting(FormattingOptions.ITALIC);
+		selectFormatting(FormattingOptions.BOLD);
+		selectFormatting(FormattingOptions.UNDERLINE);
+		enterTestText();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE));
+
+		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(replaceText(TEST_TEXT_ADVANCED));
+
+		assertTrue(italicToggleButton.isChecked());
+		assertTrue(boldToggleButton.isChecked());
+		assertTrue(underlinedToggleButton.isChecked());
+		assertEquals(TEST_TEXT_ADVANCED, textEditText.getText().toString());
+	}
+
+	@Test
+	public void testDialogKeyboardTextBoxAppearanceOnStartup() {
+		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).check(matches(hasFocus()));
 		checkTextBoxDimensionsAndDefaultPosition();
 	}
 
 	@Test
-	public void testDialogDefaultValues() throws NoSuchFieldException, IllegalAccessException {
-		String expectedHintText = activityHelper.getString(R.string.text_tool_dialog_input_hint);
-		String actualHintText = mTextEditText.getHint().toString();
-		assertEquals("Wrong input hint text", expectedHintText, actualHintText);
+	public void testDialogDefaultValues() {
+		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text))
+				.check(matches(withHint(R.string.text_tool_dialog_input_hint)))
+				.check(matches(withText(textTool.text)));
 
-		String expectedText = getToolMemberText();
-		String actualText = mTextEditText.getText().toString();
-		assertEquals("Wrong default input text", expectedText, actualText);
+		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font))
+				.check(matches(withSpinnerText(textTool.font)));
 
-		String expectedFont = getToolMemberFont();
-		String actualFont = getSelectedItemFromMaterialSpinner(mFontSpinner);
-		assertEquals("Wrong default font selected", expectedFont, actualFont);
+		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_underlined))
+				.check(matches(isNotChecked()));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_bold))
+				.check(matches(isNotChecked()));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_italic))
+				.check(matches(isNotChecked()));
 
-		boolean expectedUnderlined = getToolMemberUnderlined();
-		boolean actualUnderlined = mUnderlinedToggleButton.isChecked();
-		assertEquals("Wrong checked status of underline button", expectedUnderlined, actualUnderlined);
-
-		boolean expectedItalic = getToolMemberItalic();
-		boolean actualItalic = mItalicToggleButton.isChecked();
-		assertEquals("Wrong checked status of italic button", expectedItalic, actualItalic);
-
-		boolean expectedBold = getToolMemberBold();
-		boolean actualBold = mBoldToggleButton.isChecked();
-		assertEquals("Wrong checked status of bold button", expectedBold, actualBold);
-
-		int expectedTextSize = getToolMemberTextSize();
-		int actualTextSize = Integer.valueOf(getSelectedItemFromMaterialSpinner(mTextSizeSpinner));
-		assertEquals("Wrong text size selected", expectedTextSize, actualTextSize);
+		assertFalse(textTool.underlined);
+		assertFalse(textTool.italic);
+		assertFalse(textTool.bold);
 	}
 
 	@Test
-	public void testDialogToolInteraction() throws NoSuchFieldException, IllegalAccessException {
+	public void testDialogToolInteraction() {
 		enterTestText();
-		assertEquals("Wrong input text", TEST_TEXT, getToolMemberText());
+		assertEquals(TEST_TEXT, textTool.text);
 
 		selectFormatting(FormattingOptions.SERIF);
-		assertEquals("Tool member has wrong value for font", FONT_SERIF, getToolMemberFont());
-		assertEquals("Wrong current item of font spinner", FONT_SERIF, getSelectedItemFromMaterialSpinner(mFontSpinner));
+		assertEquals(FONT_SERIF, textTool.font);
+		assertEquals(FONT_SERIF, fontSpinner.getSelectedItem());
 
 		selectFormatting(FormattingOptions.UNDERLINE);
-		assertTrue("Tool member value for underlined should be true", getToolMemberUnderlined());
-		assertTrue("Toggle button for underline should be pressed", mUnderlinedToggleButton.isChecked());
-		assertEquals("Wrong text for toggle button underline",
-				getFontString(FormattingOptions.UNDERLINE), mUnderlinedToggleButton.getText().toString());
+		assertTrue(textTool.underlined);
+		assertTrue(underlinedToggleButton.isChecked());
+		assertEquals(getFontString(FormattingOptions.UNDERLINE), underlinedToggleButton.getText().toString());
+
 		selectFormatting(FormattingOptions.UNDERLINE);
-		assertFalse("Tool member value for underlined should be false", getToolMemberUnderlined());
-		assertFalse("Toggle button for underline should not be pressed", mUnderlinedToggleButton.isChecked());
-		assertEquals("Wrong text for toggle button underline",
-				getFontString(FormattingOptions.UNDERLINE), mUnderlinedToggleButton.getText().toString());
+		assertFalse(textTool.underlined);
+		assertFalse(underlinedToggleButton.isChecked());
+		assertEquals(getFontString(FormattingOptions.UNDERLINE), underlinedToggleButton.getText().toString());
 
 		selectFormatting(FormattingOptions.ITALIC);
-		assertTrue("Tool member value for italic should be true", getToolMemberItalic());
-		assertTrue("Toggle button for italic should be pressed", mItalicToggleButton.isChecked());
-		assertEquals("Wrong text for toggle button italic",
-				getFontString(FormattingOptions.ITALIC), mItalicToggleButton.getText().toString());
+		assertTrue(getToolMemberItalic());
+		assertTrue(italicToggleButton.isChecked());
+		assertEquals(getFontString(FormattingOptions.ITALIC), italicToggleButton.getText().toString());
+
 		selectFormatting(FormattingOptions.ITALIC);
-		assertFalse("Tool member value for italic should be false", getToolMemberItalic());
-		assertFalse("Toggle button for italic should not be pressed", mItalicToggleButton.isChecked());
-		assertEquals("Wrong text for toggle button italic",
-				getFontString(FormattingOptions.ITALIC), mItalicToggleButton.getText().toString());
+		assertFalse(getToolMemberItalic());
+		assertFalse(italicToggleButton.isChecked());
+		assertEquals(getFontString(FormattingOptions.ITALIC), italicToggleButton.getText().toString());
 
 		selectFormatting(FormattingOptions.BOLD);
-		assertTrue("Tool member value for bold should be true", getToolMemberBold());
-		assertTrue("Toggle button for bold should be pressed", mBoldToggleButton.isChecked());
-		assertEquals("Wrong text for toggle button bold",
-				getFontString(FormattingOptions.BOLD), mBoldToggleButton.getText().toString());
-		selectFormatting(FormattingOptions.BOLD);
-		assertFalse("Tool member value for bold should be false", getToolMemberBold());
-		assertFalse("Toggle button for bold should not be pressed", mBoldToggleButton.isChecked());
-		assertEquals("Wrong text for toggle button bold",
-				getFontString(FormattingOptions.BOLD), mBoldToggleButton.getText().toString());
+		assertTrue(getToolMemberBold());
+		assertTrue(boldToggleButton.isChecked());
+		assertEquals(getFontString(FormattingOptions.BOLD), boldToggleButton.getText().toString());
 
-		selectFormatting(FormattingOptions.SIZE_30);
-		assertEquals("Tool member has wrong value for text size", TEXT_SIZE_30, getToolMemberTextSize());
-		assertEquals("Wrong current item of text size spinner",
-				String.valueOf(TEXT_SIZE_30), getSelectedItemFromMaterialSpinner(mTextSizeSpinner));
+		selectFormatting(FormattingOptions.BOLD);
+		assertFalse(getToolMemberBold());
+		assertFalse(boldToggleButton.isChecked());
+		assertEquals(getFontString(FormattingOptions.BOLD), boldToggleButton.getText().toString());
 	}
 
 	@Test
-	public void testDialogAndTextBoxAfterReopenDialog() throws NoSuchFieldException, IllegalAccessException {
+	public void testDialogAndTextBoxAfterReopenDialog() {
 		enterTestText();
 		selectFormatting(FormattingOptions.SANS_SERIF);
 		selectFormatting(FormattingOptions.UNDERLINE);
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
-		selectFormatting(FormattingOptions.SIZE_40);
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptionsView();
 
 		PointF boxPosition = getToolMemberBoxPosition();
-		PointF newBoxPosition = new PointF(boxPosition.x + 20, boxPosition.y + 20);
+		PointF newBoxPosition = new PointF(boxPosition.x + 100, boxPosition.y + 200);
 		setToolMemberBoxPosition(newBoxPosition);
 		setToolMemberBoxHeight(50.0f);
 		setToolMemberBoxWidth(50.0f);
 
-		openToolOptionsForCurrentTool();
+		onToolBarView()
+				.performOpenToolOptionsView();
 
-		assertEquals("Wrong input text after reopen dialog", TEST_TEXT, mTextEditText.getText().toString());
-		assertEquals("Wrong font selected after reopen dialog", FONT_SANS_SERIF, getSelectedItemFromMaterialSpinner(mFontSpinner));
-		assertEquals("Wrong underline status after reopen dialog", true, mUnderlinedToggleButton.isChecked());
-		assertEquals("Wrong italic status after reopen dialog", true, mItalicToggleButton.isChecked());
-		assertEquals("Wrong bold status after reopen dialog", true, mBoldToggleButton.isChecked());
-		assertEquals("Wrong text size selected after reopen dialog",
-				String.valueOf(TEXT_SIZE_40), getSelectedItemFromMaterialSpinner(mTextSizeSpinner));
-
+		assertEquals(TEST_TEXT, textEditText.getText().toString());
+		assertEquals(FONT_SANS_SERIF, fontSpinner.getSelectedItem());
+		assertTrue(underlinedToggleButton.isChecked());
+		assertTrue(italicToggleButton.isChecked());
+		assertTrue(boldToggleButton.isChecked());
 		checkTextBoxDimensions();
-		assertEquals("Wrong text box position after reopen dialog", newBoxPosition, getToolMemberBoxPosition());
 	}
 
 	@Test
-	public void testCheckBoxSizeAndContentAfterFormatting() throws NoSuchFieldException, IllegalAccessException {
+	public void testStateRestoredAfterOrientationChange() {
+		enterTestText();
+		selectFormatting(FormattingOptions.SANS_SERIF);
+		selectFormatting(FormattingOptions.UNDERLINE);
+		selectFormatting(FormattingOptions.ITALIC);
+		selectFormatting(FormattingOptions.BOLD);
+
+		final PointF toolMemberBoxPosition = getToolMemberBoxPosition();
+		PointF expectedPosition = new PointF(toolMemberBoxPosition.x, toolMemberBoxPosition.y);
+
+		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		textTool = (TextTool) toolReference.get();
+
+		assertEquals(TEST_TEXT, textEditText.getText().toString());
+		assertEquals(FONT_SANS_SERIF, fontSpinner.getSelectedItem());
+		assertTrue(underlinedToggleButton.isChecked());
+		assertTrue(italicToggleButton.isChecked());
+		assertTrue(boldToggleButton.isChecked());
+
+		assertEquals(expectedPosition, getToolMemberBoxPosition());
+		checkTextBoxDimensions();
+	}
+
+	@Test
+	public void testCheckBoxSizeAndContentAfterFormatting() {
 		enterTestText();
 
-		assertFalse("Underline button should not be pressed", mUnderlinedToggleButton.isChecked());
-		assertFalse("Italic button should not be pressed", mUnderlinedToggleButton.isChecked());
-		assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
+		assertFalse(underlinedToggleButton.isChecked());
+		assertFalse(boldToggleButton.isChecked());
+		assertFalse(italicToggleButton.isChecked());
 
-		ArrayList<FormattingOptions> fonts = new ArrayList<FormattingOptions>();
+		ArrayList<FormattingOptions> fonts = new ArrayList<>();
 		fonts.add(FormattingOptions.SERIF);
 		fonts.add(FormattingOptions.SANS_SERIF);
 		fonts.add(FormattingOptions.MONOSPACE);
@@ -288,246 +289,357 @@ public class TextToolIntegrationTest {
 		for (FormattingOptions font : fonts) {
 			float boxWidth = getToolMemberBoxWidth();
 			float boxHeight = getToolMemberBoxHeight();
-			int[] pixelsBefore, pixelsAfter;
+			int[] pixelsBefore;
+			int[] pixelsAfter;
 
 			selectFormatting(font);
 			checkTextBoxDimensionsAndDefaultPosition();
-			assertFalse("Box size should have changed",
-					boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
+			assertFalse(boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
 
 			Bitmap bitmap = getToolMemberDrawingBitmap();
+
 			pixelsBefore = new int[bitmap.getHeight()];
 			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
 			selectFormatting(FormattingOptions.UNDERLINE);
-			assertTrue("Underline button should be pressed", mUnderlinedToggleButton.isChecked());
+			assertTrue(underlinedToggleButton.isChecked());
 			bitmap = getToolMemberDrawingBitmap();
 			pixelsAfter = new int[bitmap.getHeight()];
 			bitmap.getPixels(pixelsAfter, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
-			assertTrue("Number of black Pixels should be higher when text is underlined",
-					countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
-
+			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
 
 			boxWidth = getToolMemberBoxWidth();
 			selectFormatting(FormattingOptions.ITALIC);
-			assertTrue("Italic button should be pressed", mUnderlinedToggleButton.isChecked());
+			assertTrue(italicToggleButton.isChecked());
 			if (font != FormattingOptions.MONOSPACE) {
-				assertTrue("Text box width should be smaller when text is italic", getToolMemberBoxWidth() < boxWidth);
+				assertTrue(getToolMemberBoxWidth() < boxWidth);
 			} else {
-				assertEquals("Wrong value of tool member italic", true, getToolMemberItalic());
+				assertTrue(getToolMemberItalic());
 			}
 
 			pixelsBefore = new int[bitmap.getWidth()];
 			bitmap.getPixels(pixelsBefore, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
 			selectFormatting(FormattingOptions.BOLD);
-			assertTrue("Bold button should be pressed", mUnderlinedToggleButton.isChecked());
+			assertTrue(boldToggleButton.isChecked());
 			bitmap = getToolMemberDrawingBitmap();
 			pixelsAfter = new int[bitmap.getWidth()];
 			bitmap.getPixels(pixelsAfter, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
-			assertTrue("Number of black Pixels should be higher when text is bold",
-					countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
+			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
 
 			selectFormatting(FormattingOptions.UNDERLINE);
-			assertFalse("Underline button should not be pressed", mUnderlinedToggleButton.isChecked());
+			assertFalse(underlinedToggleButton.isChecked());
 			selectFormatting(FormattingOptions.ITALIC);
-			assertFalse("Italic button should not be pressed", mUnderlinedToggleButton.isChecked());
+			assertFalse(italicToggleButton.isChecked());
 			selectFormatting(FormattingOptions.BOLD);
-			assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
+			assertFalse(boldToggleButton.isChecked());
 		}
 	}
 
 	@Test
-	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndAlarabiya() throws NoSuchFieldException, IllegalAccessException {
+	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndStc() {
 		enterArabicTestText();
 
-		assertFalse("Underline button should not be pressed", mUnderlinedToggleButton.isChecked());
-		assertFalse("Italic button should not be pressed", mUnderlinedToggleButton.isChecked());
-		assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
+		assertFalse(underlinedToggleButton.isChecked());
+		assertFalse(boldToggleButton.isChecked());
+		assertFalse(italicToggleButton.isChecked());
 
-		ArrayList<FormattingOptions> fonts = new ArrayList<FormattingOptions>();
-		fonts.add(FormattingOptions.ALARABIYA);
-		fonts.add(FormattingOptions.DUBAI);
+		List<FormattingOptions> fonts = Arrays.asList(FormattingOptions.STC, FormattingOptions.DUBAI);
 
 		for (FormattingOptions font : fonts) {
 			float boxWidth = getToolMemberBoxWidth();
 			float boxHeight = getToolMemberBoxHeight();
-			int[] pixelsBefore, pixelsAfter;
+			int[] pixelsBefore;
+			int[] pixelsAfter;
 
 			selectFormatting(font);
 			checkTextBoxDimensionsAndDefaultPosition();
-			assertFalse("Box size should have changed",
-					boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
+			assertFalse(boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
 
 			Bitmap bitmap = getToolMemberDrawingBitmap();
+
 			pixelsBefore = new int[bitmap.getHeight()];
 			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
 			selectFormatting(FormattingOptions.UNDERLINE);
-			assertTrue("Underline button should be pressed", mUnderlinedToggleButton.isChecked());
+			assertTrue(underlinedToggleButton.isChecked());
 			bitmap = getToolMemberDrawingBitmap();
 			pixelsAfter = new int[bitmap.getHeight()];
 			bitmap.getPixels(pixelsAfter, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
-			assertTrue("Number of black Pixels should be higher when text is underlined",
-					countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
-
+			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
 
 			boxWidth = getToolMemberBoxWidth();
 			selectFormatting(FormattingOptions.ITALIC);
-			assertTrue("Italic button should be pressed", mUnderlinedToggleButton.isChecked());
+			assertTrue(italicToggleButton.isChecked());
 			if (font != FormattingOptions.DUBAI) {
-				assertTrue("Text box width should be smaller when text is italic", getToolMemberBoxWidth() < boxWidth);
+				assertEquals(getToolMemberBoxWidth(), boxWidth, 5);
 			} else {
-				assertEquals("Wrong value of tool member italic", true, getToolMemberItalic());
+				assertTrue(getToolMemberItalic());
 			}
 
 			pixelsBefore = new int[bitmap.getWidth()];
 			bitmap.getPixels(pixelsBefore, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
 			selectFormatting(FormattingOptions.BOLD);
-			assertTrue("Bold button should be pressed", mUnderlinedToggleButton.isChecked());
+			assertTrue(boldToggleButton.isChecked());
 			bitmap = getToolMemberDrawingBitmap();
 			pixelsAfter = new int[bitmap.getWidth()];
 			bitmap.getPixels(pixelsAfter, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
-			assertTrue("Number of black Pixels should be higher when text is bold",
-					countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
+			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
 
 			selectFormatting(FormattingOptions.UNDERLINE);
-			assertFalse("Underline button should not be pressed", mUnderlinedToggleButton.isChecked());
+			assertFalse(underlinedToggleButton.isChecked());
 			selectFormatting(FormattingOptions.ITALIC);
-			assertFalse("Italic button should not be pressed", mUnderlinedToggleButton.isChecked());
+			assertFalse(italicToggleButton.isChecked());
 			selectFormatting(FormattingOptions.BOLD);
-			assertFalse("Bold button should not be pressed", mUnderlinedToggleButton.isChecked());
+			assertFalse(boldToggleButton.isChecked());
 		}
 	}
 
 	@Test
-	public void testInputTextAndFormatByTextSize() throws NoSuchFieldException, IllegalAccessException {
+	public void testInputTextAndFormatForTextSize50() {
 		enterTestText();
 
-		ArrayList<FormattingOptions> sizes = new ArrayList<FormattingOptions>();
-		sizes.add(FormattingOptions.SIZE_30);
-		sizes.add(FormattingOptions.SIZE_40);
-		sizes.add(FormattingOptions.SIZE_60);
-
-		for (FormattingOptions size : sizes) {
-			float boxWidth = getToolMemberBoxWidth();
-			float boxHeight = getToolMemberBoxHeight();
-			selectFormatting(size);
-			checkTextBoxDimensions();
-			assertTrue("Text box width should be larger with bigger text size", getToolMemberBoxWidth() > boxWidth);
-			assertTrue("Text box height should be larger with bigger text size", getToolMemberBoxHeight() > boxHeight);
-		}
+		float boxWidth = getToolMemberBoxWidth();
+		float boxHeight = getToolMemberBoxHeight();
+		onView(withId(R.id.pocketpaint_font_size_text)).perform(replaceText("50"));
+		checkTextBoxDimensions();
+		assertTrue("Text box width should be larger with bigger text size", getToolMemberBoxWidth() > boxWidth);
+		assertTrue("Text box height should be larger with bigger text size", getToolMemberBoxHeight() > boxHeight);
 	}
 
 	@Test
-	public void testCommandUndoAndRedo() throws NoSuchFieldException, IllegalAccessException {
+	public void testInputTextAndFormatForTextSize100() {
+		enterTestText();
+
+		float boxWidth = getToolMemberBoxWidth();
+		float boxHeight = getToolMemberBoxHeight();
+		onView(withId(R.id.pocketpaint_font_size_text)).perform(replaceText("100"));
+		checkTextBoxDimensions();
+		assertTrue("Text box width should be larger with bigger text size", getToolMemberBoxWidth() > boxWidth);
+		assertTrue("Text box height should be larger with bigger text size", getToolMemberBoxHeight() > boxHeight);
+	}
+
+	@Test
+	public void testInputTextAndFormatForTextSize300() {
+		enterTestText();
+
+		float boxWidth = getToolMemberBoxWidth();
+		float boxHeight = getToolMemberBoxHeight();
+		onView(withId(R.id.pocketpaint_font_size_text)).perform(replaceText("300"));
+		checkTextBoxDimensions();
+		assertTrue("Text box width should be larger with bigger text size", getToolMemberBoxWidth() > boxWidth);
+		assertTrue("Text box height should be larger with bigger text size", getToolMemberBoxHeight() > boxHeight);
+	}
+
+	@Test
+	public void testCommandUndoAndRedo() {
 		enterMultilineTestText();
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptionsView();
 
 		Bitmap bitmap = getToolMemberDrawingBitmap();
 		int[] pixelsTool = new int[bitmap.getWidth()];
-		int yPos = Math.round(bitmap.getHeight()/2.0f);
+		int yPos = Math.round(bitmap.getHeight() / 2.0f);
 		bitmap.getPixels(pixelsTool, 0, bitmap.getWidth(), 0, yPos, bitmap.getWidth(), 1);
 		int numberOfBlackPixels = countPixelsWithColor(pixelsTool, Color.BLACK);
 
-		PointF screenPoint = new PointF(activityHelper.getDisplayWidth()/2.0f, activityHelper.getDisplayHeight()/2.0f);
-		PointF canvasPoint = getCanvasPointFromScreenPoint(screenPoint);
+		PointF screenPoint = new PointF(activityHelper.getDisplayWidth() / 2.0f, activityHelper.getDisplayHeight() / 2.0f);
+		int statusBarHeight = 0;
+		int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+		if (resourceId > 0) {
+			statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
+		}
+
+		int actionBarHeight;
+		final TypedArray styledAttributes = activity.getTheme().obtainStyledAttributes(
+				new int[] {android.R.attr.actionBarSize}
+		);
+		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
+		PointF canvasPoint = new PointF(screenPoint.x, screenPoint.y - actionBarHeight - statusBarHeight);
 		canvasPoint.x = (float) Math.round(canvasPoint.x);
 		canvasPoint.y = (float) Math.round(canvasPoint.y);
 		setToolMemberBoxPosition(canvasPoint);
 
-		onView(isRoot()).perform(touchAt(screenPoint));
+		onTopBarView()
+				.performClickCheckmark();
 
-		int surfaceBitmapWidth = PaintroidApplication.drawingSurface.getBitmapWidth();
+		int surfaceBitmapWidth = layerModel.getWidth();
 		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
-		PaintroidApplication.drawingSurface.getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
-		assertEquals("Amount of black pixels should be the same when drawing", numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		assertEquals(numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 
-		// Perform undo
-		onView(withId(R.id.btn_top_undo)).perform(click());
+		onTopBarView()
+				.performUndo();
 
-		PaintroidApplication.drawingSurface.getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
-		assertEquals("There should not be black pixels after undo",0, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		assertEquals(0, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 
-		// Perform redo
-		onView(withId(R.id.btn_top_redo)).perform(click());
+		onTopBarView()
+				.performRedo();
 
-		PaintroidApplication.drawingSurface.getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
-		assertEquals("There should be black pixels again after redo", numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		assertEquals(numberOfBlackPixels, countPixelsWithColor(pixelsDrawingSurface, Color.BLACK));
 	}
 
 	@Test
-	public void testChangeTextColor() throws NoSuchFieldException, IllegalAccessException {
+	public void testChangeTextColor() {
 		enterTestText();
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptionsView();
 
-		float newBoxWidth = getToolMemberBoxWidth()*1.5f;
-		float newBoxHeight = getToolMemberBoxHeight()*1.5f;
+		float newBoxWidth = getToolMemberBoxWidth() * 1.5f;
+		float newBoxHeight = getToolMemberBoxHeight() * 1.5f;
 		setToolMemberBoxWidth(newBoxWidth);
 		setToolMemberBoxHeight(newBoxHeight);
 
 		float boxPositionX = getToolMemberBoxPosition().x;
 		float boxPositionY = getToolMemberBoxPosition().y;
 
-		selectColorPickerPresetSelectorColor(5);
+		onToolProperties()
+				.setColor(Color.WHITE);
 
-		Paint paint = (Paint) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mTextPaint");
+		Paint paint = textTool.textPaint;
 		int selectedColor = paint.getColor();
-		assertFalse("Paint color should not be black", selectedColor == Color.BLACK);
+		assertEquals(Color.WHITE, selectedColor);
 		Bitmap bitmap = getToolMemberDrawingBitmap();
 		int[] pixels = new int[bitmap.getWidth()];
-		bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, bitmap.getHeight()/2, bitmap.getWidth(), 1);
-		assertTrue("There should not be any black pixels", countPixelsWithColor(pixels, Color.BLACK) == 0);
-		assertTrue("There should be some pixels with the selected color", countPixelsWithColor(pixels, selectedColor) > 0);
+		bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
+		assertEquals(countPixelsWithColor(pixels, Color.BLACK), 0);
+		assertTrue(countPixelsWithColor(pixels, selectedColor) > 0);
 
-		assertEquals("Text box position x should stay the same after color change", boxPositionX, getToolMemberBoxPosition().x, EQUALS_DELTA);
-		assertEquals("Text box position y should stay the same after color change", boxPositionY, getToolMemberBoxPosition().y, EQUALS_DELTA);
-
-		selectColorPickerPresetSelectorColor(COLOR_CHOOSER_PRESET_BLACK_BUTTON_ID);
+		assertEquals(boxPositionX, getToolMemberBoxPosition().x, EQUALS_DELTA);
+		assertEquals(boxPositionY, getToolMemberBoxPosition().y, EQUALS_DELTA);
 	}
 
 	@Test
-	public void testChangeToolFromEraser() throws NoSuchFieldException, IllegalAccessException {
+	public void testChangeToolFromEraser() {
 
-		int color = ((Paint) PrivateAccess.getMemberValue(TextTool.class, PaintroidApplication.currentTool, "mTextPaint")).getColor();
+		int color = textTool.textPaint.getColor();
 
-		selectTool(ToolType.ERASER);
+		onToolBarView()
+				.performSelectTool(ToolType.ERASER)
+				.performSelectTool(ToolType.TEXT);
 
-		selectTool(ToolType.TEXT);
+		int newColor = textTool.textPaint.getColor();
 
-		int newColor = ((Paint) PrivateAccess.getMemberValue(TextTool.class, PaintroidApplication.currentTool, "mTextPaint")).getColor();
-
-		assertEquals("Initial color should be black", color, Color.BLACK);
-		assertEquals("Color should not have changed after selecting the eraser", color, newColor);
+		assertEquals(color, Color.BLACK);
+		assertEquals(color, newColor);
 	}
 
 	@Test
-	public void testMultiLineText() throws NoSuchFieldException, IllegalAccessException {
+	public void testMultiLineText() {
 		enterMultilineTestText();
 
-		// Close tool options
-		clickSelectedToolButton();
+		onToolBarView()
+				.performCloseToolOptionsView();
 
-		String expectedTextSplitUp[] = { "testing", "multiline", "text", "", "123" };
-		String actualTextSplitUp[] = getToolMemberMultilineText();
+		String[] expectedTextSplitUp = {"testing", "multiline", "text", "", "123"};
+		String[] actualTextSplitUp = getToolMemberMultilineText();
 
-		assertTrue("Splitting text by newline failed", Arrays.equals(expectedTextSplitUp, actualTextSplitUp));
+		assertArrayEquals(expectedTextSplitUp, actualTextSplitUp);
 
 		checkTextBoxDimensionsAndDefaultPosition();
 	}
 
-	private void checkTextBoxDimensions() throws NoSuchFieldException, IllegalAccessException {
-		int boxOffset = (Integer) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mBoxOffset");
-		int textSizeMagnificationFactor = (Integer) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mTextSizeMagnificationFactor");
+	@Test
+	public void testTextToolAppliedWhenSelectingOtherTool() {
+		enterTestText();
+
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		int surfaceBitmapWidth = layerModel.getWidth();
+		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) textTool.toolPosition.y, surfaceBitmapWidth, 1);
+		int numberOfBlackPixels = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+		assertTrue(numberOfBlackPixels > 0);
+	}
+
+	@Test
+	public void testTextToolNotAppliedWhenPressingBack() {
+		enterTestText();
+
+		onToolBarView()
+				.performCloseToolOptionsView();
+
+		pressBack();
+
+		int surfaceBitmapWidth = layerModel.getWidth();
+		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) textTool.toolPosition.y, surfaceBitmapWidth, 1);
+		int numberOfBlackPixels = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+		assertEquals(0, numberOfBlackPixels);
+	}
+
+	@Test
+	public void testTextToolDoesNotResetPerspectiveScale() {
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		float scale = 2.0f;
+
+		activity.perspective.setScale(scale);
+		activity.perspective.setSurfaceTranslationY(200);
+		activity.perspective.setSurfaceTranslationX(50);
+		activity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		assertEquals(scale, activity.perspective.getScale(), 0.0001f);
+	}
+
+	@Test
+	public void testTextToolBoxIsPlacedCorrectlyWhenZoomedIn() {
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		PointF initialPosition = getToolMemberBoxPosition();
+
+		onToolBarView()
+				.performSelectTool(ToolType.BRUSH);
+
+		float scale = 2.0f;
+
+		activity.perspective.setScale(scale);
+		activity.perspective.setSurfaceTranslationY(200);
+		activity.perspective.setSurfaceTranslationX(50);
+		activity.refreshDrawingSurface();
+
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		textToolAfterZoom = (TextTool) activity.toolReference.get();
+
+		PointF positionAfterZoom = getToolMemberBoxPosition();
+
+		assertEquals(scale, activity.perspective.getScale(), 0.0001f);
+
+		onTopBarView()
+				.performClickCheckmark();
+
+		assertNotEquals(initialPosition, positionAfterZoom);
+	}
+
+	private void checkTextBoxDimensions() {
+		int boxOffset = TextTool.BOX_OFFSET;
+		int textSizeMagnificationFactor = TextTool.TEXT_SIZE_MAGNIFICATION_FACTOR;
 
 		float actualBoxWidth = getToolMemberBoxWidth();
 		float actualBoxHeight = getToolMemberBoxHeight();
 
-		boolean italic = mItalicToggleButton.isChecked();
+		boolean italic = italicToggleButton.isChecked();
 
-		String font = getSelectedItemFromMaterialSpinner(mFontSpinner);
-		float textSize = Float.valueOf(getSelectedItemFromMaterialSpinner(mTextSizeSpinner)) * textSizeMagnificationFactor;
+		String font = (String) fontSpinner.getSelectedItem();
+
+		String stringTextSize = textSize.getText().toString();
+		float textSize = Float.valueOf(stringTextSize) * textSizeMagnificationFactor;
+
 		Paint textPaint = new Paint();
 		textPaint.setAntiAlias(true);
 		textPaint.setTextSize(textSize);
@@ -541,11 +653,11 @@ public class TextToolIntegrationTest {
 			case FONT_SERIF:
 				textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
 				break;
-			case FONT_ALARABIYA:
-				textPaint.setTypeface(Typeface.createFromAsset(launchActivityRule.getActivity().getAssets(), "Alarabiya.ttf"));
+			case FONT_STC:
+				textPaint.setTypeface(ResourcesCompat.getFont(launchActivityRule.getActivity(), R.font.stc_regular));
 				break;
 			case FONT_DUBAI:
-				textPaint.setTypeface(Typeface.createFromAsset(launchActivityRule.getActivity().getAssets(), "Dubai.TTF"));
+				textPaint.setTypeface(ResourcesCompat.getFont(launchActivityRule.getActivity(), R.font.dubai));
 				break;
 			default:
 				textPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, style));
@@ -555,7 +667,7 @@ public class TextToolIntegrationTest {
 		float textDescent = textPaint.descent();
 		float textAscent = textPaint.ascent();
 
-		String multilineText[] = getToolMemberMultilineText();
+		String[] multilineText = getToolMemberMultilineText();
 
 		float maxTextWidth = 0;
 		for (String str : multilineText) {
@@ -564,28 +676,28 @@ public class TextToolIntegrationTest {
 				maxTextWidth = textWidth;
 			}
 		}
-		float expectedBoxWidth = maxTextWidth + 2*boxOffset;
+		float expectedBoxWidth = maxTextWidth + 2 * boxOffset;
 
 		float textHeight = textDescent - textAscent;
-		float expectedBoxHeight = textHeight * multilineText.length + 2*boxOffset;
+		float expectedBoxHeight = textHeight * multilineText.length + 2 * boxOffset;
 
-		assertEquals("Wrong text box width", expectedBoxWidth, actualBoxWidth, EQUALS_DELTA);
-		assertEquals("Wrong text box height", expectedBoxHeight, actualBoxHeight, EQUALS_DELTA);
+		assertEquals(expectedBoxWidth, actualBoxWidth, EQUALS_DELTA);
+		assertEquals(expectedBoxHeight, actualBoxHeight, EQUALS_DELTA);
 	}
 
-	private void checkTextBoxDefaultPosition() throws NoSuchFieldException, IllegalAccessException {
-		float marginTop = (Float) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mMarginTop");
+	private void checkTextBoxDefaultPosition() {
+		float marginTop = TextTool.MARGIN_TOP;
 		PointF actualBoxPosition = getToolMemberBoxPosition();
 		float boxHeight = getToolMemberBoxHeight();
 
-		float expectedBoxPositionX = PaintroidApplication.drawingSurface.getBitmapWidth()/2.0f;
-		float expectedBoxPositionY = boxHeight/2.0f + marginTop;
+		float expectedBoxPositionX = layerModel.getWidth() / 2.0f;
+		float expectedBoxPositionY = boxHeight / 2.0f + marginTop;
 
-		assertEquals("Wrong text box x position", expectedBoxPositionX, actualBoxPosition.x, EQUALS_DELTA);
-		assertEquals("Wrong text box y position", expectedBoxPositionY, actualBoxPosition.y, EQUALS_DELTA);
+		assertEquals(expectedBoxPositionX, actualBoxPosition.x, EQUALS_DELTA);
+		assertEquals(expectedBoxPositionY, actualBoxPosition.y, EQUALS_DELTA);
 	}
 
-	private void checkTextBoxDimensionsAndDefaultPosition () throws NoSuchFieldException, IllegalAccessException {
+	private void checkTextBoxDimensionsAndDefaultPosition() {
 		checkTextBoxDimensions();
 		checkTextBoxDefaultPosition();
 	}
@@ -595,13 +707,13 @@ public class TextToolIntegrationTest {
 		 * Use replaceText instead of typeText to support the arabic input.
 		 *
 		 * See:
-		 * java.lang.RuntimeException: Failed to get key events for string السلام عليكم 123 (i.e.
-		 * current IME does not understand how to translate the string into key events). As a
+		 * java.ic_pocketpaint_menu_language.RuntimeException: Failed to get key events for string السلام عليكم 123 (i.e.
+		 * current IME does not understand how to translatePerspective the string into key events). As a
 		 * workaround, you can use replaceText action to set the text directly in the EditText field.
 		 */
-		onView(withId(R.id.text_tool_dialog_input_text)).perform(replaceText(textToEnter));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(replaceText(textToEnter));
 		Espresso.closeSoftKeyboard();
-		onView(withId(R.id.text_tool_dialog_input_text)).check(matches(withText(textToEnter)));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).check(matches(withText(textToEnter)));
 	}
 
 	private void enterTestText() {
@@ -621,26 +733,17 @@ public class TextToolIntegrationTest {
 			case MONOSPACE:
 			case SERIF:
 			case SANS_SERIF:
-			case ALARABIYA:
+			case STC:
 			case DUBAI:
-				onView(withId(R.id.text_tool_dialog_spinner_font)).perform(click());
+				onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font)).perform(click());
 				onData(allOf(is(instanceOf(String.class)), is(getFontString(format))))
-						.inAdapterView(allOf(withId(R.id.text_tool_dialog_spinner_font), instanceOf(ListView.class)))
+						.inRoot(isPlatformPopup())
 						.perform(click());
 				break;
 			case UNDERLINE:
 			case ITALIC:
 			case BOLD:
 				onView(withText(getFontString(format))).perform(click());
-				break;
-			case SIZE_20:
-			case SIZE_30:
-			case SIZE_40:
-			case SIZE_60:
-				onView(withId(R.id.text_tool_dialog_spinner_text_size)).perform(click());
-				onData(allOf(is(instanceOf(String.class)), is(getFontString(format))))
-					.inAdapterView(allOf(withId(R.id.text_tool_dialog_spinner_text_size), instanceOf(ListView.class)))
-					.perform(click());
 				break;
 			default:
 				fail("Formatting option not supported.");
@@ -655,31 +758,22 @@ public class TextToolIntegrationTest {
 				return FONT_SERIF;
 			case SANS_SERIF:
 				return FONT_SANS_SERIF;
-			case ALARABIYA:
-				return FONT_ALARABIYA;
+			case STC:
+				return FONT_STC;
 			case DUBAI:
 				return FONT_DUBAI;
 			case UNDERLINE:
-				return activityHelper.getString(R.string.text_tool_dialog_underline_shortcut);
+				return activity.getString(R.string.text_tool_dialog_underline_shortcut);
 			case ITALIC:
-				return activityHelper.getString(R.string.text_tool_dialog_italic_shortcut);
+				return activity.getString(R.string.text_tool_dialog_italic_shortcut);
 			case BOLD:
-				return activityHelper.getString(R.string.text_tool_dialog_bold_shortcut);
-			case SIZE_20:
-				return String.valueOf(TEXT_SIZE_20);
-			case SIZE_30:
-				return String.valueOf(TEXT_SIZE_30);
-			case SIZE_40:
-				return String.valueOf(TEXT_SIZE_40);
-			case SIZE_60:
-				return String.valueOf(TEXT_SIZE_60);
-
+				return activity.getString(R.string.text_tool_dialog_bold_shortcut);
 			default:
 				return null;
 		}
 	}
 
-	protected int countPixelsWithColor(int[] pixels, int color) {
+	private int countPixelsWithColor(int[] pixels, int color) {
 		int count = 0;
 		for (int pixel : pixels) {
 			if (pixel == color) {
@@ -689,62 +783,51 @@ public class TextToolIntegrationTest {
 		return count;
 	}
 
-	protected float getToolMemberBoxWidth() throws NoSuchFieldException, IllegalAccessException {
-		return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mBoxWidth");
+	private float getToolMemberBoxWidth() {
+		return textTool.boxWidth;
 	}
 
-	protected float getToolMemberBoxHeight() throws NoSuchFieldException, IllegalAccessException {
-		return (Float) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mBoxHeight");
+	private void setToolMemberBoxWidth(float width) {
+		textTool.boxWidth = width;
 	}
 
-	protected PointF getToolMemberBoxPosition() throws NoSuchFieldException, IllegalAccessException {
-		return (PointF) PrivateAccess.getMemberValue(BaseToolWithShape.class, mTextTool, "mToolPosition");
+	private float getToolMemberBoxHeight() {
+		return textTool.boxHeight;
 	}
 
-	protected String getToolMemberText() throws NoSuchFieldException, IllegalAccessException {
-		return (String) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mText");
+	private void setToolMemberBoxHeight(float height) {
+		textTool.boxHeight = height;
 	}
 
-	protected String getToolMemberFont() throws NoSuchFieldException, IllegalAccessException {
-		return (String) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mFont");
+	private PointF getToolMemberBoxPosition() {
+		if (textToolAfterZoom != null) {
+			return textToolAfterZoom.toolPosition;
+		} else {
+			return textTool.toolPosition;
+		}
 	}
 
-	protected boolean getToolMemberItalic() throws NoSuchFieldException, IllegalAccessException {
-		return (Boolean) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mItalic");
+	private void setToolMemberBoxPosition(PointF position) {
+		textTool.toolPosition.set(position);
 	}
 
-	protected boolean getToolMemberUnderlined() throws NoSuchFieldException, IllegalAccessException {
-		return (Boolean) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mUnderlined");
+	private boolean getToolMemberItalic() {
+		return textTool.italic;
 	}
 
-	protected boolean getToolMemberBold() throws NoSuchFieldException, IllegalAccessException {
-		return (Boolean) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mBold");
+	private boolean getToolMemberBold() {
+		return textTool.bold;
 	}
 
-	protected int getToolMemberTextSize() throws NoSuchFieldException, IllegalAccessException {
-		return (Integer) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mTextSize");
+	private Bitmap getToolMemberDrawingBitmap() {
+		return textTool.drawingBitmap;
 	}
 
-	protected Bitmap getToolMemberDrawingBitmap() throws NoSuchFieldException, IllegalAccessException {
-		return (Bitmap) PrivateAccess.getMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mDrawingBitmap");
+	private String[] getToolMemberMultilineText() {
+		return textTool.getMultilineText();
 	}
 
-	protected String[] getToolMemberMultilineText() throws NoSuchFieldException, IllegalAccessException {
-		return (String[]) PrivateAccess.getMemberValue(TextTool.class, mTextTool, "mMultilineText");
-	}
-
-	protected void setToolMemberBoxPosition(PointF position) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(BaseToolWithShape.class, mTextTool, "mToolPosition", position);
-	}
-
-	protected void setToolMemberBoxHeight(float height) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mBoxHeight", height);
-	}
-	protected void setToolMemberBoxWidth(float width) throws NoSuchFieldException, IllegalAccessException {
-		PrivateAccess.setMemberValue(BaseToolWithRectangleShape.class, mTextTool, "mBoxWidth", width);
-	}
-
-	protected String getSelectedItemFromMaterialSpinner(MaterialSpinner materialSpinner) {
-		return materialSpinner.getItems().get(materialSpinner.getSelectedIndex()).toString();
+	private enum FormattingOptions {
+		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, STC, DUBAI
 	}
 }

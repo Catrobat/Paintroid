@@ -1,0 +1,6 @@
+# This file instruments the LogParser-Plugin
+# The initial use-case is to mark builds erroneous on instrumentation failures
+
+error /(?i)Instrumentation run failed due/
+error /(?i)ddmlib.*Exception/
+error /Cobertura conversion failed/

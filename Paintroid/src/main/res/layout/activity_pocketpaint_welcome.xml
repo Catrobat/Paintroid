@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:id="@+id/pocketpaint_intro_navigation"
+        android:layout_width="match_parent"
+        android:gravity="fill_vertical"
+        android:layout_height="@dimen/pocketpaint_welcome_navigation_height">
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_layout_dots"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/pocketpaint_welcome_dots_height"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal" />
+
+        <Button
+            android:id="@+id/pocketpaint_btn_next"
+            style="?borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/pocketpaint_layout_dots"
+            android:layout_alignParentEnd="true"
+            android:text="@string/next"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/pocketpaint_btn_skip"
+            style="?borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/pocketpaint_layout_dots"
+            android:layout_alignParentStart="true"
+            android:text="@string/skip"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/pocketpaint_intro_horizontal_line"
+        android:layout_above="@id/pocketpaint_intro_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/pocketpaint_color_picker_white"/>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pocketpaint_view_pager"
+        android:layout_above="@id/pocketpaint_intro_horizontal_line"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</RelativeLayout>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/pocketpaint_layout_top_bar"
+        android:id="@+id/pocketpaint_intro_possibilities_topbar"/>
+
+    <LinearLayout
+        android:id="@+id/pocketpaint_intro_possibilities_bottom_bar_ll"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <include android:id="@+id/pocketpaint_intro_possibilities_bottom_bar"
+            layout="@layout/pocketpaint_layout_bottom_navigation" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:background="@color/pocketpaint_main_drawing_surface_background"
+        android:layout_above="@id/pocketpaint_intro_possibilities_bottom_bar_ll"
+        android:layout_below="@id/pocketpaint_intro_possibilities_topbar">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/pocketpaint_checkeredbg_repeat"
+            android:orientation="horizontal"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/pocketpaint_intro_possibilities_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:background="#d20097a7"
+        android:gravity="top"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/pocketpaint_welcome_margin_side"
+        android:paddingStart="@dimen/pocketpaint_welcome_margin_side"
+        android:paddingTop="@dimen/pocketpaint_welcome_margin_top_possibilities"
+        android:layout_below="@id/pocketpaint_intro_possibilities_topbar"
+        android:layout_above="@id/pocketpaint_intro_possibilities_bottom_bar_ll"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/pocketpaint_intro_possibilities_head"
+            style="@style/PocketPaintWelcomeHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="2"
+            android:text="@string/more_possibilities"/>
+
+        <TextView
+            android:id="@+id/pocketpaint_intro_possibilities_text"
+            style="@style/PocketPaintWelcomeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pocketpaint_intro_possibilities_head"
+            android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
+            android:text="@string/intro_possibilities_text"/>
+
+    </RelativeLayout>
+</RelativeLayout>

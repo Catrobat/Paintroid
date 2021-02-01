@@ -1,20 +1,20 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.command.implementation;
@@ -22,62 +22,29 @@ package org.catrobat.paintroid.command.implementation;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.util.Log;
 
-import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.tools.Layer;
+import org.catrobat.paintroid.command.Command;
+import org.catrobat.paintroid.contract.LayerContracts;
 
-public class PathCommand extends BaseCommand {
-	protected Path mPath;
+import androidx.annotation.VisibleForTesting;
+
+public class PathCommand implements Command {
+	@VisibleForTesting
+	public Paint paint;
+	@VisibleForTesting
+	public Path path;
 
 	public PathCommand(Paint paint, Path path) {
-		super(paint);
-		if (path != null) {
-			mPath = new Path(path);
-		}
+		this.paint = paint;
+		this.path = path;
 	}
 
 	@Override
-	public void run(Canvas canvas, Layer layer) {
-		if ((canvas == null) || mPath == null) {
-			Log.w(PaintroidApplication.TAG,
-					"Object must not be null in PathCommand.");
-			return;
-		}
-
-		RectF bounds = new RectF();
-		mPath.computeBounds(bounds, true);
-		Rect boundsCanvas = canvas.getClipBounds();
-
-		if (boundsCanvas == null) {
-
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
-			return;
-		}
-
-		if (pathInCanvas(bounds, boundsCanvas)) {
-			canvas.drawPath(mPath, mPaint);
-		} else {
-
-			notifyStatus(NOTIFY_STATES.COMMAND_FAILED);
-		}
+	public void run(Canvas canvas, LayerContracts.Model layerModel) {
+		canvas.drawPath(path, paint);
 	}
 
-	private boolean pathInCanvas(RectF rectangleBoundsPath,
-			Rect rectangleBoundsCanvas) {
-		RectF rectangleCanvas = new RectF(rectangleBoundsCanvas);
-
-		float strokeWidth = mPaint.getStrokeWidth();
-
-		rectangleBoundsPath.bottom = rectangleBoundsPath.bottom
-				+ (strokeWidth / 2);
-		rectangleBoundsPath.left = rectangleBoundsPath.left - (strokeWidth / 2);
-		rectangleBoundsPath.right = rectangleBoundsPath.right
-				+ (strokeWidth / 2);
-		rectangleBoundsPath.top = rectangleBoundsPath.top - (strokeWidth / 2);
-
-		return (RectF.intersects(rectangleCanvas, rectangleBoundsPath));
+	@Override
+	public void freeResources() {
 	}
 }

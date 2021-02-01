@@ -3,12 +3,10 @@ Paintroid
 
 Paintroid, also known as **Pocket Paint**, is associated to [Catroid](https://github.com/Catrobat/Catroid). It is a graphical paint editor application for the Android platform that, among others, allows setting parts of pictures to transparent.
 
-Since Pocket Paint is now available in **Google Play store** you can also download Paintroid (Pocket Paint) from [here](https://play.google.com/store/apps/details?id=org.catrobat.paintroid).
+Since Pocket Paint is now available in **Google Play store** you can also download Paintroid (Pocket Paint) from [here](https://play.google.com/store/apps/details?id=org.catrobat.paintroid). Alternatively, you can find it on **F-Droid** [here](https://f-droid.org/packages/org.catrobat.paintroid/).
 
 
 For more information oriented towards developers please visit our [developers page](http://developer.catrobat.org/).
-
-Nightly builds can be found [here](http://files.catrob.at).
 
 # Issues #
 **Please report all bugs on our [Jira Bugtracker](https://jira.catrob.at/secure/CreateIssue.jspa?pid=10401&issuetype=1)**
@@ -25,6 +23,7 @@ Let's start to set up the working environment using the instructions in our  [Wi
 
 # Resources and links #
 * [Google Play Store Download](https://play.google.com/store/apps/details?id=org.catrobat.paintroid)
+* [F-Droid Download](https://f-droid.org/packages/org.catrobat.paintroid/)
 * [Installation Instructions](https://github.com/Catrobat/Catroid/wiki/Installation-Instructions)
 * [Frequently Asked Questions](https://github.com/Catrobat/Catroid/wiki/Frequently-Asked-Questions)
 * [Credits](http://developer.catrobat.org/credits)
@@ -32,7 +31,6 @@ Let's start to set up the working environment using the instructions in our  [Wi
 * [Twitter](http://twitter.com/Catroid)
 * [Google+](https://plus.google.com/u/0/+CatrobatOrgAdmin/posts)
 * [Our Google group](https://groups.google.com/forum/?fromgroups#!forum/catrobat)
-* Visit us on IRC: #catrobat or #catrobatdev on [freenode](http://freenode.net/)
 
 # License #
 [License](http://developer.catrobat.org/licenses) of our project (mainly AGPL v3).

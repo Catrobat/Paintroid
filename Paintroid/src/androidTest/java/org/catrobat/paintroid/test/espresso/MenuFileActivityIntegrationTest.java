@@ -1,178 +1,240 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2021 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.test.espresso;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PointF;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.test.espresso.Espresso;
-import android.support.test.espresso.intent.rule.IntentsTestRule;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.NavigationDrawerMenuActivity;
-import org.catrobat.paintroid.PaintroidApplication;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.ActivityHelper;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
+import org.catrobat.paintroid.common.Constants;
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.pressMenuKey;
-import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intending;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getCanvasPointFromScreenPoint;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getWorkingBitmap;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.resetColorPicker;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitMillis;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
+
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.not;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.AllOf.allOf;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.pressMenuKey;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class MenuFileActivityIntegrationTest {
 
 	private static ArrayList<File> deletionFileList = null;
-	private PointF screenPoint = null;
-
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@ClassRule
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
-	private ActivityHelper activityHelper;
+	private MainActivity activity;
 
 	@Before
 	public void setUp() {
-
-		activityHelper = new ActivityHelper(launchActivityRule.getActivity());
-
-		selectTool(ToolType.BRUSH);
-
-		screenPoint = new PointF(activityHelper.getDisplayWidth() / 2, activityHelper.getDisplayHeight() / 2);
+		onToolBarView().performSelectTool(ToolType.BRUSH);
 		deletionFileList = new ArrayList<>();
+		activity = launchActivityRule.getActivity();
 	}
 
 	@After
-	public void tearDown() throws Exception {
-		PaintroidApplication.savedPictureUri = null;
-		PaintroidApplication.isSaved = false;
+	public void tearDown() {
 		for (File file : deletionFileList) {
-			if (file != null) {
-				boolean deleted = file.delete();
-				assertTrue("File has not been deleted correctly", deleted);
+			if (file != null && file.exists()) {
+				assertTrue(file.delete());
 			}
 		}
 	}
 
 	@Test
-	public void testNewEmptyDrawingWithSave() throws NoSuchFieldException, IllegalAccessException {
-		final int xCoordinatePixel = 0;
-		final int yCoordinatePixel = 0;
+	public void testNewEmptyDrawingWithSave() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
-		getWorkingBitmap().setPixel(xCoordinatePixel, yCoordinatePixel, Color.BLACK);
-		assertEquals("Color on drawing surface wrong", Color.BLACK, PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+		onTopBarView()
+				.performOpenMoreOptions();
 
-		openNavigationDrawer();
+		onView(withText(R.string.menu_new_image))
+				.perform(click());
 
-		onView(withText(R.string.menu_new_image)).perform(click());
+		onView(withText(R.string.save_button_text))
+				.perform(click());
 
-		onView(withText(R.string.save_button_text)).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("test987654"));
 
-		onView(withText(R.string.menu_new_image_empty_image)).perform(click());
+		onView(withText(R.string.save_button_text))
+				.perform(click());
 
-		assertEquals("Color should be Transparent", Color.TRANSPARENT, PaintroidApplication.drawingSurface.getPixel(new PointF(xCoordinatePixel, yCoordinatePixel)));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 	}
 
 	@Test
 	public void testLoadImageDialog() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+		onTopBarView()
+				.performOpenMoreOptions();
 
-		openNavigationDrawer();
+		onView(withText(R.string.menu_load_image))
+				.perform(click());
 
-		onView(withText(R.string.menu_new_image)).perform(click());
+		onView(withText(R.string.menu_load_image))
+				.check(matches(isDisplayed()));
+		onView(withText(R.string.dialog_warning_new_image))
+				.check(matches(isDisplayed()));
+		onView(withText(R.string.save_button_text))
+				.check(matches(isDisplayed()));
+		onView(withText(R.string.discard_button_text))
+				.check(matches(isDisplayed()));
+	}
 
-		onView(withText(R.string.save_button_text)).check(matches(isDisplayed()));
-		onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()));
+	@Test
+	public void testLoadImageDialogIntentCancel() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		Instrumentation.ActivityResult resultCancel = new Instrumentation.ActivityResult(Activity.RESULT_CANCELED, new Intent());
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultCancel);
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_load_image)).perform(click());
+		onView(withText(R.string.discard_button_text)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+	}
+
+	@Test
+	public void testLoadImageDialogIntentOK() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
+
+		Intent intent = new Intent();
+		intent.setData(createTestImageFile());
+		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_load_image)).perform(click());
+		onView(withText(R.string.discard_button_text)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 	}
 
 	@Test
 	public void testLoadImageDialogOnBackPressed() {
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		openNavigationDrawer();
+		onTopBarView()
+				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_load_image)).perform(click());
 
 		pressBack();
 
-		onView(withId(R.id.drawingSurfaceView)).check(matches(isDisplayed()));
+		onDrawingSurfaceView()
+				.check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testOnHelpDisabled() {
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.help_title)).check(matches(not(isClickable())));
 	}
 
 	@Test
 	public void testWarningDialogOnNewImage() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
-
-		openNavigationDrawer();
+		onTopBarView()
+				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_new_image)).perform(click());
 
@@ -187,28 +249,32 @@ public class MenuFileActivityIntegrationTest {
 
 	@Test
 	public void testNewEmptyDrawingWithDiscard() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
+		onTopBarView()
+				.performOpenMoreOptions();
 
-		openNavigationDrawer();
+		onView(withText(R.string.menu_new_image))
+				.perform(click());
 
-		onView(withText(R.string.menu_new_image)).perform(click());
+		onView(withText(R.string.discard_button_text))
+				.perform(click());
 
-		onView(withText(R.string.discard_button_text)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image))
+				.check(doesNotExist());
 
-		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
-
-		assertEquals("Bitmap pixel not changed", Color.BLACK, PaintroidApplication.drawingSurface.getPixel(getCanvasPointFromScreenPoint(screenPoint)));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 	}
 
 	@Test
 	public void testNewEmptyDrawingDialogOnBackPressed() {
-		selectTool(ToolType.BRUSH);
-		resetColorPicker();
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
-
-		openNavigationDrawer();
+		onTopBarView()
+				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_new_image)).perform(click());
 
@@ -220,150 +286,381 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
 
-		assertEquals("Bitmap pixel not changed", Color.BLACK, PaintroidApplication.drawingSurface.getPixel(getCanvasPointFromScreenPoint(screenPoint)));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 	}
 
 	@Test
 	public void testSavedStateChangeAfterSave() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
-
-		assertFalse("Image already saved", PaintroidApplication.isSaved);
+		assertFalse(activity.model.isSaved());
 
 		pressMenuKey();
 
-		openNavigationDrawer();
+		onTopBarView()
+				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("test98765"));
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		onView(withText(R.string.save_button_text)).perform(click());
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		assertNotNull(activity.model.getSavedPictureUri());
 
-		assertTrue("Image not saved", PaintroidApplication.isSaved);
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
+
+		assertTrue(activity.model.isSaved());
 	}
 
 	@Test
 	public void testSaveImage() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
-
-		openNavigationDrawer();
+		onTopBarView()
+				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withText(R.string.save_button_text)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull(activity.model.getSavedPictureUri());
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 	}
 
 	@Test
 	public void testSaveCopy() {
+		launchActivityRule.getActivity().getPreferences(Context.MODE_PRIVATE)
+				.edit()
+				.clear()
+				.commit();
 
-		assertNull("Saved picture uri is not null", PaintroidApplication.savedPictureUri);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y));
-
-		openNavigationDrawer();
+		onTopBarView()
+				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		onView(withText(R.string.save_button_text)).perform(click());
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		assertNotNull(activity.model.getSavedPictureUri());
 
-		File oldFile = new File(PaintroidApplication.savedPictureUri.toString());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 
-		final int screenTouchYOffset = 100;
-		onView(isRoot()).perform(touchAt(screenPoint.x, screenPoint.y + screenTouchYOffset));
+		File oldFile = new File(activity.model.getSavedPictureUri().toString());
 
-		openNavigationDrawer();
+		onView(withText(R.string.pocketpaint_no)).perform(click());
+		onView(withText(R.string.pocketpaint_ok)).perform(click());
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE));
+
+		onTopBarView()
+				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_save_copy)).perform(click());
+		onView(withText(R.string.save_button_text)).perform(click());
 
-		File newFile = new File(PaintroidApplication.savedPictureUri.toString());
+		File newFile = new File(activity.model.getSavedPictureUri().toString());
 
 		assertNotSame("Changes to saved", oldFile, newFile);
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		assertNotNull(activity.model.getSavedPictureUri());
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 	}
 
 	@Test
-	@Ignore // TODO: fails, File is still the same
-	public void testSaveLoadedImage() throws URISyntaxException, IOException {
+	public void testAskForSaveAfterSavedOnce() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		// Save new image, stub ACTION_GET_CONTENT intent
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_save_image)).perform(click());
+
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("AskForSaveAfterSavedOnce"));
+
+		onView(withText(R.string.save_button_text)).perform(click());
+
+		assertNotNull(activity.model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		pressBack();
+		onView(withText(R.string.menu_quit)).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testShowOverwriteDialogAfterSavingAgain() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image)).perform(click());
+
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("12345test12345"));
+
+		onView(withText(R.string.save_button_text)).perform(click());
+
+		assertNotNull(activity.model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+
+		onView(withText(R.string.overwrite_button_text))
+				.check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testCheckImageNumberIncrementAfterSaveWithStandardName() {
+		FileIO.filename = "image";
+		int imageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+
+		assertNotNull(activity.model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		int newImageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
+		assertEquals(imageNumber + 1, newImageNumber);
+	}
+
+	@Test
+	public void testCheckImageNumberSameAfterSaveWithNonStandardName() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		int imageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
+
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("test9876"));
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+
+		assertNotNull(activity.model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
+
+		int newImageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
+		assertEquals(imageNumber, newImageNumber);
+	}
+
+	@Test
+	public void testCheckSaveFileWithDifferentFormats() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		onView(withId(R.id.pocketpaint_save_info_title)).check(matches(isDisplayed()));
+		onView(withId(R.id.pocketpaint_image_name_save_text)).check(matches(isDisplayed()));
+		onView(withId(R.id.pocketpaint_save_dialog_spinner)).check(matches(isDisplayed()));
+
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.perform(click());
+		onData(allOf(is(instanceOf(String.class)),
+				is("png"))).inRoot(isPlatformPopup()).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText(Constants.TEMP_PICTURE_NAME));
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+
+		assertNotNull(activity.model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
+
+		File oldFile = new File(activity.model.getSavedPictureUri().toString());
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.perform(click());
+		onData(allOf(is(instanceOf(String.class)),
+				is("jpg"))).inRoot(isPlatformPopup()).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText(Constants.TEMP_PICTURE_NAME));
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+
+		assertNotNull(activity.model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
+
+		File newFile = new File(activity.model.getSavedPictureUri().toString());
+
+		assertNotSame(oldFile, newFile);
+	}
+
+	@Test
+	public void testCheckSaveImageDialogShowsSavedImageOptions() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		String imageName = "test12345";
+
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText(imageName));
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.perform(click());
+		onData(allOf(is(instanceOf(String.class)),
+				is("png"))).inRoot(isPlatformPopup()).perform(click());
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+
+		assertNotNull(activity.model.getSavedPictureUri());
+		addUriToDeletionFileList(activity.model.getSavedPictureUri());
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		onView(withText(imageName))
+				.check(matches(isDisplayed()));
+		onView(withText("png"))
+				.check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void testCheckCopyIsAlwaysDefaultOptions() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_copy))
+				.perform(click());
+
+		int imageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
+
+		onView(withText("jpg"))
+				.check(matches(isDisplayed()));
+		onView(withText("image" + imageNumber))
+				.check(matches(isDisplayed()));
+
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.perform(click());
+		onData(allOf(is(instanceOf(String.class)),
+				is("jpg"))).inRoot(isPlatformPopup()).perform(click());
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_copy))
+				.perform(click());
+
+		imageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
+
+		onView(withText("jpg"))
+				.check(matches(isDisplayed()));
+		onView(withText("image" + imageNumber))
+				.check(matches(isDisplayed()));
+	}
+
+	private Uri createTestImageFile() {
+		Bitmap bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
+
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, "testfile.jpg");
+		contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+		}
+
+		ContentResolver resolver = activity.getContentResolver();
+		Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+		try {
+			OutputStream fos = resolver.openOutputStream(Objects.requireNonNull(imageUri));
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos));
+			assert fos != null;
+			fos.close();
+		} catch (IOException e) {
+			throw new AssertionError("Picture file could not be created.", e);
+		}
+
+		File imageFile = new File(imageUri.getPath(), "testfile.jpg");
+
+		deletionFileList.add(imageFile);
+		return imageUri;
+	}
+
+	@Test
+	public void testLoadImageTransparency() {
 		Intent intent = new Intent();
-		intent.setData(PaintroidApplication.savedPictureUri);
+		intent.setData(createTestImageFile());
 		Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
 		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result);
 
-		final int xOffset = 100;
-		onView(isRoot()).perform(swipe(screenPoint, new PointF(screenPoint.x + xOffset, screenPoint.y)));
+		onTopBarView()
+				.performOpenMoreOptions();
 
-		openNavigationDrawer();
+		onView(withText(R.string.menu_load_image))
+				.perform(click());
 
-		onView(withText(R.string.menu_save_image)).perform(click());
+		onToolBarView()
+				.performSelectTool(ToolType.ERASER);
 
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
-		// Load the saved image
-		openNavigationDrawer();
-
-		onView(withText(R.string.menu_load_image)).perform(click());
-
-		assertTrue("Save copy flag not true", PaintroidApplication.saveCopy);
-
-		openNavigationDrawer();
-
-		// Save copy of image
-		onView(withText(R.string.menu_save_copy)).perform(click());
-
-		assertNotNull("Saved picture uri is null", PaintroidApplication.savedPictureUri);
-
-		addUriToDeletionFileList(PaintroidApplication.savedPictureUri);
-
-		File saveFile = new File(getRealFilePathFromUri(PaintroidApplication.savedPictureUri));
-
-		final long oldLength = saveFile.length();
-		final long firstModified = saveFile.lastModified();
-
-		// Draw and save image
-		final int yOffset = 200;
-		onView(isRoot()).perform(swipe(screenPoint, new PointF(screenPoint.x, screenPoint.y + yOffset)));
-
-		openNavigationDrawer();
-
-		onView(withText(R.string.menu_save_image)).perform(click());
-
-		File actualSaveFile = new File(getRealFilePathFromUri(PaintroidApplication.savedPictureUri));
-
-		long newLength = actualSaveFile.length();
-		long lastModified = actualSaveFile.lastModified();
-
-		assertNotEquals("File is still the same", oldLength, newLength);
-		assertNotEquals("File not currently modified", firstModified, lastModified);
-	}
-
-	private String getRealFilePathFromUri(Uri uri) {
-		String[] fileColumns = { MediaStore.Images.Media.DATA };
-
-		Cursor cursor = launchActivityRule.getActivity().getContentResolver().query(uri, fileColumns, null, null, null);
-		cursor.moveToFirst();
-
-		int columnIndex = cursor.getColumnIndex(fileColumns[0]);
-		String realFilePath = cursor.getString(columnIndex);
-		cursor.close();
-
-		return realFilePath;
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 	}
 
 	private void addUriToDeletionFileList(Uri uri) {
-		deletionFileList.add(new File(getRealFilePathFromUri(uri)));
+		deletionFileList.add(new File(Objects.requireNonNull(uri.getPath())));
 	}
-
 }

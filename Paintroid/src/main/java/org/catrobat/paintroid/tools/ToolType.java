@@ -1,100 +1,98 @@
-/**
- *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
- *  (<http://developer.catrobat.org/credits>)
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2015 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as
- *  published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
  *
- *  You should have received a copy of the GNU Affero General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package org.catrobat.paintroid.tools;
 
-import java.util.EnumSet;
-
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.Tool.StateChange;
 
-import static android.R.attr.id;
+import java.util.EnumSet;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.StringRes;
+
+import static org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID;
 
 public enum ToolType {
-	PIPETTE(R.string.button_pipette, R.drawable.icon_menu_pipette, R.string.help_content_eyedropper, false, EnumSet.of(StateChange.ALL), R.id.tools_pipette),
-	BRUSH(R.string.button_brush, R.drawable.icon_menu_brush, R.string.help_content_brush, true, EnumSet.of(StateChange.ALL), R.id.tools_brush),
-	UNDO(R.string.button_undo, R.drawable.icon_menu_undo, R.string.help_content_undo, false, EnumSet.of(StateChange.ALL), R.id.btn_top_undo),
-	REDO(R.string.button_redo, R.drawable.icon_menu_redo, R.string.help_content_redo, false, EnumSet.of(StateChange.ALL), R.id.btn_top_redo),
-	FILL(R.string.button_fill, R.drawable.icon_menu_bucket, R.string.help_content_fill, true, EnumSet.of(StateChange.ALL), R.id.tools_fill),
-	STAMP(R.string.button_stamp, R.drawable.icon_menu_stamp, R.string.help_content_stamp, false, EnumSet.of(StateChange.ALL), R.id.tools_stamp),
-	LINE(R.string.button_line, R.drawable.icon_menu_straight_line, R.string.help_content_line, true, EnumSet.of(StateChange.ALL), R.id.tools_line),
-	CURSOR(R.string.button_cursor, R.drawable.icon_menu_cursor, R.string.help_content_cursor, true, EnumSet.of(StateChange.ALL), R.id.tools_cursor),
-	IMPORTPNG(R.string.button_import_image, R.drawable.icon_menu_import_image, R.string.help_content_import_png, false, EnumSet.of(StateChange.ALL), R.id.tools_import),
-	TRANSFORM(R.string.button_transform, R.drawable.icon_menu_resize, R.string.help_content_transform, false, EnumSet.of(StateChange.RESET_INTERNAL_STATE, StateChange.NEW_IMAGE_LOADED), R.id.tools_transform),
-	ERASER(R.string.button_eraser, R.drawable.icon_menu_eraser, R.string.help_content_eraser, false, EnumSet.of(StateChange.ALL), R.id.tools_eraser),
-	FLIP(R.string.button_flip, R.drawable.icon_menu_flip_horizontal, R.string.help_content_flip, false, EnumSet.of(StateChange.ALL), R.id.tools_flip),
-	SHAPE(R.string.button_shape, R.drawable.icon_menu_rectangle, R.string.help_content_shape, true, EnumSet.of(StateChange.ALL), R.id.tools_rectangle),
-	ROTATE(R.string.button_rotate, R.drawable.icon_menu_rotate_left, R.string.help_content_rotate, false, EnumSet.of(StateChange.ALL), R.id.tools_rotate),
-	TEXT(R.string.button_text, R.drawable.icon_menu_text, R.string.help_content_text, true, EnumSet.of(StateChange.ALL), R.id.tools_text),
-	LAYER(R.string.layers_title, R.drawable.icon_menu_layers, R.string.layers_title, false, EnumSet.of(StateChange.ALL), R.id.btn_top_layers),
-	COLORCHOOSER(R.string.color_chooser_title, R.drawable.ic_icon_menu_color, R.string.color_chooser_title, true, EnumSet.of(StateChange.ALL), R.id.btn_top_colorframe);
+	PIPETTE(R.string.button_pipette, R.string.help_content_eyedropper, R.drawable.ic_pocketpaint_tool_pipette, EnumSet.of(StateChange.ALL), 1, INVALID_RESOURCE_ID, false),
+	BRUSH(R.string.button_brush, R.string.help_content_brush, R.drawable.ic_pocketpaint_tool_brush, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_brush, INVALID_RESOURCE_ID, true),
+	UNDO(R.string.button_undo, R.string.help_content_undo, R.drawable.ic_pocketpaint_undo, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_undo, INVALID_RESOURCE_ID, false),
+	REDO(R.string.button_redo, R.string.help_content_redo, R.drawable.ic_pocketpaint_redo, EnumSet.of(StateChange.ALL), R.id.pocketpaint_btn_top_redo, INVALID_RESOURCE_ID, false),
+	FILL(R.string.button_fill, R.string.help_content_fill, R.drawable.ic_pocketpaint_tool_fill, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_fill, INVALID_RESOURCE_ID, true),
+	STAMP(R.string.button_stamp, R.string.help_content_stamp, R.drawable.ic_pocketpaint_tool_stamp, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_stamp, R.drawable.pocketpaint_stamp_tool_overlay, true),
+	LINE(R.string.button_line, R.string.help_content_line, R.drawable.ic_pocketpaint_tool_line, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_line, INVALID_RESOURCE_ID, true),
+	CURSOR(R.string.button_cursor, R.string.help_content_cursor, R.drawable.ic_pocketpaint_tool_cursor, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_cursor, INVALID_RESOURCE_ID, true),
+	IMPORTPNG(R.string.button_import_image, R.string.help_content_import_png, R.drawable.ic_pocketpaint_tool_import, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_import, R.drawable.pocketpaint_import_tool_overlay, false),
+	TRANSFORM(R.string.button_transform, R.string.help_content_transform, R.drawable.ic_pocketpaint_tool_transform, EnumSet.of(StateChange.RESET_INTERNAL_STATE, StateChange.NEW_IMAGE_LOADED), R.id.pocketpaint_tools_transform, INVALID_RESOURCE_ID, true),
+	ERASER(R.string.button_eraser, R.string.help_content_eraser, R.drawable.ic_pocketpaint_tool_eraser, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_eraser, INVALID_RESOURCE_ID, true),
+	SHAPE(R.string.button_shape, R.string.help_content_shape, R.drawable.ic_pocketpaint_tool_rectangle, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_rectangle, R.drawable.pocketpaint_rectangle_tool_overlay, true),
+	TEXT(R.string.button_text, R.string.help_content_text, R.drawable.ic_pocketpaint_tool_text, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_text, R.drawable.pocketpaint_text_tool_overlay, true),
+	LAYER(R.string.layers_title, R.string.help_content_layer, R.drawable.ic_pocketpaint_layers, EnumSet.of(StateChange.ALL), INVALID_RESOURCE_ID, INVALID_RESOURCE_ID, false),
+	COLORCHOOSER(R.string.color_picker_title, R.string.help_content_color_chooser, R.drawable.ic_pocketpaint_color_palette, EnumSet.of(StateChange.ALL), INVALID_RESOURCE_ID, INVALID_RESOURCE_ID, false),
+	HAND(R.string.button_hand, R.string.help_content_hand, R.drawable.ic_pocketpaint_tool_hand, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_hand, INVALID_RESOURCE_ID, false),
+	SPRAY(R.string.button_spray_can, R.string.help_content_spray_can, R.drawable.ic_pocketpaint_tool_spray_can, EnumSet.of(StateChange.ALL), R.id.pocketpaint_tools_spray_can, INVALID_RESOURCE_ID, true);
 
+	private int nameResource;
+	private int helpTextResource;
+	private int drawableResource;
+	private EnumSet<StateChange> stateChangeBehaviour;
+	private int toolButtonID;
+	private int overlayDrawableResource;
+	private boolean hasOptions;
 
-
-
-	private int mNameResource;
-	private int mImageResource;
-	private int mHelpTextResource;
-	private boolean mAllowColorChange;
-	private EnumSet<StateChange> mStateChangeBehaviour;
-	private int mToolButtonID;
-
-	ToolType(int nameResource, int imageResource, int helpTextResource, boolean allowColorchange,
-	         EnumSet<StateChange> stateChangeBehaviour, int toolButtonID) {
-		mNameResource = nameResource;
-		mImageResource = imageResource;
-		mHelpTextResource = helpTextResource;
-		mAllowColorChange = allowColorchange;
-		mStateChangeBehaviour = stateChangeBehaviour;
-		mToolButtonID = toolButtonID;
+	ToolType(int nameResource, int helpTextResource, int drawableResource, EnumSet<StateChange> stateChangeBehaviour,
+			int toolButtonID, int overlayDrawableResource, boolean hasOptions) {
+		this.nameResource = nameResource;
+		this.helpTextResource = helpTextResource;
+		this.drawableResource = drawableResource;
+		this.stateChangeBehaviour = stateChangeBehaviour;
+		this.toolButtonID = toolButtonID;
+		this.overlayDrawableResource = overlayDrawableResource;
+		this.hasOptions = hasOptions;
 	}
 
-	public int getNameResource() {
-		return mNameResource;
+	public @StringRes int getNameResource() {
+		return nameResource;
 	}
 
-	public void setNameResource(int nameResource) {	mNameResource = nameResource; }
-
-	public int getImageResource() {
-		return mImageResource;
+	public @StringRes int getHelpTextResource() {
+		return helpTextResource;
 	}
 
-	public int getHelpTextResource() {
-		return mHelpTextResource;
-	}
-
-	public boolean isColorChangeAllowed() {
-		return mAllowColorChange;
+	public @DrawableRes int getOverlayDrawableResource() {
+		return overlayDrawableResource;
 	}
 
 	public boolean shouldReactToStateChange(StateChange stateChange) {
-		if (mStateChangeBehaviour.contains(StateChange.ALL)) {
-			return (true);
-		} else if (mStateChangeBehaviour.contains(stateChange)) {
-			return (true);
-		} else {
-			return (false);
-		}
+		return stateChangeBehaviour.contains(StateChange.ALL) || stateChangeBehaviour.contains(stateChange);
 	}
 
-	public int getToolButtonID() {
-		return mToolButtonID;
+	public @IdRes int getToolButtonID() {
+		return toolButtonID;
 	}
 
+	public boolean hasOptions() {
+		return hasOptions;
+	}
+
+	public @DrawableRes int getDrawableResource() {
+		return drawableResource;
+	}
 }

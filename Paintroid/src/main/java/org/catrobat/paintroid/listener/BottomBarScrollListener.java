@@ -23,20 +23,28 @@ import android.view.View;
 
 import org.catrobat.paintroid.ui.BottomBarHorizontalScrollView;
 
-public class BottomBarScrollListener implements BottomBarHorizontalScrollView.IScrollStateListener {
-    private View next;
-    private View previous;
+public class BottomBarScrollListener implements BottomBarHorizontalScrollView.ScrollStateListener {
+	private View next;
+	private View previous;
 
-    public BottomBarScrollListener(View previous, View next) {
-        this.next = next;
-        this.previous = previous;
-    }
+	public BottomBarScrollListener(View previous, View next) {
+		this.next = next;
+		this.previous = previous;
+	}
 
-    public void onScrollMostRight() { next.setVisibility(View.GONE); }
+	public void onScrollMostRight() {
+		next.setVisibility(View.GONE);
+	}
 
-    public void onScrollMostLeft() { previous.setVisibility(View.GONE); }
+	public void onScrollMostLeft() {
+		previous.setVisibility(View.GONE);
+	}
 
-    public void onScrollFromMostLeft() { previous.setVisibility(View.VISIBLE); }
+	public void onScrollFromMostLeft() {
+		previous.setVisibility(View.VISIBLE);
+	}
 
-    public void onScrollFromMostRight() { next.setVisibility(View.VISIBLE); }
+	public void onScrollFromMostRight() {
+		next.setVisibility(View.VISIBLE);
+	}
 }

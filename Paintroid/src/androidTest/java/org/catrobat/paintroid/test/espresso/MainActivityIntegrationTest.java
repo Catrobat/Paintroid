@@ -19,32 +19,27 @@
 
 package org.catrobat.paintroid.test.espresso;
 
-import android.annotation.SuppressLint;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.content.Context;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.utils.SystemAnimationsRule;
-import org.catrobat.paintroid.tools.ToolType;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.longClickOnTool;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.openNavigationDrawer;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.selectTool;
-import static org.hamcrest.Matchers.not;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
+
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityIntegrationTest {
@@ -52,110 +47,34 @@ public class MainActivityIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-	@Rule
-	public SystemAnimationsRule systemAnimationsRule = new SystemAnimationsRule();
+	@Test
+	public void testMoreOptionsMenuAboutTextIsCorrect() {
 
-	@Before
-	public void setUp() {
-		selectTool(ToolType.BRUSH);
-	}
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.pocketpaint_menu_about))
+				.perform(click());
 
-	@After
-	public void tearDown() {
-//		closeNavigationDrawer();
+		Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+		String aboutTextExpected = context.getString(R.string.pocketpaint_about_content,
+				context.getString(R.string.pocketpaint_about_license));
+
+		onView(withText(aboutTextExpected))
+				.check(matches(isDisplayed()));
 	}
 
 	@Test
-	public void navigationDrawer_menu_termsOfUseAndServiceTextIsCorrect() {
-		openNavigationDrawer();
+	public void testMoreOptionsMenuAboutClosesMoreOptions() {
 
-		onView(withText(R.string.menu_terms_of_use_and_service)).perform(click());
+		onTopBarView()
+				.performOpenMoreOptions();
 
-		onView(withText(R.string.terms_of_use_and_service_title)).check(matches(isDisplayed()));
-		onView(withText(R.string.terms_of_use_and_service_content)).check(matches(isDisplayed()));
+		onView(withText(R.string.pocketpaint_menu_about))
+				.perform(click());
 
 		pressBack();
 
-		onView(withId(R.id.nav_view)).check(matches(not(isDisplayed())));
-	}
-
-	@SuppressLint("StringFormatInvalid")
-	@Test
-	public void navigationDrawer_menu_menuAboutTextIsCorrect() {
-
-		openNavigationDrawer();
-
-		onView(withText(R.string.menu_about)).perform(click());
-
-		String aboutTextExpected = launchActivityRule.getActivity().getString(R.string.about_content);
-		String licenseText = launchActivityRule.getActivity().getString(R.string.license_type_paintroid);
-		aboutTextExpected = String.format(aboutTextExpected, licenseText);
-
-		onView(withText(aboutTextExpected)).check(matches(isDisplayed()));
-
-		pressBack();
-
-		onView(withId(R.id.nav_view)).check(matches(not(isDisplayed())));
-	}
-
-	@Test
-	public void testHelpDialogForBrush() {
-		toolHelpTest(ToolType.BRUSH, R.string.help_content_brush);
-	}
-
-	@Test
-	public void testHelpDialogForCursor() {
-		toolHelpTest(ToolType.CURSOR, R.string.help_content_cursor);
-	}
-
-	@Test
-	public void testHelpDialogForPipette() {
-		toolHelpTest(ToolType.PIPETTE, R.string.help_content_eyedropper);
-	}
-
-	@Test
-	public void testHelpDialogForStamp() {
-		toolHelpTest(ToolType.STAMP, R.string.help_content_stamp);
-	}
-
-	@Test
-	public void testHelpDialogForBucket() {
-		toolHelpTest(ToolType.FILL, R.string.help_content_fill);
-	}
-
-	@Test
-	public void testHelpDialogForShape() {
-		toolHelpTest(ToolType.SHAPE, R.string.help_content_shape);
-	}
-
-	@Test
-	public void testHelpDialogForTransform() {
-		toolHelpTest(ToolType.TRANSFORM, R.string.help_content_transform);
-	}
-
-	@Test
-	public void testHelpDialogForEraser() {
-		toolHelpTest(ToolType.ERASER, R.string.help_content_eraser);
-	}
-
-	@Test
-	public void testHelpDialogForImportImage() {
-		toolHelpTest(ToolType.IMPORTPNG, R.string.help_content_import_png);
-	}
-
-
-	@Test
-	public void testHelpDialogForText() {
-		toolHelpTest(ToolType.TEXT, R.string.help_content_text);
-	}
-
-	private void toolHelpTest(ToolType toolToClick, int expectedHelpTextResourceId) {
-		longClickOnTool(toolToClick);
-
-		onView(withText(expectedHelpTextResourceId)).check(matches(isDisplayed()));
-		onView(withText(android.R.string.ok)).check(matches(isDisplayed()));
-		onView(withText(toolToClick.getNameResource())).check(matches(isDisplayed()));
-
-		onView(withText(android.R.string.ok)).perform(click());
+		onView(withText(R.string.pocketpaint_menu_about))
+				.check(doesNotExist());
 	}
 }
