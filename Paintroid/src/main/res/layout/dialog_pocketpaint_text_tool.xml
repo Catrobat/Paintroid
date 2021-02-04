@@ -41,12 +41,14 @@
 
         <LinearLayout
             style="@style/PocketPaintToolSection">
-
             <Spinner
                 android:id="@+id/pocketpaint_text_tool_dialog_spinner_font"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:popupBackground="@android:color/white"
+                android:textColor="@android:color/black"
+                android:backgroundTint="@android:color/darker_gray"/>
 
             <Space style="@style/PocketPaintToolHorizontalSpace"/>
 
@@ -63,7 +65,10 @@
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:importantForAutofill="no"
-                tools:ignore="LabelFor"/>
+                tools:ignore="LabelFor"
+                android:backgroundTint="@color/backgroundtint_color_edittext_state_list">
+
+            </EditText>
 
         </LinearLayout>
 
@@ -87,7 +92,7 @@
                 android:textStyle="italic"
                 android:textOn="@string/text_tool_dialog_italic_shortcut"
                 android:textOff="@string/text_tool_dialog_italic_shortcut"
-                android:layout_weight="1" />
+                android:layout_weight="1"/>
 
             <ToggleButton
                 android:id="@+id/pocketpaint_text_tool_dialog_toggle_bold"
@@ -115,10 +120,21 @@
                 android:id="@+id/pocketpaint_text_tool_dialog_input_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/pocketpaint_text_tool_dialog_done_button"
                 android:hint="@string/text_tool_dialog_input_hint"
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textMultiLine"
-                android:importantForAutofill="no" />
+                android:textColor="@android:color/black"
+                android:importantForAutofill="no"
+                android:backgroundTint="@color/backgroundtint_color_edittext_state_list">
+            </EditText>
+            <Button
+                style="@style/ButtonTheme"
+                android:id="@+id/pocketpaint_text_tool_dialog_done_button"
+                android:layout_alignParentEnd="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/done"/>
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>

@@ -140,8 +140,7 @@ public class EraserToolIntegrationTest {
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
 		onToolBarView()
-				.performSelectTool(ToolType.ERASER)
-				.performOpenToolOptionsView();
+				.performSelectTool(ToolType.ERASER);
 
 		onBrushPickerView().onStrokeWidthSeekBar()
 				.check(matches(allOf(isDisplayed(), withProgress(newStrokeWidth))));
@@ -183,8 +182,7 @@ public class EraserToolIntegrationTest {
 				.perform(setProgress(50));
 
 		onToolBarView()
-				.performSelectTool(ToolType.ERASER)
-				.performOpenToolOptionsView();
+				.performSelectTool(ToolType.ERASER);
 
 		onBrushPickerView().onStrokeCapSquareView()
 				.perform(click());
@@ -211,8 +209,7 @@ public class EraserToolIntegrationTest {
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 
 		onToolBarView()
-				.performSelectTool(ToolType.ERASER)
-				.performOpenToolOptionsView();
+				.performSelectTool(ToolType.ERASER);
 
 		onBrushPickerView().onStrokeWidthTextView()
 				.check(matches(allOf(isDisplayed(), withText(TEXT_DEFAULT_STROKE_WIDTH))));
@@ -251,8 +248,7 @@ public class EraserToolIntegrationTest {
 				.checkCap(Cap.ROUND);
 
 		onToolBarView()
-				.performSelectTool(ToolType.BRUSH)
-				.performOpenToolOptionsView();
+				.performSelectTool(ToolType.BRUSH);
 
 		onBrushPickerView().onStrokeWidthSeekBar()
 				.check(matches(withProgress(eraserStrokeWidth)));

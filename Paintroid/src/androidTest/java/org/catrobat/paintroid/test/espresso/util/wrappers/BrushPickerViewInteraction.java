@@ -28,7 +28,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public final class BrushPickerViewInteraction extends CustomViewInteraction {
 	private BrushPickerViewInteraction() {
-		super(onView(withId(R.id.pocketpaint_main_tool_options)));
+		super(onView(withId(R.id.pocketpaint_layout_tool_options)));
 	}
 
 	public static BrushPickerViewInteraction onBrushPickerView() {

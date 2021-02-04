@@ -10,7 +10,7 @@ class StampToolViewInteraction(viewInteraction: ViewInteraction) : CustomViewInt
 
     companion object {
         fun onStampToolViewInteraction(): StampToolViewInteraction {
-            return StampToolViewInteraction(onView(withId(R.id.pocketpaint_main_tool_options)))
+            return StampToolViewInteraction(onView(withId(R.id.pocketpaint_layout_tool_specific_options)))
         }
     }
 

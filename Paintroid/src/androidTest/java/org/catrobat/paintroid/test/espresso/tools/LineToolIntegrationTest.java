@@ -95,8 +95,6 @@ public class LineToolIntegrationTest {
 
 	@Test
 	public void testChangeLineToolForm() {
-		onToolBarView()
-				.performOpenToolOptionsView();
 
 		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.perform(click());

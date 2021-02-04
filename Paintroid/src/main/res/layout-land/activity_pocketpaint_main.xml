@@ -42,18 +42,18 @@
 
         <org.catrobat.paintroid.ui.DrawingSurface
             android:id="@+id/pocketpaint_drawing_surface_view"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-
             android:layout_above="@+id/pocketpaint_main_bottom_navigation"
             android:layout_below="@+id/pocketpaint_layout_top_bar"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:background="@color/pocketpaint_main_drawing_surface_active" />
 
-
         <include layout="@layout/pocketpaint_layout_tool_options"
-            android:id="@+id/pocketpaint_main_tool_options"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/pocketpaint_main_bottom_bar"/>
 
         <LinearLayout
             android:id="@+id/pocketpaint_main_bottom_bar"
