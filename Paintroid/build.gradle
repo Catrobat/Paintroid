@@ -96,8 +96,8 @@ android {
     lintOptions {
         // specific ignores should be defined via lint.xml file
         lintConfig file('config/lint.xml')
-        ignore 'ClickableViewAccessibility', 'StaticFieldLeak', 'GradleDependency', 'OldTargetApi'
-
+        ignore 'ClickableViewAccessibility', 'StaticFieldLeak', 'GradleDependency', 'OldTargetApi', 'LintBaseline'
+        baseline file('config/lint-baseline.xml')
         textReport true
         xmlReport true
         htmlReport true
