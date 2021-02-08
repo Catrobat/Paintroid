@@ -47,6 +47,8 @@ public class ColorPickerView extends LinearLayoutCompat {
 	private int selectedColor = Color.BLACK;
 	private int initialColor;
 
+	private InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
 	private OnColorChangedListener listener;
 
 	public ColorPickerView(Context context) {
@@ -149,16 +151,23 @@ public class ColorPickerView extends LinearLayoutCompat {
 		tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 			@Override
 			public void onTabChanged(String tabId) {
-				hideKeyboard();
+				if(tabHost.getCurrentTab() != 2){
+					hideKeyboard();
+				}else if(tabHost.getCurrentTab()==2){
+					showKeyboard();
+				}
 			}
 		});
 	}
 
 	private void hideKeyboard() {
-		InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (inputMethodManager != null) {
 			inputMethodManager.hideSoftInputFromWindow(getRootView().getWindowToken(), 0);
 		}
+	}
+
+	private void showKeyboard(){
+		inputMethodManager.toggleSoftInputFromWindow(getRootView().getWindowToken(),InputMethodManager.SHOW_FORCED,0);
 	}
 
 	@Override

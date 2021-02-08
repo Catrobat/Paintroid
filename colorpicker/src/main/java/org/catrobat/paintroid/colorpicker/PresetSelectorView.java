@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -62,6 +63,7 @@ public class PresetSelectorView extends LinearLayout {
 			public void onClick(View v) {
 				selectedColor = ((ColorPickerPresetColorButton) v).getColor();
 				onColorChanged();
+				hideKeyboard();
 			}
 		};
 
@@ -112,5 +114,12 @@ public class PresetSelectorView extends LinearLayout {
 
 	interface OnColorChangedListener {
 		void colorChanged(int color);
+	}
+
+	private void hideKeyboard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (inputMethodManager != null) {
+			inputMethodManager.hideSoftInputFromWindow(getRootView().getWindowToken(), 0);
+		}
 	}
 }
