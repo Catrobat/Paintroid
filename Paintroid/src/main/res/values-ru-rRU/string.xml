@@ -70,7 +70,7 @@
     <string name="menu_save_copy">Сохранить копию</string>
     <string name="menu_hide_menu">На весь экран</string>
     <string name="menu_rate_us">Оцените нас!</string>
-    <string name="menu_try_pocket_code">Try Pocket Code!</string>
+    <string name="menu_try_pocket_code">Попорбовать Pocket Code!</string>
     <string name="menu_export">Экспорт</string>
     <string name="saved">Картинка сохранена</string>
     <string name="copy">Копия сохранена</string>
@@ -78,8 +78,8 @@
     <string name="save_button_text">Сохранить</string>
     <string name="discard_button_text">Сброс</string>
     <string name="resize_nothing_to_resize">нечего менять</string>
-    <string name="resize_cannot_resize_to_this_size">невозможно изменить размер до этого размера</string>
-    <string name="resize_max_image_resolution_reached">достигнуто максимальное разрешение изображения</string>
+    <string name="resize_cannot_resize_to_this_size">Невозможно изменить размер до этого размера</string>
+    <string name="resize_max_image_resolution_reached">Достигнуто максимальное разрешение изображения</string>
     <string name="text_tool_dialog_input_title">Ваш текст:</string>
     <string name="text_tool_dialog_format_options">Форматирование:</string>
     <string name="text_tool_dialog_underline_shortcut">Ч</string>
@@ -95,11 +95,11 @@
     <string name="shape_tool_dialog_outline_title">План</string>
     <string name="fill_tool_dialog_color_tolerance_title">Допустимое отклонение по цвету</string>
     <string name="transform_tool_rotate_left">повернуть влево</string>
-    <string name="transform_tool_rotate_right">rotate right</string>
-    <string name="transform_tool_flip_vertical">flip vertical</string>
-    <string name="transform_tool_flip_horizontal">flip horizontal</string>
-    <string name="transform_tool_resize_text">resize</string>
-    <string name="transform_tool_auto_crop_text">crop/enlarge</string>
+    <string name="transform_tool_rotate_right">Повернуть направо</string>
+    <string name="transform_tool_flip_vertical">Перевернуть вертикально</string>
+    <string name="transform_tool_flip_horizontal">Перевернуть горизонтально</string>
+    <string name="transform_tool_resize_text">Изменить размер</string>
+    <string name="transform_tool_auto_crop_text">Обрезать/увеличить</string>
     <string name="transform_width_text">Ширина</string>
     <string name="transform_height_text">Высота</string>
     <string name="pixel">пикс</string>
@@ -109,14 +109,14 @@
     <string name="layer_delete">Удалить слой</string>
     <string name="layer_too_many_layers">Слишком много слоев</string>
     <string name="layer_merged">Слои объединены</string>
-    <string name="layer_background">Layer background</string>
+    <string name="layer_background">Фоновый слой</string>
     <string name="dialog_shape_text">Фигура</string>
     <string name="dialog_loading_image_failed_title">Ошибка загрузки изображения</string>
-    <string name="dialog_loading_image_failed_text">Not a valid image</string>
+    <string name="dialog_loading_image_failed_text">Изображение повреждено или не подходит</string>
     <string name="dialog_settings">Настройки</string>
-    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
-    <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
-        As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
+    <string name="permission_info_external_storage_text">Приложение должно получить разрешение на использование памяти телефона, чтобы сохранять там изображения</string>
+    <string name="permission_info_permanent_denial_text">Приложение должно получить разрешение на использование памяти телефона, чтобы сохранять там изображения
+        Если вы не дали разрешение и нажали на кнопку "не спрашивать еще раз", пожалуйста, зайдите в настройки телефона и дайте разрешение, если хотите пользоватся соответствующими функциями</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">Перетащите края на их новое место, а затем нажмите, чтобы увеличить или обрезать изображение.</string>
@@ -126,35 +126,35 @@
     <string name="intro_welcome_text">В Pocket Paint нет пределов вашему творчеству. Если вы новичок, посмотрите вступление, или пропустите его, если вы уже пользовались нашим приложением.</string>
     <string name="intro_tool_more_information">Нажмите на инструмент для дополнительной информации</string>
     <string name="more_possibilities">Больше возможностей</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
+    <string name="intro_possibilities_text">Используйте верхнюю панель чтобы открыть главное меню и отменять или возвращать действия</string>
     <string name="landscape">Альбомная</string>
     <string name="intro_landscape_text">Pocket Paint также поддерживает рисование в альбомном режиме, чтобы дать вам наилучшее впечатление от живописи.</string>
     <string name="enjoy_pocket_paint">Все готово. Наслаждайтесь Pocket Paint.</string>
     <string name="intro_get_started">Начните и создайте новый шедевр.</string>
-    <string name="lets_go">Let\'s go</string>
+    <string name="lets_go">Готово</string>
     <string name="next">Далее</string>
     <string name="skip">Пропустить</string>
     <string name="pocketpaint_about_title">О программе</string>
-    <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
+    <string name="pocketpaint_about_content">Pocket Paint iэто часть проекта Catrobat.\n\nCatrobat это визуальный язык программирования и набор инструментов для смартфонов.\n\nИсходный код Pocket Paint в основном под лицензией %s.\nДля подробностей, посмотрите ссылку ниже.</string>
     <string name="pocketpaint_about_url_license_description">Лицензия исходного кода Pocket Paint</string>
     <string name="pocketpaint_about_url_catrobat_description">О проекте Catrobat</string>
-    <string name="pocketpaint_intro">Intro</string>
-    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen.</string>
-    <string name="pocketpaint_like_us">Do you like Pocket Paint?</string>
-    <string name="pocketpaint_rate_us">Would you like to rate Pocket Paint?</string>
-    <string name="pocketpaint_feedback">We are sorry to hear that. If you want to share your experience with us, please write to contact@catrobat.org</string>
+    <string name="pocketpaint_intro">Вступление</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Вступление не поддерживает разделенный экран</string>
+    <string name="pocketpaint_like_us">Вам нравится Pocket Paint?</string>
+    <string name="pocketpaint_rate_us">Не хотите оценить Pocket Paint?</string>
+    <string name="pocketpaint_feedback">Нам жаль это слышать. Если вы хотите поделится впечатлениями с нами, пожалуйста, напишите на contact@catrobat.org</string>
     <string name="pocketpaint_yes">Да</string>
     <string name="pocketpaint_no">Нет</string>
-    <string name="pocketpaint_not_now">Not now</string>
-    <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
+    <string name="pocketpaint_not_now">Не сейчас</string>
+    <string name="pocketpaint_rate_us_title">Оценить Pocket Paint</string>
     <string name="bottom_navigation_tools">Инструменты</string>
-    <string name="bottom_navigation_current">Current</string>
-    <string name="bottom_navigation_color">Color</string>
+    <string name="bottom_navigation_current">Текущий</string>
+    <string name="bottom_navigation_color">Цвет</string>
     <string name="bottom_navigation_layers">Слои</string>
     <string name="bottom_navigation_item">Item for bottom navigation</string>
-    <string name="intro_bottom_navigation_tools_description">Switch to the tool you want to use.</string>
+    <string name="intro_bottom_navigation_tools_description">Выберите инструмент который хотите использовать</string>
     <string name="intro_bottom_navigation_current_description">Shows the currently used tool and opens its options.</string>
     <string name="intro_bottom_navigation_color_description">Shows the currently used color and opens the color picker.</string>
     <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
-    <string name="pocketpaint_tool_icon_description">Current tool icon</string>
+    <string name="pocketpaint_tool_icon_description">Обозначение текущего инструмента</string>
 </resources>
