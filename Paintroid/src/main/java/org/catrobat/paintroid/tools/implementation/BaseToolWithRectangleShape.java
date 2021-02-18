@@ -241,10 +241,10 @@ public abstract class BaseToolWithRectangleShape extends BaseToolWithShape {
 		movedDistance.set(
 				movedDistance.x + Math.abs(coordinate.x - previousEventCoordinate.x),
 				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
-		if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y) {
+	/*	if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y) {
 			toolPosition.x = touchDownPositionX;
 			toolPosition.y = touchDownPositionY;
-		}
+		}*/
 		return true;
 	}
 

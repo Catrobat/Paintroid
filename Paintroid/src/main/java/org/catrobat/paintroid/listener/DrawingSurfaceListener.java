@@ -33,12 +33,17 @@ import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.DrawingSurface;
 
 import java.util.EnumSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.catrobat.paintroid.tools.ToolType.FILL;
 import static org.catrobat.paintroid.tools.ToolType.TRANSFORM;
 
 public class DrawingSurfaceListener implements OnTouchListener {
 	private static final float DRAWER_EDGE_SIZE = 20;
+	private static final long TAP_DELAY_THRESHOLD = 100;
+	private static final long JITTER_DELAY_THRESHOLD = 30;
+	private static final float JITTER_DISTANCE_THRESHOLD = 10.f * 10.f;
 	private final DrawingSurfaceListenerCallback callback;
 	private TouchMode touchMode;
 
@@ -55,6 +60,21 @@ public class DrawingSurfaceListener implements OnTouchListener {
 	private PointF eventTouchPoint;
 	private int drawerEdgeSize;
 	private boolean autoScroll = true;
+	private float previousX;
+	private float previousY;
+	private List<TouchEventData> recentTouchEventData = new ArrayList<>();
+
+	private final class TouchEventData {
+		private final long timeStamp;
+		private final float xCoordinate;
+		private final float yCoordinate;
+
+		private TouchEventData(long time, float x, float y) {
+			timeStamp = time;
+			xCoordinate = x;
+			yCoordinate = y;
+		}
+	}
 
 	public DrawingSurfaceListener(AutoScrollTask autoScrollTask, DrawingSurfaceListenerCallback callback, float displayDensity) {
 		this.autoScrollTask = autoScrollTask;
@@ -102,6 +122,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 		canvasTouchPoint.y = event.getY();
 		eventTouchPoint.x = canvasTouchPoint.x;
 		eventTouchPoint.y = canvasTouchPoint.y;
+		long eventTime = event.getEventTime();
 
 		callback.convertToCanvasFromSurface(canvasTouchPoint);
 
@@ -111,6 +132,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					return false;
 				}
 
+				recentTouchEventData.add(new TouchEventData(eventTime, canvasTouchPoint.x, canvasTouchPoint.y));
 				currentTool.handleDown(canvasTouchPoint);
 
 				if (autoScroll) {
@@ -126,13 +148,20 @@ public class DrawingSurfaceListener implements OnTouchListener {
 						break;
 					}
 
+					long delay = eventTime - event.getDownTime();
+
 					touchMode = TouchMode.DRAW;
 					if (autoScroll) {
 						autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y);
 						autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight());
 					}
-
-					currentTool.handleMove(canvasTouchPoint);
+					if (delay > TAP_DELAY_THRESHOLD){
+						previousX = canvasTouchPoint.x;
+						previousY = canvasTouchPoint.y;
+						recentTouchEventData.add(new TouchEventData(eventTime, canvasTouchPoint.x, canvasTouchPoint.y));
+						removeObsoleteTouchEventsData(eventTime);
+						currentTool.handleMove(canvasTouchPoint);
+					}
 				} else if (event.getPointerCount() == 1 && (currentTool.handToolMode())) {
 					float xOld;
 					float yOld;
@@ -186,6 +215,22 @@ public class DrawingSurfaceListener implements OnTouchListener {
 				}
 
 				if (touchMode == TouchMode.DRAW) {
+					removeObsoleteTouchEventsData(eventTime);
+					float dX = canvasTouchPoint.x - previousX;
+					float dY = canvasTouchPoint.y - previousY;
+					if(!recentTouchEventData.isEmpty() && recentTouchEventData.size() > 1) {
+						TouchEventData firstEntry = recentTouchEventData.get(0);
+						float correctionX = canvasTouchPoint.x - firstEntry.xCoordinate;
+						float correctionY = canvasTouchPoint.y - firstEntry.yCoordinate;
+						double distance = correctionX * correctionX + correctionY * correctionY;
+						if (distance < JITTER_DISTANCE_THRESHOLD && distance != 0) {
+							dX -= correctionX;
+							dY -= correctionY;
+						}
+						canvasTouchPoint.x += dX;
+						canvasTouchPoint.y += dY;
+					}
+
 					currentTool.handleUp(canvasTouchPoint);
 				} else {
 					currentTool.resetInternalState(StateChange.MOVE_CANCELED);
@@ -283,6 +328,20 @@ public class DrawingSurfaceListener implements OnTouchListener {
 			}
 			handler.postDelayed(this, calculateScrollInterval(callback.getPerspectiveScale()));
 		}
+	}
+
+	private void removeObsoleteTouchEventsData(long timeStamp) {
+		List<TouchEventData> obsoleteTouchEventsData = new ArrayList<>();
+		for (TouchEventData touchEventData : recentTouchEventData) {
+			if (touchEventData != null) {
+				if ((timeStamp - touchEventData.timeStamp) > JITTER_DELAY_THRESHOLD) {
+					obsoleteTouchEventsData.add(touchEventData);
+				} else {
+					break;
+				}
+			}
+		}
+		recentTouchEventData.removeAll(obsoleteTouchEventsData);
 	}
 
 	public interface AutoScrollTaskCallback {
