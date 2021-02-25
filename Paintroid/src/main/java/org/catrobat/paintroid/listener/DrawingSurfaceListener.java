@@ -95,6 +95,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
+
 		DrawingSurface drawingSurface = (DrawingSurface) view;
 		Tool currentTool = callback.getCurrentTool();
 
