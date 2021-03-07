@@ -34,32 +34,33 @@ import org.junit.runner.RunWith;
 import java.util.Locale;
 
 import androidx.core.content.res.ResourcesCompat;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.checkTextDirection;
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getConfiguration;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.atPosition;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTypeFace;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withIndex;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
-public class TextToolFontSpinnerTestArabic {
-	private int normalStyle = Typeface.NORMAL;
-	private Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
-	private Typeface sansSerifFontFace = Typeface.create(Typeface.SANS_SERIF, normalStyle);
-	private Typeface serifFontFace = Typeface.create(Typeface.SERIF, normalStyle);
-	private Typeface monospaceFontFace = Typeface.create(Typeface.MONOSPACE, normalStyle);
-	private Typeface stcFontFace = ResourcesCompat.getFont(context, R.font.stc_regular);
-	private Typeface dubaiFontFace = ResourcesCompat.getFont(context, R.font.dubai);
+public class TextToolFontListTestArabic {
+	private final int normalStyle = Typeface.NORMAL;
+	private final Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+	private final Typeface sansSerifFontFace = Typeface.create(Typeface.SANS_SERIF, normalStyle);
+	private final Typeface serifFontFace = Typeface.create(Typeface.SERIF, normalStyle);
+	private final Typeface monospaceFontFace = Typeface.create(Typeface.MONOSPACE, normalStyle);
+	private final Typeface stcFontFace = ResourcesCompat.getFont(context, R.font.stc_regular);
+	private final Typeface dubaiFontFace = ResourcesCompat.getFont(context, R.font.dubai);
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class, "ar");
@@ -71,21 +72,15 @@ public class TextToolFontSpinnerTestArabic {
 
 		onToolBarView()
 				.performSelectTool(ToolType.TEXT);
-		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font))
-				.perform(click());
-		onView(withIndex(withId(android.R.id.text1), 0))
-				.check(matches(hasTypeFace(sansSerifFontFace)));
-
-		onView(withIndex(withId(android.R.id.text1), 1))
-				.check(matches(hasTypeFace(monospaceFontFace)));
-
-		onView(withIndex(withId(android.R.id.text1), 2))
-				.check(matches(hasTypeFace(serifFontFace)));
-
-		onView(withIndex(withId(android.R.id.text1), 3))
-				.check(matches(hasTypeFace(dubaiFontFace)));
-
-		onView(withIndex(withId(android.R.id.text1), 4))
-				.check(matches(hasTypeFace(stcFontFace)));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
+				.check(matches(atPosition(0, hasDescendant(hasTypeFace(sansSerifFontFace)))));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
+				.check(matches(atPosition(1, hasDescendant(hasTypeFace(monospaceFontFace)))));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).perform(RecyclerViewActions.scrollToPosition(2))
+				.check(matches(atPosition(2, hasDescendant(hasTypeFace(serifFontFace)))));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).perform(RecyclerViewActions.scrollToPosition(3))
+				.check(matches(atPosition(3, hasDescendant(hasTypeFace(dubaiFontFace)))));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).perform(RecyclerViewActions.scrollToPosition(4))
+				.check(matches(atPosition(4, hasDescendant(hasTypeFace(stcFontFace)))));
 	}
 }
