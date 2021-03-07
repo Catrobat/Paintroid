@@ -50,10 +50,12 @@
             android:layout_alignParentEnd="true"
             android:background="@color/pocketpaint_main_drawing_surface_active" />
 
-        <include layout="@layout/pocketpaint_layout_tool_options"
+        <include
+            layout="@layout/pocketpaint_layout_tool_options"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/pocketpaint_main_bottom_bar"/>
+            android:layout_above="@id/pocketpaint_main_bottom_bar"
+            android:layout_below="@+id/pocketpaint_layout_top_bar" />
 
         <LinearLayout
             android:id="@+id/pocketpaint_main_bottom_bar"

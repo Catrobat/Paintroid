@@ -71,6 +71,7 @@
         <item name="chipStartPadding">16dp</item>
         <item name="chipEndPadding">16dp</item>
         <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
+        <item name="android:textColor">@color/textcolor_togglebutton</item>
     </style>
 
     <style name="appBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary" />
