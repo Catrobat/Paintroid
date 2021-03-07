@@ -33,6 +33,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 
+import com.google.android.material.button.MaterialButton;
+
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.options.TextToolOptionsView;
 
@@ -45,9 +47,9 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 	private final EditText textEditText;
 	private final EditText fontSizeText;
 	private final Spinner fontSpinner;
-	private final ToggleButton underlinedToggleButton;
-	private final ToggleButton italicToggleButton;
-	private final ToggleButton boldToggleButton;
+	private final MaterialButton underlinedToggleButton;
+	private final MaterialButton italicToggleButton;
+	private final MaterialButton boldToggleButton;
 	private final List<String> fonts;
 	private static final String DEFAULT_TEXTSIZE = "20";
 	private static final String MAX_TEXTSIZE = "300";
@@ -116,7 +118,7 @@ public class DefaultTextToolOptionsView implements TextToolOptionsView {
 			}
 		});
 
-		underlinedToggleButton.setPaintFlags(underlinedToggleButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+		//underlinedToggleButton.setPaintFlags(underlinedToggleButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 		underlinedToggleButton.setOnClickListener(new ToggleButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {

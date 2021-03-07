@@ -28,7 +28,8 @@ import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.ToggleButton;
+
+import com.google.android.material.button.MaterialButton;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
@@ -105,9 +106,9 @@ public class TextToolIntegrationTest {
 	private TextTool textToolAfterZoom;
 	private EditText textEditText;
 	private Spinner fontSpinner;
-	private ToggleButton underlinedToggleButton;
-	private ToggleButton italicToggleButton;
-	private ToggleButton boldToggleButton;
+	private MaterialButton underlinedToggleButton;
+	private MaterialButton italicToggleButton;
+	private MaterialButton boldToggleButton;
 	private EditText textSize;
 	private Perspective perspective;
 	private LayerContracts.Model layerModel;
@@ -153,6 +154,7 @@ public class TextToolIntegrationTest {
 		assertTrue(underlinedToggleButton.isChecked());
 		assertEquals(TEST_TEXT_ADVANCED, textEditText.getText().toString());
 	}
+
 	@Ignore("Fix bug in own ticket , focus is not correctly implemented in google play either")
 	@Test
 	public void testDialogKeyboardTextBoxAppearanceOnStartup() {
@@ -451,7 +453,7 @@ public class TextToolIntegrationTest {
 
 		int actionBarHeight;
 		final TypedArray styledAttributes = activity.getTheme().obtainStyledAttributes(
-				new int[] {android.R.attr.actionBarSize}
+				new int[]{android.R.attr.actionBarSize}
 		);
 		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 		PointF canvasPoint = new PointF(screenPoint.x, screenPoint.y - actionBarHeight - statusBarHeight);
