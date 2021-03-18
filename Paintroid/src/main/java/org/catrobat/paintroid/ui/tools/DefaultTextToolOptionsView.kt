@@ -54,7 +54,7 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
                 notifyTextChanged(editable.toString())
             }
         })
-        textEditText.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+        textEditText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 hideKeyboard()
             }
