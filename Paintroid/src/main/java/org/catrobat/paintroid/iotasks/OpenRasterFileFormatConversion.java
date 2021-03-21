@@ -22,6 +22,7 @@ package org.catrobat.paintroid.iotasks;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -244,33 +245,23 @@ public final class OpenRasterFileFormatConversion {
 		return exportToOraFile(bitmapList, fileName, bitmapAllLayers, resolver);
 	}
 
-	public static List<Bitmap> importOraFile(ContentResolver resolver, Uri uri, int maxWidth, int maxHeight, boolean scaled) throws IOException {
+	public static BitmapReturnValue importOraFile(ContentResolver resolver, Uri uri, Context context) throws IOException {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		InputStream inputStream = resolver.openInputStream(uri);
 		ZipInputStream zipInput = new ZipInputStream(inputStream);
-
-		options.inMutable = true;
-		options.inJustDecodeBounds = false;
-		if (scaled) {
-			options.inSampleSize = FileIO.calculateSampleSize(options.outWidth, options.outHeight,
-					maxWidth, maxHeight);
-		}
-
-		ZipEntry current = zipInput.getNextEntry();
 		List<Bitmap> bitmapList = new ArrayList<>();
+		ZipEntry current = zipInput.getNextEntry();
+
 		while (current != null) {
 			if (current.getName().matches("data/(.*).png")) {
-
 				Bitmap layerBitmap = FileIO.enableAlpha(BitmapFactory.decodeStream(zipInput, null, options));
 				bitmapList.add(layerBitmap);
 			}
 			current = zipInput.getNextEntry();
 		}
-
 		if (bitmapList.isEmpty() || bitmapList.size() > Constants.MAX_LAYERS) {
 			throw new IOException("Bitmap list is wrong!");
 		}
-
-		return bitmapList;
+		return new BitmapReturnValue(bitmapList, null, false);
 	}
 }

@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.iotasks;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -34,26 +35,17 @@ import java.util.Locale;
 public class LoadImageAsync extends AsyncTask<Void, Void, BitmapReturnValue> {
 	private static final String TAG = LoadImageAsync.class.getSimpleName();
 	private WeakReference<LoadImageCallback> callbackRef;
-	private int maxWidth;
-	private int maxHeight;
 	private int requestCode;
 	private Uri uri;
 	private boolean scaleImage;
+	private Context context;
 
-	public LoadImageAsync(LoadImageCallback callback, int requestCode, int maxWidth, int maxHeight, Uri uri) {
+	public LoadImageAsync(LoadImageCallback callback, int requestCode, Uri uri, Context context, boolean scaling) {
 		this.callbackRef = new WeakReference<>(callback);
 		this.requestCode = requestCode;
 		this.uri = uri;
-		this.maxWidth = maxWidth;
-		this.maxHeight = maxHeight;
-		this.scaleImage = true;
-	}
-
-	public LoadImageAsync(LoadImageCallback callback, int requestCode, Uri uri) {
-		this.callbackRef = new WeakReference<>(callback);
-		this.requestCode = requestCode;
-		this.uri = uri;
-		this.scaleImage = false;
+		this.scaleImage = scaling;
+		this.context = context;
 	}
 
 	@Override
@@ -92,13 +84,12 @@ public class LoadImageAsync extends AsyncTask<Void, Void, BitmapReturnValue> {
 			BitmapReturnValue returnValue;
 
 			if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
-				returnValue = new BitmapReturnValue(
-						OpenRasterFileFormatConversion.importOraFile(resolver, uri, maxWidth, maxHeight, scaleImage), null);
+				returnValue = OpenRasterFileFormatConversion.importOraFile(resolver, uri, context);
 			} else {
 				if (scaleImage) {
-					returnValue = new BitmapReturnValue(null, FileIO.getBitmapFromUri(resolver, uri, maxWidth, maxHeight));
+					returnValue = FileIO.getScaledBitmapFromUri(resolver, uri, context);
 				} else {
-					returnValue = new BitmapReturnValue(null, FileIO.getBitmapFromUri(resolver, uri));
+					returnValue = FileIO.getBitmapFromUri(resolver, uri, context);
 				}
 			}
 

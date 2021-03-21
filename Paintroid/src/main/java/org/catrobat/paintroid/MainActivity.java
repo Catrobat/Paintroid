@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
 		presenter = new MainActivityPresenter(this, this, model, workspace,
 				navigator, interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
-				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, defaultToolController, preferences);
+				bottomNavigationViewHolder, new DefaultCommandFactory(), commandManager, perspective, defaultToolController, preferences, context);
 		defaultToolController.setOnColorPickedListener(new PresenterColorPickedListener(presenter));
 
 		keyboardListener = new KeyboardListener(drawerLayout);

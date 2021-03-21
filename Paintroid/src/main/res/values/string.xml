@@ -226,4 +226,8 @@
     <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
 
     <string name="pocketpaint_tool_icon_description">Current tool icon</string>
+
+    <string name="dialog_scale_title">Image is too big to load</string>
+    <string name="dialog_scale_message">The image is too big to load, click OK to scale the Image down</string>
+
 </resources>
