@@ -29,6 +29,7 @@ platform :android do
         # ...
         upload_to_play_store(
             package_name:               'org.catrobat.paintroid',
+            mapping:                    './app/build/outputs/mapping/signedRelease/mapping.txt',
             track:                      'alpha',
             json_key_data:              ENV['googlePlayJsonKey'],
             apk_paths:                  './app/build/outputs/apk/signedRelease/paintroid-signedRelease.apk',
