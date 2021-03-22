@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.espresso;
 import android.util.DisplayMetrics;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.junit.Before;
@@ -39,6 +40,9 @@ import static org.junit.Assert.assertEquals;
 public class BitmapIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Before
 	public void setUp() {

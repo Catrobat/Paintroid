@@ -25,6 +25,7 @@ import android.graphics.Paint.Cap;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,6 +57,9 @@ public class EraserToolIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Test
 	public void testEraseOnEmptyBitmap() {
