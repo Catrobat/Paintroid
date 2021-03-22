@@ -56,6 +56,7 @@ public final class FileIO {
 	public static Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
 	public static boolean catroidFlag = false;
 	public static boolean isCatrobatImage = false;
+	public static boolean wasImageLoaded = false;
 
 	public static String currentFileNameJpg = null;
 	public static String currentFileNamePng = null;

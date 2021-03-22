@@ -178,7 +178,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	private void showSecurityQuestionBeforeExit() {
-		if (isImageUnchanged() || model.isSaved()) {
+		if ((isImageUnchanged() || model.isSaved()) && (!model.isOpenedFromCatroid() || !FileIO.wasImageLoaded)) {
 			finishActivity();
 		} else if (model.isOpenedFromCatroid()) {
 			saveBeforeFinish();
@@ -558,6 +558,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void initializeFromCleanState(String extraPicturePath, String extraPictureName) {
 		boolean isOpenedFromCatroid = extraPicturePath != null;
 		model.setOpenedFromCatroid(isOpenedFromCatroid);
+		FileIO.wasImageLoaded = false;
 		if (isOpenedFromCatroid) {
 			File imageFile = new File(extraPicturePath);
 			if (imageFile.exists()) {
@@ -737,8 +738,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					commandManager.setInitialStateCommand(commandFactory.createInitCommand(bitmap.bitmapList));
 				}
 				commandManager.reset();
-				model.setSavedPictureUri(null);
+				if (!model.isOpenedFromCatroid()) {
+					model.setSavedPictureUri(null);
+				}
 				model.setCameraImageUri(null);
+				FileIO.wasImageLoaded = true;
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {
