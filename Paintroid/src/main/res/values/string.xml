@@ -228,6 +228,6 @@
     <string name="pocketpaint_tool_icon_description">Current tool icon</string>
 
     <string name="dialog_scale_title">Image is too big to load</string>
-    <string name="dialog_scale_message">The image is too big to load, click OK to scale the Image down</string>
+    <string name="dialog_scale_message">The image is too big to load. Click OK to scale down the image automatically.</string>
 
 </resources>
