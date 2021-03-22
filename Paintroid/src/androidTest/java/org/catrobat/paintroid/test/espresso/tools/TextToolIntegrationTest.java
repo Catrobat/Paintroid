@@ -27,7 +27,6 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -39,7 +38,7 @@ import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.TextTool;
-import org.catrobat.paintroid.ui.Perspective;
+import org.catrobat.paintroid.ui.tools.FontListAdapter;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -51,18 +50,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.UiMatcher.atPosition;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -70,18 +69,17 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasFocus;
+import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
@@ -105,12 +103,11 @@ public class TextToolIntegrationTest {
 	private TextTool textTool;
 	private TextTool textToolAfterZoom;
 	private EditText textEditText;
-	private Spinner fontSpinner;
+	private RecyclerView fontList;
 	private MaterialButton underlinedToggleButton;
 	private MaterialButton italicToggleButton;
 	private MaterialButton boldToggleButton;
 	private EditText textSize;
-	private Perspective perspective;
 	private LayerContracts.Model layerModel;
 	private MainActivity activity;
 	private ToolReference toolReference;
@@ -119,7 +116,6 @@ public class TextToolIntegrationTest {
 	public void setUp() {
 		activity = launchActivityRule.getActivity();
 		activityHelper = new MainActivityHelper(activity);
-		perspective = activity.perspective;
 		layerModel = activity.layerModel;
 		toolReference = activity.toolReference;
 
@@ -129,7 +125,7 @@ public class TextToolIntegrationTest {
 		textTool = (TextTool) toolReference.get();
 
 		textEditText = activity.findViewById(R.id.pocketpaint_text_tool_dialog_input_text);
-		fontSpinner = activity.findViewById(R.id.pocketpaint_text_tool_dialog_spinner_font);
+		fontList = activity.findViewById(R.id.pocketpaint_text_tool_dialog_list_font);
 		underlinedToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined);
 		italicToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic);
 		boldToggleButton = activity.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold);
@@ -168,15 +164,18 @@ public class TextToolIntegrationTest {
 				.check(matches(withHint(R.string.text_tool_dialog_input_hint)))
 				.check(matches(withText(textTool.text)));
 
-		onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font))
-				.check(matches(withSpinnerText(textTool.font)));
-
-		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_underlined))
-				.check(matches(isNotChecked()));
-		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_bold))
-				.check(matches(isNotChecked()));
-		onView(withId(R.id.pocketpaint_text_tool_dialog_toggle_italic))
-				.check(matches(isNotChecked()));
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
+				.check(matches(atPosition(0, hasDescendant(isChecked()))));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
+				.check(matches(atPosition(1, hasDescendant(isNotChecked()))));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).perform(RecyclerViewActions.scrollToPosition(2))
+				.check(matches(atPosition(2, hasDescendant(isNotChecked()))));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).perform(RecyclerViewActions.scrollToPosition(3))
+				.check(matches(atPosition(3, hasDescendant(isNotChecked()))));
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).perform(RecyclerViewActions.scrollToPosition(4))
+				.check(matches(atPosition(4, hasDescendant(isNotChecked()))));
 
 		assertFalse(textTool.underlined);
 		assertFalse(textTool.italic);
@@ -190,7 +189,7 @@ public class TextToolIntegrationTest {
 
 		selectFormatting(FormattingOptions.SERIF);
 		assertEquals(FONT_SERIF, textTool.font);
-		assertEquals(FONT_SERIF, fontSpinner.getSelectedItem());
+		assertEquals(FONT_SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
 
 		selectFormatting(FormattingOptions.UNDERLINE);
 		assertTrue(textTool.underlined);
@@ -244,7 +243,7 @@ public class TextToolIntegrationTest {
 				.performOpenToolOptionsView();
 
 		assertEquals(TEST_TEXT, textEditText.getText().toString());
-		assertEquals(FONT_SANS_SERIF, fontSpinner.getSelectedItem());
+		assertEquals(FONT_SANS_SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
@@ -267,7 +266,7 @@ public class TextToolIntegrationTest {
 		textTool = (TextTool) toolReference.get();
 
 		assertEquals(TEST_TEXT, textEditText.getText().toString());
-		assertEquals(FONT_SANS_SERIF, fontSpinner.getSelectedItem());
+		assertEquals(FONT_SANS_SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
@@ -640,10 +639,10 @@ public class TextToolIntegrationTest {
 
 		boolean italic = italicToggleButton.isChecked();
 
-		String font = (String) fontSpinner.getSelectedItem();
+		String font = ((FontListAdapter) fontList.getAdapter()).getSelectedItem();
 
 		String stringTextSize = textSize.getText().toString();
-		float textSize = Float.valueOf(stringTextSize) * textSizeMagnificationFactor;
+		float textSize = Float.parseFloat(stringTextSize) * textSizeMagnificationFactor;
 
 		Paint textPaint = new Paint();
 		textPaint.setAntiAlias(true);
@@ -740,10 +739,8 @@ public class TextToolIntegrationTest {
 			case SANS_SERIF:
 			case STC:
 			case DUBAI:
-				onView(withId(R.id.pocketpaint_text_tool_dialog_spinner_font)).perform(click());
-				onData(allOf(is(instanceOf(String.class)), is(getFontString(format))))
-						.inRoot(isPlatformPopup())
-						.perform(click());
+				onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(getFontString(format)))));
+				onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(getFontString(format))), click()));
 				break;
 			case UNDERLINE:
 			case ITALIC:
