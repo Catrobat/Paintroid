@@ -59,6 +59,7 @@ public final class Constants {
 	public static final int IS_NO_FILE = -1;
 
 	public static final int MAX_LAYERS = 4;
+	public static final String SCALE_IMAGE_FRAGMENT_TAG = "showscaleimagedialog";
 
 	private Constants() {
 		throw new AssertionError();
