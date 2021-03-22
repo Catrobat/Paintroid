@@ -27,6 +27,7 @@ import android.graphics.PointF;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.wrappers.StampToolViewInteraction;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
@@ -61,6 +62,9 @@ public class StampToolIntegrationTest {
 	private static final float STAMP_RESIZE_FACTOR = 1.5f;
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	private Workspace workspace;
 	private Perspective perspective;

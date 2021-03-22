@@ -26,6 +26,7 @@ import android.view.View;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -64,6 +65,9 @@ public class TextToolFontListTestArabic {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new RtlActivityTestRule<>(MainActivity.class, "ar");
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Test
 	public void testTextFontFaceOfFontSpinnerArabic() {

@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.espresso.rtl;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +44,9 @@ public class ButtonLayersRtlLayoutTest {
 	@Rule
 	public ActivityTestRule<MainActivity> mainActivityActivityTestRule =
 			new RtlActivityTestRule<>(MainActivity.class, "ar");
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Test
 	public void testButtonLayers() {

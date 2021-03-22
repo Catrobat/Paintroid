@@ -35,6 +35,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.TextTool;
@@ -98,6 +99,9 @@ public class TextToolIntegrationTest {
 	private static final double EQUALS_DELTA = 0.25d;
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	private MainActivityHelper activityHelper;
 	private TextTool textTool;

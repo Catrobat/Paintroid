@@ -24,6 +24,7 @@ import android.graphics.PointF;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
@@ -48,6 +49,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 public class ScrollingViewIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
+
 	private int drawerEdgeSize;
 	private Perspective perspective;
 	private MainActivity mainActivity;
