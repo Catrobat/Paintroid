@@ -51,9 +51,9 @@ import androidx.core.content.FileProvider;
 
 public final class FileIO {
 	public static String filename = "image";
-	public static String ending = ".jpg";
+	public static String ending = ".png";
 	public static int compressQuality = 100;
-	public static Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
+	public static Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.PNG;
 	public static boolean catroidFlag = false;
 	public static boolean isCatrobatImage = false;
 	public static boolean wasImageLoaded = false;

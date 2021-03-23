@@ -585,7 +585,7 @@ public class MenuFileActivityIntegrationTest {
 
 		int imageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
 
-		onView(withText("jpg"))
+		onView(withText("png"))
 				.check(matches(isDisplayed()));
 		onView(withText("image" + imageNumber))
 				.check(matches(isDisplayed()));
@@ -593,7 +593,7 @@ public class MenuFileActivityIntegrationTest {
 		onView(withId(R.id.pocketpaint_save_dialog_spinner))
 				.perform(click());
 		onData(allOf(is(instanceOf(String.class)),
-				is("jpg"))).inRoot(isPlatformPopup()).perform(click());
+				is("png"))).inRoot(isPlatformPopup()).perform(click());
 
 		onView(withText(R.string.save_button_text))
 				.perform(click());
@@ -605,7 +605,7 @@ public class MenuFileActivityIntegrationTest {
 
 		imageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
 
-		onView(withText("jpg"))
+		onView(withText("png"))
 				.check(matches(isDisplayed()));
 		onView(withText("image" + imageNumber))
 				.check(matches(isDisplayed()));
