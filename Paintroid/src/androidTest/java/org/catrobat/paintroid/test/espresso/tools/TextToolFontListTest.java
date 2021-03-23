@@ -24,6 +24,7 @@ import android.graphics.Typeface;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Rule;
 import org.junit.Test;
@@ -58,6 +59,9 @@ public class TextToolFontListTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Test
 	public void testTextFontFaceOfFontSpinnerEnglish() {

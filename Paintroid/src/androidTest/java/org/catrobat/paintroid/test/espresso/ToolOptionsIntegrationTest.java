@@ -26,6 +26,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -59,6 +60,9 @@ public class ToolOptionsIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Parameter
 	public ToolType toolType;

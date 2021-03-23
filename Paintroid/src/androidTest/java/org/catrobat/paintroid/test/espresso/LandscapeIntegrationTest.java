@@ -28,6 +28,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
@@ -74,6 +75,9 @@ public class LandscapeIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	private Tool getCurrentTool() {
 		return mainActivity.toolReference.get();
