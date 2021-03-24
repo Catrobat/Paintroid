@@ -349,7 +349,6 @@ public class MenuFileActivityIntegrationTest {
 				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_save_image)).perform(click());
-
 		onView(withText(R.string.save_button_text)).perform(click());
 
 		assertNotNull(activity.model.getSavedPictureUri());
