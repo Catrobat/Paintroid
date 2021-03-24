@@ -26,6 +26,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -60,6 +61,9 @@ public class ToolOptionsIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new IntentsTestRule<>(MainActivity.class);
 
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
+
 	@Parameter
 	public ToolType toolType;
 
@@ -74,14 +78,14 @@ public class ToolOptionsIntegrationTest {
 	@Parameters(name = "{0}")
 	public static Iterable<Object[]> data() {
 		return Arrays.asList(new Object[][]{
-				{ToolType.BRUSH, false, true},
+				{ToolType.BRUSH, true, true},
 				{ToolType.SHAPE, true, true},
 				{ToolType.TRANSFORM, true, true},
-				{ToolType.LINE, false, true},
-				{ToolType.CURSOR, false, true},
-				{ToolType.FILL, false, true},
+				{ToolType.LINE, true, true},
+				{ToolType.CURSOR, true, true},
+				{ToolType.FILL, true, true},
 				{ToolType.STAMP, true, true},
-				{ToolType.ERASER, false, true},
+				{ToolType.ERASER, true, true},
 				{ToolType.TEXT, true, true},
 				{ToolType.HAND, false, false}
 		});

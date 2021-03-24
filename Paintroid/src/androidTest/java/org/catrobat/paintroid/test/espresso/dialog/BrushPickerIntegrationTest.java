@@ -24,6 +24,7 @@ import android.graphics.Paint.Cap;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -61,11 +62,13 @@ public class BrushPickerIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
+
 	@Before
 	public void setUp() {
 		onToolBarView()
-				.performSelectTool(ToolType.BRUSH)
-				.performOpenToolOptionsView();
+				.performSelectTool(ToolType.BRUSH);
 	}
 
 	private Paint getCurrentToolBitmapPaint() {
@@ -143,8 +146,7 @@ public class BrushPickerIntegrationTest {
 
 		onToolBarView()
 				.performCloseToolOptionsView()
-				.performSelectTool(ToolType.CURSOR)
-				.performOpenToolOptionsView();
+				.performSelectTool(ToolType.CURSOR);
 
 		onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 				.check(matches(withProgress(newStrokeWidth)));

@@ -33,7 +33,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 public final class TransformToolOptionsViewInteraction extends CustomViewInteraction {
 	private TransformToolOptionsViewInteraction() {
-		super(onView(withId(R.id.pocketpaint_main_tool_options)));
+		super(onView(withId(R.id.pocketpaint_layout_tool_options)));
 	}
 
 	public static TransformToolOptionsViewInteraction onTransformToolOptionsView() {
@@ -95,13 +95,13 @@ public final class TransformToolOptionsViewInteraction extends CustomViewInterac
 	}
 
 	public TransformToolOptionsViewInteraction checkIsDisplayed() {
-		onView(withId(R.id.pocketpaint_main_tool_options))
+		onView(withId(R.id.pocketpaint_layout_tool_options))
 				.check(matches(isDisplayed()));
 		return this;
 	}
 
 	public TransformToolOptionsViewInteraction checkIsNotDisplayed() {
-		onView(withId(R.id.pocketpaint_main_tool_options))
+		onView(withId(R.id.pocketpaint_layout_tool_options))
 				.check(matches(not(isDisplayed())));
 		return this;
 	}

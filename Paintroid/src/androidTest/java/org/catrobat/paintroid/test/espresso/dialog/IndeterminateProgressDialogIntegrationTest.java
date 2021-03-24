@@ -27,6 +27,7 @@ import android.util.DisplayMetrics;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -51,6 +52,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 public class IndeterminateProgressDialogIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	private AlertDialog dialog;
 

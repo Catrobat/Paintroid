@@ -26,6 +26,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
 import org.junit.Rule;
@@ -50,6 +51,9 @@ public class LineToolIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Before
 	public void setUp() {
@@ -95,8 +99,6 @@ public class LineToolIntegrationTest {
 
 	@Test
 	public void testChangeLineToolForm() {
-		onToolBarView()
-				.performOpenToolOptionsView();
 
 		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 				.perform(click());

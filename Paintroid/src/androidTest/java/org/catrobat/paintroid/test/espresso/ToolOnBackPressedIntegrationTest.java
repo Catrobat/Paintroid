@@ -29,6 +29,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.hamcrest.core.AllOf;
@@ -83,6 +84,9 @@ public class ToolOnBackPressedIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
@@ -192,6 +196,18 @@ public class ToolOnBackPressedIntegrationTest {
 	}
 
 	@Test
+	public void testToolOptionsGoBackWhenBackPressed() {
+		onToolBarView()
+				.performSelectTool(ToolType.CURSOR);
+
+		assertEquals(toolReference.get().getToolType(), ToolType.CURSOR);
+
+		Espresso.pressBack();
+
+		assertEquals(toolReference.get().getToolType(), ToolType.BRUSH);
+	}
+
+	@Test
 	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -233,16 +249,5 @@ public class ToolOnBackPressedIntegrationTest {
 				.perform(closeSoftKeyboard())
 				.perform(ViewActions.pressBack())
 				.check(doesNotExist());
-	}
-
-	@Test
-	public void testCloseToolOptionOnBackPressed() {
-		onToolBarView()
-				.performSelectTool(ToolType.TRANSFORM);
-		onToolBarView().onToolOptionsView()
-				.check(matches(isDisplayed()));
-		pressBack();
-		onToolBarView().onToolOptionsView()
-				.check(matches(not(isDisplayed())));
 	}
 }

@@ -65,9 +65,8 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		if (isStandard) {
 			FileIO.isCatrobatImage = false;
 			FileIO.filename = "image";
-			FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
-			FileIO.ending = ".jpg";
-			FileIO.compressQuality = 100;
+			FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+			FileIO.ending = ".png";
 		}
 
 		SaveInformationDialog dialog = new SaveInformationDialog();
@@ -103,9 +102,9 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		if (FileIO.isCatrobatImage) {
 			mySpinner.setSelection(2);
 		} else if (FileIO.compressFormat == Bitmap.CompressFormat.PNG) {
-			mySpinner.setSelection(1);
-		} else {
 			mySpinner.setSelection(0);
+		} else {
+			mySpinner.setSelection(1);
 		}
 	}
 
@@ -159,8 +158,8 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 
 	private void initializeFunctioning() {
 		List<String> spinnerArray = new ArrayList<>();
-		spinnerArray.add("jpg");
 		spinnerArray.add("png");
+		spinnerArray.add("jpg");
 		spinnerArray.add("ora");
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<>(mySpinner.getContext(),

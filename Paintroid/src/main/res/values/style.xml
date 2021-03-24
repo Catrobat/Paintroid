@@ -48,6 +48,36 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
         <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+        <item name="bottomNavigationStyle">@style/AppBottomNavigation</item>
+        <item name="appBarLayoutStyle">@style/appBarLayout</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">@android:color/tab_indicator_text</item>
+    </style>
+
+    <style name="ButtonTheme" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@android:color/darker_gray</item>
+    </style>
+
+    <style name="TextFieldTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="hintEnabled">false</item>
+    </style>
+
+    <style name="ChipTheme" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipStrokeColor">@color/pocketpaint_color_picker_gray</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipIconVisible">true</item>
+        <item name="textStartPadding">0dp</item>
+        <item name="textEndPadding">0dp</item>
+        <item name="chipStartPadding">16dp</item>
+        <item name="chipEndPadding">16dp</item>
+        <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
+        <item name="android:textColor">@color/textcolor_togglebutton</item>
+    </style>
+
+    <style name="appBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary" />
+
+    <style name="DropdownMenu" parent="Theme.MaterialComponents.Light">
+        <item name="colorSecondary">@android:color/white</item>
     </style>
 
     <style name="PocketPaintSelectableButton" parent="Base.Widget.AppCompat.Button.Borderless">
@@ -72,7 +102,6 @@
         <item name="android:textViewStyle">@style/CustomTextViewStyle</item>
         <item name="android:buttonStyleToggle">@style/CustomToggleButtonStyle</item>
         <item name="android:buttonStyle">@style/CustomButtonStyle</item>
-        <item name="colorControlNormal">@android:color/black</item>
         <item name="colorControlActivated">?colorAccent</item>
         <item name="bottomNavigationStyle">@style/CustomBottomNavigationViewStyle</item>
         <item name="colorButtonNormal">@color/pocketpaint_lighter_gray</item>
@@ -118,10 +147,6 @@
 
     <style name="PocketPaintDividerBase">
         <item name="android:background">@color/pocketpaint_main_separator_color</item>
-    </style>
-
-    <style name="BottomNavigationViewLabel" parent="@style/TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="PocketPaintToolSelectionButton" parent="Base.Widget.AppCompat.Button.Borderless">
@@ -209,6 +234,12 @@
         <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
+    <style name="BottomNavigationViewLabel" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="AppBottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView.Colored" />
+
     <style name="WebViewLoadingCircle" parent="android:Theme.Holo.Dialog">
         <item name="android:alertDialogStyle">@style/WebViewLoadingCircleStyle</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -236,5 +267,25 @@
         <item name="android:background">@drawable/ic_pocketpaint_dropdown_arrow_modified</item>
         <item name="android:gravity">right</item>
         <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="CircularToggleButtonStyle" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textColor">@color/textcolor_togglebutton</item>
+        <item name="android:backgroundTint">@color/background_togglebutton</item>
+        <item name="android:padding">0dp</item>
+        <item name="iconPadding">0dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.MyApp.Button.Circle</item>
+        <item name="strokeColor">@color/pocketpaint_colorPrimary</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+
+    <style name="ShapeAppearanceOverlay.MyApp.Button.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 </resources>

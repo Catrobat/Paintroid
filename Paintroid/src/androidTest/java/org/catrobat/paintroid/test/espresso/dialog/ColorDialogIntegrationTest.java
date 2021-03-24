@@ -31,6 +31,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.junit.Before;
 import org.junit.Rule;
@@ -84,6 +85,10 @@ public class ColorDialogIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
+
 	private ToolReference toolReference;
 
 	@Before
