@@ -312,6 +312,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		FileIO.uriFilePng = null;
 		FileIO.currentFileNameJpg = null;
 		FileIO.currentFileNamePng = null;
+		FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+		FileIO.ending = ".png";
+		FileIO.isCatrobatImage = false;
 		Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 		commandManager.setInitialStateCommand(initCommand);
 		commandManager.reset();
@@ -741,6 +744,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				if (!model.isOpenedFromCatroid()) {
 					model.setSavedPictureUri(null);
 				}
+				model.setSavedPictureUri(uri);
 				model.setCameraImageUri(null);
 				FileIO.wasImageLoaded = true;
 				break;

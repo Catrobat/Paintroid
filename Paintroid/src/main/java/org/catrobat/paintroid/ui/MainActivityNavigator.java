@@ -38,7 +38,6 @@ import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.common.Constants;
-import org.catrobat.paintroid.common.MainActivityConstants;
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
@@ -422,11 +421,25 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 			return;
 		}
 
-		boolean isStandard = false;
-		if (permissionCode == MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
-			isStandard = true;
+		if (uri != null) {
+			String name = getFileName(uri);
+			if (name != null) {
+				if (name.endsWith("jpg") || name.endsWith("jpeg")) {
+					FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
+					FileIO.ending = ".jpg";
+					FileIO.isCatrobatImage = false;
+				} else if (name.endsWith("png")) {
+					FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+					FileIO.ending = ".png";
+					FileIO.isCatrobatImage = false;
+				} else {
+					FileIO.ending = ".ora";
+					FileIO.isCatrobatImage = true;
+				}
+			}
 		}
 
+		boolean isStandard = false;
 		SaveInformationDialog saveInfodialog = SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard);
 		saveInfodialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_INFORMATION_DIALOG_TAG);
 	}
