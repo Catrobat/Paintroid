@@ -184,4 +184,6 @@
     <string name="intro_bottom_navigation_color_description">Shows the currently used color and opens the color picker.</string>
     <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
     <string name="pocketpaint_tool_icon_description">Current tool icon</string>
+    <string name="dialog_scale_title">छवि लोड करने के लिए बहुत बड़ी है</string>
+    <string name="dialog_scale_message">छवि लोड करने के लिए बहुत बड़ी है। छवि को स्वचालित रूप से स्केल करने के लिए ठीक क्लिक करें।</string>
 </resources>

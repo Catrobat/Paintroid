@@ -156,7 +156,7 @@
     <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
     <string name="intro_get_started">Get started and create a new masterpiece.</string>
     <string name="lets_go">Let\'s go</string>
-    <string name="next">Next</string>
+    <string name="next">Далі</string>
     <string name="skip">Skip</string>
     <string name="pocketpaint_about_title">About</string>
     <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
@@ -184,4 +184,6 @@
     <string name="intro_bottom_navigation_color_description">Shows the currently used color and opens the color picker.</string>
     <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
     <string name="pocketpaint_tool_icon_description">Current tool icon</string>
+    <string name="dialog_scale_title">Image is too big to load</string>
+    <string name="dialog_scale_message">The image is too big to load. Click OK to scale down the image automatically.</string>
 </resources>
