@@ -165,9 +165,9 @@ public class DefaultToolController implements ToolController {
 		} else {
 			toolOptionsViewController.hideCheckmark();
 		}
-
 		tool = toolFactory.createTool(toolType, toolOptionsViewController, commandManager, workspace, toolPaint, contextCallback, onColorPickedListener);
 		toolOptionsViewController.resetToOrigin();
+		toolOptionsViewController.show();
 		return tool;
 	}
 

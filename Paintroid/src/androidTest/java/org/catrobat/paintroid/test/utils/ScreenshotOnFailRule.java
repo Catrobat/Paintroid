@@ -19,7 +19,10 @@
 
 package org.catrobat.paintroid.test.utils;
 
+import android.Manifest;
 import android.app.UiAutomation;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Environment;
@@ -33,6 +36,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import androidx.core.content.ContextCompat;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 public class ScreenshotOnFailRule extends TestWatcher {
@@ -58,14 +63,32 @@ public class ScreenshotOnFailRule extends TestWatcher {
 			return;
 		}
 
-		File path = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-				+ "/screenshots/" + InstrumentationRegistry.getInstrumentation().getTargetContext().getPackageName());
+		if (!isExternalStorageMounted()) {
+			Log.e(LOG_TAG, "storage device is not mounted");
+			return;
+		}
+
+		if (!hasWritePermission(ApplicationProvider.getApplicationContext())) {
+			Log.e(LOG_TAG, "need to have write permissions");
+			return;
+		}
+
+		File path = new File(ApplicationProvider.getApplicationContext().getExternalFilesDir(null), "/screenshots/");
 		if (!path.exists() && !path.mkdirs()) {
 			Log.e(LOG_TAG, "failed to create screenshot path");
+			return;
 		}
 
 		String filename = description.getClassName() + "-" + description.getMethodName() + ".png";
 		saveScreenshot(screenshot, new File(path, filename));
+	}
+
+	private boolean isExternalStorageMounted() {
+		return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+	}
+
+	private boolean hasWritePermission(Context activityContext) {
+		return ContextCompat.checkSelfPermission(activityContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	private void saveScreenshot(Bitmap screenshot, File path) {

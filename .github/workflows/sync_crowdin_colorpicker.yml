@@ -22,8 +22,8 @@ name: Synchronize Crowdin
 # In case, an additional run is required, a manual dispatch trigger is also enabled.
 #
 on:
-  #schedule:
-  # - cron:  '0 0 * * *'
+  schedule:
+   - cron:  '0 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -53,6 +53,6 @@ jobs:
           download_translations: true
           config: 'crowdin_colorpicker.yml'
         env:
-          GITHUB_TOKEN: ${{ secrets.TEST_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.ui;
 
+import android.content.Context;
 import android.net.Uri;
 
 import org.catrobat.paintroid.contract.MainActivityContracts;
@@ -45,12 +46,7 @@ public class MainActivityInteractor implements MainActivityContracts.Interactor 
 	}
 
 	@Override
-	public void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri) {
-		new LoadImageAsync(callback, requestCode, uri).execute();
-	}
-
-	@Override
-	public void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, int maxWidth, int maxHeight, Uri uri) {
-		new LoadImageAsync(callback, requestCode, maxWidth, maxHeight, uri).execute();
+	public void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri, Context context, boolean scaling) {
+		new LoadImageAsync(callback, requestCode, uri, context, scaling).execute();
 	}
 }

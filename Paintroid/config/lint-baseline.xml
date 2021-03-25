@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="5" by="lint 3.6.3" client="gradle" variant="debug" version="3.6.3">
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Lint found an issue registry (`androidx.appcompat.AppCompatIssueRegistry`) which requires a newer API level. That means that the custom lint checks are intended for a newer lint version; please upgrade">
+        <location
+            file="C:\Users\User\.gradle\caches\transforms-2\files-2.1\dc0aec7a492c215b61fcc0b3fe1a89b2\appcompat-1.2.0\jars\lint.jar"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `requestLegacyExternalStorage` is only used in API level 29 and higher (current min is 21)"
+        errorLine1="            android:requestLegacyExternalStorage=&quot;true&quot;/>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src\main\AndroidManifest.xml"
+            line="46"
+            column="13"/>
+    </issue>
+
+</issues>

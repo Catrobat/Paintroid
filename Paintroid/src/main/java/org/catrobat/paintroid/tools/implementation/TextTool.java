@@ -66,7 +66,7 @@ public class TextTool extends BaseToolWithRectangleShape {
 	@VisibleForTesting
 	public String text = "";
 	@VisibleForTesting
-	public String font = "Monospace";
+	public String font = "Sans Serif";
 	@VisibleForTesting
 	public boolean underlined = false;
 	@VisibleForTesting

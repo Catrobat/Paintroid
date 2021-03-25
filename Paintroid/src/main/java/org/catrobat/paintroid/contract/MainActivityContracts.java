@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.contract;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -119,6 +120,8 @@ public interface MainActivityContracts {
 		void showImageImportDialog();
 
 		void showCatroidMediaGallery();
+
+		void showScaleImageRequestDialog(Uri uri, int requestCode);
 	}
 
 	interface MainView {
@@ -254,6 +257,10 @@ public interface MainActivityContracts {
 		int getImageNumber();
 
 		Bitmap getBitmap();
+
+		Context getContext();
+
+		void loadScaledImage(Uri uri, @ActivityRequestCode int requestCode);
 	}
 
 	interface Model {
@@ -289,9 +296,7 @@ public interface MainActivityContracts {
 
 		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace, Uri uri);
 
-		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri);
-
-		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, int maxWidth, int maxHeight, Uri uri);
+		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri, Context context, boolean scaling);
 	}
 
 	interface TopBarViewHolder {

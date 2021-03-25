@@ -25,9 +25,11 @@ import java.util.List;
 public class BitmapReturnValue {
 	public List<Bitmap> bitmapList;
 	public Bitmap bitmap;
+	public boolean toBeScaled;
 
-	public BitmapReturnValue(List<Bitmap> list, Bitmap singleBitmap) {
+	public BitmapReturnValue(List<Bitmap> list, Bitmap singleBitmap, boolean scaling) {
 		bitmapList = list;
 		bitmap = singleBitmap;
+		toBeScaled = scaling;
 	}
 }

@@ -22,6 +22,7 @@ package org.catrobat.paintroid.presenter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -108,11 +109,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private boolean resetPerspectiveAfterNextCommand;
 	private ToolController toolController;
 	private UserPreferences sharedPreferences;
+	private Context context;
 
 	public MainActivityPresenter(Activity activity, MainView view, Model model, Workspace workspace, Navigator navigator,
 			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
 			DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
-			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController, UserPreferences sharedPreferences) {
+			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController,
+			UserPreferences sharedPreferences, Context context) {
 		this.fileActivity = activity;
 		this.view = view;
 		this.model = model;
@@ -128,6 +131,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		this.commandFactory = commandFactory;
 		this.bottomNavigationViewHolder = bottomNavigationViewHolder;
 		this.sharedPreferences = sharedPreferences;
+		this.context = context;
 	}
 
 	private boolean isImageUnchanged() {
@@ -174,7 +178,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	private void showSecurityQuestionBeforeExit() {
-		if (isImageUnchanged() || model.isSaved()) {
+		if ((isImageUnchanged() || model.isSaved()) && (!model.isOpenedFromCatroid() || !FileIO.wasImageLoaded)) {
 			finishActivity();
 		} else if (model.isOpenedFromCatroid()) {
 			saveBeforeFinish();
@@ -401,9 +405,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void handleActivityResult(@ActivityRequestCode int requestCode, int resultCode, Intent data) {
-		DisplayMetrics metrics = view.getDisplayMetrics();
-		int maxWidth = metrics.widthPixels;
-		int maxHeight = metrics.heightPixels;
 		switch (requestCode) {
 			case REQUEST_CODE_IMPORTPNG:
 				if (resultCode != Activity.RESULT_OK) {
@@ -412,13 +413,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				Uri selectedGalleryImageUri = data.getData();
 				setTool(ToolType.IMPORTPNG);
 				toolController.switchTool(ToolType.IMPORTPNG, false);
-				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, maxWidth, maxHeight, selectedGalleryImageUri);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, selectedGalleryImageUri, getContext(), false);
 				break;
 			case REQUEST_CODE_LOAD_PICTURE:
 				if (resultCode != Activity.RESULT_OK) {
 					return;
 				}
-				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, maxWidth, maxHeight, data.getData());
+				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, data.getData(), getContext(), false);
 				break;
 			case REQUEST_CODE_INTRO:
 				if (resultCode == RESULT_INTRO_MW_NOT_SUPPORTED) {
@@ -489,8 +490,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			drawerLayoutViewHolder.closeDrawer(Gravity.END, true);
 		} else if (model.isFullscreen()) {
 			exitFullscreenClicked();
-		} else if (toolController.toolOptionsViewVisible()) {
-			toolController.hideToolOptionsView();
 		} else if (!toolController.isDefaultTool()) {
 			setTool(ToolType.BRUSH);
 			toolController.switchTool(ToolType.BRUSH, true);
@@ -559,12 +558,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void initializeFromCleanState(String extraPicturePath, String extraPictureName) {
 		boolean isOpenedFromCatroid = extraPicturePath != null;
 		model.setOpenedFromCatroid(isOpenedFromCatroid);
+		FileIO.wasImageLoaded = false;
 		if (isOpenedFromCatroid) {
 			File imageFile = new File(extraPicturePath);
 			if (imageFile.exists()) {
 				model.setSavedPictureUri(view.getUriFromFile(imageFile));
 
-				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri());
+				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri(), getContext(), false);
 			} else {
 				interactor.createFile(this, CREATE_FILE_DEFAULT, extraPictureName);
 			}
@@ -699,9 +699,33 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
+	public void loadScaledImage(Uri uri, @LoadImageRequestCode int requestCode) {
+		switch (requestCode) {
+			case LOAD_IMAGE_IMPORTPNG:
+				setTool(ToolType.IMPORTPNG);
+				toolController.switchTool(ToolType.IMPORTPNG, false);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, uri, context, true);
+				break;
+			case LOAD_IMAGE_CATROID:
+			case LOAD_IMAGE_DEFAULT:
+				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, uri, context, true);
+				break;
+			default:
+				Log.e(MainActivity.TAG, "wrong request code for loading pictures");
+				break;
+		}
+	}
+
+	@Override
 	public void onLoadImagePostExecute(@LoadImageRequestCode int requestCode, Uri uri, BitmapReturnValue bitmap) {
+
 		if (bitmap == null) {
 			navigator.showLoadErrorDialog();
+			return;
+		}
+
+		if (bitmap.toBeScaled) {
+			navigator.showScaleImageRequestDialog(uri, requestCode);
 			return;
 		}
 
@@ -714,8 +738,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					commandManager.setInitialStateCommand(commandFactory.createInitCommand(bitmap.bitmapList));
 				}
 				commandManager.reset();
-				model.setSavedPictureUri(null);
+				if (!model.isOpenedFromCatroid()) {
+					model.setSavedPictureUri(null);
+				}
 				model.setCameraImageUri(null);
+				FileIO.wasImageLoaded = true;
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {
@@ -871,5 +898,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public Bitmap getBitmap() {
 		return workspace.getBitmapOfAllLayers();
+	}
+
+	@Override
+	public Context getContext() {
+		return this.context;
 	}
 }

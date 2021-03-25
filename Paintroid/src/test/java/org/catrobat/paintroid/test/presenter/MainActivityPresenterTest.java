@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.presenter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -122,6 +123,8 @@ public class MainActivityPresenterTest {
 	private Menu menu;
 	@Mock
 	private UserPreferences sharedPreferences;
+	@Mock
+	private Context context;
 
 	@InjectMocks
 	private MainActivityPresenter presenter;
@@ -391,8 +394,7 @@ public class MainActivityPresenterTest {
 		when(intent.getData()).thenReturn(uri);
 
 		presenter.handleActivityResult(REQUEST_CODE_LOAD_PICTURE, Activity.RESULT_OK, intent);
-
-		verify(interactor).loadFile(presenter, LOAD_IMAGE_DEFAULT, 13, 17, uri);
+		verify(interactor).loadFile(presenter, LOAD_IMAGE_DEFAULT, uri, context, false);
 	}
 
 	@Test
@@ -607,7 +609,7 @@ public class MainActivityPresenterTest {
 
 		verify(model).setOpenedFromCatroid(true);
 		verify(model).setSavedPictureUri(uri);
-		verify(interactor).loadFile(presenter, LOAD_IMAGE_CATROID, uri);
+		verify(interactor).loadFile(presenter, LOAD_IMAGE_CATROID, uri, context, false);
 	}
 
 	@Test
@@ -829,7 +831,7 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenDefaultThenResetModelUris() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
-		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap, false);
 
 		presenter.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, returnValue);
 
@@ -841,7 +843,7 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenDefaultThenResetCommandManager() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
-		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap, false);
 		Command command = mock(Command.class);
 		when(commandFactory.createInitCommand(bitmap)).thenReturn(command);
 
@@ -856,7 +858,7 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenImportThenSetBitmap() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
-		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap, false);
 		when(toolController.getToolType()).thenReturn(ToolType.IMPORTPNG);
 
 		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, returnValue);
@@ -869,7 +871,7 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenImportAndNotImportToolSetThenIgnore() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
-		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap, false);
 
 		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, returnValue);
 
@@ -881,7 +883,7 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenCatroidThenSetModelUris() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
-		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap, false);
 
 		presenter.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, returnValue);
 
@@ -894,7 +896,7 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenCatroidThenResetCommandManager() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
-		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap, false);
 		Command command = mock(Command.class);
 		when(commandFactory.createInitCommand(bitmap)).thenReturn(command);
 
@@ -909,7 +911,7 @@ public class MainActivityPresenterTest {
 	public void testOnLoadImagePostExecuteWhenInvalidRequestThenThrowException() {
 		Uri uri = mock(Uri.class);
 		Bitmap bitmap = mock(Bitmap.class);
-		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap);
+		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap, false);
 
 		presenter.onLoadImagePostExecute(0, uri, returnValue);
 	}
