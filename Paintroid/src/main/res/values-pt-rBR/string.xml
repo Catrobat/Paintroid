@@ -141,8 +141,8 @@
     <string name="permission_info_external_storage_text">Este aplicativo precisa da permissão solicitada para funcionar corretamente. Para salvar imagens na memória local, o aplicativo precisa ter acesso de leitura e escrita a ele.</string>
     <string name="permission_info_permanent_denial_text">Este aplicativo precisa da permissão solicitada para funcionar corretamente. Para salvar imagens na memória local, o aplicativo precisa ter acesso de leitura e escrita a ele.
         Como você negou a permissão sem perguntar novamente, Por favor, vá às configurações do seu telefone e conceda as permissões necessárias se você deseja usar as funções associadas.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">Abrir gaveta de navegação</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">Fechar gaveta de navegação</string>
     <string name="transform_info_text">Arraste as bordas para a nova posição e, em seguida, toque para ampliar ou cortar a área da imagem.</string>
     <string name="cursor_draw_inactive">Mova lentamente para a posição e toque para começar a pintar.</string>
     <string name="cursor_draw_active">Mova lentamente para desenhar e, então, toque novamente para parar de pintar.</string>
@@ -184,4 +184,6 @@
     <string name="intro_bottom_navigation_color_description">Mostra a cor usada atualmente e abre o seletor de cores.</string>
     <string name="intro_bottom_navigation_layers_description">Abre o menu da camada e permite que você gerencie suas camadas.</string>
     <string name="pocketpaint_tool_icon_description">Ícone da ferramenta atual</string>
+    <string name="dialog_scale_title">A imagem é muito grande para carregar</string>
+    <string name="dialog_scale_message">A imagem é muito grande para ser carregada. Clique em OK para redimensionar a imagem automaticamente.</string>
 </resources>
