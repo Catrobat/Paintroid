@@ -184,4 +184,6 @@
     <string name="intro_bottom_navigation_color_description">Показывает используемый в настоящее время цвет и открывает выбор цветов.</string>
     <string name="intro_bottom_navigation_layers_description">Открывает меню слоя и позволяет вам управлять слоями.</string>
     <string name="pocketpaint_tool_icon_description">Текущий значок инструмента</string>
+    <string name="dialog_scale_title">Изображение слишком велико для загрузки</string>
+    <string name="dialog_scale_message">Изображение слишком велико для загрузки. Нажмите ОК для автоматического изменения масштабирования.</string>
 </resources>

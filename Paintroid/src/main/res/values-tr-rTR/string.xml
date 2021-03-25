@@ -183,4 +183,6 @@
     <string name="intro_bottom_navigation_color_description">Şu anda kullanılan rengi gösterir ve renk seçiciyi açar.</string>
     <string name="intro_bottom_navigation_layers_description">Katman menüsünü açar ve katmanlarınızı yönetmenizi sağlar.</string>
     <string name="pocketpaint_tool_icon_description">Mevcut araç simgesi</string>
+    <string name="dialog_scale_title">Resim yüklenemeyecek kadar büyük</string>
+    <string name="dialog_scale_message">Resim yüklenemeyecek kadar büyük. Görüntüyü otomatik olarak küçültmek için Tamam\'a tıklayın.</string>
 </resources>

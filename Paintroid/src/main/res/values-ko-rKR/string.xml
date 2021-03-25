@@ -184,4 +184,6 @@
     <string name="intro_bottom_navigation_color_description">현재 색을 보여주고 색상 선택기를 열어주라.</string>
     <string name="intro_bottom_navigation_layers_description">레이어 메뉴를 보여주고 레이어를 관리하라.</string>
     <string name="pocketpaint_tool_icon_description">현재 프로필 아이콘</string>
+    <string name="dialog_scale_title">Image is too big to load</string>
+    <string name="dialog_scale_message">The image is too big to load. Click OK to scale down the image automatically.</string>
 </resources>
