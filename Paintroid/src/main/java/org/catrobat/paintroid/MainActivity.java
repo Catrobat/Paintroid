@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -47,6 +49,8 @@ import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.controller.DefaultToolController;
+import org.catrobat.paintroid.iotasks.BitmapReturnValue;
+import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion;
 import org.catrobat.paintroid.listener.PresenterColorPickedListener;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.model.MainActivityModel;
@@ -81,6 +85,7 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -178,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 		String receivedAction = receivedIntent.getAction();
 		String receivedType = receivedIntent.getType();
 
-		if (receivedAction != null && receivedType != null && (receivedAction.equals(Intent.ACTION_SEND) || receivedAction.equals(Intent.ACTION_EDIT)) && receivedType.startsWith("image/")) {
+		if (receivedAction != null && receivedType != null && (receivedAction.equals(Intent.ACTION_SEND) || receivedAction.equals(Intent.ACTION_EDIT)) && (receivedType.startsWith("image/") || receivedType.startsWith("application/"))) {
 			Uri receivedUri = receivedIntent
 					.getParcelableExtra(Intent.EXTRA_STREAM);
 
@@ -196,7 +201,30 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 				Log.e("Can not read", "Unable to retrieve Bitmap from Uri");
 			}
 
-			commandManager.setInitialStateCommand(commandFactory.createInitCommand(receivedBitmap));
+			String mimeType;
+			if (receivedUri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+				mimeType = getContentResolver().getType(receivedUri);
+			} else {
+				String fileExtension = MimeTypeMap.getFileExtensionFromUrl(receivedUri.toString());
+				mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US));
+			}
+
+			BitmapReturnValue returnValue;
+
+			if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
+				try {
+					returnValue = OpenRasterFileFormatConversion.importOraFile(getContentResolver(), receivedUri, getApplicationContext());
+					if (returnValue.bitmap != null) {
+						commandManager.setInitialStateCommand(commandFactory.createInitCommand(returnValue.bitmap));
+					} else {
+						commandManager.setInitialStateCommand(commandFactory.createInitCommand(returnValue.bitmapList));
+					}
+				} catch (IOException e) {
+					Log.e("Can not", "Unable to retrieve bitmap for ora file");
+				}
+			} else {
+				commandManager.setInitialStateCommand(commandFactory.createInitCommand(receivedBitmap));
+			}
 			commandManager.reset();
 			model.setSavedPictureUri(null);
 			model.setCameraImageUri(null);
