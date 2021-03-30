@@ -382,7 +382,6 @@ public class TransformToolIntegrationTest {
 				.checkBitmapDimension(initialWidth, initialHeight);
 	}
 
-	@Ignore("Process crashes on Jenkins")
 	@Test
 	public void testIfClickOnCanvasCrops() {
 		onToolBarView()
