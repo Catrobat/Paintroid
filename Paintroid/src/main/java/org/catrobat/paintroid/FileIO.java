@@ -29,11 +29,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
 
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.iotasks.BitmapReturnValue;
@@ -45,9 +51,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.Objects;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 
 public final class FileIO {
 	public static String filename = "image";
@@ -185,14 +188,80 @@ public final class FileIO {
 
 	private static Bitmap decodeBitmapFromUri(ContentResolver resolver, @NonNull Uri uri, BitmapFactory.Options options) throws IOException {
 		InputStream inputStream = resolver.openInputStream(uri);
+		Bitmap bitmap;
+		float angle;
 		if (inputStream == null) {
 			throw new IOException("Can't open input stream");
 		}
 		try {
-			return BitmapFactory.decodeStream(inputStream, null, options);
+			bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+			if (options.inJustDecodeBounds)
+				return bitmap;
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				angle = getBitmapOrientationFromInputStream(resolver, uri);
+			} else angle = getBitmapOrientationFromUri(uri);
+
+			return getOrientedBitmap(bitmap, angle);
 		} finally {
 			inputStream.close();
 		}
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.N)
+	private static float getBitmapOrientationFromInputStream(ContentResolver resolver, @NonNull Uri uri) throws IOException {
+		InputStream inputStream = resolver.openInputStream(uri);
+		if (inputStream == null)
+			return 0f;
+
+		try {
+			ExifInterface exifInterface = new ExifInterface(inputStream);
+			return getBitmapOrientation(exifInterface);
+		} finally {
+			inputStream.close();
+		}
+	}
+
+
+	private static float getBitmapOrientationFromUri(@NonNull Uri uri) throws IOException {
+		ExifInterface exifInterface = new ExifInterface(uri.getPath());
+		return getBitmapOrientation(exifInterface);
+
+	}
+
+	public static Bitmap getOrientedBitmap(Bitmap bitmap, float angle) {
+		if (bitmap == null)
+			return null;
+
+		Matrix matrix = new Matrix();
+		matrix.postRotate(angle);
+		Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+		bitmap.recycle();
+		bitmap = null;
+
+		return rotatedBitmap;
+	}
+
+	public static float getBitmapOrientation(ExifInterface exifInterface) {
+		if (exifInterface == null)
+			return 0f;
+
+		int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+		float angle = 0;
+		switch (orientation) {
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				angle = 90f;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				angle = 180f;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				angle = 270f;
+				break;
+		}
+
+		return angle;
 	}
 
 	public static void parseFileName(Uri uri, ContentResolver resolver) {
