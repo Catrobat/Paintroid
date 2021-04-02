@@ -195,12 +195,15 @@ public final class FileIO {
 		}
 		try {
 			bitmap = BitmapFactory.decodeStream(inputStream, null, options);
-			if (options.inJustDecodeBounds)
+			if (options.inJustDecodeBounds) {
 				return bitmap;
+			}
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 				angle = getBitmapOrientationFromInputStream(resolver, uri);
-			} else angle = getBitmapOrientationFromUri(uri);
+			} else {
+				angle = getBitmapOrientationFromUri(uri);
+			}
 
 			return getOrientedBitmap(bitmap, angle);
 		} finally {
@@ -211,8 +214,9 @@ public final class FileIO {
 	@RequiresApi(api = Build.VERSION_CODES.N)
 	private static float getBitmapOrientationFromInputStream(ContentResolver resolver, @NonNull Uri uri) throws IOException {
 		InputStream inputStream = resolver.openInputStream(uri);
-		if (inputStream == null)
+		if (inputStream == null) {
 			return 0f;
+		}
 
 		try {
 			ExifInterface exifInterface = new ExifInterface(inputStream);
@@ -230,8 +234,9 @@ public final class FileIO {
 	}
 
 	public static Bitmap getOrientedBitmap(Bitmap bitmap, float angle) {
-		if (bitmap == null)
+		if (bitmap == null) {
 			return null;
+		}
 
 		Matrix matrix = new Matrix();
 		matrix.postRotate(angle);
@@ -244,8 +249,9 @@ public final class FileIO {
 	}
 
 	public static float getBitmapOrientation(ExifInterface exifInterface) {
-		if (exifInterface == null)
+		if (exifInterface == null) {
 			return 0f;
+		}
 
 		int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 		float angle = 0;
