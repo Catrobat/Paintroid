@@ -226,11 +226,9 @@ public final class FileIO {
 		}
 	}
 
-
 	private static float getBitmapOrientationFromUri(@NonNull Uri uri) throws IOException {
 		ExifInterface exifInterface = new ExifInterface(uri.getPath());
 		return getBitmapOrientation(exifInterface);
-
 	}
 
 	public static Bitmap getOrientedBitmap(Bitmap bitmap, float angle) {

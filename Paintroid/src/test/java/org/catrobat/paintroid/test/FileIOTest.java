@@ -15,22 +15,18 @@ import static org.junit.Assert.assertNull;
 @RunWith(MockitoJUnitRunner.class)
 public class FileIOTest {
 
-    @Mock
-    Bitmap bitmap;
-    @Mock
-    ExifInterface exifInterface;
+	@Mock
+	Bitmap bitmap;
+	@Mock
+	ExifInterface exifInterface;
 
-    @Test
-    public void testGetOrientedBitmap() {
+	@Test
+	public void testGetOrientedBitmap() {
+		assertNull(FileIO.getOrientedBitmap(bitmap, 0));
+	}
 
-        assertNull(FileIO.getOrientedBitmap(bitmap, 0));
-
-    }
-
-    @Test
-    public void testGetBitmapOrientation() {
-
-        assertEquals(0, FileIO.getBitmapOrientation(exifInterface), 0);
-
-    }
+	@Test
+	public void testGetBitmapOrientation() {
+		assertEquals(0, FileIO.getBitmapOrientation(exifInterface), 0);
+	}
 }
