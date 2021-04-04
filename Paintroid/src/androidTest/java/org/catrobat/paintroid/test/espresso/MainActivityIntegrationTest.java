@@ -23,6 +23,7 @@ import android.content.Context;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +47,9 @@ public class MainActivityIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Test
 	public void testMoreOptionsMenuAboutTextIsCorrect() {

@@ -38,6 +38,7 @@
         android:translationX="3dp"
         android:checked="true"/>
 
+
     <ImageView
         android:id="@+id/pocketpaint_item_layer_image"
         android:layout_width="75dp"

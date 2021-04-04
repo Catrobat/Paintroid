@@ -59,6 +59,7 @@ import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDial
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog;
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog;
 import org.catrobat.paintroid.dialog.SaveInformationDialog;
+import org.catrobat.paintroid.dialog.ScaleImageOnLoadDialog;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment;
 
@@ -385,6 +386,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showSaveBeforeLoadImageDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance();
 		showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showScaleImageRequestDialog(Uri uri, int requestCode) {
+		AppCompatDialogFragment dialog = ScaleImageOnLoadDialog.newInstance(uri, requestCode);
+		showDialogFragmentSafely(dialog, Constants.SCALE_IMAGE_FRAGMENT_TAG);
 	}
 
 	@SuppressLint("VisibleForTests")

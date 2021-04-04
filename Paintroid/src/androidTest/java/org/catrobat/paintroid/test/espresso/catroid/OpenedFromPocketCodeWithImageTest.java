@@ -19,13 +19,22 @@
 
 package org.catrobat.paintroid.test.espresso.catroid;
 
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.Environment;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -35,6 +44,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
@@ -44,35 +57,46 @@ import androidx.test.rule.GrantPermissionRule;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+
 @RunWith(AndroidJUnit4.class)
 public class OpenedFromPocketCodeWithImageTest {
 
 	private static final String IMAGE_NAME = "testFile";
-	private static final String FILE_ENDING = ".png";
+	private static final String IMAGE_TO_LOAD_NAME = "loadFile";
 
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, true);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	private File imageFile = null;
+	private MainActivity activity;
+	private ArrayList<File> deletionFileList = null;
 
 	@Before
 	public void setUp() {
-		String pathToFile =
-				launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-						+ File.separator
-						+ IMAGE_NAME
-						+ FILE_ENDING;
+		deletionFileList = new ArrayList<>();
+		activity = launchActivityRule.getActivity();
 
-		imageFile = new File(pathToFile);
+		imageFile = getNewImageFile(IMAGE_NAME);
+		deletionFileList.add(imageFile);
 		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(imageFile));
 		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
 
@@ -82,8 +106,10 @@ public class OpenedFromPocketCodeWithImageTest {
 
 	@After
 	public void tearDown() {
-		if (imageFile != null && imageFile.exists()) {
-			assertTrue(imageFile.delete());
+		for (File file : deletionFileList) {
+			if (file != null && file.exists()) {
+				assertTrue(file.delete());
+			}
 		}
 	}
 
@@ -96,12 +122,49 @@ public class OpenedFromPocketCodeWithImageTest {
 		long fileSizeBefore = imageFile.length();
 
 		Espresso.pressBackUnconditionally();
+		verifyImageFile(lastModifiedBefore, fileSizeBefore);
+	}
 
-		String path = launchActivityRule.getActivityResult().getResultData().getStringExtra(Constants.PAINTROID_PICTURE_PATH);
-		assertEquals(imageFile.getAbsolutePath(), path);
+	@Test
+	public void testLoadWithoutChange() {
+		long lastModifiedBefore = imageFile.lastModified();
+		long fileSizeBefore = imageFile.length();
+		createImageIntent();
 
-		assertThat("Image modification not saved", imageFile.lastModified(), greaterThan(lastModifiedBefore));
-		assertThat("Saved image length not changed", imageFile.length(), greaterThan(fileSizeBefore));
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_load_image)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.WHITE, BitmapLocationProvider.MIDDLE);
+
+		Espresso.pressBackUnconditionally();
+		verifyImageFile(lastModifiedBefore, fileSizeBefore);
+	}
+
+	@Test
+	public void testLoadWithChange() {
+		long lastModifiedBefore = imageFile.lastModified();
+		long fileSizeBefore = imageFile.length();
+		createImageIntent();
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_load_image)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.WHITE, BitmapLocationProvider.MIDDLE);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+
+		Espresso.pressBackUnconditionally();
+		verifyImageFile(lastModifiedBefore, fileSizeBefore);
 	}
 
 	@Test
@@ -116,5 +179,49 @@ public class OpenedFromPocketCodeWithImageTest {
 
 		assertThat("Image modified", imageFile.lastModified(), equalTo(lastModifiedBefore));
 		assertThat("Saved image length changed", imageFile.length(), equalTo(fileSizeBefore));
+	}
+
+	private File getNewImageFile(String filename) {
+		try {
+			return FileIO.createNewEmptyPictureFile(filename, launchActivityRule.getActivity());
+		} catch (NullPointerException e) {
+			throw new AssertionError("Could not create temp file", e);
+		}
+	}
+
+	private void createImageIntent() {
+		Intent intent = new Intent();
+		intent.setData(createTestImageFile());
+		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
+	}
+
+	private Uri createTestImageFile() {
+		Bitmap bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		canvas.drawColor(Color.WHITE);
+		canvas.drawBitmap(bitmap, 0F, 0F, null);
+
+		File imageFile = new File(activity.getExternalFilesDir(null).getAbsolutePath(), IMAGE_TO_LOAD_NAME + ".jpg");
+		Uri imageUri = Uri.fromFile(imageFile);
+		try {
+			OutputStream fos = activity.getContentResolver().openOutputStream(Objects.requireNonNull(imageUri));
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos));
+			assert fos != null;
+			fos.close();
+		} catch (IOException e) {
+			throw new AssertionError("Picture file could not be created.", e);
+		}
+
+		deletionFileList.add(imageFile);
+		return imageUri;
+	}
+
+	private void verifyImageFile(long lastModifiedBefore, long fileSizeBefore) {
+		String path = launchActivityRule.getActivityResult().getResultData().getStringExtra(Constants.PAINTROID_PICTURE_PATH);
+		assertEquals(imageFile.getAbsolutePath(), path);
+
+		assertThat("Image modification not saved", imageFile.lastModified(), greaterThan(lastModifiedBefore));
+		assertThat("Saved image length not changed", imageFile.length(), greaterThan(fileSizeBefore));
 	}
 }

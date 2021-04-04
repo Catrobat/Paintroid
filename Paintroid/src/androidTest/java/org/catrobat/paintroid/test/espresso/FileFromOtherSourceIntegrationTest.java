@@ -14,6 +14,7 @@ import android.util.Log;
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -40,6 +41,9 @@ public class FileFromOtherSourceIntegrationTest {
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();

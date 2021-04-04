@@ -28,6 +28,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
@@ -75,6 +76,9 @@ public class LandscapeIntegrationTest {
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
+
 	private Tool getCurrentTool() {
 		return mainActivity.toolReference.get();
 	}
@@ -117,13 +121,13 @@ public class LandscapeIntegrationTest {
 						.performClickSelectedToolButton();
 			}
 
-			onView(withId(R.id.pocketpaint_main_tool_options))
+			onView(withId(R.id.pocketpaint_layout_tool_specific_options))
 					.check(matches(isDisplayed()));
 
 			onBottomNavigationView()
 					.onCurrentClicked();
 
-			onView(withId(R.id.pocketpaint_main_tool_options))
+			onView(withId(R.id.pocketpaint_layout_tool_specific_options))
 					.check(matches(not(isDisplayed())));
 		}
 	}
@@ -268,8 +272,7 @@ public class LandscapeIntegrationTest {
 				.checkItemExists(R.string.menu_new_image)
 				.checkItemExists(R.string.share_image_menu)
 
-				.checkItemDoesNotExist(R.string.menu_discard_image)
-				.checkItemDoesNotExist(R.string.menu_export);
+				.checkItemDoesNotExist(R.string.menu_discard_image);
 	}
 
 	@Test

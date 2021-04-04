@@ -46,6 +46,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.Root;
 import androidx.test.espresso.ViewAssertion;
@@ -57,11 +59,33 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import static androidx.core.util.Preconditions.checkNotNull;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 
 public final class UiMatcher {
 
 	private UiMatcher() {
+	}
+
+	public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher) {
+		checkNotNull(itemMatcher);
+		return new BoundedMatcher<View, RecyclerView>(RecyclerView.class) {
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("has item at position " + position + ": ");
+				itemMatcher.describeTo(description);
+			}
+
+			@Override
+			protected boolean matchesSafely(final RecyclerView view) {
+				RecyclerView.ViewHolder viewHolder = view.findViewHolderForAdapterPosition(position);
+				if (viewHolder == null) {
+					// has no item on such position
+					return false;
+				}
+				return itemMatcher.matches(viewHolder.itemView);
+			}
+		};
 	}
 
 	public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {

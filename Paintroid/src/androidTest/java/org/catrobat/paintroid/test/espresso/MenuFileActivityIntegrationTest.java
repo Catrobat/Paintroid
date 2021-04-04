@@ -39,6 +39,7 @@ import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.After;
 import org.junit.Before;
@@ -93,6 +94,9 @@ public class MenuFileActivityIntegrationTest {
 	private static ArrayList<File> deletionFileList = null;
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
@@ -581,7 +585,7 @@ public class MenuFileActivityIntegrationTest {
 
 		int imageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
 
-		onView(withText("jpg"))
+		onView(withText("png"))
 				.check(matches(isDisplayed()));
 		onView(withText("image" + imageNumber))
 				.check(matches(isDisplayed()));
@@ -589,7 +593,7 @@ public class MenuFileActivityIntegrationTest {
 		onView(withId(R.id.pocketpaint_save_dialog_spinner))
 				.perform(click());
 		onData(allOf(is(instanceOf(String.class)),
-				is("jpg"))).inRoot(isPlatformPopup()).perform(click());
+				is("png"))).inRoot(isPlatformPopup()).perform(click());
 
 		onView(withText(R.string.save_button_text))
 				.perform(click());
@@ -601,7 +605,7 @@ public class MenuFileActivityIntegrationTest {
 
 		imageNumber = launchActivityRule.getActivity().getPresenter().getImageNumber();
 
-		onView(withText("jpg"))
+		onView(withText("png"))
 				.check(matches(isDisplayed()));
 		onView(withText("image" + imageNumber))
 				.check(matches(isDisplayed()));

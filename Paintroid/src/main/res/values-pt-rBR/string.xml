@@ -25,6 +25,7 @@
     <string name="button_pipette">Pipeta</string>
     <string name="button_undo">Desfazer</string>
     <string name="button_redo">Refazer</string>
+    <string name="button_info">Informação</string>
     <string name="button_stamp">Carimbo</string>
     <string name="button_import_image">Importar imagem</string>
     <string name="button_eraser">Borracha</string>
@@ -34,10 +35,19 @@
     <string name="button_text">Texto</string>
     <string name="button_shape">Formas</string>
     <string name="button_hand">Mão</string>
+    <string name="button_spray_can">Lata de spray</string>
     <string name="button_apply">Aplicar</string>
+    <string name="button_checkmark">Marcações</string>
     <string name="done">Concluído</string>
+    <string name="gallery">Galeria</string>
+    <string name="load_sticker_error">Não foi possível carregar a Figurinha</string>
+    <string name="error_unknown_error">Algo deu errado.</string>
     <string name="cap_circle">Círculo</string>
     <string name="cap_square">Quadrado</string>
+    <string name="stamptool_paste">Colar</string>
+    <string name="stamptool_copy">Copiar</string>
+    <string name="stamptool_cut">Cortar</string>
+    <string name="stickers">Figurinhas</string>
     <string name="dialog_tools_title">Ferramentas</string>
     <string name="dialog_error_save_title">Erro ao carregar/salvar Arquivo</string>
     <string name="dialog_error_sdcard_text">Verifique Imagem ou Cartão SD!</string>
@@ -60,23 +70,30 @@
     <string name="help_content_layer">Criar novas camadas ou modificar as já existentes.</string>
     <string name="help_content_color_chooser">Selecione ou ajuste de cor.</string>
     <string name="help_content_hand">Mova o dedo para mover a tela.</string>
+    <string name="help_content_spray_can">Mova o seu dedo na imagem para criar um padrão de spray.</string>
     <string name="closing_catroid_security_question_title">Voltar ao projeto</string>
     <string name="closing_security_question_title">Sair</string>
     <string name="closing_security_question">Salvar alterações?</string>
     <string name="menu_new_image">Nova imagem</string>
     <string name="menu_discard_image">Descartar imagem</string>
+    <string name="no_longclick_on_hidden_layer">Você só pode mesclar ou reordenar se todas as camadas estiverem visíveis</string>
+    <string name="no_tools_on_hidden_layer">Nenhuma ferramenta está disponível na camada oculta</string>
     <string name="menu_load_image">Carregar imagem</string>
     <string name="menu_save_image">Salvar imagem</string>
     <string name="menu_save_copy">Salvar cópia</string>
     <string name="menu_hide_menu">Tela cheia</string>
+    <string name="share_image_menu">Compartilhar imagem</string>
+    <string name="share_image_via_text">Enviar imagem através</string>
     <string name="menu_rate_us">Avalie-nos!</string>
-    <string name="menu_try_pocket_code">Experimente o Pocket Code!</string>
     <string name="menu_export">Exportar</string>
+    <string name="menu_feedback">Comentário</string>
     <string name="saved">Imagem salva</string>
     <string name="copy">Cópia salva</string>
     <string name="menu_quit">Sair</string>
     <string name="save_button_text">Salvar</string>
     <string name="discard_button_text">Descartar</string>
+    <string name="cancel_button_text">Cancelar</string>
+    <string name="overwrite_button_text">Substituir</string>
     <string name="resize_nothing_to_resize">nada há nada para ser redimensionado</string>
     <string name="resize_cannot_resize_to_this_size">não é possível redimensionar para este tamanho</string>
     <string name="resize_max_image_resolution_reached">resolução máxima de imagem alcançada</string>
@@ -102,6 +119,7 @@
     <string name="transform_tool_auto_crop_text">cortar/expandir</string>
     <string name="transform_width_text">Largura</string>
     <string name="transform_height_text">Altura</string>
+    <string name="transform_auto_crop_text">Automático</string>
     <string name="pixel">px</string>
     <string name="stamp_tool_copy_hint">Pressione e segure para copiar o conteúdo</string>
     <string name="layers_title">Camadas</string>
@@ -114,11 +132,17 @@
     <string name="dialog_loading_image_failed_title">Erro ao carregar imagem</string>
     <string name="dialog_loading_image_failed_text">Não é uma imagem válida</string>
     <string name="dialog_settings">Configurações</string>
+    <string name="dialog_save_image_name">Nome da imagem</string>
+    <string name="dialog_save_image_format">Formato da imagem</string>
+    <string name="dialog_save_jpg_option_quality">Qualidade:</string>
+    <string name="pocketpaint_jpg_message_dialog">Ocupa <b>espaço mínimo no armazenamento</b>. <b>A transparência</b> não é salva </string>
+    <string name="pocketpaint_png_message_dialog">Compressão sem perdas. A transparência é preservada.</string>
+    <string name="pocketpaint_ora_message_dialog">Este formato lembra <b>camadas</b>. <b>pode ser aberto por aplicativos que suportam o formato Openraster.</b></string>
     <string name="permission_info_external_storage_text">Este aplicativo precisa da permissão solicitada para funcionar corretamente. Para salvar imagens na memória local, o aplicativo precisa ter acesso de leitura e escrita a ele.</string>
     <string name="permission_info_permanent_denial_text">Este aplicativo precisa da permissão solicitada para funcionar corretamente. Para salvar imagens na memória local, o aplicativo precisa ter acesso de leitura e escrita a ele.
         Como você negou a permissão sem perguntar novamente, Por favor, vá às configurações do seu telefone e conceda as permissões necessárias se você deseja usar as funções associadas.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">Abrir gaveta de navegação</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">Fechar gaveta de navegação</string>
     <string name="transform_info_text">Arraste as bordas para a nova posição e, em seguida, toque para ampliar ou cortar a área da imagem.</string>
     <string name="cursor_draw_inactive">Mova lentamente para a posição e toque para começar a pintar.</string>
     <string name="cursor_draw_active">Mova lentamente para desenhar e, então, toque novamente para parar de pintar.</string>
@@ -140,11 +164,14 @@
     <string name="pocketpaint_about_url_catrobat_description">Sobre o Catrobat</string>
     <string name="pocketpaint_intro">Apresentação</string>
     <string name="pocketpaint_intro_split_screen_not_supported">Este app não suporta Tela dividida</string>
+    <string name="pocketpaint_overwrite_title">Sobrescrever arquivo?</string>
+    <string name="pocketpaint_overwrite">Você está prestes a substituir uma imagem existente (dica: Para salvá-la como uma nova imagem, use a opção \"%s\"). Salvar mesmo assim?</string>
     <string name="pocketpaint_like_us">Você gosta do Pocket Paint?</string>
     <string name="pocketpaint_rate_us">Gostaria de avaliar o Pocket Paint?</string>
     <string name="pocketpaint_feedback">Lamentamos ouvir isso. Se quiser compartilhar sua experiência conosco, por favor escreva para contact@catrobat.org</string>
     <string name="pocketpaint_yes">Sim</string>
     <string name="pocketpaint_no">Não</string>
+    <string name="pocketpaint_cancel">Cancelar</string>
     <string name="pocketpaint_not_now">Agora não</string>
     <string name="pocketpaint_rate_us_title">Avaliar Pocket Paint</string>
     <string name="bottom_navigation_tools">Ferramentas</string>
@@ -157,4 +184,6 @@
     <string name="intro_bottom_navigation_color_description">Mostra a cor usada atualmente e abre o seletor de cores.</string>
     <string name="intro_bottom_navigation_layers_description">Abre o menu da camada e permite que você gerencie suas camadas.</string>
     <string name="pocketpaint_tool_icon_description">Ícone da ferramenta atual</string>
+    <string name="dialog_scale_title">A imagem é muito grande para carregar</string>
+    <string name="dialog_scale_message">A imagem é muito grande para ser carregada. Clique em OK para redimensionar a imagem automaticamente.</string>
 </resources>

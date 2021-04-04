@@ -26,7 +26,6 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
@@ -38,12 +37,8 @@ import org.catrobat.paintroid.tools.options.BrushToolPreview;
 
 public class BrushToolView extends View implements BrushToolPreview {
 
-	private static final int BORDER = 2;
-
 	private Paint canvasPaint;
 	private Paint checkeredPattern;
-	private Paint borderPaint;
-	private Path path;
 	private BrushToolOptionsView.OnBrushPreviewListener callback;
 
 	public BrushToolView(Context context) {
@@ -63,8 +58,6 @@ public class BrushToolView extends View implements BrushToolPreview {
 		canvasPaint = new Paint();
 		checkeredPattern = new Paint();
 		checkeredPattern.setShader(shader);
-		borderPaint = new Paint();
-		path = new Path();
 	}
 
 	private void changePaintColor(int color) {
@@ -84,116 +77,28 @@ public class BrushToolView extends View implements BrushToolPreview {
 		}
 	}
 
-	private void drawDrawerPreview(Canvas canvas) {
-		int currentColor = callback.getColor();
-		changePaintColor(currentColor);
-
-		int centerX = getLeft() + getWidth() / 2;
-		int centerY = getTop() + getHeight() / 2;
-		int startX = getLeft() + getWidth() / 8;
-		int startY = centerY;
-		int endX = getRight() - getWidth() / 8;
-		int endY = centerY;
-
-		float x2 = getLeft() + getWidth() / 4;
-		float y2 = getTop();
-		float x4 = getRight() - getWidth() / 4;
-		float y4 = getBottom();
-
-		path.reset();
-		path.moveTo(startX, startY);
-		path.cubicTo(startX, startY, x2, y2, centerX, centerY);
-		path.cubicTo(centerX, centerY, x4, y4, endX, endY);
-
-		if (canvasPaint.getColor() == Color.WHITE) {
-			drawBorder(canvas);
-			canvas.drawPath(path, canvasPaint);
-		}
-		if (canvasPaint.getColor() == Color.TRANSPARENT) {
-			canvasPaint.setColor(Color.BLACK);
-			canvas.drawPath(path, canvasPaint);
-			canvasPaint.setColor(Color.TRANSPARENT);
-		} else {
-			canvas.drawPath(path, canvasPaint);
-		}
-	}
-
-	private void drawBorder(Canvas canvas) {
-		float strokeWidth = callback.getStrokeWidth();
-		Paint.Cap strokeCap = callback.getStrokeCap();
-		int startX;
-		int startY;
-		int endX;
-		int endY;
-
-		borderPaint.reset();
-		borderPaint.setStyle(Paint.Style.STROKE);
-		borderPaint.setStrokeCap(strokeCap);
-		borderPaint.setStrokeWidth(strokeWidth + BORDER);
-		borderPaint.setColor(Color.BLACK);
-		borderPaint.setAntiAlias(true);
-
-		if (callback.getToolType() == ToolType.LINE) {
-			startX = getLeft() + getWidth() / 8 - BORDER;
-			startY = getTop() + getHeight() / 2;
-			endX = getRight() - getWidth() / 8 + BORDER;
-			endY = getTop() + getHeight() / 2;
-			canvas.drawLine(startX, startY, endX, endY, borderPaint);
-		} else {
-			int centerX = getLeft() + getWidth() / 2;
-			int centerY = getTop() + getHeight() / 2;
-			float x2 = getLeft() + getWidth() / 4;
-			float y2 = getTop() - BORDER;
-			float x4 = getRight() - getWidth() / 4;
-			float y4 = getBottom() + BORDER;
-
-			startX = getLeft() + getWidth() / 8 - BORDER;
-			startY = centerY + BORDER;
-			endX = getRight() - getWidth() / 8 + BORDER;
-			endY = centerY - BORDER;
-
-			path.reset();
-			path.moveTo(startX, startY);
-			path.cubicTo(startX, startY, x2, y2, centerX, centerY);
-			path.cubicTo(centerX, centerY, x4, y4, endX, endY);
-			canvas.drawPath(path, borderPaint);
-		}
-	}
-
 	private void drawEraserPreview(Canvas canvas) {
 		changePaintColor(Color.TRANSPARENT);
 
-		int centerX = getLeft() + getWidth() / 2;
-		int centerY = getTop() + getHeight() / 2;
-		int startX = getLeft() + getWidth() / 8;
-		int startY = centerY;
-		int endX = getRight() - getWidth() / 8;
-		int endY = centerY;
-
-		path.reset();
-		path.moveTo(startX, startY);
-		float x2 = getLeft() + getWidth() / 4;
-		float y2 = getTop();
-		float x4 = getRight() - getWidth() / 4;
-		float y4 = getBottom();
-		path.cubicTo(startX, startY, x2, y2, centerX, centerY);
-		path.cubicTo(centerX, centerY, x4, y4, endX, endY);
+		int startX = getRight() - getWidth() / 3;
+		int startY = getTop() + getHeight() - 56;
+		int endX = getRight() - getWidth() / 16;
+		int endY = getTop() + getHeight() - 56;
 
 		canvasPaint.setColor(Color.BLACK);
-		canvas.drawPath(path, canvasPaint);
+		canvas.drawLine(startX, startY, endX, endY, canvasPaint);
 	}
 
 	private void drawLinePreview(Canvas canvas) {
 		int currentColor = callback.getColor();
 		changePaintColor(currentColor);
 
-		int startX = getLeft() + getWidth() / 8;
-		int startY = getTop() + getHeight() / 2;
-		int endX = getRight() - getWidth() / 8;
-		int endY = getTop() + getHeight() / 2;
+		int startX = getRight() - getWidth() / 3;
+		int startY = getTop() + getHeight() - 56;
+		int endX = getRight() - getWidth() / 16;
+		int endY = getTop() + getHeight() - 56;
 
 		if (canvasPaint.getColor() == Color.WHITE) {
-			drawBorder(canvas);
 			canvas.drawLine(startX, startY, endX, endY, canvasPaint);
 		}
 		if (canvasPaint.getColor() == Color.TRANSPARENT) {
@@ -215,8 +120,6 @@ public class BrushToolView extends View implements BrushToolPreview {
 			switch (currentTool) {
 				case BRUSH:
 				case CURSOR:
-					drawDrawerPreview(canvas);
-					break;
 				case LINE:
 					drawLinePreview(canvas);
 					break;

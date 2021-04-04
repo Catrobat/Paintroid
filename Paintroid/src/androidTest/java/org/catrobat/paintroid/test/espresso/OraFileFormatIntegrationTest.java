@@ -27,6 +27,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.hamcrest.core.AllOf;
 import org.junit.After;
 import org.junit.Before;
@@ -72,6 +73,9 @@ public class OraFileFormatIntegrationTest {
 
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class);
+
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
