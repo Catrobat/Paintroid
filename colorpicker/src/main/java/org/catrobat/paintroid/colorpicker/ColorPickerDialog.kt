@@ -117,7 +117,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
 
         materialDialog.setOnShowListener {
             materialDialog.window?.clearFlags(FLAG_NOT_FOCUSABLE or FLAG_ALT_FOCUSABLE_IM)
-            materialDialog.window?.setSoftInputMode(SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            materialDialog.window?.setSoftInputMode(SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         }
 
         return materialDialog
