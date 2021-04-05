@@ -46,6 +46,7 @@
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
             tools:ignore="LabelFor"
+            android:layoutDirection="ltr"
             tools:text="100" />
 
     </com.google.android.material.textfield.TextInputLayout>
