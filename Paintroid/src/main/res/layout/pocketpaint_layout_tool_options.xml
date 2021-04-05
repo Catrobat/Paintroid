@@ -28,7 +28,7 @@
         android:id="@+id/pocketpaint_layout_tool_specific_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:orientation="vertical"
-        android:visibility="visible"></LinearLayout>
+        android:layout_alignParentBottom="true">
+    </LinearLayout>
 </RelativeLayout>

@@ -47,7 +47,6 @@
             android:textStyle="bold"
             tools:ignore="LabelFor"
             android:gravity="center"
-            android:layoutDirection="ltr"
             tools:text="100" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -82,10 +81,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         app:singleSelection="true"
-        app:singleLine="true"
-        android:layoutDirection="ltr">
+        app:singleLine="true">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/pocketpaint_stroke_ibtn_circle"
