@@ -36,11 +36,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.core.content.FileProvider;
-import androidx.exifinterface.media.ExifInterface;
-
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.iotasks.BitmapReturnValue;
 
@@ -51,6 +46,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.Objects;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 
 public final class FileIO {
 	public static String filename = "image";
