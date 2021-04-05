@@ -33,6 +33,9 @@ public class FileIOTest {
 		assertEquals(90f, FileIO.getBitmapOrientation(exifInterface), 0);
 		when(exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)).thenReturn(ExifInterface.ORIENTATION_ROTATE_180);
 		assertEquals(180f, FileIO.getBitmapOrientation(exifInterface), 0);
-
+		when(exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)).thenReturn(ExifInterface.ORIENTATION_ROTATE_270);
+		assertEquals(270f, FileIO.getBitmapOrientation(exifInterface), 0);
+		when(exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)).thenReturn(ExifInterface.ORIENTATION_NORMAL);
+		assertEquals(0f, FileIO.getBitmapOrientation(exifInterface), 0);
 	}
 }
