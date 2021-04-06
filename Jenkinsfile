@@ -38,6 +38,7 @@ pipeline {
             // Pass the uid and the gid of the current user (jenkins-user) to the Dockerfile, so a
             // corresponding user can be added. This is needed to provide the jenkins user inside
             // the container for the ssh-agent to work.
+            // Test
             // Another way would be to simply map the passwd file, but would spoil additional information
             // Also hand in the group id of kvm to allow using /dev/kvm.
             additionalBuildArgs '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --build-arg KVM_GROUP_ID=$(getent group kvm | cut -d: -f3)'
