@@ -26,11 +26,11 @@ emulators {
         sdk()
     }
 
-    emulator 'android24', {
+    emulator 'android28', {
         avd {
-            systemImage = 'system-images;android-24;default;x86_64'
-            sdcardSizeMb = 200
-            hardwareProperties += ['hw.ramSize': 800, 'vm.heapSize': 128]
+            systemImage = 'system-images;android-28;default;x86_64'
+            sdcardSizeMb = 1024
+            hardwareProperties += ['hw.ramSize': 4096, 'vm.heapSize': 1024]
             screenDensity = 'xhdpi'
         }
 
