@@ -62,5 +62,11 @@ public class ButtonLayersRtlLayoutTest {
 		onView(withId(R.id.pocketpaint_layer_side_nav_button_delete))
 				.check(matches(isClickable()))
 				.perform(click());
+		onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
+				.check(matches(isClickable()))
+				.perform(click());
+		onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
+				.check(matches(isClickable()))
+				.perform(click());
 	}
 }

@@ -45,6 +45,7 @@
             android:background="@drawable/pocketpaint_round_rect_shape"
             android:textColor="?attr/colorAccent"
             android:textStyle="bold"
+            android:layoutDirection="ltr"
             tools:ignore="LabelFor"
             tools:text="100" />
 
