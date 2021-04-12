@@ -165,7 +165,7 @@
     <string name="pocketpaint_intro">Intro</string>
     <string name="pocketpaint_intro_split_screen_not_supported">Das Teilen des Bildschirms wird im Intro nicht unterstützt</string>
     <string name="pocketpaint_overwrite_title">Datei überschreiben?</string>
-    <string name="pocketpaint_overwrite">Du bist dabei ein vorhandenes Bild zu überschreiben (Tipp: Um es als neues Bild zu speichern, verwenden Sie die Option \"%s\". Trotzdem speichern?</string>
+    <string name="pocketpaint_overwrite">Du bist dabei ein vorhandenes Bild zu überschreiben (Tipp: Um es als neues Bild zu speichern, verwenden Sie die Option \"%s\"). Trotzdem speichern?</string>
     <string name="pocketpaint_like_us">Gefällt dir Pocket Paint?</string>
     <string name="pocketpaint_rate_us">Möchtest du Pocket Paint bewerten?</string>
     <string name="pocketpaint_feedback">Es tut uns leid, das zu hören. Wenn du deine Erfahrungen mit uns teilen möchtest, schreib uns an contact@catrobat.org</string>

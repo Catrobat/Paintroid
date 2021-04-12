@@ -52,7 +52,7 @@
     <string name="dialog_error_save_title">Error load/save file</string>
     <string name="dialog_error_sdcard_text">Check image or SD-card!</string>
     <string name="dialog_brush_width_text">Stroke width</string>
-    <string name="dialog_warning_new_image">ذخیره‌ی تغییرات؟</string>
+    <string name="dialog_warning_new_image">Save changes?</string>
     <string name="help_title">Help</string>
     <string name="help_content_eraser">Remove parts of the image like with an eraser.</string>
     <string name="help_content_brush">Tap on the symbols on the bottom bar to change the color or the brush size.</string>
@@ -62,18 +62,18 @@
     <string name="help_content_fill">Tap on the image to fill an area with the selected color.</string>
     <string name="help_content_cursor">Position the cursor where you want to draw. Tap to activate the cursor. Move your finger to draw. Tap again to deactivate.</string>
     <string name="help_content_transform">Use to transform the image.</string>
-    <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and tap again to stamp.</string>
+    <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move it, then tap on the checkmark to stamp.</string>
     <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
     <string name="help_content_line">Draw a straight line.</string>
-    <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
-    <string name="help_content_shape">Choose a shape and tap it to insert the selected shape.</string>
+    <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap on the checkmark to insert the text on the image.</string>
+    <string name="help_content_shape">Choose a shape and tap on the checkmark to insert the selected shape.</string>
     <string name="help_content_layer">Create new layers or modify existing ones.</string>
     <string name="help_content_color_chooser">Select or adjust a color.</string>
     <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="help_content_spray_can">Move your finger on the image to create a spray can pattern.</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="closing_security_question_title">Quit</string>
-    <string name="closing_security_question">ذخیره‌ی تغییرات؟</string>
+    <string name="closing_security_question">Save changes?</string>
     <string name="menu_new_image">New image</string>
     <string name="menu_discard_image">Discard image</string>
     <string name="no_longclick_on_hidden_layer">You are only able to merge or reorder if all layers are visible</string>
@@ -84,7 +84,7 @@
     <string name="menu_hide_menu">Fullscreen</string>
     <string name="share_image_menu">Share image</string>
     <string name="share_image_via_text">Send image via</string>
-    <string name="menu_rate_us">امتیاز بده!</string>
+    <string name="menu_rate_us">Rate us!</string>
     <string name="menu_export">Export</string>
     <string name="menu_feedback">Feedback</string>
     <string name="saved">Image saved</string>
@@ -101,7 +101,7 @@
     <string name="text_tool_dialog_format_options">Format options:</string>
     <string name="text_tool_dialog_underline_shortcut">U</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
-    <string name="text_tool_dialog_bold_shortcut">ب</string>
+    <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">Tap here to write</string>
     <string name="shape_tool_dialog_rect_title">Rectangle</string>
@@ -143,7 +143,7 @@
         As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
     <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
     <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
-    <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+    <string name="transform_info_text">Drag edges to their new position, tap on the checkmark to enlarge or crop the image area.</string>
     <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
     <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
     <string name="welcome_to_pocket_paint">Welcome To Pocket Paint</string>
@@ -161,7 +161,7 @@
     <string name="pocketpaint_about_title">About</string>
     <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
     <string name="pocketpaint_about_url_license_description">Pocket Paint source code license</string>
-    <string name="pocketpaint_about_url_catrobat_description">درباره \"کت ربات\"</string>
+    <string name="pocketpaint_about_url_catrobat_description">About Catrobat</string>
     <string name="pocketpaint_intro">Intro</string>
     <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen.</string>
     <string name="pocketpaint_overwrite_title">Overwrite File?</string>
