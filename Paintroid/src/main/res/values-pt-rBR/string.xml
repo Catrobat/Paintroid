@@ -184,6 +184,6 @@
     <string name="intro_bottom_navigation_color_description">Mostra a cor usada atualmente e abre o seletor de cores.</string>
     <string name="intro_bottom_navigation_layers_description">Abre o menu da camada e permite que você gerencie suas camadas.</string>
     <string name="pocketpaint_tool_icon_description">Ícone da ferramenta atual</string>
-    <string name="dialog_scale_title">A imagem é muito grande para carregar</string>
-    <string name="dialog_scale_message">A imagem é muito grande para ser carregada. Clique em OK para redimensionar a imagem automaticamente.</string>
+    <string name="dialog_scale_title">A imagem é grande demais para ser carregada</string>
+    <string name="dialog_scale_message">A imagem é grande demais para ser carregada. Clique em OK para redimensionar a imagem automaticamente.</string>
 </resources>
