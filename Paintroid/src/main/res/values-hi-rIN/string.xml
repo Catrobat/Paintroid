@@ -159,7 +159,7 @@
     <string name="next">अगला</string>
     <string name="skip">छोड़</string>
     <string name="pocketpaint_about_title">के बारे में</string>
-    <string name="pocketpaint_about_content">पॉकेट पेंट एक पिक्चर एडिटिंग लाइब्रेरी है, जो कैटोबाट प्रोजेक्ट का हिस्सा है। \n\n कैटरोबैट एक विज़ुअल प्रोग्रामिंग लैंग्वेज है और स्मार्टफ़ोन के लिए क्रिएटिविटी टूल्स का सेट है। पॉकेट पेंट का सोर्स कोड मुख्य रूप से% s। \ के तहत लाइसेंस प्राप्त होता है%s। \nFor लाइसेंस के सटीक विवरण नीचे दिए गए लिंक को देखें।</string>
+    <string name="pocketpaint_about_content">पॉकेट पेंट एक पिक्चर एडिटिंग लाइब्रेरी है, जो कैटोबाट प्रोजेक्ट का हिस्सा है। \n\n कैटरोबैट एक विज़ुअल प्रोग्रामिंग लैंग्वेज है और स्मार्टफ़ोन के लिए क्रिएटिविटी टूल्स का सेट है। पॉकेट पेंट का सोर्स कोड मुख्य रूप से \n\n के तहत लाइसेंस प्राप्त होता है %s \n लाइसेंस के सटीक विवरण नीचे दिए गए लिंक को देखें।</string>
     <string name="pocketpaint_about_url_license_description">पॉकेट पेंट स्रोत कोड लाइसेंस</string>
     <string name="pocketpaint_about_url_catrobat_description">कैटरोबैट के बारे में</string>
     <string name="pocketpaint_intro">पहचान</string>
