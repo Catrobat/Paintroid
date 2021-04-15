@@ -120,7 +120,7 @@ pipeline {
                             ./gradlew publishToMavenLocal
                     '''
                 }
-                archiveArtifacts artifacts: '**/*.aar'
+                archiveArtifacts artifacts: '**/*-release.aar'
             }
         }
     }
