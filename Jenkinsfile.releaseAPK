@@ -120,7 +120,7 @@ pipeline {
                             ./gradlew publishToMavenLocal
                     '''
                 }
-                archiveArtifacts '**/paintroid-signedRelease.aar'
+                archiveArtifacts artifacts: '**/*.aar'
             }
         }
     }
