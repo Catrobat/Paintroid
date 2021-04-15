@@ -96,33 +96,31 @@ pipeline {
             }
         }
 
-        stage('Approve upload to bintray.com') {
+        stage('Approve generation of AAR file') {
             options {
                 timeout(time: 60, unit: 'MINUTES')
             }
             steps {
                 script {
-                    env.APPROVE_UPLOAD_AAR = input message: 'User input required',
-                            parameters: [choice(name: 'Upload', choices: 'no\nyes',
-                                    description: 'Do you want to upload the AAR files to bintray.com?')]
+                    env.APPROVE_AAR = input message: 'User input required',
+                            parameters: [choice(name: 'Generate', choices: 'no\nyes',
+                                    description: 'Do you want to generate the AAR file?')]
                 }
             }
         }
 
-        stage('Bintray upload') {
+        stage('AAR file') {
             when {
-                environment name: 'APPROVE_UPLOAD_AAR', value: 'yes'
+                environment name: 'APPROVE_AAR', value: 'yes'
             }
             steps {
                 script {
                     sh '''
                             set +x
-                            ./gradlew bintrayUpload \
-                            -PbintrayUser=$bintrayUser \
-                            -PbintrayKey=$bintrayKey \
-                            -PdryRun=false
+                            ./gradlew publishToMavenLocal
                     '''
                 }
+                archiveArtifacts '**/paintroid-signedRelease.aar'
             }
         }
     }
