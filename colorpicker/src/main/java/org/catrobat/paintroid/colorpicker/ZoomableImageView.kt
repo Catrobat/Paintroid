@@ -300,7 +300,7 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
         inverse.mapPoints(touchPoint)
         val xPixel = touchPoint[0].toInt()
         val yPixel = touchPoint[1].toInt()
-        if (xPixel > bitmap.width || yPixel > bitmap.height || xPixel < 0 || yPixel < 0) {
+        if (xPixel >= bitmap.width || yPixel >= bitmap.height || xPixel < 0 || yPixel < 0) {
             // clicked outside of the image frame
             return
         }
