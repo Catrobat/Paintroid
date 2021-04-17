@@ -79,6 +79,8 @@ public interface MainActivityContracts {
 
 		void returnToPocketCode(String path);
 
+		void showToast(String msg, int duration);
+
 		void showToast(@StringRes int resId, int duration);
 
 		void showSaveErrorDialog();
