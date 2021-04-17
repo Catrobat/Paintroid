@@ -38,4 +38,13 @@ public final class ToastFactory {
 		currentToast = Toast.makeText(context, resId, duration);
 		return currentToast;
 	}
+
+	public static Toast makeText(Context context, String msg, int duration) {
+		if (currentToast != null) {
+			currentToast.cancel();
+		}
+
+		currentToast = Toast.makeText(context, msg, duration);
+		return currentToast;
+	}
 }
