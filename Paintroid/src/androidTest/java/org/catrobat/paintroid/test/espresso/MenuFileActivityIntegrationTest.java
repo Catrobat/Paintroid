@@ -350,6 +350,9 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("save1"));
+
 		onView(withText(R.string.save_button_text)).perform(click());
 
 		assertNotNull(activity.model.getSavedPictureUri());
@@ -368,6 +371,10 @@ public class MenuFileActivityIntegrationTest {
 				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_save_copy)).perform(click());
+
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("copy1"));
+
 		onView(withText(R.string.save_button_text)).perform(click());
 
 		File newFile = new File(activity.model.getSavedPictureUri().toString());

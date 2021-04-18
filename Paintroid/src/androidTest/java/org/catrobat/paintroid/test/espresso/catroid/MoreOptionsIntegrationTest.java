@@ -117,7 +117,7 @@ public class MoreOptionsIntegrationTest {
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
 		onTopBarView()
 				.performOpenMoreOptions();
-		onView(withText("Share image"))
+		onView(withText(R.string.share_image_menu))
 				.perform(click());
 		UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 		UiObject uiObject = mDevice.findObject(new UiSelector());
