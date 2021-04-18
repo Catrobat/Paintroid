@@ -1324,7 +1324,9 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false);
 
-		verify(navigator).showToast(R.string.saved, Toast.LENGTH_LONG);
+		String path = MainActivityPresenter.getPathFromUri(context, uri);
+
+		verify(navigator).showToast(context.getString(R.string.saved) + path, Toast.LENGTH_LONG);
 	}
 
 	@Test
@@ -1343,7 +1345,9 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true);
 
-		verify(navigator).showToast(R.string.copy, Toast.LENGTH_LONG);
+		String path = MainActivityPresenter.getPathFromUri(context, uri);
+
+		verify(navigator).showToast(context.getString(R.string.copy) + path, Toast.LENGTH_LONG);
 	}
 
 	@Test

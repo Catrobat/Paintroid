@@ -314,6 +314,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
+	public void showToast(String msg, int duration) {
+		ToastFactory.makeText(mainActivity, msg, duration).show();
+	}
+
+	@Override
 	public void showSaveErrorDialog() {
 		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.WARNING,
 				R.string.dialog_error_sdcard_text, R.string.dialog_error_save_title);
