@@ -156,7 +156,7 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		assertEquals("width should be the same", rectWidth, newWidth, Float.MIN_VALUE);
 		assertEquals("height should be the same", rectHeight, newHeight, Float.MIN_VALUE);
-		assertTrue("position should have moved", (newPosition.x == dragToX) && (newPosition.y == dragToY));
+		assertTrue("position should have moved", newPosition.x == dragToX && newPosition.y == dragToY);
 	}
 
 	@Test
@@ -206,8 +206,8 @@ public class BaseToolWithRectangleShapeToolTest {
 				toolPaint, workspace, commandManager);
 
 		assertTrue("rectangle should be smaller with scale 2",
-				(rectTool1.boxWidth > rectTool2.boxWidth)
-						&& (rectTool1.boxHeight > rectTool2.boxHeight));
+				rectTool1.boxWidth > rectTool2.boxWidth
+						&& rectTool1.boxHeight > rectTool2.boxHeight);
 	}
 
 	@Test

@@ -167,7 +167,7 @@ public class ShapeTool extends BaseToolWithRectangleShape {
 				paint.setStrokeWidth(shapeOutlineWidth);
 				paint.setStrokeCap(Paint.Cap.BUTT);
 				paint.setStrokeJoin(Paint.Join.MITER);
-				boolean antiAlias = (shapeOutlineWidth > 1);
+				boolean antiAlias = shapeOutlineWidth > 1;
 				paint.setAntiAlias(antiAlias);
 				break;
 			default:

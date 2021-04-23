@@ -91,8 +91,8 @@ public class ScrollingViewIntegrationTest {
 		);
 		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 
-		float yMiddle = (surfaceHeight / 2 + actionBarHeight + statusBarHeight);
-		float yTop = (actionBarHeight + statusBarHeight);
+		float yMiddle = surfaceHeight / 2 + actionBarHeight + statusBarHeight;
+		float yTop = actionBarHeight + statusBarHeight;
 		float yBottom = surfaceHeight + yTop - 1;
 
 		PointF middle = new PointF(xMiddle, yMiddle);
@@ -145,8 +145,8 @@ public class ScrollingViewIntegrationTest {
 		float xLeft = 1;
 		float xMiddle = surfaceWidth / 2;
 
-		float yMiddle = (surfaceHeight / 2 + actionBarHeight + statusBarHeight);
-		float yTop = (actionBarHeight + statusBarHeight);
+		float yMiddle = surfaceHeight / 2 + actionBarHeight + statusBarHeight;
+		float yTop = actionBarHeight + statusBarHeight;
 		float yBottom = surfaceHeight + yTop - 1;
 
 		PointF middle = new PointF(xMiddle, yMiddle);
@@ -226,7 +226,7 @@ public class ScrollingViewIntegrationTest {
 
 		PointF endPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface);
 
-		assertTrue("scrolling did not work", (startPointCanvas.x != endPointCanvas.x) || (startPointCanvas.y != endPointCanvas.y));
+		assertTrue("scrolling did not work", startPointCanvas.x != endPointCanvas.x || startPointCanvas.y != endPointCanvas.y);
 	}
 
 	public void longpressOnPointAndCheckIfCanvasPointHasNotChanged(PointF clickPoint) {
@@ -303,7 +303,7 @@ public class ScrollingViewIntegrationTest {
 
 		String message = "startX(" + startPointCanvas.x + ") != endX(" + endPointCanvas.x
 				+ ") || startY(" + startPointCanvas.y + ") != endY(" + endPointCanvas.y + ")";
-		assertTrue(message, (startPointCanvas.x != endPointCanvas.x) || (startPointCanvas.y != endPointCanvas.y));
+		assertTrue(message, startPointCanvas.x != endPointCanvas.x || startPointCanvas.y != endPointCanvas.y);
 	}
 
 	public void dragAndCheckIfCanvasHasNotMoved(PointF fromPoint, PointF toPoint) {

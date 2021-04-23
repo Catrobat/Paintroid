@@ -101,7 +101,7 @@ public class JavaFillAlgorithm implements FillAlgorithm {
 
 		for (i = col - 1; i >= 0; i--) {
 			if (!filledPixels[row][i] && (pixels[row][i] == replacementColor
-					|| (considerTolerance && isPixelWithinColorTolerance(pixels[row][i], replacementColor)))) {
+					|| considerTolerance && isPixelWithinColorTolerance(pixels[row][i], replacementColor))) {
 				pixels[row][i] = targetColor;
 				filledPixels[row][i] = true;
 			} else {
@@ -112,7 +112,7 @@ public class JavaFillAlgorithm implements FillAlgorithm {
 
 		for (i = col + 1; i < width; i++) {
 			if (!filledPixels[row][i] && (pixels[row][i] == replacementColor
-					|| (considerTolerance && isPixelWithinColorTolerance(pixels[row][i], replacementColor)))) {
+					|| considerTolerance && isPixelWithinColorTolerance(pixels[row][i], replacementColor))) {
 				pixels[row][i] = targetColor;
 				filledPixels[row][i] = true;
 			} else {
@@ -134,7 +134,7 @@ public class JavaFillAlgorithm implements FillAlgorithm {
 		Range newRange;
 		for (int col = range.start; col <= range.end; col++) {
 			if (!filledPixels[row][col] && (pixels[row][col] == replacementColor
-					|| (considerTolerance && isPixelWithinColorTolerance(pixels[row][col], replacementColor)))) {
+					|| considerTolerance && isPixelWithinColorTolerance(pixels[row][col], replacementColor))) {
 				newRange = generateRangeAndReplaceColor(row, col, directionUp);
 				ranges.add(newRange);
 
