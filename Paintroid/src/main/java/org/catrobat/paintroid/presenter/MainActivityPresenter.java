@@ -329,7 +329,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void switchBetweenVersions(@PermissionRequestCode int requestCode) {
-		if (navigator.isSdkAboveOrEqualQ()) {
+		if (navigator.isSdkAboveOrEqualM()) {
 			switch (requestCode) {
 				case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
 					askForReadAndWriteExternalStoragePermission(PERMISSION_REQUEST_CODE_LOAD_PICTURE);
@@ -840,6 +840,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				final int index = cursor.getColumnIndexOrThrow(column);
 				return cursor.getString(index);
 			}
+		} catch (IllegalArgumentException e) {
+			File file = new File(context.getCacheDir(), "tmp");
+			FileIO.saveFileFromUri(uri, file, context);
+			return file.getAbsolutePath();
 		} finally {
 			if (cursor != null) {
 				cursor.close();

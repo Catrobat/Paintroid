@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             if (receivedUri != null) {
                 try {
                     FileIO.filename = "image"
-                    val receivedBitmap = FileIO.getBitmapFromUri(contentResolver, receivedUri)
+                    val receivedBitmap = FileIO.getBitmapFromUri(contentResolver, receivedUri, applicationContext)
                     commandManager.setInitialStateCommand(commandFactory.createInitCommand(receivedBitmap))
                 } catch (e: IOException) {
                     Log.e("Can not read", "Unable to retrieve Bitmap from Uri")
