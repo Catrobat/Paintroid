@@ -875,9 +875,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 
 		if (saveAsCopy) {
-			navigator.showToast(context.getString(R.string.copy) + getPathFromUri(fileActivity, uri), Toast.LENGTH_LONG);
+			if (model.isOpenedFromCatroid()) {
+				navigator.showToast(R.string.copy, Toast.LENGTH_LONG);
+			} else {
+				navigator.showToast(context.getString(R.string.copy_to) + getPathFromUri(fileActivity, uri), Toast.LENGTH_LONG);
+			}
 		} else {
-			navigator.showToast(context.getString(R.string.saved) + getPathFromUri(fileActivity, uri), Toast.LENGTH_LONG);
+			if (model.isOpenedFromCatroid()) {
+				navigator.showToast(R.string.saved, Toast.LENGTH_LONG);
+			} else {
+				navigator.showToast(context.getString(R.string.saved_to) + getPathFromUri(fileActivity, uri), Toast.LENGTH_LONG);
+			}
 			model.setSavedPictureUri(uri);
 			model.setSaved(true);
 		}

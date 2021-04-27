@@ -1324,9 +1324,12 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false);
 
-		String path = MainActivityPresenter.getPathFromUri(context, uri);
-
-		verify(navigator).showToast(context.getString(R.string.saved) + path, Toast.LENGTH_LONG);
+		if (!model.isOpenedFromCatroid()) {
+			String path = MainActivityPresenter.getPathFromUri(context, uri);
+			verify(navigator).showToast(context.getString(R.string.saved_to) + path, Toast.LENGTH_LONG);
+		} else {
+			verify(navigator).showToast(R.string.saved, Toast.LENGTH_LONG);
+		}
 	}
 
 	@Test
@@ -1345,9 +1348,12 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true);
 
-		String path = MainActivityPresenter.getPathFromUri(context, uri);
-
-		verify(navigator).showToast(context.getString(R.string.copy) + path, Toast.LENGTH_LONG);
+		if (!model.isOpenedFromCatroid()) {
+			String path = MainActivityPresenter.getPathFromUri(context, uri);
+			verify(navigator).showToast(context.getString(R.string.copy_to) + path, Toast.LENGTH_LONG);
+		} else {
+			verify(navigator).showToast(R.string.copy, Toast.LENGTH_LONG);
+		}
 	}
 
 	@Test
