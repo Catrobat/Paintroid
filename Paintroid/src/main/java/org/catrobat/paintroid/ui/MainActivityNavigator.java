@@ -340,7 +340,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void showRequestPermanentlyDeniedPermissionRationaleDialog() {
-		AppCompatDialogFragment dialog = PermanentDenialPermissionInfoDialog.newInstance(mainActivity.getName());
+		AppCompatDialogFragment dialog = PermanentDenialPermissionInfoDialog.newInstance(mainActivity.getPackageName());
 		showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
 	}
 
