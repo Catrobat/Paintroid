@@ -210,22 +210,24 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
         super.onDraw(canvas)
         canvas.setMatrix(mMatrix)
 
-        canvasRect.set(0, 0, mBitmap.width, mBitmap.height)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            canvas.drawColor(backgroundSurfaceColor, PorterDuff.Mode.SRC)
-        } else {
-            canvas.apply {
-                save()
-                clipOutRect(canvasRect)
-                drawColor(backgroundSurfaceColor, PorterDuff.Mode.SRC)
-                restore()
+        if (this::mBitmap.isInitialized) {
+            canvasRect.set(0, 0, mBitmap.width, mBitmap.height)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                canvas.drawColor(backgroundSurfaceColor, PorterDuff.Mode.SRC)
+            } else {
+                canvas.apply {
+                    save()
+                    clipOutRect(canvasRect)
+                    drawColor(backgroundSurfaceColor, PorterDuff.Mode.SRC)
+                    restore()
+                }
             }
-        }
 
-        canvas.apply {
-            drawRect(canvasRect, checkeredPattern)
-            drawRect(canvasRect, boarderPaint)
-            drawBitmap(mBitmap, 0f, 0f, null)
+            canvas.apply {
+                drawRect(canvasRect, checkeredPattern)
+                drawRect(canvasRect, boarderPaint)
+                drawBitmap(mBitmap, 0f, 0f, null)
+            }
         }
     }
 
