@@ -38,6 +38,7 @@ import android.util.Log;
 
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.iotasks.BitmapReturnValue;
+import org.catrobat.paintroid.presenter.MainActivityPresenter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -186,7 +187,7 @@ public final class FileIO {
 		return new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), filename);
 	}
 
-	private static Bitmap decodeBitmapFromUri(ContentResolver resolver, @NonNull Uri uri, BitmapFactory.Options options) throws IOException {
+	private static Bitmap decodeBitmapFromUri(ContentResolver resolver, @NonNull Uri uri, BitmapFactory.Options options, Context context) throws IOException {
 		InputStream inputStream = resolver.openInputStream(uri);
 		Bitmap bitmap;
 		float angle;
@@ -202,7 +203,7 @@ public final class FileIO {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 				angle = getBitmapOrientationFromInputStream(resolver, uri);
 			} else {
-				angle = getBitmapOrientationFromUri(uri);
+				angle = getBitmapOrientationFromUri(uri, context);
 			}
 
 			return getOrientedBitmap(bitmap, angle);
@@ -226,8 +227,8 @@ public final class FileIO {
 		}
 	}
 
-	private static float getBitmapOrientationFromUri(@NonNull Uri uri) throws IOException {
-		ExifInterface exifInterface = new ExifInterface(uri.getPath());
+	private static float getBitmapOrientationFromUri(@NonNull Uri uri, Context context) throws IOException {
+		ExifInterface exifInterface = new ExifInterface(MainActivityPresenter.getPathFromUri(context, uri));
 		return getBitmapOrientation(exifInterface);
 	}
 
@@ -298,6 +299,28 @@ public final class FileIO {
 		}
 	}
 
+	public static void saveFileFromUri(Uri uri, File destFile, Context context) {
+		try (InputStream fileInputStream = context.getContentResolver().openInputStream(uri); OutputStream fileOutputStream = new FileOutputStream(destFile)) {
+			copyStreams(fileInputStream, fileOutputStream);
+		} catch (IOException e) {
+			Log.e("FileIO", "Can not copy streams.", e);
+		}
+	}
+
+	public static long copyStreams(InputStream from, OutputStream to) throws IOException {
+		byte[] buffer = new byte[4096];
+		long total = 0;
+		while (true) {
+			int read = from.read(buffer);
+			if (read == -1) {
+				break;
+			}
+			to.write(buffer, 0, read);
+			total += read;
+		}
+		return total;
+	}
+
 	public static int checkIfDifferentFile(String filename) {
 		if (currentFileNamePng == null && currentFileNameJpg == null && currentFileNameOra == null) {
 			return Constants.IS_NO_FILE;
@@ -328,10 +351,10 @@ public final class FileIO {
 		return sampleSize;
 	}
 
-	public static Bitmap getBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri) throws IOException {
+	public static Bitmap getBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inMutable = true;
-		return enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options));
+		return enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context));
 	}
 
 	public static boolean hasEnoughMemory(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
@@ -344,7 +367,7 @@ public final class FileIO {
 		activityManager.getMemoryInfo(memoryinfo);
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-		decodeBitmapFromUri(resolver, bitmapUri, options);
+		decodeBitmapFromUri(resolver, bitmapUri, options, context);
 		if (options.outHeight < 0 || options.outWidth < 0) {
 			throw new IOException("Can't load bitmap from uri");
 		}
@@ -373,7 +396,7 @@ public final class FileIO {
 		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 		activityManager.getMemoryInfo(memoryinfo);
 		BitmapFactory.Options options = new BitmapFactory.Options();
-		decodeBitmapFromUri(resolver, bitmapUri, options);
+		decodeBitmapFromUri(resolver, bitmapUri, options, context);
 		if (options.outHeight <= 0 || options.outWidth <= 0) {
 			throw new IOException("Can't load bitmap from uri");
 		}
@@ -387,12 +410,12 @@ public final class FileIO {
 				(int) availableWidth, (int) availableHeight);
 	}
 
-	public static BitmapReturnValue getBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
+	public static BitmapReturnValue getBitmapReturnValueFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inMutable = true;
 		options.inJustDecodeBounds = false;
 		boolean scaling = hasEnoughMemory(resolver, bitmapUri, context);
-		return new BitmapReturnValue(null, enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options)), scaling);
+		return new BitmapReturnValue(null, enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)), scaling);
 	}
 
 	public static BitmapReturnValue getScaledBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
@@ -400,7 +423,7 @@ public final class FileIO {
 		options.inMutable = true;
 		options.inJustDecodeBounds = false;
 		options.inSampleSize = getScaleFactor(resolver, bitmapUri, context);
-		return new BitmapReturnValue(null, enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options)), false);
+		return new BitmapReturnValue(null, enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)), false);
 	}
 
 	public static Bitmap getBitmapFromFile(File bitmapFile) {
