@@ -167,7 +167,7 @@ public class DragAndDropListView extends ListView implements ListItemLongClickHa
 	}
 
 	private void setOffsetToCenter(Rect viewBounds) {
-		offsetToCenter = (viewBounds.height() / 2);
+		offsetToCenter = viewBounds.height() / 2;
 	}
 
 	private void swapListItems() {
@@ -185,11 +185,11 @@ public class DragAndDropListView extends ListView implements ListItemLongClickHa
 			itemBelow = getChildAt(itemPositionBelow);
 		}
 
-		boolean canMergeUpwards = (itemAbove != null) && (downY < itemAbove.getY() + view.getHeight() / 2.f);
-		boolean canMergeDownwards = (itemBelow != null) && (downY > itemBelow.getY() - view.getHeight() / 2.f);
+		boolean canMergeUpwards = itemAbove != null && downY < itemAbove.getY() + view.getHeight() / 2.f;
+		boolean canMergeDownwards = itemBelow != null && downY > itemBelow.getY() - view.getHeight() / 2.f;
 
-		boolean isAbove = (itemBelow != null) && (downY > itemBelow.getY());
-		boolean isBelow = (itemAbove != null) && (downY < itemAbove.getY());
+		boolean isAbove = itemBelow != null && downY > itemBelow.getY();
+		boolean isBelow = itemAbove != null && downY < itemAbove.getY();
 
 		if (isAbove || isBelow) {
 			int swapWith = isAbove ? itemPositionBelow : itemPositionAbove;
@@ -214,7 +214,7 @@ public class DragAndDropListView extends ListView implements ListItemLongClickHa
 	}
 
 	private boolean isPositionValid(int position) {
-		return (position >= 0 && position < getCount());
+		return position >= 0 && position < getCount();
 	}
 
 	private void handleTouchUp() {

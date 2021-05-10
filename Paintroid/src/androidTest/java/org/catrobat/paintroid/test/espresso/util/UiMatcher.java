@@ -137,7 +137,7 @@ public final class UiMatcher {
 				}
 
 				ViewGroup viewGroup = (ViewGroup) viewParent;
-				return (viewGroup.indexOfChild(view) == position);
+				return viewGroup.indexOfChild(view) == position;
 			}
 		};
 	}
@@ -164,7 +164,7 @@ public final class UiMatcher {
 					return false;
 				}
 
-				return (((ViewGroup) tableLayout).indexOfChild((TableRow) tableRow) == rowIndex);
+				return ((ViewGroup) tableLayout).indexOfChild((TableRow) tableRow) == rowIndex;
 			}
 		};
 	}
@@ -174,7 +174,7 @@ public final class UiMatcher {
 		return new TypeSafeMatcher<View>() {
 			@Override
 			protected boolean matchesSafely(View view) {
-				ColorDrawable colorDrawable = ((ColorDrawable) view.getBackground());
+				ColorDrawable colorDrawable = (ColorDrawable) view.getBackground();
 
 				if (colorDrawable == null) {
 					return false;
@@ -209,8 +209,8 @@ public final class UiMatcher {
 				} else if (background instanceof LayerDrawable) {
 					LayerDrawable layerDrawable = (LayerDrawable) background;
 					Drawable drawable = layerDrawable.getDrawable(0);
-					return (drawable instanceof ColorDrawable
-							&& color == ((ColorDrawable) drawable).getColor());
+					return drawable instanceof ColorDrawable
+							&& color == ((ColorDrawable) drawable).getColor();
 				}
 				return false;
 			}
@@ -231,7 +231,7 @@ public final class UiMatcher {
 					return false;
 				}
 
-				TextView textView = ((TextView) view);
+				TextView textView = (TextView) view;
 
 				int textColor = textView.getCurrentTextColor();
 
@@ -255,11 +255,11 @@ public final class UiMatcher {
 					return false;
 				}
 
-				TextView textView = ((TextView) view);
+				TextView textView = (TextView) view;
 
 				int textColor = textView.getCurrentTextColor();
 
-				return (textColor == color);
+				return textColor == color;
 			}
 
 			@Override
@@ -278,7 +278,7 @@ public final class UiMatcher {
 					return false;
 				}
 
-				SeekBar seekbarView = ((SeekBar) view);
+				SeekBar seekbarView = (SeekBar) view;
 
 				int seekbarProgress = seekbarView.getProgress();
 
@@ -507,7 +507,7 @@ public final class UiMatcher {
 			@Override
 			public boolean matchesSafely(Root root) {
 				int type = root.getWindowLayoutParams().get().type;
-				return (type == WindowManager.LayoutParams.TYPE_TOAST);
+				return type == WindowManager.LayoutParams.TYPE_TOAST;
 			}
 		};
 	}
@@ -542,7 +542,7 @@ public final class UiMatcher {
 				int viewStartX = (int) view.getX();
 				int viewEndX = viewStartX + view.getWidth();
 
-				return (viewStartX < displayMiddle) && (viewEndX < displayMiddle);
+				return viewStartX < displayMiddle && viewEndX < displayMiddle;
 			}
 		};
 	}
@@ -561,7 +561,7 @@ public final class UiMatcher {
 				int viewStartX = (int) view.getX();
 				int viewEndX = viewStartX + view.getWidth();
 
-				return (viewStartX > displayMiddle) && (viewEndX > displayMiddle);
+				return viewStartX > displayMiddle && viewEndX > displayMiddle;
 			}
 		};
 	}

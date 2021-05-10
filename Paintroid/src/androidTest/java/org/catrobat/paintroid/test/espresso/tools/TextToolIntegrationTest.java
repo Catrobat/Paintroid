@@ -471,7 +471,7 @@ public class TextToolIntegrationTest {
 		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
 		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		int pixelAmount = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
-		assert (pixelAmount > numberOfBlackPixels - 15 && pixelAmount < numberOfBlackPixels + 15);
+		assert pixelAmount > numberOfBlackPixels - 15 && pixelAmount < numberOfBlackPixels + 15;
 
 		onTopBarView()
 				.performUndo();
@@ -484,7 +484,7 @@ public class TextToolIntegrationTest {
 
 		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		pixelAmount = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
-		assert (pixelAmount > numberOfBlackPixels - 15 && pixelAmount < numberOfBlackPixels + 15);
+		assert pixelAmount > numberOfBlackPixels - 15 && pixelAmount < numberOfBlackPixels + 15;
 	}
 
 	@Test

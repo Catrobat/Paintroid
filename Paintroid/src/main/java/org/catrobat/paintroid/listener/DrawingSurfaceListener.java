@@ -134,7 +134,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					}
 
 					currentTool.handleMove(canvasTouchPoint);
-				} else if (event.getPointerCount() == 1 && (currentTool.handToolMode())) {
+				} else if (event.getPointerCount() == 1 && currentTool.handToolMode()) {
 					float xOld;
 					float yOld;
 					if (autoScrollTask.isRunning()) {
@@ -167,7 +167,7 @@ public class DrawingSurfaceListener implements OnTouchListener {
 					float pointerDistanceOld = pointerDistance;
 					pointerDistance = calculatePointerDistance(event);
 					if (pointerDistanceOld > 0 && pointerDistanceOld != pointerDistance) {
-						float scale = (pointerDistance / pointerDistanceOld);
+						float scale = pointerDistance / pointerDistanceOld;
 						callback.multiplyPerspectiveScale(scale);
 					}
 

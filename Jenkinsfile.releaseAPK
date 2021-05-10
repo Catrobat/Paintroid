@@ -31,7 +31,7 @@ pipeline {
 
         // Code coverage
         JACOCO_XML = "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/coverage/debug/report.xml"
-        JACOCO_UNIT_XML = "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml"
+        JACOCO_UNIT_XML = "${env.GRADLE_PROJECT_MODULE_NAME}/build/reports/jacoco/jacocoTestDebugUnitTestReport/jacoco.xml"
 
         // place the cobertura xml relative to the source, so that the source can be found
         JAVA_SRC = "${env.GRADLE_PROJECT_MODULE_NAME}/src/main/java"
