@@ -259,7 +259,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
-		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace);
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, false);
 		verifyNoMoreInteractions(interactor);
 	}
 
@@ -489,14 +489,14 @@ public class MainActivityPresenterTest {
 	public void testSaveCopyConfirmCLickedThenSaveImage() {
 		presenter.saveCopyConfirmClicked(0);
 
-		verify(interactor).saveCopy(presenter, 0, workspace);
+		verify(interactor).saveCopy(presenter, 0, workspace, false);
 	}
 
 	@Test
 	public void testSaveCopyConfirmClickedThenUseRequestCode() {
 		presenter.saveCopyConfirmClicked(-1);
 
-		verify(interactor).saveCopy(presenter, -1, workspace);
+		verify(interactor).saveCopy(presenter, -1, workspace, false);
 	}
 
 	@Test
@@ -925,7 +925,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnSaveImagePostExecuteWhenFailedThenShowDialog() {
-		presenter.onSaveImagePostExecute(0, null, false);
+		presenter.onSaveImagePostExecute(0, null, false, false);
 
 		verify(navigator).showSaveErrorDialog();
 	}
@@ -1000,7 +1000,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace));
+		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(false));
 	}
 
 	@Test
@@ -1174,7 +1174,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
-		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace);
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, false);
 	}
 
 	@Test
@@ -1313,7 +1313,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnSaveImagePostExecuteThenDismissProgressDialog() {
-		presenter.onSaveImagePostExecute(0, null, false);
+		presenter.onSaveImagePostExecute(0, null, false, false);
 
 		verify(navigator).dismissIndeterminateProgressDialog();
 	}
@@ -1322,18 +1322,21 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePostExecuteWhenNotSavedAsCopyThenShowSaveToast() {
 		Uri uri = mock(Uri.class);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false, false);
 
-		String path = MainActivityPresenter.getPathFromUri(context, uri);
-
-		verify(navigator).showToast(context.getString(R.string.saved) + path, Toast.LENGTH_LONG);
+		if (!model.isOpenedFromCatroid()) {
+			String path = MainActivityPresenter.getPathFromUri(context, uri);
+			verify(navigator).showToast(context.getString(R.string.saved_to) + path, Toast.LENGTH_LONG);
+		} else {
+			verify(navigator).showToast(R.string.saved, Toast.LENGTH_LONG);
+		}
 	}
 
 	@Test
 	public void testOnSaveImagePostExecuteWhenNotSavedAsCopyThenSetModelUri() {
 		Uri uri = mock(Uri.class);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false, false);
 
 		verify(model).setSavedPictureUri(uri);
 		verify(model).setSaved(true);
@@ -1343,18 +1346,21 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePostExecuteWhenSavedAsCopyThenShowCopyToast() {
 		Uri uri = mock(Uri.class);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true, false);
 
-		String path = MainActivityPresenter.getPathFromUri(context, uri);
-
-		verify(navigator).showToast(context.getString(R.string.copy) + path, Toast.LENGTH_LONG);
+		if (!model.isOpenedFromCatroid()) {
+			String path = MainActivityPresenter.getPathFromUri(context, uri);
+			verify(navigator).showToast(context.getString(R.string.copy_to) + path, Toast.LENGTH_LONG);
+		} else {
+			verify(navigator).showToast(R.string.copy, Toast.LENGTH_LONG);
+		}
 	}
 
 	@Test
 	public void testOnSaveImagePostExecuteWhenSavedAsCopyThenDoNotTouchModel() {
 		Uri uri = mock(Uri.class);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true, false);
 
 		verify(model, never()).setSavedPictureUri(any(Uri.class));
 		verify(model, never()).setCameraImageUri(any(Uri.class));
@@ -1368,7 +1374,7 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePostExecuteWhenSavedThenBroadcastToPictureGallery() {
 		Uri uri = mock(Uri.class);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false, false);
 
 		verify(navigator).broadcastAddPictureToGallery(uri);
 	}
@@ -1377,7 +1383,7 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePostExecuteWhenSavedAsCopyThenBroadcastToPictureGallery() {
 		Uri uri = mock(Uri.class);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true, false);
 
 		verify(navigator).broadcastAddPictureToGallery(uri);
 	}
@@ -1387,7 +1393,7 @@ public class MainActivityPresenterTest {
 		Uri uri = mock(Uri.class);
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false, false);
 
 		verify(navigator, never()).broadcastAddPictureToGallery(uri);
 	}
@@ -1397,7 +1403,7 @@ public class MainActivityPresenterTest {
 		Uri uri = mock(Uri.class);
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true, false);
 
 		verify(navigator).broadcastAddPictureToGallery(uri);
 	}
@@ -1412,7 +1418,7 @@ public class MainActivityPresenterTest {
 		Command command = mock(Command.class);
 		when(commandFactory.createInitCommand(300, 500)).thenReturn(command);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_NEW_EMPTY, uri, false);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_NEW_EMPTY, uri, false, false);
 
 		verify(commandManager).setInitialStateCommand(command);
 		verify(commandManager).reset();
@@ -1422,7 +1428,7 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePostExecuteWhenDefaultThenDoNotShowDialog() {
 		Uri uri = mock(Uri.class);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false, false);
 
 		verify(navigator, never()).startLoadImageActivity(anyInt());
 		verify(navigator, never()).returnToPocketCode(anyString());
@@ -1433,7 +1439,7 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePostExecuteWhenFinishThenFinishActivity() {
 		Uri uri = mock(Uri.class);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false, false);
 
 		verify(navigator).finishActivity();
 	}
@@ -1442,7 +1448,7 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePostExecuteWhenLoadThenStartActivity() {
 		Uri uri = mock(Uri.class);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_LOAD_NEW, uri, false);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_LOAD_NEW, uri, false, false);
 
 		verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
 	}
@@ -1453,7 +1459,7 @@ public class MainActivityPresenterTest {
 		when(uri.getPath()).thenReturn("testPath");
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 
-		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false);
+		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false, false);
 
 		verify(navigator).returnToPocketCode("testPath");
 	}
@@ -1462,7 +1468,7 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePostExecuteWhenInvalidRequestThenThrowException() {
 		Uri uri = mock(Uri.class);
 
-		presenter.onSaveImagePostExecute(0, uri, false);
+		presenter.onSaveImagePostExecute(0, uri, false, false);
 	}
 
 	@Test

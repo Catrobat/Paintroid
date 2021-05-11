@@ -283,8 +283,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void showOverwriteDialog(int permissionCode) {
-		navigator.showOverwriteDialog(permissionCode);
+	public void showOverwriteDialog(int permissionCode, boolean isExport) {
+		navigator.showOverwriteDialog(permissionCode, isExport);
 	}
 
 	@Override
@@ -327,8 +327,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		commandManager.addCommand(commandFactory.createResetCommand());
 	}
 
-	@Override
 	public void switchBetweenVersions(@PermissionRequestCode int requestCode) {
+		switchBetweenVersions(requestCode, false);
+	}
+
+	@Override
+	public void switchBetweenVersions(@PermissionRequestCode int requestCode, boolean isExport) {
 		if (navigator.isSdkAboveOrEqualM()) {
 			switch (requestCode) {
 				case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
@@ -340,7 +344,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					showLikeUsDialogIfFirstTimeSave();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
-					saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT);
+					saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT, isExport);
 					checkforDefaultFilename();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW:
@@ -508,9 +512,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		interactor.saveImage(this, requestCode, workspace, uri);
 	}
 
-	@Override
 	public void saveCopyConfirmClicked(int requestCode) {
-		interactor.saveCopy(this, requestCode, workspace);
+		saveCopyConfirmClicked(requestCode, false);
+	}
+
+	@Override
+	public void saveCopyConfirmClicked(int requestCode, boolean isExport) {
+		interactor.saveCopy(this, requestCode, workspace, isExport);
 	}
 
 	@Override
@@ -870,7 +878,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void onSaveImagePostExecute(@SaveImageRequestCode int requestCode, Uri uri, boolean saveAsCopy) {
+	public void onSaveImagePostExecute(@SaveImageRequestCode int requestCode, Uri uri, boolean saveAsCopy, boolean isExport) {
 		navigator.dismissIndeterminateProgressDialog();
 
 		if (uri == null) {
@@ -879,9 +887,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 
 		if (saveAsCopy) {
-			navigator.showToast(context.getString(R.string.copy) + getPathFromUri(fileActivity, uri), Toast.LENGTH_LONG);
+			if (model.isOpenedFromCatroid() && !isExport) {
+				navigator.showToast(R.string.copy, Toast.LENGTH_LONG);
+			} else {
+				navigator.showToast(context.getString(R.string.copy_to) + getPathFromUri(fileActivity, uri), Toast.LENGTH_LONG);
+			}
 		} else {
-			navigator.showToast(context.getString(R.string.saved) + getPathFromUri(fileActivity, uri), Toast.LENGTH_LONG);
+			if (model.isOpenedFromCatroid() && !isExport) {
+				navigator.showToast(R.string.saved, Toast.LENGTH_LONG);
+			} else {
+				navigator.showToast(context.getString(R.string.saved_to) + getPathFromUri(fileActivity, uri), Toast.LENGTH_LONG);
+			}
 			model.setSavedPictureUri(uri);
 			model.setSaved(true);
 		}

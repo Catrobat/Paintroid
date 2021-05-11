@@ -28,7 +28,7 @@ import org.catrobat.paintroid.tools.Workspace
 import java.io.IOException
 import java.lang.ref.WeakReference
 
-class SaveImageAsync(activity: SaveImageCallback, private val requestCode: Int, workspace: Workspace, uri: Uri?, saveAsCopy: Boolean) : AsyncTask<Void?, Void?, Uri?>() {
+class SaveImageAsync(activity: SaveImageCallback, private val requestCode: Int, workspace: Workspace, uri: Uri?, saveAsCopy: Boolean, val isExport: Boolean = false) : AsyncTask<Void?, Void?, Uri?>() {
 	private val callbackRef: WeakReference<SaveImageCallback> = WeakReference(activity)
 	private var uri: Uri?
 	private val saveAsCopy: Boolean
@@ -106,13 +106,13 @@ class SaveImageAsync(activity: SaveImageCallback, private val requestCode: Int, 
 	override fun onPostExecute(uri: Uri?) {
 		val callback = callbackRef.get()
 		if (callback != null && !callback.isFinishing) {
-			callback.onSaveImagePostExecute(requestCode, uri, saveAsCopy)
+			callback.onSaveImagePostExecute(requestCode, uri, saveAsCopy, isExport)
 		}
 	}
 
 	interface SaveImageCallback {
 		fun onSaveImagePreExecute(requestCode: Int)
-		fun onSaveImagePostExecute(requestCode: Int, uri: Uri?, saveAsCopy: Boolean)
+		fun onSaveImagePostExecute(requestCode: Int, uri: Uri?, saveAsCopy: Boolean, isExport: Boolean = false)
 		val contentResolver: ContentResolver?
 		val isFinishing: Boolean
 	}

@@ -59,7 +59,7 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
-		void showOverwriteDialog(int permissionCode);
+		void showOverwriteDialog(int permissionCode, boolean isExport);
 
 		void showPngInformationDialog();
 
@@ -192,7 +192,7 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
-		void showOverwriteDialog(int permissionCode);
+		void showOverwriteDialog(int permissionCode, boolean isExport);
 
 		void showPngInformationDialog();
 
@@ -204,7 +204,7 @@ public interface MainActivityContracts {
 
 		void onNewImage();
 
-		void switchBetweenVersions(int requestCode);
+		void switchBetweenVersions(int requestCode, boolean isExport);
 
 		void handleActivityResult(int requestCode, int resultCode, Intent data);
 
@@ -214,7 +214,7 @@ public interface MainActivityContracts {
 
 		void saveImageConfirmClicked(int requestCode, Uri uri);
 
-		void saveCopyConfirmClicked(int requestCode);
+		void saveCopyConfirmClicked(int requestCode, boolean isExport);
 
 		void undoClicked();
 
@@ -292,7 +292,7 @@ public interface MainActivityContracts {
 	}
 
 	interface Interactor {
-		void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace);
+		void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace, boolean isExport);
 
 		void createFile(CreateFileAsync.CreateFileCallback callback, int requestCode, @Nullable String filename);
 

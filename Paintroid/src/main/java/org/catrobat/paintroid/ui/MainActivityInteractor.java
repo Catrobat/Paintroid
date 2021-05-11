@@ -31,8 +31,8 @@ import org.catrobat.paintroid.tools.Workspace;
 public class MainActivityInteractor implements MainActivityContracts.Interactor {
 
 	@Override
-	public void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace) {
-		new SaveImageAsync(callback, requestCode, workspace, null, true).execute();
+	public void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace, boolean isExport) {
+		new SaveImageAsync(callback, requestCode, workspace, null, true, isExport).execute();
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class MainActivityInteractor implements MainActivityContracts.Interactor 
 
 	@Override
 	public void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace, Uri uri) {
-		new SaveImageAsync(callback, requestCode, workspace, uri, false).execute();
+		new SaveImageAsync(callback, requestCode, workspace, uri, false, false).execute();
 	}
 
 	@Override
