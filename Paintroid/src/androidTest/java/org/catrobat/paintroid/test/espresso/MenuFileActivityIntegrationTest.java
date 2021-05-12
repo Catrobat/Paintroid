@@ -332,7 +332,9 @@ public class MenuFileActivityIntegrationTest {
 		onView(withText(R.string.save_button_text)).perform(click());
 
 		assertNotNull(activity.model.getSavedPictureUri());
-		assertNotSame("", MainActivityPresenter.getPathFromUri(this.activity, activity.model.getSavedPictureUri()));
+		if (!activity.model.isOpenedFromCatroid()) {
+			assertNotSame("", MainActivityPresenter.getPathFromUri(this.activity, activity.model.getSavedPictureUri()));
+		}
 
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 	}
@@ -358,7 +360,9 @@ public class MenuFileActivityIntegrationTest {
 		onView(withText(R.string.save_button_text)).perform(click());
 
 		assertNotNull(activity.model.getSavedPictureUri());
-		assertNotSame("", MainActivityPresenter.getPathFromUri(this.activity, activity.model.getSavedPictureUri()));
+		if (!activity.model.isOpenedFromCatroid()) {
+			assertNotSame("", MainActivityPresenter.getPathFromUri(this.activity, activity.model.getSavedPictureUri()));
+		}
 
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 
@@ -385,7 +389,9 @@ public class MenuFileActivityIntegrationTest {
 		assertNotSame("Changes to saved", oldFile, newFile);
 
 		assertNotNull(activity.model.getSavedPictureUri());
-		assertNotSame("", MainActivityPresenter.getPathFromUri(this.activity, activity.model.getSavedPictureUri()));
+		if (!activity.model.isOpenedFromCatroid()) {
+			assertNotSame("", MainActivityPresenter.getPathFromUri(this.activity, activity.model.getSavedPictureUri()));
+		}
 
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 	}
