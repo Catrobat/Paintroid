@@ -59,7 +59,7 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
-		void showOverwriteDialog(int permissionCode);
+		void showOverwriteDialog(int permissionCode, boolean isExport);
 
 		void showPngInformationDialog();
 
@@ -192,7 +192,7 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
-		void showOverwriteDialog(int permissionCode);
+		void showOverwriteDialog(int permissionCode, boolean isExport);
 
 		void showPngInformationDialog();
 
@@ -204,7 +204,7 @@ public interface MainActivityContracts {
 
 		void onNewImage();
 
-		void switchBetweenVersions(int requestCode);
+		void switchBetweenVersions(int requestCode, boolean isExport);
 
 		void handleActivityResult(int requestCode, int resultCode, Intent data);
 

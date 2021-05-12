@@ -13,12 +13,14 @@ import androidx.appcompat.app.AlertDialog;
 
 public class OverwriteDialog extends MainActivityDialogFragment {
 	private int permission;
+	private boolean isExport;
 
-	public static OverwriteDialog newInstance(int permissionCode) {
+	public static OverwriteDialog newInstance(int permissionCode, boolean isExport) {
 		OverwriteDialog dialog = new OverwriteDialog();
 		Bundle bundle = new Bundle();
 
 		bundle.putInt("permission", permissionCode);
+		bundle.putBoolean("isExport", isExport);
 		dialog.setArguments(bundle);
 
 		return dialog;
@@ -29,6 +31,7 @@ public class OverwriteDialog extends MainActivityDialogFragment {
 		super.onCreate(savedInstanceState);
 		Bundle arguments = getArguments();
 		permission = arguments.getInt("permission");
+		isExport = arguments.getBoolean("isExport");
 	}
 
 	@NonNull
@@ -42,7 +45,7 @@ public class OverwriteDialog extends MainActivityDialogFragment {
 				.setPositiveButton(R.string.overwrite_button_text, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						getPresenter().switchBetweenVersions(permission);
+						getPresenter().switchBetweenVersions(permission, isExport);
 						dismiss();
 					}
 				})
