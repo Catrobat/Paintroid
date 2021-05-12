@@ -247,8 +247,8 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void showOverwriteDialog(int permissionCode) {
-		OverwriteDialog overwriteDialog = OverwriteDialog.newInstance(permissionCode);
+	public void showOverwriteDialog(int permissionCode, boolean isExport) {
+		OverwriteDialog overwriteDialog = OverwriteDialog.newInstance(permissionCode, isExport);
 		overwriteDialog.show(mainActivity.getSupportFragmentManager(), Constants.OVERWRITE_INFORMATION_DIALOG_TAG);
 	}
 
@@ -423,7 +423,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 			FileIO.catroidFlag = true;
 			FileIO.isCatrobatImage = false;
-			mainActivity.getPresenter().switchBetweenVersions(permissionCode);
+			mainActivity.getPresenter().switchBetweenVersions(permissionCode, isExport);
 			return;
 		}
 
@@ -432,7 +432,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 			isStandard = true;
 		}
 
-		SaveInformationDialog saveInfodialog = SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard);
+		SaveInformationDialog saveInfodialog = SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard, isExport);
 		saveInfodialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_INFORMATION_DIALOG_TAG);
 	}
 
