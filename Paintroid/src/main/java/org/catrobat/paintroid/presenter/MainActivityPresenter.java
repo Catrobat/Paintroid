@@ -119,10 +119,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private boolean isExport = false;
 
 	public MainActivityPresenter(Activity activity, MainView view, Model model, Workspace workspace, Navigator navigator,
-			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
-			DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
-			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController,
-			UserPreferences sharedPreferences, Context context) {
+	                             Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
+	                             DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
+	                             CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController,
+	                             UserPreferences sharedPreferences, Context context) {
 		this.fileActivity = activity;
 		this.view = view;
 		this.model = model;
@@ -375,11 +375,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	private void askForReadAndWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
 		if (model.isOpenedFromCatroid() && requestCode == PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH) {
-			if (!navigator.isSdkAboveOrEqualQ()) {
-				handleRequestPermissionsResult(requestCode,
-						new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-						new int[]{PackageManager.PERMISSION_GRANTED});
-			}
+			handleRequestPermissionsResult(requestCode,
+					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+					new int[]{PackageManager.PERMISSION_GRANTED});
 
 			return;
 		}
@@ -630,7 +628,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void restoreState(boolean isFullscreen, boolean isSaved, boolean isOpenedFromCatroid,
-			boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri) {
+	                         boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri) {
 		model.setFullscreen(isFullscreen);
 		model.setSaved(isSaved);
 		model.setOpenedFromCatroid(isOpenedFromCatroid);
