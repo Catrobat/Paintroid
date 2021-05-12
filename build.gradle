@@ -45,7 +45,7 @@ ext {
     androidSupportLibraryVersion = '28.0.0'
 
     androidVersionCode = 38
-    androidVersionName = '2.7.1'
+    androidVersionName = '2.7.1-PAINTROID-246'
 }
 
 if(project.hasProperty("snapshot")) {
