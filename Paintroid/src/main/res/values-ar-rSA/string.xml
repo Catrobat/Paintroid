@@ -87,7 +87,9 @@
     <string name="menu_rate_us">قم بالتقييم!</string>
     <string name="menu_export">تصدير</string>
     <string name="menu_feedback">الملاحظات</string>
+    <string name="saved_to">تم حفظ الصورة في\n</string>
     <string name="saved">تم حفظ الصورة</string>
+    <string name="copy_to">تم حفظ النسخ في\n</string>
     <string name="copy">النسخة المحفوظة</string>
     <string name="menu_quit">إنهاء/خروج</string>
     <string name="save_button_text">حفظ</string>

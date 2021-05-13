@@ -87,7 +87,9 @@
     <string name="menu_rate_us">हमें दर दे!</string>
     <string name="menu_export">निर्यात करें</string>
     <string name="menu_feedback">प्रतिपुष्टि</string>
+    <string name="saved_to">छवि को सहेजा गया\n</string>
     <string name="saved">चित्र सहेज दिया गया</string>
+    <string name="copy_to">प्रतिलिपि यहां सहेजी गई\n</string>
     <string name="copy">प्रतिलिपि सहेज दिया गया</string>
     <string name="menu_quit">बंद करें</string>
     <string name="save_button_text">सहेजें</string>

@@ -87,7 +87,9 @@
     <string name="menu_rate_us">Valutaci!</string>
     <string name="menu_export">Esporta</string>
     <string name="menu_feedback">Feedback</string>
+    <string name="saved_to">Immagine salvata in\n</string>
     <string name="saved">Immagine salvata</string>
+    <string name="copy_to">Copia salvata in\n</string>
     <string name="copy">Copia salvata</string>
     <string name="menu_quit">Esci</string>
     <string name="save_button_text">Salva</string>
