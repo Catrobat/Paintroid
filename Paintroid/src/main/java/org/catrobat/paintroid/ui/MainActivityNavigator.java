@@ -22,6 +22,7 @@ package org.catrobat.paintroid.ui;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -181,7 +182,10 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		} catch (ActivityNotFoundException e) {
 			Uri uriNoPlayStore = Uri.parse("http://play.google.com/store/apps/details?id=" + applicationId);
 			Intent noPlayStoreInstalled = new Intent(Intent.ACTION_VIEW, uriNoPlayStore);
-			mainActivity.startActivity(noPlayStoreInstalled);
+			ActivityInfo activityInfo = noPlayStoreInstalled.resolveActivityInfo(mainActivity.getPackageManager(), noPlayStoreInstalled.getFlags());
+			if (activityInfo.exported) {
+				mainActivity.startActivity(noPlayStoreInstalled);
+			}
 		}
 	}
 
