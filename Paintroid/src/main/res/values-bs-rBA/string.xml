@@ -87,7 +87,9 @@
     <string name="menu_rate_us">Ocijeni nas!</string>
     <string name="menu_export">Export</string>
     <string name="menu_feedback">Feedback</string>
+    <string name="saved_to">Image saved to\n</string>
     <string name="saved">Slika sačuvana</string>
+    <string name="copy_to">Copy saved to\n</string>
     <string name="copy">Kopija sačuvana</string>
     <string name="menu_quit">Quit</string>
     <string name="save_button_text">Sačuvaj</string>

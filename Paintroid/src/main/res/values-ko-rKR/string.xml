@@ -87,7 +87,9 @@
     <string name="menu_rate_us">평가하기</string>
     <string name="menu_export">내보내기</string>
     <string name="menu_feedback">피드백</string>
+    <string name="saved_to">이미지 저장\n</string>
     <string name="saved">이미지가 저장되었습니다</string>
+    <string name="copy_to">사본이 저장되었습니다.\n</string>
     <string name="copy">복사본이 저장되었습니다</string>
     <string name="menu_quit">종료</string>
     <string name="save_button_text">저장</string>

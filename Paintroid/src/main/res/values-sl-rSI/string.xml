@@ -87,7 +87,9 @@
     <string name="menu_rate_us">Rate us!</string>
     <string name="menu_export">Izvozi</string>
     <string name="menu_feedback">Feedback</string>
+    <string name="saved_to">Image saved to\n</string>
     <string name="saved">slika shranjena</string>
+    <string name="copy_to">Copy saved to\n</string>
     <string name="copy">Shranjena kopija</string>
     <string name="menu_quit">Prekini</string>
     <string name="save_button_text">Shrani</string>

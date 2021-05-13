@@ -87,7 +87,9 @@
     <string name="menu_rate_us">Note-nous !</string>
     <string name="menu_export">Exportation</string>
     <string name="menu_feedback">Vos commentaires</string>
+    <string name="saved_to">Image enregistrée sur\n</string>
     <string name="saved">Image enregistrée</string>
+    <string name="copy_to">Copie enregistrée dans\n</string>
     <string name="copy">Copie enregistrée</string>
     <string name="menu_quit">Quitter</string>
     <string name="save_button_text">Enregistrer</string>

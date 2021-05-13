@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">ਜੇਬ ਪੇਂਟ</string>
+    <string name="button_brush">ਬੁਰਸ਼</string>
+    <string name="button_cursor">ਕਰਸਰ</string>
+    <string name="button_pipette">ਪਾਈਪੇਟ</string>
+    <string name="button_undo">ਵਾਪਿਸ</string>
+    <string name="button_redo">ਦੁਬਾਰਾ ਕਰੋ</string>
+    <string name="button_info">ਜਾਣਕਾਰੀ</string>
+    <string name="button_stamp">ਸਟੈਂਪ</string>
+    <string name="button_import_image">ਚਿੱਤਰ ਆਯਾਤ ਕਰੋ</string>
+    <string name="button_eraser">ਈਰੇਜ਼ਰ</string>
+    <string name="button_transform">ਤਬਦੀਲੀ</string>
+    <string name="button_fill">ਭਰੋ</string>
+    <string name="button_line">ਲਾਈਨ</string>
+    <string name="button_text">ਟੈਕਸਟ</string>
+    <string name="button_shape">ਆਕਾਰ</string>
+    <string name="button_hand">ਹੱਥ</string>
+    <string name="button_spray_can">ਸਪਰੇ ਕਰ ਸਕਦੇ ਹੋ</string>
+    <string name="button_apply">ਲਾਗੂ ਕਰੋ</string>
+    <string name="button_checkmark">ਚੈੱਕਮਾਰਕ</string>
+    <string name="done">ਹੋ ਗਿਆ</string>
+    <string name="gallery">ਗੈਲਰੀ</string>
+    <string name="load_sticker_error">ਸਟਿੱਕਰ ਲੋਡ ਨਹੀਂ ਕਰ ਸਕਿਆ</string>
+    <string name="error_unknown_error">ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ.</string>
+    <string name="cap_circle">ਚੱਕਰ</string>
+    <string name="cap_square">ਵਰਗ</string>
+    <string name="stamptool_paste">ਚਿਪਕਾਓ</string>
+    <string name="stamptool_copy">ਕਾੱਪੀ</string>
+    <string name="stamptool_cut">ਕੱਟੋ</string>
+    <string name="stickers">ਸਟਿੱਕਰ</string>
+    <string name="dialog_tools_title">ਸੰਦ</string>
+    <string name="dialog_error_save_title">ਫਾਈਲ ਲੋਡ / ਸੇਵ ਕਰਨ ਦੌਰਾਨ ਗਲਤੀ</string>
+    <string name="dialog_error_sdcard_text">ਚੈੱਕ ਚਿੱਤਰ ਨੂੰ ਜ SD ਕਾਰਡ!</string>
+    <string name="dialog_brush_width_text">ਸਟਰੋਕ ਚੌੜਾਈ</string>
+    <string name="dialog_warning_new_image">ਤਬਦੀਲੀ ਸੰਭਾਲੋ?</string>
+    <string name="help_title">ਮਦਦ ਕਰੋ</string>
+    <string name="help_content_eraser">ਚਿੱਤਰ ਦੇ ਕੁਝ ਹਿੱਸਿਆਂ ਨੂੰ ਇਜਰੇ ਵਾਂਗ ਹਟਾਓ.</string>
+    <string name="help_content_brush">ਰੰਗ ਜਾਂ ਬੁਰਸ਼ ਦੇ ਆਕਾਰ ਨੂੰ ਬਦਲਣ ਲਈ ਤਲ ਬਾਰ \'ਤੇ ਚਿੰਨ੍ਹਾਂ\' ਤੇ ਟੈਪ ਕਰੋ.</string>
+    <string name="help_content_eyedropper">ਰੰਗ ਚੁਣਨ ਲਈ ਚਿੱਤਰ \'ਤੇ ਟੈਪ ਕਰੋ.</string>
+    <string name="help_content_undo">ਆਪਣੀ ਪਿਛਲੀ ਕਿਰਿਆ ਨੂੰ ਵਾਪਸ ਲਿਆਉਣ ਲਈ ਟੈਪ ਕਰੋ.</string>
+    <string name="help_content_redo">ਇੱਕ ਵਾਪਸੀ ਕੀਤੀ ਕਾਰਵਾਈ ਨੂੰ ਦੁਬਾਰਾ ਕਰਨ ਲਈ ਟੈਪ ਕਰੋ.</string>
+    <string name="help_content_fill">ਚੁਣੇ ਰੰਗ ਨਾਲ ਇੱਕ ਖੇਤਰ ਨੂੰ ਭਰਨ ਲਈ ਚਿੱਤਰ \'ਤੇ ਟੈਪ ਕਰੋ.</string>
+    <string name="help_content_cursor">ਕਰਸਰ ਦੀ ਸਥਿਤੀ ਰੱਖੋ ਜਿਥੇ ਤੁਸੀਂ ਖਿੱਚਣਾ ਚਾਹੁੰਦੇ ਹੋ. ਕਰਸਰ ਨੂੰ ਸਰਗਰਮ ਕਰਨ ਲਈ ਟੈਪ ਕਰੋ. ਆਪਣੀ ਉਂਗਲ ਨੂੰ ਡ੍ਰਾ ਕਰਨ ਲਈ ਮੂਵ ਕਰੋ. ਅਯੋਗ ਕਰਨ ਲਈ ਦੁਬਾਰਾ ਟੈਪ ਕਰੋ.</string>
+    <string name="help_content_transform">ਚਿੱਤਰ ਨੂੰ ਤਬਦੀਲ ਕਰਨ ਲਈ ਇਸਤੇਮਾਲ ਕਰੋ.</string>
+    <string name="help_content_stamp">ਜਿਸ ਖੇਤਰ ਨੂੰ ਤੁਸੀਂ ਮੋਹਰ ਲਗਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ ਉਸ ਖੇਤਰ ਨੂੰ ਕਵਰ ਕਰਨ ਲਈ ਚਤੁਰਭੁਜ ਨੂੰ ਹਿਲਾਓ ਅਤੇ ਆਕਾਰ ਦਿਓ. ਖੇਤਰ ਨੂੰ ਚੁਣਨ ਲਈ ਲੰਬੇ ਸਮੇਂ ਤਕ ਦਬਾਓ. ਇਸ ਨੂੰ ਮੂਵ ਕਰੋ, ਫਿਰ ਸਟੈਂਪ ਲਗਾਉਣ ਲਈ ਚੈੱਕਮਾਰਕ \'ਤੇ ਟੈਪ ਕਰੋ.</string>
+    <string name="help_content_import_png">ਗੈਲਰੀ ਤੋਂ ਸਟੈਂਪ ਟੂਲ \'ਤੇ ਇਕ ਚਿੱਤਰ ਇੰਪੋਰਟ ਕਰੋ.</string>
+    <string name="help_content_line">ਇੱਕ ਸਿੱਧੀ ਲਾਈਨ ਬਣਾਉ.</string>
+    <string name="help_content_text">ਟੈਕਸਟ ਲਿਖੋ ਅਤੇ ਇਸ ਨੂੰ ਫਾਰਮੈਟ ਕਰੋ. ਟੈਕਸਟ ਬਾਕਸ ਨੂੰ ਬਾਅਦ ਵਿੱਚ ਮੁੜ ਆਕਾਰ ਦਿਓ. ਚਿੱਤਰ \'ਤੇ ਟੈਕਸਟ ਪਾਉਣ ਲਈ ਚੈੱਕਮਾਰਕ\' ਤੇ ਟੈਪ ਕਰੋ.</string>
+    <string name="help_content_shape">ਇੱਕ ਸ਼ਕਲ ਚੁਣੋ ਅਤੇ ਚੁਣੀ ਹੋਈ ਸ਼ਕਲ ਪਾਉਣ ਲਈ ਚੈੱਕਮਾਰਕ \'ਤੇ ਟੈਪ ਕਰੋ.</string>
+    <string name="help_content_layer">ਨਵੀਂ ਪਰਤਾਂ ਬਣਾਓ ਜਾਂ ਮੌਜੂਦਾ ਨੂੰ ਸੋਧੋ.</string>
+    <string name="help_content_color_chooser">ਕੋਈ ਰੰਗ ਚੁਣੋ ਜਾਂ ਵਿਵਸਥ ਕਰੋ.</string>
+    <string name="help_content_hand">ਕੈਨਵਸ ਜਾਣ ਲਈ ਆਪਣੀ ਉਂਗਲ ਨੂੰ ਹਿਲਾਓ.</string>
+    <string name="help_content_spray_can">ਇੱਕ ਸਪਰੇਅ ਕੈਨ ਪੈਟਰਨ ਬਣਾਉਣ ਲਈ ਚਿੱਤਰ ਉੱਤੇ ਆਪਣੀ ਉਂਗਲ ਨੂੰ ਹਿਲਾਓ.</string>
+    <string name="closing_catroid_security_question_title">ਪ੍ਰੋਜੈਕਟ ਤੇ ਵਾਪਸ</string>
+    <string name="closing_security_question_title">ਛੱਡੋ</string>
+    <string name="closing_security_question">ਤਬਦੀਲੀ ਸੰਭਾਲੋ?</string>
+    <string name="menu_new_image">ਨਵੀਂ ਤਸਵੀਰ</string>
+    <string name="menu_discard_image">ਚਿੱਤਰ ਰੱਦ ਕਰੋ</string>
+    <string name="no_longclick_on_hidden_layer">ਤੁਸੀਂ ਸਿਰਫ ਅਭੇਦ ਹੋਣ ਜਾਂ ਮੁੜ ਕ੍ਰਮਬੱਧ ਕਰਨ ਦੇ ਯੋਗ ਹੋ ਜੇ ਸਾਰੀਆਂ ਪਰਤਾਂ ਦਿਖਾਈ ਦੇਣਗੀਆਂ</string>
+    <string name="no_tools_on_hidden_layer">ਲੁਕਵੀਂ ਪਰਤ ਤੇ ਕੋਈ ਸਾਧਨ ਉਪਲਬਧ ਨਹੀਂ ਹਨ</string>
+    <string name="menu_load_image">ਚਿੱਤਰ ਲੋਡ ਕਰੋ</string>
+    <string name="menu_save_image">ਚਿੱਤਰ ਸੰਭਾਲੋ</string>
+    <string name="menu_save_copy">ਕਾਪੀ ਸੇਵ ਕਰੋ</string>
+    <string name="menu_hide_menu">ਪੂਰਾ ਸਕਰੀਨ</string>
+    <string name="share_image_menu">ਚਿੱਤਰ ਸਾਂਝਾ ਕਰੋ</string>
+    <string name="share_image_via_text">ਦੁਆਰਾ ਚਿੱਤਰ ਭੇਜੋ</string>
+    <string name="menu_rate_us">ਸਾਨੂੰ ਦਰਜਾ ਦਿਓ!</string>
+    <string name="menu_export">ਨਿਰਯਾਤ</string>
+    <string name="menu_feedback">ਸੁਝਾਅ</string>
+    <string name="saved_to">ਚਿੱਤਰ ਨੂੰ ਸੰਭਾਲਿਆ ਗਿਆ\n</string>
+    <string name="saved">ਚਿੱਤਰ ਨੂੰ \n ਬਚਾਇਆ</string>
+    <string name="copy_to">ਉੱਤੇ ਨਕਲ ਸੁਰੱਖਿਅਤ ਕੀਤੀ ਗਈ\n</string>
+    <string name="copy">ਕਾਪੀ ਕਰੋ \n ਬਚਾਇਆ</string>
+    <string name="menu_quit">ਛੱਡੋ</string>
+    <string name="save_button_text">ਸੇਵ</string>
+    <string name="discard_button_text">ਬਰਖਾਸਤ ਕਰੋ</string>
+    <string name="cancel_button_text">ਰੱਦ ਕਰੋ</string>
+    <string name="overwrite_button_text">ਓਵਰਰਾਈਟ</string>
+    <string name="resize_nothing_to_resize">ਮੁੜ ਆਕਾਰ ਦੇਣ ਲਈ ਕੁਝ ਨਹੀਂ</string>
+    <string name="resize_cannot_resize_to_this_size">ਇਸ ਅਕਾਰ ਦਾ ਆਕਾਰ ਨਹੀਂ ਬਦਲ ਸਕਦਾ</string>
+    <string name="resize_max_image_resolution_reached">ਵੱਧ ਤੋਂ ਵੱਧ ਚਿੱਤਰ ਰੈਜ਼ੋਲੇਸ਼ਨ ਪਹੁੰਚ ਗਿਆ</string>
+    <string name="text_tool_dialog_input_title">ਤੁਹਾਡਾ ਟੈਕਸਟ:</string>
+    <string name="text_tool_dialog_format_options">ਫਾਰਮੈਟ ਵਿਕਲਪ:</string>
+    <string name="text_tool_dialog_underline_shortcut">U</string>
+    <string name="text_tool_dialog_italic_shortcut">I</string>
+    <string name="text_tool_dialog_bold_shortcut">B</string>
+    <string name="text_tool_dialog_strike_through_shortcut">ਏਬੀਸੀ</string>
+    <string name="text_tool_dialog_input_hint">ਲਿਖਣ ਲਈ ਇੱਥੇ ਟੈਪ ਕਰੋ</string>
+    <string name="shape_tool_dialog_rect_title">ਆਇਤਾਕਾਰ</string>
+    <string name="shape_tool_dialog_ellipse_title">ਅੰਡਾਕਾਰ</string>
+    <string name="shape_tool_dialog_star_title">ਤਾਰਾ</string>
+    <string name="shape_tool_dialog_heart_title">ਦਿਲ</string>
+    <string name="shape_tool_dialog_fill_title">ਭਰੋ</string>
+    <string name="shape_tool_dialog_outline_title">ਆਉਟਲਾਈਨ</string>
+    <string name="fill_tool_dialog_color_tolerance_title">ਰੰਗ ਸਹਿਣਸ਼ੀਲਤਾ</string>
+    <string name="transform_tool_rotate_left">ਖੱਬੇ ਪਾਸੇ ਘੁੰਮਾਓ</string>
+    <string name="transform_tool_rotate_right">ਸੱਜੇ ਘੁੰਮਾਓ</string>
+    <string name="transform_tool_flip_vertical">ਲੰਬਕਾਰੀ ਫਲਿੱਪ</string>
+    <string name="transform_tool_flip_horizontal">ਖਿਤਿਜੀ ਫਲਿੱਪ</string>
+    <string name="transform_tool_resize_text">ਮੁੜ ਆਕਾਰ ਦਿਓ</string>
+    <string name="transform_tool_auto_crop_text">ਫਸਲ / ਵੱਡਾ</string>
+    <string name="transform_width_text">ਚੌੜਾਈ</string>
+    <string name="transform_height_text">ਕੱਦ</string>
+    <string name="transform_auto_crop_text">ਆਟੋ</string>
+    <string name="pixel">px</string>
+    <string name="stamp_tool_copy_hint">ਸਮੱਗਰੀ ਦੀ ਨਕਲ ਕਰਨ ਲਈ ਲੰਮੇ ਸਮੇਂ ਲਈ ਦਬਾਓ</string>
+    <string name="layers_title">ਪਰਤਾਂ</string>
+    <string name="layer_new">ਨਵੀਂ ਪਰਤ</string>
+    <string name="layer_delete">ਪਰਤ ਮਿਟਾਓ</string>
+    <string name="layer_too_many_layers">ਬਹੁਤ ਸਾਰੀਆਂ ਪਰਤਾਂ</string>
+    <string name="layer_merged">ਪਰਤਾਂ ਮਿਲਾ ਦਿੱਤੀਆਂ ਗਈਆਂ</string>
+    <string name="layer_background">ਪਰਤ ਪਿਛੋਕੜ</string>
+    <string name="dialog_shape_text">ਸ਼ਕਲ</string>
+    <string name="dialog_loading_image_failed_title">ਚਿੱਤਰ ਲੋਡ ਕਰਨ ਦੌਰਾਨ ਗਲਤੀ</string>
+    <string name="dialog_loading_image_failed_text">ਵੈਧ ਚਿੱਤਰ ਨਹੀਂ</string>
+    <string name="dialog_settings">ਸੈਟਿੰਗਜ਼</string>
+    <string name="dialog_save_image_name">ਚਿੱਤਰ ਦਾ ਨਾਮ</string>
+    <string name="dialog_save_image_format">ਚਿੱਤਰ ਫਾਰਮੈਟ</string>
+    <string name="dialog_save_jpg_option_quality">ਗੁਣ:</string>
+    <string name="pocketpaint_jpg_message_dialog"><b> ਘੱਟੋ-ਘੱਟ ਸਟੋਰੇਜ਼ ਸਪੇਸ ਨੂੰ ਕਰਦਾ ਹੈ </b>. <b> ਕੋਈ ਪਾਰਦਰਸ਼ਤਾ </b> ਯਾਦ ਨਹੀਂ ਹੈ.</string>
+    <string name="pocketpaint_png_message_dialog">ਘਾਤਕ ਸੰਕੁਚਨ. ਪਾਰਦਰਸ਼ਤਾ ਸੁਰੱਖਿਅਤ ਹੈ.</string>
+    <string name="pocketpaint_ora_message_dialog">ਇਹ ਫਾਰਮੈਟ <b> ਪਰਤਾਂ </b> ਨੂੰ ਯਾਦ ਕਰਦਾ ਹੈ. <b> ਇਹ ਉਨ੍ਹਾਂ ਐਪਸ ਦੁਆਰਾ ਖੋਲ੍ਹਿਆ ਜਾ ਸਕਦਾ ਹੈ ਜੋ ਓਪਨਸਟਰ ਫਾਰਮੈਟ ਦਾ ਸਮਰਥਨ ਕਰਦੇ ਹਨ. </b></string>
+    <string name="permission_info_external_storage_text">ਇਸ ਐਪ ਨੂੰ ਸਹੀ ਤਰ੍ਹਾਂ ਕੰਮ ਕਰਨ ਲਈ ਬੇਨਤੀ ਕੀਤੀ ਅਨੁਮਤੀ ਦੀ ਲੋੜ ਹੈ. ਸਥਾਨਕ ਮੈਮੋਰੀ ਵਿਚ ਚਿੱਤਰਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਕਰਨ ਲਈ, ਐਪ ਨੂੰ ਇਸ ਨੂੰ ਪੜ੍ਹਨ ਅਤੇ ਲਿਖਣ ਦੀ ਪਹੁੰਚ ਦੀ ਜ਼ਰੂਰਤ ਹੈ.</string>
+    <string name="permission_info_permanent_denial_text">ਇਸ ਐਪ ਨੂੰ ਸਹੀ ਤਰ੍ਹਾਂ ਕੰਮ ਕਰਨ ਲਈ ਬੇਨਤੀ ਕੀਤੀ ਅਨੁਮਤੀ ਦੀ ਲੋੜ ਹੈ. ਸਥਾਨਕ ਮੈਮੋਰੀ ਵਿਚ ਚਿੱਤਰਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਕਰਨ ਲਈ, ਐਪ ਨੂੰ ਇਸ ਨੂੰ ਪੜ੍ਹਨ ਅਤੇ ਲਿਖਣ ਦੀ ਪਹੁੰਚ ਦੀ ਜ਼ਰੂਰਤ ਹੈ.
+         ਜਿਵੇਂ ਕਿ ਤੁਸੀਂ ਆਗਿਆ ਤੋਂ ਇਨਕਾਰ ਕਰ ਦਿੱਤਾ ਹੈ ਦੁਬਾਰਾ ਨਾ ਪੁੱਛੋ, ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਫੋਨ ਸੈਟਿੰਗਾਂ ਤੇ ਜਾਓ ਅਤੇ ਜੇ ਤੁਸੀਂ ਸੰਬੰਧਿਤ ਕਾਰਜਾਂ ਦੀ ਵਰਤੋਂ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ਤਾਂ ਲੋੜੀਂਦੀਆਂ ਆਗਿਆ ਦਿਓ.</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="transform_info_text">ਕਿਨਾਰਿਆਂ ਨੂੰ ਉਨ੍ਹਾਂ ਦੀ ਨਵੀਂ ਸਥਿਤੀ \'ਤੇ ਖਿੱਚੋ, ਚਿੱਤਰ ਖੇਤਰ ਨੂੰ ਵੱਡਾ ਕਰਨ ਜਾਂ ਫਸਣ ਲਈ ਚੈੱਕਮਾਰਕ\' ਤੇ ਟੈਪ ਕਰੋ.</string>
+    <string name="cursor_draw_inactive">ਸਥਿਤੀ ਤੇ ਪੈਨ ਕਰੋ, ਫਿਰ ਪੇਂਟਿੰਗ ਨੂੰ ਅਰੰਭ ਕਰਨ ਲਈ ਟੈਪ ਕਰੋ.</string>
+    <string name="cursor_draw_active">ਖਿੱਚਣ ਲਈ ਪੈਨ ਕਰੋ, ਫਿਰ ਪੇਂਟਿੰਗ ਨੂੰ ਰੋਕਣ ਲਈ ਦੁਬਾਰਾ ਟੈਪ ਕਰੋ.</string>
+    <string name="welcome_to_pocket_paint">ਜੇਬ ਪੇਂਟ ਵਿਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ</string>
+    <string name="intro_welcome_text">ਜੇਬ ਪੇਂਟ ਨਾਲ ਤੁਹਾਡੀ ਰਚਨਾਤਮਕਤਾ ਦੀ ਕੋਈ ਸੀਮਾ ਨਹੀਂ ਹੈ. ਜੇ ਤੁਸੀਂ ਨਵੇਂ ਹੋ, ਤਾਂ ਜਾਣ-ਪਛਾਣ ਸ਼ੁਰੂ ਕਰੋ, ਜਾਂ ਇਸ ਨੂੰ ਛੱਡ ਦਿਓ ਜੇ ਤੁਸੀਂ ਪਹਿਲਾਂ ਤੋਂ ਪਾਕੇਟ ਪੇਂਟ ਨਾਲ ਜਾਣੂ ਹੋ.</string>
+    <string name="intro_tool_more_information">ਵਧੇਰੇ ਜਾਣਕਾਰੀ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਇਕ ਟੂਲ ਤੇ ਕਲਿਕ ਕਰੋ</string>
+    <string name="more_possibilities">ਵਧੇਰੇ ਸੰਭਾਵਨਾਵਾਂ</string>
+    <string name="intro_possibilities_text">ਮੁੱਖ ਮੀਨੂੰ ਖੋਲ੍ਹਣ ਲਈ ਅਤੇ ਉਪਰਲੀਆਂ ਤਬਦੀਲੀਆਂ ਵਾਪਿਸ ਜਾਂ ਮੁੜ ਵਾਪਸ ਕਰਨ ਲਈ ਚੋਟੀ ਦੇ ਬਾਰ ਦੀ ਵਰਤੋਂ ਕਰੋ</string>
+    <string name="landscape">ਲੈਂਡਸਕੇਪ</string>
+    <string name="intro_landscape_text">ਜੇਬ ਪੇਂਟ ਤੁਹਾਨੂੰ ਵਧੀਆ ਪੇਂਟਿੰਗ ਦਾ ਤਜ਼ੁਰਬਾ ਦੇਣ ਲਈ ਲੈਂਡਸਕੇਪ ਮੋਡ ਵਿਚ ਡਰਾਇੰਗ ਦਾ ਵੀ ਸਮਰਥਨ ਕਰਦਾ ਹੈ.</string>
+    <string name="enjoy_pocket_paint">ਤੁਸੀਂ ਸਾਰੇ ਤਿਆਰ ਹੋ ਗਏ ਹੋ. ਜੇਬ ਪੇਂਟ ਦਾ ਅਨੰਦ ਲਓ.</string>
+    <string name="intro_get_started">ਸ਼ੁਰੂ ਕਰੋ ਅਤੇ ਇੱਕ ਨਵਾਂ ਮਾਸਟਰਪੀਸ ਬਣਾਓ.</string>
+    <string name="lets_go">ਚਲਾਂ ਚਲਦੇ ਹਾਂ</string>
+    <string name="next">ਅਗਲਾ</string>
+    <string name="skip">ਛੱਡੋ</string>
+    <string name="pocketpaint_about_title">ਬਾਰੇ</string>
+    <string name="pocketpaint_about_content">ਪਾਕੇਟ ਪੇਂਟ ਇੱਕ ਤਸਵੀਰ ਸੰਪਾਦਨ ਲਾਇਬ੍ਰੇਰੀ ਹੈ ਜੋ ਕੈਟ੍ਰੋਬੈਟ ਪ੍ਰੋਜੈਕਟ ਦਾ ਹਿੱਸਾ ਹੈ. \n\n ਗਿੱਟ੍ਰੋਬੈਟ ਇੱਕ ਵਿਜ਼ੂਅਲ ਪ੍ਰੋਗਰਾਮਿੰਗ ਭਾਸ਼ਾ ਹੈ ਅਤੇ ਸਮਾਰਟਫੋਨਜ਼ ਲਈ ਸਿਰਜਣਾਤਮਕ ਟੂਲ ਦਾ ਸੈਟ ਹੈ. \n\n ਪਾਕੇਟ ਪੇਂਟ ਦਾ ਸਰੋਤ ਕੋਡ ਮੁੱਖ ਤੌਰ ਤੇ%s ਦੇ ਅਧੀਨ ਲਾਇਸੈਂਸਸ਼ੁਦਾ ਹੈ. \n ਲਾਇਸੈਂਸ ਦੇ ਸਹੀ ਵੇਰਵਿਆਂ ਲਈ ਹੇਠਾਂ ਦਿੱਤਾ ਲਿੰਕ ਵੇਖੋ.</string>
+    <string name="pocketpaint_about_url_license_description">ਜੇਬ ਪੇਂਟ ਸਰੋਤ ਕੋਡ ਲਾਇਸੈਂਸ</string>
+    <string name="pocketpaint_about_url_catrobat_description">ਕੈਟਰੋਬੈਟ ਬਾਰੇ</string>
+    <string name="pocketpaint_intro">ਇੰਟ੍ਰੋ</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">ਇੰਟਰੋ ਸਪਲਿਟ ਸਕ੍ਰੀਨ ਦਾ ਸਮਰਥਨ ਨਹੀਂ ਕਰਦਾ.</string>
+    <string name="pocketpaint_overwrite_title">ਓਵਰਰਾਈਟ ਫਾਈਲ?</string>
+    <string name="pocketpaint_overwrite">ਤੁਸੀਂ ਇੱਕ ਮੌਜੂਦਾ ਚਿੱਤਰ ਉੱਤੇ ਲਿਖਣ ਜਾ ਰਹੇ ਹੋ (ਸੰਕੇਤ: ਇਸ ਨੂੰ ਨਵੇਂ ਚਿੱਤਰ ਦੇ ਤੌਰ ਤੇ ਸੰਭਾਲਣ ਲਈ, \"%s\" ਵਿਕਲਪ ਦੀ ਵਰਤੋਂ ਕਰੋ). ਫਿਰ ਵੀ ਬਚਾਉਣਾ ਹੈ?</string>
+    <string name="pocketpaint_like_us">ਕੀ ਤੁਹਾਨੂੰ ਪਾਕੇਟ ਪੇਂਟ ਪਸੰਦ ਹੈ?</string>
+    <string name="pocketpaint_rate_us">ਕੀ ਤੁਸੀਂ ਪਾਕੇਟ ਪੇਂਟ ਨੂੰ ਦਰਜਾ ਦੇਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
+    <string name="pocketpaint_feedback">ਸਾਨੂੰ ਇਹ ਸੁਣਕੇ ਅਫਸੋਸ ਹੋਇਆ ਹੈ. ਜੇ ਤੁਸੀਂ ਆਪਣੇ ਤਜ਼ਰਬੇ ਨੂੰ ਸਾਡੇ ਨਾਲ ਸਾਂਝਾ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ contact@catrobat.org ਤੇ ਲਿਖੋ</string>
+    <string name="pocketpaint_yes">ਹਾਂ</string>
+    <string name="pocketpaint_no">ਨਹੀਂ</string>
+    <string name="pocketpaint_cancel">ਰੱਦ ਕਰੋ</string>
+    <string name="pocketpaint_not_now">ਹਾਲੇ ਨਹੀਂ</string>
+    <string name="pocketpaint_rate_us_title">ਰੇਟ ਜੇਬ ਪੇਂਟ</string>
+    <string name="bottom_navigation_tools">ਸੰਦ</string>
+    <string name="bottom_navigation_current">ਮੌਜੂਦਾ</string>
+    <string name="bottom_navigation_color">ਰੰਗ</string>
+    <string name="bottom_navigation_layers">ਪਰਤਾਂ</string>
+    <string name="bottom_navigation_item">ਥੱਲੇ ਨੇਵੀਗੇਸ਼ਨ ਲਈ ਆਈਟਮ</string>
+    <string name="intro_bottom_navigation_tools_description">ਉਸ ਟੂਲ ਤੇ ਸਵਿਚ ਕਰੋ ਜਿਸ ਨੂੰ ਤੁਸੀਂ ਵਰਤਣਾ ਚਾਹੁੰਦੇ ਹੋ.</string>
+    <string name="intro_bottom_navigation_current_description">ਵਰਤਮਾਨ ਵਿੱਚ ਵਰਤੇ ਗਏ ਉਪਕਰਣ ਨੂੰ ਦਰਸਾਉਂਦਾ ਹੈ ਅਤੇ ਇਸਦੇ ਵਿਕਲਪ ਖੋਲ੍ਹਦਾ ਹੈ.</string>
+    <string name="intro_bottom_navigation_color_description">ਵਰਤਮਾਨ ਵਿੱਚ ਵਰਤੇ ਗਏ ਰੰਗ ਨੂੰ ਦਰਸਾਉਂਦਾ ਹੈ ਅਤੇ ਰੰਗ ਚੋਣਕਾਰ ਖੋਲ੍ਹਦਾ ਹੈ.</string>
+    <string name="intro_bottom_navigation_layers_description">ਪਰਤ ਮੀਨੂੰ ਖੋਲ੍ਹਦਾ ਹੈ ਅਤੇ ਤੁਹਾਨੂੰ ਆਪਣੀਆਂ ਪਰਤਾਂ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰਨ ਦਿੰਦਾ ਹੈ.</string>
+    <string name="pocketpaint_tool_icon_description">ਮੌਜੂਦਾ ਟੂਲ ਆਈਕਾਨ</string>
+    <string name="dialog_scale_title">ਚਿੱਤਰ ਲੋਡ ਕਰਨ ਲਈ ਬਹੁਤ ਵੱਡਾ ਹੈ</string>
+    <string name="dialog_scale_message">ਚਿੱਤਰ ਲੋਡ ਕਰਨ ਲਈ ਬਹੁਤ ਵੱਡਾ ਹੈ. ਚਿੱਤਰ ਨੂੰ ਆਪਣੇ ਆਪ ਘਟਾਉਣ ਲਈ ਠੀਕ ਹੈ ਨੂੰ ਦਬਾਓ.</string>
+</resources>
