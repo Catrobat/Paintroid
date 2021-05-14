@@ -42,8 +42,7 @@
         <activity
             android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/PocketPaintSplashTheme"
-            android:requestLegacyExternalStorage="true"/>
+            android:theme="@style/PocketPaintSplashTheme" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/PocketPaintSplashTheme">
