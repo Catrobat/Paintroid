@@ -87,7 +87,9 @@
     <string name="menu_rate_us">எங்களுக்கு மதிப்பிடுக!</string>
     <string name="menu_export">ஏற்றுமதி</string>
     <string name="menu_feedback">Feedback</string>
+    <string name="saved_to">Image saved to\n</string>
     <string name="saved">படம் சேமிக்கப்பட்டது</string>
+    <string name="copy_to">Copy saved to\n</string>
     <string name="copy">நகல் சேமிக்கப்பட்டது</string>
     <string name="menu_quit">நிறுத்து</string>
     <string name="save_button_text">சேமி</string>

@@ -87,7 +87,9 @@
     <string name="menu_rate_us">Classifique-nos!</string>
     <string name="menu_export">Exportar</string>
     <string name="menu_feedback">Feedback</string>
+    <string name="saved_to">Image saved to\n</string>
     <string name="saved">Imagem salva</string>
+    <string name="copy_to">Copy saved to\n</string>
     <string name="copy">Cópia salva</string>
     <string name="menu_quit">Sair</string>
     <string name="save_button_text">Salvar</string>

@@ -82,7 +82,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="8dp"
         app:singleSelection="true"
-        app:singleLine="true">
+        app:singleLine="true"
+        android:layoutDirection="ltr">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/pocketpaint_stroke_ibtn_circle"

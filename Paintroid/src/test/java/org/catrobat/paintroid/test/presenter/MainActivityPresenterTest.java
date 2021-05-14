@@ -1180,7 +1180,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testOnNavigationItemSelectedSaveCopyPermissionNotGranted() {
 		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
-		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 
 		presenter.saveCopyClicked(false);
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
@@ -1205,7 +1205,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testPermissionCheckOnExportWhenOpenedFromCatroid() {
 		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
-		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 
 		presenter.saveCopyClicked(false);
@@ -1230,7 +1230,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testOnNavigationItemSelectedSavePermissionNotGranted() {
 		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
-		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 
 		presenter.saveImageClicked();
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
@@ -1254,7 +1254,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testSaveAndFinishPermissionNotGranted() {
 		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
-		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 
 		presenter.saveBeforeFinish();
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getPreferenceImageNumber(), false);
@@ -1278,7 +1278,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testSaveAndNewImagePermissionNotGranted() {
 		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
-		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 
 		presenter.saveBeforeNewImage();
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, sharedPreferences.getPreferenceImageNumber(), false);
@@ -1302,7 +1302,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testSaveAndLoadImagePermissionNotGranted() {
 		when(navigator.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)).thenReturn(false);
-		when(navigator.isSdkAboveOrEqualM()).thenReturn(true);
+		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 
 		presenter.saveBeforeLoadImage();
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, sharedPreferences.getPreferenceImageNumber(), false);
@@ -1324,7 +1324,12 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false);
 
-		verify(navigator).showToast(R.string.saved, Toast.LENGTH_LONG);
+		if (!model.isOpenedFromCatroid()) {
+			String path = MainActivityPresenter.getPathFromUri(context, uri);
+			verify(navigator).showToast(context.getString(R.string.saved_to) + path, Toast.LENGTH_LONG);
+		} else {
+			verify(navigator).showToast(R.string.saved, Toast.LENGTH_LONG);
+		}
 	}
 
 	@Test
@@ -1343,7 +1348,12 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true);
 
-		verify(navigator).showToast(R.string.copy, Toast.LENGTH_LONG);
+		if (!model.isOpenedFromCatroid()) {
+			String path = MainActivityPresenter.getPathFromUri(context, uri);
+			verify(navigator).showToast(context.getString(R.string.copy_to) + path, Toast.LENGTH_LONG);
+		} else {
+			verify(navigator).showToast(R.string.copy, Toast.LENGTH_LONG);
+		}
 	}
 
 	@Test

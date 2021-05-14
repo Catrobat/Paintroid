@@ -59,7 +59,7 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
-		void showOverwriteDialog(int permissionCode);
+		void showOverwriteDialog(int permissionCode, boolean isExport);
 
 		void showPngInformationDialog();
 
@@ -78,6 +78,8 @@ public interface MainActivityContracts {
 		void dismissIndeterminateProgressDialog();
 
 		void returnToPocketCode(String path);
+
+		void showToast(String msg, int duration);
 
 		void showToast(@StringRes int resId, int duration);
 
@@ -190,7 +192,7 @@ public interface MainActivityContracts {
 
 		void showFeedbackDialog();
 
-		void showOverwriteDialog(int permissionCode);
+		void showOverwriteDialog(int permissionCode, boolean isExport);
 
 		void showPngInformationDialog();
 
@@ -202,7 +204,7 @@ public interface MainActivityContracts {
 
 		void onNewImage();
 
-		void switchBetweenVersions(int requestCode);
+		void switchBetweenVersions(int requestCode, boolean isExport);
 
 		void handleActivityResult(int requestCode, int resultCode, Intent data);
 

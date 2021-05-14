@@ -87,7 +87,9 @@
     <string name="menu_rate_us">Rate us!</string>
     <string name="menu_export">Exporteer</string>
     <string name="menu_feedback">Feedback</string>
+    <string name="saved_to">Image saved to\n</string>
     <string name="saved">Afbeelding opgeslagen</string>
+    <string name="copy_to">Copy saved to\n</string>
     <string name="copy">Kopie opgeslagen</string>
     <string name="menu_quit">Stoppen</string>
     <string name="save_button_text">Opslaan</string>

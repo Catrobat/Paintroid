@@ -36,6 +36,7 @@ import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
+import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
@@ -331,6 +332,9 @@ public class MenuFileActivityIntegrationTest {
 		onView(withText(R.string.save_button_text)).perform(click());
 
 		assertNotNull(activity.model.getSavedPictureUri());
+		if (!activity.model.isOpenedFromCatroid()) {
+			assertNotSame("", MainActivityPresenter.getPathFromUri(this.activity, activity.model.getSavedPictureUri()));
+		}
 
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 	}
@@ -350,9 +354,15 @@ public class MenuFileActivityIntegrationTest {
 
 		onView(withText(R.string.menu_save_image)).perform(click());
 
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("save1"));
+
 		onView(withText(R.string.save_button_text)).perform(click());
 
 		assertNotNull(activity.model.getSavedPictureUri());
+		if (!activity.model.isOpenedFromCatroid()) {
+			assertNotSame("", MainActivityPresenter.getPathFromUri(this.activity, activity.model.getSavedPictureUri()));
+		}
 
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 
@@ -368,6 +378,10 @@ public class MenuFileActivityIntegrationTest {
 				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_save_copy)).perform(click());
+
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText("copy1"));
+
 		onView(withText(R.string.save_button_text)).perform(click());
 
 		File newFile = new File(activity.model.getSavedPictureUri().toString());
@@ -375,6 +389,9 @@ public class MenuFileActivityIntegrationTest {
 		assertNotSame("Changes to saved", oldFile, newFile);
 
 		assertNotNull(activity.model.getSavedPictureUri());
+		if (!activity.model.isOpenedFromCatroid()) {
+			assertNotSame("", MainActivityPresenter.getPathFromUri(this.activity, activity.model.getSavedPictureUri()));
+		}
 
 		addUriToDeletionFileList(activity.model.getSavedPictureUri());
 	}
