@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val receivedIntent = intent
         val receivedAction = receivedIntent.action
         val receivedType = receivedIntent.type
-        if (receivedAction != null && receivedType != null && (receivedAction == Intent.ACTION_SEND || receivedAction == Intent.ACTION_EDIT) && (receivedType.startsWith("image/") || receivedType.startsWith("application/"))) {
+        if (receivedAction != null && receivedType != null && (receivedAction == Intent.ACTION_SEND || receivedAction == Intent.ACTION_EDIT || receivedAction == Intent.ACTION_VIEW) && (receivedType.startsWith("image/") || receivedType.startsWith("application/"))) {
             var receivedUri = receivedIntent
                     .getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
 
@@ -152,7 +152,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US))
             }
 
-            Toast.makeText(baseContext,mimeType,Toast.LENGTH_LONG).show()
             if (receivedUri != null) {
 
                 if(mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")){
