@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -85,6 +85,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXT
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_IMPORT_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
@@ -341,6 +342,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			switch (requestCode) {
 				case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
 					break;
+				case PERMISSION_REQUEST_CODE_IMPORT_PICTURE:
+					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE:
 					checkforDefaultFilename();
 					showLikeUsDialogIfFirstTimeSave();
@@ -469,6 +472,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 						} else {
 							navigator.showSaveBeforeLoadImageDialog();
 						}
+						break;
+					case PERMISSION_REQUEST_CODE_IMPORT_PICTURE:
+						navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
 						break;
 					default:
 						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -982,7 +988,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void importFromGalleryClicked() {
-		navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
+		switchBetweenVersions(PERMISSION_REQUEST_CODE_IMPORT_PICTURE);
 	}
 
 	@Override
