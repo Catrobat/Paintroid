@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,6 +46,7 @@ public final class MainActivityConstants {
 	public static final int PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY = 4;
 	public static final int PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH = 5;
 	public static final int PERMISSION_REQUEST_CODE_LOAD_PICTURE = 6;
+	public static final int PERMISSION_REQUEST_CODE_IMPORT_PICTURE = 7;
 
 	public static final int RESULT_INTRO_MW_NOT_SUPPORTED = 10;
 
@@ -74,7 +75,8 @@ public final class MainActivityConstants {
 			PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
 			PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
 			PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-			PERMISSION_REQUEST_CODE_LOAD_PICTURE})
+			PERMISSION_REQUEST_CODE_LOAD_PICTURE,
+			PERMISSION_REQUEST_CODE_IMPORT_PICTURE})
 	@Retention(RetentionPolicy.SOURCE)
 	public @interface PermissionRequestCode {
 	}
