@@ -32,6 +32,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -71,6 +72,7 @@ import org.catrobat.paintroid.ui.LayerAdapter;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -320,6 +322,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		FileIO.uriFilePng = null;
 		FileIO.currentFileNameJpg = null;
 		FileIO.currentFileNamePng = null;
+		FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+		FileIO.ending = ".png";
+		FileIO.isCatrobatImage = false;
 		Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 		commandManager.setInitialStateCommand(initCommand);
 		commandManager.reset();
@@ -754,6 +759,23 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				}
 				model.setCameraImageUri(null);
 				FileIO.wasImageLoaded = true;
+				if (uri != null) {
+					String name = getFileName(uri);
+					if (name != null) {
+						if (name.endsWith("jpg") || name.endsWith("jpeg")) {
+							FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
+							FileIO.ending = ".jpg";
+							FileIO.isCatrobatImage = false;
+						} else if (name.endsWith("png")) {
+							FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+							FileIO.ending = ".png";
+							FileIO.isCatrobatImage = false;
+						} else {
+							FileIO.ending = ".ora";
+							FileIO.isCatrobatImage = true;
+						}
+					}
+				}
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {
@@ -975,6 +997,21 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				toolController.showToolOptionsView();
 			}
 		}
+	}
+
+	public String getFileName(Uri uri) {
+		String result = null;
+		if (Objects.equals(uri.getScheme(), "content")) {
+			Cursor cursor = fileActivity.getContentResolver().query(uri, null, null, null, null);
+			try {
+				if (cursor != null && cursor.moveToFirst()) {
+					result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+		return result;
 	}
 
 	@Override

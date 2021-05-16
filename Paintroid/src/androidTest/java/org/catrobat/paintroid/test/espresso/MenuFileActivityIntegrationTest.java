@@ -63,6 +63,7 @@ import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AllOf.allOf;
@@ -87,6 +88,7 @@ import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
@@ -555,6 +557,61 @@ public class MenuFileActivityIntegrationTest {
 	}
 
 	@Test
+	public void testCheckSaveImageDialogShowJPGSpinnerText() {
+
+		createImageIntent();
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_load_image)).perform(click());
+		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.check(matches(withSpinnerText(containsString("jpg"))));
+	}
+
+	@Test
+	public void testCheckSaveImageDialogShowPNGSpinnerText() {
+		FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.check(matches(withSpinnerText(containsString("png"))));
+	}
+
+	@Test
+	public void testCheckSaveImageDialogShowORASpinnerText() {
+		FileIO.isCatrobatImage = true;
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_save_image))
+				.perform(click());
+
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.check(matches(withSpinnerText(containsString("ora"))));
+	}
+
+	@Test
 	public void testCheckSaveImageDialogShowsSavedImageOptions() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -626,6 +683,13 @@ public class MenuFileActivityIntegrationTest {
 				.check(matches(isDisplayed()));
 		onView(withText("image" + imageNumber))
 				.check(matches(isDisplayed()));
+	}
+
+	private void createImageIntent() {
+		Intent intent = new Intent();
+		intent.setData(createTestImageFile());
+		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
 	}
 
 	private Uri createTestImageFile() {
