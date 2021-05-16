@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -28,6 +29,8 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.webkit.MimeTypeMap
+import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -46,6 +49,8 @@ import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.DefaultToolController
+import org.catrobat.paintroid.iotasks.BitmapReturnValue
+import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.model.MainActivityModel
@@ -134,18 +139,40 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val receivedIntent = intent
         val receivedAction = receivedIntent.action
         val receivedType = receivedIntent.type
-        if (receivedAction != null && receivedType != null && (receivedAction == Intent.ACTION_SEND || receivedAction == Intent.ACTION_EDIT) && receivedType.startsWith("image/")) {
+        if (receivedAction != null && receivedType != null && (receivedAction == Intent.ACTION_SEND || receivedAction == Intent.ACTION_EDIT) && (receivedType.startsWith("image/") || receivedType.startsWith("application/"))) {
             var receivedUri = receivedIntent
                     .getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
 
             receivedUri = receivedUri ?: receivedIntent.data
+
+            val mimeType: String? = if (receivedUri.scheme == ContentResolver.SCHEME_CONTENT) {
+                contentResolver.getType(receivedUri)
+            } else {
+                val fileExtension = MimeTypeMap.getFileExtensionFromUrl(receivedUri.toString())
+                MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US))
+            }
+
+            Toast.makeText(baseContext,mimeType,Toast.LENGTH_LONG).show()
             if (receivedUri != null) {
-                try {
-                    FileIO.filename = "image"
-                    val receivedBitmap = FileIO.getBitmapFromUri(contentResolver, receivedUri)
-                    commandManager.setInitialStateCommand(commandFactory.createInitCommand(receivedBitmap))
-                } catch (e: IOException) {
-                    Log.e("Can not read", "Unable to retrieve Bitmap from Uri")
+
+                if(mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")){
+
+                    val returnValue : BitmapReturnValue = OpenRasterFileFormatConversion.importOraFile(contentResolver,receivedUri,applicationContext)
+                    if(returnValue.bitmap != null){
+                        commandManager.setInitialStateCommand(commandFactory.createInitCommand(returnValue.bitmap))
+                    }
+                    else{
+                        commandManager.setInitialStateCommand(commandFactory.createInitCommand(returnValue.bitmapList))
+                    }
+                }
+                else {
+                    try {
+                        FileIO.filename = "image"
+                        val receivedBitmap = FileIO.getBitmapFromUri(contentResolver, receivedUri, applicationContext)
+                        commandManager.setInitialStateCommand(commandFactory.createInitCommand(receivedBitmap))
+                    } catch (e: IOException) {
+                        Log.e("Can not read", "Unable to retrieve Bitmap from Uri")
+                    }
                 }
             }
             commandManager.reset()

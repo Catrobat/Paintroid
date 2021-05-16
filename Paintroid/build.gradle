@@ -43,10 +43,10 @@ emulators {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco-android'
+apply plugin: 'com.hiya.jacoco-android'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.panpf.bintray-publish'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'kotlin-android'
 
@@ -64,6 +64,7 @@ jacocoAndroidUnitTestReport {
     csv.enabled false
     html.enabled true
     xml.enabled true
+    destination project.getBuildDir().getPath() + "/reports/jacoco/jacocoTestDebugUnitTestReport"
 }
 
 android {
@@ -137,8 +138,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
     androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
 
-    pmd 'net.sourceforge.pmd:pmd-core:5.8.1'
-    pmd 'net.sourceforge.pmd:pmd-java:5.8.1'
+    pmd 'net.sourceforge.pmd:pmd-core:6.32.0'
+    pmd 'net.sourceforge.pmd:pmd-java:6.32.0'
 
     checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
 }

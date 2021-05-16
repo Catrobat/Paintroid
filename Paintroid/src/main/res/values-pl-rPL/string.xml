@@ -87,8 +87,10 @@
     <string name="menu_rate_us">Oceń nas!</string>
     <string name="menu_export">Eksportuj</string>
     <string name="menu_feedback">Informacja zwrotna</string>
-    <string name="saved">Obraz zapisany</string>
-    <string name="copy">Kopia zapisana</string>
+    <string name="saved_to">Obraz zapisany do\n</string>
+    <string name="saved">Obraz zapisany w\n</string>
+    <string name="copy_to">Kopia zapisana do\n</string>
+    <string name="copy">Kopia zapisana do\n</string>
     <string name="menu_quit">Opuść</string>
     <string name="save_button_text">Zapisz</string>
     <string name="discard_button_text">Odrzuć</string>

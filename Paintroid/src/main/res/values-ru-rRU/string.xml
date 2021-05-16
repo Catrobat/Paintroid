@@ -87,7 +87,9 @@
     <string name="menu_rate_us">Оцените нас!</string>
     <string name="menu_export">Экспорт</string>
     <string name="menu_feedback">Отзыв</string>
+    <string name="saved_to">Изображение сохраняется в\n</string>
     <string name="saved">Картинка сохранена</string>
+    <string name="copy_to">Копия сохранена в\n</string>
     <string name="copy">Копия сохранена</string>
     <string name="menu_quit">Выход</string>
     <string name="save_button_text">Сохранить</string>

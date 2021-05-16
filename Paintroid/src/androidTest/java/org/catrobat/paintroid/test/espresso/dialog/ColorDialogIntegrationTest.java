@@ -278,7 +278,7 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(
 				withText(
 						Integer.toString(
-								((int) (Color.alpha(currentSelectedColor) / 2.55f))
+								(int) (Color.alpha(currentSelectedColor) / 2.55f)
 						)
 				)
 		));
@@ -366,7 +366,7 @@ public class ColorDialogIntegrationTest {
 
 		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
 				withText(
-						String.format("#FF%06X", (0xFFFFFF & currentSelectColor)))));
+						String.format("#FF%06X", 0xFFFFFF & currentSelectColor))));
 
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_HSV_SELECTOR_CLASS))).check(matches(isDisplayed()));
@@ -387,7 +387,7 @@ public class ColorDialogIntegrationTest {
 
 		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
 				withText(
-						String.format("#FF%06X", (0xFFFFFF & currentSelectColor)))));
+						String.format("#FF%06X", 0xFFFFFF & currentSelectColor))));
 
 		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(touchCenterLeft());
 		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterLeft());
@@ -408,7 +408,7 @@ public class ColorDialogIntegrationTest {
 
 		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
 				withText(
-						String.format("#FF%06X", (0xFFFFFF & currentSelectColor)))));
+						String.format("#FF%06X", 0xFFFFFF & currentSelectColor))));
 	}
 
 	@Test
@@ -531,7 +531,7 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(
 				withText(
 						Integer.toString(
-								((int) (Color.alpha(Color.TRANSPARENT) / 2.55f))
+								(int) (Color.alpha(Color.TRANSPARENT) / 2.55f)
 						)
 				)
 		));
@@ -548,7 +548,7 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
 		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
 				withText(
-						String.format("#FF%06X", (0xFFFFFF & 0xFF0000FF)))));
+						String.format("#FF%06X", 0xFFFFFF & 0xFF0000FF))));
 	}
 
 	@Test

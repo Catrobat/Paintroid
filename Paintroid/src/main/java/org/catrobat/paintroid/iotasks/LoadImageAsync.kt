@@ -67,7 +67,7 @@ class LoadImageAsync(callback: LoadImageCallback, private val requestCode: Int, 
 				if (scaleImage) {
 					FileIO.getScaledBitmapFromUri(resolver, uri, context.get())
 				} else {
-					FileIO.getBitmapFromUri(resolver, uri, context.get())
+					FileIO.getBitmapReturnValueFromUri(resolver, uri, context.get())
 				}
 			}
 			returnValue

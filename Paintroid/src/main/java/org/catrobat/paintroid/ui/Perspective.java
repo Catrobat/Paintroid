@@ -81,11 +81,11 @@ public class Perspective {
 			surfaceTranslationX = surfaceWidth / 2f - bitmapWidth / 2;
 			initialTranslationX = surfaceTranslationX;
 
-			surfaceTranslationY = (surfaceHeight / 2f - bitmapHeight / 2);
+			surfaceTranslationY = surfaceHeight / 2f - bitmapHeight / 2;
 			initialTranslationY = surfaceTranslationY;
 		}
 
-		float zoomFactor = (isFullscreen) ? 1.0f : BORDER_ZOOM_FACTOR;
+		float zoomFactor = isFullscreen ? 1.0f : BORDER_ZOOM_FACTOR;
 		surfaceScale = getScaleForCenterBitmap() * zoomFactor;
 	}
 
@@ -97,18 +97,18 @@ public class Perspective {
 		surfaceTranslationX += dx / surfaceScale;
 		surfaceTranslationY += dy / surfaceScale;
 
-		float xmax = (bitmapWidth / 2)
-				+ (((surfaceWidth / 2f) - SCROLL_BORDER) / surfaceScale);
+		float xmax = bitmapWidth / 2
+				+ (surfaceWidth / 2f - SCROLL_BORDER) / surfaceScale;
 		if (surfaceTranslationX > (xmax + initialTranslationX)) {
 			surfaceTranslationX = xmax + initialTranslationX;
 		} else if (surfaceTranslationX < (-xmax + initialTranslationX)) {
 			surfaceTranslationX = -xmax + initialTranslationX;
 		}
 
-		float ymax = (bitmapHeight / 2)
-				+ (((surfaceHeight / 2f) - SCROLL_BORDER) / surfaceScale);
+		float ymax = bitmapHeight / 2
+				+ (surfaceHeight / 2f - SCROLL_BORDER) / surfaceScale;
 		if (surfaceTranslationY > (ymax + initialTranslationY)) {
-			surfaceTranslationY = (ymax + initialTranslationY);
+			surfaceTranslationY = ymax + initialTranslationY;
 		} else if (surfaceTranslationY < (-ymax + initialTranslationY)) {
 			surfaceTranslationY = -ymax + initialTranslationY;
 		}

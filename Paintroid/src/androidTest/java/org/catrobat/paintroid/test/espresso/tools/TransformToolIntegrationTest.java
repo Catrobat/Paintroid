@@ -502,7 +502,7 @@ public class TransformToolIntegrationTest {
 		final Bitmap workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		final int lineWidth = 10;
 		final int lineHeight = initialHeight / 2;
-		final int verticalStartX = (initialWidth - lineWidth);
+		final int verticalStartX = initialWidth - lineWidth;
 		final int verticalStartY = 10;
 
 		int[] pixelsColorArray = new int[lineWidth * lineHeight];
