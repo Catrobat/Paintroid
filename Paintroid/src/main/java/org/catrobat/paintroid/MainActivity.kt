@@ -153,25 +153,19 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             }
 
             if (receivedUri != null) {
-
-                if(mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")){
-
-                    val returnValue : BitmapReturnValue = OpenRasterFileFormatConversion.importOraFile(contentResolver,receivedUri,applicationContext)
-                    if(returnValue.bitmap != null){
-                        commandManager.setInitialStateCommand(commandFactory.createInitCommand(returnValue.bitmap))
-                    }
-                    else{
-                        commandManager.setInitialStateCommand(commandFactory.createInitCommand(returnValue.bitmapList))
-                    }
-                }
-                else {
-                    try {
+                try {
+                    if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
+                        OpenRasterFileFormatConversion.importOraFile(contentResolver, receivedUri, applicationContext).bitmapList?.let { bitmapList ->
+                            commandManager.setInitialStateCommand(commandFactory.createInitCommand(bitmapList))
+                        }
+                    } else {
                         FileIO.filename = "image"
-                        val receivedBitmap = FileIO.getBitmapFromUri(contentResolver, receivedUri, applicationContext)
-                        commandManager.setInitialStateCommand(commandFactory.createInitCommand(receivedBitmap))
-                    } catch (e: IOException) {
-                        Log.e("Can not read", "Unable to retrieve Bitmap from Uri")
+                        FileIO.getBitmapFromUri(contentResolver, receivedUri, applicationContext)?.let { receivedBitmap ->
+                            commandManager.setInitialStateCommand(commandFactory.createInitCommand(receivedBitmap))
+                        }
                     }
+                } catch (e: IOException) {
+                    Log.e("Can not read", "Unable to retrieve Bitmap from Uri")
                 }
             }
             commandManager.reset()
