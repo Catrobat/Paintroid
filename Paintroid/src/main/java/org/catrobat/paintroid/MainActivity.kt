@@ -406,7 +406,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         presenter.handleActivityResult(requestCode, resultCode, data)
     }
 
-    override fun superHandleActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun superHandleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
