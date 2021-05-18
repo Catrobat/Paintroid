@@ -254,7 +254,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 	public static boolean isRTL(Context context) {
 		final int layoutDirection = context.getResources().getConfiguration().getLayoutDirection();
-		boolean layoutDirectionIsRTL = (layoutDirection == View.LAYOUT_DIRECTION_RTL);
+		boolean layoutDirectionIsRTL = layoutDirection == View.LAYOUT_DIRECTION_RTL;
 		return layoutDirectionIsRTL || defaultLocaleIsRTL();
 	}
 

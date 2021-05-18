@@ -49,7 +49,8 @@ jobs:
 
       - uses: crowdin/github-action@1.0.10
         with:
-          upload_translations: true
+          upload_sources: true
+          upload_translations: false
           download_translations: true
           config: 'crowdin_colorpicker.yml'
         env:

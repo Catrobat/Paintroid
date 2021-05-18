@@ -87,7 +87,9 @@
     <string name="menu_rate_us">アプリを評価して！</string>
     <string name="menu_export">エクスポート</string>
     <string name="menu_feedback">ご意見</string>
+    <string name="saved_to">画像の保存先\n</string>
     <string name="saved">画像を保存しました。</string>
+    <string name="copy_to">保存先のコピー\n</string>
     <string name="copy">コピーが保存されました。</string>
     <string name="menu_quit">終了</string>
     <string name="save_button_text">保存</string>

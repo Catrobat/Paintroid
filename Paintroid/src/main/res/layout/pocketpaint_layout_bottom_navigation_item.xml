@@ -20,6 +20,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
     android:orientation="horizontal"
@@ -32,7 +33,7 @@
         android:layout_width="@dimen/pocketpaint_bottom_navigation_icon_size"
         android:layout_height="@dimen/pocketpaint_bottom_navigation_icon_size"
         android:contentDescription="@string/bottom_navigation_item"
-        android:tint="@android:color/white"/>
+        app:tint="@android:color/white"/>
 
     <Space style="@style/PocketPaintToolHorizontalSpace" />
 

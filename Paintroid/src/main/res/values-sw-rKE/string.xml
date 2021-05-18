@@ -87,7 +87,9 @@
     <string name="menu_rate_us">Tupime!</string>
     <string name="menu_export">Hamisha</string>
     <string name="menu_feedback">Feedback</string>
+    <string name="saved_to">Image saved to\n</string>
     <string name="saved">Picha imehifadhiwa</string>
+    <string name="copy_to">Copy saved to\n</string>
     <string name="copy">Nakala imehifadhiwa</string>
     <string name="menu_quit">Aga</string>
     <string name="save_button_text">Hifadhi</string>

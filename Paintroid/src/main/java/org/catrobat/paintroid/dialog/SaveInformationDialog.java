@@ -60,8 +60,9 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 
 	private int permission;
 	private String setName;
+	private Boolean isExport;
 
-	public static SaveInformationDialog newInstance(int permissionCode, int imageNumber, boolean isStandard) {
+	public static SaveInformationDialog newInstance(int permissionCode, int imageNumber, boolean isStandard, boolean isExport) {
 		if (isStandard) {
 			FileIO.isCatrobatImage = false;
 			FileIO.filename = "image";
@@ -79,6 +80,7 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		}
 
 		bundle.putInt("permission", permissionCode);
+		bundle.putBoolean("isExport", isExport);
 		dialog.setArguments(bundle);
 
 		return dialog;
@@ -90,6 +92,7 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 		Bundle arguments = getArguments();
 		permission = arguments.getInt("permission");
 		setName = arguments.getString("setName");
+		isExport = arguments.getBoolean("isExport");
 	}
 
 	@Override
@@ -126,9 +129,9 @@ public class SaveInformationDialog extends MainActivityDialogFragment implements
 				FileIO.filename = imageName.getText().toString();
 
 				if (permission != PERMISSION_EXTERNAL_STORAGE_SAVE_COPY && FileIO.checkIfDifferentFile(FileIO.getDefaultFileName()) != Constants.IS_NO_FILE) {
-					getPresenter().showOverwriteDialog(permission);
+					getPresenter().showOverwriteDialog(permission, isExport);
 				} else {
-					getPresenter().switchBetweenVersions(permission);
+					getPresenter().switchBetweenVersions(permission, isExport);
 				}
 
 				dismiss();

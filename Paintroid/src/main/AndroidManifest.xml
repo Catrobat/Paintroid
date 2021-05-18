@@ -18,6 +18,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.catrobat.paintroid"
     android:installLocation="auto">
 
@@ -42,8 +43,7 @@
         <activity
             android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/PocketPaintSplashTheme"
-            android:requestLegacyExternalStorage="true"/>
+            android:theme="@style/PocketPaintSplashTheme" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/PocketPaintSplashTheme">
@@ -59,11 +59,21 @@
                 <data android:host="*"/>
                 <data android:pathPattern=".*\\.ora" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.EDIT"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:mimeType="application/zip" />
+                <data android:mimeType="application/octet-stream"/>
             </intent-filter>
         </activity>
     </application>

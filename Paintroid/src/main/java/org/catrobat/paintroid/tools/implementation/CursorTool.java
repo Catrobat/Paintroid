@@ -166,7 +166,7 @@ public class CursorTool extends BaseToolWithShape {
 
 	@Override
 	public void drawShape(Canvas canvas) {
-		float brushStrokeWidth = Math.max((toolPaint.getStrokeWidth() / 2f), 1f);
+		float brushStrokeWidth = Math.max(toolPaint.getStrokeWidth() / 2f, 1f);
 
 		float strokeWidth = getStrokeWidthForZoom(DEFAULT_TOOL_STROKE_WIDTH,
 				MINIMAL_TOOL_STROKE_WIDTH, MAXIMAL_TOOL_STROKE_WIDTH);
@@ -194,36 +194,36 @@ public class CursorTool extends BaseToolWithShape {
 					innerCircleRadius - (strokeWidth / 2f), linePaint);
 		} else {
 			RectF strokeRect = new RectF(
-					(this.toolPosition.x - outerCircleRadius),
-					(this.toolPosition.y - outerCircleRadius),
-					(this.toolPosition.x + outerCircleRadius),
-					(this.toolPosition.y + outerCircleRadius));
+					this.toolPosition.x - outerCircleRadius,
+					this.toolPosition.y - outerCircleRadius,
+					this.toolPosition.x + outerCircleRadius,
+					this.toolPosition.y + outerCircleRadius);
 			canvas.drawRect(strokeRect, linePaint);
-			strokeRect.set((this.toolPosition.x - innerCircleRadius),
-					(this.toolPosition.y - innerCircleRadius),
-					(this.toolPosition.x + innerCircleRadius),
-					(this.toolPosition.y + innerCircleRadius));
+			strokeRect.set(this.toolPosition.x - innerCircleRadius,
+					this.toolPosition.y - innerCircleRadius,
+					this.toolPosition.x + innerCircleRadius,
+					this.toolPosition.y + innerCircleRadius);
 			linePaint.setColor(Color.LTGRAY);
 			canvas.drawRect(strokeRect, linePaint);
 
 			linePaint.setColor(Color.TRANSPARENT);
 			linePaint.setStyle(Style.FILL);
 			strokeRect
-					.set((this.toolPosition.x - innerCircleRadius + (strokeWidth / 2f)),
-							(this.toolPosition.y - innerCircleRadius + (strokeWidth / 2f)),
-							(this.toolPosition.x + innerCircleRadius - (strokeWidth / 2f)),
-							(this.toolPosition.y + innerCircleRadius - (strokeWidth / 2f)));
+					.set(this.toolPosition.x - innerCircleRadius + (strokeWidth / 2f),
+							this.toolPosition.y - innerCircleRadius + (strokeWidth / 2f),
+							this.toolPosition.x + innerCircleRadius - (strokeWidth / 2f),
+							this.toolPosition.y + innerCircleRadius - (strokeWidth / 2f));
 			canvas.drawRect(strokeRect, linePaint);
 		}
 
 		// DRAW outer target lines
 		linePaint.setStyle(Style.FILL);
-		float startLineLengthAddition = (strokeWidth / 2f);
+		float startLineLengthAddition = strokeWidth / 2f;
 		float endLineLengthAddition = cursorPartLength + strokeWidth;
-		for (int lineNr = 0; lineNr < CURSOR_LINES; lineNr++, startLineLengthAddition = (strokeWidth / 2f)
+		for (int lineNr = 0; lineNr < CURSOR_LINES; lineNr++, startLineLengthAddition = strokeWidth / 2f
 				+ cursorPartLength * lineNr, endLineLengthAddition = strokeWidth
 				+ cursorPartLength * (lineNr + 1f)) {
-			if ((lineNr % 2) == 0) {
+			if (lineNr % 2 == 0) {
 				linePaint.setColor(cursorToolSecondaryShapeColor);
 			} else {
 				linePaint.setColor(cursorToolPrimaryShapeColor);

@@ -21,13 +21,16 @@ package org.catrobat.paintroid.ui.tools
 
 import android.graphics.Paint
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import com.google.android.material.textfield.TextInputEditText
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.SprayToolOptionsView
 
 class DefaultSprayToolOptionsView(rootView: ViewGroup) : SprayToolOptionsView {
@@ -37,7 +40,10 @@ class DefaultSprayToolOptionsView(rootView: ViewGroup) : SprayToolOptionsView {
     private val radiusSeekBar: SeekBar
 
     companion object {
-        private const val MIN_RADIUS = 1
+        const val MIN_RADIUS = 1
+        private const val DEFAULT_RADIUS = 5
+        private const val MAX_RADIUS = 100
+        private val TAG = DefaultSprayToolOptionsView::class.java.simpleName
     }
 
     init {
@@ -49,18 +55,19 @@ class DefaultSprayToolOptionsView(rootView: ViewGroup) : SprayToolOptionsView {
     }
 
     private fun initializeListeners() {
-        radiusSeekBar.progress = MIN_RADIUS
+        radiusSeekBar.progress = DEFAULT_RADIUS
         radiusText.setText(radiusSeekBar.progress.toString())
+        radiusText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_RADIUS, MAX_RADIUS))
         radiusText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if(s.toString().toInt() > 100) {
-                    radiusText.setText(s.toString().substring(0,2))
-                    return
+                val sizeText: String = radiusText.text.toString()
+                val sizeTextInt = try {
+                    sizeText.toInt()
+                } catch (exp: NumberFormatException) {
+                    Log.d(DefaultSprayToolOptionsView.TAG, exp.localizedMessage!!)
+                    MIN_RADIUS
                 }
-
-                if(radiusSeekBar.progress.toString() != s.toString()) {
-                    radiusSeekBar.progress = s.toString().toInt()
-                }
+                radiusSeekBar.progress = sizeTextInt
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -70,14 +77,18 @@ class DefaultSprayToolOptionsView(rootView: ViewGroup) : SprayToolOptionsView {
 
         radiusSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, b: Boolean) {
-                if (progress < MIN_RADIUS) {
-                    radiusText.setText(MIN_RADIUS.toString())
-                } else {
-                    radiusText.setText(progress.toString())
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                var progressValue = progress
+                if (progressValue < MIN_RADIUS) {
+                    progressValue = MIN_RADIUS
+                    radiusSeekBar.progress = progressValue
                 }
 
-                callback?.radiusChanged(progress)
+                if (fromUser) {
+                    radiusText.setText(progressValue.toString())
+                }
+
+                callback?.radiusChanged(progressValue)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
