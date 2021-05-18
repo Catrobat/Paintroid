@@ -37,11 +37,11 @@
     <string name="button_hand">Hand</string>
     <string name="button_spray_can">Sprühdose</string>
     <string name="button_apply">Anwenden</string>
-    <string name="button_checkmark">Häkchen </string>
+    <string name="button_checkmark">Häkchen</string>
     <string name="done">Fertig</string>
     <string name="gallery">Galerie</string>
     <string name="load_sticker_error">Konnte Sticker nicht laden</string>
-    <string name="error_unknown_error">Ein unbekannter Fehler ist aufgetreten.</string>
+    <string name="error_unknown_error">Etwas ist schief gelaufen.</string>
     <string name="cap_circle">Kreis</string>
     <string name="cap_square">Quadrat</string>
     <string name="stamptool_paste">Einfügen</string>
@@ -70,13 +70,13 @@
     <string name="help_content_layer">Erstelle neue Ebenen oder verändere bestehende</string>
     <string name="help_content_color_chooser">Wähle eine Farbe oder passe sie an</string>
     <string name="help_content_hand">Bewege deinen Finger um das Bild zu bewegen.</string>
-    <string name="help_content_spray_can">Bewegen Sie den Finger auf das Bild, um ein Spray kann Muster zu erstellen.</string>
+    <string name="help_content_spray_can">Bewegen deinen Finger auf das Bild, um ein Spray kann Muster zu erstellen.</string>
     <string name="closing_catroid_security_question_title">Zurück zum Projekt</string>
     <string name="closing_security_question_title">Verlassen</string>
     <string name="closing_security_question">Änderungen speichern?</string>
     <string name="menu_new_image">Neues Bild</string>
     <string name="menu_discard_image">Bild verwerfen</string>
-    <string name="no_longclick_on_hidden_layer">Sie können nur zusammenführen oder neu anordnen, wenn alle Ebenen sichtbar sind</string>
+    <string name="no_longclick_on_hidden_layer">Du kannst nur zusammenführen oder neu anordnen, wenn alle Ebenen sichtbar sind</string>
     <string name="no_tools_on_hidden_layer">Keine Werkzeuge auf versteckter Ebene verfügbar</string>
     <string name="menu_load_image">Bild laden</string>
     <string name="menu_save_image">Bild speichern</string>
@@ -87,8 +87,10 @@
     <string name="menu_rate_us">Bewerte uns!</string>
     <string name="menu_export">Exportieren</string>
     <string name="menu_feedback">Feedback</string>
-    <string name="saved">Bild gespeichert</string>
-    <string name="copy">Kopie gespeichert</string>
+    <string name="saved_to">Bild gespeichert unter\n</string>
+    <string name="saved">Bild gespeichert\n</string>
+    <string name="copy_to">Kopie gespeichert in\n</string>
+    <string name="copy">Kopie gespeichert\n</string>
     <string name="menu_quit">Verlassen</string>
     <string name="save_button_text">Speichern</string>
     <string name="discard_button_text">Verwerfen</string>
@@ -165,7 +167,7 @@
     <string name="pocketpaint_intro">Intro</string>
     <string name="pocketpaint_intro_split_screen_not_supported">Das Teilen des Bildschirms wird im Intro nicht unterstützt</string>
     <string name="pocketpaint_overwrite_title">Datei überschreiben?</string>
-    <string name="pocketpaint_overwrite">Du bist dabei ein vorhandenes Bild zu überschreiben (Tipp: Um es als neues Bild zu speichern, verwenden Sie die Option \"%s\". Trotzdem speichern?</string>
+    <string name="pocketpaint_overwrite">Du bist dabei ein vorhandenes Bild zu überschreiben (Tipp: Um es als neues Bild zu speichern, verwende die Option \"%s\"). Trotzdem speichern?</string>
     <string name="pocketpaint_like_us">Gefällt dir Pocket Paint?</string>
     <string name="pocketpaint_rate_us">Möchtest du Pocket Paint bewerten?</string>
     <string name="pocketpaint_feedback">Es tut uns leid, das zu hören. Wenn du deine Erfahrungen mit uns teilen möchtest, schreib uns an contact@catrobat.org</string>
@@ -185,5 +187,5 @@
     <string name="intro_bottom_navigation_layers_description">Öffnet das Ebenenmenü und lässt dich deine Ebenen verwalten.</string>
     <string name="pocketpaint_tool_icon_description">Aktuelles Werkzeug Symbol</string>
     <string name="dialog_scale_title">Bild ist zu groß zum laden</string>
-    <string name="dialog_scale_message">Das Bild ist zu groß zum Laden. Klicken Sie auf OK, um das Bild automatisch zu verkleinern.</string>
+    <string name="dialog_scale_message">Das Bild ist zu groß zum Laden. Klicke auf OK, um das Bild automatisch zu verkleinern.</string>
 </resources>

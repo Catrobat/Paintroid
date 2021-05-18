@@ -87,7 +87,9 @@
     <string name="menu_rate_us">Bizi değerlendirin!</string>
     <string name="menu_export">Dışa aktar</string>
     <string name="menu_feedback">Geri bildirim</string>
+    <string name="saved_to">Görüntü kaydedildi\n</string>
     <string name="saved">Resim kaydedildi</string>
+    <string name="copy_to">Kopyala kaydedildi\n</string>
     <string name="copy">Kopyası kaydedildi</string>
     <string name="menu_quit">Çık</string>
     <string name="save_button_text">Kaydet</string>
@@ -135,7 +137,7 @@
     <string name="dialog_save_image_name">Resim adı</string>
     <string name="dialog_save_image_format">Resim formatı</string>
     <string name="dialog_save_jpg_option_quality">Kalite:</string>
-    <string name="pocketpaint_jpg_message_dialog">Depolama alanında&lt;/b&gt; minimum yer kaplar&lt;/b&gt;. &lt;b&gt;Şeffaflığı&lt;/b&gt; hatırlanmaz.</string>
+    <string name="pocketpaint_jpg_message_dialog"><b> Minimum depolama alanı kullanır </b>. <b> Şeffaflığı</b> hatırlamaz.</string>
     <string name="pocketpaint_png_message_dialog">Kayıpsız sıkıştırma. Şeffaflık korunur.</string>
     <string name="pocketpaint_ora_message_dialog">Bu dosya biçimi <b>katmanları </b>hatırlar. <b>Openraster formatını destekleyen uygulamalar tarafından açılabilir.</b></string>
     <string name="permission_info_external_storage_text">Bu uygulamanın düzgün çalışması için istenen izne ihtiyacı var. Görüntüleri yerel belleğe kaydetmek için uygulamanın okuma ve yazma erişimine ihtiyacı vardır.</string>

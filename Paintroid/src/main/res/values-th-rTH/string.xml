@@ -87,7 +87,9 @@
     <string name="menu_rate_us">ให้คะแนนเรา</string>
     <string name="menu_export">ส่งออก</string>
     <string name="menu_feedback">คำติชม</string>
+    <string name="saved_to">Image saved to\n</string>
     <string name="saved">บันทึกภาพแล้ว</string>
+    <string name="copy_to">Copy saved to\n</string>
     <string name="copy">บันทึกสำเนาแล้ว</string>
     <string name="menu_quit">ออก</string>
     <string name="save_button_text">บันทึก</string>
@@ -184,6 +186,6 @@
     <string name="intro_bottom_navigation_color_description">แสดงสีที่ใช้ในปัจจุบันและเปิดตัวเลือกสี</string>
     <string name="intro_bottom_navigation_layers_description">เปิดเมนูเลเยอร์และช่วยให้คุณจัดการเลเยอร์ของคุณ</string>
     <string name="pocketpaint_tool_icon_description">ไอคอนเครื่องมือปัจจุบัน</string>
-    <string name="dialog_scale_title">Image is too big to load</string>
-    <string name="dialog_scale_message">The image is too big to load. Click OK to scale down the image automatically.</string>
+    <string name="dialog_scale_title">รูปภาพใหญ่เกินไปที่จะโหลด</string>
+    <string name="dialog_scale_message">รูปภาพใหญ่เกินไปที่จะโหลด คลิกตกลงเพื่อย่อขนาดภาพโดยอัตโนมัติ</string>
 </resources>

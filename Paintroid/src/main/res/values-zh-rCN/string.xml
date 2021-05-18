@@ -87,7 +87,9 @@
     <string name="menu_rate_us">给我们评分！</string>
     <string name="menu_export">导出</string>
     <string name="menu_feedback">意见反馈</string>
+    <string name="saved_to">图像保存到\n</string>
     <string name="saved">图像已保存</string>
+    <string name="copy_to">复制保存到\n</string>
     <string name="copy">副本已保存</string>
     <string name="menu_quit">退出</string>
     <string name="save_button_text">保存</string>

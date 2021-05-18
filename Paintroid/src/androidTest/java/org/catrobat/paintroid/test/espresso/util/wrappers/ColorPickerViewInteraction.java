@@ -95,7 +95,7 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	}
 
 	public ColorPickerViewInteraction performClickColorPickerPresetSelectorButton(int buttonPosition) {
-		final int colorButtonRowPosition = (buttonPosition / COLOR_PICKER_BUTTONS_PER_ROW);
+		final int colorButtonRowPosition = buttonPosition / COLOR_PICKER_BUTTONS_PER_ROW;
 		final int colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW;
 
 		onView(allOf(isDescendantOfA(withClassName(containsString(PresetSelectorView.class.getSimpleName()))),

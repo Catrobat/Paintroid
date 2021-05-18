@@ -19,20 +19,27 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.app.Activity;
 import android.content.Context;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.contract.MainActivityContracts;
+import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.mockito.Mockito.verify;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
@@ -44,6 +51,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityIntegrationTest {
+
+	@Mock
+	private MainActivityContracts.MainView view;
+
+	@InjectMocks
+	private MainActivityPresenter presenter;
 
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
@@ -80,5 +93,13 @@ public class MainActivityIntegrationTest {
 
 		onView(withText(R.string.pocketpaint_menu_about))
 				.check(doesNotExist());
+	}
+
+	@Test
+	public void testHandleActivityResultWhenIntentIsNull() {
+		launchActivityRule.getActivity().onActivityResult(0, Activity.RESULT_OK, null);
+		MockitoAnnotations.initMocks(this);
+		presenter.handleActivityResult(0, Activity.RESULT_OK, null);
+		verify(view).superHandleActivityResult(0, Activity.RESULT_OK, null);
 	}
 }

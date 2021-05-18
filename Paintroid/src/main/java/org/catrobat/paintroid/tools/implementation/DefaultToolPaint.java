@@ -96,7 +96,7 @@ public class DefaultToolPaint implements ToolPaint {
 	public void setStrokeWidth(float strokeWidth) {
 		bitmapPaint.setStrokeWidth(strokeWidth);
 		previewPaint.setStrokeWidth(strokeWidth);
-		boolean antiAliasing = (strokeWidth > 1);
+		boolean antiAliasing = strokeWidth > 1;
 		bitmapPaint.setAntiAlias(antiAliasing);
 		previewPaint.setAntiAlias(antiAliasing);
 	}

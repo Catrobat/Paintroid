@@ -49,11 +49,13 @@ public class FileFromOtherSourceIntegrationTest {
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
 
 	private ContentResolver resolver;
+	private MainActivity activity;
 
 	@Before
 	public void setUp() {
 		onToolBarView().performSelectTool(ToolType.BRUSH);
 		deletionFileList = new ArrayList<>();
+		activity = launchActivityRule.getActivity();
 		resolver = launchActivityRule.getActivity().getContentResolver();
 	}
 
@@ -64,7 +66,7 @@ public class FileFromOtherSourceIntegrationTest {
 		Bitmap receivedBitmap = null;
 
 		try {
-			receivedBitmap = FileIO.getBitmapFromUri(resolver, receivedUri);
+			receivedBitmap = FileIO.getBitmapFromUri(resolver, receivedUri, activity);
 		} catch (Exception e) {
 			Log.e("Can't read", "Can't get Bitmap from File");
 		}
@@ -93,7 +95,7 @@ public class FileFromOtherSourceIntegrationTest {
 		Objects.requireNonNull(mainActivityIntentUri);
 
 		try {
-			mainActivityIntentBitmap = FileIO.getBitmapFromUri(resolver, mainActivityIntentUri);
+			mainActivityIntentBitmap = FileIO.getBitmapFromUri(resolver, mainActivityIntentUri, activity);
 		} catch (Exception e) {
 			Log.e("Can't read", "Can't get Bitmap from File");
 		}

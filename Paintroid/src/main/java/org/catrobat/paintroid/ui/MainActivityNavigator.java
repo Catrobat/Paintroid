@@ -22,6 +22,7 @@ package org.catrobat.paintroid.ui;
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -181,7 +182,10 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		} catch (ActivityNotFoundException e) {
 			Uri uriNoPlayStore = Uri.parse("http://play.google.com/store/apps/details?id=" + applicationId);
 			Intent noPlayStoreInstalled = new Intent(Intent.ACTION_VIEW, uriNoPlayStore);
-			mainActivity.startActivity(noPlayStoreInstalled);
+			ActivityInfo activityInfo = noPlayStoreInstalled.resolveActivityInfo(mainActivity.getPackageManager(), noPlayStoreInstalled.getFlags());
+			if (activityInfo.exported) {
+				mainActivity.startActivity(noPlayStoreInstalled);
+			}
 		}
 	}
 
@@ -247,8 +251,8 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
-	public void showOverwriteDialog(int permissionCode) {
-		OverwriteDialog overwriteDialog = OverwriteDialog.newInstance(permissionCode);
+	public void showOverwriteDialog(int permissionCode, boolean isExport) {
+		OverwriteDialog overwriteDialog = OverwriteDialog.newInstance(permissionCode, isExport);
 		overwriteDialog.show(mainActivity.getSupportFragmentManager(), Constants.OVERWRITE_INFORMATION_DIALOG_TAG);
 	}
 
@@ -314,6 +318,11 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	}
 
 	@Override
+	public void showToast(String msg, int duration) {
+		ToastFactory.makeText(mainActivity, msg, duration).show();
+	}
+
+	@Override
 	public void showSaveErrorDialog() {
 		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.WARNING,
 				R.string.dialog_error_sdcard_text, R.string.dialog_error_save_title);
@@ -335,7 +344,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void showRequestPermanentlyDeniedPermissionRationaleDialog() {
-		AppCompatDialogFragment dialog = PermanentDenialPermissionInfoDialog.newInstance(mainActivity.getName());
+		AppCompatDialogFragment dialog = PermanentDenialPermissionInfoDialog.newInstance(mainActivity.getPackageName());
 		showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
 	}
 
@@ -418,7 +427,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 			FileIO.catroidFlag = true;
 			FileIO.isCatrobatImage = false;
-			mainActivity.getPresenter().switchBetweenVersions(permissionCode);
+			mainActivity.getPresenter().switchBetweenVersions(permissionCode, isExport);
 			return;
 		}
 
@@ -427,7 +436,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 			isStandard = true;
 		}
 
-		SaveInformationDialog saveInfodialog = SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard);
+		SaveInformationDialog saveInfodialog = SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard, isExport);
 		saveInfodialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_INFORMATION_DIALOG_TAG);
 	}
 

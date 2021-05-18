@@ -25,11 +25,11 @@
     <string name="button_pipette">Pipeta</string>
     <string name="button_undo">Desfazer</string>
     <string name="button_redo">Refazer</string>
-    <string name="button_info">Informação</string>
+    <string name="button_info">Informações</string>
     <string name="button_stamp">Carimbo</string>
     <string name="button_import_image">Importar imagem</string>
     <string name="button_eraser">Borracha</string>
-    <string name="button_transform">Modificar</string>
+    <string name="button_transform">Transformar</string>
     <string name="button_fill">Preencher</string>
     <string name="button_line">Linha</string>
     <string name="button_text">Texto</string>
@@ -87,7 +87,9 @@
     <string name="menu_rate_us">Avalie-nos!</string>
     <string name="menu_export">Exportar</string>
     <string name="menu_feedback">Comentário</string>
+    <string name="saved_to">Imagem salva em\n</string>
     <string name="saved">Imagem salva</string>
+    <string name="copy_to">Cópia salva em\n</string>
     <string name="copy">Cópia salva</string>
     <string name="menu_quit">Sair</string>
     <string name="save_button_text">Salvar</string>
@@ -184,6 +186,6 @@
     <string name="intro_bottom_navigation_color_description">Mostra a cor usada atualmente e abre o seletor de cores.</string>
     <string name="intro_bottom_navigation_layers_description">Abre o menu da camada e permite que você gerencie suas camadas.</string>
     <string name="pocketpaint_tool_icon_description">Ícone da ferramenta atual</string>
-    <string name="dialog_scale_title">A imagem é muito grande para carregar</string>
-    <string name="dialog_scale_message">A imagem é muito grande para ser carregada. Clique em OK para redimensionar a imagem automaticamente.</string>
+    <string name="dialog_scale_title">A imagem é grande demais para ser carregada</string>
+    <string name="dialog_scale_message">A imagem é grande demais para ser carregada. Clique em OK para redimensionar a imagem automaticamente.</string>
 </resources>

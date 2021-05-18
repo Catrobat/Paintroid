@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,11 +22,17 @@ package org.catrobat.paintroid.presenter;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -66,6 +72,7 @@ import org.catrobat.paintroid.ui.LayerAdapter;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -80,6 +87,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXT
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_IMPORT_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
@@ -110,6 +118,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private ToolController toolController;
 	private UserPreferences sharedPreferences;
 	private Context context;
+
+	private boolean isExport = false;
 
 	public MainActivityPresenter(Activity activity, MainView view, Model model, Workspace workspace, Navigator navigator,
 			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
@@ -278,8 +288,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
-	public void showOverwriteDialog(int permissionCode) {
-		navigator.showOverwriteDialog(permissionCode);
+	public void showOverwriteDialog(int permissionCode, boolean isExport) {
+		navigator.showOverwriteDialog(permissionCode, isExport);
 	}
 
 	@Override
@@ -312,6 +322,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		FileIO.uriFilePng = null;
 		FileIO.currentFileNameJpg = null;
 		FileIO.currentFileNamePng = null;
+		FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+		FileIO.ending = ".png";
+		FileIO.isCatrobatImage = false;
 		Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 		commandManager.setInitialStateCommand(initCommand);
 		commandManager.reset();
@@ -322,32 +335,34 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		commandManager.addCommand(commandFactory.createResetCommand());
 	}
 
-	@Override
 	public void switchBetweenVersions(@PermissionRequestCode int requestCode) {
-		if (navigator.isSdkAboveOrEqualQ()) {
+		switchBetweenVersions(requestCode, false);
+	}
+
+	@Override
+	public void switchBetweenVersions(@PermissionRequestCode int requestCode, boolean isExport) {
+		this.isExport = isExport;
+		if (navigator.isSdkAboveOrEqualM()) {
+			askForReadAndWriteExternalStoragePermission(requestCode);
 			switch (requestCode) {
 				case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
-					askForReadAndWriteExternalStoragePermission(PERMISSION_REQUEST_CODE_LOAD_PICTURE);
+					break;
+				case PERMISSION_REQUEST_CODE_IMPORT_PICTURE:
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE:
-					saveImageConfirmClicked(SAVE_IMAGE_DEFAULT, model.getSavedPictureUri());
 					checkforDefaultFilename();
 					showLikeUsDialogIfFirstTimeSave();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_COPY:
-					saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT);
 					checkforDefaultFilename();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW:
-					saveImageConfirmClicked(SAVE_IMAGE_LOAD_NEW, model.getSavedPictureUri());
 					checkforDefaultFilename();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY:
-					saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, model.getSavedPictureUri());
 					checkforDefaultFilename();
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH:
-					saveImageConfirmClicked(SAVE_IMAGE_FINISH, model.getSavedPictureUri());
 					checkforDefaultFilename();
 					break;
 			}
@@ -368,11 +383,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	private void askForReadAndWriteExternalStoragePermission(@PermissionRequestCode int requestCode) {
 		if (model.isOpenedFromCatroid() && requestCode == PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH) {
-			if (!navigator.isSdkAboveOrEqualQ()) {
-				handleRequestPermissionsResult(requestCode,
-						new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-						new int[]{PackageManager.PERMISSION_GRANTED});
-			}
+			handleRequestPermissionsResult(requestCode,
+					new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+					new int[]{PackageManager.PERMISSION_GRANTED});
 
 			return;
 		}
@@ -464,6 +477,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 						} else {
 							navigator.showSaveBeforeLoadImageDialog();
 						}
+						break;
+					case PERMISSION_REQUEST_CODE_IMPORT_PICTURE:
+						navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
 						break;
 					default:
 						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -743,6 +759,23 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				}
 				model.setCameraImageUri(null);
 				FileIO.wasImageLoaded = true;
+				if (uri != null) {
+					String name = getFileName(uri);
+					if (name != null) {
+						if (name.endsWith("jpg") || name.endsWith("jpeg")) {
+							FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
+							FileIO.ending = ".jpg";
+							FileIO.isCatrobatImage = false;
+						} else if (name.endsWith("png")) {
+							FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+							FileIO.ending = ".png";
+							FileIO.isCatrobatImage = false;
+						} else {
+							FileIO.ending = ".ora";
+							FileIO.isCatrobatImage = true;
+						}
+					}
+				}
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {
@@ -772,6 +805,98 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		navigator.showIndeterminateProgressDialog();
 	}
 
+	public static String getPathFromUri(final Context context, final Uri uri) {
+		if (DocumentsContract.isDocumentUri(context, uri)) {
+			if (isExternalStorageDocument(uri)) {
+				final String docId = DocumentsContract.getDocumentId(uri);
+				final String[] split = docId.split(":");
+				final String type = split[0];
+
+				if ("primary".equalsIgnoreCase(type)) {
+					return Environment.getExternalStorageDirectory() + "/" + split[1];
+				}
+			} else if (isDownloadsDocument(uri)) {
+				final String id = DocumentsContract.getDocumentId(uri);
+				final Uri contentUri = ContentUris.withAppendedId(
+						Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+				return getDataColumn(context, contentUri, null, null);
+			} else if (isMediaDocument(uri)) {
+				final String docId = DocumentsContract.getDocumentId(uri);
+				final String[] split = docId.split(":");
+				final String type = split[0];
+
+				Uri contentUri = null;
+				if ("image".equals(type)) {
+					contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+				} else if ("video".equals(type)) {
+					contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+				} else if ("audio".equals(type)) {
+					contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+				}
+
+				final String selection = "_id=?";
+				final String[] selectionArgs = new String[]{
+						split[1]
+				};
+
+				return getDataColumn(context, contentUri, selection, selectionArgs);
+			}
+		} else if ("content".equalsIgnoreCase(uri.getScheme())) {
+			if (isGooglePhotosUri(uri)) {
+				return uri.getLastPathSegment();
+			}
+
+			return getDataColumn(context, uri, null, null);
+		} else if ("file".equalsIgnoreCase(uri.getScheme())) {
+			return uri.getPath();
+		}
+
+		return "";
+	}
+
+	public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+		Cursor cursor = null;
+		final String column = "_data";
+		final String[] projection = {
+				column
+		};
+
+		try {
+			cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				final int index = cursor.getColumnIndexOrThrow(column);
+				return cursor.getString(index);
+			}
+		} catch (IllegalArgumentException e) {
+			File file = new File(context.getCacheDir(), "tmp");
+			FileIO.saveFileFromUri(uri, file, context);
+			return file.getAbsolutePath();
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+
+		return "";
+	}
+
+	public static boolean isExternalStorageDocument(Uri uri) {
+		return "com.android.externalstorage.documents".equals(uri.getAuthority());
+	}
+
+	public static boolean isDownloadsDocument(Uri uri) {
+		return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+	}
+
+	public static boolean isMediaDocument(Uri uri) {
+		return "com.android.providers.media.documents".equals(uri.getAuthority());
+	}
+
+	public static boolean isGooglePhotosUri(Uri uri) {
+		return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+	}
+
 	@Override
 	public void onSaveImagePostExecute(@SaveImageRequestCode int requestCode, Uri uri, boolean saveAsCopy) {
 		navigator.dismissIndeterminateProgressDialog();
@@ -782,9 +907,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 
 		if (saveAsCopy) {
-			navigator.showToast(R.string.copy, Toast.LENGTH_LONG);
+			if (model.isOpenedFromCatroid() && !isExport) {
+				navigator.showToast(R.string.copy, Toast.LENGTH_LONG);
+			} else {
+				navigator.showToast(context.getString(R.string.copy_to) + getPathFromUri(fileActivity, uri), Toast.LENGTH_LONG);
+			}
 		} else {
-			navigator.showToast(R.string.saved, Toast.LENGTH_LONG);
+			if (model.isOpenedFromCatroid() && !isExport) {
+				navigator.showToast(R.string.saved, Toast.LENGTH_LONG);
+			} else {
+				navigator.showToast(context.getString(R.string.saved_to) + getPathFromUri(fileActivity, uri), Toast.LENGTH_LONG);
+			}
 			model.setSavedPictureUri(uri);
 			model.setSaved(true);
 		}
@@ -866,6 +999,21 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 	}
 
+	public String getFileName(Uri uri) {
+		String result = null;
+		if (Objects.equals(uri.getScheme(), "content")) {
+			Cursor cursor = fileActivity.getContentResolver().query(uri, null, null, null, null);
+			try {
+				if (cursor != null && cursor.moveToFirst()) {
+					result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+		return result;
+	}
+
 	@Override
 	public void rateUsClicked() {
 		navigator.rateUsClicked();
@@ -877,7 +1025,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void importFromGalleryClicked() {
-		navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
+		switchBetweenVersions(PERMISSION_REQUEST_CODE_IMPORT_PICTURE);
 	}
 
 	@Override

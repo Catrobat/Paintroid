@@ -56,7 +56,7 @@ pipeline {
 
     triggers {
         cron(env.BRANCH_NAME == 'develop' ? '@midnight' : '')
-        issueCommentTrigger('.*test this please.*')
+        issueCommentTrigger('.*(test this please|please test this).*')
     }
 
     stages {
@@ -106,7 +106,7 @@ pipeline {
                     }
                     post {
                         always {
-                            junitAndCoverage "$reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml", 'unit', javaSrc
+                            junitAndCoverage "$reports/jacoco/jacocoTestDebugUnitTestReport/jacoco.xml", 'unit', javaSrc
                         }
                     }
                 }
