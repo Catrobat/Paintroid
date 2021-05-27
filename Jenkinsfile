@@ -76,10 +76,16 @@ pipeline {
                 sh './gradlew publishToMavenLocal -Psnapshot'
                 sh 'rm -rf Catroid; mkdir Catroid'
                 dir('Catroid') {
-                    git branch: 'develop', url: 'https://github.com/Catrobat/Catroid.git'
+                    git branch: 'PAINTROID-248', url: 'https://github.com/ldirry/Catroid.git'
                     sh "./gradlew -PpaintroidLocal assembleCatroidDebug"
                     archiveArtifacts 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk'
                 }
+                /*sh 'mv -f Paintroid/build/outputs/aar/Paintroid-debug.aar Catroid/catroid/src/main/libs/Paintroid-release-v2.7.3.aar'
+                sh 'mv -f colorpicker/build/outputs/aar/colorpicker-debug.aar Catroid/catroid/src/main/libs/colorpicker-release-v2.7.3.aar'
+                dir('Catroid') {
+                    sh "./gradlew -PpaintroidLocal assembleCatroidDebug"
+                    archiveArtifacts 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk'
+                }*/
             }
         }
 

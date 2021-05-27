@@ -136,6 +136,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         onCreateLayerMenu()
         onCreateDrawingSurface()
         presenter.onCreateTool()
+        Toast.makeText(this, "Worked", Toast.LENGTH_LONG).show()
         val receivedIntent = intent
         val receivedAction = receivedIntent.action
         val receivedType = receivedIntent.type

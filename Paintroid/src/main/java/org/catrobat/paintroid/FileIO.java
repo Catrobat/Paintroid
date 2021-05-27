@@ -77,7 +77,7 @@ public final class FileIO {
 		if (bitmap == null || bitmap.isRecycled()) {
 			throw new IllegalArgumentException("Bitmap is invalid");
 		}
-.
+
 		if (compressFormat == Bitmap.CompressFormat.JPEG) {
 			Bitmap newBitmap = Bitmap.createBitmap(bitmap.getWidth(),
 					bitmap.getHeight(), bitmap.getConfig());
