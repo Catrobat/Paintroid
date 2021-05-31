@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,16 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools.drawable
 
-package org.catrobat.paintroid.tools.drawable;
-
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RectF;
-
-public class RectangleDrawable implements ShapeDrawable {
-	@Override
-	public void draw(Canvas canvas, RectF shapeRect, Paint drawPaint) {
-		canvas.drawRect(shapeRect, drawPaint);
-	}
+class DrawableFactory {
+    fun createDrawable(shape: DrawableShape): ShapeDrawable {
+        return when (shape) {
+            DrawableShape.RECTANGLE -> RectangleDrawable()
+            DrawableShape.OVAL -> OvalDrawable()
+            DrawableShape.HEART -> HeartDrawable()
+            DrawableShape.STAR -> StarDrawable()
+        }
+    }
 }
