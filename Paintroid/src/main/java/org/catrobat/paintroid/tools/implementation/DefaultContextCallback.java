@@ -33,7 +33,6 @@ import android.widget.Toast;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.ContextCallback;
-import org.catrobat.paintroid.tools.common.Constants;
 import org.catrobat.paintroid.ui.ToastFactory;
 
 import androidx.annotation.ColorInt;
@@ -44,6 +43,8 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+
+import static org.catrobat.paintroid.tools.common.ConstantsKt.SCROLL_TOLERANCE_PERCENTAGE;
 
 public class DefaultContextCallback implements ContextCallback {
 	private Shader checkeredBitmapShader;
@@ -71,7 +72,7 @@ public class DefaultContextCallback implements ContextCallback {
 	@Override
 	public int getScrollTolerance() {
 		return (int) (context.getResources().getDisplayMetrics().widthPixels
-				* Constants.SCROLL_TOLERANCE_PERCENTAGE);
+				* SCROLL_TOLERANCE_PERCENTAGE);
 	}
 
 	@Override

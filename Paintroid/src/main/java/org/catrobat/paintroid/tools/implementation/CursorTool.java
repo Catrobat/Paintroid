@@ -41,7 +41,7 @@ import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 import androidx.annotation.VisibleForTesting;
 
-import static org.catrobat.paintroid.tools.common.Constants.MOVE_TOLERANCE;
+import static org.catrobat.paintroid.tools.common.ConstantsKt.MOVE_TOLERANCE;
 
 public class CursorTool extends BaseToolWithShape {
 
