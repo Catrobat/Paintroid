@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools
 
-package org.catrobat.paintroid.tools;
+import android.graphics.Paint
+import android.graphics.Paint.Cap
+import android.graphics.PorterDuffXfermode
+import android.graphics.Shader
 
-import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
-import org.catrobat.paintroid.command.CommandManager;
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
-
-public interface ToolFactory {
-	Tool createTool(ToolType toolType, ToolOptionsViewController toolOptionsViewController, CommandManager commandManager,
-			Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback,
-			OnColorPickedListener onColorPickedListener);
+interface ToolPaint {
+    var paint: Paint
+    val previewPaint: Paint
+    var color: Int
+    val eraseXfermode: PorterDuffXfermode
+    val previewColor: Int
+    var strokeWidth: Float
+    var strokeCap: Cap
+    val checkeredShader: Shader
 }

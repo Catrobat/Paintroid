@@ -1,3 +1,21 @@
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2021 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Canvas
@@ -15,39 +33,46 @@ import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 
-class LineTool(private val brushToolOptionsView: BrushToolOptionsView, contextCallback: ContextCallback,
-               toolOptionsViewController: ToolOptionsVisibilityController, toolPaint: ToolPaint,
-               workspace: Workspace, commandManager: CommandManager)
-    : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
+class LineTool(
+    private val brushToolOptionsView: BrushToolOptionsView, contextCallback: ContextCallback,
+    toolOptionsViewController: ToolOptionsVisibilityController, toolPaint: ToolPaint,
+    workspace: Workspace, commandManager: CommandManager
+) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
 
     @VisibleForTesting
     var initialEventCoordinate: PointF? = null
+
     @VisibleForTesting
     var currentCoordinate: PointF? = null
 
+    override var toolType: ToolType = ToolType.LINE
+
     init {
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
-        brushToolOptionsView.setBrushPreviewListener(CommonBrushPreviewListener(toolPaint, toolType))
+        brushToolOptionsView.setBrushPreviewListener(
+            CommonBrushPreviewListener(
+                toolPaint,
+                toolType
+            )
+        )
         brushToolOptionsView.setCurrentPaint(toolPaint.paint)
     }
 
-    override fun draw(canvas: Canvas) {
+    override fun draw(canvas: Canvas?) {
         initialEventCoordinate?.let { initialCoordinate ->
             currentCoordinate?.let { currentCoordinate ->
-                canvas.run {
+                canvas?.run {
                     save()
                     clipRect(0, 0, workspace.width, workspace.height)
-                    drawLine(initialCoordinate.x,
-                             initialCoordinate.y, currentCoordinate.x,
-                             currentCoordinate.y, toolPaint.previewPaint)
+                    drawLine(
+                        initialCoordinate.x,
+                        initialCoordinate.y, currentCoordinate.x,
+                        currentCoordinate.y, toolPaint.previewPaint
+                    )
                     restore()
                 }
             }
         }
-    }
-
-    override fun getToolType(): ToolType {
-        return ToolType.LINE
     }
 
     override fun handleDown(coordinate: PointF?): Boolean {
@@ -69,8 +94,10 @@ class LineTool(private val brushToolOptionsView: BrushToolOptionsView, contextCa
         }
         val bounds = RectF()
         val finalPath = Path().apply {
-            moveTo(initialEventCoordinate?.x ?: return false,
-                   initialEventCoordinate?.y ?: return false)
+            moveTo(
+                initialEventCoordinate?.x ?: return false,
+                initialEventCoordinate?.y ?: return false
+            )
             lineTo(coordinate.x, coordinate.y)
             computeBounds(bounds, true)
         }
