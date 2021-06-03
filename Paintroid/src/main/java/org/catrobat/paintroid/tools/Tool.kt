@@ -26,7 +26,7 @@ import android.graphics.PointF
 import android.os.Bundle
 
 interface Tool {
-    val toolType: ToolType?
+    val toolType: ToolType
 
     val drawPaint: Paint
 
