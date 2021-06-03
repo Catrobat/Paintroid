@@ -92,7 +92,7 @@ public class TextToolIntegrationTest {
 
 	private static final String FONT_MONOSPACE = "Monospace";
 	private static final String FONT_SERIF = "Serif";
-	private static final String FONT_SANS_SERIF = "Sans Serif";
+	private static final String FONT_SANS_SERIF = "Sans serif";
 	private static final String FONT_STC = "STC";
 	private static final String FONT_DUBAI = "Dubai";
 
