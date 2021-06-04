@@ -30,7 +30,6 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
-import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -49,8 +48,8 @@ import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.DefaultToolController
-import org.catrobat.paintroid.iotasks.BitmapReturnValue
 import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
+import org.catrobat.paintroid.listener.DrawerLayoutListener
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.model.MainActivityModel
@@ -289,6 +288,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val layerAdapter = LayerAdapter(layerPresenter)
         presenter.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
+        findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout).apply {
+            addDrawerListener(DrawerLayoutListener(this, layerAdapter))
+        }
         layerListView.setPresenter(layerPresenter)
         layerListView.adapter = layerAdapter
         layerPresenter.refreshLayerMenuViewHolder()
@@ -404,7 +406,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (VERSION.SDK_INT == Build.VERSION_CODES.M) {
             deferredRequestPermissionsResult = Runnable { presenter.handleRequestPermissionsResult(requestCode, permissions, grantResults) }
         } else {
@@ -412,7 +414,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
-    override fun superHandleRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun superHandleRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 

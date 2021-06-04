@@ -51,6 +51,7 @@ import org.catrobat.paintroid.common.MainActivityConstants.CreateFileRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.PermissionRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.SaveImageRequestCode;
+import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.contract.MainActivityContracts.BottomBarViewHolder;
 import org.catrobat.paintroid.contract.MainActivityContracts.BottomNavigationViewHolder;
 import org.catrobat.paintroid.contract.MainActivityContracts.DrawerLayoutViewHolder;
@@ -549,6 +550,15 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void showLayerMenuClicked() {
+		if (layerAdapter != null) {
+			layerAdapter.setDrawerLayoutOpen(true);
+			for (int i = 0; i < layerAdapter.getCount(); i++) {
+				LayerContracts.LayerViewHolder currentHolder = layerAdapter.getViewHolderAt(i);
+				if (currentHolder.getBitmap() != null) {
+					currentHolder.updateImageView(currentHolder.getBitmap(), true);
+				}
+			}
+		}
 		drawerLayoutViewHolder.openDrawer(Gravity.END);
 	}
 

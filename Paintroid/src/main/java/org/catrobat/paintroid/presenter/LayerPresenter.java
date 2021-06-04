@@ -91,7 +91,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 	}
 
 	@Override
-	public void onBindLayerViewHolderAtPosition(int position, LayerViewHolder viewHolder) {
+	public void onBindLayerViewHolderAtPosition(int position, LayerViewHolder viewHolder, boolean isOpen) {
 		LayerContracts.Layer layer = getLayerItem(position);
 
 		if (layer == model.getCurrentLayer()) {
@@ -100,10 +100,10 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 			viewHolder.setDeselected();
 		}
 		if (!layers.get(position).getCheckBox()) {
-			viewHolder.setBitmap(layer.getTransparentBitmap());
+			viewHolder.updateImageView(layer.getTransparentBitmap(), isOpen);
 			viewHolder.setCheckBox(false);
 		} else {
-			viewHolder.setBitmap(layer.getBitmap());
+			viewHolder.updateImageView(layer.getBitmap(), isOpen);
 			viewHolder.setCheckBox(true);
 		}
 	}
@@ -180,7 +180,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		destinationLayer.setBitmap(bitmapToAdd);
 		destinationLayer.setCheckBox(true);
 
-		viewHolder.setBitmap(bitmapToAdd);
+		viewHolder.updateImageView(bitmapToAdd, true);
 
 		drawingSurface.refreshDrawingSurface();
 
