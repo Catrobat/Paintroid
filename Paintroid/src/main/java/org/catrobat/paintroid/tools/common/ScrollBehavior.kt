@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,28 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools.common
 
-package org.catrobat.paintroid.tools.common;
+import android.graphics.Point
 
-import android.graphics.Paint;
-
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
-
-public class CommonBrushChangedListener implements BrushToolOptionsView.OnBrushChangedListener {
-	private Tool tool;
-
-	public CommonBrushChangedListener(Tool tool) {
-		this.tool = tool;
-	}
-
-	@Override
-	public void setCap(Paint.Cap strokeCap) {
-		tool.changePaintStrokeCap(strokeCap);
-	}
-
-	@Override
-	public void setStrokeWidth(int strokeWidth) {
-		tool.changePaintStrokeWidth(strokeWidth);
-	}
+interface ScrollBehavior {
+    fun getScrollDirection(pointX: Float, pointY: Float, viewWidth: Int, viewHeight: Int): Point
 }
