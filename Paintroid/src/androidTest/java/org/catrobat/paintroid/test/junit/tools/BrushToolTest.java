@@ -34,7 +34,7 @@ import org.catrobat.paintroid.tools.Tool.StateChange;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.common.Constants;
+import org.catrobat.paintroid.tools.common.ConstantsKt;
 import org.catrobat.paintroid.tools.implementation.BrushTool;
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
@@ -60,7 +60,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BrushToolTest {
-	private static final float MOVE_TOLERANCE = Constants.MOVE_TOLERANCE;
+	private static final float MOVE_TOLERANCE = ConstantsKt.MOVE_TOLERANCE;
 	@Mock
 	private CommandManager commandManager;
 	@Mock

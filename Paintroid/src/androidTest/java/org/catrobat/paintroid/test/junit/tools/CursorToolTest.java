@@ -32,7 +32,7 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.common.Constants;
+import org.catrobat.paintroid.tools.common.ConstantsKt;
 import org.catrobat.paintroid.tools.implementation.CursorTool;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
@@ -58,7 +58,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CursorToolTest {
-	private static final float MOVE_TOLERANCE = Constants.MOVE_TOLERANCE;
+	private static final float MOVE_TOLERANCE = ConstantsKt.MOVE_TOLERANCE;
 	@Mock
 	private CommandManager commandManager;
 	@Mock

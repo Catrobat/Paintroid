@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools.common
 
-package org.catrobat.paintroid.tools.drawable;
+import android.graphics.Paint.Cap
+import org.catrobat.paintroid.tools.Tool
+import org.catrobat.paintroid.tools.options.BrushToolOptionsView.OnBrushChangedListener
 
-public enum DrawableStyle {
-	STROKE,
-	FILL
+class CommonBrushChangedListener(private val tool: Tool) : OnBrushChangedListener {
+    override fun setCap(strokeCap: Cap) {
+        tool.changePaintStrokeCap(strokeCap)
+    }
+
+    override fun setStrokeWidth(strokeWidth: Int) {
+        tool.changePaintStrokeWidth(strokeWidth)
+    }
 }
