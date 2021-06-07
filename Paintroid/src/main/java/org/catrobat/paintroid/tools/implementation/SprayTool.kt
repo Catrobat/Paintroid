@@ -24,7 +24,11 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -40,7 +44,7 @@ import kotlin.random.Random
 
 class SprayTool(
     var stampToolOptionsView: SprayToolOptionsView,
-    val contextCallback: ContextCallback,
+    override var contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
@@ -81,8 +85,8 @@ class SprayTool(
         toolOptionsViewController.showDelayed()
     }
 
-    override fun draw(canvas: Canvas?) {
-        canvas?.run {
+    override fun draw(canvas: Canvas) {
+        canvas.run {
             save()
             drawBitmap(previewBitmap, 0.0f, 0.0f, null)
             restore()
@@ -141,7 +145,6 @@ class SprayTool(
         val command = commandFactory.createSprayCommand(pointsArray, drawPaint)
         commandManager.addCommand(command)
     }
-
 
     private fun createSprayPatternAsync() {
         sprayToolScope = CoroutineScope(Dispatchers.Default)

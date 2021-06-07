@@ -26,7 +26,7 @@ import android.graphics.PointF
 import android.os.Bundle
 
 interface Tool {
-    val toolType: ToolType?
+    val toolType: ToolType
 
     val drawPaint: Paint
 
@@ -44,7 +44,7 @@ interface Tool {
 
     fun changePaintStrokeCap(cap: Cap)
 
-    fun draw(canvas: Canvas?)
+    fun draw(canvas: Canvas)
 
     fun resetInternalState(stateChange: StateChange)
 

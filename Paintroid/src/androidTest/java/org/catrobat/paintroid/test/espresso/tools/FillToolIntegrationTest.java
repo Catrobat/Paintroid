@@ -50,6 +50,7 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceI
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.catrobat.paintroid.tools.implementation.FillToolKt.DEFAULT_TOLERANCE_IN_PERCENT;
 import static org.junit.Assert.assertEquals;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -155,7 +156,7 @@ public class FillToolIntegrationTest {
 		FillTool fillTool = (FillTool) toolReference.get();
 		assertEquals(
 				"Wrong fill tool member value for color tolerance",
-				fillTool.getToleranceAbsoluteValue(FillTool.DEFAULT_TOLERANCE_IN_PERCENT),
+				fillTool.getToleranceAbsoluteValue(DEFAULT_TOLERANCE_IN_PERCENT),
 				fillTool.colorTolerance,
 				TOLERANCE_DELTA
 		);
@@ -168,7 +169,7 @@ public class FillToolIntegrationTest {
 
 		String testToleranceText = "100";
 
-		colorToleranceInput.check(matches(withText(Integer.toString(FillTool.DEFAULT_TOLERANCE_IN_PERCENT))));
+		colorToleranceInput.check(matches(withText(Integer.toString(DEFAULT_TOLERANCE_IN_PERCENT))));
 
 		colorToleranceInput.perform(replaceText(testToleranceText), closeSoftKeyboard());
 
@@ -213,8 +214,8 @@ public class FillToolIntegrationTest {
 		onToolBarView()
 				.performClickSelectedToolButton();
 
-		colorToleranceInput.check(matches(withText(Integer.toString(FillTool.DEFAULT_TOLERANCE_IN_PERCENT))));
-		colorToleranceSeekBar.check(matches(withProgress(FillTool.DEFAULT_TOLERANCE_IN_PERCENT)));
+		colorToleranceInput.check(matches(withText(Integer.toString(DEFAULT_TOLERANCE_IN_PERCENT))));
+		colorToleranceSeekBar.check(matches(withProgress(DEFAULT_TOLERANCE_IN_PERCENT)));
 	}
 
 	@Ignore("Fails on Jenkins, trying out if everything works without this test or if error is due to a bug on Jenkins")

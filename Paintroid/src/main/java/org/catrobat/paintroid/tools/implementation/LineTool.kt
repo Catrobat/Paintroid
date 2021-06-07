@@ -34,9 +34,12 @@ import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 
 class LineTool(
-    private val brushToolOptionsView: BrushToolOptionsView, contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsVisibilityController, toolPaint: ToolPaint,
-    workspace: Workspace, commandManager: CommandManager
+    private val brushToolOptionsView: BrushToolOptionsView,
+    contextCallback: ContextCallback,
+    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolPaint: ToolPaint,
+    workspace: Workspace,
+    commandManager: CommandManager
 ) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
 
     @VisibleForTesting
@@ -58,10 +61,10 @@ class LineTool(
         brushToolOptionsView.setCurrentPaint(toolPaint.paint)
     }
 
-    override fun draw(canvas: Canvas?) {
+    override fun draw(canvas: Canvas) {
         initialEventCoordinate?.let { initialCoordinate ->
             currentCoordinate?.let { currentCoordinate ->
-                canvas?.run {
+                canvas.run {
                     save()
                     clipRect(0, 0, workspace.width, workspace.height)
                     drawLine(
