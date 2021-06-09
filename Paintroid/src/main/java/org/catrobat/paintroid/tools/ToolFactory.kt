@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,38 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools
 
-package org.catrobat.paintroid.tools;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener
+import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
-import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Shader;
-
-import androidx.annotation.ColorInt;
-
-public interface ToolPaint {
-
-	Paint getPaint();
-
-	void setPaint(Paint paint);
-
-	Paint getPreviewPaint();
-
-	int getColor();
-
-	void setColor(@ColorInt int color);
-
-	PorterDuffXfermode getEraseXfermode();
-
-	int getPreviewColor();
-
-	float getStrokeWidth();
-
-	void setStrokeWidth(float strokeWidth);
-
-	Paint.Cap getStrokeCap();
-
-	void setStrokeCap(Paint.Cap strokeCap);
-
-	Shader getCheckeredShader();
+interface ToolFactory {
+    fun createTool(
+        toolType: ToolType,
+        toolOptionsViewController: ToolOptionsViewController,
+        commandManager: CommandManager,
+        workspace: Workspace,
+        toolPaint: ToolPaint,
+        contextCallback: ContextCallback,
+        onColorPickedListener: OnColorPickedListener
+    ): Tool
 }
