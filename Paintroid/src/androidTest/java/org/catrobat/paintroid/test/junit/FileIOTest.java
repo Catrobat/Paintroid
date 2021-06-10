@@ -17,6 +17,7 @@ public class FileIOTest {
 
 	@Mock
 	Bitmap bitmap;
+
 	@Mock
 	ExifInterface exifInterface;
 

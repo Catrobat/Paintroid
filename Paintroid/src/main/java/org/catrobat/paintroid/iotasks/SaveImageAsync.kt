@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.iotasks
 
 import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
 import android.os.AsyncTask
 import android.util.Log
@@ -28,11 +29,12 @@ import org.catrobat.paintroid.tools.Workspace
 import java.io.IOException
 import java.lang.ref.WeakReference
 
-class SaveImageAsync(activity: SaveImageCallback, private val requestCode: Int, workspace: Workspace, uri: Uri?, saveAsCopy: Boolean) : AsyncTask<Void?, Void?, Uri?>() {
+class SaveImageAsync(activity: SaveImageCallback, private val requestCode: Int, workspace: Workspace, uri: Uri?, saveAsCopy: Boolean, context: Context) : AsyncTask<Void?, Void?, Uri?>() {
 	private val callbackRef: WeakReference<SaveImageCallback> = WeakReference(activity)
 	private var uri: Uri?
 	private val saveAsCopy: Boolean
 	private val workspace: Workspace
+	private val context: Context
 	override fun onPreExecute() {
 		val callback = callbackRef.get()
 		if (callback == null || callback.isFinishing) {
@@ -62,12 +64,12 @@ class SaveImageAsync(activity: SaveImageCallback, private val requestCode: Int, 
 					}
 				} else {
 					if (uri != null && FileIO.catroidFlag) {
-						FileIO.saveBitmapToUri(uri, callback.contentResolver, bitmap)
+						FileIO.saveBitmapToUri(uri, callback.contentResolver, bitmap, context)
 					} else if (uri != null && fileExistsValue != Constants.IS_NO_FILE) {
 						setUriToFormatUri(fileExistsValue)
-						FileIO.saveBitmapToUri(uri, callback.contentResolver, bitmap)
+						FileIO.saveBitmapToUri(uri, callback.contentResolver, bitmap, context)
 					} else {
-						val imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.contentResolver)
+						val imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.contentResolver, context)
 						if (FileIO.ending == ".png") {
 							FileIO.currentFileNamePng = fileName
 							FileIO.uriFilePng = imageUri
@@ -125,5 +127,6 @@ class SaveImageAsync(activity: SaveImageCallback, private val requestCode: Int, 
 		this.uri = uri
 		this.saveAsCopy = saveAsCopy
 		this.workspace = workspace
+		this.context = context
 	}
 }
