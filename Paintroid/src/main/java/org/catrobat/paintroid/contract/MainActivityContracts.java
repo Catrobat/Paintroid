@@ -292,11 +292,11 @@ public interface MainActivityContracts {
 	}
 
 	interface Interactor {
-		void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace);
+		void saveCopy(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace, Context context);
 
 		void createFile(CreateFileAsync.CreateFileCallback callback, int requestCode, @Nullable String filename);
 
-		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace, Uri uri);
+		void saveImage(SaveImageAsync.SaveImageCallback callback, int requestCode, Workspace workspace, Uri uri, Context context);
 
 		void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri, Context context, boolean scaling);
 	}

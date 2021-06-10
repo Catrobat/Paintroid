@@ -516,12 +516,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void saveImageConfirmClicked(int requestCode, Uri uri) {
-		interactor.saveImage(this, requestCode, workspace, uri);
+		interactor.saveImage(this, requestCode, workspace, uri, context);
 	}
 
 	@Override
 	public void saveCopyConfirmClicked(int requestCode) {
-		interactor.saveCopy(this, requestCode, workspace);
+		interactor.saveCopy(this, requestCode, workspace, context);
 	}
 
 	@Override

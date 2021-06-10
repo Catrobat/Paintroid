@@ -53,6 +53,8 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
+import id.zelory.compressor.Compressor;
+
 public final class FileIO {
 	public static String filename = "image";
 	public static String ending = ".png";
@@ -93,7 +95,7 @@ public final class FileIO {
 		}
 	}
 
-	public static Uri saveBitmapToUri(Uri uri, ContentResolver resolver, Bitmap bitmap) throws IOException {
+	public static Uri saveBitmapToUri(Uri uri, ContentResolver resolver, Bitmap bitmap, Context context) throws IOException {
 		OutputStream outputStream = resolver.openOutputStream(uri);
 
 		if (outputStream == null) {
@@ -103,12 +105,21 @@ public final class FileIO {
 			saveBitmapToStream(outputStream, bitmap);
 		} finally {
 			outputStream.close();
+			File file = new File(MainActivityPresenter.getPathFromUri(context,uri));
+			compress(context, file);
 		}
 
 		return uri;
 	}
 
-	public static Uri saveBitmapToFile(String fileName, Bitmap bitmap, ContentResolver resolver) throws IOException {
+	public static File compress(Context context, File file) throws IOException {
+		Compressor compressor = new Compressor(context);
+		compressor.setQuality(compressQuality);
+		compressor.setCompressFormat(compressFormat);
+		return compressor.compressToFile(file);
+	}
+
+	public static Uri saveBitmapToFile(String fileName, Bitmap bitmap, ContentResolver resolver, Context context) throws IOException {
 		OutputStream fos;
 		Uri imageUri;
 
@@ -123,11 +134,14 @@ public final class FileIO {
 
 			try {
 				saveBitmapToStream(fos, bitmap);
-
 				Objects.requireNonNull(fos, "Can't create fileoutputstream!");
 			} finally {
 				fos.close();
+
+				File file = new File(MainActivityPresenter.getPathFromUri(context,imageUri));
+				compress(context, file);
 			}
+
 		} else {
 			if (!(Constants.MEDIA_DIRECTORY.exists() || Constants.MEDIA_DIRECTORY.mkdirs())) {
 				throw new IOException("Can not create media directory.");
@@ -138,10 +152,11 @@ public final class FileIO {
 
 			try {
 				saveBitmapToStream(outputStream, bitmap);
+
 			} finally {
 				outputStream.close();
+				compress(context, file);
 			}
-
 			imageUri = Uri.fromFile(file);
 		}
 
