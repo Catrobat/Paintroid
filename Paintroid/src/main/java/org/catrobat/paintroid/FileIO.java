@@ -52,7 +52,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
-
 import id.zelory.compressor.Compressor;
 
 public final class FileIO {
@@ -105,18 +104,25 @@ public final class FileIO {
 			saveBitmapToStream(outputStream, bitmap);
 		} finally {
 			outputStream.close();
-			File file = new File(MainActivityPresenter.getPathFromUri(context,uri));
-			compress(context, file);
 		}
-
+		File file = new File(MainActivityPresenter.getPathFromUri(context, uri));
+		if(!compress(context, file)) {
+			 throw new IOException("Can not compress image file.");
+		}
 		return uri;
 	}
 
-	public static File compress(Context context, File file) throws IOException {
-		Compressor compressor = new Compressor(context);
-		compressor.setQuality(compressQuality);
-		compressor.setCompressFormat(compressFormat);
-		return compressor.compressToFile(file);
+	public static boolean compress(Context context, File fileToComprss) {
+		try {
+			Compressor compressor = new Compressor(context);
+			compressor.setQuality(compressQuality);
+			compressor.setCompressFormat(compressFormat);
+			return compressor.compressToFile(fileToComprss).exists();
+		} catch (IOException e) {
+			Log.e("Can not compress", "Can not compress image file", e);
+			return false;
+		}
+
 	}
 
 	public static Uri saveBitmapToFile(String fileName, Bitmap bitmap, ContentResolver resolver, Context context) throws IOException {
@@ -137,10 +143,12 @@ public final class FileIO {
 				Objects.requireNonNull(fos, "Can't create fileoutputstream!");
 			} finally {
 				fos.close();
-
-				File file = new File(MainActivityPresenter.getPathFromUri(context,imageUri));
-				compress(context, file);
 			}
+			File file = new File(MainActivityPresenter.getPathFromUri(context, imageUri));
+			if(!compress(context, file)) {
+				throw new IOException("Can not compress image file.");
+			}
+
 
 		} else {
 			if (!(Constants.MEDIA_DIRECTORY.exists() || Constants.MEDIA_DIRECTORY.mkdirs())) {
@@ -152,10 +160,11 @@ public final class FileIO {
 
 			try {
 				saveBitmapToStream(outputStream, bitmap);
-
 			} finally {
 				outputStream.close();
-				compress(context, file);
+			}
+			if(!compress(context, file)) {
+				throw new IOException("Can not compress image file.");
 			}
 			imageUri = Uri.fromFile(file);
 		}
