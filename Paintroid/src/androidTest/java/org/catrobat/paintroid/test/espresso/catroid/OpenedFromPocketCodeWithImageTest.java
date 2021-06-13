@@ -55,7 +55,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
 import id.zelory.compressor.Compressor;
-
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -221,7 +220,6 @@ public class OpenedFromPocketCodeWithImageTest {
 		deletionFileList.add(uncompressedImageFile);
 		try {
 			imageFile = compressor.compressToFile(uncompressedImageFile, IMAGE_NAME + ".png");
-
 		} catch (IOException e) {
 			throw new AssertionError("Test Picture file could not be created.", e);
 		}
