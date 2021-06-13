@@ -54,6 +54,8 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
+import id.zelory.compressor.Compressor;
+
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -202,19 +204,31 @@ public class OpenedFromPocketCodeWithImageTest {
 		canvas.drawColor(Color.WHITE);
 		canvas.drawBitmap(bitmap, 0F, 0F, null);
 
-		File imageFile = new File(activity.getExternalFilesDir(null).getAbsolutePath(), IMAGE_TO_LOAD_NAME + ".jpg");
-		Uri imageUri = Uri.fromFile(imageFile);
+		File uncompressedImageFile = new File(activity.getExternalFilesDir(null).getAbsolutePath(), "uncompressed_" + IMAGE_NAME + ".jpg");
+
 		try {
-			OutputStream fos = activity.getContentResolver().openOutputStream(Objects.requireNonNull(imageUri));
-			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos));
+			Uri uncompressedImageUri = Uri.fromFile(uncompressedImageFile);
+			OutputStream fos = activity.getContentResolver().openOutputStream(Objects.requireNonNull(uncompressedImageUri));
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos));
 			assert fos != null;
 			fos.close();
 		} catch (IOException e) {
 			throw new AssertionError("Picture file could not be created.", e);
 		}
+		Compressor compressor = new Compressor(launchActivityRule.getActivity());
+		compressor.setCompressFormat(Bitmap.CompressFormat.JPEG);
+		compressor.setQuality(100);
+		compressor.setDestinationDirectoryPath(activity.getExternalFilesDir(null).getAbsolutePath() + "/Pictures");
+		deletionFileList.add(uncompressedImageFile);
+		try {
+			imageFile = compressor.compressToFile(uncompressedImageFile, IMAGE_NAME + ".png");
+
+		} catch (IOException e) {
+			throw new AssertionError("Test Picture file could not be created.", e);
+		}
 
 		deletionFileList.add(imageFile);
-		return imageUri;
+		return Uri.fromFile(imageFile);
 	}
 
 	private void verifyImageFile(long lastModifiedBefore, long fileSizeBefore) {

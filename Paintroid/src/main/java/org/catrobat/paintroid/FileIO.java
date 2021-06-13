@@ -120,7 +120,7 @@ public final class FileIO {
 
 			String parentPath = new File(destination.getPath()).getParentFile().getPath();
 			compressor.setDestinationDirectoryPath(parentPath);
-			return compressor.compressToFile(fileToCompress, filename+ending);
+			return compressor.compressToFile(fileToCompress, filename + ending);
 		} catch (IOException e) {
 			Log.e("Can not compress", "Can not compress image file.", e);
 			return null;
