@@ -77,7 +77,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class OpenedFromPocketCodeWithImageTest {
 
 	private static final String IMAGE_NAME = "testFile";
-	private static final String IMAGE_TO_LOAD_NAME = "loadFile";
 
 	@Rule
 	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, true);
