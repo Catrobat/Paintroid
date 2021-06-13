@@ -101,7 +101,7 @@ public final class FileIO {
 		Uri cachedImageUri = saveBitmapToCache(bitmap, context, Long.toString(random.nextLong()));
 		File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
 		try {
-			if(compress(context, cachedFile, uri) == null) {
+			if (compress(context, cachedFile, uri) == null) {
 				throw new IOException("Can not compress image file.");
 			}
 		} finally {
@@ -147,15 +147,14 @@ public final class FileIO {
 			File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
 
 			try {
-				if(compress(context, cachedFile, imageUri) == null) {
+				if (compress(context, cachedFile, imageUri) == null) {
 					throw new IOException("Can not compress image file.");
 				}
 			} finally {
-				if(cachedFile.exists()) {
+				if (cachedFile.exists()) {
 					cachedFile.delete();
 				}
 			}
-
 		} else {
 			if (!(Constants.MEDIA_DIRECTORY.exists() || Constants.MEDIA_DIRECTORY.mkdirs())) {
 				throw new IOException("Can not create media directory.");
@@ -168,11 +167,11 @@ public final class FileIO {
 			Uri cachedImageUri = saveBitmapToCache(bitmap, context, Long.toString(random.nextLong()));
 			File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
 			try {
-				if(compress(context, cachedFile, imageUri) == null) {
+				if (compress(context, cachedFile, imageUri) == null) {
 					throw new IOException("Can not compress image file.");
 				}
 			} finally {
-				if(cachedFile.exists()) {
+				if (cachedFile.exists()) {
 					cachedFile.delete();
 				}
 			}
@@ -185,11 +184,11 @@ public final class FileIO {
 		try {
 			File cachePath = new File(context.getCacheDir(), "images");
 			cachePath.mkdirs();
-			FileOutputStream stream = new FileOutputStream(cachePath + "/"+fileName +ending);
+			FileOutputStream stream = new FileOutputStream(cachePath + "/" + fileName + ending);
 			saveBitmapToStream(stream, bitmap);
 			stream.close();
 			File imagePath = new File(context.getCacheDir(), "images");
-			File newFile = new File(imagePath, fileName+ending);
+			File newFile = new File(imagePath, fileName + ending);
 			String fileProviderString = context.getApplicationContext().getPackageName() + ".fileprovider";
 			uri = FileProvider.getUriForFile(context.getApplicationContext(), fileProviderString, newFile);
 		} catch (IOException e) {
