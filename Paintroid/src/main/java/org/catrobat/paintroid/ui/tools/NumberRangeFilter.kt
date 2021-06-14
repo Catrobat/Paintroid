@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.ui.tools
 
-package org.catrobat.paintroid.tools.helper;
+import android.text.InputFilter
+import android.text.Spanned
 
-public class JavaFillAlgorithmFactory implements FillAlgorithmFactory {
-	@Override
-	public FillAlgorithm createFillAlgorithm() {
-		return new JavaFillAlgorithm();
-	}
+interface NumberRangeFilter : InputFilter {
+    var max: Int
+
+    override fun filter(
+        source: CharSequence,
+        start: Int,
+        end: Int,
+        dest: Spanned,
+        dstart: Int,
+        dend: Int
+    ): CharSequence?
 }
