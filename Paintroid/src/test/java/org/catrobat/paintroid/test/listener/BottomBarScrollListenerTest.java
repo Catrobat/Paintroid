@@ -19,6 +19,7 @@
 
 package org.catrobat.paintroid.test.listener;
 
+import android.content.Context;
 import android.view.View;
 
 import org.catrobat.paintroid.listener.BottomBarScrollListener;
@@ -28,6 +29,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -42,9 +44,12 @@ public class BottomBarScrollListenerTest {
 
 	private BottomBarScrollListener bottomBarScrollListener;
 
+	private Context context;
+
 	@Before
 	public void setUp() {
-		bottomBarScrollListener = new BottomBarScrollListener(previous, next);
+		context = mock(Context.class);
+		bottomBarScrollListener = new BottomBarScrollListener(previous, next, context);
 	}
 
 	@Test
