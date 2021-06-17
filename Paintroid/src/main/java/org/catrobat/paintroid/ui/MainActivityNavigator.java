@@ -436,8 +436,8 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 			isStandard = true;
 		}
 
-		SaveInformationDialog saveInfodialog = SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard, isExport);
-		saveInfodialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_INFORMATION_DIALOG_TAG);
+		SaveInformationDialog saveInfoDialog = SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard, isExport);
+		saveInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_INFORMATION_DIALOG_TAG);
 	}
 
 	public String getFileName(Uri uri) {
