@@ -258,19 +258,19 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void showPngInformationDialog() {
-		PngInfoDialog pngInfoDialog = PngInfoDialog.newInstance();
+		PngInfoDialog pngInfoDialog = new PngInfoDialog();
 		pngInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.PNG_INFORMATION_DIALOG_TAG);
 	}
 
 	@Override
 	public void showJpgInformationDialog() {
-		JpgInfoDialog jpgInfoDialog = JpgInfoDialog.newInstance();
+		JpgInfoDialog jpgInfoDialog = new JpgInfoDialog();
 		jpgInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.JPG_INFORMATION_DIALOG_TAG);
 	}
 
 	@Override
 	public void showOraInformationDialog() {
-		OraInfoDialog oraInfoDialog = OraInfoDialog.newInstance();
+		OraInfoDialog oraInfoDialog = new OraInfoDialog();
 		oraInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.ORA_INFORMATION_DIALOG_TAG);
 	}
 
