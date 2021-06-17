@@ -53,6 +53,8 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
+import static org.catrobat.paintroid.common.Constants.MAX_LAYERS;
+
 public final class FileIO {
 	public static String filename = "image";
 	public static String ending = ".png";
@@ -403,7 +405,7 @@ public final class FileIO {
 		Runtime info = Runtime.getRuntime();
 		availableMemory = (float) ((info.maxMemory() - info.totalMemory() + info.freeMemory()) * 0.9);
 		heightToWidthFactor = (float) (options.outWidth / (options.outHeight * 1.0));
-		availablePixels = (float) ((availableMemory * 0.9) / 4.0); //4 byte per pixel, 10% safety buffer on memory
+		availablePixels = (float) (((availableMemory / (float) MAX_LAYERS) * 0.9) / 4.0); //4 byte per pixel, 10% safety buffer on memory
 		availableHeight = (float) Math.sqrt(availablePixels / heightToWidthFactor);
 		availableWidth = availablePixels / availableHeight;
 		return calculateSampleSize(options.outWidth, options.outHeight,

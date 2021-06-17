@@ -102,10 +102,10 @@ public class LayerPresenterTest {
 		layerModel.setCurrentLayer(firstLayer);
 
 		createPresenter();
-		layerPresenter.onBindLayerViewHolderAtPosition(0, layerViewHolder);
+		layerPresenter.onBindLayerViewHolderAtPosition(0, layerViewHolder, false);
 
 		verify(layerViewHolder).setSelected(0, null, null);
-		verify(layerViewHolder).setBitmap(firstLayerBitmap);
+		verify(layerViewHolder).updateImageView(firstLayerBitmap, false);
 		verify(layerViewHolder).setCheckBox(false);
 		verifyNoMoreInteractions(layerViewHolder);
 		verifyZeroInteractions(commandManager, commandFactory, layerAdapter,
@@ -124,10 +124,10 @@ public class LayerPresenterTest {
 		layerModel.setCurrentLayer(firstLayer);
 
 		createPresenter();
-		layerPresenter.onBindLayerViewHolderAtPosition(1, layerViewHolder);
+		layerPresenter.onBindLayerViewHolderAtPosition(1, layerViewHolder, false);
 
 		verify(layerViewHolder).setDeselected();
-		verify(layerViewHolder).setBitmap(secondLayer.getTransparentBitmap());
+		verify(layerViewHolder).updateImageView(secondLayer.getTransparentBitmap(), false);
 		verify(layerViewHolder).setCheckBox(false);
 		verifyNoMoreInteractions(layerViewHolder);
 		verifyZeroInteractions(firstLayer, commandManager, layerAdapter,

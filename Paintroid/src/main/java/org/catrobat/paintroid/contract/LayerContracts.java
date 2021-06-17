@@ -18,11 +18,13 @@ public interface LayerContracts {
 		void notifyDataSetChanged();
 
 		LayerViewHolder getViewHolderAt(int position);
+
+		void setDrawerLayoutOpen(boolean isOpen);
 	}
 
 	interface Presenter {
 
-		void onBindLayerViewHolderAtPosition(int position, LayerViewHolder viewHolder);
+		void onBindLayerViewHolderAtPosition(int position, LayerViewHolder viewHolder, boolean isOpen);
 
 		void refreshLayerMenuViewHolder();
 
@@ -62,6 +64,8 @@ public interface LayerContracts {
 		void setDeselected();
 
 		void setBitmap(Bitmap bitmap);
+
+		void updateImageView(Bitmap bitmap, boolean isDrawerLayoutOpen);
 
 		View getView();
 
