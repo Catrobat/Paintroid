@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">வண்ண தேர்வு</string>
     <string name="color_picker_tab_icon">வண்ண தேர்வு தாவல் ஐகான்</string>
     <string name="color_red">சிவப்பு</string>
@@ -27,4 +27,11 @@
     <string name="color_hex">எண்ம (ஹெக்ஸ்)</string>
     <string name="color_picker_apply">அமல்படுத்து</string>
     <string name="color_picker_cancel">தவிர்</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">குழாயி</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">மாற்றங்களை சேமிக்க வேண்டுமா?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">மாற்றங்களைச் சேமிக்க விரும்புகிறீர்களா?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
 </resources>

@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">Color Picker</string>
     <string name="color_picker_tab_icon">Color Picker tab icon</string>
     <string name="color_red">Crvena</string>
@@ -27,4 +27,11 @@
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Apply</string>
     <string name="color_picker_cancel">Odustani</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipeta</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Sačuvaj promjene?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Da li želiš sačuvati promjene?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
 </resources>
