@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">ตัวเลือกสี</string>
     <string name="color_picker_tab_icon">ไอคอนแท็บตัวเลือกสี</string>
     <string name="color_red">สีแดง</string>
@@ -27,4 +27,11 @@
     <string name="color_hex">หลากหลาย</string>
     <string name="color_picker_apply">นำไปใช้</string>
     <string name="color_picker_cancel">ยกเลิก</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">ดูดสี</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">บันทึกการเปลี่ยนแปลงหรือไม่?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">คุณต้องบันทึกการเปลี่ยนแปลงหรือไม่?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
 </resources>

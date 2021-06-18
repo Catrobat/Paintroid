@@ -18,20 +18,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">Farbauswahl</string>
-    <string name="color_picker_tab_icon">Farbauswahl-Tab-Symbol</string>
-    <string name="color_red">Rot</string>
-    <string name="color_green">Grün</string>
-    <string name="color_blue">Blau</string>
-    <string name="color_alpha">Alpha</string>
-    <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Anwenden</string>
-    <string name="color_picker_cancel">Abbrechen</string>
+    <string name="color_picker_title">ਰੰਗ ਚੋਣਕਾਰ</string>
+    <string name="color_picker_tab_icon">ਰੰਗ ਚੋਣਕਾਰ ਟੈਬ ਆਈਕਾਨ</string>
+    <string name="color_red">ਲਾਲ</string>
+    <string name="color_green">ਹਰਾ</string>
+    <string name="color_blue">ਨੀਲਾ</string>
+    <string name="color_alpha">ਅਲਫ਼ਾ</string>
+    <string name="color_hex">ਹੈਕਸ</string>
+    <string name="color_picker_apply">ਲਾਗੂ ਕਰੋ</string>
+    <string name="color_picker_cancel">ਰੱਦ ਕਰੋ</string>
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipette</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Änderungen speichern?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Möchtest du deine Änderungen speichern?</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">ਪਾਈਪੇਟ</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">ਤਬਦੀਲੀ ਸੰਭਾਲੋ?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">ਤੁਹਾਨੂੰ ਆਪਣੇ ਤਬਦੀਲੀ ਨੂੰ ਸੰਭਾਲਣ ਲਈ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
 </resources>
