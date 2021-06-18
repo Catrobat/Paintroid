@@ -53,7 +53,8 @@ jobs:
           upload_translations: false
           download_translations: true
           config: 'crowdin_colorpicker.yml'
-          pull_request_base_branch_name:  l10n_colorpicker_crowdin_action
+          localization_branch_name:  l10n_colorpicker_crowdin_action
+          create_pull_request: true
           pull_request_title: 'New Colorpicker Crowdin translations by Github Action'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
