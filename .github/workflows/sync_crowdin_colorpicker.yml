@@ -12,7 +12,7 @@
 #
 # - Secrets required!
 #
-name: Synchronize Crowdin
+name: Synchronize Color Picker Crowdin
 
 #
 # New base strings could be uploaded on the merge of a new feature.
@@ -53,6 +53,8 @@ jobs:
           upload_translations: false
           download_translations: true
           config: 'crowdin_colorpicker.yml'
+          pull_request_base_branch_name:  l10n_colorpicker_crowdin_action
+          pull_request_title: 'New Colorpicker Crowdin translations by Github Action'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
