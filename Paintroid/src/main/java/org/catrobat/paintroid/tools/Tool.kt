@@ -44,7 +44,7 @@ interface Tool {
 
     fun changePaintStrokeCap(cap: Cap)
 
-    fun draw(canvas: Canvas?)
+    fun draw(canvas: Canvas)
 
     fun resetInternalState(stateChange: StateChange)
 

@@ -31,7 +31,6 @@ import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.model.Layer;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory;
-import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,6 +42,7 @@ import java.util.List;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import static org.catrobat.paintroid.tools.implementation.FillToolKt.MAX_ABSOLUTE_TOLERANCE;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertEquals;
@@ -52,8 +52,8 @@ import static org.junit.Assert.assertThat;
 @RunWith(AndroidJUnit4.class)
 public class FillCommandTest {
 	private static final float NO_TOLERANCE = 0.0f;
-	private static final float HALF_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE / 2.0f;
-	private static final float MAX_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE;
+	private static final float HALF_TOLERANCE = MAX_ABSOLUTE_TOLERANCE / 2.0f;
+	private static final float MAX_TOLERANCE = MAX_ABSOLUTE_TOLERANCE;
 
 	private LayerContracts.Model layerModel;
 
