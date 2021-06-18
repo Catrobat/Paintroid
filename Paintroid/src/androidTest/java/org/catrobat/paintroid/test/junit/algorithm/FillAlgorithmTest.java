@@ -23,7 +23,6 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithm;
-import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,12 +30,13 @@ import java.util.Queue;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import static org.catrobat.paintroid.tools.implementation.FillToolKt.MAX_ABSOLUTE_TOLERANCE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class FillAlgorithmTest {
-	private static final float HALF_TOLERANCE = FillTool.MAX_ABSOLUTE_TOLERANCE / 2.0f;
+	private static final float HALF_TOLERANCE = MAX_ABSOLUTE_TOLERANCE / 2.0f;
 
 	@Test
 	public void testFillAlgorithmMembers() {

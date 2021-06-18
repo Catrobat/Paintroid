@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Bitmap
@@ -25,7 +24,11 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -39,25 +42,30 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.random.Random
 
-class SprayTool(var stampToolOptionsView: SprayToolOptionsView,
-                val contextCallback: ContextCallback,
-                toolOptionsViewController: ToolOptionsVisibilityController,
-                toolPaint: ToolPaint,
-                workspace: Workspace,
-                commandManager: CommandManager)
-    : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
+class SprayTool(
+    var stampToolOptionsView: SprayToolOptionsView,
+    override var contextCallback: ContextCallback,
+    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolPaint: ToolPaint,
+    workspace: Workspace,
+    commandManager: CommandManager
+) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
 
     @VisibleForTesting
     var sprayToolScope = CoroutineScope(Dispatchers.Main)
+
     @VisibleForTesting
     var sprayedPoints = ConcurrentLinkedQueue<PointF>()
+
     @VisibleForTesting
     var sprayActive = false
-    private var currentCoordinate: PointF? = null
-    private var previewBitmap: Bitmap = Bitmap.createBitmap(workspace.width, workspace.height, Bitmap.Config.ARGB_8888)
-    private val previewCanvas = Canvas(previewBitmap)
 
+    override var toolType: ToolType = ToolType.SPRAY
+    private var currentCoordinate: PointF? = null
     private var sprayRadius = DEFAULT_RADIUS
+    private var previewBitmap: Bitmap =
+        Bitmap.createBitmap(workspace.width, workspace.height, Bitmap.Config.ARGB_8888)
+    private val previewCanvas = Canvas(previewBitmap)
 
     companion object {
         const val BUNDLE_RADIUS = "BUNDLE_RADIUS"
@@ -69,7 +77,7 @@ class SprayTool(var stampToolOptionsView: SprayToolOptionsView,
 
         stampToolOptionsView.setCallback(object : SprayToolOptionsView.Callback {
             override fun radiusChanged(radius: Int) {
-                sprayRadius = DEFAULT_RADIUS + radius  * 2
+                sprayRadius = DEFAULT_RADIUS + radius * 2
             }
         })
 
@@ -77,8 +85,8 @@ class SprayTool(var stampToolOptionsView: SprayToolOptionsView,
         toolOptionsViewController.showDelayed()
     }
 
-    override fun draw(canvas: Canvas?) {
-        canvas?.run {
+    override fun draw(canvas: Canvas) {
+        canvas.run {
             save()
             drawBitmap(previewBitmap, 0.0f, 0.0f, null)
             restore()
@@ -98,7 +106,7 @@ class SprayTool(var stampToolOptionsView: SprayToolOptionsView,
     }
 
     override fun handleDown(coordinate: PointF?): Boolean {
-        if(sprayActive || coordinate == null) {
+        if (sprayActive || coordinate == null) {
             return false
         }
 
@@ -138,11 +146,10 @@ class SprayTool(var stampToolOptionsView: SprayToolOptionsView,
         commandManager.addCommand(command)
     }
 
-
     private fun createSprayPatternAsync() {
         sprayToolScope = CoroutineScope(Dispatchers.Default)
         sprayToolScope.launch {
-            while(true) {
+            while (true) {
                 repeat((sprayRadius / DEFAULT_RADIUS)) {
                     val point = createRandomPointInCircle()
                     if (workspace.contains(point)) {
@@ -171,9 +178,5 @@ class SprayTool(var stampToolOptionsView: SprayToolOptionsView,
         point.x = radius * cos(theta).toFloat() + (currentCoordinate?.x ?: 0f)
         point.y = radius * sin(theta).toFloat() + (currentCoordinate?.y ?: 0f)
         return point
-    }
-
-    override fun getToolType(): ToolType? {
-        return ToolType.SPRAY
     }
 }

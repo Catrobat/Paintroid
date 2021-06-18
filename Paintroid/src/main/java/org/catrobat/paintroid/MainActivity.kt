@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -28,6 +29,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.webkit.MimeTypeMap
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -46,6 +48,8 @@ import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.DefaultToolController
+import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
+import org.catrobat.paintroid.listener.DrawerLayoutListener
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.model.MainActivityModel
@@ -134,16 +138,31 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val receivedIntent = intent
         val receivedAction = receivedIntent.action
         val receivedType = receivedIntent.type
-        if (receivedAction != null && receivedType != null && (receivedAction == Intent.ACTION_SEND || receivedAction == Intent.ACTION_EDIT) && receivedType.startsWith("image/")) {
+        if (receivedAction != null && receivedType != null && (receivedAction == Intent.ACTION_SEND || receivedAction == Intent.ACTION_EDIT || receivedAction == Intent.ACTION_VIEW) && (receivedType.startsWith("image/") || receivedType.startsWith("application/"))) {
             var receivedUri = receivedIntent
                     .getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
 
             receivedUri = receivedUri ?: receivedIntent.data
+
+            val mimeType: String? = if (receivedUri.scheme == ContentResolver.SCHEME_CONTENT) {
+                contentResolver.getType(receivedUri)
+            } else {
+                val fileExtension = MimeTypeMap.getFileExtensionFromUrl(receivedUri.toString())
+                MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US))
+            }
+
             if (receivedUri != null) {
                 try {
-                    FileIO.filename = "image"
-                    val receivedBitmap = FileIO.getBitmapFromUri(contentResolver, receivedUri, applicationContext)
-                    commandManager.setInitialStateCommand(commandFactory.createInitCommand(receivedBitmap))
+                    if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
+                        OpenRasterFileFormatConversion.importOraFile(contentResolver, receivedUri, applicationContext).bitmapList?.let { bitmapList ->
+                            commandManager.setInitialStateCommand(commandFactory.createInitCommand(bitmapList))
+                        }
+                    } else {
+                        FileIO.filename = "image"
+                        FileIO.getBitmapFromUri(contentResolver, receivedUri, applicationContext)?.let { receivedBitmap ->
+                            commandManager.setInitialStateCommand(commandFactory.createInitCommand(receivedBitmap))
+                        }
+                    }
                 } catch (e: IOException) {
                     Log.e("Can not read", "Unable to retrieve Bitmap from Uri")
                 }
@@ -269,6 +288,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val layerAdapter = LayerAdapter(layerPresenter)
         presenter.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
+        findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout).apply {
+            addDrawerListener(DrawerLayoutListener(this, layerAdapter))
+        }
         layerListView.setPresenter(layerPresenter)
         layerListView.adapter = layerAdapter
         layerPresenter.refreshLayerMenuViewHolder()
@@ -380,11 +402,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         presenter.handleActivityResult(requestCode, resultCode, data)
     }
 
-    override fun superHandleActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun superHandleActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (VERSION.SDK_INT == Build.VERSION_CODES.M) {
             deferredRequestPermissionsResult = Runnable { presenter.handleRequestPermissionsResult(requestCode, permissions, grantResults) }
         } else {
@@ -392,7 +414,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
-    override fun superHandleRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun superHandleRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 

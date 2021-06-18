@@ -143,8 +143,8 @@
     <string name="permission_info_external_storage_text">이 앱이 제대로 작동하려면 요청된 권한이 필요합니다. 이미지를 로컬 메모리에 저장하려면 앱에 읽기 및 쓰기 권한이 필요합니다.</string>
     <string name="permission_info_permanent_denial_text">이 앱이 제대로 작동하려면 요청된 권한이 필요합니다. 이미지를 로컬 메모리에 저장하려면 앱에 읽기 및 쓰기 권한이 필요합니다. 
 다시 묻지 않음으로 권한을 거부 했으므로 관련 기능을 사용하려면 휴대폰 설정으로 이동하여 필요한 권한을 부여하십시오.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">탐색 창 열기</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">탐색 창 닫기</string>
     <string name="transform_info_text">새로운 위치로 가장자리를 끌고, 확대하거나 자르려면 탭하세요.</string>
     <string name="cursor_draw_inactive">위치를 끌어 정하고, 시작하려면 터치하세요.</string>
     <string name="cursor_draw_active">그리려면 끌고, 그리기를 중지하려면 다시 탭하세요.</string>

@@ -101,7 +101,7 @@
     <string name="resize_max_image_resolution_reached">最大の画像解像度に達しました</string>
     <string name="text_tool_dialog_input_title">テキスト:</string>
     <string name="text_tool_dialog_format_options">書式設定オプション:</string>
-    <string name="text_tool_dialog_underline_shortcut">U</string>
+    <string name="text_tool_dialog_underline_shortcut">う</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_strike_through_shortcut">あいう</string>

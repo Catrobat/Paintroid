@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2021 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pocketpaint_tools_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:showIn="@layout/activity_pocketpaint_main">
+
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_brush"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_brush"
+                android:contentDescription="@string/button_brush"
+                app:tint="@color/pocketpaint_color_picker_white" />
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_brush"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_hand"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_hand"
+                android:contentDescription="@string/button_hand"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_hand"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_eraser"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_eraser"
+                android:contentDescription="@string/button_eraser"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_eraser"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_line"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_line"
+                android:contentDescription="@string/button_line"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_line"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+    </TableRow>
+
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_rectangle"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_rectangle"
+                android:contentDescription="@string/button_shape"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_shape"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_fill"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_fill"
+                android:contentDescription="@string/button_fill"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_fill"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_spray_can"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_spray_can"
+                android:contentDescription="@string/button_spray_can"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_spray_can"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_cursor"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_cursor"
+                android:contentDescription="@string/button_cursor"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_cursor"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+    </TableRow>
+
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_text"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_text"
+                android:contentDescription="@string/button_text"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_text"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_stamp"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_stamp"
+                android:contentDescription="@string/button_stamp"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_stamp"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_transform"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_transform"
+                android:contentDescription="@string/button_transform"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_transform"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_import"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_import"
+                android:contentDescription="@string/button_import_image"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_import_image"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+    </TableRow>
+</TableLayout>

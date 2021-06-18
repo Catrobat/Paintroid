@@ -143,8 +143,8 @@
     <string name="permission_info_external_storage_text">Aplikasi ini membutuhkan izin yang diminta agar berfungsi dengan baik. Untuk menyimpan gambar ke memori lokal, aplikasi membutuhkan akses baca dan tulis ke dalamnya.</string>
     <string name="permission_info_permanent_denial_text">Aplikasi ini membutuhkan izin yang diminta agar berfungsi dengan baik. Untuk menyimpan gambar ke memori lokal, aplikasi membutuhkan akses baca dan tulis ke dalamnya.
         Karena Anda telah menolak izin dengan jangan tanya lagi, silakan buka pengaturan ponsel Anda dan berikan izin yang diperlukan jika Anda ingin menggunakan fungsi terkait.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">Buka laci navigasi</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">Tutup laci navigasi</string>
     <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
     <string name="cursor_draw_inactive">Geser ke posisi, lalu ketuk untuk mulai mengecat.</string>
     <string name="cursor_draw_active">Geser untuk menggambar, lalu ketuk lagi untuk berhenti melukis.</string>

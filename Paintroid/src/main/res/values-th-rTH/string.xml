@@ -87,9 +87,9 @@
     <string name="menu_rate_us">ให้คะแนนเรา</string>
     <string name="menu_export">ส่งออก</string>
     <string name="menu_feedback">คำติชม</string>
-    <string name="saved_to">Image saved to\n</string>
+    <string name="saved_to">บันทึกภาพไปที่ \n</string>
     <string name="saved">บันทึกภาพแล้ว</string>
-    <string name="copy_to">Copy saved to\n</string>
+    <string name="copy_to">คัดลอกและบันทึกไปที่ \n</string>
     <string name="copy">บันทึกสำเนาแล้ว</string>
     <string name="menu_quit">ออก</string>
     <string name="save_button_text">บันทึก</string>

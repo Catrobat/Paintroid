@@ -21,13 +21,13 @@ files: [
   # Source files filter
   # e.g. "/resources/en/*.json"
   #
-  "source" : "/colorpicker/src/main/res/values/string.xml",
+  "source" : "/colorpicker/src/main/res/values/strings.xml",
 
   #
   # Where translations will be placed
   # e.g. "/resources/%two_letters_code%/%original_file_name%"
   #
-  "translation" : "/colorpicker/src/main/res/values-%android_code%/string.xml",
+  "translation" : "/colorpicker/src/main/res/values-%android_code%/strings.xml",
 
   #
   # Files or directories for ignore
@@ -39,7 +39,7 @@ files: [
   # The dest allows you to specify a file name in Crowdin
   # e.g. "/messages.json"
   #
-  "dest" : "/paintroid/colorpicker/string.xml",
+  "dest" : "/paintroid/colorpicker/strings.xml",
 
   #
   # File type
@@ -117,11 +117,12 @@ files: [
   # Often software projects have custom names for the directories where translations are placed. crowdin-cli allows you
   # to map your own languages to be understandable by Crowdin.
   #
-  #"languages_mapping" : {
-  #  "two_letters_code" : {
-  #    "crowdin_language_code" : "local_name"
-  #   }
-  #},
+  "languages_mapping" : {
+    "android_code" : {
+      "kab" : "kab-rDZ",
+      "tw" : "tw-rGH"
+    }
+  },
 
   #
   # Does the first line contain header?

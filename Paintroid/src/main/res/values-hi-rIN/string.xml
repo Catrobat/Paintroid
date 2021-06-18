@@ -143,8 +143,8 @@
     <string name="permission_info_external_storage_text">इस एप्लिकेशन को ठीक से काम करने के लिए अनुरोध की अनुमति की आवश्यकता है। छवियों को स्थानीय मेमोरी में सहेजने के लिए, एप्लिकेशन को उस तक पहुंच पढ़ने और लिखने की आवश्यकता होती है।</string>
     <string name="permission_info_permanent_denial_text">इस एप्लिकेशन को ठीक से काम करने के लिए अनुरोध की अनुमति की आवश्यकता है। छवियों को स्थानीय मेमोरी में सहेजने के लिए, एप्लिकेशन को उस तक पहुंच पढ़ने और लिखने की आवश्यकता होती है।
         जैसा कि आपने दोबारा अनुमति नहीं देने से इनकार कर दिया है, कृपया अपनी फोन सेटिंग में जाएं और यदि आप संबंधित कार्यों का उपयोग करना चाहते हैं तो आवश्यक अनुमति दें।</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">नेविगेशन दराज खोलें</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">नेविगेशन दराज बंद करें</string>
     <string name="transform_info_text">किनारों को अपनी नई स्थिति में खींचें, फिर छवि क्षेत्र को विस्तार देने या क्रॉप करने के लिए टैप करें.</string>
     <string name="cursor_draw_inactive">स्थिति के लिए पैन, तो पेंटिंग शुरू करने के लिए नल.</string>
     <string name="cursor_draw_active">ड्रा करने के लिए पैन, तो पेंटिंग को रोकने के लिए फिर से नल ।</string>

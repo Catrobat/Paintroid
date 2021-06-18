@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -50,6 +51,7 @@ import org.catrobat.paintroid.common.MainActivityConstants.CreateFileRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.PermissionRequestCode;
 import org.catrobat.paintroid.common.MainActivityConstants.SaveImageRequestCode;
+import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.contract.MainActivityContracts.BottomBarViewHolder;
 import org.catrobat.paintroid.contract.MainActivityContracts.BottomNavigationViewHolder;
 import org.catrobat.paintroid.contract.MainActivityContracts.DrawerLayoutViewHolder;
@@ -71,6 +73,7 @@ import org.catrobat.paintroid.ui.LayerAdapter;
 import org.catrobat.paintroid.ui.Perspective;
 
 import java.io.File;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -85,6 +88,7 @@ import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXT
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_IMPORT_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
 import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
@@ -319,6 +323,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		FileIO.uriFilePng = null;
 		FileIO.currentFileNameJpg = null;
 		FileIO.currentFileNamePng = null;
+		FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+		FileIO.ending = ".png";
+		FileIO.isCatrobatImage = false;
 		Command initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels);
 		commandManager.setInitialStateCommand(initCommand);
 		commandManager.reset();
@@ -340,6 +347,8 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			askForReadAndWriteExternalStoragePermission(requestCode);
 			switch (requestCode) {
 				case PERMISSION_REQUEST_CODE_LOAD_PICTURE:
+					break;
+				case PERMISSION_REQUEST_CODE_IMPORT_PICTURE:
 					break;
 				case PERMISSION_EXTERNAL_STORAGE_SAVE:
 					checkforDefaultFilename();
@@ -470,6 +479,9 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 							navigator.showSaveBeforeLoadImageDialog();
 						}
 						break;
+					case PERMISSION_REQUEST_CODE_IMPORT_PICTURE:
+						navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
+						break;
 					default:
 						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
 						break;
@@ -538,6 +550,15 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void showLayerMenuClicked() {
+		if (layerAdapter != null) {
+			layerAdapter.setDrawerLayoutOpen(true);
+			for (int i = 0; i < layerAdapter.getCount(); i++) {
+				LayerContracts.LayerViewHolder currentHolder = layerAdapter.getViewHolderAt(i);
+				if (currentHolder.getBitmap() != null) {
+					currentHolder.updateImageView(currentHolder.getBitmap(), true);
+				}
+			}
+		}
 		drawerLayoutViewHolder.openDrawer(Gravity.END);
 	}
 
@@ -748,6 +769,23 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 				}
 				model.setCameraImageUri(null);
 				FileIO.wasImageLoaded = true;
+				if (uri != null) {
+					String name = getFileName(uri);
+					if (name != null) {
+						if (name.endsWith("jpg") || name.endsWith("jpeg")) {
+							FileIO.compressFormat = Bitmap.CompressFormat.JPEG;
+							FileIO.ending = ".jpg";
+							FileIO.isCatrobatImage = false;
+						} else if (name.endsWith("png")) {
+							FileIO.compressFormat = Bitmap.CompressFormat.PNG;
+							FileIO.ending = ".png";
+							FileIO.isCatrobatImage = false;
+						} else {
+							FileIO.ending = ".ora";
+							FileIO.isCatrobatImage = true;
+						}
+					}
+				}
 				break;
 			case LOAD_IMAGE_IMPORTPNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {
@@ -971,6 +1009,21 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 	}
 
+	public String getFileName(Uri uri) {
+		String result = null;
+		if (Objects.equals(uri.getScheme(), "content")) {
+			Cursor cursor = fileActivity.getContentResolver().query(uri, null, null, null, null);
+			try {
+				if (cursor != null && cursor.moveToFirst()) {
+					result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+		return result;
+	}
+
 	@Override
 	public void rateUsClicked() {
 		navigator.rateUsClicked();
@@ -982,7 +1035,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void importFromGalleryClicked() {
-		navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
+		switchBetweenVersions(PERMISSION_REQUEST_CODE_IMPORT_PICTURE);
 	}
 
 	@Override

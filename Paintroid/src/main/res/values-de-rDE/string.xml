@@ -90,7 +90,7 @@
     <string name="saved_to">Bild gespeichert unter\n</string>
     <string name="saved">Bild gespeichert\n</string>
     <string name="copy_to">Kopie gespeichert in\n</string>
-    <string name="copy">Kopie gespeichert\n</string>
+    <string name="copy">Kopie gespeichert</string>
     <string name="menu_quit">Verlassen</string>
     <string name="save_button_text">Speichern</string>
     <string name="discard_button_text">Verwerfen</string>
