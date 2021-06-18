@@ -68,7 +68,7 @@
     <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
     <string name="help_content_shape">Choose a shape and tap it to insert the selected shape.</string>
     <string name="help_content_layer">Create new layers or modify existing ones.</string>
-    <string name="help_content_color_chooser">Select or adjust a color.</string>
+    <string name="help_content_color_chooser">Select or adjust a colour.</string>
     <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="help_content_spray_can">Move your finger on the image to create a spray can pattern.</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
@@ -112,7 +112,7 @@
     <string name="shape_tool_dialog_heart_title">Heart</string>
     <string name="shape_tool_dialog_fill_title">Fill</string>
     <string name="shape_tool_dialog_outline_title">Outline</string>
-    <string name="fill_tool_dialog_color_tolerance_title">Color tolerance</string>
+    <string name="fill_tool_dialog_color_tolerance_title">Colour tolerance</string>
     <string name="transform_tool_rotate_left">rotate left</string>
     <string name="transform_tool_rotate_right">rotate right</string>
     <string name="transform_tool_flip_vertical">flip vertical</string>
@@ -178,12 +178,12 @@
     <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
     <string name="bottom_navigation_tools">Tools</string>
     <string name="bottom_navigation_current">Current</string>
-    <string name="bottom_navigation_color">Color</string>
+    <string name="bottom_navigation_color">Colour</string>
     <string name="bottom_navigation_layers">Layers</string>
     <string name="bottom_navigation_item">Item for bottom navigation</string>
     <string name="intro_bottom_navigation_tools_description">Switch to the tool you want to use.</string>
     <string name="intro_bottom_navigation_current_description">Shows the currently used tool and opens its options.</string>
-    <string name="intro_bottom_navigation_color_description">Shows the currently used color and opens the color picker.</string>
+    <string name="intro_bottom_navigation_color_description">Shows the currently used colour and opens the colour picker.</string>
     <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
     <string name="pocketpaint_tool_icon_description">Current tool icon</string>
     <string name="dialog_scale_title">Image is too big to load</string>
