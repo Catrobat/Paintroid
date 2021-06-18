@@ -101,9 +101,9 @@
     <string name="resize_max_image_resolution_reached">الوصول الى الحد الأقصى لدقة الشاشة</string>
     <string name="text_tool_dialog_input_title">النص الخاص بك:</string>
     <string name="text_tool_dialog_format_options">خيارات التنسيق:</string>
-    <string name="text_tool_dialog_underline_shortcut">تسطير</string>
-    <string name="text_tool_dialog_italic_shortcut">مائل</string>
-    <string name="text_tool_dialog_bold_shortcut">غامق</string>
+    <string name="text_tool_dialog_underline_shortcut">يو</string>
+    <string name="text_tool_dialog_italic_shortcut">ص</string>
+    <string name="text_tool_dialog_bold_shortcut">ب</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">أنقر هنا للكتابة</string>
     <string name="shape_tool_dialog_rect_title">مستطيل</string>

@@ -101,7 +101,7 @@
     <string name="resize_max_image_resolution_reached">resolución de imagen máxima alcanzada</string>
     <string name="text_tool_dialog_input_title">Tu texto:</string>
     <string name="text_tool_dialog_format_options">Opciones de formato:</string>
-    <string name="text_tool_dialog_underline_shortcut">Fecha de actualización</string>
+    <string name="text_tool_dialog_underline_shortcut">U</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
@@ -143,8 +143,8 @@
     <string name="permission_info_external_storage_text">Esta aplicación necesita el permiso solicitado para funcionar correctamente. Para guardar las imágenes en la memoria local, la app necesita acceso de lectura y escritura a la misma.</string>
     <string name="permission_info_permanent_denial_text">Esta aplicación necesita el permiso solicitado para funcionar correctamente. Para guardar las imágenes en la memoria local, la app necesita acceso de lectura y escritura a la misma.
         Como has denegado el permiso con no preguntar de nuevo, por favor, ve a los ajustes de tu teléfono y concede los permisos necesarios si deseas utilizar las funciones asociadas.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">Abrir cajón de navegación</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">Cerrar cajón de navegación</string>
     <string name="transform_info_text">Arrastra los bordes a su nueva posición, luego pulsa para agrandar o recortar el área de imagen.</string>
     <string name="cursor_draw_inactive">Pan a la posición, después pulsa para empezar a pintar.</string>
     <string name="cursor_draw_active">Pan a dibujar, después pulsa y deja de dibujar.</string>

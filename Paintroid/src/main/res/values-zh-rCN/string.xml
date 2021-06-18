@@ -46,7 +46,7 @@
     <string name="cap_square">正方型</string>
     <string name="stamptool_paste">粘贴</string>
     <string name="stamptool_copy">复制</string>
-    <string name="stamptool_cut">切</string>
+    <string name="stamptool_cut"> 剪切</string>
     <string name="stickers">贴纸</string>
     <string name="dialog_tools_title">工具</string>
     <string name="dialog_error_save_title">加载/保存文件时发生错误</string>
@@ -101,9 +101,9 @@
     <string name="resize_max_image_resolution_reached">达到最大图像分辨率</string>
     <string name="text_tool_dialog_input_title">您的文本：</string>
     <string name="text_tool_dialog_format_options">格式选项：</string>
-    <string name="text_tool_dialog_underline_shortcut">U</string>
-    <string name="text_tool_dialog_italic_shortcut">I</string>
-    <string name="text_tool_dialog_bold_shortcut">B</string>
+    <string name="text_tool_dialog_underline_shortcut">你</string>
+    <string name="text_tool_dialog_italic_shortcut">我</string>
+    <string name="text_tool_dialog_bold_shortcut">乙</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">点击此处添加文本</string>
     <string name="shape_tool_dialog_rect_title">矩形</string>
@@ -143,8 +143,8 @@
     <string name="permission_info_external_storage_text">此应用需要所请求的权限才能正常运行。 为了将图像保存到本地内存，应用需要读写权限。</string>
     <string name="permission_info_permanent_denial_text">此应用需要所请求的权限才能正常运行。 为了将图像保存到本地内存，应用需要读写权限。
         因为您拒绝了权限，所以不再询问。 如果您想要使用相关的功能，请前往您的手机设置并授予所需的权限。</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">打开导航抽屉</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">关闭导航抽屉</string>
     <string name="transform_info_text">将边缘拖动到新位置，然后点击可放大或裁剪图像。</string>
     <string name="cursor_draw_inactive">拖动到位置，点击开始绘画。</string>
     <string name="cursor_draw_active">拖动作画，然后点击停止作画。</string>

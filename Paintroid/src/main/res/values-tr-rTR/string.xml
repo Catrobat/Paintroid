@@ -87,9 +87,9 @@
     <string name="menu_rate_us">Bizi değerlendirin!</string>
     <string name="menu_export">Dışa aktar</string>
     <string name="menu_feedback">Geri bildirim</string>
-    <string name="saved_to">Görüntü kaydedildi\n</string>
+    <string name="saved_to">Görüntü şuraya kaydedildi\n</string>
     <string name="saved">Resim kaydedildi</string>
-    <string name="copy_to">Kopyala kaydedildi\n</string>
+    <string name="copy_to">Kopyası şuraya kaydedildi\n</string>
     <string name="copy">Kopyası kaydedildi</string>
     <string name="menu_quit">Çık</string>
     <string name="save_button_text">Kaydet</string>
@@ -142,8 +142,8 @@
     <string name="pocketpaint_ora_message_dialog">Bu dosya biçimi <b>katmanları </b>hatırlar. <b>Openraster formatını destekleyen uygulamalar tarafından açılabilir.</b></string>
     <string name="permission_info_external_storage_text">Bu uygulamanın düzgün çalışması için istenen izne ihtiyacı var. Görüntüleri yerel belleğe kaydetmek için uygulamanın okuma ve yazma erişimine ihtiyacı vardır.</string>
     <string name="permission_info_permanent_denial_text">Bu uygulamanın düzgün çalışması için istenen izne ihtiyacı var. Görüntüleri yerel belleğe kaydetmek için uygulamanın okuma ve yazma erişimine ihtiyacı vardır. İzninizi reddettiğiniz için bir daha sormayın.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">Gezinme çekmecesini aç</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">Gezinme çekmecesini kapat</string>
     <string name="transform_info_text">Kenarları yeni konumlarına sürükleyin, görüntü alanını büyütmek veya kırpmak için onay işaretine dokunun.</string>
     <string name="cursor_draw_inactive">Konumlandırmak için kaydırın, ardından boyamaya başlamak için dokunun.</string>
     <string name="cursor_draw_active">Çizmek için kaydırın, ardından boyamayı durdurmak için tekrar dokunun.</string>
