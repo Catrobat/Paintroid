@@ -117,9 +117,8 @@ public final class FileIO {
 			Compressor compressor = new Compressor(context);
 			compressor.setQuality(compressQuality);
 			compressor.setCompressFormat(compressFormat);
-
-			String parentPath = new File(destination.getPath()).getParentFile().getPath();
-			compressor.setDestinationDirectoryPath(parentPath);
+			String destinationDirectoryPath = new File(destination.getPath()).getParentFile().getPath();
+			compressor.setDestinationDirectoryPath(destinationDirectoryPath);
 			return compressor.compressToFile(fileToCompress, destination.getLastPathSegment());
 		} catch (IOException e) {
 			Log.e("Can not compress", "Can not compress image file.", e);
