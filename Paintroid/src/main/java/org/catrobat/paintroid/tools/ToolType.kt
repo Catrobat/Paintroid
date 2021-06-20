@@ -86,7 +86,7 @@ enum class ToolType(
         R.drawable.ic_pocketpaint_tool_stamp,
         EnumSet.of(StateChange.ALL),
         R.id.pocketpaint_tools_stamp,
-        R.drawable.pocketpaint_stamp_tool_overlay,
+        INVALID_RESOURCE_ID,
         true
     ),
     LINE(
