@@ -49,7 +49,7 @@ ext {
 }
 
 if(project.hasProperty("snapshot")) {
-    androidVersionName = androidVersionName + '-LOCAL'
+    androidVersionName = '-LOCAL'
 }
 
 allprojects {
