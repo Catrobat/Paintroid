@@ -26,7 +26,7 @@ def useDebugLabelParameter(defaultLabel){
 pipeline {
     parameters {
         string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
-        booleanParam name: 'BUILD_WITH_CATROID', defaultValue: false, description: 'When set to \'yes\' then the current Paintroid build will be build with the current develop branch of Catroid'
+        booleanParam name: 'BUILD_WITH_CATROID', defaultValue: false, description: 'When checked then the current Paintroid build will be built with the current develop branch of Catroid'
     }
 
     agent {
