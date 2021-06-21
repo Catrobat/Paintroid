@@ -18,15 +18,15 @@
  */
 package org.catrobat.paintroid.tools
 
-import androidx.annotation.StringRes
-import androidx.annotation.FontRes
+import android.graphics.Shader
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
-import android.graphics.Shader
-import android.graphics.drawable.Drawable
 import androidx.annotation.DrawableRes
+import androidx.annotation.FontRes
+import androidx.annotation.StringRes
 
 interface ContextCallback {
     fun showNotification(@StringRes resId: Int)
@@ -38,7 +38,7 @@ interface ContextCallback {
 
     fun getFont(@FontRes id: Int): Typeface?
 
-    val displayMetrics: DisplayMetrics?
+    val displayMetrics: DisplayMetrics
 
     @ColorInt
     fun getColor(@ColorRes id: Int): Int

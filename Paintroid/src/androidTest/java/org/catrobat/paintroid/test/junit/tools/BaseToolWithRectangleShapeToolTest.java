@@ -40,6 +40,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.DEFAULT_BOX_RESIZE_MARGIN;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
@@ -129,7 +130,7 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		float newWidth = toolToTest.boxWidth;
 		float newHeight = toolToTest.boxHeight;
-		float boxResizeMargin = BaseToolWithRectangleShape.DEFAULT_BOX_RESIZE_MARGIN;
+		float boxResizeMargin = DEFAULT_BOX_RESIZE_MARGIN;
 
 		assertThat(newHeight, is(greaterThanOrEqualTo(boxResizeMargin)));
 		assertThat(newWidth, is(greaterThanOrEqualTo(boxResizeMargin)));
