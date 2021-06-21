@@ -26,7 +26,7 @@ def useDebugLabelParameter(defaultLabel){
 pipeline {
     parameters {
         string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
-        string name: 'BUILD_WITH_CATROID', defaultValue: 'no', description: 'When set to \'yes\' the the current Paintroid build will be build with the current develop Branch of Catroid'
+        booleanParam name: 'BUILD_WITH_CATROID', defaultValue: false, description: 'When set to \'yes\' then the current Paintroid build will be build with the current develop branch of Catroid'
     }
 
     agent {
@@ -70,7 +70,9 @@ pipeline {
 
         stage('Build with Catroid') {
             when {
-                environment name: 'BUILD_WITH_CATROID', value: 'yes'
+                expression {
+                    params.BUILD_WITH_CATROID
+                }
             }
             steps {
                 sh './gradlew publishToMavenLocal -Psnapshot'
