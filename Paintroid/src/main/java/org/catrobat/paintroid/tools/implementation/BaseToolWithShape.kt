@@ -118,15 +118,15 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
     override fun getAutoScrollDirection(
         pointX: Float,
         pointY: Float,
-        viewWidth: Int,
-        viewHeight: Int
+        screenWidth: Int,
+        screenHeight: Int
     ): Point {
         val surfaceToolPosition = workspace.getSurfacePointFromCanvasPoint(toolPosition)
         return scrollBehavior.getScrollDirection(
             surfaceToolPosition.x,
             surfaceToolPosition.y,
-            viewWidth,
-            viewHeight
+            screenWidth,
+            screenHeight
         )
     }
 

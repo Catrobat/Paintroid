@@ -1481,7 +1481,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testGetContentResolver() {
 		ContentResolver resolver = mock(ContentResolver.class);
-		when(view.getContentResolver()).thenReturn(resolver);
+		when(view.getMyContentResolver()).thenReturn(resolver);
 
 		ContentResolver result = presenter.getContentResolver();
 
@@ -1490,7 +1490,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testIsFinishing() {
-		when(view.isFinishing()).thenReturn(true, false);
+		when(view.getFinishing()).thenReturn(true, false);
 
 		assertTrue(presenter.isFinishing());
 		assertFalse(presenter.isFinishing());
