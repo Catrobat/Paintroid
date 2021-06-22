@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
+import org.catrobat.paintroid.tools.implementation.STROKE_25
 import org.catrobat.paintroid.tools.implementation.SprayTool
 import org.catrobat.paintroid.tools.options.SprayToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
@@ -57,7 +57,7 @@ class SprayToolTest {
         val paint = Paint()
         paint.color = Color.BLACK
         paint.strokeCap = Paint.Cap.ROUND
-        paint.strokeWidth = DefaultToolPaint.STROKE_25.toFloat()
+        paint.strokeWidth = STROKE_25
 
         Mockito.`when`(toolPaint.paint).thenReturn(paint)
         Mockito.`when`(workspace.width).thenReturn(200)

@@ -91,7 +91,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void showColorPickerDialog() {
-		if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null) {
+		if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null && toolReference.get() != null) {
 			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor());
 			setupColorPickerDialogListeners(dialog);
 			showDialogFragmentSafely(dialog, Constants.COLOR_PICKER_DIALOG_TAG);

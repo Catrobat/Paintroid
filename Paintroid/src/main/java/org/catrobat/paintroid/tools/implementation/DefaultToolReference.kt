@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,22 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools.implementation
 
-package org.catrobat.paintroid.tools.implementation;
+import org.catrobat.paintroid.tools.Tool
+import org.catrobat.paintroid.tools.ToolReference
 
-import org.catrobat.paintroid.tools.Tool;
-import org.catrobat.paintroid.tools.ToolReference;
+class DefaultToolReference : ToolReference {
+    private var tool: Tool? = null
 
-public class DefaultToolReference implements ToolReference {
-	private Tool tool;
+    override fun get(): Tool? = tool
 
-	@Override
-	public Tool get() {
-		return tool;
-	}
-
-	@Override
-	public void set(Tool tool) {
-		this.tool = tool;
-	}
+    override fun set(tool: Tool) {
+        this.tool = tool
+    }
 }

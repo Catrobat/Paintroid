@@ -36,7 +36,6 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.ConstantsKt;
 import org.catrobat.paintroid.tools.implementation.BrushTool;
-import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 import org.junit.Before;
@@ -48,6 +47,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPaintEquals;
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEquals;
+import static org.catrobat.paintroid.tools.implementation.DefaultToolPaintKt.STROKE_25;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -84,7 +84,7 @@ public class BrushToolTest {
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setStrokeCap(Paint.Cap.ROUND);
-		paint.setStrokeWidth(DefaultToolPaint.STROKE_25);
+		paint.setStrokeWidth(STROKE_25);
 	}
 
 	@Test
