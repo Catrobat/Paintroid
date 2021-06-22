@@ -192,7 +192,7 @@ public class ToolOnBackPressedIntegrationTest {
 
 		Espresso.pressBack();
 
-		assertEquals(toolReference.get().getToolType(), ToolType.BRUSH);
+		assertEquals(toolReference.getTool().getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
@@ -200,11 +200,11 @@ public class ToolOnBackPressedIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.CURSOR);
 
-		assertEquals(toolReference.get().getToolType(), ToolType.CURSOR);
+		assertEquals(toolReference.getTool().getToolType(), ToolType.CURSOR);
 
 		Espresso.pressBack();
 
-		assertEquals(toolReference.get().getToolType(), ToolType.BRUSH);
+		assertEquals(toolReference.getTool().getToolType(), ToolType.BRUSH);
 	}
 
 	@Test

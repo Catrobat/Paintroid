@@ -72,7 +72,7 @@ public class DefaultToolController implements ToolController {
 
 	@Override
 	public boolean isDefaultTool() {
-		return toolReference.get().getToolType() == ToolType.BRUSH;
+		return toolReference.getTool().getToolType() == ToolType.BRUSH;
 	}
 
 	@Override
@@ -92,26 +92,26 @@ public class DefaultToolController implements ToolController {
 
 	@Override
 	public void resetToolInternalState() {
-		toolReference.get().resetInternalState(RESET_INTERNAL_STATE);
+		toolReference.getTool().resetInternalState(RESET_INTERNAL_STATE);
 	}
 
 	@Override
 	public void resetToolInternalStateOnImageLoaded() {
-		toolReference.get().resetInternalState(NEW_IMAGE_LOADED);
+		toolReference.getTool().resetInternalState(NEW_IMAGE_LOADED);
 	}
 
 	@Override
 	public int getToolColor() {
-		return toolReference.get().getDrawPaint().getColor();
+		return toolReference.getTool().getDrawPaint().getColor();
 	}
 
 	@Override
 	public Tool getCurrentTool() {
-		return toolReference.get();
+		return toolReference.getTool();
 	}
 
 	private void switchTool(Tool tool, boolean backPressed) {
-		Tool currentTool = toolReference.get();
+		Tool currentTool = toolReference.getTool();
 		ToolType currentToolType = currentTool.getToolType();
 
 		if ((currentToolType == ToolType.TEXT || currentToolType == ToolType.TRANSFORM
@@ -126,14 +126,14 @@ public class DefaultToolController implements ToolController {
 			currentTool.onSaveInstanceState(toolBundle);
 			tool.onRestoreInstanceState(toolBundle);
 		}
-		toolReference.set(tool);
+		toolReference.setTool(tool);
 
 		workspace.invalidate();
 	}
 
 	@Override
 	public ToolType getToolType() {
-		return toolReference.get().getToolType();
+		return toolReference.getTool().getToolType();
 	}
 
 	@Override
@@ -148,13 +148,13 @@ public class DefaultToolController implements ToolController {
 
 	@Override
 	public void createTool() {
-		if (toolReference.get() == null) {
-			toolReference.set(createAndSetupTool(ToolType.BRUSH));
+		if (toolReference.getTool() == null) {
+			toolReference.setTool(createAndSetupTool(ToolType.BRUSH));
 		} else {
 			Bundle bundle = new Bundle();
-			toolReference.get().onSaveInstanceState(bundle);
-			toolReference.set(createAndSetupTool(toolReference.get().getToolType()));
-			toolReference.get().onRestoreInstanceState(bundle);
+			toolReference.getTool().onSaveInstanceState(bundle);
+			toolReference.setTool(createAndSetupTool(toolReference.getTool().getToolType()));
+			toolReference.getTool().onRestoreInstanceState(bundle);
 		}
 		workspace.invalidate();
 	}
@@ -202,7 +202,7 @@ public class DefaultToolController implements ToolController {
 
 	@Override
 	public void setBitmapFromSource(Bitmap bitmap) {
-		ImportTool importTool = (ImportTool) toolReference.get();
+		ImportTool importTool = (ImportTool) toolReference.getTool();
 		importTool.setBitmapFromSource(bitmap);
 	}
 }

@@ -41,8 +41,6 @@ interface Workspace {
 
     fun intersectsWith(rectF: RectF): Boolean
 
-    fun getPixelOfCurrentLayer(coordinate: PointF): Int
-
     fun resetPerspective()
 
     fun getSurfacePointFromCanvasPoint(coordinate: PointF): PointF

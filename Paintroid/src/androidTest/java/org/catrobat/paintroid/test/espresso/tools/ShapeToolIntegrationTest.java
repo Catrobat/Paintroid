@@ -74,7 +74,7 @@ public class ShapeToolIntegrationTest {
 	}
 
 	private Paint getCurrentToolBitmapPaint() {
-		return ((ShapeTool) toolReference.get()).getShapeBitmapPaint();
+		return ((ShapeTool) toolReference.getTool()).getShapeBitmapPaint();
 	}
 
 	private Paint getToolPaint() {
@@ -86,7 +86,7 @@ public class ShapeToolIntegrationTest {
 		onShapeToolOptionsView()
 				.performSelectShape(DrawableShape.OVAL);
 
-		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) toolReference.get();
+		BaseToolWithRectangleShape ellipseTool = (BaseToolWithRectangleShape) toolReference.getTool();
 		float rectHeight = ellipseTool.boxHeight;
 
 		onToolBarView()

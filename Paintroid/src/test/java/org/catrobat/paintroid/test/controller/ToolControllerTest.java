@@ -81,7 +81,7 @@ public class ToolControllerTest {
 	public void testIsBrushDefaultTool() {
 		Tool tool = mock(Tool.class);
 		when(tool.getToolType()).thenReturn(ToolType.BRUSH);
-		when(toolReference.get()).thenReturn(tool);
+		when(toolReference.getTool()).thenReturn(tool);
 
 		assertTrue(toolController.isDefaultTool());
 	}
@@ -106,7 +106,7 @@ public class ToolControllerTest {
 				ToolType.COLORCHOOSER,
 				ToolType.HAND
 		);
-		when(toolReference.get()).thenReturn(tool);
+		when(toolReference.getTool()).thenReturn(tool);
 
 		assertFalse(toolController.isDefaultTool());
 		assertFalse(toolController.isDefaultTool());
@@ -148,7 +148,7 @@ public class ToolControllerTest {
 	@Test
 	public void testResetToolInternalStateCallsResetInternalState() {
 		Tool tool = mock(Tool.class);
-		when(toolReference.get()).thenReturn(tool);
+		when(toolReference.getTool()).thenReturn(tool);
 
 		toolController.resetToolInternalState();
 
@@ -158,7 +158,7 @@ public class ToolControllerTest {
 	@Test
 	public void testResetToolInternalStateOnImageLoadedCallsResetInternalState() {
 		Tool tool = mock(Tool.class);
-		when(toolReference.get()).thenReturn(tool);
+		when(toolReference.getTool()).thenReturn(tool);
 
 		toolController.resetToolInternalStateOnImageLoaded();
 
@@ -169,7 +169,7 @@ public class ToolControllerTest {
 	public void testGetToolColorReturnsColor() {
 		Tool tool = mock(Tool.class);
 		Paint paint = mock(Paint.class);
-		when(toolReference.get()).thenReturn(tool);
+		when(toolReference.getTool()).thenReturn(tool);
 		when(tool.getDrawPaint()).thenReturn(paint);
 		when(paint.getColor()).thenReturn(Color.CYAN);
 
@@ -179,7 +179,7 @@ public class ToolControllerTest {
 	@Test
 	public void testGetToolTypeReturnsToolType() {
 		Tool tool = mock(Tool.class);
-		when(toolReference.get()).thenReturn(tool);
+		when(toolReference.getTool()).thenReturn(tool);
 		when(tool.getToolType()).thenReturn(ToolType.BRUSH, ToolType.ERASER);
 
 		assertEquals(ToolType.BRUSH, toolController.getToolType());
@@ -219,7 +219,7 @@ public class ToolControllerTest {
 	@Test
 	public void testHasToolOptions() {
 		Tool mock = mock(Tool.class);
-		when(toolReference.get()).thenReturn(mock);
+		when(toolReference.getTool()).thenReturn(mock);
 		when(mock.getToolType()).thenReturn(ToolType.BRUSH, ToolType.IMPORTPNG);
 
 		assertTrue(toolController.hasToolOptionsView());

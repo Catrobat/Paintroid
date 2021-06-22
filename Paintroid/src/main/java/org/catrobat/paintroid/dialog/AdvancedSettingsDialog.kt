@@ -9,7 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.smoothing
-import org.catrobat.paintroid.tools.implementation.DefaultToolPaint.antialiasing
+import org.catrobat.paintroid.tools.implementation.DefaultToolPaint.Companion.antialiasing
 
 class AdvancedSettingsDialog : MainActivityDialogFragment() {
     private var initValueAntialiasing: Boolean = antialiasing
@@ -24,7 +24,7 @@ class AdvancedSettingsDialog : MainActivityDialogFragment() {
         antialiasingSwitch.isChecked = antialiasing
         smoothSwitch.isChecked = smoothing
 
-        antialiasingSwitch?.setOnCheckedChangeListener { _, isChecked ->
+        antialiasingSwitch.setOnCheckedChangeListener { _, isChecked ->
             antialiasing = isChecked
         }
 

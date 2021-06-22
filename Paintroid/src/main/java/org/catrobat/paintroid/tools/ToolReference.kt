@@ -19,7 +19,5 @@
 package org.catrobat.paintroid.tools
 
 interface ToolReference {
-    fun get(): Tool
-
-    fun set(tool: Tool)
+    var tool: Tool?
 }

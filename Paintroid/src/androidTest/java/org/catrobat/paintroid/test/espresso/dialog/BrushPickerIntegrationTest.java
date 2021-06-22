@@ -238,6 +238,9 @@ public class BrushPickerIntegrationTest {
 		onView(withText(R.string.pocketpaint_ok))
 				.perform(click());
 
+		bitmapPaint = getCurrentToolBitmapPaint();
+		canvasPaint = getCurrentToolCanvasPaint();
+
 		assertTrue("BITMAP_PAINT antialiasing should be on", bitmapPaint.isAntiAlias());
 		assertTrue("CANVAS_PAINT antialiasing should be on", canvasPaint.isAntiAlias());
 	}

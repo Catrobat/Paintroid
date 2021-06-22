@@ -80,7 +80,7 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 	}
 
 	public Tool getCurrentTool() {
-		return getMainActivity().toolReference.get();
+		return getMainActivity().toolReference.getTool();
 	}
 
 	public ToolPropertiesInteraction setColorResource(@ColorRes int colorResource) {

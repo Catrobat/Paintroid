@@ -94,10 +94,11 @@ open class DrawingSurfaceListener(
         autoScrollTask.setViewDimensions(view.width, view.height)
     }
 
-    private fun handleActionMove(currentTool: Tool, view: View, event: MotionEvent) {
+    private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
         val xOld: Float
         val yOld: Float
         if (event.pointerCount == 1) {
+            currentTool ?: return
             if (currentTool.handToolMode()) {
                 disableAutoScroll()
                 if (touchMode == TouchMode.PINCH) {
@@ -122,7 +123,7 @@ open class DrawingSurfaceListener(
         } else {
             disableAutoScroll()
             if (touchMode == TouchMode.DRAW) {
-                currentTool.resetInternalState(StateChange.MOVE_CANCELED)
+                currentTool?.resetInternalState(StateChange.MOVE_CANCELED)
             }
             touchMode = TouchMode.PINCH
             val pointerDistanceOld = pointerDistance
@@ -154,7 +155,7 @@ open class DrawingSurfaceListener(
                     return false
                 }
                 timerStartDraw = System.currentTimeMillis()
-                currentTool.handleDown(canvasTouchPoint)
+                currentTool?.handleDown(canvasTouchPoint)
                 if (autoScroll) {
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                     autoScrollTask.start()
@@ -167,10 +168,10 @@ open class DrawingSurfaceListener(
                 }
                 if (touchMode == TouchMode.DRAW) {
                     val drawingTime = System.currentTimeMillis() - timerStartDraw
-                    currentTool.drawTime = drawingTime
-                    currentTool.handleUp(canvasTouchPoint)
+                    currentTool?.drawTime = drawingTime
+                    currentTool?.handleUp(canvasTouchPoint)
                 } else {
-                    currentTool.resetInternalState(StateChange.MOVE_CANCELED)
+                    currentTool?.resetInternalState(StateChange.MOVE_CANCELED)
                 }
                 pointerDistance = 0f
                 xMidPoint = 0f
@@ -235,7 +236,7 @@ open class DrawingSurfaceListener(
         override fun run() {
             val autoScrollDirection =
                 callback.getToolAutoScrollDirection(pointX, pointY, width, height)
-            if (autoScrollDirection.x != 0 || autoScrollDirection.y != 0) {
+            if (autoScrollDirection != null && (autoScrollDirection.x != 0 || autoScrollDirection.y != 0)) {
                 newMovePoint.x = pointX
                 newMovePoint.y = pointY
                 callback.convertToCanvasFromSurface(newMovePoint)
@@ -257,26 +258,36 @@ open class DrawingSurfaceListener(
 
     interface AutoScrollTaskCallback {
         fun isPointOnCanvas(pointX: Int, pointY: Int): Boolean
+
         fun refreshDrawingSurface()
+
         fun handleToolMove(coordinate: PointF)
+
         fun getToolAutoScrollDirection(
             pointX: Float,
             pointY: Float,
             screenWidth: Int,
             screenHeight: Int
-        ): Point
+        ): Point?
 
         fun getPerspectiveScale(): Float
+
         fun translatePerspective(dx: Float, dy: Float)
+
         fun convertToCanvasFromSurface(surfacePoint: PointF)
-        fun getCurrentToolType(): ToolType
+
+        fun getCurrentToolType(): ToolType?
     }
 
     interface DrawingSurfaceListenerCallback {
-        fun getCurrentTool(): Tool
+        fun getCurrentTool(): Tool?
+
         fun multiplyPerspectiveScale(factor: Float)
+
         fun translatePerspective(x: Float, y: Float)
+
         fun convertToCanvasFromSurface(surfacePoint: PointF)
+
         fun getToolOptionsViewController(): ToolOptionsViewController
     }
 }

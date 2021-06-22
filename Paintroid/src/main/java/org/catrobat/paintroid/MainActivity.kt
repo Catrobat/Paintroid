@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
-    private fun init(receivedIntent: Intent): Boolean {
+    private fun handleIntent(receivedIntent: Intent): Boolean {
         var receivedUri = receivedIntent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
 
         receivedUri = receivedUri ?: receivedIntent.data
@@ -179,7 +179,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         try {
             if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
                 try {
-                    commandManager.loadCommandsCatrobatImage(workspace.getCommandSerializationHelper().readFromFile(receivedUri))
+                    commandManager.loadCommandsCatrobatImage(
+                        workspace.getCommandSerializationHelper().readFromFile(receivedUri)
+                    )
                     return false
                 } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
                     Log.e(TAG, "Image might be an ora file instead")
@@ -235,33 +237,38 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         presenterMain.onCreateTool()
 
         val receivedIntent = intent
-        if (validateIntent(receivedIntent)) {
-            if (init(receivedIntent)) {
-                commandManager.reset()
+        when {
+            validateIntent(receivedIntent) -> {
+                if (handleIntent(receivedIntent)) {
+                    commandManager.reset()
+                }
+                model.savedPictureUri = null
+                model.cameraImageUri = null
+                workspace.resetPerspective()
+                presenterMain.initializeFromCleanState(null, null)
             }
-            model.savedPictureUri = null
-            model.cameraImageUri = null
-            workspace.resetPerspective()
-            presenterMain.initializeFromCleanState(null, null)
-        } else if (savedInstanceState == null) {
-            val intent = intent
-            val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
-            val pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME)
-            presenterMain.initializeFromCleanState(picturePath, pictureName)
-        } else {
-            val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)
-            val isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false)
-            val isOpenedFromCatroid =
-                savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
-            val wasInitialAnimationPlayed =
-                savedInstanceState.getBoolean(WAS_INITIAL_ANIMATION_PLAYED, false)
-            val savedPictureUri = savedInstanceState.getParcelable<Uri>(SAVED_PICTURE_URI_KEY)
-            val cameraImageUri = savedInstanceState.getParcelable<Uri>(CAMERA_IMAGE_URI_KEY)
-            presenterMain.restoreState(
-                isFullscreen, isSaved, isOpenedFromCatroid,
-                wasInitialAnimationPlayed, savedPictureUri, cameraImageUri
-            )
+            savedInstanceState == null -> {
+                val intent = intent
+                val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
+                val pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME)
+                presenterMain.initializeFromCleanState(picturePath, pictureName)
+            }
+            else -> {
+                val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)
+                val isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false)
+                val isOpenedFromCatroid =
+                    savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
+                val wasInitialAnimationPlayed =
+                    savedInstanceState.getBoolean(WAS_INITIAL_ANIMATION_PLAYED, false)
+                val savedPictureUri = savedInstanceState.getParcelable<Uri>(SAVED_PICTURE_URI_KEY)
+                val cameraImageUri = savedInstanceState.getParcelable<Uri>(CAMERA_IMAGE_URI_KEY)
+                presenterMain.restoreState(
+                    isFullscreen, isSaved, isOpenedFromCatroid,
+                    wasInitialAnimationPlayed, savedPictureUri, cameraImageUri
+                )
+            }
         }
+
         commandManager.addCommandListener(this)
         presenterMain.finishInitialize()
     }
@@ -344,7 +351,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         )
         perspective = Perspective(layerModel.width, layerModel.height)
         val listener = DefaultWorkspace.Listener { drawingSurface.refreshDrawingSurface() }
-        workspace = DefaultWorkspace(layerModel, perspective, listener, CommandSerializationUtilities(this, commandManager))
+        workspace = DefaultWorkspace(
+            layerModel,
+            perspective,
+            listener,
+            CommandSerializationUtilities(this, commandManager)
+        )
         model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
@@ -431,8 +443,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         topBar.undoButton.setOnClickListener { presenterMain.undoClicked() }
         topBar.redoButton.setOnClickListener { presenterMain.redoClicked() }
         topBar.checkmarkButton.setOnClickListener {
-            val tool = toolReference.get() as BaseToolWithShape
-            tool.onClickOnButton()
+            val tool = toolReference.tool as BaseToolWithShape?
+            tool?.onClickOnButton()
         }
     }
 

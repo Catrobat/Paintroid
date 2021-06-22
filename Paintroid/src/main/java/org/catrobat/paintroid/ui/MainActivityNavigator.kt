@@ -129,7 +129,7 @@ class MainActivityNavigator(
     private fun setupColorPickerDialogListeners(dialog: ColorPickerDialog) {
         dialog.addOnColorPickedListener(object : OnColorPickedListener {
             override fun colorChanged(color: Int) {
-                toolReference.get().changePaintColor(color)
+                toolReference.tool?.changePaintColor(color)
                 mainActivity.presenter.setBottomNavigationColor(color)
             }
         })
@@ -194,9 +194,11 @@ class MainActivityNavigator(
 
     override fun showColorPickerDialog() {
         if (findFragmentByTag(COLOR_PICKER_DIALOG_TAG) == null) {
-            val dialog = ColorPickerDialog.newInstance(toolReference.get().drawPaint.color)
-            setupColorPickerDialogListeners(dialog)
-            showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)
+            toolReference.tool?.let {
+                val dialog = ColorPickerDialog.newInstance(it.drawPaint.color)
+                setupColorPickerDialogListeners(dialog)
+                showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)
+            }
         }
     }
 
