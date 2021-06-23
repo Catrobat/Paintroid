@@ -24,12 +24,16 @@ import org.catrobat.paintroid.tools.ToolType
 
 interface BrushToolOptionsView {
     fun invalidate()
+
     fun setCurrentPaint(paint: Paint)
+
     fun setBrushChangedListener(onBrushChangedListener: OnBrushChangedListener)
+
     fun setBrushPreviewListener(onBrushPreviewListener: OnBrushPreviewListener)
 
     interface OnBrushChangedListener {
         fun setCap(strokeCap: Cap)
+
         fun setStrokeWidth(strokeWidth: Int)
     }
 

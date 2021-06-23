@@ -30,8 +30,10 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import java.util.EnumSet
+import kotlin.math.hypot
 
 private const val DRAWER_EDGE_SIZE = 20f
+private const val CONSTANT_1 = 0.5f
 
 open class DrawingSurfaceListener(
     private val autoScrollTask: AutoScrollTask,
@@ -46,7 +48,7 @@ open class DrawingSurfaceListener(
     private var eventY = 0f
     private val canvasTouchPoint: PointF
     private val eventTouchPoint: PointF
-    private val drawerEdgeSize: Int = (DRAWER_EDGE_SIZE * displayDensity + 0.5f).toInt()
+    private val drawerEdgeSize: Int = (DRAWER_EDGE_SIZE * displayDensity + CONSTANT_1).toInt()
     private var autoScroll = true
 
     internal enum class TouchMode {
@@ -67,7 +69,7 @@ open class DrawingSurfaceListener(
     private fun calculatePointerDistance(event: MotionEvent): Float {
         val x = event.getX(0) - event.getX(1)
         val y = event.getY(0) - event.getY(1)
-        return Math.hypot(x.toDouble(), y.toDouble()).toFloat()
+        return hypot(x, y)
     }
 
     private fun calculateMidPoint(event: MotionEvent) {
@@ -86,6 +88,57 @@ open class DrawingSurfaceListener(
         }
     }
 
+    private fun setEvenPointAndViewDimensionsForAutoScrollTask(view: View) {
+        autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y)
+        autoScrollTask.setViewDimensions(view.width, view.height)
+    }
+
+    private fun handleActionMove(currentTool: Tool, view: View, event: MotionEvent) {
+        val xOld: Float
+        val yOld: Float
+        if (event.pointerCount == 1) {
+            if (currentTool.handToolMode()) {
+                disableAutoScroll()
+                if (touchMode == TouchMode.PINCH) {
+                    xOld = 0f
+                    yOld = 0f
+                    touchMode = TouchMode.DRAW
+                } else {
+                    xOld = eventX
+                    yOld = eventY
+                }
+                newHandEvent(event.x, event.y)
+                if (xOld > 0 && eventX != xOld || yOld > 0 && eventY != yOld) {
+                    callback.translatePerspective(eventX - xOld, eventY - yOld)
+                }
+            } else if (touchMode != TouchMode.PINCH) {
+                touchMode = TouchMode.DRAW
+                if (autoScroll) {
+                    setEvenPointAndViewDimensionsForAutoScrollTask(view)
+                }
+                currentTool.handleMove(canvasTouchPoint)
+            }
+        } else {
+            disableAutoScroll()
+            if (touchMode == TouchMode.DRAW) {
+                currentTool.resetInternalState(StateChange.MOVE_CANCELED)
+            }
+            touchMode = TouchMode.PINCH
+            val pointerDistanceOld = pointerDistance
+            pointerDistance = calculatePointerDistance(event)
+            if (pointerDistanceOld > 0 && pointerDistanceOld != pointerDistance) {
+                val scale = pointerDistance / pointerDistanceOld
+                callback.multiplyPerspectiveScale(scale)
+            }
+            xOld = xMidPoint
+            yOld = yMidPoint
+            calculateMidPoint(event)
+            if (xOld > 0 && xMidPoint != xOld || yOld > 0 && yMidPoint != yOld) {
+                callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld)
+            }
+        }
+    }
+
     override fun onTouch(view: View, event: MotionEvent): Boolean {
         val drawingSurface = view as DrawingSurface
         val currentTool = callback.getCurrentTool()
@@ -101,59 +154,11 @@ open class DrawingSurfaceListener(
                 }
                 currentTool.handleDown(canvasTouchPoint)
                 if (autoScroll) {
-                    autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y)
-                    autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight())
+                    setEvenPointAndViewDimensionsForAutoScrollTask(view)
                     autoScrollTask.start()
                 }
             }
-            MotionEvent.ACTION_MOVE -> if (event.pointerCount == 1 && !currentTool.handToolMode()) {
-                if (touchMode != TouchMode.PINCH) {
-                    touchMode = TouchMode.DRAW
-                    if (autoScroll) {
-                        autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y)
-                        autoScrollTask.setViewDimensions(view.getWidth(), view.getHeight())
-                    }
-                    currentTool.handleMove(canvasTouchPoint)
-                }
-            } else if (event.pointerCount == 1 && currentTool.handToolMode()) {
-                val xOld: Float
-                val yOld: Float
-                if (autoScrollTask.isRunning) {
-                    autoScrollTask.stop()
-                }
-                if (touchMode == TouchMode.PINCH) {
-                    xOld = 0f
-                    yOld = 0f
-                    touchMode = TouchMode.DRAW
-                } else {
-                    xOld = eventX
-                    yOld = eventY
-                }
-                newHandEvent(event.x, event.y)
-                if (xOld > 0 && eventX != xOld || yOld > 0 && eventY != yOld) {
-                    callback.translatePerspective(eventX - xOld, eventY - yOld)
-                }
-            } else {
-                if (autoScrollTask.isRunning) {
-                    autoScrollTask.stop()
-                }
-                if (touchMode == TouchMode.DRAW) {
-                    currentTool.resetInternalState(StateChange.MOVE_CANCELED)
-                }
-                touchMode = TouchMode.PINCH
-                val pointerDistanceOld = pointerDistance
-                pointerDistance = calculatePointerDistance(event)
-                if (pointerDistanceOld > 0 && pointerDistanceOld != pointerDistance) {
-                    val scale = pointerDistance / pointerDistanceOld
-                    callback.multiplyPerspectiveScale(scale)
-                }
-                val xOld = xMidPoint
-                val yOld = yMidPoint
-                calculateMidPoint(event)
-                if (xOld > 0 && xMidPoint != xOld || yOld > 0 && yMidPoint != yOld) {
-                    callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld)
-                }
-            }
+            MotionEvent.ACTION_MOVE -> handleActionMove(currentTool, view, event)
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (autoScrollTask.isRunning) {
                     autoScrollTask.stop()
@@ -220,9 +225,8 @@ open class DrawingSurfaceListener(
             }
         }
 
-        private fun calculateScrollInterval(scale: Float): Int {
-            return (SCROLL_INTERVAL_FACTOR / Math.cbrt(scale.toDouble())).toInt()
-        }
+        private fun calculateScrollInterval(scale: Float): Int =
+            (SCROLL_INTERVAL_FACTOR / Math.cbrt(scale.toDouble())).toInt()
 
         override fun run() {
             val autoScrollDirection =

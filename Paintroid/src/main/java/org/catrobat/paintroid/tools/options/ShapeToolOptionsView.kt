@@ -23,12 +23,18 @@ import org.catrobat.paintroid.tools.drawable.DrawableStyle
 
 interface ShapeToolOptionsView {
     fun setShapeActivated(shape: DrawableShape)
+
     fun setDrawTypeActivated(drawType: DrawableStyle)
+
     fun setShapeOutlineWidth(outlineWidth: Int)
+
     fun setCallback(callback: Callback)
+
     interface Callback {
         fun setToolType(shape: DrawableShape)
+
         fun setDrawType(drawType: DrawableStyle)
+
         fun setOutlineWidth(outlineWidth: Int)
     }
 }

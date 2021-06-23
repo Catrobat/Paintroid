@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.colorpicker
 
 import android.app.Activity.RESULT_OK
@@ -24,14 +23,22 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Shader
 import android.graphics.Shader.TileMode
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager.LayoutParams.*
+import android.view.WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
+import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
 import androidx.annotation.ColorInt
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDialogFragment
@@ -39,6 +46,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+
+private const val FF = 0xff
 
 class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     @VisibleForTesting
@@ -77,7 +86,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogView = requireActivity().layoutInflater
-                .inflate(R.layout.color_picker_dialog_view, null)
+            .inflate(R.layout.color_picker_dialog_view, null)
         currentColorView = dialogView.findViewById(R.id.color_picker_current_color_view)
         pipetteBtn = dialogView.findViewById(R.id.color_picker_pipette_btn)
         pipetteBtn.setOnClickListener {
@@ -99,21 +108,22 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
             setCurrentColor(savedInstanceState.getInt(CURRENT_COLOR, Color.BLACK))
             setInitialColor(savedInstanceState.getInt(INITIAL_COLOR, Color.BLACK))
         } else {
-            setCurrentColor(arguments!!.getInt(CURRENT_COLOR, Color.BLACK))
-            setInitialColor(arguments!!.getInt(INITIAL_COLOR, Color.BLACK))
+            val arguments = requireArguments()
+            setCurrentColor(arguments.getInt(CURRENT_COLOR, Color.BLACK))
+            setInitialColor(arguments.getInt(INITIAL_COLOR, Color.BLACK))
         }
         colorToApply = colorPickerView.initialColor
         val materialDialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-                .setNegativeButton(R.string.color_picker_cancel) { dialogInterface: DialogInterface, _: Int ->
-                    dialogInterface.dismiss()
-                }
-                .setPositiveButton(R.string.color_picker_apply) { _: DialogInterface, _: Int ->
-                    updateColorChange(colorToApply)
-                    deleteBitmapFile(requireContext(), bitmapName)
-                    dismiss()
-                }
-                .setView(dialogView)
-                .create()
+            .setNegativeButton(R.string.color_picker_cancel) { dialogInterface: DialogInterface, _: Int ->
+                dialogInterface.dismiss()
+            }
+            .setPositiveButton(R.string.color_picker_apply) { _: DialogInterface, _: Int ->
+                updateColorChange(colorToApply)
+                deleteBitmapFile(requireContext(), bitmapName)
+                dismiss()
+            }
+            .setView(dialogView)
+            .create()
 
         materialDialog.setOnShowListener {
             materialDialog.window?.clearFlags(FLAG_NOT_FOCUSABLE or FLAG_ALT_FOCUSABLE_IM)
@@ -125,7 +135,8 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val checkeredBitmap = BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg)
+        val checkeredBitmap =
+            BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg)
         checkeredShader = BitmapShader(checkeredBitmap, TileMode.REPEAT, TileMode.REPEAT)
     }
 
@@ -168,11 +179,14 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         }
     }
 
-    internal class CustomColorDrawable private constructor(checkeredShader: Shader, @ColorInt color: Int) : ColorDrawable(color) {
+    internal class CustomColorDrawable private constructor(
+        checkeredShader: Shader,
+        @ColorInt color: Int
+    ) : ColorDrawable(color) {
         private var backgroundPaint: Paint? = null
 
         init {
-            if (Color.alpha(getColor()) != 0xff) {
+            if (Color.alpha(getColor()) != FF) {
                 backgroundPaint = Paint()
                 backgroundPaint?.shader = checkeredShader
             }
@@ -181,8 +195,10 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         companion object {
             @JvmStatic
             fun createDrawable(checkeredShader: Shader, @ColorInt color: Int): Drawable {
-                return RippleDrawable(ColorStateList.valueOf(Color.WHITE),
-                        CustomColorDrawable(checkeredShader, color), null)
+                return RippleDrawable(
+                    ColorStateList.valueOf(Color.WHITE),
+                    CustomColorDrawable(checkeredShader, color), null
+                )
             }
         }
 

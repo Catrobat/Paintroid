@@ -157,7 +157,7 @@ class ShapeTool(
     }
 
     override fun onClickOnButton() {
-        if (toolPosition.x in -boxWidth / 2..(workspace.width + boxWidth / 2) && toolPosition.y in -boxHeight / 2..(workspace.height + boxHeight / 2)) {
+        if (toolPosition.x in -boxWidth / 2..workspace.width + boxWidth / 2 && toolPosition.y in -boxHeight / 2..workspace.height + boxHeight / 2) {
             shapeBitmapPaint.set(toolPaint.paint)
             val shapeRect = RectF()
             preparePaint(shapeBitmapPaint)

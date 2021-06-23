@@ -29,6 +29,7 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.FillToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 
+private const val HUNDRED = 100f
 const val DEFAULT_TOLERANCE_IN_PERCENT = 12
 const val MAX_ABSOLUTE_TOLERANCE = 510
 
@@ -48,7 +49,7 @@ class FillTool(
 ) {
     @VisibleForTesting
     @JvmField
-    var colorTolerance = MAX_ABSOLUTE_TOLERANCE * DEFAULT_TOLERANCE_IN_PERCENT / 100.0f
+    var colorTolerance = MAX_ABSOLUTE_TOLERANCE * DEFAULT_TOLERANCE_IN_PERCENT / HUNDRED
 
     init {
         fillToolOptionsView.setCallback(object : FillToolOptionsView.Callback {
@@ -63,7 +64,7 @@ class FillTool(
     }
 
     fun getToleranceAbsoluteValue(toleranceInPercent: Int): Float =
-        MAX_ABSOLUTE_TOLERANCE * toleranceInPercent / 100.0f
+        MAX_ABSOLUTE_TOLERANCE * toleranceInPercent / HUNDRED
 
     override fun handleDown(coordinate: PointF?): Boolean = false
 

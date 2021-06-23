@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.util.Log
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 
 class SprayCommand(
-        private val sprayedPoints: FloatArray,
-        private val paint: Paint
+    private val sprayedPoints: FloatArray,
+    private val paint: Paint
 ) : Command {
 
     override fun run(canvas: Canvas?, layerModel: LayerContracts.Model?) {
@@ -35,6 +33,6 @@ class SprayCommand(
     }
 
     override fun freeResources() {
-        //nothing to free
+        // nothing to free
     }
 }

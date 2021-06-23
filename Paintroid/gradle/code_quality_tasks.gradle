@@ -17,6 +17,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+apply plugin: "io.gitlab.arturbosch.detekt"
+
+check.dependsOn 'checkstyle'
+check.dependsOn 'pmd'
+check.dependsOn 'detekt'
+
+dependencies {
+    pmd 'net.sourceforge.pmd:pmd-core:6.32.0'
+    pmd 'net.sourceforge.pmd:pmd-java:6.32.0'
+
+    checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
+
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0"
+}
+
 task checkstyle(type: Checkstyle) {
     configFile file('config/checkstyle.xml')
     source '.'
@@ -50,4 +67,10 @@ task pmd(type: Pmd) {
         html.enabled = true
         xml.destination file("build/reports/pmd.xml")
     }
+}
+
+detekt {
+    toolVersion = "1.14.2"
+    config = files("$rootDir/Paintroid/config/detekt.yml")
+    input = files("$rootDir/colorpicker/", "$rootDir/Paintroid/")
 }

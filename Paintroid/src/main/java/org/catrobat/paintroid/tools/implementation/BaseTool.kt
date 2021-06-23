@@ -89,7 +89,7 @@ abstract class BaseTool(
 
     abstract override fun draw(canvas: Canvas)
 
-    protected open fun resetInternalState() = Unit
+    protected open fun resetInternalState() {}
 
     override fun resetInternalState(stateChange: StateChange) {
         if (toolType.shouldReactToStateChange(stateChange)) {

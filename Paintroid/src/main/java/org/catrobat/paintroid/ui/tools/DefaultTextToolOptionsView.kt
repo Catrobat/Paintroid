@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
-import java.util.*
+
+private const val DEFAULT_TEXTSIZE = "20"
+private const val MAX_TEXTSIZE = "300"
+private const val MIN_FONT_SIZE = 1
+private const val MAX_FONT_SIZE = 300
 
 class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     private val context: Context = rootView.context
@@ -46,10 +50,30 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     private val boldToggleButton: MaterialButton
     private val fonts: List<String>
 
+    init {
+        val inflater = LayoutInflater.from(context)
+        val textToolView = inflater.inflate(R.layout.dialog_pocketpaint_text_tool, rootView)
+        textEditText = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_input_text)
+        fontList = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_list_font)
+        underlinedToggleButton =
+            textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined)
+        italicToggleButton =
+            textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic)
+        boldToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold)
+        fontSizeText = textToolView.findViewById(R.id.pocketpaint_font_size_text)
+        fontSizeText.setText(DEFAULT_TEXTSIZE)
+        underlinedToggleButton.paintFlags =
+            underlinedToggleButton.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        @Suppress("SpreadOperator")
+        fonts = listOf(*context.resources.getStringArray(R.array.pocketpaint_main_text_tool_fonts))
+        initializeListeners()
+        textEditText.requestFocus()
+    }
+
     private fun initializeListeners() {
         textEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) = Unit
             override fun afterTextChanged(editable: Editable) {
                 notifyTextChanged(editable.toString())
             }
@@ -81,8 +105,10 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
             hideKeyboard()
         }
         fontSizeText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) = Unit
+
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) = Unit
+
             override fun afterTextChanged(editable: Editable) {
                 val sizeText = fontSizeText.text.toString()
                 var sizeTextInt: Int
@@ -102,47 +128,42 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     }
 
     private fun notifyFontChanged(fontString: String) {
-        if (callback != null) {
-            callback!!.setFont(fontString)
-        }
+        callback?.setFont(fontString)
     }
 
     private fun notifyUnderlinedChanged(underlined: Boolean) {
-        if (callback != null) {
-            callback!!.setUnderlined(underlined)
-        }
+        callback?.setUnderlined(underlined)
     }
 
     private fun notifyItalicChanged(italic: Boolean) {
-        if (callback != null) {
-            callback!!.setItalic(italic)
-        }
+        callback?.setItalic(italic)
     }
 
     private fun notifyBoldChanged(bold: Boolean) {
-        if (callback != null) {
-            callback!!.setBold(bold)
-        }
+        callback?.setBold(bold)
     }
 
     private fun notifyTextSizeChanged(textSize: Int) {
-        if (callback != null) {
-            callback!!.setTextSize(textSize)
-        }
+        callback?.setTextSize(textSize)
     }
 
     private fun notifyTextChanged(text: String) {
-        if (callback != null) {
-            callback!!.setText(text)
-        }
+        callback?.setText(text)
     }
 
-    override fun setState(bold: Boolean, italic: Boolean, underlined: Boolean, text: String, textSize: Int, font: String) {
+    override fun setState(
+        bold: Boolean,
+        italic: Boolean,
+        underlined: Boolean,
+        text: String,
+        textSize: Int,
+        font: String
+    ) {
         boldToggleButton.isChecked = bold
         italicToggleButton.isChecked = italic
         underlinedToggleButton.isChecked = underlined
         textEditText.setText(text)
-        (fontList.adapter as FontListAdapter).setSelectedIndex(fonts.indexOf(font));
+        (fontList.adapter as FontListAdapter).setSelectedIndex(fonts.indexOf(font))
         fontSizeText.setText(DEFAULT_TEXTSIZE)
     }
 
@@ -153,28 +174,5 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     private fun hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(textEditText.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-    }
-
-    companion object {
-        private const val DEFAULT_TEXTSIZE = "20"
-        private const val MAX_TEXTSIZE = "300"
-        private const val MIN_FONT_SIZE = 1
-        private const val MAX_FONT_SIZE = 300
-    }
-
-    init {
-        val inflater = LayoutInflater.from(context)
-        val textToolView = inflater.inflate(R.layout.dialog_pocketpaint_text_tool, rootView)
-        textEditText = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_input_text)
-        fontList = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_list_font)
-        underlinedToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined)
-        italicToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic)
-        boldToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold)
-        fontSizeText = textToolView.findViewById(R.id.pocketpaint_font_size_text)
-        fontSizeText.setText(DEFAULT_TEXTSIZE)
-        underlinedToggleButton.paintFlags = underlinedToggleButton.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        fonts = listOf(*context.resources.getStringArray(R.array.pocketpaint_main_text_tool_fonts))
-        initializeListeners()
-        textEditText.requestFocus()
     }
 }

@@ -37,10 +37,16 @@ interface Workspace {
     val perspective: Perspective
 
     fun contains(point: PointF): Boolean
+
     fun intersectsWith(rectF: RectF): Boolean
+
     fun getPixelOfCurrentLayer(coordinate: PointF): Int
+
     fun resetPerspective()
+
     fun getSurfacePointFromCanvasPoint(coordinate: PointF): PointF
+
     fun getCanvasPointFromSurfacePoint(surfacePoint: PointF): PointF
+
     fun invalidate()
 }

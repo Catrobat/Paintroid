@@ -60,11 +60,11 @@ public class DefaultContextCallback implements ContextCallback {
 
 	@Override
 	public void showNotification(@StringRes int resId) {
-		showNotification(resId, NotificationDuration.SHORT);
+		showNotificationWithDuration(resId, NotificationDuration.SHORT);
 	}
 
 	@Override
-	public void showNotification(@StringRes int resId, NotificationDuration duration) {
+	public void showNotificationWithDuration(@StringRes int resId, NotificationDuration duration) {
 		int toastDuration = duration == NotificationDuration.SHORT ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG;
 		ToastFactory.makeText(context, resId, toastDuration).show();
 	}
