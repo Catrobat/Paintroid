@@ -29,21 +29,19 @@ import androidx.annotation.FontRes
 import androidx.annotation.StringRes
 
 interface ContextCallback {
-    fun showNotification(@StringRes resId: Int)
-
-    fun showNotification(@StringRes resId: Int, duration: NotificationDuration)
-
     val scrollTolerance: Int
     val orientation: ScreenOrientation?
+    val displayMetrics: DisplayMetrics
+    val checkeredBitmapShader: Shader?
+
+    fun showNotification(@StringRes resId: Int)
+
+    fun showNotificationWithDuration(@StringRes resId: Int, duration: NotificationDuration)
 
     fun getFont(@FontRes id: Int): Typeface?
 
-    val displayMetrics: DisplayMetrics
-
     @ColorInt
     fun getColor(@ColorRes id: Int): Int
-
-    val checkeredBitmapShader: Shader?
 
     fun getDrawable(@DrawableRes resource: Int): Drawable?
 

@@ -1,4 +1,23 @@
-package org.catrobat.paintroid.ui.tools;
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2021 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.catrobat.paintroid.ui.tools
+
 import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -9,8 +28,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
 
-
-class FontListAdapter internal constructor(context: Context, private val fonts: List<String>, private val onFontChanged: (String) -> Unit) : RecyclerView.Adapter<FontListAdapter.ViewHolder>() {
+class FontListAdapter internal constructor(
+    context: Context,
+    private val fonts: List<String>,
+    private val onFontChanged: (String) -> Unit
+) : RecyclerView.Adapter<FontListAdapter.ViewHolder>() {
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
     private var selectedIndex = 0
 
@@ -21,11 +43,12 @@ class FontListAdapter internal constructor(context: Context, private val fonts: 
     private val stc = ResourcesCompat.getFont(context, R.font.stc_regular)
 
     private val typeFaces = arrayOf(
-            sansSerif,
-            monospace,
-            serif,
-            dubai,
-            stc)
+        sansSerif,
+        monospace,
+        serif,
+        dubai,
+        stc
+    )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = mInflater.inflate(R.layout.pocketpaint_item_font, parent, false)
@@ -39,9 +62,7 @@ class FontListAdapter internal constructor(context: Context, private val fonts: 
         holder.fontChip.isChecked = position == selectedIndex
     }
 
-    override fun getItemCount(): Int {
-        return fonts.size
-    }
+    override fun getItemCount(): Int = fonts.size
 
     fun setSelectedIndex(selectedIndex: Int) {
         this.selectedIndex = selectedIndex
@@ -50,7 +71,9 @@ class FontListAdapter internal constructor(context: Context, private val fonts: 
 
     fun getSelectedItem(): String = fonts[selectedIndex]
 
-    inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder internal constructor(itemView: View) :
+        RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         var fontChip: Chip = itemView.findViewById(R.id.pocketpaint_font_type)
 
         init {

@@ -1,3 +1,21 @@
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2021 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.catrobat.paintroid.test.espresso.tools
 
 import androidx.test.espresso.Espresso.onView
@@ -13,12 +31,11 @@ import org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
-import org.catrobat.paintroid.ui.tools.DefaultSprayToolOptionsView
+import org.catrobat.paintroid.ui.tools.MIN_RADIUS
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
 
 @RunWith(AndroidJUnit4::class)
 class SprayToolIntegrationTest {
@@ -31,19 +48,17 @@ class SprayToolIntegrationTest {
 
     @Before
     fun setUp() {
-        ToolBarViewInteraction.onToolBarView()
-                .performSelectTool(ToolType.SPRAY)
+        ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.SPRAY)
     }
 
     @Test
-    fun testEmptyRadius()
-    {
-        val emptyString:String = ""
+    fun testEmptyRadius() {
+        val emptyString = ""
         onView(withId(R.id.pocketpaint_radius_text))
-                .perform(replaceText(emptyString))
-                .check(matches(withText(emptyString)))
+            .perform(replaceText(emptyString))
+            .check(matches(withText(emptyString)))
 
         onView(withId(R.id.pocketpaint_spray_radius_seek_bar))
-                .check(matches(withProgress(DefaultSprayToolOptionsView.MIN_RADIUS)))
+            .check(matches(withProgress(MIN_RADIUS)))
     }
 }

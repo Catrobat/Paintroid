@@ -29,6 +29,6 @@ class JpgInfoDialog : AppCompatDialogFragment() {
         AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
             .setMessage(R.string.pocketpaint_jpg_message_dialog)
             .setTitle(R.string.pocketpaint_jpg_title_dialog)
-            .setPositiveButton(R.string.pocketpaint_ok) { dialog, which -> dismiss() }
+            .setPositiveButton(R.string.pocketpaint_ok) { _, _ -> dismiss() }
             .create()
 }

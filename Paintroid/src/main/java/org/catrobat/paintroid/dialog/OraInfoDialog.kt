@@ -29,6 +29,6 @@ class OraInfoDialog : AppCompatDialogFragment() {
         AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
             .setMessage(R.string.pocketpaint_ora_message_dialog)
             .setTitle(R.string.pocketpaint_ora_title_dialog)
-            .setPositiveButton(R.string.pocketpaint_ok) { dialog, which -> dismiss() }
+            .setPositiveButton(R.string.pocketpaint_ok) { _, _ -> dismiss() }
             .create()
 }

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,30 +16,46 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.colorpicker
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Point
+import android.graphics.PointF
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.Rect
+import android.graphics.Shader
 import android.os.Build
 import android.util.AttributeSet
-import android.view.*
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
+import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
 import kotlin.math.abs
 
-class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetector.OnGestureListener {
+private const val NONE = 0
+private const val DRAG = 1
+private const val ZOOM = 2
+private const val CLICK = 3
+private const val MIN_SCALE = .75f
+private const val MAX_SCALE = 50f
+private const val MATRIX_SIZE = 9
+private const val DELAY_MILLIS = 150L
 
-    companion object {
-        const val NONE = 0
-        const val DRAG = 1
-        const val ZOOM = 2
-        const val CLICK = 3
-        private const val MIN_SCALE = .75f
-        private const val MAX_SCALE = 50f
-    }
-
+class ZoomableImageView :
+    AppCompatImageView,
+    View.OnTouchListener,
+    GestureDetector.OnGestureListener {
     private var mode = NONE
 
     private lateinit var mBitmap: Bitmap
@@ -53,7 +69,7 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
     private var scaleDetector: ScaleGestureDetector
     private var gestureDetector: GestureDetector
     private var mMatrix = Matrix()
-    private var matrixValues = FloatArray(9)
+    private var matrixValues = FloatArray(MATRIX_SIZE)
 
     private var saveScale = 1f
 
@@ -69,34 +85,37 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
-            : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
+        super(context, attrs, defStyleAttr)
 
     init {
         visibility = GONE
         super.setClickable(true)
         scaleDetector = ScaleGestureDetector(context, ScaleListener())
 
-        matrixValues = FloatArray(9)
+        matrixValues = FloatArray(MATRIX_SIZE)
         imageMatrix = mMatrix
         scaleType = ScaleType.MATRIX
 
         gestureDetector = GestureDetector(context, this)
         setOnTouchListener(this)
 
-        backgroundSurfaceColor = ContextCompat.getColor(context,
-                R.color.pocketpaint_color_picker_surface_background)
+        backgroundSurfaceColor = ContextCompat.getColor(
+            context,
+            R.color.pocketpaint_color_picker_surface_background
+        )
 
         boarderPaint.color = Color.BLACK
         boarderPaint.style = Paint.Style.STROKE
         boarderPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
 
-        val checkerboard = BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg)
+        val checkerboard =
+            BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg)
         val shader = BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
         checkeredPattern.shader = shader
         checkeredPattern.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
         // delay displaying till the drawing being done
-        postDelayed({ visibility = VISIBLE }, 150)
+        postDelayed({ visibility = VISIBLE }, DELAY_MILLIS)
     }
 
     fun setListener(listener: OnImageViewPointClickedListener) {
@@ -120,18 +139,19 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
             var mScaleFactor = detector.scaleFactor
             val prevScale = saveScale
             saveScale *= mScaleFactor
-            if (saveScale > Companion.MAX_SCALE) {
-                saveScale = Companion.MAX_SCALE
-                mScaleFactor = Companion.MAX_SCALE / prevScale
-            } else if (saveScale < Companion.MIN_SCALE) {
-                saveScale = Companion.MIN_SCALE
-                mScaleFactor = Companion.MIN_SCALE / prevScale
+            if (saveScale > MAX_SCALE) {
+                saveScale = MAX_SCALE
+                mScaleFactor = MAX_SCALE / prevScale
+            } else if (saveScale < MIN_SCALE) {
+                saveScale = MIN_SCALE
+                mScaleFactor = MIN_SCALE / prevScale
             }
             if (origWidth * saveScale <= viewWidth || origHeight * saveScale <= viewHeight) {
-                mMatrix.postScale(mScaleFactor,
-                        mScaleFactor,
-                        viewWidth / 2.toFloat(),
-                        viewHeight / 2.toFloat()
+                mMatrix.postScale(
+                    mScaleFactor,
+                    mScaleFactor,
+                    viewWidth / 2.toFloat(),
+                    viewHeight / 2.toFloat()
                 )
             } else {
                 mMatrix.postScale(mScaleFactor, mScaleFactor, detector.focusX, detector.focusY)
@@ -142,8 +162,9 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
     }
 
     private fun fitToScreen() {
-        if (drawable == null || drawable.intrinsicWidth == 0 || drawable.intrinsicHeight == 0)
+        if (drawable == null || drawable.intrinsicWidth == 0 || drawable.intrinsicHeight == 0) {
             return
+        }
         val imageWidth = drawable.intrinsicWidth.toFloat()
         val imageHeight = drawable.intrinsicHeight.toFloat()
         val scaleX = viewWidth / imageWidth
@@ -152,8 +173,8 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
         mMatrix.setScale(scale, scale)
 
         // Center the image
-        var redundantYSpace = (viewHeight - scale * imageHeight)
-        var redundantXSpace = (viewWidth - scale * imageWidth)
+        var redundantYSpace = viewHeight - scale * imageHeight
+        var redundantXSpace = viewWidth - scale * imageWidth
         redundantYSpace /= 2.toFloat()
         redundantXSpace /= 2.toFloat()
         mMatrix.postTranslate(redundantXSpace, redundantYSpace)
@@ -168,8 +189,9 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
         val transY = matrixValues[Matrix.MTRANS_Y]
         val fixTransX = getCorrectTranslation(transX, viewWidth, origWidth * saveScale)
         val fixTransY = getCorrectTranslation(transY, viewHeight, origHeight * saveScale)
-        if (fixTransX != 0f || fixTransY != 0f)
+        if (fixTransX != 0f || fixTransY != 0f) {
             mMatrix.postTranslate(fixTransX, fixTransY)
+        }
     }
 
     private fun getCorrectTranslation(trans: Float, viewSize: Float, contentSize: Float): Float {
@@ -182,13 +204,11 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
             minTrans = viewSize - contentSize
             maxTrans = 0f
         }
-        if (trans < minTrans) {
-            return -trans + minTrans
+        return when {
+            trans < minTrans -> -trans + minTrans
+            trans > maxTrans -> -trans + maxTrans
+            else -> 0f
         }
-        if (trans > maxTrans) {
-            return -trans + maxTrans
-        }
-        return 0F
     }
 
     private fun getFixDragTrans(delta: Float, viewSize: Float, contentSize: Float): Float {
@@ -251,19 +271,24 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
                 if (mode == ZOOM && saveScale > MIN_SCALE) {
                     val dx = currentPoint.x - lastPoint.x
                     val dy = currentPoint.y - lastPoint.y
-                    val fixTransX = getFixDragTrans(dx,
-                            viewWidth,
-                            origWidth * saveScale)
-                    val fixTransY = getFixDragTrans(dy,
-                            viewHeight,
-                            origHeight * saveScale)
+                    val fixTransX = getFixDragTrans(
+                        dx,
+                        viewWidth,
+                        origWidth * saveScale
+                    )
+                    val fixTransY = getFixDragTrans(
+                        dy,
+                        viewHeight,
+                        origHeight * saveScale
+                    )
                     mMatrix.postTranslate(fixTransX, fixTransY)
                     correctTranslation()
                     lastPoint[currentPoint.x] = currentPoint.y
                 }
 
-                if (event.pointerCount == 1 && mode == DRAG)
+                if (event.pointerCount == 1 && mode == DRAG) {
                     performColorColorChanged(PointF(event.x, event.y))
+                }
             }
 
             MotionEvent.ACTION_UP -> {
@@ -302,16 +327,18 @@ class ZoomableImageView : AppCompatImageView, View.OnTouchListener, GestureDetec
         inverse.mapPoints(touchPoint)
         val xPixel = touchPoint[0].toInt()
         val yPixel = touchPoint[1].toInt()
-        if (xPixel >= bitmap.width || yPixel >= bitmap.height || xPixel < 0 || yPixel < 0) {
+        if (xPixel !in 0 until bitmap.width || yPixel !in 0 until bitmap.height) {
             // clicked outside of the image frame
             return
         }
 
         val touchedPixelRGB = bitmap.getPixel(xPixel, yPixel)
-        val colorValue = Color.argb(Color.alpha(touchedPixelRGB),
-                Color.red(touchedPixelRGB),
-                Color.green(touchedPixelRGB),
-                Color.blue(touchedPixelRGB))
+        val colorValue = Color.argb(
+            Color.alpha(touchedPixelRGB),
+            Color.red(touchedPixelRGB),
+            Color.green(touchedPixelRGB),
+            Color.blue(touchedPixelRGB)
+        )
 
         listener.colorChanged(colorValue)
     }

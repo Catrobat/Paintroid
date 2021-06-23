@@ -42,7 +42,14 @@ class LineToolTest {
 
     @Before
     fun setUp() {
-        tool = LineTool(brushToolOptions, contextCallback, toolOptionsController, toolPaint, workspace, commandManager)
+        tool = LineTool(
+            brushToolOptions,
+            contextCallback,
+            toolOptionsController,
+            toolPaint,
+            workspace,
+            commandManager
+        )
     }
 
     @Test

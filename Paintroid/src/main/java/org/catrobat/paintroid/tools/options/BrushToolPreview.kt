@@ -22,5 +22,6 @@ import org.catrobat.paintroid.tools.options.BrushToolOptionsView.OnBrushPreviewL
 
 interface BrushToolPreview {
     fun setListener(callback: OnBrushPreviewListener)
+
     fun invalidate()
 }

@@ -43,11 +43,11 @@ class OverwriteDialog : MainActivityDialogFragment() {
                 )
             )
             .setTitle(R.string.pocketpaint_overwrite_title)
-            .setPositiveButton(R.string.overwrite_button_text) { dialog, which ->
+            .setPositiveButton(R.string.overwrite_button_text) { _, _ ->
                 presenter.switchBetweenVersions(permission, isExport)
                 dismiss()
             }
-            .setNegativeButton(R.string.cancel_button_text) { dialog, which -> dismiss() }
+            .setNegativeButton(R.string.cancel_button_text) { _, _ -> dismiss() }
             .create()
 
     companion object {

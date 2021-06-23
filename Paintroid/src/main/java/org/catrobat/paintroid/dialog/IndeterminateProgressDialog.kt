@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,12 @@ import androidx.appcompat.app.AlertDialog
 import org.catrobat.paintroid.R
 
 object IndeterminateProgressDialog {
-	@JvmStatic
-	@SuppressLint("InflateParams")
-	fun newInstance(context: Context?): AlertDialog {
-		return AlertDialog.Builder(context!!, R.style.PocketPaintProgressDialog)
-			.setCancelable(false)
-			.setView(R.layout.pocketpaint_layout_indeterminate)
-			.create()
-	}
+    @JvmStatic
+    @SuppressLint("InflateParams")
+    fun newInstance(context: Context): AlertDialog {
+        return AlertDialog.Builder(context, R.style.PocketPaintProgressDialog)
+            .setCancelable(false)
+            .setView(R.layout.pocketpaint_layout_indeterminate)
+            .create()
+    }
 }

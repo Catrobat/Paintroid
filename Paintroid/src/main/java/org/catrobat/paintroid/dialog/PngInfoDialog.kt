@@ -29,6 +29,6 @@ class PngInfoDialog : AppCompatDialogFragment() {
         AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
             .setMessage(R.string.pocketpaint_png_message_dialog)
             .setTitle(R.string.pocketpaint_png_title_dialog)
-            .setPositiveButton(R.string.pocketpaint_ok) { dialog, which -> dismiss() }
+            .setPositiveButton(R.string.pocketpaint_ok) { _, _ -> dismiss() }
             .create()
 }

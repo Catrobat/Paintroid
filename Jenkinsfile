@@ -19,7 +19,7 @@ def junitAndCoverage(String jacocoXmlFile, String coverageName, String javaSrcLo
     sh "./buildScripts/cover2cover.py '$jacocoXmlFile' '$coverageFile'"
 }
 
-def useDebugLabelParameter(defaultLabel){
+def useDebugLabelParameter(defaultLabel) {
     return env.DEBUG_LABEL?.trim() ? env.DEBUG_LABEL : defaultLabel
 }
 
@@ -87,15 +87,16 @@ pipeline {
 
         stage('Static Analysis') {
             steps {
-                sh './gradlew pmd checkstyle lint'
+                sh './gradlew pmd checkstyle lint detekt'
             }
 
             post {
                 always {
                     recordIssues aggregatingResults: true, enabledForFailure: true, qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]],
-                                 tools: [androidLintParser(pattern: "$reports/lint*.xml"),
-                                         checkStyle(pattern: "$reports/checkstyle.xml"),
-                                         pmdParser(pattern: "$reports/pmd.xml")]
+                            tools: [androidLintParser(pattern: "$reports/lint*.xml"),
+                                    checkStyle(pattern: "$reports/checkstyle.xml"),
+                                    pmdParser(pattern: "$reports/pmd.xml"),
+                                    detekt(pattern: "$reports/detekt/detekt.xml")]
                 }
             }
         }

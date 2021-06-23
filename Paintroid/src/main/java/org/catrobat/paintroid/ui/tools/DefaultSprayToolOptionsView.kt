@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.ui.tools
 
 import android.graphics.Paint
@@ -33,6 +32,10 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.SprayToolOptionsView
 
+const val MIN_RADIUS = 1
+private const val DEFAULT_RADIUS = 5
+private const val MAX_RADIUS = 100
+
 class DefaultSprayToolOptionsView(rootView: ViewGroup) : SprayToolOptionsView {
 
     private var callback: SprayToolOptionsView.Callback? = null
@@ -40,15 +43,13 @@ class DefaultSprayToolOptionsView(rootView: ViewGroup) : SprayToolOptionsView {
     private val radiusSeekBar: SeekBar
 
     companion object {
-        const val MIN_RADIUS = 1
-        private const val DEFAULT_RADIUS = 5
-        private const val MAX_RADIUS = 100
         private val TAG = DefaultSprayToolOptionsView::class.java.simpleName
     }
 
     init {
         val inflater = LayoutInflater.from(rootView.context)
-        val sprayToolOptionsView: View = inflater.inflate(R.layout.dialog_pocketpaint_spray_tool, rootView)
+        val sprayToolOptionsView: View =
+            inflater.inflate(R.layout.dialog_pocketpaint_spray_tool, rootView)
         radiusText = sprayToolOptionsView.findViewById(R.id.pocketpaint_radius_text)
         radiusSeekBar = sprayToolOptionsView.findViewById(R.id.pocketpaint_spray_radius_seek_bar)
         initializeListeners()
@@ -64,15 +65,18 @@ class DefaultSprayToolOptionsView(rootView: ViewGroup) : SprayToolOptionsView {
                 val sizeTextInt = try {
                     sizeText.toInt()
                 } catch (exp: NumberFormatException) {
-                    Log.d(DefaultSprayToolOptionsView.TAG, exp.localizedMessage!!)
+                    exp.localizedMessage?.let {
+                        Log.d(TAG, it)
+                    }
                     MIN_RADIUS
                 }
                 radiusSeekBar.progress = sizeTextInt
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
         })
 
         radiusSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -91,9 +95,9 @@ class DefaultSprayToolOptionsView(rootView: ViewGroup) : SprayToolOptionsView {
                 callback?.radiusChanged(progressValue)
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
 
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
         })
     }
 

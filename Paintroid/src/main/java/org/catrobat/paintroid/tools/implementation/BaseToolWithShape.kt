@@ -131,5 +131,5 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
 
     abstract fun onClickOnButton()
 
-    protected open fun drawToolSpecifics(canvas: Canvas, boxWidth: Float, boxHeight: Float) = Unit
+    protected open fun drawToolSpecifics(canvas: Canvas, boxWidth: Float, boxHeight: Float) {}
 }

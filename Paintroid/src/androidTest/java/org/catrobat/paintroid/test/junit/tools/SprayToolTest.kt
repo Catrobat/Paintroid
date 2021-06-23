@@ -25,7 +25,11 @@ import kotlinx.coroutines.isActive
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.implementation.SprayCommand
-import org.catrobat.paintroid.tools.*
+import org.catrobat.paintroid.tools.ContextCallback
+import org.catrobat.paintroid.tools.Tool
+import org.catrobat.paintroid.tools.ToolPaint
+import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.tools.implementation.SprayTool
 import org.catrobat.paintroid.tools.options.SprayToolOptionsView
@@ -43,7 +47,8 @@ class SprayToolTest {
     private val commandManager = Mockito.mock(CommandManager::class.java)
     private val workspace = Mockito.mock(Workspace::class.java)
     private val sprayToolOptionsView = Mockito.mock(SprayToolOptionsView::class.java)
-    private val toolOptionsViewController = Mockito.mock(ToolOptionsVisibilityController::class.java)
+    private val toolOptionsViewController =
+        Mockito.mock(ToolOptionsVisibilityController::class.java)
     private val contextCallback = Mockito.mock(ContextCallback::class.java)
     private lateinit var tool: SprayTool
 
@@ -57,7 +62,14 @@ class SprayToolTest {
         Mockito.`when`(toolPaint.paint).thenReturn(paint)
         Mockito.`when`(workspace.width).thenReturn(200)
         Mockito.`when`(workspace.height).thenReturn(300)
-        tool = SprayTool(sprayToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager)
+        tool = SprayTool(
+            sprayToolOptionsView,
+            contextCallback,
+            toolOptionsViewController,
+            toolPaint,
+            workspace,
+            commandManager
+        )
     }
 
     @After
@@ -125,7 +137,8 @@ class SprayToolTest {
     fun testHandleMoveDoesNothingButUpdateCoordinate() {
         val event = PointF(0f, 0f)
         tool.handleMove(event)
-        Mockito.verify(commandManager, Mockito.never()).addCommand(ArgumentMatchers.any(Command::class.java))
+        Mockito.verify(commandManager, Mockito.never())
+            .addCommand(ArgumentMatchers.any(Command::class.java))
         Assert.assertTrue(tool.sprayToolScope.isActive)
         Assert.assertFalse(tool.sprayActive)
     }
