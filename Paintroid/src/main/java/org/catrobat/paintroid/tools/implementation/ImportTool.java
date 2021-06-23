@@ -31,6 +31,9 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
+import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.DEFAULT_BOX_RESIZE_MARGIN;
+import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.MAXIMUM_BORDER_RATIO;
+
 public class ImportTool extends BaseToolWithRectangleShape {
 	private static final String BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP";
 
