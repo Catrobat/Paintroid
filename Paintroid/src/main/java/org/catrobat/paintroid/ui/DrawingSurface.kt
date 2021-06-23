@@ -142,7 +142,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 val iterator = layerModel.listIterator(layerModel.layerCount)
 
                 while (iterator.hasPrevious()) {
-                    surfaceViewCanvas.drawBitmap(iterator.previous().bitmap, 0f, 0f, null)
+                    iterator.previous().bitmap?.let { surfaceViewCanvas.drawBitmap(it, 0f, 0f, null) }
                 }
 
                 val tool = toolReference.get()
@@ -180,7 +180,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
 
     @Synchronized
     fun setBitmap(bitmap: Bitmap?) {
-        layerModel.currentLayer.bitmap = bitmap
+        layerModel.currentLayer?.bitmap = bitmap
     }
 
     fun isPointOnCanvas(pointX: Int, pointY: Int): Boolean =
