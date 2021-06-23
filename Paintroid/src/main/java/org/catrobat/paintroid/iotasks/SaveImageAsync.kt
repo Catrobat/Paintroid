@@ -186,10 +186,10 @@ class SaveImageAsync(
         private val TAG = SaveImageAsync::class.java.simpleName
     }
 
-	init {
-		this.uri = uri
-		this.saveAsCopy = saveAsCopy
-		this.workspace = workspace
-		this.context = context
-	}
+    init {
+        this.uri = uri
+        this.saveAsCopy = saveAsCopy
+        this.workspace = workspace
+        this.context = context
+    }
 }

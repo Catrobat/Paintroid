@@ -31,7 +31,6 @@ import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
 import org.catrobat.paintroid.iotasks.CreateFileAsync.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback
-import org.catrobat.paintroid.iotasks.SaveImageAsync
 import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
@@ -288,16 +287,16 @@ interface MainActivityContracts {
     }
 
     interface Interactor {
-        fun saveCopy(callback: SaveImageAsync.SaveImageAsync.SaveImageCallback, requestCode: Int, workspace: Workspace, context: Context)
+        fun saveCopy(callback: SaveImageCallback, requestCode: Int, workspace: Workspace, context: Context)
 
         fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String)
 
         fun saveImage(
-                callback: SaveImageAsync.SaveImageAsync.SaveImageCallback,
-                requestCode: Int,
-                workspace: Workspace,
-                uri: Uri?,
-                context: Context
+            callback: SaveImageCallback,
+            requestCode: Int,
+            workspace: Workspace,
+            uri: Uri?,
+            context: Context
         )
 
         fun loadFile(

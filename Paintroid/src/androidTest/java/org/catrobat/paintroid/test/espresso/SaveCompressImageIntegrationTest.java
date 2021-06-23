@@ -27,6 +27,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
@@ -41,8 +42,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
@@ -129,7 +128,7 @@ public class SaveCompressImageIntegrationTest {
 		try {
 			compressedBitmap = FileIO.getBitmapFromUri(activity.getContentResolver(), activity.model.getSavedPictureUri(), activity.getApplicationContext());
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e("Can't read", "Cant read Bitmap from Uri");
 		}
 		Bitmap testBitmap = FileIO.getBitmapFromFile(testImageFile);
 		assertThat(compressedBitmap.getWidth(), is(equalTo(testBitmap.getWidth())));
