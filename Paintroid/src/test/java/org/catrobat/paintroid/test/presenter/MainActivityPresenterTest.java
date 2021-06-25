@@ -41,7 +41,7 @@ import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.controller.ToolController;
 import org.catrobat.paintroid.dialog.PermissionInfoDialog;
 import org.catrobat.paintroid.iotasks.BitmapReturnValue;
-import org.catrobat.paintroid.iotasks.SaveImageAsync;
+import org.catrobat.paintroid.iotasks.SaveImage;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
@@ -969,7 +969,7 @@ public class MainActivityPresenterTest {
 
 		Uri uri = model.getSavedPictureUri();
 
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(uri), eq(context));
+		verify(interactor).saveImage(any(SaveImage.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(uri), eq(context));
 	}
 
 	@Test
@@ -1000,7 +1000,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(context));
+		verify(interactor).saveCopy(any(SaveImage.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(context));
 	}
 
 	@Test
