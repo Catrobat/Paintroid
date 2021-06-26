@@ -303,7 +303,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         layerPresenter.setDrawingSurface(drawingSurface)
         appFragment.perspective = perspective
         layerPresenter.setDefaultToolController(defaultToolController)
-        layerPresenter.setbottomNavigationViewHolder(bottomNavigationViewHolder)
+        layerPresenter.setBottomNavigationViewHolder(bottomNavigationViewHolder)
     }
 
     private fun setLayerMenuListeners(layerMenuViewHolder: LayerMenuViewHolder) {

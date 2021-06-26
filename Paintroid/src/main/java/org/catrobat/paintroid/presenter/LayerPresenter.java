@@ -86,7 +86,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 	}
 
 	@Override
-	public void setbottomNavigationViewHolder(BottomNavigationViewHolder bottomNavigationViewHolder) {
+	public void setBottomNavigationViewHolder(BottomNavigationViewHolder bottomNavigationViewHolder) {
 		this.bottomNavigationViewHolder = bottomNavigationViewHolder;
 	}
 
