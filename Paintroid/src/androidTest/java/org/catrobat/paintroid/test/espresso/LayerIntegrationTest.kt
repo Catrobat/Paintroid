@@ -684,7 +684,7 @@ class LayerIntegrationTest {
         }
         val imageFile = File(launchActivityRule.activity.getExternalFilesDir(null)!!.absolutePath, "loadImage.jpg")
         val imageUri = Uri.fromFile(imageFile)
-        launchActivityRule.activity.contentResolver.openOutputStream((imageUri)).use { fos ->
+        launchActivityRule.activity.myContentResolver.openOutputStream((imageUri)).use { fos ->
             Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos))
         }
         deletionFileList.add(imageFile)

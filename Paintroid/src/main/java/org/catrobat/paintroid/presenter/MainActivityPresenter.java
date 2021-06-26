@@ -959,7 +959,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public ContentResolver getContentResolver() {
-		return view.getContentResolver();
+		return view.getMyContentResolver();
 	}
 
 	@Override
@@ -969,7 +969,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public boolean isFinishing() {
-		return view.isFinishing();
+		return view.getFinishing();
 	}
 
 	@Override
