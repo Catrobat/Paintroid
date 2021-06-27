@@ -55,6 +55,7 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInte
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView;
+import static org.catrobat.paintroid.tools.implementation.TransformToolKt.MAXIMUM_BITMAP_SIZE_FACTOR;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
@@ -158,7 +159,7 @@ public class TransformToolIntegrationTest {
 		displayHeight = activityHelper.getDisplayHeight();
 
 		maxBitmapSize = displayHeight * displayWidth
-				* (int) TransformTool.MAXIMUM_BITMAP_SIZE_FACTOR;
+				* (int) MAXIMUM_BITMAP_SIZE_FACTOR;
 
 		final Bitmap workingBitmap = layerModel.getCurrentLayer().getBitmap();
 		initialWidth = workingBitmap.getWidth();
