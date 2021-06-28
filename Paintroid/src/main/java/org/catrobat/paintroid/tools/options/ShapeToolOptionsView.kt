@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,26 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools.options
 
-package org.catrobat.paintroid.tools.options;
+import org.catrobat.paintroid.tools.drawable.DrawableShape
+import org.catrobat.paintroid.tools.drawable.DrawableStyle
 
-import org.catrobat.paintroid.tools.drawable.DrawableShape;
-import org.catrobat.paintroid.tools.drawable.DrawableStyle;
-
-public interface ShapeToolOptionsView {
-	void setShapeActivated(DrawableShape shape);
-
-	void setDrawTypeActivated(DrawableStyle drawType);
-
-	void setShapeOutlineWidth(int outlineWidth);
-
-	void setCallback(Callback callback);
-
-	interface Callback {
-		void setToolType(DrawableShape shape);
-
-		void setDrawType(DrawableStyle drawType);
-
-		void setOutlineWidth(int outlineWidth);
-	}
+interface ShapeToolOptionsView {
+    fun setShapeActivated(shape: DrawableShape)
+    fun setDrawTypeActivated(drawType: DrawableStyle)
+    fun setShapeOutlineWidth(outlineWidth: Int)
+    fun setCallback(callback: Callback)
+    interface Callback {
+        fun setToolType(shape: DrawableShape)
+        fun setDrawType(drawType: DrawableStyle)
+        fun setOutlineWidth(outlineWidth: Int)
+    }
 }
