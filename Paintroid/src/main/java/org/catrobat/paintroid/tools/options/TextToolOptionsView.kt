@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,27 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools.options
 
-package org.catrobat.paintroid.tools.options;
+interface TextToolOptionsView {
+    fun setState(
+        bold: Boolean,
+        italic: Boolean,
+        underlined: Boolean,
+        text: String,
+        textSize: Int,
+        font: String
+    )
 
-public interface TextToolOptionsView {
-	void setState(boolean bold, boolean italic, boolean underlined, String text, int textSize, String font);
+    fun setCallback(listener: Callback)
 
-	void setCallback(Callback listener);
+    interface Callback {
+        fun setText(text: String)
 
-	interface Callback {
-		void setText(String text);
+        fun setFont(font: String)
 
-		void setFont(String font);
+        fun setUnderlined(underlined: Boolean)
 
-		void setUnderlined(boolean underlined);
+        fun setItalic(italic: Boolean)
 
-		void setItalic(boolean italic);
+        fun setBold(bold: Boolean)
 
-		void setBold(boolean bold);
+        fun setTextSize(size: Int)
 
-		void setTextSize(int size);
-
-		void hideToolOptions();
-	}
+        fun hideToolOptions()
+    }
 }
