@@ -63,6 +63,9 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceI
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.catrobat.paintroid.tools.implementation.TextToolKt.BOX_OFFSET;
+import static org.catrobat.paintroid.tools.implementation.TextToolKt.MARGIN_TOP;
+import static org.catrobat.paintroid.tools.implementation.TextToolKt.TEXT_SIZE_MAGNIFICATION_FACTOR;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -635,8 +638,8 @@ public class TextToolIntegrationTest {
 	}
 
 	private void checkTextBoxDimensions() {
-		int boxOffset = TextTool.BOX_OFFSET;
-		int textSizeMagnificationFactor = TextTool.TEXT_SIZE_MAGNIFICATION_FACTOR;
+		int boxOffset = BOX_OFFSET;
+		float textSizeMagnificationFactor = TEXT_SIZE_MAGNIFICATION_FACTOR;
 
 		float actualBoxWidth = getToolMemberBoxWidth();
 		float actualBoxHeight = getToolMemberBoxHeight();
@@ -694,7 +697,7 @@ public class TextToolIntegrationTest {
 	}
 
 	private void checkTextBoxDefaultPosition() {
-		float marginTop = TextTool.MARGIN_TOP;
+		float marginTop = MARGIN_TOP;
 		PointF actualBoxPosition = getToolMemberBoxPosition();
 		float boxHeight = getToolMemberBoxHeight();
 
