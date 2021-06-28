@@ -33,7 +33,6 @@ import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -209,7 +208,6 @@ public class LandscapeIntegrationTest {
 		assertEquals(toolType, getCurrentTool().getToolType());
 	}
 
-	@Ignore("Fail due to Pipette")
 	@Test
 	public void testCorrectSelectionInBothOrientationsPipetteTool() {
 		ToolType toolType = ToolType.PIPETTE;
@@ -456,7 +454,6 @@ public class LandscapeIntegrationTest {
 			if (toolType == ToolType.IMPORTPNG
 					|| toolType == ToolType.COLORCHOOSER
 					|| toolType == ToolType.REDO
-					|| toolType == ToolType.PIPETTE
 					|| toolType == ToolType.UNDO
 					|| toolType == ToolType.LAYER) {
 				continue;

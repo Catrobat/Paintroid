@@ -184,7 +184,7 @@ open class DrawingSurfaceListener(
         private var pointY = 0f
         private var width = 0
         private var height = 0
-        private val ignoredTools = EnumSet.of(ToolType.FILL, ToolType.TRANSFORM)
+        private val ignoredTools = EnumSet.of(ToolType.PIPETTE, ToolType.FILL, ToolType.TRANSFORM)
         private val newMovePoint: PointF = PointF()
 
         companion object {

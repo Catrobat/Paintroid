@@ -217,4 +217,23 @@
                 android:textColor="@color/pocketpaint_color_picker_white"/>
         </LinearLayout>
     </TableRow>
+
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_pipette"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_pipette"
+                android:contentDescription="@string/button_pipette"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_pipette"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
+    </TableRow>
 </TableLayout>
