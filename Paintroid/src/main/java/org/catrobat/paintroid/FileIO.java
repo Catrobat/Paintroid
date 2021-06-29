@@ -138,7 +138,9 @@ public final class FileIO {
                 return false;
             } finally {
                 if(compressed != null && compressed.exists())
-                    compressed.delete();
+				{
+					compressed.delete();
+				}
             }
         }
         else {
