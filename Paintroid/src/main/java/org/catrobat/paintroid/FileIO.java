@@ -42,16 +42,14 @@ import org.catrobat.paintroid.presenter.MainActivityPresenter;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -119,54 +117,36 @@ public final class FileIO {
     }
 
     public static boolean compress(Context context, File fileToCompress, Uri destination) {
+        Compressor compressor = new Compressor(context);
+        compressor.setQuality(compressQuality);
+        compressor.setCompressFormat(compressFormat);
+        String tempFileName = "tmp";
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
         {
+            File compressed = null;
             try {
-                Compressor compressor = new Compressor(context);
-                compressor.setQuality(compressQuality);
-                compressor.setCompressFormat(compressFormat);
-
-                String fileName = "tmp";
-
                 File cachePath = new File(context.getCacheDir(), "images");
                 cachePath.mkdirs();
-                File imagePath = new File(context.getCacheDir(), "images");
-                File newFile = new File(imagePath, fileName + ending);
-
-//                String destinationDirectoryPath = new File(destination.getPath()).getParentFile().getPath();
                 compressor.setDestinationDirectoryPath(cachePath.getPath());
-                String lp = destination.getLastPathSegment();
-                File compressed = compressor.compressToFile(fileToCompress, fileName+ending);
-                Uri output = Uri.fromFile(compressed);
+                compressed = compressor.compressToFile(fileToCompress, tempFileName+ending);
                 OutputStream os = context.getContentResolver().openOutputStream(destination);
                 copyStreams(new FileInputStream(compressed), os);
-                if(compressed.exists())
-                {
-                    compressed.delete();
-                }
                 return true;
             } catch (IOException e) {
                 Log.e("Can not compress", "Can not compress image file.", e);
                 return false;
-            } catch (NullPointerException e) {
-                Log.e("Can not compress", "Can not locate image to compress.");
-                return false;
+            } finally {
+                if(compressed != null && compressed.exists())
+                    compressed.delete();
             }
         }
         else {
             try {
-                Compressor compressor = new Compressor(context);
-                compressor.setQuality(compressQuality);
-                compressor.setCompressFormat(compressFormat);
-                String destinationDirectoryPath = new File(destination.getPath()).getParentFile().getPath();
-                compressor.setDestinationDirectoryPath(destinationDirectoryPath);
+                compressor.setDestinationDirectoryPath(Objects.requireNonNull(new File(destination.getPath()).getParentFile()).getPath());
                 compressor.compressToFile(fileToCompress, destination.getLastPathSegment());
                 return true;
             } catch (IOException e) {
                 Log.e("Can not compress", "Can not compress image file.", e);
-                return false;
-            } catch (NullPointerException e) {
-                Log.e("Can not compress", "Can not locate image to compress.");
                 return false;
             }
         }
@@ -182,9 +162,7 @@ public final class FileIO {
             contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
 
             imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-            Random random = new Random();
-            random.setSeed(System.currentTimeMillis());
-            Uri cachedImageUri = saveBitmapToCache(bitmap, context, Long.toString(random.nextLong()));
+            Uri cachedImageUri = saveBitmapToCache(bitmap, context, UUID.randomUUID().toString());
             File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
 
             try {
@@ -202,10 +180,7 @@ public final class FileIO {
             }
 
             imageUri = Uri.fromFile(new File(Constants.MEDIA_DIRECTORY, fileName));
-            Random random = new Random();
-            random.setSeed(System.currentTimeMillis());
-
-            Uri cachedImageUri = saveBitmapToCache(bitmap, context, Long.toString(random.nextLong()));
+            Uri cachedImageUri = saveBitmapToCache(bitmap, context, UUID.randomUUID().toString());
             File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
             try {
                 if (!compress(context, cachedFile, imageUri)) {

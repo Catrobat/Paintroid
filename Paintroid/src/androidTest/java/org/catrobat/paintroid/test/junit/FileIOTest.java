@@ -1,13 +1,30 @@
 package org.catrobat.paintroid.test.junit;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 
 import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.tools.ToolType;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import androidx.exifinterface.media.ExifInterface;
 
+import java.io.Console;
+import java.util.ArrayList;
+import java.util.Random;
+
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
@@ -17,6 +34,7 @@ public class FileIOTest {
 
 	@Mock
 	Bitmap bitmap;
+
 	@Mock
 	ExifInterface exifInterface;
 
