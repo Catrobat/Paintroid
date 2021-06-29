@@ -231,7 +231,6 @@ public final class FileIO {
             throw new NullPointerException("Can not create media directory.");
         }
 
-//		return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), filename);
         return new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), filename);
     }
 
