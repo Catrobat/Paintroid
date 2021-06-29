@@ -57,6 +57,7 @@ import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
 import id.zelory.compressor.Compressor;
+import static org.catrobat.paintroid.common.Constants.MAX_LAYERS;
 
 public final class FileIO {
 	public static String filename = "image";
