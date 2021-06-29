@@ -57,6 +57,7 @@ import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
 import id.zelory.compressor.Compressor;
+
 import static org.catrobat.paintroid.common.Constants.MAX_LAYERS;
 
 public final class FileIO {
@@ -79,10 +80,10 @@ public final class FileIO {
 		throw new AssertionError();
 	}
 
-    private static void saveBitmapToStream(OutputStream outputStream, Bitmap bitmap) throws IOException {
-        if (bitmap == null || bitmap.isRecycled()) {
-            throw new IllegalArgumentException("Bitmap is invalid");
-        }
+	private static void saveBitmapToStream(OutputStream outputStream, Bitmap bitmap) throws IOException {
+		if (bitmap == null || bitmap.isRecycled()) {
+			throw new IllegalArgumentException("Bitmap is invalid");
+		}
 
 		if (compressFormat == Bitmap.CompressFormat.JPEG) {
 			Bitmap newBitmap = Bitmap.createBitmap(bitmap.getWidth(),
@@ -94,127 +95,124 @@ public final class FileIO {
 			bitmap = newBitmap;
 		}
 
-        if (!bitmap.compress(compressFormat, compressQuality, outputStream)) {
-            throw new IOException("Can not write png to stream.");
-        }
-    }
+		if (!bitmap.compress(compressFormat, compressQuality, outputStream)) {
+			throw new IOException("Can not write png to stream.");
+		}
+	}
 
-    public static Uri saveBitmapToUri(Uri uri, ContentResolver resolver, Bitmap bitmap, Context context) throws IOException {
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
-        Uri cachedImageUri = saveBitmapToCache(bitmap, context, Long.toString(random.nextLong()));
-        File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
+	public static Uri saveBitmapToUri(Uri uri, ContentResolver resolver, Bitmap bitmap, Context context) throws IOException {
+		Random random = new Random();
+		random.setSeed(System.currentTimeMillis());
+		Uri cachedImageUri = saveBitmapToCache(bitmap, context, Long.toString(random.nextLong()));
+		File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
 
-        try {
-            if (!compress(context, cachedFile, uri)) {
-                throw new IOException("Can not compress image file.");
-            }
-        } finally {
-            if (cachedFile.exists()) {
-                cachedFile.delete();
-            }
-        }
-        return uri;
-    }
+		try {
+			if (!compress(context, cachedFile, uri)) {
+				throw new IOException("Can not compress image file.");
+			}
+		} finally {
+			if (cachedFile.exists()) {
+				cachedFile.delete();
+			}
+		}
+		return uri;
+	}
 
-    public static boolean compress(Context context, File fileToCompress, Uri destination) {
-        Compressor compressor = new Compressor(context);
-        compressor.setQuality(compressQuality);
-        compressor.setCompressFormat(compressFormat);
-        String tempFileName = "tmp";
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-        {
-            File compressed = null;
-            try {
-                File cachePath = new File(context.getCacheDir(), "images");
-                cachePath.mkdirs();
-                compressor.setDestinationDirectoryPath(cachePath.getPath());
-                compressed = compressor.compressToFile(fileToCompress, tempFileName+ending);
-                OutputStream os = context.getContentResolver().openOutputStream(destination);
-                copyStreams(new FileInputStream(compressed), os);
-                return true;
-            } catch (IOException e) {
-                Log.e("Can not compress", "Can not compress image file.", e);
-                return false;
-            } finally {
-                if(compressed != null && compressed.exists())
-				{
+	public static boolean compress(Context context, File fileToCompress, Uri destination) {
+		Compressor compressor = new Compressor(context);
+		compressor.setQuality(compressQuality);
+		compressor.setCompressFormat(compressFormat);
+		String tempFileName = "tmp";
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			File compressed = null;
+			try {
+				File cachePath = new File(context.getCacheDir(), "images");
+				cachePath.mkdirs();
+				compressor.setDestinationDirectoryPath(cachePath.getPath());
+				compressed = compressor.compressToFile(fileToCompress, tempFileName + ending);
+				OutputStream os = context.getContentResolver().openOutputStream(destination);
+				copyStreams(new FileInputStream(compressed), os);
+				return true;
+			} catch (IOException e) {
+				Log.e("Can not compress", "Can not compress image file.", e);
+				return false;
+			} finally {
+				if (compressed != null && compressed.exists()) {
 					compressed.delete();
 				}
-            }
-        }
-        else {
-            try {
-                compressor.setDestinationDirectoryPath(Objects.requireNonNull(new File(destination.getPath()).getParentFile()).getPath());
-                compressor.compressToFile(fileToCompress, destination.getLastPathSegment());
-                return true;
-            } catch (IOException e) {
-                Log.e("Can not compress", "Can not compress image file.", e);
-                return false;
-            }
-        }
-    }
+			}
+		} else {
+			try {
+				compressor.setDestinationDirectoryPath(Objects.requireNonNull(new File(destination.getPath()).getParentFile()).getPath());
+				compressor.compressToFile(fileToCompress, destination.getLastPathSegment());
+				return true;
+			} catch (IOException e) {
+				Log.e("Can not compress", "Can not compress image file.", e);
+				return false;
+			}
+		}
+	}
 
-    public static Uri saveBitmapToFile(String fileName, Bitmap bitmap, ContentResolver resolver, Context context) throws IOException {
-        Uri imageUri;
+	public static Uri saveBitmapToFile(String fileName, Bitmap bitmap, ContentResolver resolver, Context context) throws IOException {
+		Uri imageUri;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
-            contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/*");
-            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
+			contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/*");
+			contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
 
-            imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-            Uri cachedImageUri = saveBitmapToCache(bitmap, context, UUID.randomUUID().toString());
-            File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
+			imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+			Uri cachedImageUri = saveBitmapToCache(bitmap, context, UUID.randomUUID().toString());
+			File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
 
-            try {
-                if (!compress(context, cachedFile, imageUri)) {
-                    throw new IOException("Can not compress image file.");
-                }
-            } finally {
-                if (cachedFile.exists()) {
-                    cachedFile.delete();
-                }
-            }
-        } else {
-            if (!(Constants.MEDIA_DIRECTORY.exists() || Constants.MEDIA_DIRECTORY.mkdirs())) {
-                throw new IOException("Can not create media directory.");
-            }
+			try {
+				if (!compress(context, cachedFile, imageUri)) {
+					throw new IOException("Can not compress image file.");
+				}
+			} finally {
+				if (cachedFile.exists()) {
+					cachedFile.delete();
+				}
+			}
+		} else {
+			if (!(Constants.MEDIA_DIRECTORY.exists() || Constants.MEDIA_DIRECTORY.mkdirs())) {
+				throw new IOException("Can not create media directory.");
+			}
 
-            imageUri = Uri.fromFile(new File(Constants.MEDIA_DIRECTORY, fileName));
-            Uri cachedImageUri = saveBitmapToCache(bitmap, context, UUID.randomUUID().toString());
-            File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
-            try {
-                if (!compress(context, cachedFile, imageUri)) {
-                    throw new IOException("Can not compress image file.");
-                }
-            } finally {
-                if (cachedFile.exists()) {
-                    cachedFile.delete();
-                }
-            }
-        }
-        return imageUri;
-    }
+			imageUri = Uri.fromFile(new File(Constants.MEDIA_DIRECTORY, fileName));
+			Uri cachedImageUri = saveBitmapToCache(bitmap, context, UUID.randomUUID().toString());
+			File cachedFile = new File(MainActivityPresenter.getPathFromUri(context, cachedImageUri));
+			try {
+				if (!compress(context, cachedFile, imageUri)) {
+					throw new IOException("Can not compress image file.");
+				}
+			} finally {
+				if (cachedFile.exists()) {
+					cachedFile.delete();
+				}
+			}
+		}
+		return imageUri;
+	}
 
-    public static Uri saveBitmapToCache(Bitmap bitmap, Context context, String fileName) {
-        Uri uri = null;
-        try {
-            File cachePath = new File(context.getCacheDir(), "images");
-            cachePath.mkdirs();
-            FileOutputStream stream = new FileOutputStream(cachePath + "/" + fileName + ending);
-            saveBitmapToStream(stream, bitmap);
-            stream.close();
-            File imagePath = new File(context.getCacheDir(), "images");
-            File newFile = new File(imagePath, fileName + ending);
-            String fileProviderString = context.getApplicationContext().getPackageName() + ".fileprovider";
-            uri = FileProvider.getUriForFile(context.getApplicationContext(), fileProviderString, newFile);
-        } catch (IOException e) {
-            Log.e("Can not write", "Can not write png to stream.", e);
-        }
-        return uri;
-    }
+	public static Uri saveBitmapToCache(Bitmap bitmap, Context context, String fileName) {
+		Uri uri = null;
+		try {
+			File cachePath = new File(context.getCacheDir(), "images");
+			cachePath.mkdirs();
+			FileOutputStream stream = new FileOutputStream(cachePath + "/" + fileName + ending);
+			saveBitmapToStream(stream, bitmap);
+			stream.close();
+			File imagePath = new File(context.getCacheDir(), "images");
+			File newFile = new File(imagePath, fileName + ending);
+			String fileProviderString = context.getApplicationContext().getPackageName() + ".fileprovider";
+			uri = FileProvider.getUriForFile(context.getApplicationContext(), fileProviderString, newFile);
+		} catch (IOException e) {
+			Log.e("Can not write", "Can not write png to stream.", e);
+		}
+		return uri;
+	}
 
 	public static String getDefaultFileName() {
 		return filename + ending;

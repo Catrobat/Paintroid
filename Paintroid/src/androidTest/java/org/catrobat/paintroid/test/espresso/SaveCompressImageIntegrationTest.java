@@ -48,7 +48,6 @@ import java.util.UUID;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.rule.ActivityTestRule;
 
-import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -56,6 +55,9 @@ import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -64,7 +66,6 @@ import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 
 public class SaveCompressImageIntegrationTest {
 
@@ -136,21 +137,21 @@ public class SaveCompressImageIntegrationTest {
 		int width = 1080;
 		int height = 1920;
 		Bitmap.Config bitmapConfig = Bitmap.Config.ARGB_8888;
-		int bytesPerPixel=4;
+		int bytesPerPixel = 4;
 
-		byte[] b = new byte[width*height*bytesPerPixel];
+		byte[] b = new byte[width * height * bytesPerPixel];
 		Random r = new Random();
 		r.setSeed(0);
 		r.nextBytes(b);
-		bitmap = Bitmap.createBitmap(width,height, bitmapConfig);
+		bitmap = Bitmap.createBitmap(width, height, bitmapConfig);
 		Canvas canvas = new Canvas(bitmap);
 		int byteIndex = 0;
 		Paint paint = new Paint();
 		for (int i = 0; i < height; i++) {
-			for(int j=0; j < width; j++) {
+			for (int j = 0; j < width; j++) {
 				int color = Color.argb(b[byteIndex++], b[byteIndex++], b[byteIndex++], b[byteIndex++]);
 				paint.setColor(color);
-				canvas.drawPoint(j,i,paint);
+				canvas.drawPoint(j, i, paint);
 			}
 		}
 		return bitmap;
