@@ -35,6 +35,7 @@ public class MainActivityInteractor implements MainActivityContracts.Interactor 
 		new SaveImageAsync(callback, requestCode, workspace, null, true, context).execute();
 	}
 
+
 	@Override
 	public void createFile(CreateFileAsync.CreateFileCallback callback, int requestCode, String filename) {
 		new CreateFileAsync(callback, requestCode, filename).execute();
