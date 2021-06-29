@@ -17,14 +17,21 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
-    <string name="color_picker_title">Color Picker</string>
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="color_picker_title">色の選択</string>
+    <string name="color_picker_tab_icon">カラーピッカータブアイコン</string>
     <string name="color_red">赤</string>
     <string name="color_green">緑</string>
     <string name="color_blue">青</string>
     <string name="color_alpha">透過度</string>
     <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Apply</string>
+    <string name="color_picker_apply">適用</string>
     <string name="color_picker_cancel">キャンセル</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">ピペット</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">変更を保存しますか？</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">変更内容を保存しますか？</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
 </resources>

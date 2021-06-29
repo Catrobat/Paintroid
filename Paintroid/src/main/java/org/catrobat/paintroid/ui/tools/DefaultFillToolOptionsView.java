@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.ui.tools;
 
 import android.text.Editable;
@@ -31,10 +30,11 @@ import android.widget.SeekBar;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter;
-import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.tools.options.FillToolOptionsView;
 
 import java.util.Locale;
+
+import static org.catrobat.paintroid.tools.implementation.FillToolKt.DEFAULT_TOLERANCE_IN_PERCENT;
 
 public class DefaultFillToolOptionsView implements FillToolOptionsView {
 	private SeekBar colorToleranceSeekBar;
@@ -85,7 +85,7 @@ public class DefaultFillToolOptionsView implements FillToolOptionsView {
 				}
 			}
 		});
-		setColorToleranceText(FillTool.DEFAULT_TOLERANCE_IN_PERCENT);
+		setColorToleranceText(DEFAULT_TOLERANCE_IN_PERCENT);
 	}
 
 	private void updateColorTolerance(int colorTolerance) {

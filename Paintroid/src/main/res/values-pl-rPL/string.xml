@@ -41,7 +41,7 @@
     <string name="done">Zrobione</string>
     <string name="gallery">Galeria</string>
     <string name="load_sticker_error">Nie można załadować naklejki</string>
-    <string name="error_unknown_error">Coś poszło nie tak.</string>
+    <string name="error_unknown_error">Wystąpił nieznany błąd.</string>
     <string name="cap_circle">Koło</string>
     <string name="cap_square">Kwadrat</string>
     <string name="stamptool_paste">Wklej</string>

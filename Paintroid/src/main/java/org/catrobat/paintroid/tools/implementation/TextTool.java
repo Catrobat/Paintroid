@@ -39,6 +39,8 @@ import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 
 import androidx.annotation.VisibleForTesting;
 
+import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.DEFAULT_ANTIALIASING_ON;
+
 public class TextTool extends BaseToolWithRectangleShape {
 
 	private static final boolean ROTATION_ENABLED = true;

@@ -59,39 +59,39 @@ import androidx.exifinterface.media.ExifInterface;
 import id.zelory.compressor.Compressor;
 
 public final class FileIO {
-    public static String filename = "image";
-    public static String ending = ".png";
-    public static int compressQuality = 100;
-    public static Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.PNG;
-    public static boolean catroidFlag = false;
-    public static boolean isCatrobatImage = false;
-    public static boolean wasImageLoaded = false;
+	public static String filename = "image";
+	public static String ending = ".png";
+	public static int compressQuality = 100;
+	public static Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.PNG;
+	public static boolean catroidFlag = false;
+	public static boolean isCatrobatImage = false;
+	public static boolean wasImageLoaded = false;
 
-    public static String currentFileNameJpg = null;
-    public static String currentFileNamePng = null;
-    public static String currentFileNameOra = null;
-    public static Uri uriFileJpg = null;
-    public static Uri uriFilePng = null;
-    public static Uri uriFileOra = null;
+	public static String currentFileNameJpg = null;
+	public static String currentFileNamePng = null;
+	public static String currentFileNameOra = null;
+	public static Uri uriFileJpg = null;
+	public static Uri uriFilePng = null;
+	public static Uri uriFileOra = null;
 
-    private FileIO() {
-        throw new AssertionError();
-    }
+	private FileIO() {
+		throw new AssertionError();
+	}
 
     private static void saveBitmapToStream(OutputStream outputStream, Bitmap bitmap) throws IOException {
         if (bitmap == null || bitmap.isRecycled()) {
             throw new IllegalArgumentException("Bitmap is invalid");
         }
 
-        if (compressFormat == Bitmap.CompressFormat.JPEG) {
-            Bitmap newBitmap = Bitmap.createBitmap(bitmap.getWidth(),
-                    bitmap.getHeight(), bitmap.getConfig());
-            Canvas canvas = new Canvas(newBitmap);
-            canvas.drawColor(Color.WHITE);
-            canvas.drawBitmap(bitmap, 0F, 0F, null);
+		if (compressFormat == Bitmap.CompressFormat.JPEG) {
+			Bitmap newBitmap = Bitmap.createBitmap(bitmap.getWidth(),
+					bitmap.getHeight(), bitmap.getConfig());
+			Canvas canvas = new Canvas(newBitmap);
+			canvas.drawColor(Color.WHITE);
+			canvas.drawBitmap(bitmap, 0F, 0F, null);
 
-            bitmap = newBitmap;
-        }
+			bitmap = newBitmap;
+		}
 
         if (!bitmap.compress(compressFormat, compressQuality, outputStream)) {
             throw new IOException("Can not write png to stream.");
@@ -213,276 +213,276 @@ public final class FileIO {
         return uri;
     }
 
-    public static String getDefaultFileName() {
-        return filename + ending;
-    }
+	public static String getDefaultFileName() {
+		return filename + ending;
+	}
 
-    public static File createNewEmptyPictureFile(String filename, Activity activity) throws NullPointerException {
-        if (filename == null) {
-            filename = getDefaultFileName();
-        }
+	public static File createNewEmptyPictureFile(String filename, Activity activity) throws NullPointerException {
+		if (filename == null) {
+			filename = getDefaultFileName();
+		}
 
-        if (!filename.toLowerCase(Locale.US).endsWith(ending.toLowerCase(Locale.US))) {
-            filename += ending;
-        }
+		if (!filename.toLowerCase(Locale.US).endsWith(ending.toLowerCase(Locale.US))) {
+			filename += ending;
+		}
 
-        if (!Objects.requireNonNull(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)).exists()
-                && !Objects.requireNonNull(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)).mkdirs()) {
-            throw new NullPointerException("Can not create media directory.");
-        }
+		if (!Objects.requireNonNull(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)).exists()
+				&& !Objects.requireNonNull(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)).mkdirs()) {
+			throw new NullPointerException("Can not create media directory.");
+		}
 
-        return new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), filename);
-    }
+		return new File(activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES), filename);
+	}
 
-    private static Bitmap decodeBitmapFromUri(ContentResolver resolver, @NonNull Uri uri, BitmapFactory.Options options, Context context) throws IOException {
-        InputStream inputStream = resolver.openInputStream(uri);
-        Bitmap bitmap;
-        float angle;
-        if (inputStream == null) {
-            throw new IOException("Can't open input stream");
-        }
-        try {
-            bitmap = BitmapFactory.decodeStream(inputStream, null, options);
-            if (options.inJustDecodeBounds) {
-                return bitmap;
-            }
+	private static Bitmap decodeBitmapFromUri(ContentResolver resolver, @NonNull Uri uri, BitmapFactory.Options options, Context context) throws IOException {
+		InputStream inputStream = resolver.openInputStream(uri);
+		Bitmap bitmap;
+		float angle;
+		if (inputStream == null) {
+			throw new IOException("Can't open input stream");
+		}
+		try {
+			bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+			if (options.inJustDecodeBounds) {
+				return bitmap;
+			}
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                angle = getBitmapOrientationFromInputStream(resolver, uri);
-            } else {
-                angle = getBitmapOrientationFromUri(uri, context);
-            }
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				angle = getBitmapOrientationFromInputStream(resolver, uri);
+			} else {
+				angle = getBitmapOrientationFromUri(uri, context);
+			}
 
-            return getOrientedBitmap(bitmap, angle);
-        } finally {
-            inputStream.close();
-        }
-    }
+			return getOrientedBitmap(bitmap, angle);
+		} finally {
+			inputStream.close();
+		}
+	}
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private static float getBitmapOrientationFromInputStream(ContentResolver resolver, @NonNull Uri uri) throws IOException {
-        InputStream inputStream = resolver.openInputStream(uri);
-        if (inputStream == null) {
-            return 0f;
-        }
+	@RequiresApi(api = Build.VERSION_CODES.N)
+	private static float getBitmapOrientationFromInputStream(ContentResolver resolver, @NonNull Uri uri) throws IOException {
+		InputStream inputStream = resolver.openInputStream(uri);
+		if (inputStream == null) {
+			return 0f;
+		}
 
-        try {
-            ExifInterface exifInterface = new ExifInterface(inputStream);
-            return getBitmapOrientation(exifInterface);
-        } finally {
-            inputStream.close();
-        }
-    }
+		try {
+			ExifInterface exifInterface = new ExifInterface(inputStream);
+			return getBitmapOrientation(exifInterface);
+		} finally {
+			inputStream.close();
+		}
+	}
 
-    private static float getBitmapOrientationFromUri(@NonNull Uri uri, Context context) throws IOException {
-        ExifInterface exifInterface = new ExifInterface(MainActivityPresenter.getPathFromUri(context, uri));
-        return getBitmapOrientation(exifInterface);
-    }
+	private static float getBitmapOrientationFromUri(@NonNull Uri uri, Context context) throws IOException {
+		ExifInterface exifInterface = new ExifInterface(MainActivityPresenter.getPathFromUri(context, uri));
+		return getBitmapOrientation(exifInterface);
+	}
 
-    public static Bitmap getOrientedBitmap(Bitmap bitmap, float angle) {
-        if (bitmap == null) {
-            return null;
-        }
+	public static Bitmap getOrientedBitmap(Bitmap bitmap, float angle) {
+		if (bitmap == null) {
+			return null;
+		}
 
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+		Matrix matrix = new Matrix();
+		matrix.postRotate(angle);
+		Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
-        bitmap.recycle();
-        bitmap = null;
+		bitmap.recycle();
+		bitmap = null;
 
-        return rotatedBitmap;
-    }
+		return rotatedBitmap;
+	}
 
-    public static float getBitmapOrientation(ExifInterface exifInterface) {
-        if (exifInterface == null) {
-            return 0f;
-        }
+	public static float getBitmapOrientation(ExifInterface exifInterface) {
+		if (exifInterface == null) {
+			return 0f;
+		}
 
-        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-        float angle = 0;
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                angle = 90f;
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                angle = 180f;
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                angle = 270f;
-                break;
-        }
+		int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+		float angle = 0;
+		switch (orientation) {
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				angle = 90f;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				angle = 180f;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				angle = 270f;
+				break;
+		}
 
-        return angle;
-    }
+		return angle;
+	}
 
-    public static void parseFileName(Uri uri, ContentResolver resolver) {
-        String fileName = "image";
+	public static void parseFileName(Uri uri, ContentResolver resolver) {
+		String fileName = "image";
 
-        Cursor cursor = null;
-        try {
-            cursor = resolver.query(uri, new String[]{
-                    MediaStore.Images.ImageColumns.DISPLAY_NAME
-            }, null, null, null);
+		Cursor cursor = null;
+		try {
+			cursor = resolver.query(uri, new String[]{
+					MediaStore.Images.ImageColumns.DISPLAY_NAME
+			}, null, null, null);
 
-            if (cursor != null && cursor.moveToFirst()) {
-                fileName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME));
-            }
-        } finally {
+			if (cursor != null && cursor.moveToFirst()) {
+				fileName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME));
+			}
+		} finally {
 
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
 
-        if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
-            ending = ".jpg";
-            compressFormat = Bitmap.CompressFormat.JPEG;
-            filename = fileName.substring(0, fileName.length() - FileIO.ending.length());
-        } else if (fileName.endsWith(".png")) {
-            ending = ".png";
-            compressFormat = Bitmap.CompressFormat.PNG;
-            filename = fileName.substring(0, fileName.length() - FileIO.ending.length());
-        }
-    }
+		if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+			ending = ".jpg";
+			compressFormat = Bitmap.CompressFormat.JPEG;
+			filename = fileName.substring(0, fileName.length() - FileIO.ending.length());
+		} else if (fileName.endsWith(".png")) {
+			ending = ".png";
+			compressFormat = Bitmap.CompressFormat.PNG;
+			filename = fileName.substring(0, fileName.length() - FileIO.ending.length());
+		}
+	}
 
-    public static void saveFileFromUri(Uri uri, File destFile, Context context) {
-        try (InputStream fileInputStream = context.getContentResolver().openInputStream(uri); OutputStream fileOutputStream = new FileOutputStream(destFile)) {
-            copyStreams(fileInputStream, fileOutputStream);
-        } catch (IOException e) {
-            Log.e("FileIO", "Can not copy streams.", e);
-        }
-    }
+	public static void saveFileFromUri(Uri uri, File destFile, Context context) {
+		try (InputStream fileInputStream = context.getContentResolver().openInputStream(uri); OutputStream fileOutputStream = new FileOutputStream(destFile)) {
+			copyStreams(fileInputStream, fileOutputStream);
+		} catch (IOException e) {
+			Log.e("FileIO", "Can not copy streams.", e);
+		}
+	}
 
-    public static long copyStreams(InputStream from, OutputStream to) throws IOException {
-        byte[] buffer = new byte[4096];
-        long total = 0;
-        while (true) {
-            int read = from.read(buffer);
-            if (read == -1) {
-                break;
-            }
-            to.write(buffer, 0, read);
-            total += read;
-        }
-        return total;
-    }
+	public static long copyStreams(InputStream from, OutputStream to) throws IOException {
+		byte[] buffer = new byte[4096];
+		long total = 0;
+		while (true) {
+			int read = from.read(buffer);
+			if (read == -1) {
+				break;
+			}
+			to.write(buffer, 0, read);
+			total += read;
+		}
+		return total;
+	}
 
-    public static int checkIfDifferentFile(String filename) {
-        if (currentFileNamePng == null && currentFileNameJpg == null && currentFileNameOra == null) {
-            return Constants.IS_NO_FILE;
-        }
+	public static int checkIfDifferentFile(String filename) {
+		if (currentFileNamePng == null && currentFileNameJpg == null && currentFileNameOra == null) {
+			return Constants.IS_NO_FILE;
+		}
 
-        if (currentFileNameJpg != null && currentFileNameJpg.equals(filename)) {
-            return Constants.IS_JPG;
-        }
+		if (currentFileNameJpg != null && currentFileNameJpg.equals(filename)) {
+			return Constants.IS_JPG;
+		}
 
-        if (currentFileNamePng != null && currentFileNamePng.equals(filename)) {
-            return Constants.IS_PNG;
-        }
+		if (currentFileNamePng != null && currentFileNamePng.equals(filename)) {
+			return Constants.IS_PNG;
+		}
 
-        if (currentFileNameOra != null && currentFileNameOra.equals(filename)) {
-            return Constants.IS_ORA;
-        }
+		if (currentFileNameOra != null && currentFileNameOra.equals(filename)) {
+			return Constants.IS_ORA;
+		}
 
-        return Constants.IS_NO_FILE;
-    }
+		return Constants.IS_NO_FILE;
+	}
 
-    public static int calculateSampleSize(int width, int height, int maxWidth, int maxHeight) {
-        int sampleSize = 1;
-        while (width > maxWidth || height > maxHeight) {
-            width /= 2;
-            height /= 2;
-            sampleSize *= 2;
-        }
-        return sampleSize;
-    }
+	public static int calculateSampleSize(int width, int height, int maxWidth, int maxHeight) {
+		int sampleSize = 1;
+		while (width > maxWidth || height > maxHeight) {
+			width /= 2;
+			height /= 2;
+			sampleSize *= 2;
+		}
+		return sampleSize;
+	}
 
-    public static Bitmap getBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
-        return enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context));
-    }
+	public static Bitmap getBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inMutable = true;
+		return enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context));
+	}
 
-    public static boolean hasEnoughMemory(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
-        long requiredMemory;
-        long availableMemory;
-        boolean scaling = false;
+	public static boolean hasEnoughMemory(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
+		long requiredMemory;
+		long availableMemory;
+		boolean scaling = false;
 
-        ActivityManager.MemoryInfo memoryinfo = new ActivityManager.MemoryInfo();
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        activityManager.getMemoryInfo(memoryinfo);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        decodeBitmapFromUri(resolver, bitmapUri, options, context);
-        if (options.outHeight < 0 || options.outWidth < 0) {
-            throw new IOException("Can't load bitmap from uri");
-        }
+		ActivityManager.MemoryInfo memoryinfo = new ActivityManager.MemoryInfo();
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		activityManager.getMemoryInfo(memoryinfo);
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		decodeBitmapFromUri(resolver, bitmapUri, options, context);
+		if (options.outHeight < 0 || options.outWidth < 0) {
+			throw new IOException("Can't load bitmap from uri");
+		}
 
-        if (((memoryinfo.availMem - memoryinfo.threshold) * 0.9) > 5000 * 5000 * 4) {
-            availableMemory = (long) 5000 * 5000 * 4;
-        } else {
-            availableMemory = (long) ((memoryinfo.availMem - memoryinfo.threshold) * 0.9);
-        }
-        requiredMemory = options.outWidth * options.outHeight * 4;
-        if (requiredMemory > availableMemory) {
-            scaling = true;
-        }
+		if (((memoryinfo.availMem - memoryinfo.threshold) * 0.9) > 5000 * 5000 * 4) {
+			availableMemory = (long) 5000 * 5000 * 4;
+		} else {
+			availableMemory = (long) ((memoryinfo.availMem - memoryinfo.threshold) * 0.9);
+		}
+		requiredMemory = options.outWidth * options.outHeight * 4;
+		if (requiredMemory > availableMemory) {
+			scaling = true;
+		}
 
-        return scaling;
-    }
+		return scaling;
+	}
 
-    public static int getScaleFactor(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
-        float heightToWidthFactor;
-        float availablePixels;
-        float availableHeight;
-        float availableWidth;
-        float availableMemory;
+	public static int getScaleFactor(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
+		float heightToWidthFactor;
+		float availablePixels;
+		float availableHeight;
+		float availableWidth;
+		float availableMemory;
 
-        ActivityManager.MemoryInfo memoryinfo = new ActivityManager.MemoryInfo();
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        activityManager.getMemoryInfo(memoryinfo);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        decodeBitmapFromUri(resolver, bitmapUri, options, context);
-        if (options.outHeight <= 0 || options.outWidth <= 0) {
-            throw new IOException("Can't load bitmap from uri");
-        }
-        Runtime info = Runtime.getRuntime();
-        availableMemory = (float) ((info.maxMemory() - info.totalMemory() + info.freeMemory()) * 0.9);
-        heightToWidthFactor = (float) (options.outWidth / (options.outHeight * 1.0));
-        availablePixels = (float) ((availableMemory * 0.9) / 4.0); //4 byte per pixel, 10% safety buffer on memory
-        availableHeight = (float) Math.sqrt(availablePixels / heightToWidthFactor);
-        availableWidth = availablePixels / availableHeight;
-        return calculateSampleSize(options.outWidth, options.outHeight,
-                (int) availableWidth, (int) availableHeight);
-    }
+		ActivityManager.MemoryInfo memoryinfo = new ActivityManager.MemoryInfo();
+		ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+		activityManager.getMemoryInfo(memoryinfo);
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		decodeBitmapFromUri(resolver, bitmapUri, options, context);
+		if (options.outHeight <= 0 || options.outWidth <= 0) {
+			throw new IOException("Can't load bitmap from uri");
+		}
+		Runtime info = Runtime.getRuntime();
+		availableMemory = (float) ((info.maxMemory() - info.totalMemory() + info.freeMemory()) * 0.9);
+		heightToWidthFactor = (float) (options.outWidth / (options.outHeight * 1.0));
+		availablePixels = (float) (((availableMemory / (float) MAX_LAYERS) * 0.9) / 4.0); //4 byte per pixel, 10% safety buffer on memory
+		availableHeight = (float) Math.sqrt(availablePixels / heightToWidthFactor);
+		availableWidth = availablePixels / availableHeight;
+		return calculateSampleSize(options.outWidth, options.outHeight,
+				(int) availableWidth, (int) availableHeight);
+	}
 
-    public static BitmapReturnValue getBitmapReturnValueFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
-        options.inJustDecodeBounds = false;
-        boolean scaling = hasEnoughMemory(resolver, bitmapUri, context);
-        return new BitmapReturnValue(null, enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)), scaling);
-    }
+	public static BitmapReturnValue getBitmapReturnValueFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inMutable = true;
+		options.inJustDecodeBounds = false;
+		boolean scaling = hasEnoughMemory(resolver, bitmapUri, context);
+		return new BitmapReturnValue(null, enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)), scaling);
+	}
 
-    public static BitmapReturnValue getScaledBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
-        options.inJustDecodeBounds = false;
-        options.inSampleSize = getScaleFactor(resolver, bitmapUri, context);
-        return new BitmapReturnValue(null, enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)), false);
-    }
+	public static BitmapReturnValue getScaledBitmapFromUri(ContentResolver resolver, @NonNull Uri bitmapUri, Context context) throws IOException {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inMutable = true;
+		options.inJustDecodeBounds = false;
+		options.inSampleSize = getScaleFactor(resolver, bitmapUri, context);
+		return new BitmapReturnValue(null, enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)), false);
+	}
 
-    public static Bitmap getBitmapFromFile(File bitmapFile) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
-        return enableAlpha(BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options));
-    }
+	public static Bitmap getBitmapFromFile(File bitmapFile) {
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inMutable = true;
+		return enableAlpha(BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options));
+	}
 
-    public static Bitmap enableAlpha(Bitmap bitmap) {
-        if (bitmap != null) {
-            bitmap.setHasAlpha(true);
-        }
-        return bitmap;
-    }
+	public static Bitmap enableAlpha(Bitmap bitmap) {
+		if (bitmap != null) {
+			bitmap.setHasAlpha(true);
+		}
+		return bitmap;
+	}
 }

@@ -44,12 +44,12 @@ ext {
 
     androidSupportLibraryVersion = '28.0.0'
 
-    androidVersionCode = 40
-    androidVersionName = '2.7.3'
+    androidVersionCode = 41
+    androidVersionName = '2.7.4'
 }
 
 if(project.hasProperty("snapshot")) {
-    androidVersionName = androidVersionName + '-LOCAL'
+    androidVersionName = '-LOCAL'
 }
 
 allprojects {

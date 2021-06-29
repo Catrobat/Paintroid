@@ -102,7 +102,7 @@
     <string name="text_tool_dialog_input_title">Votre texte :</string>
     <string name="text_tool_dialog_format_options">Options de formatage :</string>
     <string name="text_tool_dialog_underline_shortcut">U</string>
-    <string name="text_tool_dialog_italic_shortcut">I</string>
+    <string name="text_tool_dialog_italic_shortcut">l</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">Appuyez ici pour écrire</string>
@@ -143,8 +143,8 @@
     <string name="permission_info_external_storage_text">Cette application a besoin de l\'autorisation requise pour fonctionner correctement. Afin d\'enregistrer des images dans la mémoire locale, l\'application a besoin d\'y accéder en lecture et en écriture.</string>
     <string name="permission_info_permanent_denial_text">Cette application a besoin de l\'autorisation requise pour fonctionner correctement. Afin d\'enregistrer des images dans la mémoire locale, l\'application a besoin d\'y accéder en lecture et en écriture.
         Comme vous avez refusé la permission avec ne pas demander à nouveau, allez dans les paramètres de votre téléphone et accordez les autorisations requises si vous souhaitez utiliser les fonctions associées.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="drawer_open" tools:ignore="UnusedResources">Ouvrir le tiroir de navigation</string>
+    <string name="drawer_close" tools:ignore="UnusedResources">Fermer le tiroir de navigation</string>
     <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
     <string name="cursor_draw_inactive">Pan pour positionner, puis appuyez pour commencer à peindre.</string>
     <string name="cursor_draw_active">Pan pour dessiner, puis appuyez à nouveau pour arrêter la peinture.</string>

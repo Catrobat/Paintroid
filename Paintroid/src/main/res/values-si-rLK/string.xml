@@ -94,7 +94,7 @@
     <string name="menu_quit">Quit</string>
     <string name="save_button_text">Save</string>
     <string name="discard_button_text">Discard</string>
-    <string name="cancel_button_text">Cancel</string>
+    <string name="cancel_button_text">අවලංගු කරන්න</string>
     <string name="overwrite_button_text">Overwrite</string>
     <string name="resize_nothing_to_resize">nothing to resize</string>
     <string name="resize_cannot_resize_to_this_size">cannot resize to this size</string>
@@ -173,7 +173,7 @@
     <string name="pocketpaint_feedback">We are sorry to hear that. If you want to share your experience with us, please write to contact@catrobat.org</string>
     <string name="pocketpaint_yes">Yes</string>
     <string name="pocketpaint_no">No</string>
-    <string name="pocketpaint_cancel">Cancel</string>
+    <string name="pocketpaint_cancel">අවලංගු කරන්න</string>
     <string name="pocketpaint_not_now">Not now</string>
     <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
     <string name="bottom_navigation_tools">Tools</string>
