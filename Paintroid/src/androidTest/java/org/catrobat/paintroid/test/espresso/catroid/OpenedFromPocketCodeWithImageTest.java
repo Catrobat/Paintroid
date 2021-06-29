@@ -53,7 +53,6 @@ import androidx.test.espresso.Espresso;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
-
 import id.zelory.compressor.Compressor;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
