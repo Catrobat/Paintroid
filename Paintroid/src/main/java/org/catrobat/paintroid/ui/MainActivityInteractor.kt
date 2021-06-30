@@ -25,8 +25,8 @@ import kotlinx.coroutines.Dispatchers
 import org.catrobat.paintroid.contract.MainActivityContracts.Interactor
 import org.catrobat.paintroid.iotasks.CreateFile
 import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
-import org.catrobat.paintroid.iotasks.LoadImageAsync
-import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback
+import org.catrobat.paintroid.iotasks.LoadImage
+import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
 import org.catrobat.paintroid.tools.Workspace
@@ -58,6 +58,6 @@ class MainActivityInteractor : Interactor {
         context: Context,
         scaling: Boolean
     ) {
-        LoadImageAsync(callback, requestCode, uri, context, scaling).execute()
+        LoadImage(callback, requestCode, uri, context, scaling, scopeIO).execute()
     }
 }

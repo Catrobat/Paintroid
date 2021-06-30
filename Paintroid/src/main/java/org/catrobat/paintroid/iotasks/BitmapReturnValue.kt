@@ -16,20 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.catrobat.paintroid.iotasks;
+package org.catrobat.paintroid.iotasks
 
-import android.graphics.Bitmap;
+import android.graphics.Bitmap
 
-import java.util.List;
-
-public class BitmapReturnValue {
-	public List<Bitmap> bitmapList;
-	public Bitmap bitmap;
-	public boolean toBeScaled;
-
-	public BitmapReturnValue(List<Bitmap> list, Bitmap singleBitmap, boolean scaling) {
-		bitmapList = list;
-		bitmap = singleBitmap;
-		toBeScaled = scaling;
-	}
-}
+data class BitmapReturnValue(
+    @JvmField
+    var bitmapList: List<Bitmap?>?,
+    @JvmField
+    var bitmap: Bitmap?,
+    @JvmField
+    var toBeScaled: Boolean
+)
