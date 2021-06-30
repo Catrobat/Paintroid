@@ -37,6 +37,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
+import id.zelory.compressor.Compressor
 import org.catrobat.paintroid.common.Constants.MEDIA_DIRECTORY
 import org.catrobat.paintroid.common.IS_JPG
 import org.catrobat.paintroid.common.IS_NO_FILE
@@ -46,19 +47,18 @@ import org.catrobat.paintroid.common.MAX_LAYERS
 import org.catrobat.paintroid.iotasks.BitmapReturnValue
 import org.catrobat.paintroid.presenter.MainActivityPresenter
 import java.io.File
-import java.io.FileOutputStream
 import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.lang.NullPointerException
 import java.util.Locale
-import java.util.UUID
 import java.util.Objects.requireNonNull
+import java.util.UUID
 import kotlin.Throws
 import kotlin.math.min
 import kotlin.math.sqrt
-import id.zelory.compressor.Compressor
 
 private const val CONSTANT_POINT9 = .9f
 private const val CONSTANT_5000 = 5000L
@@ -186,7 +186,12 @@ object FileIO {
         }
     }
 
-    fun saveBitmapToFile(fileName: String, bitmap: Bitmap?, resolver: ContentResolver?, context: Context?): Uri? {
+    fun saveBitmapToFile(
+        fileName: String,
+        bitmap: Bitmap?,
+        resolver: ContentResolver?,
+        context: Context?
+    ): Uri? {
         val imageUri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val contentValues = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
@@ -201,7 +206,8 @@ object FileIO {
             Uri.fromFile(File(MEDIA_DIRECTORY, fileName))
         }
 
-        val cachedImageUri = saveBitmapToCache(bitmap, context as MainActivity, UUID.randomUUID().toString())
+        val cachedImageUri =
+            saveBitmapToCache(bitmap, context as MainActivity, UUID.randomUUID().toString())
         val cachedFile = File(MainActivityPresenter.getPathFromUri(context, cachedImageUri))
 
         try {
@@ -471,6 +477,7 @@ object FileIO {
         val scaling = hasEnoughMemory(resolver, bitmapUri, context)
         return BitmapReturnValue(
             null,
+            null,
             enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)),
             scaling
         )
@@ -488,6 +495,7 @@ object FileIO {
             inSampleSize = getScaleFactor(resolver, bitmapUri, context)
         }
         return BitmapReturnValue(
+            null,
             null,
             enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)),
             false
