@@ -1,6 +1,6 @@
 /*
  * Catroid: An on-device visual programming system for Android devices
- * Copyright (C) 2010-2017 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,13 +20,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.ui.dragndrop
 
-package org.catrobat.paintroid.ui.dragndrop;
+import android.view.View
 
-import android.view.View;
+interface ListItemLongClickHandler {
+    fun handleOnItemLongClick(position: Int, view: View)
 
-public interface ListItemLongClickHandler {
-	void handleOnItemLongClick(int position, View view);
-
-	void stopDragging();
+    fun stopDragging()
 }
