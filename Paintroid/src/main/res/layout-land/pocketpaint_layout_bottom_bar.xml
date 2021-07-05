@@ -188,4 +188,20 @@
                 android:text="@string/button_import_image" />
         </LinearLayout>
     </TableRow>
+    <TableRow
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_pipette"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_pipette"
+                android:contentDescription="@string/button_pipette"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_pipette"/>
+        </LinearLayout>
+    </TableRow>
 </TableLayout>

@@ -204,7 +204,6 @@ class LayerIntegrationTest {
                 .checkLayerCount(1)
     }
 
-    @Ignore("Fail due to Pipette")
     @Test
     fun testDeleteFilledLayer() {
         LayerMenuViewInteraction.onLayerMenuView()
@@ -253,7 +252,6 @@ class LayerIntegrationTest {
                 .checkLayerCount(1)
     }
 
-    @Ignore("Fail due to Pipette")
     @Test
     fun testSwitchBetweenFilledLayers() {
         ToolBarViewInteraction.onToolBarView()
@@ -292,7 +290,6 @@ class LayerIntegrationTest {
                 .checkMatchesColor(Color.WHITE)
     }
 
-    @Ignore("Fail due to Pipette")
     @Test
     fun testMultipleLayersNewImageDiscardOld() {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
@@ -320,7 +317,6 @@ class LayerIntegrationTest {
                 .checkLayerCount(1)
     }
 
-    @Ignore("Fail due to Pipette")
     @Test
     fun testMultipleLayersNewImageSaveOld() {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
@@ -414,7 +410,6 @@ class LayerIntegrationTest {
                 .checkThatLayerDimensions(Matchers.lessThan(bitmapWidth), Matchers.lessThan(bitmapHeight))
     }
 
-    @Ignore("Fail due to Pipette")
     @Test
     fun testRotatingThroughAllLayers() {
         LayerMenuViewInteraction.onLayerMenuView()
@@ -454,7 +449,6 @@ class LayerIntegrationTest {
                 .checkMatchesColor(Color.BLACK)
     }
 
-    @Ignore("Fail due to Pipette")
     @Test
     fun testReflectingOnlyCurrentLayer() {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
@@ -507,7 +501,6 @@ class LayerIntegrationTest {
                 .checkLayerCount(1)
     }
 
-    @Ignore("Fail due to Pipette")
     @Test
     fun testLayerOrderUndoDelete() {
         ToolBarViewInteraction.onToolBarView()

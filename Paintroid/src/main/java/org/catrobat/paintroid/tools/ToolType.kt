@@ -40,7 +40,7 @@ enum class ToolType(
         R.string.help_content_eyedropper,
         R.drawable.ic_pocketpaint_tool_pipette,
         EnumSet.of(StateChange.ALL),
-        1,
+        R.id.pocketpaint_tools_pipette,
         INVALID_RESOURCE_ID,
         false
     ),
