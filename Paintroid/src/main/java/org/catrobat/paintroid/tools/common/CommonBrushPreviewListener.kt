@@ -23,13 +23,16 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView.OnBrushPreviewListener
 
-class CommonBrushPreviewListener(private val toolPaint: ToolPaint, private val toolType: ToolType) :
-    OnBrushPreviewListener {
-    override fun getStrokeWidth(): Float = toolPaint.strokeWidth
+class CommonBrushPreviewListener(
+    private val toolPaint: ToolPaint,
+    override val toolType: ToolType
+) : OnBrushPreviewListener {
+    override val strokeWidth: Float
+        get() = toolPaint.strokeWidth
 
-    override fun getStrokeCap(): Cap = toolPaint.strokeCap
+    override val strokeCap: Cap
+        get() = toolPaint.strokeCap
 
-    override fun getColor(): Int = toolPaint.color
-
-    override fun getToolType(): ToolType = toolType
+    override val color: Int
+        get() = toolPaint.color
 }
