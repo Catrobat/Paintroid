@@ -48,6 +48,7 @@ interface MainActivityContracts {
         fun showLikeUsDialog()
         fun showRateUsDialog()
         fun showFeedbackDialog()
+        fun showAdvancedSettingsDialog()
         fun showOverwriteDialog(permissionCode: Int, isExport: Boolean)
         fun showPngInformationDialog()
         fun showJpgInformationDialog()
@@ -77,6 +78,7 @@ interface MainActivityContracts {
         fun broadcastAddPictureToGallery(uri: Uri?)
         fun rateUsClicked()
         fun showImageImportDialog()
+        fun setAntialiasingOnToolPaint()
         fun showCatroidMediaGallery()
         fun showScaleImageRequestDialog(uri: Uri?, requestCode: Int)
     }
@@ -125,6 +127,7 @@ interface MainActivityContracts {
         fun backToPocketCodeClicked()
         fun showHelpClicked()
         fun showAboutClicked()
+        fun showAdvancedSettingsClicked()
         fun showRateUsDialog()
         fun showFeedbackDialog()
         fun showOverwriteDialog(permissionCode: Int, isExport: Boolean)
@@ -160,6 +163,7 @@ interface MainActivityContracts {
         fun bitmapLoadedFromSource(loadedImage: Bitmap)
         fun setLayerAdapter(layerAdapter: LayerAdapter)
         fun loadScaledImage(uri: Uri?, @ActivityRequestCode requestCode: Int)
+        fun setAntialiasingOnOkClicked()
     }
 
     interface Model {
