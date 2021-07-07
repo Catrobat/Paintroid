@@ -212,7 +212,7 @@ class SaveInformationDialog :
         }
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (parent?.getItemAtPosition(position).toString()) {
             "jpg" -> setFileDetails(Bitmap.CompressFormat.JPEG, false, ".jpg", true)
             "png" -> setFileDetails(Bitmap.CompressFormat.PNG, false, ".png")
