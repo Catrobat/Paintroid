@@ -22,6 +22,7 @@ package org.catrobat.paintroid.controller;
 import android.graphics.Bitmap;
 
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 
 public interface ToolController {
@@ -42,6 +43,8 @@ public interface ToolController {
 	void resetToolInternalStateOnImageLoaded();
 
 	int getToolColor();
+
+	Tool getCurrentTool();
 
 	ToolType getToolType();
 
