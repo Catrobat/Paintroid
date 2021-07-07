@@ -77,7 +77,6 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 
 		this.transformToolOptionsView = transformToolOptionsView;
-
 		this.rotationEnabled = ROTATION_ENABLED;
 		this.resizePointsVisible = RESIZE_POINTS_VISIBLE;
 		this.respectMaximumBorderRatio = RESPECT_MAXIMUM_BORDER_RATIO;
