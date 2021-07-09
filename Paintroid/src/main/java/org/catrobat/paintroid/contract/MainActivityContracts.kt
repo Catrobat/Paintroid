@@ -29,9 +29,9 @@ import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
-import org.catrobat.paintroid.iotasks.CreateFileAsync.CreateFileCallback
+import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback
-import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback
+import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.LayerAdapter
@@ -174,7 +174,7 @@ interface MainActivityContracts {
 
     interface Interactor {
         fun saveCopy(callback: SaveImageCallback, requestCode: Int, workspace: Workspace)
-        fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String)
+        fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String?)
         fun saveImage(callback: SaveImageCallback, requestCode: Int, workspace: Workspace, uri: Uri?)
         fun loadFile(callback: LoadImageCallback, requestCode: Int, uri: Uri?, context: Context, scaling: Boolean)
     }
