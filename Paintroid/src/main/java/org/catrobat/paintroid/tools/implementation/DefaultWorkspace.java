@@ -72,12 +72,12 @@ public class DefaultWorkspace implements Workspace {
 
 	@Override
 	public int getSurfaceWidth() {
-		return perspective.getSurfaceWidth();
+		return perspective.surfaceWidth;
 	}
 
 	@Override
 	public int getSurfaceHeight() {
-		return perspective.getSurfaceHeight();
+		return perspective.surfaceHeight;
 	}
 
 	@Override

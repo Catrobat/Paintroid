@@ -220,8 +220,8 @@ public class ShapeToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.BRUSH);
 
-		mainActivity.perspective.setSurfaceTranslationY(200);
-		mainActivity.perspective.setSurfaceTranslationX(50);
+		mainActivity.perspective.surfaceTranslationY = 200;
+		mainActivity.perspective.surfaceTranslationX = 50;
 		mainActivity.perspective.setScale(2.0f);
 		mainActivity.refreshDrawingSurface();
 

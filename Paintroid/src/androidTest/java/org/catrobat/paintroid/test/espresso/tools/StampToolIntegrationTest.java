@@ -244,8 +244,8 @@ public class StampToolIntegrationTest {
 		float scale = 2.0f;
 
 		perspective.setScale(scale);
-		perspective.setSurfaceTranslationX(50);
-		perspective.setSurfaceTranslationY(200);
+		perspective.surfaceTranslationX = 50;
+		perspective.surfaceTranslationY = 200;
 		mainActivity.refreshDrawingSurface();
 
 		onToolBarView()
