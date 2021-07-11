@@ -32,6 +32,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.catrobat.paintroid.ui.PerspectiveKt.MAX_SCALE;
+import static org.catrobat.paintroid.ui.PerspectiveKt.MIN_SCALE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.mock;
@@ -80,8 +82,8 @@ public class PerspectiveTests {
 
 		assertEquals(INITIAL_SCALE, perspective.getScale(), Float.MIN_VALUE);
 
-		assertNotEquals(0, perspective.getSurfaceTranslationX());
-		assertNotEquals(0, perspective.getSurfaceTranslationY());
+		assertNotEquals(0, perspective.surfaceTranslationX);
+		assertNotEquals(0, perspective.surfaceTranslationY);
 	}
 
 	@Test
@@ -100,7 +102,7 @@ public class PerspectiveTests {
 
 	@Test
 	public void testMultiplyScaleBelowMinimum() {
-		float minScale = Perspective.MIN_SCALE;
+		float minScale = MIN_SCALE;
 
 		perspective.multiplyScale(minScale * 0.9f);
 		assertEquals(minScale, perspective.getScale(), Float.MIN_VALUE);
@@ -108,7 +110,7 @@ public class PerspectiveTests {
 
 	@Test
 	public void testMultiplyScaleAboveMaximum() {
-		float maxScale = Perspective.MAX_SCALE;
+		float maxScale = MAX_SCALE;
 
 		perspective.multiplyScale(maxScale * 1.1f);
 		assertEquals(maxScale, perspective.getScale(), Float.MIN_VALUE);
@@ -130,7 +132,7 @@ public class PerspectiveTests {
 
 	@Test
 	public void testSetScaleBelowMinimum() {
-		float minScale = Perspective.MIN_SCALE;
+		float minScale = MIN_SCALE;
 
 		perspective.setScale(minScale * 0.9f);
 		assertEquals(minScale, perspective.getScale(), Float.MIN_VALUE);
@@ -138,7 +140,7 @@ public class PerspectiveTests {
 
 	@Test
 	public void testSetScaleAboveMaximum() {
-		float maxScale = Perspective.MAX_SCALE;
+		float maxScale = MAX_SCALE;
 
 		perspective.setScale(maxScale * 1.1f);
 		assertEquals(maxScale, perspective.getScale(), Float.MIN_VALUE);

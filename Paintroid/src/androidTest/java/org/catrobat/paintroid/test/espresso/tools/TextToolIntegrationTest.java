@@ -586,8 +586,8 @@ public class TextToolIntegrationTest {
 		float scale = 2.0f;
 
 		activity.perspective.setScale(scale);
-		activity.perspective.setSurfaceTranslationY(200);
-		activity.perspective.setSurfaceTranslationX(50);
+		activity.perspective.surfaceTranslationY = 200;
+		activity.perspective.surfaceTranslationX = 50;
 		activity.refreshDrawingSurface();
 
 		onToolBarView()
@@ -613,8 +613,8 @@ public class TextToolIntegrationTest {
 		float scale = 2.0f;
 
 		activity.perspective.setScale(scale);
-		activity.perspective.setSurfaceTranslationY(200);
-		activity.perspective.setSurfaceTranslationX(50);
+		activity.perspective.surfaceTranslationY = 200;
+		activity.perspective.surfaceTranslationX = 50;
 		activity.refreshDrawingSurface();
 
 		onToolBarView()
