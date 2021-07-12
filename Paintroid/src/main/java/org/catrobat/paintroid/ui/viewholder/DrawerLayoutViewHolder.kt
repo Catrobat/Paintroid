@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,33 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.ui.viewholder
 
-package org.catrobat.paintroid.ui.viewholder;
+import androidx.drawerlayout.widget.DrawerLayout
+import org.catrobat.paintroid.contract.MainActivityContracts
 
-import android.view.View;
+class DrawerLayoutViewHolder(private val drawerLayout: DrawerLayout) : MainActivityContracts.DrawerLayoutViewHolder {
+    override fun closeDrawer(gravity: Int, animate: Boolean) {
+        drawerLayout.closeDrawer(gravity, animate)
+    }
 
-import org.catrobat.paintroid.contract.MainActivityContracts;
+    override fun isDrawerOpen(gravity: Int): Boolean = drawerLayout.isDrawerOpen(gravity)
 
-public class BottomBarViewHolder implements MainActivityContracts.BottomBarViewHolder {
-	public final View layout;
-
-	public BottomBarViewHolder(View layout) {
-		this.layout = layout;
-	}
-
-	@Override
-	public void show() {
-		layout.setVisibility(View.VISIBLE);
-	}
-
-	@Override
-	public void hide() {
-		layout.setVisibility(View.GONE);
-	}
-
-	@Override
-	public boolean isVisible() {
-		return layout.getVisibility() == View.VISIBLE;
-	}
+    override fun openDrawer(gravity: Int) {
+        drawerLayout.openDrawer(gravity)
+    }
 }
-
