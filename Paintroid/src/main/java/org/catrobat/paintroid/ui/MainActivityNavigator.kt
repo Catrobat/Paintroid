@@ -130,7 +130,7 @@ class MainActivityNavigator(
                 showIndeterminateProgressDialog()
             }
 
-            override fun dissmissProgressDialog() {
+            override fun dismissProgressDialog() {
                 dismissIndeterminateProgressDialog()
             }
         })
@@ -196,7 +196,7 @@ class MainActivityNavigator(
                     showIndeterminateProgressDialog()
                 }
 
-                override fun dissmissProgressDialog() {
+                override fun dismissProgressDialog() {
                     dismissIndeterminateProgressDialog()
                 }
             })
