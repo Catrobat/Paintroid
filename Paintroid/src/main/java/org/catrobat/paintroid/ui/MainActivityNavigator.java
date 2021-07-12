@@ -114,7 +114,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 				}
 
 				@Override
-				public void dissmissProgressDialog() {
+				public void dismissProgressDialog() {
 					dismissIndeterminateProgressDialog();
 				}
 			});
@@ -167,7 +167,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 			}
 
 			@Override
-			public void dissmissProgressDialog() {
+			public void dismissProgressDialog() {
 				dismissIndeterminateProgressDialog();
 			}
 		});
