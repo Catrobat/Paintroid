@@ -44,17 +44,12 @@ emulators {
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.hiya.jacoco-android'
-apply plugin: 'checkstyle'
-apply plugin: 'pmd'
 apply plugin: 'com.github.panpf.bintray-publish'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'kotlin-android'
 
 apply from: 'gradle/adb_tasks.gradle'
 apply from: 'gradle/code_quality_tasks.gradle'
-
-check.dependsOn 'checkstyle'
-check.dependsOn 'pmd'
 
 jacoco {
     toolVersion = "0.8.5"
@@ -137,11 +132,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
     androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
-
-    pmd 'net.sourceforge.pmd:pmd-core:6.32.0'
-    pmd 'net.sourceforge.pmd:pmd-java:6.32.0'
-
-    checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
 }
 
 tasks.withType(Javadoc).all {

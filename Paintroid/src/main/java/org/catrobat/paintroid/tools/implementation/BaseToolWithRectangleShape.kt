@@ -73,6 +73,13 @@ private const val DEFAULT_RESIZE_POINTS_VISIBLE = true
 private const val DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO = true
 private const val DEFAULT_RESPECT_MAXIMUM_BOX_RESOLUTION = false
 private const val CLICK_TIMEOUT_MILLIS = 250
+private const val RIGHT_ANGLE = 90f
+private const val STRAIGHT_ANGLE = 180f
+private const val COMPLETE_ANGLE = 360f
+private const val SIDES = 4
+private const val CONSTANT_1 = 10
+private const val CONSTANT_2 = 8
+private const val CONSTANT_3 = 3
 private const val BUNDLE_BOX_WIDTH = "BOX_WIDTH"
 private const val BUNDLE_BOX_HEIGHT = "BOX_HEIGHT"
 private const val BUNDLE_BOX_ROTATION = "BOX_ROTATION"
@@ -154,8 +161,11 @@ abstract class BaseToolWithRectangleShape(
 
     init {
         val orientation = contextCallback.orientation
-        val boxSize = if (orientation == ScreenOrientation.PORTRAIT) metrics.widthPixels.toFloat() else metrics.heightPixels.toFloat()
-        boxWidth = boxSize / workspace.scale - 2 * getInverselyProportionalSizeForZoom(DEFAULT_RECTANGLE_MARGIN)
+        val boxSize =
+            if (orientation == ScreenOrientation.PORTRAIT) metrics.widthPixels.toFloat() else metrics.heightPixels.toFloat()
+        boxWidth = boxSize / workspace.scale - 2 * getInverselyProportionalSizeForZoom(
+            DEFAULT_RECTANGLE_MARGIN
+        )
         boxHeight = boxWidth
         if (DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO && (
             boxHeight > workspace.height * MAXIMUM_BORDER_RATIO ||
@@ -167,9 +177,9 @@ abstract class BaseToolWithRectangleShape(
         }
         rectangleShrinkingOnHighlight = DEFAULT_RECTANGLE_SHRINKING
         rotationArrowArcStrokeWidth = getDensitySpecificValue(2)
-        rotationArrowArcRadius = getDensitySpecificValue(8)
-        rotationArrowHeadSize = getDensitySpecificValue(3)
-        rotationArrowOffset = getDensitySpecificValue(3)
+        rotationArrowArcRadius = getDensitySpecificValue(CONSTANT_2)
+        rotationArrowHeadSize = getDensitySpecificValue(CONSTANT_3)
+        rotationArrowOffset = getDensitySpecificValue(CONSTANT_3)
         resizeAction = ResizeAction.NONE
         rotationEnabled = DEFAULT_ROTATION_ENABLED
         resizePointsVisible = DEFAULT_RESIZE_POINTS_VISIBLE
@@ -282,7 +292,7 @@ abstract class BaseToolWithRectangleShape(
     fun boxContainsPoint(coordinate: PointF): Boolean {
         val relativeToOriginX = coordinate.x - toolPosition.x
         val relativeToOriginY = coordinate.y - toolPosition.y
-        val radians = -(boxRotation * PI.toFloat() / 180f)
+        val radians = -(boxRotation * PI.toFloat() / STRAIGHT_ANGLE)
         val rotatedX =
             relativeToOriginX * cos(radians) - relativeToOriginY * sin(radians) + toolPosition.x
         val rotatedY =
@@ -332,7 +342,7 @@ abstract class BaseToolWithRectangleShape(
         val arrowSize = getInverselyProportionalSizeForZoom(rotationArrowHeadSize.toFloat())
         val offset = getInverselyProportionalSizeForZoom(rotationArrowOffset.toFloat())
         arcPaint.strokeWidth = arcStrokeWidth
-        repeat(4) {
+        repeat(SIDES) {
             val xBase = -width / 2 - offset
             val yBase = -height / 2 - offset
             arcPath.reset()
@@ -342,7 +352,7 @@ abstract class BaseToolWithRectangleShape(
                 xBase + arcRadius,
                 yBase + arcRadius
             )
-            arcPath.addArc(tempDrawingRectangle, 180f, 90f)
+            arcPath.addArc(tempDrawingRectangle, STRAIGHT_ANGLE, RIGHT_ANGLE)
             canvas.drawPath(arcPath, arcPaint)
             arrowPath.run {
                 reset()
@@ -359,7 +369,7 @@ abstract class BaseToolWithRectangleShape(
             val tempLength = width
             width = height
             height = tempLength
-            canvas.rotate(90f)
+            canvas.rotate(RIGHT_ANGLE)
         }
     }
 
@@ -377,7 +387,7 @@ abstract class BaseToolWithRectangleShape(
         boxHeight: Float,
         boxRotation: Float
     ) {
-        val size = (min(boxWidth, boxHeight) / 8).toInt()
+        val size = (min(boxWidth, boxHeight) / CONSTANT_2).toInt()
         canvas.save()
         canvas.rotate(-boxRotation)
         overlayDrawable?.run {
@@ -414,10 +424,10 @@ abstract class BaseToolWithRectangleShape(
             val rotationAnglePrevious = atan2(previousYLength, previousXLength)
             val rotationAngleCurrent = atan2(currentYLength, currentXLength)
             val deltaAngle = -(rotationAnglePrevious - rotationAngleCurrent)
-            boxRotation += toDegrees(deltaAngle).toFloat() + 360
-            boxRotation %= 360
-            if (boxRotation > 180) {
-                boxRotation -= 360f
+            boxRotation += toDegrees(deltaAngle).toFloat() + COMPLETE_ANGLE
+            boxRotation %= COMPLETE_ANGLE
+            if (boxRotation > STRAIGHT_ANGLE) {
+                boxRotation -= COMPLETE_ANGLE
             }
         }
     }
@@ -471,7 +481,7 @@ abstract class BaseToolWithRectangleShape(
         clickCoordinatesY: Float
     ): FloatingBoxAction {
         resizeAction = ResizeAction.NONE
-        val rotationRadiant = boxRotation * PI.toFloat() / 180f
+        val rotationRadiant = boxRotation * PI.toFloat() / STRAIGHT_ANGLE
         val clickCoordinatesRotatedX =
             toolPosition.x + cos(-rotationRadiant) * (clickCoordinatesX - toolPosition.x) - sin(-rotationRadiant) * (clickCoordinatesY - toolPosition.y)
         val clickCoordinatesRotatedY =
@@ -479,11 +489,11 @@ abstract class BaseToolWithRectangleShape(
 
         val margin = boxResizeMargin ?: 0f
         // Move (within box)
-        if ((clickCoordinatesRotatedX < toolPosition.x + boxWidth / 2 - margin) && (clickCoordinatesRotatedX > toolPosition.x - boxWidth / 2 + margin) && (clickCoordinatesRotatedY < toolPosition.y + boxHeight / 2 - margin) && (clickCoordinatesRotatedY > toolPosition.y - boxHeight / 2 + margin)) {
+        if (clickCoordinatesRotatedX < toolPosition.x + boxWidth / 2 - margin && clickCoordinatesRotatedX > toolPosition.x - boxWidth / 2 + margin && clickCoordinatesRotatedY < toolPosition.y + boxHeight / 2 - margin && clickCoordinatesRotatedY > toolPosition.y - boxHeight / 2 + margin) {
             return FloatingBoxAction.MOVE
         }
         // Resize (on frame)
-        if ((clickCoordinatesRotatedX < toolPosition.x + boxWidth / 2 + margin) && (clickCoordinatesRotatedX > toolPosition.x - boxWidth / 2 - margin) && (clickCoordinatesRotatedY < toolPosition.y + boxHeight / 2 + margin) && (clickCoordinatesRotatedY > toolPosition.y - boxHeight / 2 - margin)) {
+        if (clickCoordinatesRotatedX < toolPosition.x + boxWidth / 2 + margin && clickCoordinatesRotatedX > toolPosition.x - boxWidth / 2 - margin && clickCoordinatesRotatedY < toolPosition.y + boxHeight / 2 + margin && clickCoordinatesRotatedY > toolPosition.y - boxHeight / 2 - margin) {
             resizeOnFrame(clickCoordinatesRotatedX, clickCoordinatesRotatedY, margin)
             return FloatingBoxAction.RESIZE
         }
@@ -570,7 +580,7 @@ abstract class BaseToolWithRectangleShape(
                 }
             }
             ResizeAction.RIGHT, ResizeAction.TOPRIGHT, ResizeAction.BOTTOMRIGHT -> {
-                width = (boxWidth + deltaXCorrected)
+                width = boxWidth + deltaXCorrected
                 posX = toolPosition.x + resizeXMoveCenterX
                 posY = toolPosition.y + resizeXMoveCenterY
                 if (respectMaximumBorderRatio && width > maximumBorderRatioWidth) {
@@ -590,22 +600,28 @@ abstract class BaseToolWithRectangleShape(
         var deltaXCorrected = cos(-rotationRadian) * deltaX - sin(-rotationRadian) * deltaY
         var deltaYCorrected = sin(-rotationRadian) * deltaX + cos(-rotationRadian) * deltaY
         when (resizeAction) {
-            ResizeAction.TOPLEFT, ResizeAction.BOTTOMRIGHT -> if (abs(deltaXCorrected) > abs(
-                    deltaYCorrected
-                )
-            ) {
-                deltaYCorrected = (boxWidth + deltaXCorrected) * boxHeight / boxWidth - boxHeight
-            } else {
-                deltaXCorrected = boxWidth * (boxHeight + deltaYCorrected) / boxHeight - boxWidth
-            }
-            ResizeAction.TOPRIGHT, ResizeAction.BOTTOMLEFT -> if (abs(deltaXCorrected) > abs(
-                    deltaYCorrected
-                )
-            ) {
-                deltaYCorrected = (boxWidth - deltaXCorrected) * boxHeight / boxWidth - boxHeight
-            } else {
-                deltaXCorrected = boxWidth * (boxHeight - deltaYCorrected) / boxHeight - boxWidth
-            }
+            ResizeAction.TOPLEFT, ResizeAction.BOTTOMRIGHT ->
+                if (abs(deltaXCorrected) > abs(
+                        deltaYCorrected
+                    )
+                ) {
+                    deltaYCorrected =
+                        (boxWidth + deltaXCorrected) * boxHeight / boxWidth - boxHeight
+                } else {
+                    deltaXCorrected =
+                        boxWidth * (boxHeight + deltaYCorrected) / boxHeight - boxWidth
+                }
+            ResizeAction.TOPRIGHT, ResizeAction.BOTTOMLEFT ->
+                if (abs(deltaXCorrected) > abs(
+                        deltaYCorrected
+                    )
+                ) {
+                    deltaYCorrected =
+                        (boxWidth - deltaXCorrected) * boxHeight / boxWidth - boxHeight
+                } else {
+                    deltaXCorrected =
+                        boxWidth * (boxHeight - deltaYCorrected) / boxHeight - boxWidth
+                }
             else -> Unit
         }
         val oldPosX = toolPosition.x
@@ -652,7 +668,10 @@ abstract class BaseToolWithRectangleShape(
 
     fun highlightBox() {
         downTimer = object :
-            CountDownTimer(CLICK_TIMEOUT_MILLIS.toLong(), (CLICK_TIMEOUT_MILLIS / 3).toLong()) {
+            CountDownTimer(
+                CLICK_TIMEOUT_MILLIS.toLong(),
+                (CLICK_TIMEOUT_MILLIS / CONSTANT_3).toLong()
+            ) {
             override fun onTick(millisUntilFinished: Long) {
                 highlightBoxWhenClickInBox(true)
                 workspace.invalidate()
@@ -712,9 +731,9 @@ abstract class BaseToolWithRectangleShape(
             -width / 2 + rectangleShrinkingOnHighlight,
             -height / 2 + rectangleShrinkingOnHighlight
         )
-        repeat(4) {
-            val resizeLineLengthHeight = height / 10
-            val resizeLineLengthWidth = width / 10
+        repeat(SIDES) {
+            val resizeLineLengthHeight = height / CONSTANT_1
+            val resizeLineLengthWidth = width / CONSTANT_1
             canvas.run {
                 drawLine(
                     rightTopPoint.x - toolStrokeWidth / 2,
@@ -736,7 +755,7 @@ abstract class BaseToolWithRectangleShape(
                     rightTopPoint.y,
                     linePaint
                 )
-                rotate(90f)
+                rotate(RIGHT_ANGLE)
             }
             val tempX = rightTopPoint.x
             rightTopPoint.x = rightTopPoint.y

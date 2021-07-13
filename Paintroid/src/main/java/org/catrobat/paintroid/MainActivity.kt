@@ -382,8 +382,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val layerAdapter = LayerAdapter(layerPresenter)
         presenterMain.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
-        findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout).apply {
-            addDrawerListener(DrawerLayoutListener(this, layerAdapter))
+        findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout).also {
+            it.addDrawerListener(DrawerLayoutListener(it, layerAdapter))
         }
         layerListView.setPresenter(layerPresenter)
         layerListView.adapter = layerAdapter

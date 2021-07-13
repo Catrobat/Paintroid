@@ -99,7 +99,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 			@Override
 			public void onHide() {
 				if (!zeroSizeBitmap) {
-					contextCallback.showNotification(R.string.transform_info_text, ContextCallback.NotificationDuration.LONG);
+					contextCallback.showNotificationWithDuration(R.string.transform_info_text, ContextCallback.NotificationDuration.LONG);
 				} else {
 					zeroSizeBitmap = false;
 				}
@@ -257,7 +257,7 @@ public class TransformTool extends BaseToolWithRectangleShape {
 
 		if (newWidth == 0 || newHeight == 0) {
 			zeroSizeBitmap = true;
-			contextCallback.showNotification(R.string.resize_cannot_resize_to_this_size, ContextCallback.NotificationDuration.LONG);
+			contextCallback.showNotificationWithDuration(R.string.resize_cannot_resize_to_this_size, ContextCallback.NotificationDuration.LONG);
 		} else {
 			Command command = commandFactory.createResizeCommand(newWidth, newHeight);
 			commandManager.addCommand(command);

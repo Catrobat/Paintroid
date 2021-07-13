@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 /**
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2015 The Catrobat Team
@@ -77,6 +79,12 @@ android {
             signingConfig signingConfigs.signedRelease
         }
     }
+}
+
+tasks.withType(Detekt).configureEach {
+    jvmTarget = "1.8"
+    exclude("**/resources/**")
+    exclude("**/build/**")
 }
 
 dependencies {

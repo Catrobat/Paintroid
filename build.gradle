@@ -19,7 +19,7 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.4.21'
+    ext.kotlin_version = '1.4.32'
     repositories {
         google()
         jcenter()
@@ -35,6 +35,10 @@ buildscript {
         classpath 'com.github.panpf.bintray-publish:bintray-publish:1.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
+}
+
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.14.2"
 }
 
 ext {

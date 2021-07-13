@@ -83,9 +83,7 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
         return localConvertView
     }
 
-    override fun getViewHolderAt(position: Int): LayerContracts.LayerViewHolder? {
-        return viewHolders[position]
-    }
+    override fun getViewHolderAt(position: Int): LayerContracts.LayerViewHolder? = viewHolders[position]
 
     internal class LayerViewHolder(private val itemView: View, private val layerPresenter: LayerContracts.Presenter) : LayerContracts.LayerViewHolder {
         private val layerBackground: LinearLayout = itemView.findViewById(R.id.pocketpaint_item_layer_background)

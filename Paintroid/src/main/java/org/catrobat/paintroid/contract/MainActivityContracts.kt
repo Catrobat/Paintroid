@@ -41,43 +41,89 @@ interface MainActivityContracts {
     interface Navigator {
         val isSdkAboveOrEqualM: Boolean
         val isSdkAboveOrEqualQ: Boolean
+
         fun showColorPickerDialog()
+
         fun startLoadImageActivity(@ActivityRequestCode requestCode: Int)
+
         fun startImportImageActivity(@ActivityRequestCode requestCode: Int)
+
         fun showAboutDialog()
+
         fun showLikeUsDialog()
+
         fun showRateUsDialog()
+
         fun showFeedbackDialog()
+
         fun showOverwriteDialog(permissionCode: Int, isExport: Boolean)
+
         fun showPngInformationDialog()
+
         fun showJpgInformationDialog()
+
         fun showOraInformationDialog()
+
         fun sendFeedback()
+
         fun startWelcomeActivity(@ActivityRequestCode requestCode: Int)
+
         fun startShareImageActivity(bitmap: Bitmap?)
+
         fun showIndeterminateProgressDialog()
+
         fun dismissIndeterminateProgressDialog()
+
         fun returnToPocketCode(path: String?)
+
         fun showToast(msg: String, duration: Int)
+
         fun showToast(@StringRes resId: Int, duration: Int)
+
         fun showSaveErrorDialog()
+
         fun showLoadErrorDialog()
-        fun showRequestPermissionRationaleDialog(permissionType: PermissionType, permissions: Array<String>, requestCode: Int)
+
+        fun showRequestPermissionRationaleDialog(
+            permissionType: PermissionType,
+            permissions: Array<String>,
+            requestCode: Int
+        )
+
         fun showRequestPermanentlyDeniedPermissionRationaleDialog()
+
         fun askForPermission(permissions: Array<String>, requestCode: Int)
+
         fun doIHavePermission(permission: String): Boolean
+
         fun isPermissionPermanentlyDenied(permission: Array<String>): Boolean
+
         fun finishActivity()
+
         fun showSaveBeforeFinishDialog()
+
         fun showSaveBeforeNewImageDialog()
+
         fun showSaveBeforeLoadImageDialog()
-        fun showSaveImageInformationDialogWhenStandalone(permissionCode: Int, imageNumber: Int, isExport: Boolean)
+
+        fun showSaveImageInformationDialogWhenStandalone(
+            permissionCode: Int,
+            imageNumber: Int,
+            isExport: Boolean
+        )
+
         fun restoreFragmentListeners()
+
         fun showToolChangeToast(offset: Int, idRes: Int)
+
         fun broadcastAddPictureToGallery(uri: Uri?)
+
         fun rateUsClicked()
+
         fun showImageImportDialog()
+
         fun showCatroidMediaGallery()
+
         fun showScaleImageRequestDialog(uri: Uri?, requestCode: Int)
     }
 
@@ -87,13 +133,25 @@ interface MainActivityContracts {
         val myContentResolver: ContentResolver
         val displayMetrics: DisplayMetrics
         val presenter: Presenter
+
         fun initializeActionBar(isOpenedFromCatroid: Boolean)
+
         fun superHandleActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-        fun superHandleRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray)
+
+        fun superHandleRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
+        )
+
         fun getUriFromFile(file: File): Uri
+
         fun hideKeyboard()
+
         fun refreshDrawingSurface()
+
         fun enterFullscreen()
+
         fun exitFullscreen()
     }
 
@@ -101,7 +159,9 @@ interface MainActivityContracts {
         val imageNumber: Int
         val bitmap: Bitmap
         val context: Context
+
         fun initializeFromCleanState(extraPicturePath: String?, extraPictureName: String?)
+
         fun restoreState(
             isFullscreen: Boolean,
             isSaved: Boolean,
@@ -112,53 +172,105 @@ interface MainActivityContracts {
         )
 
         fun finishInitialize()
+
         fun removeMoreOptionsItems(menu: Menu?)
+
         fun loadImageClicked()
+
         fun loadNewImage()
+
         fun newImageClicked()
+
         fun discardImageClicked()
+
         fun saveCopyClicked(isExport: Boolean)
+
         fun saveImageClicked()
+
         fun shareImageClicked()
+
         fun enterFullscreenClicked()
+
         fun exitFullscreenClicked()
+
         fun backToPocketCodeClicked()
+
         fun showHelpClicked()
+
         fun showAboutClicked()
+
         fun showRateUsDialog()
+
         fun showFeedbackDialog()
+
         fun showOverwriteDialog(permissionCode: Int, isExport: Boolean)
+
         fun showPngInformationDialog()
+
         fun showJpgInformationDialog()
+
         fun showOraInformationDialog()
+
         fun sendFeedback()
+
         fun onNewImage()
+
         fun switchBetweenVersions(requestCode: Int, isExport: Boolean)
+
         fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-        fun handleRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray)
+
+        fun handleRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
+        )
+
         fun onBackPressed()
+
         fun saveImageConfirmClicked(requestCode: Int, uri: Uri?)
+
         fun saveCopyConfirmClicked(requestCode: Int)
+
         fun undoClicked()
+
         fun redoClicked()
+
         fun showColorPickerClicked()
+
         fun showLayerMenuClicked()
+
         fun onCommandPostExecute()
+
         fun setBottomNavigationColor(color: Int)
+
         fun onCreateTool()
+
         fun toolClicked(toolType: ToolType)
+
         fun saveBeforeLoadImage()
+
         fun saveBeforeNewImage()
+
         fun saveBeforeFinish()
+
         fun finishActivity()
+
         fun actionToolsClicked()
+
         fun actionCurrentToolClicked()
+
         fun rateUsClicked()
+
         fun importFromGalleryClicked()
+
         fun showImportDialog()
+
         fun importStickersClicked()
+
         fun bitmapLoadedFromSource(loadedImage: Bitmap)
+
         fun setLayerAdapter(layerAdapter: LayerAdapter)
+
         fun loadScaledImage(uri: Uri?, @ActivityRequestCode requestCode: Int)
     }
 
@@ -168,46 +280,78 @@ interface MainActivityContracts {
         var isSaved: Boolean
         var isFullscreen: Boolean
         var isOpenedFromCatroid: Boolean
+
         fun wasInitialAnimationPlayed(): Boolean
+
         fun setInitialAnimationPlayed(wasInitialAnimationPlayed: Boolean)
     }
 
     interface Interactor {
         fun saveCopy(callback: SaveImageCallback, requestCode: Int, workspace: Workspace)
+
         fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String)
-        fun saveImage(callback: SaveImageCallback, requestCode: Int, workspace: Workspace, uri: Uri?)
-        fun loadFile(callback: LoadImageCallback, requestCode: Int, uri: Uri?, context: Context, scaling: Boolean)
+
+        fun saveImage(
+            callback: SaveImageCallback,
+            requestCode: Int,
+            workspace: Workspace,
+            uri: Uri?
+        )
+
+        fun loadFile(
+            callback: LoadImageCallback,
+            requestCode: Int,
+            uri: Uri?,
+            context: Context,
+            scaling: Boolean
+        )
     }
 
     interface TopBarViewHolder {
         val height: Int
+
         fun enableUndoButton()
+
         fun disableUndoButton()
+
         fun enableRedoButton()
+
         fun disableRedoButton()
+
         fun hide()
+
         fun show()
+
         fun removeStandaloneMenuItems(menu: Menu?)
+
         fun removeCatroidMenuItems(menu: Menu?)
+
         fun hideTitleIfNotStandalone()
     }
 
     interface DrawerLayoutViewHolder {
         fun closeDrawer(gravity: Int, animate: Boolean)
+
         fun isDrawerOpen(gravity: Int): Boolean
+
         fun openDrawer(gravity: Int)
     }
 
     interface BottomBarViewHolder {
         val isVisible: Boolean
+
         fun show()
+
         fun hide()
     }
 
     interface BottomNavigationViewHolder {
         fun show()
+
         fun hide()
+
         fun showCurrentTool(toolType: ToolType)
+
         fun setColorButtonColor(@ColorInt color: Int)
     }
 

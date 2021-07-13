@@ -40,7 +40,7 @@ class ScaleImageOnLoadDialog : MainActivityDialogFragment() {
         AlertDialog.Builder(requireActivity(), R.style.PocketPaintAlertDialog)
             .setTitle(R.string.dialog_scale_title)
             .setMessage(R.string.dialog_scale_message)
-            .setPositiveButton(android.R.string.ok) { dialog, id ->
+            .setPositiveButton(android.R.string.ok) { _, _ ->
                 presenter.loadScaledImage(
                     uri,
                     requestCode

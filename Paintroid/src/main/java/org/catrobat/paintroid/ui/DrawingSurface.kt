@@ -65,9 +65,9 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var toolReference: ToolReference
     private lateinit var toolOptionsViewController: ToolOptionsViewController
 
-    constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet) {}
+    constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
-    constructor(context: Context?) : super(context) {}
+    constructor(context: Context?) : super(context)
 
     init {
         surfaceLock = Object()
@@ -162,10 +162,10 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     }
 
     fun refreshDrawingSurface() {
-        surfaceLock?.apply {
-            synchronized(this) {
+        surfaceLock?.let {
+            synchronized(it) {
                 surfaceDirty = true
-                notify()
+                it.notify()
             }
         }
     }
@@ -244,11 +244,11 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private inner class DrawLoop : Runnable {
         val holder: SurfaceHolder = getHolder()
         override fun run() {
-            surfaceLock?.apply {
-                synchronized(this) {
+            surfaceLock?.let {
+                synchronized(it) {
                     if (!surfaceDirty && surfaceReady) {
                         try {
-                            wait()
+                            it.wait()
                         } catch (e: InterruptedException) {
                             return
                         }

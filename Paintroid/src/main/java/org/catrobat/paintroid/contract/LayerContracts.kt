@@ -28,43 +28,75 @@ import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 interface LayerContracts {
     interface Adapter {
         fun notifyDataSetChanged()
+
         fun getViewHolderAt(position: Int): LayerViewHolder?
+
         fun setDrawerLayoutOpen(isOpen: Boolean)
     }
 
     interface Presenter {
         val layerCount: Int
         val presenter: Presenter
-        fun onBindLayerViewHolderAtPosition(position: Int, viewHolder: LayerViewHolder, isOpen: Boolean)
+
+        fun onBindLayerViewHolderAtPosition(
+            position: Int,
+            viewHolder: LayerViewHolder,
+            isOpen: Boolean
+        )
+
         fun refreshLayerMenuViewHolder()
+
         fun getLayerItem(position: Int): Layer
+
         fun getLayerItemId(position: Int): Long
+
         fun addLayer()
+
         fun removeLayer()
+
         fun hideLayer(position: Int)
+
         fun unhideLayer(position: Int, viewHolder: LayerViewHolder)
+
         fun setAdapter(layerAdapter: Adapter)
+
         fun setDrawingSurface(drawingSurface: DrawingSurface)
+
         fun invalidate()
+
         fun setDefaultToolController(defaultToolController: DefaultToolController)
+
         fun setBottomNavigationViewHolder(bottomNavigationViewHolder: BottomNavigationViewHolder)
     }
 
     interface LayerViewHolder {
         val bitmap: Bitmap?
         val view: View
-        fun setSelected(position: Int, bottomNavigationViewHolder: BottomNavigationViewHolder?, defaultToolController: DefaultToolController?)
+
+        fun setSelected(
+            position: Int,
+            bottomNavigationViewHolder: BottomNavigationViewHolder?,
+            defaultToolController: DefaultToolController?
+        )
+
         fun setSelected()
+
         fun setDeselected()
+
         fun updateImageView(bitmap: Bitmap?, isDrawerLayoutOpen: Boolean)
+
         fun setMergable()
+
         fun setCheckBox(setTo: Boolean)
     }
 
     interface LayerMenuViewHolder {
         fun disableAddLayerButton()
+
         fun enableAddLayerButton()
+
         fun disableRemoveLayerButton()
+
         fun enableRemoveLayerButton()
     }
 
@@ -72,6 +104,7 @@ interface LayerContracts {
         var bitmap: Bitmap?
         val transparentBitmap: Bitmap?
         var checkBox: Boolean
+
         fun switchBitmaps(isUnhide: Boolean)
     }
 
@@ -81,12 +114,19 @@ interface LayerContracts {
         var width: Int
         var height: Int
         val layerCount: Int
+
         fun reset()
+
         fun getLayerAt(index: Int): Layer
+
         fun getLayerIndexOf(layer: Layer): Int
+
         fun addLayerAt(index: Int, layer: Layer)
+
         fun listIterator(index: Int): ListIterator<Layer>
+
         fun setLayerAt(position: Int, layer: Layer)
+
         fun removeLayerAt(position: Int)
     }
 
