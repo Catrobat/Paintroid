@@ -259,7 +259,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
-		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace);
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, context);
 		verifyNoMoreInteractions(interactor);
 	}
 
@@ -272,7 +272,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, uri, context);
 
 		verifyNoMoreInteractions(interactor);
 	}
@@ -473,7 +473,7 @@ public class MainActivityPresenterTest {
 
 		presenter.saveImageConfirmClicked(0, uri);
 
-		verify(interactor).saveImage(presenter, 0, workspace, uri);
+		verify(interactor).saveImage(presenter, 0, workspace, uri, context);
 	}
 
 	@Test
@@ -482,21 +482,21 @@ public class MainActivityPresenterTest {
 
 		presenter.saveImageConfirmClicked(-1, uri);
 
-		verify(interactor).saveImage(presenter, -1, workspace, uri);
+		verify(interactor).saveImage(presenter, -1, workspace, uri, context);
 	}
 
 	@Test
 	public void testSaveCopyConfirmCLickedThenSaveImage() {
 		presenter.saveCopyConfirmClicked(0);
 
-		verify(interactor).saveCopy(presenter, 0, workspace);
+		verify(interactor).saveCopy(presenter, 0, workspace, context);
 	}
 
 	@Test
 	public void testSaveCopyConfirmClickedThenUseRequestCode() {
 		presenter.saveCopyConfirmClicked(-1);
 
-		verify(interactor).saveCopy(presenter, -1, workspace);
+		verify(interactor).saveCopy(presenter, -1, workspace, context);
 	}
 
 	@Test
@@ -969,7 +969,7 @@ public class MainActivityPresenterTest {
 
 		Uri uri = model.getSavedPictureUri();
 
-		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(uri));
+		verify(interactor).saveImage(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(uri), eq(context));
 	}
 
 	@Test
@@ -1000,7 +1000,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace));
+		verify(interactor).saveCopy(any(SaveImageAsync.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(context));
 	}
 
 	@Test
@@ -1036,7 +1036,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, uri, context);
 	}
 
 	@Test
@@ -1096,7 +1096,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, uri, context);
 	}
 
 	@Test
@@ -1132,7 +1132,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, uri, context);
 	}
 
 	@Test
@@ -1174,7 +1174,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
-		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace);
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, context);
 	}
 
 	@Test
@@ -1199,7 +1199,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
-		verify(interactor).saveImage(any(MainActivityPresenter.class), anyInt(), any(Workspace.class), eq((Uri) null));
+		verify(interactor).saveImage(any(MainActivityPresenter.class), anyInt(), any(Workspace.class), eq((Uri) null), any(Context.class));
 	}
 
 	@Test
@@ -1224,7 +1224,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, uri, context);
 	}
 
 	@Test
@@ -1248,7 +1248,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, uri, context);
 	}
 
 	@Test
@@ -1272,7 +1272,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, uri, context);
 	}
 
 	@Test
@@ -1296,7 +1296,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, uri);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, uri, context);
 	}
 
 	@Test

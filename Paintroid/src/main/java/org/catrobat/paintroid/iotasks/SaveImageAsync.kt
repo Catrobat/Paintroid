@@ -20,6 +20,7 @@ package org.catrobat.paintroid.iotasks
 
 import android.content.ContentResolver
 import android.graphics.Bitmap
+import android.content.Context
 import android.net.Uri
 import android.os.AsyncTask
 import android.util.Log
@@ -35,12 +36,14 @@ class SaveImageAsync(
     private val requestCode: Int,
     workspace: Workspace,
     uri: Uri?,
-    saveAsCopy: Boolean
+    saveAsCopy: Boolean,
+    context: Context
 ) : AsyncTask<Void?, Void?, Uri?>() {
     private val callbackRef: WeakReference<SaveImageCallback> = WeakReference(activity)
     private var uri: Uri?
     private val saveAsCopy: Boolean
     private val workspace: Workspace
+    private val context: Context
     override fun onPreExecute() {
         val callback = callbackRef.get()
         if (callback == null || callback.isFinishing) {
@@ -57,7 +60,7 @@ class SaveImageAsync(
         val fileName = FileIO.getDefaultFileName()
         val fileExistsValue = FileIO.checkIfDifferentFile(fileName)
         return if (uri == null) {
-            val imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.contentResolver)
+            val imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.contentResolver, context)
             if (FileIO.ending == ".png") {
                 FileIO.currentFileNamePng = fileName
                 FileIO.uriFilePng = imageUri
@@ -70,7 +73,7 @@ class SaveImageAsync(
             if (!FileIO.catroidFlag) {
                 setUriToFormatUri(fileExistsValue)
             }
-            FileIO.saveBitmapToUri(uri, callback.contentResolver, bitmap)
+            FileIO.saveBitmapToUri(uri, callback.contentResolver, bitmap, context)
         }
     }
 
@@ -183,9 +186,10 @@ class SaveImageAsync(
         private val TAG = SaveImageAsync::class.java.simpleName
     }
 
-    init {
-        this.uri = uri
-        this.saveAsCopy = saveAsCopy
-        this.workspace = workspace
-    }
+	init {
+		this.uri = uri
+		this.saveAsCopy = saveAsCopy
+		this.workspace = workspace
+		this.context = context
+	}
 }
