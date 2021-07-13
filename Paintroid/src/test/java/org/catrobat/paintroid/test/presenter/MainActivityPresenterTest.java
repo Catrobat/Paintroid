@@ -1376,7 +1376,8 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false);
 
-		verify(navigator).broadcastAddPictureToGallery(uri);
+		File file = new File(MainActivityPresenter.getPathFromUri(context, uri));
+		verify(navigator).broadcastAddPictureToGallery(file);
 	}
 
 	@Test
@@ -1385,7 +1386,8 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true);
 
-		verify(navigator).broadcastAddPictureToGallery(uri);
+		File file = new File(MainActivityPresenter.getPathFromUri(context, uri));
+		verify(navigator).broadcastAddPictureToGallery(file);
 	}
 
 	@Test
@@ -1395,7 +1397,8 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false);
 
-		verify(navigator, never()).broadcastAddPictureToGallery(uri);
+		File file = new File(MainActivityPresenter.getPathFromUri(context, uri));
+		verify(navigator, never()).broadcastAddPictureToGallery(file);
 	}
 
 	@Test
@@ -1405,7 +1408,8 @@ public class MainActivityPresenterTest {
 
 		presenter.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true);
 
-		verify(navigator).broadcastAddPictureToGallery(uri);
+		File file = new File(MainActivityPresenter.getPathFromUri(context, uri));
+		verify(navigator).broadcastAddPictureToGallery(file);
 	}
 
 	@Test
