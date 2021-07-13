@@ -16,25 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools.options
 
-package org.catrobat.paintroid.tools.options;
+import android.view.ViewGroup
 
-import androidx.annotation.Nullable;
+interface ToolOptionsViewController : ToolOptionsVisibilityController {
+    val toolSpecificOptionsLayout: ViewGroup
 
-public interface ToolOptionsVisibilityController {
-	void hide();
-
-	boolean isVisible();
-
-	void setCallback(@Nullable Callback callback);
-
-	void show();
-
-	void showDelayed();
-
-	interface Callback {
-		void onHide();
-
-		void onShow();
-	}
+    fun disable()
+    fun enable()
+    fun resetToOrigin()
+    fun removeToolViews()
+    fun showCheckmark()
+    fun hideCheckmark()
 }
