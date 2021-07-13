@@ -57,7 +57,7 @@ interface MainActivityContracts {
         fun showFeedbackDialog()
 
         fun showAdvancedSettingsDialog()
-
+        
         fun showOverwriteDialog(permissionCode: Int, isExport: Boolean)
 
         fun showPngInformationDialog()
