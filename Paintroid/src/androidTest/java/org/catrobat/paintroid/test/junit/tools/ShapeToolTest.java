@@ -90,7 +90,7 @@ public class ShapeToolTest {
 		displayMetrics.widthPixels = 100;
 		displayMetrics.heightPixels = 100;
 
-		shapeTool = new ShapeTool(shapeToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		shapeTool = new ShapeTool(shapeToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
 		shapeTool.setBaseShape(shape);
 	}
 

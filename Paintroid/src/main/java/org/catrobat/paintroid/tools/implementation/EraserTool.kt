@@ -34,14 +34,15 @@ class EraserTool(
     toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
-    commandManager: CommandManager
+    commandManager: CommandManager,
+    drawTime: Long
 ) : BrushTool(
     brushToolOptionsView,
     contextCallback,
     toolOptionsViewController,
     toolPaint,
     workspace,
-    commandManager
+    commandManager, drawTime
 ) {
     override val previewPaint: Paint
         get() = Paint().apply {

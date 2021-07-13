@@ -160,6 +160,7 @@
     <string name="dialog_save_image_format">Image format</string>
 
     <string name="dialog_antialiasing">Antialiasing</string>
+    <string name="dialog_smoothing">Smoothing</string>
 
     <string name="dialog_save_jpg_option_quality">Quality:</string>
 

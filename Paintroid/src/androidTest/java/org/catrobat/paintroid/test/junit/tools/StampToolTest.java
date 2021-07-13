@@ -84,7 +84,7 @@ public class StampToolTest {
 			}
 		});
 
-		tool = new StampTool(stampToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		tool = new StampTool(stampToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
 	}
 
 	@Test

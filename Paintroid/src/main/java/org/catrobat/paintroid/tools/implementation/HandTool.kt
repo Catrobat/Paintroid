@@ -32,7 +32,8 @@ class HandTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
-    commandManager: CommandManager
+    commandManager: CommandManager,
+    override var drawTime: Long
 ) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
     override val toolType: ToolType
         get() = ToolType.HAND

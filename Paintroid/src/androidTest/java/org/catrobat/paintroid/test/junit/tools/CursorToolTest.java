@@ -82,7 +82,7 @@ public class CursorToolTest {
 		when(workspace.getWidth()).thenReturn(1080);
 		when(workspace.getPerspective()).thenReturn(new Perspective(1080, 1920));
 
-		toolToTest = new CursorTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		toolToTest = new CursorTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
 	}
 
 	@Test

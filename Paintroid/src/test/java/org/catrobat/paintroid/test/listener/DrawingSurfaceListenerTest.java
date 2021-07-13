@@ -39,6 +39,7 @@ import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -391,6 +392,7 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(currentTool).handleUp(pointFEquals(3f, 5f));
+		verify(currentTool).setDrawTime(anyLong());
 		verifyNoMoreInteractions(currentTool);
 	}
 

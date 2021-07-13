@@ -36,11 +36,15 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener
 import org.catrobat.paintroid.tools.common.MOVE_TOLERANCE
+import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.smoothing
+import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.smoothingAlgorithm
+import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.threshold
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sqrt
 
 private const val DEFAULT_TOOL_STROKE_WIDTH = 5f
 private const val MINIMAL_TOOL_STROKE_WIDTH = 1f
@@ -53,7 +57,8 @@ open class CursorTool(
     toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
-    commandManager: CommandManager
+    commandManager: CommandManager,
+    override var drawTime: Long
 ) : BaseToolWithShape(
     contextCallback,
     toolOptionsViewController,
@@ -75,6 +80,9 @@ open class CursorTool(
 
     private var pointInsideBitmap: Boolean
     private val cursorToolPrimaryShapeColor: Int
+
+    private val initialEventCoordinate = PointF(0f, 0f)
+    private val pointArray = mutableListOf<PointF>()
 
     override val toolType: ToolType
         get() = ToolType.CURSOR
@@ -104,7 +112,9 @@ open class CursorTool(
         pathToDraw.moveTo(toolPosition.x, toolPosition.y)
         coordinate?.let {
             previousEventCoordinate?.set(it)
+            initialEventCoordinate.set(coordinate)
         }
+        pointArray.add(PointF(toolPosition.x, toolPosition.y))
         movedDistance.set(0f, 0f)
         pointInsideBitmap = workspace.contains(toolPosition)
         return true
@@ -124,6 +134,7 @@ open class CursorTool(
                     pathToDraw.quadTo(toolPosition.x, toolPosition.y, dx, dy)
                     pathToDraw.incReserve(1)
                 }
+                pointArray.add(PointF(toolPosition.x, toolPosition.y))
                 toolPosition.set(newToolPosition)
                 movedDistance.offset(abs(deltaX), abs(deltaY))
             }
@@ -163,10 +174,12 @@ open class CursorTool(
             }
         }
         handleDrawMode()
+        pointArray.clear()
         return true
     }
 
     public override fun resetInternalState() {
+        pointArray.clear()
         pathToDraw.rewind()
     }
 
@@ -307,8 +320,27 @@ open class CursorTool(
         pathToDraw.computeBounds(bounds, true)
         bounds.inset(-toolPaint.strokeWidth, -toolPaint.strokeWidth)
         if (workspace.intersectsWith(bounds)) {
-            val command = commandFactory.createPathCommand(toolPaint.paint, pathToDraw)
-            commandManager.addCommand(command)
+
+            val distance = sqrt(
+                (
+                    (coordinate.x - initialEventCoordinate.x) *
+                        (coordinate.x - initialEventCoordinate.x) +
+                        (coordinate.y - initialEventCoordinate.y)
+                    ).toDouble()
+            )
+            val speed = distance / drawTime
+
+            if (!smoothing || speed < threshold) {
+                val command = commandFactory.createPathCommand(toolPaint.paint, pathToDraw)
+                commandManager.addCommand(command)
+            } else {
+                val pathNew =
+                    smoothingAlgorithm(pointArray)
+                pathNew.computeBounds(bounds, true)
+                val command = commandFactory.createPathCommand(toolPaint.paint, pathNew)
+                commandManager.addCommand(command)
+            }
+
             return true
         }
         resetInternalState(StateChange.RESET_INTERNAL_STATE)
@@ -343,5 +375,7 @@ open class CursorTool(
                 addPointCommand(toolPosition)
             }
         }
+
+        pointArray.clear()
     }
 }

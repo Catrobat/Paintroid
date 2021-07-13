@@ -78,7 +78,7 @@ public class ImportToolTest {
 		when(workspace.getScale()).thenReturn(1f);
 		when(workspace.getPerspective()).thenReturn(new Perspective(20, 30));
 
-		tool = new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		tool = new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
 	}
 
 	@Test
