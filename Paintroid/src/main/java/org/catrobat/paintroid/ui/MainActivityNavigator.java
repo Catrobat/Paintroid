@@ -214,7 +214,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void startShareImageActivity(Bitmap bitmap) {
-		Uri uri = FileIO.saveBitmapToCache(bitmap, mainActivity);
+		Uri uri = FileIO.saveBitmapToCache(bitmap, mainActivity, "image");
 		if (uri != null) {
 			Intent shareIntent = new Intent();
 			shareIntent.putExtra(Intent.EXTRA_STREAM, uri);

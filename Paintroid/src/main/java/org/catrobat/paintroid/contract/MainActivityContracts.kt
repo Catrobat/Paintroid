@@ -173,9 +173,9 @@ interface MainActivityContracts {
     }
 
     interface Interactor {
-        fun saveCopy(callback: SaveImageCallback, requestCode: Int, workspace: Workspace)
+        fun saveCopy(callback: SaveImageCallback, requestCode: Int, workspace: Workspace, context: Context)
         fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String)
-        fun saveImage(callback: SaveImageCallback, requestCode: Int, workspace: Workspace, uri: Uri?)
+        fun saveImage(callback: SaveImageCallback, requestCode: Int, workspace: Workspace, uri: Uri?, context: Context)
         fun loadFile(callback: LoadImageCallback, requestCode: Int, uri: Uri?, context: Context, scaling: Boolean)
     }
 
