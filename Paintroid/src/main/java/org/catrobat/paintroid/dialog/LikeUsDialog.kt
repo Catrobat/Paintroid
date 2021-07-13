@@ -40,9 +40,4 @@ class LikeUsDialog : MainActivityDialogFragment() {
             }
             .create()
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(): LikeUsDialog = LikeUsDialog()
-    }
 }
