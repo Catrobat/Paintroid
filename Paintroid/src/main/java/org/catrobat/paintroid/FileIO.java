@@ -36,11 +36,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.core.content.FileProvider;
-import androidx.exifinterface.media.ExifInterface;
-
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.iotasks.BitmapReturnValue;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
@@ -56,9 +51,14 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
-import id.zelory.compressor.Compressor;
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 
 import static org.catrobat.paintroid.common.Constants.MAX_LAYERS;
+
+import id.zelory.compressor.Compressor;
 
 public final class FileIO {
 	public static String filename = "image";

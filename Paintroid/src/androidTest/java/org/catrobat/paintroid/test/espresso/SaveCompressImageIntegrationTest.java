@@ -41,6 +41,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
@@ -123,8 +125,12 @@ public class SaveCompressImageIntegrationTest {
 		onData(allOf(is(instanceOf(String.class)), is("jpg"))).inRoot(isPlatformPopup()).perform(click());
 		onView(withText(R.string.save_button_text)).perform(click());
 
-		File compressedFile = new File(activity.model.getSavedPictureUri().getPath());
-		Bitmap compressedBitmap = FileIO.getBitmapFromFile(compressedFile);
+		Bitmap compressedBitmap = null;
+		try {
+			compressedBitmap = FileIO.getBitmapFromUri(activity.getContentResolver(), activity.model.getSavedPictureUri(), activity.getApplicationContext());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Bitmap testBitmap = FileIO.getBitmapFromFile(testImageFile);
 		assertThat(compressedBitmap.getWidth(), is(equalTo(testBitmap.getWidth())));
 		assertThat(compressedBitmap.getHeight(), is(equalTo(testBitmap.getHeight())));
