@@ -36,6 +36,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 public class DefaultToolPaint implements ToolPaint {
 	public static final int STROKE_25 = 25;
 	private static final PorterDuffXfermode ERASE_XFERMODE = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+	public static boolean antialiasing = true;
 
 	private final Shader checkeredShader;
 	private final Paint bitmapPaint = new Paint();
@@ -47,7 +48,7 @@ public class DefaultToolPaint implements ToolPaint {
 		checkeredShader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
 
 		bitmapPaint.reset();
-		bitmapPaint.setAntiAlias(true);
+		bitmapPaint.setAntiAlias(antialiasing);
 		bitmapPaint.setColor(Color.BLACK);
 		bitmapPaint.setStyle(Paint.Style.STROKE);
 		bitmapPaint.setStrokeJoin(Paint.Join.ROUND);
@@ -96,7 +97,10 @@ public class DefaultToolPaint implements ToolPaint {
 	public void setStrokeWidth(float strokeWidth) {
 		bitmapPaint.setStrokeWidth(strokeWidth);
 		previewPaint.setStrokeWidth(strokeWidth);
-		boolean antiAliasing = strokeWidth > 1;
+		boolean antiAliasing = antialiasing;
+		if (strokeWidth <= 1) {
+			antiAliasing = false;
+		}
 		bitmapPaint.setAntiAlias(antiAliasing);
 		previewPaint.setAntiAlias(antiAliasing);
 	}
@@ -121,6 +125,12 @@ public class DefaultToolPaint implements ToolPaint {
 	public void setPaint(Paint paint) {
 		bitmapPaint.set(paint);
 		previewPaint.set(paint);
+	}
+
+	@Override
+	public void setAntialiasing() {
+		bitmapPaint.setAntiAlias(antialiasing);
+		previewPaint.setAntiAlias(antialiasing);
 	}
 
 	@Override

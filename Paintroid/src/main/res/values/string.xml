@@ -94,6 +94,7 @@
     <string name="menu_rate_us">Rate us!</string>
     <string name="menu_export">Export</string>
     <string name="menu_feedback">Feedback</string>
+    <string name="menu_advanced">Advanced settings</string>
     <string name="saved_to">Image saved to\n</string>
     <string name="saved">Image saved</string>
     <string name="copy_to">Copy saved to\n</string>
@@ -157,6 +158,8 @@
 
     <string name="dialog_save_image_name">Image name</string>
     <string name="dialog_save_image_format">Image format</string>
+
+    <string name="dialog_antialiasing">Antialiasing</string>
 
     <string name="dialog_save_jpg_option_quality">Quality:</string>
 

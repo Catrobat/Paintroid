@@ -32,4 +32,5 @@ interface ToolPaint {
     var strokeWidth: Float
     var strokeCap: Cap
     val checkeredShader: Shader
+    fun setAntialiasing()
 }
