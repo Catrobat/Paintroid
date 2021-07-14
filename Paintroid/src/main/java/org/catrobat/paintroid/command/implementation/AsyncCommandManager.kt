@@ -80,7 +80,11 @@ open class AsyncCommandManager(
         CoroutineScope(Dispatchers.Default).launch {
             mutex.withLock {
                 if (!shuttingDown) {
-                    synchronized(layerModel) { commandManager.undo() }
+                    synchronized(layerModel) {
+                        if (isUndoAvailable) {
+                            commandManager.undo()
+                        }
+                    }
                 }
                 withContext(Dispatchers.Main) {
                     notifyCommandPostExecute()
@@ -93,7 +97,11 @@ open class AsyncCommandManager(
         CoroutineScope(Dispatchers.Default).launch {
             mutex.withLock {
                 if (!shuttingDown) {
-                    synchronized(layerModel) { commandManager.redo() }
+                    synchronized(layerModel) {
+                        if (isRedoAvailable) {
+                            commandManager.redo()
+                        }
+                    }
                 }
                 withContext(Dispatchers.Main) {
                     notifyCommandPostExecute()
