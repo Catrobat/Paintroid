@@ -65,4 +65,12 @@ public class HandTool extends BaseTool {
 	public boolean handToolMode() {
 		return true;
 	}
+
+	@Override
+	public long getDrawTime() {
+		return 0;
+	}
+
+	@Override
+	public void setDrawTime(long drawTime) { }
 }

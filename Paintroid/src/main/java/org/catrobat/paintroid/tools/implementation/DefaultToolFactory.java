@@ -55,29 +55,29 @@ public class DefaultToolFactory implements ToolFactory {
 			case CURSOR:
 				return new CursorTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case STAMP:
-				return new StampTool(createStampToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new StampTool(createStampToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 30000000);
 			case IMPORTPNG:
-				return new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 30000000);
 			case PIPETTE:
 				return new PipetteTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, onColorPickedListener);
 			case FILL:
-				return new FillTool(createFillToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new FillTool(createFillToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 30000000);
 			case TRANSFORM:
 				return new TransformTool(createTransformToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case SHAPE:
-				return new ShapeTool(createShapeToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new ShapeTool(createShapeToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 30000000);
 			case ERASER:
-				return new EraserTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new EraserTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 30000000);
 			case LINE:
-				return new LineTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new LineTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 30000000);
 			case TEXT:
 				return new TextTool(createTextToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case HAND:
 				return new HandTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 			case SPRAY:
-				return new SprayTool(createSprayToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new SprayTool(createSprayToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 30000000);
 			default:
-				return new BrushTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new BrushTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 30000000);
 		}
 	}
 

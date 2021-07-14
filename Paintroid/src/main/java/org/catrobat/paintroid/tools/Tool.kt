@@ -30,6 +30,8 @@ interface Tool {
 
     val drawPaint: Paint
 
+    var drawTime: Long
+
     fun handToolMode(): Boolean
 
     fun handleDown(coordinate: PointF?): Boolean

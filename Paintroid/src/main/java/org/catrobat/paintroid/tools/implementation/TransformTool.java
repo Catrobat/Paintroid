@@ -380,4 +380,12 @@ public class TransformTool extends BaseToolWithRectangleShape {
 		transformToolOptionsView.setWidth((int) boxWidth);
 		transformToolOptionsView.setHeight((int) boxHeight);
 	}
+
+	@Override
+	public long getDrawTime() {
+		return 0;
+	}
+
+	@Override
+	public void setDrawTime(long drawTime) { }
 }

@@ -92,4 +92,12 @@ public class PipetteTool extends BaseTool {
 	public void resetInternalState() {
 		updateSurfaceBitmap();
 	}
+
+	@Override
+	public long getDrawTime() {
+		return 0;
+	}
+
+	@Override
+	public void setDrawTime(long drawTime) { }
 }

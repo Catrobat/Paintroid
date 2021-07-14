@@ -39,7 +39,8 @@ class FillTool(
     toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
-    commandManager: CommandManager
+    commandManager: CommandManager,
+    override var drawTime: Long
 ) : BaseTool(
     contextCallback,
     toolOptionsViewController,

@@ -36,8 +36,12 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener;
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener;
+import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -59,6 +63,10 @@ public class CursorTool extends BaseToolWithShape {
 	@VisibleForTesting
 	public boolean toolInDrawMode = false;
 	private BrushToolOptionsView brushToolOptionsView;
+
+	private PointF initialEventCoordinate = new PointF(0f, 0f);
+	private List<PointF> pointArray = new ArrayList<>();
+	private Long drawTime;
 
 	public CursorTool(BrushToolOptionsView brushToolOptionsView, ContextCallback contextCallback, ToolOptionsVisibilityController toolOptionsViewController,
 			ToolPaint toolPaint, Workspace workspace, CommandManager commandManager) {
@@ -91,6 +99,8 @@ public class CursorTool extends BaseToolWithShape {
 	public boolean handleDown(PointF coordinate) {
 		pathToDraw.moveTo(this.toolPosition.x, this.toolPosition.y);
 		previousEventCoordinate.set(coordinate);
+		initialEventCoordinate.set(coordinate);
+		pointArray.add(new PointF(toolPosition.x, toolPosition.y));
 		movedDistance.set(0, 0);
 		pointInsideBitmap = false;
 
@@ -106,7 +116,6 @@ public class CursorTool extends BaseToolWithShape {
 		pointInsideBitmap = pointInsideBitmap || workspace.contains(toolPosition);
 
 		PointF newToolPosition = calculateNewClampedToolPosition(deltaX, deltaY);
-
 		if (toolInDrawMode) {
 			float dx = (toolPosition.x + newToolPosition.x) / 2f;
 			float dy = (toolPosition.y + newToolPosition.y) / 2f;
@@ -114,6 +123,7 @@ public class CursorTool extends BaseToolWithShape {
 			pathToDraw.quadTo(toolPosition.x, toolPosition.y, dx, dy);
 			pathToDraw.incReserve(1);
 		}
+		pointArray.add(new PointF(toolPosition.x, toolPosition.y));
 
 		toolPosition.set(newToolPosition);
 		movedDistance.offset(Math.abs(deltaX), Math.abs(deltaY));
@@ -156,11 +166,13 @@ public class CursorTool extends BaseToolWithShape {
 				movedDistance.y + Math.abs(coordinate.y - previousEventCoordinate.y));
 
 		handleDrawMode();
+		pointArray.clear();
 		return true;
 	}
 
 	@Override
 	public void resetInternalState() {
+		pointArray.clear();
 		pathToDraw.rewind();
 	}
 
@@ -286,8 +298,21 @@ public class CursorTool extends BaseToolWithShape {
 		bounds.inset(-toolPaint.getStrokeWidth(), -toolPaint.getStrokeWidth());
 
 		if (workspace.intersectsWith(bounds)) {
-			Command command = commandFactory.createPathCommand(toolPaint.getPaint(), pathToDraw);
-			commandManager.addCommand(command);
+			double distance = Math.sqrt((coordinate.x - initialEventCoordinate.x) * (coordinate.x - initialEventCoordinate.x)
+					+ (coordinate.y - initialEventCoordinate.y));
+			double speed = distance / drawTime;
+
+			if (speed < 0.2) {
+				Command command = commandFactory.createPathCommand(toolPaint.getPaint(), pathToDraw);
+				commandManager.addCommand(command);
+			} else {
+				Path pathNew = AdvancedSettingsAlgorithms.smoothingAlgorithm(pointArray);
+				pathNew.computeBounds(bounds, true);
+
+				Command command = commandFactory.createPathCommand(toolPaint.getPaint(), pathNew);
+				commandManager.addCommand(command);
+			}
+
 			return true;
 		}
 
@@ -324,5 +349,17 @@ public class CursorTool extends BaseToolWithShape {
 				addPointCommand(toolPosition);
 			}
 		}
+
+		pointArray.clear();
+	}
+
+	@Override
+	public long getDrawTime() {
+		return drawTime;
+	}
+
+	@Override
+	public void setDrawTime(long time) {
+		drawTime = time;
 	}
 }

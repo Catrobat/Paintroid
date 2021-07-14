@@ -50,6 +50,7 @@ open class DrawingSurfaceListener(
     private val eventTouchPoint: PointF
     private val drawerEdgeSize: Int = (DRAWER_EDGE_SIZE * displayDensity + CONSTANT_1).toInt()
     private var autoScroll = true
+    private var timerStartDraw = 0.toLong()
 
     internal enum class TouchMode {
         DRAW, PINCH
@@ -152,6 +153,7 @@ open class DrawingSurfaceListener(
                 if (eventTouchPoint.x < drawerEdgeSize || view.getWidth() - eventTouchPoint.x < drawerEdgeSize) {
                     return false
                 }
+                timerStartDraw = System.currentTimeMillis()
                 currentTool.handleDown(canvasTouchPoint)
                 if (autoScroll) {
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
@@ -164,6 +166,8 @@ open class DrawingSurfaceListener(
                     autoScrollTask.stop()
                 }
                 if (touchMode == TouchMode.DRAW) {
+                    val drawingTime = System.currentTimeMillis() - timerStartDraw
+                    currentTool.drawTime = drawingTime
                     currentTool.handleUp(canvasTouchPoint)
                 } else {
                     currentTool.resetInternalState(StateChange.MOVE_CANCELED)
