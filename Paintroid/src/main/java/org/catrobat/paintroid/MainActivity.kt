@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
-    private fun init(receivedIntent: Intent) {
+    private fun handleIntent(receivedIntent: Intent) {
         var receivedUri = receivedIntent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
 
         receivedUri = receivedUri ?: receivedIntent.data
@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         presenterMain.onCreateTool()
         val receivedIntent = intent
         if (validateIntent(receivedIntent)) {
-            init(receivedIntent)
+            handleIntent(receivedIntent)
             commandManager.reset()
             model.savedPictureUri = null
             model.cameraImageUri = null
