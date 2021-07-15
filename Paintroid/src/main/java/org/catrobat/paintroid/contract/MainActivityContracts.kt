@@ -96,7 +96,7 @@ interface MainActivityContracts {
 
         fun doIHavePermission(permission: String): Boolean
 
-        fun isPermissionPermanentlyDenied(permission: Array<String>): Boolean
+        fun isPermissionPermanentlyDenied(permissions: Array<String>): Boolean
 
         fun finishActivity()
 
@@ -116,7 +116,7 @@ interface MainActivityContracts {
 
         fun showToolChangeToast(offset: Int, idRes: Int)
 
-        fun broadcastAddPictureToGallery(uri: Uri?)
+        fun broadcastAddPictureToGallery(file: File)
 
         fun rateUsClicked()
 

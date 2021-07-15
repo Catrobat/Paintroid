@@ -34,9 +34,4 @@ class FeedbackDialog : AppCompatDialogFragment() {
             .setPositiveButton(R.string.pocketpaint_ok) { _, _ -> dismiss() }
             .create()
     }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(): FeedbackDialog = FeedbackDialog()
-    }
 }
