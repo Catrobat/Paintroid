@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,22 +16,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.ui
 
-package org.catrobat.paintroid.ui;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.widget.Toast
+import androidx.annotation.StringRes
 
-import android.content.Context;
+@SuppressLint("ShowToast")
+object ToastFactory {
+    private var currentToast: Toast? = null
 
-import org.catrobat.paintroid.contract.LayerContracts;
+    @JvmStatic
+    fun makeText(context: Context, @StringRes resId: Int, duration: Int): Toast? {
+        currentToast?.cancel()
+        currentToast = Toast.makeText(context, resId, duration)
+        return currentToast
+    }
 
-public class LayerNavigator implements LayerContracts.Navigator {
-	private Context context;
-
-	public LayerNavigator(Context context) {
-		this.context = context;
-	}
-
-	@Override
-	public void showToast(int id, int length) {
-		ToastFactory.makeText(context, id, length).show();
-	}
+    @JvmStatic
+    fun makeText(context: Context, msg: String, duration: Int): Toast? {
+        currentToast?.cancel()
+        currentToast = Toast.makeText(context, msg, duration)
+        return currentToast
+    }
 }
