@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,39 +16,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools.options
 
-package org.catrobat.paintroid.tools.options;
+import org.catrobat.paintroid.ui.tools.NumberRangeFilter
 
-import org.catrobat.paintroid.ui.tools.NumberRangeFilter;
+interface TransformToolOptionsView {
+    fun setWidthFilter(numberRangeFilter: NumberRangeFilter)
 
-public interface TransformToolOptionsView {
-	void setWidthFilter(NumberRangeFilter numberRangeFilter);
+    fun setHeightFilter(numberRangeFilter: NumberRangeFilter)
 
-	void setHeightFilter(NumberRangeFilter numberRangeFilter);
+    fun setCallback(callback: Callback)
 
-	void setCallback(Callback callback);
+    fun setWidth(width: Int)
 
-	void setWidth(int width);
+    fun setHeight(height: Int)
 
-	void setHeight(int height);
+    interface Callback {
+        fun autoCropClicked()
 
-	interface Callback {
-		void autoCropClicked();
+        fun rotateCounterClockwiseClicked()
 
-		void rotateCounterClockwiseClicked();
+        fun rotateClockwiseClicked()
 
-		void rotateClockwiseClicked();
+        fun flipHorizontalClicked()
 
-		void flipHorizontalClicked();
+        fun flipVerticalClicked()
 
-		void flipVerticalClicked();
+        fun applyResizeClicked(resizePercentage: Int)
 
-		void applyResizeClicked(int resizePercentage);
+        fun setBoxWidth(boxWidth: Float)
 
-		void setBoxWidth(float boxWidth);
+        fun setBoxHeight(boxHeight: Float)
 
-		void setBoxHeight(float boxHeight);
-
-		void hideToolOptions();
-	}
+        fun hideToolOptions()
+    }
 }
