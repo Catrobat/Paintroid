@@ -24,9 +24,14 @@ interface ToolOptionsViewController : ToolOptionsVisibilityController {
     val toolSpecificOptionsLayout: ViewGroup
 
     fun disable()
+
     fun enable()
+
     fun resetToOrigin()
+
     fun removeToolViews()
+
     fun showCheckmark()
+
     fun hideCheckmark()
 }

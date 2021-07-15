@@ -22,12 +22,16 @@ interface ToolOptionsVisibilityController {
     val isVisible: Boolean
 
     fun hide()
+
     fun setCallback(callback: Callback)
+
     fun show()
+
     fun showDelayed()
 
     interface Callback {
         fun onHide()
+
         fun onShow()
     }
 }
