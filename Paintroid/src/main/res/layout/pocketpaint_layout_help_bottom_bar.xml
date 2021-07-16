@@ -235,5 +235,20 @@
                 android:text="@string/button_pipette"
                 android:textColor="@color/pocketpaint_color_picker_white"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_watercolor"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_watercolor_brush"
+                android:contentDescription="@string/button_pipette"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_watercolor"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
     </TableRow>
 </TableLayout>
