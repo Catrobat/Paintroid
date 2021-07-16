@@ -110,7 +110,8 @@ public class DefaultToolController implements ToolController {
 		ToolType currentToolType = currentTool.getToolType();
 
 		if ((currentToolType == ToolType.TEXT || currentToolType == ToolType.TRANSFORM
-				|| currentToolType == ToolType.IMPORTPNG || currentToolType == ToolType.SHAPE) && !backPressed) {
+				|| currentToolType == ToolType.IMPORTPNG || currentToolType == ToolType.SHAPE
+				|| currentToolType == ToolType.LINE) && !backPressed) {
 			BaseToolWithShape toolToApply = (BaseToolWithShape) currentTool;
 			toolToApply.onClickOnButton();
 		}
@@ -160,7 +161,8 @@ public class DefaultToolController implements ToolController {
 		if (toolType == ToolType.TEXT
 				|| toolType == ToolType.TRANSFORM
 				|| toolType == ToolType.SHAPE
-				|| toolType == ToolType.IMPORTPNG) {
+				|| toolType == ToolType.IMPORTPNG
+				|| toolType == ToolType.LINE) {
 			toolOptionsViewController.showCheckmark();
 		} else {
 			toolOptionsViewController.hideCheckmark();
