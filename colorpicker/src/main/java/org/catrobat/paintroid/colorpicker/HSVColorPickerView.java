@@ -20,9 +20,6 @@
 package org.catrobat.paintroid.colorpicker;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -40,7 +37,6 @@ public class HSVColorPickerView extends View {
 
 	private static final float BORDER_WIDTH_PX = 1;
 
-	private float alphaPanelHeight = 21f;
 	private float panelSpacing = 10f;
 	private float paletteCircleTrackerRadius = 5f;
 	private float rectangleTrackerOffset = 2f;
@@ -51,21 +47,16 @@ public class HSVColorPickerView extends View {
 	private Paint satValTrackerPaint;
 	private Paint huePaint;
 	private Paint hueTrackerPaint;
-	private Paint alphaPaint;
 	private Paint borderPaint;
-	private Paint checkeredPaint;
 
 	private Shader valShader;
-	private Shader satShader;
 	private Shader hueShader;
-	private Shader alphaShader;
 
 	private int alpha = 0xff;
 	private float hue = 360f;
 	private float sat = 0f;
 	private float val = 0f;
 
-	private int sliderTrackerColor = 0xfff5f5f5;
 	private int borderColor = 0xff6E6E6E;
 
 	private OnColorChangedListener onColorChangedListener;
@@ -75,7 +66,6 @@ public class HSVColorPickerView extends View {
 	private RectF drawingRect;
 	private RectF satValRect;
 	private RectF hueRect;
-	private RectF alphaRect;
 
 	private Point startTouchPoint = null;
 
@@ -99,7 +89,6 @@ public class HSVColorPickerView extends View {
 		paletteCircleTrackerRadius *= density;
 		rectangleTrackerOffset *= density;
 		huePanelWidth *= density;
-		alphaPanelHeight *= density;
 		panelSpacing *= density;
 		drawingOffset = paletteCircleTrackerRadius;
 
@@ -107,27 +96,21 @@ public class HSVColorPickerView extends View {
 		satValTrackerPaint = new Paint();
 		huePaint = new Paint();
 		hueTrackerPaint = new Paint();
-		alphaPaint = new Paint();
 		borderPaint = new Paint();
 
 		satValTrackerPaint.setStyle(Paint.Style.STROKE);
 		satValTrackerPaint.setStrokeWidth(2f * density);
 		satValTrackerPaint.setAntiAlias(true);
 
+		int sliderTrackerColor = 0xfff5f5f5;
 		hueTrackerPaint.setColor(sliderTrackerColor);
 		hueTrackerPaint.setStyle(Paint.Style.STROKE);
 		hueTrackerPaint.setStrokeWidth(2f * density);
 		hueTrackerPaint.setAntiAlias(true);
 
-		checkeredPaint = new Paint();
-		Bitmap checkerboard = BitmapFactory.decodeResource(getResources(), R.drawable.pocketpaint_checkeredbg);
-		BitmapShader checkeredShader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-		checkeredPaint.setShader(checkeredShader);
-
 		drawingRect = new RectF();
 		satValRect = new RectF();
 		hueRect = new RectF();
-		alphaRect = new RectF();
 	}
 
 	@Override
@@ -137,45 +120,6 @@ public class HSVColorPickerView extends View {
 		}
 		drawSatValPanel(canvas);
 		drawHuePanel(canvas);
-		drawAlphaPanel(canvas);
-	}
-
-	private void drawAlphaPanel(Canvas canvas) {
-		if (alphaRect == null) {
-			return;
-		}
-
-		final RectF rect = alphaRect;
-
-		if (BORDER_WIDTH_PX > 0) {
-			borderPaint.setColor(borderColor);
-			canvas.drawRect(rect.left - BORDER_WIDTH_PX, rect.top
-							- BORDER_WIDTH_PX, rect.right + BORDER_WIDTH_PX,
-					rect.bottom + BORDER_WIDTH_PX, borderPaint);
-		}
-
-		canvas.drawRect(rect, checkeredPaint);
-
-		float[] hsv = new float[]{hue, sat, val};
-		int color = Color.HSVToColor(hsv);
-		int acolor = Color.HSVToColor(0, hsv);
-
-		alphaShader = new LinearGradient(rect.left, rect.top, rect.right,
-				rect.top, color, acolor, Shader.TileMode.CLAMP);
-		alphaPaint.setShader(alphaShader);
-		canvas.drawRect(rect, alphaPaint);
-
-		float rectWidth = 4 * density / 2;
-
-		Point p = alphaToPoint(alpha);
-
-		RectF r = new RectF();
-		r.left = p.x - rectWidth;
-		r.right = p.x + rectWidth;
-		r.top = rect.top - rectangleTrackerOffset;
-		r.bottom = rect.bottom + rectangleTrackerOffset;
-
-		canvas.drawRoundRect(r, 2, 2, hueTrackerPaint);
 	}
 
 	private void drawSatValPanel(Canvas canvas) {
@@ -193,7 +137,7 @@ public class HSVColorPickerView extends View {
 
 		int rgb = Color.HSVToColor(new float[]{hue, 1f, 1f});
 
-		satShader = new LinearGradient(rect.left, rect.top, rect.right,
+		Shader satShader = new LinearGradient(rect.left, rect.top, rect.right,
 				rect.bottom, Color.WHITE, rgb, Shader.TileMode.CLAMP);
 
 		satValPaint.setXfermode(null);
@@ -283,8 +227,6 @@ public class HSVColorPickerView extends View {
 			float[] result = pointToSatVal(event.getX(), event.getY());
 			sat = result[0];
 			val = result[1];
-		} else if (alphaRect != null && alphaRect.contains(startX, startY)) {
-			alpha = pointToAlpha((int) event.getX());
 		} else {
 			update = false;
 		}
@@ -304,7 +246,6 @@ public class HSVColorPickerView extends View {
 
 		setUpSatValRect();
 		setUpHueRect();
-		setUpAlphaRect();
 	}
 
 	@Override
@@ -315,14 +256,6 @@ public class HSVColorPickerView extends View {
 
 	private static float clamp(float val, float min, float max) {
 		return Math.max(min, Math.min(max, val));
-	}
-
-	private int pointToAlpha(int x) {
-		final RectF rect = alphaRect;
-		final int width = (int) rect.width();
-
-		x = (int) clamp(x - rect.left, 0, width);
-		return 0xff - (x * 0xff / width);
 	}
 
 	private Point satValToPoint(float sat, float val) {
@@ -344,17 +277,6 @@ public class HSVColorPickerView extends View {
 		Point p = new Point();
 		p.y = (int) (height - (hue * height / 360f) + rect.top);
 		p.x = (int) rect.left;
-
-		return p;
-	}
-
-	private Point alphaToPoint(int alpha) {
-		final RectF rect = alphaRect;
-		final float width = rect.width();
-
-		Point p = new Point();
-		p.x = (int) (width - (alpha * width / 0xff) + rect.left);
-		p.y = (int) rect.top;
 
 		return p;
 	}
@@ -393,7 +315,7 @@ public class HSVColorPickerView extends View {
 
 	private void setUpSatValRect() {
 		final RectF dRect = drawingRect;
-		float panelContentHeight = dRect.height() - 2 * BORDER_WIDTH_PX - panelSpacing - alphaPanelHeight;
+		float panelContentHeight = dRect.height() - 2 * BORDER_WIDTH_PX;
 		float panelContentWidth = dRect.width() - 2 * BORDER_WIDTH_PX - panelSpacing - huePanelWidth;
 
 		float left = dRect.left + BORDER_WIDTH_PX;
@@ -407,21 +329,10 @@ public class HSVColorPickerView extends View {
 		final RectF dRect = drawingRect;
 		float left = dRect.right - huePanelWidth + BORDER_WIDTH_PX;
 		float top = dRect.top + BORDER_WIDTH_PX;
-		float bottom = dRect.bottom - BORDER_WIDTH_PX
-				- (panelSpacing + alphaPanelHeight);
-		float right = dRect.right - BORDER_WIDTH_PX;
-
-		hueRect.set(left, top, right, bottom);
-	}
-
-	private void setUpAlphaRect() {
-		final RectF dRect = drawingRect;
-		float left = dRect.left + BORDER_WIDTH_PX;
-		float top = dRect.bottom - alphaPanelHeight + BORDER_WIDTH_PX;
 		float bottom = dRect.bottom - BORDER_WIDTH_PX;
 		float right = dRect.right - BORDER_WIDTH_PX;
 
-		alphaRect.set(left, top, right, bottom);
+		hueRect.set(left, top, right, bottom);
 	}
 
 	public void setOnColorChangedListener(OnColorChangedListener listener) {

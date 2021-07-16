@@ -36,6 +36,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
 import android.view.WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
 import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -48,6 +49,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 private const val FF = 0xff
+private const val HSV_INITIALIZER = 3
 
 class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     @VisibleForTesting
@@ -62,18 +64,21 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     private var colorToApply = 0
 
     companion object {
+        private lateinit var alphaSliderView: AlphaSliderView
         private const val CURRENT_COLOR = "CurrentColor"
         private const val INITIAL_COLOR = "InitialColor"
+        private const val INITIAL_CATROID_FLAG = "InitialCatroidFlag"
         const val REQUEST_CODE = 1
         const val COLOR_EXTRA = "colorExtra"
         const val BITMAP_Name_EXTRA = "bitmapNameExtra"
         const val bitmapName = "temp.png"
 
-        fun newInstance(@ColorInt initialColor: Int): ColorPickerDialog {
+        fun newInstance(@ColorInt initialColor: Int, flag: Boolean): ColorPickerDialog {
             val dialog = ColorPickerDialog()
             val bundle = Bundle()
             bundle.putInt(INITIAL_COLOR, initialColor)
             bundle.putInt(CURRENT_COLOR, initialColor)
+            bundle.putBoolean(INITIAL_CATROID_FLAG, flag)
             dialog.arguments = bundle
             return dialog
         }
@@ -102,7 +107,8 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         newColorView = dialogView.findViewById(R.id.color_picker_new_color_view)
         colorPickerView = dialogView.findViewById(R.id.color_picker_view)
         colorPickerView.setOnColorChangedListener(this)
-
+        alphaSliderView = dialogView.findViewById(R.id.color_alpha_slider)
+        colorPickerView.setAlphaSlider(alphaSliderView)
         if (savedInstanceState != null) {
             setCurrentColor(savedInstanceState.getInt(CURRENT_COLOR, Color.BLACK))
             setInitialColor(savedInstanceState.getInt(INITIAL_COLOR, Color.BLACK))
@@ -140,8 +146,20 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     }
 
     override fun colorChanged(color: Int) {
-        setViewColor(newColorView, color)
-        colorToApply = color
+        if(alphaSliderView.visibility == GONE) {
+            alphaSliderView.getAlphaSlider()?.invalidate()
+            val alpha = alphaSliderView.getAlphaSlider()?.getAlphaValue()
+            val hsv = FloatArray(HSV_INITIALIZER)
+            Color.colorToHSV(color, hsv)
+            val newColor = alpha?.let { Color.HSVToColor(it, hsv) }
+            if (newColor != null) {
+                setViewColor(newColorView, newColor)
+                colorToApply = newColor
+            }
+        } else {
+            setViewColor(newColorView, color)
+            colorToApply = color
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -162,6 +180,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
 
     private fun setInitialColor(color: Int) {
         setViewColor(currentColorView, color)
+        alphaSliderView.visibility = View.VISIBLE
         colorPickerView.initialColor = color
     }
 

@@ -176,7 +176,7 @@ class MainActivityNavigator(
 
     override fun showColorPickerDialog() {
         if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null) {
-            val dialog = ColorPickerDialog.newInstance(toolReference.get().drawPaint.color)
+            val dialog = ColorPickerDialog.newInstance(toolReference.get().drawPaint.color, mainActivity.model.isOpenedFromCatroid)
             setupColorPickerDialogListeners(dialog)
             showDialogFragmentSafely(dialog, Constants.COLOR_PICKER_DIALOG_TAG)
         }

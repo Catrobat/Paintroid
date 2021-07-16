@@ -41,12 +41,14 @@ public class PresetSelectorView extends LinearLayout {
 
 	public PresetSelectorView(Context context) {
 		super(context);
+		setWillNotDraw(false);
 		tableLayout = new TableLayout(context);
 		init(context);
 	}
 
 	public PresetSelectorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		setWillNotDraw(false);
 		tableLayout = new TableLayout(context, attrs);
 		init(context);
 	}
@@ -85,7 +87,6 @@ public class PresetSelectorView extends LinearLayout {
 		}
 
 		presetColors.recycle();
-
 		addView(tableLayout);
 	}
 

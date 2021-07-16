@@ -34,6 +34,8 @@ import android.widget.TabHost.TabSpec;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
+import java.util.Objects;
+
 public class ColorPickerView extends LinearLayoutCompat {
 	private static final String RGB_TAG = "RGB";
 	private static final String PRE_TAG = "PRE";
@@ -42,6 +44,7 @@ public class ColorPickerView extends LinearLayoutCompat {
 	private RgbSelectorView rgbSelectorView;
 	private PresetSelectorView preSelectorView;
 	private HSVSelectorView hsvSelectorView;
+	private AlphaSliderView alphaSliderView;
 	private TabHost tabHost;
 
 	private int selectedColor = Color.BLACK;
@@ -98,6 +101,10 @@ public class ColorPickerView extends LinearLayoutCompat {
 		if (sender != hsvSelectorView) {
 			hsvSelectorView.setSelectedColor(color);
 		}
+		if (sender != alphaSliderView) {
+			alphaSliderView.setSelectedColor(color);
+		}
+
 		onColorChanged();
 	}
 
@@ -123,6 +130,7 @@ public class ColorPickerView extends LinearLayoutCompat {
 		rgbSelectorView = new RgbSelectorView(getContext());
 		preSelectorView = new PresetSelectorView(getContext());
 		hsvSelectorView = new HSVSelectorView(getContext());
+		alphaSliderView = new AlphaSliderView(getContext());
 
 		tabHost = tabView.findViewById(R.id.color_picker_colorview_tabColors);
 		tabHost.setup();
@@ -150,13 +158,19 @@ public class ColorPickerView extends LinearLayoutCompat {
 			@Override
 			public void onTabChanged(String tabId) {
 				if(tabId.equals(rgbTab.getTag())){
+					alphaSliderView.setVisibility(GONE);
 					showKeyboard();
 				}
 				else {
+					alphaSliderView.setVisibility(VISIBLE);
 					hideKeyboard();
 				}
 			}
 		});
+	}
+
+	public void setAlphaSlider(AlphaSliderView alphaSliderView) {
+		this.alphaSliderView = alphaSliderView;
 	}
 
 	private void hideKeyboard() {
@@ -201,6 +215,14 @@ public class ColorPickerView extends LinearLayoutCompat {
 						setSelectedColor(color, rgbSelectorView);
 					}
 				});
+		Objects.requireNonNull(alphaSliderView.getAlphaSlider()).setOnColorChangedListener(
+				new AlphaSlider.OnColorChangedListener() {
+					@Override
+					public void colorChanged(int color) {
+						setSelectedColor(color, alphaSliderView);
+					}
+				}
+		);
 	}
 
 	@Override

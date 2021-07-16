@@ -203,5 +203,18 @@
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_pipette"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_watercolor"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_watercolor_brush"
+                android:contentDescription="@string/button_watercolor"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_watercolor"/>
+        </LinearLayout>
     </TableRow>
 </TableLayout>
