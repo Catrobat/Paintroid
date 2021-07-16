@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.tools.options
 
+import android.graphics.MaskFilter
 import android.graphics.Paint
 import android.graphics.Paint.Cap
 import org.catrobat.paintroid.tools.ToolType

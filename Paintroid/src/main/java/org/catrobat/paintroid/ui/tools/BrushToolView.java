@@ -121,6 +121,7 @@ public class BrushToolView extends View implements BrushToolPreview {
 				case BRUSH:
 				case CURSOR:
 				case LINE:
+				case WATERCOLOR:
 					drawLinePreview(canvas);
 					break;
 				case ERASER:
