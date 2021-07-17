@@ -48,7 +48,6 @@ public class CropCommandTest {
 	private int maximumBitmapResolution;
 
 	private Command commandUnderTest;
-	private Command commandUnderTestNull; // can be used to pass null to constructor
 	private Canvas canvasUnderTest;
 	private Bitmap bitmapUnderTest;
 	private Layer layerUnderTest;
@@ -77,16 +76,6 @@ public class CropCommandTest {
 				* MAXIMUM_BITMAP_RESOLUTION_FACTOR;
 		commandUnderTest = new CropCommand(resizeCoordinateXLeft, resizeCoordinateYTop,
 				resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution);
-		commandUnderTestNull = new CropCommand(1, 1, 2, 2, maximumBitmapResolution);
-	}
-
-	@Test
-	public void testRunWithNullParameters() {
-		commandUnderTestNull.run(null, null);
-		commandUnderTestNull.run(null, null);
-		commandUnderTestNull.run(canvasUnderTest, null);
-		commandUnderTestNull.run(null, new LayerModel());
-		commandUnderTestNull.run(null, layerModel);
 	}
 
 	@Test

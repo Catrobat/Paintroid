@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.RectF
+import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
 import org.catrobat.paintroid.ui.Perspective
 
 interface Workspace {
@@ -49,4 +50,6 @@ interface Workspace {
     fun getCanvasPointFromSurfacePoint(surfacePoint: PointF): PointF
 
     fun invalidate()
+
+    fun getCommandSerializationHelper(): CommandSerializationUtilities
 }

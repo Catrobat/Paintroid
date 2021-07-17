@@ -20,16 +20,23 @@ package org.catrobat.paintroid.iotasks;
 
 import android.graphics.Bitmap;
 
+import org.catrobat.paintroid.model.CommandManagerModel;
+
 import java.util.List;
 
 public class BitmapReturnValue {
 	public List<Bitmap> bitmapList;
 	public Bitmap bitmap;
 	public boolean toBeScaled;
+	public CommandManagerModel model;
 
 	public BitmapReturnValue(List<Bitmap> list, Bitmap singleBitmap, boolean scaling) {
 		bitmapList = list;
 		bitmap = singleBitmap;
 		toBeScaled = scaling;
+	}
+
+	public BitmapReturnValue(CommandManagerModel model) {
+		this.model = model;
 	}
 }

@@ -28,8 +28,9 @@ import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.model.CommandManagerModel
 
-class AsyncCommandManager(
+open class AsyncCommandManager(
     private val commandManager: CommandManager,
     private val layerModel: LayerContracts.Model
 ) : CommandManager {
@@ -54,6 +55,19 @@ class AsyncCommandManager(
             mutex.withLock {
                 if (!shuttingDown) {
                     synchronized(layerModel) { commandManager.addCommand(command) }
+                }
+                withContext(Dispatchers.Main) {
+                    notifyCommandPostExecute()
+                }
+            }
+        }
+    }
+
+    override fun loadCommandsCatrobatImage(model: CommandManagerModel?) {
+        CoroutineScope(Dispatchers.Default).launch {
+            mutex.withLock {
+                if (!shuttingDown) {
+                    synchronized(layerModel) { commandManager.loadCommandsCatrobatImage(model) }
                 }
                 withContext(Dispatchers.Main) {
                     notifyCommandPostExecute()
@@ -102,6 +116,8 @@ class AsyncCommandManager(
     }
 
     override fun isBusy(): Boolean = mutex.isLocked
+
+    override fun getCommandManagerModel() = commandManager.commandManagerModel
 
     private fun notifyCommandPostExecute() {
         if (!shuttingDown) {

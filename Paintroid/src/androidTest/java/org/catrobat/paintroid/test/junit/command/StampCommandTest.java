@@ -21,14 +21,13 @@ package org.catrobat.paintroid.test.junit.command;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PointF;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.BaseCommand;
 import org.catrobat.paintroid.command.implementation.StampCommand;
 import org.catrobat.paintroid.model.Layer;
 import org.catrobat.paintroid.model.LayerModel;
@@ -36,10 +35,14 @@ import org.catrobat.paintroid.test.utils.PaintroidAsserts;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class StampCommandTest {
 
@@ -50,8 +53,7 @@ public class StampCommandTest {
 	private static final int INITIAL_HEIGHT = 80;
 	private static final int INITIAL_WIDTH = 80;
 
-	private Command commandUnderTest;
-	private Command commandUnderTestNull; // can be used to pass null to constructor
+	private StampCommand commandUnderTest;
 	private PointF pointUnderTest;
 	private Canvas canvasUnderTest;
 	private Bitmap canvasBitmapUnderTest;
@@ -80,16 +82,6 @@ public class StampCommandTest {
 		commandUnderTest = new StampCommand(stampBitmapUnderTest, new Point(canvasBitmapUnderTest.getWidth() / 2,
 				canvasBitmapUnderTest.getHeight() / 2), canvasBitmapUnderTest.getWidth(),
 				canvasBitmapUnderTest.getHeight(), 0);
-		commandUnderTestNull = new StampCommand(null, null, 0, 0, 0);
-	}
-
-	@Test
-	public void testRunWithNullParameters() {
-		commandUnderTestNull.run(null, null);
-		commandUnderTestNull.run(null, null);
-		commandUnderTestNull.run(canvasUnderTest, null);
-		commandUnderTestNull.run(null, new LayerModel());
-		commandUnderTestNull.run(null, layerModel);
 	}
 
 	@Test
@@ -101,8 +93,8 @@ public class StampCommandTest {
 		commandUnderTest.run(canvasUnderTest, model);
 		PaintroidAsserts.assertBitmapEquals(stampBitmapUnderTest, canvasBitmapUnderTest);
 
-		assertNull("Stamp bitmap not recycled.", ((BaseCommand) commandUnderTest).bitmap);
-		assertNotNull("Bitmap not stored", ((BaseCommand) commandUnderTest).fileToStoredBitmap);
+		assertNull("Stamp bitmap not recycled.", commandUnderTest.getBitmap());
+		assertNotNull("Bitmap not stored", commandUnderTest.getFileToStoredBitmap());
 		Layer secondLayer = new Layer(Bitmap.createBitmap(10, 10, Config.ARGB_8888));
 		LayerModel secondModel = new LayerModel();
 		secondModel.addLayerAt(0, secondLayer);
@@ -116,12 +108,54 @@ public class StampCommandTest {
 		stampBitmapUnderTest.setPixel(0, 0, Color.GREEN);
 		commandUnderTest = new StampCommand(stampBitmapUnderTest, new Point((int) pointUnderTest.x,
 				(int) pointUnderTest.y), canvasBitmapUnderTest.getWidth(), canvasBitmapUnderTest.getHeight(), 180);
-		commandUnderTest.run(canvasUnderTest, null);
+		commandUnderTest.run(canvasUnderTest, new LayerModel());
 		stampBitmapUnderTest.setPixel(0, 0, Color.CYAN);
 		stampBitmapUnderTest.setPixel(stampBitmapUnderTest.getWidth() - 1, stampBitmapUnderTest.getHeight() - 1,
 				Color.GREEN);
 		PaintroidAsserts.assertBitmapEquals(stampBitmapUnderTest, canvasBitmapUnderTest);
-		assertNull("Stamp bitmap not recycled.", ((BaseCommand) commandUnderTest).bitmap);
-		assertNotNull("Bitmap not stored", ((BaseCommand) commandUnderTest).fileToStoredBitmap);
+		assertNull("Stamp bitmap not recycled.", commandUnderTest.getBitmap());
+		assertNotNull("Bitmap not stored", commandUnderTest.getFileToStoredBitmap());
+	}
+
+	@Test
+	public void testFreeResources() throws Exception {
+		File cacheDir = InstrumentationRegistry.getInstrumentation().getTargetContext().getCacheDir();
+		File storedBitmap = new File(cacheDir, "test");
+
+		assertFalse(storedBitmap.exists());
+
+		commandUnderTest.setFileToStoredBitmap(storedBitmap);
+		commandUnderTest.freeResources();
+		assertNull(commandUnderTest.getBitmap());
+
+		File restoredBitmap = commandUnderTest.getFileToStoredBitmap();
+		assertFalse("bitmap not deleted", restoredBitmap.exists());
+		if (restoredBitmap.exists()) {
+			assertTrue(restoredBitmap.delete());
+		}
+
+		assertTrue(storedBitmap.createNewFile());
+		assertTrue(storedBitmap.exists());
+		commandUnderTest.freeResources();
+		assertFalse(storedBitmap.exists());
+		assertNull(commandUnderTest.getBitmap());
+	}
+
+	@Test
+	public void testStoreBitmap() {
+		File storedBitmap = null;
+		try {
+			Bitmap bitmapCopy = canvasBitmapUnderTest.copy(canvasBitmapUnderTest.getConfig(), canvasBitmapUnderTest.isMutable());
+			commandUnderTest.storeBitmap(bitmapCopy, bitmapCopy.getWidth(), bitmapCopy.getHeight());
+
+			storedBitmap = commandUnderTest.getFileToStoredBitmap();
+			assertNotNull(storedBitmap);
+			assertNotNull(storedBitmap.getAbsolutePath());
+			Bitmap restoredBitmap = BitmapFactory.decodeFile(storedBitmap.getAbsolutePath());
+			PaintroidAsserts.assertBitmapEquals("Loaded file doesn't match saved file.", restoredBitmap, bitmapCopy);
+		} finally {
+			assertNotNull("Failed to delete the stored bitmap(0)", storedBitmap);
+			assertTrue("Failed to delete the stored bitmap(1)", storedBitmap.delete());
+		}
 	}
 }

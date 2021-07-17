@@ -39,7 +39,7 @@ class CutCommand(
         alpha = 0
     }
 
-    override fun run(canvas: Canvas, layerModel: LayerContracts.Model?) {
+    override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         canvas.save()
         canvas.translate(toolPosition.x.toFloat(), toolPosition.y.toFloat())
         canvas.rotate(boxRotation)

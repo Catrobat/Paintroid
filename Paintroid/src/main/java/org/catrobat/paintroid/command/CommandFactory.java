@@ -21,13 +21,14 @@ package org.catrobat.paintroid.command;
 
 import android.graphics.Bitmap;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
+import org.catrobat.paintroid.command.serialization.SerializablePath;
+import org.catrobat.paintroid.command.serialization.SerializableTypeface;
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable;
 
 import java.util.List;
@@ -66,9 +67,9 @@ public interface CommandFactory {
 
 	Command createGeometricFillCommand(ShapeDrawable shapeDrawable, Point position, RectF box, float boxRotation, Paint paint);
 
-	Command createPathCommand(Paint paint, Path path);
+	Command createPathCommand(Paint paint, SerializablePath path);
 
-	Command createTextToolCommand(String[] multilineText, Paint textPaint, int boxOffset, float boxWidth, float boxHeight, PointF toolPosition, float boxRotation);
+	Command createTextToolCommand(String[] multilineText, Paint textPaint, int boxOffset, float boxWidth, float boxHeight, PointF toolPosition, float boxRotation, SerializableTypeface typeFaceInfo);
 
 	Command createResizeCommand(int newWidth, int newHeight);
 

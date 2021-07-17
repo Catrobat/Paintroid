@@ -223,8 +223,8 @@ public class BrushToolTest {
 		ArgumentCaptor<PathCommand> argument = ArgumentCaptor.forClass(PathCommand.class);
 		verify(commandManager).addCommand(argument.capture());
 		PathCommand command = argument.getValue();
-		assertPathEquals(pathStub, command.path);
-		assertPaintEquals(this.paint, command.paint);
+		assertPathEquals(pathStub, command.getPath());
+		assertPaintEquals(this.paint, command.getPaint());
 	}
 
 	@Test
@@ -253,8 +253,8 @@ public class BrushToolTest {
 		ArgumentCaptor<PointCommand> argument = ArgumentCaptor.forClass(PointCommand.class);
 		verify(commandManager).addCommand(argument.capture());
 		PointCommand command = argument.getValue();
-		assertEquals(tap, command.point);
-		assertPaintEquals(paint, command.paint);
+		assertEquals(tap, command.getPoint());
+		assertPaintEquals(paint, command.getPaint());
 	}
 
 	@Test
@@ -275,8 +275,8 @@ public class BrushToolTest {
 		ArgumentCaptor<PointCommand> argument = ArgumentCaptor.forClass(PointCommand.class);
 		verify(commandManager).addCommand(argument.capture());
 		PointCommand command = argument.getValue();
-		assertEquals(tap1, command.point);
-		assertPaintEquals(paint, command.paint);
+		assertEquals(tap1, command.getPoint());
+		assertPaintEquals(paint, command.getPaint());
 	}
 
 	@Test

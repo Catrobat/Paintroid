@@ -77,7 +77,7 @@ public class PointCommandTest {
 	@Test
 	public void testRun() {
 		bitmapUnderTest.setPixel((int) pointUnderTest.x, (int) pointUnderTest.y, paintUnderTest.getColor());
-		commandUnderTest.run(canvasUnderTest, null);
+		commandUnderTest.run(canvasUnderTest, new LayerModel());
 		PaintroidAsserts.assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest);
 	}
 
@@ -85,7 +85,7 @@ public class PointCommandTest {
 	public void testRunOutOfBounds() {
 		pointUnderTest = new PointF(canvasBitmapUnderTest.getHeight() + 1, canvasBitmapUnderTest.getWidth() + 1);
 		commandUnderTest = new PointCommand(paintUnderTest, pointUnderTest);
-		commandUnderTest.run(canvasUnderTest, null);
+		commandUnderTest.run(canvasUnderTest, new LayerModel());
 		PaintroidAsserts.assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest);
 	}
 }

@@ -105,6 +105,7 @@ class StampTool(
     }
 
     private fun pasteBoxContent() {
+        drawingBitmap ?: return
         val command = commandFactory.createStampCommand(
             drawingBitmap,
             toolPosition,

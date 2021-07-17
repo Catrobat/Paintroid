@@ -20,10 +20,10 @@ package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Path
 import android.graphics.PointF
 import androidx.annotation.VisibleForTesting
 import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolPaint
@@ -56,7 +56,7 @@ open class BrushTool(
 
     @VisibleForTesting
     @JvmField
-    var pathToDraw: Path = Path()
+    var pathToDraw: SerializablePath = SerializablePath()
     private var initialEventCoordinate: PointF? = null
     private var pathInsideBitmap = false
     private val drawToolMovedDistance = PointF(0f, 0f)

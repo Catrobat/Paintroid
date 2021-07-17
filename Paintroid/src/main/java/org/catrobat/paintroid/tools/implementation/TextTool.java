@@ -30,6 +30,7 @@ import android.util.Log;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.command.serialization.SerializableTypeface;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
@@ -284,8 +285,9 @@ public class TextTool extends BaseToolWithRectangleShape {
 	public void onClickOnButton() {
 		highlightBox();
 		PointF toolPosition = new PointF(this.toolPosition.x, this.toolPosition.y);
+		SerializableTypeface typeFaceInfo = new SerializableTypeface(font, bold, underlined, italic, textPaint.getTextSize(), textPaint.getTextSkewX());
 		Command command = commandFactory.createTextToolCommand(getMultilineText(), textPaint, BOX_OFFSET, boxWidth,
-				boxHeight, toolPosition, boxRotation);
+				boxHeight, toolPosition, boxRotation, typeFaceInfo);
 		commandManager.addCommand(command);
 	}
 

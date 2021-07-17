@@ -28,6 +28,8 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import org.catrobat.paintroid.command.serialization.SerializablePath;
+
 public class CommonFactory {
 	public Canvas createCanvas() {
 		return new Canvas();
@@ -51,6 +53,10 @@ public class CommonFactory {
 
 	public Path createPath(Path path) {
 		return new Path(path);
+	}
+
+	public SerializablePath createSerializablePath(SerializablePath path) {
+		return new SerializablePath(path);
 	}
 
 	public RectF createRectF(RectF rect) {

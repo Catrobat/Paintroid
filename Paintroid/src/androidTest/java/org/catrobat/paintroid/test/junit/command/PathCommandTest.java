@@ -87,7 +87,7 @@ public class PathCommandTest {
 
 		commandUnderTest = new PathCommand(paintUnderTest, path);
 
-		commandUnderTest.run(canvasUnderTest, null);
+		commandUnderTest.run(canvasUnderTest, new LayerModel());
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class PathCommandTest {
 		for (int heightIndex = 0; heightIndex < height; heightIndex++) {
 			bitmapUnderTest.setPixel(1, heightIndex, color);
 		}
-		commandUnderTest.run(canvasUnderTest, null);
+		commandUnderTest.run(canvasUnderTest, new LayerModel());
 		PaintroidAsserts.assertBitmapEquals(bitmapUnderTest, canvasBitmapUnderTest);
 	}
 }

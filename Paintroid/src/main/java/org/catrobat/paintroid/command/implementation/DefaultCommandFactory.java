@@ -21,7 +21,6 @@ package org.catrobat.paintroid.command.implementation;
 
 import android.graphics.Bitmap;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -30,6 +29,8 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection;
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection;
+import org.catrobat.paintroid.command.serialization.SerializablePath;
+import org.catrobat.paintroid.command.serialization.SerializableTypeface;
 import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable;
 import org.catrobat.paintroid.tools.helper.Conversion;
@@ -137,15 +138,15 @@ public class DefaultCommandFactory implements CommandFactory {
 	}
 
 	@Override
-	public Command createPathCommand(Paint paint, Path path) {
-		return new PathCommand(commonFactory.createPaint(paint), commonFactory.createPath(path));
+	public Command createPathCommand(Paint paint, SerializablePath path) {
+		return new PathCommand(commonFactory.createPaint(paint), commonFactory.createSerializablePath(path));
 	}
 
 	@Override
-	public Command createTextToolCommand(String[] multilineText, Paint textPaint, int boxOffset, float boxWidth, float boxHeight, PointF toolPosition, float boxRotation) {
+	public Command createTextToolCommand(String[] multilineText, Paint textPaint, int boxOffset, float boxWidth, float boxHeight, PointF toolPosition, float boxRotation, SerializableTypeface typeFaceInfo) {
 		return new TextToolCommand(multilineText, commonFactory.createPaint(textPaint),
 				boxOffset, boxWidth, boxHeight, commonFactory.createPointF(toolPosition),
-				boxRotation);
+				boxRotation, typeFaceInfo);
 	}
 
 	@Override

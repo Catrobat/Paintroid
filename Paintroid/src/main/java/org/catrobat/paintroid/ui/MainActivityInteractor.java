@@ -46,7 +46,7 @@ public class MainActivityInteractor implements MainActivityContracts.Interactor 
 	}
 
 	@Override
-	public void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri, Context context, boolean scaling) {
-		new LoadImageAsync(callback, requestCode, uri, context, scaling).execute();
+	public void loadFile(LoadImageAsync.LoadImageCallback callback, int requestCode, Uri uri, Context context, boolean scaling, Workspace workspace) {
+		new LoadImageAsync(callback, requestCode, uri, context, scaling, workspace).execute();
 	}
 }

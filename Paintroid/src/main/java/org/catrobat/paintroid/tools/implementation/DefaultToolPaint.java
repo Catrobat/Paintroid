@@ -44,7 +44,11 @@ public class DefaultToolPaint implements ToolPaint {
 	public DefaultToolPaint(Context context) {
 		Resources resources = context.getResources();
 		Bitmap checkerboard = BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg);
-		checkeredShader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		if (checkerboard != null) {
+			checkeredShader = new BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		} else {
+			checkeredShader = null;
+		}
 
 		bitmapPaint.reset();
 		bitmapPaint.setAntiAlias(true);
@@ -131,5 +135,11 @@ public class DefaultToolPaint implements ToolPaint {
 	@Override
 	public Shader getCheckeredShader() {
 		return checkeredShader;
+	}
+
+	public static boolean arePaintEquals(Paint object, Paint other) {
+		return object.getColor() == other.getColor() && object.getStrokeCap() == other.getStrokeCap()
+				&& object.getStrokeCap() == other.getStrokeCap() && object.isAntiAlias() == other.isAntiAlias()
+				&& object.getStrokeJoin() == other.getStrokeJoin() && object.getStyle() == other.getStyle();
 	}
 }

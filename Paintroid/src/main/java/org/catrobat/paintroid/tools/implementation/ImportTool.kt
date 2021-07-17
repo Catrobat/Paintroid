@@ -67,6 +67,7 @@ class ImportTool(
     }
 
     override fun onClickOnButton() {
+        drawingBitmap ?: return
         highlightBox()
         val command = commandFactory.createStampCommand(
             drawingBitmap,

@@ -23,13 +23,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint.Cap;
 import android.graphics.Paint.Style;
-import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
+import org.catrobat.paintroid.command.serialization.SerializablePath;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
@@ -51,7 +51,7 @@ public class CursorTool extends BaseToolWithShape {
 	private static final int CURSOR_LINES = 4;
 
 	@VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
-	public Path pathToDraw;
+	public SerializablePath pathToDraw;
 	private boolean pointInsideBitmap;
 	private int cursorToolPrimaryShapeColor;
 	@VisibleForTesting
@@ -65,7 +65,7 @@ public class CursorTool extends BaseToolWithShape {
 		super(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
 		this.brushToolOptionsView = brushToolOptionsView;
 
-		pathToDraw = new Path();
+		pathToDraw = new SerializablePath();
 		pathToDraw.incReserve(1);
 		cursorToolPrimaryShapeColor = contextCallback.getColor(R.color.pocketpaint_main_cursor_tool_inactive_primary_color);
 		cursorToolSecondaryShapeColor = Color.LTGRAY;

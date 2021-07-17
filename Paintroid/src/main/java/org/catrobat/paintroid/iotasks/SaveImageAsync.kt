@@ -138,13 +138,13 @@ class SaveImageAsync(
                     FileIO.uriFileOra = imageUri
                     imageUri
                 }
+            } else if (FileIO.ending == "." + Constants.CATROBAT_IMAGE_ENDING) {
+                workspace.getCommandSerializationHelper().writeToFile(fileName)
             } else {
                 getImageUri(callback, bitmap)
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             Log.d(TAG, "Can't save image file", e)
-        } catch (e: NullPointerException) {
-            Log.e(TAG, "Can't load image file", e)
         }
         return null
     }
