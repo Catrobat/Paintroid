@@ -25,6 +25,7 @@ import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
+import org.catrobat.paintroid.model.CommandManagerModel;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -77,6 +78,15 @@ public class DefaultCommandManager implements CommandManager {
 		command.run(canvas, layerModel);
 
 		notifyCommandExecuted();
+	}
+
+	@Override
+	public void loadCommandsCatrobatImage(CommandManagerModel model) {
+		setInitialStateCommand(model.getInitialCommand());
+		reset();
+		for (Command command: model.getCommands()) {
+			addCommand(command);
+		}
 	}
 
 	@Override
@@ -147,5 +157,16 @@ public class DefaultCommandManager implements CommandManager {
 		for (CommandListener listener : commandListeners) {
 			listener.commandPostExecute();
 		}
+	}
+
+	@Override
+	public CommandManagerModel getCommandManagerModel() {
+		ArrayList<Command> commandList = new ArrayList<>();
+		Iterator<Command> it = redoCommandList.descendingIterator();
+		while (it.hasNext()) {
+			commandList.add(it.next());
+		}
+		commandList.addAll(undoCommandList);
+		return new CommandManagerModel(initialStateCommand, commandList);
 	}
 }

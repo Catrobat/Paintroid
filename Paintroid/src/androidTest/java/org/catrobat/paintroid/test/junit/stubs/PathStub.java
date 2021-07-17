@@ -21,14 +21,16 @@ package org.catrobat.paintroid.test.junit.stubs;
 
 import android.graphics.Path;
 
+import org.catrobat.paintroid.command.serialization.SerializablePath;
+
 import static org.mockito.Mockito.mock;
 
-public final class PathStub extends Path {
-	private Path stub;
+public final class PathStub extends SerializablePath {
+	private SerializablePath stub;
 
 	public PathStub() {
 		super();
-		stub = mock(Path.class);
+		stub = mock(SerializablePath.class);
 	}
 
 	public Path getStub() {

@@ -394,7 +394,7 @@ public class MainActivityPresenterTest {
 		when(intent.getData()).thenReturn(uri);
 
 		presenter.handleActivityResult(REQUEST_CODE_LOAD_PICTURE, Activity.RESULT_OK, intent);
-		verify(interactor).loadFile(presenter, LOAD_IMAGE_DEFAULT, uri, context, false);
+		verify(interactor).loadFile(presenter, LOAD_IMAGE_DEFAULT, uri, context, false, workspace);
 	}
 
 	@Test
@@ -609,7 +609,7 @@ public class MainActivityPresenterTest {
 
 		verify(model).setOpenedFromCatroid(true);
 		verify(model).setSavedPictureUri(uri);
-		verify(interactor).loadFile(presenter, LOAD_IMAGE_CATROID, uri, context, false);
+		verify(interactor).loadFile(presenter, LOAD_IMAGE_CATROID, uri, context, false, workspace);
 	}
 
 	@Test

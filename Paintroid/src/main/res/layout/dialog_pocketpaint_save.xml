@@ -68,7 +68,7 @@
         <Spinner
             android:id="@+id/pocketpaint_save_dialog_spinner"
             style="@style/PocketpaintSpinnerTheme"
-            android:layout_width="117dp"
+            android:layout_width="157dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="23dp"
             android:textSize="14sp"
@@ -81,7 +81,7 @@
             android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="96dp"
+            android:layout_marginStart="56dp"
             android:layout_marginTop="25dp"
             android:layout_marginBottom="11dp"
             android:layout_toEndOf="@+id/pocketpaint_save_dialog_spinner"
@@ -89,7 +89,7 @@
             android:src="@drawable/ic_pocketpaint_save_info" />
 
         <View
-            android:layout_width="111dp"
+            android:layout_width="151dp"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="8dp"

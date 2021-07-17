@@ -24,12 +24,12 @@ import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 
 class SprayCommand(
-    private val sprayedPoints: FloatArray,
-    private val paint: Paint
+    val sprayedPoints: FloatArray,
+    val paint: Paint
 ) : Command {
 
-    override fun run(canvas: Canvas?, layerModel: LayerContracts.Model?) {
-        canvas?.drawPoints(sprayedPoints, paint)
+    override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
+        canvas.drawPoints(sprayedPoints, paint)
     }
 
     override fun freeResources() {

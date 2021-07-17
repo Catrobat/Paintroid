@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.test.command.implementation;
 
+import android.graphics.Canvas;
+
 import org.catrobat.paintroid.command.implementation.SetDimensionCommand;
 import org.catrobat.paintroid.model.LayerModel;
 import org.junit.Test;
@@ -33,7 +35,7 @@ public class SetDimensionCommandTest {
 		LayerModel layerModel = new LayerModel();
 		SetDimensionCommand command = new SetDimensionCommand(3, 4);
 
-		command.run(null, layerModel);
+		command.run(new Canvas(), layerModel);
 
 		assertThat(layerModel.getWidth(), is(3));
 		assertThat(layerModel.getHeight(), is(4));
