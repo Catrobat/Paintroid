@@ -35,7 +35,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.VisibleForTesting
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
-import org.catrobat.paintroid.common.Constants
+import org.catrobat.paintroid.common.INVALID_RESOURCE_ID
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ContextCallback.ScreenOrientation
 import org.catrobat.paintroid.tools.ToolPaint
@@ -660,7 +660,7 @@ abstract class BaseToolWithRectangleShape(
 
     private fun createOverlayDrawable() {
         val overlayDrawableResource = toolType.overlayDrawableResource
-        if (overlayDrawableResource != Constants.INVALID_RESOURCE_ID) {
+        if (overlayDrawableResource != INVALID_RESOURCE_ID) {
             overlayDrawable = contextCallback.getDrawable(overlayDrawableResource)
             overlayDrawable?.isFilterBitmap = false
         }

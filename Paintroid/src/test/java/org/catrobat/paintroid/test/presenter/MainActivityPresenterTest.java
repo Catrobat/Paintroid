@@ -57,23 +57,23 @@ import java.io.File;
 
 import androidx.core.view.GravityCompat;
 
-import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
-import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_IMPORTPNG;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOAD_NEW;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_NEW_EMPTY;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.CREATE_FILE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.LOAD_IMAGE_CATROID;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.LOAD_IMAGE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.LOAD_IMAGE_IMPORT_PNG;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.REQUEST_CODE_INTRO;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.REQUEST_CODE_LOAD_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.RESULT_INTRO_MW_NOT_SUPPORTED;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_FINISH;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_LOAD_NEW;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_NEW_EMPTY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -861,7 +861,7 @@ public class MainActivityPresenterTest {
 		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap, false);
 		when(toolController.getToolType()).thenReturn(ToolType.IMPORTPNG);
 
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, returnValue);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, uri, returnValue);
 
 		verify(toolController).setBitmapFromSource(bitmap);
 		verifyZeroInteractions(commandManager);
@@ -873,7 +873,7 @@ public class MainActivityPresenterTest {
 		Bitmap bitmap = mock(Bitmap.class);
 		BitmapReturnValue returnValue = new BitmapReturnValue(null, bitmap, false);
 
-		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORTPNG, uri, returnValue);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, uri, returnValue);
 
 		verify(toolController, never()).setBitmapFromSource(any(Bitmap.class));
 		verifyZeroInteractions(commandManager);

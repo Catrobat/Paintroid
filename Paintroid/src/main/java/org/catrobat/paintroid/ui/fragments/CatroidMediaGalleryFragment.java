@@ -43,7 +43,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import static org.catrobat.paintroid.common.Constants.MEDIA_GALLEY_URL;
+import static org.catrobat.paintroid.common.ConstantsKt.MEDIA_GALLEY_URL;
 
 public class CatroidMediaGalleryFragment extends Fragment implements MediaGalleryWebViewClient.WebClientCallback {
 	private WebView webView;

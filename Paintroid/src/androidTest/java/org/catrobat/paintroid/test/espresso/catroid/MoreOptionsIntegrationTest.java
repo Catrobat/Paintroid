@@ -24,7 +24,6 @@ import android.graphics.Color;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
@@ -35,6 +34,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.catrobat.paintroid.common.ConstantsKt.PAINTROID_PICTURE_NAME;
+import static org.catrobat.paintroid.common.ConstantsKt.PAINTROID_PICTURE_PATH;
 import static org.junit.Assert.assertTrue;
 
 import androidx.test.espresso.intent.rule.IntentsTestRule;
@@ -69,8 +70,8 @@ public class MoreOptionsIntegrationTest {
 	@Before
 	public void setUp() {
 		Intent intent = new Intent();
-		intent.putExtra(Constants.PAINTROID_PICTURE_PATH, "");
-		intent.putExtra(Constants.PAINTROID_PICTURE_NAME, "testFile");
+		intent.putExtra(PAINTROID_PICTURE_PATH, "");
+		intent.putExtra(PAINTROID_PICTURE_NAME, "testFile");
 		launchActivityRule.launchActivity(intent);
 	}
 
