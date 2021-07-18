@@ -2,8 +2,8 @@ package org.catrobat.paintroid;
 
 import android.content.SharedPreferences;
 
-import static org.catrobat.paintroid.common.Constants.IMAGE_NUMBER_SHARED_PREFERENCES_TAG;
-import static org.catrobat.paintroid.common.Constants.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.IMAGE_NUMBER_SHARED_PREFERENCES_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG;
 
 public class UserPreferences {
 	SharedPreferences preferences;

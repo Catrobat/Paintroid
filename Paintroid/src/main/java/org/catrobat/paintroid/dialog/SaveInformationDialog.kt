@@ -37,8 +37,8 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.Constants.IS_NO_FILE
-import org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+import org.catrobat.paintroid.common.IS_NO_FILE
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
 
 private const val STANDARD_FILE_NAME = "image"
 private const val STANDARD_FILE_ENDING = ".png"

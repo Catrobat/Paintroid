@@ -38,8 +38,6 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.WelcomeActivity;
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog;
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
-import org.catrobat.paintroid.common.Constants;
-import org.catrobat.paintroid.common.MainActivityConstants;
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
@@ -77,7 +75,24 @@ import androidx.fragment.app.FragmentManager;
 import static android.app.Activity.RESULT_OK;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.ConstantsKt.ABOUT_DIALOG_FRAGMENT_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.CATROID_MEDIA_GALLERY_FRAGMENT_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.COLOR_PICKER_DIALOG_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.FEEDBACK_DIALOG_FRAGMENT_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.JPG_INFORMATION_DIALOG_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.LIKE_US_DIALOG_FRAGMENT_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.LOAD_DIALOG_FRAGMENT_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.ORA_INFORMATION_DIALOG_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.OVERWRITE_INFORMATION_DIALOG_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.PAINTROID_PICTURE_PATH;
+import static org.catrobat.paintroid.common.ConstantsKt.PERMISSION_DIALOG_FRAGMENT_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.PNG_INFORMATION_DIALOG_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.RATE_US_DIALOG_FRAGMENT_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.SAVE_DIALOG_FRAGMENT_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.SAVE_INFORMATION_DIALOG_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.SAVE_QUESTION_FRAGMENT_TAG;
+import static org.catrobat.paintroid.common.ConstantsKt.SCALE_IMAGE_FRAGMENT_TAG;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
 
 public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	private MainActivity mainActivity;
@@ -91,16 +106,16 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void showColorPickerDialog() {
-		if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null) {
+		if (findFragmentByTag(COLOR_PICKER_DIALOG_TAG) == null) {
 			ColorPickerDialog dialog = ColorPickerDialog.newInstance(toolReference.get().getDrawPaint().getColor());
 			setupColorPickerDialogListeners(dialog);
-			showDialogFragmentSafely(dialog, Constants.COLOR_PICKER_DIALOG_TAG);
+			showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG);
 		}
 	}
 
 	@Override
 	public void showCatroidMediaGallery() {
-		if (findFragmentByTag(Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG) == null) {
+		if (findFragmentByTag(CATROID_MEDIA_GALLERY_FRAGMENT_TAG) == null) {
 			CatroidMediaGalleryFragment fragment = new CatroidMediaGalleryFragment();
 			fragment.setMediaGalleryListener(new CatroidMediaGalleryFragment.MediaGalleryListener() {
 				@Override
@@ -118,7 +133,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 					dismissIndeterminateProgressDialog();
 				}
 			});
-			showFragment(fragment, Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG);
+			showFragment(fragment, CATROID_MEDIA_GALLERY_FRAGMENT_TAG);
 		}
 	}
 
@@ -229,49 +244,49 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void showAboutDialog() {
 		AboutDialog about = AboutDialog.newInstance();
-		about.show(mainActivity.getSupportFragmentManager(), Constants.ABOUT_DIALOG_FRAGMENT_TAG);
+		about.show(mainActivity.getSupportFragmentManager(), ABOUT_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showLikeUsDialog() {
 		LikeUsDialog likeUsDialog = LikeUsDialog.newInstance();
-		likeUsDialog.show(mainActivity.getSupportFragmentManager(), Constants.LIKE_US_DIALOG_FRAGMENT_TAG);
+		likeUsDialog.show(mainActivity.getSupportFragmentManager(), LIKE_US_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showRateUsDialog() {
 		RateUsDialog rateUsDialog = RateUsDialog.newInstance();
-		rateUsDialog.show(mainActivity.getSupportFragmentManager(), Constants.RATE_US_DIALOG_FRAGMENT_TAG);
+		rateUsDialog.show(mainActivity.getSupportFragmentManager(), RATE_US_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showFeedbackDialog() {
 		FeedbackDialog feedbackDialog = FeedbackDialog.newInstance();
-		feedbackDialog.show(mainActivity.getSupportFragmentManager(), Constants.FEEDBACK_DIALOG_FRAGMENT_TAG);
+		feedbackDialog.show(mainActivity.getSupportFragmentManager(), FEEDBACK_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showOverwriteDialog(int permissionCode, boolean isExport) {
 		OverwriteDialog overwriteDialog = OverwriteDialog.newInstance(permissionCode, isExport);
-		overwriteDialog.show(mainActivity.getSupportFragmentManager(), Constants.OVERWRITE_INFORMATION_DIALOG_TAG);
+		overwriteDialog.show(mainActivity.getSupportFragmentManager(), OVERWRITE_INFORMATION_DIALOG_TAG);
 	}
 
 	@Override
 	public void showPngInformationDialog() {
 		PngInfoDialog pngInfoDialog = new PngInfoDialog();
-		pngInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.PNG_INFORMATION_DIALOG_TAG);
+		pngInfoDialog.show(mainActivity.getSupportFragmentManager(), PNG_INFORMATION_DIALOG_TAG);
 	}
 
 	@Override
 	public void showJpgInformationDialog() {
 		JpgInfoDialog jpgInfoDialog = new JpgInfoDialog();
-		jpgInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.JPG_INFORMATION_DIALOG_TAG);
+		jpgInfoDialog.show(mainActivity.getSupportFragmentManager(), JPG_INFORMATION_DIALOG_TAG);
 	}
 
 	@Override
 	public void showOraInformationDialog() {
 		OraInfoDialog oraInfoDialog = new OraInfoDialog();
-		oraInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.ORA_INFORMATION_DIALOG_TAG);
+		oraInfoDialog.show(mainActivity.getSupportFragmentManager(), ORA_INFORMATION_DIALOG_TAG);
 	}
 
 	@Override
@@ -285,7 +300,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void showImageImportDialog() {
 		ImportImageDialog importImage = ImportImageDialog.newInstance();
-		importImage.show(mainActivity.getSupportFragmentManager(), Constants.ABOUT_DIALOG_FRAGMENT_TAG);
+		importImage.show(mainActivity.getSupportFragmentManager(), ABOUT_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
@@ -307,7 +322,7 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void returnToPocketCode(String path) {
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra(Constants.PAINTROID_PICTURE_PATH, path);
+		resultIntent.putExtra(PAINTROID_PICTURE_PATH, path);
 		mainActivity.setResult(RESULT_OK, resultIntent);
 		mainActivity.finish();
 	}
@@ -326,26 +341,26 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showSaveErrorDialog() {
 		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.WARNING,
 				R.string.dialog_error_sdcard_text, R.string.dialog_error_save_title);
-		showDialogFragmentSafely(dialog, Constants.SAVE_DIALOG_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, SAVE_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showLoadErrorDialog() {
 		AppCompatDialogFragment dialog = InfoDialog.newInstance(InfoDialog.DialogType.WARNING,
 				R.string.dialog_loading_image_failed_title, R.string.dialog_loading_image_failed_text);
-		showDialogFragmentSafely(dialog, Constants.LOAD_DIALOG_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, LOAD_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType permissionType, String[] permissions, int requestCode) {
 		AppCompatDialogFragment dialog = PermissionInfoDialog.newInstance(permissionType, permissions, requestCode);
-		showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, PERMISSION_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showRequestPermanentlyDeniedPermissionRationaleDialog() {
 		AppCompatDialogFragment dialog = PermanentDenialPermissionInfoDialog.newInstance(mainActivity.getPackageName());
-		showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, PERMISSION_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
@@ -382,25 +397,25 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showSaveBeforeFinishDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeFinishDialog.newInstance(
 				SaveBeforeFinishDialogType.FINISH);
-		showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showSaveBeforeNewImageDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeNewImageDialog.newInstance();
-		showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showSaveBeforeLoadImageDialog() {
 		AppCompatDialogFragment dialog = SaveBeforeLoadImageDialog.newInstance();
-		showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, SAVE_QUESTION_FRAGMENT_TAG);
 	}
 
 	@Override
 	public void showScaleImageRequestDialog(Uri uri, int requestCode) {
 		AppCompatDialogFragment dialog = ScaleImageOnLoadDialog.newInstance(uri, requestCode);
-		showDialogFragmentSafely(dialog, Constants.SCALE_IMAGE_FRAGMENT_TAG);
+		showDialogFragmentSafely(dialog, SCALE_IMAGE_FRAGMENT_TAG);
 	}
 
 	@SuppressLint("VisibleForTests")
@@ -432,12 +447,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 		}
 
 		boolean isStandard = false;
-		if (permissionCode == MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
+		if (permissionCode == PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
 			isStandard = true;
 		}
 
 		SaveInformationDialog saveInfoDialog = SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard, isExport);
-		saveInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.SAVE_INFORMATION_DIALOG_TAG);
+		saveInfoDialog.show(mainActivity.getSupportFragmentManager(), SAVE_INFORMATION_DIALOG_TAG);
 	}
 
 	public String getFileName(Uri uri) {
@@ -483,12 +498,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 
 	@Override
 	public void restoreFragmentListeners() {
-		Fragment fragment = findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG);
+		Fragment fragment = findFragmentByTag(COLOR_PICKER_DIALOG_TAG);
 		if (fragment != null) {
 			setupColorPickerDialogListeners((ColorPickerDialog) fragment);
 		}
 
-		fragment = findFragmentByTag(Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG);
+		fragment = findFragmentByTag(CATROID_MEDIA_GALLERY_FRAGMENT_TAG);
 		if (fragment != null) {
 			setupCatroidMediaGalleryListeners((CatroidMediaGalleryFragment) fragment);
 		}

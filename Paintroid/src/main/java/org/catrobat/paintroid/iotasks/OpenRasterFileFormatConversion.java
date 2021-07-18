@@ -33,7 +33,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
-import org.catrobat.paintroid.common.Constants;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -57,6 +56,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import static org.catrobat.paintroid.common.ConstantsKt.MAX_LAYERS;
 
 //
 //Source:	https://www.openraster.org/baseline/file-layout-spec.html
@@ -259,7 +260,7 @@ public final class OpenRasterFileFormatConversion {
 			}
 			current = zipInput.getNextEntry();
 		}
-		if (bitmapList.isEmpty() || bitmapList.size() > Constants.MAX_LAYERS) {
+		if (bitmapList.isEmpty() || bitmapList.size() > MAX_LAYERS) {
 			throw new IOException("Bitmap list is wrong!");
 		}
 		return new BitmapReturnValue(bitmapList, null, false);
