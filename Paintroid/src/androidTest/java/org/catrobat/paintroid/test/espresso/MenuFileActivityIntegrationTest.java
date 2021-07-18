@@ -35,7 +35,6 @@ import android.provider.MediaStore;
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
@@ -59,6 +58,7 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
+import static org.catrobat.paintroid.common.ConstantsKt.TEMP_PICTURE_NAME;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -523,7 +523,7 @@ public class MenuFileActivityIntegrationTest {
 		onData(allOf(is(instanceOf(String.class)),
 				is("png"))).inRoot(isPlatformPopup()).perform(click());
 		onView(withId(R.id.pocketpaint_image_name_save_text))
-				.perform(replaceText(Constants.TEMP_PICTURE_NAME));
+				.perform(replaceText(TEMP_PICTURE_NAME));
 
 		onView(withText(R.string.save_button_text))
 				.perform(click());
@@ -543,7 +543,7 @@ public class MenuFileActivityIntegrationTest {
 		onData(allOf(is(instanceOf(String.class)),
 				is("jpg"))).inRoot(isPlatformPopup()).perform(click());
 		onView(withId(R.id.pocketpaint_image_name_save_text))
-				.perform(replaceText(Constants.TEMP_PICTURE_NAME));
+				.perform(replaceText(TEMP_PICTURE_NAME));
 
 		onView(withText(R.string.save_button_text))
 				.perform(click());

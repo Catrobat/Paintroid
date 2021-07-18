@@ -22,7 +22,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID
+import org.catrobat.paintroid.common.INVALID_RESOURCE_ID
 import org.catrobat.paintroid.tools.Tool.StateChange
 import java.util.EnumSet
 

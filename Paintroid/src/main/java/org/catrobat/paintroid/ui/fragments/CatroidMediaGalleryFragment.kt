@@ -35,7 +35,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
 import com.nostra13.universalimageloader.core.assist.FailReason
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.Constants
+import org.catrobat.paintroid.common.MEDIA_GALLEY_URL
 import org.catrobat.paintroid.web.MediaGalleryWebViewClient
 import org.catrobat.paintroid.web.MediaGalleryWebViewClient.WebClientCallback
 
@@ -61,7 +61,7 @@ class CatroidMediaGalleryFragment : Fragment(), WebClientCallback {
             settings.javaScriptEnabled = true
             webViewClient = MediaGalleryWebViewClient(this@CatroidMediaGalleryFragment)
             settings.userAgentString = "Catrobat"
-            loadUrl(Constants.MEDIA_GALLEY_URL)
+            loadUrl(MEDIA_GALLEY_URL)
             setDownloadListener { url, _, _, _, _ ->
                 val imageLoader = ImageLoader.getInstance()
                 imageLoader.init(ImageLoaderConfiguration.createDefault(activity))

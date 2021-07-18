@@ -48,7 +48,8 @@ import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandManager
 import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
 import org.catrobat.paintroid.common.CommonFactory
-import org.catrobat.paintroid.common.Constants
+import org.catrobat.paintroid.common.PAINTROID_PICTURE_NAME
+import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
@@ -244,8 +245,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             presenterMain.initializeFromCleanState(null, null)
         } else if (savedInstanceState == null) {
             val intent = intent
-            val picturePath = intent.getStringExtra(Constants.PAINTROID_PICTURE_PATH)
-            val pictureName = intent.getStringExtra(Constants.PAINTROID_PICTURE_NAME)
+            val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
+            val pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME)
             presenterMain.initializeFromCleanState(picturePath, pictureName)
         } else {
             val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)

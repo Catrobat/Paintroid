@@ -53,7 +53,11 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
-import static org.catrobat.paintroid.common.Constants.MAX_LAYERS;
+import static org.catrobat.paintroid.common.ConstantsKt.IS_JPG;
+import static org.catrobat.paintroid.common.ConstantsKt.IS_NO_FILE;
+import static org.catrobat.paintroid.common.ConstantsKt.IS_ORA;
+import static org.catrobat.paintroid.common.ConstantsKt.IS_PNG;
+import static org.catrobat.paintroid.common.ConstantsKt.MAX_LAYERS;
 
 public final class FileIO {
 	public static String filename = "image";
@@ -325,22 +329,22 @@ public final class FileIO {
 
 	public static int checkIfDifferentFile(String filename) {
 		if (currentFileNamePng == null && currentFileNameJpg == null && currentFileNameOra == null) {
-			return Constants.IS_NO_FILE;
+			return IS_NO_FILE;
 		}
 
 		if (currentFileNameJpg != null && currentFileNameJpg.equals(filename)) {
-			return Constants.IS_JPG;
+			return IS_JPG;
 		}
 
 		if (currentFileNamePng != null && currentFileNamePng.equals(filename)) {
-			return Constants.IS_PNG;
+			return IS_PNG;
 		}
 
 		if (currentFileNameOra != null && currentFileNameOra.equals(filename)) {
-			return Constants.IS_ORA;
+			return IS_ORA;
 		}
 
-		return Constants.IS_NO_FILE;
+		return IS_NO_FILE;
 	}
 
 	public static int calculateSampleSize(int width, int height, int maxWidth, int maxHeight) {
