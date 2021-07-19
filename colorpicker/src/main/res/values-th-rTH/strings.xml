@@ -27,11 +27,11 @@
     <string name="color_hex">หลากหลาย</string>
     <string name="color_picker_apply">นำไปใช้</string>
     <string name="color_picker_cancel">ยกเลิก</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">ปัจจุบัน</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">ใหม่</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">ดูดสี</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">บันทึกการเปลี่ยนแปลงหรือไม่?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">คุณต้องบันทึกการเปลี่ยนแปลงหรือไม่?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">ไม่</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">ใช่</string>
 </resources>

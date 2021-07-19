@@ -27,11 +27,11 @@
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Uygula</string>
     <string name="color_picker_cancel">İptal et</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">mevcut</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">yeni</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Renk Seçici</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Değişiklikleri kaydet?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Değişiklikleri kaydetmek istiyor musunuz?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">hayır</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">evet</string>
 </resources>
