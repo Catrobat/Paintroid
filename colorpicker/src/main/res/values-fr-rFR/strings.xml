@@ -27,11 +27,11 @@
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Appliquer</string>
     <string name="color_picker_cancel">Annuler</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">actuel</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">nouveau</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipette</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Enregistrer changements?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Voulez-vous enregistrer vos modifications?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">pas de</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">oui</string>
 </resources>
