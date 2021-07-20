@@ -203,5 +203,18 @@
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_pipette"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_smudge"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_smudge"
+                android:contentDescription="@string/button_smudge"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_smudge"/>
+        </LinearLayout>
     </TableRow>
 </TableLayout>

@@ -187,6 +187,15 @@ enum class ToolType(
         R.id.pocketpaint_tools_spray_can,
         INVALID_RESOURCE_ID,
         true
+    ),
+    SMUDGE(
+        R.string.button_smudge,
+        R.string.help_content_smudge,
+        R.drawable.ic_pocketpaint_tool_smudge,
+        EnumSet.of(StateChange.ALL),
+        R.id.pocketpaint_tools_smudge,
+        INVALID_RESOURCE_ID,
+        true
     );
 
     fun shouldReactToStateChange(stateChange: StateChange): Boolean =

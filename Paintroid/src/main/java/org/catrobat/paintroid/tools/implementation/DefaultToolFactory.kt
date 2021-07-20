@@ -155,6 +155,14 @@ class DefaultToolFactory : ToolFactory {
                 commandManager,
                 DRAW_TIME_INIT
             )
+            ToolType.SMUDGE -> SmudgeTool(
+                DefaultBrushToolOptionsView(toolLayout),
+                contextCallback,
+                toolOptionsViewController,
+                toolPaint,
+                workspace,
+                commandManager
+            )
             else -> BrushTool(
                 DefaultBrushToolOptionsView(toolLayout),
                 contextCallback,
