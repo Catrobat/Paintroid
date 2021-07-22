@@ -108,6 +108,7 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+        animationsDisabled = true
     }
 }
 
@@ -126,6 +127,7 @@ dependencies {
     debugImplementation 'androidx.multidex:multidex:2.0.0'
 
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'com.jraska:falcon:2.2.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.18.3'
@@ -133,6 +135,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.1.1'
     androidTestImplementation 'org.mockito:mockito-android:2.18.3'
+    androidTestImplementation 'tools.fastlane:screengrab:2.1.0'
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'

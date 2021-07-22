@@ -19,7 +19,7 @@ opt_out_usage
 default_platform(:android)
 
 platform :android do
-    desc "Runs all the tests"
+	desc "Runs all the tests"
         lane :test do
         gradle(task: "test")
     end
@@ -41,4 +41,21 @@ platform :android do
             check_superseded_tracks:    'false',
         )
     end
+	
+	desc "upload Paintroid screenshots"
+	lane :upload_Screenshots_Paintroid do
+		upload_to_play_store(
+		  package_name:               'org.catrobat.paintroid',
+		  track:                      'alpha',
+		  json_key_data:              ENV['googlePlayJsonKey'],
+		  metadata_path:              './fastlane/metadata/android',
+		  skip_upload_apk:            'true', 
+		  skip_upload_metadata:       'true',
+		  skip_upload_images:         'true',
+		  skip_upload_screenshots:    'false',
+		  skip_upload_changelogs:     'true',
+		  validate_only:              'false',
+		  check_superseded_tracks:    'false',
+		)
+	end	  
 end

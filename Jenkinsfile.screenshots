@@ -1,0 +1,112 @@
+#!groovy
+def useDebugLabelParameter(defaultLabel){
+    return env.DEBUG_LABEL?.trim() ? env.DEBUG_LABEL : defaultLabel
+}
+
+pipeline {
+    environment {
+        BRANCH_NAME = 'Marketing_Screenshots'
+    }
+
+    parameters {
+        booleanParam name: 'UPLOAD_SCREENSHOTS', defaultValue: false, description: 'When selected the created screenshots will be uploaded to google play alpha.'
+    }
+
+    agent {
+        dockerfile {
+            filename 'Dockerfile.jenkins'
+            // 'docker build' would normally copy the whole build-dir to the container, changing the
+            // docker build directory avoids that overhead
+            dir 'docker'
+            // Pass the uid and the gid of the current user (jenkins-user) to the Dockerfile, so a
+            // corresponding user can be added. This is needed to provide the jenkins user inside
+            // the container for the ssh-agent to work.
+            // Another way would be to simply map the passwd file, but would spoil additional information
+            // Also hand in the group id of kvm to allow using /dev/kvm.
+            additionalBuildArgs '--build-arg USER_ID=$(id -u) --build-arg GROUP_ID=$(id -g) --build-arg KVM_GROUP_ID=$(getent group kvm | cut -d: -f3)'
+            // Ensure that each executor has its own gradle cache to not affect other builds
+            // that run concurrently.
+            args '--device /dev/kvm:/dev/kvm -m=6.5G'
+            label useDebugLabelParameter('LimitedEmulator')
+        }
+    }
+
+    options {
+        timeout(time: 2, unit: 'HOURS')
+        timestamps()
+        buildDiscarder(logRotator(numToKeepStr: '30'))
+    }
+
+    triggers {
+        issueCommentTrigger('.*(test this please|please test this).*')
+    }
+
+    stages {
+        stage('Build Debug-APK') {
+            steps {
+                sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
+                archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
+                plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
+            }
+        }
+
+        stage('Build Test-APK') {
+            steps {
+                sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleAndroidTest"
+                archiveArtifacts 'Paintroid/build/outputs/apk/androidTest/debug/*.apk'
+                plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
+            }
+        }
+
+        stage('Start emulator') {
+            steps {
+                sh './gradlew startEmulator'
+            }
+        }
+
+        stage('Take sreenshots') {
+            steps {
+                sh "fastlane screengrab"
+            }
+            post {
+                success {
+                    zip zipFile: 'metadata.zip', archive: false, dir: 'fastlane/metadata'
+                    archiveArtifacts artifacts: 'metadata.zip', fingerprint: true
+                }
+            }
+        }
+
+        stage('Review') {
+            //agent none
+            options {
+                timeout(time: 6, unit: 'HOURS')
+            }
+            steps {
+                script {
+                    env.APPROVE_DEPLOY = input message: 'User input required',
+                            parameters: [choice(name: 'Deploy', choices: 'no\nyes',
+                                    description: 'Please review the Screenshots! Do you want to deploy this to Google Play?')]
+                }
+            }
+        }
+
+        stage('Upload sreenshots to googlePlay') {
+            when {
+                allOf {
+                    environment name: 'UPLOAD_SCREENSHOTS', value: 'true'
+                    environment name: 'APPROVE_DEPLOY', value: 'yes'
+                }
+            }
+            steps {
+                sh 'fastlane android upload_Screenshots_Paintroid'
+            }
+        }
+    }
+
+    post {
+        always {
+            // clean workspace
+            deleteDir()
+        }
+    }
+}
