@@ -44,6 +44,7 @@ import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
 import org.catrobat.paintroid.dialog.AdvancedSettingsDialog;
+import org.catrobat.paintroid.dialog.CatrobatImageInfoDialog;
 import org.catrobat.paintroid.dialog.FeedbackDialog;
 import org.catrobat.paintroid.dialog.ImportImageDialog;
 import org.catrobat.paintroid.dialog.IndeterminateProgressDialog;
@@ -279,6 +280,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showOraInformationDialog() {
 		OraInfoDialog oraInfoDialog = new OraInfoDialog();
 		oraInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.ORA_INFORMATION_DIALOG_TAG);
+	}
+
+	@Override
+	public void showCatrobatInformationDialog() {
+		CatrobatImageInfoDialog catrobatInfoDialog = new CatrobatImageInfoDialog();
+		catrobatInfoDialog.show(mainActivity.getSupportFragmentManager(), Constants.CATROBAT_INFORMATION_DIALOG_TAG);
 	}
 
 	@Override

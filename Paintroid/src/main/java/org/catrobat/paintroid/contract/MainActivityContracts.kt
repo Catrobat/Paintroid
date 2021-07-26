@@ -66,6 +66,8 @@ interface MainActivityContracts {
 
         fun showOraInformationDialog()
 
+        fun showCatrobatInformationDialog()
+
         fun sendFeedback()
 
         fun startWelcomeActivity(@ActivityRequestCode requestCode: Int)
@@ -217,6 +219,8 @@ interface MainActivityContracts {
 
         fun showOraInformationDialog()
 
+        fun showCatrobatInformationDialog()
+
         fun sendFeedback()
 
         fun onNewImage()
@@ -311,7 +315,8 @@ interface MainActivityContracts {
             requestCode: Int,
             uri: Uri?,
             context: Context,
-            scaling: Boolean
+            scaling: Boolean,
+            workspace: Workspace
         )
     }
 

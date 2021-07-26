@@ -169,6 +169,8 @@
     <string name="pocketpaint_png_message_dialog">Lossless compression. Transparency is preserved.</string>
     <string name="pocketpaint_ora_title_dialog" translatable="false">Ora</string>
     <string name="pocketpaint_ora_message_dialog">This format remembers <b>layers</b>. <b>It can be opened by apps that support the Openraster format.</b></string>
+    <string name="pocketpaint_catrobat_title_dialog" translatable="false">catrobat-image</string>
+    <string name="pocketpaint_catrobat_message_dialog">Pocket Paint\'s native image format. This format remembers commands and layers.</string>
 
 
     <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>

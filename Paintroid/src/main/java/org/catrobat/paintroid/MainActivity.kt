@@ -46,6 +46,7 @@ import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.command.implementation.AsyncCommandManager
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandManager
+import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.common.Constants
 import org.catrobat.paintroid.contract.LayerContracts
@@ -160,7 +161,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
-    private fun init(receivedIntent: Intent) {
+    private fun init(receivedIntent: Intent): Boolean {
         var receivedUri = receivedIntent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
 
         receivedUri = receivedUri ?: receivedIntent.data
@@ -173,19 +174,25 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 .getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US))
         }
 
-        receivedUri ?: return
+        receivedUri ?: return true
         try {
             if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
-                OpenRasterFileFormatConversion.importOraFile(
-                    myContentResolver,
-                    receivedUri,
-                    applicationContext
-                ).bitmapList?.let { bitmapList ->
-                    commandManager.setInitialStateCommand(
-                        commandFactory.createInitCommand(
-                            bitmapList
+                try {
+                    commandManager.loadCommandsCatrobatImage(workspace.getCommandSerializationHelper().readFromFile(receivedUri))
+                    return false
+                } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
+                    Log.e(TAG, "Image might be an ora file instead")
+                    OpenRasterFileFormatConversion.importOraFile(
+                        myContentResolver,
+                        receivedUri,
+                        applicationContext
+                    ).bitmapList?.let { bitmapList ->
+                        commandManager.setInitialStateCommand(
+                            commandFactory.createInitCommand(
+                                bitmapList
+                            )
                         )
-                    )
+                    }
                 }
             } else {
                 FileIO.filename = "image"
@@ -201,6 +208,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         } catch (e: IOException) {
             Log.e("Can not read", "Unable to retrieve Bitmap from Uri")
         }
+        return true
     }
 
     private fun validateIntent(receivedIntent: Intent): Boolean {
@@ -224,10 +232,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         onCreateLayerMenu()
         onCreateDrawingSurface()
         presenterMain.onCreateTool()
+
         val receivedIntent = intent
         if (validateIntent(receivedIntent)) {
-            init(receivedIntent)
-            commandManager.reset()
+            if (init(receivedIntent)) {
+                commandManager.reset()
+            }
             model.savedPictureUri = null
             model.cameraImageUri = null
             workspace.resetPerspective()
@@ -333,7 +343,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         )
         perspective = Perspective(layerModel.width, layerModel.height)
         val listener = DefaultWorkspace.Listener { drawingSurface.refreshDrawingSurface() }
-        workspace = DefaultWorkspace(layerModel, perspective, listener)
+        workspace = DefaultWorkspace(layerModel, perspective, listener, CommandSerializationUtilities(this, commandManager))
         model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
