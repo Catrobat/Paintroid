@@ -286,6 +286,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             android.R.id.home -> presenterMain.backToPocketCodeClicked()
             R.id.pocketpaint_share_image_button -> presenterMain.shareImageClicked()
             R.id.pocketpaint_options_feedback -> presenterMain.sendFeedback()
+            R.id.pocketpaint_advanced_settings -> presenterMain.showAdvancedSettingsClicked()
             else -> return false
         }
         return true

@@ -56,6 +56,8 @@ interface MainActivityContracts {
 
         fun showFeedbackDialog()
 
+        fun showAdvancedSettingsDialog()
+
         fun showOverwriteDialog(permissionCode: Int, isExport: Boolean)
 
         fun showPngInformationDialog()
@@ -123,6 +125,8 @@ interface MainActivityContracts {
         fun rateUsClicked()
 
         fun showImageImportDialog()
+
+        fun setAntialiasingOnToolPaint()
 
         fun showCatroidMediaGallery()
 
@@ -201,6 +205,8 @@ interface MainActivityContracts {
 
         fun showAboutClicked()
 
+        fun showAdvancedSettingsClicked()
+
         fun showRateUsDialog()
 
         fun showFeedbackDialog()
@@ -276,6 +282,8 @@ interface MainActivityContracts {
         fun setLayerAdapter(layerAdapter: LayerAdapter)
 
         fun loadScaledImage(uri: Uri?, @ActivityRequestCode requestCode: Int)
+
+        fun setAntialiasingOnOkClicked()
     }
 
     interface Model {

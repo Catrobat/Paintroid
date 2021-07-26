@@ -43,6 +43,7 @@ import org.catrobat.paintroid.common.MainActivityConstants;
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode;
 import org.catrobat.paintroid.contract.MainActivityContracts;
 import org.catrobat.paintroid.dialog.AboutDialog;
+import org.catrobat.paintroid.dialog.AdvancedSettingsDialog;
 import org.catrobat.paintroid.dialog.CatrobatImageInfoDialog;
 import org.catrobat.paintroid.dialog.FeedbackDialog;
 import org.catrobat.paintroid.dialog.ImportImageDialog;
@@ -249,6 +250,12 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	public void showFeedbackDialog() {
 		FeedbackDialog feedbackDialog = FeedbackDialog.newInstance();
 		feedbackDialog.show(mainActivity.getSupportFragmentManager(), Constants.FEEDBACK_DIALOG_FRAGMENT_TAG);
+	}
+
+	@Override
+	public void showAdvancedSettingsDialog() {
+		AdvancedSettingsDialog advancedSettingsDialog = AdvancedSettingsDialog.newInstance();
+		advancedSettingsDialog.show(mainActivity.getSupportFragmentManager(), Constants.ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG);
 	}
 
 	@Override
@@ -504,5 +511,10 @@ public class MainActivityNavigator implements MainActivityContracts.Navigator {
 	@Override
 	public void rateUsClicked() {
 		openPlayStore(mainActivity.getPackageName());
+	}
+
+	@Override
+	public void setAntialiasingOnToolPaint() {
+		mainActivity.getToolPaint().setAntialiasing();
 	}
 }

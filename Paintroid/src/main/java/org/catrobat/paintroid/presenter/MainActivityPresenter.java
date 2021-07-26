@@ -279,6 +279,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
+	public void showAdvancedSettingsClicked() {
+		navigator.showAdvancedSettingsDialog();
+	}
+
+	@Override
 	public void showRateUsDialog() {
 		navigator.showRateUsDialog();
 	}
@@ -1073,5 +1078,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public Context getContext() {
 		return this.context;
+	}
+
+	@Override
+	public void setAntialiasingOnOkClicked() {
+		navigator.setAntialiasingOnToolPaint();
 	}
 }
