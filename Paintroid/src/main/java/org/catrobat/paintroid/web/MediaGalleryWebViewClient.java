@@ -44,7 +44,7 @@ public class MediaGalleryWebViewClient extends WebViewClient {
 
 	@Override
 	public void onPageStarted(WebView view, String urlClient, Bitmap favicon) {
-		if (webViewLoadingDialog == null) {
+		if (webViewLoadingDialog == null && !urlClient.matches("https://share.catrob.at/pocketcode/")) {
 			webViewLoadingDialog = new ProgressDialog(view.getContext(), R.style.WebViewLoadingCircle);
 			webViewLoadingDialog.setCancelable(true);
 			webViewLoadingDialog.setCanceledOnTouchOutside(false);
