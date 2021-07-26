@@ -19,6 +19,8 @@
 
 package org.catrobat.paintroid.command;
 
+import org.catrobat.paintroid.model.CommandManagerModel;
+
 public interface CommandManager {
 
 	void addCommandListener(CommandListener commandListener);
@@ -42,6 +44,10 @@ public interface CommandManager {
 	void setInitialStateCommand(Command command);
 
 	boolean isBusy();
+
+	CommandManagerModel getCommandManagerModel();
+
+	void loadCommandsCatrobatImage(CommandManagerModel model);
 
 	interface CommandListener {
 		void commandPostExecute();

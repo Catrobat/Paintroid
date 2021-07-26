@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.tools.Workspace;
@@ -36,11 +37,13 @@ public class DefaultWorkspace implements Workspace {
 	private final LayerContracts.Model layerModel;
 	private final Perspective perspective;
 	private final Listener listener;
+	private final CommandSerializationUtilities serializationHelper;
 
-	public DefaultWorkspace(LayerContracts.Model layerModel, Perspective perspective, Listener listener) {
+	public DefaultWorkspace(LayerContracts.Model layerModel, Perspective perspective, Listener listener, CommandSerializationUtilities serializationHelper) {
 		this.layerModel = layerModel;
 		this.perspective = perspective;
 		this.listener = listener;
+		this.serializationHelper = serializationHelper;
 	}
 
 	public Perspective getPerspective() {
@@ -78,6 +81,11 @@ public class DefaultWorkspace implements Workspace {
 	@Override
 	public int getSurfaceHeight() {
 		return perspective.getSurfaceHeight();
+	}
+
+	@Override
+	public CommandSerializationUtilities getCommandSerializationHelper() {
+		return serializationHelper;
 	}
 
 	@Override
