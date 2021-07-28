@@ -62,7 +62,6 @@ class SaveInformationDialog :
     private var isExport = false
 
     companion object {
-        @JvmStatic
         fun newInstance(
             permissionCode: Int,
             imageNumber: Int,
@@ -75,18 +74,17 @@ class SaveInformationDialog :
                 FileIO.compressFormat = Bitmap.CompressFormat.PNG
                 FileIO.ending = STANDARD_FILE_ENDING
             }
-            val dialog = SaveInformationDialog()
-            val bundle = Bundle().apply {
-                if (FileIO.filename == STANDARD_FILE_NAME) {
-                    putString(SET_NAME, FileIO.filename + imageNumber)
-                } else {
-                    putString(SET_NAME, FileIO.filename)
+            return SaveInformationDialog().apply {
+                arguments = Bundle().apply {
+                    if (FileIO.filename == STANDARD_FILE_NAME) {
+                        putString(SET_NAME, FileIO.filename + imageNumber)
+                    } else {
+                        putString(SET_NAME, FileIO.filename)
+                    }
+                    putInt(PERMISSION, permissionCode)
+                    putBoolean(IS_EXPORT, isExport)
                 }
-                putInt(PERMISSION, permissionCode)
-                putBoolean(IS_EXPORT, isExport)
             }
-            dialog.arguments = bundle
-            return dialog
         }
     }
 

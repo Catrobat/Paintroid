@@ -22,8 +22,12 @@ import android.app.Dialog
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode
+
+private const val URI = "Uri"
+private const val REQUEST_CODE = "requestCode"
 
 class ScaleImageOnLoadDialog : MainActivityDialogFragment() {
     private var uri: Uri? = null
@@ -32,8 +36,8 @@ class ScaleImageOnLoadDialog : MainActivityDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val arguments = requireArguments()
-        uri = Uri.parse(arguments.getString("Uri"))
-        requestCode = arguments.getInt("requestCode")
+        uri = Uri.parse(arguments.getString(URI))
+        requestCode = arguments.getInt(REQUEST_CODE)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -50,14 +54,9 @@ class ScaleImageOnLoadDialog : MainActivityDialogFragment() {
             .create()
 
     companion object {
-        @JvmStatic
-        fun newInstance(uri: Uri, @LoadImageRequestCode requestCode: Int): ScaleImageOnLoadDialog {
-            val scaleImageDialog = ScaleImageOnLoadDialog()
-            val bundle = Bundle()
-            bundle.putString("Uri", uri.toString())
-            bundle.putInt("requestCode", requestCode)
-            scaleImageDialog.arguments = bundle
-            return scaleImageDialog
-        }
+        fun newInstance(uri: Uri, @LoadImageRequestCode requestCode: Int): ScaleImageOnLoadDialog =
+            ScaleImageOnLoadDialog().apply {
+                arguments = bundleOf(URI to uri.toString(), REQUEST_CODE to requestCode)
+            }
     }
 }
