@@ -83,4 +83,9 @@ class AboutDialog : AppCompatDialogFragment() {
             .setPositiveButton(R.string.done) { _, _ -> dismiss() }
             .create()
     }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(): AboutDialog = AboutDialog()
+    }
 }

@@ -53,4 +53,9 @@ class ImportImageDialog : MainActivityDialogFragment() {
             .setNegativeButton(R.string.pocketpaint_cancel) { _, _ -> dismiss() }
             .create()
     }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(): ImportImageDialog = ImportImageDialog()
+    }
 }

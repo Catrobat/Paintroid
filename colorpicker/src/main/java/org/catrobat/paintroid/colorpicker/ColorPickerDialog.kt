@@ -69,6 +69,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         const val BITMAP_Name_EXTRA = "bitmapNameExtra"
         const val bitmapName = "temp.png"
 
+        @JvmStatic
         fun newInstance(@ColorInt initialColor: Int): ColorPickerDialog {
             val dialog = ColorPickerDialog()
             val bundle = Bundle()

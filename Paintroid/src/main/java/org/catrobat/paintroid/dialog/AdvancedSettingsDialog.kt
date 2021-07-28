@@ -49,4 +49,9 @@ class AdvancedSettingsDialog : MainActivityDialogFragment() {
         antialiasing = initValue
         super.onCancel(dialog)
     }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(): AdvancedSettingsDialog = AdvancedSettingsDialog()
+    }
 }

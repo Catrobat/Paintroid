@@ -21,11 +21,7 @@ package org.catrobat.paintroid.dialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import org.catrobat.paintroid.R
-
-private const val PERMISSION = "permission"
-private const val IS_EXPORT = "isExport"
 
 class OverwriteDialog : MainActivityDialogFragment() {
     private var permission = 0
@@ -34,8 +30,8 @@ class OverwriteDialog : MainActivityDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val arguments = requireArguments()
-        permission = arguments.getInt(PERMISSION)
-        isExport = arguments.getBoolean(IS_EXPORT)
+        permission = arguments.getInt("permission")
+        isExport = arguments.getBoolean("isExport")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
@@ -55,9 +51,14 @@ class OverwriteDialog : MainActivityDialogFragment() {
             .create()
 
     companion object {
-        fun newInstance(permissionCode: Int, isExport: Boolean): OverwriteDialog =
-            OverwriteDialog().apply {
-                arguments = bundleOf(PERMISSION to permissionCode, IS_EXPORT to isExport)
-            }
+        @JvmStatic
+        fun newInstance(permissionCode: Int, isExport: Boolean): OverwriteDialog {
+            val dialog = OverwriteDialog()
+            val bundle = Bundle()
+            bundle.putInt("permission", permissionCode)
+            bundle.putBoolean("isExport", isExport)
+            dialog.arguments = bundle
+            return dialog
+        }
     }
 }

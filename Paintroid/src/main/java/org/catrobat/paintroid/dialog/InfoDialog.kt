@@ -28,10 +28,6 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.os.bundleOf
 import org.catrobat.paintroid.R
 
-private const val DRAWABLE_RESOURCE_KEY = "drawableResource"
-private const val MESSAGE_RESOURCE_KEY = "messageResource"
-private const val TITLE_RESOURCE_KEY = "titleResource"
-
 class InfoDialog : AppCompatDialogFragment(), DialogInterface.OnClickListener {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
@@ -53,16 +49,23 @@ class InfoDialog : AppCompatDialogFragment(), DialogInterface.OnClickListener {
     }
 
     companion object {
+        const val DRAWABLE_RESOURCE_KEY = "drawableResource"
+        const val MESSAGE_RESOURCE_KEY = "messageResource"
+        const val TITLE_RESOURCE_KEY = "titleResource"
+
+        @JvmStatic
         fun newInstance(
             dialogType: DialogType,
             @StringRes messageResource: Int,
             @StringRes titleResource: Int
-        ): InfoDialog = InfoDialog().apply {
-            arguments = bundleOf(
-                DRAWABLE_RESOURCE_KEY to dialogType.imageResource,
-                MESSAGE_RESOURCE_KEY to messageResource,
-                TITLE_RESOURCE_KEY to titleResource
-            )
+        ): InfoDialog {
+            return InfoDialog().apply {
+                arguments = bundleOf(
+                    DRAWABLE_RESOURCE_KEY to dialogType.imageResource,
+                    MESSAGE_RESOURCE_KEY to messageResource,
+                    TITLE_RESOURCE_KEY to titleResource
+                )
+            }
         }
     }
 }
