@@ -120,7 +120,7 @@ interface MainActivityContracts {
 
         fun showToolChangeToast(offset: Int, idRes: Int)
 
-        fun broadcastAddPictureToGallery(file: File)
+        fun broadcastAddPictureToGallery(uri: Uri)
 
         fun rateUsClicked()
 
