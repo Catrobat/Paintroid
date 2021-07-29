@@ -25,7 +25,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
@@ -72,7 +71,6 @@ import org.catrobat.paintroid.dialog.ScaleImageOnLoadDialog
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment.MediaGalleryListener
-import java.io.File
 
 class MainActivityNavigator(
     private val mainActivity: MainActivity,
@@ -477,8 +475,10 @@ class MainActivityNavigator(
         toolNameToast.show()
     }
 
-    override fun broadcastAddPictureToGallery(file: File) {
-        MediaScannerConnection.scanFile(mainActivity, arrayOf(file.toString()), null, null)
+    override fun broadcastAddPictureToGallery(uri: Uri) {
+        val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        mediaScanIntent.data = uri
+        mainActivity.sendBroadcast(mediaScanIntent)
     }
 
     override fun restoreFragmentListeners() {

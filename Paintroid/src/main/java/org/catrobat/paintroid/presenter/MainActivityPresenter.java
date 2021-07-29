@@ -950,8 +950,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		}
 
 		if (!model.isOpenedFromCatroid() || saveAsCopy) {
-			File file = new File(getPathFromUri(context, uri));
-			navigator.broadcastAddPictureToGallery(file);
+			navigator.broadcastAddPictureToGallery(uri);
 		}
 
 		switch (requestCode) {
