@@ -42,6 +42,7 @@ public class ColorPickerView extends LinearLayoutCompat {
 	private RgbSelectorView rgbSelectorView;
 	private PresetSelectorView preSelectorView;
 	private HSVSelectorView hsvSelectorView;
+	private PresetSelectorSliderView selectorSliderView;
 	private TabHost tabHost;
 
 	private int selectedColor = Color.BLACK;
@@ -98,6 +99,10 @@ public class ColorPickerView extends LinearLayoutCompat {
 		if (sender != hsvSelectorView) {
 			hsvSelectorView.setSelectedColor(color);
 		}
+		if (sender != selectorSliderView) {
+			selectorSliderView.setSelectedColor(color);
+		}
+
 		onColorChanged();
 	}
 
@@ -123,6 +128,7 @@ public class ColorPickerView extends LinearLayoutCompat {
 		rgbSelectorView = new RgbSelectorView(getContext());
 		preSelectorView = new PresetSelectorView(getContext());
 		hsvSelectorView = new HSVSelectorView(getContext());
+		selectorSliderView = new PresetSelectorSliderView(getContext());
 
 		tabHost = tabView.findViewById(R.id.color_picker_colorview_tabColors);
 		tabHost.setup();
@@ -201,6 +207,15 @@ public class ColorPickerView extends LinearLayoutCompat {
 						setSelectedColor(color, rgbSelectorView);
 					}
 				});
+		selectorSliderView.getPresetSelectorSlider().setOnColorChangedListener(
+				new PresetSelectorSlider.OnColorChangedListener() {
+					@Override
+					public void colorChanged(int color) {
+						setSelectedColor(color, selectorSliderView);
+					}
+				}
+		);
+
 	}
 
 	@Override
