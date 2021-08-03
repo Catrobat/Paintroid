@@ -115,7 +115,7 @@ class SaveInformationDialog :
             .setPositiveButton(R.string.save_button_text) { _, _ ->
                 FileIO.filename = imageName.text.toString()
                 if (permission != PERMISSION_EXTERNAL_STORAGE_SAVE_COPY && FileIO.checkIfDifferentFile(
-                        FileIO.getDefaultFileName()
+                        FileIO.defaultFileName
                     ) != IS_NO_FILE
                 ) {
                     presenter.showOverwriteDialog(permission, isExport)

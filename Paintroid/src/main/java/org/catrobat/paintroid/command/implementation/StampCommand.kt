@@ -33,7 +33,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.Random
 
-class StampCommand(bitmap: Bitmap, position: Point, width: Float, height: Float, rotation: Float) : Command {
+class StampCommand(bitmap: Bitmap, position: Point, width: Float, height: Float, rotation: Float) :
+    Command {
 
     var bitmap: Bitmap? = bitmap.copy(Bitmap.Config.ARGB_8888, false); private set
     var coordinates = position; private set
@@ -72,7 +73,8 @@ class StampCommand(bitmap: Bitmap, position: Point, width: Float, height: Float,
     fun storeBitmap(bitmapToStore: Bitmap, boxWidth: Float, boxHeight: Float) {
         val random = Random()
         random.setSeed(System.currentTimeMillis())
-        fileToStoredBitmap = File(PaintroidApplication.cacheDir?.absolutePath, random.nextLong().toString())
+        fileToStoredBitmap =
+            File(PaintroidApplication.cacheDir?.absolutePath, random.nextLong().toString())
         val resizedBitmap = resizeBitmap(bitmapToStore, boxWidth, boxHeight)
         FileOutputStream(fileToStoredBitmap).use { stream ->
             resizedBitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, stream)
@@ -80,8 +82,10 @@ class StampCommand(bitmap: Bitmap, position: Point, width: Float, height: Float,
     }
 
     private fun resizeBitmap(bitmapToResize: Bitmap, boxWidth: Float, boxHeight: Float): Bitmap {
-        val newWidth = if (boxWidth < bitmapToResize.width) boxWidth.toInt() else bitmapToResize.width
-        val newHeight = if (boxHeight < bitmapToResize.height) boxHeight.toInt() else bitmapToResize.height
+        val newWidth =
+            if (boxWidth < bitmapToResize.width) boxWidth.toInt() else bitmapToResize.width
+        val newHeight =
+            if (boxHeight < bitmapToResize.height) boxHeight.toInt() else bitmapToResize.height
         if (newWidth == bitmapToResize.width && newHeight == bitmapToResize.height) {
             return bitmapToResize
         }
