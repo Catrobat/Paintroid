@@ -47,6 +47,7 @@ public final class Constants {
 	public static final String ORA_INFORMATION_DIALOG_TAG = "orainformationdialogfragment";
 	public static final String CATROBAT_INFORMATION_DIALOG_TAG = "catrobatinformationdialogfragment";
 	public static final String CATROID_MEDIA_GALLERY_FRAGMENT_TAG = "catroidmediagalleryfragment";
+	public static final String INDETERMINATE_PROGRESS_DIALOG_TAG = "indeterminateprogressdialogfragment";
 
 	public static final String PERMISSION_DIALOG_FRAGMENT_TAG = "permissiondialogfragment";
 
