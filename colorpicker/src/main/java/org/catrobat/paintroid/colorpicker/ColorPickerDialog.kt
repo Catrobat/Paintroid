@@ -109,6 +109,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         colorPickerView.setOnColorChangedListener(this)
         alphaSliderView = dialogView.findViewById(R.id.color_alpha_slider)
         colorPickerView.setAlphaSlider(alphaSliderView)
+
         if (savedInstanceState != null) {
             setCurrentColor(savedInstanceState.getInt(CURRENT_COLOR, Color.BLACK))
             setInitialColor(savedInstanceState.getInt(INITIAL_COLOR, Color.BLACK))
@@ -120,10 +121,10 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         colorToApply = colorPickerView.initialColor
         val materialDialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setNegativeButton(R.string.color_picker_cancel) { dialogInterface: DialogInterface, _: Int ->
+                updateColorChange(colorPickerView.initialColor)
                 dialogInterface.dismiss()
             }
             .setPositiveButton(R.string.color_picker_apply) { _: DialogInterface, _: Int ->
-                updateColorChange(colorToApply)
                 deleteBitmapFile(requireContext(), bitmapName)
                 dismiss()
             }
@@ -160,6 +161,8 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
             setViewColor(newColorView, color)
             colorToApply = color
         }
+
+        updateColorChange(colorToApply)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
