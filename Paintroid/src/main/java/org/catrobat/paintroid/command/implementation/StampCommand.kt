@@ -72,7 +72,7 @@ class StampCommand(bitmap: Bitmap, position: Point, width: Float, height: Float,
     fun storeBitmap(bitmapToStore: Bitmap, boxWidth: Float, boxHeight: Float) {
         val random = Random()
         random.setSeed(System.currentTimeMillis())
-        fileToStoredBitmap = File(PaintroidApplication.cacheDir.absolutePath, random.nextLong().toString())
+        fileToStoredBitmap = File(PaintroidApplication.cacheDir?.absolutePath, random.nextLong().toString())
         val resizedBitmap = resizeBitmap(bitmapToStore, boxWidth, boxHeight)
         FileOutputStream(fileToStoredBitmap).use { stream ->
             resizedBitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, stream)

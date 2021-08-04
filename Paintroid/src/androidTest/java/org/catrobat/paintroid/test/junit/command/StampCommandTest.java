@@ -75,7 +75,7 @@ public class StampCommandTest {
 		layerModel.addLayerAt(0, layerUnderTest);
 		layerModel.setCurrentLayer(layerUnderTest);
 
-		PaintroidApplication.cacheDir = InstrumentationRegistry.getInstrumentation().getTargetContext().getCacheDir();
+		PaintroidApplication.setCacheDir(InstrumentationRegistry.getInstrumentation().getTargetContext().getCacheDir());
 
 		stampBitmapUnderTest = canvasBitmapUnderTest.copy(Config.ARGB_8888, true);
 		stampBitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR);
