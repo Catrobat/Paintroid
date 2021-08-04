@@ -210,8 +210,8 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
-	public void testColorPickerDialogOnBackPressedSelectedColorShouldNotChange() {
-		int expectedSelectedColor = toolReference.get().getDrawPaint().getColor();
+	public void testColorPickerDialogOnBackPressedSelectedColorShouldChange() {
+		int initialColor = toolReference.get().getDrawPaint().getColor();
 
 		onColorPickerView()
 				.performOpenColorPicker();
@@ -224,7 +224,7 @@ public class ColorDialogIntegrationTest {
 		int colorToSelect = presetColors.getColor(colorToSelectIndex, Color.WHITE);
 		presetColors.recycle();
 
-		assertNotEquals("Selected color should not be the same as the color to select", colorToSelect, expectedSelectedColor);
+		assertNotEquals("Selected color should not be the same as the initial color", colorToSelect, initialColor);
 
 		onColorPickerView()
 				.performClickColorPickerPresetSelectorButton(colorToSelectIndex);
@@ -233,7 +233,7 @@ public class ColorDialogIntegrationTest {
 		onView(isRoot()).perform(pressBack());
 
 		int currentSelectedColor = toolReference.get().getDrawPaint().getColor();
-		assertEquals("Selected color has not changed", expectedSelectedColor, currentSelectedColor);
+		assertEquals("Selected color has not changed", colorToSelect, currentSelectedColor);
 	}
 
 	@Test

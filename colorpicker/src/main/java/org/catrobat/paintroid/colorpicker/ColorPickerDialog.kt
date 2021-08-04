@@ -114,10 +114,10 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         colorToApply = colorPickerView.initialColor
         val materialDialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setNegativeButton(R.string.color_picker_cancel) { dialogInterface: DialogInterface, _: Int ->
+                updateColorChange(colorPickerView.initialColor)
                 dialogInterface.dismiss()
             }
             .setPositiveButton(R.string.color_picker_apply) { _: DialogInterface, _: Int ->
-                updateColorChange(colorToApply)
                 deleteBitmapFile(requireContext(), bitmapName)
                 dismiss()
             }
@@ -142,6 +142,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     override fun colorChanged(color: Int) {
         setViewColor(newColorView, color)
         colorToApply = color
+        updateColorChange(colorToApply)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
