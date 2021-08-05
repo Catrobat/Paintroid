@@ -75,7 +75,7 @@ complexity:
     ignoreDefaultParameters: false
   MethodOverloading:
     active: true
-    threshold: 3
+    threshold: 5
   NestedBlockDepth:
     active: true
     threshold: 5
