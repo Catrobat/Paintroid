@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,40 +16,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.command
 
-package org.catrobat.paintroid.command;
+import org.catrobat.paintroid.model.CommandManagerModel
 
-import org.catrobat.paintroid.model.CommandManagerModel;
+interface CommandManager {
+    val isUndoAvailable: Boolean
+    val isRedoAvailable: Boolean
+    val isBusy: Boolean
+    val commandManagerModel: CommandManagerModel?
 
-public interface CommandManager {
+    fun addCommandListener(commandListener: CommandListener)
 
-	void addCommandListener(CommandListener commandListener);
+    fun removeCommandListener(commandListener: CommandListener)
 
-	void removeCommandListener(CommandListener commandListener);
+    fun addCommand(command: Command?)
 
-	boolean isUndoAvailable();
+    fun setInitialStateCommand(command: Command)
 
-	boolean isRedoAvailable();
+    fun loadCommandsCatrobatImage(model: CommandManagerModel?)
 
-	void addCommand(Command command);
+    fun undo()
 
-	void undo();
+    fun redo()
 
-	void redo();
+    fun reset()
 
-	void reset();
+    fun shutdown()
 
-	void shutdown();
-
-	void setInitialStateCommand(Command command);
-
-	boolean isBusy();
-
-	CommandManagerModel getCommandManagerModel();
-
-	void loadCommandsCatrobatImage(CommandManagerModel model);
-
-	interface CommandListener {
-		void commandPostExecute();
-	}
+    interface CommandListener {
+        fun commandPostExecute()
+    }
 }
