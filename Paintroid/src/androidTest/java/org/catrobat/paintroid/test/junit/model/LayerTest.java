@@ -66,7 +66,7 @@ public class LayerTest {
 
 	@Test
 	public void testCreateManyLayers() {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			commandManager.addCommand(commandFactory.createAddLayerCommand());
 			commandManager.addCommand(commandFactory.createRemoveLayerCommand(1));
 		}

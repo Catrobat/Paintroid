@@ -63,7 +63,6 @@ import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
 import org.catrobat.paintroid.dialog.PngInfoDialog
 import org.catrobat.paintroid.dialog.RateUsDialog
 import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog
-import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog.SaveBeforeFinishDialogType
 import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog
 import org.catrobat.paintroid.dialog.SaveInformationDialog
@@ -252,7 +251,7 @@ class MainActivityNavigator(
     }
 
     override fun showRateUsDialog() {
-        val rateUsDialog = RateUsDialog.newInstance()
+        val rateUsDialog = RateUsDialog()
         rateUsDialog.show(
             mainActivity.supportFragmentManager,
             Constants.RATE_US_DIALOG_FRAGMENT_TAG
@@ -405,19 +404,17 @@ class MainActivityNavigator(
     }
 
     override fun showSaveBeforeFinishDialog() {
-        val dialog: AppCompatDialogFragment = SaveBeforeFinishDialog.newInstance(
-            SaveBeforeFinishDialogType.FINISH
-        )
+        val dialog: AppCompatDialogFragment = SaveBeforeFinishDialog()
         showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG)
     }
 
     override fun showSaveBeforeNewImageDialog() {
-        val dialog: AppCompatDialogFragment = SaveBeforeNewImageDialog.newInstance()
+        val dialog: AppCompatDialogFragment = SaveBeforeNewImageDialog()
         showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG)
     }
 
     override fun showSaveBeforeLoadImageDialog() {
-        val dialog: AppCompatDialogFragment = SaveBeforeLoadImageDialog.newInstance()
+        val dialog: AppCompatDialogFragment = SaveBeforeLoadImageDialog()
         showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG)
     }
 
