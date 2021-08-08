@@ -54,7 +54,6 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.lang.NullPointerException
 import java.util.Locale
-import java.util.Objects.requireNonNull
 import java.util.UUID
 import kotlin.Throws
 import kotlin.math.min
@@ -137,21 +136,27 @@ object FileIO {
     fun saveBitmapToUri(uri: Uri, bitmap: Bitmap?, context: Context): Uri {
         val uid = UUID.randomUUID()
         val cachedImageUri = saveBitmapToCache(bitmap, context as MainActivity, uid.toString())
-        val cachedFile = File(MainActivityPresenter.getPathFromUri(context, cachedImageUri))
+        var cachedFile: File? = null
+        cachedImageUri?.let {
+            cachedFile = File(MainActivityPresenter.getPathFromUri(context, it))
+        }
 
         try {
-            if (!compress(context, cachedFile, uri)) {
+            if (cachedFile == null || !compress(context, cachedFile, uri)) {
                 throw IOException("Can not open URI.")
             }
         } finally {
-            if (cachedFile.exists()) {
-                cachedFile.delete()
+            cachedFile?.let {
+                if (it.exists()) {
+                    it.delete()
+                }
             }
         }
         return uri
     }
 
-    fun compress(mainActivity: MainActivity, fileToCompress: File, destination: Uri): Boolean {
+    fun compress(mainActivity: MainActivity, fileToCompress: File?, destination: Uri): Boolean {
+        fileToCompress ?: return false
         val compressor = Compressor(mainActivity)
         compressor.setQuality(compressQuality)
         compressor.setCompressFormat(compressFormat)
@@ -164,7 +169,7 @@ object FileIO {
                 compressor.setDestinationDirectoryPath(cachePath.path)
                 compressed = compressor.compressToFile(fileToCompress, tempFileName + ending)
                 val os = mainActivity.contentResolver.openOutputStream(destination)
-                copyStreams(FileInputStream(compressed), os!!)
+                os?.let { copyStreams(FileInputStream(compressed), it) }
                 true
             } catch (e: IOException) {
                 Log.e("Compression", "Can not compress image file.", e)
@@ -176,7 +181,12 @@ object FileIO {
             }
         } else {
             try {
-                compressor.setDestinationDirectoryPath(requireNonNull(File(destination.path!!).parentFile).getPath())
+                destination.path?.let {
+                    val file = File(it).parentFile
+                    if (file != null) {
+                        compressor.setDestinationDirectoryPath(file.path)
+                    }
+                }
                 compressor.compressToFile(fileToCompress, destination.lastPathSegment)
                 true
             } catch (e: IOException) {
@@ -208,16 +218,25 @@ object FileIO {
 
         val cachedImageUri =
             saveBitmapToCache(bitmap, context as MainActivity, UUID.randomUUID().toString())
-        val cachedFile = File(MainActivityPresenter.getPathFromUri(context, cachedImageUri))
-
+        var cachedFile: File? = null
+        cachedImageUri?.let {
+            cachedFile = File(MainActivityPresenter.getPathFromUri(context, it))
+        }
         try {
-            if (imageUri == null || !compress(context, cachedFile, imageUri)) {
+            if (imageUri == null || cachedFile == null || !compress(
+                    context,
+                    cachedFile,
+                    imageUri
+                )
+            ) {
                 throw IOException("Can not compress image file.")
             }
             return imageUri
         } finally {
-            if (cachedFile.exists()) {
-                cachedFile.delete()
+            cachedFile?.let {
+                if (it.exists()) {
+                    it.delete()
+                }
             }
         }
     }
@@ -247,12 +266,12 @@ object FileIO {
 
     @Throws(NullPointerException::class)
     @JvmStatic
-    fun createNewEmptyPictureFile(filename: String?, activity: Activity): File {
+    fun createNewEmptyPictureFile(filename: String?, activity: Activity?): File {
         var fileName = filename ?: defaultFileName
         if (!fileName.toLowerCase(Locale.US).endsWith(ending.toLowerCase(Locale.US))) {
             fileName += ending
         }
-        val externalFilesDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val externalFilesDir = activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         if (externalFilesDir == null || !externalFilesDir.exists() && !externalFilesDir.mkdir()) {
             throw NullPointerException("Can not create media directory.")
         }
@@ -297,7 +316,9 @@ object FileIO {
 
     @Throws(IOException::class)
     private fun getBitmapOrientationFromUri(uri: Uri, context: Context?): Float {
-        val exifInterface = ExifInterface(MainActivityPresenter.getPathFromUri(context, uri))
+        val exifInterface = context?.let {
+            ExifInterface(MainActivityPresenter.getPathFromUri(it, uri))
+        }
         return getBitmapOrientation(exifInterface)
     }
 
@@ -477,7 +498,6 @@ object FileIO {
         val scaling = hasEnoughMemory(resolver, bitmapUri, context)
         return BitmapReturnValue(
             null,
-            null,
             enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)),
             scaling
         )
@@ -495,7 +515,6 @@ object FileIO {
             inSampleSize = getScaleFactor(resolver, bitmapUri, context)
         }
         return BitmapReturnValue(
-            null,
             null,
             enableAlpha(decodeBitmapFromUri(resolver, bitmapUri, options, context)),
             false

@@ -25,13 +25,13 @@ import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.Layer
 
-class LoadBitmapListCommand(loadedImageList: List<Bitmap>) : Command {
+class LoadBitmapListCommand(loadedImageList: List<Bitmap?>) : Command {
 
     var loadedImageList = loadedImageList; private set
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         loadedImageList.forEachIndexed { index, bitmap ->
-            val currentLayer = Layer(bitmap.copy(Bitmap.Config.ARGB_8888, true))
+            val currentLayer = Layer(bitmap?.copy(Bitmap.Config.ARGB_8888, true))
             layerModel.addLayerAt(index, currentLayer)
         }
         layerModel.currentLayer = layerModel.getLayerAt(0)

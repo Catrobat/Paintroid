@@ -169,7 +169,7 @@ interface MainActivityContracts {
 
     interface Presenter {
         val imageNumber: Int
-        val bitmap: Bitmap
+        val bitmap: Bitmap?
         val context: Context
 
         fun initializeFromCleanState(extraPicturePath: String?, extraPictureName: String?)
@@ -307,7 +307,7 @@ interface MainActivityContracts {
     interface Interactor {
         fun saveCopy(callback: SaveImageCallback, requestCode: Int, workspace: Workspace, context: Context)
 
-        fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String?)
+        fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String)
 
         fun saveImage(
             callback: SaveImageCallback,
@@ -370,7 +370,7 @@ interface MainActivityContracts {
 
         fun hide()
 
-        fun showCurrentTool(toolType: ToolType)
+        fun showCurrentTool(toolType: ToolType?)
 
         fun setColorButtonColor(@ColorInt color: Int)
     }

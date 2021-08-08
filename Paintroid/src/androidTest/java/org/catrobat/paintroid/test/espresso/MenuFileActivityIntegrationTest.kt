@@ -257,8 +257,8 @@ class MenuFileActivityIntegrationTest {
         assertNotNull(activity.model.savedPictureUri)
         if (!activity.model.isOpenedFromCatroid) {
             assertNotSame(
-                "",
-                MainActivityPresenter.getPathFromUri(activity, activity.model.savedPictureUri)
+                "null",
+                MainActivityPresenter.getPathFromUri(activity, activity.model.savedPictureUri!!)
             )
         }
         addUriToDeletionFileList(activity.model.savedPictureUri)
@@ -282,8 +282,8 @@ class MenuFileActivityIntegrationTest {
         assertNotNull(activity.model.savedPictureUri)
         if (!activity.model.isOpenedFromCatroid) {
             assertNotSame(
-                "",
-                MainActivityPresenter.getPathFromUri(activity, activity.model.savedPictureUri)
+                "null",
+                MainActivityPresenter.getPathFromUri(activity, activity.model.savedPictureUri!!)
             )
         }
         addUriToDeletionFileList(activity.model.savedPictureUri)
@@ -304,8 +304,8 @@ class MenuFileActivityIntegrationTest {
         assertNotNull(activity.model.savedPictureUri)
         if (!activity.model.isOpenedFromCatroid) {
             assertNotSame(
-                "",
-                MainActivityPresenter.getPathFromUri(activity, activity.model.savedPictureUri)
+                "null",
+                MainActivityPresenter.getPathFromUri(activity, activity.model.savedPictureUri!!)
             )
         }
         addUriToDeletionFileList(activity.model.savedPictureUri)

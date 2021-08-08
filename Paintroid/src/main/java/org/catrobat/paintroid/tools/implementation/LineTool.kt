@@ -120,26 +120,6 @@ class LineTool(
         }
     }
 
-    fun handleStateBeforeUndo() {
-        if (!lineFinalized && startpointSet && !connectedLines) {
-            startpointSet = false
-            startPointToDraw = null
-        } else {
-            if (!undoRecentlyClicked) {
-                endpointSet = false
-                endPointToDraw = null
-            } else {
-                lineFinalized = true
-                resetInternalState()
-            }
-            undoRecentlyClicked = true
-        }
-        val isPlusVisible = topBarViewHolder!!.plusButton.visibility == View.VISIBLE
-        if (isPlusVisible && !connectedLines) {
-            topBarViewHolder!!.plusButton.visibility = View.GONE
-        }
-    }
-
     override fun drawShape(canvas: Canvas) {
         // This should never be invoked
     }

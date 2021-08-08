@@ -43,7 +43,7 @@ class MainActivityInteractor : Interactor {
         SaveImage(callback, requestCode, workspace, null, true, context, scopeIO).execute()
     }
 
-    override fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String?) {
+    override fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String) {
         CreateFile(callback, requestCode, filename, scopeIO).execute()
     }
 

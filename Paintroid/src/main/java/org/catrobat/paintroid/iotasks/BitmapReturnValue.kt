@@ -25,9 +25,18 @@ data class BitmapReturnValue(
     @JvmField
     var model: CommandManagerModel?,
     @JvmField
-    var bitmapList: List<Bitmap?>? = null,
+    var bitmapList: List<Bitmap?>?,
     @JvmField
-    var bitmap: Bitmap? = null,
+    var bitmap: Bitmap?,
     @JvmField
-    var toBeScaled: Boolean = false
-)
+    var toBeScaled: Boolean
+) {
+    constructor(bitmapList: List<Bitmap?>?, bitmap: Bitmap?, toBeScaled: Boolean) : this(
+        null,
+        bitmapList,
+        bitmap,
+        toBeScaled
+    )
+
+    constructor(model: CommandManagerModel?) : this(model, null, null, false)
+}

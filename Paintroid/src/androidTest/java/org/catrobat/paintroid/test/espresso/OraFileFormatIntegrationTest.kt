@@ -35,13 +35,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
-<<<<<<< HEAD
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
-=======
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
->>>>>>> 413ca88b (PAINTROID-299 refactored SaveImageAsync, CreateFileAsync, MainActivityInteractor, MenuFileActivityIntegrationTest, OraFileFormatIntegrationTest)
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
@@ -51,13 +46,8 @@ import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteract
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
-<<<<<<< HEAD
 import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.`is`
-=======
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.instanceOf
->>>>>>> 413ca88b (PAINTROID-299 refactored SaveImageAsync, CreateFileAsync, MainActivityInteractor, MenuFileActivityIntegrationTest, OraFileFormatIntegrationTest)
 import org.hamcrest.core.AllOf
 import org.junit.After
 import org.junit.Assert.assertNotNull
@@ -70,10 +60,6 @@ import org.junit.runner.RunWith
 import java.io.File
 
 @RunWith(AndroidJUnit4::class)
-<<<<<<< HEAD
-@ExperimentalCoroutinesApi
-=======
->>>>>>> 413ca88b (PAINTROID-299 refactored SaveImageAsync, CreateFileAsync, MainActivityInteractor, MenuFileActivityIntegrationTest, OraFileFormatIntegrationTest)
 class OraFileFormatIntegrationTest {
     @get:Rule
     var launchActivityRule = IntentsTestRule(MainActivity::class.java)
@@ -105,11 +91,7 @@ class OraFileFormatIntegrationTest {
     }
 
     @Test
-<<<<<<< HEAD
-    fun testSaveAsOraFile() = runBlockingTest {
-=======
     fun testSaveAsOraFile() {
->>>>>>> 413ca88b (PAINTROID-299 refactored SaveImageAsync, CreateFileAsync, MainActivityInteractor, MenuFileActivityIntegrationTest, OraFileFormatIntegrationTest)
         onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
@@ -118,24 +100,16 @@ class OraFileFormatIntegrationTest {
             .inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText("test1337"))
-<<<<<<< HEAD
-        onView(withText(R.string.save_button_text)).perform(ViewActions.click())
-=======
         runBlocking {
             onView(withText(R.string.save_button_text)).perform(ViewActions.click())
-            delay(100)
+            delay(500)
         }
->>>>>>> 413ca88b (PAINTROID-299 refactored SaveImageAsync, CreateFileAsync, MainActivityInteractor, MenuFileActivityIntegrationTest, OraFileFormatIntegrationTest)
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
     }
 
     @Test
-<<<<<<< HEAD
-    fun testSaveAndOverrideOraFile() = runBlockingTest {
-=======
     fun testSaveAndOverrideOraFile() {
->>>>>>> 413ca88b (PAINTROID-299 refactored SaveImageAsync, CreateFileAsync, MainActivityInteractor, MenuFileActivityIntegrationTest, OraFileFormatIntegrationTest)
         onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
@@ -144,10 +118,9 @@ class OraFileFormatIntegrationTest {
             .inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText("OraOverride"))
-<<<<<<< HEAD
         onView(withText(R.string.save_button_text)).perform(ViewActions.click())
-        // onView(withText(R.string.pocketpaint_no)).perform(ViewActions.click())
-        // onView(withText(R.string.pocketpaint_ok)).perform(ViewActions.click())
+        onView(withText(R.string.pocketpaint_no)).perform(ViewActions.click())
+        onView(withText(R.string.pocketpaint_ok)).perform(ViewActions.click())
         onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
@@ -157,34 +130,17 @@ class OraFileFormatIntegrationTest {
                 isDisplayed()
             )
         )
-=======
         runBlocking {
-            onView(withText(R.string.save_button_text)).perform(ViewActions.click())
-            delay(100)
+            onView(withText(R.string.overwrite_button_text)).perform(ViewActions.click())
+            delay(500)
         }
-        onView(withText(R.string.pocketpaint_no)).perform(ViewActions.click())
-        onView(withText(R.string.pocketpaint_ok)).perform(ViewActions.click())
-        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
-        onTopBarView().performOpenMoreOptions()
-        onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(ViewActions.click())
-            delay(100)
-        }
-        onView(withText(R.string.pocketpaint_overwrite_title)).check(ViewAssertions.matches(isDisplayed()))
->>>>>>> 413ca88b (PAINTROID-299 refactored SaveImageAsync, CreateFileAsync, MainActivityInteractor, MenuFileActivityIntegrationTest, OraFileFormatIntegrationTest)
-        onView(withText(R.string.overwrite_button_text)).perform(ViewActions.click())
         val imageUri = activity.model.savedPictureUri
         assertNotNull(imageUri)
         addUriToDeletionFileList(imageUri)
     }
 
     @Test
-<<<<<<< HEAD
-    fun testOraFileWithMultipleLayersSaveAndLoad() = runBlockingTest {
-=======
     fun testOraFileWithMultipleLayersSaveAndLoad() {
->>>>>>> 413ca88b (PAINTROID-299 refactored SaveImageAsync, CreateFileAsync, MainActivityInteractor, MenuFileActivityIntegrationTest, OraFileFormatIntegrationTest)
         onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
@@ -205,14 +161,10 @@ class OraFileFormatIntegrationTest {
             .inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText("MoreLayersOraTest"))
-<<<<<<< HEAD
-        onView(withText(R.string.save_button_text)).perform(ViewActions.click())
-=======
         runBlocking {
             onView(withText(R.string.save_button_text)).perform(ViewActions.click())
             delay(500)
         }
->>>>>>> 413ca88b (PAINTROID-299 refactored SaveImageAsync, CreateFileAsync, MainActivityInteractor, MenuFileActivityIntegrationTest, OraFileFormatIntegrationTest)
         val fileUri = activity.model.savedPictureUri
         assertNotNull(fileUri)
         addUriToDeletionFileList(fileUri)

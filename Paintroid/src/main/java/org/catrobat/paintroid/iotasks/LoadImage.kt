@@ -80,6 +80,7 @@ class LoadImage(
         }
     }
 
+    @SuppressWarnings("TooGenericExceptionCaught")
     fun execute() {
         val callback = callbackRef.get()
         if (callback == null || callback.isFinishing) {
