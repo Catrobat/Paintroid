@@ -32,6 +32,7 @@ import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import kotlin.math.max
 import kotlin.math.min
 
 private const val BUNDLE_TOOL_POSITION_Y = "TOOL_POSITION_Y"
@@ -90,7 +91,7 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
         maxStrokeWidth: Float
     ): Float {
         val strokeWidth = defaultStrokeWidth * metrics.density / workspace.scale
-        return min(maxStrokeWidth, Math.max(minStrokeWidth, strokeWidth))
+        return min(maxStrokeWidth, max(minStrokeWidth, strokeWidth))
     }
 
     fun getInverselyProportionalSizeForZoom(defaultSize: Float): Float {
