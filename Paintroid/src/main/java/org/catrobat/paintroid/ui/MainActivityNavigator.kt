@@ -30,7 +30,6 @@ import android.os.Build
 import android.provider.OpenableColumns
 import android.view.Gravity
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -43,6 +42,7 @@ import org.catrobat.paintroid.WelcomeActivity
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.common.Constants
+import org.catrobat.paintroid.common.Constants.INDETERMINATE_PROGRESS_DIALOG_TAG
 import org.catrobat.paintroid.common.MainActivityConstants
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.contract.MainActivityContracts
@@ -51,7 +51,7 @@ import org.catrobat.paintroid.dialog.AdvancedSettingsDialog
 import org.catrobat.paintroid.dialog.CatrobatImageInfoDialog
 import org.catrobat.paintroid.dialog.FeedbackDialog
 import org.catrobat.paintroid.dialog.ImportImageDialog
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog.newInstance
+import org.catrobat.paintroid.dialog.IndeterminateProgressDialog
 import org.catrobat.paintroid.dialog.InfoDialog
 import org.catrobat.paintroid.dialog.JpgInfoDialog
 import org.catrobat.paintroid.dialog.LikeUsDialog
@@ -75,7 +75,6 @@ class MainActivityNavigator(
     private val mainActivity: MainActivity,
     private val toolReference: ToolReference
 ) : MainActivityContracts.Navigator {
-    private var progressDialog: AppCompatDialog? = null
 
     override val isSdkAboveOrEqualM: Boolean
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
@@ -327,15 +326,13 @@ class MainActivityNavigator(
     }
 
     override fun showIndeterminateProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = newInstance(mainActivity)
-        }
-        progressDialog?.show()
+        val progressDialogFragment = IndeterminateProgressDialog()
+        showDialogFragmentSafely(progressDialogFragment, INDETERMINATE_PROGRESS_DIALOG_TAG)
     }
 
     override fun dismissIndeterminateProgressDialog() {
-        progressDialog?.dismiss()
-        progressDialog = null
+        val progressDialogFragment = findFragmentByTag(INDETERMINATE_PROGRESS_DIALOG_TAG) as DialogFragment?
+        progressDialogFragment?.dismiss()
     }
 
     override fun returnToPocketCode(path: String?) {
