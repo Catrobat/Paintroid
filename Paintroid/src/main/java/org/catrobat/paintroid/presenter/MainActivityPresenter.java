@@ -67,8 +67,10 @@ import org.catrobat.paintroid.iotasks.BitmapReturnValue;
 import org.catrobat.paintroid.iotasks.CreateFileAsync.CreateFileCallback;
 import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback;
 import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.implementation.LineTool;
 import org.catrobat.paintroid.ui.LayerAdapter;
 import org.catrobat.paintroid.ui.Perspective;
 
@@ -153,6 +155,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void loadImageClicked() {
 		switchBetweenVersions(PERMISSION_REQUEST_CODE_LOAD_PICTURE);
 		setFirstCheckBoxInLayerMenu();
+		if (toolController.getToolType() == ToolType.LINE) {
+			LineTool lineTool = (LineTool) toolController.getCurrentTool();
+			lineTool.setLineFinalized(true);
+			lineTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+		}
 	}
 
 	public void setFirstCheckBoxInLayerMenu() {
@@ -174,6 +181,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void newImageClicked() {
+		if (toolController.getToolType() == ToolType.LINE) {
+			LineTool lineTool = (LineTool) toolController.getCurrentTool();
+			lineTool.setLineFinalized(true);
+			lineTool.resetInternalState(Tool.StateChange.ALL);
+		}
 		if (isImageUnchanged() || model.isSaved()) {
 			onNewImage();
 			setFirstCheckBoxInLayerMenu();
@@ -518,6 +530,19 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		} else if (model.isFullscreen()) {
 			exitFullscreenClicked();
 		} else if (!toolController.isDefaultTool()) {
+			if (toolController.getToolType() == ToolType.LINE) {
+				LineTool lineTool = (LineTool) toolController.getCurrentTool();
+				if (!lineTool.getLineFinalized() && lineTool.getStartpointSet() && !lineTool.getEndpointSet()) {
+					if (commandManager.isUndoAvailable()) {
+						commandManager.undo();
+					}
+					lineTool.setStartPointToDraw(null);
+					lineTool.setStartpointSet(false);
+				} else if (!lineTool.getLineFinalized() && lineTool.getStartpointSet() && lineTool.getEndpointSet()) {
+					lineTool.setToolSwitched(true);
+					lineTool.onClickOnButton();
+				}
+			}
 			setTool(ToolType.BRUSH);
 			toolController.switchTool(ToolType.BRUSH, true);
 		} else {
@@ -540,6 +565,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (view.isKeyboardShown()) {
 			view.hideKeyboard();
 		} else {
+			if (toolController.getToolType() == ToolType.LINE) {
+				LineTool lineTool = (LineTool) toolController.getCurrentTool();
+				if (!lineTool.getLineFinalized() && lineTool.getStartpointSet()) {
+					lineTool.setStartpointSet(false);
+					lineTool.setStartPointToDraw(null);
+				}
+			}
 			commandManager.undo();
 		}
 	}

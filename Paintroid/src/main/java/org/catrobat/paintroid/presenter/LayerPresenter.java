@@ -33,6 +33,7 @@ import org.catrobat.paintroid.contract.LayerContracts.LayerViewHolder;
 import org.catrobat.paintroid.contract.LayerContracts.Model;
 import org.catrobat.paintroid.controller.DefaultToolController;
 import org.catrobat.paintroid.tools.ToolType;
+import org.catrobat.paintroid.tools.implementation.LineTool;
 import org.catrobat.paintroid.ui.DrawingSurface;
 import org.catrobat.paintroid.ui.dragndrop.DragAndDropPresenter;
 import org.catrobat.paintroid.ui.dragndrop.ListItemLongClickHandler;
@@ -100,11 +101,11 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 			viewHolder.setDeselected();
 		}
 		if (!layers.get(position).getCheckBox()) {
-			viewHolder.updateImageView(layer.getTransparentBitmap(), isOpen);
 			viewHolder.setCheckBox(false);
+			viewHolder.updateImageView(layer.getTransparentBitmap(), isOpen);
 		} else {
-			viewHolder.updateImageView(layer.getBitmap(), isOpen);
 			viewHolder.setCheckBox(true);
+			viewHolder.updateImageView(layer.getBitmap(), isOpen);
 		}
 	}
 
@@ -138,9 +139,26 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		return position;
 	}
 
+	public void checkIfLineToolInUse() {
+		if (defaultToolController != null && defaultToolController.getToolType() == ToolType.LINE) {
+			LineTool lineTool = (LineTool) defaultToolController.getCurrentTool();
+			if (!lineTool.getLineFinalized() && lineTool.getStartpointSet() && !lineTool.getEndpointSet()) {
+				if (commandManager.isUndoAvailable()) {
+					commandManager.undo();
+				}
+				lineTool.setStartPointToDraw(null);
+				lineTool.setStartpointSet(false);
+			} else if (!lineTool.getLineFinalized() && lineTool.getStartpointSet() && lineTool.getEndpointSet()) {
+				lineTool.setToolSwitched(true);
+				lineTool.onClickOnButton();
+			}
+		}
+	}
+
 	@Override
 	public void addLayer() {
 		if (getLayerCount() < Constants.MAX_LAYERS) {
+			checkIfLineToolInUse();
 			commandManager.addCommand(commandFactory.createAddLayerCommand());
 		} else {
 			navigator.showToast(R.string.layer_too_many_layers, Toast.LENGTH_SHORT);
@@ -150,6 +168,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 	@Override
 	public void removeLayer() {
 		if (getLayerCount() > 1) {
+			checkIfLineToolInUse();
 			LayerContracts.Layer layerToDelete = model.getCurrentLayer();
 			int index = model.getLayerIndexOf(layerToDelete);
 			commandManager.addCommand(commandFactory.createRemoveLayerCommand(index));
@@ -201,6 +220,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 
 	@Override
 	public void mergeItems(int position, int mergeWith) {
+		checkIfLineToolInUse();
 		LayerContracts.Layer actualLayer = layers.get(mergeWith);
 		int actualPosition = model.getLayerIndexOf(actualLayer);
 		if (position != actualPosition) {
@@ -213,6 +233,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 	@Override
 	public void reorderItems(int position, int targetPosition) {
 		if (position != targetPosition) {
+			checkIfLineToolInUse();
 			commandManager.addCommand(commandFactory.createReorderLayersCommand(position, targetPosition));
 		}
 	}
@@ -255,6 +276,7 @@ public class LayerPresenter implements LayerContracts.Presenter, DragAndDropPres
 		}
 
 		if (position != model.getLayerIndexOf(model.getCurrentLayer())) {
+			checkIfLineToolInUse();
 			commandManager.addCommand(commandFactory.createSelectLayerCommand(position));
 		}
 	}

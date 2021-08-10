@@ -58,9 +58,19 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 		return this;
 	}
 
+	public ToolPropertiesInteraction setCap(Cap expectedCap) {
+		getCurrentTool().changePaintStrokeCap(expectedCap);
+		return this;
+	}
+
 	public ToolPropertiesInteraction checkStrokeWidth(float expectedStrokeWidth) {
 		Paint strokePaint = getCurrentTool().getDrawPaint();
 		assertEquals(expectedStrokeWidth, strokePaint.getStrokeWidth(), Float.MIN_VALUE);
+		return this;
+	}
+
+	public ToolPropertiesInteraction setStrokeWidth(float expectedStrokeWidth) {
+		getCurrentTool().changePaintStrokeWidth((int) expectedStrokeWidth);
 		return this;
 	}
 
