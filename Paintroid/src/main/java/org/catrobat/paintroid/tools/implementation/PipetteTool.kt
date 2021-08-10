@@ -42,6 +42,8 @@ class PipetteTool(
     override val toolType: ToolType
         get() = ToolType.PIPETTE
 
+    override var drawTime: Long = 0
+
     init {
         updateSurfaceBitmap()
     }

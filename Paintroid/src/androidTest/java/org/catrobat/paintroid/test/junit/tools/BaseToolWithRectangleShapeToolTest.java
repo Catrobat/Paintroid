@@ -395,5 +395,14 @@ public class BaseToolWithRectangleShapeToolTest {
 		public ToolType getToolType() {
 			return toolType != null ? toolType : ToolType.BRUSH;
 		}
+
+		@Override
+		public long getDrawTime() {
+			return 0;
+		}
+
+		@Override
+		public void setDrawTime(long drawTime) {
+		}
 	}
 }

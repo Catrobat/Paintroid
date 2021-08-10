@@ -46,6 +46,7 @@ import org.catrobat.paintroid.ui.tools.DefaultTextToolOptionsView;
 import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptionsView;
 
 public class DefaultToolFactory implements ToolFactory {
+	private static final int DRAWTIMEINIT = 30000000;
 
 	@Override
 	public Tool createTool(ToolType toolType, ToolOptionsViewController toolOptionsViewController, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint, ContextCallback contextCallback, OnColorPickedListener onColorPickedListener) {
@@ -53,31 +54,31 @@ public class DefaultToolFactory implements ToolFactory {
 
 		switch (toolType) {
 			case CURSOR:
-				return new CursorTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new CursorTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			case STAMP:
-				return new StampTool(createStampToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new StampTool(createStampToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			case IMPORTPNG:
-				return new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			case PIPETTE:
 				return new PipetteTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, onColorPickedListener);
 			case FILL:
-				return new FillTool(createFillToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new FillTool(createFillToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			case TRANSFORM:
-				return new TransformTool(createTransformToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new TransformTool(createTransformToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			case SHAPE:
-				return new ShapeTool(createShapeToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new ShapeTool(createShapeToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			case ERASER:
-				return new EraserTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new EraserTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			case LINE:
-				return new LineTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new LineTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			case TEXT:
-				return new TextTool(createTextToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new TextTool(createTextToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			case HAND:
-				return new HandTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new HandTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			case SPRAY:
-				return new SprayTool(createSprayToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new SprayTool(createSprayToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 			default:
-				return new BrushTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+				return new BrushTool(createBrushToolOptionsView(toolLayout), contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, DRAWTIMEINIT);
 		}
 	}
 

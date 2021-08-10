@@ -29,6 +29,7 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
+import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -39,6 +40,7 @@ import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import androidx.test.espresso.intent.Intents;
@@ -120,6 +122,7 @@ public class MoreOptionsIntegrationTest {
 				.checkItemExists(R.string.menu_new_image)
 				.checkItemExists(R.string.menu_feedback)
 				.checkItemExists(R.string.share_image_menu)
+				.checkItemExists(R.string.menu_advanced)
 
 				.checkItemDoesNotExist(R.string.menu_discard_image)
 				.checkItemDoesNotExist(R.string.menu_export);
@@ -255,5 +258,34 @@ public class MoreOptionsIntegrationTest {
 		onView(withText(R.string.menu_save_image)).perform(click());
 		onView(withText(R.string.pocketpaint_like_us)).check(doesNotExist());
 		onView(withText(R.string.save_button_text)).perform(click());
+	}
+
+	@Test
+	public void testOnOffSmoothOptions() {
+		onView(withText(R.string.menu_advanced)).perform(click());
+		onView(withId(R.id.pocketpaint_smoothing)).perform(click());
+
+		onView(withText(R.string.pocketpaint_ok)).perform(click());
+
+		assertFalse("Smoothing is still on!", AdvancedSettingsAlgorithms.smoothing);
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_advanced)).perform(click());
+		onView(withId(R.id.pocketpaint_smoothing)).perform(click());
+
+		onView(withText(R.string.pocketpaint_ok)).perform(click());
+
+		assertTrue("Smoothing is still off!", AdvancedSettingsAlgorithms.smoothing);
+	}
+
+	@Test
+	public void testNoChangeOnSmoothingWhenCancel() {
+		onView(withText(R.string.menu_advanced)).perform(click());
+		onView(withId(R.id.pocketpaint_smoothing)).perform(click());
+
+		onView(withText(R.string.cancel_button_text)).perform(click());
+		assertTrue("Smoothing is off after cancel!", AdvancedSettingsAlgorithms.smoothing);
 	}
 }

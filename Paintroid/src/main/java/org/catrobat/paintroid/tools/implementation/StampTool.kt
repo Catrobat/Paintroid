@@ -40,7 +40,8 @@ class StampTool(
     toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
-    commandManager: CommandManager
+    commandManager: CommandManager,
+    override var drawTime: Long
 ) : BaseToolWithRectangleShape(
     contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager
 ) {

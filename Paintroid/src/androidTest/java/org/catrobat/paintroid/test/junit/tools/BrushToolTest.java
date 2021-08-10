@@ -79,7 +79,7 @@ public class BrushToolTest {
 
 	@Before
 	public void setUp() {
-		toolToTest = new BrushTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		toolToTest = new BrushTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
 
 		paint = new Paint();
 		paint.setColor(Color.BLACK);

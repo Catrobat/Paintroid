@@ -71,7 +71,8 @@ class LineToolTest {
             toolOptionsController,
             toolPaint,
             workspace,
-            commandManager
+            commandManager,
+            0
         )
     }
 

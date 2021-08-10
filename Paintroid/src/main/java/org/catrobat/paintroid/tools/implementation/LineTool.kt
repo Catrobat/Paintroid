@@ -42,7 +42,8 @@ class LineTool(
     toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
-    commandManager: CommandManager
+    commandManager: CommandManager,
+    override var drawTime: Long
 ) : BaseToolWithShape(
     contextCallback,
     toolOptionsViewController,

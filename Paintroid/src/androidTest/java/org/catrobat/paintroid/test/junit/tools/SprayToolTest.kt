@@ -68,7 +68,8 @@ class SprayToolTest {
             toolOptionsViewController,
             toolPaint,
             workspace,
-            commandManager
+            commandManager,
+            0
         )
     }
 
