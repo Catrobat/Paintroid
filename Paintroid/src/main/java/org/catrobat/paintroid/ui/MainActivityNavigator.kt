@@ -195,7 +195,7 @@ class MainActivityNavigator(
     override fun showColorPickerDialog() {
         if (findFragmentByTag(COLOR_PICKER_DIALOG_TAG) == null) {
             toolReference.tool?.let {
-                val dialog = ColorPickerDialog.newInstance(it.drawPaint.color)
+                val dialog = ColorPickerDialog.newInstance(it.drawPaint.color, mainActivity.model.isOpenedFromCatroid)
                 setupColorPickerDialogListeners(dialog)
                 showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)
             }
@@ -513,5 +513,14 @@ class MainActivityNavigator(
 
     override fun setAntialiasingOnToolPaint() {
         mainActivity.toolPaint.setAntialiasing()
+    }
+
+    override fun setMaskFilterToNull() {
+        mainActivity.toolPaint.paint.maskFilter = null
+        mainActivity.toolPaint.previewPaint.maskFilter = null
+        if (toolReference.tool != null) {
+            mainActivity.toolPaint.paint.alpha = toolReference.tool!!.drawPaint.alpha
+            mainActivity.toolPaint.previewPaint.alpha = toolReference.tool!!.drawPaint.alpha
+        }
     }
 }

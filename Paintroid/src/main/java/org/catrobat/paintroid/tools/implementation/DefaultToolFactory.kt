@@ -155,6 +155,15 @@ class DefaultToolFactory : ToolFactory {
                 commandManager,
                 DRAW_TIME_INIT
             )
+            ToolType.WATERCOLOR -> WatercolorTool(
+                DefaultBrushToolOptionsView(toolLayout),
+                contextCallback,
+                toolOptionsViewController,
+                toolPaint,
+                workspace,
+                commandManager,
+                DRAW_TIME_INIT
+            )
             else -> BrushTool(
                 DefaultBrushToolOptionsView(toolLayout),
                 contextCallback,

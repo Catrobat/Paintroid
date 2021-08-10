@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,6 +52,7 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesI
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -59,6 +60,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.pressBack;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.hasTextColor;
@@ -135,6 +137,62 @@ public class ColorDialogIntegrationTest {
 
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void dontShowAlphaSliderFromCatrobat() {
+		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_alpha_slider))
+				.check(matches(not(isDisplayed())));
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv))).perform(click());
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_alpha_slider))
+				.check(matches(not(isDisplayed())));
+	}
+
+	@Test
+	public void showAlphaSliderIfNotCatrobatFlagSet() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_alpha_slider))
+				.check(matches(isDisplayed()));
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv))).perform(click());
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_alpha_slider))
+				.check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void dontShowAlphaSliderInRgb() {
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_alpha_slider))
+				.check(matches(not(isDisplayed())));
 	}
 
 	@Test
