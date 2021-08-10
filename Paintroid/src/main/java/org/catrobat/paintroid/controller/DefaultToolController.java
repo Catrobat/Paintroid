@@ -107,6 +107,8 @@ public class DefaultToolController implements ToolController {
 
 	private void switchTool(Tool tool, boolean backPressed) {
 		Tool currentTool = toolReference.get();
+		toolPaint.getPaint().setMaskFilter(null);
+
 		ToolType currentToolType = currentTool.getToolType();
 
 		if ((currentToolType == ToolType.TEXT || currentToolType == ToolType.TRANSFORM

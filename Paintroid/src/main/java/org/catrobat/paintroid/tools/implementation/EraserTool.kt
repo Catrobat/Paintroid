@@ -48,6 +48,7 @@ class EraserTool(
             set(super.previewPaint)
             color = Color.BLACK
             shader = toolPaint.checkeredShader
+            maskFilter = null
         }
 
     override val bitmapPaint: Paint
@@ -55,6 +56,7 @@ class EraserTool(
             set(super.bitmapPaint)
             xfermode = toolPaint.eraseXfermode
             alpha = 0
+            maskFilter = null
         }
 
     override val toolType: ToolType
