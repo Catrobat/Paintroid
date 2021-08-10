@@ -29,6 +29,7 @@ import org.catrobat.paintroid.model.CommandManagerModel;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
@@ -38,6 +39,7 @@ public class DefaultCommandManager implements CommandManager {
 	private Deque<Command> redoCommandList = new ArrayDeque<>();
 	private Deque<Command> undoCommandList = new ArrayDeque<>();
 	private Command initialStateCommand;
+//	private List<Boolean> checkBoxes;
 
 	private final CommonFactory commonFactory;
 	private final LayerContracts.Model layerModel;
@@ -80,6 +82,34 @@ public class DefaultCommandManager implements CommandManager {
 		notifyCommandExecuted();
 	}
 
+	public void backUpCheckBoxes(int layerCount, List<Boolean> checkBoxes) {
+		if (layerCount > 1) {
+			for (int index = layerCount - 1; index >= 0; index--) {
+				checkBoxes.set(index, layerModel.getLayerAt(index).getCheckBox());
+			}
+		} else {
+			checkBoxes.set(0, layerModel.getLayerAt(0).getCheckBox());
+		}
+	}
+
+	public void fetchBackCheckBoxes(int layerCount, List<Boolean> checkBoxes) {
+		if (layerCount > 1) {
+			for (int index = layerCount - 1; index >= 0; index--) {
+				LayerContracts.Layer destinationLayer = layerModel.getLayerAt(index);
+				if (!checkBoxes.get(index)) {
+					destinationLayer.switchBitmaps(false);
+					destinationLayer.setCheckBox(false);
+				}
+			}
+		} else {
+			LayerContracts.Layer destinationLayer = layerModel.getCurrentLayer();
+			if (destinationLayer != null && !checkBoxes.get(0)) {
+				destinationLayer.switchBitmaps(false);
+				destinationLayer.setCheckBox(false);
+			}
+		}
+	}
+
 	@Override
 	public void loadCommandsCatrobatImage(CommandManagerModel model) {
 		setInitialStateCommand(model.getInitialCommand());
@@ -93,6 +123,20 @@ public class DefaultCommandManager implements CommandManager {
 	public void undo() {
 		Command command = undoCommandList.pop();
 		redoCommandList.addFirst(command);
+
+		int layerCount = layerModel.getLayerCount();
+		String currentCommandName = command.getClass().getSimpleName();
+
+		if (currentCommandName.matches(AddLayerCommand.class.getSimpleName())) {
+			layerCount--;
+			layerModel.removeLayerAt(0);
+		}
+
+		List<Boolean> checkBoxes = new ArrayList<>(Collections.nCopies(layerCount, true));
+
+		if (!currentCommandName.matches(MergeLayersCommand.class.getSimpleName())) {
+			backUpCheckBoxes(layerCount, checkBoxes);
+		}
 
 		layerModel.reset();
 
@@ -109,6 +153,10 @@ public class DefaultCommandManager implements CommandManager {
 			iterator.next().run(canvas, layerModel);
 		}
 
+		if (!currentCommandName.matches(MergeLayersCommand.class.getSimpleName())) {
+			fetchBackCheckBoxes(layerCount, checkBoxes);
+		}
+
 		notifyCommandExecuted();
 	}
 
@@ -119,7 +167,13 @@ public class DefaultCommandManager implements CommandManager {
 
 		LayerContracts.Layer currentLayer = layerModel.getCurrentLayer();
 		Canvas canvas = commonFactory.createCanvas();
-		canvas.setBitmap(currentLayer.getBitmap());
+
+		if (currentLayer.getCheckBox()) {
+			canvas.setBitmap(currentLayer.getBitmap());
+		} else {
+			canvas.setBitmap(currentLayer.getTransparentBitmap());
+		}
+
 		command.run(canvas, layerModel);
 
 		notifyCommandExecuted();

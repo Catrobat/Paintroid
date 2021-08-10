@@ -36,6 +36,10 @@ class ResizeCommand(newWidth: Int, newHeight: Int) : Command {
                 val resizedBitmap = Bitmap.createScaledBitmap(currentBitmap, newWidth, newHeight, true)
                 currentLayer.bitmap = resizedBitmap
             }
+            currentLayer.transparentBitmap?.let { currentBitmap ->
+                val resizedBitmap = Bitmap.createScaledBitmap(currentBitmap, newWidth, newHeight, true)
+                currentLayer.transparentBitmap = resizedBitmap
+            }
         }
         layerModel.height = newHeight
         layerModel.width = newWidth

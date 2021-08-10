@@ -102,7 +102,7 @@ interface LayerContracts {
 
     interface Layer {
         var bitmap: Bitmap?
-        val transparentBitmap: Bitmap?
+        var transparentBitmap: Bitmap?
         var checkBox: Boolean
 
         fun switchBitmaps(isUnhide: Boolean)

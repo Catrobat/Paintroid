@@ -123,10 +123,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private boolean isExport = false;
 
 	public MainActivityPresenter(Activity activity, MainView view, Model model, Workspace workspace, Navigator navigator,
-			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
-			DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
-			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController,
-			UserPreferences sharedPreferences, Context context) {
+				Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
+				DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
+				CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController,
+				UserPreferences sharedPreferences, Context context) {
 		this.fileActivity = activity;
 		this.view = view;
 		this.model = model;
@@ -660,7 +660,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void restoreState(boolean isFullscreen, boolean isSaved, boolean isOpenedFromCatroid,
-			boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri) {
+				boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri) {
 		model.setFullscreen(isFullscreen);
 		model.setSaved(isSaved);
 		model.setOpenedFromCatroid(isOpenedFromCatroid);

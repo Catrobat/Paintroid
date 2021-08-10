@@ -26,8 +26,10 @@ import org.catrobat.paintroid.tools.ToolType
 class BottomNavigationPortrait(private val bottomNavigationView: BottomNavigationView) : BottomNavigationAppearance {
     override fun showCurrentTool(toolType: ToolType) {
         bottomNavigationView.menu.findItem(R.id.action_current_tool).apply {
-            setIcon(toolType.drawableResource)
-            setTitle(toolType.nameResource)
+            if (!this.toString().equals(toolType.name, ignoreCase = true)) {
+                setIcon(toolType.drawableResource)
+                setTitle(toolType.nameResource)
+            }
         }
     }
 }

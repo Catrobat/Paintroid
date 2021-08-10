@@ -317,7 +317,7 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
 		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
-		assertNotEquals("Selected color changed to blue", toolReference.get().getDrawPaint().getColor(), Color.BLUE);
+		assertNotEquals("Selected color changed to blue", toolReference.get().getDrawPaint().getColor(), Color.BLACK);
 
 		onColorPickerView()
 				.onPositiveButton()

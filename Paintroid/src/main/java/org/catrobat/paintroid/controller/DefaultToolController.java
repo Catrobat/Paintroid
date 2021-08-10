@@ -49,8 +49,8 @@ public class DefaultToolController implements ToolController {
 	private OnColorPickedListener onColorPickedListener;
 
 	public DefaultToolController(ToolReference toolReference, ToolOptionsViewController toolOptionsViewController,
-			ToolFactory toolFactory, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint,
-			ContextCallback contextCallback) {
+				ToolFactory toolFactory, CommandManager commandManager, Workspace workspace, ToolPaint toolPaint,
+				ContextCallback contextCallback) {
 		this.toolReference = toolReference;
 		this.toolOptionsViewController = toolOptionsViewController;
 		this.toolFactory = toolFactory;
@@ -155,7 +155,10 @@ public class DefaultToolController implements ToolController {
 
 	private Tool createAndSetupTool(ToolType toolType) {
 		Tool tool;
-		toolOptionsViewController.removeToolViews();
+
+		if (!toolType.equals(ToolType.HAND)) {
+			toolOptionsViewController.removeToolViews();
+		}
 
 		if (toolType == ToolType.TEXT
 				|| toolType == ToolType.TRANSFORM
@@ -165,9 +168,14 @@ public class DefaultToolController implements ToolController {
 		} else {
 			toolOptionsViewController.hideCheckmark();
 		}
+
 		tool = toolFactory.createTool(toolType, toolOptionsViewController, commandManager, workspace, toolPaint, contextCallback, onColorPickedListener);
-		toolOptionsViewController.resetToOrigin();
-		toolOptionsViewController.show();
+
+		if (!toolType.equals(ToolType.HAND)) {
+			toolOptionsViewController.resetToOrigin();
+			toolOptionsViewController.show();
+		}
+
 		return tool;
 	}
 

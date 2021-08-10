@@ -50,6 +50,13 @@ class RotateCommand(rotateDirection: RotateDirection) : Command {
                 )
                 currentLayer.bitmap = rotatedBitmap
             }
+            currentLayer.transparentBitmap?.let {
+                val rotatedBitmap = Bitmap.createBitmap(
+                    it, 0, 0,
+                    layerModel.width, layerModel.height, rotateMatrix, true
+                )
+                currentLayer.transparentBitmap = rotatedBitmap
+            }
         }
         val tmpWidth = layerModel.width
         layerModel.width = layerModel.height
