@@ -35,6 +35,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
 import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
@@ -44,10 +45,18 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 private const val FF = 0xff
+private const val CURRENT_COLOR = "CurrentColor"
+private const val INITIAL_COLOR = "InitialColor"
+private const val REQUEST_CODE = 1
+private const val BITMAP_NAME = "temp.png"
+const val COLOR_EXTRA = "colorExtra"
+const val BITMAP_NAME_EXTRA = "bitmapNameExtra"
 
 class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     @VisibleForTesting
@@ -62,13 +71,6 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     private var colorToApply = 0
 
     companion object {
-        private const val CURRENT_COLOR = "CurrentColor"
-        private const val INITIAL_COLOR = "InitialColor"
-        const val REQUEST_CODE = 1
-        const val COLOR_EXTRA = "colorExtra"
-        const val BITMAP_Name_EXTRA = "bitmapNameExtra"
-        const val bitmapName = "temp.png"
-
         fun newInstance(@ColorInt initialColor: Int): ColorPickerDialog {
             val dialog = ColorPickerDialog()
             val bundle = Bundle()
@@ -77,6 +79,8 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
             dialog.arguments = bundle
             return dialog
         }
+
+        private val TAG = ColorPickerDialog::class.java.simpleName
     }
 
     fun setBitmap(bitmap: Bitmap) {
@@ -89,13 +93,20 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         currentColorView = dialogView.findViewById(R.id.color_picker_current_color_view)
         pipetteBtn = dialogView.findViewById(R.id.color_picker_pipette_btn)
         pipetteBtn.setOnClickListener {
-            runBlocking {
-                launch {
-                    storeBitmapTemporally(currentBitmap, requireContext(), bitmapName)
-                    val intent = Intent(it.context, ColorPickerPreviewActivity::class.java)
-                    intent.putExtra(COLOR_EXTRA, colorToApply)
-                    intent.putExtra(BITMAP_Name_EXTRA, bitmapName)
-                    startActivityForResult(intent, REQUEST_CODE)
+            pipetteBtn.isEnabled = false
+            CoroutineScope(Dispatchers.IO).launch {
+                storeBitmapTemporally(currentBitmap, requireContext(), BITMAP_NAME)
+                withContext(Dispatchers.Main) {
+                    pipetteBtn.isEnabled = true
+                    val intent = Intent(it.context, ColorPickerPreviewActivity::class.java).apply {
+                        putExtra(COLOR_EXTRA, colorToApply)
+                        putExtra(BITMAP_NAME_EXTRA, BITMAP_NAME)
+                    }
+                    try {
+                        startActivityForResult(intent, REQUEST_CODE)
+                    } catch (e: IllegalStateException) {
+                        Log.e(TAG, "onCreateDialog: ${e.message}")
+                    }
                 }
             }
         }
@@ -118,7 +129,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
                 dialogInterface.dismiss()
             }
             .setPositiveButton(R.string.color_picker_apply) { _: DialogInterface, _: Int ->
-                deleteBitmapFile(requireContext(), bitmapName)
+                deleteBitmapFile(requireContext(), BITMAP_NAME)
                 dismiss()
             }
             .setView(dialogView)

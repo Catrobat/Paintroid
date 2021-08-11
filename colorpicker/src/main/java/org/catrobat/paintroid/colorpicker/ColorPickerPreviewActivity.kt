@@ -30,10 +30,9 @@ import android.view.WindowManager
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog.Companion.BITMAP_Name_EXTRA
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog.Companion.COLOR_EXTRA
 
 class ColorPickerPreviewActivity : AppCompatActivity(), OnImageViewPointClickedListener {
 
@@ -65,12 +64,10 @@ class ColorPickerPreviewActivity : AppCompatActivity(), OnImageViewPointClickedL
             setCurrentColor(it)
         }
 
-        intent?.extras?.getString(BITMAP_Name_EXTRA)?.let {
-            runBlocking {
-                launch {
-                    loadBitmapByName(this@ColorPickerPreviewActivity, it)?.let {
-                        previewSurface.setImageBitmap(it)
-                    }
+        intent?.extras?.getString(BITMAP_NAME_EXTRA)?.let {
+            CoroutineScope(Dispatchers.Main).launch {
+                loadBitmapByName(this@ColorPickerPreviewActivity, it)?.let {
+                    previewSurface.setImageBitmap(it)
                 }
             }
         }
@@ -91,14 +88,19 @@ class ColorPickerPreviewActivity : AppCompatActivity(), OnImageViewPointClickedL
 
     private fun setCurrentColor(color: Int) {
         currentColor = color
-        val checkeredBitmap = BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg)
+        val checkeredBitmap =
+            BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg)
         val shader = BitmapShader(checkeredBitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-        colorPreview.background = ColorPickerDialog.CustomColorDrawable.createDrawable(shader, color)
+        colorPreview.background =
+            ColorPickerDialog.CustomColorDrawable.createDrawable(shader, color)
     }
 
     override fun onStart() {
         super.onStart()
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
     }
 
