@@ -116,7 +116,7 @@ pipeline {
 
                 stage('Device Tests') {
                     steps {
-                        sh './gradlew -PenableCoverage -Pjenkins startEmulator adbDisableAnimationsGlobally createDebugCoverageReport'
+                        sh './gradlew -PenableCoverage -Pjenkins startEmulator adbDisableAnimationsGlobally createDebugCoverageReport -i'
                     }
                     post {
                         always {

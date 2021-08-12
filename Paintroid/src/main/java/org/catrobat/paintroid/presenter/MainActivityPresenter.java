@@ -155,9 +155,17 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void loadImageClicked() {
 		switchBetweenVersions(PERMISSION_REQUEST_CODE_LOAD_PICTURE);
 		setFirstCheckBoxInLayerMenu();
+		checkIfLineToolInUse();
+	}
+
+	public void checkIfLineToolInUse() {
 		if (toolController.getToolType() == ToolType.LINE) {
 			LineTool lineTool = (LineTool) toolController.getCurrentTool();
 			lineTool.setLineFinalized(true);
+			org.catrobat.paintroid.ui.viewholder.TopBarViewHolder topBarViewHolder = LineTool.Companion.getTopBarViewHolder();
+			if (topBarViewHolder != null) {
+				topBarViewHolder.hidePlusButton();
+			}
 			lineTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
 		}
 	}
@@ -181,11 +189,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void newImageClicked() {
-		if (toolController.getToolType() == ToolType.LINE) {
-			LineTool lineTool = (LineTool) toolController.getCurrentTool();
-			lineTool.setLineFinalized(true);
-			lineTool.resetInternalState(Tool.StateChange.ALL);
-		}
+		checkIfLineToolInUse();
 		if (isImageUnchanged() || model.isSaved()) {
 			onNewImage();
 			setFirstCheckBoxInLayerMenu();
@@ -567,10 +571,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		} else {
 			if (toolController.getToolType() == ToolType.LINE) {
 				LineTool lineTool = (LineTool) toolController.getCurrentTool();
-				if (!lineTool.getLineFinalized() && lineTool.getStartpointSet()) {
-					lineTool.setStartpointSet(false);
-					lineTool.setStartPointToDraw(null);
-				}
+				lineTool.handleStateBeforeUndo();
 			}
 			commandManager.undo();
 		}
@@ -581,6 +582,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (view.isKeyboardShown()) {
 			view.hideKeyboard();
 		} else {
+			if (toolController.getToolType() == ToolType.LINE) {
+				LineTool lineTool = (LineTool) toolController.getCurrentTool();
+				lineTool.setLineFinalized(true);
+				lineTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+			}
 			commandManager.redo();
 		}
 	}
@@ -739,7 +745,6 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private void switchTool(ToolType type) {
 		setTool(type);
 		toolController.switchTool(type, false);
-
 		if (type == ToolType.IMPORTPNG) {
 			showImportDialog();
 		}

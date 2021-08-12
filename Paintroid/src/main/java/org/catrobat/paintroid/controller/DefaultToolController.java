@@ -21,6 +21,7 @@ package org.catrobat.paintroid.controller;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
 
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.command.CommandManager;
@@ -33,6 +34,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
+import org.catrobat.paintroid.tools.implementation.LineTool;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 
 import static org.catrobat.paintroid.tools.Tool.StateChange.NEW_IMAGE_LOADED;
@@ -110,6 +112,15 @@ public class DefaultToolController implements ToolController {
 		return toolReference.getTool();
 	}
 
+	public void checkIfPlusIsShown(ToolType currentToolType) {
+		if (currentToolType == ToolType.LINE && LineTool.Companion.getTopBarViewHolder() != null) {
+			boolean isPlusVisible = LineTool.Companion.getTopBarViewHolder().getPlusButton().getVisibility() == View.VISIBLE;
+			if (isPlusVisible) {
+				LineTool.Companion.getTopBarViewHolder().getPlusButton().setVisibility(View.GONE);
+			}
+		}
+	}
+
 	private void switchTool(Tool tool, boolean backPressed) {
 		Tool currentTool = toolReference.getTool();
 		ToolType currentToolType = currentTool.getToolType();
@@ -120,6 +131,8 @@ public class DefaultToolController implements ToolController {
 			BaseToolWithShape toolToApply = (BaseToolWithShape) currentTool;
 			toolToApply.onClickOnButton();
 		}
+
+		checkIfPlusIsShown(currentToolType);
 
 		if (currentTool.getToolType() == tool.getToolType()) {
 			Bundle toolBundle = new Bundle();
