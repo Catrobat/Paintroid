@@ -20,6 +20,7 @@ package org.catrobat.paintroid.controller
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.view.View
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -32,6 +33,7 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
 import org.catrobat.paintroid.tools.implementation.ImportTool
+import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
 class DefaultToolController(
@@ -123,6 +125,9 @@ class DefaultToolController(
             val toolToApply = currentTool as BaseToolWithShape
             toolToApply.onClickOnButton()
         }
+
+        currentToolType?.let { hidePlusIfShown(it) }
+
         if (currentTool?.toolType == tool.toolType) {
             val toolBundle = Bundle()
             currentTool.onSaveInstanceState(toolBundle)
@@ -130,6 +135,15 @@ class DefaultToolController(
         }
         toolReference.tool = tool
         workspace.invalidate()
+    }
+
+    private fun hidePlusIfShown(currentToolType: ToolType) {
+        if (currentToolType == ToolType.LINE && null != LineTool.topBarViewHolder) {
+            val visibility = LineTool.topBarViewHolder?.plusButton?.visibility == View.VISIBLE
+            if (visibility) {
+                LineTool.topBarViewHolder?.plusButton?.visibility = View.GONE
+            }
+        }
     }
 
     override fun disableToolOptionsView() {

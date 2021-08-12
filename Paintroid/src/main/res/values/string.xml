@@ -38,6 +38,7 @@
     <string name="button_spray_can">Spray can</string>
     <string name="button_apply">Apply</string>
     <string name="button_checkmark">Checkmark</string>
+    <string name="button_plus">Connect Line Segment</string>
     <string name="done">Done</string>
 
     <string name="gallery">Gallery</string>
