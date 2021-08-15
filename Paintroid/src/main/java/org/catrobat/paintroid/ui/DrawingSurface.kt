@@ -36,6 +36,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
@@ -108,6 +109,10 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         setOnTouchListener(drawingSurfaceListener)
     }
 
+    companion object {
+        private val TAG = DrawingSurface::class.java.name
+    }
+
     fun setArguments(
         layerModel: LayerContracts.Model,
         perspective: Perspective,
@@ -142,7 +147,9 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 val iterator = layerModel.listIterator(layerModel.layerCount)
 
                 while (iterator.hasPrevious()) {
-                    iterator.previous().bitmap?.let { surfaceViewCanvas.drawBitmap(it, 0f, 0f, null) }
+                    iterator.previous().bitmap?.let {
+                        surfaceViewCanvas.drawBitmap(it, 0f, 0f, null)
+                    }
                 }
 
                 val tool = toolReference.get()
@@ -268,6 +275,8 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                     canvas?.let {
                         doDraw(it)
                     }
+                } catch (e: IllegalArgumentException) {
+                    Log.e(TAG, "run: ", e)
                 } finally {
                     canvas?.let {
                         holder.unlockCanvasAndPost(it)
