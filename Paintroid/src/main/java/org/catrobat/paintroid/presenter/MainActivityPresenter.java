@@ -81,25 +81,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 
-import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
-import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_IMPORTPNG;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_IMPORT_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOAD_NEW;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_NEW_EMPTY;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.CREATE_FILE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.LOAD_IMAGE_CATROID;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.LOAD_IMAGE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.LOAD_IMAGE_IMPORT_PNG;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_REQUEST_CODE_IMPORT_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.REQUEST_CODE_IMPORT_PNG;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.REQUEST_CODE_INTRO;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.REQUEST_CODE_LOAD_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.RESULT_INTRO_MW_NOT_SUPPORTED;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_FINISH;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_LOAD_NEW;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_NEW_EMPTY;
 
 public class MainActivityPresenter implements Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
 	private Activity fileActivity;
@@ -442,14 +442,14 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void handleActivityResult(@ActivityRequestCode int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-			case REQUEST_CODE_IMPORTPNG:
+			case REQUEST_CODE_IMPORT_PNG:
 				if (resultCode != Activity.RESULT_OK) {
 					return;
 				}
 				Uri selectedGalleryImageUri = data.getData();
 				setTool(ToolType.IMPORTPNG);
 				toolController.switchTool(ToolType.IMPORTPNG, false);
-				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, selectedGalleryImageUri, getContext(), false, workspace);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORT_PNG, selectedGalleryImageUri, getContext(), false, workspace);
 				break;
 			case REQUEST_CODE_LOAD_PICTURE:
 				if (resultCode != Activity.RESULT_OK) {
@@ -502,7 +502,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 						}
 						break;
 					case PERMISSION_REQUEST_CODE_IMPORT_PICTURE:
-						navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
+						navigator.startImportImageActivity(REQUEST_CODE_IMPORT_PNG);
 						break;
 					default:
 						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -770,10 +770,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void loadScaledImage(Uri uri, @LoadImageRequestCode int requestCode) {
 		switch (requestCode) {
-			case LOAD_IMAGE_IMPORTPNG:
+			case LOAD_IMAGE_IMPORT_PNG:
 				setTool(ToolType.IMPORTPNG);
 				toolController.switchTool(ToolType.IMPORTPNG, false);
-				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, uri, context, true, workspace);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORT_PNG, uri, context, true, workspace);
 				break;
 			case LOAD_IMAGE_CATROID:
 			case LOAD_IMAGE_DEFAULT:
@@ -836,7 +836,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					}
 				}
 				break;
-			case LOAD_IMAGE_IMPORTPNG:
+			case LOAD_IMAGE_IMPORT_PNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {
 					toolController.setBitmapFromSource(bitmap.bitmap);
 				} else {

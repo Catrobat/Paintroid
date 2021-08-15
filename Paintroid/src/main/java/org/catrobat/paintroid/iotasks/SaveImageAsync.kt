@@ -24,7 +24,10 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.util.Log
 import org.catrobat.paintroid.FileIO
-import org.catrobat.paintroid.common.Constants
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
+import org.catrobat.paintroid.common.IS_JPG
+import org.catrobat.paintroid.common.IS_ORA
+import org.catrobat.paintroid.common.IS_PNG
 import org.catrobat.paintroid.tools.Workspace
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -126,7 +129,7 @@ class SaveImageAsync(
             val fileExistsValue = FileIO.checkIfDifferentFile(fileName)
             return if (FileIO.isCatrobatImage) {
                 val bitmapList = workspace.bitmapLisOfAllLayers
-                return if (uri != null && fileExistsValue == Constants.IS_ORA) {
+                return if (uri != null && fileExistsValue == IS_ORA) {
                     setUriToFormatUri(fileExistsValue)
                     uri?.let {
                         saveOraFile(bitmapList, it, fileName, bitmap, callback.contentResolver)
@@ -138,7 +141,7 @@ class SaveImageAsync(
                     FileIO.uriFileOra = imageUri
                     imageUri
                 }
-            } else if (FileIO.ending == "." + Constants.CATROBAT_IMAGE_ENDING) {
+            } else if (FileIO.ending == ".$CATROBAT_IMAGE_ENDING") {
                 workspace.getCommandSerializationHelper().writeToFile(fileName)
             } else {
                 getImageUri(callback, bitmap)
@@ -150,11 +153,11 @@ class SaveImageAsync(
     }
 
     private fun setUriToFormatUri(formatcode: Int) {
-        if (formatcode == Constants.IS_JPG) {
+        if (formatcode == IS_JPG) {
             if (FileIO.uriFileJpg != null) {
                 uri = FileIO.uriFileJpg
             }
-        } else if (formatcode == Constants.IS_PNG) {
+        } else if (formatcode == IS_PNG) {
             if (FileIO.uriFilePng != null) {
                 uri = FileIO.uriFilePng
             }

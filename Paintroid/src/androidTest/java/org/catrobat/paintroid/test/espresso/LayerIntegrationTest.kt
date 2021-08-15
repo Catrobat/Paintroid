@@ -38,7 +38,7 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.Constants
+import org.catrobat.paintroid.common.MAX_LAYERS
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
@@ -663,7 +663,7 @@ class LayerIntegrationTest {
             .performAddLayer()
             .performAddLayer()
             .performAddLayer()
-            .checkLayerCount(Constants.MAX_LAYERS)
+            .checkLayerCount(MAX_LAYERS)
     }
 
     private fun createTestImageFile(): Uri {

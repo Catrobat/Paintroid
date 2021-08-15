@@ -31,7 +31,7 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.Constants
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
@@ -93,7 +93,7 @@ class CatrobatImageIOIntegrationTest {
         Espresso.onData(
             AllOf.allOf(
                 Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
-                Matchers.`is`<String>(Constants.CATROBAT_IMAGE_ENDING)
+                Matchers.`is`<String>(CATROBAT_IMAGE_ENDING)
             )
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))

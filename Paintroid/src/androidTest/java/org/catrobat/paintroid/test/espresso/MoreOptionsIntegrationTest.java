@@ -26,7 +26,6 @@ import android.content.Intent;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms;
@@ -37,6 +36,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.catrobat.paintroid.common.ConstantsKt.TEMP_PICTURE_NAME;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AllOf.allOf;
@@ -207,7 +207,7 @@ public class MoreOptionsIntegrationTest {
 		onData(allOf(is(instanceOf(String.class)),
 				is("png"))).inRoot(isPlatformPopup()).perform(click());
 		onView(withId(R.id.pocketpaint_image_name_save_text))
-				.perform(replaceText(Constants.TEMP_PICTURE_NAME));
+				.perform(replaceText(TEMP_PICTURE_NAME));
 
 		onView(withText(R.string.save_button_text))
 				.perform(click());
@@ -219,7 +219,7 @@ public class MoreOptionsIntegrationTest {
 		onView(withText(R.string.menu_save_image)).perform(click());
 
 		onView(withText("png")).check(matches(isDisplayed()));
-		onView(withText(Constants.TEMP_PICTURE_NAME)).check(matches(isDisplayed()));
+		onView(withText(TEMP_PICTURE_NAME)).check(matches(isDisplayed()));
 	}
 
 	@Test

@@ -41,10 +41,28 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.WelcomeActivity
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
-import org.catrobat.paintroid.common.Constants
-import org.catrobat.paintroid.common.Constants.INDETERMINATE_PROGRESS_DIALOG_TAG
-import org.catrobat.paintroid.common.MainActivityConstants
+import org.catrobat.paintroid.common.ABOUT_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.CATROBAT_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.CATROID_MEDIA_GALLERY_FRAGMENT_TAG
+import org.catrobat.paintroid.common.COLOR_PICKER_DIALOG_TAG
+import org.catrobat.paintroid.common.FEEDBACK_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.INDETERMINATE_PROGRESS_DIALOG_TAG
+import org.catrobat.paintroid.common.JPG_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.LIKE_US_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.LOAD_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
+import org.catrobat.paintroid.common.ORA_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.OVERWRITE_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
+import org.catrobat.paintroid.common.PERMISSION_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+import org.catrobat.paintroid.common.PNG_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.RATE_US_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.SAVE_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.SAVE_INFORMATION_DIALOG_TAG
+import org.catrobat.paintroid.common.SAVE_QUESTION_FRAGMENT_TAG
+import org.catrobat.paintroid.common.SCALE_IMAGE_FRAGMENT_TAG
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.dialog.AboutDialog
 import org.catrobat.paintroid.dialog.AdvancedSettingsDialog
@@ -83,7 +101,7 @@ class MainActivityNavigator(
 
     private fun showFragment(
         fragment: Fragment,
-        tag: String = Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG
+        tag: String = CATROID_MEDIA_GALLERY_FRAGMENT_TAG
     ) {
         val fragmentManager = mainActivity.supportFragmentManager
         fragmentManager.beginTransaction()
@@ -175,15 +193,15 @@ class MainActivityNavigator(
     }
 
     override fun showColorPickerDialog() {
-        if (findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG) == null) {
+        if (findFragmentByTag(COLOR_PICKER_DIALOG_TAG) == null) {
             val dialog = ColorPickerDialog.newInstance(toolReference.get().drawPaint.color)
             setupColorPickerDialogListeners(dialog)
-            showDialogFragmentSafely(dialog, Constants.COLOR_PICKER_DIALOG_TAG)
+            showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)
         }
     }
 
     override fun showCatroidMediaGallery() {
-        if (findFragmentByTag(Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG) == null) {
+        if (findFragmentByTag(CATROID_MEDIA_GALLERY_FRAGMENT_TAG) == null) {
             val fragment = CatroidMediaGalleryFragment()
             fragment.setMediaGalleryListener(object : MediaGalleryListener {
                 override fun bitmapLoadedFromSource(loadedBitmap: Bitmap) {
@@ -238,14 +256,14 @@ class MainActivityNavigator(
 
     override fun showAboutDialog() {
         val about = AboutDialog()
-        about.show(mainActivity.supportFragmentManager, Constants.ABOUT_DIALOG_FRAGMENT_TAG)
+        about.show(mainActivity.supportFragmentManager, ABOUT_DIALOG_FRAGMENT_TAG)
     }
 
     override fun showLikeUsDialog() {
         val likeUsDialog = LikeUsDialog()
         likeUsDialog.show(
             mainActivity.supportFragmentManager,
-            Constants.LIKE_US_DIALOG_FRAGMENT_TAG
+            LIKE_US_DIALOG_FRAGMENT_TAG
         )
     }
 
@@ -253,7 +271,7 @@ class MainActivityNavigator(
         val rateUsDialog = RateUsDialog()
         rateUsDialog.show(
             mainActivity.supportFragmentManager,
-            Constants.RATE_US_DIALOG_FRAGMENT_TAG
+            RATE_US_DIALOG_FRAGMENT_TAG
         )
     }
 
@@ -261,7 +279,7 @@ class MainActivityNavigator(
         val feedbackDialog = FeedbackDialog()
         feedbackDialog.show(
             mainActivity.supportFragmentManager,
-            Constants.FEEDBACK_DIALOG_FRAGMENT_TAG
+            FEEDBACK_DIALOG_FRAGMENT_TAG
         )
     }
 
@@ -269,7 +287,7 @@ class MainActivityNavigator(
         val advancedSettingsDialog = AdvancedSettingsDialog()
         advancedSettingsDialog.show(
             mainActivity.supportFragmentManager,
-            Constants.ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG
+            ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG
         )
     }
 
@@ -277,7 +295,7 @@ class MainActivityNavigator(
         val overwriteDialog = OverwriteDialog.newInstance(permissionCode, isExport)
         overwriteDialog.show(
             mainActivity.supportFragmentManager,
-            Constants.OVERWRITE_INFORMATION_DIALOG_TAG
+            OVERWRITE_INFORMATION_DIALOG_TAG
         )
     }
 
@@ -285,7 +303,7 @@ class MainActivityNavigator(
         val pngInfoDialog = PngInfoDialog()
         pngInfoDialog.show(
             mainActivity.supportFragmentManager,
-            Constants.PNG_INFORMATION_DIALOG_TAG
+            PNG_INFORMATION_DIALOG_TAG
         )
     }
 
@@ -293,7 +311,7 @@ class MainActivityNavigator(
         val jpgInfoDialog = JpgInfoDialog()
         jpgInfoDialog.show(
             mainActivity.supportFragmentManager,
-            Constants.JPG_INFORMATION_DIALOG_TAG
+            JPG_INFORMATION_DIALOG_TAG
         )
     }
 
@@ -301,7 +319,7 @@ class MainActivityNavigator(
         val oraInfoDialog = OraInfoDialog()
         oraInfoDialog.show(
             mainActivity.supportFragmentManager,
-            Constants.ORA_INFORMATION_DIALOG_TAG
+            ORA_INFORMATION_DIALOG_TAG
         )
     }
 
@@ -309,7 +327,7 @@ class MainActivityNavigator(
         val catrobatInfoDialog = CatrobatImageInfoDialog()
         catrobatInfoDialog.show(
             mainActivity.supportFragmentManager,
-            Constants.CATROBAT_INFORMATION_DIALOG_TAG
+            CATROBAT_INFORMATION_DIALOG_TAG
         )
     }
 
@@ -322,7 +340,7 @@ class MainActivityNavigator(
 
     override fun showImageImportDialog() {
         val importImage = ImportImageDialog()
-        importImage.show(mainActivity.supportFragmentManager, Constants.ABOUT_DIALOG_FRAGMENT_TAG)
+        importImage.show(mainActivity.supportFragmentManager, ABOUT_DIALOG_FRAGMENT_TAG)
     }
 
     override fun showIndeterminateProgressDialog() {
@@ -331,13 +349,14 @@ class MainActivityNavigator(
     }
 
     override fun dismissIndeterminateProgressDialog() {
-        val progressDialogFragment = findFragmentByTag(INDETERMINATE_PROGRESS_DIALOG_TAG) as DialogFragment?
+        val progressDialogFragment =
+            findFragmentByTag(INDETERMINATE_PROGRESS_DIALOG_TAG) as DialogFragment?
         progressDialogFragment?.dismiss()
     }
 
     override fun returnToPocketCode(path: String?) {
         val resultIntent = Intent()
-        resultIntent.putExtra(Constants.PAINTROID_PICTURE_PATH, path)
+        resultIntent.putExtra(PAINTROID_PICTURE_PATH, path)
         mainActivity.setResult(Activity.RESULT_OK, resultIntent)
         mainActivity.finish()
     }
@@ -355,7 +374,7 @@ class MainActivityNavigator(
             InfoDialog.DialogType.WARNING,
             R.string.dialog_error_sdcard_text, R.string.dialog_error_save_title
         )
-        showDialogFragmentSafely(dialog, Constants.SAVE_DIALOG_FRAGMENT_TAG)
+        showDialogFragmentSafely(dialog, SAVE_DIALOG_FRAGMENT_TAG)
     }
 
     override fun showLoadErrorDialog() {
@@ -363,7 +382,7 @@ class MainActivityNavigator(
             InfoDialog.DialogType.WARNING,
             R.string.dialog_loading_image_failed_title, R.string.dialog_loading_image_failed_text
         )
-        showDialogFragmentSafely(dialog, Constants.LOAD_DIALOG_FRAGMENT_TAG)
+        showDialogFragmentSafely(dialog, LOAD_DIALOG_FRAGMENT_TAG)
     }
 
     override fun showRequestPermissionRationaleDialog(
@@ -373,14 +392,14 @@ class MainActivityNavigator(
     ) {
         val dialog: AppCompatDialogFragment =
             PermissionInfoDialog.newInstance(permissionType, permissions, requestCode)
-        showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG)
+        showDialogFragmentSafely(dialog, PERMISSION_DIALOG_FRAGMENT_TAG)
     }
 
     override fun showRequestPermanentlyDeniedPermissionRationaleDialog() {
         val dialog: AppCompatDialogFragment = PermanentDenialPermissionInfoDialog.newInstance(
             mainActivity.packageName
         )
-        showDialogFragmentSafely(dialog, Constants.PERMISSION_DIALOG_FRAGMENT_TAG)
+        showDialogFragmentSafely(dialog, PERMISSION_DIALOG_FRAGMENT_TAG)
     }
 
     override fun askForPermission(permissions: Array<String>, requestCode: Int) {
@@ -402,23 +421,23 @@ class MainActivityNavigator(
 
     override fun showSaveBeforeFinishDialog() {
         val dialog: AppCompatDialogFragment = SaveBeforeFinishDialog()
-        showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG)
+        showDialogFragmentSafely(dialog, SAVE_QUESTION_FRAGMENT_TAG)
     }
 
     override fun showSaveBeforeNewImageDialog() {
         val dialog: AppCompatDialogFragment = SaveBeforeNewImageDialog()
-        showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG)
+        showDialogFragmentSafely(dialog, SAVE_QUESTION_FRAGMENT_TAG)
     }
 
     override fun showSaveBeforeLoadImageDialog() {
         val dialog: AppCompatDialogFragment = SaveBeforeLoadImageDialog()
-        showDialogFragmentSafely(dialog, Constants.SAVE_QUESTION_FRAGMENT_TAG)
+        showDialogFragmentSafely(dialog, SAVE_QUESTION_FRAGMENT_TAG)
     }
 
     override fun showScaleImageRequestDialog(uri: Uri?, requestCode: Int) {
         uri ?: return
         val dialog: AppCompatDialogFragment = ScaleImageOnLoadDialog.newInstance(uri, requestCode)
-        showDialogFragmentSafely(dialog, Constants.SCALE_IMAGE_FRAGMENT_TAG)
+        showDialogFragmentSafely(dialog, SCALE_IMAGE_FRAGMENT_TAG)
     }
 
     @SuppressLint("VisibleForTests")
@@ -428,7 +447,7 @@ class MainActivityNavigator(
         isExport: Boolean
     ) {
         val uri = mainActivity.model.savedPictureUri
-        if (uri != null && permissionCode != MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
+        if (uri != null && permissionCode != PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
             FileIO.parseFileName(uri, mainActivity.contentResolver)
         }
         if (!isExport && mainActivity.model.isOpenedFromCatroid) {
@@ -447,14 +466,14 @@ class MainActivityNavigator(
             return
         }
         var isStandard = false
-        if (permissionCode == MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
+        if (permissionCode == PERMISSION_EXTERNAL_STORAGE_SAVE_COPY) {
             isStandard = true
         }
         val saveInfoDialog =
             SaveInformationDialog.newInstance(permissionCode, imageNumber, isStandard, isExport)
         saveInfoDialog.show(
             mainActivity.supportFragmentManager,
-            Constants.SAVE_INFORMATION_DIALOG_TAG
+            SAVE_INFORMATION_DIALOG_TAG
         )
     }
 
@@ -476,11 +495,11 @@ class MainActivityNavigator(
     }
 
     override fun restoreFragmentListeners() {
-        var fragment = findFragmentByTag(Constants.COLOR_PICKER_DIALOG_TAG)
+        var fragment = findFragmentByTag(COLOR_PICKER_DIALOG_TAG)
         if (fragment != null) {
             setupColorPickerDialogListeners(fragment as ColorPickerDialog)
         }
-        fragment = findFragmentByTag(Constants.CATROID_MEDIA_GALLERY_FRAGMENT_TAG)
+        fragment = findFragmentByTag(CATROID_MEDIA_GALLERY_FRAGMENT_TAG)
         if (fragment != null) {
             setupCatroidMediaGalleryListeners(fragment as CatroidMediaGalleryFragment)
         }

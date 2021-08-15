@@ -46,7 +46,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
-import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.RESULT_INTRO_MW_NOT_SUPPORTED;
 
 public class WelcomeActivity extends AppCompatActivity {
 
