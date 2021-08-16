@@ -68,16 +68,17 @@ class ImportTool(
     }
 
     override fun onClickOnButton() {
-        drawingBitmap ?: return
-        highlightBox()
-        val command = commandFactory.createStampCommand(
-            drawingBitmap,
-            toolPosition,
-            boxWidth,
-            boxHeight,
-            boxRotation
-        )
-        commandManager.addCommand(command)
+        drawingBitmap?.let {
+            highlightBox()
+            val command = commandFactory.createStampCommand(
+                it,
+                toolPosition,
+                boxWidth,
+                boxHeight,
+                boxRotation
+            )
+            commandManager.addCommand(command)
+        }
     }
 
     fun setBitmapFromSource(bitmap: Bitmap) {

@@ -106,15 +106,16 @@ class StampTool(
     }
 
     private fun pasteBoxContent() {
-        drawingBitmap ?: return
-        val command = commandFactory.createStampCommand(
-            drawingBitmap,
-            toolPosition,
-            boxWidth,
-            boxHeight,
-            boxRotation
-        )
-        commandManager.addCommand(command)
+        drawingBitmap?.let {
+            val command = commandFactory.createStampCommand(
+                it,
+                toolPosition,
+                boxWidth,
+                boxHeight,
+                boxRotation
+            )
+            commandManager.addCommand(command)
+        }
     }
 
     private fun cutBoxContent() {
