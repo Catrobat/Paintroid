@@ -38,6 +38,18 @@ open class AsyncCommandManager(
     private var shuttingDown = false
     private var mutex = Mutex()
 
+    override val isBusy: Boolean
+        get() = mutex.isLocked
+
+    override val commandManagerModel
+        get() = commandManager.commandManagerModel
+
+    override val isUndoAvailable: Boolean
+        get() = commandManager.isUndoAvailable
+
+    override val isRedoAvailable: Boolean
+        get() = commandManager.isRedoAvailable
+
     override fun addCommandListener(commandListener: CommandListener) {
         commandListeners.add(commandListener)
     }
@@ -46,11 +58,7 @@ open class AsyncCommandManager(
         commandListeners.remove(commandListener)
     }
 
-    override fun isUndoAvailable(): Boolean = commandManager.isUndoAvailable
-
-    override fun isRedoAvailable(): Boolean = commandManager.isRedoAvailable
-
-    override fun addCommand(command: Command) {
+    override fun addCommand(command: Command?) {
         CoroutineScope(Dispatchers.Default).launch {
             mutex.withLock {
                 if (!shuttingDown) {
@@ -122,10 +130,6 @@ open class AsyncCommandManager(
     override fun setInitialStateCommand(command: Command) {
         synchronized(layerModel) { commandManager.setInitialStateCommand(command) }
     }
-
-    override fun isBusy(): Boolean = mutex.isLocked
-
-    override fun getCommandManagerModel() = commandManager.commandManagerModel
 
     private fun notifyCommandPostExecute() {
         if (!shuttingDown) {
