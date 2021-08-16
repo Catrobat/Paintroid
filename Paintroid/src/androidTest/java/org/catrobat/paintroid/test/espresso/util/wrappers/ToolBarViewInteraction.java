@@ -77,7 +77,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 	}
 
 	private ToolType getCurrentToolType() {
-		return getMainActivity().toolReference.get().getToolType();
+		return getMainActivity().toolReference.getTool().getToolType();
 	}
 
 	public ToolBarViewInteraction performOpenToolOptionsView() {

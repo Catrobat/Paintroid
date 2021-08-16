@@ -153,7 +153,7 @@ public class FillToolIntegrationTest {
 
 	@Test
 	public void testFillToolOptionsDialog() {
-		FillTool fillTool = (FillTool) toolReference.get();
+		FillTool fillTool = (FillTool) toolReference.getTool();
 		assertEquals(
 				"Wrong fill tool member value for color tolerance",
 				fillTool.getToleranceAbsoluteValue(DEFAULT_TOLERANCE_IN_PERCENT),
@@ -186,7 +186,7 @@ public class FillToolIntegrationTest {
 
 	@Test
 	public void testFillToolDialogAfterToolSwitch() {
-		FillTool fillTool = (FillTool) toolReference.get();
+		FillTool fillTool = (FillTool) toolReference.getTool();
 
 		onToolBarView()
 				.performClickSelectedToolButton();

@@ -64,8 +64,8 @@ import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import kotlin.collections.ArrayList
 
 class CommandSerializationTest {

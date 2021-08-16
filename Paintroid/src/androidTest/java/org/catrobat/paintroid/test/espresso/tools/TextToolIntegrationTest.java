@@ -129,7 +129,7 @@ public class TextToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.TEXT);
 
-		textTool = (TextTool) toolReference.get();
+		textTool = (TextTool) toolReference.getTool();
 
 		textEditText = activity.findViewById(R.id.pocketpaint_text_tool_dialog_input_text);
 		fontList = activity.findViewById(R.id.pocketpaint_text_tool_dialog_list_font);
@@ -270,7 +270,7 @@ public class TextToolIntegrationTest {
 
 		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-		textTool = (TextTool) toolReference.get();
+		textTool = (TextTool) toolReference.getTool();
 
 		assertEquals(TEST_TEXT, textEditText.getText().toString());
 		assertEquals(FONT_SANS_SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
@@ -625,7 +625,7 @@ public class TextToolIntegrationTest {
 
 		enterTestText();
 
-		textToolAfterZoom = (TextTool) activity.toolReference.get();
+		textToolAfterZoom = (TextTool) activity.toolReference.getTool();
 
 		PointF positionAfterZoom = getToolMemberBoxPosition();
 

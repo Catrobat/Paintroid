@@ -113,34 +113,34 @@ public class TransformToolIntegrationTest {
 	}
 
 	private float getToolSelectionBoxWidth() {
-		return ((BaseToolWithRectangleShape) toolReference.get()).boxWidth;
+		return ((BaseToolWithRectangleShape) toolReference.getTool()).boxWidth;
 	}
 
 	private void setToolSelectionBoxWidth(float width) {
-		((BaseToolWithRectangleShape) toolReference.get()).boxWidth = width;
+		((BaseToolWithRectangleShape) toolReference.getTool()).boxWidth = width;
 	}
 
 	private float getToolSelectionBoxHeight() {
-		return ((BaseToolWithRectangleShape) toolReference.get()).boxHeight;
+		return ((BaseToolWithRectangleShape) toolReference.getTool()).boxHeight;
 	}
 
 	private void setToolSelectionBoxHeight(float height) {
-		((BaseToolWithRectangleShape) toolReference.get()).boxHeight = height;
+		((BaseToolWithRectangleShape) toolReference.getTool()).boxHeight = height;
 	}
 
 	private void setToolSelectionBoxDimensions(float width, float height) {
 		BaseToolWithRectangleShape currentTool = (BaseToolWithRectangleShape)
-				toolReference.get();
+				toolReference.getTool();
 		currentTool.boxWidth = width;
 		currentTool.boxHeight = height;
 	}
 
 	private PointF getToolPosition() {
-		return ((BaseToolWithShape) toolReference.get()).toolPosition;
+		return ((BaseToolWithShape) toolReference.getTool()).toolPosition;
 	}
 
 	private void setToolPosition(float x, float y) {
-		((BaseToolWithShape) toolReference.get()).toolPosition.set(x, y);
+		((BaseToolWithShape) toolReference.getTool()).toolPosition.set(x, y);
 	}
 
 	private PointF newPointF(PointF point) {
@@ -554,7 +554,7 @@ public class TransformToolIntegrationTest {
 		final Bitmap croppedBitmap = layerModel.getCurrentLayer().getBitmap();
 		final int width = croppedBitmap.getWidth();
 		final int height = croppedBitmap.getHeight();
-		final TransformTool tool = (TransformTool) toolReference.get();
+		final TransformTool tool = (TransformTool) toolReference.getTool();
 		assertEquals(0.0f, tool.resizeBoundWidthXLeft, Float.MIN_VALUE);
 		assertEquals(width - 1, tool.resizeBoundWidthXRight, Float.MIN_VALUE);
 		assertEquals(0.0f, tool.resizeBoundHeightYTop, Float.MIN_VALUE);
@@ -759,7 +759,7 @@ public class TransformToolIntegrationTest {
 		final int height = croppedBitmap.getHeight();
 		final int width = croppedBitmap.getWidth();
 
-		final TransformTool tool = (TransformTool) toolReference.get();
+		final TransformTool tool = (TransformTool) toolReference.getTool();
 		assertEquals(0.0f, tool.resizeBoundWidthXLeft, Float.MIN_VALUE);
 		assertEquals(width - 1, tool.resizeBoundWidthXRight, Float.MIN_VALUE);
 		assertEquals(0.0f, tool.resizeBoundHeightYTop, Float.MIN_VALUE);

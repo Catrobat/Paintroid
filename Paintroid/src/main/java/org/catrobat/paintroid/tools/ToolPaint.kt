@@ -31,6 +31,7 @@ interface ToolPaint {
     val previewColor: Int
     var strokeWidth: Float
     var strokeCap: Cap
-    val checkeredShader: Shader
+    val checkeredShader: Shader?
+
     fun setAntialiasing()
 }

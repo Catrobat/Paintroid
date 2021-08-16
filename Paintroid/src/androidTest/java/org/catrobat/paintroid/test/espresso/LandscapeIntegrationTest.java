@@ -79,7 +79,7 @@ public class LandscapeIntegrationTest {
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	private Tool getCurrentTool() {
-		return mainActivity.toolReference.get();
+		return mainActivity.toolReference.getTool();
 	}
 
 	private ToolOptionsViewController getToolOptionsViewController() {
