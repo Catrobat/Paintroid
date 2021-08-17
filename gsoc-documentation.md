@@ -5,12 +5,14 @@ This was the initial plan. However these plans quickly changed when we discussed
 The new goal was to implement some advanced settings which effect multiple tools and extend the tool menu with 1 or 2 more tools.
 
 ## New additions:
-New advanced settings
-![Concept](https://imgur.com/SFo5C0B)
-![Concept](https://imgur.com/rUOgVoU)
+New advanced settings: 
+
+![Concept](https://i.imgur.com/SFo5C0B.png)
+![Concept](https://i.imgur.com/rUOgVoU.png)
 
 New Tool:
-![Concept](https://imgur.com/PLrNj4l)
+
+![Concept](https://i.imgur.com/PLrNj4l.png)
 
 
 # GSoC Tasks
@@ -22,19 +24,42 @@ https://github.com/Catrobat/Paintroid/pull/957
 
 ## 2. Adding advanved setting: Smoothing
 Added an basic algorithm which smoothes the drawing line the user
-draws when a certain speed is matched.
+draws when a certain speed is matched. Can also be turned on and off.
+
+### Functioning:
+Before smoothing was implemented the approach to drawing a line was to draw a quadradic bezier curve
+between 2 points. Because it only took 2 points into account it did not always look smooth. With the 
+new approach points on the drawing surface got recalculated (cubic splines) and then instead of 2 points
+3 points were taken to draw a cubic bezier curve. Although this approach is not perfect it smoothed got
+a decent result. Also to not hinder the user when trying to draw slow and exact, a certain speed needs to be matched.
 https://github.com/Catrobat/Paintroid/pull/969
 
 ## 3. New Tool: Watercolor brush
 Implemented a new Tool which mimics a watercolor brush.
 Also changed some functioning how the colorpicker works.
+
+### Functioning:
+To mimic a watercolor effect an already existing maskfilter was used to implement it.
+The maskfilter was simply put onto the paint and we got a good result. Since there was 
+an additional option for the strength of the watercolor brush I put a slider into the colorpicker as seen below.
 https://github.com/Catrobat/Paintroid/pull/1000
+
+Slider:
+
+![Concept](https://i.imgur.com/M6KAko8.png)
+
+Watercolor vs Brush
+
+![Concept](https://i.imgur.com/Zae42Gc.png)
+![Concept](https://i.imgur.com/C7BMc53.png)
+
 
 
 # Unfinished tasks:
 Due to time limitation this task was sadly not possible to complete.
 
 ## New Tool: Smudge Tool
+The goal was to implement a tool that smudges colors. 
 https://github.com/Catrobat/Paintroid/pull/1004
 
 
