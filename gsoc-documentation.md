@@ -26,7 +26,7 @@ https://github.com/Catrobat/Paintroid/pull/957
 Added an basic algorithm which smoothes the drawing line the user
 draws when a certain speed is matched. Can also be turned on and off.
 
-### Functioning:
+### Functionality:
 Before smoothing was implemented the approach to drawing a line was to draw a quadradic bezier curve
 between 2 points. Because it only took 2 points into account it did not always look smooth. With the 
 new approach points on the drawing surface got recalculated (cubic splines) and then instead of 2 points
@@ -38,7 +38,7 @@ https://github.com/Catrobat/Paintroid/pull/969
 Implemented a new Tool which mimics a watercolor brush.
 Also changed some functioning how the colorpicker works.
 
-### Functioning:
+### Functionality:
 To mimic a watercolor effect an already existing maskfilter was used to implement it.
 The maskfilter was simply put onto the paint and we got a good result. Since there was 
 an additional option for the strength of the watercolor brush I put a slider into the colorpicker as seen below.
@@ -54,12 +54,27 @@ Watercolor vs Brush
 ![Concept](https://i.imgur.com/C7BMc53.png)
 
 
-
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Unfinished tasks:
 Due to time limitation this task was sadly not possible to complete.
 
 ## New Tool: Smudge Tool
 The goal was to implement a tool that smudges colors. 
+
+### Problems: 
+The problem of this tool was the efficiency. After you draw for a certain period of time with this tool
+it gets slower and slower. This was due to implementation. The tool always compares 2 bitmaps and merges them 
+with an algorithm. The new bitmap gets then drawn onto the surface. This repeats until the user has finished drawing on the screen.
+This however creates way too many bitmaps which will lag the app after a while.
+
 https://github.com/Catrobat/Paintroid/pull/1004
+
+**some screenshots from the tool:**
+
+Before smudge tool vs after smudge tool
+
+![Concept](https://i.imgur.com/Hr5IvZW.png)
+![Concept](https://i.imgur.com/ZbSLbdn.png)
 
 
