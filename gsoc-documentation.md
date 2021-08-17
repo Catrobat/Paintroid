@@ -5,6 +5,7 @@ This was the initial plan. However these plans quickly changed when we discussed
 The new goal was to implement some advanced settings which effect multiple tools and extend the tool menu with 1 or 2 more tools.
 
 ## New additions:
+<<<<<<< HEAD
 New advanced settings: 
 
 ![Concept](https://i.imgur.com/SFo5C0B.png)
@@ -13,6 +14,13 @@ New advanced settings:
 New Tool:
 
 ![Concept](https://i.imgur.com/PLrNj4l.png)
+=======
+![Concept] (https://imgur.com/SFo5C0B)
+
+![Concept] (https://imgur.com/rUOgVoU)
+
+![Concept] (https://imgur.com/PLrNj4l)
+>>>>>>> Update and rename gsoc-documentation to gsoc-documentation.md
 
 
 # GSoC Tasks
@@ -24,6 +32,7 @@ https://github.com/Catrobat/Paintroid/pull/957
 
 ## 2. Adding advanved setting: Smoothing
 Added an basic algorithm which smoothes the drawing line the user
+<<<<<<< HEAD
 draws when a certain speed is matched. Can also be turned on and off.
 
 ### Functionality:
@@ -56,10 +65,22 @@ Watercolor vs Brush
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
+=======
+draws when a certain speed is matched.
+https://github.com/Catrobat/Paintroid/pull/969
+
+## 3. New Tool: Watercolor brush
+Implemented a new Tool which mimics a watercolor brush.
+Also changed some functioning how the colorpicker works.
+https://github.com/Catrobat/Paintroid/pull/1000
+
+
+>>>>>>> Update and rename gsoc-documentation to gsoc-documentation.md
 # Unfinished tasks:
 Due to time limitation this task was sadly not possible to complete.
 
 ## New Tool: Smudge Tool
+<<<<<<< HEAD
 The goal was to implement a tool that smudges colors. 
 
 ### Problems: 
@@ -77,4 +98,8 @@ Before smudge tool vs after smudge tool
 ![Concept](https://i.imgur.com/Hr5IvZW.png)
 ![Concept](https://i.imgur.com/ZbSLbdn.png)
 
+=======
+https://github.com/Catrobat/Paintroid/pull/1004
+
+>>>>>>> Update and rename gsoc-documentation to gsoc-documentation.md
 
