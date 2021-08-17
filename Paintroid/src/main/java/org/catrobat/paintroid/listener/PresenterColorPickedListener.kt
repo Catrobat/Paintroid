@@ -16,21 +16,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.listener
 
-package org.catrobat.paintroid.listener;
+import org.catrobat.paintroid.colorpicker.OnColorPickedListener
+import org.catrobat.paintroid.contract.MainActivityContracts.Presenter
 
-import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
-import org.catrobat.paintroid.contract.MainActivityContracts;
-
-public class PresenterColorPickedListener implements OnColorPickedListener {
-	private final MainActivityContracts.Presenter presenter;
-
-	public PresenterColorPickedListener(MainActivityContracts.Presenter presenter) {
-		this.presenter = presenter;
-	}
-
-	@Override
-	public void colorChanged(int color) {
-		presenter.setBottomNavigationColor(color);
-	}
+class PresenterColorPickedListener(private val presenter: Presenter) : OnColorPickedListener {
+    override fun colorChanged(color: Int) {
+        presenter.setBottomNavigationColor(color)
+    }
 }
