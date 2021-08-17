@@ -54,6 +54,11 @@ open class SerializablePath : Path {
         super.quadTo(x1, y1, x2, y2)
     }
 
+    override fun cubicTo(x1: Float, y1: Float, x2: Float, y2: Float, x3: Float, y3: Float) {
+        serializableActions.add(Cube(x1, y1, x2, y2, x3, y3))
+        super.cubicTo(x1, y1, x2, y2, x3, y3)
+    }
+
     override fun rewind() {
         serializableActions.clear()
         super.rewind()
@@ -78,6 +83,12 @@ open class SerializablePath : Path {
     class Quad(val x1: Float, val y1: Float, val x2: Float, val y2: Float) : SerializableAction {
         override fun perform(path: Path) {
             path.quadTo(x1, y1, x2, y2)
+        }
+    }
+
+    class Cube(val x1: Float, val y1: Float, val x2: Float, val y2: Float, val x3: Float, val y3: Float) : SerializableAction {
+        override fun perform(path: Path) {
+            path.cubicTo(x1, y1, x2, y2, x3, y3)
         }
     }
 
@@ -162,6 +173,27 @@ open class SerializablePath : Path {
                 Quad(readFloat(), readFloat(), readFloat(), readFloat())
             }
         }
+    }
+
+    class PathActionCubeSerializer(version: Int) : VersionSerializer<Cube>(version) {
+        override fun write(kryo: Kryo, output: Output, action: Cube) {
+            with(output) {
+                writeFloat(action.x1)
+                writeFloat(action.y1)
+                writeFloat(action.x2)
+                writeFloat(action.y2)
+                writeFloat(action.x3)
+                writeFloat(action.y3)
+            }
+        }
+
+        override fun read(kryo: Kryo, input: Input, type: Class<out Cube>): Cube =
+            super.handleVersions(this, kryo, input, type)
+
+        override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out Cube>) =
+            with(input) {
+                Cube(readFloat(), readFloat(), readFloat(), readFloat(), readFloat(), readFloat())
+            }
     }
 
     class PathActionRewindSerializer(version: Int) : VersionSerializer<Rewind>(version) {

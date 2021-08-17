@@ -128,6 +128,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
             put(StampCommand::class.java, StampCommandSerializer(version))
             put(SerializableTypeface::class.java, SerializableTypeface.TypefaceSerializer(version))
             put(PointCommand::class.java, PointCommandSerializer(version))
+            put(SerializablePath.Cube::class.java, SerializablePath.PathActionCubeSerializer(version))
         }
     }
 

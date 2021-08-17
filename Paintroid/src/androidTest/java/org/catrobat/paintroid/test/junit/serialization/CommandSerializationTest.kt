@@ -64,8 +64,8 @@ import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import kotlin.collections.ArrayList
 
 class CommandSerializationTest {
@@ -210,6 +210,7 @@ class CommandSerializationTest {
             moveTo(20f, 30f)
             lineTo(30f, 10f)
             quadTo(10f, 20f, 30f, 40f)
+            cubicTo(10f, 20f, 30f, 3f, 19f, 20f)
         }
         expectedModel.commands.add(commandFactory.createPathCommand(paint, path))
         assertSerializeAndDeserialize()
@@ -434,6 +435,7 @@ class CommandSerializationTest {
             is SerializablePath.Move -> return equalsActionMove(expectedAction, actualAction as SerializablePath.Move)
             is SerializablePath.Line -> return equalsActionLine(expectedAction, actualAction as SerializablePath.Line)
             is SerializablePath.Quad -> return equalsActionQuad(expectedAction, actualAction as SerializablePath.Quad)
+            is SerializablePath.Cube -> return equalsActionCube(expectedAction, actualAction as SerializablePath.Cube)
             is SerializablePath.Rewind -> return true
         }
         return false
@@ -448,4 +450,9 @@ class CommandSerializationTest {
     private fun equalsActionQuad(expectedAction: SerializablePath.Quad, actualAction: SerializablePath.Quad) =
         expectedAction.x1 == actualAction.x1 && expectedAction.y1 == actualAction.y1 &&
             expectedAction.x2 == actualAction.x2 && expectedAction.y2 == actualAction.y2
+
+    private fun equalsActionCube(expectedAction: SerializablePath.Cube, actualAction: SerializablePath.Cube) =
+        expectedAction.x1 == actualAction.x1 && expectedAction.y1 == actualAction.y1 &&
+            expectedAction.x2 == actualAction.x2 && expectedAction.y2 == actualAction.y2 &&
+            expectedAction.x3 == actualAction.x3 && expectedAction.y3 == actualAction.y3
 }

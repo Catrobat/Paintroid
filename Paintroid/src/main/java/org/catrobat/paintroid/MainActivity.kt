@@ -87,7 +87,6 @@ import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder
 import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import java.io.File
-import java.io.IOException
 import java.util.Locale
 
 class MainActivity : AppCompatActivity(), MainView, CommandListener {
@@ -162,6 +161,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
+    @SuppressWarnings("TooGenericExceptionCaught")
     private fun handleIntent(receivedIntent: Intent): Boolean {
         var receivedUri = receivedIntent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
 
@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                         )
                     }
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             Log.e("Can not read", "Unable to retrieve Bitmap from Uri")
         }
         return true
