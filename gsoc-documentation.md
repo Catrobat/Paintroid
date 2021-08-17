@@ -29,13 +29,13 @@ draws when a certain speed is matched. Can also be turned on and off.
 ### Functionality:
 Before smoothing was implemented the approach to drawing a line was to draw a quadradic bezier curve
 between 2 points. Because it only took 2 points into account it did not always look smooth. With the 
-new approach points on the drawing surface got recalculated (cubic splines) and then instead of 2 points
-3 points were taken to draw a cubic bezier curve. Although this approach is not perfect it smoothed got
+new approach points on the drawing surface got recalculated (cubic splines) and then instead of 2 points,
+3 points were taken to draw a cubic bezier curve. Although this approach is not perfect it got
 a decent result. Also to not hinder the user when trying to draw slow and exact, a certain speed needs to be matched.
 https://github.com/Catrobat/Paintroid/pull/969
 
 ## 3. New Tool: Watercolor brush
-Implemented a new Tool which mimics a watercolor brush.
+Implemented a new tool which mimics a watercolor brush.
 Also changed some functioning how the colorpicker works.
 
 ### Functionality:
