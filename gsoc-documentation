@@ -14,14 +14,21 @@ Previously antialiasing was automatically on. The task was to
 implement a new option to switch it on and off via a new menu entry.
 https://github.com/Catrobat/Paintroid/pull/957
 
-2.
+2. Adding advanved setting: Smoothing
+Added an basic algorithm which smoothes the drawing line the user
+draws when a certain speed is matched.
 https://github.com/Catrobat/Paintroid/pull/969
 
 3. New Tool: Watercolor brush
-
+Implemented a new Tool which mimics a watercolor brush.
+Also changed some functioning how the colorpicker works.
 https://github.com/Catrobat/Paintroid/pull/1000
 
 
 Unfinished tasks:
+Due to time limitation this task was sadly not possible to complete.
+
+New Tool: Smudge Tool
+https://github.com/Catrobat/Paintroid/pull/1004
 
 
