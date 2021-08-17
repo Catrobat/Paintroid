@@ -5,11 +5,12 @@ This was the initial plan. However these plans quickly changed when we discussed
 The new goal was to implement some advanced settings which effect multiple tools and extend the tool menu with 1 or 2 more tools.
 
 ## New additions:
-![Concept] (https://imgur.com/SFo5C0B)
+New advanced settings
+![Concept](https://imgur.com/SFo5C0B)
+![Concept](https://imgur.com/rUOgVoU)
 
-![Concept] (https://imgur.com/rUOgVoU)
-
-![Concept] (https://imgur.com/PLrNj4l)
+New Tool:
+![Concept](https://imgur.com/PLrNj4l)
 
 
 # GSoC Tasks
