@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.drawable.DrawableFactory
 import org.catrobat.paintroid.tools.drawable.DrawableShape
 import org.catrobat.paintroid.tools.drawable.DrawableStyle
-import org.catrobat.paintroid.tools.helper.Conversion
+import org.catrobat.paintroid.tools.helper.toPoint
 import org.catrobat.paintroid.tools.options.ShapeToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 
@@ -165,7 +165,7 @@ class ShapeTool(
             prepareShapeRectangle(shapeRect, boxWidth, boxHeight)
             val command = commandFactory.createGeometricFillCommand(
                 shapeDrawable,
-                Conversion.toPoint(toolPosition),
+                toPoint(toolPosition),
                 shapeRect,
                 boxRotation,
                 shapeBitmapPaint

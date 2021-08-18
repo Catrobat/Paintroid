@@ -31,8 +31,8 @@ import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
-import org.catrobat.paintroid.tools.helper.Conversion
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory
+import org.catrobat.paintroid.tools.helper.toPoint
 
 class DefaultCommandFactory : CommandFactory {
     private val commonFactory = CommonFactory()
@@ -150,7 +150,7 @@ class DefaultCommandFactory : CommandFactory {
         boxRotation: Float
     ): Command = StampCommand(
         bitmap,
-        Conversion.toPoint(toolPosition),
+        toPoint(toolPosition),
         boxWidth,
         boxHeight,
         boxRotation
@@ -164,5 +164,5 @@ class DefaultCommandFactory : CommandFactory {
         boxWidth: Float,
         boxHeight: Float,
         boxRotation: Float
-    ): Command = CutCommand(Conversion.toPoint(toolPosition), boxWidth, boxHeight, boxRotation)
+    ): Command = CutCommand(toPoint(toolPosition), boxWidth, boxHeight, boxRotation)
 }
