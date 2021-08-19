@@ -41,6 +41,7 @@ import android.view.SurfaceView
 import androidx.core.content.ContextCompat
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.listener.DrawingSurfaceListener
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTaskCallback
@@ -64,6 +65,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var perspective: Perspective
     private lateinit var toolReference: ToolReference
     private lateinit var toolOptionsViewController: ToolOptionsViewController
+    private lateinit var presenter: MainActivityContracts.Presenter
 
     constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
@@ -104,20 +106,22 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
             override fun getToolOptionsViewController(): ToolOptionsViewController =
                 toolOptionsViewController
         }
-        drawingSurfaceListener = DrawingSurfaceListener(autoScrollTask, callback, density)
+        drawingSurfaceListener = DrawingSurfaceListener(autoScrollTask, callback, density, presenter)
         setOnTouchListener(drawingSurfaceListener)
     }
 
     fun setArguments(
-        layerModel: LayerContracts.Model,
-        perspective: Perspective,
-        toolReference: ToolReference,
-        toolOptionsViewController: ToolOptionsViewController
+            layerModel: LayerContracts.Model,
+            perspective: Perspective,
+            toolReference: ToolReference,
+            toolOptionsViewController: ToolOptionsViewController,
+            presenter: MainActivityContracts.Presenter,
     ) {
         this.layerModel = layerModel
         this.perspective = perspective
         this.toolReference = toolReference
         this.toolOptionsViewController = toolOptionsViewController
+        this.presenter = presenter
     }
 
     @Synchronized

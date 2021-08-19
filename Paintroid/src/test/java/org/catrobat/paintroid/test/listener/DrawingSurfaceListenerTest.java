@@ -73,7 +73,7 @@ public class DrawingSurfaceListenerTest {
 		when(callback.getToolOptionsViewController())
 				.thenReturn(toolOptionsViewController);
 
-		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, callback, DISPLAY_DENSITY);
+		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, callback, DISPLAY_DENSITY, presenter);
 	}
 
 	@Test

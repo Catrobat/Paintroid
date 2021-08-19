@@ -408,7 +408,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             layerModel,
             perspective,
             toolReference,
-            toolOptionsViewController
+            toolOptionsViewController,
+            presenterMain
         )
         layerPresenter.setDrawingSurface(drawingSurface)
         appFragment.perspective = perspective

@@ -24,6 +24,8 @@ import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import org.catrobat.paintroid.contract.MainActivityContracts
+import org.catrobat.paintroid.presenter.MainActivityPresenter
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolType
@@ -36,9 +38,10 @@ private const val DRAWER_EDGE_SIZE = 20f
 private const val CONSTANT_1 = 0.5f
 
 open class DrawingSurfaceListener(
-    private val autoScrollTask: AutoScrollTask,
-    private val callback: DrawingSurfaceListenerCallback,
-    displayDensity: Float
+        private val autoScrollTask: AutoScrollTask,
+        private val callback: DrawingSurfaceListenerCallback,
+        displayDensity: Float,
+        val presenter: MainActivityContracts.Presenter
 ) : OnTouchListener {
     private var touchMode: TouchMode
     private var pointerDistance = 0f
@@ -153,6 +156,7 @@ open class DrawingSurfaceListener(
                 if (eventTouchPoint.x < drawerEdgeSize || view.getWidth() - eventTouchPoint.x < drawerEdgeSize) {
                     return false
                 }
+                presenter.enterFullscreenClicked()
                 timerStartDraw = System.currentTimeMillis()
                 currentTool.handleDown(canvasTouchPoint)
                 if (autoScroll) {
@@ -178,6 +182,7 @@ open class DrawingSurfaceListener(
                 eventX = 0f
                 eventY = 0f
                 touchMode = TouchMode.DRAW
+                presenter.exitFullscreenClicked()
             }
         }
         drawingSurface.refreshDrawingSurface()
