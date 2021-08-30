@@ -77,6 +77,10 @@ public final class OpenRasterFileFormatConversion {
 	private static final int COMPRESS_QUALITY = 100;
 	private static final int THUMBNAIL_WIDTH = 256;
 	private static final int THUMBNAIL_HEIGHT = 256;
+	private static final int STANDARD_WIDTH = 720;
+	private static final int MAX_WIDTH = 1440;
+	private static final int STANDARD_HEIGHT = 1184;
+	private static final int MAX_HEIGHT = 2365;
 
 	private OpenRasterFileFormatConversion() {
 		throw new AssertionError();
@@ -248,20 +252,40 @@ public final class OpenRasterFileFormatConversion {
 
 	public static BitmapReturnValue importOraFile(ContentResolver resolver, Uri uri, Context context) throws IOException {
 		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inMutable = true;
 		InputStream inputStream = resolver.openInputStream(uri);
 		ZipInputStream zipInput = new ZipInputStream(inputStream);
 		List<Bitmap> bitmapList = new ArrayList<>();
 		ZipEntry current = zipInput.getNextEntry();
-
+		int maxWidth = 0;
+		int maxHeight = 0;
 		while (current != null) {
-			if (current.getName().matches("data/(.*).png")) {
+			if (current.getName().matches("data/layer(.*).png")) {
 				Bitmap layerBitmap = FileIO.enableAlpha(BitmapFactory.decodeStream(zipInput, null, options));
 				bitmapList.add(layerBitmap);
+				if (layerBitmap.getHeight() > maxHeight) {
+					maxHeight = layerBitmap.getHeight();
+				}
+				if (layerBitmap.getWidth() > maxWidth) {
+					maxWidth = layerBitmap.getWidth();
+				}
 			}
 			current = zipInput.getNextEntry();
 		}
+
 		if (bitmapList.isEmpty() || bitmapList.size() > MAX_LAYERS) {
 			throw new IOException("Bitmap list is wrong!");
+		} else {
+			for (int layer = 0; layer < bitmapList.size(); layer++) {
+				Bitmap currentLayer = bitmapList.get(layer);
+				if (maxWidth < STANDARD_WIDTH || maxHeight < STANDARD_HEIGHT) {
+					currentLayer = Bitmap.createScaledBitmap(currentLayer, STANDARD_WIDTH, STANDARD_HEIGHT, true);
+					bitmapList.set(layer, currentLayer);
+				} else if (maxWidth > MAX_WIDTH || maxHeight > MAX_HEIGHT) {
+					currentLayer = Bitmap.createScaledBitmap(currentLayer, MAX_WIDTH, MAX_HEIGHT, true);
+					bitmapList.set(layer, currentLayer);
+				}
+			}
 		}
 		return new BitmapReturnValue(bitmapList, null, false);
 	}
