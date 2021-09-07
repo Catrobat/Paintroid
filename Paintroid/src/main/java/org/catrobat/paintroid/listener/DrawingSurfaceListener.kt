@@ -25,7 +25,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import org.catrobat.paintroid.contract.MainActivityContracts
-import org.catrobat.paintroid.presenter.MainActivityPresenter
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolType
@@ -38,10 +37,9 @@ private const val DRAWER_EDGE_SIZE = 20f
 private const val CONSTANT_1 = 0.5f
 
 open class DrawingSurfaceListener(
-        private val autoScrollTask: AutoScrollTask,
-        private val callback: DrawingSurfaceListenerCallback,
-        displayDensity: Float,
-        val presenter: MainActivityContracts.Presenter
+    private val autoScrollTask: AutoScrollTask,
+    private val callback: DrawingSurfaceListenerCallback,
+    displayDensity: Float
 ) : OnTouchListener {
     private var touchMode: TouchMode
     private var pointerDistance = 0f
@@ -54,6 +52,7 @@ open class DrawingSurfaceListener(
     private val drawerEdgeSize: Int = (DRAWER_EDGE_SIZE * displayDensity + CONSTANT_1).toInt()
     private var autoScroll = true
     private var timerStartDraw = 0.toLong()
+    var presenter: MainActivityContracts.Presenter? = null
 
     internal enum class TouchMode {
         DRAW, PINCH
@@ -156,7 +155,7 @@ open class DrawingSurfaceListener(
                 if (eventTouchPoint.x < drawerEdgeSize || view.getWidth() - eventTouchPoint.x < drawerEdgeSize) {
                     return false
                 }
-                presenter.enterFullscreenClicked()
+                presenter?.enterFullscreenClicked()
                 timerStartDraw = System.currentTimeMillis()
                 currentTool.handleDown(canvasTouchPoint)
                 if (autoScroll) {
@@ -182,7 +181,7 @@ open class DrawingSurfaceListener(
                 eventX = 0f
                 eventY = 0f
                 touchMode = TouchMode.DRAW
-                presenter.exitFullscreenClicked()
+                presenter?.exitFullscreenClicked()
             }
         }
         drawingSurface.refreshDrawingSurface()
