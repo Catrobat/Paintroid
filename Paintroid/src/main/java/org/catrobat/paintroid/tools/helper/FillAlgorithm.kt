@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.tools.helper
 
-package org.catrobat.paintroid.tools.helper;
+import android.graphics.Bitmap
+import android.graphics.Point
 
-import android.graphics.Bitmap;
-import android.graphics.Point;
+interface FillAlgorithm {
+    fun setParameters(
+        bitmap: Bitmap,
+        clickedPixel: Point,
+        targetColor: Int,
+        replacementColor: Int,
+        colorToleranceThreshold: Float
+    )
 
-public interface FillAlgorithm {
-	void setParameters(Bitmap bitmap, Point clickedPixel, int targetColor, int replacementColor, float colorToleranceThreshold);
-
-	void performFilling();
+    fun performFilling()
 }
