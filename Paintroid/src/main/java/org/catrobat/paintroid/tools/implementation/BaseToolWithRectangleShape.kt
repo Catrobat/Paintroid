@@ -543,7 +543,7 @@ abstract class BaseToolWithRectangleShape(
                 }
             }
             ResizeAction.BOTTOM, ResizeAction.BOTTOMLEFT, ResizeAction.BOTTOMRIGHT -> {
-                height = (boxHeight + deltaYCorrected).toFloat()
+                height = boxHeight + deltaYCorrected
                 posX = toolPosition.x - resizeYMoveCenterX
                 posY = toolPosition.y + resizeYMoveCenterY
                 if (respectMaximumBorderRatio && height > maximumBorderRatioHeight) {
@@ -696,11 +696,11 @@ abstract class BaseToolWithRectangleShape(
     override fun getAutoScrollDirection(
         pointX: Float,
         pointY: Float,
-        viewWidth: Int,
-        viewHeight: Int
+        screenWidth: Int,
+        screenHeight: Int
     ): Point {
         return if (currentAction == FloatingBoxAction.MOVE || currentAction == FloatingBoxAction.RESIZE) {
-            super.getAutoScrollDirection(pointX, pointY, viewWidth, viewHeight)
+            super.getAutoScrollDirection(pointX, pointY, screenWidth, screenHeight)
         } else Point(0, 0)
     }
 
