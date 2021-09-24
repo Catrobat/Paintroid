@@ -56,13 +56,13 @@
         android:id="@+id/pocketpaint_stroke_width_seek_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/pocketpaint_stroke_width_width_text_layout"
-        android:layout_alignBottom="@id/pocketpaint_stroke_width_width_text_layout"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="10dp"
-        android:layout_toEndOf="@+id/pocketpaint_stroke_width_width_text_layout"
         android:max="100"
-        android:minHeight="30dip" />
+        android:minHeight="30dip"
+        android:layout_marginRight="10dp"
+        android:layout_alignTop="@id/pocketpaint_stroke_width_width_text_layout"
+        android:layout_toEndOf="@+id/pocketpaint_stroke_width_width_text_layout"
+        android:layout_alignBottom="@id/pocketpaint_stroke_width_width_text_layout"
+        android:layout_alignParentEnd="true"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
