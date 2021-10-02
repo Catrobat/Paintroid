@@ -57,7 +57,7 @@ class SaveImageAsync(
         callback: SaveImageCallback,
         bitmap: Bitmap?
     ): Uri? {
-        val fileName = FileIO.getDefaultFileName()
+        val fileName = FileIO.defaultFileName
         val fileExistsValue = FileIO.checkIfDifferentFile(fileName)
         return if (uri == null) {
             val imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.contentResolver)
@@ -125,7 +125,7 @@ class SaveImageAsync(
         }
         try {
             val bitmap = workspace.bitmapOfAllLayers
-            val fileName = FileIO.getDefaultFileName()
+            val fileName = FileIO.defaultFileName
             val fileExistsValue = FileIO.checkIfDifferentFile(fileName)
             return if (FileIO.isCatrobatImage) {
                 val bitmapList = workspace.bitmapLisOfAllLayers
