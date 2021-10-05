@@ -206,7 +206,7 @@ class RgbSelectorView : LinearLayoutCompat {
         seekBarAlpha.setOnSeekBarChangeListener(null)
     }
 
-    interface OnColorChangedListener {
+    fun interface OnColorChangedListener {
         fun colorChanged(color: Int)
     }
 }

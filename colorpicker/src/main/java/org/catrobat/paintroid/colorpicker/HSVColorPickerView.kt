@@ -415,7 +415,7 @@ class HSVColorPickerView : View {
         setMeasuredDimension(size, size)
     }
 
-    interface OnColorChangedListener {
+    fun interface OnColorChangedListener {
         fun colorChanged(color: Int)
     }
 }
