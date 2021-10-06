@@ -36,6 +36,7 @@ import kotlin.math.min
 
 private const val HEX_COLOR_CODE_LENGTH = 9
 private const val PERCENT_MAX_ALPHA = 2.55f
+private const val NOT_A_HEX_VALUE = 20_000_000
 
 class RgbSelectorView : LinearLayoutCompat {
     private var seekBarRed: SeekBar
@@ -110,12 +111,12 @@ class RgbSelectorView : LinearLayoutCompat {
     @SuppressWarnings("SwallowedException")
     private fun parseInputToCheckIfHEX(newText: String): Int =
         if (newText.length != HEX_COLOR_CODE_LENGTH || newText.substring(0, 1) != "#") {
-            Constants.NOT_A_HEX_VALUE
+            NOT_A_HEX_VALUE
         } else {
             try {
                 Color.parseColor(newText)
             } catch (e: IllegalArgumentException) {
-                Constants.NOT_A_HEX_VALUE
+                NOT_A_HEX_VALUE
             }
         }
 
@@ -184,7 +185,7 @@ class RgbSelectorView : LinearLayoutCompat {
             override fun afterTextChanged(newText: Editable) {
                 if (editTextHex.tag == null) {
                     val color = parseInputToCheckIfHEX(newText.toString())
-                    if (color != Constants.NOT_A_HEX_VALUE) {
+                    if (color != NOT_A_HEX_VALUE) {
                         selectedColor = color
                         onColorChanged(color)
                         resetTextColor()
