@@ -245,7 +245,7 @@ class MainActivityNavigator(
     }
 
     override fun startShareImageActivity(bitmap: Bitmap?) {
-        val uri = FileIO.saveBitmapToCache(bitmap, mainActivity) ?: return
+        val uri = FileIO.saveBitmapToCache(bitmap, mainActivity, "image") ?: return
         val shareIntent = Intent().apply {
             putExtra(Intent.EXTRA_STREAM, uri)
             setDataAndType(uri, mainActivity.contentResolver.getType(uri))

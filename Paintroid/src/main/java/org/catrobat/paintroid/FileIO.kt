@@ -47,15 +47,18 @@ import org.catrobat.paintroid.iotasks.BitmapReturnValue
 import org.catrobat.paintroid.presenter.MainActivityPresenter
 import java.io.File
 import java.io.FileOutputStream
+import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 import java.util.Locale
+import java.util.UUID
+import java.util.Objects.requireNonNull
 import kotlin.Throws
 import kotlin.math.min
 import kotlin.math.sqrt
+import id.zelory.compressor.Compressor
 
 private const val CONSTANT_POINT9 = .9f
 private const val CONSTANT_5000 = 5000L
@@ -106,6 +109,8 @@ object FileIO {
     val defaultFileName: String
         get() = filename + ending
 
+    private val cacheChildFolder = "images"
+
     @Throws(IOException::class)
     private fun saveBitmapToStream(outputStream: OutputStream?, bitmap: Bitmap?) {
         var currentBitmap = bitmap
@@ -129,49 +134,98 @@ object FileIO {
     }
 
     @Throws(IOException::class)
-    fun saveBitmapToUri(uri: Uri?, resolver: ContentResolver?, bitmap: Bitmap?): Uri {
-        val outputStream = uri?.let { resolver?.openOutputStream(it) }
-            ?: throw IllegalArgumentException("Can not open uri.")
-        outputStream.use { saveBitmapToStream(it, bitmap) }
+    fun saveBitmapToUri(uri: Uri, bitmap: Bitmap?, context: Context): Uri {
+        val uid = UUID.randomUUID()
+        val cachedImageUri = saveBitmapToCache(bitmap, context as MainActivity, uid.toString())
+        val cachedFile = File(MainActivityPresenter.getPathFromUri(context, cachedImageUri))
+
+        try {
+            if (!compress(context, cachedFile, uri)) {
+                throw IOException("Can not open URI.")
+            }
+        } finally {
+            if (cachedFile.exists()) {
+                cachedFile.delete()
+            }
+        }
         return uri
     }
 
-    @Throws(IOException::class)
-    fun saveBitmapToFile(fileName: String, bitmap: Bitmap?, resolver: ContentResolver?): Uri? {
-        val imageUri: Uri?
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    fun compress(mainActivity: MainActivity, fileToCompress: File, destination: Uri): Boolean {
+        val compressor = Compressor(mainActivity)
+        compressor.setQuality(compressQuality)
+        compressor.setCompressFormat(compressFormat)
+        val tempFileName = "tmp"
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            var compressed: File? = null
+            try {
+                val cachePath = File(mainActivity.cacheDir, cacheChildFolder)
+                cachePath.mkdirs()
+                compressor.setDestinationDirectoryPath(cachePath.path)
+                compressed = compressor.compressToFile(fileToCompress, tempFileName + ending)
+                val os = mainActivity.contentResolver.openOutputStream(destination)
+                copyStreams(FileInputStream(compressed), os!!)
+                true
+            } catch (e: IOException) {
+                Log.e("Compression", "Can not compress image file.", e)
+                false
+            } finally {
+                if (compressed != null && compressed.exists()) {
+                    compressed.delete()
+                }
+            }
+        } else {
+            try {
+                compressor.setDestinationDirectoryPath(requireNonNull(File(destination.path!!).parentFile).getPath())
+                compressor.compressToFile(fileToCompress, destination.lastPathSegment)
+                true
+            } catch (e: IOException) {
+                Log.e("Compression", "Can not compress image file", e)
+                false
+            }
+        }
+    }
+
+    fun saveBitmapToFile(fileName: String, bitmap: Bitmap?, resolver: ContentResolver?, context: Context?): Uri? {
+        val imageUri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val contentValues = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
                 put(MediaStore.Images.Media.MIME_TYPE, "image/*")
                 put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
             }
-            imageUri =
-                resolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-            val fos = imageUri?.let { resolver?.openOutputStream(it) }
-            require(fos != null) { "Can't create fileoutputstream!" }
-            fos.use { saveBitmapToStream(it, bitmap) }
+            resolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         } else {
             if (!(MEDIA_DIRECTORY.exists() || MEDIA_DIRECTORY.mkdirs())) {
                 throw IOException("Can not create media directory.")
             }
-            val file = File(MEDIA_DIRECTORY, fileName)
-            val outputStream: OutputStream = FileOutputStream(file)
-            outputStream.use { saveBitmapToStream(it, bitmap) }
-            imageUri = Uri.fromFile(file)
+            Uri.fromFile(File(MEDIA_DIRECTORY, fileName))
         }
-        return imageUri
+
+        val cachedImageUri = saveBitmapToCache(bitmap, context as MainActivity, UUID.randomUUID().toString())
+        val cachedFile = File(MainActivityPresenter.getPathFromUri(context, cachedImageUri))
+
+        try {
+            if (imageUri == null || !compress(context, cachedFile, imageUri)) {
+                throw IOException("Can not compress image file.")
+            }
+            return imageUri
+        } finally {
+            if (cachedFile.exists()) {
+                cachedFile.delete()
+            }
+        }
     }
 
-    fun saveBitmapToCache(bitmap: Bitmap?, mainActivity: MainActivity): Uri? {
+    fun saveBitmapToCache(bitmap: Bitmap?, mainActivity: MainActivity, fileName: String): Uri? {
         var uri: Uri? = null
         try {
-            val cachePath = File(mainActivity.cacheDir, "images")
+            val cachePath = File(mainActivity.cacheDir, cacheChildFolder)
             cachePath.mkdirs()
-            val stream = FileOutputStream("$cachePath/image.png")
+            val stream = FileOutputStream("$cachePath/$fileName$ending")
             saveBitmapToStream(stream, bitmap)
             stream.close()
-            val imagePath = File(mainActivity.cacheDir, "images")
-            val newFile = File(imagePath, "image.png")
+            val imagePath = File(mainActivity.cacheDir, cacheChildFolder)
+            val newFile = File(imagePath, fileName + ending)
             val fileProviderString =
                 mainActivity.applicationContext.packageName + ".fileprovider"
             uri = FileProvider.getUriForFile(
