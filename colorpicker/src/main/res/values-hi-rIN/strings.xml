@@ -27,11 +27,11 @@
     <string name="color_hex">हेक्स</string>
     <string name="color_picker_apply">Apply</string>
     <string name="color_picker_cancel">रद्द करें</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">वर्तमान</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">नवीन व</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">पिपेट</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">परिवर्तन सहेजें?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">क्या आप अपने परिवर्तनों को सहेजना चाहते हैं?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">नहीं न</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">हाँ</string>
 </resources>
