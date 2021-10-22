@@ -27,6 +27,8 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction;
+import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
@@ -38,6 +40,7 @@ import org.junit.runner.RunWith;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipeAccurate;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
@@ -191,15 +194,15 @@ public class UndoRedoIntegrationTest {
 		int translationY = 15;
 
 		perspective.setScale(scale);
-		perspective.setSurfaceTranslationX(translationX);
-		perspective.setSurfaceTranslationY(translationY);
+		perspective.surfaceTranslationX = translationX;
+		perspective.surfaceTranslationY = translationY;
 
 		onTopBarView()
 				.performUndo();
 
 		assertEquals(scale, perspective.getScale(), Float.MIN_VALUE);
-		assertEquals(translationX, perspective.getSurfaceTranslationX(), Float.MIN_VALUE);
-		assertEquals(translationY, perspective.getSurfaceTranslationY(), Float.MIN_VALUE);
+		assertEquals(translationX, perspective.surfaceTranslationX, Float.MIN_VALUE);
+		assertEquals(translationY, perspective.surfaceTranslationY, Float.MIN_VALUE);
 	}
 
 	@Test
@@ -216,14 +219,109 @@ public class UndoRedoIntegrationTest {
 		int translationY = 15;
 
 		perspective.setScale(scale);
-		perspective.setSurfaceTranslationX(translationX);
-		perspective.setSurfaceTranslationY(translationY);
+		perspective.surfaceTranslationX = translationX;
+		perspective.surfaceTranslationY = translationY;
 
 		onTopBarView()
 				.performRedo();
 
 		assertEquals(scale, perspective.getScale(), Float.MIN_VALUE);
-		assertEquals(translationX, perspective.getSurfaceTranslationX(), Float.MIN_VALUE);
-		assertEquals(translationY, perspective.getSurfaceTranslationY(), Float.MIN_VALUE);
+		assertEquals(translationX, perspective.surfaceTranslationX, Float.MIN_VALUE);
+		assertEquals(translationY, perspective.surfaceTranslationY, Float.MIN_VALUE);
+	}
+
+	@Test
+	public void testUndoDoesNotResetLayerVisibility() {
+		onDrawingSurfaceView()
+				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
+				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE))
+				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
+				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
+
+		LayerMenuViewInteraction.onLayerMenuView()
+				.performOpen()
+				.performToggleLayerVisibility(0)
+				.performClose();
+
+		onTopBarView()
+				.performUndo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_TOP_MIDDLE);
+
+		onTopBarView()
+				.performUndo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
+
+		onTopBarView()
+				.performUndo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE);
+
+		onTopBarView()
+				.performUndo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE);
+	}
+
+	@Test
+	public void testUndoRedoDoesNotResetLayerVisibility() {
+		onDrawingSurfaceView()
+				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
+				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE))
+				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
+				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
+
+		LayerMenuViewInteraction.onLayerMenuView()
+				.performOpen()
+				.performToggleLayerVisibility(0)
+				.performClose();
+
+		onTopBarView()
+				.performUndo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_TOP_MIDDLE);
+
+		onTopBarView()
+				.performUndo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
+
+		onTopBarView()
+				.performUndo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE);
+
+		onTopBarView()
+				.performUndo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE);
+
+		onTopBarView()
+				.performRedo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_TOP_MIDDLE);
+
+		onTopBarView()
+				.performRedo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
+
+		onTopBarView()
+				.performRedo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE);
+
+		onTopBarView()
+				.performRedo();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE);
+
+		LayerMenuViewInteraction.onLayerMenuView()
+				.performOpen()
+				.performToggleLayerVisibility(0)
+				.performClose();
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE);
 	}
 }

@@ -22,9 +22,9 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.Constants.INVALID_RESOURCE_ID
+import org.catrobat.paintroid.common.INVALID_RESOURCE_ID
 import org.catrobat.paintroid.tools.Tool.StateChange
-import java.util.*
+import java.util.EnumSet
 
 enum class ToolType(
     @get:StringRes val nameResource: Int,
@@ -40,7 +40,7 @@ enum class ToolType(
         R.string.help_content_eyedropper,
         R.drawable.ic_pocketpaint_tool_pipette,
         EnumSet.of(StateChange.ALL),
-        1,
+        R.id.pocketpaint_tools_pipette,
         INVALID_RESOURCE_ID,
         false
     ),
@@ -86,7 +86,7 @@ enum class ToolType(
         R.drawable.ic_pocketpaint_tool_stamp,
         EnumSet.of(StateChange.ALL),
         R.id.pocketpaint_tools_stamp,
-        R.drawable.pocketpaint_stamp_tool_overlay,
+        INVALID_RESOURCE_ID,
         true
     ),
     LINE(
@@ -113,7 +113,7 @@ enum class ToolType(
         R.drawable.ic_pocketpaint_tool_import,
         EnumSet.of(StateChange.ALL),
         R.id.pocketpaint_tools_import,
-        R.drawable.pocketpaint_import_tool_overlay,
+        INVALID_RESOURCE_ID,
         false
     ),
     TRANSFORM(
@@ -140,7 +140,7 @@ enum class ToolType(
         R.drawable.ic_pocketpaint_tool_rectangle,
         EnumSet.of(StateChange.ALL),
         R.id.pocketpaint_tools_rectangle,
-        R.drawable.pocketpaint_rectangle_tool_overlay,
+        INVALID_RESOURCE_ID,
         true
     ),
     TEXT(
@@ -149,7 +149,7 @@ enum class ToolType(
         R.drawable.ic_pocketpaint_tool_text,
         EnumSet.of(StateChange.ALL),
         R.id.pocketpaint_tools_text,
-        R.drawable.pocketpaint_text_tool_overlay,
+        INVALID_RESOURCE_ID,
         true
     ),
     LAYER(

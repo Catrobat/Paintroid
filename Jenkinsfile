@@ -19,14 +19,14 @@ def junitAndCoverage(String jacocoXmlFile, String coverageName, String javaSrcLo
     sh "./buildScripts/cover2cover.py '$jacocoXmlFile' '$coverageFile'"
 }
 
-def useDebugLabelParameter(defaultLabel){
+def useDebugLabelParameter(defaultLabel) {
     return env.DEBUG_LABEL?.trim() ? env.DEBUG_LABEL : defaultLabel
 }
 
 pipeline {
     parameters {
         string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
-        string name: 'BUILD_WITH_CATROID', defaultValue: 'no', description: 'When set to \'yes\' the the current Paintroid build will be build with the current develop Branch of Catroid'
+        booleanParam name: 'BUILD_WITH_CATROID', defaultValue: false, description: 'When checked then the current Paintroid build will be built with the current develop branch of Catroid'
     }
 
     agent {
@@ -70,7 +70,9 @@ pipeline {
 
         stage('Build with Catroid') {
             when {
-                environment name: 'BUILD_WITH_CATROID', value: 'yes'
+                expression {
+                    params.BUILD_WITH_CATROID
+                }
             }
             steps {
                 sh './gradlew publishToMavenLocal -Psnapshot'
@@ -85,15 +87,16 @@ pipeline {
 
         stage('Static Analysis') {
             steps {
-                sh './gradlew pmd checkstyle lint'
+                sh './gradlew pmd checkstyle lint detekt'
             }
 
             post {
                 always {
                     recordIssues aggregatingResults: true, enabledForFailure: true, qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]],
-                                 tools: [androidLintParser(pattern: "$reports/lint*.xml"),
-                                         checkStyle(pattern: "$reports/checkstyle.xml"),
-                                         pmdParser(pattern: "$reports/pmd.xml")]
+                            tools: [androidLintParser(pattern: "$reports/lint*.xml"),
+                                    checkStyle(pattern: "$reports/checkstyle.xml"),
+                                    pmdParser(pattern: "$reports/pmd.xml"),
+                                    detekt(pattern: "$reports/detekt/detekt.xml")]
                 }
             }
         }

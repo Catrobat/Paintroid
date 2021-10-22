@@ -36,7 +36,6 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.common.ConstantsKt;
 import org.catrobat.paintroid.tools.implementation.BrushTool;
-import org.catrobat.paintroid.tools.implementation.DefaultToolPaint;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
 import org.junit.Before;
@@ -48,6 +47,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPaintEquals;
 import static org.catrobat.paintroid.test.utils.PaintroidAsserts.assertPathEquals;
+import static org.catrobat.paintroid.tools.implementation.DefaultToolPaintKt.STROKE_25;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -79,12 +79,12 @@ public class BrushToolTest {
 
 	@Before
 	public void setUp() {
-		toolToTest = new BrushTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		toolToTest = new BrushTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
 
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setStrokeCap(Paint.Cap.ROUND);
-		paint.setStrokeWidth(DefaultToolPaint.STROKE_25);
+		paint.setStrokeWidth(STROKE_25);
 	}
 
 	@Test
@@ -223,8 +223,8 @@ public class BrushToolTest {
 		ArgumentCaptor<PathCommand> argument = ArgumentCaptor.forClass(PathCommand.class);
 		verify(commandManager).addCommand(argument.capture());
 		PathCommand command = argument.getValue();
-		assertPathEquals(pathStub, command.path);
-		assertPaintEquals(this.paint, command.paint);
+		assertPathEquals(pathStub, command.getPath());
+		assertPaintEquals(this.paint, command.getPaint());
 	}
 
 	@Test
@@ -253,8 +253,8 @@ public class BrushToolTest {
 		ArgumentCaptor<PointCommand> argument = ArgumentCaptor.forClass(PointCommand.class);
 		verify(commandManager).addCommand(argument.capture());
 		PointCommand command = argument.getValue();
-		assertEquals(tap, command.point);
-		assertPaintEquals(paint, command.paint);
+		assertEquals(tap, command.getPoint());
+		assertPaintEquals(paint, command.getPaint());
 	}
 
 	@Test
@@ -275,8 +275,8 @@ public class BrushToolTest {
 		ArgumentCaptor<PointCommand> argument = ArgumentCaptor.forClass(PointCommand.class);
 		verify(commandManager).addCommand(argument.capture());
 		PointCommand command = argument.getValue();
-		assertEquals(tap1, command.point);
-		assertPaintEquals(paint, command.paint);
+		assertEquals(tap1, command.getPoint());
+		assertPaintEquals(paint, command.getPaint());
 	}
 
 	@Test

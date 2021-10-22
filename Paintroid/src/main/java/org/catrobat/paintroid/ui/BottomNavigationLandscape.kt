@@ -1,0 +1,61 @@
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2021 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.catrobat.paintroid.ui
+
+import android.content.Context
+import android.view.LayoutInflater
+import android.widget.ImageView
+import android.widget.TextView
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import org.catrobat.paintroid.R
+import org.catrobat.paintroid.contract.MainActivityContracts.BottomNavigationAppearance
+import org.catrobat.paintroid.tools.ToolType
+
+class BottomNavigationLandscape(context: Context, private val bottomNavigationView: BottomNavigationView) : BottomNavigationAppearance {
+    private val bottomNavigationMenuView: BottomNavigationMenuView = bottomNavigationView.getChildAt(0) as BottomNavigationMenuView
+
+    init {
+        setAppearance(context)
+    }
+
+    override fun showCurrentTool(toolType: ToolType) {
+        val item = bottomNavigationMenuView.getChildAt(1)
+        val icon = item.findViewById<ImageView>(R.id.icon)
+        val title = item.findViewById<TextView>(R.id.title)
+        icon.setImageResource(toolType.drawableResource)
+        title.setText(toolType.nameResource)
+    }
+
+    private fun setAppearance(context: Context) {
+        val inflater = LayoutInflater.from(context)
+        val menu = bottomNavigationView.menu
+        for (i in 0 until menu.size()) {
+            val item = bottomNavigationMenuView.getChildAt(i) as BottomNavigationItemView
+            val itemBottomNavigation = inflater.inflate(R.layout.pocketpaint_layout_bottom_navigation_item, bottomNavigationMenuView, false)
+            val icon = itemBottomNavigation.findViewById<ImageView>(R.id.icon)
+            val text = itemBottomNavigation.findViewById<TextView>(R.id.title)
+            icon.setImageDrawable(menu.getItem(i).icon)
+            text.text = menu.getItem(i).title
+            item.removeAllViews()
+            item.addView(itemBottomNavigation)
+        }
+    }
+}

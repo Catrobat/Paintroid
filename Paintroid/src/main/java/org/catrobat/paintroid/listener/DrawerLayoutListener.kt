@@ -5,10 +5,10 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import org.catrobat.paintroid.ui.LayerAdapter
 
-class DrawerLayoutListener(private val view: DrawerLayout, private val adapter: LayerAdapter) : DrawerLayout.DrawerListener{
-    override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+class DrawerLayoutListener(private val view: DrawerLayout, private val adapter: LayerAdapter) : DrawerLayout.DrawerListener {
+    override fun onDrawerSlide(drawerView: View, slideOffset: Float) = Unit
 
-    override fun onDrawerOpened(drawerView: View) {}
+    override fun onDrawerOpened(drawerView: View) = Unit
 
     override fun onDrawerClosed(drawerView: View) {
         adapter.setDrawerLayoutOpen(false)

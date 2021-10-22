@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,49 +33,54 @@ import org.catrobat.paintroid.BuildConfig
 import org.catrobat.paintroid.R
 
 class AboutDialog : AppCompatDialogFragment() {
-	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		return if (showsDialog) {
-			super.onCreateView(inflater, container, savedInstanceState)
-		} else {
-			inflater.inflate(R.layout.dialog_pocketpaint_about, container, false)
-		}
-	}
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return if (showsDialog) {
+            super.onCreateView(inflater, container, savedInstanceState)
+        } else {
+            inflater.inflate(R.layout.dialog_pocketpaint_about, container, false)
+        }
+    }
 
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		val aboutVersionView = view.findViewById<TextView>(R.id.pocketpaint_about_version)
-		val aboutContentView = view.findViewById<TextView>(R.id.pocketpaint_about_content)
-		val aboutLicenseView = view.findViewById<TextView>(R.id.pocketpaint_about_license_url)
-		val aboutCatrobatView = view.findViewById<TextView>(R.id.pocketpaint_about_catrobat_url)
-		val aboutVersion = getString(R.string.pocketpaint_about_version, BuildConfig.VERSION_NAME)
-		aboutVersionView.text = aboutVersion
-		val aboutContent = getString(R.string.pocketpaint_about_content,
-				getString(R.string.pocketpaint_about_license))
-		aboutContentView.text = aboutContent
-		val licenseUrl = getString(R.string.pocketpaint_about_url_license,
-				getString(R.string.pocketpaint_about_url_license_description))
-		aboutLicenseView.text = HtmlCompat.fromHtml(licenseUrl, HtmlCompat.FROM_HTML_MODE_LEGACY)
-		aboutLicenseView.movementMethod = LinkMovementMethod.getInstance()
-		val catrobatUrl = getString(R.string.pocketpaint_about_url_catrobat,
-				getString(R.string.pocketpaint_about_url_catrobat_description))
-		aboutCatrobatView.text = HtmlCompat.fromHtml(catrobatUrl, HtmlCompat.FROM_HTML_MODE_LEGACY)
-		aboutCatrobatView.movementMethod = LinkMovementMethod.getInstance()
-	}
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val aboutVersionView = view.findViewById<TextView>(R.id.pocketpaint_about_version)
+        val aboutContentView = view.findViewById<TextView>(R.id.pocketpaint_about_content)
+        val aboutLicenseView = view.findViewById<TextView>(R.id.pocketpaint_about_license_url)
+        val aboutCatrobatView = view.findViewById<TextView>(R.id.pocketpaint_about_catrobat_url)
+        val aboutVersion = getString(R.string.pocketpaint_about_version, BuildConfig.VERSION_NAME)
+        aboutVersionView.text = aboutVersion
+        val aboutContent = getString(
+            R.string.pocketpaint_about_content,
+            getString(R.string.pocketpaint_about_license)
+        )
+        aboutContentView.text = aboutContent
+        val licenseUrl = getString(
+            R.string.pocketpaint_about_url_license,
+            getString(R.string.pocketpaint_about_url_license_description)
+        )
+        aboutLicenseView.text = HtmlCompat.fromHtml(licenseUrl, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        aboutLicenseView.movementMethod = LinkMovementMethod.getInstance()
+        val catrobatUrl = getString(
+            R.string.pocketpaint_about_url_catrobat,
+            getString(R.string.pocketpaint_about_url_catrobat_description)
+        )
+        aboutCatrobatView.text = HtmlCompat.fromHtml(catrobatUrl, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        aboutCatrobatView.movementMethod = LinkMovementMethod.getInstance()
+    }
 
-	@SuppressLint("InflateParams")
-	override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-		val inflater = requireActivity().layoutInflater
-		val layout = inflater.inflate(R.layout.dialog_pocketpaint_about, null)
-		onViewCreated(layout, savedInstanceState)
-		return AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
-				.setTitle(R.string.pocketpaint_about_title)
-				.setView(layout)
-				.setPositiveButton(R.string.done) { _, _ -> dismiss() }
-				.create()
-	}
-
-	companion object {
-		@JvmStatic
-		fun newInstance(): AboutDialog = AboutDialog()
-	}
+    @SuppressLint("InflateParams")
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val inflater = requireActivity().layoutInflater
+        val layout = inflater.inflate(R.layout.dialog_pocketpaint_about, null)
+        onViewCreated(layout, savedInstanceState)
+        return AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
+            .setTitle(R.string.pocketpaint_about_title)
+            .setView(layout)
+            .setPositiveButton(R.string.done) { _, _ -> dismiss() }
+            .create()
+    }
 }

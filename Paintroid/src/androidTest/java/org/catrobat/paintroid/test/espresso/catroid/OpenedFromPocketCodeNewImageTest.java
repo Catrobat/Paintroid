@@ -30,7 +30,6 @@ import android.net.Uri;
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
@@ -54,6 +53,8 @@ import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.GrantPermissionRule;
 
+import static org.catrobat.paintroid.common.ConstantsKt.PAINTROID_PICTURE_NAME;
+import static org.catrobat.paintroid.common.ConstantsKt.PAINTROID_PICTURE_PATH;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -92,8 +93,8 @@ public class OpenedFromPocketCodeNewImageTest {
 	@Before
 	public void setUp() {
 		Intent intent = new Intent();
-		intent.putExtra(Constants.PAINTROID_PICTURE_PATH, "");
-		intent.putExtra(Constants.PAINTROID_PICTURE_NAME, IMAGE_NAME);
+		intent.putExtra(PAINTROID_PICTURE_PATH, "");
+		intent.putExtra(PAINTROID_PICTURE_NAME, IMAGE_NAME);
 
 		launchActivityRule.launchActivity(intent);
 		deletionFileList = new ArrayList<>();
@@ -198,7 +199,7 @@ public class OpenedFromPocketCodeNewImageTest {
 	}
 
 	private void verifyImageFile() {
-		String path = launchActivityRule.getActivityResult().getResultData().getStringExtra(Constants.PAINTROID_PICTURE_PATH);
+		String path = launchActivityRule.getActivityResult().getResultData().getStringExtra(PAINTROID_PICTURE_PATH);
 		assertEquals(imageFile.getAbsolutePath(), path);
 
 		assertTrue(imageFile.exists());

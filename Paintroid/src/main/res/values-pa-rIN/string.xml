@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">ਜੇਬ ਪੇਂਟ</string>
+    <string name="pocketpaint_app_name">ਜੇਬ ਪੇਂਟ</string>
     <string name="button_brush">ਬੁਰਸ਼</string>
     <string name="button_cursor">ਕਰਸਰ</string>
     <string name="button_pipette">ਪਾਈਪੇਟ</string>
@@ -87,6 +87,7 @@
     <string name="menu_rate_us">ਸਾਨੂੰ ਦਰਜਾ ਦਿਓ!</string>
     <string name="menu_export">ਨਿਰਯਾਤ</string>
     <string name="menu_feedback">ਸੁਝਾਅ</string>
+    <string name="menu_advanced">ਤਕਨੀਕੀ ਸੈਟਿੰਗਜ਼</string>
     <string name="saved_to">ਚਿੱਤਰ ਨੂੰ ਸੰਭਾਲਿਆ ਗਿਆ\n</string>
     <string name="saved">ਚਿੱਤਰ ਨੂੰ \n ਬਚਾਇਆ</string>
     <string name="copy_to">ਉੱਤੇ ਨਕਲ ਸੁਰੱਖਿਅਤ ਕੀਤੀ ਗਈ\n</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_strike_through_shortcut">ਏਬੀਸੀ</string>
     <string name="text_tool_dialog_input_hint">ਲਿਖਣ ਲਈ ਇੱਥੇ ਟੈਪ ਕਰੋ</string>
+    <string name="text_tool_dialog_font_monospace">ਮੋਨੋਸਪੇਸ</string>
+    <string name="text_tool_dialog_font_serif">ਸੀਰੀਫ</string>
+    <string name="text_tool_dialog_font_sans_serif">ਸੰਸ ਸੇਰੀਫ</string>
+    <string name="text_tool_dialog_font_dubai">ਦੁਬਈ</string>
+    <string name="text_tool_dialog_font_arabic_stc">ਐਸ.ਟੀ.ਸੀ.</string>
     <string name="shape_tool_dialog_rect_title">ਆਇਤਾਕਾਰ</string>
     <string name="shape_tool_dialog_ellipse_title">ਅੰਡਾਕਾਰ</string>
     <string name="shape_tool_dialog_star_title">ਤਾਰਾ</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">ਸੈਟਿੰਗਜ਼</string>
     <string name="dialog_save_image_name">ਚਿੱਤਰ ਦਾ ਨਾਮ</string>
     <string name="dialog_save_image_format">ਚਿੱਤਰ ਫਾਰਮੈਟ</string>
+    <string name="dialog_antialiasing">ਵਿਰੋਧੀ ਲਾਇਸਿੰਸ</string>
+    <string name="dialog_smoothing">ਸਮੂਥਿੰਗ</string>
     <string name="dialog_save_jpg_option_quality">ਗੁਣ:</string>
     <string name="pocketpaint_jpg_message_dialog"><b> ਘੱਟੋ-ਘੱਟ ਸਟੋਰੇਜ਼ ਸਪੇਸ ਨੂੰ ਕਰਦਾ ਹੈ </b>. <b> ਕੋਈ ਪਾਰਦਰਸ਼ਤਾ </b> ਯਾਦ ਨਹੀਂ ਹੈ.</string>
     <string name="pocketpaint_png_message_dialog">ਘਾਤਕ ਸੰਕੁਚਨ. ਪਾਰਦਰਸ਼ਤਾ ਸੁਰੱਖਿਅਤ ਹੈ.</string>
     <string name="pocketpaint_ora_message_dialog">ਇਹ ਫਾਰਮੈਟ <b> ਪਰਤਾਂ </b> ਨੂੰ ਯਾਦ ਕਰਦਾ ਹੈ. <b> ਇਹ ਉਨ੍ਹਾਂ ਐਪਸ ਦੁਆਰਾ ਖੋਲ੍ਹਿਆ ਜਾ ਸਕਦਾ ਹੈ ਜੋ ਓਪਨਸਟਰ ਫਾਰਮੈਟ ਦਾ ਸਮਰਥਨ ਕਰਦੇ ਹਨ. </b></string>
+    <string name="pocketpaint_catrobat_message_dialog">ਜੇਬ ਪੇਂਟ ਦਾ ਜੱਦੀ ਚਿੱਤਰ ਫਾਰਮੈਟ. ਇਹ ਫਾਰਮੈਟ ਕਮਾਂਡਾਂ ਅਤੇ ਲੇਅਰਾਂ ਨੂੰ ਯਾਦ ਰੱਖਦਾ ਹੈ.</string>
     <string name="permission_info_external_storage_text">ਇਸ ਐਪ ਨੂੰ ਸਹੀ ਤਰ੍ਹਾਂ ਕੰਮ ਕਰਨ ਲਈ ਬੇਨਤੀ ਕੀਤੀ ਅਨੁਮਤੀ ਦੀ ਲੋੜ ਹੈ. ਸਥਾਨਕ ਮੈਮੋਰੀ ਵਿਚ ਚਿੱਤਰਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਕਰਨ ਲਈ, ਐਪ ਨੂੰ ਇਸ ਨੂੰ ਪੜ੍ਹਨ ਅਤੇ ਲਿਖਣ ਦੀ ਪਹੁੰਚ ਦੀ ਜ਼ਰੂਰਤ ਹੈ.</string>
     <string name="permission_info_permanent_denial_text">ਇਸ ਐਪ ਨੂੰ ਸਹੀ ਤਰ੍ਹਾਂ ਕੰਮ ਕਰਨ ਲਈ ਬੇਨਤੀ ਕੀਤੀ ਅਨੁਮਤੀ ਦੀ ਲੋੜ ਹੈ. ਸਥਾਨਕ ਮੈਮੋਰੀ ਵਿਚ ਚਿੱਤਰਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਕਰਨ ਲਈ, ਐਪ ਨੂੰ ਇਸ ਨੂੰ ਪੜ੍ਹਨ ਅਤੇ ਲਿਖਣ ਦੀ ਪਹੁੰਚ ਦੀ ਜ਼ਰੂਰਤ ਹੈ.
          ਜਿਵੇਂ ਕਿ ਤੁਸੀਂ ਆਗਿਆ ਤੋਂ ਇਨਕਾਰ ਕਰ ਦਿੱਤਾ ਹੈ ਦੁਬਾਰਾ ਨਾ ਪੁੱਛੋ, ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਫੋਨ ਸੈਟਿੰਗਾਂ ਤੇ ਜਾਓ ਅਤੇ ਜੇ ਤੁਸੀਂ ਸੰਬੰਧਿਤ ਕਾਰਜਾਂ ਦੀ ਵਰਤੋਂ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ਤਾਂ ਲੋੜੀਂਦੀਆਂ ਆਗਿਆ ਦਿਓ.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">ਨੈਵੀਗੇਸ਼ਨ ਦਰਾਜ਼ ਖੋਲ੍ਹੋ</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">ਨੇਵੀਗੇਸ਼ਨ ਦਰਾਜ਼ ਨੂੰ ਬੰਦ ਕਰੋ</string>
     <string name="transform_info_text">ਕਿਨਾਰਿਆਂ ਨੂੰ ਉਨ੍ਹਾਂ ਦੀ ਨਵੀਂ ਸਥਿਤੀ \'ਤੇ ਖਿੱਚੋ, ਚਿੱਤਰ ਖੇਤਰ ਨੂੰ ਵੱਡਾ ਕਰਨ ਜਾਂ ਫਸਣ ਲਈ ਚੈੱਕਮਾਰਕ\' ਤੇ ਟੈਪ ਕਰੋ.</string>
     <string name="cursor_draw_inactive">ਸਥਿਤੀ ਤੇ ਪੈਨ ਕਰੋ, ਫਿਰ ਪੇਂਟਿੰਗ ਨੂੰ ਅਰੰਭ ਕਰਨ ਲਈ ਟੈਪ ਕਰੋ.</string>
     <string name="cursor_draw_active">ਖਿੱਚਣ ਲਈ ਪੈਨ ਕਰੋ, ਫਿਰ ਪੇਂਟਿੰਗ ਨੂੰ ਰੋਕਣ ਲਈ ਦੁਬਾਰਾ ਟੈਪ ਕਰੋ.</string>

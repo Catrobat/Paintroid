@@ -26,7 +26,6 @@ import android.view.Gravity;
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.common.Constants;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
@@ -48,6 +47,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import static org.catrobat.paintroid.common.ConstantsKt.TEMP_PICTURE_NAME;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ConfirmQuitDialogInteraction.onConfirmQuitDialog;
@@ -146,13 +146,13 @@ public class ToolOnBackPressedIntegrationTest {
 	public void testBrushToolBackPressedWithSaveAndOverride() {
 		String pathToFile = launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 				+ File.separator
-				+ Constants.TEMP_PICTURE_NAME
+				+ TEMP_PICTURE_NAME
 				+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
 
 		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(saveFile));
-		FileIO.currentFileNamePng = Constants.TEMP_PICTURE_NAME + FILE_ENDING;
+		FileIO.currentFileNamePng = TEMP_PICTURE_NAME + FILE_ENDING;
 		FileIO.uriFilePng = Uri.fromFile(saveFile);
 		long oldFileSize = saveFile.length();
 
@@ -173,7 +173,7 @@ public class ToolOnBackPressedIntegrationTest {
 		onData(AllOf.allOf(is(instanceOf(String.class)),
 				is("png"))).inRoot(isPlatformPopup()).perform(click());
 		onView(withId(R.id.pocketpaint_image_name_save_text))
-				.perform(replaceText(Constants.TEMP_PICTURE_NAME));
+				.perform(replaceText(TEMP_PICTURE_NAME));
 
 		onView(withText(R.string.save_button_text))
 				.perform(click());
@@ -192,7 +192,7 @@ public class ToolOnBackPressedIntegrationTest {
 
 		Espresso.pressBack();
 
-		assertEquals(toolReference.get().getToolType(), ToolType.BRUSH);
+		assertEquals(toolReference.getTool().getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
@@ -200,11 +200,11 @@ public class ToolOnBackPressedIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.CURSOR);
 
-		assertEquals(toolReference.get().getToolType(), ToolType.CURSOR);
+		assertEquals(toolReference.getTool().getToolType(), ToolType.CURSOR);
 
 		Espresso.pressBack();
 
-		assertEquals(toolReference.get().getToolType(), ToolType.BRUSH);
+		assertEquals(toolReference.getTool().getToolType(), ToolType.BRUSH);
 	}
 
 	@Test
@@ -215,7 +215,7 @@ public class ToolOnBackPressedIntegrationTest {
 		String pathToFile =
 				launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 						+ File.separator
-						+ Constants.TEMP_PICTURE_NAME
+						+ TEMP_PICTURE_NAME
 						+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);

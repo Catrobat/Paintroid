@@ -28,14 +28,27 @@ import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.model.CommandManagerModel
 
-class AsyncCommandManager(
+open class AsyncCommandManager(
     private val commandManager: CommandManager,
     private val layerModel: LayerContracts.Model
 ) : CommandManager {
     private val commandListeners: MutableList<CommandListener> = ArrayList()
     private var shuttingDown = false
     private var mutex = Mutex()
+
+    override val isBusy: Boolean
+        get() = mutex.isLocked
+
+    override val commandManagerModel
+        get() = commandManager.commandManagerModel
+
+    override val isUndoAvailable: Boolean
+        get() = commandManager.isUndoAvailable
+
+    override val isRedoAvailable: Boolean
+        get() = commandManager.isRedoAvailable
 
     override fun addCommandListener(commandListener: CommandListener) {
         commandListeners.add(commandListener)
@@ -45,11 +58,7 @@ class AsyncCommandManager(
         commandListeners.remove(commandListener)
     }
 
-    override fun isUndoAvailable(): Boolean = commandManager.isUndoAvailable
-
-    override fun isRedoAvailable(): Boolean = commandManager.isRedoAvailable
-
-    override fun addCommand(command: Command) {
+    override fun addCommand(command: Command?) {
         CoroutineScope(Dispatchers.Default).launch {
             mutex.withLock {
                 if (!shuttingDown) {
@@ -62,11 +71,28 @@ class AsyncCommandManager(
         }
     }
 
+    override fun loadCommandsCatrobatImage(model: CommandManagerModel?) {
+        CoroutineScope(Dispatchers.Default).launch {
+            mutex.withLock {
+                if (!shuttingDown) {
+                    synchronized(layerModel) { commandManager.loadCommandsCatrobatImage(model) }
+                }
+                withContext(Dispatchers.Main) {
+                    notifyCommandPostExecute()
+                }
+            }
+        }
+    }
+
     override fun undo() {
         CoroutineScope(Dispatchers.Default).launch {
             mutex.withLock {
                 if (!shuttingDown) {
-                    synchronized(layerModel) { commandManager.undo() }
+                    synchronized(layerModel) {
+                        if (isUndoAvailable) {
+                            commandManager.undo()
+                        }
+                    }
                 }
                 withContext(Dispatchers.Main) {
                     notifyCommandPostExecute()
@@ -79,7 +105,11 @@ class AsyncCommandManager(
         CoroutineScope(Dispatchers.Default).launch {
             mutex.withLock {
                 if (!shuttingDown) {
-                    synchronized(layerModel) { commandManager.redo() }
+                    synchronized(layerModel) {
+                        if (isRedoAvailable) {
+                            commandManager.redo()
+                        }
+                    }
                 }
                 withContext(Dispatchers.Main) {
                     notifyCommandPostExecute()
@@ -100,8 +130,6 @@ class AsyncCommandManager(
     override fun setInitialStateCommand(command: Command) {
         synchronized(layerModel) { commandManager.setInitialStateCommand(command) }
     }
-
-    override fun isBusy(): Boolean = mutex.isLocked
 
     private fun notifyCommandPostExecute() {
         if (!shuttingDown) {

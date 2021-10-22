@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.RectF
+import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
 import org.catrobat.paintroid.ui.Perspective
 
 interface Workspace {
@@ -37,10 +38,16 @@ interface Workspace {
     val perspective: Perspective
 
     fun contains(point: PointF): Boolean
+
     fun intersectsWith(rectF: RectF): Boolean
-    fun getPixelOfCurrentLayer(coordinate: PointF): Int
+
     fun resetPerspective()
+
     fun getSurfacePointFromCanvasPoint(coordinate: PointF): PointF
+
     fun getCanvasPointFromSurfacePoint(surfacePoint: PointF): PointF
+
     fun invalidate()
+
+    fun getCommandSerializationHelper(): CommandSerializationUtilities
 }

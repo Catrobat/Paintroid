@@ -119,7 +119,7 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
-	public LayerMenuViewInteraction perfomToggleLayerVisibility(int position) {
+	public LayerMenuViewInteraction performToggleLayerVisibility(int position) {
 		check(matches(isDisplayed()));
 		onView(withIndex(withId(R.id.pocketpaint_checkbox_layer), position)).perform(click());
 		return this;

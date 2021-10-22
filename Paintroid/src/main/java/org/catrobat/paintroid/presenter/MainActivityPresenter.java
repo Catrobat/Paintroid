@@ -67,8 +67,10 @@ import org.catrobat.paintroid.iotasks.BitmapReturnValue;
 import org.catrobat.paintroid.iotasks.CreateFileAsync.CreateFileCallback;
 import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback;
 import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback;
+import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.tools.implementation.LineTool;
 import org.catrobat.paintroid.ui.LayerAdapter;
 import org.catrobat.paintroid.ui.Perspective;
 
@@ -79,25 +81,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.GravityCompat;
 
-import static org.catrobat.paintroid.common.MainActivityConstants.CREATE_FILE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_CATROID;
-import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.LOAD_IMAGE_IMPORTPNG;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_IMPORT_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_IMPORTPNG;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_INTRO;
-import static org.catrobat.paintroid.common.MainActivityConstants.REQUEST_CODE_LOAD_PICTURE;
-import static org.catrobat.paintroid.common.MainActivityConstants.RESULT_INTRO_MW_NOT_SUPPORTED;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_DEFAULT;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_FINISH;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_LOAD_NEW;
-import static org.catrobat.paintroid.common.MainActivityConstants.SAVE_IMAGE_NEW_EMPTY;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.CREATE_FILE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.LOAD_IMAGE_CATROID;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.LOAD_IMAGE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.LOAD_IMAGE_IMPORT_PNG;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_REQUEST_CODE_IMPORT_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.REQUEST_CODE_IMPORT_PNG;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.REQUEST_CODE_INTRO;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.REQUEST_CODE_LOAD_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.RESULT_INTRO_MW_NOT_SUPPORTED;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_DEFAULT;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_FINISH;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_LOAD_NEW;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.SAVE_IMAGE_NEW_EMPTY;
 
 public class MainActivityPresenter implements Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
 	private Activity fileActivity;
@@ -123,10 +125,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	private boolean isExport = false;
 
 	public MainActivityPresenter(Activity activity, MainView view, Model model, Workspace workspace, Navigator navigator,
-			Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
-			DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
-			CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController,
-			UserPreferences sharedPreferences, Context context) {
+				Interactor interactor, TopBarViewHolder topBarViewHolder, BottomBarViewHolder bottomBarViewHolder,
+				DrawerLayoutViewHolder drawerLayoutViewHolder, BottomNavigationViewHolder bottomNavigationViewHolder,
+				CommandFactory commandFactory, CommandManager commandManager, Perspective perspective, ToolController toolController,
+				UserPreferences sharedPreferences, Context context) {
 		this.fileActivity = activity;
 		this.view = view;
 		this.model = model;
@@ -153,6 +155,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	public void loadImageClicked() {
 		switchBetweenVersions(PERMISSION_REQUEST_CODE_LOAD_PICTURE);
 		setFirstCheckBoxInLayerMenu();
+		if (toolController.getToolType() == ToolType.LINE) {
+			LineTool lineTool = (LineTool) toolController.getCurrentTool();
+			lineTool.setLineFinalized(true);
+			lineTool.resetInternalState(Tool.StateChange.RESET_INTERNAL_STATE);
+		}
 	}
 
 	public void setFirstCheckBoxInLayerMenu() {
@@ -174,6 +181,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void newImageClicked() {
+		if (toolController.getToolType() == ToolType.LINE) {
+			LineTool lineTool = (LineTool) toolController.getCurrentTool();
+			lineTool.setLineFinalized(true);
+			lineTool.resetInternalState(Tool.StateChange.ALL);
+		}
 		if (isImageUnchanged() || model.isSaved()) {
 			onNewImage();
 			setFirstCheckBoxInLayerMenu();
@@ -279,6 +291,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	@Override
+	public void showAdvancedSettingsClicked() {
+		navigator.showAdvancedSettingsDialog();
+	}
+
+	@Override
 	public void showRateUsDialog() {
 		navigator.showRateUsDialog();
 	}
@@ -306,6 +323,11 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void showOraInformationDialog() {
 		navigator.showOraInformationDialog();
+	}
+
+	@Override
+	public void showCatrobatInformationDialog() {
+		navigator.showCatrobatInformationDialog();
 	}
 
 	@Override
@@ -420,20 +442,20 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void handleActivityResult(@ActivityRequestCode int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-			case REQUEST_CODE_IMPORTPNG:
+			case REQUEST_CODE_IMPORT_PNG:
 				if (resultCode != Activity.RESULT_OK) {
 					return;
 				}
 				Uri selectedGalleryImageUri = data.getData();
 				setTool(ToolType.IMPORTPNG);
 				toolController.switchTool(ToolType.IMPORTPNG, false);
-				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, selectedGalleryImageUri, getContext(), false);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORT_PNG, selectedGalleryImageUri, getContext(), false, workspace);
 				break;
 			case REQUEST_CODE_LOAD_PICTURE:
 				if (resultCode != Activity.RESULT_OK) {
 					return;
 				}
-				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, data.getData(), getContext(), false);
+				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, data.getData(), getContext(), false, workspace);
 				break;
 			case REQUEST_CODE_INTRO:
 				if (resultCode == RESULT_INTRO_MW_NOT_SUPPORTED) {
@@ -480,7 +502,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 						}
 						break;
 					case PERMISSION_REQUEST_CODE_IMPORT_PICTURE:
-						navigator.startImportImageActivity(REQUEST_CODE_IMPORTPNG);
+						navigator.startImportImageActivity(REQUEST_CODE_IMPORT_PNG);
 						break;
 					default:
 						view.superHandleRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -508,6 +530,19 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		} else if (model.isFullscreen()) {
 			exitFullscreenClicked();
 		} else if (!toolController.isDefaultTool()) {
+			if (toolController.getToolType() == ToolType.LINE) {
+				LineTool lineTool = (LineTool) toolController.getCurrentTool();
+				if (!lineTool.getLineFinalized() && lineTool.getStartpointSet() && !lineTool.getEndpointSet()) {
+					if (commandManager.isUndoAvailable()) {
+						commandManager.undo();
+					}
+					lineTool.setStartPointToDraw(null);
+					lineTool.setStartpointSet(false);
+				} else if (!lineTool.getLineFinalized() && lineTool.getStartpointSet() && lineTool.getEndpointSet()) {
+					lineTool.setToolSwitched(true);
+					lineTool.onClickOnButton();
+				}
+			}
 			setTool(ToolType.BRUSH);
 			toolController.switchTool(ToolType.BRUSH, true);
 		} else {
@@ -530,6 +565,13 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 		if (view.isKeyboardShown()) {
 			view.hideKeyboard();
 		} else {
+			if (toolController.getToolType() == ToolType.LINE) {
+				LineTool lineTool = (LineTool) toolController.getCurrentTool();
+				if (!lineTool.getLineFinalized() && lineTool.getStartpointSet()) {
+					lineTool.setStartpointSet(false);
+					lineTool.setStartPointToDraw(null);
+				}
+			}
 			commandManager.undo();
 		}
 	}
@@ -564,6 +606,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void onCommandPostExecute() {
+		navigator.dismissIndeterminateProgressDialog();
 		if (resetPerspectiveAfterNextCommand) {
 			resetPerspectiveAfterNextCommand = false;
 			workspace.resetPerspective();
@@ -590,7 +633,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 			if (imageFile.exists()) {
 				model.setSavedPictureUri(view.getUriFromFile(imageFile));
 
-				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri(), getContext(), false);
+				interactor.loadFile(this, LOAD_IMAGE_CATROID, model.getSavedPictureUri(), getContext(), false, workspace);
 			} else {
 				interactor.createFile(this, CREATE_FILE_DEFAULT, extraPictureName);
 			}
@@ -649,7 +692,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void restoreState(boolean isFullscreen, boolean isSaved, boolean isOpenedFromCatroid,
-			boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri) {
+				boolean wasInitialAnimationPlayed, @Nullable Uri savedPictureUri, @Nullable Uri cameraImageUri) {
 		model.setFullscreen(isFullscreen);
 		model.setSaved(isSaved);
 		model.setOpenedFromCatroid(isOpenedFromCatroid);
@@ -727,14 +770,14 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public void loadScaledImage(Uri uri, @LoadImageRequestCode int requestCode) {
 		switch (requestCode) {
-			case LOAD_IMAGE_IMPORTPNG:
+			case LOAD_IMAGE_IMPORT_PNG:
 				setTool(ToolType.IMPORTPNG);
 				toolController.switchTool(ToolType.IMPORTPNG, false);
-				interactor.loadFile(this, LOAD_IMAGE_IMPORTPNG, uri, context, true);
+				interactor.loadFile(this, LOAD_IMAGE_IMPORT_PNG, uri, context, true, workspace);
 				break;
 			case LOAD_IMAGE_CATROID:
 			case LOAD_IMAGE_DEFAULT:
-				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, uri, context, true);
+				interactor.loadFile(this, LOAD_IMAGE_DEFAULT, uri, context, true, workspace);
 				break;
 			default:
 				Log.e(MainActivity.TAG, "wrong request code for loading pictures");
@@ -747,6 +790,12 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 		if (bitmap == null) {
 			navigator.showLoadErrorDialog();
+			return;
+		}
+
+		if (bitmap.model != null) {
+			commandManager.loadCommandsCatrobatImage(bitmap.model);
+			resetPerspectiveAfterNextCommand = true;
 			return;
 		}
 
@@ -787,7 +836,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 					}
 				}
 				break;
-			case LOAD_IMAGE_IMPORTPNG:
+			case LOAD_IMAGE_IMPORT_PNG:
 				if (toolController.getToolType() == ToolType.IMPORTPNG) {
 					toolController.setBitmapFromSource(bitmap.bitmap);
 				} else {
@@ -959,7 +1008,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public ContentResolver getContentResolver() {
-		return view.getContentResolver();
+		return view.getMyContentResolver();
 	}
 
 	@Override
@@ -969,7 +1018,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public boolean isFinishing() {
-		return view.isFinishing();
+		return view.getFinishing();
 	}
 
 	@Override
@@ -1061,5 +1110,10 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	@Override
 	public Context getContext() {
 		return this.context;
+	}
+
+	@Override
+	public void setAntialiasingOnOkClicked() {
+		navigator.setAntialiasingOnToolPaint();
 	}
 }

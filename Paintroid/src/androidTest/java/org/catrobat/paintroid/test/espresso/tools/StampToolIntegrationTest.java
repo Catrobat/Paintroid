@@ -96,7 +96,7 @@ public class StampToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.STAMP);
 
-		StampTool stampTool = (StampTool) toolReference.get();
+		StampTool stampTool = (StampTool) toolReference.getTool();
 		stampTool.boxHeight -= 25;
 		stampTool.boxWidth -= 25;
 
@@ -126,7 +126,7 @@ public class StampToolIntegrationTest {
 		StampToolViewInteraction.Companion.onStampToolViewInteraction()
 				.performCopy();
 
-		StampTool stampTool = (StampTool) toolReference.get();
+		StampTool stampTool = (StampTool) toolReference.getTool();
 		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
 
 		StampToolViewInteraction.Companion.onStampToolViewInteraction()
@@ -148,7 +148,7 @@ public class StampToolIntegrationTest {
 		StampToolViewInteraction.Companion.onStampToolViewInteraction()
 				.performCut();
 
-		StampTool stampTool = (StampTool) toolReference.get();
+		StampTool stampTool = (StampTool) toolReference.getTool();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, stampTool.toolPosition.x, stampTool.toolPosition.y);
@@ -178,7 +178,7 @@ public class StampToolIntegrationTest {
 		StampToolViewInteraction.Companion.onStampToolViewInteraction()
 				.performCopy();
 
-		StampTool stampTool = (StampTool) toolReference.get();
+		StampTool stampTool = (StampTool) toolReference.getTool();
 		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
 
 		StampToolViewInteraction.Companion.onStampToolViewInteraction()
@@ -200,7 +200,7 @@ public class StampToolIntegrationTest {
 		onToolBarView()
 				.performSelectTool(ToolType.STAMP);
 
-		StampTool stampTool = (StampTool) toolReference.get();
+		StampTool stampTool = (StampTool) toolReference.getTool();
 		PointF toolPosition = new PointF(perspective.surfaceCenterX, perspective.surfaceCenterY);
 		stampTool.toolPosition.set(toolPosition);
 		stampTool.boxWidth = (int) (bitmapWidth * STAMP_RESIZE_FACTOR);
@@ -221,20 +221,20 @@ public class StampToolIntegrationTest {
 				.performSelectTool(ToolType.STAMP);
 
 		Bitmap emptyBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
-				toolReference.get()).drawingBitmap);
+				toolReference.getTool()).drawingBitmap);
 
 		StampToolViewInteraction.Companion.onStampToolViewInteraction()
 				.performCopy();
 
 		Bitmap expectedBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
-				toolReference.get()).drawingBitmap);
+				toolReference.getTool()).drawingBitmap);
 
 		assertFalse(expectedBitmap.sameAs(emptyBitmap));
 
 		mainActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		Bitmap actualBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
-				toolReference.get()).drawingBitmap);
+				toolReference.getTool()).drawingBitmap);
 
 		assertTrue(expectedBitmap.sameAs(actualBitmap));
 	}
@@ -244,8 +244,8 @@ public class StampToolIntegrationTest {
 		float scale = 2.0f;
 
 		perspective.setScale(scale);
-		perspective.setSurfaceTranslationX(50);
-		perspective.setSurfaceTranslationY(200);
+		perspective.surfaceTranslationX = 50;
+		perspective.surfaceTranslationY = 200;
 		mainActivity.refreshDrawingSurface();
 
 		onToolBarView()

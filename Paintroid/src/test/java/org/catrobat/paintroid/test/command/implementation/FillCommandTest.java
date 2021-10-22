@@ -63,6 +63,7 @@ public class FillCommandTest {
 		layerModel.setCurrentLayer(layer);
 
 		when(layer.getBitmap()).thenReturn(bitmap);
+		when(layer.getCheckBox()).thenReturn(true);
 		when(bitmap.getPixel(3, 5)).thenReturn(Color.RED);
 		when(paint.getColor()).thenReturn(Color.BLUE);
 

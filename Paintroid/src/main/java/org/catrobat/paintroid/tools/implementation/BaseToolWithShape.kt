@@ -32,6 +32,8 @@ import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import kotlin.math.max
+import kotlin.math.min
 
 private const val BUNDLE_TOOL_POSITION_Y = "TOOL_POSITION_Y"
 private const val BUNDLE_TOOL_POSITION_X = "TOOL_POSITION_X"
@@ -65,7 +67,7 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
     val linePaint: Paint
 
     @JvmField
-    val metrics: DisplayMetrics? = contextCallback.displayMetrics
+    val metrics: DisplayMetrics = contextCallback.displayMetrics
 
     init {
         val perspective = workspace.perspective
@@ -81,20 +83,18 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
         linePaint.color = primaryShapeColor
     }
 
-    abstract fun drawShape(canvas: Canvas?)
+    abstract fun drawShape(canvas: Canvas)
 
     fun getStrokeWidthForZoom(
         defaultStrokeWidth: Float,
         minStrokeWidth: Float,
         maxStrokeWidth: Float
-    ): Float? {
-        metrics ?: return null
+    ): Float {
         val strokeWidth = defaultStrokeWidth * metrics.density / workspace.scale
-        return Math.min(maxStrokeWidth, Math.max(minStrokeWidth, strokeWidth))
+        return min(maxStrokeWidth, max(minStrokeWidth, strokeWidth))
     }
 
-    fun getInverselyProportionalSizeForZoom(defaultSize: Float): Float? {
-        metrics ?: return null
+    fun getInverselyProportionalSizeForZoom(defaultSize: Float): Float {
         val applicationScale = workspace.scale
         return defaultSize * metrics.density / applicationScale
     }
@@ -118,19 +118,19 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
     override fun getAutoScrollDirection(
         pointX: Float,
         pointY: Float,
-        viewWidth: Int,
-        viewHeight: Int
+        screenWidth: Int,
+        screenHeight: Int
     ): Point {
         val surfaceToolPosition = workspace.getSurfacePointFromCanvasPoint(toolPosition)
         return scrollBehavior.getScrollDirection(
             surfaceToolPosition.x,
             surfaceToolPosition.y,
-            viewWidth,
-            viewHeight
+            screenWidth,
+            screenHeight
         )
     }
 
     abstract fun onClickOnButton()
 
-    protected open fun drawToolSpecifics(canvas: Canvas?, boxWidth: Float, boxHeight: Float) = Unit
+    protected open fun drawToolSpecifics(canvas: Canvas, boxWidth: Float, boxHeight: Float) {}
 }

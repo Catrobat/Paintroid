@@ -37,6 +37,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import androidx.test.annotation.UiThreadTest;
 
+import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.DEFAULT_BOX_RESIZE_MARGIN;
+import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.MAXIMUM_BORDER_RATIO;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -76,7 +78,7 @@ public class ImportToolTest {
 		when(workspace.getScale()).thenReturn(1f);
 		when(workspace.getPerspective()).thenReturn(new Perspective(20, 30));
 
-		tool = new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager);
+		tool = new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
 	}
 
 	@Test
@@ -95,7 +97,7 @@ public class ImportToolTest {
 	public void testImportTooSmall() {
 		final int width = 1;
 		final int height = 1;
-		final int minSize = ImportTool.DEFAULT_BOX_RESIZE_MARGIN;
+		final int minSize = DEFAULT_BOX_RESIZE_MARGIN;
 
 		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		tool.setBitmapFromSource(bitmap);
@@ -106,8 +108,8 @@ public class ImportToolTest {
 
 	@Test
 	public void testImportTooLarge() {
-		final int width = (int) (drawingSurfaceWidth * ImportTool.MAXIMUM_BORDER_RATIO);
-		final int height = (int) (drawingSurfaceHeight * ImportTool.MAXIMUM_BORDER_RATIO);
+		final int width = (int) (drawingSurfaceWidth * MAXIMUM_BORDER_RATIO);
+		final int height = (int) (drawingSurfaceHeight * MAXIMUM_BORDER_RATIO);
 
 		Bitmap bitmap = Bitmap.createBitmap(width + 1, height + 1, Bitmap.Config.ARGB_8888);
 		tool.setBitmapFromSource(bitmap);

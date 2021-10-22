@@ -139,7 +139,7 @@ public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 		public float[] calculateCoordinates(View view) {
 			MainActivity mainActivity = getMainActivityFromView(view);
 			Workspace workspace = mainActivity.workspace;
-			PointF toolPosition = ((BaseToolWithShape) mainActivity.toolReference.get()).toolPosition;
+			PointF toolPosition = ((BaseToolWithShape) mainActivity.toolReference.getTool()).toolPosition;
 			PointF point = workspace.getSurfacePointFromCanvasPoint(toolPosition);
 			return calculateViewOffset(view, point.x, point.y);
 		}

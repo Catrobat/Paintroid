@@ -36,6 +36,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
@@ -65,9 +66,9 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var toolReference: ToolReference
     private lateinit var toolOptionsViewController: ToolOptionsViewController
 
-    constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet) {}
+    constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
-    constructor(context: Context?) : super(context) {}
+    constructor(context: Context?) : super(context)
 
     init {
         surfaceLock = Object()
@@ -87,7 +88,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         val autoScrollTask = AutoScrollTask(handler, AutoScrollTaskCallbackImpl())
         val density = resources.displayMetrics.density
         val callback: DrawingSurfaceListenerCallback = object : DrawingSurfaceListenerCallback {
-            override fun getCurrentTool(): Tool = toolReference.get()
+            override fun getCurrentTool(): Tool? = toolReference.tool
 
             override fun multiplyPerspectiveScale(factor: Float) {
                 perspective.multiplyScale(factor)
@@ -106,6 +107,10 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         }
         drawingSurfaceListener = DrawingSurfaceListener(autoScrollTask, callback, density)
         setOnTouchListener(drawingSurfaceListener)
+    }
+
+    companion object {
+        private val TAG = DrawingSurface::class.java.name
     }
 
     fun setArguments(
@@ -142,10 +147,12 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 val iterator = layerModel.listIterator(layerModel.layerCount)
 
                 while (iterator.hasPrevious()) {
-                    surfaceViewCanvas.drawBitmap(iterator.previous().bitmap, 0f, 0f, null)
+                    iterator.previous().bitmap?.let {
+                        surfaceViewCanvas.drawBitmap(it, 0f, 0f, null)
+                    }
                 }
 
-                val tool = toolReference.get()
+                val tool = toolReference.tool
                 tool?.draw(surfaceViewCanvas)
             }
         }
@@ -162,10 +169,10 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     }
 
     fun refreshDrawingSurface() {
-        surfaceLock?.apply {
-            synchronized(this) {
+        surfaceLock?.let {
+            synchronized(it) {
                 surfaceDirty = true
-                notify()
+                it.notify()
             }
         }
     }
@@ -180,7 +187,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
 
     @Synchronized
     fun setBitmap(bitmap: Bitmap?) {
-        layerModel.currentLayer.bitmap = bitmap
+        layerModel.currentLayer?.bitmap = bitmap
     }
 
     fun isPointOnCanvas(pointX: Int, pointY: Int): Boolean =
@@ -188,7 +195,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         surfaceReady = true
-        val currentToolType = toolReference.get().toolType
+        val currentToolType = toolReference.tool?.toolType
         if (currentToolType != ToolType.IMPORTPNG && currentToolType != ToolType.TRANSFORM && currentToolType != ToolType.TEXT) {
             perspective.resetScaleAndTranslation()
         }
@@ -217,7 +224,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         }
 
         override fun handleToolMove(coordinate: PointF) {
-            toolReference.get().handleMove(coordinate)
+            toolReference.tool?.handleMove(coordinate)
         }
 
         override fun getToolAutoScrollDirection(
@@ -225,8 +232,8 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
             pointY: Float,
             screenWidth: Int,
             screenHeight: Int
-        ): Point = toolReference.get()
-            .getAutoScrollDirection(pointX, pointY, screenWidth, screenHeight)
+        ): Point? =
+            toolReference.tool?.getAutoScrollDirection(pointX, pointY, screenWidth, screenHeight)
 
         override fun getPerspectiveScale(): Float = perspective.scale
 
@@ -238,17 +245,17 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
             perspective.convertToCanvasFromSurface(surfacePoint)
         }
 
-        override fun getCurrentToolType(): ToolType = toolReference.get().toolType
+        override fun getCurrentToolType(): ToolType? = toolReference.tool?.toolType
     }
 
     private inner class DrawLoop : Runnable {
         val holder: SurfaceHolder = getHolder()
         override fun run() {
-            surfaceLock?.apply {
-                synchronized(this) {
+            surfaceLock?.let {
+                synchronized(it) {
                     if (!surfaceDirty && surfaceReady) {
                         try {
-                            wait()
+                            it.wait()
                         } catch (e: InterruptedException) {
                             return
                         }
@@ -268,6 +275,8 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                     canvas?.let {
                         doDraw(it)
                     }
+                } catch (e: IllegalArgumentException) {
+                    Log.e(TAG, "run: ", e)
                 } finally {
                     canvas?.let {
                         holder.unlockCanvasAndPost(it)

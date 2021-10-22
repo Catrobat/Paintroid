@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.test.junit.tools
 
+import android.graphics.Paint
 import android.graphics.PointF
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -26,6 +27,7 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.ui.Perspective
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -34,21 +36,51 @@ import org.mockito.Mockito
 class LineToolTest {
     private val toolPaint = Mockito.mock(ToolPaint::class.java)
     private val commandManager = Mockito.mock(CommandManager::class.java)
-    private val workspace = Mockito.mock(Workspace::class.java)
+    private var workspace = Mockito.mock(Workspace::class.java)
     private val brushToolOptions = Mockito.mock(BrushToolOptionsView::class.java)
     private val toolOptionsController = Mockito.mock(ToolOptionsVisibilityController::class.java)
     private val contextCallback = Mockito.mock(ContextCallback::class.java)
     private lateinit var tool: LineTool
+    private var screenWidth = 1920
+    private var screenHeight = 1080
+
+    object MockitoHelper {
+        fun <T> anyObject(): T {
+            Mockito.any<T>()
+            return uninitialized()
+        }
+        @Suppress("UNCHECKED_CAST")
+        fun <T> uninitialized(): T = null as T
+    }
 
     @Before
     fun setUp() {
-        tool = LineTool(brushToolOptions, contextCallback, toolOptionsController, toolPaint, workspace, commandManager)
+        Mockito.`when`(workspace.perspective).thenReturn(Perspective(screenWidth, screenHeight))
+        Mockito.`when`(workspace.width).thenReturn(screenWidth)
+        Mockito.`when`(workspace.height).thenReturn(screenHeight)
+        Mockito.`when`(workspace.contains(MockitoHelper.anyObject()))
+            .thenAnswer { invocation ->
+                val point = invocation.getArgument<PointF>(0)
+                point.x >= 0 && point.y >= 0 && point.x < screenWidth && point.y < screenHeight
+            }
+        val paint = Paint()
+        Mockito.`when`(toolPaint.paint).thenReturn(paint)
+        tool = LineTool(
+            brushToolOptions,
+            contextCallback,
+            toolOptionsController,
+            toolPaint,
+            workspace,
+            commandManager,
+            0
+        )
     }
 
     @Test
     fun testInternalStateGetsResetWithPathOuterWorkspace() {
         tool.handleDown(PointF(-1f, -1f))
         tool.handleUp(PointF(-2f, -2f))
+
         Assert.assertEquals(tool.currentCoordinate, null)
         Assert.assertEquals(tool.initialEventCoordinate, null)
     }
@@ -69,5 +101,21 @@ class LineToolTest {
         val point = PointF(2f, 2f)
         tool.handleMove(point)
         Assert.assertEquals(tool.currentCoordinate, point)
+    }
+
+    @Test
+    fun testIfCheckmarkFeatureWorks() {
+        tool.handleDown(PointF(1f, 1f))
+        tool.handleUp(PointF(2f, 2f))
+        Assert.assertEquals(tool.currentCoordinate, null)
+        Assert.assertEquals(tool.initialEventCoordinate, null)
+        Assert.assertEquals(tool.startpointSet, true)
+        Assert.assertNotEquals(tool.startPointToDraw, null)
+        tool.handleDown(PointF(5f, 5f))
+        tool.handleUp(PointF(10f, 10f))
+        Assert.assertEquals(tool.endpointSet, true)
+        Assert.assertNotEquals(tool.endPointToDraw, null)
+        tool.onClickOnButton()
+        Assert.assertEquals(tool.lineFinalized, false)
     }
 }

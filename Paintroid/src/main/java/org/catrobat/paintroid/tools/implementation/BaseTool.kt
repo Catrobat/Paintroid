@@ -89,7 +89,7 @@ abstract class BaseTool(
 
     abstract override fun draw(canvas: Canvas)
 
-    protected open fun resetInternalState() = Unit
+    protected open fun resetInternalState() {}
 
     override fun resetInternalState(stateChange: StateChange) {
         if (toolType.shouldReactToStateChange(stateChange)) {
@@ -100,9 +100,9 @@ abstract class BaseTool(
     override fun getAutoScrollDirection(
         pointX: Float,
         pointY: Float,
-        viewWidth: Int,
-        viewHeight: Int
-    ): Point = scrollBehavior.getScrollDirection(pointX, pointY, viewWidth, viewHeight)
+        screenWidth: Int,
+        screenHeight: Int
+    ): Point = scrollBehavior.getScrollDirection(pointX, pointY, screenWidth, screenHeight)
 
     override fun handToolMode(): Boolean = false
 }

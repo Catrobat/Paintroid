@@ -42,13 +42,19 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.random.Random
 
+private const val BUNDLE_RADIUS = "BUNDLE_RADIUS"
+private const val DEFAULT_RADIUS = 30
+private const val STROKE_WIDTH = 5f
+private const val CONSTANT_1 = 0.5f
+
 class SprayTool(
     var stampToolOptionsView: SprayToolOptionsView,
     override var contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
-    commandManager: CommandManager
+    commandManager: CommandManager,
+    override var drawTime: Long
 ) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
 
     @VisibleForTesting
@@ -67,13 +73,8 @@ class SprayTool(
         Bitmap.createBitmap(workspace.width, workspace.height, Bitmap.Config.ARGB_8888)
     private val previewCanvas = Canvas(previewBitmap)
 
-    companion object {
-        const val BUNDLE_RADIUS = "BUNDLE_RADIUS"
-        const val DEFAULT_RADIUS = 30
-    }
-
     init {
-        toolPaint.strokeWidth = 5f
+        toolPaint.strokeWidth = STROKE_WIDTH
 
         stampToolOptionsView.setCallback(object : SprayToolOptionsView.Callback {
             override fun radiusChanged(radius: Int) {
@@ -150,7 +151,7 @@ class SprayTool(
         sprayToolScope = CoroutineScope(Dispatchers.Default)
         sprayToolScope.launch {
             while (true) {
-                repeat((sprayRadius / DEFAULT_RADIUS)) {
+                repeat(sprayRadius / DEFAULT_RADIUS) {
                     val point = createRandomPointInCircle()
                     if (workspace.contains(point)) {
                         previewCanvas.drawPoint(point.x, point.y, drawPaint)
@@ -172,7 +173,7 @@ class SprayTool(
 
     private fun createRandomPointInCircle(): PointF {
         val point = PointF()
-        val radius = sprayRadius * Random.nextFloat().pow(0.5f)
+        val radius = sprayRadius * Random.nextFloat().pow(CONSTANT_1)
         val theta = Random.nextFloat() * 2f * Math.PI
 
         point.x = radius * cos(theta).toFloat() + (currentCoordinate?.x ?: 0f)

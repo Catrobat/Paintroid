@@ -114,6 +114,7 @@ public class DefaultCommandManagerTest {
 		Command command = mock(Command.class);
 		LayerContracts.Layer currentLayer = mock(LayerContracts.Layer.class);
 		layerModel.setCurrentLayer(currentLayer);
+		layerModel.addLayerAt(0, currentLayer);
 
 		when(currentLayer.getBitmap()).thenReturn(mock(Bitmap.class));
 		when(commonFactory.createCanvas()).thenReturn(mock(Canvas.class));
@@ -138,6 +139,7 @@ public class DefaultCommandManagerTest {
 
 		LayerContracts.Layer currentLayer = mock(LayerContracts.Layer.class);
 		layerModel.setCurrentLayer(currentLayer);
+		layerModel.addLayerAt(0, currentLayer);
 
 		when(currentLayer.getBitmap()).thenReturn(mock(Bitmap.class));
 		when(commonFactory.createCanvas()).thenReturn(mock(Canvas.class));
@@ -168,6 +170,7 @@ public class DefaultCommandManagerTest {
 
 		LayerContracts.Layer currentLayer = mock(LayerContracts.Layer.class);
 		layerModel.setCurrentLayer(currentLayer);
+		layerModel.addLayerAt(0, currentLayer);
 
 		when(currentLayer.getBitmap()).thenReturn(mock(Bitmap.class));
 		when(commonFactory.createCanvas()).thenReturn(mock(Canvas.class));
@@ -200,6 +203,7 @@ public class DefaultCommandManagerTest {
 
 		LayerContracts.Layer currentLayer = mock(LayerContracts.Layer.class);
 		layerModel.setCurrentLayer(currentLayer);
+		layerModel.addLayerAt(0, currentLayer);
 
 		when(currentLayer.getBitmap()).thenReturn(mock(Bitmap.class));
 		when(commonFactory.createCanvas()).thenReturn(mock(Canvas.class));
@@ -209,7 +213,9 @@ public class DefaultCommandManagerTest {
 		commandManager.addCommand(thirdCommand);
 
 		commandManager.undo();
+		layerModel.addLayerAt(0, currentLayer);
 		commandManager.undo();
+		layerModel.addLayerAt(0, currentLayer);
 		commandManager.undo();
 
 		commandManager.redo();
@@ -245,6 +251,7 @@ public class DefaultCommandManagerTest {
 
 		LayerContracts.Layer currentLayer = mock(LayerContracts.Layer.class);
 		layerModel.setCurrentLayer(currentLayer);
+		layerModel.addLayerAt(0, currentLayer);
 
 		when(currentLayer.getBitmap()).thenReturn(mock(Bitmap.class));
 		when(commonFactory.createCanvas()).thenReturn(mock(Canvas.class));
@@ -323,6 +330,7 @@ public class DefaultCommandManagerTest {
 
 		LayerContracts.Layer currentLayer = mock(LayerContracts.Layer.class);
 		layerModel.setCurrentLayer(currentLayer);
+		layerModel.addLayerAt(0, currentLayer);
 
 		when(commonFactory.createCanvas()).thenReturn(mock(Canvas.class));
 

@@ -70,7 +70,7 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
         presenter.onBindLayerViewHolderAtPosition(position, viewHolder, isDrawerLayoutOpen)
         val checkBox = localConvertView?.findViewById<CheckBox>(R.id.pocketpaint_checkbox_layer)
         checkBox?.setOnClickListener {
-            with (presenter) {
+            with(presenter) {
                 if (checkBox.isChecked) {
                     unhideLayer(position, viewHolder)
                     getLayerItem(position).checkBox = true
@@ -83,24 +83,28 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
         return localConvertView
     }
 
-    override fun getViewHolderAt(position: Int): LayerContracts.LayerViewHolder? {
-        return viewHolders[position]
-    }
+    override fun getViewHolderAt(position: Int): LayerContracts.LayerViewHolder? = viewHolders[position]
 
     internal class LayerViewHolder(private val itemView: View, private val layerPresenter: LayerContracts.Presenter) : LayerContracts.LayerViewHolder {
         private val layerBackground: LinearLayout = itemView.findViewById(R.id.pocketpaint_item_layer_background)
         private val imageView: ImageView = itemView.findViewById(R.id.pocketpaint_item_layer_image)
-        private var bitmap: Bitmap? = null
+        private var currentBitmap: Bitmap? = null
         private val checkBox: CheckBox = itemView.findViewById(R.id.pocketpaint_checkbox_layer)
 
         companion object {
             private const val RESIZE_LENGTH = 400f
         }
 
-        override fun setSelected(position: Int, bottomNavigationViewHolder: BottomNavigationViewHolder, defaultToolController: DefaultToolController) {
+        override val bitmap: Bitmap?
+            get() = currentBitmap
+
+        override val view: View
+            get() = itemView
+
+        override fun setSelected(position: Int, bottomNavigationViewHolder: BottomNavigationViewHolder?, defaultToolController: DefaultToolController?) {
             if (!layerPresenter.getLayerItem(position).checkBox) {
-                defaultToolController.switchTool(ToolType.HAND, false)
-                bottomNavigationViewHolder.showCurrentTool(ToolType.HAND)
+                defaultToolController?.switchTool(ToolType.HAND, false)
+                bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
             }
             layerBackground.setBackgroundColor(Color.BLUE)
         }
@@ -113,19 +117,15 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
             layerBackground.setBackgroundColor(Color.TRANSPARENT)
         }
 
-        override fun setBitmap(bitmap: Bitmap) {
-            this.bitmap = bitmap
-        }
-
-        override fun updateImageView(bitmap: Bitmap, isDrawerLayerOpen: Boolean) {
-            if (isDrawerLayerOpen) {
+        override fun updateImageView(bitmap: Bitmap?, isDrawerLayoutOpen: Boolean) {
+            if (isDrawerLayoutOpen) {
                 runBlocking {
                     launch {
-                        imageView.setImageBitmap(resizeBitmap(bitmap))
-                        }
+                        imageView.setImageBitmap(bitmap?.let { resizeBitmap(it) })
                     }
+                }
             }
-            setBitmap(bitmap)
+            currentBitmap = bitmap
         }
 
         private fun resizeBitmap(bitmap: Bitmap): Bitmap {
@@ -145,10 +145,6 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
             checkBox.isChecked = setTo
         }
 
-        override fun getView() = itemView
-
         override fun setMergable() = layerBackground.setBackgroundColor(Color.YELLOW)
-
-        override fun getBitmap() = bitmap
     }
 }

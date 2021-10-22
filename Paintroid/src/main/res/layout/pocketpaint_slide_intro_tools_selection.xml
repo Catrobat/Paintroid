@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -21,56 +20,56 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pocketpaint_slide_intro_tools_selection"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
     android:paddingTop="@dimen/pocketpaint_welcome_margin_top">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
+        android:contentDescription="@string/pocketpaint_tool_icon_description"
         android:id="@+id/pocketpaint_tools_info_icon"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/pocketpaint_textview_intro_tools_header"
-        tools:src="@drawable/ic_pocketpaint_dialog_warning"
-        android:contentDescription="@string/pocketpaint_tool_icon_description"
-        app:tint="@color/pocketpaint_color_picker_white" />
+        android:layout_width="wrap_content"
+        app:tint="@color/pocketpaint_color_picker_white"
+        tools:src="@drawable/ic_pocketpaint_dialog_warning" />
 
-    <TextView
-        android:id="@+id/pocketpaint_tools_info_description"
+    <androidx.appcompat.widget.AppCompatTextView
         style="@style/PocketPaintWelcomeText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/pocketpaint_tools_info_description"
         android:layout_below="@+id/pocketpaint_textview_intro_tools_header"
-        android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_possibilities"
-        android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
+        android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
+        android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_possibilities"
+        android:layout_width="match_parent"
         android:text="@string/intro_bottom_navigation_tools_description"
         tools:text="tool_description" />
 
-    <TextView
-        android:id="@+id/pocketpaint_textview_intro_tools_header"
+    <androidx.appcompat.widget.AppCompatTextView
         style="@style/PocketPaintWelcomeHeader"
-        android:layout_width="wrap_content"
+        android:id="@+id/pocketpaint_textview_intro_tools_header"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
         android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
-        android:text="@string/dialog_tools_title"/>
-
-    <TextView
-        android:id="@+id/pocketpaint_textview_intro_tools_text"
-        style="@style/PocketPaintWelcomeText"
+        android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:text="@string/dialog_tools_title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/PocketPaintWelcomeText"
+        android:id="@+id/pocketpaint_textview_intro_tools_text"
         android:layout_above="@+id/pocketpaint_intro_bottom_bar"
         android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:text="@string/intro_tool_more_information" />
 
     <include
-        android:id="@+id/pocketpaint_intro_bottom_bar"
         layout="@layout/pocketpaint_layout_help_bottom_bar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/pocketpaint_intro_bottom_bar"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"/>
+        android:layout_height="wrap_content"
+        android:layout_width="0dp" />
 </RelativeLayout>
 

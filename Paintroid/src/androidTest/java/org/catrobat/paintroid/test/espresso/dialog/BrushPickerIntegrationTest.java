@@ -40,9 +40,11 @@ import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgre
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -178,6 +180,69 @@ public class BrushPickerIntegrationTest {
 
 		assertFalse("BITMAP_PAINT antialiasing should be off", bitmapPaint.isAntiAlias());
 		assertFalse("CANVAS_PAINT antialiasing should be off", canvasPaint.isAntiAlias());
+	}
+
+	@Test
+	public void setAntiAliasingNotOnWhenCancelPressed() {
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_advanced))
+				.perform(click());
+
+		onView(withId(R.id.pocketpaint_antialiasing))
+				.perform(click());
+
+		onView(withText(R.string.cancel_button_text))
+				.perform(click());
+
+		Paint bitmapPaint = getCurrentToolBitmapPaint();
+		Paint canvasPaint = getCurrentToolCanvasPaint();
+
+		assertTrue("BITMAP_PAINT antialiasing should be on", bitmapPaint.isAntiAlias());
+		assertTrue("CANVAS_PAINT antialiasing should be on", canvasPaint.isAntiAlias());
+	}
+
+	@Test
+	public void setAntiAliasingOffWhenAdvancedSettingsTurnOffAndOn() {
+		onTopBarView()
+			.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_advanced))
+				.check(matches(isDisplayed()));
+
+		onView(withText(R.string.menu_advanced))
+				.perform(click());
+
+		onView(withId(R.id.pocketpaint_antialiasing))
+				.perform(click());
+
+		onView(withText(R.string.pocketpaint_ok))
+				.perform(click());
+
+		Paint bitmapPaint = getCurrentToolBitmapPaint();
+		Paint canvasPaint = getCurrentToolCanvasPaint();
+
+		assertFalse("BITMAP_PAINT antialiasing should be off", bitmapPaint.isAntiAlias());
+		assertFalse("CANVAS_PAINT antialiasing should be off", canvasPaint.isAntiAlias());
+
+		onTopBarView()
+				.performOpenMoreOptions();
+
+		onView(withText(R.string.menu_advanced))
+				.perform(click());
+
+		onView(withId(R.id.pocketpaint_antialiasing))
+				.perform(click());
+
+		onView(withText(R.string.pocketpaint_ok))
+				.perform(click());
+
+		bitmapPaint = getCurrentToolBitmapPaint();
+		canvasPaint = getCurrentToolCanvasPaint();
+
+		assertTrue("BITMAP_PAINT antialiasing should be on", bitmapPaint.isAntiAlias());
+		assertTrue("CANVAS_PAINT antialiasing should be on", canvasPaint.isAntiAlias());
 	}
 
 	@Test

@@ -110,14 +110,14 @@ public class ColorDialogIntegrationTest {
 
 	@Test
 	public void testCorrectColorAfterApplyWithoutNewColorSelected() {
-		Paint initialPaint = toolReference.get().getDrawPaint();
+		Paint initialPaint = toolReference.getTool().getDrawPaint();
 
 		onColorPickerView()
 				.performOpenColorPicker()
 				.onPositiveButton()
 				.perform(click());
 
-		assertEquals(initialPaint.getColor(), toolReference.get().getDrawPaint().getColor());
+		assertEquals(initialPaint.getColor(), toolReference.getTool().getDrawPaint().getColor());
 	}
 
 	@Test
@@ -173,7 +173,7 @@ public class ColorDialogIntegrationTest {
 					.perform(click());
 
 			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
-			int selectedColor = toolReference.get().getDrawPaint().getColor();
+			int selectedColor = toolReference.getTool().getDrawPaint().getColor();
 
 			assertEquals("Color in array and selected color not the same", arrayColor, selectedColor);
 		}
@@ -182,7 +182,7 @@ public class ColorDialogIntegrationTest {
 
 	@Test
 	public void testCurrentColorViewHasInitialColor() {
-		int selectedColor = toolReference.get().getDrawPaint().getColor();
+		int selectedColor = toolReference.getTool().getDrawPaint().getColor();
 		onColorPickerView()
 				.performOpenColorPicker();
 
@@ -195,7 +195,7 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.performOpenColorPicker();
 
-		int initialColor = toolReference.get().getDrawPaint().getColor();
+		int initialColor = toolReference.getTool().getDrawPaint().getColor();
 		final Resources resources = launchActivityRule.getActivity().getResources();
 		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
 		for (int counterColors = 0; counterColors < presetColors.length(); counterColors++) {
@@ -210,8 +210,8 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
-	public void testColorPickerDialogOnBackPressedSelectedColorShouldNotChange() {
-		int expectedSelectedColor = toolReference.get().getDrawPaint().getColor();
+	public void testColorPickerDialogOnBackPressedSelectedColorShouldChange() {
+		int initialColor = toolReference.getTool().getDrawPaint().getColor();
 
 		onColorPickerView()
 				.performOpenColorPicker();
@@ -224,7 +224,7 @@ public class ColorDialogIntegrationTest {
 		int colorToSelect = presetColors.getColor(colorToSelectIndex, Color.WHITE);
 		presetColors.recycle();
 
-		assertNotEquals("Selected color should not be the same as the color to select", colorToSelect, expectedSelectedColor);
+		assertNotEquals("Selected color should not be the same as the initial color", colorToSelect, initialColor);
 
 		onColorPickerView()
 				.performClickColorPickerPresetSelectorButton(colorToSelectIndex);
@@ -232,8 +232,8 @@ public class ColorDialogIntegrationTest {
 		// Close color picker dialog
 		onView(isRoot()).perform(pressBack());
 
-		int currentSelectedColor = toolReference.get().getDrawPaint().getColor();
-		assertEquals("Selected color has not changed", expectedSelectedColor, currentSelectedColor);
+		int currentSelectedColor = toolReference.getTool().getDrawPaint().getColor();
+		assertEquals("Selected color has not changed", colorToSelect, currentSelectedColor);
 	}
 
 	@Test
@@ -317,13 +317,13 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
 		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
-		assertNotEquals("Selected color changed to blue", toolReference.get().getDrawPaint().getColor(), Color.BLUE);
+		assertNotEquals("Selected color changed to blue", toolReference.getTool().getDrawPaint().getColor(), Color.BLACK);
 
 		onColorPickerView()
 				.onPositiveButton()
 				.perform(click());
 
-		assertEquals("Selected color is not blue", toolReference.get().getDrawPaint().getColor(), Color.BLUE);
+		assertEquals("Selected color is not blue", toolReference.getTool().getDrawPaint().getColor(), Color.BLUE);
 	}
 
 	@Test
@@ -356,7 +356,7 @@ public class ColorDialogIntegrationTest {
 				.onPositiveButton()
 				.perform(click());
 
-		int currentSelectColor = toolReference.get().getDrawPaint().getColor();
+		int currentSelectColor = toolReference.getTool().getDrawPaint().getColor();
 
 		onColorPickerView()
 				.performOpenColorPicker();
@@ -377,7 +377,7 @@ public class ColorDialogIntegrationTest {
 				.onPositiveButton()
 				.perform(click());
 
-		currentSelectColor = toolReference.get().getDrawPaint().getColor();
+		currentSelectColor = toolReference.getTool().getDrawPaint().getColor();
 
 		onColorPickerView()
 				.performOpenColorPicker();
@@ -398,7 +398,7 @@ public class ColorDialogIntegrationTest {
 				.onPositiveButton()
 				.perform(click());
 
-		currentSelectColor = toolReference.get().getDrawPaint().getColor();
+		currentSelectColor = toolReference.getTool().getDrawPaint().getColor();
 
 		onColorPickerView()
 				.performOpenColorPicker();
@@ -473,7 +473,7 @@ public class ColorDialogIntegrationTest {
 
 	@Test
 	public void testStandardColorDoesNotChangeOnCancel() {
-		int initialColor = toolReference.get().getDrawPaint().getColor();
+		int initialColor = toolReference.getTool().getDrawPaint().getColor();
 
 		onColorPickerView()
 				.performOpenColorPicker();
