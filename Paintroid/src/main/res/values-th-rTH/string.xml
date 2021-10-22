@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">พ็อกเก็ตเพ้นท์</string>
+    <string name="pocketpaint_app_name">พ็อกเก็ตเพ้นท์</string>
     <string name="button_brush">พู่กัน</string>
     <string name="button_cursor">เคอร์เซอร์</string>
     <string name="button_pipette">ดูดสี</string>
@@ -41,11 +41,11 @@
     <string name="done">เสร็จสิ้น</string>
     <string name="gallery">คลังภาพ</string>
     <string name="load_sticker_error">ไม่สามารถโหลดสติกเกอร์ได้</string>
-    <string name="error_unknown_error">บางอย่างผิดพลาด.</string>
+    <string name="error_unknown_error">อะไรบางอย่างผิดปกติ.</string>
     <string name="cap_circle">วงกลม</string>
     <string name="cap_square">สี่เหลี่ยม</string>
     <string name="stamptool_paste">วาง</string>
-    <string name="stamptool_copy">คัด​ลอก</string>
+    <string name="stamptool_copy">สำเนา</string>
     <string name="stamptool_cut">ตัด</string>
     <string name="stickers">สติกเกอร์</string>
     <string name="dialog_tools_title">เครื่องมือ</string>
@@ -84,14 +84,15 @@
     <string name="menu_hide_menu">เต็มจอ</string>
     <string name="share_image_menu">แบ่งปันรูปภาพ</string>
     <string name="share_image_via_text">ส่งภาพทาง</string>
-    <string name="menu_rate_us">ให้คะแนนเรา</string>
+    <string name="menu_rate_us">ให้คะแนนเรา!</string>
     <string name="menu_export">ส่งออก</string>
     <string name="menu_feedback">คำติชม</string>
+    <string name="menu_advanced">ตั้งค่าขั้นสูง</string>
     <string name="saved_to">บันทึกภาพไปที่ \n</string>
     <string name="saved">บันทึกภาพแล้ว</string>
     <string name="copy_to">คัดลอกและบันทึกไปที่ \n</string>
     <string name="copy">บันทึกสำเนาแล้ว</string>
-    <string name="menu_quit">ออก</string>
+    <string name="menu_quit">ล้มเลิก</string>
     <string name="save_button_text">บันทึก</string>
     <string name="discard_button_text">ละทิ้ง</string>
     <string name="cancel_button_text">ยกเลิก</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_strike_through_shortcut">a b c</string>
     <string name="text_tool_dialog_input_hint">แตะที่นี่เพื่อเขียน</string>
+    <string name="text_tool_dialog_font_monospace">Monospace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">Dubai</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
     <string name="shape_tool_dialog_rect_title">สี่เหลี่ยมผืนผ้า</string>
     <string name="shape_tool_dialog_ellipse_title">รูปวงรี</string>
     <string name="shape_tool_dialog_star_title">ระดับดาว</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">การตั้งค่า</string>
     <string name="dialog_save_image_name">ชื่อรูปภาพ</string>
     <string name="dialog_save_image_format">รูปแบบรูปภาพ</string>
+    <string name="dialog_antialiasing">การลบรอยหยัก</string>
+    <string name="dialog_smoothing">ปรับให้เรียบ</string>
     <string name="dialog_save_jpg_option_quality">คุณภาพ:</string>
     <string name="pocketpaint_jpg_message_dialog">ใช้ <b> พื้นที่จัดเก็บน้อยที่สุด </b> <b> ไม่มีความโปร่งใส </b> เป็นที่จดจำ</string>
     <string name="pocketpaint_png_message_dialog">การบีบอัดแบบไม่สูญเสีย ความโปร่งใสจะถูกรักษาไว้</string>
     <string name="pocketpaint_ora_message_dialog">รูปแบบนี้จำ <b> เลเยอร์ </b> <b> สามารถเปิดได้โดยแอปที่รองรับรูปแบบ Openraster </b></string>
+    <string name="pocketpaint_catrobat_message_dialog">รูปแบบรูปภาพดั้งเดิมของ Pocket Paint รูปแบบนี้จดจำคำสั่งและเลเยอร์</string>
     <string name="permission_info_external_storage_text">แอปนี้ต้องการสิทธิ์ที่ร้องขอเพื่อให้สามารถทำงานได้อย่างถูกต้อง ในการบันทึกภาพไปยังหน่วยความจำภายในแอปจำเป็นต้องมีสิทธิ์ในการอ่านและเขียน</string>
     <string name="permission_info_permanent_denial_text">แอปนี้ต้องการสิทธิ์ที่ร้องขอเพื่อให้สามารถทำงานได้อย่างถูกต้อง ในการบันทึกภาพไปยังหน่วยความจำภายในแอปจำเป็นต้องมีสิทธิ์ในการอ่านและเขียน
          เนื่องจากคุณปฏิเสธการอนุญาตไม่ต้องถามอีกโปรดไปที่การตั้งค่าโทรศัพท์และให้สิทธิ์ที่จำเป็นหากคุณต้องการใช้ฟังก์ชั่นที่เกี่ยวข้อง</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
     <string name="transform_info_text">ลากขอบไปยังตำแหน่งใหม่จากนั้นแตะเพื่อขยายหรือครอบตัดพื้นที่ภาพ</string>
     <string name="cursor_draw_inactive">เลื่อนไปที่ตำแหน่งแล้วแตะเพื่อเริ่มวาดภาพ</string>
     <string name="cursor_draw_active">เลื่อนเพื่อวาดจากนั้นแตะอีกครั้งเพื่อหยุดการทาสี</string>
@@ -158,7 +165,7 @@
     <string name="enjoy_pocket_paint">คุณพร้อมแล้ว เพลิดเพลินไปกับ Pocket Paint</string>
     <string name="intro_get_started">เริ่มต้นและสร้างผลงานใหม่</string>
     <string name="lets_go">ไปกันเลย</string>
-    <string name="next">ถัดไป</string>
+    <string name="next">ต่อไป</string>
     <string name="skip">ข้าม</string>
     <string name="pocketpaint_about_title">เกี่ยวกับ</string>
     <string name="pocketpaint_about_content">Pocket Paint เป็นห้องสมุดแก้ไขรูปภาพที่เป็นส่วนหนึ่งของโครงการ Catrobat \n \n Catrobat เป็นภาษาโปรแกรมภาพและชุดเครื่องมือความคิดสร้างสรรค์สำหรับสมาร์ทโฟน \n \n ซอร์สโค้ดของ Pocket Paint ได้รับอนุญาตภายใต้ %s \n สำหรับรายละเอียดที่ถูกต้องของใบอนุญาตโปรดดูที่ลิงก์ด้านล่าง</string>
@@ -172,7 +179,7 @@
     <string name="pocketpaint_rate_us">คุณต้องการให้คะแนน Pocket Paint หรือไม่</string>
     <string name="pocketpaint_feedback">เราจะเสียใจที่ได้ทราบว่า. หากคุณต้องการแบ่งปันประสบการณ์ของคุณกับเราโปรดเขียนถึง contact@catrobat.org</string>
     <string name="pocketpaint_yes">ใช่</string>
-    <string name="pocketpaint_no">ไม่ใช่</string>
+    <string name="pocketpaint_no">เลขที่</string>
     <string name="pocketpaint_cancel">ยกเลิก</string>
     <string name="pocketpaint_not_now">ไม่ใช่ตอนนี้</string>
     <string name="pocketpaint_rate_us_title">ให้คะแนน Pocket Paint</string>

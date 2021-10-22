@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">포켓 페인트</string>
+    <string name="pocketpaint_app_name">포켓 페인트</string>
     <string name="button_brush">붓</string>
     <string name="button_cursor">커서</string>
     <string name="button_pipette">색 고르기</string>
@@ -87,6 +87,7 @@
     <string name="menu_rate_us">평가하기</string>
     <string name="menu_export">내보내기</string>
     <string name="menu_feedback">피드백</string>
+    <string name="menu_advanced">고급 설정</string>
     <string name="saved_to">이미지 저장\n</string>
     <string name="saved">이미지가 저장되었습니다</string>
     <string name="copy_to">사본이 저장되었습니다.\n</string>
@@ -103,9 +104,14 @@
     <string name="text_tool_dialog_format_options">서식 옵션:</string>
     <string name="text_tool_dialog_underline_shortcut">U</string>
     <string name="text_tool_dialog_italic_shortcut">나</string>
-    <string name="text_tool_dialog_bold_shortcut">B</string>
+    <string name="text_tool_dialog_bold_shortcut">비</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">여기를 눌러 텍스트를 추가하세요</string>
+    <string name="text_tool_dialog_font_monospace">고정 폭</string>
+    <string name="text_tool_dialog_font_serif">명조체</string>
+    <string name="text_tool_dialog_font_sans_serif">고딕체</string>
+    <string name="text_tool_dialog_font_dubai">두바이</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
     <string name="shape_tool_dialog_rect_title">사각형</string>
     <string name="shape_tool_dialog_ellipse_title">타원</string>
     <string name="shape_tool_dialog_star_title">별</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">설정</string>
     <string name="dialog_save_image_name">이미지 이름</string>
     <string name="dialog_save_image_format">이미지 형식</string>
+    <string name="dialog_antialiasing">안티 앨리어싱</string>
+    <string name="dialog_smoothing">스무딩</string>
     <string name="dialog_save_jpg_option_quality">품질:</string>
     <string name="pocketpaint_jpg_message_dialog"><b> 최소 저장 공간 </b>을 차지합니다. <b> 투명성 없음 </b>은 기억되지 않습니다.</string>
     <string name="pocketpaint_png_message_dialog">무손실 압축. 투명성이 유지됩니다.</string>
     <string name="pocketpaint_ora_message_dialog">이 형식은 <b> 레이어 </b>를 기억합니다. <b> Openraster 형식을 지원하는 앱에서 열 수 있습니다. </b></string>
+    <string name="pocketpaint_catrobat_message_dialog">Pocket Paint의 기본 이미지 형식입니다. 이 형식은 명령과 레이어를 기억합니다.</string>
     <string name="permission_info_external_storage_text">이 앱이 제대로 작동하려면 요청된 권한이 필요합니다. 이미지를 로컬 메모리에 저장하려면 앱에 읽기 및 쓰기 권한이 필요합니다.</string>
-    <string name="permission_info_permanent_denial_text">이 앱이 제대로 작동하려면 요청된 권한이 필요합니다. 이미지를 로컬 메모리에 저장하려면 앱에 읽기 및 쓰기 권한이 필요합니다. 
-다시 묻지 않음으로 권한을 거부 했으므로 관련 기능을 사용하려면 휴대폰 설정으로 이동하여 필요한 권한을 부여하십시오.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">탐색 창 열기</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">탐색 창 닫기</string>
+    <string name="permission_info_permanent_denial_text">이 앱이 제대로 작동하려면 요청된 권한이 필요합니다. 이미지를 로컬 메모리에 저장하려면 앱에 읽기 및 쓰기 권한이 필요합니다.
+        다시 묻지 않음으로 권한을 거부 했으므로 관련 기능을 사용하려면 휴대폰 설정으로 이동하여 필요한 권한을 부여하십시오.</string>
     <string name="transform_info_text">새로운 위치로 가장자리를 끌고, 확대하거나 자르려면 탭하세요.</string>
     <string name="cursor_draw_inactive">위치를 끌어 정하고, 시작하려면 터치하세요.</string>
     <string name="cursor_draw_active">그리려면 끌고, 그리기를 중지하려면 다시 탭하세요.</string>

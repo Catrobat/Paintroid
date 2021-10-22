@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint</string>
+    <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Pinsel</string>
     <string name="button_cursor">Eingabezeiger</string>
     <string name="button_pipette">Pipette</string>
@@ -87,6 +87,7 @@
     <string name="menu_rate_us">Bewerte uns!</string>
     <string name="menu_export">Exportieren</string>
     <string name="menu_feedback">Feedback</string>
+    <string name="menu_advanced">Erweiterte Einstellungen</string>
     <string name="saved_to">Bild gespeichert unter\n</string>
     <string name="saved">Bild gespeichert\n</string>
     <string name="copy_to">Kopie gespeichert in\n</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">F</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">Tippe hier, um zu schreiben</string>
+    <string name="text_tool_dialog_font_monospace">Monospace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">Dubai</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
     <string name="shape_tool_dialog_rect_title">Rechteck</string>
     <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
     <string name="shape_tool_dialog_star_title">Stern</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">Einstellungen</string>
     <string name="dialog_save_image_name">Bildname</string>
     <string name="dialog_save_image_format">Bildformat</string>
+    <string name="dialog_antialiasing">Antialiasing</string>
+    <string name="dialog_smoothing">Glättung</string>
     <string name="dialog_save_jpg_option_quality">Qualität:</string>
     <string name="pocketpaint_jpg_message_dialog">Verwendet <b>minimalen Speicherplatz</b>. <b>Keine Transparenz</b> wird gespeichert.</string>
     <string name="pocketpaint_png_message_dialog">Verlustfreie Kompression. Transparenz bleibt erhalten.</string>
     <string name="pocketpaint_ora_message_dialog">Dieses Format erinnert sich an <b>Ebenen</b>. <b>Es kann von Apps geöffnet werden, die das Openraster-Format unterstützen.</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">Das native Bildformat von Pocket Paint. Dieses Format merkt sich Befehle und Ebenen.</string>
     <string name="permission_info_external_storage_text">Diese App benötigt die angeforderte Berechtigung, um richtig zu funktionieren. Um Bilder im lokalen Speicher zu speichern, benötigt die App Lese- und Schreibzugriff.</string>
     <string name="permission_info_permanent_denial_text">Diese App benötigt die angeforderte Berechtigung, um richtig zu funktionieren. Um Bilder im lokalen Speicher zu speichern, benötigt die App Lese- und Schreibzugriff.
         Da du die Erlaubnis mit nicht erneut fragen verweigert hast , geh bitte zu deinen Telefoneinstellungen und erteile die erforderlichen Berechtigungen, wenn du die zugehörigen Funktionen nutzen möchtest.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Navigation-Drawer öffnen</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Navigation-Drawer schließen</string>
     <string name="transform_info_text">Ziehe die Kanten an ihre neue Position und tipp dann, um den Bildbereich zu vergrößern oder zu verkleinern.</string>
     <string name="cursor_draw_inactive">Verschieben, dann tippen, um mit dem Malen beginnen.</string>
     <string name="cursor_draw_active">Verschieben um zu zeichnen, dann tippen um Malen zu stoppen.</string>
