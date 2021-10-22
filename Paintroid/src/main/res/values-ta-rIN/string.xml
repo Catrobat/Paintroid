@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">பாக்கெட் பெயிண்ட்</string>
+    <string name="pocketpaint_app_name">பாக்கெட் பெயிண்ட்</string>
     <string name="button_brush">தூரிகை</string>
     <string name="button_cursor">கர்சர்</string>
     <string name="button_pipette">குழாயி</string>
@@ -35,19 +35,19 @@
     <string name="button_text">உரை</string>
     <string name="button_shape">வடிவங்கள்</string>
     <string name="button_hand">கை</string>
-    <string name="button_spray_can">Spray can</string>
+    <string name="button_spray_can">தெளிப்பு முடியும்</string>
     <string name="button_apply">அமல்படுத்து</string>
-    <string name="button_checkmark">Checkmark</string>
+    <string name="button_checkmark">செக்மார்க்</string>
     <string name="done">முடிந்தது</string>
-    <string name="gallery">Gallery</string>
-    <string name="load_sticker_error">Could not load Sticker</string>
+    <string name="gallery">படம் தேர்ந்தெடு</string>
+    <string name="load_sticker_error">ஸ்டிக்கரை ஏற்ற முடியவில்லை</string>
     <string name="error_unknown_error">ஏதோ தவறு நடைபெற்றிருக்கிறது.</string>
     <string name="cap_circle">வட்டம்</string>
     <string name="cap_square">சதுரம்</string>
-    <string name="stamptool_paste">Paste</string>
+    <string name="stamptool_paste">ஒட்டு</string>
     <string name="stamptool_copy">நகல்</string>
-    <string name="stamptool_cut">Cut</string>
-    <string name="stickers">Stickers</string>
+    <string name="stamptool_cut">வெட்டு</string>
+    <string name="stickers">ஓட்டிகள்</string>
     <string name="dialog_tools_title">கருவிகள்</string>
     <string name="dialog_error_save_title">கோப்பை ஏற்றுவதில் / சேமிப்பதில் பிழை</string>
     <string name="dialog_error_sdcard_text">படம் அல்லது எஸ்டி-கார்டைச் சரிபார்க்கவும்!</string>
@@ -70,32 +70,33 @@
     <string name="help_content_layer">புதிய அடுக்குகளை உருவாக்கவும் அல்லது ஏற்கனவே உள்ளவற்றை மாற்றவும்</string>
     <string name="help_content_color_chooser">ஒரு வண்ணத்தைத் தேர்ந்தெடுக்கவும் அல்லது சரிசெய்யவும்</string>
     <string name="help_content_hand">கேன்வாஸை நகர்த்த உங்கள் விரலை நகர்த்தவும்.</string>
-    <string name="help_content_spray_can">Move your finger on the image to create a spray can pattern.</string>
+    <string name="help_content_spray_can">ஒரு ஸ்ப்ரே கேன் வடிவத்தை உருவாக்க உங்கள் விரலை படத்தில் நகர்த்தவும்.</string>
     <string name="closing_catroid_security_question_title">திட்டத்திற்குத் திரும்பு</string>
     <string name="closing_security_question_title">நிறுத்து</string>
     <string name="closing_security_question">மாற்றங்களை சேமிக்க வேண்டுமா?</string>
     <string name="menu_new_image">புதிய படம்</string>
     <string name="menu_discard_image">படத்தை நிராகரி</string>
-    <string name="no_longclick_on_hidden_layer">You are only able to merge or reorder if all layers are visible</string>
-    <string name="no_tools_on_hidden_layer">No tools are available on hidden layer</string>
+    <string name="no_longclick_on_hidden_layer">அனைத்து அடுக்குகளும் தெரிந்தால் மட்டுமே நீங்கள் ஒன்றிணைக்க அல்லது மறுவரிசைப்படுத்த முடியும்</string>
+    <string name="no_tools_on_hidden_layer">மறைக்கப்பட்ட அடுக்கில் கருவிகள் இல்லை</string>
     <string name="menu_load_image">படங்களை ஏற்றவும்</string>
     <string name="menu_save_image">படத்தை சேமி</string>
     <string name="menu_save_copy">நகலைச் சேமிக்கவும்</string>
     <string name="menu_hide_menu">முழுத்திரை</string>
-    <string name="share_image_menu">Share image</string>
-    <string name="share_image_via_text">Send image via</string>
+    <string name="share_image_menu">படத்தை பகிரவும்</string>
+    <string name="share_image_via_text">வழியாக படத்தை அனுப்பவும்</string>
     <string name="menu_rate_us">எங்களுக்கு மதிப்பிடுக!</string>
     <string name="menu_export">ஏற்றுமதி</string>
-    <string name="menu_feedback">Feedback</string>
-    <string name="saved_to">Image saved to\n</string>
+    <string name="menu_feedback">பின்னூட்டம்</string>
+    <string name="menu_advanced">மேம்பட்ட அமைப்புகள்</string>
+    <string name="saved_to">படம் சேமிக்கப்பட்டது\n</string>
     <string name="saved">படம் சேமிக்கப்பட்டது</string>
-    <string name="copy_to">Copy saved to\n</string>
+    <string name="copy_to">நகல் சேமிக்கப்பட்டது\n</string>
     <string name="copy">நகல் சேமிக்கப்பட்டது</string>
     <string name="menu_quit">நிறுத்து</string>
     <string name="save_button_text">சேமி</string>
     <string name="discard_button_text">புறக்கணி</string>
     <string name="cancel_button_text">தவிர்</string>
-    <string name="overwrite_button_text">Overwrite</string>
+    <string name="overwrite_button_text">மேலெழுதவும்</string>
     <string name="resize_nothing_to_resize">மறுஅளவிடுவதற்கு எதுவும் இல்லை</string>
     <string name="resize_cannot_resize_to_this_size">இந்த அளவுக்கு அளவை மாற்ற முடியாது</string>
     <string name="resize_max_image_resolution_reached">அதிகபட்ச படத் தீர்மானம் அடைந்தது</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">எழுத இங்கே தட்டவும்</string>
+    <string name="text_tool_dialog_font_monospace">Monospace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">Dubai</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
     <string name="shape_tool_dialog_rect_title">நீள் சதுரம்</string>
     <string name="shape_tool_dialog_ellipse_title">நீள்வட்டம்</string>
     <string name="shape_tool_dialog_star_title">நட்சத்திரம்</string>
@@ -121,7 +127,7 @@
     <string name="transform_tool_auto_crop_text">பயிர் / அதிகரிக்க</string>
     <string name="transform_width_text">அகலம்</string>
     <string name="transform_height_text">உயரம்</string>
-    <string name="transform_auto_crop_text">Auto</string>
+    <string name="transform_auto_crop_text">ஆட்டோ</string>
     <string name="pixel">px</string>
     <string name="stamp_tool_copy_hint">உள்ளடக்கத்தை நகலெடுக்க நீண்ட நேரம் அழுத்தவும்</string>
     <string name="layers_title">அடுக்குகள்</string>
@@ -132,19 +138,20 @@
     <string name="layer_background">பின்னணியை அடுக்கு</string>
     <string name="dialog_shape_text">வடிவம்</string>
     <string name="dialog_loading_image_failed_title">படத்தை ஏற்றுவதில் பிழை</string>
-    <string name="dialog_loading_image_failed_text">Not a valid image</string>
+    <string name="dialog_loading_image_failed_text">சரியான படம் அல்ல</string>
     <string name="dialog_settings">அமைவுகள்</string>
     <string name="dialog_save_image_name">படத்தின் பெயர்</string>
-    <string name="dialog_save_image_format">Image format</string>
-    <string name="dialog_save_jpg_option_quality">Quality:</string>
-    <string name="pocketpaint_jpg_message_dialog">Takes up <b>minimal storage space</b>. <b>No transparency</b> is remembered.</string>
-    <string name="pocketpaint_png_message_dialog">Lossless compression. Transparency is preserved.</string>
-    <string name="pocketpaint_ora_message_dialog">This format remembers <b>layers</b>. <b>It can be opened by apps that support the Openraster format.</b></string>
-    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
-    <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
-        As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Open navigation drawer</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Close navigation drawer</string>
+    <string name="dialog_save_image_format">பட வடிவம்</string>
+    <string name="dialog_antialiasing">தவறழைப்பு எதிர்மறைத்தல்</string>
+    <string name="dialog_smoothing">மென்மையாக்கும்</string>
+    <string name="dialog_save_jpg_option_quality">தரம்:</string>
+    <string name="pocketpaint_jpg_message_dialog"><b> குறைந்தபட்ச சேமிப்பு இடத்தை </b> எடுக்கும். <b> வெளிப்படைத்தன்மை இல்லை </b> நினைவில் உள்ளது.</string>
+    <string name="pocketpaint_png_message_dialog">இழப்பற்ற சுருக்க. வெளிப்படைத்தன்மை பாதுகாக்கப்படுகிறது.</string>
+    <string name="pocketpaint_ora_message_dialog">இந்த வடிவம் <b> அடுக்குகளை </b> நினைவில் கொள்கிறது. <b> ஓபன்ராஸ்டர் வடிவமைப்பை ஆதரிக்கும் பயன்பாடுகளால் இதைத் திறக்கலாம். </b></string>
+    <string name="pocketpaint_catrobat_message_dialog">பாக்கெட் பெயிண்டின் சொந்த பட வடிவம்.  இந்த வடிவம் கட்டளைகளையும் அடுக்குகளையும் நினைவில் கொள்கிறது.</string>
+    <string name="permission_info_external_storage_text">இந்த செயலி சரியாக செயல்பட கோரப்பட்ட அனுமதி தேவை. உள்ளூர் நினைவகத்தில் படங்களைச் சேமிக்க, பயன்பாட்டைப் படிக்க மற்றும் எழுத அணுகல் தேவை.</string>
+    <string name="permission_info_permanent_denial_text">இந்த செயலி சரியாக செயல்பட கோரப்பட்ட அனுமதி தேவை. உள்ளூர் நினைவகத்தில் படங்களைச் சேமிக்க, பயன்பாட்டைப் படிக்க மற்றும் எழுத அணுகல் தேவை.
+        நீங்கள் அனுமதி மறுத்ததால், மீண்டும் கேட்க வேண்டாம், தயவுசெய்து உங்கள் தொலைபேசி அமைப்புகளுக்குச் சென்று, தொடர்புடைய செயல்பாடுகளைப் பயன்படுத்த விரும்பினால் தேவையான அனுமதிகளை வழங்கவும்.</string>
     <string name="transform_info_text">விளிம்புகளை அவற்றின் புதிய நிலைக்கு இழுத்து, பின்னர் படப் பகுதியை பெரிதாக்க அல்லது செதுக்க தட்டவும்.</string>
     <string name="cursor_draw_inactive">நிலைக்கு பான், பின்னர் ஓவியம் தொடங்க தட்டவும்.</string>
     <string name="cursor_draw_active">வரைய பான், பின்னர் ஓவியத்தை நிறுத்த மீண்டும் தட்டவும்.</string>
@@ -152,40 +159,40 @@
     <string name="intro_welcome_text">பாக்கெட் பெயிண்ட் மூலம் உங்கள் படைப்பாற்றலுக்கு வரம்புகள் இல்லை. நீங்கள் புதியவராக இருந்தால் அறிமுகத்தைத் தொடங்கவும் அல்லது பாக்கெட் பெயிண்ட் உங்களுக்கு ஏற்கனவே தெரிந்திருந்தால் அதைத் தவிர்க்கவும்.</string>
     <string name="intro_tool_more_information">மேலும் தகவலைப் பெற ஒரு கருவியைக் கிளிக் செய்க</string>
     <string name="more_possibilities">மேலும் சாத்தியங்கள்</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
+    <string name="intro_possibilities_text">பிரதான மெனுவைத் திறக்க மேல் பட்டியைப் பயன்படுத்தி மாற்றங்களைச் செயல்தவிர்க்க அல்லது மீண்டும் செய்யவும்</string>
     <string name="landscape">படுக்கைவாட்டம்</string>
     <string name="intro_landscape_text">சிறந்த ஓவிய அனுபவத்தை உங்களுக்கு வழங்க பாக்கெட் பெயிண்ட் இயற்கை முறையில் வரைவதை ஆதரிக்கிறது.</string>
     <string name="enjoy_pocket_paint">நீங்கள் எல்லாம் தயாராகிவிட்டீர்கள். பாக்கெட் பெயிண்ட் அனுபவிக்கவும்.</string>
     <string name="intro_get_started">தொடங்கவும் புதிய தலைசிறந்த படைப்பை உருவாக்கவும்.</string>
-    <string name="lets_go">Let\'s go</string>
+    <string name="lets_go">போகலாம்</string>
     <string name="next">அடுத்து</string>
     <string name="skip">தவிர்</string>
-    <string name="pocketpaint_about_title">பற்றி</string>
-    <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
+    <string name="pocketpaint_about_title">இதனைப் பற்றி</string>
+    <string name="pocketpaint_about_content">பாக்கெட் பெயிண்ட் என்பது பட எடிட்டிங் நூலகம், இது கேட்ரோபாட் திட்டத்தின் ஒரு பகுதியாகும்.\n\n கேட்ரோபாட் ஒரு காட்சி நிரலாக்க மொழி மற்றும் ஸ்மார்ட்போன்களுக்கான படைப்பாற்றல் கருவிகளின் தொகுப்பாகும்.\n\nபாக்கெட் பெயிண்டின் மூல குறியீடு முக்கியமாக கீழ் உரிமம் பெற்றது%s.\n உரிமத்தின் துல்லியமான விவரங்களுக்கு கீழே உள்ள இணைப்பைப் பார்க்கவும்.</string>
     <string name="pocketpaint_about_url_license_description">பாக்கெட் குறியீடு மூல குறியீடு உரிமம்</string>
     <string name="pocketpaint_about_url_catrobat_description">கேட்ரோபாட் பற்றி</string>
     <string name="pocketpaint_intro">முன்னுரை</string>
     <string name="pocketpaint_intro_split_screen_not_supported">அறிமுகம் பிளவு திரையை ஆதரிக்காது</string>
-    <string name="pocketpaint_overwrite_title">Overwrite File?</string>
-    <string name="pocketpaint_overwrite">You are about to overwrite an existing image (hint: To save it as a new image, use the \"%s\" option). Save anyway?</string>
-    <string name="pocketpaint_like_us">Do you like Pocket Paint?</string>
-    <string name="pocketpaint_rate_us">Would you like to rate Pocket Paint?</string>
-    <string name="pocketpaint_feedback">We are sorry to hear that. If you want to share your experience with us, please write to contact@catrobat.org</string>
+    <string name="pocketpaint_overwrite_title">மேலெழுத கோப்பு?</string>
+    <string name="pocketpaint_overwrite">ஏற்கனவே இருக்கும் படத்தை மேலெழுதப் போகிறீர்கள் (குறிப்பு: புதிய படமாகச் சேமிக்க, \"%s\" விருப்பத்தைப் பயன்படுத்தவும்). எப்படியும் சேமிக்கவா?</string>
+    <string name="pocketpaint_like_us">உங்களுக்கு பாக்கெட் பெயிண்ட் பிடிக்குமா?</string>
+    <string name="pocketpaint_rate_us">நீங்கள் பாக்கெட் பெயிண்ட் மதிப்பிட விரும்புகிறீர்களா?</string>
+    <string name="pocketpaint_feedback">அதைக் கேட்டு வருந்துகிறோம். உங்கள் அனுபவத்தை எங்களுடன் பகிர்ந்து கொள்ள விரும்பினால், தயவுசெய்து தொடர்பு கொள்ளவும் contact@catrobat.org</string>
     <string name="pocketpaint_yes">அமாம்</string>
     <string name="pocketpaint_no">இல்லை</string>
     <string name="pocketpaint_cancel">தவிர்</string>
-    <string name="pocketpaint_not_now">Not now</string>
-    <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
+    <string name="pocketpaint_not_now">இப்போது இல்லை</string>
+    <string name="pocketpaint_rate_us_title">ரேட் பாக்கெட் பெயிண்ட்</string>
     <string name="bottom_navigation_tools">கருவிகள்</string>
-    <string name="bottom_navigation_current">Current</string>
-    <string name="bottom_navigation_color">Color</string>
+    <string name="bottom_navigation_current">தற்போதைய</string>
+    <string name="bottom_navigation_color">நிறம்</string>
     <string name="bottom_navigation_layers">அடுக்குகள்</string>
-    <string name="bottom_navigation_item">Item for bottom navigation</string>
-    <string name="intro_bottom_navigation_tools_description">Switch to the tool you want to use.</string>
-    <string name="intro_bottom_navigation_current_description">Shows the currently used tool and opens its options.</string>
-    <string name="intro_bottom_navigation_color_description">Shows the currently used color and opens the color picker.</string>
-    <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
-    <string name="pocketpaint_tool_icon_description">Current tool icon</string>
-    <string name="dialog_scale_title">Image is too big to load</string>
-    <string name="dialog_scale_message">The image is too big to load. Click OK to scale down the image automatically.</string>
+    <string name="bottom_navigation_item">கீழே வழிசெலுத்தலுக்கான பொருள்</string>
+    <string name="intro_bottom_navigation_tools_description">நீங்கள் பயன்படுத்த விரும்பும் கருவிக்கு மாறவும்.</string>
+    <string name="intro_bottom_navigation_current_description">தற்போது பயன்படுத்தப்படும் கருவியைக் காட்டுகிறது மற்றும் அதன் விருப்பங்களைத் திறக்கிறது.</string>
+    <string name="intro_bottom_navigation_color_description">தற்போது பயன்படுத்தப்படும் வண்ணத்தைக் காட்டுகிறது மற்றும் வண்ணத் தேர்வைத் திறக்கிறது.</string>
+    <string name="intro_bottom_navigation_layers_description">லேயர் மெனுவைத் திறந்து உங்கள் லேயர்களை நிர்வகிக்க உதவுகிறது.</string>
+    <string name="pocketpaint_tool_icon_description">தற்போதைய கருவி ஐகான்</string>
+    <string name="dialog_scale_title">படத்தை ஏற்ற மிகவும் பெரியது</string>
+    <string name="dialog_scale_message">படத்தை ஏற்ற மிகவும் பெரியது. படத்தை தானாக அளவிட சரி என்பதைக் கிளிக் செய்யவும்.</string>
 </resources>
