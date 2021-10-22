@@ -26,7 +26,7 @@
     <string name="color_alpha">Alpha</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Apply</string>
-    <string name="color_picker_cancel">Cancel</string>
+    <string name="color_picker_cancel">Скасувати</string>
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipette</string>

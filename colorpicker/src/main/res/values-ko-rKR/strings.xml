@@ -27,11 +27,11 @@
     <string name="color_hex">헥사편집기</string>
     <string name="color_picker_apply">사용하기</string>
     <string name="color_picker_cancel">취소</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">흐름</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">새로운</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">색 고르기</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">변경사항을 저장하시겠습니까?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">변경 내용을 저장 하시겠습니까?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">아니</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">예</string>
 </resources>
