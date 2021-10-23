@@ -311,11 +311,14 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     private fun onCreateGlobals() {
-        appFragment.layerModel = appFragment.layerModel ?: LayerModel()
-        layerModel = appFragment.layerModel
+        val currentLayerModel = appFragment.layerModel ?: LayerModel()
+        appFragment.layerModel = currentLayerModel
+        layerModel = currentLayerModel
+
         commandFactory = DefaultCommandFactory()
 
-        if (appFragment.commandManager == null) {
+        val currentCommandManager = appFragment.commandManager
+        if (currentCommandManager == null) {
             val metrics = resources.displayMetrics
             val synchronousCommandManager: CommandManager =
                 DefaultCommandManager(CommonFactory(), layerModel)
@@ -326,12 +329,16 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             commandManager.reset()
             appFragment.commandManager = commandManager
         } else {
-            commandManager = appFragment.commandManager
+            commandManager = currentCommandManager
         }
-        appFragment.toolPaint = appFragment.toolPaint ?: DefaultToolPaint(applicationContext)
-        toolPaint = appFragment.toolPaint
-        appFragment.currentTool = appFragment.currentTool ?: DefaultToolReference()
-        toolReference = appFragment.currentTool
+
+        val currentToolPaint = appFragment.toolPaint ?: DefaultToolPaint(applicationContext)
+        appFragment.toolPaint = currentToolPaint
+        toolPaint = currentToolPaint
+
+        val currentTool = appFragment.currentTool ?: DefaultToolReference()
+        appFragment.currentTool = currentTool
+        toolReference = currentTool
     }
 
     private fun onCreateMainView() {

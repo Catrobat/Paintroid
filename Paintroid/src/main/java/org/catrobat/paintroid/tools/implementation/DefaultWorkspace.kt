@@ -40,10 +40,10 @@ class DefaultWorkspace(
         get() = layerModel.width
 
     override val surfaceWidth: Int
-        get() = perspective.getSurfaceWidth()
+        get() = perspective.surfaceWidth
 
     override val surfaceHeight: Int
-        get() = perspective.getSurfaceHeight()
+        get() = perspective.surfaceHeight
 
     override val bitmapOfAllLayers: Bitmap?
         get() = LayerModel.getBitmapOfAllLayersToSave(layerModel.layers)

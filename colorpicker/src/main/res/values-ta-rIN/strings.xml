@@ -18,20 +18,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">வண்ண தேர்வு</string>
-    <string name="color_picker_tab_icon">வண்ண தேர்வு தாவல் ஐகான்</string>
+    <string name="color_picker_title">வண்ணத் தேர்வி</string>
+    <string name="color_picker_tab_icon">வண்ணத் தேர்வி மீயிட ஈர்ப்புரு</string>
     <string name="color_red">சிவப்பு</string>
     <string name="color_green">பச்சை</string>
     <string name="color_blue">நீலம்</string>
-    <string name="color_alpha">ஆல்ஃபா</string>
-    <string name="color_hex">எண்ம (ஹெக்ஸ்)</string>
-    <string name="color_picker_apply">அமல்படுத்து</string>
-    <string name="color_picker_cancel">தவிர்</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_alpha">அகரம்</string>
+    <string name="color_hex">பதினா</string>
+    <string name="color_picker_apply">செலுத்து</string>
+    <string name="color_picker_cancel">பின்வாங்கு</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">தற்போதைய</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">புதிய</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">குழாயி</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">மாற்றங்களை சேமிக்க வேண்டுமா?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">மாற்றங்களைச் சேமிக்க விரும்புகிறீர்களா?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">மாற்றங்களைச் சேமிக்க?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">நீங்கள் உங்கள் மாற்றங்களைச் சேமிக்க வேண்டுமா?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">இல்லை</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">ஆமாம்</string>
 </resources>

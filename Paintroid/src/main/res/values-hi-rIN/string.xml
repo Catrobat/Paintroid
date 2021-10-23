@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">पॉकेट पेंट</string>
+    <string name="pocketpaint_app_name">पॉकेट पेंट</string>
     <string name="button_brush">ब्रश</string>
     <string name="button_cursor">कर्सर</string>
     <string name="button_pipette">पिपेट</string>
@@ -36,7 +36,7 @@
     <string name="button_shape">आकार</string>
     <string name="button_hand">हाथ</string>
     <string name="button_spray_can">स्प्रे कैन</string>
-    <string name="button_apply">Apply</string>
+    <string name="button_apply">लागू</string>
     <string name="button_checkmark">सही का निशान</string>
     <string name="done">पूर्ण</string>
     <string name="gallery">गेलरी</string>
@@ -87,6 +87,7 @@
     <string name="menu_rate_us">हमें दर दे!</string>
     <string name="menu_export">निर्यात करें</string>
     <string name="menu_feedback">प्रतिपुष्टि</string>
+    <string name="menu_advanced">एडवांस सेटिंग</string>
     <string name="saved_to">छवि को सहेजा गया\n</string>
     <string name="saved">चित्र सहेज दिया गया</string>
     <string name="copy_to">प्रतिलिपि यहां सहेजी गई\n</string>
@@ -94,7 +95,7 @@
     <string name="menu_quit">बंद करें</string>
     <string name="save_button_text">सहेजें</string>
     <string name="discard_button_text">रद्द करें</string>
-    <string name="cancel_button_text">रद्द करें</string>
+    <string name="cancel_button_text">रद्द करना</string>
     <string name="overwrite_button_text">ओवरराइट</string>
     <string name="resize_nothing_to_resize">आकार बदलने के लिए कुछ नहीं</string>
     <string name="resize_cannot_resize_to_this_size">इस आकार का आकार नहीं बदल सकता</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">बी</string>
     <string name="text_tool_dialog_strike_through_shortcut">एबीसी</string>
     <string name="text_tool_dialog_input_hint">लिखने के लिए यहां टैप करें</string>
+    <string name="text_tool_dialog_font_monospace">एकलस्पेस</string>
+    <string name="text_tool_dialog_font_serif">सेरिफ़</string>
+    <string name="text_tool_dialog_font_sans_serif">सेरिफ़ के बिना</string>
+    <string name="text_tool_dialog_font_dubai">दुबई</string>
+    <string name="text_tool_dialog_font_arabic_stc">एसटीसी</string>
     <string name="shape_tool_dialog_rect_title">आयत</string>
     <string name="shape_tool_dialog_ellipse_title">दीर्घवृत्त</string>
     <string name="shape_tool_dialog_star_title">स्टार</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">व्यवस्था</string>
     <string name="dialog_save_image_name">चित्र का नाम</string>
     <string name="dialog_save_image_format">छवि प्रारूप</string>
+    <string name="dialog_antialiasing">उपघटन प्रतिरोधी</string>
+    <string name="dialog_smoothing">चौरसाई</string>
     <string name="dialog_save_jpg_option_quality">गुणवत्ता:</string>
     <string name="pocketpaint_jpg_message_dialog">न्यूनतम <b> संग्रहण स्थान </b> लेता है। <b> कोई पारदर्शिता नहीं </b> याद है।</string>
     <string name="pocketpaint_png_message_dialog">दोषरहित संपीड़न। पारदर्शिता संरक्षित है।</string>
     <string name="pocketpaint_ora_message_dialog">यह प्रारूप <b> परतों </b> को याद करता है। <b> इसे उन एप्लिकेशन द्वारा खोला जा सकता है जो Openraster प्रारूप का समर्थन करते हैं। </b></string>
+    <string name="pocketpaint_catrobat_message_dialog">पॉकेट पेंट का मूल छवि प्रारूप। यह फॉर्मेट कमांड और लेयर्स को याद रखता है।</string>
     <string name="permission_info_external_storage_text">इस एप्लिकेशन को ठीक से काम करने के लिए अनुरोध की अनुमति की आवश्यकता है। छवियों को स्थानीय मेमोरी में सहेजने के लिए, एप्लिकेशन को उस तक पहुंच पढ़ने और लिखने की आवश्यकता होती है।</string>
     <string name="permission_info_permanent_denial_text">इस एप्लिकेशन को ठीक से काम करने के लिए अनुरोध की अनुमति की आवश्यकता है। छवियों को स्थानीय मेमोरी में सहेजने के लिए, एप्लिकेशन को उस तक पहुंच पढ़ने और लिखने की आवश्यकता होती है।
         जैसा कि आपने दोबारा अनुमति नहीं देने से इनकार कर दिया है, कृपया अपनी फोन सेटिंग में जाएं और यदि आप संबंधित कार्यों का उपयोग करना चाहते हैं तो आवश्यक अनुमति दें।</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">नेविगेशन दराज खोलें</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">नेविगेशन दराज बंद करें</string>
     <string name="transform_info_text">किनारों को अपनी नई स्थिति में खींचें, फिर छवि क्षेत्र को विस्तार देने या क्रॉप करने के लिए टैप करें.</string>
     <string name="cursor_draw_inactive">स्थिति के लिए पैन, तो पेंटिंग शुरू करने के लिए नल.</string>
     <string name="cursor_draw_active">ड्रा करने के लिए पैन, तो पेंटिंग को रोकने के लिए फिर से नल ।</string>
@@ -163,7 +170,7 @@
     <string name="pocketpaint_about_title">के बारे में</string>
     <string name="pocketpaint_about_content">पॉकेट पेंट एक पिक्चर एडिटिंग लाइब्रेरी है, जो कैटोबाट प्रोजेक्ट का हिस्सा है। \n\n कैटरोबैट एक विज़ुअल प्रोग्रामिंग लैंग्वेज है और स्मार्टफ़ोन के लिए क्रिएटिविटी टूल्स का सेट है। पॉकेट पेंट का सोर्स कोड मुख्य रूप से \n\n के तहत लाइसेंस प्राप्त होता है %s \n लाइसेंस के सटीक विवरण नीचे दिए गए लिंक को देखें।</string>
     <string name="pocketpaint_about_url_license_description">पॉकेट पेंट स्रोत कोड लाइसेंस</string>
-    <string name="pocketpaint_about_url_catrobat_description">कैटरोबैट के बारे में</string>
+    <string name="pocketpaint_about_url_catrobat_description">Catrobat के बारे में</string>
     <string name="pocketpaint_intro">पहचान</string>
     <string name="pocketpaint_intro_split_screen_not_supported">इंट्रो विभाजित स्क्रीन का समर्थन नहीं करता है।</string>
     <string name="pocketpaint_overwrite_title">फ़ाइल पर सबसे ऊपर लिखना?</string>
@@ -172,7 +179,7 @@
     <string name="pocketpaint_rate_us">क्या आप पॉकेट पेंट को रेट करना चाहेंगे?</string>
     <string name="pocketpaint_feedback">हमें इसके लिए खेद है। यदि आप अपना अनुभव हमारे साथ साझा करना चाहते हैं, तो कृपया contact@catrobat.org पर लिखें</string>
     <string name="pocketpaint_yes">हाँ</string>
-    <string name="pocketpaint_no">नहीं</string>
+    <string name="pocketpaint_no">नहीं न</string>
     <string name="pocketpaint_cancel">रद्द करें</string>
     <string name="pocketpaint_not_now">अभी नहीं</string>
     <string name="pocketpaint_rate_us_title">पॉकेट पेंट को रेट करें</string>

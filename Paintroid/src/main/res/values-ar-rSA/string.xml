@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">بوكت بينت</string>
+    <string name="pocketpaint_app_name">بوكت بينت</string>
     <string name="button_brush">فرشاة</string>
     <string name="button_cursor">مؤشر</string>
     <string name="button_pipette">التقاط اللون</string>
@@ -41,7 +41,7 @@
     <string name="done">موافق</string>
     <string name="gallery">معرض</string>
     <string name="load_sticker_error">تعذر تحميل الملصق</string>
-    <string name="error_unknown_error">حدث خطأ غير معروف.</string>
+    <string name="error_unknown_error">حدث خطأ ما.</string>
     <string name="cap_circle">دائرة</string>
     <string name="cap_square">مربع</string>
     <string name="stamptool_paste">لصق</string>
@@ -87,6 +87,7 @@
     <string name="menu_rate_us">قم بالتقييم!</string>
     <string name="menu_export">تصدير</string>
     <string name="menu_feedback">الملاحظات</string>
+    <string name="menu_advanced">إعدادات متقدمة</string>
     <string name="saved_to">تم حفظ الصورة في\n</string>
     <string name="saved">تم حفظ الصورة</string>
     <string name="copy_to">تم حفظ النسخ في\n</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">ب</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">أنقر هنا للكتابة</string>
+    <string name="text_tool_dialog_font_monospace">فضاء أحادي</string>
+    <string name="text_tool_dialog_font_serif">سيرفر</string>
+    <string name="text_tool_dialog_font_sans_serif">دون سيرف</string>
+    <string name="text_tool_dialog_font_dubai">دبي</string>
+    <string name="text_tool_dialog_font_arabic_stc">شركة الاتصالات السعودية</string>
     <string name="shape_tool_dialog_rect_title">مستطيل</string>
     <string name="shape_tool_dialog_ellipse_title">بيضوي</string>
     <string name="shape_tool_dialog_star_title">نجمة</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">إعدادات</string>
     <string name="dialog_save_image_name">اسم الصورة</string>
     <string name="dialog_save_image_format">تنسيق الصورة</string>
+    <string name="dialog_antialiasing">الحواف</string>
+    <string name="dialog_smoothing">التنعيم</string>
     <string name="dialog_save_jpg_option_quality">الجودة:</string>
     <string name="pocketpaint_jpg_message_dialog">يأخذ <b>مساحة تخزين صغيرة</b>. <b>لا توجد شفافية</b> يتذكر.</string>
     <string name="pocketpaint_png_message_dialog">ضغط بلا خسارة. الشفافية محفوظة.</string>
     <string name="pocketpaint_ora_message_dialog">هذا التنسيق يتذكر الطبقات <b></b>. <b>يمكن فتحه بواسطة التطبيقات التي تدعم تنسيق Openraster</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">تنسيق الصورة الأصلية لـ Pocket Paint. هذا التنسيق يتذكر الأوامر والطبقات.</string>
     <string name="permission_info_external_storage_text">هذا التطبيق يحتاج إلى الإذن المطلوب ليعمل بشكل صحيح. من أجل حفظ الصور في الذاكرة المحلية، يحتاج التطبيق إلى الوصول إلى القراءة والكتابة.</string>
     <string name="permission_info_permanent_denial_text">هذا التطبيق يحتاج إلى الإذن المطلوب ليعمل بشكل صحيح. من أجل حفظ الصور في الذاكرة المحلية، يحتاج التطبيق إلى الوصول إلى القراءة والكتابة.
         كما رفضت الإذن مع لا تطلب مرة أخرى، الرجاء الذهاب إلى إعدادات الهاتف الخاص بك ومنح الأذونات المطلوبة إذا كنت ترغب في استخدام الوظائف المرتبطة بها.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">فتح قائمة التنقل</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">إغلاق قائمة التنقل</string>
     <string name="transform_info_text">اسحب الحواف إلى المركز الجديد، ثم اضغط للتكبير أو اقتصاص صورة المنطقة.</string>
     <string name="cursor_draw_inactive">حرك ببطئ لتحديد الموضع, ثم انقر لبدء التلوين.</string>
     <string name="cursor_draw_active">حرك ببطئ للرسم, ثم انقر مجدداً لإيقاف التلوين.</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint</string>
+    <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Pincel</string>
     <string name="button_cursor">Cursor</string>
     <string name="button_pipette">Pipeta</string>
@@ -87,6 +87,7 @@
     <string name="menu_rate_us">Avalie-nos!</string>
     <string name="menu_export">Exportar</string>
     <string name="menu_feedback">Comentário</string>
+    <string name="menu_advanced">Configurações avançadas</string>
     <string name="saved_to">Imagem salva em\n</string>
     <string name="saved">Imagem salva</string>
     <string name="copy_to">Cópia salva em\n</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">Toque aqui para escrever</string>
+    <string name="text_tool_dialog_font_monospace">Espaçamento único</string>
+    <string name="text_tool_dialog_font_serif">Serifa</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">Dubai</string>
+    <string name="text_tool_dialog_font_arabic_stc">INICIAR</string>
     <string name="shape_tool_dialog_rect_title">Retângulo</string>
     <string name="shape_tool_dialog_ellipse_title">Elipse</string>
     <string name="shape_tool_dialog_star_title">Estrela</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">Configurações</string>
     <string name="dialog_save_image_name">Nome da imagem</string>
     <string name="dialog_save_image_format">Formato da imagem</string>
+    <string name="dialog_antialiasing">Antisserrilhado</string>
+    <string name="dialog_smoothing">Alisamento</string>
     <string name="dialog_save_jpg_option_quality">Qualidade:</string>
     <string name="pocketpaint_jpg_message_dialog">Ocupa <b>espaço mínimo no armazenamento</b>. <b>A transparência</b> não é salva </string>
     <string name="pocketpaint_png_message_dialog">Compressão sem perdas. A transparência é preservada.</string>
     <string name="pocketpaint_ora_message_dialog">Este formato lembra <b>camadas</b>. <b>pode ser aberto por aplicativos que suportam o formato Openraster.</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">Formato de imagem nativo do Pocket Paint. Este formato lembra comandos e camadas.</string>
     <string name="permission_info_external_storage_text">Este aplicativo precisa da permissão solicitada para funcionar corretamente. Para salvar imagens na memória local, o aplicativo precisa ter acesso de leitura e escrita a ele.</string>
     <string name="permission_info_permanent_denial_text">Este aplicativo precisa da permissão solicitada para funcionar corretamente. Para salvar imagens na memória local, o aplicativo precisa ter acesso de leitura e escrita a ele.
         Como você negou a permissão sem perguntar novamente, Por favor, vá às configurações do seu telefone e conceda as permissões necessárias se você deseja usar as funções associadas.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Abrir gaveta de navegação</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Fechar gaveta de navegação</string>
     <string name="transform_info_text">Arraste as bordas para a nova posição e, em seguida, toque para ampliar ou cortar a área da imagem.</string>
     <string name="cursor_draw_inactive">Mova lentamente para a posição e toque para começar a pintar.</string>
     <string name="cursor_draw_active">Mova lentamente para desenhar e, então, toque novamente para parar de pintar.</string>

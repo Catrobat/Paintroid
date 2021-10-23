@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,35 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid
 
-package org.catrobat.paintroid.ui;
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.tools.ToolPaint
+import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.ui.Perspective
 
-import android.content.Context;
-import android.widget.Toast;
-
-import androidx.annotation.StringRes;
-
-public final class ToastFactory {
-	private static Toast currentToast;
-
-	private ToastFactory() {
-	}
-
-	public static Toast makeText(Context context, @StringRes int resId, int duration) {
-		if (currentToast != null) {
-			currentToast.cancel();
-		}
-
-		currentToast = Toast.makeText(context, resId, duration);
-		return currentToast;
-	}
-
-	public static Toast makeText(Context context, String msg, int duration) {
-		if (currentToast != null) {
-			currentToast.cancel();
-		}
-
-		currentToast = Toast.makeText(context, msg, duration);
-		return currentToast;
-	}
+class PaintroidApplicationFragment : Fragment() {
+    var commandManager: CommandManager? = null
+    var currentTool: ToolReference? = null
+    var perspective: Perspective? = null
+    var layerModel: LayerContracts.Model? = null
+    var toolPaint: ToolPaint? = null
+    override fun onCreate(savedInstance: Bundle?) {
+        super.onCreate(savedInstance)
+        retainInstance = true
+    }
 }

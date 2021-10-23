@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">ポケットペイント（お絵かきソフト）</string>
+    <string name="pocketpaint_app_name">ポケットペイント（お絵かきソフト）</string>
     <string name="button_brush">ブラシ</string>
     <string name="button_cursor">カーソル</string>
     <string name="button_pipette">ピペット</string>
@@ -86,7 +86,8 @@
     <string name="share_image_via_text">画像の送信</string>
     <string name="menu_rate_us">アプリを評価して！</string>
     <string name="menu_export">エクスポート</string>
-    <string name="menu_feedback">ご意見</string>
+    <string name="menu_feedback">フィードバック</string>
+    <string name="menu_advanced">詳細設定</string>
     <string name="saved_to">画像の保存先\n</string>
     <string name="saved">画像を保存しました。</string>
     <string name="copy_to">保存先のコピー\n</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_strike_through_shortcut">あいう</string>
     <string name="text_tool_dialog_input_hint">テキストを追加するにはここをタップ</string>
+    <string name="text_tool_dialog_font_monospace">Monospace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">ドバイ</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
     <string name="shape_tool_dialog_rect_title">四角形</string>
     <string name="shape_tool_dialog_ellipse_title">楕円</string>
     <string name="shape_tool_dialog_star_title">星</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">設定</string>
     <string name="dialog_save_image_name">画像名</string>
     <string name="dialog_save_image_format">画像フォーマット</string>
+    <string name="dialog_antialiasing">アンチエイリアス</string>
+    <string name="dialog_smoothing">スムージング</string>
     <string name="dialog_save_jpg_option_quality">画質:</string>
     <string name="pocketpaint_jpg_message_dialog"><b>最小のストレージ容量</b>を取得します。 <b>透明度</b> は記憶されません。</string>
     <string name="pocketpaint_png_message_dialog">無損失圧縮。透明度は保持されます。</string>
     <string name="pocketpaint_ora_message_dialog">このフォーマットは、<b>レイヤー</b>を記憶します。<b>Openraster フォーマットをサポートするアプリで開くことができます。</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">ポケットペイントのネイティブ画像フォーマット。このフォーマットはコマンドとレイヤーを記憶します。</string>
     <string name="permission_info_external_storage_text">このアプリは正常に機能するために要求された権限が必要です。 ローカルメモリに画像を保存するには、アプリは読み取りと書き込みアクセスを必要とします。</string>
     <string name="permission_info_permanent_denial_text">このアプリは正常に機能するために要求された権限が必要です。 ローカルメモリに画像を保存するには、アプリは読み取りと書き込みアクセスを必要とします。
         もう一回聞かない、拒否されていますので、機能をご利用になる場合は、携帯電話の設定で必要な権限を付与してください。</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">ナビゲーションドロワーを開く</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">ナビゲーションドロワーを閉じる</string>
     <string name="transform_info_text">エッジを新しい位置にドラッグして、その後タップすると、画像領域を拡大したりトリミングします。</string>
     <string name="cursor_draw_inactive">パンして配置します。その後タップするとペイントを開始します。</string>
     <string name="cursor_draw_active">パンして描画します。その後もう一度タップするとペイントを終了します。</string>

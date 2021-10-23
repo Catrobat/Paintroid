@@ -1326,8 +1326,8 @@ class TransformToolIntegrationTest {
     fun testTransformToolDoesNotResetPerspectiveScale() {
         val scale = 2.0f
         perspective.scale = scale
-        perspective.setSurfaceTranslationX(50f)
-        perspective.setSurfaceTranslationY(200f)
+        perspective.surfaceTranslationX = 50f
+        perspective.surfaceTranslationY = 200f
         mainActivity.refreshDrawingSurface()
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
