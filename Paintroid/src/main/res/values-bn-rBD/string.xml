@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">পকেট পেইন্ট</string>
+    <string name="pocketpaint_app_name">পকেট পেইন্ট</string>
     <string name="button_brush">তুলি</string>
     <string name="button_cursor">কার্সার</string>
     <string name="button_pipette">পিপেট</string>
@@ -87,6 +87,7 @@
     <string name="menu_rate_us">আমাদের মতামত দিন</string>
     <string name="menu_export">রপ্তানি</string>
     <string name="menu_feedback">মতামত</string>
+    <string name="menu_advanced">উন্নত সেটিংস</string>
     <string name="saved_to">চিত্রটি এতে সংরক্ষণ করা হয়েছে\n</string>
     <string name="saved">চিত্র সংরক্ষিত হয়েছে</string>
     <string name="copy_to">অনুলিপি এতে সংরক্ষণ করা হয়েছে\n</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">খ</string>
     <string name="text_tool_dialog_strike_through_shortcut">এবিসি</string>
     <string name="text_tool_dialog_input_hint">লিখতে এখানে আলতো চাপুন</string>
+    <string name="text_tool_dialog_font_monospace">মনোস্পেস</string>
+    <string name="text_tool_dialog_font_serif">সেরিফ</string>
+    <string name="text_tool_dialog_font_sans_serif">সেরিফ ছাড়া</string>
+    <string name="text_tool_dialog_font_dubai">দুবাই</string>
+    <string name="text_tool_dialog_font_arabic_stc">এসটিসি</string>
     <string name="shape_tool_dialog_rect_title">আয়তক্ষেত্র</string>
     <string name="shape_tool_dialog_ellipse_title">উপবৃত্ত</string>
     <string name="shape_tool_dialog_star_title">তারা</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">সেটিংস</string>
     <string name="dialog_save_image_name">ছবির নাম</string>
     <string name="dialog_save_image_format">চিত্র বিন্যাস</string>
+    <string name="dialog_antialiasing">অ্যান্টিয়ালাইজিং</string>
+    <string name="dialog_smoothing">মসৃণ</string>
     <string name="dialog_save_jpg_option_quality">গুণ:</string>
     <string name="pocketpaint_jpg_message_dialog"><b> ন্যূনতম সঞ্চয় স্থান </b>নেয় T<b>কোনও স্বচ্ছতা</b>মনে নেই।</string>
     <string name="pocketpaint_png_message_dialog">ক্ষয়হীন সংকোচনের। স্বচ্ছতা সংরক্ষণ করা হয়।</string>
     <string name="pocketpaint_ora_message_dialog">এই ফর্ম্যাটটি <b> স্তরগুলি</b>মনে রাখে। <b> এটি অ্যাপ্লিকেশনগুলি ওপেনারস্টার ফর্ম্যাটকে সমর্থন করে opened</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">পকেট পেইন্টের নেটিভ ইমেজ ফর্ম্যাট। এই বিন্যাসটি কমান্ড এবং স্তরগুলি মনে রাখে।</string>
     <string name="permission_info_external_storage_text">এই অ্যাপ্লিকেশনটির সঠিকভাবে কাজ করার জন্য অনুরোধ করা অনুমতি দরকার। স্থানীয় মেমোরিতে চিত্রগুলি সংরক্ষণ করার জন্য, অ্যাপ্লিকেশনটির এতে পড়ার এবং লেখার অ্যাক্সেসের প্রয়োজন।</string>
     <string name="permission_info_permanent_denial_text">এই অ্যাপ্লিকেশনটির সঠিকভাবে কাজ করার জন্য অনুরোধ করা অনুমতি দরকার। স্থানীয় মেমোরিতে চিত্রগুলি সংরক্ষণ করার জন্য, অ্যাপ্লিকেশনটির এতে পড়ার এবং লেখার অ্যাক্সেসের প্রয়োজন।
         আপনি আবারও জিজ্ঞাসা করবেন না এমন অনুমতি যেমন অস্বীকার করেছেন, দয়া করে আপনার ফোন সেটিংসে যান এবং যদি আপনি সম্পর্কিত ফাংশনগুলি ব্যবহার করতে চান তবে প্রয়োজনীয় অনুমতিগুলি দিন।</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">নেভিগেশন ড্রয়ার খুলুন</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">নেভিগেশন ড্রয়ারটি বন্ধ করুন</string>
     <string name="transform_info_text">প্রান্তগুলি তাদের নতুন অবস্থানে টেনে আনুন, তারপরে চিত্রের ক্ষেত্রটি প্রসারিত করতে বা কাটতে আলতো চাপুন।</string>
     <string name="cursor_draw_inactive">অবস্থানে প্যান করুন, তারপরে পেইন্টিং শুরু করতে আলতো চাপুন।</string>
     <string name="cursor_draw_active">আঁকতে প্যান করুন, তারপরে পেইন্টিং বন্ধ করতে আবার আলতো চাপুন।</string>

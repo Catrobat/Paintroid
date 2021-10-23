@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint 口袋小畫家</string>
+    <string name="pocketpaint_app_name">Pocket Paint 口袋小畫家</string>
     <string name="button_brush">筆刷</string>
     <string name="button_cursor">游標</string>
     <string name="button_pipette">吸管</string>
@@ -87,6 +87,7 @@
     <string name="menu_rate_us">對我們評分！</string>
     <string name="menu_export">匯出</string>
     <string name="menu_feedback">反饋</string>
+    <string name="menu_advanced">高級設置</string>
     <string name="saved_to">圖片已保存到\n</string>
     <string name="saved">圖檔已儲存</string>
     <string name="copy_to">複製保存到\n</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">乙</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">點按此處撰寫</string>
+    <string name="text_tool_dialog_font_monospace">等寬</string>
+    <string name="text_tool_dialog_font_serif">襯線</string>
+    <string name="text_tool_dialog_font_sans_serif">無襯線字體</string>
+    <string name="text_tool_dialog_font_dubai">迪拜</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
     <string name="shape_tool_dialog_rect_title">長方形</string>
     <string name="shape_tool_dialog_ellipse_title">橢圓</string>
     <string name="shape_tool_dialog_star_title">星星</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">設定</string>
     <string name="dialog_save_image_name">圖片名稱</string>
     <string name="dialog_save_image_format">圖像格式</string>
+    <string name="dialog_antialiasing">抗鋸齒</string>
+    <string name="dialog_smoothing">平滑</string>
     <string name="dialog_save_jpg_option_quality">質量：</string>
     <string name="pocketpaint_jpg_message_dialog">佔用<b>最小存儲空間</b>。 <b>沒有透明度</b>被記住。</string>
     <string name="pocketpaint_png_message_dialog">無損壓縮。透明度得以保留。</string>
     <string name="pocketpaint_ora_message_dialog">這種格式會記住<b>圖層</b>。 <b>可以通過支持Openraster格式的應用程序將其打開。</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">Pocket Paint 的原生圖像格式。這種格式記住命令和層。</string>
     <string name="permission_info_external_storage_text">此應用需要所請求的權限才能正常運行。為了將圖像保存到本地內存，應用程序需要對其進行讀寫訪問。</string>
     <string name="permission_info_permanent_denial_text">此應用需要所請求的權限才能正常運行。為了將圖像保存到本地內存，應用程序需要對其進行讀寫訪問。
         由於您已拒絕的許可，請不要再詢問，因此，如果要使用關聯的功能，請進入手機設置並授予所需的許可權。</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">開啟導航抽屜</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">關閉導航抽屜</string>
     <string name="transform_info_text">將邊緣拖動到新位置，點擊複選標記以放大或裁剪圖像區域。</string>
     <string name="cursor_draw_inactive">平移至位置，然後點按以開始繪畫。</string>
     <string name="cursor_draw_active">平移以繪畫，然後再次點擊以停止繪畫。</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@
             android:paddingBottom="12dp"
             android:paddingTop="12dp">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/color_picker_color_rgb_textview_red"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -57,7 +57,7 @@
                 android:layout_gravity="center_vertical"
                 android:max="255" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/color_picker_rgb_red_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -75,7 +75,7 @@
             android:paddingBottom="12dp"
             android:paddingTop="12dp">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/color_picker_color_rgb_textview_green"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -92,7 +92,7 @@
                 android:layout_height="match_parent"
                 android:max="255" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/color_picker_rgb_green_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -110,7 +110,7 @@
             android:paddingBottom="12dp"
             android:paddingTop="12dp">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/color_picker_color_rgb_textview_blue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -127,7 +127,7 @@
                 android:layout_height="match_parent"
                 android:max="255" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/color_picker_rgb_blue_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -146,7 +146,7 @@
             android:paddingBottom="12dp"
             android:paddingTop="12dp">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/color_picker_color_rgb_textview_alpha"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -163,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:max="255" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/color_picker_rgb_alpha_value"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -173,7 +173,7 @@
                 android:textColor="?attr/colorAccent"
                 tools:ignore="HardcodedText" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical|start"
@@ -190,7 +190,7 @@
             android:paddingBottom="12dp"
             android:paddingTop="12dp">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/color_picker_color_rgb_textview_hex"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -198,7 +198,7 @@
                 android:text="@string/color_hex"
                 android:textColor="@color/pocketpaint_color_picker_hex_black" />
 
-            <EditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/color_picker_color_rgb_hex"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -194,15 +194,15 @@ public class UndoRedoIntegrationTest {
 		int translationY = 15;
 
 		perspective.setScale(scale);
-		perspective.setSurfaceTranslationX(translationX);
-		perspective.setSurfaceTranslationY(translationY);
+		perspective.surfaceTranslationX = translationX;
+		perspective.surfaceTranslationY = translationY;
 
 		onTopBarView()
 				.performUndo();
 
 		assertEquals(scale, perspective.getScale(), Float.MIN_VALUE);
-		assertEquals(translationX, perspective.getSurfaceTranslationX(), Float.MIN_VALUE);
-		assertEquals(translationY, perspective.getSurfaceTranslationY(), Float.MIN_VALUE);
+		assertEquals(translationX, perspective.surfaceTranslationX, Float.MIN_VALUE);
+		assertEquals(translationY, perspective.surfaceTranslationY, Float.MIN_VALUE);
 	}
 
 	@Test
@@ -219,15 +219,15 @@ public class UndoRedoIntegrationTest {
 		int translationY = 15;
 
 		perspective.setScale(scale);
-		perspective.setSurfaceTranslationX(translationX);
-		perspective.setSurfaceTranslationY(translationY);
+		perspective.surfaceTranslationX = translationX;
+		perspective.surfaceTranslationY = translationY;
 
 		onTopBarView()
 				.performRedo();
 
 		assertEquals(scale, perspective.getScale(), Float.MIN_VALUE);
-		assertEquals(translationX, perspective.getSurfaceTranslationX(), Float.MIN_VALUE);
-		assertEquals(translationY, perspective.getSurfaceTranslationY(), Float.MIN_VALUE);
+		assertEquals(translationX, perspective.surfaceTranslationX, Float.MIN_VALUE);
+		assertEquals(translationY, perspective.surfaceTranslationY, Float.MIN_VALUE);
 	}
 
 	@Test

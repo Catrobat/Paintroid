@@ -27,11 +27,11 @@
     <string name="color_hex">هيكس</string>
     <string name="color_picker_apply">تطبيق</string>
     <string name="color_picker_cancel">إلغاء</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">تيار</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">الجديد</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">التقاط اللون</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">حفظ التغييرات؟</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">هل تريد حفظ التغييرات؟</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">لا</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">نعم</string>
 </resources>

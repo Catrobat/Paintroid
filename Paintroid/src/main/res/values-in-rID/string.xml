@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint</string>
+    <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Kuas</string>
     <string name="button_cursor">Kursor</string>
     <string name="button_pipette">Pipet</string>
@@ -41,7 +41,7 @@
     <string name="done">Selesai</string>
     <string name="gallery">Galeri</string>
     <string name="load_sticker_error">Tidak dapat memuat Stiker</string>
-    <string name="error_unknown_error">Terjadi kesalahan yang tidak diketahui.</string>
+    <string name="error_unknown_error">Ada yang salah.</string>
     <string name="cap_circle">Lingkaran</string>
     <string name="cap_square">Kotak</string>
     <string name="stamptool_paste">Tempel</string>
@@ -62,11 +62,11 @@
     <string name="help_content_fill">Ketuk pada gambar untuk mengisi suatu area dengan warna yang dipilih.</string>
     <string name="help_content_cursor">Posisikan kursor di tempat yang ingin Anda gambar. Ketuk untuk mengaktifkan kursor. Gerakkan jari Anda untuk menggambar. Ketuk lagi untuk menonaktifkan.</string>
     <string name="help_content_transform">Digunakan untuk mengubah ukuran gambar.</string>
-    <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and tap again to stamp.</string>
+    <string name="help_content_stamp">Pindahkan dan ubah ukuran persegi panjang untuk menutupi area yang ingin Anda cap. Tekan lama untuk memilih area. Pindahkan, lalu ketuk tanda centang untuk mencap.</string>
     <string name="help_content_import_png">Impor citra dari Galeri ke alat stempel.</string>
     <string name="help_content_line">Gambar garis lurus.</string>
     <string name="help_content_text">Tulis teks lalu format. Ubah ukuran kotak teks sesudahnya. Tekan untuk memasukkan teks pada gambar.</string>
-    <string name="help_content_shape">Choose a shape and tap it to insert the selected shape.</string>
+    <string name="help_content_shape">Pilih bentuk dan ketuk tanda centang untuk menyisipkan bentuk yang dipilih.</string>
     <string name="help_content_layer">Buat lapisan baru atau modifikasi yang sudah ada.</string>
     <string name="help_content_color_chooser">Pilih atau sesuaikan warna.</string>
     <string name="help_content_hand">Gerakkan jari Anda untuk memindahkan kanvas.</string>
@@ -87,14 +87,15 @@
     <string name="menu_rate_us">Nilai kami!</string>
     <string name="menu_export">Ekspor</string>
     <string name="menu_feedback">Umpan balik</string>
+    <string name="menu_advanced">Pengaturan lanjutan</string>
     <string name="saved_to">Gambar disimpan ke\n</string>
     <string name="saved">Citra tersimpan</string>
     <string name="copy_to">Salin disimpan ke\n</string>
     <string name="copy">Salinan tersimpan</string>
-    <string name="menu_quit">Keluar</string>
+    <string name="menu_quit">Berhenti</string>
     <string name="save_button_text">Simpan</string>
     <string name="discard_button_text">Singkirkan</string>
-    <string name="cancel_button_text">Batalkan</string>
+    <string name="cancel_button_text">Membatalkan</string>
     <string name="overwrite_button_text">Timpa</string>
     <string name="resize_nothing_to_resize">tidak ada yang diubah ukurannya</string>
     <string name="resize_cannot_resize_to_this_size">tidak dapat mengubah ukuran menjadi ukuran ini</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">B</string>
     <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">Tekan di sini untuk menambahkan teks</string>
+    <string name="text_tool_dialog_font_monospace">Monospace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Tanpa Serif</string>
+    <string name="text_tool_dialog_font_dubai">Dubai</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
     <string name="shape_tool_dialog_rect_title">Empat persegi panjang</string>
     <string name="shape_tool_dialog_ellipse_title">Elips</string>
     <string name="shape_tool_dialog_star_title">Bintang</string>
@@ -136,16 +142,17 @@
     <string name="dialog_settings">Pengaturan</string>
     <string name="dialog_save_image_name">Nama citra</string>
     <string name="dialog_save_image_format">Format gambar</string>
+    <string name="dialog_antialiasing">Antialiasing</string>
+    <string name="dialog_smoothing">menghaluskan</string>
     <string name="dialog_save_jpg_option_quality">Kualitas:</string>
     <string name="pocketpaint_jpg_message_dialog">Menggunakan<b>ruang penyimpanan minimal</b>. <b>Tidak ada transparansi</b> yang diingat.</string>
     <string name="pocketpaint_png_message_dialog">Kompresi lossless. Transparansi dipertahankan.</string>
     <string name="pocketpaint_ora_message_dialog">Format ini mengingat <b> lapisan </b>. <b> Ini dapat dibuka oleh aplikasi yang mendukung format Openraster. </b></string>
+    <string name="pocketpaint_catrobat_message_dialog">Format gambar asli Pocket Paint. Format ini mengingat perintah dan lapisan.</string>
     <string name="permission_info_external_storage_text">Aplikasi ini membutuhkan izin yang diminta agar berfungsi dengan baik. Untuk menyimpan gambar ke memori lokal, aplikasi membutuhkan akses baca dan tulis ke dalamnya.</string>
     <string name="permission_info_permanent_denial_text">Aplikasi ini membutuhkan izin yang diminta agar berfungsi dengan baik. Untuk menyimpan gambar ke memori lokal, aplikasi membutuhkan akses baca dan tulis ke dalamnya.
         Karena Anda telah menolak izin dengan jangan tanya lagi, silakan buka pengaturan ponsel Anda dan berikan izin yang diperlukan jika Anda ingin menggunakan fungsi terkait.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Buka laci navigasi</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Tutup laci navigasi</string>
-    <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+    <string name="transform_info_text">Seret tepi ke posisi barunya, ketuk tanda centang untuk memperbesar atau memotong area gambar.</string>
     <string name="cursor_draw_inactive">Geser ke posisi, lalu ketuk untuk mulai mengecat.</string>
     <string name="cursor_draw_active">Geser untuk menggambar, lalu ketuk lagi untuk berhenti melukis.</string>
     <string name="welcome_to_pocket_paint">Selamat datang di Pocket Paint</string>

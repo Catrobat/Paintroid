@@ -173,7 +173,7 @@ public class ToolControllerTest {
 		when(tool.getDrawPaint()).thenReturn(paint);
 		when(paint.getColor()).thenReturn(Color.CYAN);
 
-		assertEquals(Color.CYAN, toolController.getToolColor());
+		assertEquals(Color.CYAN, (int) toolController.getToolColor());
 	}
 
 	@Test

@@ -158,7 +158,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(CURRENT_COLOR, colorPickerView.selectedColor)
+        outState.putInt(CURRENT_COLOR, colorPickerView.getSelectedColor())
         outState.putInt(INITIAL_COLOR, colorPickerView.initialColor)
     }
 
@@ -179,7 +179,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
 
     private fun setCurrentColor(color: Int) {
         setViewColor(newColorView, color)
-        colorPickerView.selectedColor = color
+        colorPickerView.setSelectedColor(color)
     }
 
     override fun dismiss() {

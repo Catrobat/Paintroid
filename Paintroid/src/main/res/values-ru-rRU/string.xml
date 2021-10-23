@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="pocketpaint_app_name" tools:ignore="UnusedResources">Pocket Paint</string>
+    <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Кисть</string>
     <string name="button_cursor">Курсор</string>
     <string name="button_pipette">Пипетка</string>
@@ -87,6 +87,7 @@
     <string name="menu_rate_us">Оцените нас!</string>
     <string name="menu_export">Экспорт</string>
     <string name="menu_feedback">Отзыв</string>
+    <string name="menu_advanced">Расширенные настройки</string>
     <string name="saved_to">Изображение сохраняется в\n</string>
     <string name="saved">Картинка сохранена</string>
     <string name="copy_to">Копия сохранена в\n</string>
@@ -106,6 +107,11 @@
     <string name="text_tool_dialog_bold_shortcut">Ж</string>
     <string name="text_tool_dialog_strike_through_shortcut">азбука</string>
     <string name="text_tool_dialog_input_hint">Нажмите здесь, чтобы написать</string>
+    <string name="text_tool_dialog_font_monospace">Моноспейс</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">Дубай</string>
+    <string name="text_tool_dialog_font_arabic_stc">НТЦ</string>
     <string name="shape_tool_dialog_rect_title">Прямоугольник</string>
     <string name="shape_tool_dialog_ellipse_title">Эллипс</string>
     <string name="shape_tool_dialog_star_title">Звезда</string>
@@ -136,15 +142,16 @@
     <string name="dialog_settings">Настройки</string>
     <string name="dialog_save_image_name">Имя изображения</string>
     <string name="dialog_save_image_format">Формат изображения</string>
+    <string name="dialog_antialiasing">Сглаживание</string>
+    <string name="dialog_smoothing">Разглаживание</string>
     <string name="dialog_save_jpg_option_quality">Качество:</string>
     <string name="pocketpaint_jpg_message_dialog">Занимает <b>минимального пространства для хранения</b> <b>Нет прозрачности</b> запоминается.</string>
     <string name="pocketpaint_png_message_dialog">Сжатие без потерь. Прозрачность сохраняется.</string>
     <string name="pocketpaint_ora_message_dialog">Этот формат запоминает <b>слоёв</b>. <b>Он может быть открыт приложениями, которые поддерживают формат Openraster.</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">Родной формат изображений Pocket Paint. Этот формат запоминает команды и слои.</string>
     <string name="permission_info_external_storage_text">Этому приложению требуется запрошенное разрешение для правильной работы. Чтобы сохранять изображения в локальной памяти, приложению необходим доступ для чтения и записи.</string>
     <string name="permission_info_permanent_denial_text">Этому приложению требуется запрашиваемое разрешение для правильной работы. Чтобы сохранить изображения в локальную память, приложению необходимо иметь доступ к ним для чтения и записи.
         Как вы отказали в разрешении не спрашивать снова, перейдите в настройки телефона и предоставьте необходимые разрешения, если вы хотите использовать соответствующие функции.</string>
-    <string name="drawer_open" tools:ignore="UnusedResources">Открыть панель навигации</string>
-    <string name="drawer_close" tools:ignore="UnusedResources">Закрыть панель навигации</string>
     <string name="transform_info_text">Перетащите края на их новое место, а затем нажмите, чтобы увеличить или обрезать изображение.</string>
     <string name="cursor_draw_inactive">Нажмите, чтобы начать рисование.</string>
     <string name="cursor_draw_active">Нажмите кнопку, чтобы рисовать, затем снова, чтобы остановить рисование.</string>
