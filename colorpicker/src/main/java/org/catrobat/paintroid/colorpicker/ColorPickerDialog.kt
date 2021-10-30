@@ -56,7 +56,8 @@ private const val INITIAL_COLOR = "InitialColor"
 private const val REQUEST_CODE = 1
 private const val BITMAP_NAME = "temp.png"
 const val COLOR_EXTRA = "colorExtra"
-const val BITMAP_NAME_EXTRA = "bitmapNameExtra"
+const val BITMAP_HEIGHT_EXTRA = "bitmapHeightNameExtra"
+const val BITMAP_WIDTH_EXTRA = "bitmapWidthNameExtra"
 
 class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     @VisibleForTesting
@@ -92,15 +93,17 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
             .inflate(R.layout.color_picker_dialog_view, null)
         currentColorView = dialogView.findViewById(R.id.color_picker_current_color_view)
         pipetteBtn = dialogView.findViewById(R.id.color_picker_pipette_btn)
+
         pipetteBtn.setOnClickListener {
             pipetteBtn.isEnabled = false
             CoroutineScope(Dispatchers.IO).launch {
-                storeBitmapTemporally(currentBitmap, requireContext(), BITMAP_NAME)
+                ColorPickerPreviewActivity.pickableImage = currentBitmap
                 withContext(Dispatchers.Main) {
                     pipetteBtn.isEnabled = true
                     val intent = Intent(it.context, ColorPickerPreviewActivity::class.java).apply {
                         putExtra(COLOR_EXTRA, colorToApply)
-                        putExtra(BITMAP_NAME_EXTRA, BITMAP_NAME)
+                        putExtra(BITMAP_HEIGHT_EXTRA, currentBitmap.height)
+                        putExtra(BITMAP_WIDTH_EXTRA, currentBitmap.width)
                     }
                     try {
                         startActivityForResult(intent, REQUEST_CODE)
