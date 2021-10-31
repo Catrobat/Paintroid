@@ -32,6 +32,9 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
+const val BITMAP_FALLBACK_HEIGHT = 512
+const val BITMAP_FALLBACK_WIDTH = 512
+
 class ColorPickerPreviewActivity : AppCompatActivity(), OnImageViewPointClickedListener {
 
     private lateinit var backAction: ImageView
@@ -41,9 +44,6 @@ class ColorPickerPreviewActivity : AppCompatActivity(), OnImageViewPointClickedL
 
     private var currentColor = 0
     private var oldChosenColor = 0
-
-    private var bitmapDefaultHeight = 512
-    private var bitmapDefaultWidth = 512
 
     companion object {
         var pickableImage: Bitmap? = null
@@ -78,7 +78,7 @@ class ColorPickerPreviewActivity : AppCompatActivity(), OnImageViewPointClickedL
                     Bitmap.createBitmap(it1, it, Bitmap.Config.ARGB_8888)
                 }
             } ?: run {
-                Bitmap.createBitmap(bitmapDefaultWidth, bitmapDefaultHeight, Bitmap.Config.ARGB_8888)
+                Bitmap.createBitmap(BITMAP_FALLBACK_WIDTH, BITMAP_FALLBACK_HEIGHT, Bitmap.Config.ARGB_8888)
             }
             previewSurface.setImageBitmap(bitmap)
         }
