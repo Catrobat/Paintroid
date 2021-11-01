@@ -19,19 +19,19 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">रंग चयन</string>
-    <string name="color_picker_tab_icon">रंग बीनने वाला टैब आइकन</string>
+    <string name="color_picker_tab_icon">रंग चयन टैब आइकन</string>
     <string name="color_red">लाल</string>
     <string name="color_green">हरा</string>
     <string name="color_blue">नीला</string>
-    <string name="color_alpha">अल्फा</string>
-    <string name="color_hex">हेक्स</string>
-    <string name="color_picker_apply">Apply</string>
+    <string name="color_alpha">पारदर्शिता</string>
+    <string name="color_hex">HEX</string>
+    <string name="color_picker_apply">लागू करें</string>
     <string name="color_picker_cancel">रद्द करें</string>
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">वर्तमान</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">नवीन व</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">नया</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">पिपेट</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">परिवर्तन सहेजें?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">क्या आप अपने परिवर्तनों को सहेजना चाहते हैं?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">नहीं न</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">नहीं</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">हाँ</string>
 </resources>
