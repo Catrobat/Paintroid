@@ -67,8 +67,13 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     private lateinit var pipetteBtn: MaterialButton
     private lateinit var checkeredShader: Shader
     private lateinit var currentBitmap: Bitmap
+    private var colorUpdated = false
+    @JvmField var colorToApply = 0
 
-    private var colorToApply = 0
+    private fun setColorToApply(value: Int) {
+        colorToApply = value
+        colorUpdated = true
+    }
 
     companion object {
         fun newInstance(@ColorInt initialColor: Int): ColorPickerDialog {
@@ -129,6 +134,9 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
                 dialogInterface.dismiss()
             }
             .setPositiveButton(R.string.color_picker_apply) { _: DialogInterface, _: Int ->
+                if (colorUpdated) {
+                    updateColorChange(colorToApply)
+                }
                 deleteBitmapFile(requireContext(), BITMAP_NAME)
                 dismiss()
             }
@@ -152,8 +160,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
 
     override fun colorChanged(color: Int) {
         setViewColor(newColorView, color)
-        colorToApply = color
-        updateColorChange(colorToApply)
+        setColorToApply(color)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
