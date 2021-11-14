@@ -71,8 +71,13 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     private lateinit var pipetteBtn: MaterialButton
     private lateinit var checkeredShader: Shader
     private lateinit var currentBitmap: Bitmap
+    private var colorUpdated = false
+    @JvmField var colorToApply = 0
 
-    private var colorToApply = 0
+    private fun setColorToApply(value: Int) {
+        colorToApply = value
+        colorUpdated = true
+    }
 
     companion object {
         private lateinit var alphaSliderView: AlphaSliderView
@@ -141,6 +146,9 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
                 dialogInterface.dismiss()
             }
             .setPositiveButton(R.string.color_picker_apply) { _: DialogInterface, _: Int ->
+                if (colorUpdated) {
+                    updateColorChange(colorToApply)
+                }
                 deleteBitmapFile(requireContext(), BITMAP_NAME)
                 dismiss()
             }
@@ -163,6 +171,8 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     }
 
     override fun colorChanged(color: Int) {
+        setViewColor(newColorView, color)
+        setColorToApply(color)
         if (alphaSliderView.visibility == GONE) {
             alphaSliderView.getAlphaSlider()?.invalidate()
             val alpha = alphaSliderView.getAlphaSlider()?.getAlphaValue()
@@ -178,7 +188,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
             colorToApply = color
         }
 
-        updateColorChange(colorToApply)
+        setColorToApply(colorToApply)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
