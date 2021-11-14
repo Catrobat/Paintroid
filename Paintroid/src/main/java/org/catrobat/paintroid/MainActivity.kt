@@ -71,6 +71,7 @@ import org.catrobat.paintroid.tools.implementation.DefaultToolFactory
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.tools.implementation.DefaultToolReference
 import org.catrobat.paintroid.tools.implementation.DefaultWorkspace
+import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.KeyboardListener
@@ -453,6 +454,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             val tool = toolReference.tool as BaseToolWithShape?
             tool?.onClickOnButton()
         }
+        topBar.plusButton.setOnClickListener {
+            val tool = toolReference.tool as LineTool
+            tool.onClickOnPlus()
+        }
+        LineTool.topBarViewHolder = topBar
     }
 
     private fun setBottomBarListeners(viewHolder: BottomBarViewHolder) {
