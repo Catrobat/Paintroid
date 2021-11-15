@@ -20,6 +20,7 @@ package org.catrobat.paintroid.colorpicker
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.BitmapShader
 import android.graphics.Color
@@ -30,9 +31,9 @@ import android.view.WindowManager
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
+const val BITMAP_FALLBACK_HEIGHT = 512
+const val BITMAP_FALLBACK_WIDTH = 512
 
 class ColorPickerPreviewActivity : AppCompatActivity(), OnImageViewPointClickedListener {
 
@@ -43,6 +44,10 @@ class ColorPickerPreviewActivity : AppCompatActivity(), OnImageViewPointClickedL
 
     private var currentColor = 0
     private var oldChosenColor = 0
+
+    companion object {
+        var pickableImage: Bitmap? = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,12 +69,18 @@ class ColorPickerPreviewActivity : AppCompatActivity(), OnImageViewPointClickedL
             setCurrentColor(it)
         }
 
-        intent?.extras?.getString(BITMAP_NAME_EXTRA)?.let {
-            CoroutineScope(Dispatchers.Main).launch {
-                loadBitmapByName(this@ColorPickerPreviewActivity, it)?.let {
-                    previewSurface.setImageBitmap(it)
+        pickableImage?.let { previewSurface.setImageBitmap(it) } ?: run {
+
+            val height = intent.extras?.getInt(BITMAP_HEIGHT_EXTRA)
+            val width = intent.extras?.getInt(BITMAP_WIDTH_EXTRA)
+            val bitmap = width?.let {
+                height?.let { it1 ->
+                    Bitmap.createBitmap(it1, it, Bitmap.Config.ARGB_8888)
                 }
+            } ?: run {
+                Bitmap.createBitmap(BITMAP_FALLBACK_WIDTH, BITMAP_FALLBACK_HEIGHT, Bitmap.Config.ARGB_8888)
             }
+            previewSurface.setImageBitmap(bitmap)
         }
 
         doneAction.setOnClickListener {
