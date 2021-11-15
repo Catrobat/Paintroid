@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.iotasks
 
 import android.content.ContentResolver
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
@@ -38,12 +39,14 @@ class SaveImageAsync(
     private val requestCode: Int,
     workspace: Workspace,
     uri: Uri?,
-    saveAsCopy: Boolean
+    saveAsCopy: Boolean,
+    context: Context
 ) : AsyncTask<Void?, Void?, Uri?>() {
     private val callbackRef: WeakReference<SaveImageCallback> = WeakReference(activity)
     private var uri: Uri?
     private val saveAsCopy: Boolean
     private val workspace: Workspace
+    private val context: Context
     override fun onPreExecute() {
         val callback = callbackRef.get()
         if (callback == null || callback.isFinishing) {
@@ -59,8 +62,8 @@ class SaveImageAsync(
     ): Uri? {
         val fileName = FileIO.defaultFileName
         val fileExistsValue = FileIO.checkIfDifferentFile(fileName)
-        return if (uri == null) {
-            val imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.contentResolver)
+        if (uri == null) {
+            val imageUri = FileIO.saveBitmapToFile(fileName, bitmap, callback.contentResolver, context)
             if (FileIO.ending == ".png") {
                 FileIO.currentFileNamePng = fileName
                 FileIO.uriFilePng = imageUri
@@ -68,12 +71,12 @@ class SaveImageAsync(
                 FileIO.currentFileNameJpg = fileName
                 FileIO.uriFileJpg = imageUri
             }
-            imageUri
+            return imageUri
         } else {
             if (!FileIO.catroidFlag) {
                 setUriToFormatUri(fileExistsValue)
             }
-            FileIO.saveBitmapToUri(uri, callback.contentResolver, bitmap)
+            return FileIO.saveBitmapToUri(uri!!, bitmap, context)
         }
     }
 
@@ -190,5 +193,6 @@ class SaveImageAsync(
         this.uri = uri
         this.saveAsCopy = saveAsCopy
         this.workspace = workspace
+        this.context = context
     }
 }
