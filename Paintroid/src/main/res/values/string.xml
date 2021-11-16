@@ -35,6 +35,7 @@
     <string name="button_text">Text</string>
     <string name="button_shape">Shapes</string>
     <string name="button_hand">Hand</string>
+    <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">Spray can</string>
     <string name="button_apply">Apply</string>
     <string name="button_checkmark">Checkmark</string>
@@ -63,6 +64,7 @@
     <string name="help_title">Help</string>
     <string name="help_content_eraser">Remove parts of the image like with an eraser.</string>
     <string name="help_content_brush">Tap on the symbols on the bottom bar to change the color or the brush size.</string>
+    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
     <string name="help_content_eyedropper">Tap on the image to select a color.</string>
     <string name="help_content_undo">Tap to undo your previous action.</string>
     <string name="help_content_redo">Tap to redo an undone action.</string>

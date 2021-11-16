@@ -42,7 +42,7 @@ import kotlin.math.max
 import kotlin.math.sqrt
 
 open class BrushTool(
-    private val brushToolOptionsView: BrushToolOptionsView,
+    val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,

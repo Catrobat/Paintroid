@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.tools.common
 
+import android.graphics.MaskFilter
 import android.graphics.Paint.Cap
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
@@ -35,4 +36,7 @@ class CommonBrushPreviewListener(
 
     override val color: Int
         get() = toolPaint.color
+
+    override val maskFilter: MaskFilter?
+        get() = toolPaint.paint.maskFilter
 }

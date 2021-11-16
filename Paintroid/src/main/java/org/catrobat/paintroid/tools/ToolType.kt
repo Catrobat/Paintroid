@@ -187,6 +187,15 @@ enum class ToolType(
         R.id.pocketpaint_tools_spray_can,
         INVALID_RESOURCE_ID,
         true
+    ),
+    WATERCOLOR(
+        R.string.button_watercolor,
+        R.string.help_content_watercolor,
+        R.drawable.ic_pocketpaint_tool_watercolor,
+        EnumSet.of(StateChange.ALL),
+        R.id.pocketpaint_tools_watercolor,
+        INVALID_RESOURCE_ID,
+        true
     );
 
     fun shouldReactToStateChange(stateChange: StateChange): Boolean =

@@ -743,6 +743,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 	}
 
 	private void switchTool(ToolType type) {
+		navigator.setMaskFilterToNull();
 		setTool(type);
 		toolController.switchTool(type, false);
 		if (type == ToolType.IMPORTPNG) {

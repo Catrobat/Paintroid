@@ -131,6 +131,8 @@ interface MainActivityContracts {
         fun showCatroidMediaGallery()
 
         fun showScaleImageRequestDialog(uri: Uri?, requestCode: Int)
+
+        fun setMaskFilterToNull()
     }
 
     interface MainView {

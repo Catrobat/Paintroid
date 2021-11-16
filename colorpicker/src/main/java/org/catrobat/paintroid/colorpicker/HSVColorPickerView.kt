@@ -19,8 +19,6 @@
 package org.catrobat.paintroid.colorpicker
 
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.graphics.BitmapShader
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -37,7 +35,6 @@ import kotlin.math.max
 import kotlin.math.min
 
 private const val BORDER_WIDTH_PX = 1f
-private const val ALPHA_PANEL_HEIGHT = 21f
 private const val HUE_PANEL_WIDTH = 30f
 private const val PANEL_SPACING = 10f
 private const val PALETTE_CIRCLE_TRACKING_RADIUS = 5f
@@ -47,7 +44,6 @@ private const val CHANNELS = 3
 private const val ALPHA_MAX = 0xff
 
 class HSVColorPickerView : View {
-    private var alphaPanelHeight = ALPHA_PANEL_HEIGHT
     private var panelSpacing = PANEL_SPACING
     private var paletteCircleTrackerRadius = PALETTE_CIRCLE_TRACKING_RADIUS
     private var rectangleTrackerOffset = RECTANGLE_TRACKER_OFFSET
@@ -64,13 +60,10 @@ class HSVColorPickerView : View {
     private var satValTrackerPaint: Paint
     private var huePaint: Paint
     private var hueTrackerPaint: Paint
-    private var alphaPaint: Paint
     private var borderPaint: Paint
-    private var checkeredPaint: Paint
     private var drawingRect: RectF
     private val satValRect: RectF
     private val hueRect: RectF
-    private val alphaRect: RectF
     private var onColorChangedListener: OnColorChangedListener? = null
     private var startTouchPoint: Point? = null
 
@@ -104,7 +97,6 @@ class HSVColorPickerView : View {
         paletteCircleTrackerRadius *= density
         rectangleTrackerOffset *= density
         huePanelWidth *= density
-        alphaPanelHeight *= density
         panelSpacing *= density
         drawingOffset = paletteCircleTrackerRadius
         satValTrackerPaint = Paint().apply {
@@ -120,58 +112,13 @@ class HSVColorPickerView : View {
         }
         satValPaint = Paint()
         huePaint = Paint()
-        alphaPaint = Paint()
         borderPaint = Paint()
-        checkeredPaint = Paint()
-        val checkerboard =
-            BitmapFactory.decodeResource(resources, R.drawable.pocketpaint_checkeredbg)
-        val checkeredShader =
-            BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
-        checkeredPaint.shader = checkeredShader
         drawingRect = RectF()
         satValRect = RectF()
         hueRect = RectF()
-        alphaRect = RectF()
     }
 
     private fun clamp(brightness: Float, mn: Float, mx: Float): Float = max(mn, min(mx, brightness))
-
-    private fun drawAlphaPanel(canvas: Canvas) {
-        if (BORDER_WIDTH_PX > 0) {
-            borderPaint.color = borderColor
-            canvas.drawRect(
-                alphaRect.left - BORDER_WIDTH_PX,
-                alphaRect.top - BORDER_WIDTH_PX,
-                alphaRect.right + BORDER_WIDTH_PX,
-                alphaRect.bottom + BORDER_WIDTH_PX,
-                borderPaint
-            )
-        }
-        canvas.drawRect(alphaRect, checkeredPaint)
-        val hsv = floatArrayOf(hue, sat, brightness)
-        val color = Color.HSVToColor(hsv)
-        val acolor = Color.HSVToColor(0, hsv)
-        alphaPaint.shader = LinearGradient(
-            alphaRect.left,
-            alphaRect.top,
-            alphaRect.right,
-            alphaRect.top,
-            color,
-            acolor,
-            Shader.TileMode.CLAMP
-        )
-        canvas.drawRect(alphaRect, alphaPaint)
-        val rectWidth = 2 * density
-        alphaToPoint(alpha).let {
-            val r = RectF().apply {
-                left = it.x - rectWidth
-                right = it.x + rectWidth
-                top = alphaRect.top - rectangleTrackerOffset
-                bottom = alphaRect.bottom + rectangleTrackerOffset
-            }
-            canvas.drawRoundRect(r, 2f, 2f, hueTrackerPaint)
-        }
-    }
 
     private fun drawSatValPanel(canvas: Canvas) {
         borderPaint.color = borderColor
@@ -270,17 +217,9 @@ class HSVColorPickerView : View {
                 sat = result[0]
                 brightness = result[1]
             }
-            alphaRect.contains(startX.toFloat(), startY.toFloat()) ->
-                alpha = pointToAlpha(event.x.toInt())
             else -> return false
         }
         return true
-    }
-
-    private fun pointToAlpha(x: Int): Int {
-        val width = alphaRect.width().toInt()
-        val curX = clamp(x - alphaRect.left, 0f, width.toFloat()).toInt()
-        return ALPHA_MAX - curX * ALPHA_MAX / width
     }
 
     private fun satValToPoint(sat: Float, brightness: Float): Point {
@@ -297,14 +236,6 @@ class HSVColorPickerView : View {
         return Point().apply {
             x = hueRect.left.toInt()
             y = (height - hue * height / HUE + hueRect.top).toInt()
-        }
-    }
-
-    private fun alphaToPoint(alpha: Int): Point {
-        val width = alphaRect.width()
-        return Point().apply {
-            x = (width - alpha * width / ALPHA_MAX + alphaRect.left).toInt()
-            y = alphaRect.top.toInt()
         }
     }
 
@@ -333,7 +264,7 @@ class HSVColorPickerView : View {
 
     private fun setUpSatValRect() {
         val panelContentHeight =
-            drawingRect.height() - 2 * BORDER_WIDTH_PX - panelSpacing - alphaPanelHeight
+            drawingRect.height() - 2 * BORDER_WIDTH_PX
         val panelContentWidth =
             drawingRect.width() - 2 * BORDER_WIDTH_PX - panelSpacing - huePanelWidth
         val left = drawingRect.left + BORDER_WIDTH_PX
@@ -346,17 +277,9 @@ class HSVColorPickerView : View {
     private fun setUpHueRect() {
         val left = drawingRect.right - huePanelWidth + BORDER_WIDTH_PX
         val top = drawingRect.top + BORDER_WIDTH_PX
-        val bottom = drawingRect.bottom - BORDER_WIDTH_PX - panelSpacing + alphaPanelHeight
-        val right = drawingRect.right - BORDER_WIDTH_PX
-        hueRect.set(left, top, right, bottom)
-    }
-
-    private fun setUpAlphaRect() {
-        val left = drawingRect.left + BORDER_WIDTH_PX
-        val top = drawingRect.bottom - alphaPanelHeight + BORDER_WIDTH_PX
         val bottom = drawingRect.bottom - BORDER_WIDTH_PX
         val right = drawingRect.right - BORDER_WIDTH_PX
-        alphaRect.set(left, top, right, bottom)
+        hueRect.set(left, top, right, bottom)
     }
 
     private fun onColorChanged() {
@@ -373,7 +296,6 @@ class HSVColorPickerView : View {
         }
         drawSatValPanel(canvas)
         drawHuePanel(canvas)
-        drawAlphaPanel(canvas)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -407,7 +329,6 @@ class HSVColorPickerView : View {
         }
         setUpSatValRect()
         setUpHueRect()
-        setUpAlphaRect()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

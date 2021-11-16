@@ -88,7 +88,8 @@ public class ToolOptionsIntegrationTest {
 				{ToolType.STAMP, true, true},
 				{ToolType.ERASER, true, true},
 				{ToolType.TEXT, true, true},
-				{ToolType.HAND, false, false}
+				{ToolType.HAND, false, false},
+				{ToolType.WATERCOLOR, true, true}
 		});
 	}
 

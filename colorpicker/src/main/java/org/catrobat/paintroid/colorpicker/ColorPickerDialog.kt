@@ -37,6 +37,7 @@ import android.graphics.drawable.RippleDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
 import android.view.WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
 import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -51,6 +52,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val FF = 0xff
+private const val HSV_INITIALIZER = 3
+private const val INITIAL_CATROID_FLAG = "InitialCatroidFlag"
 private const val CURRENT_COLOR = "CurrentColor"
 private const val INITIAL_COLOR = "InitialColor"
 private const val REQUEST_CODE = 1
@@ -72,11 +75,14 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     private var colorToApply = 0
 
     companion object {
-        fun newInstance(@ColorInt initialColor: Int): ColorPickerDialog {
+        private lateinit var alphaSliderView: AlphaSliderView
+
+        fun newInstance(@ColorInt initialColor: Int, flag: Boolean): ColorPickerDialog {
             val dialog = ColorPickerDialog()
             val bundle = Bundle()
             bundle.putInt(INITIAL_COLOR, initialColor)
             bundle.putInt(CURRENT_COLOR, initialColor)
+            bundle.putBoolean(INITIAL_CATROID_FLAG, flag)
             dialog.arguments = bundle
             return dialog
         }
@@ -116,14 +122,17 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         newColorView = dialogView.findViewById(R.id.color_picker_new_color_view)
         colorPickerView = dialogView.findViewById(R.id.color_picker_view)
         colorPickerView.setOnColorChangedListener(this)
+        alphaSliderView = dialogView.findViewById(R.id.color_alpha_slider)
 
         if (savedInstanceState != null) {
             setCurrentColor(savedInstanceState.getInt(CURRENT_COLOR, Color.BLACK))
-            setInitialColor(savedInstanceState.getInt(INITIAL_COLOR, Color.BLACK))
+            setInitialColor(savedInstanceState.getInt(INITIAL_COLOR, Color.BLACK), savedInstanceState.getBoolean(INITIAL_CATROID_FLAG))
+            colorPickerView.setAlphaSlider(alphaSliderView, savedInstanceState.getBoolean(INITIAL_CATROID_FLAG))
         } else {
             val arguments = requireArguments()
             setCurrentColor(arguments.getInt(CURRENT_COLOR, Color.BLACK))
-            setInitialColor(arguments.getInt(INITIAL_COLOR, Color.BLACK))
+            setInitialColor(arguments.getInt(INITIAL_COLOR, Color.BLACK), arguments.getBoolean(INITIAL_CATROID_FLAG))
+            colorPickerView.setAlphaSlider(alphaSliderView, arguments.getBoolean(INITIAL_CATROID_FLAG))
         }
         colorToApply = colorPickerView.initialColor
         val materialDialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
@@ -154,8 +163,21 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     }
 
     override fun colorChanged(color: Int) {
-        setViewColor(newColorView, color)
-        colorToApply = color
+        if (alphaSliderView.visibility == GONE) {
+            alphaSliderView.getAlphaSlider()?.invalidate()
+            val alpha = alphaSliderView.getAlphaSlider()?.getAlphaValue()
+            val hsv = FloatArray(HSV_INITIALIZER)
+            Color.colorToHSV(color, hsv)
+            val newColor = alpha?.let { Color.HSVToColor(it, hsv) }
+            if (newColor != null) {
+                setViewColor(newColorView, newColor)
+                colorToApply = newColor
+            }
+        } else {
+            setViewColor(newColorView, color)
+            colorToApply = color
+        }
+
         updateColorChange(colorToApply)
     }
 
@@ -175,8 +197,11 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         }
     }
 
-    private fun setInitialColor(color: Int) {
+    private fun setInitialColor(color: Int, catroidFlag: Boolean) {
         setViewColor(currentColorView, color)
+        if (!catroidFlag) {
+            alphaSliderView.visibility = View.VISIBLE
+        }
         colorPickerView.initialColor = color
     }
 
