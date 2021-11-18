@@ -180,7 +180,7 @@ class TextTool(
                 val height = boxHeight
                 val position = PointF(toolPosition.x, toolPosition.y)
                 createAndSetBitmap()
-                toolPosition.set(position) 
+                toolPosition.set(position)
                 boxWidth = width
                 boxHeight = height
             }
