@@ -22,6 +22,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -53,6 +54,7 @@ class BottomNavigationLandscape(context: Context, private val bottomNavigationVi
             val icon = itemBottomNavigation.findViewById<ImageView>(R.id.icon)
             val text = itemBottomNavigation.findViewById<TextView>(R.id.title)
             icon.setImageDrawable(menu.getItem(i).icon)
+            icon.setColorFilter(ContextCompat.getColor(context, R.color.pocketpaint_welcome_dot_active))
             text.text = menu.getItem(i).title
             item.removeAllViews()
             item.addView(itemBottomNavigation)
