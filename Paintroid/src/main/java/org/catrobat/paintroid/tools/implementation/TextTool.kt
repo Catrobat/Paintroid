@@ -211,7 +211,7 @@ class TextTool(
         setBitmap(bitmap)
     }
 
-    private fun keepAttributeAndcreateBitmap(){
+    private fun keepAttributeAndcreateBitmap() {
         val width = boxWidth
         val height = boxHeight
         val position = PointF(toolPosition.x, toolPosition.y)
