@@ -140,49 +140,25 @@ class TextTool(
             override fun setFont(font: String) {
                 this@TextTool.font = font
                 updateTypeface()
-                val width = boxWidth
-                val height = boxHeight
-                val position = PointF(toolPosition.x, toolPosition.y)
-                createAndSetBitmap()
-                toolPosition.set(position)
-                boxWidth = width
-                boxHeight = height
+                keepAttributeAndcreateBitmap()
             }
 
             override fun setUnderlined(underlined: Boolean) {
                 this@TextTool.underlined = underlined
                 textPaint.isUnderlineText = this@TextTool.underlined
-                val width = boxWidth
-                val height = boxHeight
-                val position = PointF(toolPosition.x, toolPosition.y)
-                createAndSetBitmap()
-                toolPosition.set(position)
-                boxWidth = width
-                boxHeight = height
+                keepAttributeAndcreateBitmap()
             }
 
             override fun setItalic(italic: Boolean) {
                 this@TextTool.italic = italic
                 updateTypeface()
-                val width = boxWidth
-                val height = boxHeight
-                val position = PointF(toolPosition.x, toolPosition.y)
-                createAndSetBitmap()
-                toolPosition.set(position)
-                boxWidth = width
-                boxHeight = height
+                keepAttributeAndcreateBitmap()
             }
 
             override fun setBold(bold: Boolean) {
                 this@TextTool.bold = bold
                 textPaint.isFakeBoldText = this@TextTool.bold
-                val width = boxWidth
-                val height = boxHeight
-                val position = PointF(toolPosition.x, toolPosition.y)
-                createAndSetBitmap()
-                toolPosition.set(position)
-                boxWidth = width
-                boxHeight = height
+                keepAttributeAndcreateBitmap()
             }
 
             override fun setTextSize(size: Int) {
@@ -233,6 +209,16 @@ class TextTool(
             )
         }
         setBitmap(bitmap)
+    }
+
+    private fun keepAttributeAndcreateBitmap(){
+        val width = boxWidth
+        val height = boxHeight
+        val position = PointF(toolPosition.x, toolPosition.y)
+        createAndSetBitmap()
+        toolPosition.set(position)
+        boxWidth = width
+        boxHeight = height
     }
 
     override fun onSaveInstanceState(bundle: Bundle?) {
