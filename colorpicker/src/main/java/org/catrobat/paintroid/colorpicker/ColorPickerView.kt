@@ -37,7 +37,7 @@ private const val HSV_TAG = "HSV"
 private const val EXCEPTION = "Invalid TAG"
 
 class ColorPickerView : LinearLayoutCompat {
-    private val rgbSelectorView: RgbSelectorView
+    val rgbSelectorView: RgbSelectorView
     private val preSelectorView: PresetSelectorView
     private val hsvSelectorView: HSVSelectorView
     private var alphaSliderView: AlphaSliderView

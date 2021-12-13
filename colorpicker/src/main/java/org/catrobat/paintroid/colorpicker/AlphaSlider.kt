@@ -73,7 +73,7 @@ class AlphaSlider(
     }
 
     companion object {
-        private var alphaVal = MAX_ALPHA
+        var alphaValue = MAX_ALPHA
         private lateinit var onColorChangedListener: OnColorChangedListener
         private var selectedColor = 0
         private var currentColor = 0
@@ -133,7 +133,7 @@ class AlphaSlider(
         alphaPaint.shader = alphaShader
         canvas.drawRect(rect, alphaPaint)
         val rectWidth = FOUR * density / SLIDER_PADDING
-        val p = alphaToPoint(alphaVal)
+        val p = alphaToPoint(alphaValue)
         val r = RectF()
         r.left = p.x - rectWidth
         r.right = p.x + rectWidth
@@ -181,7 +181,7 @@ class AlphaSlider(
         val startX = startTouchPoint!!.x
         val startY = startTouchPoint!!.y
         if (alphaRectangle.contains(startX.toFloat(), startY.toFloat())) {
-            alphaVal = pointToAlpha(event.x.toInt())
+            alphaValue = pointToAlpha(event.x.toInt())
         } else {
             update = false
         }
@@ -213,7 +213,7 @@ class AlphaSlider(
     fun getSelectedColor(): Int {
         val hsv = FloatArray(HSV_INITIALIZER)
         Color.colorToHSV(selectedColor, hsv)
-        selectedColor = Color.HSVToColor(alphaVal, hsv)
+        selectedColor = Color.HSVToColor(alphaValue, hsv)
 
         return selectedColor
     }
@@ -225,11 +225,15 @@ class AlphaSlider(
     fun setSelectedColor(color: Int) {
         val hsv = FloatArray(HSV_INITIALIZER)
         Color.colorToHSV(color, hsv)
-        selectedColor = Color.HSVToColor(alphaVal, hsv)
+        selectedColor = Color.HSVToColor(alphaValue, hsv)
         currentColor = color
 
         invalidate()
     }
 
-    fun getAlphaValue(): Int = alphaVal
+    fun getAlphaValue(): Int = alphaValue
+
+    fun setAlphaValue(value: Int) {
+        alphaValue = value
+    }
 }

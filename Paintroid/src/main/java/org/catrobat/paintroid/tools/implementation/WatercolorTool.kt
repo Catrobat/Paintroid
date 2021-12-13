@@ -53,10 +53,7 @@ class WatercolorTool(
 
     init {
         bitmapPaint.maskFilter = BlurMaskFilter(calcRange(bitmapPaint.alpha), BlurMaskFilter.Blur.INNER)
-        bitmapPaint.alpha = MAX_ALPHA_VALUE
-
         previewPaint.maskFilter = BlurMaskFilter(calcRange(previewPaint.alpha), BlurMaskFilter.Blur.INNER)
-        bitmapPaint.alpha = MAX_ALPHA_VALUE
     }
 
     override fun changePaintColor(color: Int) {
@@ -64,10 +61,7 @@ class WatercolorTool(
 
         brushToolOptionsView.invalidate()
         bitmapPaint.maskFilter = BlurMaskFilter(calcRange(bitmapPaint.alpha), BlurMaskFilter.Blur.INNER)
-        bitmapPaint.alpha = MAX_ALPHA_VALUE
-
         previewPaint.maskFilter = BlurMaskFilter(calcRange(previewPaint.alpha), BlurMaskFilter.Blur.INNER)
-        bitmapPaint.alpha = MAX_ALPHA_VALUE
     }
 
     private fun calcRange(value: Int): Float {
