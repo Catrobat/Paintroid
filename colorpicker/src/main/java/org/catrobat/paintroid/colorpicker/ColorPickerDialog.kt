@@ -172,7 +172,6 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
 
     override fun colorChanged(color: Int) {
         setViewColor(newColorView, color)
-        setColorToApply(color)
         if (alphaSliderView.visibility == GONE) {
             alphaSliderView.getAlphaSlider()?.invalidate()
             val alpha = alphaSliderView.getAlphaSlider()?.getAlphaValue()
