@@ -163,7 +163,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     }
 
     override fun colorChanged(color: Int) {
-        if (alphaSliderView.visibility == GONE) {
+        if (alphaSliderView.visibility == GONE && colorPickerView.rgbSelectorView.seekBarAlpha.visibility == GONE) {
             alphaSliderView.getAlphaSlider()?.invalidate()
             val alpha = alphaSliderView.getAlphaSlider()?.getAlphaValue()
             val hsv = FloatArray(HSV_INITIALIZER)
@@ -174,6 +174,9 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
                 colorToApply = newColor
             }
         } else {
+            if (colorPickerView.rgbSelectorView.seekBarAlpha.visibility != GONE) {
+                alphaSliderView.getAlphaSlider()?.setAlphaValue(Color.alpha(color))
+            }
             setViewColor(newColorView, color)
             colorToApply = color
         }

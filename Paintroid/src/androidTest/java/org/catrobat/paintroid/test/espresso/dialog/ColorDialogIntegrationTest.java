@@ -60,6 +60,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.pressBack;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
@@ -631,5 +632,33 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_current_color_view))
 				.check(matches(isDisplayed()))
 				.check(matches(withBackgroundColor(Color.BLACK)));
+	}
+
+	@Test
+	public void alphaValueIsSetInSliderWhenChangedInSeekBar() {
+		onColorPickerView()
+				.performOpenColorPicker();
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+
+		// set color to value #7F000000, alpha seekbar 49%
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterMiddle());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(scrollTo(), click());
+		onToolProperties()
+				.checkMatchesColor(Color.parseColor("#7F000000"));
+	}
+
+	@Test
+	public void alphaValueIsSetInSeekBarWhenChangedInSlider() {
+		onColorPickerView()
+				.performOpenColorPicker();
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(click());
+
+		// set color to value #80000000, alpha seekbar 50%
+		onView(withId(R.id.color_alpha_slider)).perform(scrollTo(), touchCenterMiddle());
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(
+				withText("50")
+		));
 	}
 }
