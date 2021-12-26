@@ -18,20 +18,20 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">رنگ چننا</string>
-    <string name="color_picker_tab_icon">رنگ چننا ٹیب آئکن</string>
+    <string name="color_picker_title">رنگ</string>
+    <string name="color_picker_tab_icon">رنگ اٹھانے کا نشان</string>
     <string name="color_red">سرخ</string>
     <string name="color_green">سبز</string>
     <string name="color_blue">نیلا</string>
-    <string name="color_alpha">الفا</string>
-    <string name="color_hex">HEX</string>
+    <string name="color_alpha">مکس</string>
+    <string name="color_hex">ہیکس</string>
     <string name="color_picker_apply">لاگو کریں</string>
-    <string name="color_picker_cancel">منسوخ</string>
+    <string name="color_picker_cancel">ختم</string>
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">موجودہ</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">نئی</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">نیا</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">نعمونہ</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">تبدیلیاں محفوظ کریں؟</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">کیا آپ تبدیلیاں محفوظ کرنا چاہتے ہیں?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">نہیں</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">جی ہاں</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">ہاں</string>
 </resources>
