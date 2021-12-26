@@ -30,8 +30,8 @@
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">actuel</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">nouveau</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipette</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Enregistrer changements?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Voulez-vous enregistrer vos modifications?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">pas de</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Enregistrer changements ?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Veux-tu enregistrer tes modifications ?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">non</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">oui</string>
 </resources>
