@@ -35,9 +35,11 @@
     <string name="button_text">Mətn</string>
     <string name="button_shape">Formalar</string>
     <string name="button_hand">Əl</string>
+    <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">Sprey qutusu</string>
     <string name="button_apply">Tətbiq et</string>
     <string name="button_checkmark">Təsdiq işarəsi</string>
+    <string name="button_plus">Connect Line Segment</string>
     <string name="done">Hazırdır</string>
     <string name="gallery">Qalareya</string>
     <string name="load_sticker_error">Stiker yüklənə bilmədi</string>
@@ -56,6 +58,7 @@
     <string name="help_title">Kömək</string>
     <string name="help_content_eraser">Təsvirin hissələrini pozanla silirmiş kimi çıxart.</string>
     <string name="help_content_brush">Rəng və ya fırça ölçüsünü dəyişdirmək üçün alt sətirdəki simvollara toxunun.</string>
+    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
     <string name="help_content_eyedropper">Rəng seçmək üçün təsvirə toxunun.</string>
     <string name="help_content_undo">Əvvəlki hərəkəti geri qaytarmaq üçün toxunun.</string>
     <string name="help_content_redo">Geri qaytarılan hərəkəti təkrarlamaq üçün toxunun.</string>

@@ -35,9 +35,11 @@
     <string name="button_text">文本</string>
     <string name="button_shape">形状</string>
     <string name="button_hand">手形工具</string>
+    <string name="button_watercolor">水彩</string>
     <string name="button_spray_can">喷雾罐</string>
     <string name="button_apply">申请</string>
     <string name="button_checkmark">勾选</string>
+    <string name="button_plus">连接线段</string>
     <string name="done">已完成</string>
     <string name="gallery">画廊</string>
     <string name="load_sticker_error">无法加载贴纸</string>
@@ -56,6 +58,7 @@
     <string name="help_title">帮助</string>
     <string name="help_content_eraser">使用橡皮擦擦除部分图像。</string>
     <string name="help_content_brush">点击底部栏上的符号更改画笔的颜色。</string>
+    <string name="help_content_watercolor">类似于具有水彩效果的画笔工具。您还可以使用颜色菜单中的滑块更改画笔的强度。</string>
     <string name="help_content_eyedropper">点击图像选择颜色。</string>
     <string name="help_content_undo">点击可撤销先前的操作。</string>
     <string name="help_content_redo">点击可重做已撤消的操作。</string>

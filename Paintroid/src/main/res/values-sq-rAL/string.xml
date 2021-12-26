@@ -35,9 +35,11 @@
     <string name="button_text">Tekst</string>
     <string name="button_shape">Format</string>
     <string name="button_hand">Duar</string>
+    <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">Kanaçe me spërkatje</string>
     <string name="button_apply">Apliko</string>
     <string name="button_checkmark">Shenjë kontrolli</string>
+    <string name="button_plus">Connect Line Segment</string>
     <string name="done">i përfunduar</string>
     <string name="gallery">Galeria</string>
     <string name="load_sticker_error">Pulla nuk mund të ngarkohej </string>
@@ -56,6 +58,7 @@
     <string name="help_title">Ndihmë</string>
     <string name="help_content_eraser">Hiqni pjesë të figurës me një gomë fshirëse.</string>
     <string name="help_content_brush">Prekni simbolet në pjesen e poshtëm për të ndryshuar ngjyrën ose madhësinë e furçës.</string>
+    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
     <string name="help_content_eyedropper">Prekni imazhin për të zgjedhur një ngjyrë.</string>
     <string name="help_content_undo">Trokit për të zhbërë veprimin tënd të mëparshëm. </string>
     <string name="help_content_redo">Prekni për të ribërë një veprim të pakthyer.</string>

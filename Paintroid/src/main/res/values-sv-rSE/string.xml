@@ -35,9 +35,11 @@
     <string name="button_text">Text</string>
     <string name="button_shape">Former</string>
     <string name="button_hand">Hand</string>
+    <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">Spray can</string>
     <string name="button_apply">Verkställ</string>
     <string name="button_checkmark">Checkmark</string>
+    <string name="button_plus">Connect Line Segment</string>
     <string name="done">Färdigt</string>
     <string name="gallery">Galleri</string>
     <string name="load_sticker_error">Could not load Sticker</string>
@@ -56,6 +58,7 @@
     <string name="help_title">Hjälp</string>
     <string name="help_content_eraser">Ta bort delar av bilden t.ex. med ett suddgummi.</string>
     <string name="help_content_brush">Klicka på symbolerna i nedre fältet för att ändra färg eller penselstorlek.</string>
+    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
     <string name="help_content_eyedropper">Klicka på bilden för att välja en färg.</string>
     <string name="help_content_undo">tryck för att ångra den föregående åtgärden.</string>
     <string name="help_content_redo">Tryck för att göra om en ångra åtgärd.</string>
@@ -129,7 +132,7 @@
     <string name="transform_height_text">Höjd</string>
     <string name="transform_auto_crop_text">Auto</string>
     <string name="pixel">px</string>
-    <string name="stamp_tool_copy_hint">Long press to copy content</string>
+    <string name="stamp_tool_copy_hint">Tap on copy to copy content</string>
     <string name="layers_title">Lager</string>
     <string name="layer_new">Nytt lager</string>
     <string name="layer_delete">Ta bort lager</string>
@@ -159,7 +162,7 @@
     <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new, start the intro, or skip it if you are already familiar with Pocket Paint.</string>
     <string name="intro_tool_more_information">Klicka på ett verktyg för att få mer information</string>
     <string name="more_possibilities">Fler möjligheter</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
+    <string name="intro_possibilities_text">Use the top bar to open the overflow menu and to undo or redo changes</string>
     <string name="landscape">Landskap</string>
     <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
     <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
@@ -194,5 +197,5 @@
     <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
     <string name="pocketpaint_tool_icon_description">Current tool icon</string>
     <string name="dialog_scale_title">Image is too big to load</string>
-    <string name="dialog_scale_message">The image is too big to load. Click OK to scale down the image automatically.</string>
+    <string name="dialog_scale_message">The image is too big to load. Tap OK to scale down the image automatically.</string>
 </resources>
