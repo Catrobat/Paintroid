@@ -1,6 +1,6 @@
 use_adb_root(false)
 
-app_package_name('org.catrobat.paintroid')
+app_package_name('org.catrobat.paintroid.test')
 use_tests_in_packages(['org.catrobat.paintroid.test.espresso.screenshots'])
 tests_package_name('org.catrobat.paintroid.test')
 
