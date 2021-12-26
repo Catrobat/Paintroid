@@ -35,9 +35,11 @@
     <string name="button_text">Metin</string>
     <string name="button_shape">Şekiller</string>
     <string name="button_hand">El</string>
+    <string name="button_watercolor">Suluboya</string>
     <string name="button_spray_can">Sprey Kutusu</string>
     <string name="button_apply">Uygula</string>
     <string name="button_checkmark">Onay İşareti</string>
+    <string name="button_plus">Hat Segmentini Bağla</string>
     <string name="done">Tamam</string>
     <string name="gallery">Galeri</string>
     <string name="load_sticker_error">Çıkartma yüklenemedi</string>
@@ -56,6 +58,7 @@
     <string name="help_title">Yardım</string>
     <string name="help_content_eraser">Resmin parçalarını silgiyle siliyormuş gibi çıkart.</string>
     <string name="help_content_brush">Renk veya fırça boyutunu değiştirmek için alt araç çubuğundaki sembollere dokun.</string>
+    <string name="help_content_watercolor">Suluboya efektli fırça aracına benzer. Bununla birlikte, renk menüsündeki kaydırıcı ile fırçanın gücünü de değiştirebilirsiniz.</string>
     <string name="help_content_eyedropper">Renk seçmek için resme dokun.</string>
     <string name="help_content_undo">Önceki eylemi geri almak için dokun.</string>
     <string name="help_content_redo">Geri alınan eylemi yinelemek için dokun.</string>

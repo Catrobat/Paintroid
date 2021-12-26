@@ -35,9 +35,11 @@
     <string name="button_text">متن</string>
     <string name="button_shape">شکلونه</string>
     <string name="button_hand">لاس</string>
+    <string name="button_watercolor">د اوبو رنګ</string>
     <string name="button_spray_can">سپری کولی شی</string>
     <string name="button_apply">تطبیق کړئ</string>
     <string name="button_checkmark">چک مارک</string>
+    <string name="button_plus">د کرښې برخه وصل کړئ</string>
     <string name="done">ترسره شو</string>
     <string name="gallery">ګالری</string>
     <string name="load_sticker_error">سټیکر نشي پورته کولی</string>
@@ -56,6 +58,7 @@
     <string name="help_title">مرسته</string>
     <string name="help_content_eraser">د عکس برخې لرې کړئ لکه د پاکولو سره.</string>
     <string name="help_content_brush">د رنګ یا برش اندازې بدلولو لپاره په لاندې بار کې سمبولونو باندې ټایپ کړئ.</string>
+    <string name="help_content_watercolor">د اوبو رنګ اغیز سره د برش وسیلې ته ورته. په هرصورت تاسو کولی شئ د رنګ مینو کې د سلیډر سره د برش ځواک هم بدل کړئ.</string>
     <string name="help_content_eyedropper">د رنګ غوره کولو لپاره په عکس باندې کلیک وکړئ.</string>
     <string name="help_content_undo">د خپل پخوانی عمل بیرته راوستلو لپاره ټایپ کړئ.</string>
     <string name="help_content_redo">د نه منل شوي عمل بیا ترسره کولو لپاره ټایپ کړئ.</string>

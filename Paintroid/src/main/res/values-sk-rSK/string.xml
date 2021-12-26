@@ -35,9 +35,11 @@
     <string name="button_text">Text</string>
     <string name="button_shape">Shapes</string>
     <string name="button_hand">Hand</string>
+    <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">Spray can</string>
     <string name="button_apply">Apply</string>
     <string name="button_checkmark">Checkmark</string>
+    <string name="button_plus">Connect Line Segment</string>
     <string name="done">Done</string>
     <string name="gallery">Vybrať obrázok</string>
     <string name="load_sticker_error">Could not load Sticker</string>
@@ -56,6 +58,7 @@
     <string name="help_title">Help</string>
     <string name="help_content_eraser">Remove parts of the image like with an eraser.</string>
     <string name="help_content_brush">Tap on the symbols on the bottom bar to change the color or the brush size.</string>
+    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
     <string name="help_content_eyedropper">Tap on the image to select a color.</string>
     <string name="help_content_undo">Tap to undo your previous action.</string>
     <string name="help_content_redo">Tap to redo an undone action.</string>
@@ -129,7 +132,7 @@
     <string name="transform_height_text">Height</string>
     <string name="transform_auto_crop_text">Auto</string>
     <string name="pixel">px</string>
-    <string name="stamp_tool_copy_hint">Long press to copy content</string>
+    <string name="stamp_tool_copy_hint">Tap on copy to copy content</string>
     <string name="layers_title">Layers</string>
     <string name="layer_new">New layer</string>
     <string name="layer_delete">Delete layer</string>
@@ -157,9 +160,9 @@
     <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
     <string name="welcome_to_pocket_paint">Welcome To Pocket Paint</string>
     <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new, start the intro, or skip it if you are already familiar with Pocket Paint.</string>
-    <string name="intro_tool_more_information">Click on a tool to get more information</string>
+    <string name="intro_tool_more_information">Tap on a tool to get more information</string>
     <string name="more_possibilities">More possibilities</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
+    <string name="intro_possibilities_text">Use the top bar to open the overflow menu and to undo or redo changes</string>
     <string name="landscape">Landscape</string>
     <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
     <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
@@ -194,5 +197,5 @@
     <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
     <string name="pocketpaint_tool_icon_description">Current tool icon</string>
     <string name="dialog_scale_title">Image is too big to load</string>
-    <string name="dialog_scale_message">The image is too big to load. Click OK to scale down the image automatically.</string>
+    <string name="dialog_scale_message">The image is too big to load. Tap OK to scale down the image automatically.</string>
 </resources>

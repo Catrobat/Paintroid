@@ -35,9 +35,11 @@
     <string name="button_text">Text</string>
     <string name="button_shape">Tvary</string>
     <string name="button_hand">Hand</string>
+    <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">Spray can</string>
     <string name="button_apply">Apply</string>
     <string name="button_checkmark">Checkmark</string>
+    <string name="button_plus">Connect Line Segment</string>
     <string name="done">Hotovo</string>
     <string name="gallery">Vybrat obrázek</string>
     <string name="load_sticker_error">Could not load Sticker</string>
@@ -56,6 +58,7 @@
     <string name="help_title">Nápověda</string>
     <string name="help_content_eraser">Odeber části obrazu jak gumou.</string>
     <string name="help_content_brush">Klepni na symboly na spodní liště pro změnu barvy nebo velikosti štětce.</string>
+    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
     <string name="help_content_eyedropper">Klepni na obrázek pro výběr barvy.</string>
     <string name="help_content_undo">Klepni na tlačítko pro vrácení akce.</string>
     <string name="help_content_redo">Klepnutím na tlačítko Opakovat akci se vrátíte zpět.</string>
@@ -159,7 +162,7 @@
     <string name="intro_welcome_text">S Pocket Paint  tady nejsou limity vaší kreativity. Když chcete znova nový intro nebo přeskočit ho když jste již obeznámený s Pocket Paint.</string>
     <string name="intro_tool_more_information">Klepněte na nástroj pro získání více informací</string>
     <string name="more_possibilities">Další možnosti</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
+    <string name="intro_possibilities_text">Use the top bar to open the overflow menu and to undo or redo changes</string>
     <string name="landscape">Na šířku</string>
     <string name="intro_landscape_text">Pocket Paint také podporuje malování v režimu na šířku aby jste měl ten nejlepší zážitek z malby.</string>
     <string name="enjoy_pocket_paint">Vše je hotovo. Užijte si Pocket Code.</string>
@@ -194,5 +197,5 @@
     <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
     <string name="pocketpaint_tool_icon_description">Current tool icon</string>
     <string name="dialog_scale_title">Image is too big to load</string>
-    <string name="dialog_scale_message">The image is too big to load. Click OK to scale down the image automatically.</string>
+    <string name="dialog_scale_message">The image is too big to load. Tap OK to scale down the image automatically.</string>
 </resources>

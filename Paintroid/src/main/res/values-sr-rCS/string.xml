@@ -35,9 +35,11 @@
     <string name="button_text">Tekst</string>
     <string name="button_shape">Oblici</string>
     <string name="button_hand">Ruka</string>
+    <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">Spray can</string>
     <string name="button_apply">Primeni</string>
     <string name="button_checkmark">Checkmark</string>
+    <string name="button_plus">Connect Line Segment</string>
     <string name="done">Gotovo</string>
     <string name="gallery">Izaberi sliku</string>
     <string name="load_sticker_error">Could not load Sticker</string>
@@ -56,6 +58,7 @@
     <string name="help_title">Pomoć</string>
     <string name="help_content_eraser">Obriši delove slike sa gumicom.</string>
     <string name="help_content_brush">Pritisni na simbole kod donje trake da promeniš boju ili veličinu četke.</string>
+    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
     <string name="help_content_eyedropper">Pritisni na sliku da odabereš boju.</string>
     <string name="help_content_undo">Pritisni da opozoveš prošlu radnju.</string>
     <string name="help_content_redo">Pritisni da ponoviš poništenu radnu.</string>
@@ -159,7 +162,7 @@
     <string name="intro_welcome_text">Sa PocketPaint nema ograničenja za vašu kreativnost. Ako ste novi, pokrenite uvod ili ga jednostavno preskočite ako ste već upoznati sa PocketPaint.</string>
     <string name="intro_tool_more_information">Klikni na alat za više informacija</string>
     <string name="more_possibilities">Više mogućnosti</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
+    <string name="intro_possibilities_text">Use the top bar to open the overflow menu and to undo or redo changes</string>
     <string name="landscape">Horizontalno</string>
     <string name="intro_landscape_text">Pocket Paint takođe podržava crtanje u pejzažnom režimu kako bi vam pružio najbolje slikarsko iskustvo.</string>
     <string name="enjoy_pocket_paint">Spremni ste. Uživajte u Pocket Paint.</string>
@@ -194,5 +197,5 @@
     <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
     <string name="pocketpaint_tool_icon_description">Current tool icon</string>
     <string name="dialog_scale_title">Image is too big to load</string>
-    <string name="dialog_scale_message">The image is too big to load. Click OK to scale down the image automatically.</string>
+    <string name="dialog_scale_message">The image is too big to load. Tap OK to scale down the image automatically.</string>
 </resources>

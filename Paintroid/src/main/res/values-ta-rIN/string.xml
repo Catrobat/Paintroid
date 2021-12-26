@@ -35,9 +35,11 @@
     <string name="button_text">உரை</string>
     <string name="button_shape">வடிவங்கள்</string>
     <string name="button_hand">கை</string>
+    <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">தெளிப்பு முடியும்</string>
     <string name="button_apply">அமல்படுத்து</string>
     <string name="button_checkmark">செக்மார்க்</string>
+    <string name="button_plus">Connect Line Segment</string>
     <string name="done">முடிந்தது</string>
     <string name="gallery">படம் தேர்ந்தெடு</string>
     <string name="load_sticker_error">ஸ்டிக்கரை ஏற்ற முடியவில்லை</string>
@@ -56,6 +58,7 @@
     <string name="help_title">உதவி</string>
     <string name="help_content_eraser">அழிப்பானைப் பயன் படுத்தி படத்தின் பகுதிகளை அகற்றவும்.</string>
     <string name="help_content_brush">நிறம் அல்லது தூரிகை அளவை மாற்ற கீழே பட்டியில் உள்ள சின்னங்களைத் தட்டவும்.</string>
+    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
     <string name="help_content_eyedropper">வண்ணத்தைத் தேர்ந்தெடுக்க படத்தைத் தட்டவும்.</string>
     <string name="help_content_undo">உங்கள் முந்தைய செயலைச் செயல்தவிர்க்க தட்டவும்.</string>
     <string name="help_content_redo">செயல்தவிர்த்த செயலை மீண்டும் செய்வதற்குத் தட்டவும்.</string>

@@ -35,9 +35,11 @@
     <string name="button_text">Tekst</string>
     <string name="button_shape">Kształty</string>
     <string name="button_hand">Ręka</string>
+    <string name="button_watercolor">Akwarela</string>
     <string name="button_spray_can">Sprej</string>
     <string name="button_apply">Zastosuj</string>
     <string name="button_checkmark">Zaznaczenie</string>
+    <string name="button_plus">Połącz segment linii</string>
     <string name="done">Zrobione</string>
     <string name="gallery">Galeria</string>
     <string name="load_sticker_error">Nie można załadować naklejki</string>
@@ -56,6 +58,7 @@
     <string name="help_title">Pomoc</string>
     <string name="help_content_eraser">Usuń części obrazu tak, jak gumką.</string>
     <string name="help_content_brush">Naciśnij symbole na dolnym pasku, aby zmienić kolor lub rozmiar pędzla.</string>
+    <string name="help_content_watercolor">Podobne do narzędzia pędzla z efektem akwarelowym. Możesz jednak również zmienić siłę pędzla za pomocą suwaka w menu koloru.</string>
     <string name="help_content_eyedropper">Naciśnij na obrazek, aby wybrać kolor.</string>
     <string name="help_content_undo">Naciśnij, aby cofnąć poprzednią czynność.</string>
     <string name="help_content_redo">Naciśnij, aby przywrócić cofniętą czynność.</string>

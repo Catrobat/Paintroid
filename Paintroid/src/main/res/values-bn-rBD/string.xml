@@ -35,9 +35,11 @@
     <string name="button_text">পাঠ্য</string>
     <string name="button_shape">আকার</string>
     <string name="button_hand">হাত</string>
+    <string name="button_watercolor">জলরং</string>
     <string name="button_spray_can">স্প্রে করতে পারেন</string>
     <string name="button_apply">প্রয়োগ করুন</string>
     <string name="button_checkmark">চেক চিহ্ন</string>
+    <string name="button_plus">লাইন সংযোগ রেখাংশ</string>
     <string name="done">করা হয়েছে</string>
     <string name="gallery">গ্যালারী</string>
     <string name="load_sticker_error">স্টিকার লোড করা যায়নি</string>
@@ -56,6 +58,7 @@
     <string name="help_title">সাহায্য</string>
     <string name="help_content_eraser">ইরেজারের মতো চিত্রের অংশগুলি সরান।</string>
     <string name="help_content_brush">রঙ বা ব্রাশের আকার পরিবর্তন করতে নীচের বারের চিহ্নগুলিতে আলতো চাপুন।</string>
+    <string name="help_content_watercolor">জল রং এবং তুলি টুল অনুরূপ। তবে আপনি রঙ মেনুতে স্লাইডার দিয়ে তুলির আকার পরিবর্তন করতে পারেন।</string>
     <string name="help_content_eyedropper">রঙ নির্বাচন করতে ছবিতে আলতো চাপুন।</string>
     <string name="help_content_undo">আপনার ক্রিয়াটি পূর্বাবস্থায় ফিরিয়ে আনতে আলতো চাপুন।</string>
     <string name="help_content_redo">অসম্পন্ন ক্রিয়াটি পুনরায় করিতে আলতো চাপুন।</string>
