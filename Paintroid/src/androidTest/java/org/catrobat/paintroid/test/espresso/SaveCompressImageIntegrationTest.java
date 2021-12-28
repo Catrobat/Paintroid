@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -42,6 +43,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -109,7 +111,7 @@ public class SaveCompressImageIntegrationTest {
 	}
 
 	@Test
-	public void testSaveImage() {
+	public void testSaveImage() throws IOException {
 		String testName = UUID.randomUUID().toString();
 		onTopBarView()
 				.performOpenMoreOptions();
@@ -122,8 +124,9 @@ public class SaveCompressImageIntegrationTest {
 		onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(click());
 		onData(allOf(is(instanceOf(String.class)), is("jpg"))).inRoot(isPlatformPopup()).perform(click());
 		onView(withText(R.string.save_button_text)).perform(click());
-		File compressedFile = new File(activity.model.getSavedPictureUri().getPath());
-		Bitmap compressedBitmap = FileIO.INSTANCE.getBitmapFromFile(compressedFile);
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inMutable = true;
+		Bitmap compressedBitmap = FileIO.INSTANCE.decodeBitmapFromUri(this.activity.getContentResolver(), Objects.requireNonNull(activity.model.getSavedPictureUri()), options, this.activity.getApplicationContext());
 		Bitmap testBitmap = FileIO.INSTANCE.getBitmapFromFile(testImageFile);
 		assertThat(compressedBitmap.getWidth(), is(equalTo(testBitmap.getWidth())));
 		assertThat(compressedBitmap.getHeight(), is(equalTo(testBitmap.getHeight())));

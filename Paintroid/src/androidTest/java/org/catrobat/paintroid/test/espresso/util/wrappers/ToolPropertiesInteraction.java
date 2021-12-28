@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2021 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,6 +33,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getMainActivity;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public final class ToolPropertiesInteraction extends CustomViewInteraction {
 	private ToolPropertiesInteraction() {
@@ -44,6 +45,11 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 
 	public ToolPropertiesInteraction checkMatchesColor(@ColorInt int expectedColor) {
 		assertEquals(expectedColor, getCurrentTool().getDrawPaint().getColor());
+		return this;
+	}
+
+	public ToolPropertiesInteraction checkDoesNotMatchColor(@ColorInt int color) {
+		assertNotEquals(color, getCurrentTool().getDrawPaint().getColor());
 		return this;
 	}
 
