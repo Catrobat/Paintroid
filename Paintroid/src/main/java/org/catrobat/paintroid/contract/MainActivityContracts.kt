@@ -161,6 +161,10 @@ interface MainActivityContracts {
         fun enterFullscreen()
 
         fun exitFullscreen()
+
+        fun showContentLoadingProgressBar()
+
+        fun hideContentLoadingProgressBar()
     }
 
     interface Presenter {

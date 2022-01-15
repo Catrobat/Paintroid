@@ -867,7 +867,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void onSaveImagePreExecute(@SaveImageRequestCode int requestCode) {
-		navigator.showIndeterminateProgressDialog();
+		view.showContentLoadingProgressBar();
 	}
 
 	public static String getPathFromUri(final Context context, final Uri uri) {
@@ -964,7 +964,7 @@ public class MainActivityPresenter implements Presenter, SaveImageCallback, Load
 
 	@Override
 	public void onSaveImagePostExecute(@SaveImageRequestCode int requestCode, Uri uri, boolean saveAsCopy) {
-		navigator.dismissIndeterminateProgressDialog();
+		view.hideContentLoadingProgressBar();
 
 		if (uri == null) {
 			navigator.showSaveErrorDialog();

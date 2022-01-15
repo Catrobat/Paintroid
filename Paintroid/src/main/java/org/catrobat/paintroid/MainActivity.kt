@@ -38,6 +38,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.catrobat.paintroid.command.CommandFactory
@@ -126,6 +127,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
     private lateinit var commandFactory: CommandFactory
     private var deferredRequestPermissionsResult: Runnable? = null
+    private lateinit var progressBar: ContentLoadingProgressBar
 
     companion object {
         const val TAG = "MainActivity"
@@ -400,6 +402,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         setBottomBarListeners(bottomBarViewHolder)
         setBottomNavigationListeners(bottomNavigationViewHolder)
         setActionBarToolTips(topBarViewHolder, context)
+        progressBar = findViewById(R.id.pocketpaint_content_loading_progress_bar)
     }
 
     private fun onCreateLayerMenu() {
@@ -592,5 +595,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             val rootView = window.decorView.rootView
             inputMethodManager.hideSoftInputFromWindow(rootView.windowToken, 0)
         }
+    }
+
+    override fun showContentLoadingProgressBar() {
+        progressBar.show()
+    }
+
+    override fun hideContentLoadingProgressBar() {
+        progressBar.hide()
     }
 }
