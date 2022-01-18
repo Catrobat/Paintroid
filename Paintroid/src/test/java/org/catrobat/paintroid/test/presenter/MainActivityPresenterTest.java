@@ -920,7 +920,7 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePreExecuteThenShowProgressDialog() {
 		presenter.onSaveImagePreExecute(0);
 
-		verify(navigator).showIndeterminateProgressDialog();
+		verify(view).showContentLoadingProgressBar();
 	}
 
 	@Test
@@ -1315,7 +1315,7 @@ public class MainActivityPresenterTest {
 	public void testOnSaveImagePostExecuteThenDismissProgressDialog() {
 		presenter.onSaveImagePostExecute(0, null, false);
 
-		verify(navigator).dismissIndeterminateProgressDialog();
+		verify(view).hideContentLoadingProgressBar();
 	}
 
 	@Test
