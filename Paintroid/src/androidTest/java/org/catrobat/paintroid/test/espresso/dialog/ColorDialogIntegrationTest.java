@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -376,12 +377,11 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
 		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterRight());
 
-		assertNotEquals("Selected color changed to blue", toolReference.getTool().getDrawPaint().getColor(), Color.BLACK);
-
 		onColorPickerView()
 				.onPositiveButton()
 				.perform(click());
 
+		assertNotEquals("Selected color changed to blue from black", toolReference.getTool().getDrawPaint().getColor(), Color.BLACK);
 		assertEquals("Selected color is not blue", toolReference.getTool().getDrawPaint().getColor(), Color.BLUE);
 	}
 
@@ -531,7 +531,7 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
-	public void testStandardColorDoesNotChangeOnCancel() {
+	public void testStandardColorDoesNotChangeOnCancelButtonPress() {
 		int initialColor = toolReference.getTool().getDrawPaint().getColor();
 
 		onColorPickerView()
@@ -546,6 +546,45 @@ public class ColorDialogIntegrationTest {
 
 		onToolProperties()
 				.checkMatchesColor(initialColor);
+	}
+
+	@Test
+	public void testStandardColorDoesChangeOnCancel() {
+		int initialColor = toolReference.getTool().getDrawPaint().getColor();
+
+		onColorPickerView()
+				.performOpenColorPicker();
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(0);
+		onColorPickerView()
+				.perform(ViewActions.pressBack());
+		onToolProperties()
+				.checkDoesNotMatchColor(initialColor);
+	}
+
+	@Test
+	public void testColorOnlyUpdatesOncePerColorPickerIntent() {
+		int initialColor = toolReference.getTool().getDrawPaint().getColor();
+
+		onColorPickerView()
+				.performOpenColorPicker();
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(0);
+		onToolProperties()
+				.checkMatchesColor(initialColor);
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(1);
+		onToolProperties()
+				.checkMatchesColor(initialColor);
+		onColorPickerView()
+				.performClickColorPickerPresetSelectorButton(2);
+		onToolProperties()
+				.checkMatchesColor(initialColor);
+
+		onColorPickerView()
+				.perform(ViewActions.pressBack());
+		onToolProperties()
+				.checkDoesNotMatchColor(initialColor);
 	}
 
 	@Test

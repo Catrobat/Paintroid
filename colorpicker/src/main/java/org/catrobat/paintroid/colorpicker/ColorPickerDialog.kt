@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,7 +57,6 @@ private const val INITIAL_CATROID_FLAG = "InitialCatroidFlag"
 private const val CURRENT_COLOR = "CurrentColor"
 private const val INITIAL_COLOR = "InitialColor"
 private const val REQUEST_CODE = 1
-private const val BITMAP_NAME = "temp.png"
 const val COLOR_EXTRA = "colorExtra"
 const val BITMAP_HEIGHT_EXTRA = "bitmapHeightNameExtra"
 const val BITMAP_WIDTH_EXTRA = "bitmapWidthNameExtra"
@@ -65,14 +64,14 @@ const val BITMAP_WIDTH_EXTRA = "bitmapWidthNameExtra"
 class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     @VisibleForTesting
     var onColorPickedListener = mutableListOf<OnColorPickedListener>()
+    private var colorToApply = 0
+
     private lateinit var colorPickerView: ColorPickerView
     private lateinit var currentColorView: View
     private lateinit var newColorView: View
     private lateinit var pipetteBtn: MaterialButton
     private lateinit var checkeredShader: Shader
     private lateinit var currentBitmap: Bitmap
-
-    private var colorToApply = 0
 
     companion object {
         private lateinit var alphaSliderView: AlphaSliderView
@@ -137,11 +136,11 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         colorToApply = colorPickerView.initialColor
         val materialDialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setNegativeButton(R.string.color_picker_cancel) { dialogInterface: DialogInterface, _: Int ->
-                updateColorChange(colorPickerView.initialColor)
+                // updateColorChange(colorToApply)
                 dialogInterface.dismiss()
             }
             .setPositiveButton(R.string.color_picker_apply) { _: DialogInterface, _: Int ->
-                deleteBitmapFile(requireContext(), BITMAP_NAME)
+                updateColorChange(colorToApply)
                 dismiss()
             }
             .setView(dialogView)
@@ -151,8 +150,12 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
             materialDialog.window?.clearFlags(FLAG_NOT_FOCUSABLE or FLAG_ALT_FOCUSABLE_IM)
             materialDialog.window?.setSoftInputMode(SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         }
-
         return materialDialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        updateColorChange(colorToApply)
+        super.onCancel(dialog)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -180,8 +183,6 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
             setViewColor(newColorView, color)
             colorToApply = color
         }
-
-        updateColorChange(colorToApply)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
