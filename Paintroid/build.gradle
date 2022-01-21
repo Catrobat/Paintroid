@@ -110,6 +110,11 @@ android {
         unitTests.returnDefaultValues = true
         animationsDisabled = true
     }
+
+    packagingOptions {
+        exclude "META-INF/AL2.0"
+        exclude "META-INF/LGPL2.1"
+    }
 }
 
 dependencies {
@@ -133,6 +138,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.18.3'
 
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.1.1'
     androidTestImplementation 'org.mockito:mockito-android:2.18.3'

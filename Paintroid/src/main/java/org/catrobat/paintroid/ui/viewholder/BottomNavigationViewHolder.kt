@@ -61,8 +61,8 @@ class BottomNavigationViewHolder(
         layout.visibility = View.GONE
     }
 
-    override fun showCurrentTool(toolType: ToolType) {
-        bottomNavigation.showCurrentTool(toolType)
+    override fun showCurrentTool(toolType: ToolType?) {
+        toolType?.let { bottomNavigation.showCurrentTool(it) }
     }
 
     override fun setColorButtonColor(color: Int) {

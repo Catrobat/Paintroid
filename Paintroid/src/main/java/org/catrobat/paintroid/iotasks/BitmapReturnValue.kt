@@ -16,27 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.catrobat.paintroid.iotasks;
+package org.catrobat.paintroid.iotasks
 
-import android.graphics.Bitmap;
+import android.graphics.Bitmap
+import org.catrobat.paintroid.model.CommandManagerModel
 
-import org.catrobat.paintroid.model.CommandManagerModel;
+data class BitmapReturnValue(
+    @JvmField
+    var model: CommandManagerModel?,
+    @JvmField
+    var bitmapList: List<Bitmap?>?,
+    @JvmField
+    var bitmap: Bitmap?,
+    @JvmField
+    var toBeScaled: Boolean
+) {
+    constructor(bitmapList: List<Bitmap?>?, bitmap: Bitmap?, toBeScaled: Boolean) : this(
+        null,
+        bitmapList,
+        bitmap,
+        toBeScaled
+    )
 
-import java.util.List;
-
-public class BitmapReturnValue {
-	public List<Bitmap> bitmapList;
-	public Bitmap bitmap;
-	public boolean toBeScaled;
-	public CommandManagerModel model;
-
-	public BitmapReturnValue(List<Bitmap> list, Bitmap singleBitmap, boolean scaling) {
-		bitmapList = list;
-		bitmap = singleBitmap;
-		toBeScaled = scaling;
-	}
-
-	public BitmapReturnValue(CommandManagerModel model) {
-		this.model = model;
-	}
+    constructor(model: CommandManagerModel?) : this(model, null, null, false)
 }

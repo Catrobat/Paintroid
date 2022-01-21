@@ -29,9 +29,9 @@ import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
-import org.catrobat.paintroid.iotasks.CreateFileAsync.CreateFileCallback
-import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback
-import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback
+import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
+import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
+import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.LayerAdapter
@@ -169,7 +169,7 @@ interface MainActivityContracts {
 
     interface Presenter {
         val imageNumber: Int
-        val bitmap: Bitmap
+        val bitmap: Bitmap?
         val context: Context
 
         fun initializeFromCleanState(extraPicturePath: String?, extraPictureName: String?)
@@ -370,7 +370,7 @@ interface MainActivityContracts {
 
         fun hide()
 
-        fun showCurrentTool(toolType: ToolType)
+        fun showCurrentTool(toolType: ToolType?)
 
         fun setColorButtonColor(@ColorInt color: Int)
     }

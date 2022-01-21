@@ -34,7 +34,7 @@ interface CommandFactory {
 
     fun createInitCommand(bitmap: Bitmap): Command
 
-    fun createInitCommand(bitmapList: List<Bitmap>): Command
+    fun createInitCommand(bitmapList: List<Bitmap?>): Command
 
     fun createResetCommand(): Command
 

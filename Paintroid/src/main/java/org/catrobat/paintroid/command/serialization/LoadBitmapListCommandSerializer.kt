@@ -25,7 +25,8 @@ import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.command.implementation.LoadBitmapListCommand
 
-class LoadBitmapListCommandSerializer(version: Int) : VersionSerializer<LoadBitmapListCommand>(version) {
+class LoadBitmapListCommandSerializer(version: Int) :
+    VersionSerializer<LoadBitmapListCommand>(version) {
 
     companion object {
         private const val COMPRESSION_QUALITY = 100
@@ -34,14 +35,22 @@ class LoadBitmapListCommandSerializer(version: Int) : VersionSerializer<LoadBitm
     override fun write(kryo: Kryo, output: Output, command: LoadBitmapListCommand) {
         output.writeInt(command.loadedImageList.size)
         command.loadedImageList.forEach { bitmap ->
-            bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, output)
+            bitmap?.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, output)
         }
     }
 
-    override fun read(kryo: Kryo, input: Input, type: Class<out LoadBitmapListCommand>): LoadBitmapListCommand =
+    override fun read(
+        kryo: Kryo,
+        input: Input,
+        type: Class<out LoadBitmapListCommand>
+    ): LoadBitmapListCommand =
         super.handleVersions(this, kryo, input, type)
 
-    override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out LoadBitmapListCommand>): LoadBitmapListCommand {
+    override fun readCurrentVersion(
+        kryo: Kryo,
+        input: Input,
+        type: Class<out LoadBitmapListCommand>
+    ): LoadBitmapListCommand {
         val size = input.readInt()
         val bitmapList = ArrayList<Bitmap>()
         repeat(size) {

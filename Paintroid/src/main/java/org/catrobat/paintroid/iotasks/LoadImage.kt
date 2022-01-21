@@ -21,36 +21,30 @@ package org.catrobat.paintroid.iotasks
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import android.os.AsyncTask
 import android.util.Log
 import android.webkit.MimeTypeMap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
 import org.catrobat.paintroid.tools.Workspace
+import java.io.IOException
 import java.lang.ref.WeakReference
-import java.util.Locale.US
+import java.util.Locale
 
-@Suppress("ForbiddenVoid")
-class LoadImageAsync(
+class LoadImage(
     callback: LoadImageCallback,
     private val requestCode: Int,
     private val uri: Uri?,
     context: Context,
-    scaling: Boolean,
-    private val workspace: Workspace
-) :
-    AsyncTask<Void?, Void?, BitmapReturnValue?>() {
+    private val scaleImage: Boolean,
+    private val workspace: Workspace,
+    private val scopeIO: CoroutineScope
+) {
     private val callbackRef: WeakReference<LoadImageCallback> = WeakReference(callback)
-    private val scaleImage: Boolean = scaling
     private val context: WeakReference<Context> = WeakReference(context)
-    override fun onPreExecute() {
-        val callback = callbackRef.get()
-        if (callback == null || callback.isFinishing) {
-            cancel(false)
-        } else {
-            callback.onLoadImagePreExecute(requestCode)
-        }
-    }
 
     private fun getMimeType(uri: Uri, resolver: ContentResolver): String? =
         if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
@@ -58,10 +52,13 @@ class LoadImageAsync(
         } else {
             val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
             MimeTypeMap.getSingleton()
-                .getMimeTypeFromExtension(fileExtension.toLowerCase(US))
+                .getMimeTypeFromExtension(fileExtension.toLowerCase(Locale.US))
         }
 
-    private fun getBitmapReturnValue(uri: Uri, resolver: ContentResolver): BitmapReturnValue {
+    private fun getBitmapReturnValue(
+        uri: Uri,
+        resolver: ContentResolver
+    ): BitmapReturnValue {
         val mimeType: String? = getMimeType(uri, resolver)
         return if (mimeType == "application/zip" || mimeType == "application/octet-stream") {
             try {
@@ -83,31 +80,35 @@ class LoadImageAsync(
         }
     }
 
-    @Suppress("Detekt.TooGenericExceptionCaught")
-    override fun doInBackground(vararg params: Void?): BitmapReturnValue? {
+    @SuppressWarnings("TooGenericExceptionCaught")
+    fun execute() {
         val callback = callbackRef.get()
         if (callback == null || callback.isFinishing) {
-            return null
+            return
         }
-        if (uri == null) {
-            Log.e(TAG, "Can't load image file, uri is null")
-            return null
-        }
-        return try {
-            val resolver = callback.contentResolver
-            FileIO.filename = "image"
-            val returnValue: BitmapReturnValue = getBitmapReturnValue(uri, resolver)
-            returnValue
-        } catch (e: Exception) {
-            Log.e(TAG, "Can't load image file", e)
-            null
-        }
-    }
+        callback.onLoadImagePreExecute(requestCode)
 
-    override fun onPostExecute(result: BitmapReturnValue?) {
-        val callback = callbackRef.get()
-        if (callback != null && !callback.isFinishing) {
-            callback.onLoadImagePostExecute(requestCode, uri, result)
+        var returnValue: BitmapReturnValue? = null
+        scopeIO.launch {
+            if (uri == null) {
+                Log.e(TAG, "Can't load image file, uri is null")
+            } else {
+                try {
+                    val resolver = callback.contentResolver
+                    FileIO.filename = "image"
+                    returnValue = getBitmapReturnValue(uri, resolver)
+                } catch (e: IOException) {
+                    Log.e(TAG, "Can't load image file", e)
+                } catch (e: NullPointerException) {
+                    Log.e(TAG, "Can't load image file", e)
+                }
+            }
+
+            withContext(Dispatchers.Main) {
+                if (!callback.isFinishing) {
+                    callback.onLoadImagePostExecute(requestCode, uri, returnValue)
+                }
+            }
         }
     }
 
@@ -119,6 +120,6 @@ class LoadImageAsync(
     }
 
     companion object {
-        private val TAG = LoadImageAsync::class.java.simpleName
+        private val TAG = LoadImage::class.java.simpleName
     }
 }
