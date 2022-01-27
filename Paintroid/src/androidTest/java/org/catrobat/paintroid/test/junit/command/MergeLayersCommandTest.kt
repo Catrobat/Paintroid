@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -74,10 +74,10 @@ class MergeLayersCommandTest {
     @Test
     fun testRun() {
         commandUnderTest.run(canvasUnderTest, layerModel)
-        Assert.assertEquals(layerModel.getLayerAt(0).bitmap!!.getPixel(5, 5), PAINT_BASE_COLOR)
-        Assert.assertEquals(layerModel.getLayerAt(0).bitmap!!.getPixel(8, 8), PAINT_BASE_COLOR)
-        Assert.assertEquals(layerModel.getLayerAt(0).bitmap!!.getPixel(3, 3), 0)
-        Assert.assertEquals(layerModel.getLayerAt(0).bitmap!!.getPixel(0, 0), 0)
+        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap!!.getPixel(5, 5), PAINT_BASE_COLOR)
+        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap!!.getPixel(8, 8), PAINT_BASE_COLOR)
+        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap!!.getPixel(3, 3), 0)
+        Assert.assertEquals(layerModel.getLayerAt(0)!!.bitmap!!.getPixel(0, 0), 0)
     }
 
     @Test
@@ -96,6 +96,6 @@ class MergeLayersCommandTest {
         Assert.assertEquals(layerModel.currentLayer!!.bitmap!!.getPixel(8, 8), PAINT_BASE_COLOR)
         Assert.assertEquals(layerModel.currentLayer!!.bitmap!!.getPixel(3, 3), 0)
         Assert.assertEquals(layerModel.currentLayer!!.bitmap!!.getPixel(5, 5), 0)
-        Assert.assertEquals(layerModel.getLayerAt(1).bitmap!!.getPixel(5, 5), PAINT_BASE_COLOR)
+        Assert.assertEquals(layerModel.getLayerAt(1)!!.bitmap!!.getPixel(5, 5), PAINT_BASE_COLOR)
     }
 }
