@@ -78,7 +78,7 @@ pipeline {
                 sh './gradlew publishToMavenLocal -Psnapshot'
                 sh 'rm -rf Catroid; mkdir Catroid'
                 dir('Catroid') {
-                    git branch: 'develop', url: 'https://github.com/Catrobat/Catroid.git'
+                    git branch: 'PAINTROID-248', url: 'https://github.com/ldirry/Catroid.git'
                     sh "./gradlew -PpaintroidLocal assembleCatroidDebug"
                     archiveArtifacts 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk'
                 }
