@@ -153,4 +153,21 @@ class LineToolTest {
         Assert.assertEquals(tool.connectedLines, true)
         Assert.assertEquals(tool.undoRecentlyClicked, false)
     }
+
+    @Test
+    @UiThreadTest
+    fun testIfPlusIsDisplayedAfterDrawingLine() {
+        tool.handleDown(PointF(1f, 1f))
+        tool.handleMove(PointF(500f, 500f))
+        tool.handleUp(PointF(500f, 500f))
+        Assert.assertEquals(tool.currentCoordinate, null)
+        Assert.assertEquals(tool.initialEventCoordinate, null)
+        Assert.assertEquals(tool.startpointSet, true)
+        Assert.assertNotEquals(tool.startPointToDraw, null)
+        val plusButtonVisibility = LineTool.topBarViewHolder?.plusButton?.visibility
+        Assert.assertEquals(plusButtonVisibility, View.VISIBLE)
+        tool.onClickOnPlus()
+        Assert.assertEquals(tool.connectedLines, true)
+        Assert.assertEquals(tool.undoRecentlyClicked, false)
+    }
 }
