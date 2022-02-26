@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.PointF
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -34,9 +35,10 @@ class PipetteTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     private val listener: OnColorPickedListener
-) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
+) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
     private var surfaceBitmap: Bitmap? = null
 
     override val toolType: ToolType

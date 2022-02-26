@@ -22,6 +22,7 @@ package org.catrobat.paintroid.test.junit.tools;
 import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
@@ -29,13 +30,18 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.ImportTool;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.Perspective;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import androidx.test.annotation.UiThreadTest;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.idling.CountingIdlingResource;
+import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.DEFAULT_BOX_RESIZE_MARGIN;
 import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.MAXIMUM_BORDER_RATIO;
@@ -62,10 +68,16 @@ public class ImportToolTest {
 	private int drawingSurfaceHeight;
 
 	private ImportTool tool;
+	private CountingIdlingResource idlingResource;
+
+	@Rule
+	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@UiThreadTest
 	@Before
 	public void setUp() {
+		idlingResource = launchActivityRule.getActivity().getIdlingResource();
+		IdlingRegistry.getInstance().register(idlingResource);
 		drawingSurfaceWidth = 20;
 		drawingSurfaceHeight = 30;
 
@@ -79,9 +91,13 @@ public class ImportToolTest {
 		when(workspace.getScale()).thenReturn(1f);
 		when(workspace.getPerspective()).thenReturn(new Perspective(20, 30));
 
-		tool = new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
+		tool = new ImportTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager, 0);
 	}
 
+	@After
+	public void tearDown() {
+		IdlingRegistry.getInstance().unregister(idlingResource);
+	}
 	@Test
 	public void testImport() {
 		final int width = drawingSurfaceWidth;

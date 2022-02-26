@@ -24,6 +24,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.PointF;
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
@@ -32,7 +33,9 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.Perspective;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -54,6 +57,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.idling.CountingIdlingResource;
+import androidx.test.rule.ActivityTestRule;
+
 @RunWith(MockitoJUnitRunner.class)
 public class BaseToolWithRectangleShapeToolTest {
 	private static final int RESIZE_MOVE_DISTANCE = 50;
@@ -65,6 +72,9 @@ public class BaseToolWithRectangleShapeToolTest {
 	private float symbolDistance;
 
 	private PointF toolPosition;
+
+	@Rule
+	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Mock
 	private CommandManager commandManager;
@@ -80,9 +90,12 @@ public class BaseToolWithRectangleShapeToolTest {
 	private DisplayMetrics metrics;
 
 	private BaseToolWithRectangleShape toolToTest;
+	private CountingIdlingResource idlingResource;
 
 	@Before
 	public void setUp() {
+		idlingResource = launchActivityRule.getActivity().getIdlingResource();
+		IdlingRegistry.getInstance().register(idlingResource);
 		metrics.heightPixels = 1920;
 		metrics.widthPixels = 1080;
 		metrics.density = 1;
@@ -102,13 +115,18 @@ public class BaseToolWithRectangleShapeToolTest {
 			}
 		});
 
-		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH, toolPaint, workspace, commandManager);
+		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH, toolPaint, workspace, idlingResource, commandManager);
 
 		toolPosition = toolToTest.toolPosition;
 		rectWidth = toolToTest.boxWidth;
 		rectHeight = toolToTest.boxHeight;
 		rotation = toolToTest.boxRotation;
 		symbolDistance = toolToTest.rotationSymbolDistance;
+	}
+
+	@After
+	public void tearDown() {
+		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 
 	@Test
@@ -166,7 +184,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		when(workspace.getScale()).thenReturn(0.8f, 0.15f, 0.1f);
 
 		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.SHAPE,
-				toolPaint, workspace, commandManager);
+				toolPaint, workspace, idlingResource, commandManager);
 
 		float width = toolToTest.boxWidth;
 		float height = toolToTest.boxHeight;
@@ -174,7 +192,7 @@ public class BaseToolWithRectangleShapeToolTest {
 		assertEquals("Width and Height should be the same with activating Rectangletool on low zoom out", width, height, Double.MIN_VALUE);
 
 		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.SHAPE,
-				toolPaint, workspace, commandManager);
+				toolPaint, workspace, idlingResource, commandManager);
 
 		width = toolToTest.boxWidth;
 		height = toolToTest.boxHeight;
@@ -184,7 +202,7 @@ public class BaseToolWithRectangleShapeToolTest {
 				width, height);
 
 		toolToTest = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.SHAPE,
-				toolPaint, workspace, commandManager);
+				toolPaint, workspace, idlingResource, commandManager);
 
 		float newWidth = toolToTest.boxWidth;
 		float newHeight = toolToTest.boxHeight;
@@ -202,9 +220,9 @@ public class BaseToolWithRectangleShapeToolTest {
 	public void testRectangleSizeChangeWhenZoomedLevel1ToLevel2() {
 		when(workspace.getScale()).thenReturn(1f, 2f);
 		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
-				toolPaint, workspace, commandManager);
+				toolPaint, workspace, idlingResource, commandManager);
 		BaseToolWithRectangleShape rectTool2 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
-				toolPaint, workspace, commandManager);
+				toolPaint, workspace, idlingResource, commandManager);
 
 		assertTrue("rectangle should be smaller with scale 2",
 				rectTool1.boxWidth > rectTool2.boxWidth
@@ -216,9 +234,9 @@ public class BaseToolWithRectangleShapeToolTest {
 		when(workspace.getScale()).thenReturn(1f, 0.5f);
 
 		BaseToolWithRectangleShape rectTool1 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
-				toolPaint, workspace, commandManager);
+				toolPaint, workspace, idlingResource, commandManager);
 		BaseToolWithRectangleShape rectTool05 = new BaseToolWithRectangleShapeImpl(contextCallback, toolOptionsViewController, ToolType.BRUSH,
-				toolPaint, workspace, commandManager);
+				toolPaint, workspace, idlingResource, commandManager);
 		assertThat(rectTool1.boxWidth, is(lessThan(rectTool05.boxWidth)));
 		assertThat(rectTool1.boxHeight, is(lessThan(rectTool05.boxHeight)));
 	}
@@ -376,8 +394,14 @@ public class BaseToolWithRectangleShapeToolTest {
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 		private final ToolType toolType;
 
-		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint, Workspace layerModelWrapper, CommandManager commandManager) {
-			super(contextCallback, toolOptionsViewController, toolPaint, layerModelWrapper, commandManager);
+		BaseToolWithRectangleShapeImpl(
+				ContextCallback contextCallback,
+				ToolOptionsViewController toolOptionsViewController,
+				ToolType toolType, ToolPaint toolPaint,
+				Workspace layerModelWrapper,
+				CountingIdlingResource idlingResource,
+				CommandManager commandManager) {
+			super(contextCallback, toolOptionsViewController, toolPaint, layerModelWrapper, idlingResource, commandManager);
 			this.toolType = toolType;
 		}
 

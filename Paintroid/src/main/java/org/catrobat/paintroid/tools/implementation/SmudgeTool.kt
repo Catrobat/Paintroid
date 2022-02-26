@@ -9,6 +9,7 @@ import android.graphics.Path
 import android.graphics.PointF
 import android.graphics.RectF
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -36,8 +37,9 @@ class SmudgeTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager
-) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
+) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
 
     override var drawTime: Long = 0
     private var currentBitmap: Bitmap? = null

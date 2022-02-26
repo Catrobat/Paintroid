@@ -24,6 +24,7 @@ import android.graphics.PointF
 import android.graphics.RectF
 import android.view.View
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
@@ -42,6 +43,7 @@ class LineTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithShape(
@@ -49,6 +51,7 @@ class LineTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
     @VisibleForTesting

@@ -32,6 +32,7 @@ import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,6 +40,8 @@ import org.junit.runner.RunWith;
 
 import androidx.annotation.ArrayRes;
 import androidx.annotation.ColorInt;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -71,7 +74,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class LandscapeIntegrationTest {
 
 	private MainActivity mainActivity;
-
+	private CountingIdlingResource idlingResource;
 	@Rule
 	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -89,6 +92,13 @@ public class LandscapeIntegrationTest {
 	@Before
 	public void setUp() {
 		mainActivity = activityTestRule.getActivity();
+		idlingResource = mainActivity.getIdlingResource();
+		IdlingRegistry.getInstance().register(idlingResource);
+	}
+
+	@After
+	public void tearDown() {
+		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 
 	@Test

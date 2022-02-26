@@ -22,6 +22,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
@@ -47,9 +48,10 @@ open class BrushTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
-) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
+) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
     protected open val previewPaint: Paint
         get() = toolPaint.previewPaint
 

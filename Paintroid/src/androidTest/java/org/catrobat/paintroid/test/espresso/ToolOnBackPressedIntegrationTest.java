@@ -97,7 +97,7 @@ public class ToolOnBackPressedIntegrationTest {
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.INSTANCE.grantPermissionRulesVersionCheck();
 
 	private File saveFile = null;
 	private ToolReference toolReference;
@@ -242,7 +242,7 @@ public class ToolOnBackPressedIntegrationTest {
 	}
 
 	@Test
-	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException {
+	public void testBrushToolBackPressedFromCatroidAndUsePicture() throws SecurityException, IllegalArgumentException, InterruptedException {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 

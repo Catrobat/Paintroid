@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.BlurMaskFilter
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -37,6 +38,7 @@ class WatercolorTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     drawTime: Long
 ) : BrushTool(
@@ -45,6 +47,7 @@ class WatercolorTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager,
     drawTime
 ) {

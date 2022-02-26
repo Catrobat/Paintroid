@@ -26,6 +26,7 @@ import android.graphics.PointF
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -43,12 +44,14 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager
 ) : BaseTool(
     contextCallback,
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
 

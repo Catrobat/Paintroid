@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -37,10 +38,11 @@ class ImportTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithRectangleShape(
-    contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager
+    contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager
 ) {
 
     override val toolType: ToolType

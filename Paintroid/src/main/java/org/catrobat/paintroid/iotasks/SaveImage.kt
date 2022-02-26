@@ -23,6 +23,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,7 +40,8 @@ class SaveImage(
     private var uri: Uri?,
     private val saveAsCopy: Boolean,
     private val context: Context,
-    private val scopeIO: CoroutineScope
+    private val scopeIO: CoroutineScope,
+    private val idlingResource: CountingIdlingResource
 ) {
     private val callbackRef: WeakReference<SaveImageCallback> = WeakReference(activity)
 
@@ -108,6 +110,7 @@ class SaveImage(
         var currentUri: Uri? = null
         scopeIO.launch {
             try {
+                idlingResource.increment()
                 val bitmap = workspace.bitmapOfAllLayers
                 val filename = FileIO.defaultFileName
                 currentUri = if (FileIO.isCatrobatImage) {
@@ -125,7 +128,9 @@ class SaveImage(
                 } else {
                     getImageUri(callback, bitmap)
                 }
+                idlingResource.decrement()
             } catch (e: Exception) {
+                idlingResource.decrement()
                 when (e) {
                     is IOException -> Log.d(TAG, "Can't save image file", e)
                     is NullPointerException -> Log.e(TAG, "Can't load image file", e)

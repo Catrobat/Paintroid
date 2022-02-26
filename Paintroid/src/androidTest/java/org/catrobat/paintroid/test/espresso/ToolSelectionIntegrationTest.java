@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.test.espresso;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
@@ -30,7 +31,6 @@ import org.junit.runner.RunWith;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 
@@ -56,7 +56,7 @@ public class ToolSelectionIntegrationTest {
 		onToolBarView()
 				.performSelectTool(toolType);
 
-		waitForToast(withText(toolType.getNameResource()), 1000);
+		EspressoUtils.INSTANCE.waitForToast(withText(toolType.getNameResource()), 1000);
 	}
 
 	@Test

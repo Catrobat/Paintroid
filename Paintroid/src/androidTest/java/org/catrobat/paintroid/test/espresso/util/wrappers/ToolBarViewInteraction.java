@@ -20,11 +20,11 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.tools.ToolType;
 
 import androidx.test.espresso.ViewInteraction;
 
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getMainActivity;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.hamcrest.Matchers.not;
 
@@ -77,7 +77,7 @@ public final class ToolBarViewInteraction extends CustomViewInteraction {
 	}
 
 	private ToolType getCurrentToolType() {
-		return getMainActivity().toolReference.getTool().getToolType();
+		return EspressoUtils.INSTANCE.getMainActivity().toolReference.getTool().getToolType();
 	}
 
 	public ToolBarViewInteraction performOpenToolOptionsView() {

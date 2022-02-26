@@ -32,9 +32,9 @@ import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -49,6 +49,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ToolControllerTest {
@@ -67,8 +69,15 @@ public class ToolControllerTest {
 	@Mock
 	public ContextCallback contextCallback;
 
-	@InjectMocks
+	public CountingIdlingResource idlingResource;
+
 	public DefaultToolController toolController;
+
+	@Before
+	public void init() {
+		idlingResource = new CountingIdlingResource("name");
+		toolController = new DefaultToolController(toolReference, toolOptionsViewController, toolFactory, commandManager, workspace, idlingResource, toolPaint, contextCallback);
+	}
 
 	@Test
 	public void testSetUp() {

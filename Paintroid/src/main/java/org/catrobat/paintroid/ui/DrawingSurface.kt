@@ -40,6 +40,7 @@ import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.fragment.app.FragmentManager
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
@@ -69,6 +70,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var toolReference: ToolReference
     private lateinit var toolOptionsViewController: ToolOptionsViewController
     private lateinit var fragmentManager: FragmentManager
+    private lateinit var idlingResource: CountingIdlingResource
 
     constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
@@ -121,14 +123,17 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         layerModel: LayerContracts.Model,
         perspective: Perspective,
         toolReference: ToolReference,
-        toolOptionsViewController: ToolOptionsViewController,
-        fragmentManager: FragmentManager
+        idlingResource: CountingIdlingResource,
+        fragmentManager: FragmentManager,
+        toolOptionsViewController: ToolOptionsViewController
     ) {
         this.layerModel = layerModel
         this.perspective = perspective
         this.toolReference = toolReference
         this.toolOptionsViewController = toolOptionsViewController
+        this.idlingResource = idlingResource
         this.fragmentManager = fragmentManager
+        this.toolOptionsViewController = toolOptionsViewController
     }
 
     @Synchronized
@@ -279,13 +284,16 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
             var canvas: Canvas? = null
             synchronized(holder) {
                 try {
+                    idlingResource.increment()
                     canvas = holder.lockCanvas()
                     canvas?.let {
                         doDraw(it)
                     }
+                    canvas
                 } catch (e: IllegalArgumentException) {
                     Log.e(TAG, "run: ", e)
                 } finally {
+                    idlingResource.decrement()
                     canvas?.let {
                         holder.unlockCanvasAndPost(it)
                     }

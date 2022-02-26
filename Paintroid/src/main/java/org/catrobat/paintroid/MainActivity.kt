@@ -40,6 +40,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.test.espresso.idling.CountingIdlingResource
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
@@ -127,6 +128,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     @VisibleForTesting
     lateinit var toolOptionsViewController: ToolOptionsViewController
 
+    var idlingResource: CountingIdlingResource = CountingIdlingResource("MainIdleResource")
+
     lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
 
     private lateinit var layerPresenter: LayerPresenter
@@ -142,8 +145,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     @Volatile
     private var lastInteractionTime = System.currentTimeMillis()
+
     @Volatile
     private var minuteTemporaryCopiesCounter = 0
+
     @Volatile
     private var userInteraction = false
     private var isTemporaryFileSavingTest = false
@@ -289,7 +294,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 presenterMain.initializeFromCleanState(picturePath, pictureName)
 
                 if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
-                    commandManager.loadCommandsCatrobatImage(presenterMain.openTemporaryFile(workspace))
+                    commandManager.loadCommandsCatrobatImage(
+                        presenterMain.openTemporaryFile(
+                            workspace
+                        )
+                    )
                 }
             }
             else -> {
@@ -400,7 +409,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val topBarLayout = findViewById<ViewGroup>(R.id.pocketpaint_layout_top_bar)
         val bottomBarLayout = findViewById<View>(R.id.pocketpaint_main_bottom_bar)
         val bottomNavigationView = findViewById<View>(R.id.pocketpaint_main_bottom_navigation)
-        toolOptionsViewController = DefaultToolOptionsViewController(this)
+        toolOptionsViewController = DefaultToolOptionsViewController(this, idlingResource)
         drawerLayoutViewHolder = DrawerLayoutViewHolder(drawerLayout)
         val topBarViewHolder = TopBarViewHolder(topBarLayout)
         val bottomBarViewHolder = BottomBarViewHolder(bottomBarLayout)
@@ -424,6 +433,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             DefaultToolFactory(),
             commandManager,
             workspace,
+            idlingResource,
             toolPaint,
             DefaultContextCallback(context)
         )
@@ -434,7 +444,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             model,
             workspace,
             MainActivityNavigator(this, toolReference),
-            MainActivityInteractor(),
+            MainActivityInteractor(idlingResource),
             topBarViewHolder,
             bottomBarViewHolder,
             drawerLayoutViewHolder,
@@ -444,6 +454,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             perspective,
             defaultToolController,
             preferences,
+            idlingResource,
             context,
             filesDir
         )
@@ -480,8 +491,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             layerModel,
             perspective,
             toolReference,
-            toolOptionsViewController,
-            supportFragmentManager
+            idlingResource,
+            supportFragmentManager,
+            toolOptionsViewController
         )
         layerPresenter.setDrawingSurface(drawingSurface)
         appFragment.perspective = perspective

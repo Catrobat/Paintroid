@@ -32,21 +32,23 @@ import android.provider.MediaStore
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.pressMenuKey
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.isClickable
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
-import androidx.test.espresso.matcher.ViewMatchers.isClickable
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import org.catrobat.paintroid.FileIO
@@ -65,9 +67,9 @@ import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
+import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.instanceOf
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.core.AllOf.allOf
 import org.hamcrest.core.IsNot
 import org.junit.After
@@ -83,7 +85,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
 import java.io.IOException
-import java.lang.AssertionError
 
 @RunWith(AndroidJUnit4::class)
 class MenuFileActivityIntegrationTest {
@@ -95,6 +96,7 @@ class MenuFileActivityIntegrationTest {
 
     private lateinit var activity: MainActivity
     private var defaultFileName = "menuTestDefaultFile"
+    private lateinit var idlingResource: CountingIdlingResource
 
     companion object {
         private lateinit var deletionFileList: ArrayList<File?>
@@ -108,6 +110,8 @@ class MenuFileActivityIntegrationTest {
         ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.BRUSH)
         deletionFileList = ArrayList()
         activity = launchActivityRule.activity
+        idlingResource = activity.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
     }
 
     @After
@@ -117,6 +121,7 @@ class MenuFileActivityIntegrationTest {
                 assertTrue(file.delete())
             }
         }
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
@@ -265,9 +270,8 @@ class MenuFileActivityIntegrationTest {
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText("save1"))
+            .perform(replaceText("testSaveCopy"))
         onView(withText(R.string.save_button_text)).perform(click())
-        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         if (!activity.model.isOpenedFromCatroid) {
             assertNotSame(

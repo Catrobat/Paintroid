@@ -26,6 +26,7 @@ import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.ViewConfiguration;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
@@ -35,7 +36,9 @@ import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.tools.options.StampToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.Perspective;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -43,7 +46,10 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.ActivityTestRule;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -67,9 +73,15 @@ public class StampToolTest {
 	private DisplayMetrics displayMetrics;
 
 	private StampTool tool;
+	private CountingIdlingResource idlingResource;
+
+	@Rule
+	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Before
 	public void setUp() {
+		idlingResource = launchActivityRule.getActivity().getIdlingResource();
+		IdlingRegistry.getInstance().register(idlingResource);
 		when(contextCallback.getDisplayMetrics()).thenReturn(displayMetrics);
 		displayMetrics.widthPixels = 200;
 		displayMetrics.heightPixels = 300;
@@ -84,7 +96,12 @@ public class StampToolTest {
 			}
 		});
 
-		tool = new StampTool(stampToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
+		tool = new StampTool(stampToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager, 0);
+	}
+
+	@After
+	public void tearDown() {
+		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 
 	@Test

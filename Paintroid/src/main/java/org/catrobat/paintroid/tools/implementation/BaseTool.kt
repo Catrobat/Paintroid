@@ -25,6 +25,7 @@ import android.graphics.Point
 import android.graphics.PointF
 import android.os.Bundle
 import androidx.annotation.ColorInt
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
@@ -46,6 +47,8 @@ abstract class BaseTool(
     protected var toolPaint: ToolPaint,
     @JvmField
     protected var workspace: Workspace,
+    @JvmField
+    protected var idlingResource: CountingIdlingResource,
     @JvmField
     protected var commandManager: CommandManager
 ) : Tool {

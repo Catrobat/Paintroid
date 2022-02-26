@@ -21,6 +21,7 @@ package org.catrobat.paintroid.controller
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -42,6 +43,7 @@ class DefaultToolController(
     private val toolFactory: ToolFactory,
     private val commandManager: CommandManager,
     private val workspace: Workspace,
+    private val idlingResource: CountingIdlingResource,
     private val toolPaint: ToolPaint,
     private val contextCallback: ContextCallback
 ) : ToolController {
@@ -81,6 +83,7 @@ class DefaultToolController(
             toolOptionsViewController,
             commandManager,
             workspace,
+            idlingResource,
             toolPaint,
             contextCallback,
             onColorPickedListener

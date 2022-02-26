@@ -24,6 +24,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.PointCommand;
@@ -37,7 +38,9 @@ import org.catrobat.paintroid.tools.implementation.CursorTool;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.Perspective;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -56,6 +59,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.idling.CountingIdlingResource;
+import androidx.test.rule.ActivityTestRule;
+
 @RunWith(MockitoJUnitRunner.class)
 public class CursorToolTest {
 	private static final float MOVE_TOLERANCE = ConstantsKt.MOVE_TOLERANCE;
@@ -73,16 +80,27 @@ public class CursorToolTest {
 	private ContextCallback contextCallback;
 
 	private CursorTool toolToTest;
+	private CountingIdlingResource idlingResource;
+
+	@Rule
+	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Before
 	public void setUp() {
+		idlingResource = launchActivityRule.getActivity().getIdlingResource();
+		IdlingRegistry.getInstance().register(idlingResource);
 		Paint paint = new Paint();
 		when(toolPaint.getPaint()).thenReturn(paint);
 		when(workspace.getHeight()).thenReturn(1920);
 		when(workspace.getWidth()).thenReturn(1080);
 		when(workspace.getPerspective()).thenReturn(new Perspective(1080, 1920));
 
-		toolToTest = new CursorTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
+		toolToTest = new CursorTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager, 0);
+	}
+
+	@After
+	public void tearDown() {
+		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 
 	@Test

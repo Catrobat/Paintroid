@@ -46,7 +46,7 @@ public class FileFromOtherSourceIntegrationTest {
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.INSTANCE.grantPermissionRulesVersionCheck();
 
 	private ContentResolver resolver;
 	private MainActivity activity;

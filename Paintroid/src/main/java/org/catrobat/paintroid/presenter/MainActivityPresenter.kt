@@ -38,6 +38,7 @@ import android.view.Gravity
 import android.view.Menu
 import android.widget.Toast
 import androidx.core.view.GravityCompat
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
@@ -103,6 +104,7 @@ open class MainActivityPresenter(
     private val perspective: Perspective,
     private val toolController: ToolController,
     private val sharedPreferences: UserPreferences,
+    private val idlingResource: CountingIdlingResource,
     override val context: Context,
     private val internalMemoryPath: File
 ) : MainActivityContracts.Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
@@ -690,6 +692,7 @@ open class MainActivityPresenter(
     }
 
     override fun toolClicked(toolType: ToolType) {
+        idlingResource.increment()
         bottomBarViewHolder.hide()
         if (toolController.toolType === toolType && toolController.hasToolOptionsView()) {
             toolController.toggleToolOptionsView()
@@ -698,6 +701,7 @@ open class MainActivityPresenter(
         } else {
             switchTool(toolType)
         }
+        idlingResource.decrement()
     }
 
     private fun switchTool(type: ToolType, backPressed: Boolean = false) {
@@ -710,10 +714,12 @@ open class MainActivityPresenter(
     }
 
     private fun setTool(toolType: ToolType) {
+        idlingResource.increment()
         bottomBarViewHolder.hide()
         bottomNavigationViewHolder.showCurrentTool(toolType)
         val offset = topBarViewHolder.height
         navigator.showToolChangeToast(offset, toolType.nameResource)
+        idlingResource.decrement()
     }
 
     override fun onCreateFilePostExecute(@CreateFileRequestCode requestCode: Int, file: File?) {

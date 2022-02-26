@@ -20,6 +20,7 @@ package org.catrobat.paintroid.ui
 
 import android.content.Context
 import android.net.Uri
+import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.catrobat.paintroid.contract.MainActivityContracts.Interactor
@@ -31,7 +32,7 @@ import org.catrobat.paintroid.iotasks.SaveImage
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
 import org.catrobat.paintroid.tools.Workspace
 
-class MainActivityInteractor : Interactor {
+class MainActivityInteractor(private val idlingResource: CountingIdlingResource) : Interactor {
     private val scopeIO = CoroutineScope(Dispatchers.IO)
 
     override fun saveCopy(
@@ -40,7 +41,7 @@ class MainActivityInteractor : Interactor {
         workspace: Workspace,
         context: Context
     ) {
-        SaveImage(callback, requestCode, workspace, null, true, context, scopeIO).execute()
+        SaveImage(callback, requestCode, workspace, null, true, context, scopeIO, idlingResource).execute()
     }
 
     override fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String) {
@@ -54,7 +55,7 @@ class MainActivityInteractor : Interactor {
         uri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, workspace, uri, false, context, scopeIO).execute()
+        SaveImage(callback, requestCode, workspace, uri, false, context, scopeIO, idlingResource).execute()
     }
 
     override fun loadFile(
@@ -65,6 +66,6 @@ class MainActivityInteractor : Interactor {
         scaling: Boolean,
         workspace: Workspace
     ) {
-        LoadImage(callback, requestCode, uri, context, scaling, workspace, scopeIO).execute()
+        LoadImage(callback, requestCode, uri, context, scaling, workspace, scopeIO, idlingResource).execute()
     }
 }

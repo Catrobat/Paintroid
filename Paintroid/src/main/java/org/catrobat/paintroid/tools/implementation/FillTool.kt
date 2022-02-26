@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Canvas
 import android.graphics.PointF
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -39,6 +40,7 @@ class FillTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseTool(
@@ -46,6 +48,7 @@ class FillTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
     @VisibleForTesting

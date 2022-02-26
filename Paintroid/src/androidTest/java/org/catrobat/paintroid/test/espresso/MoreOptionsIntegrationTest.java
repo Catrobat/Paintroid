@@ -80,7 +80,7 @@ public class MoreOptionsIntegrationTest {
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.INSTANCE.grantPermissionRulesVersionCheck();
 
 	public String defaultPictureName = "moreOptionsImageTest";
 

@@ -18,10 +18,14 @@
  */
 package org.catrobat.paintroid.test.junit.tools
 
-import android.graphics.Paint
 import android.graphics.Bitmap
-import android.graphics.PointF
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PointF
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.idling.CountingIdlingResource
+import androidx.test.rule.ActivityTestRule
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.tools.ContextCallback
@@ -35,6 +39,7 @@ import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
@@ -46,10 +51,16 @@ class SmudgeToolTest {
     private val smudgeToolOptionsView = Mockito.mock(SmudgeToolOptionsView::class.java)
     private val toolOptionsViewController = Mockito.mock(ToolOptionsViewController::class.java)
     private val contextCallback = Mockito.mock(ContextCallback::class.java)
+    private lateinit var idlingResource: CountingIdlingResource
     private lateinit var tool: SmudgeTool
+
+    @get:Rule
+    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
     @Before
     fun setUp() {
+        idlingResource = launchActivityRule.getActivity().idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
         Mockito.`when`(toolPaint.strokeWidth).thenReturn(100f)
         Mockito.`when`(toolPaint.strokeCap).thenReturn(Paint.Cap.ROUND)
 
@@ -63,6 +74,7 @@ class SmudgeToolTest {
             toolOptionsViewController,
             toolPaint,
             workspace,
+            idlingResource,
             commandManager
         )
     }
@@ -70,6 +82,7 @@ class SmudgeToolTest {
     @After
     fun tearDown() {
         tool.resetInternalState(Tool.StateChange.ALL)
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test

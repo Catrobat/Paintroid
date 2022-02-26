@@ -22,6 +22,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -40,10 +41,11 @@ class StampTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithRectangleShape(
-    contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager
+    contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager
 ) {
     private val stampToolOptionsView: StampToolOptionsView
     private var readyForPaste = false

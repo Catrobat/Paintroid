@@ -24,9 +24,7 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
 import androidx.annotation.VisibleForTesting
-import kotlin.math.floor
-import kotlin.math.max
-import kotlin.math.min
+import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,6 +45,9 @@ import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 import org.catrobat.paintroid.tools.options.TransformToolOptionsView
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter
+import kotlin.math.floor
+import kotlin.math.max
+import kotlin.math.min
 
 @VisibleForTesting
 const val MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f
@@ -70,6 +71,7 @@ class TransformTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithRectangleShape(
@@ -77,6 +79,7 @@ class TransformTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
     @VisibleForTesting
@@ -403,6 +406,7 @@ class TransformTool(
 
     private fun autoCrop() {
         CoroutineScope(Dispatchers.Default).launch {
+            idlingResource.increment()
             val shapeBounds = cropAlgorithm.crop(workspace.bitmapOfAllLayers)
             if (shapeBounds != null) {
                 boxWidth = shapeBounds.width() + 1f
@@ -415,6 +419,7 @@ class TransformTool(
                 workspace.invalidate()
                 toolOptionsViewController.hide()
             }
+            idlingResource.decrement()
         }
     }
 

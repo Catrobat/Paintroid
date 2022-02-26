@@ -40,7 +40,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -722,18 +724,20 @@ public class ColorDialogIntegrationTest {
 
 	@Test
 	public void alphaValueIsSetInSliderWhenChangedInSeekBar() {
+		CountingIdlingResource idlingResource = launchActivityRule.getActivity().getIdlingResource();
+		IdlingRegistry.getInstance().register(idlingResource);
 		onColorPickerView()
 				.performOpenColorPicker();
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 
-		// set color to value #7F000000, alpha seekbar 49%
 		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterMiddle());
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(scrollTo(), click());
 		onColorPickerView()
 				.onPositiveButton()
 				.perform(click());
 		onToolProperties()
-				.checkMatchesColor(Color.parseColor("#7F000000"));
+				.checkMatchesColor(Color.parseColor("#80000000"));
+		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 
 	@Test
@@ -742,7 +746,6 @@ public class ColorDialogIntegrationTest {
 				.performOpenColorPicker();
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(click());
 
-		// set color to value #80000000, alpha seekbar 50%
 		onView(withId(R.id.color_alpha_slider)).perform(scrollTo(), touchCenterMiddle());
 
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());

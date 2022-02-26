@@ -25,6 +25,7 @@ import android.graphics.Paint.Cap
 import android.graphics.PointF
 import android.graphics.RectF
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
@@ -57,6 +58,7 @@ open class CursorTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithShape(
@@ -64,6 +66,7 @@ open class CursorTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)

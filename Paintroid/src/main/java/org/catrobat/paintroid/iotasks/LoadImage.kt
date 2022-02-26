@@ -23,6 +23,10 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.webkit.MimeTypeMap
+import androidx.test.espresso.idling.CountingIdlingResource
+import java.io.IOException
+import java.lang.ref.WeakReference
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,9 +34,6 @@ import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
 import org.catrobat.paintroid.tools.Workspace
-import java.io.IOException
-import java.lang.ref.WeakReference
-import java.util.Locale
 
 class LoadImage(
     callback: LoadImageCallback,
@@ -41,7 +42,8 @@ class LoadImage(
     context: Context,
     private val scaleImage: Boolean,
     private val workspace: Workspace,
-    private val scopeIO: CoroutineScope
+    private val scopeIO: CoroutineScope,
+    private val idlingResource: CountingIdlingResource
 ) {
     private val callbackRef: WeakReference<LoadImageCallback> = WeakReference(callback)
     private val context: WeakReference<Context> = WeakReference(context)
@@ -89,6 +91,7 @@ class LoadImage(
 
         var returnValue: BitmapReturnValue? = null
         scopeIO.launch {
+            idlingResource.increment()
             if (uri == null) {
                 Log.e(TAG, "Can't load image file, uri is null")
             } else {
@@ -105,7 +108,11 @@ class LoadImage(
 
             withContext(Dispatchers.Main) {
                 if (!callback.isFinishing) {
-                    callback.onLoadImagePostExecute(requestCode, uri, returnValue)
+                    try {
+                        callback.onLoadImagePostExecute(requestCode, uri, returnValue)
+                    } finally {
+                        idlingResource.decrement()
+                    }
                 }
             }
         }
