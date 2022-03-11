@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +69,7 @@ public class BaseToolWithRectangleShapeToolTest {
 	@Mock
 	private CommandManager commandManager;
 	@Mock
-	private ToolOptionsVisibilityController toolOptionsViewController;
+	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 	@Mock
@@ -376,8 +376,7 @@ public class BaseToolWithRectangleShapeToolTest {
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 		private final ToolType toolType;
 
-		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback,
-										ToolOptionsVisibilityController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint, Workspace layerModelWrapper, CommandManager commandManager) {
+		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint, Workspace layerModelWrapper, CommandManager commandManager) {
 			super(contextCallback, toolOptionsViewController, toolPaint, layerModelWrapper, commandManager);
 			this.toolType = toolType;
 		}

@@ -26,7 +26,7 @@ import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import kotlin.math.max
 import kotlin.math.min
 
@@ -34,7 +34,7 @@ private const val BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP"
 
 class ImportTool(
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager,
