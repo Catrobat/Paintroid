@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@ import org.catrobat.paintroid.contract.MainActivityContracts
 class MainActivityModel : MainActivityContracts.Model {
     private var wasInitialAnimationPlayed = false
     override var isOpenedFromCatroid = false
+    override var isOpenedFromFormulaEditorInCatroid = false
     override var isFullscreen = false
     override var isSaved = false
     override var savedPictureUri: Uri? = null

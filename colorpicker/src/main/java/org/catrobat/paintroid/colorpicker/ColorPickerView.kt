@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,6 @@ import android.widget.TabHost
 import android.widget.TabHost.TabContentFactory
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
-import java.util.Objects
 
 private const val RGB_TAG = "RGB"
 private const val PRE_TAG = "PRE"
@@ -44,6 +43,7 @@ class ColorPickerView : LinearLayoutCompat {
     private val tabHost: TabHost
     private var selectedColor = Color.BLACK
     var initialColor = 0
+    var isOpenedFromFormulaEditorInCatroid = false
     private var listener: OnColorChangedListener? = null
 
     constructor(context: Context) : super(context)
@@ -81,8 +81,9 @@ class ColorPickerView : LinearLayoutCompat {
                     alphaSliderView.visibility = GONE
                     showKeyboard()
                 } else {
-                    if (!alphaSliderView.isCatroid) {
-                        alphaSliderView.visibility = VISIBLE
+                    alphaSliderView.apply {
+                        visibility =
+                            if (isCatroid && openedFromFormulaEditorInCatroidFlag) GONE else VISIBLE
                     }
                     hideKeyboard()
                 }
@@ -92,7 +93,10 @@ class ColorPickerView : LinearLayoutCompat {
 
     fun setAlphaSlider(alphaSliderView: AlphaSliderView, catroidFlag: Boolean) {
         this.alphaSliderView = alphaSliderView
-        this.alphaSliderView.isCatroid = catroidFlag
+        this.alphaSliderView.apply {
+            isCatroid = catroidFlag
+            openedFromFormulaEditorInCatroidFlag = isOpenedFromFormulaEditorInCatroid
+        }
     }
 
     private fun createTabView(context: Context, iconResourceId: Int): View {
@@ -107,13 +111,13 @@ class ColorPickerView : LinearLayoutCompat {
             return
         }
         selectedColor = color
-        if (sender !== rgbSelectorView) {
-            rgbSelectorView.selectedColor = color
+        if (sender != rgbSelectorView) {
+            rgbSelectorView.setSelectedColor(color, isOpenedFromFormulaEditorInCatroid)
         }
-        if (sender !== preSelectorView) {
+        if (sender != preSelectorView) {
             preSelectorView.setSelectedColor(color)
         }
-        if (sender !== hsvSelectorView) {
+        if (sender != hsvSelectorView) {
             hsvSelectorView.setSelectedColor(color)
         }
         if (sender != alphaSliderView) {
@@ -173,7 +177,7 @@ class ColorPickerView : LinearLayoutCompat {
         rgbSelectorView.setOnColorChangedListener { color ->
             setSelectedColor(color, rgbSelectorView)
         }
-        Objects.requireNonNull(alphaSliderView.getAlphaSlider())?.setOnColorChangedListener(
+        alphaSliderView.getAlphaSlider()?.setOnColorChangedListener(
             object : AlphaSlider.OnColorChangedListener {
                 override fun colorChanged(color: Int) {
                     setSelectedColor(color, alphaSliderView)

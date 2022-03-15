@@ -577,9 +577,9 @@ open class MainActivityPresenter(
     override fun initializeFromCleanState(extraPicturePath: String?, extraPictureName: String?) {
         model.isOpenedFromCatroid = extraPicturePath != null
         FileIO.wasImageLoaded = false
-        if (extraPictureName != null) {
-            val imageFile = extraPicturePath?.let { File(it) }
-            if (imageFile != null && imageFile.exists()) {
+        if (extraPicturePath != null) {
+            val imageFile = File(extraPicturePath)
+            if (imageFile.exists()) {
                 model.savedPictureUri = view.getUriFromFile(imageFile)
                 interactor.loadFile(
                     this,
@@ -589,7 +589,7 @@ open class MainActivityPresenter(
                     false,
                     workspace
                 )
-            } else {
+            } else if (extraPictureName != null) {
                 interactor.createFile(
                     this,
                     CREATE_FILE_DEFAULT,
@@ -648,6 +648,7 @@ open class MainActivityPresenter(
         isFullscreen: Boolean,
         isSaved: Boolean,
         isOpenedFromCatroid: Boolean,
+        isOpenedFromFormulaEditorInCatroid: Boolean,
         wasInitialAnimationPlayed: Boolean,
         savedPictureUri: Uri?,
         cameraImageUri: Uri?
@@ -655,6 +656,7 @@ open class MainActivityPresenter(
         model.isFullscreen = isFullscreen
         model.isSaved = isSaved
         model.isOpenedFromCatroid = isOpenedFromCatroid
+        model.isOpenedFromFormulaEditorInCatroid = isOpenedFromFormulaEditorInCatroid
         model.setInitialAnimationPlayed(wasInitialAnimationPlayed)
         model.savedPictureUri = savedPictureUri
         model.cameraImageUri = cameraImageUri

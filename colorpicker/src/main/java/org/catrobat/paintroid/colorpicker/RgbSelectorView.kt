@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
-import android.view.View
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.widget.AppCompatEditText
@@ -35,6 +34,7 @@ import java.util.Locale
 import kotlin.math.min
 
 private const val HEX_COLOR_CODE_LENGTH = 9
+private const val HEX_COLOR_CODE_WITHOUT_ALPHA_LENGTH = 7
 private const val PERCENT_MAX_ALPHA = 2.55f
 private const val NOT_A_HEX_VALUE = 20_000_000
 
@@ -47,6 +47,7 @@ class RgbSelectorView : LinearLayoutCompat {
     private var textViewGreen: AppCompatTextView
     private var textViewBlue: AppCompatTextView
     private var textViewAlpha: AppCompatTextView
+    private var alphaRow: LinearLayoutCompat
     private var editTextHex: AppCompatEditText
     private var onColorChangedListener: OnColorChangedListener? = null
 
@@ -68,15 +69,12 @@ class RgbSelectorView : LinearLayoutCompat {
             seekBarBlue.progress = colorBlue
             var currentCursorPosition = editTextHex.selectionStart
             editTextHex.tag = "changed programmatically"
-            editTextHex.setText(
-                String.format(
-                    "#%02X%02X%02X%02X",
-                    colorAlpha,
-                    colorRed,
-                    colorGreen,
-                    colorBlue
-                )
-            )
+            val colorRGB = if (alphaRow.visibility == VISIBLE) {
+                String.format("#%02X%02X%02X%02X", colorAlpha, colorRed, colorGreen, colorBlue)
+            } else {
+                String.format("#%02X%02X%02X", colorRed, colorGreen, colorBlue)
+            }
+            editTextHex.setText(colorRGB)
             editTextHex.tag = null
             val editTextHexLength = editTextHex.text.toString().length
             currentCursorPosition = min(currentCursorPosition, editTextHexLength)
@@ -92,17 +90,16 @@ class RgbSelectorView : LinearLayoutCompat {
         val rgbView = inflate(context, R.layout.color_picker_layout_rgbview, null)
         addView(rgbView)
         with(rgbView) {
-            seekBarRed = findViewById<View>(R.id.color_picker_color_rgb_seekbar_red) as SeekBar
-            seekBarGreen = findViewById<View>(R.id.color_picker_color_rgb_seekbar_green) as SeekBar
-            seekBarBlue = findViewById<View>(R.id.color_picker_color_rgb_seekbar_blue) as SeekBar
-            seekBarAlpha = findViewById<View>(R.id.color_picker_color_rgb_seekbar_alpha) as SeekBar
-            textViewRed = findViewById<View>(R.id.color_picker_rgb_red_value) as AppCompatTextView
-            textViewBlue = findViewById<View>(R.id.color_picker_rgb_blue_value) as AppCompatTextView
-            editTextHex = findViewById<View>(R.id.color_picker_color_rgb_hex) as AppCompatEditText
-            textViewGreen =
-                findViewById<View>(R.id.color_picker_rgb_green_value) as AppCompatTextView
-            textViewAlpha =
-                findViewById<View>(R.id.color_picker_rgb_alpha_value) as AppCompatTextView
+            seekBarRed = findViewById(R.id.color_picker_color_rgb_seekbar_red)
+            seekBarGreen = findViewById(R.id.color_picker_color_rgb_seekbar_green)
+            seekBarBlue = findViewById(R.id.color_picker_color_rgb_seekbar_blue)
+            seekBarAlpha = findViewById(R.id.color_picker_color_rgb_seekbar_alpha)
+            textViewRed = findViewById(R.id.color_picker_rgb_red_value)
+            textViewBlue = findViewById(R.id.color_picker_rgb_blue_value)
+            editTextHex = findViewById(R.id.color_picker_color_rgb_hex)
+            textViewGreen = findViewById(R.id.color_picker_rgb_green_value)
+            textViewAlpha = findViewById(R.id.color_picker_rgb_alpha_value)
+            alphaRow = findViewById(R.id.color_picker_alpha_row)
         }
         resetTextColor()
         selectedColor = Color.BLACK
@@ -110,7 +107,10 @@ class RgbSelectorView : LinearLayoutCompat {
 
     @SuppressWarnings("SwallowedException")
     private fun parseInputToCheckIfHEX(newText: String): Int =
-        if (newText.length != HEX_COLOR_CODE_LENGTH || newText.substring(0, 1) != "#") {
+        if (newText.length !=
+            (if (alphaRow.visibility == VISIBLE) HEX_COLOR_CODE_LENGTH else HEX_COLOR_CODE_WITHOUT_ALPHA_LENGTH) ||
+            newText.substring(0, 1) != "#"
+        ) {
             NOT_A_HEX_VALUE
         } else {
             try {
@@ -136,6 +136,30 @@ class RgbSelectorView : LinearLayoutCompat {
                 R.color.pocketpaint_color_picker_hex_wrong_value_red
             )
         )
+    }
+
+    fun setSelectedColor(color: Int, isOpenedFromFormulaEditorInCatroid: Boolean = false) {
+        val colorRed = Color.red(color)
+        val colorGreen = Color.green(color)
+        val colorBlue = Color.blue(color)
+        val colorAlpha = Color.alpha(color)
+        seekBarAlpha.progress = colorAlpha
+        seekBarRed.progress = colorRed
+        seekBarGreen.progress = colorGreen
+        seekBarBlue.progress = colorBlue
+        var currentCursorPosition = editTextHex.selectionStart
+        editTextHex.tag = "changed programmatically"
+        val colorRGB = if (!isOpenedFromFormulaEditorInCatroid) {
+            String.format("#%02X%02X%02X%02X", colorAlpha, colorRed, colorGreen, colorBlue)
+        } else {
+            String.format("#%02X%02X%02X", colorRed, colorGreen, colorBlue)
+        }
+        editTextHex.setText(colorRGB)
+        editTextHex.tag = null
+        val editTextHexLength = editTextHex.text.toString().length
+        currentCursorPosition = min(currentCursorPosition, editTextHexLength)
+        editTextHex.setSelection(currentCursorPosition)
+        setSelectedColorText(color)
     }
 
     private fun setSelectedColorText(color: Int) {
@@ -209,5 +233,10 @@ class RgbSelectorView : LinearLayoutCompat {
 
     fun interface OnColorChangedListener {
         fun colorChanged(color: Int)
+    }
+
+    fun setAlphaRow(catroidFlag: Boolean, openedFromFormulaEditorInCatroidFlag: Boolean) {
+        alphaRow.visibility =
+            if (catroidFlag && openedFromFormulaEditorInCatroidFlag) GONE else VISIBLE
     }
 }
