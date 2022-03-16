@@ -70,7 +70,7 @@ interface MainActivityContracts {
 
         fun sendFeedback()
 
-        fun startWelcomeActivity(@ActivityRequestCode requestCode: Int)
+        fun startWelcomeActivity(@ActivityRequestCode requestCode: Int, skipAnimation: Boolean = false)
 
         fun startShareImageActivity(bitmap: Bitmap?)
 

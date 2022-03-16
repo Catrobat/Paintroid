@@ -241,10 +241,14 @@ class MainActivityNavigator(
         mainActivity.startActivityForResult(intent, requestCode)
     }
 
-    override fun startWelcomeActivity(@ActivityRequestCode requestCode: Int) {
+    override fun startWelcomeActivity(@ActivityRequestCode requestCode: Int, skipAnimation: Boolean) {
         val intent = Intent(mainActivity.applicationContext, WelcomeActivity::class.java)
         intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         mainActivity.startActivityForResult(intent, requestCode)
+
+        if (skipAnimation) {
+            mainActivity.overridePendingTransition(0, 0)
+        }
     }
 
     override fun startShareImageActivity(bitmap: Bitmap?) {

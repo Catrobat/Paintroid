@@ -60,6 +60,7 @@ import org.catrobat.paintroid.listener.DrawerLayoutListener
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.model.MainActivityModel
+import org.catrobat.paintroid.preference.UserPreferences
 import org.catrobat.paintroid.presenter.LayerPresenter
 import org.catrobat.paintroid.presenter.MainActivityPresenter
 import org.catrobat.paintroid.tools.ToolPaint

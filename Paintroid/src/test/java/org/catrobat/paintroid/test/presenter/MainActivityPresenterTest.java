@@ -33,7 +33,7 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.UserPreferences;
+import org.catrobat.paintroid.preference.UserPreferences;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandFactory;
 import org.catrobat.paintroid.command.CommandManager;
@@ -256,7 +256,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testSaveCopyClickedThenSaveImage() {
 		presenter.saveCopyClicked(false);
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
 		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, context);
@@ -269,7 +269,7 @@ public class MainActivityPresenterTest {
 		when(model.getSavedPictureUri()).thenReturn(uri);
 
 		presenter.saveImageClicked();
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, uri, context);
@@ -304,7 +304,7 @@ public class MainActivityPresenterTest {
 	public void testShowHelpClickedThenStartWelcomeActivity() {
 		presenter.showHelpClicked();
 
-		verify(navigator).startWelcomeActivity(REQUEST_CODE_INTRO);
+		verify(navigator).startWelcomeActivity(REQUEST_CODE_INTRO, false);
 		verifyNoMoreInteractions(navigator);
 	}
 
@@ -1171,7 +1171,7 @@ public class MainActivityPresenterTest {
 	@Test
 	public void testOnNavigationItemSelectedSaveCopyPermissionGranted() {
 		presenter.saveCopyClicked(false);
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
 		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, context);
@@ -1183,7 +1183,7 @@ public class MainActivityPresenterTest {
 		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 
 		presenter.saveCopyClicked(false);
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
@@ -1196,7 +1196,7 @@ public class MainActivityPresenterTest {
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 
 		presenter.saveBeforeFinish();
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
 		verify(interactor).saveImage(any(MainActivityPresenter.class), anyInt(), any(Workspace.class), eq((Uri) null), any(Context.class));
@@ -1209,7 +1209,7 @@ public class MainActivityPresenterTest {
 		when(model.isOpenedFromCatroid()).thenReturn(true);
 
 		presenter.saveCopyClicked(false);
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
@@ -1221,7 +1221,7 @@ public class MainActivityPresenterTest {
 		when(model.getSavedPictureUri()).thenReturn(uri);
 
 		presenter.saveImageClicked();
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, uri, context);
@@ -1233,7 +1233,7 @@ public class MainActivityPresenterTest {
 		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 
 		presenter.saveImageClicked();
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE);
@@ -1245,7 +1245,7 @@ public class MainActivityPresenterTest {
 		when(model.getSavedPictureUri()).thenReturn(uri);
 
 		presenter.saveBeforeFinish();
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, uri, context);
@@ -1257,7 +1257,7 @@ public class MainActivityPresenterTest {
 		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 
 		presenter.saveBeforeFinish();
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
@@ -1269,7 +1269,7 @@ public class MainActivityPresenterTest {
 		when(model.getSavedPictureUri()).thenReturn(uri);
 
 		presenter.saveBeforeNewImage();
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, uri, context);
@@ -1281,7 +1281,7 @@ public class MainActivityPresenterTest {
 		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 
 		presenter.saveBeforeNewImage();
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
@@ -1293,7 +1293,7 @@ public class MainActivityPresenterTest {
 		when(model.getSavedPictureUri()).thenReturn(uri);
 
 		presenter.saveBeforeLoadImage();
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, uri, context);
@@ -1305,7 +1305,7 @@ public class MainActivityPresenterTest {
 		when(navigator.isSdkAboveOrEqualM()).thenReturn(false).thenReturn(true);
 
 		presenter.saveBeforeLoadImage();
-		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, sharedPreferences.getPreferenceImageNumber(), false);
+		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, sharedPreferences.getSavedImagesNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
 		verify(navigator).askForPermission(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
