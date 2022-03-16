@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -117,17 +117,17 @@ interface LayerContracts {
 
         fun reset()
 
-        fun getLayerAt(index: Int): Layer
+        fun getLayerAt(index: Int): Layer?
 
         fun getLayerIndexOf(layer: Layer): Int
 
-        fun addLayerAt(index: Int, layer: Layer)
+        fun addLayerAt(index: Int, layer: Layer): Boolean
 
         fun listIterator(index: Int): ListIterator<Layer>
 
         fun setLayerAt(position: Int, layer: Layer)
 
-        fun removeLayerAt(position: Int)
+        fun removeLayerAt(position: Int): Boolean
     }
 
     interface Navigator {

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,11 @@ import org.junit.runner.RunWith;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.timeout;
@@ -50,14 +54,16 @@ public class LayerTest {
 	private CommandFactory commandFactory;
 	private CommandManager commandManager;
 	private LayerContracts.Model layerModel;
+	private final int layerHeight = 200;
+	private final int layerWidth = 200;
 
 	@Before
 	public void setUp() {
 		commandFactory = new DefaultCommandFactory();
 		layerModel = new LayerModel();
-		layerModel.setWidth(200);
-		layerModel.setHeight(200);
-		Layer layer = new Layer(Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888));
+		layerModel.setWidth(layerWidth);
+		layerModel.setHeight(layerHeight);
+		Layer layer = new Layer(Bitmap.createBitmap(layerWidth, layerHeight, Bitmap.Config.ARGB_8888));
 		layerModel.addLayerAt(0, layer);
 		layerModel.setCurrentLayer(layer);
 
@@ -154,5 +160,33 @@ public class LayerTest {
 		assertThat(layerToHide.getBitmap().getPixel(2, 1), is(Color.BLACK));
 		assertThat(layerToHide.getBitmap().getPixel(3, 1), is(Color.BLACK));
 		assertThat(layerToHide.getBitmap().getPixel(4, 1), is(Color.BLACK));
+	}
+
+	@Test
+	public void testGetLayerAt() {
+		for (int i = 0; i < layerModel.getLayerCount(); i++) {
+			assertNotNull(layerModel.getLayerAt(i));
+		}
+
+		assertNull(layerModel.getLayerAt(-1));
+		assertNull(layerModel.getLayerAt(layerModel.getLayerCount()));
+	}
+
+	@Test
+	public void testAddLayerAt() {
+		Layer layer = new Layer(Bitmap.createBitmap(layerWidth, layerHeight, Bitmap.Config.ARGB_8888));
+		assertTrue(layerModel.addLayerAt(0, layer));
+		assertTrue(layerModel.addLayerAt(layerModel.getLayerCount(), layer));
+		assertFalse(layerModel.addLayerAt(-1, layer));
+		assertFalse(layerModel.addLayerAt(layerModel.getLayerCount() + 1, layer));
+	}
+
+	@Test
+	public void testRemoveLayerAt() {
+		assertFalse(layerModel.removeLayerAt(-1));
+		assertTrue(layerModel.removeLayerAt(0));
+		Layer layer = new Layer(Bitmap.createBitmap(layerWidth, layerHeight, Bitmap.Config.ARGB_8888));
+		layerModel.addLayerAt(0, layer);
+		assertFalse(layerModel.removeLayerAt(layerModel.getLayerCount()));
 	}
 }

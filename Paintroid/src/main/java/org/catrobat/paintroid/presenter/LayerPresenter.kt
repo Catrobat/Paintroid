@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -158,7 +158,7 @@ class LayerPresenter(
     private fun getDestinationLayer(
         position: Int,
         isUnhide: Boolean
-    ): LayerContracts.Layer = model.getLayerAt(position).apply {
+    ): LayerContracts.Layer? = model.getLayerAt(position)?.apply {
         if (isUnhide) switchBitmaps(isUnhide)
         val newBitmap = if (!isUnhide) transparentBitmap else bitmap
         if (!isUnhide) switchBitmaps(isUnhide)
@@ -167,21 +167,23 @@ class LayerPresenter(
     }
 
     override fun hideLayer(position: Int) {
-        val destinationLayer = getDestinationLayer(position, false)
         drawingSurface?.refreshDrawingSurface()
-        if (model.currentLayer == destinationLayer) {
-            defaultToolController?.switchTool(ToolType.HAND, false)
-            bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
+        getDestinationLayer(position, false)?.let { layer ->
+            if (model.currentLayer == layer) {
+                defaultToolController?.switchTool(ToolType.HAND, false)
+                bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
+            }
         }
     }
 
     override fun unhideLayer(position: Int, viewHolder: LayerContracts.LayerViewHolder) {
-        val destinationLayer = getDestinationLayer(position, true)
-        viewHolder.updateImageView(destinationLayer.bitmap, true)
         drawingSurface?.refreshDrawingSurface()
-        if (model.currentLayer == destinationLayer) {
-            defaultToolController?.switchTool(ToolType.BRUSH, false)
-            bottomNavigationViewHolder?.showCurrentTool(ToolType.BRUSH)
+        getDestinationLayer(position, true)?.let { layer ->
+            viewHolder.updateImageView(layer.bitmap, true)
+            if (model.currentLayer == layer) {
+                defaultToolController?.switchTool(ToolType.BRUSH, false)
+                bottomNavigationViewHolder?.showCurrentTool(ToolType.BRUSH)
+            }
         }
     }
 
@@ -192,13 +194,14 @@ class LayerPresenter(
 
     override fun mergeItems(position: Int, mergeWith: Int) {
         checkIfLineToolInUse()
-        val actualLayer = layers[mergeWith]
-        val actualPosition = model.getLayerIndexOf(actualLayer)
-        if (position != actualPosition) {
-            commandManager.addCommand(
-                commandFactory.createMergeLayersCommand(position, actualPosition)
-            )
-            navigator.showToast(R.string.layer_merged, Toast.LENGTH_SHORT)
+        layers.getOrNull(mergeWith)?.let { actualLayer ->
+            val actualPosition = model.getLayerIndexOf(actualLayer)
+            if (position != actualPosition && actualPosition > -1) {
+                commandManager.addCommand(
+                    commandFactory.createMergeLayersCommand(position, actualPosition)
+                )
+                navigator.showToast(R.string.layer_merged, Toast.LENGTH_SHORT)
+            }
         }
     }
 
