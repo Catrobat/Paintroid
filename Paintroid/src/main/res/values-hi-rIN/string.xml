@@ -35,11 +35,11 @@
     <string name="button_text">शब्द</string>
     <string name="button_shape">आकृति</string>
     <string name="button_hand">हाथ</string>
-    <string name="button_watercolor">Watercolor</string>
+    <string name="button_watercolor">आबरंग</string>
     <string name="button_spray_can">स्प्रे कैन</string>
     <string name="button_apply">लागू करें</string>
     <string name="button_checkmark">सही का निशान</string>
-    <string name="button_plus">Connect Line Segment</string>
+    <string name="button_plus">कनेक्ट लाइन सेगमेंट</string>
     <string name="done">हो गया</string>
     <string name="gallery">गैलरी</string>
     <string name="load_sticker_error">स्टिकर लोड नहीं हो सका</string>
@@ -58,7 +58,7 @@
     <string name="help_title">मदद</string>
     <string name="help_content_eraser">चित्र के भागों को रबड़ से हटाएँ।</string>
     <string name="help_content_brush">रंग या ब्रश का आकार बदलने के लिए नीचे दी हुई पट्टी के उप्युक्त चिह्न पर टैप करें।</string>
-    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_watercolor">वॉटरकलर प्रभाव वाले ब्रश टूल के समान। हालाँकि आप रंग मेनू में स्लाइडर के साथ ब्रश की ताकत को भी बदल सकते हैं।</string>
     <string name="help_content_eyedropper">रंग का चयन करने के लिए चित्र पर टैप करें।</string>
     <string name="help_content_undo">अपने पिछले बदलाव को वापस करने के लिए टैप करें।</string>
     <string name="help_content_redo">वापस किये बदलाव को फिर से करने के लिए टैप करें।</string>

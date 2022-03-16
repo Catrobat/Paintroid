@@ -35,11 +35,11 @@
     <string name="button_text">متن</string>
     <string name="button_shape">شکل‌ها</string>
     <string name="button_hand">دست ها</string>
-    <string name="button_watercolor">Watercolor</string>
+    <string name="button_watercolor">آبرنگ</string>
     <string name="button_spray_can">کتی اسپری</string>
     <string name="button_apply">اعمال</string>
     <string name="button_checkmark">علامت </string>
-    <string name="button_plus">Connect Line Segment</string>
+    <string name="button_plus">اتصال بخش خط</string>
     <string name="done">ﺍﻧﺠﺎﻡ شد</string>
     <string name="gallery">انتخاب تصویر</string>
     <string name="load_sticker_error">برچسب را نمی توان بارگیری کرد</string>
@@ -58,7 +58,7 @@
     <string name="help_title">راهنما</string>
     <string name="help_content_eraser">مثل یک پاک کن بخش هایی از عکس را حذف کن.</string>
     <string name="help_content_brush">برای تغییر رنگ یا تغییر اندازه قلمو روی نمادهای واقع شده در نوار پایین ضربه بزن.</string>
-    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_watercolor">مشابه ابزار قلم مو با افکت آبرنگ. با این حال می توانید قدرت قلم مو را با نوار لغزنده در منوی رنگ تغییر دهید.</string>
     <string name="help_content_eyedropper">برای انتخاب رنگ روی تصویر ضربه بزن.</string>
     <string name="help_content_undo">برای خنثی کردن عمل قبلی ضربه بزن.</string>
     <string name="help_content_redo">برای تکرار عملی نا تمام ضربه بزن.</string>

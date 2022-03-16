@@ -35,11 +35,11 @@
     <string name="button_text">텍스트</string>
     <string name="button_shape">모양</string>
     <string name="button_hand">손</string>
-    <string name="button_watercolor">Watercolor</string>
+    <string name="button_watercolor">수채화</string>
     <string name="button_spray_can">스프레이 캔</string>
     <string name="button_apply">사용하기</string>
     <string name="button_checkmark">체크 표시</string>
-    <string name="button_plus">Connect Line Segment</string>
+    <string name="button_plus">라인 세그먼트 연결</string>
     <string name="done">완료</string>
     <string name="gallery">갤러리</string>
     <string name="load_sticker_error">스티커를로드 할 수 없습니다.</string>
@@ -58,7 +58,7 @@
     <string name="help_title">도움말</string>
     <string name="help_content_eraser">지우개와 같은 것으로 이미지의 부분을 제거합니다.</string>
     <string name="help_content_brush">색 또는 브러시 크기를 변경하려면 하단 바에 기호를 누릅니다.</string>
-    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_watercolor">수채화 효과가 있는 브러시 도구와 유사합니다. 그러나 색상 메뉴의 슬라이더를 사용하여 브러시의 강도를 변경할 수도 있습니다.</string>
     <string name="help_content_eyedropper">색상을 선택하려면 이미지를 터치하세요.</string>
     <string name="help_content_undo">이전 작업을 취소하려면 터치하세요.</string>
     <string name="help_content_redo">실행 취소한 작업을 다시 실행하려면 터치하세요.</string>

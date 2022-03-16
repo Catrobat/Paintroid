@@ -35,11 +35,11 @@
     <string name="button_text">Text</string>
     <string name="button_shape">Formen</string>
     <string name="button_hand">Hand</string>
-    <string name="button_watercolor">Watercolor</string>
+    <string name="button_watercolor">Wasserfarben</string>
     <string name="button_spray_can">Sprühdose</string>
     <string name="button_apply">Anwenden</string>
     <string name="button_checkmark">Häkchen</string>
-    <string name="button_plus">Connect Line Segment</string>
+    <string name="button_plus">Liniensegment verbinden</string>
     <string name="done">Fertig</string>
     <string name="gallery">Galerie</string>
     <string name="load_sticker_error">Konnte Sticker nicht laden</string>
@@ -58,7 +58,7 @@
     <string name="help_title">Hilfe</string>
     <string name="help_content_eraser">Entferne Teile des Bildes mit einem Radiergummi.</string>
     <string name="help_content_brush">Tippe auf die Symbole auf der unteren Leiste, um die Farbe oder die Größe des Pinsels zu ändern.</string>
-    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_watercolor">Ähnlich dem Pinselwerkzeug mit einem Aquarell-Effekt. Du kannst jedoch auch die Stärke des Pinsels mit dem Schieberegler im Farbmenü ändern.</string>
     <string name="help_content_eyedropper">Tippe auf das Bild, um eine Farbe auszuwählen.</string>
     <string name="help_content_undo">Tippe, um deine vorherige Aktion rückgängig zu machen.</string>
     <string name="help_content_redo">Tippe, um eine rückgängig gemachte Aktion wiederherzustellen.</string>

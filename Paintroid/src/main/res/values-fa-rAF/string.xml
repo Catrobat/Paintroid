@@ -35,11 +35,11 @@
     <string name="button_text">متن</string>
     <string name="button_shape">شکل ها</string>
     <string name="button_hand">دست</string>
-    <string name="button_watercolor">Watercolor</string>
+    <string name="button_watercolor">آبرنگ</string>
     <string name="button_spray_can">قوطی اسپری</string>
     <string name="button_apply">بکار ببر</string>
     <string name="button_checkmark">سوال سحی </string>
-    <string name="button_plus">Connect Line Segment</string>
+    <string name="button_plus">اتصال بخش خط</string>
     <string name="done">انجام شد</string>
     <string name="gallery">گالری</string>
     <string name="load_sticker_error">برچسب را نمی توان بارگیری کرد</string>
@@ -58,7 +58,7 @@
     <string name="help_title">کمک</string>
     <string name="help_content_eraser">بخش هایی از تصویر را با یک پاک کن حذف کنید.</string>
     <string name="help_content_brush">برای تغییر رنگ یا اندازه قلم مو بر روی نمادها در نوار پایین ضربه بزنید.</string>
-    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_watercolor">مشابه ابزار قلم مو با افکت آبرنگ. با این حال می توانید قدرت قلم مو را با نوار لغزنده در منوی رنگ تغییر دهید.</string>
     <string name="help_content_eyedropper">برای انتخاب یک رنگ روی تصویر ضربه بزنید.</string>
     <string name="help_content_undo">ضربه بزنید تا اقدام قبلی خود را لغو کنید.</string>
     <string name="help_content_redo">ضربه بزنید تا یک اقدام لغو شود.</string>
@@ -90,7 +90,7 @@
     <string name="menu_rate_us">به ما رای دهید!</string>
     <string name="menu_export">صادر</string>
     <string name="menu_feedback">بازخورد</string>
-    <string name="menu_advanced">Advanced settings</string>
+    <string name="menu_advanced">تنظیمات پیشرفته</string>
     <string name="saved_to">تصویر ذخیره شده در\n</string>
     <string name="saved">تصویر ذخیره شد</string>
     <string name="copy_to">تصویر ذخیره شد در\n</string>
@@ -145,13 +145,13 @@
     <string name="dialog_settings">تنظیمات</string>
     <string name="dialog_save_image_name">نام تصویر</string>
     <string name="dialog_save_image_format">فرمت تصویر</string>
-    <string name="dialog_antialiasing">Antialiasing</string>
-    <string name="dialog_smoothing">Smoothing</string>
+    <string name="dialog_antialiasing">ضد تبخیر</string>
+    <string name="dialog_smoothing">صاف کردن</string>
     <string name="dialog_save_jpg_option_quality">کیفیت:</string>
     <string name="pocketpaint_jpg_message_dialog">طول می کشد <b> فضای ذخیره سازی حداقل </b>. <b>هیچ شفافیت </b>به یاد میآید.</string>
     <string name="pocketpaint_png_message_dialog">فشرده سازی بدون افتادگی. شفافیت حفظ می شود. </string>
     <string name="pocketpaint_ora_message_dialog">این فرمت <b> لایه های </b> را به یاد می آورد. <b> این را می توان با برنامه هایی که از فرمت OpenRaster پشتیبانی می کنند باز می شود. </b></string>
-    <string name="pocketpaint_catrobat_message_dialog">Pocket Paint\'s native image format. This format remembers commands and layers.</string>
+    <string name="pocketpaint_catrobat_message_dialog">فرمت تصویر بومی Pocket Paint. این فرمت دستورات و لایه ها را به خاطر می آورد.</string>
     <string name="permission_info_external_storage_text">این برنامه نیاز به اجازه درخواست شده برای عملکرد به درستی دارد. به منظور ذخیره تصاویر به حافظه محلی، برنامه نیاز به خواندن و نوشتن دسترسی به آن دارد.</string>
     <string name="permission_info_permanent_denial_text">این برنامه نیاز به اجازه درخواست شده برای عملکرد به درستی دارد. به منظور ذخیره تصاویر به حافظه محلی، برنامه نیاز به خواندن و نوشتن دسترسی به آن دارد.
         همانطور که مجوز را رد کردید، دوباره درخواست نکنید، لطفا به تنظیمات تلفن خود بروید و اگر بخواهید از توابع مرتبط استفاده کنید، مجوزهای مورد نیاز را دریافت کنید.</string>
