@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Canvas
+import android.util.Log
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 
@@ -28,11 +29,22 @@ class ReorderLayersCommand(position: Int, destination: Int) : Command {
     var position = position; private set
     var destination = destination; private set
 
+    companion object {
+        private val TAG = ReorderLayersCommand::class.java.simpleName
+    }
+
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         layerModel.run {
-            val tempLayer = getLayerAt(position)
-            removeLayerAt(position)
-            addLayerAt(destination, tempLayer)
+            var success = false
+            getLayerAt(position)?.let { layer ->
+                if (removeLayerAt(position)) {
+                    success = addLayerAt(destination, layer)
+                }
+            }
+
+            if (!success) {
+                Log.e(TAG, "Could not retrieve layer to reorder!")
+            }
         }
     }
 

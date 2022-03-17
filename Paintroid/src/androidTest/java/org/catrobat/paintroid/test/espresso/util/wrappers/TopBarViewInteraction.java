@@ -51,6 +51,10 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 		return onView(withId(R.id.pocketpaint_btn_top_checkmark));
 	}
 
+	public ViewInteraction onPlusButton() {
+		return onView(withId(R.id.pocketpaint_btn_top_plus));
+	}
+
 	public TopBarViewInteraction performUndo() {
 		onUndoButton()
 				.perform(click());
@@ -65,6 +69,12 @@ public final class TopBarViewInteraction extends CustomViewInteraction {
 
 	public TopBarViewInteraction performClickCheckmark() {
 		onCheckmarkButton()
+				.perform(click());
+		return this;
+	}
+
+	public TopBarViewInteraction performClickPlus() {
+		onPlusButton()
 				.perform(click());
 		return this;
 	}

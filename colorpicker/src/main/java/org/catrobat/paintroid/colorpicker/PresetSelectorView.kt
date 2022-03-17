@@ -35,9 +35,12 @@ class PresetSelectorView : LinearLayout {
     private var tableLayout: TableLayout
     private var onColorChangedListener: OnColorChangedListener? = null
 
-    constructor(context: Context) : this(context, null)
+    constructor(context: Context) : this(context, null) {
+        setWillNotDraw(false)
+    }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        setWillNotDraw(false)
         tableLayout = TableLayout(context, attrs).apply {
             gravity = Gravity.TOP
             orientation = VERTICAL

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,8 +28,9 @@ class RemoveLayerCommand(position: Int) : Command {
     var position = position; private set
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
-        layerModel.removeLayerAt(position)
-        layerModel.currentLayer = layerModel.layers[0]
+        if (layerModel.removeLayerAt(position)) {
+            layerModel.getLayerAt(0)?.let { layerModel.currentLayer = it }
+        }
     }
 
     override fun freeResources() {

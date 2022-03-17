@@ -20,6 +20,13 @@ package org.catrobat.paintroid.test.junit.tools
 
 import android.graphics.Paint
 import android.graphics.PointF
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageButton
+import androidx.test.annotation.UiThreadTest
+import androidx.test.rule.ActivityTestRule
+import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -28,8 +35,10 @@ import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 import org.catrobat.paintroid.ui.Perspective
+import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
@@ -43,6 +52,9 @@ class LineToolTest {
     private lateinit var tool: LineTool
     private var screenWidth = 1920
     private var screenHeight = 1080
+
+    @get:Rule
+    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
     object MockitoHelper {
         fun <T> anyObject(): T {
@@ -65,6 +77,10 @@ class LineToolTest {
             }
         val paint = Paint()
         Mockito.`when`(toolPaint.paint).thenReturn(paint)
+        val topBarLayout = launchActivityRule.activity.findViewById<ViewGroup>(R.id.pocketpaint_layout_top_bar)
+        LineTool.topBarViewHolder = TopBarViewHolder(topBarLayout)
+        val plusButton: ImageButton = launchActivityRule.activity.findViewById(R.id.pocketpaint_btn_top_plus)
+        LineTool.topBarViewHolder!!.plusButton = plusButton
         tool = LineTool(
             brushToolOptions,
             contextCallback,
@@ -104,6 +120,7 @@ class LineToolTest {
     }
 
     @Test
+    @UiThreadTest
     fun testIfCheckmarkFeatureWorks() {
         tool.handleDown(PointF(1f, 1f))
         tool.handleUp(PointF(2f, 2f))
@@ -117,5 +134,40 @@ class LineToolTest {
         Assert.assertNotEquals(tool.endPointToDraw, null)
         tool.onClickOnButton()
         Assert.assertEquals(tool.lineFinalized, false)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testIfPlusIsDisplayedAfterSettingSegment() {
+        tool.handleDown(PointF(1f, 1f))
+        tool.handleUp(PointF(2f, 2f))
+        Assert.assertEquals(tool.currentCoordinate, null)
+        Assert.assertEquals(tool.initialEventCoordinate, null)
+        Assert.assertEquals(tool.startpointSet, true)
+        Assert.assertNotEquals(tool.startPointToDraw, null)
+        tool.handleDown(PointF(5f, 5f))
+        tool.handleUp(PointF(10f, 10f))
+        val plusButtonVisibility = LineTool.topBarViewHolder?.plusButton?.visibility
+        Assert.assertEquals(plusButtonVisibility, View.VISIBLE)
+        tool.onClickOnPlus()
+        Assert.assertEquals(tool.connectedLines, true)
+        Assert.assertEquals(tool.undoRecentlyClicked, false)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testIfPlusIsDisplayedAfterDrawingLine() {
+        tool.handleDown(PointF(1f, 1f))
+        tool.handleMove(PointF(500f, 500f))
+        tool.handleUp(PointF(500f, 500f))
+        Assert.assertEquals(tool.currentCoordinate, null)
+        Assert.assertEquals(tool.initialEventCoordinate, null)
+        Assert.assertEquals(tool.startpointSet, true)
+        Assert.assertNotEquals(tool.startPointToDraw, null)
+        val plusButtonVisibility = LineTool.topBarViewHolder?.plusButton?.visibility
+        Assert.assertEquals(plusButtonVisibility, View.VISIBLE)
+        tool.onClickOnPlus()
+        Assert.assertEquals(tool.connectedLines, true)
+        Assert.assertEquals(tool.undoRecentlyClicked, false)
     }
 }

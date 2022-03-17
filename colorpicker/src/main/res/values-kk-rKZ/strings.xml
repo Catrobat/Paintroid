@@ -29,8 +29,8 @@
     <string name="color_picker_cancel">Cancel</string>
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipette</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Save changes?</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">Тамшуыр</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Өзгерістерді сақтау?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Do you want to save your changes?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>

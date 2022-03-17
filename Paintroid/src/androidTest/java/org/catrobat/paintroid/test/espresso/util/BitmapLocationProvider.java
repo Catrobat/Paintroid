@@ -82,6 +82,12 @@ public enum BitmapLocationProvider implements CoordinatesProvider{
 		public float[] calculateCoordinates(View view) {
 			return calculatePercentageOffset(view, .75f, .75f);
 		}
+	},
+	HALFWAY_BOTTOM_LEFT {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, .25f, .75f);
+		}
 	};
 
 	private static float[] calculatePercentageOffset(View view, float percentageX, float percentageY) {

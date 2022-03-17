@@ -29,9 +29,9 @@ import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
-import org.catrobat.paintroid.iotasks.CreateFileAsync.CreateFileCallback
-import org.catrobat.paintroid.iotasks.LoadImageAsync.LoadImageCallback
-import org.catrobat.paintroid.iotasks.SaveImageAsync.SaveImageCallback
+import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
+import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
+import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.LayerAdapter
@@ -131,6 +131,8 @@ interface MainActivityContracts {
         fun showCatroidMediaGallery()
 
         fun showScaleImageRequestDialog(uri: Uri?, requestCode: Int)
+
+        fun setMaskFilterToNull()
     }
 
     interface MainView {
@@ -159,11 +161,15 @@ interface MainActivityContracts {
         fun enterFullscreen()
 
         fun exitFullscreen()
+
+        fun showContentLoadingProgressBar()
+
+        fun hideContentLoadingProgressBar()
     }
 
     interface Presenter {
         val imageNumber: Int
-        val bitmap: Bitmap
+        val bitmap: Bitmap?
         val context: Context
 
         fun initializeFromCleanState(extraPicturePath: String?, extraPictureName: String?)
@@ -299,7 +305,7 @@ interface MainActivityContracts {
     }
 
     interface Interactor {
-        fun saveCopy(callback: SaveImageCallback, requestCode: Int, workspace: Workspace)
+        fun saveCopy(callback: SaveImageCallback, requestCode: Int, workspace: Workspace, context: Context)
 
         fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String)
 
@@ -307,7 +313,8 @@ interface MainActivityContracts {
             callback: SaveImageCallback,
             requestCode: Int,
             workspace: Workspace,
-            uri: Uri?
+            uri: Uri?,
+            context: Context
         )
 
         fun loadFile(
@@ -363,7 +370,7 @@ interface MainActivityContracts {
 
         fun hide()
 
-        fun showCurrentTool(toolType: ToolType)
+        fun showCurrentTool(toolType: ToolType?)
 
         fun setColorButtonColor(@ColorInt color: Int)
     }

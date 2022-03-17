@@ -133,7 +133,7 @@ class MainActivityNavigator(
                 mainActivity.presenter.setBottomNavigationColor(color)
             }
         })
-        dialog.setBitmap(mainActivity.presenter.bitmap)
+        mainActivity.presenter.bitmap?.let { dialog.setBitmap(it) }
     }
 
     private fun setupCatroidMediaGalleryListeners(dialog: CatroidMediaGalleryFragment) {
@@ -195,7 +195,10 @@ class MainActivityNavigator(
     override fun showColorPickerDialog() {
         if (findFragmentByTag(COLOR_PICKER_DIALOG_TAG) == null) {
             toolReference.tool?.let {
-                val dialog = ColorPickerDialog.newInstance(it.drawPaint.color)
+                val dialog = ColorPickerDialog.newInstance(
+                    it.drawPaint.color,
+                    mainActivity.model.isOpenedFromCatroid
+                )
                 setupColorPickerDialogListeners(dialog)
                 showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)
             }
@@ -245,7 +248,7 @@ class MainActivityNavigator(
     }
 
     override fun startShareImageActivity(bitmap: Bitmap?) {
-        val uri = FileIO.saveBitmapToCache(bitmap, mainActivity) ?: return
+        val uri = FileIO.saveBitmapToCache(bitmap, mainActivity, "image") ?: return
         val shareIntent = Intent().apply {
             putExtra(Intent.EXTRA_STREAM, uri)
             setDataAndType(uri, mainActivity.contentResolver.getType(uri))
@@ -513,5 +516,14 @@ class MainActivityNavigator(
 
     override fun setAntialiasingOnToolPaint() {
         mainActivity.toolPaint.setAntialiasing()
+    }
+
+    override fun setMaskFilterToNull() {
+        mainActivity.toolPaint.paint.maskFilter = null
+        mainActivity.toolPaint.previewPaint.maskFilter = null
+        toolReference.tool?.let {
+            mainActivity.toolPaint.paint.alpha = it.drawPaint.alpha
+            mainActivity.toolPaint.previewPaint.alpha = it.drawPaint.alpha
+        }
     }
 }

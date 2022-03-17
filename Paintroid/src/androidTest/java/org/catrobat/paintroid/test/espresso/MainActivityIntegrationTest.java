@@ -1,6 +1,6 @@
 /**
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2021 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,15 @@ import android.content.Context;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.UserPreferences;
+import org.catrobat.paintroid.command.CommandFactory;
+import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.contract.MainActivityContracts;
+import org.catrobat.paintroid.controller.ToolController;
 import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
+import org.catrobat.paintroid.tools.Workspace;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,10 +56,39 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
+@SuppressWarnings("PMD.UnusedPrivateField")
 public class MainActivityIntegrationTest {
 
 	@Mock
 	private MainActivityContracts.MainView view;
+	@Mock
+	private MainActivityContracts.Model model;
+	@Mock
+	private MainActivityContracts.Navigator navigator;
+	@Mock
+	private MainActivityContracts.Interactor interactor;
+	@Mock
+	private MainActivityContracts.TopBarViewHolder topBarViewHolder;
+	@Mock
+	private MainActivityContracts.DrawerLayoutViewHolder drawerLayoutViewHolder;
+	@Mock
+	private Workspace workspace;
+	@Mock
+	private Perspective perspective;
+	@Mock
+	private ToolController toolController;
+	@Mock
+	private CommandFactory commandFactory;
+	@Mock
+	private CommandManager commandManager;
+	@Mock
+	private MainActivityContracts.BottomBarViewHolder bottomBarViewHolder;
+	@Mock
+	private MainActivityContracts.BottomNavigationViewHolder bottomNavigationViewHolder;
+	@Mock
+	private UserPreferences sharedPreferences;
+	@Mock
+	private Context context;
 
 	@InjectMocks
 	private MainActivityPresenter presenter;

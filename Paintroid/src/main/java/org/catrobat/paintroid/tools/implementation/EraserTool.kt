@@ -42,7 +42,8 @@ class EraserTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
-    commandManager, drawTime
+    commandManager,
+    drawTime
 ) {
     override val previewPaint: Paint
         get() = Paint().apply {

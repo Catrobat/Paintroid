@@ -29,7 +29,7 @@ import android.widget.TabHost
 import android.widget.TabHost.TabContentFactory
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
-import java.lang.IllegalArgumentException
+import java.util.Objects
 
 private const val RGB_TAG = "RGB"
 private const val PRE_TAG = "PRE"
@@ -37,9 +37,10 @@ private const val HSV_TAG = "HSV"
 private const val EXCEPTION = "Invalid TAG"
 
 class ColorPickerView : LinearLayoutCompat {
-    private val rgbSelectorView: RgbSelectorView
+    val rgbSelectorView: RgbSelectorView
     private val preSelectorView: PresetSelectorView
     private val hsvSelectorView: HSVSelectorView
+    private var alphaSliderView: AlphaSliderView
     private val tabHost: TabHost
     private var selectedColor = Color.BLACK
     var initialColor = 0
@@ -55,6 +56,7 @@ class ColorPickerView : LinearLayoutCompat {
         rgbSelectorView = RgbSelectorView(context)
         preSelectorView = PresetSelectorView(context)
         hsvSelectorView = HSVSelectorView(context)
+        alphaSliderView = AlphaSliderView(context)
         tabHost = tabView.findViewById(R.id.color_picker_colorview_tabColors)
         tabHost.setup()
         val factory = ColorTabContentFactory()
@@ -76,12 +78,21 @@ class ColorPickerView : LinearLayoutCompat {
             addTab(rgbTab)
             setOnTabChangedListener { tabId ->
                 if (tabId == rgbTab.tag) {
+                    alphaSliderView.visibility = GONE
                     showKeyboard()
                 } else {
+                    if (!alphaSliderView.isCatroid) {
+                        alphaSliderView.visibility = VISIBLE
+                    }
                     hideKeyboard()
                 }
             }
         }
+    }
+
+    fun setAlphaSlider(alphaSliderView: AlphaSliderView, catroidFlag: Boolean) {
+        this.alphaSliderView = alphaSliderView
+        this.alphaSliderView.isCatroid = catroidFlag
     }
 
     private fun createTabView(context: Context, iconResourceId: Int): View {
@@ -104,6 +115,9 @@ class ColorPickerView : LinearLayoutCompat {
         }
         if (sender !== hsvSelectorView) {
             hsvSelectorView.setSelectedColor(color)
+        }
+        if (sender != alphaSliderView) {
+            alphaSliderView.setSelectedColor(color)
         }
         onColorChanged()
     }
@@ -159,6 +173,13 @@ class ColorPickerView : LinearLayoutCompat {
         rgbSelectorView.setOnColorChangedListener { color ->
             setSelectedColor(color, rgbSelectorView)
         }
+        Objects.requireNonNull(alphaSliderView.getAlphaSlider())?.setOnColorChangedListener(
+            object : AlphaSlider.OnColorChangedListener {
+                override fun colorChanged(color: Int) {
+                    setSelectedColor(color, alphaSliderView)
+                }
+            }
+        )
     }
 
     override fun onDetachedFromWindow() {

@@ -35,9 +35,11 @@
     <string name="button_text">ข้อความ</string>
     <string name="button_shape">รูปร่าง</string>
     <string name="button_hand">มือ</string>
+    <string name="button_watercolor">สีน้ำ</string>
     <string name="button_spray_can">กระป๋องสเปรย์</string>
     <string name="button_apply">นำไปใช้</string>
     <string name="button_checkmark">เครื่องหมายถูก</string>
+    <string name="button_plus">เชื่อมต่อส่วนสาย</string>
     <string name="done">เสร็จสิ้น</string>
     <string name="gallery">คลังภาพ</string>
     <string name="load_sticker_error">ไม่สามารถโหลดสติกเกอร์ได้</string>
@@ -56,6 +58,7 @@
     <string name="help_title">ช่วยเหลือ</string>
     <string name="help_content_eraser">ลบส่วนต่างๆของภาพด้วยยางลบ</string>
     <string name="help_content_brush">เคาะบนสัญลักษณ์บนแถบด้านล่างเพื่อเปลี่ยนสีหรือขนาดแปรง</string>
+    <string name="help_content_watercolor">คล้ายกับเครื่องมือแปรงที่มีเอฟเฟกต์สีน้ำ อย่างไรก็ตาม คุณยังสามารถเปลี่ยนความแรงของแปรงได้ด้วยแถบเลื่อนในเมนูสี</string>
     <string name="help_content_eyedropper">แตะรูปภาพเพื่อเลือกสี</string>
     <string name="help_content_undo">เคาะเพื่อเลิกการกระทำก่อนหน้านี้</string>
     <string name="help_content_redo">เคาะเพื่อทำซ้ำการกระทำถูกยกเลิก</string>

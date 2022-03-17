@@ -35,9 +35,11 @@
     <string name="button_text">Testo</string>
     <string name="button_shape">Forme</string>
     <string name="button_hand">Mano</string>
+    <string name="button_watercolor">Acquarello</string>
     <string name="button_spray_can">Tanica spray</string>
     <string name="button_apply">Applica</string>
     <string name="button_checkmark">Segno di spunta</string>
+    <string name="button_plus">Connetti Segmento</string>
     <string name="done">Fatto</string>
     <string name="gallery">Galleria</string>
     <string name="load_sticker_error">Impossibile caricare l\'Adesivo</string>
@@ -56,6 +58,7 @@
     <string name="help_title">Guida</string>
     <string name="help_content_eraser">Rimuovere parti dell\'immagine come con una gomma da cancellare.</string>
     <string name="help_content_brush">Cliccare sui simboli sulla barra inferiore per modificare il colore o la dimensione del pennello.</string>
+    <string name="help_content_watercolor">Simile al pennello con un effetto acquerello. Tuttavia è anche possibile modificare l\'intensità del pennello con la barra di scorrimento dal menu colore.</string>
     <string name="help_content_eyedropper">Cliccare sull\'immagine per selezionare un colore.</string>
     <string name="help_content_undo">Cliccare per annullare l\'azione precedente.</string>
     <string name="help_content_redo">Fare clic per ripristinare un\'azione annullata.</string>

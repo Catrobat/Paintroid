@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,6 +37,7 @@ import android.graphics.drawable.RippleDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
 import android.view.WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
 import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -51,16 +52,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val FF = 0xff
+private const val HSV_INITIALIZER = 3
+private const val INITIAL_CATROID_FLAG = "InitialCatroidFlag"
 private const val CURRENT_COLOR = "CurrentColor"
 private const val INITIAL_COLOR = "InitialColor"
 private const val REQUEST_CODE = 1
-private const val BITMAP_NAME = "temp.png"
 const val COLOR_EXTRA = "colorExtra"
-const val BITMAP_NAME_EXTRA = "bitmapNameExtra"
+const val BITMAP_HEIGHT_EXTRA = "bitmapHeightNameExtra"
+const val BITMAP_WIDTH_EXTRA = "bitmapWidthNameExtra"
 
 class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     @VisibleForTesting
     var onColorPickedListener = mutableListOf<OnColorPickedListener>()
+    private var colorToApply = 0
+
     private lateinit var colorPickerView: ColorPickerView
     private lateinit var currentColorView: View
     private lateinit var newColorView: View
@@ -68,14 +73,15 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     private lateinit var checkeredShader: Shader
     private lateinit var currentBitmap: Bitmap
 
-    private var colorToApply = 0
-
     companion object {
-        fun newInstance(@ColorInt initialColor: Int): ColorPickerDialog {
+        private lateinit var alphaSliderView: AlphaSliderView
+
+        fun newInstance(@ColorInt initialColor: Int, flag: Boolean): ColorPickerDialog {
             val dialog = ColorPickerDialog()
             val bundle = Bundle()
             bundle.putInt(INITIAL_COLOR, initialColor)
             bundle.putInt(CURRENT_COLOR, initialColor)
+            bundle.putBoolean(INITIAL_CATROID_FLAG, flag)
             dialog.arguments = bundle
             return dialog
         }
@@ -92,15 +98,17 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
             .inflate(R.layout.color_picker_dialog_view, null)
         currentColorView = dialogView.findViewById(R.id.color_picker_current_color_view)
         pipetteBtn = dialogView.findViewById(R.id.color_picker_pipette_btn)
+
         pipetteBtn.setOnClickListener {
             pipetteBtn.isEnabled = false
             CoroutineScope(Dispatchers.IO).launch {
-                storeBitmapTemporally(currentBitmap, requireContext(), BITMAP_NAME)
+                ColorPickerPreviewActivity.pickableImage = currentBitmap
                 withContext(Dispatchers.Main) {
                     pipetteBtn.isEnabled = true
                     val intent = Intent(it.context, ColorPickerPreviewActivity::class.java).apply {
                         putExtra(COLOR_EXTRA, colorToApply)
-                        putExtra(BITMAP_NAME_EXTRA, BITMAP_NAME)
+                        putExtra(BITMAP_HEIGHT_EXTRA, currentBitmap.height)
+                        putExtra(BITMAP_WIDTH_EXTRA, currentBitmap.width)
                     }
                     try {
                         startActivityForResult(intent, REQUEST_CODE)
@@ -113,23 +121,26 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         newColorView = dialogView.findViewById(R.id.color_picker_new_color_view)
         colorPickerView = dialogView.findViewById(R.id.color_picker_view)
         colorPickerView.setOnColorChangedListener(this)
+        alphaSliderView = dialogView.findViewById(R.id.color_alpha_slider)
 
         if (savedInstanceState != null) {
             setCurrentColor(savedInstanceState.getInt(CURRENT_COLOR, Color.BLACK))
-            setInitialColor(savedInstanceState.getInt(INITIAL_COLOR, Color.BLACK))
+            setInitialColor(savedInstanceState.getInt(INITIAL_COLOR, Color.BLACK), savedInstanceState.getBoolean(INITIAL_CATROID_FLAG))
+            colorPickerView.setAlphaSlider(alphaSliderView, savedInstanceState.getBoolean(INITIAL_CATROID_FLAG))
         } else {
             val arguments = requireArguments()
             setCurrentColor(arguments.getInt(CURRENT_COLOR, Color.BLACK))
-            setInitialColor(arguments.getInt(INITIAL_COLOR, Color.BLACK))
+            setInitialColor(arguments.getInt(INITIAL_COLOR, Color.BLACK), arguments.getBoolean(INITIAL_CATROID_FLAG))
+            colorPickerView.setAlphaSlider(alphaSliderView, arguments.getBoolean(INITIAL_CATROID_FLAG))
         }
         colorToApply = colorPickerView.initialColor
         val materialDialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setNegativeButton(R.string.color_picker_cancel) { dialogInterface: DialogInterface, _: Int ->
-                updateColorChange(colorPickerView.initialColor)
+                // updateColorChange(colorToApply)
                 dialogInterface.dismiss()
             }
             .setPositiveButton(R.string.color_picker_apply) { _: DialogInterface, _: Int ->
-                deleteBitmapFile(requireContext(), BITMAP_NAME)
+                updateColorChange(colorToApply)
                 dismiss()
             }
             .setView(dialogView)
@@ -139,8 +150,12 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
             materialDialog.window?.clearFlags(FLAG_NOT_FOCUSABLE or FLAG_ALT_FOCUSABLE_IM)
             materialDialog.window?.setSoftInputMode(SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         }
-
         return materialDialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        updateColorChange(colorToApply)
+        super.onCancel(dialog)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -151,9 +166,23 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     }
 
     override fun colorChanged(color: Int) {
-        setViewColor(newColorView, color)
-        colorToApply = color
-        updateColorChange(colorToApply)
+        if (alphaSliderView.visibility == GONE && colorPickerView.rgbSelectorView.seekBarAlpha.visibility == GONE) {
+            alphaSliderView.getAlphaSlider()?.invalidate()
+            val alpha = alphaSliderView.getAlphaSlider()?.getAlphaValue()
+            val hsv = FloatArray(HSV_INITIALIZER)
+            Color.colorToHSV(color, hsv)
+            val newColor = alpha?.let { Color.HSVToColor(it, hsv) }
+            if (newColor != null) {
+                setViewColor(newColorView, newColor)
+                colorToApply = newColor
+            }
+        } else {
+            if (colorPickerView.rgbSelectorView.seekBarAlpha.visibility != GONE) {
+                alphaSliderView.getAlphaSlider()?.setAlphaValue(Color.alpha(color))
+            }
+            setViewColor(newColorView, color)
+            colorToApply = color
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -172,8 +201,11 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         }
     }
 
-    private fun setInitialColor(color: Int) {
+    private fun setInitialColor(color: Int, catroidFlag: Boolean) {
         setViewColor(currentColorView, color)
+        if (!catroidFlag) {
+            alphaSliderView.visibility = View.VISIBLE
+        }
         colorPickerView.initialColor = color
     }
 

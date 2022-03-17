@@ -35,9 +35,11 @@
     <string name="button_text">Текст</string>
     <string name="button_shape">Формы</string>
     <string name="button_hand">Рука</string>
+    <string name="button_watercolor">Акварель</string>
     <string name="button_spray_can">Баллончик</string>
     <string name="button_apply">Применить</string>
     <string name="button_checkmark">Галочка</string>
+    <string name="button_plus">Подключить сегмент линии</string>
     <string name="done">Готово</string>
     <string name="gallery">Галерея</string>
     <string name="load_sticker_error">Не удалось загрузить стикер</string>
@@ -56,6 +58,7 @@
     <string name="help_title">Помощь</string>
     <string name="help_content_eraser">Удалить часть изображения как ластиком.</string>
     <string name="help_content_brush">Нажмите на символы на нижней панели, чтобы изменить цвет или размер кисти.</string>
+    <string name="help_content_watercolor">Подобно инструменту кисти с эффектом акварели. Однако также можно изменить силу кисти с помощью ползунка в цветовом меню.</string>
     <string name="help_content_eyedropper">Нажмите на изображение, чтобы выбрать цвет.</string>
     <string name="help_content_undo">Нажмите, чтобы отменить предыдущее действие.</string>
     <string name="help_content_redo">Нажмите, чтобы повторить отменённое действие.</string>

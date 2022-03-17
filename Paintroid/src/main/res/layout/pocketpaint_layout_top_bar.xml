@@ -57,6 +57,17 @@
                 android:tint="@android:color/white" />
 
             <ImageButton
+                android:id="@+id/pocketpaint_btn_top_plus"
+                style="?actionButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="@string/button_checkmark"
+                android:src="@drawable/ic_pocketpaint_plus_enabled"
+                android:tint="@android:color/white"
+                android:visibility="gone"/>
+
+            <ImageButton
                 android:id="@+id/pocketpaint_btn_top_checkmark"
                 style="?actionButtonStyle"
                 android:layout_width="0dp"

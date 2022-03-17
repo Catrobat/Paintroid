@@ -31,6 +31,7 @@ class TopBarViewHolder(val layout: ViewGroup) : MainActivityContracts.TopBarView
     val undoButton: ImageButton = layout.findViewById(R.id.pocketpaint_btn_top_undo)
     val redoButton: ImageButton = layout.findViewById(R.id.pocketpaint_btn_top_redo)
     val checkmarkButton: ImageButton = layout.findViewById(R.id.pocketpaint_btn_top_checkmark)
+    var plusButton: ImageButton = layout.findViewById(R.id.pocketpaint_btn_top_plus)
 
     override val height: Int
         get() = layout.height
@@ -57,6 +58,14 @@ class TopBarViewHolder(val layout: ViewGroup) : MainActivityContracts.TopBarView
 
     override fun show() {
         layout.visibility = View.VISIBLE
+    }
+
+    fun hidePlusButton() {
+        plusButton.visibility = View.GONE
+    }
+
+    fun showPlusButton() {
+        plusButton.visibility = View.VISIBLE
     }
 
     override fun removeStandaloneMenuItems(menu: Menu?) {

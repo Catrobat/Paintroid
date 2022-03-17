@@ -58,6 +58,7 @@
         android:layout_height="wrap_content"
         android:max="100"
         android:minHeight="30dip"
+        android:layout_marginEnd="10dp"
         android:layout_alignTop="@id/pocketpaint_stroke_width_width_text_layout"
         android:layout_toEndOf="@+id/pocketpaint_stroke_width_width_text_layout"
         android:layout_alignBottom="@id/pocketpaint_stroke_width_width_text_layout"

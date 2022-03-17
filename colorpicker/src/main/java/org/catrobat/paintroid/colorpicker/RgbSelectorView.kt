@@ -42,7 +42,7 @@ class RgbSelectorView : LinearLayoutCompat {
     private var seekBarRed: SeekBar
     private var seekBarGreen: SeekBar
     private var seekBarBlue: SeekBar
-    private var seekBarAlpha: SeekBar
+    var seekBarAlpha: SeekBar
     private var textViewRed: AppCompatTextView
     private var textViewGreen: AppCompatTextView
     private var textViewBlue: AppCompatTextView

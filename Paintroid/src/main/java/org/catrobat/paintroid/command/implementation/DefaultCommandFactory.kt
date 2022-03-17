@@ -46,8 +46,10 @@ class DefaultCommandFactory : CommandFactory {
         addCommand(LoadCommand(bitmap.copy(Bitmap.Config.ARGB_8888, false)))
     }
 
-    override fun createInitCommand(bitmapList: List<Bitmap>): Command = CompositeCommand().apply {
-        addCommand(SetDimensionCommand(bitmapList[0].width, bitmapList[0].height))
+    override fun createInitCommand(bitmapList: List<Bitmap?>): Command = CompositeCommand().apply {
+        bitmapList[0]?.let {
+            addCommand(SetDimensionCommand(it.width, it.height))
+        }
         addCommand(LoadBitmapListCommand(bitmapList))
     }
 

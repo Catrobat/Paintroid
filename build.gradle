@@ -42,14 +42,14 @@ plugins {
 }
 
 ext {
-    androidCompileSdkVersion = 29
+    androidCompileSdkVersion = 30
     androidMinSdkVersion = 21
-    androidTargetSdkVersion = 29
+    androidTargetSdkVersion = 30
 
     androidSupportLibraryVersion = '28.0.0'
 
-    androidVersionCode = 42
-    androidVersionName = '2.7.5'
+    androidVersionCode = 43
+    androidVersionName = '2.8.0'
 }
 
 if(project.hasProperty("snapshot")) {

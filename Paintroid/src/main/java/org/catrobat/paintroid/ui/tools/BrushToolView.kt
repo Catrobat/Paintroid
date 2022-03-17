@@ -101,6 +101,11 @@ class BrushToolView : View, BrushToolPreview {
         if (currentColor != null) {
             changePaintColor(currentColor)
         }
+
+        if (callback?.maskFilter != null) {
+            canvasPaint.maskFilter = callback?.maskFilter
+        }
+
         val startX = right - width / CONSTANT_3F
         val startY = top + height - CONSTANT_56F
         val endX = right - width / CONSTANT_16F
@@ -117,7 +122,7 @@ class BrushToolView : View, BrushToolPreview {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         when (callback?.toolType) {
-            ToolType.BRUSH, ToolType.CURSOR, ToolType.LINE -> drawLinePreview(canvas)
+            ToolType.BRUSH, ToolType.CURSOR, ToolType.LINE, ToolType.WATERCOLOR -> drawLinePreview(canvas)
             ToolType.ERASER -> drawEraserPreview(canvas)
         }
     }

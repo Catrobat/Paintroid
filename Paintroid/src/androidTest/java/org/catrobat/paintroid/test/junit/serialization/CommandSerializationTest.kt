@@ -64,8 +64,8 @@ import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import kotlin.collections.ArrayList
 
 class CommandSerializationTest {
@@ -87,7 +87,8 @@ class CommandSerializationTest {
         val commandManger = mock(AsyncCommandManager::class.java)
 
         commandSerializer = CommandSerializationUtilities(context, commandManger)
-        val initialCommand: Command = commandFactory.createInitCommand(WORKSPACE_WIDTH, WORKSPACE_HEIGHT)
+        val initialCommand: Command =
+            commandFactory.createInitCommand(WORKSPACE_WIDTH, WORKSPACE_HEIGHT)
         expectedModel = CommandManagerModel(initialCommand, ArrayList())
 
         `when`(context.resources).thenReturn(resources)
@@ -113,7 +114,12 @@ class CommandSerializationTest {
 
     @Test
     fun testSerializeSprayCommand() {
-        expectedModel.commands.add(commandFactory.createSprayCommand(floatArrayOf(20f, 347.5f, 99.239f), paint))
+        expectedModel.commands.add(
+            commandFactory.createSprayCommand(
+                floatArrayOf(20f, 347.5f, 99.239f),
+                paint
+            )
+        )
         assertSerializeAndDeserialize()
     }
 
@@ -125,52 +131,117 @@ class CommandSerializationTest {
 
     @Test
     fun testSerializeDefaultInitCommand() {
-        expectedModel.commands.add(commandFactory.createInitCommand(WORKSPACE_WIDTH, WORKSPACE_HEIGHT))
+        expectedModel.commands.add(
+            commandFactory.createInitCommand(
+                WORKSPACE_WIDTH,
+                WORKSPACE_HEIGHT
+            )
+        )
         assertSerializeAndDeserialize()
     }
 
     @Test
     fun testSerializeLoadInitCommand() {
-        expectedModel.commands.add(commandFactory.createInitCommand(Bitmap.createBitmap(WORKSPACE_WIDTH, WORKSPACE_HEIGHT, Bitmap.Config.ARGB_8888)))
+        expectedModel.commands.add(
+            commandFactory.createInitCommand(
+                Bitmap.createBitmap(
+                    WORKSPACE_WIDTH,
+                    WORKSPACE_HEIGHT,
+                    Bitmap.Config.ARGB_8888
+                )
+            )
+        )
         assertSerializeAndDeserialize()
     }
 
     @Test
     fun testSerializeLoadListInitCommand() {
         val bitmapList = ArrayList<Bitmap>()
-        bitmapList.add(Bitmap.createBitmap(Bitmap.createBitmap(WORKSPACE_WIDTH, WORKSPACE_HEIGHT, Bitmap.Config.ARGB_8888)))
+        bitmapList.add(
+            Bitmap.createBitmap(
+                Bitmap.createBitmap(
+                    WORKSPACE_WIDTH,
+                    WORKSPACE_HEIGHT,
+                    Bitmap.Config.ARGB_8888
+                )
+            )
+        )
         expectedModel.commands.add(commandFactory.createInitCommand(bitmapList))
         assertSerializeAndDeserialize()
     }
 
     @Test
     fun testSerializeTextToolCommand() {
-        val typeface = SerializableTypeface("Monospace", bold = true, underline = false, italic = true, textSize = 25f, textSkewX = -0.25f)
-        expectedModel.commands.add(commandFactory.createTextToolCommand(arrayOf("Serialization", "is", "fun", "!.?)4`\""), paint, 20, 50.3f, 40.5f, PointF(30f, 25.243f), 10.23f, typeface))
+        val typeface = SerializableTypeface(
+            "Monospace",
+            bold = true,
+            underline = false,
+            italic = true,
+            textSize = 25f,
+            textSkewX = -0.25f
+        )
+        expectedModel.commands.add(
+            commandFactory.createTextToolCommand(
+                arrayOf("Serialization", "is", "fun", "!.?)4`\""),
+                paint, 20, 50.3f, 40.5f, PointF(30f, 25.243f), 10.23f, typeface
+            )
+        )
         assertSerializeAndDeserialize()
     }
 
     @Test
     fun testSerializeHeartGeometricCommand() {
-        expectedModel.commands.add(commandFactory.createGeometricFillCommand(HeartDrawable(), Point(10, 20), RectF(10f, 20f, 30f, 40f), 25f, paint))
+        expectedModel.commands.add(
+            commandFactory.createGeometricFillCommand(
+                HeartDrawable(),
+                Point(10, 20),
+                RectF(10f, 20f, 30f, 40f),
+                25f,
+                paint
+            )
+        )
         assertSerializeAndDeserialize()
     }
 
     @Test
     fun testSerializeOvalGeometricCommand() {
-        expectedModel.commands.add(commandFactory.createGeometricFillCommand(OvalDrawable(), Point(10, 20), RectF(10f, 20f, 30f, 40f), 25f, paint))
+        expectedModel.commands.add(
+            commandFactory.createGeometricFillCommand(
+                OvalDrawable(),
+                Point(10, 20),
+                RectF(10f, 20f, 30f, 40f),
+                25f,
+                paint
+            )
+        )
         assertSerializeAndDeserialize()
     }
 
     @Test
     fun testSerializeRectangleGeometricCommand() {
-        expectedModel.commands.add(commandFactory.createGeometricFillCommand(RectangleDrawable(), Point(10, 20), RectF(10f, 20f, 30f, 40f), 25f, paint))
+        expectedModel.commands.add(
+            commandFactory.createGeometricFillCommand(
+                RectangleDrawable(),
+                Point(10, 20),
+                RectF(10f, 20f, 30f, 40f),
+                25f,
+                paint
+            )
+        )
         assertSerializeAndDeserialize()
     }
 
     @Test
     fun testSerializeStarGeometricCommand() {
-        expectedModel.commands.add(commandFactory.createGeometricFillCommand(StarDrawable(), Point(10, 20), RectF(10f, 20f, 30f, 40f), 25f, paint))
+        expectedModel.commands.add(
+            commandFactory.createGeometricFillCommand(
+                StarDrawable(),
+                Point(10, 20),
+                RectF(10f, 20f, 30f, 40f),
+                25f,
+                paint
+            )
+        )
         assertSerializeAndDeserialize()
     }
 
@@ -293,34 +364,75 @@ class CommandSerializationTest {
         if (expectedCommand.javaClass != actualCommand.javaClass) {
             return false
         }
-        when (expectedCommand) {
-            is AddLayerCommand -> return true
-            is CompositeCommand -> return equalsCompositeCommand(expectedCommand, actualCommand as CompositeCommand)
-            is SetDimensionCommand -> return equalsDimensionCommand(expectedCommand, actualCommand as SetDimensionCommand)
-            is PointCommand -> return equalsPointCommand(expectedCommand, actualCommand as PointCommand)
-            is SprayCommand -> return equalsSprayCommand(expectedCommand, actualCommand as SprayCommand)
-            is SelectLayerCommand -> return equalsSelectLayerCommand(expectedCommand, actualCommand as SelectLayerCommand)
-            is MergeLayersCommand -> return equalsMergeLayersCommand(expectedCommand, actualCommand as MergeLayersCommand)
-            is RemoveLayerCommand -> return equalsRemoveLayerCommand(expectedCommand, actualCommand as RemoveLayerCommand)
-            is ReorderLayersCommand -> return equalsReorderLayersCommand(expectedCommand, actualCommand as ReorderLayersCommand)
-            is ResetCommand -> return true
-            is ResizeCommand -> return equalsResizeCommand(expectedCommand, actualCommand as ResizeCommand)
-            is RotateCommand -> return equalsRotateCommand(expectedCommand, actualCommand as RotateCommand)
-            is CropCommand -> return equalsCropCommand(expectedCommand, actualCommand as CropCommand)
-            is CutCommand -> return equalsCutCommand(expectedCommand, actualCommand as CutCommand)
-            is FillCommand -> return equalsFillCommand(expectedCommand, actualCommand as FillCommand)
-            is FlipCommand -> return equalsFlipCommand(expectedCommand, actualCommand as FlipCommand)
-            is LoadCommand -> return equalsLoadCommand(expectedCommand, actualCommand as LoadCommand)
-            is StampCommand -> return equalsStampCommand(expectedCommand, actualCommand as StampCommand)
-            is LoadBitmapListCommand -> return equalsLoadBitmapListCommand(expectedCommand, actualCommand as LoadBitmapListCommand)
-            is TextToolCommand -> return equalsTextToolCommand(expectedCommand, actualCommand as TextToolCommand)
-            is GeometricFillCommand -> return equalsGeometricFillCommand(expectedCommand, actualCommand as GeometricFillCommand)
-            is PathCommand -> return equalsPathCommand(expectedCommand, actualCommand as PathCommand)
+        return when (expectedCommand) {
+            is AddLayerCommand -> true
+            is CompositeCommand -> equalsCompositeCommand(
+                expectedCommand, actualCommand as CompositeCommand
+            )
+            is SetDimensionCommand -> equalsDimensionCommand(
+                expectedCommand, actualCommand as SetDimensionCommand
+            )
+            is PointCommand -> equalsPointCommand(
+                expectedCommand, actualCommand as PointCommand
+            )
+            is SprayCommand -> equalsSprayCommand(
+                expectedCommand, actualCommand as SprayCommand
+            )
+            is SelectLayerCommand -> equalsSelectLayerCommand(
+                expectedCommand, actualCommand as SelectLayerCommand
+            )
+            is MergeLayersCommand -> equalsMergeLayersCommand(
+                expectedCommand, actualCommand as MergeLayersCommand
+            )
+            is RemoveLayerCommand -> equalsRemoveLayerCommand(
+                expectedCommand, actualCommand as RemoveLayerCommand
+            )
+            is ReorderLayersCommand -> equalsReorderLayersCommand(
+                expectedCommand, actualCommand as ReorderLayersCommand
+            )
+            is ResetCommand -> true
+            is ResizeCommand -> equalsResizeCommand(
+                expectedCommand, actualCommand as ResizeCommand
+            )
+            is RotateCommand -> equalsRotateCommand(
+                expectedCommand, actualCommand as RotateCommand
+            )
+            is CropCommand -> equalsCropCommand(
+                expectedCommand, actualCommand as CropCommand
+            )
+            is CutCommand -> equalsCutCommand(expectedCommand, actualCommand as CutCommand)
+            is FillCommand -> equalsFillCommand(
+                expectedCommand, actualCommand as FillCommand
+            )
+            is FlipCommand -> equalsFlipCommand(
+                expectedCommand, actualCommand as FlipCommand
+            )
+            is LoadCommand -> equalsLoadCommand(
+                expectedCommand, actualCommand as LoadCommand
+            )
+            is StampCommand -> equalsStampCommand(
+                expectedCommand, actualCommand as StampCommand
+            )
+            is LoadBitmapListCommand -> equalsLoadBitmapListCommand(
+                expectedCommand, actualCommand as LoadBitmapListCommand
+            )
+            is TextToolCommand -> equalsTextToolCommand(
+                expectedCommand, actualCommand as TextToolCommand
+            )
+            is GeometricFillCommand -> equalsGeometricFillCommand(
+                expectedCommand, actualCommand as GeometricFillCommand
+            )
+            is PathCommand -> equalsPathCommand(
+                expectedCommand, actualCommand as PathCommand
+            )
+            else -> false
         }
-        return false
     }
 
-    private fun equalsCompositeCommand(expectedCommand: CompositeCommand, actualCommand: CompositeCommand): Boolean {
+    private fun equalsCompositeCommand(
+        expectedCommand: CompositeCommand,
+        actualCommand: CompositeCommand
+    ): Boolean {
         if (expectedCommand.commands.size != actualCommand.commands.size) {
             return false
         }
@@ -332,25 +444,46 @@ class CommandSerializationTest {
         return true
     }
 
-    private fun equalsDimensionCommand(expectedCommand: SetDimensionCommand, actualCommand: SetDimensionCommand) =
+    private fun equalsDimensionCommand(
+        expectedCommand: SetDimensionCommand,
+        actualCommand: SetDimensionCommand
+    ) =
         expectedCommand.width == actualCommand.width && expectedCommand.height == actualCommand.height
 
     private fun equalsPointCommand(expectedCommand: PointCommand, actualCommand: PointCommand) =
-        DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint) && expectedCommand.point.equals(actualCommand.point)
+        DefaultToolPaint.arePaintEquals(
+            expectedCommand.paint,
+            actualCommand.paint
+        ) && expectedCommand.point.equals(actualCommand.point)
 
     private fun equalsSprayCommand(expectedCommand: SprayCommand, actualCommand: SprayCommand) =
-        DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint) && expectedCommand.sprayedPoints.contentEquals(actualCommand.sprayedPoints)
+        DefaultToolPaint.arePaintEquals(
+            expectedCommand.paint,
+            actualCommand.paint
+        ) && expectedCommand.sprayedPoints.contentEquals(actualCommand.sprayedPoints)
 
-    private fun equalsSelectLayerCommand(expectedCommand: SelectLayerCommand, actualCommand: SelectLayerCommand) =
+    private fun equalsSelectLayerCommand(
+        expectedCommand: SelectLayerCommand,
+        actualCommand: SelectLayerCommand
+    ) =
         expectedCommand.position == actualCommand.position
 
-    private fun equalsMergeLayersCommand(expectedCommand: MergeLayersCommand, actualCommand: MergeLayersCommand) =
+    private fun equalsMergeLayersCommand(
+        expectedCommand: MergeLayersCommand,
+        actualCommand: MergeLayersCommand
+    ) =
         expectedCommand.mergeWith == actualCommand.mergeWith && expectedCommand.position == actualCommand.position
 
-    private fun equalsRemoveLayerCommand(expectedCommand: RemoveLayerCommand, actualCommand: RemoveLayerCommand) =
+    private fun equalsRemoveLayerCommand(
+        expectedCommand: RemoveLayerCommand,
+        actualCommand: RemoveLayerCommand
+    ) =
         expectedCommand.position == actualCommand.position
 
-    private fun equalsReorderLayersCommand(expectedCommand: ReorderLayersCommand, actualCommand: ReorderLayersCommand) =
+    private fun equalsReorderLayersCommand(
+        expectedCommand: ReorderLayersCommand,
+        actualCommand: ReorderLayersCommand
+    ) =
         expectedCommand.destination == actualCommand.destination && expectedCommand.position == actualCommand.position
 
     private fun equalsResizeCommand(expectedCommand: ResizeCommand, actualCommand: ResizeCommand) =
@@ -369,7 +502,10 @@ class CommandSerializationTest {
             expectedCommand.boxHeight == actualCommand.boxHeight && expectedCommand.boxRotation == actualCommand.boxRotation
 
     private fun equalsFillCommand(expectedCommand: FillCommand, actualCommand: FillCommand) =
-        DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint) && expectedCommand.clickedPixel == actualCommand.clickedPixel &&
+        DefaultToolPaint.arePaintEquals(
+            expectedCommand.paint,
+            actualCommand.paint
+        ) && expectedCommand.clickedPixel == actualCommand.clickedPixel &&
             expectedCommand.colorTolerance == actualCommand.colorTolerance
 
     private fun equalsFlipCommand(expectedCommand: FlipCommand, actualCommand: FlipCommand) =
@@ -378,12 +514,15 @@ class CommandSerializationTest {
     private fun equalsLoadCommand(expectedCommand: LoadCommand, actualCommand: LoadCommand) =
         expectedCommand.loadedImage.sameAs(actualCommand.loadedImage)
 
-    private fun equalsLoadBitmapListCommand(expectedCommand: LoadBitmapListCommand, actualCommand: LoadBitmapListCommand): Boolean {
+    private fun equalsLoadBitmapListCommand(
+        expectedCommand: LoadBitmapListCommand,
+        actualCommand: LoadBitmapListCommand
+    ): Boolean {
         if (expectedCommand.loadedImageList.size != actualCommand.loadedImageList.size) {
             return false
         }
         expectedCommand.loadedImageList.zip(actualCommand.loadedImageList).forEach { commandPair ->
-            if (!commandPair.component1().sameAs(commandPair.component2())) {
+            if (!commandPair.component1()!!.sameAs(commandPair.component2())) {
                 return false
             }
         }
@@ -395,27 +534,48 @@ class CommandSerializationTest {
             expectedCommand.boxWidth == actualCommand.boxWidth && expectedCommand.boxHeight == actualCommand.boxHeight &&
             expectedCommand.boxRotation == actualCommand.boxRotation
 
-    private fun equalsTextToolCommand(expectedCommand: TextToolCommand, actualCommand: TextToolCommand) =
-        DefaultToolPaint.arePaintEquals(expectedCommand.textPaint, actualCommand.textPaint) && expectedCommand.multilineText.contentEquals(actualCommand.multilineText) &&
+    private fun equalsTextToolCommand(
+        expectedCommand: TextToolCommand,
+        actualCommand: TextToolCommand
+    ) =
+        DefaultToolPaint.arePaintEquals(
+            expectedCommand.textPaint,
+            actualCommand.textPaint
+        ) && expectedCommand.multilineText.contentEquals(actualCommand.multilineText) &&
             expectedCommand.boxOffset == actualCommand.boxOffset && expectedCommand.boxWidth == actualCommand.boxWidth && expectedCommand.boxHeight == actualCommand.boxHeight &&
             expectedCommand.toolPosition == actualCommand.toolPosition && expectedCommand.rotationAngle == actualCommand.rotationAngle &&
             equalsSerializableTypeFace(expectedCommand.typeFaceInfo, actualCommand.typeFaceInfo)
 
-    private fun equalsSerializableTypeFace(actualTypeFace: SerializableTypeface, expectedTypeFace: SerializableTypeface) =
+    private fun equalsSerializableTypeFace(
+        actualTypeFace: SerializableTypeface,
+        expectedTypeFace: SerializableTypeface
+    ) =
         actualTypeFace.font == expectedTypeFace.font && actualTypeFace.bold == expectedTypeFace.bold && actualTypeFace.underline == expectedTypeFace.underline &&
             actualTypeFace.italic == expectedTypeFace.italic && actualTypeFace.textSize == expectedTypeFace.textSize &&
             actualTypeFace.textSkewX == expectedTypeFace.textSkewX
 
-    private fun equalsGeometricFillCommand(expectedCommand: GeometricFillCommand, actualCommand: GeometricFillCommand) =
+    private fun equalsGeometricFillCommand(
+        expectedCommand: GeometricFillCommand,
+        actualCommand: GeometricFillCommand
+    ) =
         expectedCommand.pointX == actualCommand.pointX && expectedCommand.pointY == actualCommand.pointY &&
-            DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint) && expectedCommand.boxRect == actualCommand.boxRect &&
+            DefaultToolPaint.arePaintEquals(
+                expectedCommand.paint,
+                actualCommand.paint
+            ) && expectedCommand.boxRect == actualCommand.boxRect &&
             expectedCommand.boxRotation == actualCommand.boxRotation && expectedCommand.shapeDrawable.javaClass == actualCommand.shapeDrawable.javaClass
 
     private fun equalsPathCommand(expectedCommand: PathCommand, actualCommand: PathCommand) =
-        equalsSerializablePath(expectedCommand.path as SerializablePath, actualCommand.path as SerializablePath) &&
+        equalsSerializablePath(
+            expectedCommand.path as SerializablePath,
+            actualCommand.path as SerializablePath
+        ) &&
             DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint)
 
-    private fun equalsSerializablePath(expectedPath: SerializablePath, actualPath: SerializablePath): Boolean {
+    private fun equalsSerializablePath(
+        expectedPath: SerializablePath,
+        actualPath: SerializablePath
+    ): Boolean {
         if (expectedPath.serializableActions.size != actualPath.serializableActions.size) {
             return false
         }
@@ -427,31 +587,58 @@ class CommandSerializationTest {
         return true
     }
 
-    private fun equalsSerializableAction(expectedAction: SerializablePath.SerializableAction, actualAction: SerializablePath.SerializableAction): Boolean {
+    private fun equalsSerializableAction(
+        expectedAction: SerializablePath.SerializableAction,
+        actualAction: SerializablePath.SerializableAction
+    ): Boolean {
         if (expectedAction.javaClass != actualAction.javaClass) {
             return false
         }
         when (expectedAction) {
-            is SerializablePath.Move -> return equalsActionMove(expectedAction, actualAction as SerializablePath.Move)
-            is SerializablePath.Line -> return equalsActionLine(expectedAction, actualAction as SerializablePath.Line)
-            is SerializablePath.Quad -> return equalsActionQuad(expectedAction, actualAction as SerializablePath.Quad)
-            is SerializablePath.Cube -> return equalsActionCube(expectedAction, actualAction as SerializablePath.Cube)
+            is SerializablePath.Move -> return equalsActionMove(
+                expectedAction,
+                actualAction as SerializablePath.Move
+            )
+            is SerializablePath.Line -> return equalsActionLine(
+                expectedAction,
+                actualAction as SerializablePath.Line
+            )
+            is SerializablePath.Quad -> return equalsActionQuad(
+                expectedAction,
+                actualAction as SerializablePath.Quad
+            )
+            is SerializablePath.Cube -> return equalsActionCube(
+                expectedAction,
+                actualAction as SerializablePath.Cube
+            )
             is SerializablePath.Rewind -> return true
         }
         return false
     }
 
-    private fun equalsActionMove(expectedAction: SerializablePath.Move, actualAction: SerializablePath.Move) =
+    private fun equalsActionMove(
+        expectedAction: SerializablePath.Move,
+        actualAction: SerializablePath.Move
+    ) =
         expectedAction.x == actualAction.x && expectedAction.y == actualAction.y
 
-    private fun equalsActionLine(expectedAction: SerializablePath.Line, actualAction: SerializablePath.Line) =
+    private fun equalsActionLine(
+        expectedAction: SerializablePath.Line,
+        actualAction: SerializablePath.Line
+    ) =
         expectedAction.x == actualAction.x && expectedAction.y == actualAction.y
 
-    private fun equalsActionQuad(expectedAction: SerializablePath.Quad, actualAction: SerializablePath.Quad) =
+    private fun equalsActionQuad(
+        expectedAction: SerializablePath.Quad,
+        actualAction: SerializablePath.Quad
+    ) =
         expectedAction.x1 == actualAction.x1 && expectedAction.y1 == actualAction.y1 &&
             expectedAction.x2 == actualAction.x2 && expectedAction.y2 == actualAction.y2
 
-    private fun equalsActionCube(expectedAction: SerializablePath.Cube, actualAction: SerializablePath.Cube) =
+    private fun equalsActionCube(
+        expectedAction: SerializablePath.Cube,
+        actualAction: SerializablePath.Cube
+    ) =
         expectedAction.x1 == actualAction.x1 && expectedAction.y1 == actualAction.y1 &&
             expectedAction.x2 == actualAction.x2 && expectedAction.y2 == actualAction.y2 &&
             expectedAction.x3 == actualAction.x3 && expectedAction.y3 == actualAction.y3

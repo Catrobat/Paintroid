@@ -35,9 +35,11 @@
     <string name="button_text">Tekst</string>
     <string name="button_shape">Vormen</string>
     <string name="button_hand">Hand</string>
+    <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">Spray can</string>
     <string name="button_apply">Apply</string>
     <string name="button_checkmark">Checkmark</string>
+    <string name="button_plus">Connect Line Segment</string>
     <string name="done">Gereed</string>
     <string name="gallery">Kies afbeelding</string>
     <string name="load_sticker_error">Could not load Sticker</string>
@@ -56,6 +58,7 @@
     <string name="help_title">Help</string>
     <string name="help_content_eraser">Verwijder delen van de afbeelding zoals met een gum.</string>
     <string name="help_content_brush">Klik op de symbolen op de onderste balk om de kleur of penseelgrootte te wijzigen.</string>
+    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
     <string name="help_content_eyedropper">Tik op de afbeelding om een kleur te selecteren.</string>
     <string name="help_content_undo">Klik op om uw vorige actie ongedaan maken.</string>
     <string name="help_content_redo">Klik om een ongedane actie opnieuw te laten maken.</string>
@@ -159,7 +162,7 @@
     <string name="intro_welcome_text">Met Pocket Paint zijn er geen grenzen aan jouw creativiteit. Als je nieuw bent, start de intro of sla deze over als je al bekend bent met Pocket Paint.</string>
     <string name="intro_tool_more_information">Klik op een tool voor meer informatie</string>
     <string name="more_possibilities">Meer mogelijkheden</string>
-    <string name="intro_possibilities_text">Use the top bar to open the main menu and undo or redo changes</string>
+    <string name="intro_possibilities_text">Use the top bar to open the overflow menu and to undo or redo changes</string>
     <string name="landscape">Landschap</string>
     <string name="intro_landscape_text">Pocket Paint biedt ook mogelijkheid in landscape-modus te tekenen voor de beste tekenervaring.</string>
     <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
@@ -194,5 +197,5 @@
     <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
     <string name="pocketpaint_tool_icon_description">Current tool icon</string>
     <string name="dialog_scale_title">Image is too big to load</string>
-    <string name="dialog_scale_message">The image is too big to load. Click OK to scale down the image automatically.</string>
+    <string name="dialog_scale_message">The image is too big to load. Tap OK to scale down the image automatically.</string>
 </resources>
