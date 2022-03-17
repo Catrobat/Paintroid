@@ -11,6 +11,6 @@ test_instrumentation_runner 'androidx.test.runner.AndroidJUnitRunner'
 
 ending_locale 'de-rDE'
 # supported languages: https://www.ibabbleon.com/Google-Play-Store-Language-Codes.html
-locales(['ar','bn-BD','zh-CN','zh-TW','en-US','es-ES','fr-FR','de-DE','hi-IN','hu-HU','it-IT','ja-JP','ko-KR','nl-NL','pl-PL','pt-BR','ru-RU','sr','tr-TR','id','fa','ta-IN'])
+locales(['ar','az-AZ','bn-BD','zh-CN','zh-TW','en-US','en-GB','en-CA','en-AU','es-ES','fr-FR','de-DE','hi-IN','hu-HU','it-IT','ja-JP','ko-KR','nl-NL','pl-PL','pt-BR','ru-RU','sr','tr-TR','id','fa','ta-IN','ur','uk'])
 
 clear_previous_screenshots(true)
