@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -509,8 +509,7 @@ open class MainActivityPresenter(
         } else if (model.isFullscreen) {
             exitFullscreenClicked()
         } else if (!toolController.isDefaultTool) {
-            setTool(ToolType.BRUSH)
-            toolController.switchTool(ToolType.BRUSH, true)
+            switchTool(ToolType.BRUSH, true)
         } else {
             showSecurityQuestionBeforeExit()
         }
@@ -691,9 +690,10 @@ open class MainActivityPresenter(
         }
     }
 
-    private fun switchTool(type: ToolType) {
+    private fun switchTool(type: ToolType, backPressed: Boolean = false) {
+        navigator.setMaskFilterToNull()
         setTool(type)
-        toolController.switchTool(type, false)
+        toolController.switchTool(type, backPressed)
         if (type === ToolType.IMPORTPNG) {
             showImportDialog()
         }
