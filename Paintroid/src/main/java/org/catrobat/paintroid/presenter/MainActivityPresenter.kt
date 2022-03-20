@@ -546,7 +546,6 @@ open class MainActivityPresenter(
 
     override fun showLayerMenuClicked() {
         layerAdapter?.apply {
-            setDrawerLayoutOpen(true)
             for (i in 0 until count) {
                 val currentHolder = getViewHolderAt(i)
                 currentHolder?.let {

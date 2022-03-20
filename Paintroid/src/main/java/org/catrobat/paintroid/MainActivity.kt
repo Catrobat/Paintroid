@@ -41,6 +41,7 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
@@ -406,7 +407,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     private fun onCreateLayerMenu() {
-        val layerLayout = findViewById<ViewGroup>(R.id.pocketpaint_layer_side_nav_menu)
+        val layerLayout = findViewById<NavigationView>(R.id.pocketpaint_nav_view_layer)
         val layerListView = findViewById<DragAndDropListView>(R.id.pocketpaint_layer_side_nav_list)
         val layerMenuViewHolder = LayerMenuViewHolder(layerLayout)
         val layerNavigator = LayerNavigator(applicationContext)
