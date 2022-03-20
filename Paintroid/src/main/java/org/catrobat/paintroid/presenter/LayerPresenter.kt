@@ -112,10 +112,10 @@ class LayerPresenter(
             viewHolder.setDeselected()
         }
         if (!layers[position].checkBox) {
-            viewHolder.updateImageView(layer.transparentBitmap, isOpen)
+            viewHolder.updateImageView(layer.transparentBitmap)
             viewHolder.setCheckBox(false)
         } else {
-            viewHolder.updateImageView(layer.bitmap, isOpen)
+            viewHolder.updateImageView(layer.bitmap)
             viewHolder.setCheckBox(true)
         }
     }
@@ -181,7 +181,7 @@ class LayerPresenter(
     override fun unhideLayer(position: Int, viewHolder: LayerContracts.LayerViewHolder) {
         drawingSurface?.refreshDrawingSurface()
         getDestinationLayer(position, true)?.let { layer ->
-            viewHolder.updateImageView(layer.bitmap, true)
+            viewHolder.updateImageView(layer.bitmap)
             if (model.currentLayer == layer) {
                 defaultToolController?.switchTool(ToolType.BRUSH, false)
                 bottomNavigationViewHolder?.showCurrentTool(ToolType.BRUSH)
