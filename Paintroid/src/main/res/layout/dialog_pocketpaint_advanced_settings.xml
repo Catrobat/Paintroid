@@ -18,42 +18,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:padding="?dialogPreferredPadding">
 
-    <LinearLayout
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/pocketpaint_antialiasing"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:orientation="vertical"
-        android:padding="10dp"
-        style="@style/AlertDialogTheme">
+        android:layout_height="match_parent"
+        android:checked="true"
+        android:text="@string/dialog_antialiasing"
+        android:textColor="@color/design_default_color_on_secondary"
+        android:theme="@style/CustomSwitchTheme" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:checked="true"
-            android:text="@string/dialog_antialiasing"
-            android:id="@+id/pocketpaint_antialiasing"
-            android:textColor="@color/design_default_color_on_secondary"/>
-    </LinearLayout>
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="16dp" />
 
-    <LinearLayout
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/pocketpaint_smoothing"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:orientation="vertical"
-        android:padding="10dp"
-        style="@style/AlertDialogTheme">
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:checked="true"
-            android:text="@string/dialog_smoothing"
-            android:id="@+id/pocketpaint_smoothing"
-            android:textColor="@color/design_default_color_on_secondary"/>
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:checked="true"
+        android:text="@string/dialog_smoothing"
+        android:textColor="@color/design_default_color_on_secondary"
+        android:theme="@style/CustomSwitchTheme" />
 
 </LinearLayout>

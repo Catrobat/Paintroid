@@ -89,6 +89,12 @@
         <item name="hintEnabled">false</item>
     </style>
 
+    <style name="CustomSwitchTheme" parent="@style/ThemeOverlay.MaterialComponents">
+        <item name="colorSwitchThumbNormal">@color/pocketpaint_lighter_gray</item>
+        <item name="android:colorForeground">@android:color/darker_gray</item>
+    </style>
+
+
     <style name="PocketPaintTheme.Base" parent="Theme.MaterialComponents.NoActionBar.Bridge">
         <item name="android:windowBackground">@color/pocketpaint_colorPrimary</item>
         <item name="dialogTheme">@style/PocketPaintAlertDialog</item>
