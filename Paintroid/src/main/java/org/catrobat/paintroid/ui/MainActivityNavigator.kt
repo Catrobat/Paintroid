@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
-import android.view.Gravity
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.app.ActivityCompat
@@ -485,11 +484,9 @@ class MainActivityNavigator(
     override fun showToolChangeToast(offset: Int, idRes: Int) {
         var offset = offset
         val toolNameToast = ToastFactory.makeText(mainActivity, idRes, Toast.LENGTH_SHORT)
-        val gravity = Gravity.TOP or Gravity.CENTER
         if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             offset = 0
         }
-        toolNameToast.setGravity(gravity, 0, offset)
         toolNameToast.show()
     }
 
