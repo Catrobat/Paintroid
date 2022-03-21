@@ -485,7 +485,6 @@ class MainActivityNavigator(
     override fun showToolChangeToast(offset: Int, idRes: Int) {
         var offset = offset
         val toolNameToast = ToastFactory.makeText(mainActivity, idRes, Toast.LENGTH_SHORT)
-        val gravity = Gravity.TOP or Gravity.CENTER
         if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             offset = 0
         }
