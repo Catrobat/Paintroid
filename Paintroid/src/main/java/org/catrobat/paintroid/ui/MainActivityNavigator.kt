@@ -489,7 +489,6 @@ class MainActivityNavigator(
         if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             offset = 0
         }
-        toolNameToast.setGravity(gravity, 0, offset)
         toolNameToast.show()
     }
 
