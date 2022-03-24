@@ -40,7 +40,7 @@ import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ContextCallback.ScreenOrientation
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
 import kotlin.math.PI
@@ -86,7 +86,7 @@ private const val BUNDLE_BOX_ROTATION = "BOX_ROTATION"
 
 abstract class BaseToolWithRectangleShape(
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager
@@ -149,6 +149,9 @@ abstract class BaseToolWithRectangleShape(
 
     @JvmField
     var rectangleShrinkingOnHighlight: Int
+
+    @JvmField
+    var shouldDrawRectangle = true
 
     private var boxResizeMargin: Float? = 0f
     private var rotationSymbolWidth: Float? = 0f
@@ -328,7 +331,9 @@ abstract class BaseToolWithRectangleShape(
         if (overlayDrawable != null) {
             drawOverlayDrawable(canvas, boxWidth, boxHeight, boxRotation)
         }
-        drawRectangle(canvas, boxWidth, boxHeight)
+        if (shouldDrawRectangle) {
+            drawRectangle(canvas, boxWidth, boxHeight)
+        }
         drawToolSpecifics(canvas, boxWidth, boxHeight)
         canvas.restore()
     }

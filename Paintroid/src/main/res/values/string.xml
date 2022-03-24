@@ -17,11 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Brush</string>
     <string name="button_cursor">Cursor</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">Pipette</string>
     <string name="button_undo">Undo</string>
     <string name="button_redo">Redo</string>
@@ -143,6 +144,7 @@
     <string name="transform_width_text">Width</string>
     <string name="transform_height_text">Height</string>
     <string name="transform_auto_crop_text">Auto</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">px</string>
 
     <string name="stamp_tool_copy_hint">Tap on copy to copy content</string>
@@ -181,7 +183,8 @@
     <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
         As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
 
-    <string name="transform_info_text">Drag edges to their new position, then tap on the checkmark to enlarge or crop the image area.</string>
+    <string name="set_center_info_text">Drag the cursor to the new center position.</string>
+    <string name="transform_info_text">Drag edges to their new position, tap on the checkmark to enlarge or crop the image area.</string>
     <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
     <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
     <string name="welcome_to_pocket_paint">Welcome To Pocket Paint</string>

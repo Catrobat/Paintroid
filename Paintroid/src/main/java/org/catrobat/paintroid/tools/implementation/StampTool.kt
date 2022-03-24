@@ -29,7 +29,7 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.StampToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
 private const val BUNDLE_TOOL_READY_FOR_PASTE = "BUNDLE_TOOL_READY_FOR_PASTE"
 private const val BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP"
@@ -37,7 +37,7 @@ private const val BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP"
 class StampTool(
     stampToolOptionsView: StampToolOptionsView,
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager,
