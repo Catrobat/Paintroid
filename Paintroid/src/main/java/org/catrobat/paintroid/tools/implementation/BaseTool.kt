@@ -35,13 +35,13 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.common.PointScrollBehavior
 import org.catrobat.paintroid.tools.common.ScrollBehavior
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 
 abstract class BaseTool(
     @JvmField
     open var contextCallback: ContextCallback,
     @JvmField
-    protected var toolOptionsViewController: ToolOptionsViewController,
+    protected var toolOptionsViewController: ToolOptionsVisibilityController,
     @JvmField
     protected var toolPaint: ToolPaint,
     @JvmField

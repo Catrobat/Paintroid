@@ -74,10 +74,6 @@ class DefaultTransformToolOptionsView(rootView: ViewGroup) : TransformToolOption
             .setOnClickListener {
                 callback?.autoCropClicked()
             }
-        optionsView.findViewById<View>(R.id.pocketpaint_transform_set_center_btn)
-            .setOnClickListener {
-                callback?.setCenterClicked()
-            }
         optionsView.findViewById<View>(R.id.pocketpaint_transform_rotate_left_btn)
             .setOnClickListener {
                 callback?.rotateCounterClockwiseClicked()

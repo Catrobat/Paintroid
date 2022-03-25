@@ -34,7 +34,6 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 import kotlin.Exception
 import kotlin.math.max
@@ -64,7 +63,7 @@ private const val TAG = "Can't set custom font"
 class TextTool(
     private val textToolOptionsView: TextToolOptionsView,
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsViewController,
+    toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager,

@@ -33,13 +33,13 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 
 class LineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsViewController,
+    toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager,

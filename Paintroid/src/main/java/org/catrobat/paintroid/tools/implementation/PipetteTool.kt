@@ -27,11 +27,11 @@ import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 
 class PipetteTool(
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsViewController,
+    toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager,
