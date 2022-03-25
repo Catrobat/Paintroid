@@ -47,12 +47,6 @@ public final class TransformToolOptionsViewInteraction extends CustomViewInterac
 		return new TransformToolOptionsViewInteraction();
 	}
 
-	public TransformToolOptionsViewInteraction performSetCenterClick() {
-		onView(withId(R.id.pocketpaint_transform_set_center_btn))
-				.perform(click());
-		return this;
-	}
-
 	public TransformToolOptionsViewInteraction performAutoCrop() {
 		onView(withId(R.id.pocketpaint_transform_auto_crop_btn))
 				.perform(click());

@@ -40,7 +40,7 @@ import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.smoothing
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.smoothingAlgorithm
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.threshold
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -54,7 +54,7 @@ private const val CURSOR_LINES = 4
 open class CursorTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsViewController,
+    toolOptionsViewController: ToolOptionsVisibilityController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager,

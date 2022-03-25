@@ -1334,27 +1334,6 @@ class TransformToolIntegrationTest {
         assertEquals(scale, perspective.scale, 0.0001f)
     }
 
-    @Test
-    fun testTransformToolSetCenter() {
-        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
-        onToolBarView()
-            .performSelectTool(ToolType.TRANSFORM)
-
-        runBlocking {
-            onTransformToolOptionsView().performSetCenterClick()
-        }
-        val maxWidth = maxBitmapSize / initialHeight
-        val dragFrom =
-            getSurfacePointFromCanvasPoint(PointF(initialWidth.toFloat(), initialHeight.toFloat()))
-        val dragTo = getSurfacePointFromCanvasPoint(
-            PointF(maxWidth + 10f, initialHeight.toFloat())
-        )
-        onDrawingSurfaceView().perform(UiInteractions.swipe(dragFrom, dragTo))
-        runBlocking {
-            TopBarViewInteraction.onTopBarView().performClickCheckmark()
-        }
-    }
-
     companion object {
         private fun drawPlus(bitmap: Bitmap, lineLength: Int) {
             val horizontalStartX = bitmap.width / 4
