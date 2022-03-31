@@ -87,6 +87,8 @@ interface LayerContracts {
 
         fun setMergable()
 
+        fun isSelected(): Boolean
+
         fun setCheckBox(setTo: Boolean)
     }
 

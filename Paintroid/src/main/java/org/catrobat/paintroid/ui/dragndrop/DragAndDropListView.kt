@@ -33,6 +33,7 @@ import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemLongClickListener
 import android.widget.ListView
+import org.catrobat.paintroid.presenter.LayerPresenter
 import kotlin.math.max
 import kotlin.math.min
 
@@ -109,6 +110,9 @@ class DragAndDropListView : ListView, ListItemLongClickHandler {
 
     override fun stopDragging() {
         hoveringListItem ?: return
+        if (presenter is LayerPresenter) {
+            (presenter as LayerPresenter).resetMergeColor(mergePosition)
+        }
         mergePosition = -1
         view?.visibility = VISIBLE
         view = null
