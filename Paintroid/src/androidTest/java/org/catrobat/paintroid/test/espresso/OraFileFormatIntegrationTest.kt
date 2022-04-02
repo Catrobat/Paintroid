@@ -33,6 +33,7 @@ import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import kotlinx.coroutines.delay
@@ -42,6 +43,7 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.grantPermissionRulesVersionCheck
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
@@ -119,6 +121,7 @@ class OraFileFormatIntegrationTest {
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText("OraOverride"))
         onView(withText(R.string.save_button_text)).perform(ViewActions.click())
+        onView(isRoot()).perform(waitFor(100))
         onView(withText(R.string.pocketpaint_no)).perform(ViewActions.click())
         onView(withText(R.string.pocketpaint_ok)).perform(ViewActions.click())
         onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
@@ -130,10 +133,10 @@ class OraFileFormatIntegrationTest {
                 isDisplayed()
             )
         )
-        runBlocking {
-            onView(withText(R.string.overwrite_button_text)).perform(ViewActions.click())
-            delay(500)
-        }
+
+        onView(withText(R.string.overwrite_button_text)).perform(ViewActions.click())
+        onView(isRoot()).perform(waitFor(500))
+
         val imageUri = activity.model.savedPictureUri
         assertNotNull(imageUri)
         addUriToDeletionFileList(imageUri)
@@ -161,10 +164,10 @@ class OraFileFormatIntegrationTest {
             .inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText("MoreLayersOraTest"))
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(ViewActions.click())
-            delay(500)
-        }
+
+        onView(withText(R.string.save_button_text)).perform(ViewActions.click())
+        onView(isRoot()).perform(waitFor(1000))
+
         val fileUri = activity.model.savedPictureUri
         assertNotNull(fileUri)
         addUriToDeletionFileList(fileUri)
