@@ -21,7 +21,6 @@ package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.graphics.Point
 import android.graphics.RectF
 import androidx.annotation.VisibleForTesting
@@ -59,7 +58,7 @@ class StampCommand(bitmap: Bitmap, position: Point, width: Float, height: Float,
             save()
             translate(coordinates.x.toFloat(), coordinates.y.toFloat())
             rotate(boxRotation)
-            drawBitmap(bitmapToDraw, null, rect, Paint(Paint.DITHER_FLAG))
+            drawBitmap(bitmapToDraw, null, rect, null)
             restore()
         }
 
