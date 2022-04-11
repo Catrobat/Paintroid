@@ -230,6 +230,9 @@ public class TextToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptionsView();
 
+		float oldBoxWidth = getToolMemberBoxWidth();
+		float oldBoxHeight = getToolMemberBoxHeight();
+
 		PointF boxPosition = getToolMemberBoxPosition();
 		PointF newBoxPosition = new PointF(boxPosition.x + 100, boxPosition.y + 200);
 		setToolMemberBoxPosition(newBoxPosition);
@@ -242,7 +245,7 @@ public class TextToolIntegrationTest {
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
-		checkTextBoxDimensions();
+		assertTrue(oldBoxWidth == getToolMemberBoxWidth() && oldBoxHeight == getToolMemberBoxHeight());
 	}
 
 	@Test
@@ -256,9 +259,11 @@ public class TextToolIntegrationTest {
 		final PointF toolMemberBoxPosition = getToolMemberBoxPosition();
 		PointF expectedPosition = new PointF(toolMemberBoxPosition.x, toolMemberBoxPosition.y);
 
-		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
 		textTool = (TextTool) toolReference.getTool();
+		float oldBoxWidth = getToolMemberBoxWidth();
+		float oldBoxHeight = getToolMemberBoxHeight();
+
+		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		assertEquals(TEST_TEXT, textEditText.getText().toString());
 		assertEquals(FontType.SANS_SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
@@ -267,7 +272,8 @@ public class TextToolIntegrationTest {
 		assertTrue(boldToggleButton.isChecked());
 
 		assertEquals(expectedPosition, getToolMemberBoxPosition());
-		checkTextBoxDimensions();
+		assertEquals(oldBoxWidth, getToolMemberBoxWidth(), EQUALS_DELTA);
+		assertEquals(oldBoxHeight, getToolMemberBoxHeight(), EQUALS_DELTA);
 	}
 
 	@Test
@@ -294,7 +300,7 @@ public class TextToolIntegrationTest {
 			float boxHeight = getToolMemberBoxHeight();
 
 			selectFontType(font);
-			assertFalse(boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
+			assertTrue(boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
 
 			PointF canvasPoint = centerBox();
 
@@ -578,6 +584,41 @@ public class TextToolIntegrationTest {
 		assertNotEquals(initialPosition, positionAfterZoom);
 	}
 
+	@Test
+	public void testSettingFontAndFontStyleDoesNotResetBox() {
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		ArrayList<FontType> fonts = new ArrayList<>();
+		fonts.add(FontType.SANS_SERIF);
+		fonts.add(FontType.MONOSPACE);
+		fonts.add(FontType.DUBAI);
+		fonts.add(FontType.STC);
+
+		for (FontType font : fonts) {
+			if (italicToggleButton.isChecked()) {
+				selectFormatting(FormattingOptions.ITALIC);
+				selectFormatting(FormattingOptions.BOLD);
+				selectFormatting(FormattingOptions.UNDERLINE);
+			}
+
+			float boxWidth = getToolMemberBoxWidth();
+			float boxHeight = getToolMemberBoxHeight();
+
+			setToolMemberBoxWidth(boxWidth + 100);
+			setToolMemberBoxHeight(boxHeight + 100);
+
+			selectFontType(font);
+			selectFormatting(FormattingOptions.ITALIC);
+			selectFormatting(FormattingOptions.BOLD);
+			selectFormatting(FormattingOptions.UNDERLINE);
+
+			assertTrue(boxWidth < getToolMemberBoxWidth() && boxHeight < getToolMemberBoxHeight());
+		}
+	}
+
 	private PointF centerBox() {
 		PointF screenPoint = new PointF(activityHelper.getDisplayWidth() / 2.0f, activityHelper.getDisplayHeight() / 2.0f);
 		PointF canvasPoint = new PointF(screenPoint.x, screenPoint.y);
@@ -736,6 +777,14 @@ public class TextToolIntegrationTest {
 
 	private float getToolMemberBoxWidth() {
 		return textTool.boxWidth;
+	}
+
+	private void setToolMemberBoxWidth(float boxWidth) {
+		textTool.boxWidth = boxWidth;
+	}
+
+	private void setToolMemberBoxHeight(float boxHeight) {
+		textTool.boxHeight = boxHeight;
 	}
 
 	private float getToolMemberBoxHeight() {

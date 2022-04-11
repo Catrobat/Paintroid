@@ -57,7 +57,7 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     @JvmField
-    val toolPosition: PointF
+    var toolPosition: PointF
 
     @JvmField
     var primaryShapeColor: Int =
