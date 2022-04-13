@@ -29,6 +29,7 @@ import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.implementation.TextToolCommand
+import org.catrobat.paintroid.tools.FontType
 
 class TextToolCommandSerializer(version: Int, private val activityContext: Context) : VersionSerializer<TextToolCommand>(version) {
     override fun write(kryo: Kryo, output: Output, command: TextToolCommand) {
@@ -60,23 +61,24 @@ class TextToolCommandSerializer(version: Int, private val activityContext: Conte
             val position = kryo.readObject(input, PointF::class.java)
             val rotation = readFloat()
             val typeFaceInfo = kryo.readObject(input, SerializableTypeface::class.java)
+
             paint.apply {
                 isFakeBoldText = typeFaceInfo.bold
                 isUnderlineText = typeFaceInfo.underline
                 textSize = typeFaceInfo.textSize
                 textSkewX = typeFaceInfo.textSkewX
                 val style = if (typeFaceInfo.italic) Typeface.ITALIC else Typeface.NORMAL
-                try {
+                typeface = try {
                     when (typeFaceInfo.font) {
-                        "Sans Serif" -> typeface = Typeface.create(Typeface.SANS_SERIF, style)
-                        "Serif" -> typeface = Typeface.create(Typeface.SERIF, style)
-                        "Monospace" -> typeface = Typeface.create(Typeface.MONOSPACE, style)
-                        "STC" -> typeface = ResourcesCompat.getFont(activityContext, R.font.stc_regular)
-                        "Dubai" -> typeface = ResourcesCompat.getFont(activityContext, R.font.dubai)
+                        FontType.SANS_SERIF -> Typeface.create(Typeface.SANS_SERIF, style)
+                        FontType.SERIF -> Typeface.create(Typeface.SERIF, style)
+                        FontType.MONOSPACE -> Typeface.create(Typeface.MONOSPACE, style)
+                        FontType.STC -> ResourcesCompat.getFont(activityContext, R.font.stc_regular)
+                        FontType.DUBAI -> ResourcesCompat.getFont(activityContext, R.font.dubai)
                     }
                 } catch (e: Exception) {
                     Log.e("LoadImageAsync", "Typeface not supported on this mobile phone")
-                    typeface = Typeface.create(Typeface.SANS_SERIF, style)
+                    Typeface.create(Typeface.SANS_SERIF, style)
                 }
             }
             TextToolCommand(text, paint, offset, width, height, position, rotation, typeFaceInfo)
