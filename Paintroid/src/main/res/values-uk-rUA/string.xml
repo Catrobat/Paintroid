@@ -128,10 +128,10 @@
     <string name="transform_tool_flip_horizontal">віддзеркалити горизонтально</string>
     <string name="transform_tool_resize_text">розмір</string>
     <string name="transform_tool_auto_crop_text">зрізати чи розтягнути</string>
-    <string name="transform_width_text">Ширина</string>
-    <string name="transform_height_text">Висота</string>
+    <string name="transform_width_text">Шир.</string>
+    <string name="transform_height_text">Вис.</string>
     <string name="transform_auto_crop_text">Авто</string>
-    <string name="pixel">пікс.</string>
+    <string name="pixel">п.</string>
     <string name="stamp_tool_copy_hint">Створіть дубль кнопкою «Копіювати»</string>
     <string name="layers_title">Шари</string>
     <string name="layer_new">Створити шар</string>
@@ -155,9 +155,9 @@
     <string name="permission_info_external_storage_text">Застосунку бракує дозволу для коректної роботи. Щоб зберігати зображення в локальній пам\'яті, дозвольте застосунку читання й запис.</string>
     <string name="permission_info_permanent_denial_text">Застосунку бракує дозволу для коректної роботи. Щоб зберігати зображення в локальній пам\'яті, дозвольте застосунку читання й запис.
         Ви заборонили доступ назовсім. Будь ласка, надайте необхідні дозволи в налаштуваннях телефону, якщо бажаєте використовувати ці функції.</string>
-    <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+    <string name="transform_info_text">Змістіть краї й застосуйте розтягнення чи зріз полотна пташкою.</string>
     <string name="cursor_draw_inactive">Прицільтесь і торкніть, щоб почати лінію.</string>
-    <string name="cursor_draw_active">Намалюйте й торкніть іще раз, щоб зупинити лінію.</string>
+    <string name="cursor_draw_active">Посуньте курсор і торкніть іще раз, щоб зупинити лінію.</string>
     <string name="welcome_to_pocket_paint">Вас вітає Pocket Paint</string>
     <string name="intro_welcome_text">Із Pocket Paint вашій творчості нема меж. Радимо пройти вступ. Якщо ви вже знайомі з Pocket Paint, можете його пропустити.</string>
     <string name="intro_tool_more_information">Торкніть інструмент, щоб дізнатися більше</string>
