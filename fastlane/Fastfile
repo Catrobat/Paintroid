@@ -25,8 +25,7 @@ platform :android do
     end
 
     desc "upload Paintroid APK to alpha track"
-    lane :upload_APK_Paintroid do
-        # ...
+    lane :upload_APK_Paintroid_to_play_store do
         upload_to_play_store(
             package_name:               'org.catrobat.paintroid',
             mapping:                    './app/build/outputs/mapping/signedRelease/mapping.txt',
@@ -39,6 +38,16 @@ platform :android do
             skip_upload_screenshots:    'true',
             validate_only:              'false',
             check_superseded_tracks:    'false',
+        )
+    end
+
+    desc "upload Paintroid APK to AppGallery"
+    lane :upload_APK_Paintroid_to_appGallery do
+        huawei_appgallery_connect(
+            client_id:                  ENV['appGalleryClientId'],
+            client_secret:              ENV['appGalleryClientSecret'],
+            app_id:                     ENV['appGalleryAppId'],
+            apk_paths:                  './app/build/outputs/apk/signedRelease/paintroid-signedRelease.apk',
         )
     end
 	
