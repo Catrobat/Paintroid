@@ -142,8 +142,9 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
-	public void dontShowAlphaSliderFromCatrobat() {
+	public void dontShowAlphaRelatedStuffFromCatroidFormulaEditor() {
 		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
+		launchActivityRule.getActivity().model.setOpenedFromFormulaEditorInCatroid(true);
 
 		onColorPickerView()
 				.performOpenColorPicker();
@@ -161,10 +162,52 @@ public class ColorDialogIntegrationTest {
 
 		onView(withId(R.id.color_alpha_slider))
 				.check(matches(not(isDisplayed())));
+
+		onColorPickerView()
+				.onPositiveButton()
+				.perform(click());
+
+		int currentSelectColor = toolReference.getTool().getDrawPaint().getColor();
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_picker_alpha_row))
+				.check(matches(not(isDisplayed())));
+
+		onView(withId(R.id.color_picker_color_rgb_hex))
+				.check(matches(withText(String.format("#%02X%02X%02X", Color.red(currentSelectColor), Color.green(currentSelectColor), Color.blue(currentSelectColor)))));
 	}
 
 	@Test
-	public void showAlphaSliderIfNotCatrobatFlagSet() {
+	public void showAlphaSliderFromCatroid() {
+		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_alpha_slider))
+				.check(matches(isDisplayed()));
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv))).perform(click());
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_alpha_slider))
+				.check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void showAlphaSliderIfNotCatroidFlagSet() {
 		onColorPickerView()
 				.performOpenColorPicker();
 
@@ -682,6 +725,9 @@ public class ColorDialogIntegrationTest {
 		// set color to value #7F000000, alpha seekbar 49%
 		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterMiddle());
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(scrollTo(), click());
+		onColorPickerView()
+				.onPositiveButton()
+				.perform(click());
 		onToolProperties()
 				.checkMatchesColor(Color.parseColor("#7F000000"));
 	}

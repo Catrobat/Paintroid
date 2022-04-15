@@ -260,4 +260,14 @@ class LayerPresenter(
         adapter?.notifyDataSetChanged()
         listItemLongClickHandler.stopDragging()
     }
+
+    fun resetMergeColor(layerPosition: Int) {
+        if (adapter != null && adapter?.getViewHolderAt(layerPosition) != null) {
+            if (adapter?.getViewHolderAt(layerPosition)!!.isSelected()) {
+                adapter?.getViewHolderAt(layerPosition)?.setSelected()
+            } else {
+                adapter?.getViewHolderAt(layerPosition)?.setDeselected()
+            }
+        }
+    }
 }

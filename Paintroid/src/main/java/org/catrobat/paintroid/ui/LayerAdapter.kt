@@ -90,6 +90,7 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
         private val imageView: ImageView = itemView.findViewById(R.id.pocketpaint_item_layer_image)
         private var currentBitmap: Bitmap? = null
         private val checkBox: CheckBox = itemView.findViewById(R.id.pocketpaint_checkbox_layer)
+        private var isSelected = false
 
         companion object {
             private const val RESIZE_LENGTH = 400f
@@ -107,15 +108,20 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
                 bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
             }
             layerBackground.setBackgroundColor(Color.BLUE)
+            isSelected = true
         }
 
         override fun setSelected() {
             layerBackground.setBackgroundColor(Color.BLUE)
+            isSelected = true
         }
 
         override fun setDeselected() {
             layerBackground.setBackgroundColor(Color.TRANSPARENT)
+            isSelected = false
         }
+
+        override fun isSelected() = isSelected
 
         override fun updateImageView(bitmap: Bitmap?, isDrawerLayoutOpen: Boolean) {
             if (isDrawerLayoutOpen) {

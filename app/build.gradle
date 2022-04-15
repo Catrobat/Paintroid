@@ -2,7 +2,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 /**
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -82,6 +82,23 @@ android {
         signedRelease.initWith(buildTypes.release)
         signedRelease {
             signingConfig signingConfigs.signedRelease
+        }
+        debug {
+            def branchName = System.getenv("BRANCH_NAME")
+            def buildNumber = System.getenv("BUILD_NUMBER")
+
+            //only rename when env is setup via jenkins
+            if (branchName && buildNumber) {
+                //loop over all variants is necessary to expose outputFileName variable
+                android.applicationVariants.all { variant ->
+                    if (variant.name == "debug") {
+                        variant.outputs.all { output ->
+                            def fileName = "${getProperty("archivesBaseName")}-debug-$branchName-${buildNumber}.apk"
+                            outputFileName = fileName
+                        }
+                    }
+                }
+            }
         }
     }
 }
