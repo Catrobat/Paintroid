@@ -361,7 +361,7 @@ public class BaseToolWithRectangleShapeToolTest {
 	}
 
 	@Test
-	public void testToolClicksOnTouchDownPosition() {
+	public void testToolPreciseMovementTest() {
 		float initialToolPositionX = toolToTest.toolPosition.x;
 		float initialToolPositionY = toolToTest.toolPosition.y;
 
@@ -369,8 +369,8 @@ public class BaseToolWithRectangleShapeToolTest {
 		toolToTest.handleMove(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
 		toolToTest.handleUp(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
 
-		assertEquals(toolToTest.toolPosition.x, initialToolPositionX, 0);
-		assertEquals(toolToTest.toolPosition.y, initialToolPositionY, 0);
+		assertEquals(toolToTest.toolPosition.x, initialToolPositionX + 9, 0);
+		assertEquals(toolToTest.toolPosition.y, initialToolPositionY + 9, 0);
 	}
 
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {

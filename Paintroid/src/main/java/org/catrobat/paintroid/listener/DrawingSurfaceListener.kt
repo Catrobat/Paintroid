@@ -30,15 +30,20 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import java.util.EnumSet
+import kotlin.collections.ArrayList
+import kotlin.collections.MutableList
+import kotlin.collections.mutableListOf
 import kotlin.math.hypot
 
 private const val DRAWER_EDGE_SIZE = 20f
 private const val CONSTANT_1 = 0.5f
+private const val JITTER_DELAY_THRESHOLD: Long = 30
+private const val JITTER_DISTANCE_THRESHOLD = 50f
 
 open class DrawingSurfaceListener(
     private val autoScrollTask: AutoScrollTask,
     private val callback: DrawingSurfaceListenerCallback,
-    displayDensity: Float
+    private val displayDensity: Float
 ) : OnTouchListener {
     private var touchMode: TouchMode
     private var pointerDistance = 0f
@@ -51,6 +56,10 @@ open class DrawingSurfaceListener(
     private val drawerEdgeSize: Int = (DRAWER_EDGE_SIZE * displayDensity + CONSTANT_1).toInt()
     private var autoScroll = true
     private var timerStartDraw = 0.toLong()
+
+    private var recentTouchEventsData: MutableList<TouchEventData> = mutableListOf()
+
+    private data class TouchEventData constructor(val timeStamp: Long, val xCoordinate: Float, val yCoordinate: Float)
 
     internal enum class TouchMode {
         DRAW, PINCH
@@ -99,6 +108,8 @@ open class DrawingSurfaceListener(
         val yOld: Float
         if (event.pointerCount == 1) {
             currentTool ?: return
+            recentTouchEventsData.add(TouchEventData(event.eventTime, event.x, event.y))
+            removeObsoleteTouchEventsData(event.eventTime)
             if (currentTool.handToolMode()) {
                 disableAutoScroll()
                 if (touchMode == TouchMode.PINCH) {
@@ -155,6 +166,7 @@ open class DrawingSurfaceListener(
                     return false
                 }
                 timerStartDraw = System.currentTimeMillis()
+                recentTouchEventsData.add(TouchEventData(event.eventTime, event.x, event.y))
                 currentTool?.handleDown(canvasTouchPoint)
                 if (autoScroll) {
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
@@ -168,6 +180,22 @@ open class DrawingSurfaceListener(
                 }
                 if (touchMode == TouchMode.DRAW) {
                     val drawingTime = System.currentTimeMillis() - timerStartDraw
+                    removeObsoleteTouchEventsData(event.eventTime)
+                    var dX = 0f
+                    var dY = 0f
+                    if (recentTouchEventsData.size > 1) {
+                        val oldestEntry = recentTouchEventsData[0]
+                        val distanceCorrectionX = event.x - oldestEntry.xCoordinate
+                        val distanceCorrectionY = event.y - oldestEntry.yCoordinate
+                        val distance = distanceCorrectionX * distanceCorrectionX + distanceCorrectionY * distanceCorrectionY
+                        if (distance < JITTER_DISTANCE_THRESHOLD * displayDensity && distance != 0f) {
+                            dX = distanceCorrectionX
+                            dY = distanceCorrectionY
+                        }
+                    }
+                    canvasTouchPoint.x = event.x - dX
+                    canvasTouchPoint.y = event.y - dY
+                    callback.convertToCanvasFromSurface(canvasTouchPoint)
                     currentTool?.drawTime = drawingTime
                     currentTool?.handleUp(canvasTouchPoint)
                 } else {
@@ -183,6 +211,18 @@ open class DrawingSurfaceListener(
         }
         drawingSurface.refreshDrawingSurface()
         return true
+    }
+
+    private fun removeObsoleteTouchEventsData(timeStamp: Long) {
+        val obsoleteTouchEventsData: MutableList<TouchEventData> = ArrayList()
+        for (touchEventData in recentTouchEventsData) {
+            if (timeStamp - touchEventData.timeStamp > JITTER_DELAY_THRESHOLD) {
+                obsoleteTouchEventsData.add(touchEventData)
+            } else {
+                break
+            }
+        }
+        recentTouchEventsData.removeAll(obsoleteTouchEventsData)
     }
 
     open class AutoScrollTask(
