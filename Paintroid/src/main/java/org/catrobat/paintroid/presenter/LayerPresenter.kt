@@ -133,6 +133,8 @@ class LayerPresenter(
         }
     }
 
+    override fun isShown(): Boolean = layerMenuViewHolder.isShown()
+
     override fun getLayerItem(position: Int): LayerContracts.Layer = layers[position]
 
     override fun getLayerItemId(position: Int): Long = position.toLong()

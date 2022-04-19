@@ -70,8 +70,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/pocketpaint_layer_side_nav_button_add"
         android:background="@color/pocketpaint_colorPrimary"
-        tools:listitem="@layout/pocketpaint_item_layer"
-        android:splitMotionEvents="true">
+        android:splitMotionEvents="true"
+        tools:listitem="@layout/pocketpaint_item_layer">
 
     </org.catrobat.paintroid.ui.dragndrop.DragAndDropListView>
 

@@ -30,8 +30,6 @@ interface LayerContracts {
         fun notifyDataSetChanged()
 
         fun getViewHolderAt(position: Int): LayerViewHolder?
-
-        fun setDrawerLayoutOpen(isOpen: Boolean)
     }
 
     interface Presenter {
@@ -67,6 +65,8 @@ interface LayerContracts {
         fun setDefaultToolController(defaultToolController: DefaultToolController)
 
         fun setBottomNavigationViewHolder(bottomNavigationViewHolder: BottomNavigationViewHolder)
+
+        fun isShown(): Boolean
     }
 
     interface LayerViewHolder {
@@ -100,6 +100,8 @@ interface LayerContracts {
         fun disableRemoveLayerButton()
 
         fun enableRemoveLayerButton()
+
+        fun isShown(): Boolean
     }
 
     interface Layer {

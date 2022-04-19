@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso
 import android.app.Activity
 import android.app.Instrumentation.ActivityResult
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -74,10 +75,12 @@ class LayerIntegrationTest {
 
     private var bitmapHeight = 0
     private var bitmapWidth = 0
+    private lateinit var activity: Activity
     private lateinit var deletionFileList: ArrayList<File?>
 
     @Before
     fun setUp() {
+        activity = launchActivityRule.activity
         deletionFileList = ArrayList()
         val workspace = launchActivityRule.activity.workspace
         bitmapHeight = workspace.height
@@ -538,6 +541,22 @@ class LayerIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         ToolPropertiesInteraction.onToolProperties()
             .checkMatchesColorResource(R.color.pocketpaint_color_picker_green1)
+    }
+
+    @Test
+    fun testLayerPreviewKeepsBitmapAfterOrientationChange() {
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.FILL)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        LayerMenuViewInteraction.onLayerMenuView()
+            .performOpen()
+            .checkLayerAtPositionHasTopLeftPixelWithColor(0, Color.BLACK)
+
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+        LayerMenuViewInteraction.onLayerMenuView()
+            .checkLayerAtPositionHasTopLeftPixelWithColor(0, Color.BLACK)
     }
 
     @Test
