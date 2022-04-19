@@ -65,7 +65,6 @@ private const val MAXIMAL_TOOL_STROKE_WIDTH = 8f
 private const val DEFAULT_ROTATION_SYMBOL_DISTANCE = 20
 private const val DEFAULT_ROTATION_SYMBOL_WIDTH = 30
 private const val DEFAULT_MAXIMUM_BOX_RESOLUTION = 0f
-private const val CLICK_IN_BOX_MOVE_TOLERANCE = 10
 private const val DEFAULT_RECTANGLE_SHRINKING = 0
 private const val HIGHLIGHT_RECTANGLE_SHRINKING = 5
 private const val DEFAULT_ROTATION_ENABLED = false
@@ -280,10 +279,6 @@ abstract class BaseToolWithRectangleShape(
         ifNotNull(coordinate, previousEventCoordinate) { (coordinate, previousEventCoordinate) ->
             movedDistance.x += abs(coordinate.x - previousEventCoordinate.x)
             movedDistance.y += abs(coordinate.y - previousEventCoordinate.y)
-        }
-        if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y) {
-            toolPosition.x = touchDownPositionX
-            toolPosition.y = touchDownPositionY
         }
         return true
     }

@@ -118,7 +118,7 @@ public class StampToolTest {
 	}
 
 	@Test
-	public void testToolClicksOnTouchDownPosition() {
+	public void testToolPreciseMovementTest() {
 		Looper.prepare();
 
 		float initialToolPositionX = tool.toolPosition.x;
@@ -128,7 +128,7 @@ public class StampToolTest {
 		tool.handleMove(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
 		tool.handleUp(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
 
-		assertEquals(tool.toolPosition.x, initialToolPositionX, 0);
-		assertEquals(tool.toolPosition.y, initialToolPositionY, 0);
+		assertEquals(tool.toolPosition.x, initialToolPositionX + 9, 0);
+		assertEquals(tool.toolPosition.y, initialToolPositionY + 9, 0);
 	}
 }
