@@ -119,12 +119,10 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
 
         override fun isSelected() = isSelected
 
-        override fun updateImageView(bitmap: Bitmap?, isDrawerLayoutOpen: Boolean) {
-            if (isDrawerLayoutOpen) {
-                runBlocking {
-                    launch {
-                        imageView.setImageBitmap(bitmap?.let { resizeBitmap(it) })
-                    }
+        override fun updateImageView(bitmap: Bitmap?) {
+            runBlocking {
+                launch {
+                    imageView.setImageBitmap(bitmap?.let { resizeBitmap(it) })
                 }
             }
             currentBitmap = bitmap

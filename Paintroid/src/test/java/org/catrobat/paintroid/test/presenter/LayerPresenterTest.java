@@ -105,7 +105,7 @@ public class LayerPresenterTest {
 		layerPresenter.onBindLayerViewHolderAtPosition(0, layerViewHolder, false);
 
 		verify(layerViewHolder).setSelected(0, null, null);
-		verify(layerViewHolder).updateImageView(firstLayerBitmap, false);
+		verify(layerViewHolder).updateImageView(firstLayerBitmap);
 		verify(layerViewHolder).setCheckBox(false);
 		verifyNoMoreInteractions(layerViewHolder);
 		verifyZeroInteractions(commandManager, commandFactory, layerAdapter,
@@ -127,7 +127,7 @@ public class LayerPresenterTest {
 		layerPresenter.onBindLayerViewHolderAtPosition(1, layerViewHolder, false);
 
 		verify(layerViewHolder).setDeselected();
-		verify(layerViewHolder).updateImageView(secondLayer.getTransparentBitmap(), false);
+		verify(layerViewHolder).updateImageView(secondLayer.getTransparentBitmap());
 		verify(layerViewHolder).setCheckBox(false);
 		verifyNoMoreInteractions(layerViewHolder);
 		verifyZeroInteractions(firstLayer, commandManager, layerAdapter,

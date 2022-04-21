@@ -549,7 +549,7 @@ open class MainActivityPresenter(
                 val currentHolder = getViewHolderAt(i)
                 currentHolder?.let {
                     if (it.bitmap != null) {
-                        it.updateImageView(it.bitmap, true)
+                        it.updateImageView(it.bitmap)
                     }
                 }
             }
