@@ -24,8 +24,8 @@ package org.catrobat.paintroid.ui.dragndrop
 
 import android.view.View
 
-interface ListItemLongClickHandler {
-    fun handleOnItemLongClick(position: Int, view: View)
+interface ListItemDragHandler {
+    fun startDragging(position: Int, view: View)
 
     fun stopDragging()
 }
