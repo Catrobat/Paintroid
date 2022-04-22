@@ -637,6 +637,42 @@ public class TextToolIntegrationTest {
 		assertNotEquals(initialPosition, positionAfterZoom);
 	}
 
+	@Test
+	public void checkIfTextFieldSizeIncreasesOnFontSizeIncrease() {
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		float oldBoxWidth = getToolMemberBoxWidth();
+		float oldBoxHeight = getToolMemberBoxHeight();
+
+		onView(withId(R.id.pocketpaint_font_size_text)).perform(replaceText("40"));
+
+		float newBoxWidth = getToolMemberBoxWidth();
+		float newBoxHeight = getToolMemberBoxHeight();
+
+		assertTrue(newBoxHeight > oldBoxHeight && newBoxWidth > oldBoxWidth);
+	}
+
+	@Test
+	public void checkIfTextFieldSizeDecreasesOnFontSizeDecrease() {
+		onToolBarView()
+				.performSelectTool(ToolType.TEXT);
+
+		enterTestText();
+
+		float oldBoxWidth = getToolMemberBoxWidth();
+		float oldBoxHeight = getToolMemberBoxHeight();
+
+		onView(withId(R.id.pocketpaint_font_size_text)).perform(replaceText("10"));
+
+		float newBoxWidth = getToolMemberBoxWidth();
+		float newBoxHeight = getToolMemberBoxHeight();
+
+		assertTrue(newBoxHeight < oldBoxHeight && newBoxWidth < oldBoxWidth);
+	}
+
 	private void checkTextBoxDimensions() {
 		int boxOffset = BOX_OFFSET;
 		float textSizeMagnificationFactor = TEXT_SIZE_MAGNIFICATION_FACTOR;
