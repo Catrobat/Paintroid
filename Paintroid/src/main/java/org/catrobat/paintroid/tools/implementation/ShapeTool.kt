@@ -35,6 +35,7 @@ import org.catrobat.paintroid.tools.options.ShapeToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 
 private const val SHAPE_OFFSET = 10f
+private const val MIN_SHAPE_OFFSET = 0.75f
 private const val DEFAULT_OUTLINE_WIDTH = 25
 private const val BUNDLE_BASE_SHAPE = "BASE_SHAPE"
 private const val BUNDLE_SHAPE_DRAW_TYPE = "SHAPE_DRAW_TYPE"
@@ -134,7 +135,10 @@ class ShapeTool(
 
     private fun prepareShapeRectangle(shapeRect: RectF, boxWidth: Float, boxHeight: Float) {
         shapeRect.setEmpty()
-        shapeRect.inset(SHAPE_OFFSET - boxWidth / 2, SHAPE_OFFSET - boxHeight / 2)
+        val zoomScaling = if (workspace.scale > 1) workspace.scale else 1f
+        var shapeOffset = SHAPE_OFFSET / zoomScaling
+        shapeOffset = if (shapeOffset > MIN_SHAPE_OFFSET) shapeOffset else MIN_SHAPE_OFFSET
+        shapeRect.inset(shapeOffset - boxWidth / 2, shapeOffset - boxHeight / 2)
         if (shapePreviewPaint.style == Paint.Style.STROKE) {
             shapeRect.inset(shapeOutlineWidth / 2f, shapeOutlineWidth / 2f)
         }

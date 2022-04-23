@@ -40,7 +40,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.DEFAULT_BOX_RESIZE_MARGIN;
+import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.MINIMAL_BOX_SIZE;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
@@ -130,7 +130,7 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		float newWidth = toolToTest.boxWidth;
 		float newHeight = toolToTest.boxHeight;
-		float boxResizeMargin = DEFAULT_BOX_RESIZE_MARGIN;
+		float boxResizeMargin = MINIMAL_BOX_SIZE;
 
 		assertThat(newHeight, is(greaterThanOrEqualTo(boxResizeMargin)));
 		assertThat(newWidth, is(greaterThanOrEqualTo(boxResizeMargin)));
@@ -235,8 +235,8 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		// try rotate right
 		toolToTest.handleDown(topLeftRotationPoint);
-		toolToTest.handleMove(new PointF(screenWidth / 2, topLeftRotationPoint.y));
-		toolToTest.handleUp(new PointF(screenWidth / 2, topLeftRotationPoint.y));
+		toolToTest.handleMove(new PointF(screenWidth / 2f, topLeftRotationPoint.y));
+		toolToTest.handleUp(new PointF(screenWidth / 2f, topLeftRotationPoint.y));
 		float newRotation = toolToTest.boxRotation;
 		assertThat(newRotation, is(greaterThan(rotation)));
 	}
@@ -353,8 +353,8 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		//rotate right
 		toolToTest.handleDown(topLeftRotationPoint);
-		toolToTest.handleMove(new PointF(screenWidth / 2, topLeftRotationPoint.y));
-		toolToTest.handleUp(new PointF(screenWidth / 2, topLeftRotationPoint.y));
+		toolToTest.handleMove(new PointF(screenWidth / 2f, topLeftRotationPoint.y));
+		toolToTest.handleUp(new PointF(screenWidth / 2f, topLeftRotationPoint.y));
 
 		assertFalse(toolToTest.boxContainsPoint(topLeftCorner));
 		assertTrue(toolToTest.boxContainsPoint(pointInRotatedRectangle));
