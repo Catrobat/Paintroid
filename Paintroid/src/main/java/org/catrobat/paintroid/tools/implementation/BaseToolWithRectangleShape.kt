@@ -55,6 +55,8 @@ import kotlin.math.sin
 const val MAXIMUM_BORDER_RATIO = 2f
 
 @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+const val MINIMAL_BOX_SIZE = 3
+
 const val DEFAULT_BOX_RESIZE_MARGIN = 20
 
 const val DEFAULT_ANTIALIASING_ON = true
@@ -633,12 +635,12 @@ abstract class BaseToolWithRectangleShape(
         resizeWidth(deltaXCorrected.toFloat(), rotationRadian)
 
         // prevent that box gets too small
-        if (boxWidth < DEFAULT_BOX_RESIZE_MARGIN) {
-            boxWidth = DEFAULT_BOX_RESIZE_MARGIN.toFloat()
+        if (boxWidth < MINIMAL_BOX_SIZE) {
+            boxWidth = MINIMAL_BOX_SIZE.toFloat()
             toolPosition.x = oldPosX
         }
-        if (boxHeight < DEFAULT_BOX_RESIZE_MARGIN) {
-            boxHeight = DEFAULT_BOX_RESIZE_MARGIN.toFloat()
+        if (boxHeight < MINIMAL_BOX_SIZE) {
+            boxHeight = MINIMAL_BOX_SIZE.toFloat()
             toolPosition.y = oldPosY
         }
         if (respectMaximumBoxResolution && maximumBoxResolution > 0 && boxWidth * boxHeight > maximumBoxResolution) {
