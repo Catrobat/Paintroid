@@ -67,6 +67,7 @@ import org.catrobat.paintroid.common.SAVE_IMAGE_DEFAULT
 import org.catrobat.paintroid.common.SAVE_IMAGE_FINISH
 import org.catrobat.paintroid.common.SAVE_IMAGE_LOAD_NEW
 import org.catrobat.paintroid.common.SAVE_IMAGE_NEW_EMPTY
+import org.catrobat.paintroid.common.TEMP_PICTURE_NAME
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.Interactor
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
@@ -1015,7 +1016,7 @@ open class MainActivityPresenter(
                     return cursor.getString(index)
                 }
             } catch (e: IllegalArgumentException) {
-                val file = File(context.cacheDir, "tmp")
+                val file = File(context.cacheDir, TEMP_PICTURE_NAME)
                 FileIO.saveFileFromUri(uri, file, context)
                 return file.absolutePath
             } finally {
