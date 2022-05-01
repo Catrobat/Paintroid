@@ -19,9 +19,14 @@
 package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.RectF
 import androidx.annotation.VisibleForTesting
+import kotlin.math.floor
+import kotlin.math.max
+import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,11 +42,11 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.helper.CropAlgorithm
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.helper.JavaCropAlgorithm
+import org.catrobat.paintroid.tools.helper.SetCenterAlgorithm
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 import org.catrobat.paintroid.tools.options.TransformToolOptionsView
 import org.catrobat.paintroid.ui.tools.NumberRangeFilter
-import kotlin.math.floor
-import kotlin.math.min
 
 @VisibleForTesting
 const val MAXIMUM_BITMAP_SIZE_FACTOR = 4.0f
@@ -54,11 +59,15 @@ private const val ROTATION_ENABLED = false
 private const val RESIZE_POINTS_VISIBLE = false
 private const val RESPECT_MAXIMUM_BORDER_RATIO = false
 private const val RESPECT_MAXIMUM_BOX_RESOLUTION = true
+private const val DEFAULT_CURSOR_STROKE_WIDTH = 5f
+private const val MINIMAL_CURSOR_STROKE_WIDTH = 1f
+private const val MAXIMAL_CURSOR_STROKE_WIDTH = 10f
+private const val CURSOR_LINES = 4
 
 class TransformTool(
     private val transformToolOptionsView: TransformToolOptionsView,
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager,
@@ -89,9 +98,11 @@ class TransformTool(
     private var cropRunFinished = false
     private var maxImageResolutionInformationAlreadyShown = false
     private var zeroSizeBitmap = false
+    private var isSetCenter = false
     private val rangeFilterHeight: NumberRangeFilter
     private val rangeFilterWidth: NumberRangeFilter
     private val cropAlgorithm: CropAlgorithm
+    private val setCenterCropAlgorithm: SetCenterAlgorithm
 
     override val toolType: ToolType
         get() = ToolType.TRANSFORM
@@ -105,6 +116,7 @@ class TransformTool(
         toolPosition.x = boxWidth / 2f
         toolPosition.y = boxHeight / 2f
         cropAlgorithm = JavaCropAlgorithm()
+        setCenterCropAlgorithm = SetCenterAlgorithm(cropAlgorithm)
         cropRunFinished = true
         maximumBoxResolution =
             metrics.widthPixels * metrics.heightPixels * MAXIMUM_BITMAP_SIZE_FACTOR
@@ -112,7 +124,12 @@ class TransformTool(
         initResizeBounds()
         toolOptionsViewController.setCallback(object : ToolOptionsVisibilityController.Callback {
             override fun onHide() {
-                if (!zeroSizeBitmap) {
+                if (isSetCenter) {
+                    contextCallback.showNotificationWithDuration(
+                        R.string.set_center_info_text,
+                        ContextCallback.NotificationDuration.LONG
+                    )
+                } else if (!zeroSizeBitmap) {
                     contextCallback.showNotificationWithDuration(
                         R.string.transform_info_text,
                         ContextCallback.NotificationDuration.LONG
@@ -129,6 +146,10 @@ class TransformTool(
         transformToolOptionsView.setCallback(object : TransformToolOptionsView.Callback {
             override fun autoCropClicked() {
                 autoCrop()
+            }
+
+            override fun setCenterClicked() {
+                setCenter()
             }
 
             override fun rotateCounterClockwiseClicked() {
@@ -175,12 +196,43 @@ class TransformTool(
         initialiseResizingState()
     }
 
+    override fun handleDown(coordinate: PointF?): Boolean {
+        coordinate ?: return false
+        if (!isSetCenter) {
+            return super.handleDown(coordinate)
+        }
+
+        CoroutineScope(Dispatchers.Default).launch {
+            toolPosition.x = coordinate.x
+            toolPosition.y = coordinate.y
+            withContext(Dispatchers.Main) {
+                workspace.invalidate()
+            }
+        }
+        return true
+    }
+
+    override fun handleMove(coordinate: PointF?): Boolean {
+        if (isSetCenter) {
+            return false
+        }
+        return super.handleMove(coordinate)
+    }
+
     override fun drawToolSpecifics(canvas: Canvas, boxWidth: Float, boxHeight: Float) {
+
+        if (isSetCenter) {
+            drawCursor(canvas)
+            return
+        }
+
         var width = boxWidth
         var height = boxHeight
+
         if (cropRunFinished) {
             linePaint.color = primaryShapeColor
             linePaint.strokeWidth = toolStrokeWidth * 2
+
             val rightTopPoint = PointF(-width / 2, -height / 2)
             repeat(SIDES) {
                 val resizeLineLengthHeight = height / CONSTANT_1
@@ -244,6 +296,28 @@ class TransformTool(
         )
         cropRunFinished = true
         updateToolOptions()
+    }
+
+    private fun executeSetCenterCommand() {
+        CoroutineScope(Dispatchers.Default).launch {
+            val shapeBounds = setCenterCropAlgorithm.crop(workspace.bitmapOfAllLayers, toolPosition)
+            if (shapeBounds != null) {
+                boxWidth = shapeBounds.width() + 1f
+                boxHeight = shapeBounds.height() + 1f
+                toolPosition.x = shapeBounds.left + (shapeBounds.width() + 1) / 2.0f
+                toolPosition.y = shapeBounds.top + (shapeBounds.height() + 1) / 2.0f
+            } else {
+                toolPosition.x = boxWidth / 2.0f
+                toolPosition.y = boxHeight / 2.0f
+            }
+
+            withContext(Dispatchers.Main) {
+                isSetCenter = false
+                shouldDrawRectangle = true
+                workspace.invalidate()
+                toolOptionsViewController.hide()
+            }
+        }
     }
 
     private fun executeResizeCommand() {
@@ -326,6 +400,111 @@ class TransformTool(
         }
     }
 
+    private fun setCenter() {
+        CoroutineScope(Dispatchers.Default).launch {
+            isSetCenter = true
+            shouldDrawRectangle = false
+            withContext(Dispatchers.Main) {
+                toolOptionsViewController.hide()
+            }
+            workspace.invalidate()
+        }
+    }
+
+    private fun drawCursor(canvas: Canvas) {
+        val positionX = 0.0f
+        val positionY = 0.0f
+        val brushStrokeWidth = max(toolPaint.strokeWidth / 2f, 1f)
+        val strokeWidth = getStrokeWidthForZoom(
+            DEFAULT_CURSOR_STROKE_WIDTH,
+            MINIMAL_CURSOR_STROKE_WIDTH, MAXIMAL_CURSOR_STROKE_WIDTH
+        )
+        val cursorPartLength = strokeWidth * 2
+        val innerCircleRadius = brushStrokeWidth + strokeWidth / 2f
+        val outerCircleRadius = innerCircleRadius + strokeWidth
+        linePaint.apply {
+            color =
+                contextCallback.getColor(R.color.pocketpaint_main_cursor_tool_inactive_primary_color)
+            style = Paint.Style.STROKE
+            this.strokeWidth = strokeWidth
+        }
+        drawCursorCircle(
+            canvas,
+            strokeWidth,
+            outerCircleRadius,
+            innerCircleRadius,
+            positionX,
+            positionY
+        )
+
+        linePaint.style = Paint.Style.FILL
+        var startLineLengthAddition = strokeWidth / 2f
+        var endLineLengthAddition = cursorPartLength + strokeWidth
+        var lineNr = 0
+        while (lineNr < CURSOR_LINES) {
+            if (lineNr % 2 == 0) {
+                linePaint.color = Color.LTGRAY
+            } else {
+                linePaint.color =
+                    contextCallback.getColor(R.color.pocketpaint_main_cursor_tool_inactive_primary_color)
+            }
+
+            canvas.drawLine(
+                positionX - outerCircleRadius - startLineLengthAddition,
+                positionY,
+                positionX - outerCircleRadius - endLineLengthAddition,
+                positionY,
+                linePaint
+            )
+            canvas.drawLine(
+                positionX + outerCircleRadius + startLineLengthAddition,
+                positionY,
+                positionX + outerCircleRadius + endLineLengthAddition,
+                positionY,
+                linePaint
+            )
+            canvas.drawLine(
+                positionX,
+                positionY + outerCircleRadius + startLineLengthAddition,
+                positionX,
+                positionY + outerCircleRadius + endLineLengthAddition,
+                linePaint
+            )
+            canvas.drawLine(
+                positionX,
+                positionY - outerCircleRadius - startLineLengthAddition,
+                positionX,
+                positionY - outerCircleRadius - endLineLengthAddition,
+                linePaint
+            )
+            lineNr++
+            startLineLengthAddition = strokeWidth / 2f + cursorPartLength * lineNr
+            endLineLengthAddition = strokeWidth + cursorPartLength * (lineNr + 1f)
+        }
+        linePaint.style = Paint.Style.STROKE
+    }
+
+    private fun drawCursorCircle(
+        canvas: Canvas,
+        strokeWidth: Float,
+        outerCircleRadius: Float,
+        innerCircleRadius: Float,
+        positionX: Float,
+        positionY: Float,
+    ) {
+        canvas.drawCircle(positionX, positionY, outerCircleRadius, linePaint)
+        linePaint.color = Color.LTGRAY
+        canvas.drawCircle(positionX, positionY, innerCircleRadius, linePaint)
+        linePaint.color = Color.TRANSPARENT
+        linePaint.style = Paint.Style.FILL
+        canvas.drawCircle(
+            positionX,
+            positionY,
+            innerCircleRadius - strokeWidth / 2f,
+            linePaint
+        )
+    }
+
     private fun areResizeBordersValid(): Boolean {
         if (resizeBoundWidthXRight < resizeBoundWidthXLeft ||
             resizeBoundHeightYTop > resizeBoundHeightYBottom
@@ -361,7 +540,11 @@ class TransformTool(
     }
 
     override fun onClickOnButton() {
-        executeResizeCommand()
+        if (isSetCenter) {
+            executeSetCenterCommand()
+        } else {
+            executeResizeCommand()
+        }
     }
 
     override fun preventThatBoxGetsTooLarge(

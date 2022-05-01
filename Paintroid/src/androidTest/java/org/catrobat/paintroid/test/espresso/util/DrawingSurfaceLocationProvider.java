@@ -104,6 +104,18 @@ public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 			return calculatePercentageOffset(view, .75f, .75f);
 		}
 	},
+	BOTTOM_RIGHT_CLOSE_CENTER {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, .55f, .55f);
+		}
+	},
+	BOTTOM_RIGHT_CORNER {
+		@Override
+		public float[] calculateCoordinates(View view) {
+			return calculatePercentageOffset(view, 1f, 1f);
+		}
+	},
 	BOTTOM_MIDDLE {
 		@Override
 		public float[] calculateCoordinates(View view) {

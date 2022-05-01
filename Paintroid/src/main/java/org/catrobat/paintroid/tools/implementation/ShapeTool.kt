@@ -32,7 +32,7 @@ import org.catrobat.paintroid.tools.drawable.DrawableShape
 import org.catrobat.paintroid.tools.drawable.DrawableStyle
 import org.catrobat.paintroid.tools.helper.toPoint
 import org.catrobat.paintroid.tools.options.ShapeToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
 private const val SHAPE_OFFSET = 10f
 private const val DEFAULT_OUTLINE_WIDTH = 25
@@ -43,7 +43,7 @@ private const val BUNDLE_OUTLINE_WIDTH = "OUTLINE_WIDTH"
 class ShapeTool(
     shapeToolOptionsView: ShapeToolOptionsView,
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager,

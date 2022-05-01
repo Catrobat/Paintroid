@@ -37,19 +37,9 @@
 
         <LinearLayout style="@style/PocketPaintToolSection">
 
-            <Button
-                android:id="@+id/pocketpaint_transform_auto_crop_btn"
-                style="?android:borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/transform_tool_auto_crop_text"
-                android:drawableTop="@drawable/ic_pocketpaint_tool_resize_adjust"
-                android:text="@string/transform_auto_crop_text"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="?attr/colorAccent"
-                android:textSize="14sp" />
-
-            <Space style="@style/PocketPaintToolHorizontalSpace" />
+            <Space
+                style="@style/PocketPaintToolHorizontalSpace"
+                android:layout_width="21dp" />
 
             <TextView
                 android:id="@+id/pocketpaint_transform_width_text"
@@ -81,8 +71,9 @@
                 android:textColor="?attr/colorAccent"
                 android:textSize="14sp" />
 
-            <Space style="@style/PocketPaintToolHorizontalSpace"
-                android:layout_width="16dp" />
+            <Space
+                style="@style/PocketPaintToolHorizontalSpace"
+                android:layout_width="35dp" />
 
             <TextView
                 android:id="@+id/pocketpaint_transform_height_text"
@@ -114,14 +105,47 @@
                 android:textColor="?attr/colorAccent"
                 android:textSize="14sp" />
 
-            <Space style="@style/PocketPaintToolHorizontalSpace" />
+            <Space
+                style="@style/PocketPaintToolHorizontalSpace"
+                android:layout_width="21dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/PocketPaintToolSection"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="5dp">
+
+            <Button
+                android:id="@+id/pocketpaint_transform_set_center_btn"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/transform_tool_auto_crop_text"
+                android:drawableTop="@drawable/ic_pocketpaint_tool_center_focus_strong"
+                android:text="@string/transform_set_center_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="?attr/colorAccent"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/pocketpaint_transform_auto_crop_btn"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/transform_tool_auto_crop_text"
+                android:drawableTop="@drawable/ic_pocketpaint_tool_resize_adjust"
+                android:text="@string/transform_auto_crop_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="?attr/colorAccent"
+                android:textSize="14sp" />
+
         </LinearLayout>
 
         <TextView
             style="@style/PocketPaintToolSubtitle"
             android:text="@string/transform_tool_resize_text" />
 
-        <View style="@style/PocketPaintToolSectionDivider"/>
+        <View style="@style/PocketPaintToolSectionDivider" />
 
         <LinearLayout style="@style/PocketPaintToolSection">
             <SeekBar
