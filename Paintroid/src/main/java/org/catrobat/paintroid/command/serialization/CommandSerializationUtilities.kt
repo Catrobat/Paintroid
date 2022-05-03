@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,6 +63,7 @@ import org.catrobat.paintroid.tools.drawable.RectangleDrawable
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 import org.catrobat.paintroid.tools.drawable.StarDrawable
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.lang.Exception
@@ -168,6 +169,31 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
         }
 
         return returnUri
+    }
+
+    fun writeToInternalMemory(stream: FileOutputStream) {
+        stream.use { fileStream ->
+            writeToStream(fileStream)
+        }
+    }
+
+    fun readFromInternalMemory(stream: FileInputStream): CommandManagerModel {
+        var commandModel: CommandManagerModel
+
+        Input(stream).use { input ->
+            if (!input.readString().equals(MAGIC_VALUE)) {
+                throw NotCatrobatImageException("Magic Value doesn't exist.")
+            }
+            val imageVersion = input.readInt()
+            if (CURRENT_IMAGE_VERSION != imageVersion) {
+                setRegisterMapVersion(imageVersion)
+                registerClasses()
+            }
+            commandModel = kryo.readObject(input, CommandManagerModel::class.java)
+        }
+
+        commandModel.commands.reverse()
+        return commandModel
     }
 
     private fun writeToStream(stream: OutputStream) {

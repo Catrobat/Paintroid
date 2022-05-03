@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,8 @@
     android:paddingTop="10dp"
     android:paddingEnd="5dp"
     android:paddingBottom="10dp"
-    android:descendantFocusability="blocksDescendants" >
+    android:descendantFocusability="blocksDescendants"
+    android:baselineAligned="false">
 
     <CheckBox
         android:id="@+id/pocketpaint_checkbox_layer"

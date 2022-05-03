@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,6 +53,10 @@ const val IS_ORA = 2
 const val IS_NO_FILE = -1
 const val MAX_LAYERS = 4
 const val CATROBAT_IMAGE_ENDING = "catrobat-image"
+const val TEMP_IMAGE_DIRECTORY_NAME = "TemporaryImages"
+const val TEMP_IMAGE_NAME = "temporaryImage"
+const val TEMP_IMAGE_PATH = "$TEMP_IMAGE_DIRECTORY_NAME/$TEMP_IMAGE_NAME.$CATROBAT_IMAGE_ENDING"
+const val TEMP_IMAGE_TEMP_PATH = "$TEMP_IMAGE_DIRECTORY_NAME/${TEMP_IMAGE_NAME}1.$CATROBAT_IMAGE_ENDING"
 
 object Constants {
     @JvmField
