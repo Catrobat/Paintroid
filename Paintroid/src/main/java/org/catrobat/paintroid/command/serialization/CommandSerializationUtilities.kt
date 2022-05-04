@@ -24,6 +24,7 @@ import android.graphics.Paint
 import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.RectF
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -55,6 +56,7 @@ import org.catrobat.paintroid.command.implementation.SetDimensionCommand
 import org.catrobat.paintroid.command.implementation.SprayCommand
 import org.catrobat.paintroid.command.implementation.StampCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
+import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.common.Constants
 import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.drawable.HeartDrawable
@@ -129,6 +131,8 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
             put(SerializableTypeface::class.java, SerializableTypeface.TypefaceSerializer(version))
             put(PointCommand::class.java, PointCommandSerializer(version))
             put(SerializablePath.Cube::class.java, SerializablePath.PathActionCubeSerializer(version))
+            put(Bitmap::class.java, BitmapSerializer(version))
+            put(SmudgePathCommand::class.java, SmudgePathCommandSerializer(version))
         }
     }
 
