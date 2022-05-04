@@ -44,6 +44,7 @@ import org.catrobat.paintroid.common.IS_NO_FILE
 import org.catrobat.paintroid.common.IS_ORA
 import org.catrobat.paintroid.common.IS_PNG
 import org.catrobat.paintroid.common.MAX_LAYERS
+import org.catrobat.paintroid.common.TEMP_PICTURE_NAME
 import org.catrobat.paintroid.iotasks.BitmapReturnValue
 import org.catrobat.paintroid.presenter.MainActivityPresenter
 import java.io.File
@@ -160,7 +161,7 @@ object FileIO {
         val compressor = Compressor(mainActivity)
         compressor.setQuality(compressQuality)
         compressor.setCompressFormat(compressFormat)
-        val tempFileName = "tmp"
+        val tempFileName = TEMP_PICTURE_NAME
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             var compressed: File? = null
             try {
