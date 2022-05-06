@@ -38,7 +38,6 @@ import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 
 class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), LayerContracts.Adapter {
     private val viewHolders: SparseArray<LayerContracts.LayerViewHolder> = SparseArray()
-    private var isDrawerLayoutOpen = false
 
     override fun getCount() = presenter.layerCount
 
@@ -49,10 +48,6 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
     override fun notifyDataSetChanged() {
         viewHolders.clear()
         super.notifyDataSetChanged()
-    }
-
-    override fun setDrawerLayoutOpen(isOpen: Boolean) {
-        isDrawerLayoutOpen = isOpen
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
@@ -67,7 +62,8 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
             viewHolder = localConvertView.tag as LayerContracts.LayerViewHolder
         }
         viewHolders.put(position, viewHolder)
-        presenter.onBindLayerViewHolderAtPosition(position, viewHolder, isDrawerLayoutOpen)
+        val isShown = presenter.isShown()
+        presenter.onBindLayerViewHolderAtPosition(position, viewHolder, isShown)
         val checkBox = localConvertView?.findViewById<CheckBox>(R.id.pocketpaint_checkbox_layer)
         checkBox?.setOnClickListener {
             with(presenter) {
@@ -123,12 +119,10 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
 
         override fun isSelected() = isSelected
 
-        override fun updateImageView(bitmap: Bitmap?, isDrawerLayoutOpen: Boolean) {
-            if (isDrawerLayoutOpen) {
-                runBlocking {
-                    launch {
-                        imageView.setImageBitmap(bitmap?.let { resizeBitmap(it) })
-                    }
+        override fun updateImageView(bitmap: Bitmap?) {
+            runBlocking {
+                launch {
+                    imageView.setImageBitmap(bitmap?.let { resizeBitmap(it) })
                 }
             }
             currentBitmap = bitmap

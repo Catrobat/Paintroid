@@ -41,6 +41,7 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
@@ -56,7 +57,6 @@ import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
-import org.catrobat.paintroid.listener.DrawerLayoutListener
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.model.MainActivityModel
@@ -411,7 +411,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     private fun onCreateLayerMenu() {
-        val layerLayout = findViewById<ViewGroup>(R.id.pocketpaint_layer_side_nav_menu)
+        val layerLayout = findViewById<NavigationView>(R.id.pocketpaint_nav_view_layer)
         val layerListView = findViewById<DragAndDropListView>(R.id.pocketpaint_layer_side_nav_list)
         val layerMenuViewHolder = LayerMenuViewHolder(layerLayout)
         val layerNavigator = LayerNavigator(applicationContext)
@@ -422,9 +422,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val layerAdapter = LayerAdapter(layerPresenter)
         presenterMain.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
-        findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout).also {
-            it.addDrawerListener(DrawerLayoutListener(it, layerAdapter))
-        }
         layerListView.setPresenter(layerPresenter)
         layerListView.adapter = layerAdapter
         layerPresenter.refreshLayerMenuViewHolder()
