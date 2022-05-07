@@ -28,7 +28,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.tools.options.FillToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -44,7 +44,7 @@ public class FillToolTest {
 	@Mock
 	public ContextCallback contextCallback;
 	@Mock
-	public ToolOptionsVisibilityController toolOptionsViewController;
+	public ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	public Workspace workspace;
 	@Mock
