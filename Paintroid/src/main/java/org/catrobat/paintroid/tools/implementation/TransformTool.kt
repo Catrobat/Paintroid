@@ -95,6 +95,8 @@ class TransformTool(
     @JvmField
     var resizeBoundHeightYBottom = 0f
 
+    var checkMarkClicked = false
+
     private var cropRunFinished = false
     private var maxImageResolutionInformationAlreadyShown = false
     private var zeroSizeBitmap = false
@@ -281,11 +283,19 @@ class TransformTool(
         resizeBoundHeightYBottom = 0f
         resizeBoundWidthXLeft = workspace.width.toFloat()
         resizeBoundHeightYTop = workspace.height.toFloat()
-        resetScaleAndTranslation()
-        resizeBoundWidthXRight = workspace.width - 1f
-        resizeBoundHeightYBottom = workspace.height - 1f
-        resizeBoundWidthXLeft = 0f
-        resizeBoundHeightYTop = 0f
+        if (!checkMarkClicked) {
+            resetScaleAndTranslation()
+            resizeBoundWidthXRight = workspace.width - 1f
+            resizeBoundHeightYBottom = workspace.height - 1f
+            resizeBoundWidthXLeft = 0f
+            resizeBoundHeightYTop = 0f
+        } else {
+            resizeBoundWidthXRight = toolPosition.x + workspace.width / 2 + 1
+            resizeBoundWidthXLeft = toolPosition.x - workspace.width / 2 + 1
+            resizeBoundHeightYBottom = toolPosition.y + workspace.height / 2 + 1
+            resizeBoundHeightYTop = toolPosition.y - workspace.height / 2 + 1
+        }
+
         setRectangle(
             RectF(
                 resizeBoundWidthXLeft,
@@ -294,6 +304,14 @@ class TransformTool(
                 resizeBoundHeightYBottom
             )
         )
+        if (checkMarkClicked) {
+            workspace.perspective.surfaceTranslationX += resizeBoundWidthXLeft
+            workspace.perspective.surfaceTranslationY += resizeBoundHeightYTop
+            workspace.perspective.setBitmapDimensions(boxWidth.toInt(), boxHeight.toInt())
+            toolPosition.x -= resizeBoundWidthXLeft
+            toolPosition.y -= resizeBoundHeightYTop
+            checkMarkClicked = false
+        }
         cropRunFinished = true
         updateToolOptions()
     }
@@ -526,10 +544,15 @@ class TransformTool(
     }
 
     private fun setRectangle(rectangle: RectF) {
-        boxWidth = rectangle.right - rectangle.left + 1f
-        boxHeight = rectangle.bottom - rectangle.top + 1f
-        toolPosition.x = rectangle.left + boxWidth / 2f
-        toolPosition.y = rectangle.top + boxHeight / 2f
+        if (!checkMarkClicked) {
+            boxWidth = rectangle.right - rectangle.left + 1f
+            boxHeight = rectangle.bottom - rectangle.top + 1f
+            toolPosition.x = rectangle.left + boxWidth / 2f
+            toolPosition.y = rectangle.top + boxHeight / 2f
+        } else {
+            boxWidth = rectangle.right - rectangle.left
+            boxHeight = rectangle.bottom - rectangle.top
+        }
     }
 
     private fun initResizeBounds() {

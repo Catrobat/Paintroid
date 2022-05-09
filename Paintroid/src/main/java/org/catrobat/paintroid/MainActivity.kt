@@ -77,6 +77,7 @@ import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.tools.implementation.DefaultToolReference
 import org.catrobat.paintroid.tools.implementation.DefaultWorkspace
 import org.catrobat.paintroid.tools.implementation.LineTool
+import org.catrobat.paintroid.tools.implementation.TransformTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.KeyboardListener
@@ -501,6 +502,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         topBar.undoButton.setOnClickListener { presenterMain.undoClicked() }
         topBar.redoButton.setOnClickListener { presenterMain.redoClicked() }
         topBar.checkmarkButton.setOnClickListener {
+            if (toolReference.tool?.toolType?.name.equals(ToolType.TRANSFORM.name)) {
+                (toolReference.tool as TransformTool).checkMarkClicked = true
+            }
             val tool = toolReference.tool as BaseToolWithShape?
             tool?.onClickOnButton()
         }
