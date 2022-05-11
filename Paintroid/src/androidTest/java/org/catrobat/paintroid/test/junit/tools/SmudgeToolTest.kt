@@ -31,7 +31,7 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.SmudgeTool
 import org.catrobat.paintroid.tools.options.SmudgeToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -45,7 +45,7 @@ class SmudgeToolTest {
     private val workspace = Mockito.mock(Workspace::class.java)
     private val smudgeToolOptionsView = Mockito.mock(SmudgeToolOptionsView::class.java)
     private val toolOptionsViewController =
-        Mockito.mock(ToolOptionsVisibilityController::class.java)
+        Mockito.mock(ToolOptionsViewController::class.java)
     private val contextCallback = Mockito.mock(ContextCallback::class.java)
     private lateinit var tool: SmudgeTool
 
@@ -80,7 +80,8 @@ class SmudgeToolTest {
 
     @Test
     fun testNotExecutingSmudgeWhenBitmapHasNoColor() {
-        Mockito.`when`(workspace.bitmapOfCurrentLayer).thenReturn(Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888))
+        Mockito.`when`(workspace.bitmapOfCurrentLayer)
+            .thenReturn(Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888))
         val event = PointF(100f, 100f)
         Assert.assertFalse(tool.handleDown(event))
         Assert.assertFalse(tool.handleMove(event))
