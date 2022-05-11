@@ -33,7 +33,7 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.STROKE_25
 import org.catrobat.paintroid.tools.implementation.SprayTool
 import org.catrobat.paintroid.tools.options.SprayToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -48,7 +48,7 @@ class SprayToolTest {
     private val workspace = Mockito.mock(Workspace::class.java)
     private val sprayToolOptionsView = Mockito.mock(SprayToolOptionsView::class.java)
     private val toolOptionsViewController =
-        Mockito.mock(ToolOptionsVisibilityController::class.java)
+        Mockito.mock(ToolOptionsViewController::class.java)
     private val contextCallback = Mockito.mock(ContextCallback::class.java)
     private lateinit var tool: SprayTool
 

@@ -57,7 +57,6 @@ import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
-import org.catrobat.paintroid.listener.DrawerLayoutListener
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.model.MainActivityModel
@@ -423,9 +422,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val layerAdapter = LayerAdapter(layerPresenter)
         presenterMain.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
-        findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout).also {
-            it.addDrawerListener(DrawerLayoutListener(it, layerAdapter))
-        }
         layerListView.setPresenter(layerPresenter)
         layerListView.adapter = layerAdapter
         layerPresenter.refreshLayerMenuViewHolder()

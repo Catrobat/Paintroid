@@ -24,7 +24,7 @@
     <string name="button_cursor">Курсор</string>
     <string name="button_pipette">Пипетка</string>
     <string name="button_undo">Отменить</string>
-    <string name="button_redo">Повторить</string>
+    <string name="button_redo">Вернуть</string>
     <string name="button_info">Информация</string>
     <string name="button_stamp">Штамп</string>
     <string name="button_import_image">Импорт изображения</string>
@@ -33,7 +33,7 @@
     <string name="button_fill">Заливка</string>
     <string name="button_line">Линия</string>
     <string name="button_text">Текст</string>
-    <string name="button_shape">Формы</string>
+    <string name="button_shape">Фигуры</string>
     <string name="button_hand">Рука</string>
     <string name="button_watercolor">Акварель</string>
     <string name="button_spray_can">Баллончик</string>
@@ -47,9 +47,9 @@
     <string name="cap_circle">Круг</string>
     <string name="cap_square">Квадрат</string>
     <string name="stamptool_paste">Вставить</string>
-    <string name="stamptool_copy">Копировать</string>
+    <string name="stamptool_copy">Скопировать</string>
     <string name="stamptool_cut">Вырезать</string>
-    <string name="stickers">Наклейки</string>
+    <string name="stickers">Стикеры</string>
     <string name="dialog_tools_title">Инструменты</string>
     <string name="dialog_error_save_title">Ошибка загрузки/сохранения файла</string>
     <string name="dialog_error_sdcard_text">Проверьте изображение или SD-карту!</string>
@@ -60,9 +60,9 @@
     <string name="help_content_brush">Нажмите на символы на нижней панели, чтобы изменить цвет или размер кисти.</string>
     <string name="help_content_watercolor">Подобно инструменту кисти с эффектом акварели. Однако также можно изменить силу кисти с помощью ползунка в цветовом меню.</string>
     <string name="help_content_eyedropper">Нажмите на изображение, чтобы выбрать цвет.</string>
-    <string name="help_content_undo">Нажмите, чтобы отменить предыдущее действие.</string>
+    <string name="help_content_undo">Нажмите, чтобы отменить свое предыдущее действие.</string>
     <string name="help_content_redo">Нажмите, чтобы повторить отменённое действие.</string>
-    <string name="help_content_fill">Нажмите на изображение, чтобы сделать заливку выбранным цветом.</string>
+    <string name="help_content_fill">Нажмите на изображение, чтобы заполнить область выбранным цветом.</string>
     <string name="help_content_cursor">Поместите курсор там, где вы хотите нарисовать. Нажмите, чтобы активировать курсор. Проведите пальцем чтобы нарисовать. Нажмите снова, чтобы отключить.</string>
     <string name="help_content_transform">Используйте для изменения размера изображения.</string>
     <string name="help_content_stamp">Переместите и измените размер прямоугольника, чтобы покрыть область, к которой вы хотите применить штамп. Зажмите, чтобы выбрать область. Переместите и нажмите снова, чтобы применить штамп.</string>
@@ -70,7 +70,7 @@
     <string name="help_content_line">Нарисуйте прямую линию.</string>
     <string name="help_content_text">Напишите текст и отформатируйте его. Затем измените размер текстового поля. Нажмите, чтобы добавить текст на изображение.</string>
     <string name="help_content_shape">Выберите форму и нажмите на нее, чтобы вставить выбранную форму</string>
-    <string name="help_content_layer">Создать новые слои или изменить существующие</string>
+    <string name="help_content_layer">Создать новые слои или изменить существующие.</string>
     <string name="help_content_color_chooser">Выбрать или настроить цвет</string>
     <string name="help_content_hand">Переместите палец, чтобы переместить холст.</string>
     <string name="help_content_spray_can">Переместите палец на изображение, чтобы создать шаблон спрея.</string>
@@ -78,9 +78,9 @@
     <string name="closing_security_question_title">Выход</string>
     <string name="closing_security_question">Сохранить изменения?</string>
     <string name="menu_new_image">Новое изображение</string>
-    <string name="menu_discard_image">Удалить изображение</string>
+    <string name="menu_discard_image">Сбросить изображение</string>
     <string name="no_longclick_on_hidden_layer">Вы можете объединить или изменить порядок, только если все слои видны</string>
-    <string name="no_tools_on_hidden_layer">На скрытом слое нет доступных инструментов</string>
+    <string name="no_tools_on_hidden_layer">На скрытом слое инструменты недоступны</string>
     <string name="menu_load_image">Загрузить изображение</string>
     <string name="menu_save_image">Сохранить изображение</string>
     <string name="menu_save_copy">Сохранить копию</string>
@@ -91,8 +91,8 @@
     <string name="menu_export">Экспорт</string>
     <string name="menu_feedback">Отзыв</string>
     <string name="menu_advanced">Расширенные настройки</string>
-    <string name="saved_to">Изображение сохраняется в\n</string>
-    <string name="saved">Картинка сохранена</string>
+    <string name="saved_to">Изображение сохранено в\n</string>
+    <string name="saved">Изображение сохранено</string>
     <string name="copy_to">Копия сохранена в\n</string>
     <string name="copy">Копия сохранена</string>
     <string name="menu_quit">Уйти</string>
@@ -119,15 +119,15 @@
     <string name="shape_tool_dialog_ellipse_title">Эллипс</string>
     <string name="shape_tool_dialog_star_title">Звезда</string>
     <string name="shape_tool_dialog_heart_title">Сердце</string>
-    <string name="shape_tool_dialog_fill_title">Заполнить</string>
-    <string name="shape_tool_dialog_outline_title">План</string>
+    <string name="shape_tool_dialog_fill_title">Заливка</string>
+    <string name="shape_tool_dialog_outline_title">Контур</string>
     <string name="fill_tool_dialog_color_tolerance_title">Допустимое отклонение по цвету</string>
     <string name="transform_tool_rotate_left">повернуть влево</string>
-    <string name="transform_tool_rotate_right">Повернуть вправо</string>
-    <string name="transform_tool_flip_vertical">перевернуть по вертикали</string>
-    <string name="transform_tool_flip_horizontal">перевернуть горизонтально</string>
+    <string name="transform_tool_rotate_right">повернуть вправо</string>
+    <string name="transform_tool_flip_vertical">отразить по вертикали</string>
+    <string name="transform_tool_flip_horizontal">отразить по горизонтали</string>
     <string name="transform_tool_resize_text">изменить размер</string>
-    <string name="transform_tool_auto_crop_text">обрезать / увеличить</string>
+    <string name="transform_tool_auto_crop_text">обрезать/увеличить</string>
     <string name="transform_width_text">Ширина</string>
     <string name="transform_height_text">Высота</string>
     <string name="transform_auto_crop_text">Авто</string>
@@ -140,7 +140,7 @@
     <string name="layer_merged">Слои объединены</string>
     <string name="layer_background">Задать фон</string>
     <string name="dialog_shape_text">Фигура</string>
-    <string name="dialog_loading_image_failed_title">Ошибка загрузки изображения</string>
+    <string name="dialog_loading_image_failed_title">Ошибка при загрузке изображения</string>
     <string name="dialog_loading_image_failed_text">Это неправильный формат изображения.</string>
     <string name="dialog_settings">Настройки</string>
     <string name="dialog_save_image_name">Имя изображения</string>
@@ -155,7 +155,7 @@
     <string name="permission_info_external_storage_text">Этому приложению требуется запрошенное разрешение для правильной работы. Чтобы сохранять изображения в локальной памяти, приложению необходим доступ для чтения и записи.</string>
     <string name="permission_info_permanent_denial_text">Этому приложению требуется запрашиваемое разрешение для правильной работы. Чтобы сохранить изображения в локальную память, приложению необходимо иметь доступ к ним для чтения и записи.
         Как вы отказали в разрешении не спрашивать снова, перейдите в настройки телефона и предоставьте необходимые разрешения, если вы хотите использовать соответствующие функции.</string>
-    <string name="transform_info_text">Перетащите края на их новое место, а затем нажмите, чтобы увеличить или обрезать изображение.</string>
+    <string name="transform_info_text">Перетащите края на их новое место, а затем нажмите на галочку, чтобы увеличить или обрезать изображение.</string>
     <string name="cursor_draw_inactive">Нажмите, чтобы начать рисование.</string>
     <string name="cursor_draw_active">Нажмите кнопку, чтобы рисовать, затем снова, чтобы остановить рисование.</string>
     <string name="welcome_to_pocket_paint">Добро пожаловать в Pocket Paint</string>
@@ -170,7 +170,7 @@
     <string name="lets_go">Начнем</string>
     <string name="next">Следующий</string>
     <string name="skip">Пропустить</string>
-    <string name="pocketpaint_about_title">О программе</string>
+    <string name="pocketpaint_about_title">О приложении</string>
     <string name="pocketpaint_about_content">Pocket Paint - это библиотека для редактирования изображений, являющаяся частью проекта Catrobat.\n\nCatrobat является визуальным языком программирования и набором инструментов креативности для смартфонов.\n\nИсходный код Pocket Paint в основном лицензирован под %s.\nПодробнее о лицензии см. ссылку ниже.</string>
     <string name="pocketpaint_about_url_license_description">Лицензия исходного кода Pocket Paint</string>
     <string name="pocketpaint_about_url_catrobat_description">О проекте Catrobat</string>
@@ -179,7 +179,7 @@
     <string name="pocketpaint_overwrite_title">Перезаписать файл?</string>
     <string name="pocketpaint_overwrite">Вы собираетесь перезаписать существующее изображение (подсказка: чтобы сохранить его как новое изображение, используйте опцию \"%s\"). Все равно сохранить?</string>
     <string name="pocketpaint_like_us">Вам нравится Pocket Paint?</string>
-    <string name="pocketpaint_rate_us">Вы хотите оценить Pocket Paint?</string>
+    <string name="pocketpaint_rate_us">Хотите оценить приложение Pocket Paint?</string>
     <string name="pocketpaint_feedback">Нам очень жаль. Если вы хотите поделиться своим опытом, напишите нам на contact@catrobat.org</string>
     <string name="pocketpaint_yes">Да</string>
     <string name="pocketpaint_no">Нет</string>
@@ -193,7 +193,7 @@
     <string name="bottom_navigation_item">Элемент для нижней навигации</string>
     <string name="intro_bottom_navigation_tools_description">Переключитесь на инструмент, который хотите использовать.</string>
     <string name="intro_bottom_navigation_current_description">Показывает используемый в настоящее время инструмент и открывает его параметры.</string>
-    <string name="intro_bottom_navigation_color_description">Показывает используемый в настоящее время цвет и открывает выбор цветов.</string>
+    <string name="intro_bottom_navigation_color_description">Показывает используемый в настоящее время цвет и открывает цветовую палитру.</string>
     <string name="intro_bottom_navigation_layers_description">Открывает меню слоя и позволяет вам управлять слоями.</string>
     <string name="pocketpaint_tool_icon_description">Текущий значок инструмента</string>
     <string name="dialog_scale_title">Изображение слишком велико для загрузки</string>

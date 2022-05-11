@@ -29,7 +29,7 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.drawable.DrawableShape;
 import org.catrobat.paintroid.tools.implementation.ShapeTool;
 import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
@@ -58,7 +58,7 @@ public class ShapeToolTest {
 	@Mock
 	private ShapeToolOptionsView shapeToolOptions;
 	@Mock
-	private ToolOptionsVisibilityController toolOptionsViewController;
+	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 	@Mock

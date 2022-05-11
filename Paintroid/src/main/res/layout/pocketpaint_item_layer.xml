@@ -22,31 +22,42 @@
     android:layout_width="150dp"
     android:layout_height="wrap_content"
     android:background="@drawable/pocketpaint_attribute_button_selector"
+    android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="5dp"
     android:paddingTop="10dp"
     android:paddingEnd="5dp"
-    android:paddingBottom="10dp"
-    android:descendantFocusability="blocksDescendants" >
+    android:paddingBottom="10dp">
 
     <CheckBox
         android:id="@+id/pocketpaint_checkbox_layer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:checked="true"
         android:focusable="false"
-        android:translationX="3dp"
-        android:checked="true"/>
+        android:translationX="3dp" />
 
+    <Space
+        android:layout_width="16dp"
+        android:layout_height="0dp" />
 
-    <ImageView
-        android:id="@+id/pocketpaint_item_layer_image"
-        android:layout_width="75dp"
-        android:layout_height="100dp"
-        android:adjustViewBounds="false"
-        android:background="@drawable/pocketpaint_checkeredbg_repeat"
-        android:contentDescription="@string/layer_background"
-        android:scaleType="fitXY"
-        android:translationX="20dp"
-        android:focusable="false" />
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/pocketpaint_item_layer_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxHeight="100dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/pocketpaint_checkeredbg_repeat"
+            android:contentDescription="@string/layer_background"
+            android:focusable="false"
+            android:scaleType="fitXY" />
+
+    </FrameLayout>
 </LinearLayout>

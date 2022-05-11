@@ -18,38 +18,12 @@
  */
 package org.catrobat.paintroid.tools.options
 
-import org.catrobat.paintroid.ui.tools.NumberRangeFilter
-
-interface TransformToolOptionsView {
-    fun setWidthFilter(numberRangeFilter: NumberRangeFilter)
-
-    fun setHeightFilter(numberRangeFilter: NumberRangeFilter)
-
+interface SmudgeToolOptionsView : BrushToolOptionsView {
     fun setCallback(callback: Callback)
 
-    fun setWidth(width: Int)
-
-    fun setHeight(height: Int)
-
     interface Callback {
-        fun autoCropClicked()
+        fun onPressureChanged(pressure: Int)
 
-        fun setCenterClicked()
-
-        fun rotateCounterClockwiseClicked()
-
-        fun rotateClockwiseClicked()
-
-        fun flipHorizontalClicked()
-
-        fun flipVerticalClicked()
-
-        fun applyResizeClicked(resizePercentage: Int)
-
-        fun setBoxWidth(boxWidth: Float)
-
-        fun setBoxHeight(boxHeight: Float)
-
-        fun hideToolOptions()
+        fun onDragChanged(drag: Int)
     }
 }

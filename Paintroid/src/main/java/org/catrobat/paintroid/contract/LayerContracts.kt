@@ -83,7 +83,7 @@ interface LayerContracts {
 
         fun setDeselected()
 
-        fun updateImageView(bitmap: Bitmap?, isDrawerLayoutOpen: Boolean)
+        fun updateImageView(bitmap: Bitmap?)
 
         fun setMergable()
 
