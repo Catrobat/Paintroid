@@ -244,7 +244,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
         val receivedIntent = intent
         when {
-            validateIntent(receivedIntent) -> {
+            validateIntent(receivedIntent) && savedInstanceState == null -> {
                 if (handleIntent(receivedIntent)) {
                     commandManager.reset()
                 }
