@@ -19,9 +19,12 @@
 
 package org.catrobat.paintroid.iotasks;
 
+import android.app.DownloadManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,6 +35,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.MainActivity;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -57,8 +61,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import static org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY;
+import static android.content.Context.DOWNLOAD_SERVICE;
+
 import static org.catrobat.paintroid.common.ConstantsKt.MAX_LAYERS;
+import static org.catrobat.paintroid.common.ConstantsKt.SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME;
 
 //
 //Source:	https://www.openraster.org/baseline/file-layout-spec.html
@@ -78,9 +84,14 @@ public final class OpenRasterFileFormatConversion {
 	private static final int COMPRESS_QUALITY = 100;
 	private static final int THUMBNAIL_WIDTH = 256;
 	private static final int THUMBNAIL_HEIGHT = 256;
+	public static MainActivity mainActivity = null;
 
 	private OpenRasterFileFormatConversion() {
 		throw new AssertionError();
+	}
+
+	public static void setContext(MainActivity toSet) {
+		mainActivity = toSet;
 	}
 
 	public static Uri exportToOraFile(List<Bitmap> bitmapList, String fileName, Bitmap bitmapAllLayers, ContentResolver resolver) throws IOException {
@@ -108,6 +119,7 @@ public final class OpenRasterFileFormatConversion {
 		ByteArrayOutputStream bosThumb = new ByteArrayOutputStream();
 		bitmapThumb.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, bosThumb);
 		byte[] bitmapThumbArray = bosThumb.toByteArray();
+		File imageRoot = null;
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 			//applefile has no file ending. which is important for api level 30.
@@ -118,8 +130,17 @@ public final class OpenRasterFileFormatConversion {
 
 			imageUri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
 		} else {
+
+			imageRoot = Environment.getExternalStoragePublicDirectory(
+					Environment.DIRECTORY_DOWNLOADS);
+
+			if (!imageRoot.exists() && !imageRoot.mkdirs()) {
+				imageRoot.mkdirs();
+			}
+
 			Uri uri = MediaStore.Files.getContentUri("external");
-			contentValues.put(MediaStore.Files.FileColumns.DATA, DOWNLOADS_DIRECTORY.getAbsolutePath() + "/" + fileName);
+
+			contentValues.put(MediaStore.Files.FileColumns.DATA, imageRoot.getAbsolutePath() + "/" + fileName);
 			contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName);
 			contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/zip");
 			contentValues.put(MediaStore.Files.FileColumns.MEDIA_TYPE, MediaStore.Files.FileColumns.MEDIA_TYPE_NONE);
@@ -132,7 +153,14 @@ public final class OpenRasterFileFormatConversion {
 			wholeSize += bitmapByteArray.length;
 			wholeSize += bitmapThumbArray.length;
 			contentValues.put(MediaStore.Images.Media.SIZE, wholeSize);
+
+			DownloadManager downloadManager = (DownloadManager) mainActivity.getBaseContext().getSystemService(DOWNLOAD_SERVICE);
+			long id = downloadManager.addCompletedDownload(fileName, fileName, true, "application/zip", imageRoot.getAbsolutePath() + "/" + fileName, (long) wholeSize, true);
+
 			imageUri = resolver.insert(uri, contentValues);
+
+			SharedPreferences sharedPreferences = mainActivity.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, 0);
+			sharedPreferences.edit().putLong(imageRoot.getAbsolutePath() + "/" + fileName, id).apply();
 		}
 
 		outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
@@ -241,6 +269,12 @@ public final class OpenRasterFileFormatConversion {
 		} else {
 			File file = new File(uri.getPath());
 			boolean isDeleted = file.delete();
+			SharedPreferences sharedPreferences = mainActivity.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+			long id = sharedPreferences.getLong(uri.getPath(), -1);
+			if (id > -1) {
+				DownloadManager downloadManager = (DownloadManager) mainActivity.getBaseContext().getSystemService(DOWNLOAD_SERVICE);
+				downloadManager.remove(id);
+			}
 			if (!isDeleted) {
 				throw new AssertionError("No file to delete was found!");
 			}

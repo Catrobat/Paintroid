@@ -18,6 +18,9 @@
  */
 package org.catrobat.paintroid.command.serialization
 
+import android.app.DownloadManager
+import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Paint
@@ -60,6 +63,8 @@ import org.catrobat.paintroid.command.implementation.StampCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
 import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
+import org.catrobat.paintroid.common.SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME
+import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
 import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.drawable.HeartDrawable
 import org.catrobat.paintroid.tools.drawable.OvalDrawable
@@ -71,8 +76,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.OutputStream
-import java.lang.Exception
-import kotlin.collections.LinkedHashMap
 
 class CommandSerializationUtilities(private val activityContext: Context, private val commandManager: CommandManager) {
 
@@ -153,7 +156,6 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
     fun writeToFile(fileName: String): Uri? {
         var returnUri: Uri? = null
         val contentResolver = activityContext.contentResolver
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val contentValues = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
@@ -174,9 +176,44 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
                 writeToStream(fileStream)
                 returnUri = Uri.fromFile(imageFile)
             }
+
+            val downloadManager = OpenRasterFileFormatConversion.mainActivity.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val id = downloadManager.addCompletedDownload(fileName, fileName, true, "application/zip", imageFile.absolutePath, imageFile.length(), true)
+            val sharedPreferences = OpenRasterFileFormatConversion.mainActivity.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, 0)
+            sharedPreferences.edit().putLong(imageFile.absolutePath, id).apply()
         }
 
         return returnUri
+    }
+
+    fun overWriteFile(fileName: String, uri: Uri, resolver: ContentResolver): Uri? {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val projection = arrayOf(MediaStore.Images.Media._ID)
+            val c = resolver.query(uri, projection, null, null, null)
+            if (c != null) {
+                if (c.moveToFirst()) {
+                    val id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+                    val deleteUri = ContentUris.withAppendedId(MediaStore.Downloads.EXTERNAL_CONTENT_URI, id)
+                    resolver.delete(deleteUri, null, null)
+                } else {
+                    throw AssertionError("No file to delete was found!")
+                }
+                c.close()
+            }
+        } else {
+            val file = File(uri.path.toString())
+            val isDeleted = file.delete()
+            val sharedPreferences = OpenRasterFileFormatConversion.mainActivity.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            val id = sharedPreferences.getLong(uri.path, -1)
+            if (id > -1) {
+                val downloadManager = OpenRasterFileFormatConversion.mainActivity.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                downloadManager.remove(id)
+            }
+            if (!isDeleted) {
+                throw AssertionError("No file to delete was found!")
+            }
+        }
+        return writeToFile(fileName)
     }
 
     fun writeToInternalMemory(stream: FileOutputStream) {
