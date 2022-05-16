@@ -173,7 +173,7 @@
     <string name="pocketpaint_about_title">Tungkol sa</string>
     <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
     <string name="pocketpaint_about_url_license_description">Pocket Paint source code license</string>
-    <string name="pocketpaint_about_url_catrobat_description">About Catrobat</string>
+    <string name="pocketpaint_about_url_catrobat_description">Tungkol sa Catrobat</string>
     <string name="pocketpaint_intro">Intro</string>
     <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen.</string>
     <string name="pocketpaint_overwrite_title">Overwrite File?</string>

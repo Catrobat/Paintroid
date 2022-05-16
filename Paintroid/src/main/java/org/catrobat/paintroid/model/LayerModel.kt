@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,12 +22,13 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import org.catrobat.paintroid.contract.LayerContracts
 import java.util.ArrayList
+import kotlin.IndexOutOfBoundsException
 
 class LayerModel : LayerContracts.Model {
     override var currentLayer: LayerContracts.Layer? = null
     override var width = 0
     override var height = 0
-    override val layers: ArrayList<LayerContracts.Layer> = ArrayList()
+    override val layers: ArrayList<LayerContracts.Layer> = arrayListOf()
     override val layerCount: Int
         get() = layers.size
 
@@ -35,12 +36,16 @@ class LayerModel : LayerContracts.Model {
         layers.clear()
     }
 
-    override fun getLayerAt(index: Int): LayerContracts.Layer = layers[index]
+    override fun getLayerAt(index: Int): LayerContracts.Layer? = layers.getOrNull(index)
 
     override fun getLayerIndexOf(layer: LayerContracts.Layer): Int = layers.indexOf(layer)
 
-    override fun addLayerAt(index: Int, layer: LayerContracts.Layer) {
+    @SuppressWarnings("SwallowedException", "TooGenericExceptionCaught")
+    override fun addLayerAt(index: Int, layer: LayerContracts.Layer): Boolean = try {
         layers.add(index, layer)
+        true
+    } catch (e: IndexOutOfBoundsException) {
+        false
     }
 
     override fun listIterator(index: Int): ListIterator<LayerContracts.Layer> =
@@ -50,12 +55,15 @@ class LayerModel : LayerContracts.Model {
         layers[position] = layer
     }
 
-    override fun removeLayerAt(position: Int) {
+    @SuppressWarnings("SwallowedException", "TooGenericExceptionCaught")
+    override fun removeLayerAt(position: Int): Boolean = try {
         layers.removeAt(position)
+        true
+    } catch (e: IndexOutOfBoundsException) {
+        false
     }
 
     companion object {
-        @JvmStatic
         fun getBitmapOfAllLayersToSave(layers: List<LayerContracts.Layer>): Bitmap? {
             if (layers.isEmpty()) {
                 return null
@@ -73,7 +81,6 @@ class LayerModel : LayerContracts.Model {
             return bitmap
         }
 
-        @JvmStatic
         fun getBitmapListOfAllLayers(layers: List<LayerContracts.Layer>): List<Bitmap?> {
             val bitmapList: MutableList<Bitmap?> = ArrayList()
             for (layer in layers) {

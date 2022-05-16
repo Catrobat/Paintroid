@@ -29,7 +29,7 @@
     <string name="color_picker_cancel">ختم</string>
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">موجودہ</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">نیا</string>
-    <string name="color_picker_pipette" tools:ignore="MissingTranslation">نعمونہ</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">رنگ چنیں</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">تبدیلیاں محفوظ کریں؟</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">کیا آپ تبدیلیاں محفوظ کرنا چاہتے ہیں?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">نہیں</string>

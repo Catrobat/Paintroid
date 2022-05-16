@@ -33,7 +33,7 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.StampTool;
 import org.catrobat.paintroid.tools.options.StampToolOptionsView;
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class StampToolTest {
 	@Mock
 	private StampToolOptionsView stampToolOptions;
 	@Mock
-	private ToolOptionsVisibilityController toolOptionsViewController;
+	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 	@Mock
@@ -118,7 +118,7 @@ public class StampToolTest {
 	}
 
 	@Test
-	public void testToolClicksOnTouchDownPosition() {
+	public void testToolPreciseMovementTest() {
 		Looper.prepare();
 
 		float initialToolPositionX = tool.toolPosition.x;
@@ -128,7 +128,7 @@ public class StampToolTest {
 		tool.handleMove(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
 		tool.handleUp(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
 
-		assertEquals(tool.toolPosition.x, initialToolPositionX, 0);
-		assertEquals(tool.toolPosition.y, initialToolPositionY, 0);
+		assertEquals(tool.toolPosition.x, initialToolPositionX + 9, 0);
+		assertEquals(tool.toolPosition.y, initialToolPositionY + 9, 0);
 	}
 }

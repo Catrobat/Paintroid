@@ -47,8 +47,8 @@ public class LayerTest {
 
 		assertEquals(firstBitmap, firstLayer.getBitmap());
 		assertEquals(secondBitmap, secondLayer.getBitmap());
-		assertTrue(firstLayer.getCheckBox());
-		assertTrue(secondLayer.getCheckBox());
+		assertTrue(firstLayer.isVisible());
+		assertTrue(secondLayer.isVisible());
 		verify(secondBitmap).getWidth();
 		verify(secondBitmap).getHeight();
 		verify(firstBitmap).getWidth();
@@ -62,7 +62,7 @@ public class LayerTest {
 		layer.setBitmap(secondBitmap);
 
 		assertEquals(secondBitmap, layer.getBitmap());
-		assertTrue(layer.getCheckBox());
+		assertTrue(layer.isVisible());
 		verify(firstBitmap).getWidth();
 		verify(firstBitmap).getHeight();
 	}

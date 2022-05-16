@@ -35,11 +35,11 @@
     <string name="button_text">النص</string>
     <string name="button_shape">الأشكال</string>
     <string name="button_hand">اليد</string>
-    <string name="button_watercolor">Watercolor</string>
+    <string name="button_watercolor">اللون المائي</string>
     <string name="button_spray_can">يمكن الرش</string>
     <string name="button_apply">تطبيق</string>
     <string name="button_checkmark">علامة الاختيار</string>
-    <string name="button_plus">Connect Line Segment</string>
+    <string name="button_plus">توصيل شريحة الخط</string>
     <string name="done">موافق</string>
     <string name="gallery">معرض</string>
     <string name="load_sticker_error">تعذر تحميل الملصق</string>
@@ -58,7 +58,7 @@
     <string name="help_title">المساعدة</string>
     <string name="help_content_eraser">إزالة أجزاء من الصورة مثل استخدام ممحاة.</string>
     <string name="help_content_brush">انقر فوق الرموز على الشريط أسفل الصورة لتغيير اللون أو حجم الفرشاة.</string>
-    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_watercolor">مماثلة لأداة الفرشاة ذات تأثير على الألوان المائية. ومع ذلك، يمكنك أيضا تغيير قوة الفرشاة مع شريط التمرير في قائمة الألوان.</string>
     <string name="help_content_eyedropper">اضغط على الصورة لتحديد لون.</string>
     <string name="help_content_undo">انقر للتراجع عن الإجراء السابق.</string>
     <string name="help_content_redo">انقر لإعادة عملية التراجع.</string>

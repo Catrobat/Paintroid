@@ -35,11 +35,11 @@
     <string name="button_text">テキスト</string>
     <string name="button_shape">図形</string>
     <string name="button_hand">手</string>
-    <string name="button_watercolor">Watercolor</string>
+    <string name="button_watercolor">水彩色</string>
     <string name="button_spray_can">スプレー缶</string>
     <string name="button_apply">適用</string>
     <string name="button_checkmark">チェックマーク</string>
-    <string name="button_plus">Connect Line Segment</string>
+    <string name="button_plus">ラインセグメントを接続</string>
     <string name="done">完了</string>
     <string name="gallery">ギャラリー</string>
     <string name="load_sticker_error">ステッカーを読み込めませんでした</string>
@@ -58,7 +58,7 @@
     <string name="help_title">ヘルプ</string>
     <string name="help_content_eraser">消しゴムのようにイメージの部分を削除します。</string>
     <string name="help_content_brush">色またはブラシのサイズを変更する記号をタップしてください。</string>
-    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_watercolor">水彩効果のあるブラシツールに似ています。 ただし、カラーメニューのスライダーでブラシの強度を変更することもできます。</string>
     <string name="help_content_eyedropper">色を選択する画像をタップします。</string>
     <string name="help_content_undo">前の操作を元に戻す をタップします。</string>
     <string name="help_content_redo">元に戻した操作をやり直す をタップします。</string>

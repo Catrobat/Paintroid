@@ -20,10 +20,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">Wybór kolorów</string>
     <string name="color_picker_tab_icon">Ikona zakładki Wyboru kolorów</string>
-    <string name="color_red">Czerwony (Red)</string>
-    <string name="color_green">Zielony (Green)</string>
-    <string name="color_blue">Niebieski (Blue)</string>
-    <string name="color_alpha">Przezroczyste</string>
+    <string name="color_red">Czerwony</string>
+    <string name="color_green">Zielony</string>
+    <string name="color_blue">Niebieski</string>
+    <string name="color_alpha">Przezroczystość</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Zastosuj</string>
     <string name="color_picker_cancel">Anuluj</string>

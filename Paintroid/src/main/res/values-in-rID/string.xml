@@ -35,11 +35,11 @@
     <string name="button_text">Teks</string>
     <string name="button_shape">Bentuk</string>
     <string name="button_hand">Tangan</string>
-    <string name="button_watercolor">Watercolor</string>
+    <string name="button_watercolor">Cat air</string>
     <string name="button_spray_can">Kaleng semprot</string>
     <string name="button_apply">Menerapkan</string>
     <string name="button_checkmark">Tanda cek</string>
-    <string name="button_plus">Connect Line Segment</string>
+    <string name="button_plus">Hubungkan Segmen Garis</string>
     <string name="done">Selesai</string>
     <string name="gallery">Galeri</string>
     <string name="load_sticker_error">Tidak dapat memuat Stiker</string>
@@ -58,7 +58,7 @@
     <string name="help_title">Bantuan</string>
     <string name="help_content_eraser">Hapus bagian citra dengan setip.</string>
     <string name="help_content_brush">Ketuk simbol pada bilah bawah untuk mengubah warna atau ukuran kuas.</string>
-    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_watercolor">Mirip dengan alat kuas dengan efek cat air. Namun Anda juga dapat mengubah kekuatan kuas dengan penggeser di menu warna.</string>
     <string name="help_content_eyedropper">Ketuk pada citra untuk memilih warna.</string>
     <string name="help_content_undo">Ketuk untuk mengurungkan tindakan sebelumnya.</string>
     <string name="help_content_redo">Ketuk untuk mengulangi tindakan yang diurungkan.</string>

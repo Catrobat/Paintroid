@@ -22,12 +22,14 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.util.SparseArray
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatImageView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.catrobat.paintroid.R
@@ -38,7 +40,6 @@ import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 
 class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), LayerContracts.Adapter {
     private val viewHolders: SparseArray<LayerContracts.LayerViewHolder> = SparseArray()
-    private var isDrawerLayoutOpen = false
 
     override fun getCount() = presenter.layerCount
 
@@ -49,10 +50,6 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
     override fun notifyDataSetChanged() {
         viewHolders.clear()
         super.notifyDataSetChanged()
-    }
-
-    override fun setDrawerLayoutOpen(isOpen: Boolean) {
-        isDrawerLayoutOpen = isOpen
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
@@ -67,19 +64,31 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
             viewHolder = localConvertView.tag as LayerContracts.LayerViewHolder
         }
         viewHolders.put(position, viewHolder)
-        presenter.onBindLayerViewHolderAtPosition(position, viewHolder, isDrawerLayoutOpen)
+        val isShown = presenter.isShown()
+        presenter.onBindLayerViewHolderAtPosition(position, viewHolder, isShown)
         val checkBox = localConvertView?.findViewById<CheckBox>(R.id.pocketpaint_checkbox_layer)
         checkBox?.setOnClickListener {
             with(presenter) {
                 if (checkBox.isChecked) {
                     unhideLayer(position, viewHolder)
-                    getLayerItem(position).checkBox = true
+                    getLayerItem(position).isVisible = true
                 } else {
                     hideLayer(position)
-                    getLayerItem(position).checkBox = false
+                    getLayerItem(position).isVisible = false
                 }
             }
         }
+
+        val dragHandle = localConvertView?.findViewById<AppCompatImageView>(R.id.pocketpaint_layer_drag_handle)
+        dragHandle?.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> presenter.onStartDragging(position, localConvertView!!)
+                MotionEvent.ACTION_UP -> presenter.onStopDragging()
+            }
+
+            true
+        }
+
         return localConvertView
     }
 
@@ -89,7 +98,8 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
         private val layerBackground: LinearLayout = itemView.findViewById(R.id.pocketpaint_item_layer_background)
         private val imageView: ImageView = itemView.findViewById(R.id.pocketpaint_item_layer_image)
         private var currentBitmap: Bitmap? = null
-        private val checkBox: CheckBox = itemView.findViewById(R.id.pocketpaint_checkbox_layer)
+        private val layerVisibilityCheckbox: CheckBox = itemView.findViewById(R.id.pocketpaint_checkbox_layer)
+        private var isSelected = false
 
         companion object {
             private const val RESIZE_LENGTH = 400f
@@ -102,27 +112,30 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
             get() = itemView
 
         override fun setSelected(position: Int, bottomNavigationViewHolder: BottomNavigationViewHolder?, defaultToolController: DefaultToolController?) {
-            if (!layerPresenter.getLayerItem(position).checkBox) {
+            if (!layerPresenter.getLayerItem(position).isVisible) {
                 defaultToolController?.switchTool(ToolType.HAND, false)
                 bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
             }
             layerBackground.setBackgroundColor(Color.BLUE)
+            isSelected = true
         }
 
         override fun setSelected() {
             layerBackground.setBackgroundColor(Color.BLUE)
+            isSelected = true
         }
 
         override fun setDeselected() {
-            layerBackground.setBackgroundColor(Color.TRANSPARENT)
+            layerBackground.setBackgroundResource(R.color.pocketpaint_colorPrimary)
+            isSelected = false
         }
 
-        override fun updateImageView(bitmap: Bitmap?, isDrawerLayoutOpen: Boolean) {
-            if (isDrawerLayoutOpen) {
-                runBlocking {
-                    launch {
-                        imageView.setImageBitmap(bitmap?.let { resizeBitmap(it) })
-                    }
+        override fun isSelected() = isSelected
+
+        override fun updateImageView(bitmap: Bitmap?) {
+            runBlocking {
+                launch {
+                    imageView.setImageBitmap(bitmap?.let { resizeBitmap(it) })
                 }
             }
             currentBitmap = bitmap
@@ -141,10 +154,10 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
             return Bitmap.createScaledBitmap(bitmap, newWidth.toInt(), newHeight.toInt(), false)
         }
 
-        override fun setCheckBox(setTo: Boolean) {
-            checkBox.isChecked = setTo
+        override fun setLayerVisibilityCheckbox(setTo: Boolean) {
+            layerVisibilityCheckbox.isChecked = setTo
         }
 
-        override fun setMergable() = layerBackground.setBackgroundColor(Color.YELLOW)
+        override fun setMergable() = layerBackground.setBackgroundResource(R.color.pocketpaint_color_merge_layer)
     }
 }

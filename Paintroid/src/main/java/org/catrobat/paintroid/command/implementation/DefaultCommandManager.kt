@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -90,23 +90,37 @@ class DefaultCommandManager(
     }
 
     override fun undo() {
+        var success = true
         val command = undoCommandList.pop()
         redoCommandList.addFirst(command)
-
         var layerCount = layerModel.layerCount
         val currentCommandName = command.javaClass.simpleName
         val addLayerCommandRegex = AddLayerCommand::class.java.simpleName.toRegex()
         val mergeLayerCommandRegex = MergeLayersCommand::class.java.simpleName.toRegex()
 
+        var backupLayer: LayerContracts.Layer? = null
         if (currentCommandName.matches(addLayerCommandRegex)) {
             layerCount--
-            layerModel.removeLayerAt(0)
+            backupLayer = layerModel.getLayerAt(0)
+            success = layerModel.removeLayerAt(0)
         }
 
         val checkBoxes: MutableList<Boolean> = ArrayList(Collections.nCopies(layerCount, true))
 
         if (!currentCommandName.matches(mergeLayerCommandRegex)) {
-            backUpCheckBoxes(layerCount, checkBoxes)
+            success = if (!backUpCheckBoxes(layerCount, checkBoxes)) false else success
+        }
+
+        if (!success) {
+            backupLayer?.apply {
+                if (layerModel.getLayerIndexOf(this) == -1) {
+                    layerModel.addLayerAt(0, this)
+                }
+            }
+            val commandToRestore = redoCommandList.pop()
+            undoCommandList.addFirst(commandToRestore)
+
+            return
         }
 
         layerModel.reset()
@@ -136,7 +150,7 @@ class DefaultCommandManager(
         val currentLayer = layerModel.currentLayer
         val canvas = commonFactory.createCanvas()
         if (currentLayer != null) {
-            if (currentLayer.checkBox) {
+            if (currentLayer.isVisible) {
                 canvas.setBitmap(currentLayer.bitmap)
             } else {
                 canvas.setBitmap(currentLayer.transparentBitmap)
@@ -172,14 +186,21 @@ class DefaultCommandManager(
         }
     }
 
-    private fun backUpCheckBoxes(layerCount: Int, checkBoxes: MutableList<Boolean>) {
+    private fun backUpCheckBoxes(layerCount: Int, checkBoxes: MutableList<Boolean>): Boolean {
+        var success = true
         if (layerCount > 1) {
             for (index in layerCount - 1 downTo 0) {
-                checkBoxes[index] = layerModel.getLayerAt(index).checkBox
+                layerModel.getLayerAt(index)?.let {
+                    checkBoxes[index] = it.isVisible
+                } ?: run { success = false }
             }
         } else {
-            checkBoxes[0] = layerModel.getLayerAt(0).checkBox
+            layerModel.getLayerAt(0)?.let {
+                checkBoxes[0] = it.isVisible
+            } ?: run { success = false }
         }
+
+        return success
     }
 
     private fun fetchBackCheckBoxes(layerCount: Int, checkBoxes: List<Boolean>) {
@@ -187,15 +208,17 @@ class DefaultCommandManager(
             for (index in layerCount - 1 downTo 0) {
                 val destinationLayer = layerModel.getLayerAt(index)
                 if (!checkBoxes[index]) {
-                    destinationLayer.switchBitmaps(false)
-                    destinationLayer.checkBox = false
+                    destinationLayer?.let {
+                        it.switchBitmaps(false)
+                        it.isVisible = false
+                    }
                 }
             }
         } else {
             val destinationLayer = layerModel.currentLayer
             if (destinationLayer != null && !checkBoxes[0]) {
                 destinationLayer.switchBitmaps(false)
-                destinationLayer.checkBox = false
+                destinationLayer.isVisible = false
             }
         }
     }

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Color
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -59,11 +60,38 @@ class WatercolorToolIntegrationTest {
     }
 
     @Test
+    fun testSwitchingBackToBrushOnBackPressed() {
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+
+        assertTrue(
+            "Paint has maskFilter",
+            launchActivityRule.activity.toolPaint.paint.maskFilter != null
+        )
+
+        pressBack()
+
+        BottomNavigationViewInteraction.onBottomNavigationView()
+            .checkShowsCurrentTool(ToolType.BRUSH)
+
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+
+        assertTrue(
+            "Paint maskFilter has been reset",
+            launchActivityRule.activity.toolPaint.paint.maskFilter == null
+        )
+    }
+
+    @Test
     fun testSwitchingBetweenBrushAndWatercolorAndEraserAndLookForMaskFilter() {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
 
-        assertTrue("Paint has no maskfilter", launchActivityRule.activity.toolPaint.paint.maskFilter != null)
+        assertTrue(
+            "Paint has no maskFilter",
+            launchActivityRule.activity.toolPaint.paint.maskFilter != null
+        )
 
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.ERASER)
@@ -89,7 +117,10 @@ class WatercolorToolIntegrationTest {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
 
-        assertTrue("Paint still has maskfilter", launchActivityRule.activity.toolPaint.paint.maskFilter == null)
+        assertTrue(
+            "Paint still has maskFilter",
+            launchActivityRule.activity.toolPaint.paint.maskFilter == null
+        )
     }
 
     @Test

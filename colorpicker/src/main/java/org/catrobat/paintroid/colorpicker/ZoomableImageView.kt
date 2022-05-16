@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,6 +38,8 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
@@ -310,11 +312,24 @@ class ZoomableImageView :
 
     private fun updateLP() {
         updateLayoutParams {
-            val point = Point()
             post {
-                display.getSize(point)
-                height = point.y
-                width = point.x
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+                    val windowMetrics = windowManager.currentWindowMetrics
+                    val windowInsets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(
+                        WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout()
+                    )
+                    val insetsWidth = windowInsets.right + windowInsets.left
+                    val insetsHeight = windowInsets.top + windowInsets.bottom
+                    val b = windowMetrics.bounds
+                    width = b.width() - insetsWidth
+                    height = b.height() - insetsHeight
+                } else {
+                    val point = Point()
+                    display?.getSize(point)
+                    height = point.y
+                    width = point.x
+                }
             }
         }
     }

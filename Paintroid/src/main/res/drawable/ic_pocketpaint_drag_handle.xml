@@ -1,0 +1,144 @@
+<!--
+  ~ Catroid: An on-device visual programming system for Android devices
+  ~ Copyright (C) 2010-2021 The Catrobat Team
+  ~ (<http://developer.catrobat.org/credits>)
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ An additional term exception under section 7 of the GNU Affero
+  ~ General Public License, version 3, is available at
+  ~ http://developer.catrobat.org/license_additional_term
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="25.636dp"
+    android:viewportWidth="31.458"
+    android:viewportHeight="25.636">
+  <group>
+    <clip-path android:pathData="M1.229,0h29v5h-29z"/>
+    <group>
+      <path
+          android:fillAlpha="0.05"
+          android:pathData="M0,0h31v7.5h-31z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#fff">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M0,0h31.458v1h-31.458z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M0,0h1.5v7.636h-1.5z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M31.5,0h-1.5v7.636h1.5z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+    </group>
+  </group>
+  <group>
+    <clip-path android:pathData="M1.229,6h29v5h-29z"/>
+    <group>
+      <path
+          android:fillAlpha="0.05"
+          android:pathData="M0,6h31v7.5h-31z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#fff">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M0,6h31.458v1h-31.458z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M0,6h1.5v7.636h-1.5z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M31.5,6h-1.5v7.636h1.5z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+    </group>
+  </group>
+  <group>
+    <clip-path android:pathData="M1.229,12h29v5h-29z"/>
+    <group>
+      <path
+          android:fillAlpha="0.05"
+          android:pathData="M0,12h31v7.5h-31z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#fff">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M0,12h31.458v1h-31.458z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M0,12h1.5v7.636h-1.5z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M31.5,12h-1.5v7.636h1.5z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+    </group>
+  </group>
+  <group>
+    <clip-path android:pathData="M1.229,18h29v5h-29z" />
+    <group>
+      <path
+          android:fillAlpha="0.05"
+          android:pathData="M0,18h31v7.5h-31z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#fff"/>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M0,18h31.458v1h-31.458z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M0,18h1.5v7.636h-1.5z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+      <path
+          android:fillAlpha="0.2"
+          android:pathData="M31.5,18h-1.5v7.636h1.5z"
+          android:strokeAlpha="0.5"
+          android:fillColor="#000">
+      </path>
+    </group>
+  </group>
+</vector>

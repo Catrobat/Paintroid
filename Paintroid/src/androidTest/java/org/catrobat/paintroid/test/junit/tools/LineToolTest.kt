@@ -33,7 +33,7 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.Perspective
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import org.junit.Assert
@@ -47,7 +47,7 @@ class LineToolTest {
     private val commandManager = Mockito.mock(CommandManager::class.java)
     private var workspace = Mockito.mock(Workspace::class.java)
     private val brushToolOptions = Mockito.mock(BrushToolOptionsView::class.java)
-    private val toolOptionsController = Mockito.mock(ToolOptionsVisibilityController::class.java)
+    private val toolOptionsViewController = Mockito.mock(ToolOptionsViewController::class.java)
     private val contextCallback = Mockito.mock(ContextCallback::class.java)
     private lateinit var tool: LineTool
     private var screenWidth = 1920
@@ -84,7 +84,7 @@ class LineToolTest {
         tool = LineTool(
             brushToolOptions,
             contextCallback,
-            toolOptionsController,
+            toolOptionsViewController,
             toolPaint,
             workspace,
             commandManager,
@@ -147,6 +147,23 @@ class LineToolTest {
         Assert.assertNotEquals(tool.startPointToDraw, null)
         tool.handleDown(PointF(5f, 5f))
         tool.handleUp(PointF(10f, 10f))
+        val plusButtonVisibility = LineTool.topBarViewHolder?.plusButton?.visibility
+        Assert.assertEquals(plusButtonVisibility, View.VISIBLE)
+        tool.onClickOnPlus()
+        Assert.assertEquals(tool.connectedLines, true)
+        Assert.assertEquals(tool.undoRecentlyClicked, false)
+    }
+
+    @Test
+    @UiThreadTest
+    fun testIfPlusIsDisplayedAfterDrawingLine() {
+        tool.handleDown(PointF(1f, 1f))
+        tool.handleMove(PointF(500f, 500f))
+        tool.handleUp(PointF(500f, 500f))
+        Assert.assertEquals(tool.currentCoordinate, null)
+        Assert.assertEquals(tool.initialEventCoordinate, null)
+        Assert.assertEquals(tool.startpointSet, true)
+        Assert.assertNotEquals(tool.startPointToDraw, null)
         val plusButtonVisibility = LineTool.topBarViewHolder?.plusButton?.visibility
         Assert.assertEquals(plusButtonVisibility, View.VISIBLE)
         tool.onClickOnPlus()

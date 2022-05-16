@@ -1334,6 +1334,44 @@ class TransformToolIntegrationTest {
         assertEquals(scale, perspective.scale, 0.0001f)
     }
 
+    @Test
+    fun testTransformToolSetCenterCloseCenter() {
+        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        onToolBarView()
+            .performSelectTool(ToolType.TRANSFORM)
+
+        runBlocking {
+            onTransformToolOptionsView().performSetCenterClick()
+        }
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CLOSE_CENTER))
+        runBlocking {
+            TopBarViewInteraction.onTopBarView().performClickCheckmark()
+            delay(1500)
+        }
+        assertThat(toolSelectionBoxWidth, lessThan(initialWidth.toFloat()))
+        assertThat(toolSelectionBoxHeight, lessThan(initialHeight.toFloat()))
+    }
+
+    @Test
+    fun testTransformToolSetCenterFarCenter() {
+        drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+        onToolBarView()
+            .performSelectTool(ToolType.TRANSFORM)
+
+        runBlocking {
+            onTransformToolOptionsView().performSetCenterClick()
+        }
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CORNER))
+        runBlocking {
+            TopBarViewInteraction.onTopBarView().performClickCheckmark()
+            delay(1500)
+        }
+        assertThat(toolSelectionBoxWidth, greaterThan(initialWidth.toFloat()))
+        assertThat(toolSelectionBoxHeight, greaterThan(initialHeight.toFloat()))
+    }
+
     companion object {
         private fun drawPlus(bitmap: Bitmap, lineLength: Int) {
             val horizontalStartX = bitmap.width / 4

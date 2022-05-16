@@ -35,11 +35,11 @@
     <string name="button_text">Texto</string>
     <string name="button_shape">Formas</string>
     <string name="button_hand">Mano</string>
-    <string name="button_watercolor">Watercolor</string>
+    <string name="button_watercolor">Agua color</string>
     <string name="button_spray_can">Lata de spray</string>
     <string name="button_apply">Aplicar</string>
     <string name="button_checkmark">Marca de verificación</string>
-    <string name="button_plus">Connect Line Segment</string>
+    <string name="button_plus">Conectar segmento de línea</string>
     <string name="done">Listo</string>
     <string name="gallery">Galería</string>
     <string name="load_sticker_error">No se ha podido cargar el Sticker</string>
@@ -58,7 +58,7 @@
     <string name="help_title">Ayuda</string>
     <string name="help_content_eraser">Quite partes de la imagen como si utilizara una goma de borrar.</string>
     <string name="help_content_brush">Pulse sobre los símbolos de la barra de abajo para cambiar el color o el tamaño del pincel.</string>
-    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_watercolor">Similar a la herramienta de enjuague con efecto acuático. Sin embargo, también puede cambiar la fuerza del frustre con la barra deslizante en el menú de colores.</string>
     <string name="help_content_eyedropper">Pulse sobre la imagen para seleccionar un color.</string>
     <string name="help_content_undo">Pulse deshacer, para deshacer la acción anterior.</string>
     <string name="help_content_redo">Pulse rehacer una acción deshecha.</string>

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,14 +31,14 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.dragndrop.DragAndDropPresenter
-import org.catrobat.paintroid.ui.dragndrop.ListItemLongClickHandler
+import org.catrobat.paintroid.ui.dragndrop.ListItemDragHandler
 import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 import java.util.ArrayList
 import java.util.Collections.swap
 
 class LayerPresenter(
     private val model: LayerContracts.Model,
-    private val listItemLongClickHandler: ListItemLongClickHandler,
+    private val listItemDragHandler: ListItemDragHandler,
     private val layerMenuViewHolder: LayerContracts.LayerMenuViewHolder,
     private val commandManager: CommandManager,
     private val commandFactory: CommandFactory,
@@ -111,12 +111,12 @@ class LayerPresenter(
         } else {
             viewHolder.setDeselected()
         }
-        if (!layers[position].checkBox) {
-            viewHolder.updateImageView(layer.transparentBitmap, isOpen)
-            viewHolder.setCheckBox(false)
+        if (!layers[position].isVisible) {
+            viewHolder.updateImageView(layer.transparentBitmap)
+            viewHolder.setLayerVisibilityCheckbox(false)
         } else {
-            viewHolder.updateImageView(layer.bitmap, isOpen)
-            viewHolder.setCheckBox(true)
+            viewHolder.updateImageView(layer.bitmap)
+            viewHolder.setLayerVisibilityCheckbox(true)
         }
     }
 
@@ -132,6 +132,8 @@ class LayerPresenter(
             layerMenuViewHolder.disableRemoveLayerButton()
         }
     }
+
+    override fun isShown(): Boolean = layerMenuViewHolder.isShown()
 
     override fun getLayerItem(position: Int): LayerContracts.Layer = layers[position]
 
@@ -158,30 +160,32 @@ class LayerPresenter(
     private fun getDestinationLayer(
         position: Int,
         isUnhide: Boolean
-    ): LayerContracts.Layer = model.getLayerAt(position).apply {
+    ): LayerContracts.Layer? = model.getLayerAt(position)?.apply {
         if (isUnhide) switchBitmaps(isUnhide)
         val newBitmap = if (!isUnhide) transparentBitmap else bitmap
         if (!isUnhide) switchBitmaps(isUnhide)
         bitmap = newBitmap
-        checkBox = isUnhide
+        isVisible = isUnhide
     }
 
     override fun hideLayer(position: Int) {
-        val destinationLayer = getDestinationLayer(position, false)
         drawingSurface?.refreshDrawingSurface()
-        if (model.currentLayer == destinationLayer) {
-            defaultToolController?.switchTool(ToolType.HAND, false)
-            bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
+        getDestinationLayer(position, false)?.let { layer ->
+            if (model.currentLayer == layer) {
+                defaultToolController?.switchTool(ToolType.HAND, false)
+                bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
+            }
         }
     }
 
     override fun unhideLayer(position: Int, viewHolder: LayerContracts.LayerViewHolder) {
-        val destinationLayer = getDestinationLayer(position, true)
-        viewHolder.updateImageView(destinationLayer.bitmap, true)
         drawingSurface?.refreshDrawingSurface()
-        if (model.currentLayer == destinationLayer) {
-            defaultToolController?.switchTool(ToolType.BRUSH, false)
-            bottomNavigationViewHolder?.showCurrentTool(ToolType.BRUSH)
+        getDestinationLayer(position, true)?.let { layer ->
+            viewHolder.updateImageView(layer.bitmap)
+            if (model.currentLayer == layer) {
+                defaultToolController?.switchTool(ToolType.BRUSH, false)
+                bottomNavigationViewHolder?.showCurrentTool(ToolType.BRUSH)
+            }
         }
     }
 
@@ -192,13 +196,14 @@ class LayerPresenter(
 
     override fun mergeItems(position: Int, mergeWith: Int) {
         checkIfLineToolInUse()
-        val actualLayer = layers[mergeWith]
-        val actualPosition = model.getLayerIndexOf(actualLayer)
-        if (position != actualPosition) {
-            commandManager.addCommand(
-                commandFactory.createMergeLayersCommand(position, actualPosition)
-            )
-            navigator.showToast(R.string.layer_merged, Toast.LENGTH_SHORT)
+        layers.getOrNull(mergeWith)?.let { actualLayer ->
+            val actualPosition = model.getLayerIndexOf(actualLayer)
+            if (position != actualPosition && actualPosition > -1) {
+                commandManager.addCommand(
+                    commandFactory.createMergeLayersCommand(position, actualPosition)
+                )
+                navigator.showToast(R.string.layer_merged, Toast.LENGTH_SHORT)
+            }
         }
     }
 
@@ -217,20 +222,24 @@ class LayerPresenter(
         adapter?.getViewHolderAt(mergeWith)?.setMergable()
     }
 
-    override fun onLongClickLayerAtPosition(position: Int, view: View) {
+    override fun onStopDragging() {
+        listItemDragHandler.stopDragging()
+    }
+
+    override fun onStartDragging(position: Int, view: View) {
         if (!isPositionValid(position)) {
             Log.e(TAG, "onLongClickLayerAtPosition at invalid position")
             return
         }
         var isAllowedToLongclick = true
         for (i in layers.indices) {
-            if (!layers[i].checkBox) {
+            if (!layers[i].isVisible) {
                 isAllowedToLongclick = false
             }
         }
         if (isAllowedToLongclick) {
             if (layerCount > 1) {
-                listItemLongClickHandler.handleOnItemLongClick(position, view)
+                listItemDragHandler.startDragging(position, view)
             }
         } else {
             navigator.showToast(R.string.no_longclick_on_hidden_layer, Toast.LENGTH_SHORT)
@@ -255,6 +264,16 @@ class LayerPresenter(
         }
         refreshLayerMenuViewHolder()
         adapter?.notifyDataSetChanged()
-        listItemLongClickHandler.stopDragging()
+        listItemDragHandler.stopDragging()
+    }
+
+    fun resetMergeColor(layerPosition: Int) {
+        if (adapter != null && adapter?.getViewHolderAt(layerPosition) != null) {
+            if (adapter?.getViewHolderAt(layerPosition)!!.isSelected()) {
+                adapter?.getViewHolderAt(layerPosition)?.setSelected()
+            } else {
+                adapter?.getViewHolderAt(layerPosition)?.setDeselected()
+            }
+        }
     }
 }

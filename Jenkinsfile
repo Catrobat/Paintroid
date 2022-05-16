@@ -27,6 +27,7 @@ pipeline {
     parameters {
         string name: 'DEBUG_LABEL', defaultValue: '', description: 'For debugging when entered will be used as label to decide on which slaves the jobs will run.'
         booleanParam name: 'BUILD_WITH_CATROID', defaultValue: false, description: 'When checked then the current Paintroid build will be built with the current develop branch of Catroid'
+        string name: 'CATROID_BRANCH', defaultValue: 'develop', description: 'The branch which to build catroid with, when BUILD_WITH_CATROID is checked.'
     }
 
     agent {
@@ -74,12 +75,19 @@ pipeline {
                     params.BUILD_WITH_CATROID
                 }
             }
+            
             steps {
                 sh './gradlew publishToMavenLocal -Psnapshot'
                 sh 'rm -rf Catroid; mkdir Catroid'
                 dir('Catroid') {
-                    git branch: 'develop', url: 'https://github.com/Catrobat/Catroid.git'
-                    sh "./gradlew -PpaintroidLocal assembleCatroidDebug"
+                    git branch: params.CATROID_BRANCH, url: 'https://github.com/Catrobat/Catroid.git'
+                    sh 'rm -f catroid/src/main/libs/*.aar'
+                    sh 'mv -f ../colorpicker/build/outputs/aar/colorpicker-debug.aar catroid/src/main/libs/colorpicker-LOCAL.aar'
+                    sh 'mv -f ../Paintroid/build/outputs/aar/Paintroid-debug.aar catroid/src/main/libs/Paintroid-LOCAL.aar'
+
+                    archiveArtifacts 'catroid/src/main/libs/colorpicker-LOCAL.aar'
+                    archiveArtifacts 'catroid/src/main/libs/Paintroid-LOCAL.aar'
+                    sh "./gradlew assembleCatroidDebug"
                     archiveArtifacts 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk'
                 }
             }
