@@ -84,7 +84,7 @@ interface CommandFactory {
         boxHeight: Float,
         toolPosition: PointF,
         boxRotation: Float,
-        typeFaceInfo: SerializableTypeface
+        typefaceInfo: SerializableTypeface
     ): Command
 
     fun createResizeCommand(newWidth: Int, newHeight: Int): Command

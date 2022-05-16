@@ -144,11 +144,11 @@ class DefaultCommandFactory : CommandFactory {
         boxHeight: Float,
         toolPosition: PointF,
         boxRotation: Float,
-        typeFaceInfo: SerializableTypeface
+        typefaceInfo: SerializableTypeface
     ): Command = TextToolCommand(
         multilineText, commonFactory.createPaint(textPaint),
         boxOffset.toFloat(), boxWidth, boxHeight, commonFactory.createPointF(toolPosition),
-        boxRotation, typeFaceInfo
+        boxRotation, typefaceInfo
     )
 
     override fun createResizeCommand(newWidth: Int, newHeight: Int): Command =

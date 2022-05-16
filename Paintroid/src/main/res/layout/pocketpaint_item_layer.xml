@@ -27,7 +27,8 @@
     android:paddingStart="8dp"
     android:paddingTop="10dp"
     android:paddingEnd="8dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:baselineAligned="false">
 
     <LinearLayout
         android:layout_width="wrap_content"

@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
 
 private const val DEFAULT_TEXTSIZE = "20"
@@ -48,7 +49,7 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     private val underlinedToggleButton: MaterialButton
     private val italicToggleButton: MaterialButton
     private val boldToggleButton: MaterialButton
-    private val fonts: List<String>
+    private val fontTypes: List<FontType>
 
     init {
         val inflater = LayoutInflater.from(context)
@@ -65,7 +66,7 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
         underlinedToggleButton.paintFlags =
             underlinedToggleButton.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         @Suppress("SpreadOperator")
-        fonts = listOf(*context.resources.getStringArray(R.array.pocketpaint_main_text_tool_fonts))
+        fontTypes = FontType.values().toList()
         initializeListeners()
         textEditText.requestFocus()
     }
@@ -84,7 +85,7 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
             }
         }
         fontList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        fontList.adapter = FontListAdapter(context, fonts) { font ->
+        fontList.adapter = FontListAdapter(context, fontTypes) { font ->
             notifyFontChanged(font)
             hideKeyboard()
         }
@@ -127,8 +128,8 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
         })
     }
 
-    private fun notifyFontChanged(fontString: String) {
-        callback?.setFont(fontString)
+    private fun notifyFontChanged(fontType: FontType) {
+        callback?.setFont(fontType)
     }
 
     private fun notifyUnderlinedChanged(underlined: Boolean) {
@@ -157,13 +158,13 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
         underlined: Boolean,
         text: String,
         textSize: Int,
-        font: String
+        fontType: FontType
     ) {
         boldToggleButton.isChecked = bold
         italicToggleButton.isChecked = italic
         underlinedToggleButton.isChecked = underlined
         textEditText.setText(text)
-        (fontList.adapter as FontListAdapter).setSelectedIndex(fonts.indexOf(font))
+        (fontList.adapter as FontListAdapter).setSelectedIndex(fontTypes.indexOf(fontType))
         fontSizeText.setText(DEFAULT_TEXTSIZE)
     }
 
