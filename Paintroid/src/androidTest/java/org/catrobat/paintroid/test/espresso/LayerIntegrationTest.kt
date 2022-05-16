@@ -642,8 +642,10 @@ class LayerIntegrationTest {
             .performAddLayer()
             .checkLayerCount(2)
             .performToggleLayerVisibility(0)
-            .performLongClickLayer(0)
-        onView(withText(R.string.no_longclick_on_hidden_layer)).inRoot(RootMatchers.withDecorView(Matchers.not(launchActivityRule.activity.window.decorView))).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            .performStartDragging(0)
+        onView(withText(R.string.no_longclick_on_hidden_layer))
+            .inRoot(RootMatchers.withDecorView(Matchers.not(launchActivityRule.activity.window.decorView)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test

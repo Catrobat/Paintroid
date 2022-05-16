@@ -52,6 +52,7 @@ import org.catrobat.paintroid.command.implementation.SetDimensionCommand
 import org.catrobat.paintroid.command.implementation.SprayCommand
 import org.catrobat.paintroid.command.implementation.StampCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
+import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
@@ -288,6 +289,21 @@ class CommandSerializationTest {
     }
 
     @Test
+    fun testSerializeSmudgePathCommand() {
+        val bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+        val pointArray = mutableListOf<PointF>()
+        pointArray.add(PointF(0f, 0f))
+        pointArray.add(PointF(1f, 1f))
+        pointArray.add(PointF(2f, 2f))
+        pointArray.add(PointF(3f, 3f))
+        val pressure = 1f
+        val maxSize = 100f
+        val minSize = 1f
+        expectedModel.commands.add(commandFactory.createSmudgePathCommand(bitmap, pointArray, pressure, maxSize, minSize))
+        assertSerializeAndDeserialize()
+    }
+
+    @Test
     fun testSerializeRemoveLayerCommand() {
         expectedModel.commands.add(commandFactory.createRemoveLayerCommand(4))
         assertSerializeAndDeserialize()
@@ -424,6 +440,9 @@ class CommandSerializationTest {
             )
             is PathCommand -> equalsPathCommand(
                 expectedCommand, actualCommand as PathCommand
+            )
+            is SmudgePathCommand -> equalsSmudgePathCommand(
+                expectedCommand, actualCommand as SmudgePathCommand
             )
             else -> false
         }
@@ -571,6 +590,13 @@ class CommandSerializationTest {
             actualCommand.path as SerializablePath
         ) &&
             DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint)
+
+    private fun equalsSmudgePathCommand(expectedCommand: SmudgePathCommand, actualCommand: SmudgePathCommand) =
+        expectedCommand.maxPressure == actualCommand.maxPressure &&
+            expectedCommand.maxSize == actualCommand.maxSize &&
+            expectedCommand.minSize == actualCommand.minSize &&
+            expectedCommand.originalBitmap.sameAs(actualCommand.originalBitmap) &&
+            expectedCommand.pointPath == actualCommand.pointPath
 
     private fun equalsSerializablePath(
         expectedPath: SerializablePath,

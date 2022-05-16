@@ -24,14 +24,8 @@ package org.catrobat.paintroid.ui.dragndrop
 
 import android.view.View
 
-interface DragAndDropPresenter {
-    fun swapItemsVisually(position: Int, swapWith: Int): Int
+interface ListItemDragHandler {
+    fun startDragging(position: Int, view: View)
 
-    fun mergeItems(position: Int, mergeWith: Int)
-
-    fun reorderItems(position: Int, swapWith: Int)
-
-    fun markMergeable(position: Int, mergeWith: Int)
-
-    fun onClickLayerAtPosition(position: Int, view: View)
+    fun stopDragging()
 }

@@ -20,8 +20,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">Палитра</string>
     <string name="color_picker_tab_icon">Значок вкладки палитры</string>
-    <string name="color_red">красный</string>
-    <string name="color_green">зелёный</string>
+    <string name="color_red">Красный</string>
+    <string name="color_green">Зелёный</string>
     <string name="color_blue">Синий</string>
     <string name="color_alpha">Прозрачность</string>
     <string name="color_hex">HEX</string>
@@ -30,7 +30,7 @@
     <string name="color_picker_current_color" tools:ignore="MissingTranslation">текущий</string>
     <string name="color_picker_new_color" tools:ignore="MissingTranslation">новый</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Пипетка</string>
-    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Сохранить?</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Сохранить изменения?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Хотите ли вы сохранить свои изменения?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">нет</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">да</string>

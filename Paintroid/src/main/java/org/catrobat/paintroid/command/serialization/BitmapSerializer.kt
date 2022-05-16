@@ -16,28 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.catrobat.paintroid.model
+package org.catrobat.paintroid.command.serialization
 
 import android.graphics.Bitmap
-import android.graphics.Color
-import org.catrobat.paintroid.contract.LayerContracts
+import android.graphics.BitmapFactory
+import com.esotericsoftware.kryo.Kryo
+import com.esotericsoftware.kryo.io.Input
+import com.esotericsoftware.kryo.io.Output
 
-open class Layer(override var bitmap: Bitmap?) : LayerContracts.Layer {
-    override var transparentBitmap: Bitmap? = null
-    override var isVisible: Boolean = true
+const val BITMAP_SERIALIZATION_COMPRESSION_QUALITY = 100
 
-    init {
-        bitmap?.apply {
-            transparentBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        }
+class BitmapSerializer(version: Int) : VersionSerializer<Bitmap>(version) {
+    override fun write(kryo: Kryo, output: Output, bitmap: Bitmap) {
+        bitmap.compress(Bitmap.CompressFormat.PNG, BITMAP_SERIALIZATION_COMPRESSION_QUALITY, output)
     }
 
-    override fun switchBitmaps(isUnhide: Boolean) {
-        val tmpBitmap = transparentBitmap?.apply { copy(config, isMutable) }
-        transparentBitmap = bitmap
-        bitmap = tmpBitmap
-        if (isUnhide) {
-            transparentBitmap?.eraseColor(Color.TRANSPARENT)
-        }
-    }
+    override fun read(kryo: Kryo, input: Input, type: Class<out Bitmap>): Bitmap =
+        super.handleVersions(this, kryo, input, type)
+
+    override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out Bitmap>): Bitmap =
+        BitmapFactory.decodeStream(input)
 }
