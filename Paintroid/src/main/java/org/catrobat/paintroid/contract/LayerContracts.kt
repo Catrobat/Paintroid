@@ -30,8 +30,6 @@ interface LayerContracts {
         fun notifyDataSetChanged()
 
         fun getViewHolderAt(position: Int): LayerViewHolder?
-
-        fun setDrawerLayoutOpen(isOpen: Boolean)
     }
 
     interface Presenter {
@@ -67,6 +65,12 @@ interface LayerContracts {
         fun setDefaultToolController(defaultToolController: DefaultToolController)
 
         fun setBottomNavigationViewHolder(bottomNavigationViewHolder: BottomNavigationViewHolder)
+
+        fun isShown(): Boolean
+
+        fun onStartDragging(position: Int, view: View)
+
+        fun onStopDragging()
     }
 
     interface LayerViewHolder {
@@ -83,13 +87,13 @@ interface LayerContracts {
 
         fun setDeselected()
 
-        fun updateImageView(bitmap: Bitmap?, isDrawerLayoutOpen: Boolean)
+        fun updateImageView(bitmap: Bitmap?)
 
         fun setMergable()
 
         fun isSelected(): Boolean
 
-        fun setCheckBox(setTo: Boolean)
+        fun setLayerVisibilityCheckbox(setTo: Boolean)
     }
 
     interface LayerMenuViewHolder {
@@ -100,12 +104,14 @@ interface LayerContracts {
         fun disableRemoveLayerButton()
 
         fun enableRemoveLayerButton()
+
+        fun isShown(): Boolean
     }
 
     interface Layer {
         var bitmap: Bitmap?
         var transparentBitmap: Bitmap?
-        var checkBox: Boolean
+        var isVisible: Boolean
 
         fun switchBitmaps(isUnhide: Boolean)
     }

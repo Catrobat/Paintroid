@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,6 +41,7 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
@@ -56,7 +57,6 @@ import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
-import org.catrobat.paintroid.listener.DrawerLayoutListener
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.model.MainActivityModel
@@ -134,6 +134,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         private const val IS_FULLSCREEN_KEY = "isFullscreen"
         private const val IS_SAVED_KEY = "isSaved"
         private const val IS_OPENED_FROM_CATROID_KEY = "isOpenedFromCatroid"
+        private const val IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY =
+            "isOpenedFromFormulaEditorInCatroid"
         private const val WAS_INITIAL_ANIMATION_PLAYED = "wasInitialAnimationPlayed"
         private const val SAVED_PICTURE_URI_KEY = "savedPictureUri"
         private const val CAMERA_IMAGE_URI_KEY = "cameraImageUri"
@@ -261,12 +263,15 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 val isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false)
                 val isOpenedFromCatroid =
                     savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
+                val isOpenedFromFormulaEditorInCatroid = savedInstanceState.getBoolean(
+                    IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY, false
+                )
                 val wasInitialAnimationPlayed =
                     savedInstanceState.getBoolean(WAS_INITIAL_ANIMATION_PLAYED, false)
                 val savedPictureUri = savedInstanceState.getParcelable<Uri>(SAVED_PICTURE_URI_KEY)
                 val cameraImageUri = savedInstanceState.getParcelable<Uri>(CAMERA_IMAGE_URI_KEY)
                 presenterMain.restoreState(
-                    isFullscreen, isSaved, isOpenedFromCatroid,
+                    isFullscreen, isSaved, isOpenedFromCatroid, isOpenedFromFormulaEditorInCatroid,
                     wasInitialAnimationPlayed, savedPictureUri, cameraImageUri
                 )
             }
@@ -406,7 +411,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     private fun onCreateLayerMenu() {
-        val layerLayout = findViewById<ViewGroup>(R.id.pocketpaint_layer_side_nav_menu)
+        val layerLayout = findViewById<NavigationView>(R.id.pocketpaint_nav_view_layer)
         val layerListView = findViewById<DragAndDropListView>(R.id.pocketpaint_layer_side_nav_list)
         val layerMenuViewHolder = LayerMenuViewHolder(layerLayout)
         val layerNavigator = LayerNavigator(applicationContext)
@@ -417,9 +422,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val layerAdapter = LayerAdapter(layerPresenter)
         presenterMain.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
-        findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout).also {
-            it.addDrawerListener(DrawerLayoutListener(it, layerAdapter))
-        }
         layerListView.setPresenter(layerPresenter)
         layerListView.adapter = layerAdapter
         layerPresenter.refreshLayerMenuViewHolder()
@@ -522,6 +524,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             putBoolean(IS_FULLSCREEN_KEY, model.isFullscreen)
             putBoolean(IS_SAVED_KEY, model.isSaved)
             putBoolean(IS_OPENED_FROM_CATROID_KEY, model.isOpenedFromCatroid)
+            putBoolean(
+                IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY,
+                model.isOpenedFromFormulaEditorInCatroid
+            )
             putBoolean(WAS_INITIAL_ANIMATION_PLAYED, model.wasInitialAnimationPlayed())
             putParcelable(SAVED_PICTURE_URI_KEY, model.savedPictureUri)
             putParcelable(CAMERA_IMAGE_URI_KEY, model.cameraImageUri)

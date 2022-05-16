@@ -32,7 +32,7 @@ import org.catrobat.paintroid.contract.LayerContracts.LayerViewHolder;
 import org.catrobat.paintroid.model.Layer;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.presenter.LayerPresenter;
-import org.catrobat.paintroid.ui.dragndrop.ListItemLongClickHandler;
+import org.catrobat.paintroid.ui.dragndrop.ListItemDragHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when;
 public class LayerPresenterTest {
 
 	@Mock
-	private ListItemLongClickHandler listItemLongClickHandler;
+	private ListItemDragHandler listItemDragHandler;
 
 	@Mock
 	private LayerContracts.LayerMenuViewHolder layerMenuViewHolder;
@@ -78,7 +78,7 @@ public class LayerPresenterTest {
 	}
 
 	private void createPresenter() {
-		layerPresenter = new LayerPresenter(layerModel, listItemLongClickHandler,
+		layerPresenter = new LayerPresenter(layerModel, listItemDragHandler,
 				layerMenuViewHolder, commandManager, commandFactory, navigator);
 		layerPresenter.setAdapter(layerAdapter);
 	}
@@ -86,7 +86,7 @@ public class LayerPresenterTest {
 	@Test
 	public void testSetUp() {
 		createPresenter();
-		verifyZeroInteractions(layerAdapter, layerMenuViewHolder, listItemLongClickHandler,
+		verifyZeroInteractions(layerAdapter, layerMenuViewHolder, listItemDragHandler,
 				commandManager, commandFactory, navigator);
 	}
 
@@ -105,11 +105,11 @@ public class LayerPresenterTest {
 		layerPresenter.onBindLayerViewHolderAtPosition(0, layerViewHolder, false);
 
 		verify(layerViewHolder).setSelected(0, null, null);
-		verify(layerViewHolder).updateImageView(firstLayerBitmap, false);
-		verify(layerViewHolder).setCheckBox(false);
+		verify(layerViewHolder).updateImageView(firstLayerBitmap);
+		verify(layerViewHolder).setLayerVisibilityCheckbox(false);
 		verifyNoMoreInteractions(layerViewHolder);
 		verifyZeroInteractions(commandManager, commandFactory, layerAdapter,
-				listItemLongClickHandler, layerMenuViewHolder);
+				listItemDragHandler, layerMenuViewHolder);
 	}
 
 	@Test
@@ -127,11 +127,11 @@ public class LayerPresenterTest {
 		layerPresenter.onBindLayerViewHolderAtPosition(1, layerViewHolder, false);
 
 		verify(layerViewHolder).setDeselected();
-		verify(layerViewHolder).updateImageView(secondLayer.getTransparentBitmap(), false);
-		verify(layerViewHolder).setCheckBox(false);
+		verify(layerViewHolder).updateImageView(secondLayer.getTransparentBitmap());
+		verify(layerViewHolder).setLayerVisibilityCheckbox(false);
 		verifyNoMoreInteractions(layerViewHolder);
 		verifyZeroInteractions(firstLayer, commandManager, layerAdapter,
-				listItemLongClickHandler, layerMenuViewHolder);
+				listItemDragHandler, layerMenuViewHolder);
 	}
 
 	@Test
@@ -145,7 +145,7 @@ public class LayerPresenterTest {
 		verify(layerMenuViewHolder).enableAddLayerButton();
 		verify(layerMenuViewHolder).enableRemoveLayerButton();
 		verifyNoMoreInteractions(layerMenuViewHolder);
-		verifyZeroInteractions(commandManager, commandFactory, layerAdapter, listItemLongClickHandler);
+		verifyZeroInteractions(commandManager, commandFactory, layerAdapter, listItemDragHandler);
 	}
 
 	@Test
@@ -161,7 +161,7 @@ public class LayerPresenterTest {
 		verify(layerMenuViewHolder).disableAddLayerButton();
 		verify(layerMenuViewHolder).enableRemoveLayerButton();
 		verifyNoMoreInteractions(layerMenuViewHolder);
-		verifyZeroInteractions(commandManager, commandFactory, layerAdapter, listItemLongClickHandler);
+		verifyZeroInteractions(commandManager, commandFactory, layerAdapter, listItemDragHandler);
 	}
 
 	@Test
@@ -174,7 +174,7 @@ public class LayerPresenterTest {
 		verify(layerMenuViewHolder).enableAddLayerButton();
 		verify(layerMenuViewHolder).disableRemoveLayerButton();
 		verifyNoMoreInteractions(layerMenuViewHolder);
-		verifyZeroInteractions(commandManager, commandFactory, layerAdapter, listItemLongClickHandler);
+		verifyZeroInteractions(commandManager, commandFactory, layerAdapter, listItemDragHandler);
 	}
 
 	@Test
@@ -221,7 +221,7 @@ public class LayerPresenterTest {
 		layerPresenter.addLayer();
 
 		verify(commandManager).addCommand(command);
-		verifyZeroInteractions(layerMenuViewHolder, layerAdapter, listItemLongClickHandler);
+		verifyZeroInteractions(layerMenuViewHolder, layerAdapter, listItemDragHandler);
 	}
 
 	@Test
@@ -235,7 +235,7 @@ public class LayerPresenterTest {
 		layerPresenter.addLayer();
 
 		verify(navigator).showToast(R.string.layer_too_many_layers, Toast.LENGTH_SHORT);
-		verifyZeroInteractions(commandManager, layerMenuViewHolder, layerAdapter, listItemLongClickHandler);
+		verifyZeroInteractions(commandManager, layerMenuViewHolder, layerAdapter, listItemDragHandler);
 	}
 
 	@Test
@@ -251,7 +251,7 @@ public class LayerPresenterTest {
 		layerPresenter.removeLayer();
 
 		verify(commandManager).addCommand(command);
-		verifyZeroInteractions(selectedLayer, layerMenuViewHolder, layerAdapter, listItemLongClickHandler);
+		verifyZeroInteractions(selectedLayer, layerMenuViewHolder, layerAdapter, listItemDragHandler);
 	}
 
 	@Test
@@ -261,46 +261,46 @@ public class LayerPresenterTest {
 		createPresenter();
 		layerPresenter.removeLayer();
 
-		verifyZeroInteractions(commandManager, commandFactory, layerMenuViewHolder, layerAdapter, listItemLongClickHandler);
+		verifyZeroInteractions(commandManager, commandFactory, layerMenuViewHolder, layerAdapter, listItemDragHandler);
 	}
 
 	@Test
-	public void testOnLongClickLayerAtPosition() {
+	public void testOnDragLayerAtPosition() {
 		View view = mock(View.class);
 		Layer firstLayer = new Layer(null);
 		Layer secondLayer = new Layer(null);
-		assertTrue(firstLayer.getCheckBox());
-		assertTrue(secondLayer.getCheckBox());
+		assertTrue(firstLayer.isVisible());
+		assertTrue(secondLayer.isVisible());
 		layerModel.addLayerAt(0, firstLayer);
 		layerModel.addLayerAt(1, secondLayer);
 		createPresenter();
-		layerPresenter.onLongClickLayerAtPosition(0, view);
+		layerPresenter.onStartDragging(0, view);
 
-		verify(listItemLongClickHandler).handleOnItemLongClick(0, view);
+		verify(listItemDragHandler).startDragging(0, view);
 		verifyZeroInteractions(commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
 	}
 
 	@Test
-	public void testOnLongClickLayerAtPositionWhenOnlyOneLayer() {
+	public void testOnDragLayerAtPositionWhenOnlyOneLayer() {
 		View view = mock(View.class);
 		layerModel.addLayerAt(0, mock(Layer.class));
 
 		createPresenter();
-		layerPresenter.onLongClickLayerAtPosition(0, view);
+		layerPresenter.onStartDragging(0, view);
 
-		verifyZeroInteractions(listItemLongClickHandler, commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
+		verifyZeroInteractions(listItemDragHandler, commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
 	}
 
 	@Test
-	public void testOnLongClickLayerAtPositionWhenPositionOutOfBounds() {
+	public void testOnDragLayerAtPositionWhenPositionOutOfBounds() {
 		View view = mock(View.class);
 		layerModel.addLayerAt(0, mock(Layer.class));
 		layerModel.addLayerAt(1, mock(Layer.class));
 
 		createPresenter();
-		layerPresenter.onLongClickLayerAtPosition(2, view);
+		layerPresenter.onStartDragging(2, view);
 
-		verifyZeroInteractions(listItemLongClickHandler, commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
+		verifyZeroInteractions(listItemDragHandler, commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
 	}
 
 	@Test
@@ -495,7 +495,7 @@ public class LayerPresenterTest {
 		layerPresenter.markMergeable(0, 1);
 
 		verify(layerViewHolder).setMergable();
-		verifyZeroInteractions(commandManager, layerMenuViewHolder, listItemLongClickHandler);
+		verifyZeroInteractions(commandManager, layerMenuViewHolder, listItemDragHandler);
 	}
 
 	@Test
@@ -503,7 +503,7 @@ public class LayerPresenterTest {
 		createPresenter();
 		layerPresenter.markMergeable(0, 1);
 
-		verifyZeroInteractions(commandManager, layerMenuViewHolder, listItemLongClickHandler);
+		verifyZeroInteractions(commandManager, layerMenuViewHolder, listItemDragHandler);
 	}
 
 	@Test

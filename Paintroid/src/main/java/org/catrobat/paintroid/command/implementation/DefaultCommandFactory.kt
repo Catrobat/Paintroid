@@ -126,6 +126,16 @@ class DefaultCommandFactory : CommandFactory {
         commonFactory.createSerializablePath(path)
     )
 
+    override fun createSmudgePathCommand(bitmap: Bitmap, pointPath: MutableList<PointF>, maxPressure: Float, maxSize: Float, minSize: Float): Command {
+        val copy = mutableListOf<PointF>()
+
+        pointPath.forEach {
+            copy.add(commonFactory.createPointF(it))
+        }
+
+        return SmudgePathCommand(bitmap.copy(Bitmap.Config.ARGB_8888, false), copy, maxPressure, maxSize, minSize)
+    }
+
     override fun createTextToolCommand(
         multilineText: Array<String>,
         textPaint: Paint,

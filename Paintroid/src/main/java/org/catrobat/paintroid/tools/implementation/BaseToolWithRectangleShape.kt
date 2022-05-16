@@ -40,7 +40,7 @@ import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ContextCallback.ScreenOrientation
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
 import kotlin.math.PI
@@ -55,6 +55,8 @@ import kotlin.math.sin
 const val MAXIMUM_BORDER_RATIO = 2f
 
 @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+const val MINIMAL_BOX_SIZE = 3
+
 const val DEFAULT_BOX_RESIZE_MARGIN = 20
 
 const val DEFAULT_ANTIALIASING_ON = true
@@ -65,7 +67,6 @@ private const val MAXIMAL_TOOL_STROKE_WIDTH = 8f
 private const val DEFAULT_ROTATION_SYMBOL_DISTANCE = 20
 private const val DEFAULT_ROTATION_SYMBOL_WIDTH = 30
 private const val DEFAULT_MAXIMUM_BOX_RESOLUTION = 0f
-private const val CLICK_IN_BOX_MOVE_TOLERANCE = 10
 private const val DEFAULT_RECTANGLE_SHRINKING = 0
 private const val HIGHLIGHT_RECTANGLE_SHRINKING = 5
 private const val DEFAULT_ROTATION_ENABLED = false
@@ -86,7 +87,7 @@ private const val BUNDLE_BOX_ROTATION = "BOX_ROTATION"
 
 abstract class BaseToolWithRectangleShape(
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager
@@ -149,6 +150,9 @@ abstract class BaseToolWithRectangleShape(
 
     @JvmField
     var rectangleShrinkingOnHighlight: Int
+
+    @JvmField
+    var shouldDrawRectangle = true
 
     private var boxResizeMargin: Float? = 0f
     private var rotationSymbolWidth: Float? = 0f
@@ -281,10 +285,6 @@ abstract class BaseToolWithRectangleShape(
             movedDistance.x += abs(coordinate.x - previousEventCoordinate.x)
             movedDistance.y += abs(coordinate.y - previousEventCoordinate.y)
         }
-        if (CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.x && CLICK_IN_BOX_MOVE_TOLERANCE >= movedDistance.y) {
-            toolPosition.x = touchDownPositionX
-            toolPosition.y = touchDownPositionY
-        }
         return true
     }
 
@@ -328,7 +328,9 @@ abstract class BaseToolWithRectangleShape(
         if (overlayDrawable != null) {
             drawOverlayDrawable(canvas, boxWidth, boxHeight, boxRotation)
         }
-        drawRectangle(canvas, boxWidth, boxHeight)
+        if (shouldDrawRectangle) {
+            drawRectangle(canvas, boxWidth, boxHeight)
+        }
         drawToolSpecifics(canvas, boxWidth, boxHeight)
         canvas.restore()
     }
@@ -633,12 +635,12 @@ abstract class BaseToolWithRectangleShape(
         resizeWidth(deltaXCorrected.toFloat(), rotationRadian)
 
         // prevent that box gets too small
-        if (boxWidth < DEFAULT_BOX_RESIZE_MARGIN) {
-            boxWidth = DEFAULT_BOX_RESIZE_MARGIN.toFloat()
+        if (boxWidth < MINIMAL_BOX_SIZE) {
+            boxWidth = MINIMAL_BOX_SIZE.toFloat()
             toolPosition.x = oldPosX
         }
-        if (boxHeight < DEFAULT_BOX_RESIZE_MARGIN) {
-            boxHeight = DEFAULT_BOX_RESIZE_MARGIN.toFloat()
+        if (boxHeight < MINIMAL_BOX_SIZE) {
+            boxHeight = MINIMAL_BOX_SIZE.toFloat()
             toolPosition.y = oldPosY
         }
         if (respectMaximumBoxResolution && maximumBoxResolution > 0 && boxWidth * boxHeight > maximumBoxResolution) {

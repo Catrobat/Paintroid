@@ -19,8 +19,12 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.model.Layer;
@@ -28,6 +32,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import androidx.annotation.ColorInt;
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.DrawerActions;
@@ -39,7 +44,6 @@ import static org.hamcrest.Matchers.instanceOf;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -87,7 +91,7 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	public LayerMenuViewInteraction performClose() {
 		check(matches(isDisplayed()));
 		onView(withId(R.id.pocketpaint_drawer_layout))
-			.perform(DrawerActions.close(Gravity.END));
+				.perform(DrawerActions.close(Gravity.END));
 		return this;
 	}
 
@@ -98,10 +102,11 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
-	public LayerMenuViewInteraction performLongClickLayer(int listPosition) {
+	public LayerMenuViewInteraction performStartDragging(int listPosition) {
 		check(matches(isDisplayed()));
 		onLayerAt(listPosition)
-				.perform(longClick());
+				.onChildView(withId(R.id.pocketpaint_layer_drag_handle))
+				.perform(click());
 		return this;
 	}
 
@@ -141,5 +146,35 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 				return matcher.matches(view) && currentIndex++ == index;
 			}
 		};
+	}
+
+	public LayerMenuViewInteraction checkLayerAtPositionHasTopLeftPixelWithColor(int listPosition, @ColorInt final int expectedColor) {
+		onData(instanceOf(Layer.class))
+				.inAdapterView(withId(R.id.pocketpaint_layer_side_nav_list))
+				.atPosition(listPosition)
+				.onChildView(withId(R.id.pocketpaint_item_layer_image))
+				.check(matches(new TypeSafeMatcher<View>() {
+					@Override
+					public void describeTo(Description description) {
+						description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
+					}
+
+					@Override
+					protected boolean matchesSafely(View view) {
+						Bitmap bitmap = getBitmap(((ImageView) view).getDrawable());
+						int actualColor = bitmap.getPixel(0, 0);
+						return actualColor == expectedColor;
+					}
+				}));
+
+		return this;
+	}
+
+	private Bitmap getBitmap(Drawable drawable) {
+		Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+		drawable.draw(canvas);
+		return bitmap;
 	}
 }

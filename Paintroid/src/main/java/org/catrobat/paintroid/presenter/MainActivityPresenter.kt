@@ -67,6 +67,7 @@ import org.catrobat.paintroid.common.SAVE_IMAGE_DEFAULT
 import org.catrobat.paintroid.common.SAVE_IMAGE_FINISH
 import org.catrobat.paintroid.common.SAVE_IMAGE_LOAD_NEW
 import org.catrobat.paintroid.common.SAVE_IMAGE_NEW_EMPTY
+import org.catrobat.paintroid.common.TEMP_PICTURE_NAME
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.Interactor
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
@@ -132,7 +133,7 @@ open class MainActivityPresenter(
     }
 
     private fun setFirstCheckBoxInLayerMenu() {
-        layerAdapter?.getViewHolderAt(0)?.apply { setCheckBox(true) }
+        layerAdapter?.getViewHolderAt(0)?.apply { setLayerVisibilityCheckbox(true) }
     }
 
     override fun saveBeforeLoadImage() {
@@ -545,12 +546,11 @@ open class MainActivityPresenter(
 
     override fun showLayerMenuClicked() {
         layerAdapter?.apply {
-            setDrawerLayoutOpen(true)
             for (i in 0 until count) {
                 val currentHolder = getViewHolderAt(i)
                 currentHolder?.let {
                     if (it.bitmap != null) {
-                        it.updateImageView(it.bitmap, true)
+                        it.updateImageView(it.bitmap)
                     }
                 }
             }
@@ -577,9 +577,9 @@ open class MainActivityPresenter(
     override fun initializeFromCleanState(extraPicturePath: String?, extraPictureName: String?) {
         model.isOpenedFromCatroid = extraPicturePath != null
         FileIO.wasImageLoaded = false
-        if (extraPictureName != null) {
-            val imageFile = extraPicturePath?.let { File(it) }
-            if (imageFile != null && imageFile.exists()) {
+        if (extraPicturePath != null) {
+            val imageFile = File(extraPicturePath)
+            if (imageFile.exists()) {
                 model.savedPictureUri = view.getUriFromFile(imageFile)
                 interactor.loadFile(
                     this,
@@ -589,7 +589,7 @@ open class MainActivityPresenter(
                     false,
                     workspace
                 )
-            } else {
+            } else if (extraPictureName != null) {
                 interactor.createFile(
                     this,
                     CREATE_FILE_DEFAULT,
@@ -648,6 +648,7 @@ open class MainActivityPresenter(
         isFullscreen: Boolean,
         isSaved: Boolean,
         isOpenedFromCatroid: Boolean,
+        isOpenedFromFormulaEditorInCatroid: Boolean,
         wasInitialAnimationPlayed: Boolean,
         savedPictureUri: Uri?,
         cameraImageUri: Uri?
@@ -655,6 +656,7 @@ open class MainActivityPresenter(
         model.isFullscreen = isFullscreen
         model.isSaved = isSaved
         model.isOpenedFromCatroid = isOpenedFromCatroid
+        model.isOpenedFromFormulaEditorInCatroid = isOpenedFromFormulaEditorInCatroid
         model.setInitialAnimationPlayed(wasInitialAnimationPlayed)
         model.savedPictureUri = savedPictureUri
         model.cameraImageUri = cameraImageUri
@@ -888,7 +890,7 @@ open class MainActivityPresenter(
         if (bottomBarViewHolder.isVisible) {
             bottomBarViewHolder.hide()
         } else {
-            if (!layerAdapter!!.presenter.getLayerItem(workspace.currentLayerIndex).checkBox) {
+            if (!layerAdapter!!.presenter.getLayerItem(workspace.currentLayerIndex).isVisible) {
                 navigator.showToast(R.string.no_tools_on_hidden_layer, Toast.LENGTH_SHORT)
                 return
             }
@@ -1014,7 +1016,7 @@ open class MainActivityPresenter(
                     return cursor.getString(index)
                 }
             } catch (e: IllegalArgumentException) {
-                val file = File(context.cacheDir, "tmp")
+                val file = File(context.cacheDir, TEMP_PICTURE_NAME)
                 FileIO.saveFileFromUri(uri, file, context)
                 return file.absolutePath
             } finally {

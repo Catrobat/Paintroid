@@ -38,6 +38,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
 import android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -54,9 +55,11 @@ import kotlinx.coroutines.withContext
 private const val FF = 0xff
 private const val HSV_INITIALIZER = 3
 private const val INITIAL_CATROID_FLAG = "InitialCatroidFlag"
+private const val OPENED_FROM_FORMULA_EDITOR_CATROID_FLAG = "OpenedFromFormulaEditorCatroidFlag"
 private const val CURRENT_COLOR = "CurrentColor"
 private const val INITIAL_COLOR = "InitialColor"
 private const val REQUEST_CODE = 1
+private const val MAX_ALPHA_VALUE = 255
 const val COLOR_EXTRA = "colorExtra"
 const val BITMAP_HEIGHT_EXTRA = "bitmapHeightNameExtra"
 const val BITMAP_WIDTH_EXTRA = "bitmapWidthNameExtra"
@@ -72,21 +75,38 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     private lateinit var pipetteBtn: MaterialButton
     private lateinit var checkeredShader: Shader
     private lateinit var currentBitmap: Bitmap
+    private lateinit var alphaSliderView: AlphaSliderView
 
     companion object {
-        private lateinit var alphaSliderView: AlphaSliderView
+        private val TAG = ColorPickerDialog::class.java.simpleName
 
-        fun newInstance(@ColorInt initialColor: Int, flag: Boolean): ColorPickerDialog {
+        fun newInstance(
+            @ColorInt initialColor: Int,
+            catroidFlag: Boolean,
+            openedFromFormulaEditorInCatroidFlag: Boolean = false
+        ): ColorPickerDialog {
             val dialog = ColorPickerDialog()
-            val bundle = Bundle()
-            bundle.putInt(INITIAL_COLOR, initialColor)
-            bundle.putInt(CURRENT_COLOR, initialColor)
-            bundle.putBoolean(INITIAL_CATROID_FLAG, flag)
+            val alpha = if (openedFromFormulaEditorInCatroidFlag) MAX_ALPHA_VALUE else {
+                Color.alpha(initialColor)
+            }
+            val color = Color.argb(
+                alpha,
+                Color.red(initialColor),
+                Color.green(initialColor),
+                Color.blue(initialColor)
+            )
+            val bundle = Bundle().apply {
+                putInt(INITIAL_COLOR, color)
+                putInt(CURRENT_COLOR, color)
+                putBoolean(INITIAL_CATROID_FLAG, catroidFlag)
+                putBoolean(
+                    OPENED_FROM_FORMULA_EDITOR_CATROID_FLAG,
+                    openedFromFormulaEditorInCatroidFlag
+                )
+            }
             dialog.arguments = bundle
             return dialog
         }
-
-        private val TAG = ColorPickerDialog::class.java.simpleName
     }
 
     fun setBitmap(bitmap: Bitmap) {
@@ -123,15 +143,24 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         colorPickerView.setOnColorChangedListener(this)
         alphaSliderView = dialogView.findViewById(R.id.color_alpha_slider)
 
-        if (savedInstanceState != null) {
-            setCurrentColor(savedInstanceState.getInt(CURRENT_COLOR, Color.BLACK))
-            setInitialColor(savedInstanceState.getInt(INITIAL_COLOR, Color.BLACK), savedInstanceState.getBoolean(INITIAL_CATROID_FLAG))
-            colorPickerView.setAlphaSlider(alphaSliderView, savedInstanceState.getBoolean(INITIAL_CATROID_FLAG))
-        } else {
-            val arguments = requireArguments()
-            setCurrentColor(arguments.getInt(CURRENT_COLOR, Color.BLACK))
-            setInitialColor(arguments.getInt(INITIAL_COLOR, Color.BLACK), arguments.getBoolean(INITIAL_CATROID_FLAG))
-            colorPickerView.setAlphaSlider(alphaSliderView, arguments.getBoolean(INITIAL_CATROID_FLAG))
+        val arguments = savedInstanceState ?: requireArguments()
+        arguments.apply {
+            val catroidFlag = getBoolean(INITIAL_CATROID_FLAG)
+            val openedFromFormulaEditorInCatroidFlag =
+                getBoolean(OPENED_FROM_FORMULA_EDITOR_CATROID_FLAG)
+            colorPickerView.isOpenedFromFormulaEditorInCatroid =
+                openedFromFormulaEditorInCatroidFlag
+            setCurrentColor(getInt(CURRENT_COLOR, Color.BLACK))
+            setInitialColor(
+                getInt(INITIAL_COLOR, Color.BLACK),
+                catroidFlag,
+                openedFromFormulaEditorInCatroidFlag
+            )
+            colorPickerView.setAlphaSlider(alphaSliderView, catroidFlag)
+            colorPickerView.rgbSelectorView.setAlphaRow(
+                catroidFlag,
+                openedFromFormulaEditorInCatroidFlag
+            )
         }
         colorToApply = colorPickerView.initialColor
         val materialDialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
@@ -201,11 +230,14 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         }
     }
 
-    private fun setInitialColor(color: Int, catroidFlag: Boolean) {
+    private fun setInitialColor(
+        color: Int,
+        catroidFlag: Boolean,
+        openedFromFormulaEditorInCatroidFlag: Boolean
+    ) {
         setViewColor(currentColorView, color)
-        if (!catroidFlag) {
-            alphaSliderView.visibility = View.VISIBLE
-        }
+        alphaSliderView.visibility =
+            if (catroidFlag && openedFromFormulaEditorInCatroidFlag) GONE else VISIBLE
         colorPickerView.initialColor = color
     }
 

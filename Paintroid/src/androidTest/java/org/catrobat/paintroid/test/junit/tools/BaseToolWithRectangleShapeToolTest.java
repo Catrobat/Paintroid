@@ -30,7 +30,7 @@ import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController;
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +40,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.DEFAULT_BOX_RESIZE_MARGIN;
+import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.MINIMAL_BOX_SIZE;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
@@ -69,7 +69,7 @@ public class BaseToolWithRectangleShapeToolTest {
 	@Mock
 	private CommandManager commandManager;
 	@Mock
-	private ToolOptionsVisibilityController toolOptionsViewController;
+	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
 	private ContextCallback contextCallback;
 	@Mock
@@ -130,7 +130,7 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		float newWidth = toolToTest.boxWidth;
 		float newHeight = toolToTest.boxHeight;
-		float boxResizeMargin = DEFAULT_BOX_RESIZE_MARGIN;
+		float boxResizeMargin = MINIMAL_BOX_SIZE;
 
 		assertThat(newHeight, is(greaterThanOrEqualTo(boxResizeMargin)));
 		assertThat(newWidth, is(greaterThanOrEqualTo(boxResizeMargin)));
@@ -235,8 +235,8 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		// try rotate right
 		toolToTest.handleDown(topLeftRotationPoint);
-		toolToTest.handleMove(new PointF(screenWidth / 2, topLeftRotationPoint.y));
-		toolToTest.handleUp(new PointF(screenWidth / 2, topLeftRotationPoint.y));
+		toolToTest.handleMove(new PointF(screenWidth / 2f, topLeftRotationPoint.y));
+		toolToTest.handleUp(new PointF(screenWidth / 2f, topLeftRotationPoint.y));
 		float newRotation = toolToTest.boxRotation;
 		assertThat(newRotation, is(greaterThan(rotation)));
 	}
@@ -353,15 +353,15 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		//rotate right
 		toolToTest.handleDown(topLeftRotationPoint);
-		toolToTest.handleMove(new PointF(screenWidth / 2, topLeftRotationPoint.y));
-		toolToTest.handleUp(new PointF(screenWidth / 2, topLeftRotationPoint.y));
+		toolToTest.handleMove(new PointF(screenWidth / 2f, topLeftRotationPoint.y));
+		toolToTest.handleUp(new PointF(screenWidth / 2f, topLeftRotationPoint.y));
 
 		assertFalse(toolToTest.boxContainsPoint(topLeftCorner));
 		assertTrue(toolToTest.boxContainsPoint(pointInRotatedRectangle));
 	}
 
 	@Test
-	public void testToolClicksOnTouchDownPosition() {
+	public void testToolPreciseMovementTest() {
 		float initialToolPositionX = toolToTest.toolPosition.x;
 		float initialToolPositionY = toolToTest.toolPosition.y;
 
@@ -369,15 +369,14 @@ public class BaseToolWithRectangleShapeToolTest {
 		toolToTest.handleMove(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
 		toolToTest.handleUp(new PointF(initialToolPositionX + 9, initialToolPositionY + 9));
 
-		assertEquals(toolToTest.toolPosition.x, initialToolPositionX, 0);
-		assertEquals(toolToTest.toolPosition.y, initialToolPositionY, 0);
+		assertEquals(toolToTest.toolPosition.x, initialToolPositionX + 9, 0);
+		assertEquals(toolToTest.toolPosition.y, initialToolPositionY + 9, 0);
 	}
 
 	private class BaseToolWithRectangleShapeImpl extends BaseToolWithRectangleShape {
 		private final ToolType toolType;
 
-		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback,
-										ToolOptionsVisibilityController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint, Workspace layerModelWrapper, CommandManager commandManager) {
+		BaseToolWithRectangleShapeImpl(ContextCallback contextCallback, ToolOptionsViewController toolOptionsViewController, ToolType toolType, ToolPaint toolPaint, Workspace layerModelWrapper, CommandManager commandManager) {
 			super(contextCallback, toolOptionsViewController, toolPaint, layerModelWrapper, commandManager);
 			this.toolType = toolType;
 		}

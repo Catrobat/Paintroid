@@ -196,7 +196,8 @@ class MainActivityNavigator(
             toolReference.tool?.let {
                 val dialog = ColorPickerDialog.newInstance(
                     it.drawPaint.color,
-                    mainActivity.model.isOpenedFromCatroid
+                    mainActivity.model.isOpenedFromCatroid,
+                    mainActivity.model.isOpenedFromFormulaEditorInCatroid
                 )
                 setupColorPickerDialogListeners(dialog)
                 showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)

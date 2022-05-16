@@ -74,6 +74,8 @@ interface CommandFactory {
 
     fun createPathCommand(paint: Paint, path: SerializablePath): Command
 
+    fun createSmudgePathCommand(bitmap: Bitmap, pointPath: MutableList<PointF>, maxPressure: Float, maxSize: Float, minSize: Float): Command
+
     fun createTextToolCommand(
         multilineText: Array<String>,
         textPaint: Paint,

@@ -64,7 +64,24 @@ public class DrawingSurfaceListenerTest {
 	@Mock
 	private DrawingSurfaceListener.DrawingSurfaceListenerCallback callback;
 
+	@Mock
+	private MotionEvent motionEvent;
+
 	private DrawingSurfaceListener drawingSurfaceListener;
+
+	private final Float initalPositionX = 1.f;
+	private final Float initalPositionY = 1.f;
+	private final Float firstMovementPositionX = 5.f;
+	private final Float firstMovementPositionY = 5.f;
+	private final Float secondMovementPositionX = 6.f;
+	private final Float secondMovementPositionY = 6.f;
+	private final Float actionUpMovementPositionX = 7.f;
+	private final Float actionUpMovementPositionY = 7.f;
+	private final int width = 97;
+	private final int height = 11;
+	private final long firstMovementTimestamp = 150;
+	private final long secondMovementTimestamp = 170;
+	private final long actionUpTimestamp = 175;
 
 	@Before
 	public void setUp() {
@@ -72,6 +89,8 @@ public class DrawingSurfaceListenerTest {
 				.thenReturn(currentTool);
 		when(callback.getToolOptionsViewController())
 				.thenReturn(toolOptionsViewController);
+
+		when(motionEvent.getDownTime()).thenReturn((long) 0);
 
 		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, callback, DISPLAY_DENSITY);
 	}
@@ -81,24 +100,52 @@ public class DrawingSurfaceListenerTest {
 		verifyZeroInteractions(currentTool, callback, autoScrollTask);
 	}
 
+	private void triggerTouchDownEvent(float startPositionX, float startPositionY, DrawingSurface drawingSurface) {
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
+		when(motionEvent.getX()).thenReturn(startPositionX);
+		when(motionEvent.getY()).thenReturn(startPositionY);
+		when(drawingSurface.getWidth()).thenReturn(width);
+		when(drawingSurface.getHeight()).thenReturn(height);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+	}
+
+	private void triggerMovementEvent(float positionX, float positionY, DrawingSurface drawingSurface) {
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
+		when(motionEvent.getX()).thenReturn(positionX);
+		when(motionEvent.getY()).thenReturn(positionY);
+		when(motionEvent.getPointerCount()).thenReturn(1);
+
+		when(drawingSurface.getWidth()).thenReturn(width);
+		when(drawingSurface.getHeight()).thenReturn(height);
+
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+	}
+
+	private void triggerMovementEventWithTimestamp(float positionX, float positionY, DrawingSurface drawingSurface, long timestamp) {
+		when(motionEvent.getEventTime()).thenReturn(timestamp);
+		triggerMovementEvent(positionX, positionY, drawingSurface);
+	}
+
+	public void triggerTouchUpEvent(long timestamp, DrawingSurface drawingSurface) {
+		when(motionEvent.getEventTime()).thenReturn(timestamp);
+		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_UP);
+		when(motionEvent.getX()).thenReturn(actionUpMovementPositionX);
+		when(motionEvent.getY()).thenReturn(actionUpMovementPositionY);
+		when(drawingSurface.getWidth()).thenReturn(width);
+		when(drawingSurface.getHeight()).thenReturn(height);
+		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+	}
+
 	@Test
 	public void testOnTouchDown() {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
-		MotionEvent motionEvent = mock(MotionEvent.class);
 
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_DOWN);
-		when(motionEvent.getX()).thenReturn(41f);
-		when(motionEvent.getY()).thenReturn(5f);
-
-		when(drawingSurface.getWidth()).thenReturn(97);
-		when(drawingSurface.getHeight()).thenReturn(11);
-
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		triggerTouchDownEvent(41f, 5f, drawingSurface);
 
 		verify(callback).convertToCanvasFromSurface(pointFEquals(41f, 5f));
 		verify(currentTool).handleDown(pointFEquals(41f, 5f));
 
-		verify(autoScrollTask).setViewDimensions(97, 11);
+		verify(autoScrollTask).setViewDimensions(width, height);
 		verify(autoScrollTask).setEventPoint(41f, 5f);
 		verify(autoScrollTask).start();
 
@@ -142,39 +189,21 @@ public class DrawingSurfaceListenerTest {
 	@Test
 	public void testOnTouchMoveInDrawMode() {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
-		MotionEvent motionEvent = mock(MotionEvent.class);
 
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
-		when(motionEvent.getX()).thenReturn(5f);
-		when(motionEvent.getY()).thenReturn(3f);
-		when(motionEvent.getPointerCount()).thenReturn(1);
-
-		when(drawingSurface.getWidth()).thenReturn(7);
-		when(drawingSurface.getHeight()).thenReturn(11);
-
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		triggerMovementEvent(5f, 3f, drawingSurface);
 
 		verify(callback).convertToCanvasFromSurface(pointFEquals(5f, 3f));
 		verify(currentTool).handleMove(pointFEquals(5f, 3f));
 		verify(autoScrollTask).setEventPoint(5f, 3f);
-		verify(autoScrollTask).setViewDimensions(7, 11);
+		verify(autoScrollTask).setViewDimensions(width, height);
 		verifyNoMoreInteractions(autoScrollTask);
 	}
 
 	@Test
 	public void testOnTouchMoveInDrawModeDoesNotStopAutoScroll() {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
-		MotionEvent motionEvent = mock(MotionEvent.class);
 
-		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
-		when(motionEvent.getX()).thenReturn(5f);
-		when(motionEvent.getY()).thenReturn(3f);
-		when(motionEvent.getPointerCount()).thenReturn(1);
-
-		when(drawingSurface.getWidth()).thenReturn(7);
-		when(drawingSurface.getHeight()).thenReturn(11);
-
-		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
+		triggerMovementEvent(5f, 3f, drawingSurface);
 
 		verify(autoScrollTask, never()).stop();
 		verify(autoScrollTask, never()).isRunning();
@@ -440,12 +469,68 @@ public class DrawingSurfaceListenerTest {
 		when(motionEvent.getX()).thenReturn(41f);
 		when(motionEvent.getY()).thenReturn(5f);
 
-		when(drawingSurface.getWidth()).thenReturn(97);
-		when(drawingSurface.getHeight()).thenReturn(11);
+		when(drawingSurface.getWidth()).thenReturn(width);
+		when(drawingSurface.getHeight()).thenReturn(height);
 
 		drawingSurfaceListener.disableAutoScroll();
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(autoScrollTask, never()).start();
+	}
+
+	@Test
+	public void testTouchCorrection() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		triggerTouchDownEvent(initalPositionX, initalPositionY, drawingSurface);
+
+		triggerMovementEventWithTimestamp(firstMovementPositionX, firstMovementPositionY, drawingSurface, firstMovementTimestamp);
+		triggerMovementEventWithTimestamp(secondMovementPositionX, secondMovementPositionY, drawingSurface, secondMovementTimestamp);
+
+		triggerTouchUpEvent(actionUpTimestamp, drawingSurface);
+		verify(currentTool).handleUp(pointFEquals(firstMovementPositionX, firstMovementPositionY));
+	}
+
+	@Test
+	public void testTouchCorrectionWithInvalidDelayBetweenMovements() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		long tooLateTimestamp = secondMovementTimestamp + 15;
+
+		triggerTouchDownEvent(initalPositionX, initalPositionY, drawingSurface);
+
+		triggerMovementEventWithTimestamp(firstMovementPositionX, firstMovementPositionY, drawingSurface, firstMovementTimestamp);
+		triggerMovementEventWithTimestamp(secondMovementPositionX, secondMovementPositionY, drawingSurface, secondMovementTimestamp);
+
+		triggerTouchUpEvent(tooLateTimestamp, drawingSurface);
+		verify(currentTool).handleUp(pointFEquals(actionUpMovementPositionX, actionUpMovementPositionY));
+	}
+
+	@Test
+	public void testTouchCorrectionWithTooBigDelayBeforeUP() {
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+		long muchLaterTimestamp = 220;
+
+		triggerTouchDownEvent(initalPositionX, initalPositionY, drawingSurface);
+
+		triggerMovementEventWithTimestamp(firstMovementPositionX, firstMovementPositionY, drawingSurface, firstMovementTimestamp);
+		triggerMovementEventWithTimestamp(secondMovementPositionX, secondMovementPositionY, drawingSurface, secondMovementTimestamp);
+
+		triggerTouchUpEvent(muchLaterTimestamp, drawingSurface);
+		verify(currentTool).handleUp(pointFEquals(actionUpMovementPositionX, actionUpMovementPositionY));
+	}
+
+	@Test
+	public void testTouchCorrectionWithDistanceAboveJitterThreshold() {
+		float farAwayPositionX = 20.0f;
+		float farAwayPositionY = 20.0f;
+
+		DrawingSurface drawingSurface = mock(DrawingSurface.class);
+
+		triggerTouchDownEvent(initalPositionX, initalPositionY, drawingSurface);
+
+		triggerMovementEventWithTimestamp(farAwayPositionX, farAwayPositionY, drawingSurface, firstMovementTimestamp);
+		triggerMovementEventWithTimestamp(secondMovementPositionX, secondMovementPositionY, drawingSurface, secondMovementTimestamp);
+
+		triggerTouchUpEvent(actionUpTimestamp, drawingSurface);
+		verify(currentTool).handleUp(pointFEquals(actionUpMovementPositionX, actionUpMovementPositionY));
 	}
 }
