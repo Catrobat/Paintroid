@@ -133,7 +133,7 @@ open class MainActivityPresenter(
     }
 
     private fun setFirstCheckBoxInLayerMenu() {
-        layerAdapter?.getViewHolderAt(0)?.apply { setCheckBox(true) }
+        layerAdapter?.getViewHolderAt(0)?.apply { setLayerVisibilityCheckbox(true) }
     }
 
     override fun saveBeforeLoadImage() {
@@ -890,7 +890,7 @@ open class MainActivityPresenter(
         if (bottomBarViewHolder.isVisible) {
             bottomBarViewHolder.hide()
         } else {
-            if (!layerAdapter!!.presenter.getLayerItem(workspace.currentLayerIndex).checkBox) {
+            if (!layerAdapter!!.presenter.getLayerItem(workspace.currentLayerIndex).isVisible) {
                 navigator.showToast(R.string.no_tools_on_hidden_layer, Toast.LENGTH_SHORT)
                 return
             }
