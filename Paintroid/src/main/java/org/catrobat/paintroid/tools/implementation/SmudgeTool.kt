@@ -1,14 +1,14 @@
 package org.catrobat.paintroid.tools.implementation
 
-import androidx.annotation.VisibleForTesting
-import android.graphics.PointF
-import android.graphics.Canvas
 import android.graphics.Bitmap
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.Canvas
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.PointF
 import android.graphics.RectF
+import androidx.annotation.VisibleForTesting
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -17,7 +17,7 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.common.CommonBrushChangedListener
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener
 import org.catrobat.paintroid.tools.options.SmudgeToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
 const val PERCENT_100 = 100f
 const val BITMAP_ROTATION_FACTOR = -0.0f
@@ -30,9 +30,9 @@ const val DRAW_THRESHOLD = 0.8f
 const val PRESSURE_UPDATE_STEP = 0.004f
 
 class SmudgeTool(
-    private val smudgeToolOptionsView: SmudgeToolOptionsView,
+    smudgeToolOptionsView: SmudgeToolOptionsView,
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager
@@ -45,12 +45,16 @@ class SmudgeTool(
 
     @VisibleForTesting
     var maxPressure = 0f
+
     @VisibleForTesting
     var pressure = maxPressure
+
     @VisibleForTesting
     var maxSmudgeSize = toolPaint.strokeWidth
+
     @VisibleForTesting
     var minSmudgeSize = 0f
+
     @VisibleForTesting
     val pointArray = mutableListOf<PointF>()
 
@@ -101,7 +105,11 @@ class SmudgeTool(
         }
 
         val layerBitmap = workspace.bitmapOfCurrentLayer
-        currentBitmap = Bitmap.createBitmap(maxSmudgeSize.toInt(), maxSmudgeSize.toInt(), Bitmap.Config.ARGB_8888)
+        currentBitmap = Bitmap.createBitmap(
+            maxSmudgeSize.toInt(),
+            maxSmudgeSize.toInt(),
+            Bitmap.Config.ARGB_8888
+        )
         currentBitmap?.let {
             Canvas(it).apply {
                 translate(-coordinate.x + maxSmudgeSize / 2f, -coordinate.y + maxSmudgeSize / 2f)
@@ -162,7 +170,12 @@ class SmudgeTool(
         val height = bitmap.height
         val outputBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val path = Path()
-        path.addCircle((width / 2).toFloat(), (height / 2).toFloat(), kotlin.math.min(width, height / 2).toFloat(), Path.Direction.CCW)
+        path.addCircle(
+            (width / 2).toFloat(),
+            (height / 2).toFloat(),
+            kotlin.math.min(width, height / 2).toFloat(),
+            Path.Direction.CCW
+        )
         val canvas = Canvas(outputBitmap)
         canvas.clipPath(path)
         canvas.drawBitmap(bitmap, 0f, 0f, null)
@@ -183,7 +196,13 @@ class SmudgeTool(
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false
         if (!pointArray.isEmpty() && currentBitmap != null) {
-            val command = commandFactory.createSmudgePathCommand(currentBitmap!!, pointArray, maxPressure, maxSmudgeSize, minSmudgeSize)
+            val command = commandFactory.createSmudgePathCommand(
+                currentBitmap!!,
+                pointArray,
+                maxPressure,
+                maxSmudgeSize,
+                minSmudgeSize
+            )
             commandManager.addCommand(command)
 
             numOfPointsOnPath = if (numOfPointsOnPath < 0) {
@@ -222,7 +241,11 @@ class SmudgeTool(
                 colorMatrix.setScale(1f, 1f, 1f, pressure)
                 paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
 
-                val newBitmap = Bitmap.createBitmap(maxSmudgeSize.toInt(), maxSmudgeSize.toInt(), Bitmap.Config.ARGB_8888)
+                val newBitmap = Bitmap.createBitmap(
+                    maxSmudgeSize.toInt(),
+                    maxSmudgeSize.toInt(),
+                    Bitmap.Config.ARGB_8888
+                )
 
                 Canvas(newBitmap).apply {
                     drawBitmap(bitmap, 0f, 0f, paint)
