@@ -27,11 +27,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.tools.FontType
 
 class FontListAdapter internal constructor(
     context: Context,
-    private val fonts: List<String>,
-    private val onFontChanged: (String) -> Unit
+    private val fontTypes: List<FontType>,
+    private val onFontChanged: (FontType) -> Unit
 ) : RecyclerView.Adapter<FontListAdapter.ViewHolder>() {
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
     private var selectedIndex = 0
@@ -56,20 +57,20 @@ class FontListAdapter internal constructor(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val font = fonts[position]
-        holder.fontChip.text = font
+        val font = fontTypes[position]
+        holder.fontChip.setText(font.nameResource)
         holder.fontChip.typeface = typeFaces[position]
         holder.fontChip.isChecked = position == selectedIndex
     }
 
-    override fun getItemCount(): Int = fonts.size
+    override fun getItemCount(): Int = fontTypes.size
 
     fun setSelectedIndex(selectedIndex: Int) {
         this.selectedIndex = selectedIndex
         notifyDataSetChanged()
     }
 
-    fun getSelectedItem(): String = fonts[selectedIndex]
+    fun getSelectedItem(): FontType = fontTypes[selectedIndex]
 
     inner class ViewHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView),
@@ -82,7 +83,7 @@ class FontListAdapter internal constructor(
 
         override fun onClick(p0: View?) {
             setSelectedIndex(layoutPosition)
-            onFontChanged(fonts[layoutPosition])
+            onFontChanged(fontTypes[layoutPosition])
         }
     }
 }

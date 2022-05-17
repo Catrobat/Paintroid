@@ -77,6 +77,7 @@ import org.catrobat.paintroid.iotasks.BitmapReturnValue
 import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
+import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.LayerAdapter
@@ -102,6 +103,7 @@ open class MainActivityPresenter(
     private val toolController: ToolController,
     private val sharedPreferences: UserPreferences,
     override val context: Context,
+    private val internalMemoryPath: File
 ) : MainActivityContracts.Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
     private var layerAdapter: LayerAdapter? = null
     private var resetPerspectiveAfterNextCommand = false
@@ -294,6 +296,7 @@ open class MainActivityPresenter(
         FileIO.compressFormat = Bitmap.CompressFormat.PNG
         FileIO.ending = ".png"
         FileIO.isCatrobatImage = false
+        FileIO.deleteTempFile(internalMemoryPath)
         val initCommand =
             commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
         commandManager.setInitialStateCommand(initCommand)
@@ -955,6 +958,16 @@ open class MainActivityPresenter(
     override fun setAntialiasingOnOkClicked() {
         navigator.setAntialiasingOnToolPaint()
     }
+
+    override fun saveNewTemporaryImage() {
+        FileIO.saveTemporaryPictureFile(internalMemoryPath, workspace)
+    }
+
+    override fun openTemporaryFile(workspace: Workspace): CommandManagerModel? =
+        FileIO.openTemporaryPictureFile(workspace)
+
+    override fun checkForTemporaryFile(): Boolean =
+        FileIO.checkForTemporaryFile(internalMemoryPath)
 
     companion object {
         @JvmStatic
