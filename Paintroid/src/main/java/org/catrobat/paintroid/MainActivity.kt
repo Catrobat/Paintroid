@@ -220,8 +220,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                     Log.e(TAG, "Image might be an ora file instead")
                     OpenRasterFileFormatConversion.importOraFile(
                         myContentResolver,
-                        receivedUri,
-                        applicationContext
+                        receivedUri
                     ).bitmapList?.let { bitmapList ->
                         commandManager.setInitialStateCommand(
                             commandFactory.createInitCommand(

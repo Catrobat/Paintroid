@@ -24,14 +24,14 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
+import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
@@ -93,13 +93,12 @@ class CatrobatImageIOIntegrationTest {
         Espresso.onData(
             AllOf.allOf(
                 Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
-                Matchers.`is`<String>(CATROBAT_IMAGE_ENDING)
+                Matchers.`is`<String>(FileIO.FileType.CATROBAT.value)
             )
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText(IMAGE_NAME))
-        onView(withText(R.string.save_button_text))
-            .perform(ViewActions.click())
+        onView(withText(R.string.save_button_text)).perform(ViewActions.click())
         uriFile = activity.model.savedPictureUri!!
         Assert.assertNotNull(uriFile)
         Assert.assertNotNull(activity.workspace.getCommandSerializationHelper().readFromFile(uriFile))

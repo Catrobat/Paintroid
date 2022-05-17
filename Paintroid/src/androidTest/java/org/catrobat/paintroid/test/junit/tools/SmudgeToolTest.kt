@@ -44,8 +44,7 @@ class SmudgeToolTest {
     private val commandManager = Mockito.mock(CommandManager::class.java)
     private val workspace = Mockito.mock(Workspace::class.java)
     private val smudgeToolOptionsView = Mockito.mock(SmudgeToolOptionsView::class.java)
-    private val toolOptionsViewController =
-        Mockito.mock(ToolOptionsViewController::class.java)
+    private val toolOptionsViewController = Mockito.mock(ToolOptionsViewController::class.java)
     private val contextCallback = Mockito.mock(ContextCallback::class.java)
     private lateinit var tool: SmudgeTool
 

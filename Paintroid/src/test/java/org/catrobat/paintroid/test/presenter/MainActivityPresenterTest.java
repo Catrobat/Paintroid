@@ -32,6 +32,7 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.widget.Toast;
 
+import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.UserPreferences;
 import org.catrobat.paintroid.command.Command;
@@ -267,15 +268,12 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testSaveImageClickedThenSaveImageWithUri() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-
+	public void testSaveImageClickedThenSaveImage() {
 		presenter.saveImageClicked();
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, uri, context);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, null, context);
 
 		verifyNoMoreInteractions(interactor);
 	}
@@ -1034,14 +1032,11 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandlePermissionResultSaveBeforeFinishPermissionGranted() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, uri, context);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, FileIO.storeImageUri, context);
 	}
 
 	@Test
@@ -1094,14 +1089,11 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandlePermissionResultSaveBeforeLoadNewPermissionGranted() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, uri, context);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, FileIO.storeImageUri, context);
 	}
 
 	@Test
@@ -1130,14 +1122,11 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandlePermissionResultSaveBeforeNewEmptyPermissionGranted() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-
 		presenter.handleRequestPermissionsResult(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, uri, context);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, FileIO.storeImageUri, context);
 	}
 
 	@Test
@@ -1222,14 +1211,11 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testOnNavigationItemSelectedSavePermissionGranted() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-
 		presenter.saveImageClicked();
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, uri, context);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, FileIO.storeImageUri, context);
 	}
 
 	@Test
@@ -1246,14 +1232,11 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testSaveAndFinishPermissionGranted() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-
 		presenter.saveBeforeFinish();
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, uri, context);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, FileIO.storeImageUri, context);
 	}
 
 	@Test
@@ -1270,14 +1253,11 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testSaveAndNewImagePermissionGranted() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-
 		presenter.saveBeforeNewImage();
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, uri, context);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, FileIO.storeImageUri, context);
 	}
 
 	@Test
@@ -1294,14 +1274,11 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testSaveAndLoadImagePermissionGranted() {
-		Uri uri = mock(Uri.class);
-		when(model.getSavedPictureUri()).thenReturn(uri);
-
 		presenter.saveBeforeLoadImage();
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
-		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, uri, context);
+		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, FileIO.storeImageUri, context);
 	}
 
 	@Test

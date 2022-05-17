@@ -57,7 +57,7 @@ import org.catrobat.paintroid.command.implementation.SprayCommand
 import org.catrobat.paintroid.command.implementation.StampCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
 import org.catrobat.paintroid.command.implementation.SmudgePathCommand
-import org.catrobat.paintroid.common.Constants
+import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
 import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.drawable.HeartDrawable
 import org.catrobat.paintroid.tools.drawable.OvalDrawable
@@ -162,10 +162,10 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
                 }
             }
         } else {
-            if (!(Constants.MEDIA_DIRECTORY.exists() || Constants.MEDIA_DIRECTORY.mkdirs())) {
+            if (!(DOWNLOADS_DIRECTORY.exists() || DOWNLOADS_DIRECTORY.mkdirs())) {
                 return null
             }
-            val imageFile = File(Constants.MEDIA_DIRECTORY, fileName)
+            val imageFile = File(DOWNLOADS_DIRECTORY, fileName)
             FileOutputStream(imageFile).use { fileStream ->
                 writeToStream(fileStream)
                 returnUri = Uri.fromFile(imageFile)
