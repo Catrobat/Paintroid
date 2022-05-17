@@ -652,7 +652,6 @@ open class MainActivityPresenter(
         isSaved: Boolean,
         isOpenedFromCatroid: Boolean,
         isOpenedFromFormulaEditorInCatroid: Boolean,
-        wasInitialAnimationPlayed: Boolean,
         savedPictureUri: Uri?,
         cameraImageUri: Uri?
     ) {
@@ -660,7 +659,6 @@ open class MainActivityPresenter(
         model.isSaved = isSaved
         model.isOpenedFromCatroid = isOpenedFromCatroid
         model.isOpenedFromFormulaEditorInCatroid = isOpenedFromFormulaEditorInCatroid
-        model.setInitialAnimationPlayed(wasInitialAnimationPlayed)
         model.savedPictureUri = savedPictureUri
         model.cameraImageUri = cameraImageUri
         navigator.restoreFragmentListeners()

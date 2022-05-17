@@ -180,7 +180,6 @@ interface MainActivityContracts {
             isSaved: Boolean,
             isOpenedFromCatroid: Boolean,
             isOpenedFromFormulaEditorInCatroid: Boolean,
-            wasInitialAnimationPlayed: Boolean,
             savedPictureUri: Uri?,
             cameraImageUri: Uri?
         )
@@ -307,10 +306,6 @@ interface MainActivityContracts {
         var isFullscreen: Boolean
         var isOpenedFromCatroid: Boolean
         var isOpenedFromFormulaEditorInCatroid: Boolean
-
-        fun wasInitialAnimationPlayed(): Boolean
-
-        fun setInitialAnimationPlayed(wasInitialAnimationPlayed: Boolean)
     }
 
     interface Interactor {

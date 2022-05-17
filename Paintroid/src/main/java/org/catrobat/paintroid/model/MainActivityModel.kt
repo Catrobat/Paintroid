@@ -22,17 +22,10 @@ import android.net.Uri
 import org.catrobat.paintroid.contract.MainActivityContracts
 
 class MainActivityModel : MainActivityContracts.Model {
-    private var wasInitialAnimationPlayed = false
     override var isOpenedFromCatroid = false
     override var isOpenedFromFormulaEditorInCatroid = false
     override var isFullscreen = false
     override var isSaved = false
     override var savedPictureUri: Uri? = null
     override var cameraImageUri: Uri? = null
-
-    override fun wasInitialAnimationPlayed(): Boolean = wasInitialAnimationPlayed
-
-    override fun setInitialAnimationPlayed(wasInitialAnimationPlayed: Boolean) {
-        this.wasInitialAnimationPlayed = wasInitialAnimationPlayed
-    }
 }
