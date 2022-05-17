@@ -163,10 +163,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         private const val IS_OPENED_FROM_CATROID_KEY = "isOpenedFromCatroid"
         private const val IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY =
             "isOpenedFromFormulaEditorInCatroid"
-        private const val WAS_INITIAL_ANIMATION_PLAYED = "wasInitialAnimationPlayed"
         private const val SAVED_PICTURE_URI_KEY = "savedPictureUri"
         private const val CAMERA_IMAGE_URI_KEY = "cameraImageUri"
         private const val APP_FRAGMENT_KEY = "customActivityState"
+        private const val SHARED_PREFS_NAME = "preferences"
+        private const val FIRST_LAUNCH_AFTER_INSTALL = "firstLaunchAfterInstall"
     }
 
     override val presenter: MainActivityContracts.Presenter
@@ -298,13 +299,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 val isOpenedFromFormulaEditorInCatroid = savedInstanceState.getBoolean(
                     IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY, false
                 )
-                val wasInitialAnimationPlayed =
-                    savedInstanceState.getBoolean(WAS_INITIAL_ANIMATION_PLAYED, false)
                 val savedPictureUri = savedInstanceState.getParcelable<Uri>(SAVED_PICTURE_URI_KEY)
                 val cameraImageUri = savedInstanceState.getParcelable<Uri>(CAMERA_IMAGE_URI_KEY)
                 presenterMain.restoreState(
                     isFullscreen, isSaved, isOpenedFromCatroid, isOpenedFromFormulaEditorInCatroid,
-                    wasInitialAnimationPlayed, savedPictureUri, cameraImageUri
+                    savedPictureUri, cameraImageUri
                 )
             }
         }
@@ -315,6 +314,15 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             startAutoSaveCoroutine()
         }
         presenterMain.finishInitialize()
+
+        if (!org.catrobat.paintroid.BuildConfig.DEBUG) {
+            val prefs = getSharedPreferences(SHARED_PREFS_NAME, 0)
+
+            if (prefs.getBoolean(FIRST_LAUNCH_AFTER_INSTALL, true)) {
+                prefs.edit().putBoolean(FIRST_LAUNCH_AFTER_INSTALL, false).apply()
+                presenterMain.showHelpClicked()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -566,7 +574,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY,
                 model.isOpenedFromFormulaEditorInCatroid
             )
-            putBoolean(WAS_INITIAL_ANIMATION_PLAYED, model.wasInitialAnimationPlayed())
             putParcelable(SAVED_PICTURE_URI_KEY, model.savedPictureUri)
             putParcelable(CAMERA_IMAGE_URI_KEY, model.cameraImageUri)
         }
