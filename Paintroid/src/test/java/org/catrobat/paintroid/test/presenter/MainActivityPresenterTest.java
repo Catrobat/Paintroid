@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -126,6 +126,9 @@ public class MainActivityPresenterTest {
 	@Mock
 	private Context context;
 
+	@Mock
+	private File internalMemoryPath;
+
 	@InjectMocks
 	private MainActivityPresenter presenter;
 
@@ -139,7 +142,7 @@ public class MainActivityPresenterTest {
 	public void testSetUp() {
 		verifyZeroInteractions(view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
 				drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
-				bottomNavigationViewHolder, toolController, sharedPreferences);
+				bottomNavigationViewHolder, toolController, sharedPreferences, internalMemoryPath);
 	}
 
 	@Test

@@ -38,15 +38,22 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import id.zelory.compressor.Compressor
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.common.Constants.MEDIA_DIRECTORY
 import org.catrobat.paintroid.common.IS_JPG
 import org.catrobat.paintroid.common.IS_NO_FILE
 import org.catrobat.paintroid.common.IS_ORA
 import org.catrobat.paintroid.common.IS_PNG
 import org.catrobat.paintroid.common.MAX_LAYERS
+import org.catrobat.paintroid.common.TEMP_IMAGE_DIRECTORY_NAME
+import org.catrobat.paintroid.common.TEMP_IMAGE_NAME
+import org.catrobat.paintroid.common.TEMP_IMAGE_PATH
+import org.catrobat.paintroid.common.TEMP_IMAGE_TEMP_PATH
 import org.catrobat.paintroid.common.TEMP_PICTURE_NAME
 import org.catrobat.paintroid.iotasks.BitmapReturnValue
+import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.presenter.MainActivityPresenter
+import org.catrobat.paintroid.tools.Workspace
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -105,6 +112,8 @@ object FileIO {
     var uriFilePng: Uri? = null
 
     var uriFileOra: Uri? = null
+
+    var temporaryFilePath: String? = null
 
     val defaultFileName: String
         get() = filename + ending
@@ -533,5 +542,81 @@ object FileIO {
     fun enableAlpha(bitmap: Bitmap?): Bitmap? {
         bitmap?.setHasAlpha(true)
         return bitmap
+    }
+
+    fun saveTemporaryPictureFile(internalMemoryPath: File, workspace: Workspace) {
+        val newFileName = "${TEMP_IMAGE_NAME}1.$CATROBAT_IMAGE_ENDING"
+        val tempPath = File(internalMemoryPath, TEMP_IMAGE_DIRECTORY_NAME)
+        try {
+            tempPath.mkdirs()
+
+            val stream = FileOutputStream("$tempPath/$newFileName")
+            workspace.getCommandSerializationHelper().writeToInternalMemory(stream)
+            temporaryFilePath = TEMP_IMAGE_TEMP_PATH
+        } catch (e: IOException) {
+            Log.e("Cannot write", "Can't write to stream", e)
+        }
+        val oldFile = File(internalMemoryPath, TEMP_IMAGE_PATH)
+        if (oldFile.exists()) {
+            oldFile.delete()
+        }
+        val newFile = File(internalMemoryPath, TEMP_IMAGE_TEMP_PATH)
+        if (newFile.exists()) {
+            newFile.renameTo(File(internalMemoryPath, TEMP_IMAGE_PATH))
+            temporaryFilePath = TEMP_IMAGE_PATH
+        }
+    }
+
+    fun checkForTemporaryFile(internalMemoryPath: File): Boolean {
+        val tempPath = File(internalMemoryPath, TEMP_IMAGE_DIRECTORY_NAME)
+        if (!tempPath.exists()) {
+            return false
+        }
+        val fileList = tempPath.listFiles()
+        if (fileList != null && fileList.isNotEmpty()) {
+            if (fileList.size == 2) {
+                if (fileList[1].lastModified() > fileList[0].lastModified()) {
+                    reorganizeTempFiles(fileList[1], fileList[0], internalMemoryPath)
+                } else {
+                    reorganizeTempFiles(fileList[0], fileList[1], internalMemoryPath)
+                }
+            } else {
+                temporaryFilePath = fileList[0].path
+            }
+            return true
+        }
+        return false
+    }
+
+    private fun reorganizeTempFiles(file1: File, file2: File, internalMemoryPath: File) {
+        file2.delete()
+        file1.renameTo(File(internalMemoryPath, TEMP_IMAGE_PATH))
+        temporaryFilePath = TEMP_IMAGE_PATH
+    }
+
+    fun openTemporaryPictureFile(workspace: Workspace): CommandManagerModel? {
+        var commandModel: CommandManagerModel? = null
+        if (temporaryFilePath != null) {
+            try {
+                val stream = FileInputStream(temporaryFilePath)
+                commandModel = workspace.getCommandSerializationHelper().readFromInternalMemory(stream)
+            } catch (e: IOException) {
+                Log.e("Cannot read", "Can't read from stream", e)
+            }
+        }
+        return commandModel
+    }
+
+    fun deleteTempFile(internalMemoryPath: File) {
+        tryDeleteFile(internalMemoryPath)
+    }
+
+    private fun tryDeleteFile(internalMemoryPath: File) {
+        if (temporaryFilePath != null) {
+            val file = File(internalMemoryPath, temporaryFilePath.orEmpty())
+            if (file.exists()) {
+                file.delete()
+            }
+        }
     }
 }

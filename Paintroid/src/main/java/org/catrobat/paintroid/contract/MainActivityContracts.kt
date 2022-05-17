@@ -32,6 +32,7 @@ import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
 import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
+import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.LayerAdapter
@@ -291,6 +292,12 @@ interface MainActivityContracts {
         fun loadScaledImage(uri: Uri?, @ActivityRequestCode requestCode: Int)
 
         fun setAntialiasingOnOkClicked()
+
+        fun saveNewTemporaryImage()
+
+        fun openTemporaryFile(workspace: Workspace): CommandManagerModel?
+
+        fun checkForTemporaryFile(): Boolean
     }
 
     interface Model {
