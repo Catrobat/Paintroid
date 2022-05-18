@@ -91,7 +91,18 @@ pipeline {
             }
             steps {
                 script {
-                    sh 'fastlane android upload_APK_Paintroid'
+                    sh 'fastlane android upload_APK_Paintroid_to_play_store'
+                }
+            }
+        }
+
+        stage('Upload AKP to AppGallery') {
+            when {
+                environment name: 'APPROVE_UPLOAD_APK', value: 'yes'
+            }
+            steps {
+                script {
+                    sh 'fastlane android upload_APK_Paintroid_to_appGallery'
                 }
             }
         }
