@@ -263,14 +263,14 @@ open class MainActivityPresenter(
         sharedPreferences.preferenceImageNumber = imageNumber
     }
 
-    override fun enterFullscreenClicked() {
+    override fun enterHideButtonsClicked() {
         model.isFullscreen = true
-        enterFullscreen()
+        enterHideButtons()
     }
 
-    override fun exitFullscreenClicked() {
+    override fun exitHideButtonsClicked() {
         model.isFullscreen = false
-        exitFullscreen()
+        exitHideButtons()
     }
 
     override fun backToPocketCodeClicked() {
@@ -549,7 +549,7 @@ open class MainActivityPresenter(
         } else if (drawerLayoutViewHolder.isDrawerOpen(GravityCompat.END)) {
             drawerLayoutViewHolder.closeDrawer(Gravity.END, true)
         } else if (model.isFullscreen) {
-            exitFullscreenClicked()
+            exitHideButtonsClicked()
         } else if (!toolController.isDefaultTool) {
             if (toolController.currentTool?.toolType == ToolType.CLIP) toolController.adjustClippingToolOnBackPressed(true)
             switchTool(ToolType.BRUSH)
@@ -699,9 +699,9 @@ open class MainActivityPresenter(
         toolController.toolColor?.let { bottomNavigationViewHolder.setColorButtonColor(it) }
         bottomNavigationViewHolder.showCurrentTool(toolController.toolType)
         if (model.isFullscreen) {
-            enterFullscreen()
+            enterHideButtons()
         } else {
-            exitFullscreen()
+            exitHideButtons()
         }
         view.initializeActionBar(model.isOpenedFromCatroid)
         if (commandManager.isBusy) {
@@ -718,29 +718,29 @@ open class MainActivityPresenter(
         }
     }
 
-    private fun exitFullscreen() {
-        view.exitFullscreen()
+    private fun exitHideButtons() {
+        view.exitHideButtons()
         topBarViewHolder.show()
         bottomNavigationViewHolder.show()
         toolController.enableToolOptionsView()
-        perspective.exitFullscreen()
         if (toolOptionsViewWasShown) {
             toolController.showToolOptionsView()
             toolOptionsViewWasShown = false
         }
     }
 
-    private fun enterFullscreen() {
         if (toolController.toolOptionsViewVisible()) {
-            toolOptionsViewWasShown = true
         }
+            toolOptionsViewWasShown = true
+    private fun enterHideButtons() {
         view.hideKeyboard()
-        view.enterFullscreen()
+        view.enterHideButtons()
         topBarViewHolder.hide()
         bottomBarViewHolder.hide()
         bottomNavigationViewHolder.hide()
         toolController.disableToolOptionsView()
-        perspective.enterFullscreen()
+        toolController.disableHideOption()
+        perspective.enterHideButtonsMode()
     }
 
     override fun restoreState(

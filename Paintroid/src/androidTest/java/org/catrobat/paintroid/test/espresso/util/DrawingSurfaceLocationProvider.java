@@ -113,7 +113,7 @@ public enum DrawingSurfaceLocationProvider implements CoordinatesProvider {
 	BOTTOM_RIGHT_CORNER {
 		@Override
 		public float[] calculateCoordinates(View view) {
-			return calculatePercentageOffset(view, 1f, 1f);
+			return calculatePercentageOffset(view, 0.95f, .95f);
 		}
 	},
 	BOTTOM_MIDDLE {
