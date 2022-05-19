@@ -144,4 +144,21 @@ class SmudgeToolTest {
         tool.updateDrag(40)
         Assert.assertNotEquals(minSize, tool.minSmudgeSize)
     }
+
+    @Test
+    fun testShouldCallHideWhenDrawing() {
+        val tap1 = PointF(7f, 7f)
+        tool.handleDown(tap1)
+        Mockito.verify(toolOptionsViewController).slideUp(smudgeToolOptionsView.getTopToolOptions(), true)
+        Mockito.verify(toolOptionsViewController).slideDown(smudgeToolOptionsView.getBottomToolOptions(), true)
+    }
+
+    @Test
+    fun testShouldCallUnhideWhenDrawingFinish() {
+        val tap1 = PointF(7f, 7f)
+        tool.handleDown(tap1)
+        tool.handleUp(tap1)
+        Mockito.verify(toolOptionsViewController).slideDown(smudgeToolOptionsView.getTopToolOptions(), false)
+        Mockito.verify(toolOptionsViewController).slideUp(smudgeToolOptionsView.getBottomToolOptions(), false)
+    }
 }

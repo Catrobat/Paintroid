@@ -202,6 +202,34 @@ class TextTool(
         updateTypeface()
     }
 
+    private fun hideTextLayout() {
+        toolOptionsViewController.slideUp(textToolOptionsView.getTopLayout(), true)
+        toolOptionsViewController.animateBottomAndTopNavigation(true)
+        toolOptionsViewController.slideDown(textToolOptionsView.getBottomLayout(), true)
+    }
+
+    private fun showTextLayout() {
+        toolOptionsViewController.slideDown(textToolOptionsView.getTopLayout(), false)
+        toolOptionsViewController.animateBottomAndTopNavigation(false)
+        toolOptionsViewController.slideUp(textToolOptionsView.getBottomLayout(), false)
+    }
+
+    override fun handleDown(coordinate: PointF?): Boolean {
+        hideTextLayout()
+        toolOptionsViewController.disable()
+        super.handleDown(coordinate)
+        toolOptionsViewController.enable()
+        return true
+    }
+
+    override fun handleUp(coordinate: PointF?): Boolean {
+        toolOptionsViewController.disable()
+        val returnValue = super.handleUp(coordinate)
+        toolOptionsViewController.enable()
+        showTextLayout()
+        return returnValue
+    }
+
     override fun drawBitmap(canvas: Canvas, boxWidth: Float, boxHeight: Float) {
         val textAscent = textPaint.ascent()
         val textDescent = textPaint.descent()

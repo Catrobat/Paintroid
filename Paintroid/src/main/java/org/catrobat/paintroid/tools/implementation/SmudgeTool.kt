@@ -1,3 +1,21 @@
+/*
+ * Paintroid: An image manipulation application for Android.
+ * Copyright (C) 2010-2022 The Catrobat Team
+ * (<http://developer.catrobat.org/credits>)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Bitmap
@@ -32,7 +50,7 @@ const val DRAW_THRESHOLD = 0.8f
 const val PRESSURE_UPDATE_STEP = 0.004f
 
 class SmudgeTool(
-    smudgeToolOptionsView: SmudgeToolOptionsView,
+    val smudgeToolOptionsView: SmudgeToolOptionsView,
     contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
@@ -99,8 +117,32 @@ class SmudgeTool(
         minSmudgeSize = onePercent * dragInPercent
     }
 
+    private fun hideSpecificLayoutOnHandleDown() {
+        toolOptionsViewController.slideUp(
+            smudgeToolOptionsView.getTopToolOptions(), true
+        )
+
+        toolOptionsViewController.slideDown(
+            smudgeToolOptionsView.getBottomToolOptions(), true
+        )
+    }
+
+    private fun showSpecificLayoutOnHandleUp() {
+        toolOptionsViewController.slideDown(
+            smudgeToolOptionsView.getTopToolOptions(), false
+        )
+
+        toolOptionsViewController.slideUp(
+            smudgeToolOptionsView.getBottomToolOptions(), false
+        )
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+
+        hideSpecificLayoutOnHandleDown()
+        super.handleDown(coordinate)
+
         if (maxSmudgeSize != toolPaint.strokeWidth) {
             val ratio = minSmudgeSize / maxSmudgeSize
             maxSmudgeSize = toolPaint.strokeWidth
@@ -204,6 +246,10 @@ class SmudgeTool(
 
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false
+
+        showSpecificLayoutOnHandleUp()
+        super.handleUp(coordinate)
+
         if (pointArray.isNotEmpty() && currentBitmap != null) {
             currentBitmap?.let {
                 val command = commandFactory.createSmudgePathCommand(

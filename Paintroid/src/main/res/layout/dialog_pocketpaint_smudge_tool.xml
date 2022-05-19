@@ -23,6 +23,10 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pocketpaint_smudge_top_layout">
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/pocketpaint_stroke_width_width_text_layout"
         android:layout_width="wrap_content"
@@ -56,13 +60,15 @@
         android:id="@+id/pocketpaint_stroke_width_seek_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:max="100"
-        android:minHeight="30dip"
-        android:layout_marginEnd="10dp"
         android:layout_alignTop="@id/pocketpaint_stroke_width_width_text_layout"
-        android:layout_toEndOf="@+id/pocketpaint_stroke_width_width_text_layout"
         android:layout_alignBottom="@id/pocketpaint_stroke_width_width_text_layout"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@+id/pocketpaint_stroke_width_width_text_layout"
+        android:max="100"
+        android:minHeight="30dip" />
+
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,9 +86,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:id="@+id/pocketpaint_smudge_bottom_layout"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/pocketpaint_stroke_types"
@@ -91,23 +98,23 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layoutDirection="ltr"
-            app:singleSelection="true"
-            app:singleLine="true">
+            app:singleLine="true"
+            app:singleSelection="true">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/pocketpaint_stroke_ibtn_circle"
+                style="@style/ChipTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/ChipTheme"
                 android:checkable="true"
-                app:chipIcon="@drawable/ic_pocketpaint_tool_circle"
-                android:checked="true"/>
+                android:checked="true"
+                app:chipIcon="@drawable/ic_pocketpaint_tool_circle" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/pocketpaint_stroke_ibtn_rect"
+                style="@style/ChipTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/ChipTheme"
                 app:chipIcon="@drawable/ic_pocketpaint_tool_square" />
 
         </com.google.android.material.chip.ChipGroup>
@@ -211,5 +218,4 @@
         </ScrollView>
 
     </LinearLayout>
-
 </RelativeLayout>

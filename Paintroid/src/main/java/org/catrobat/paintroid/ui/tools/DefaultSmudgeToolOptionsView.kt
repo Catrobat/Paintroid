@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@ import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.SeekBar
@@ -59,6 +60,8 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
     private val pressureSeekBar: SeekBar
     private val dragText: EditText
     private val dragSeekBar: SeekBar
+    private val topLayout: View
+    private val bottomLayout: View
 
     companion object {
         private val TAG = DefaultSmudgeToolOptionsView::class.java.simpleName
@@ -80,6 +83,8 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
             dragText = findViewById(R.id.pocketpaint_smudge_tool_dialog_drag_input)
             dragSeekBar = findViewById(R.id.pocketpaint_drag_seek_bar)
             dragSeekBar.setOnSeekBarChangeListener(OnDragChangedSeekBarListener())
+            topLayout = findViewById(R.id.pocketpaint_smudge_top_layout)
+            bottomLayout = findViewById(R.id.pocketpaint_smudge_bottom_layout)
         }
         brushSizeText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
         pressureText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
@@ -282,4 +287,8 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
             setDragText(seekBar.progress)
         }
     }
+
+    override fun getBottomToolOptions(): View = bottomLayout
+
+    override fun getTopToolOptions(): View = topLayout
 }

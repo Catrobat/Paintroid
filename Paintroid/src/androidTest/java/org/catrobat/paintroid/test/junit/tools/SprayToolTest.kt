@@ -156,4 +156,20 @@ class SprayToolTest {
         Assert.assertTrue(tool.sprayToolScope.isActive)
         Assert.assertFalse(tool.sprayActive)
     }
+
+    @Test
+    fun testShouldCallHideWhenDrawing() {
+        val tap1 = PointF(7f, 7f)
+        tool.handleDown(tap1)
+
+        Mockito.verify(toolOptionsViewController).slideDown(toolOptionsViewController.toolSpecificOptionsLayout, true)
+    }
+
+    @Test
+    fun testShouldCallUnhideWhenDrawingFinish() {
+        val tap1 = PointF(7f, 7f)
+
+        tool.handleUp(tap1)
+        Mockito.verify(toolOptionsViewController).slideUp(toolOptionsViewController.toolSpecificOptionsLayout, false)
+    }
 }

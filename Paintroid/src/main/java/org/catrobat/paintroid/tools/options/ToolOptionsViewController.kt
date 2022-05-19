@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.tools.options
 
+import android.view.View
 import android.view.ViewGroup
 
 interface ToolOptionsViewController : ToolOptionsVisibilityController {
@@ -27,6 +28,10 @@ interface ToolOptionsViewController : ToolOptionsVisibilityController {
 
     fun enable()
 
+    fun disableHide()
+
+    fun enableHide()
+
     fun resetToOrigin()
 
     fun removeToolViews()
@@ -34,4 +39,10 @@ interface ToolOptionsViewController : ToolOptionsVisibilityController {
     fun showCheckmark()
 
     fun hideCheckmark()
+
+    fun slideUp(view: View, willHide: Boolean)
+
+    fun slideDown(view: View, willHide: Boolean)
+
+    fun animateBottomAndTopNavigation(hide: Boolean)
 }

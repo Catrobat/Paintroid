@@ -23,6 +23,7 @@
     android:id="@+id/pocketpaint_layout_top_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:alpha="0.80"
     tools:showIn="@layout/activity_pocketpaint_main">
 
     <androidx.appcompat.widget.Toolbar

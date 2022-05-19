@@ -177,6 +177,14 @@ class DefaultToolController(
         toolOptionsViewController.enable()
     }
 
+    override fun enableHideOption() {
+        toolOptionsViewController.enableHide()
+    }
+
+    override fun disableHideOption() {
+        toolOptionsViewController.disableHide()
+    }
+
     override fun createTool() {
         val currentTool = toolReference.tool
         if (currentTool == null) {

@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.options
 import android.graphics.MaskFilter
 import android.graphics.Paint
 import android.graphics.Paint.Cap
+import android.view.View
 import org.catrobat.paintroid.tools.ToolType
 
 interface BrushToolOptionsView {
@@ -31,6 +32,10 @@ interface BrushToolOptionsView {
     fun setBrushChangedListener(onBrushChangedListener: OnBrushChangedListener)
 
     fun setBrushPreviewListener(onBrushPreviewListener: OnBrushPreviewListener)
+
+    fun getTopToolOptions(): View
+
+    fun getBottomToolOptions(): View
 
     fun hideCaps()
 

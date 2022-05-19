@@ -23,7 +23,6 @@ import android.graphics.PointF;
 import android.view.MotionEvent;
 
 import org.catrobat.paintroid.listener.DrawingSurfaceListener;
-import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.DrawingSurface;
@@ -38,7 +37,6 @@ import static org.catrobat.paintroid.tools.Tool.StateChange.MOVE_CANCELED;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -52,8 +50,6 @@ import static org.mockito.Mockito.when;
 public class DrawingSurfaceListenerTest {
 
 	private static final float DISPLAY_DENSITY = 1.5f;
-	@Mock
-	private AutoScrollTask autoScrollTask;
 
 	@Mock
 	private Tool currentTool;
@@ -92,12 +88,12 @@ public class DrawingSurfaceListenerTest {
 
 		when(motionEvent.getDownTime()).thenReturn((long) 0);
 
-		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, callback, DISPLAY_DENSITY);
+		drawingSurfaceListener = new DrawingSurfaceListener(callback, DISPLAY_DENSITY);
 	}
 
 	@Test
 	public void testSetUp() {
-		verifyZeroInteractions(currentTool, callback, autoScrollTask);
+		verifyZeroInteractions(currentTool, callback);
 	}
 
 	private void triggerTouchDownEvent(float startPositionX, float startPositionY, DrawingSurface drawingSurface) {
@@ -145,11 +141,7 @@ public class DrawingSurfaceListenerTest {
 		verify(callback).convertToCanvasFromSurface(pointFEquals(41f, 5f));
 		verify(currentTool).handleDown(pointFEquals(41f, 5f));
 
-		verify(autoScrollTask).setViewDimensions(width, height);
-		verify(autoScrollTask).setEventPoint(41f, 5f);
-		verify(autoScrollTask).start();
-
-		verifyNoMoreInteractions(autoScrollTask, currentTool);
+		verifyNoMoreInteractions(currentTool);
 		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
 		verify(callback, never()).translatePerspective(anyFloat(), anyFloat());
 	}
@@ -166,7 +158,7 @@ public class DrawingSurfaceListenerTest {
 		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		assertFalse(onTouchResult);
-		verifyNoMoreInteractions(autoScrollTask, currentTool);
+		verifyNoMoreInteractions(currentTool);
 	}
 
 	@Test
@@ -183,7 +175,7 @@ public class DrawingSurfaceListenerTest {
 		boolean onTouchResult = drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		assertFalse(onTouchResult);
-		verifyNoMoreInteractions(autoScrollTask, currentTool);
+		verifyNoMoreInteractions(currentTool);
 	}
 
 	@Test
@@ -194,9 +186,6 @@ public class DrawingSurfaceListenerTest {
 
 		verify(callback).convertToCanvasFromSurface(pointFEquals(5f, 3f));
 		verify(currentTool).handleMove(pointFEquals(5f, 3f));
-		verify(autoScrollTask).setEventPoint(5f, 3f);
-		verify(autoScrollTask).setViewDimensions(width, height);
-		verifyNoMoreInteractions(autoScrollTask);
 	}
 
 	@Test
@@ -204,9 +193,6 @@ public class DrawingSurfaceListenerTest {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
 
 		triggerMovementEvent(5f, 3f, drawingSurface);
-
-		verify(autoScrollTask, never()).stop();
-		verify(autoScrollTask, never()).isRunning();
 	}
 
 	@Test
@@ -224,8 +210,6 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(currentTool, never()).handleMove(any(PointF.class));
-		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
-		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 	}
 
 	@Test
@@ -243,8 +227,6 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(currentTool, never()).handleMove(any(PointF.class));
-		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
-		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
 		verify(callback, never()).translatePerspective(anyFloat(), anyFloat());
 		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
@@ -269,8 +251,6 @@ public class DrawingSurfaceListenerTest {
 		verify(currentTool, never()).handleUp(any(PointF.class));
 		verify(currentTool, never()).handleDown(any(PointF.class));
 		verify(currentTool, never()).handleMove(any(PointF.class));
-		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
-		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
 		verify(callback, never()).translatePerspective(anyFloat(), anyFloat());
 		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
@@ -284,11 +264,8 @@ public class DrawingSurfaceListenerTest {
 		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_MOVE);
 		when(motionEvent.getPointerCount()).thenReturn(2);
 		when(motionEvent.getX()).thenReturn(50f);
-		when(autoScrollTask.isRunning()).thenReturn(true);
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-
-		verify(autoScrollTask).stop();
 	}
 
 	@Test
@@ -300,11 +277,8 @@ public class DrawingSurfaceListenerTest {
 		when(motionEvent.getPointerCount()).thenReturn(1);
 		when(currentTool.handToolMode()).thenReturn(true);
 		when(motionEvent.getX()).thenReturn(50f);
-		when(autoScrollTask.isRunning()).thenReturn(true);
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-
-		verify(autoScrollTask).stop();
 	}
 
 	@Test
@@ -332,8 +306,6 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(currentTool, never()).handleMove(any(PointF.class));
-		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
-		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
 		verify(callback).translatePerspective(10, -10);
 		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
@@ -363,8 +335,6 @@ public class DrawingSurfaceListenerTest {
 		verify(currentTool, never()).handleUp(any(PointF.class));
 		verify(currentTool, never()).handleDown(any(PointF.class));
 		verify(currentTool, never()).handleMove(any(PointF.class));
-		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
-		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
 		verify(callback).translatePerspective(10, -10);
 		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
@@ -401,8 +371,6 @@ public class DrawingSurfaceListenerTest {
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
 
 		verify(currentTool, never()).handleMove(any(PointF.class));
-		verify(autoScrollTask, never()).setEventPoint(anyFloat(), anyFloat());
-		verify(autoScrollTask, never()).setViewDimensions(anyInt(), anyInt());
 
 		verify(callback, never()).translatePerspective(anyFloat(), anyFloat());
 		verify(callback).multiplyPerspectiveScale((2f - 4f) / (1f - 5f));
@@ -452,12 +420,9 @@ public class DrawingSurfaceListenerTest {
 		DrawingSurface drawingSurface = mock(DrawingSurface.class);
 		MotionEvent motionEvent = mock(MotionEvent.class);
 
-		when(autoScrollTask.isRunning()).thenReturn(true);
 		when(motionEvent.getAction()).thenReturn(MotionEvent.ACTION_UP);
 
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-
-		verify(autoScrollTask).stop();
 	}
 
 	@Test
@@ -472,10 +437,7 @@ public class DrawingSurfaceListenerTest {
 		when(drawingSurface.getWidth()).thenReturn(width);
 		when(drawingSurface.getHeight()).thenReturn(height);
 
-		drawingSurfaceListener.disableAutoScroll();
 		drawingSurfaceListener.onTouch(drawingSurface, motionEvent);
-
-		verify(autoScrollTask, never()).start();
 	}
 
 	@Test

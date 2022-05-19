@@ -365,7 +365,7 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_red)))));
 		onView(withId(R.id.color_picker_color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_green)))));
 		onView(withId(R.id.color_picker_color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_blue)))));
-		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_alpha)))));
+		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.pocketpaint_color_picker_hex_black)))));
 
 		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).check(matches(isDisplayed()));
@@ -736,7 +736,7 @@ public class ColorDialogIntegrationTest {
 				.onPositiveButton()
 				.perform(click());
 		onToolProperties()
-				.checkMatchesColor(Color.parseColor("#80000000"));
+				.checkMatchesColor(Color.parseColor("#7F000000"));
 		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 

@@ -159,9 +159,9 @@ interface MainActivityContracts {
 
         fun refreshDrawingSurface()
 
-        fun enterFullscreen()
+        fun enterHideButtons()
 
-        fun exitFullscreen()
+        fun exitHideButtons()
 
         fun showContentLoadingProgressBar()
 
@@ -204,9 +204,9 @@ interface MainActivityContracts {
 
         fun shareImageClicked()
 
-        fun enterFullscreenClicked()
+        fun enterHideButtonsClicked()
 
-        fun exitFullscreenClicked()
+        fun exitHideButtonsClicked()
 
         fun backToPocketCodeClicked()
 

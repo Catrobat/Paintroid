@@ -275,4 +275,24 @@ public class CursorToolTest {
 
 		assertEquals(Color.CYAN, toolToTest.cursorToolSecondaryShapeColor);
 	}
+
+	@Test
+	public void testShouldCallHideWhenDrawing() {
+		PointF tap1 = new PointF(7, 7);
+
+		toolToTest.handleDown(tap1);
+
+		verify(toolOptionsViewController).slideUp(brushToolOptionsView.getTopToolOptions(), true);
+		verify(toolOptionsViewController).slideDown(brushToolOptionsView.getBottomToolOptions(), true);
+	}
+
+	@Test
+	public void testShouldCallUnhideWhenDrawingFinish() {
+		PointF tap1 = new PointF(7, 7);
+		toolToTest.handleDown(tap1);
+		toolToTest.handleUp(tap1);
+
+		verify(toolOptionsViewController).slideDown(brushToolOptionsView.getTopToolOptions(), false);
+		verify(toolOptionsViewController).slideUp(brushToolOptionsView.getBottomToolOptions(), false);
+	}
 }

@@ -55,6 +55,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import androidx.test.espresso.IdlingRegistry;
@@ -427,5 +428,22 @@ public class BaseToolWithRectangleShapeToolTest {
 		@Override
 		public void setDrawTime(long drawTime) {
 		}
+	}
+
+	@Test
+	public void testShouldCallHideWhenDrawing() {
+		PointF tap1 = new PointF(7, 7);
+
+		toolToTest.handleDown(tap1);
+
+		verify(toolOptionsViewController).slideDown(toolOptionsViewController.getToolSpecificOptionsLayout(), true);
+	}
+
+	@Test
+	public void testShouldCallUnhideWhenDrawingFinish() {
+		PointF tap1 = new PointF(7, 7);
+		toolToTest.handleUp(tap1);
+
+		verify(toolOptionsViewController).slideUp(toolOptionsViewController.getToolSpecificOptionsLayout(), false);
 	}
 }

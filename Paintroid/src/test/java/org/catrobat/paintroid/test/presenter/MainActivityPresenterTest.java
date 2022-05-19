@@ -287,25 +287,25 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testEnterFullscreenClicked() {
-		presenter.enterFullscreenClicked();
+		presenter.enterHideButtonsClicked();
 
 		verify(model).setFullscreen(true);
 		verify(topBarViewHolder).hide();
 		verify(view).hideKeyboard();
-		verify(view).enterFullscreen();
+		verify(view).enterHideButtons();
 		verify(toolController).disableToolOptionsView();
-		verify(perspective).enterFullscreen();
+		verify(perspective).enterHideButtonsMode();
 	}
 
 	@Test
 	public void testExitFullscreenClicked() {
-		presenter.exitFullscreenClicked();
+		presenter.exitHideButtonsClicked();
 
 		verify(model).setFullscreen(false);
 		verify(topBarViewHolder).show();
-		verify(view).exitFullscreen();
+		verify(view).exitHideButtons();
 		verify(toolController).enableToolOptionsView();
-		verify(perspective).exitFullscreen();
+		verify(perspective).exitHideButtonsMode();
 	}
 
 	@Test
@@ -704,7 +704,7 @@ public class MainActivityPresenterTest {
 	public void testFinishInitializeWhenNotFullscreenThenRestoreState() {
 		presenter.finishInitialize();
 
-		verify(view).exitFullscreen();
+		verify(view).exitHideButtons();
 	}
 
 	@Test
@@ -713,7 +713,7 @@ public class MainActivityPresenterTest {
 
 		presenter.finishInitialize();
 
-		verify(view).enterFullscreen();
+		verify(view).enterHideButtons();
 	}
 
 	@Test

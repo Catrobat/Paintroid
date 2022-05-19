@@ -201,8 +201,24 @@ class LineTool(
         }
     }
 
+    private fun hideToolOptions() {
+        toolOptionsViewController.slideUp(brushToolOptionsView.getTopToolOptions(), true)
+
+        toolOptionsViewController.slideDown(
+            brushToolOptionsView.getBottomToolOptions(), true
+        )
+    }
+
+    private fun showToolOptions() {
+        toolOptionsViewController.slideDown(brushToolOptionsView.getTopToolOptions(), false)
+
+        toolOptionsViewController.slideUp(brushToolOptionsView.getBottomToolOptions(), false)
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        hideToolOptions()
+        super.handleDown(coordinate)
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
         return true
@@ -317,6 +333,8 @@ class LineTool(
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
+        showToolOptions()
+        super.handleUp(coordinate)
         undoPreviousLineForConnectedLines = true
         if (changeInitialCoordinateForHandleNormalLine && initialEventCoordinate == null) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }

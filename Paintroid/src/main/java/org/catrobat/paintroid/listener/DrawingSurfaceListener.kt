@@ -18,18 +18,14 @@
  */
 package org.catrobat.paintroid.listener
 
-import android.graphics.Point
 import android.graphics.PointF
-import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
-import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
-import java.util.EnumSet
 import kotlin.collections.ArrayList
 import kotlin.collections.MutableList
 import kotlin.collections.mutableListOf
@@ -41,7 +37,6 @@ private const val JITTER_DELAY_THRESHOLD: Long = 30
 private const val JITTER_DISTANCE_THRESHOLD = 50f
 
 open class DrawingSurfaceListener(
-    private val autoScrollTask: AutoScrollTask,
     private val callback: DrawingSurfaceListenerCallback,
     private val displayDensity: Float
 ) : OnTouchListener {
@@ -54,7 +49,6 @@ open class DrawingSurfaceListener(
     private val canvasTouchPoint: PointF
     private val eventTouchPoint: PointF
     private val drawerEdgeSize: Int = (DRAWER_EDGE_SIZE * displayDensity + CONSTANT_1).toInt()
-    private var autoScroll = true
     private var timerStartDraw = 0.toLong()
 
     private var recentTouchEventsData: MutableList<TouchEventData> = mutableListOf()
@@ -87,23 +81,7 @@ open class DrawingSurfaceListener(
         yMidPoint = (event.getY(0) + event.getY(1)) / 2f
     }
 
-    fun enableAutoScroll() {
-        autoScroll = true
-    }
-
-    fun disableAutoScroll() {
-        autoScroll = false
-        if (autoScrollTask.isRunning) {
-            autoScrollTask.stop()
-        }
-    }
-
-    private fun setEvenPointAndViewDimensionsForAutoScrollTask(view: View) {
-        autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y)
-        autoScrollTask.setViewDimensions(view.width, view.height)
-    }
-
-    private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
+    private fun handleActionMove(currentTool: Tool?, event: MotionEvent) {
         val xOld: Float
         val yOld: Float
         if (event.pointerCount == 1) {
@@ -111,7 +89,6 @@ open class DrawingSurfaceListener(
             recentTouchEventsData.add(TouchEventData(event.eventTime, event.x, event.y))
             removeObsoleteTouchEventsData(event.eventTime)
             if (currentTool.handToolMode()) {
-                disableAutoScroll()
                 if (touchMode == TouchMode.PINCH) {
                     xOld = 0f
                     yOld = 0f
@@ -126,13 +103,9 @@ open class DrawingSurfaceListener(
                 }
             } else if (touchMode != TouchMode.PINCH) {
                 touchMode = TouchMode.DRAW
-                if (autoScroll) {
-                    setEvenPointAndViewDimensionsForAutoScrollTask(view)
-                }
                 currentTool.handleMove(canvasTouchPoint)
             }
         } else {
-            disableAutoScroll()
             if (touchMode == TouchMode.DRAW) {
                 currentTool?.resetInternalState(StateChange.MOVE_CANCELED)
             }
@@ -168,16 +141,9 @@ open class DrawingSurfaceListener(
                 timerStartDraw = System.currentTimeMillis()
                 recentTouchEventsData.add(TouchEventData(event.eventTime, event.x, event.y))
                 currentTool?.handleDown(canvasTouchPoint)
-                if (autoScroll) {
-                    setEvenPointAndViewDimensionsForAutoScrollTask(view)
-                    autoScrollTask.start()
-                }
             }
-            MotionEvent.ACTION_MOVE -> handleActionMove(currentTool, view, event)
+            MotionEvent.ACTION_MOVE -> handleActionMove(currentTool, event)
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                if (autoScrollTask.isRunning) {
-                    autoScrollTask.stop()
-                }
                 if (touchMode == TouchMode.DRAW) {
                     val drawingTime = System.currentTimeMillis() - timerStartDraw
                     removeObsoleteTouchEventsData(event.eventTime)
@@ -223,100 +189,6 @@ open class DrawingSurfaceListener(
             }
         }
         recentTouchEventsData.removeAll(obsoleteTouchEventsData)
-    }
-
-    open class AutoScrollTask(
-        private val handler: Handler,
-        private val callback: AutoScrollTaskCallback
-    ) : Runnable {
-        open var isRunning = false
-        private var pointX = 0f
-        private var pointY = 0f
-        private var width = 0
-        private var height = 0
-        private val ignoredTools = EnumSet.of(ToolType.PIPETTE, ToolType.FILL, ToolType.TRANSFORM)
-        private val newMovePoint: PointF = PointF()
-
-        companion object {
-            // IMPORTANT: If the SCROLL_INTERVAL_FACTOR is chosen too low,
-            // espresso will wait forever for the handler queue to be empty on long touch events.
-            private const val SCROLL_INTERVAL_FACTOR = 40
-            private const val STEP = 2f
-        }
-
-        open fun setEventPoint(pointX: Float, pointY: Float) {
-            this.pointX = pointX
-            this.pointY = pointY
-        }
-
-        open fun setViewDimensions(width: Int, height: Int) {
-            this.width = width
-            this.height = height
-        }
-
-        open fun start() {
-            check(!(isRunning || width == 0 || height == 0))
-            if (ignoredTools.contains(callback.getCurrentToolType())) {
-                return
-            }
-            isRunning = true
-            run()
-        }
-
-        open fun stop() {
-            if (isRunning) {
-                isRunning = false
-                handler.removeCallbacks(this)
-            }
-        }
-
-        private fun calculateScrollInterval(scale: Float): Int =
-            (SCROLL_INTERVAL_FACTOR / Math.cbrt(scale.toDouble())).toInt()
-
-        override fun run() {
-            val autoScrollDirection =
-                callback.getToolAutoScrollDirection(pointX, pointY, width, height)
-            if (autoScrollDirection != null && (autoScrollDirection.x != 0 || autoScrollDirection.y != 0)) {
-                newMovePoint.x = pointX
-                newMovePoint.y = pointY
-                callback.convertToCanvasFromSurface(newMovePoint)
-                if (callback.isPointOnCanvas(newMovePoint.x.toInt(), newMovePoint.y.toInt())) {
-                    callback.translatePerspective(
-                        autoScrollDirection.x * STEP,
-                        autoScrollDirection.y * STEP
-                    )
-                    callback.handleToolMove(newMovePoint)
-                    callback.refreshDrawingSurface()
-                }
-            }
-            handler.postDelayed(
-                this,
-                calculateScrollInterval(callback.getPerspectiveScale()).toLong()
-            )
-        }
-    }
-
-    interface AutoScrollTaskCallback {
-        fun isPointOnCanvas(pointX: Int, pointY: Int): Boolean
-
-        fun refreshDrawingSurface()
-
-        fun handleToolMove(coordinate: PointF)
-
-        fun getToolAutoScrollDirection(
-            pointX: Float,
-            pointY: Float,
-            screenWidth: Int,
-            screenHeight: Int
-        ): Point?
-
-        fun getPerspectiveScale(): Float
-
-        fun translatePerspective(dx: Float, dy: Float)
-
-        fun convertToCanvasFromSurface(surfacePoint: PointF)
-
-        fun getCurrentToolType(): ToolType?
     }
 
     interface DrawingSurfaceListenerCallback {

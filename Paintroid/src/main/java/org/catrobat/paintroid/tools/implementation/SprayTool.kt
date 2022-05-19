@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -96,10 +96,25 @@ class SprayTool(
         }
     }
 
+    private fun hideToolOptions() {
+        toolOptionsViewController.slideDown(
+            toolOptionsViewController.toolSpecificOptionsLayout, true
+        )
+    }
+
+    private fun showToolOptions() {
+        toolOptionsViewController.slideUp(
+            toolOptionsViewController.toolSpecificOptionsLayout, false
+        )
+    }
+
     override fun handleUp(coordinate: PointF?): Boolean {
         sprayToolScope.cancel()
         currentCoordinate = coordinate
         addSprayCommand()
+
+        showToolOptions()
+        super.handleUp(coordinate)
         return true
     }
 
@@ -112,7 +127,8 @@ class SprayTool(
         if (sprayActive || coordinate == null) {
             return false
         }
-
+        hideToolOptions()
+        super.handleDown(coordinate)
         sprayActive = true
         currentCoordinate = coordinate
         createSprayPatternAsync()

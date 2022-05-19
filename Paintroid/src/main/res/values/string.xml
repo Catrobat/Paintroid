@@ -97,7 +97,7 @@
     <string name="menu_add_to_current_layer">Add to current layer</string>
     <string name="menu_save_image">Save image</string>
     <string name="menu_save_copy">Save copy</string>
-    <string name="menu_hide_menu">Fullscreen</string>
+    <string name="menu_hide_menu">Hide buttons</string>
     <string name="share_image_menu">Share image</string>
     <string name="share_image_via_text">Send image via</string>
     <string name="pocketpaint_menu_about" translatable="false">@string/pocketpaint_about_title</string>

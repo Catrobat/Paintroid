@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -92,8 +92,30 @@ open class BrushTool(
         }
     }
 
+    private fun hideBrushSpecificLayoutOnHandleDown() {
+        toolOptionsViewController.slideUp(
+            brushToolOptionsView.getTopToolOptions(), true
+        )
+
+        toolOptionsViewController.slideDown(
+            brushToolOptionsView.getBottomToolOptions(), true
+        )
+    }
+
+    private fun showBrushSpecificLayoutOnHandleUp() {
+        toolOptionsViewController.slideDown(
+            brushToolOptionsView.getTopToolOptions(), false
+        )
+
+        toolOptionsViewController.slideUp(
+            brushToolOptionsView.getBottomToolOptions(), false
+        )
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        hideBrushSpecificLayoutOnHandleDown()
+        super.handleDown(coordinate)
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
         pathToDraw.moveTo(coordinate.x, coordinate.y)
@@ -127,6 +149,9 @@ open class BrushTool(
         if (eventCoordinatesAreNull() || coordinate == null) {
             return false
         }
+
+        showBrushSpecificLayoutOnHandleUp()
+        super.handleUp(coordinate)
 
         if (!pathInsideBitmap && workspace.contains(coordinate)) {
             pathInsideBitmap = true

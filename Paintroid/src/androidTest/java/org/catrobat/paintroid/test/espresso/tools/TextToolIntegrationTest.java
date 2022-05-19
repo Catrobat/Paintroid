@@ -137,7 +137,7 @@ public class TextToolIntegrationTest {
 		enterTestText();
 
 		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE));
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
 
 		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(replaceText(TEST_TEXT_ADVANCED));
 
