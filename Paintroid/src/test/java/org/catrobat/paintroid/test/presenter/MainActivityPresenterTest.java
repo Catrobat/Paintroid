@@ -615,7 +615,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testRestoreStateThenRestoreFragmentListeners() {
-		presenter.restoreState(false, false, false, false, false, null, null);
+		presenter.restoreState(false, false, false, false, null, null);
 
 		verify(navigator).restoreFragmentListeners();
 	}
@@ -625,13 +625,12 @@ public class MainActivityPresenterTest {
 		Uri savedPictureUri = mock(Uri.class);
 		Uri cameraImageUri = mock(Uri.class);
 
-		presenter.restoreState(false, false, false, false, false, savedPictureUri, cameraImageUri);
+		presenter.restoreState(false, false, false, false, savedPictureUri, cameraImageUri);
 
 		verify(model).setFullscreen(false);
 		verify(model).setSaved(false);
 		verify(model).setOpenedFromCatroid(false);
 		verify(model).setOpenedFromFormulaEditorInCatroid(false);
-		verify(model).setInitialAnimationPlayed(false);
 		verify(model).setSavedPictureUri(savedPictureUri);
 		verify(model).setCameraImageUri(cameraImageUri);
 	}
@@ -641,20 +640,19 @@ public class MainActivityPresenterTest {
 		Uri savedPictureUri = mock(Uri.class);
 		Uri cameraImageUri = mock(Uri.class);
 
-		presenter.restoreState(true, true, true, true, true, savedPictureUri, cameraImageUri);
+		presenter.restoreState(true, true, true, true, savedPictureUri, cameraImageUri);
 
 		verify(model).setFullscreen(true);
 		verify(model).setSaved(true);
 		verify(model).setOpenedFromCatroid(true);
 		verify(model).setOpenedFromFormulaEditorInCatroid(true);
-		verify(model).setInitialAnimationPlayed(true);
 		verify(model).setSavedPictureUri(savedPictureUri);
 		verify(model).setCameraImageUri(cameraImageUri);
 	}
 
 	@Test
 	public void testRestoreStateThenResetTool() {
-		presenter.restoreState(false, false, false, false, false, null, null);
+		presenter.restoreState(false, false, false, false, null, null);
 
 		verify(toolController).resetToolInternalStateOnImageLoaded();
 	}
@@ -1348,7 +1346,6 @@ public class MainActivityPresenterTest {
 		verify(model, never()).setCameraImageUri(any(Uri.class));
 		verify(model, never()).setSaved(anyBoolean());
 		verify(model, never()).setOpenedFromCatroid(anyBoolean());
-		verify(model, never()).setInitialAnimationPlayed(anyBoolean());
 		verify(model, never()).setFullscreen(anyBoolean());
 	}
 
