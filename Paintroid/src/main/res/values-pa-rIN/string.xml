@@ -35,11 +35,11 @@
     <string name="button_text">ਟੈਕਸਟ</string>
     <string name="button_shape">ਆਕਾਰ</string>
     <string name="button_hand">ਹੱਥ</string>
-    <string name="button_watercolor">Watercolor</string>
+    <string name="button_watercolor">ਪਾਣੀ ਦਾ ਰੰਗ</string>
     <string name="button_spray_can">ਸਪਰੇ ਕਰ ਸਕਦੇ ਹੋ</string>
     <string name="button_apply">ਲਾਗੂ ਕਰੋ</string>
     <string name="button_checkmark">ਚੈੱਕਮਾਰਕ</string>
-    <string name="button_plus">Connect Line Segment</string>
+    <string name="button_plus">ਲਾਈਨ ਖੰਡ ਨੂੰ ਕਨੈਕਟ ਕਰੋ</string>
     <string name="done">ਹੋ ਗਿਆ</string>
     <string name="gallery">ਗੈਲਰੀ</string>
     <string name="load_sticker_error">ਸਟਿੱਕਰ ਲੋਡ ਨਹੀਂ ਕਰ ਸਕਿਆ</string>
@@ -58,7 +58,7 @@
     <string name="help_title">ਮਦਦ ਕਰੋ</string>
     <string name="help_content_eraser">ਚਿੱਤਰ ਦੇ ਕੁਝ ਹਿੱਸਿਆਂ ਨੂੰ ਇਜਰੇ ਵਾਂਗ ਹਟਾਓ.</string>
     <string name="help_content_brush">ਰੰਗ ਜਾਂ ਬੁਰਸ਼ ਦੇ ਆਕਾਰ ਨੂੰ ਬਦਲਣ ਲਈ ਤਲ ਬਾਰ \'ਤੇ ਚਿੰਨ੍ਹਾਂ\' ਤੇ ਟੈਪ ਕਰੋ.</string>
-    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_watercolor">ਵਾਟਰ ਕਲਰ ਪ੍ਰਭਾਵ ਵਾਲੇ ਬੁਰਸ਼ ਟੂਲ ਦੇ ਸਮਾਨ। ਹਾਲਾਂਕਿ ਤੁਸੀਂ ਕਲਰ ਮੀਨੂ ਵਿੱਚ ਸਲਾਈਡਰ ਨਾਲ ਬੁਰਸ਼ ਦੀ ਤਾਕਤ ਨੂੰ ਵੀ ਬਦਲ ਸਕਦੇ ਹੋ।</string>
     <string name="help_content_eyedropper">ਰੰਗ ਚੁਣਨ ਲਈ ਚਿੱਤਰ \'ਤੇ ਟੈਪ ਕਰੋ.</string>
     <string name="help_content_undo">ਆਪਣੀ ਪਿਛਲੀ ਕਿਰਿਆ ਨੂੰ ਵਾਪਸ ਲਿਆਉਣ ਲਈ ਟੈਪ ਕਰੋ.</string>
     <string name="help_content_redo">ਇੱਕ ਵਾਪਸੀ ਕੀਤੀ ਕਾਰਵਾਈ ਨੂੰ ਦੁਬਾਰਾ ਕਰਨ ਲਈ ਟੈਪ ਕਰੋ.</string>

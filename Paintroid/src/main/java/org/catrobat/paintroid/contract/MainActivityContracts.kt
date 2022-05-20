@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,7 @@ import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
 import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
+import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.LayerAdapter
@@ -178,7 +179,7 @@ interface MainActivityContracts {
             isFullscreen: Boolean,
             isSaved: Boolean,
             isOpenedFromCatroid: Boolean,
-            wasInitialAnimationPlayed: Boolean,
+            isOpenedFromFormulaEditorInCatroid: Boolean,
             savedPictureUri: Uri?,
             cameraImageUri: Uri?
         )
@@ -290,6 +291,12 @@ interface MainActivityContracts {
         fun loadScaledImage(uri: Uri?, @ActivityRequestCode requestCode: Int)
 
         fun setAntialiasingOnOkClicked()
+
+        fun saveNewTemporaryImage()
+
+        fun openTemporaryFile(workspace: Workspace): CommandManagerModel?
+
+        fun checkForTemporaryFile(): Boolean
     }
 
     interface Model {
@@ -298,10 +305,7 @@ interface MainActivityContracts {
         var isSaved: Boolean
         var isFullscreen: Boolean
         var isOpenedFromCatroid: Boolean
-
-        fun wasInitialAnimationPlayed(): Boolean
-
-        fun setInitialAnimationPlayed(wasInitialAnimationPlayed: Boolean)
+        var isOpenedFromFormulaEditorInCatroid: Boolean
     }
 
     interface Interactor {

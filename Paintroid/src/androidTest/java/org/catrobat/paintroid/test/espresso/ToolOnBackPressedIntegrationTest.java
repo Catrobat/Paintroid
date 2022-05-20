@@ -19,6 +19,9 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.view.Gravity;
@@ -28,6 +31,7 @@ import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
@@ -40,15 +44,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
-import static org.catrobat.paintroid.common.ConstantsKt.TEMP_PICTURE_NAME;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ConfirmQuitDialogInteraction.onConfirmQuitDialog;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
@@ -58,7 +64,8 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -74,6 +81,7 @@ import static androidx.test.espresso.contrib.DrawerActions.open;
 import static androidx.test.espresso.contrib.DrawerMatchers.isClosed;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -83,7 +91,7 @@ public class ToolOnBackPressedIntegrationTest {
 	private static final String FILE_ENDING = ".png";
 
 	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, true);
 
 	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
@@ -93,6 +101,7 @@ public class ToolOnBackPressedIntegrationTest {
 
 	private File saveFile = null;
 	private ToolReference toolReference;
+	public final String defaultPictureName = "catroidTemp";
 
 	@Before
 	public void setUp() {
@@ -143,18 +152,35 @@ public class ToolOnBackPressedIntegrationTest {
 	}
 
 	@Test
-	public void testBrushToolBackPressedWithSaveAndOverride() {
-		String pathToFile = launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-				+ File.separator
-				+ TEMP_PICTURE_NAME
-				+ FILE_ENDING;
+	public void testBrushToolBackPressedWithSaveAndOverride() throws IOException {
+		TopBarViewInteraction.onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image))
+				.perform(ViewActions.click());
 
-		saveFile = new File(pathToFile);
+		onView(withId(R.id.pocketpaint_save_info_title)).check(matches(isDisplayed()));
+		onView(withId(R.id.pocketpaint_image_name_save_text)).check(matches(isDisplayed()));
+		onView(withId(R.id.pocketpaint_save_dialog_spinner)).check(matches(isDisplayed()));
 
-		launchActivityRule.getActivity().model.setSavedPictureUri(Uri.fromFile(saveFile));
-		FileIO.currentFileNamePng = TEMP_PICTURE_NAME + FILE_ENDING;
-		FileIO.uriFilePng = Uri.fromFile(saveFile);
-		long oldFileSize = saveFile.length();
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.perform(click());
+		onData(AllOf.allOf(is(instanceOf(String.class)),
+				is("png"))).inRoot(isPlatformPopup()).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText(defaultPictureName));
+
+		onView(withText(R.string.save_button_text))
+				.perform(click());
+
+		onView(isRoot()).perform(waitFor(200));
+
+		String filename = defaultPictureName + FILE_ENDING;
+		ContentResolver resolver = launchActivityRule.getActivity().getContentResolver();
+		Uri uri = FileIO.INSTANCE.getUriForFilenameInPicturesFolder(filename, resolver);
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		assertNotNull(uri);
+		InputStream inputStream = resolver.openInputStream(uri);
+		Bitmap oldBitmap = BitmapFactory.decodeStream(inputStream, null, options);
 
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
@@ -173,16 +199,24 @@ public class ToolOnBackPressedIntegrationTest {
 		onData(AllOf.allOf(is(instanceOf(String.class)),
 				is("png"))).inRoot(isPlatformPopup()).perform(click());
 		onView(withId(R.id.pocketpaint_image_name_save_text))
-				.perform(replaceText(TEMP_PICTURE_NAME));
+				.perform(replaceText(defaultPictureName));
 
 		onView(withText(R.string.save_button_text))
 				.perform(click());
 
+		onView(isRoot()).perform(waitFor(200));
 		onView(withText(R.string.overwrite_button_text))
 				.perform(click());
+		onView(isRoot()).perform(waitFor(200));
 
-		long actualFileSize = saveFile.length();
-		assertNotEquals(oldFileSize, actualFileSize);
+		uri = FileIO.INSTANCE.getUriForFilenameInPicturesFolder(filename, resolver);
+		assertNotNull(uri);
+		inputStream = resolver.openInputStream(uri);
+		Bitmap actualBitmap = BitmapFactory.decodeStream(inputStream, null, options);
+
+		assertNotNull(oldBitmap);
+		assertNotNull(actualBitmap);
+		assertFalse("Bitmaps are the same, should be different", oldBitmap.sameAs(actualBitmap));
 	}
 
 	@Test
@@ -215,7 +249,7 @@ public class ToolOnBackPressedIntegrationTest {
 		String pathToFile =
 				launchActivityRule.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 						+ File.separator
-						+ TEMP_PICTURE_NAME
+						+ defaultPictureName
 						+ FILE_ENDING;
 
 		saveFile = new File(pathToFile);
@@ -223,6 +257,8 @@ public class ToolOnBackPressedIntegrationTest {
 		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
 
 		Espresso.pressBackUnconditionally();
+
+		onView(isRoot()).perform(waitFor(2000));
 
 		assertTrue(launchActivityRule.getActivity().isFinishing());
 		assertTrue(saveFile.exists());

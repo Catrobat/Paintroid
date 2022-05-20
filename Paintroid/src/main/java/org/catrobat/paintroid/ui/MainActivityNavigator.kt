@@ -28,7 +28,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
-import android.view.Gravity
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.app.ActivityCompat
@@ -201,7 +200,8 @@ class MainActivityNavigator(
             toolReference.tool?.let {
                 val dialog = ColorPickerDialog.newInstance(
                     it.drawPaint.color,
-                    mainActivity.model.isOpenedFromCatroid
+                    mainActivity.model.isOpenedFromCatroid,
+                    mainActivity.model.isOpenedFromFormulaEditorInCatroid
                 )
                 setupColorPickerDialogListeners(dialog)
                 showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)
@@ -461,12 +461,12 @@ class MainActivityNavigator(
         }
         if (!isExport && mainActivity.model.isOpenedFromCatroid) {
             val name = getFileName(uri)
-            if (name != null && (name.endsWith("jpg") || name.endsWith("jpeg"))) {
+            if (name != null && (name.endsWith(FileIO.FileType.JPG.value) || name.endsWith("jpeg"))) {
                 FileIO.compressFormat = Bitmap.CompressFormat.JPEG
-                FileIO.ending = ".jpg"
+                FileIO.fileType = FileIO.FileType.JPG
             } else {
                 FileIO.compressFormat = Bitmap.CompressFormat.PNG
-                FileIO.ending = ".png"
+                FileIO.fileType = FileIO.FileType.PNG
             }
             FileIO.filename = "image$imageNumber"
             FileIO.catroidFlag = true
@@ -489,11 +489,9 @@ class MainActivityNavigator(
     override fun showToolChangeToast(offset: Int, idRes: Int) {
         var offset = offset
         val toolNameToast = ToastFactory.makeText(mainActivity, idRes, Toast.LENGTH_SHORT)
-        val gravity = Gravity.TOP or Gravity.CENTER
         if (mainActivity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             offset = 0
         }
-        toolNameToast.setGravity(gravity, 0, offset)
         toolNameToast.show()
     }
 

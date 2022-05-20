@@ -32,29 +32,34 @@ class JavaCropAlgorithm : CropAlgorithm {
 
     private fun isOpaquePixel(x: Int, y: Int): Boolean = bitmap.getPixel(x, y) != Color.TRANSPARENT
 
-    private fun getTopmostCellWithOpaquePixel(): Int? =
+    fun getTopmostCellWithOpaquePixel(): Int? =
         bounds.yRange().firstOrNull { y ->
             bounds.xRange()
                 .firstOrNull { x -> isOpaquePixel(x, y) } != null
         }
 
-    private fun getBottommostCellWithOpaquePixel(): Int? =
+    fun getBottommostCellWithOpaquePixel(): Int? =
         bounds.yRange().lastOrNull { y ->
             bounds.xRange()
                 .firstOrNull { x -> isOpaquePixel(x, y) } != null
         }
 
-    private fun getLeftmostCellWithOpaquePixel(): Int? =
+    fun getLeftmostCellWithOpaquePixel(): Int? =
         bounds.xRange().firstOrNull { x ->
             bounds.yRange()
                 .firstOrNull { y -> isOpaquePixel(x, y) } != null
         }
 
-    private fun getRightmostCellWithOpaquePixel(): Int? =
+    fun getRightmostCellWithOpaquePixel(): Int? =
         bounds.xRange().lastOrNull { x ->
             bounds.yRange()
                 .firstOrNull { y -> isOpaquePixel(x, y) } != null
         }
+
+    fun init(bitmap: Bitmap) {
+        this.bitmap = bitmap
+        bounds = Rect(0, 0, bitmap.width - 1, bitmap.height - 1)
+    }
 
     override fun crop(bitmap: Bitmap?): Rect? {
         this.bitmap = bitmap ?: return null

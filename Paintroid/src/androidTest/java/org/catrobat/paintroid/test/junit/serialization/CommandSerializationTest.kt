@@ -52,10 +52,12 @@ import org.catrobat.paintroid.command.implementation.SetDimensionCommand
 import org.catrobat.paintroid.command.implementation.SprayCommand
 import org.catrobat.paintroid.command.implementation.StampCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
+import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.drawable.HeartDrawable
 import org.catrobat.paintroid.tools.drawable.OvalDrawable
 import org.catrobat.paintroid.tools.drawable.RectangleDrawable
@@ -64,9 +66,8 @@ import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import kotlin.collections.ArrayList
+import org.mockito.Mockito.mock
 
 class CommandSerializationTest {
 
@@ -173,13 +174,14 @@ class CommandSerializationTest {
     @Test
     fun testSerializeTextToolCommand() {
         val typeface = SerializableTypeface(
-            "Monospace",
-            bold = true,
+            FontType.MONOSPACE,
+            bold = false,
             underline = false,
             italic = true,
             textSize = 25f,
             textSkewX = -0.25f
         )
+
         expectedModel.commands.add(
             commandFactory.createTextToolCommand(
                 arrayOf("Serialization", "is", "fun", "!.?)4`\""),
@@ -284,6 +286,21 @@ class CommandSerializationTest {
             cubicTo(10f, 20f, 30f, 3f, 19f, 20f)
         }
         expectedModel.commands.add(commandFactory.createPathCommand(paint, path))
+        assertSerializeAndDeserialize()
+    }
+
+    @Test
+    fun testSerializeSmudgePathCommand() {
+        val bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+        val pointArray = mutableListOf<PointF>()
+        pointArray.add(PointF(0f, 0f))
+        pointArray.add(PointF(1f, 1f))
+        pointArray.add(PointF(2f, 2f))
+        pointArray.add(PointF(3f, 3f))
+        val pressure = 1f
+        val maxSize = 100f
+        val minSize = 1f
+        expectedModel.commands.add(commandFactory.createSmudgePathCommand(bitmap, pointArray, pressure, maxSize, minSize))
         assertSerializeAndDeserialize()
     }
 
@@ -425,6 +442,9 @@ class CommandSerializationTest {
             is PathCommand -> equalsPathCommand(
                 expectedCommand, actualCommand as PathCommand
             )
+            is SmudgePathCommand -> equalsSmudgePathCommand(
+                expectedCommand, actualCommand as SmudgePathCommand
+            )
             else -> false
         }
     }
@@ -550,8 +570,11 @@ class CommandSerializationTest {
         actualTypeFace: SerializableTypeface,
         expectedTypeFace: SerializableTypeface
     ) =
-        actualTypeFace.font == expectedTypeFace.font && actualTypeFace.bold == expectedTypeFace.bold && actualTypeFace.underline == expectedTypeFace.underline &&
-            actualTypeFace.italic == expectedTypeFace.italic && actualTypeFace.textSize == expectedTypeFace.textSize &&
+        actualTypeFace.font == expectedTypeFace.font &&
+            actualTypeFace.bold == expectedTypeFace.bold &&
+            actualTypeFace.underline == expectedTypeFace.underline &&
+            actualTypeFace.italic == expectedTypeFace.italic &&
+            actualTypeFace.textSize == expectedTypeFace.textSize &&
             actualTypeFace.textSkewX == expectedTypeFace.textSkewX
 
     private fun equalsGeometricFillCommand(
@@ -571,6 +594,13 @@ class CommandSerializationTest {
             actualCommand.path as SerializablePath
         ) &&
             DefaultToolPaint.arePaintEquals(expectedCommand.paint, actualCommand.paint)
+
+    private fun equalsSmudgePathCommand(expectedCommand: SmudgePathCommand, actualCommand: SmudgePathCommand) =
+        expectedCommand.maxPressure == actualCommand.maxPressure &&
+            expectedCommand.maxSize == actualCommand.maxSize &&
+            expectedCommand.minSize == actualCommand.minSize &&
+            expectedCommand.originalBitmap.sameAs(actualCommand.originalBitmap) &&
+            expectedCommand.pointPath == actualCommand.pointPath
 
     private fun equalsSerializablePath(
         expectedPath: SerializablePath,

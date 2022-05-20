@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Canvas
+import android.util.Log
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 
@@ -28,18 +29,31 @@ class MergeLayersCommand(position: Int, mergeWith: Int) : Command {
     var position = position; private set
     var mergeWith = mergeWith; private set
 
+    companion object {
+        private val TAG = MergeLayersCommand::class.java.simpleName
+    }
+
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         val sourceLayer = layerModel.getLayerAt(position)
         val destinationLayer = layerModel.getLayerAt(mergeWith)
-        val destinationBitmap = destinationLayer.bitmap
-        destinationBitmap ?: return
-        val copyBitmap = destinationBitmap.copy(destinationBitmap.config, true)
-        val copyCanvas = Canvas(copyBitmap)
-        copyCanvas.drawBitmap(sourceLayer.bitmap ?: return, 0f, 0f, null)
-        destinationLayer.bitmap = copyBitmap
-        layerModel.removeLayerAt(position)
-        if (sourceLayer === layerModel.currentLayer) {
-            layerModel.currentLayer = destinationLayer
+        var success = false
+        if (sourceLayer != null && destinationLayer != null) {
+            val destinationBitmap = destinationLayer.bitmap
+            destinationBitmap ?: return
+            val copyBitmap = destinationBitmap.copy(destinationBitmap.config, true)
+            val copyCanvas = Canvas(copyBitmap)
+            copyCanvas.drawBitmap(sourceLayer.bitmap ?: return, 0f, 0f, null)
+            if (layerModel.removeLayerAt(position)) {
+                destinationLayer.bitmap = copyBitmap
+                if (sourceLayer == layerModel.currentLayer) {
+                    layerModel.currentLayer = destinationLayer
+                }
+                success = true
+            }
+        }
+
+        if (!success) {
+            Log.e(TAG, "Could not merge layers!")
         }
     }
 

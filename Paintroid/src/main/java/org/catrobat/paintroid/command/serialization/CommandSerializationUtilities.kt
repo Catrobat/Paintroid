@@ -24,6 +24,7 @@ import android.graphics.Paint
 import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.RectF
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -55,7 +56,8 @@ import org.catrobat.paintroid.command.implementation.SetDimensionCommand
 import org.catrobat.paintroid.command.implementation.SprayCommand
 import org.catrobat.paintroid.command.implementation.StampCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
-import org.catrobat.paintroid.common.Constants
+import org.catrobat.paintroid.command.implementation.SmudgePathCommand
+import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
 import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.drawable.HeartDrawable
 import org.catrobat.paintroid.tools.drawable.OvalDrawable
@@ -63,6 +65,7 @@ import org.catrobat.paintroid.tools.drawable.RectangleDrawable
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 import org.catrobat.paintroid.tools.drawable.StarDrawable
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.lang.Exception
@@ -129,6 +132,8 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
             put(SerializableTypeface::class.java, SerializableTypeface.TypefaceSerializer(version))
             put(PointCommand::class.java, PointCommandSerializer(version))
             put(SerializablePath.Cube::class.java, SerializablePath.PathActionCubeSerializer(version))
+            put(Bitmap::class.java, BitmapSerializer(version))
+            put(SmudgePathCommand::class.java, SmudgePathCommandSerializer(version))
         }
     }
 
@@ -157,10 +162,10 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
                 }
             }
         } else {
-            if (!(Constants.MEDIA_DIRECTORY.exists() || Constants.MEDIA_DIRECTORY.mkdirs())) {
+            if (!(DOWNLOADS_DIRECTORY.exists() || DOWNLOADS_DIRECTORY.mkdirs())) {
                 return null
             }
-            val imageFile = File(Constants.MEDIA_DIRECTORY, fileName)
+            val imageFile = File(DOWNLOADS_DIRECTORY, fileName)
             FileOutputStream(imageFile).use { fileStream ->
                 writeToStream(fileStream)
                 returnUri = Uri.fromFile(imageFile)
@@ -168,6 +173,31 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
         }
 
         return returnUri
+    }
+
+    fun writeToInternalMemory(stream: FileOutputStream) {
+        stream.use { fileStream ->
+            writeToStream(fileStream)
+        }
+    }
+
+    fun readFromInternalMemory(stream: FileInputStream): CommandManagerModel {
+        var commandModel: CommandManagerModel
+
+        Input(stream).use { input ->
+            if (!input.readString().equals(MAGIC_VALUE)) {
+                throw NotCatrobatImageException("Magic Value doesn't exist.")
+            }
+            val imageVersion = input.readInt()
+            if (CURRENT_IMAGE_VERSION != imageVersion) {
+                setRegisterMapVersion(imageVersion)
+                registerClasses()
+            }
+            commandModel = kryo.readObject(input, CommandManagerModel::class.java)
+        }
+
+        commandModel.commands.reverse()
+        return commandModel
     }
 
     private fun writeToStream(stream: OutputStream) {

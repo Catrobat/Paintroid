@@ -31,8 +31,10 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
+import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,6 +44,7 @@ import androidx.test.espresso.action.ViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
@@ -49,6 +52,7 @@ import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withTextColor;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
@@ -142,8 +146,9 @@ public class ColorDialogIntegrationTest {
 	}
 
 	@Test
-	public void dontShowAlphaSliderFromCatrobat() {
+	public void dontShowAlphaRelatedStuffFromCatroidFormulaEditor() {
 		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
+		launchActivityRule.getActivity().model.setOpenedFromFormulaEditorInCatroid(true);
 
 		onColorPickerView()
 				.performOpenColorPicker();
@@ -161,10 +166,52 @@ public class ColorDialogIntegrationTest {
 
 		onView(withId(R.id.color_alpha_slider))
 				.check(matches(not(isDisplayed())));
+
+		onColorPickerView()
+				.onPositiveButton()
+				.perform(click());
+
+		int currentSelectColor = toolReference.getTool().getDrawPaint().getColor();
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_picker_alpha_row))
+				.check(matches(not(isDisplayed())));
+
+		onView(withId(R.id.color_picker_color_rgb_hex))
+				.check(matches(withText(String.format("#%02X%02X%02X", Color.red(currentSelectColor), Color.green(currentSelectColor), Color.blue(currentSelectColor)))));
 	}
 
 	@Test
-	public void showAlphaSliderIfNotCatrobatFlagSet() {
+	public void showAlphaSliderFromCatroid() {
+		launchActivityRule.getActivity().model.setOpenedFromCatroid(true);
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_alpha_slider))
+				.check(matches(isDisplayed()));
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv))).perform(click());
+
+		onView(withId(R.id.color_picker_base_layout))
+				.perform(swipeUp());
+
+		onView(withId(R.id.color_alpha_slider))
+				.check(matches(isDisplayed()));
+	}
+
+	@Test
+	public void showAlphaSliderIfNotCatroidFlagSet() {
 		onColorPickerView()
 				.performOpenColorPicker();
 
@@ -682,6 +729,9 @@ public class ColorDialogIntegrationTest {
 		// set color to value #7F000000, alpha seekbar 49%
 		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterMiddle());
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(scrollTo(), click());
+		onColorPickerView()
+				.onPositiveButton()
+				.perform(click());
 		onToolProperties()
 				.checkMatchesColor(Color.parseColor("#7F000000"));
 	}
@@ -699,5 +749,28 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(
 				withText("50")
 		));
+	}
+
+	@Test
+	public void testPreserveZoomAfterPipetteUsage() {
+		Perspective perspective = launchActivityRule.getActivity().getPerspective();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		float scale = 4f;
+
+		perspective.setScale(scale);
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(withId(R.id.color_picker_pipette_btn)).perform(click());
+		onView(withId(R.id.doneAction)).perform(click());
+
+		onColorPickerView()
+				.performCloseColorPickerWithDialogButton();
+
+		assertEquals(scale, perspective.getScale(), Float.MIN_VALUE);
 	}
 }

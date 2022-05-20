@@ -105,10 +105,12 @@ public class ToolControllerTest {
 				ToolType.LAYER,
 				ToolType.COLORCHOOSER,
 				ToolType.HAND,
-				ToolType.WATERCOLOR
+				ToolType.WATERCOLOR,
+				ToolType.SMUDGE
 		);
 		when(toolReference.getTool()).thenReturn(tool);
 
+		assertFalse(toolController.isDefaultTool());
 		assertFalse(toolController.isDefaultTool());
 		assertFalse(toolController.isDefaultTool());
 		assertFalse(toolController.isDefaultTool());

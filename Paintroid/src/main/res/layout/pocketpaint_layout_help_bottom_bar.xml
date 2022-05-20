@@ -250,5 +250,20 @@
                 android:text="@string/button_watercolor"
                 android:textColor="@color/pocketpaint_color_picker_white"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_smudge"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_smudge"
+                android:contentDescription="@string/button_smudge"
+                app:tint="@color/pocketpaint_color_picker_white"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_smudge"
+                android:textColor="@color/pocketpaint_color_picker_white"/>
+        </LinearLayout>
     </TableRow>
 </TableLayout>

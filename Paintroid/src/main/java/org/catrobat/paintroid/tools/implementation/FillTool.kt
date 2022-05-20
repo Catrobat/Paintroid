@@ -27,7 +27,7 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.FillToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
 private const val HUNDRED = 100f
 const val DEFAULT_TOLERANCE_IN_PERCENT = 12
@@ -36,7 +36,7 @@ const val MAX_ABSOLUTE_TOLERANCE = 510
 class FillTool(
     fillToolOptionsView: FillToolOptionsView,
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager,

@@ -24,7 +24,7 @@ import org.catrobat.paintroid.contract.LayerContracts
 
 open class Layer(override var bitmap: Bitmap?) : LayerContracts.Layer {
     override var transparentBitmap: Bitmap? = null
-    override var checkBox: Boolean = true
+    override var isVisible: Boolean = true
 
     init {
         bitmap?.apply {

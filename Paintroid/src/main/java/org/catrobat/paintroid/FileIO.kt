@@ -21,6 +21,7 @@ package org.catrobat.paintroid
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
@@ -38,24 +39,27 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import id.zelory.compressor.Compressor
-import org.catrobat.paintroid.common.Constants.MEDIA_DIRECTORY
-import org.catrobat.paintroid.common.IS_JPG
-import org.catrobat.paintroid.common.IS_NO_FILE
-import org.catrobat.paintroid.common.IS_ORA
-import org.catrobat.paintroid.common.IS_PNG
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
+import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
+import org.catrobat.paintroid.common.Constants.PICTURES_DIRECTORY
 import org.catrobat.paintroid.common.MAX_LAYERS
+import org.catrobat.paintroid.common.TEMP_IMAGE_DIRECTORY_NAME
+import org.catrobat.paintroid.common.TEMP_IMAGE_NAME
+import org.catrobat.paintroid.common.TEMP_IMAGE_PATH
+import org.catrobat.paintroid.common.TEMP_IMAGE_TEMP_PATH
+import org.catrobat.paintroid.common.TEMP_PICTURE_NAME
 import org.catrobat.paintroid.iotasks.BitmapReturnValue
+import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.presenter.MainActivityPresenter
+import org.catrobat.paintroid.tools.Workspace
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.lang.NullPointerException
 import java.util.Locale
 import java.util.UUID
-import kotlin.Throws
 import kotlin.math.min
 import kotlin.math.sqrt
 
@@ -74,7 +78,7 @@ object FileIO {
     var filename = "image"
 
     @JvmField
-    var ending = ".png"
+    var fileType = FileType.PNG
 
     var compressQuality = CONSTANT_100
 
@@ -87,28 +91,23 @@ object FileIO {
     var isCatrobatImage = false
 
     @JvmField
-    var wasImageLoaded = false
+    var storeImageUri: Uri? = null
 
-    @JvmField
-    var currentFileNameJpg: String? = null
-
-    @JvmField
-    var currentFileNamePng: String? = null
-
-    var currentFileNameOra: String? = null
-
-    @JvmField
-    var uriFileJpg: Uri? = null
-
-    @JvmField
-    var uriFilePng: Uri? = null
-
-    var uriFileOra: Uri? = null
+    var temporaryFilePath: String? = null
 
     val defaultFileName: String
-        get() = filename + ending
+        get() = filename + fileType.toExtension()
 
     private val cacheChildFolder = "images"
+
+    enum class FileType(val value: String) {
+        PNG("png"),
+        JPG("jpg"),
+        ORA("ora"),
+        CATROBAT("catrobat-image");
+
+        fun toExtension(): String = ".$value"
+    }
 
     @Throws(IOException::class)
     private fun saveBitmapToStream(outputStream: OutputStream?, bitmap: Bitmap?) {
@@ -160,14 +159,14 @@ object FileIO {
         val compressor = Compressor(mainActivity)
         compressor.setQuality(compressQuality)
         compressor.setCompressFormat(compressFormat)
-        val tempFileName = "tmp"
+        val tempFileName = TEMP_PICTURE_NAME
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             var compressed: File? = null
             try {
                 val cachePath = File(mainActivity.cacheDir, cacheChildFolder)
                 cachePath.mkdirs()
                 compressor.setDestinationDirectoryPath(cachePath.path)
-                compressed = compressor.compressToFile(fileToCompress, tempFileName + ending)
+                compressed = compressor.compressToFile(fileToCompress, tempFileName + fileType.toExtension())
                 val os = mainActivity.contentResolver.openOutputStream(destination)
                 os?.let { copyStreams(FileInputStream(compressed), it) }
                 true
@@ -200,8 +199,8 @@ object FileIO {
         fileName: String,
         bitmap: Bitmap?,
         resolver: ContentResolver?,
-        context: Context?
-    ): Uri? {
+        context: Context
+    ): Uri {
         val imageUri: Uri? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val contentValues = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
@@ -210,10 +209,10 @@ object FileIO {
             }
             resolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         } else {
-            if (!(MEDIA_DIRECTORY.exists() || MEDIA_DIRECTORY.mkdirs())) {
+            if (!(PICTURES_DIRECTORY.exists() || PICTURES_DIRECTORY.mkdirs())) {
                 throw IOException("Can not create media directory.")
             }
-            Uri.fromFile(File(MEDIA_DIRECTORY, fileName))
+            Uri.fromFile(File(PICTURES_DIRECTORY, fileName))
         }
 
         val cachedImageUri =
@@ -246,11 +245,11 @@ object FileIO {
         try {
             val cachePath = File(mainActivity.cacheDir, cacheChildFolder)
             cachePath.mkdirs()
-            val stream = FileOutputStream("$cachePath/$fileName$ending")
+            val stream = FileOutputStream("$cachePath/$fileName${fileType.toExtension()}")
             saveBitmapToStream(stream, bitmap)
             stream.close()
             val imagePath = File(mainActivity.cacheDir, cacheChildFolder)
-            val newFile = File(imagePath, fileName + ending)
+            val newFile = File(imagePath, fileName + fileType.toExtension())
             val fileProviderString =
                 mainActivity.applicationContext.packageName + ".fileprovider"
             uri = FileProvider.getUriForFile(
@@ -268,8 +267,8 @@ object FileIO {
     @JvmStatic
     fun createNewEmptyPictureFile(filename: String?, activity: Activity?): File {
         var fileName = filename ?: defaultFileName
-        if (!fileName.toLowerCase(Locale.US).endsWith(ending.toLowerCase(Locale.US))) {
-            fileName += ending
+        if (!fileName.toLowerCase(Locale.US).endsWith(fileType.toExtension())) {
+            fileName += fileType.toExtension()
         }
         val externalFilesDir = activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         if (externalFilesDir == null || !externalFilesDir.exists() && !externalFilesDir.mkdir()) {
@@ -362,14 +361,14 @@ object FileIO {
                     cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME))
             }
         }
-        if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
-            ending = ".jpg"
+        if (fileName.endsWith(FileType.JPG.toExtension()) || fileName.endsWith(".jpeg")) {
+            fileType = FileType.JPG
             compressFormat = CompressFormat.JPEG
-            filename = fileName.substring(0, fileName.length - ending.length)
+            filename = fileName.substring(0, fileName.length - fileType.toExtension().length)
         } else if (fileName.endsWith(".png")) {
-            ending = ".png"
+            fileType = FileType.PNG
             compressFormat = CompressFormat.PNG
-            filename = fileName.substring(0, fileName.length - ending.length)
+            filename = fileName.substring(0, fileName.length - fileType.toExtension().length)
         }
     }
 
@@ -401,12 +400,65 @@ object FileIO {
         return total
     }
 
-    fun checkIfDifferentFile(filename: String): Int = when {
-        currentFileNameJpg == filename -> IS_JPG
-        currentFileNamePng == filename -> IS_PNG
-        currentFileNameOra == filename -> IS_ORA
-        else -> IS_NO_FILE
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun getUriForFilename(contentLocationUri: Uri, filename: String, resolver: ContentResolver): Uri? {
+        val selectionArgs = arrayOf(filename)
+        val selection = "_display_name=?"
+        val cursor = resolver.query(contentLocationUri, null, selection, selectionArgs, null)
+        cursor?.run {
+            while (moveToNext()) {
+                val fileName = getString(cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME))
+                if (fileName == filename) {
+                    val id = cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
+                    close()
+                    return ContentUris.withAppendedId(contentLocationUri, id)
+                }
+            }
+            close()
+        }
+        return null
     }
+
+    fun getUriForFilenameInPicturesFolder(filename: String, resolver: ContentResolver): Uri? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            getUriForFilename(contentUri, filename, resolver)
+        } else {
+            val file = File(PICTURES_DIRECTORY, filename)
+            return if (file.exists()) {
+                Uri.fromFile(file)
+            } else {
+                null
+            }
+        }
+    }
+
+    fun getUriForFilenameInDownloadsFolder(filename: String, resolver: ContentResolver): Uri? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val contentUri = MediaStore.Downloads.EXTERNAL_CONTENT_URI
+            getUriForFilename(contentUri, filename, resolver)
+        } else {
+            val file = File(DOWNLOADS_DIRECTORY, filename)
+            return if (file.exists()) {
+                Uri.fromFile(file)
+            } else {
+                null
+            }
+        }
+    }
+
+    fun checkFileExists(fileType: FileType, filename: String, resolver: ContentResolver): Boolean {
+        return when (fileType) {
+            FileType.JPG, FileType.PNG -> checkFileExistsInPicturesFolder(filename, resolver)
+            FileType.CATROBAT, FileType.ORA -> checkFileExistsInDownloadsFolder(filename, resolver)
+        }
+    }
+
+    private fun checkFileExistsInPicturesFolder(filename: String, resolver: ContentResolver): Boolean =
+        getUriForFilenameInPicturesFolder(filename, resolver) != null
+
+    private fun checkFileExistsInDownloadsFolder(filename: String, resolver: ContentResolver): Boolean =
+        getUriForFilenameInDownloadsFolder(filename, resolver) != null
 
     private fun calculateSampleSize(width: Int, height: Int, maxWidth: Int, maxHeight: Int): Int {
         var w = width
@@ -532,5 +584,81 @@ object FileIO {
     fun enableAlpha(bitmap: Bitmap?): Bitmap? {
         bitmap?.setHasAlpha(true)
         return bitmap
+    }
+
+    fun saveTemporaryPictureFile(internalMemoryPath: File, workspace: Workspace) {
+        val newFileName = "${TEMP_IMAGE_NAME}1.$CATROBAT_IMAGE_ENDING"
+        val tempPath = File(internalMemoryPath, TEMP_IMAGE_DIRECTORY_NAME)
+        try {
+            tempPath.mkdirs()
+
+            val stream = FileOutputStream("$tempPath/$newFileName")
+            workspace.getCommandSerializationHelper().writeToInternalMemory(stream)
+            temporaryFilePath = TEMP_IMAGE_TEMP_PATH
+        } catch (e: IOException) {
+            Log.e("Cannot write", "Can't write to stream", e)
+        }
+        val oldFile = File(internalMemoryPath, TEMP_IMAGE_PATH)
+        if (oldFile.exists()) {
+            oldFile.delete()
+        }
+        val newFile = File(internalMemoryPath, TEMP_IMAGE_TEMP_PATH)
+        if (newFile.exists()) {
+            newFile.renameTo(File(internalMemoryPath, TEMP_IMAGE_PATH))
+            temporaryFilePath = TEMP_IMAGE_PATH
+        }
+    }
+
+    fun checkForTemporaryFile(internalMemoryPath: File): Boolean {
+        val tempPath = File(internalMemoryPath, TEMP_IMAGE_DIRECTORY_NAME)
+        if (!tempPath.exists()) {
+            return false
+        }
+        val fileList = tempPath.listFiles()
+        if (fileList != null && fileList.isNotEmpty()) {
+            if (fileList.size == 2) {
+                if (fileList[1].lastModified() > fileList[0].lastModified()) {
+                    reorganizeTempFiles(fileList[1], fileList[0], internalMemoryPath)
+                } else {
+                    reorganizeTempFiles(fileList[0], fileList[1], internalMemoryPath)
+                }
+            } else {
+                temporaryFilePath = fileList[0].path
+            }
+            return true
+        }
+        return false
+    }
+
+    private fun reorganizeTempFiles(file1: File, file2: File, internalMemoryPath: File) {
+        file2.delete()
+        file1.renameTo(File(internalMemoryPath, TEMP_IMAGE_PATH))
+        temporaryFilePath = TEMP_IMAGE_PATH
+    }
+
+    fun openTemporaryPictureFile(workspace: Workspace): CommandManagerModel? {
+        var commandModel: CommandManagerModel? = null
+        if (temporaryFilePath != null) {
+            try {
+                val stream = FileInputStream(temporaryFilePath)
+                commandModel = workspace.getCommandSerializationHelper().readFromInternalMemory(stream)
+            } catch (e: IOException) {
+                Log.e("Cannot read", "Can't read from stream", e)
+            }
+        }
+        return commandModel
+    }
+
+    fun deleteTempFile(internalMemoryPath: File) {
+        tryDeleteFile(internalMemoryPath)
+    }
+
+    private fun tryDeleteFile(internalMemoryPath: File) {
+        if (temporaryFilePath != null) {
+            val file = File(internalMemoryPath, temporaryFilePath.orEmpty())
+            if (file.exists()) {
+                file.delete()
+            }
+        }
     }
 }

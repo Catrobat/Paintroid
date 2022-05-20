@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso
 import android.app.Activity
 import android.app.Instrumentation.ActivityResult
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -32,6 +33,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
@@ -43,6 +45,7 @@ import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
@@ -74,10 +77,12 @@ class LayerIntegrationTest {
 
     private var bitmapHeight = 0
     private var bitmapWidth = 0
+    private lateinit var activity: Activity
     private lateinit var deletionFileList: ArrayList<File?>
 
     @Before
     fun setUp() {
+        activity = launchActivityRule.activity
         deletionFileList = ArrayList()
         val workspace = launchActivityRule.activity.workspace
         bitmapHeight = workspace.height
@@ -348,6 +353,7 @@ class LayerIntegrationTest {
             .perform(click())
         onView(withText(R.string.save_button_text))
             .perform(click())
+        onView(isRoot()).perform(waitFor(100))
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.PIPETTE)
         DrawingSurfaceInteraction.onDrawingSurfaceView()
@@ -541,6 +547,22 @@ class LayerIntegrationTest {
     }
 
     @Test
+    fun testLayerPreviewKeepsBitmapAfterOrientationChange() {
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.FILL)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        LayerMenuViewInteraction.onLayerMenuView()
+            .performOpen()
+            .checkLayerAtPositionHasTopLeftPixelWithColor(0, Color.BLACK)
+
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+        LayerMenuViewInteraction.onLayerMenuView()
+            .checkLayerAtPositionHasTopLeftPixelWithColor(0, Color.BLACK)
+    }
+
+    @Test
     fun testUndoRedoLayerRotate() {
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
@@ -623,8 +645,10 @@ class LayerIntegrationTest {
             .performAddLayer()
             .checkLayerCount(2)
             .performToggleLayerVisibility(0)
-            .performLongClickLayer(0)
-        onView(withText(R.string.no_longclick_on_hidden_layer)).inRoot(RootMatchers.withDecorView(Matchers.not(launchActivityRule.activity.window.decorView))).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            .performStartDragging(0)
+        onView(withText(R.string.no_longclick_on_hidden_layer))
+            .inRoot(RootMatchers.withDecorView(Matchers.not(launchActivityRule.activity.window.decorView)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test

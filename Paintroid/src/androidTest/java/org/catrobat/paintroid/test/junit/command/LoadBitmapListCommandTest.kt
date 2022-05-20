@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -53,8 +53,8 @@ class LoadBitmapListCommandTest {
     fun testRunCopiesImage() {
         commandUnderTest.run(canvas, layerModel)
         Assert.assertTrue(layerModel.currentLayer!!.bitmap!!.sameAs(bitmapList[0]))
-        Assert.assertTrue(layerModel.getLayerAt(1).bitmap!!.sameAs(bitmapList[1]))
-        Assert.assertTrue(layerModel.getLayerAt(2).bitmap!!.sameAs(bitmapList[2]))
+        Assert.assertTrue(layerModel.getLayerAt(1)!!.bitmap!!.sameAs(bitmapList[1]))
+        Assert.assertTrue(layerModel.getLayerAt(2)!!.bitmap!!.sameAs(bitmapList[2]))
     }
 
     @Test

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="color_picker_title">Палітра</string>
+    <string name="color_picker_tab_icon">Знак вкладки палітри</string>
+    <string name="color_red">Червоний</string>
+    <string name="color_green">Зелений</string>
+    <string name="color_blue">Синій</string>
+    <string name="color_alpha">Альфа</string>
+    <string name="color_hex">Шістнадцятковий</string>
+    <string name="color_picker_apply">Застосувати</string>
+    <string name="color_picker_cancel">Скасувати</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">зараз</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">буде</string>
+    <string name="color_picker_pipette" tools:ignore="MissingTranslation">Піпетка</string>
+    <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Зберегти зміни?</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Бажаєте зберегти свої зміни?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">ні</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">так</string>
+</resources>

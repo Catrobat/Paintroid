@@ -41,19 +41,17 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isClickable
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
+import androidx.test.espresso.matcher.ViewMatchers.isClickable
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.TEMP_PICTURE_NAME
 import org.catrobat.paintroid.presenter.MainActivityPresenter
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE
@@ -61,6 +59,7 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider.
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider.MIDDLE
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.grantPermissionRulesVersionCheck
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
@@ -95,6 +94,7 @@ class MenuFileActivityIntegrationTest {
     var screenshotOnFailRule = ScreenshotOnFailRule()
 
     private lateinit var activity: MainActivity
+    private var defaultFileName = "menuTestDefaultFile"
 
     companion object {
         private lateinit var deletionFileList: ArrayList<File?>
@@ -125,17 +125,12 @@ class MenuFileActivityIntegrationTest {
         onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_new_image)).perform(click())
-        runBlocking {
-            onView(withText(R.string.save_button_text))
-                .perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("test987654"))
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
     }
 
@@ -236,10 +231,8 @@ class MenuFileActivityIntegrationTest {
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("test98765"))
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         assertTrue(activity.model.isSaved)
@@ -250,10 +243,8 @@ class MenuFileActivityIntegrationTest {
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         if (!activity.model.isOpenedFromCatroid) {
             assertNotSame(
@@ -275,10 +266,8 @@ class MenuFileActivityIntegrationTest {
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("save1"))
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         if (!activity.model.isOpenedFromCatroid) {
             assertNotSame(
@@ -295,10 +284,8 @@ class MenuFileActivityIntegrationTest {
         onView(withText(R.string.menu_save_copy)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("copy1"))
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         val newFile = File(activity.model.savedPictureUri.toString())
         assertNotSame("Changes to saved", oldFile, newFile)
         assertNotNull(activity.model.savedPictureUri)
@@ -318,10 +305,8 @@ class MenuFileActivityIntegrationTest {
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("AskForSaveAfterSavedOnce"))
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
@@ -336,18 +321,14 @@ class MenuFileActivityIntegrationTest {
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("12345test12345"))
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         onView(withText(R.string.overwrite_button_text)).check(matches(isDisplayed()))
     }
 
@@ -357,15 +338,14 @@ class MenuFileActivityIntegrationTest {
         val imageNumber = launchActivityRule.activity.presenter.imageNumber
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(200))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
+        onView(isRoot()).perform(waitFor(200))
         val newImageNumber = launchActivityRule.activity.presenter.imageNumber
         assertEquals((imageNumber + 1).toLong(), newImageNumber.toLong())
     }
@@ -378,10 +358,8 @@ class MenuFileActivityIntegrationTest {
         val imageNumber = launchActivityRule.activity.presenter.imageNumber
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("test9876"))
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         val newImageNumber = launchActivityRule.activity.presenter.imageNumber
@@ -400,11 +378,9 @@ class MenuFileActivityIntegrationTest {
         onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("png")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(TEMP_PICTURE_NAME))
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+            .perform(replaceText(defaultFileName))
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         val oldFile = File(activity.model.savedPictureUri.toString())
@@ -414,11 +390,9 @@ class MenuFileActivityIntegrationTest {
         onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("jpg")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
-            .perform(replaceText(TEMP_PICTURE_NAME))
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+            .perform(replaceText(defaultFileName))
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         val newFile = File(activity.model.savedPictureUri.toString())
@@ -468,10 +442,8 @@ class MenuFileActivityIntegrationTest {
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(click())
         onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("png")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         onTopBarView().performOpenMoreOptions()
@@ -491,10 +463,8 @@ class MenuFileActivityIntegrationTest {
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(click())
         onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("png")))
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
-        runBlocking {
-            onView(withText(R.string.save_button_text)).perform(click())
-            delay(100)
-        }
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_copy)).perform(click())
         imageNumber = launchActivityRule.activity.presenter.imageNumber

@@ -34,6 +34,7 @@ import org.catrobat.paintroid.ui.tools.DefaultSprayToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultStampToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultTextToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptionsView
+import org.catrobat.paintroid.ui.tools.DefaultSmudgeToolOptionsView
 
 private const val DRAW_TIME_INIT: Long = 30_000_000
 
@@ -163,6 +164,14 @@ class DefaultToolFactory : ToolFactory {
                 workspace,
                 commandManager,
                 DRAW_TIME_INIT
+            )
+            ToolType.SMUDGE -> SmudgeTool(
+                DefaultSmudgeToolOptionsView(toolLayout),
+                contextCallback,
+                toolOptionsViewController,
+                toolPaint,
+                workspace,
+                commandManager
             )
             else -> BrushTool(
                 DefaultBrushToolOptionsView(toolLayout),
