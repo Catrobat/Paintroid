@@ -22,7 +22,6 @@ package org.catrobat.paintroid.iotasks;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,6 +37,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -57,6 +57,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import static org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY;
 import static org.catrobat.paintroid.common.ConstantsKt.MAX_LAYERS;
 
 //
@@ -109,7 +110,6 @@ public final class OpenRasterFileFormatConversion {
 		byte[] bitmapThumbArray = bosThumb.toByteArray();
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-
 			//applefile has no file ending. which is important for api level 30.
 			// we can't save an application file in media directory so we have to save it in downloads.
 			contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName);
@@ -117,10 +117,11 @@ public final class OpenRasterFileFormatConversion {
 			contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/applefile");
 
 			imageUri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-			outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
 		} else {
-			contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
-			contentValues.put(MediaStore.Images.Media.MIME_TYPE, "application/zip");
+			Uri uri = MediaStore.Files.getContentUri("external");
+			contentValues.put(MediaStore.Files.FileColumns.DATA, DOWNLOADS_DIRECTORY.getAbsolutePath() + "/" + fileName);
+			contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName);
+			contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/zip");
 			contentValues.put(MediaStore.Files.FileColumns.MEDIA_TYPE, MediaStore.Files.FileColumns.MEDIA_TYPE_NONE);
 
 			long date = System.currentTimeMillis();
@@ -131,9 +132,10 @@ public final class OpenRasterFileFormatConversion {
 			wholeSize += bitmapByteArray.length;
 			wholeSize += bitmapThumbArray.length;
 			contentValues.put(MediaStore.Images.Media.SIZE, wholeSize);
-			imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-			outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
+			imageUri = resolver.insert(uri, contentValues);
 		}
+
+		outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri));
 
 		ZipOutputStream streamZip = new ZipOutputStream(outputStream);
 		ZipEntry mimetypeEntry = new ZipEntry("mimetype");
@@ -224,29 +226,30 @@ public final class OpenRasterFileFormatConversion {
 	}
 
 	public static Uri saveOraFileToUri(List<Bitmap> bitmapList, Uri uri, String fileName, Bitmap bitmapAllLayers, ContentResolver resolver) throws IOException {
-		String[] projection = {MediaStore.Images.Media._ID};
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-		Cursor c = resolver.query(uri, projection, null, null, null);
-		if (c.moveToFirst()) {
-			long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
-
-			Uri deleteUri;
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-				deleteUri = ContentUris.withAppendedId(MediaStore.Downloads.EXTERNAL_CONTENT_URI, id);
+			String[] projection = {MediaStore.Images.Media._ID};
+			Cursor c = resolver.query(uri, projection, null, null, null);
+			if (c.moveToFirst()) {
+				long id = c.getLong(c.getColumnIndexOrThrow(MediaStore.Images.Media._ID));
+				Uri deleteUri = ContentUris.withAppendedId(MediaStore.Downloads.EXTERNAL_CONTENT_URI, id);
+				resolver.delete(deleteUri, null, null);
 			} else {
-				deleteUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+				throw new AssertionError("No file to delete was found!");
 			}
-
-			resolver.delete(deleteUri, null, null);
+			c.close();
 		} else {
-			throw new AssertionError("No file to delete was found!");
+			File file = new File(uri.getPath());
+			boolean isDeleted = file.delete();
+			if (!isDeleted) {
+				throw new AssertionError("No file to delete was found!");
+			}
 		}
-		c.close();
 
 		return exportToOraFile(bitmapList, fileName, bitmapAllLayers, resolver);
 	}
 
-	public static BitmapReturnValue importOraFile(ContentResolver resolver, Uri uri, Context context) throws IOException {
+	public static BitmapReturnValue importOraFile(ContentResolver resolver, Uri uri) throws IOException {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		InputStream inputStream = resolver.openInputStream(uri);
 		ZipInputStream zipInput = new ZipInputStream(inputStream);

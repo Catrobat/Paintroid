@@ -36,13 +36,16 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import org.catrobat.paintroid.FileIO
+import org.catrobat.paintroid.FileIO.FileType
+import org.catrobat.paintroid.FileIO.FileType.PNG
+import org.catrobat.paintroid.FileIO.FileType.JPG
+import org.catrobat.paintroid.FileIO.FileType.CATROBAT
+import org.catrobat.paintroid.FileIO.FileType.ORA
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
-import org.catrobat.paintroid.common.IS_NO_FILE
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+import java.util.Locale
 
 private const val STANDARD_FILE_NAME = "image"
-private const val STANDARD_FILE_ENDING = ".png"
 private const val SET_NAME = "setName"
 private const val PERMISSION = "permission"
 private const val IS_EXPORT = "isExport"
@@ -72,7 +75,7 @@ class SaveInformationDialog :
                 FileIO.isCatrobatImage = false
                 FileIO.filename = STANDARD_FILE_NAME
                 FileIO.compressFormat = Bitmap.CompressFormat.PNG
-                FileIO.ending = STANDARD_FILE_ENDING
+                FileIO.fileType = PNG
             }
             return SaveInformationDialog().apply {
                 arguments = Bundle().apply {
@@ -114,9 +117,9 @@ class SaveInformationDialog :
             .setView(customLayout)
             .setPositiveButton(R.string.save_button_text) { _, _ ->
                 FileIO.filename = imageName.text.toString()
-                if (permission != PERMISSION_EXTERNAL_STORAGE_SAVE_COPY && FileIO.checkIfDifferentFile(
-                        FileIO.defaultFileName
-                    ) != IS_NO_FILE
+                FileIO.storeImageUri = null
+                if (permission != PERMISSION_EXTERNAL_STORAGE_SAVE_COPY &&
+                    FileIO.checkFileExists(FileIO.fileType, FileIO.defaultFileName, requireContext().contentResolver)
                 ) {
                     presenter.showOverwriteDialog(permission, isExport)
                 } else {
@@ -168,7 +171,7 @@ class SaveInformationDialog :
             when {
                 FileIO.isCatrobatImage -> presenter.showOraInformationDialog()
                 FileIO.compressFormat == Bitmap.CompressFormat.JPEG -> presenter.showJpgInformationDialog()
-                FileIO.ending == ".$CATROBAT_IMAGE_ENDING" -> presenter.showCatrobatInformationDialog()
+                FileIO.fileType == CATROBAT -> presenter.showCatrobatInformationDialog()
                 else -> presenter.showPngInformationDialog()
             }
         }
@@ -176,9 +179,8 @@ class SaveInformationDialog :
 
     private fun initSpinner(view: View) {
         spinner = view.findViewById(R.id.pocketpaint_save_dialog_spinner)
-        val spinnerArray = arrayListOf("png", "jpg", "ora", CATROBAT_IMAGE_ENDING)
-        val adapter =
-            ArrayAdapter(spinner.context, android.R.layout.simple_spinner_item, spinnerArray)
+        val spinnerArray = FileType.values().map { it.value }
+        val adapter = ArrayAdapter(spinner.context, android.R.layout.simple_spinner_item, spinnerArray)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
         spinner.onItemSelectedListener = this
@@ -192,7 +194,7 @@ class SaveInformationDialog :
     private fun setFileDetails(
         compressFormat: Bitmap.CompressFormat,
         isCatrobatImage: Boolean,
-        ending: String,
+        fileType: FileType,
         isJpg: Boolean = false
     ) {
         specificFormatLayout.removeAllViews()
@@ -201,7 +203,7 @@ class SaveInformationDialog :
         }
         FileIO.compressFormat = compressFormat
         FileIO.isCatrobatImage = isCatrobatImage
-        FileIO.ending = ending
+        FileIO.fileType = fileType
     }
 
     private fun setSpinnerSelection() {
@@ -213,12 +215,11 @@ class SaveInformationDialog :
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        when (parent?.getItemAtPosition(position).toString()) {
-            "jpg" -> setFileDetails(Bitmap.CompressFormat.JPEG, false, ".jpg", true)
-            "png" -> setFileDetails(Bitmap.CompressFormat.PNG, false, ".png")
-            "ora" -> setFileDetails(Bitmap.CompressFormat.PNG, true, ".ora")
-            CATROBAT_IMAGE_ENDING ->
-                setFileDetails(Bitmap.CompressFormat.PNG, false, ".$CATROBAT_IMAGE_ENDING")
+        when (parent?.getItemAtPosition(position).toString().toLowerCase(Locale.getDefault())) {
+            JPG.value -> setFileDetails(Bitmap.CompressFormat.JPEG, false, JPG, true)
+            PNG.value -> setFileDetails(Bitmap.CompressFormat.PNG, false, PNG)
+            ORA.value -> setFileDetails(Bitmap.CompressFormat.PNG, true, ORA)
+            CATROBAT.value -> setFileDetails(Bitmap.CompressFormat.PNG, false, CATROBAT)
         }
     }
 

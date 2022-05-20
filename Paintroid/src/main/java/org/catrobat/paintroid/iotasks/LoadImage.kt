@@ -68,8 +68,7 @@ class LoadImage(
                 Log.e(TAG, "Image might be an ora file instead")
                 OpenRasterFileFormatConversion.importOraFile(
                     resolver,
-                    uri,
-                    context.get()
+                    uri
                 )
             }
         } else {

@@ -28,10 +28,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.FileIO
-import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
-import org.catrobat.paintroid.common.IS_JPG
-import org.catrobat.paintroid.common.IS_ORA
-import org.catrobat.paintroid.common.IS_PNG
 import org.catrobat.paintroid.tools.Workspace
 import java.io.IOException
 import java.lang.ref.WeakReference
@@ -55,23 +51,11 @@ class SaveImage(
         callback: SaveImageCallback,
         bitmap: Bitmap?
     ): Uri? {
-        val fileName = FileIO.defaultFileName
-        val fileExistsValue = FileIO.checkIfDifferentFile(fileName)
+        val filename = FileIO.defaultFileName
         return if (uri == null) {
-            val imageUri =
-                FileIO.saveBitmapToFile(fileName, bitmap, callback.contentResolver, context)
-            if (FileIO.ending == ".png") {
-                FileIO.currentFileNamePng = fileName
-                FileIO.uriFilePng = imageUri
-            } else {
-                FileIO.currentFileNameJpg = fileName
-                FileIO.uriFileJpg = imageUri
-            }
+            val imageUri = FileIO.saveBitmapToFile(filename, bitmap, callback.contentResolver, context)
             imageUri
         } else {
-            if (!FileIO.catroidFlag) {
-                setUriToFormatUri(fileExistsValue)
-            }
             uri?.let { FileIO.saveBitmapToUri(it, bitmap, context) }
         }
     }
@@ -125,24 +109,19 @@ class SaveImage(
         scopeIO.launch {
             try {
                 val bitmap = workspace.bitmapOfAllLayers
-                val fileName = FileIO.defaultFileName
-                val fileExistsValue = FileIO.checkIfDifferentFile(fileName)
+                val filename = FileIO.defaultFileName
                 currentUri = if (FileIO.isCatrobatImage) {
                     val bitmapList = workspace.bitmapLisOfAllLayers
-                    if (uri != null && fileExistsValue == IS_ORA) {
-                        setUriToFormatUri(fileExistsValue)
+                    if (uri != null && filename.endsWith(FileIO.FileType.ORA.toExtension())) {
                         uri?.let {
-                            saveOraFile(bitmapList, it, fileName, bitmap, callback.contentResolver)
+                            saveOraFile(bitmapList, it, filename, bitmap, callback.contentResolver)
                         }
                     } else {
-                        val imageUri =
-                            exportOraFile(bitmapList, fileName, bitmap, callback.contentResolver)
-                        FileIO.currentFileNameOra = fileName
-                        FileIO.uriFileOra = imageUri
+                        val imageUri = exportOraFile(bitmapList, filename, bitmap, callback.contentResolver)
                         imageUri
                     }
-                } else if (FileIO.ending == ".$CATROBAT_IMAGE_ENDING") {
-                    workspace.getCommandSerializationHelper().writeToFile(fileName)
+                } else if (FileIO.fileType == FileIO.FileType.CATROBAT) {
+                    workspace.getCommandSerializationHelper().writeToFile(filename)
                 } else {
                     getImageUri(callback, bitmap)
                 }
@@ -157,22 +136,6 @@ class SaveImage(
                 if (!callback.isFinishing) {
                     callback.onSaveImagePostExecute(requestCode, currentUri, saveAsCopy)
                 }
-            }
-        }
-    }
-
-    private fun setUriToFormatUri(formatCode: Int) {
-        if (formatCode == IS_JPG) {
-            if (FileIO.uriFileJpg != null) {
-                uri = FileIO.uriFileJpg
-            }
-        } else if (formatCode == IS_PNG) {
-            if (FileIO.uriFilePng != null) {
-                uri = FileIO.uriFilePng
-            }
-        } else {
-            if (FileIO.uriFileOra != null) {
-                uri = FileIO.uriFileOra
             }
         }
     }

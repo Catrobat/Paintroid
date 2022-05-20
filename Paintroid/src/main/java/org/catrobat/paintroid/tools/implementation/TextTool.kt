@@ -18,7 +18,6 @@
  */
 package org.catrobat.paintroid.tools.implementation
 
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
@@ -30,13 +29,12 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.tools.ContextCallback
+import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
-import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
-import kotlin.Exception
-import kotlin.math.max
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
 @VisibleForTesting
 const val TEXT_SIZE_MAGNIFICATION_FACTOR = 3f
@@ -63,7 +61,7 @@ private const val TAG = "Can't set custom font"
 class TextTool(
     private val textToolOptionsView: TextToolOptionsView,
     contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsVisibilityController,
+    toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
     commandManager: CommandManager,
@@ -85,7 +83,7 @@ class TextTool(
 
     @VisibleForTesting
     @JvmField
-    var font = "Sans Serif"
+    var font = FontType.SANS_SERIF
 
     @VisibleForTesting
     @JvmField
@@ -99,10 +97,7 @@ class TextTool(
     @JvmField
     var bold = false
 
-    @VisibleForTesting
-    @JvmField
-    var textSize = DEFAULT_TEXT_SIZE
-
+    private var textSize = DEFAULT_TEXT_SIZE
     private val stc: Typeface?
     private val dubai: Typeface?
 
@@ -120,51 +115,49 @@ class TextTool(
         dubai = contextCallback.getFont(R.font.dubai)
         textPaint = Paint()
         initializePaint()
-        createAndSetBitmap()
+        resetPreview()
         resetBoxPosition()
-        toolOptionsViewController.setCallback(object : ToolOptionsVisibilityController.Callback {
-            override fun onHide() {
-                createAndSetBitmap()
-            }
 
-            override fun onShow() {
-                createAndSetBitmap()
-            }
-        })
         val callback: TextToolOptionsView.Callback = object : TextToolOptionsView.Callback {
             override fun setText(text: String) {
                 this@TextTool.text = text
-                createAndSetBitmap()
+                resetPreview()
+                workspace.invalidate()
             }
 
-            override fun setFont(font: String) {
-                this@TextTool.font = font
+            override fun setFont(fontType: FontType) {
+                this@TextTool.font = fontType
                 updateTypeface()
-                createAndSetBitmap()
+                resetPreview()
+                workspace.invalidate()
             }
 
             override fun setUnderlined(underlined: Boolean) {
                 this@TextTool.underlined = underlined
                 textPaint.isUnderlineText = this@TextTool.underlined
-                createAndSetBitmap()
+                resetPreview()
+                workspace.invalidate()
             }
 
             override fun setItalic(italic: Boolean) {
                 this@TextTool.italic = italic
                 updateTypeface()
-                createAndSetBitmap()
+                resetPreview()
+                workspace.invalidate()
             }
 
             override fun setBold(bold: Boolean) {
                 this@TextTool.bold = bold
                 textPaint.isFakeBoldText = this@TextTool.bold
-                createAndSetBitmap()
+                resetPreview()
+                workspace.invalidate()
             }
 
             override fun setTextSize(size: Int) {
                 textSize = size
                 textPaint.textSize = textSize * TEXT_SIZE_MAGNIFICATION_FACTOR
-                createAndSetBitmap()
+                resetPreview()
+                workspace.invalidate()
             }
 
             override fun hideToolOptions() {
@@ -178,37 +171,56 @@ class TextTool(
     private fun initializePaint() {
         textPaint.isAntiAlias = DEFAULT_ANTIALIASING_ON
         textPaint.color = toolPaint.previewColor
-        textPaint.textSize = textSize * TEXT_SIZE_MAGNIFICATION_FACTOR
+        textPaint.textSize = DEFAULT_TEXT_SIZE * TEXT_SIZE_MAGNIFICATION_FACTOR
         textPaint.isUnderlineText = underlined
         textPaint.isFakeBoldText = bold
         updateTypeface()
     }
 
-    private fun createAndSetBitmap() {
-        val multilineText = multilineText
-        val textDescent = textPaint.descent()
+    override fun drawBitmap(canvas: Canvas, boxWidth: Float, boxHeight: Float) {
         val textAscent = textPaint.ascent()
-        val upperBoxEdge = toolPosition.y - boxHeight / 2.0f
-        val textHeight = textDescent - textAscent
-        boxHeight = textHeight * multilineText.size + 2 * BOX_OFFSET
-        toolPosition.y = upperBoxEdge + boxHeight / 2.0f
-        var maxTextWidth = 0f
-        for (str in multilineText) {
-            maxTextWidth = max(maxTextWidth, textPaint.measureText(str))
+        val textDescent = textPaint.descent()
+        val textHeight = (textDescent - textAscent) * multilineText.size
+        val lineHeight = textHeight / multilineText.size
+        val maxTextWidth = multilineText.maxOf { line ->
+            textPaint.measureText(line)
         }
-        boxWidth = maxTextWidth + 2 * BOX_OFFSET
-        val bitmap =
-            Bitmap.createBitmap(boxWidth.toInt(), boxHeight.toInt(), Bitmap.Config.ARGB_8888)
-        val drawCanvas = Canvas(bitmap)
-        for (i in multilineText.indices) {
-            drawCanvas.drawText(
-                multilineText[i],
-                BOX_OFFSET.toFloat(),
-                BOX_OFFSET - textAscent + textHeight * i,
+
+        canvas.save()
+
+        val widthScaling = (boxWidth - 2 * BOX_OFFSET) / maxTextWidth
+        val heightScaling = (boxHeight - 2 * BOX_OFFSET) / textHeight
+
+        canvas.scale(widthScaling, heightScaling)
+
+        val scaledHeightOffset = BOX_OFFSET / heightScaling
+        val scaledWidthOffset = BOX_OFFSET / widthScaling
+        val scaledBoxWidth = boxWidth / widthScaling
+        val scaledBoxHeight = boxHeight / heightScaling
+
+        multilineText.forEachIndexed { index, textLine ->
+            canvas.drawText(
+                textLine,
+                -(scaledBoxWidth / 2) + scaledWidthOffset,
+                -(scaledBoxHeight / 2) + scaledHeightOffset - textAscent + lineHeight * index,
                 textPaint
             )
         }
-        setBitmap(bitmap)
+
+        canvas.restore()
+    }
+
+    private fun resetPreview() {
+        val textDescent = textPaint.descent()
+        val textAscent = textPaint.ascent()
+        val textHeight = textDescent - textAscent
+
+        val maxTextWidth = multilineText.maxOf { line ->
+            textPaint.measureText(line)
+        }
+
+        boxHeight = textHeight * multilineText.size + 2 * BOX_OFFSET
+        boxWidth = maxTextWidth + 2 * BOX_OFFSET
     }
 
     override fun onSaveInstanceState(bundle: Bundle?) {
@@ -219,7 +231,7 @@ class TextTool(
             putBoolean(BUNDLE_TOOL_BOLD, bold)
             putString(BUNDLE_TOOL_TEXT, text)
             putInt(BUNDLE_TOOL_TEXT_SIZE, textSize)
-            putString(BUNDLE_TOOL_FONT, font)
+            putString(BUNDLE_TOOL_FONT, font.name)
         }
     }
 
@@ -231,13 +243,12 @@ class TextTool(
             bold = getBoolean(BUNDLE_TOOL_BOLD, bold)
             text = getString(BUNDLE_TOOL_TEXT, text)
             textSize = getInt(BUNDLE_TOOL_TEXT_SIZE, textSize)
-            font = getString(BUNDLE_TOOL_FONT, font)
+            font = FontType.valueOf(getString(BUNDLE_TOOL_FONT, font.name))
         }
         textToolOptionsView.setState(bold, italic, underlined, text, textSize, font)
         textPaint.isUnderlineText = underlined
         textPaint.isFakeBoldText = bold
         updateTypeface()
-        createAndSetBitmap()
     }
 
     @SuppressWarnings("TooGenericExceptionCaught")
@@ -245,17 +256,17 @@ class TextTool(
         val style = if (italic) Typeface.ITALIC else Typeface.NORMAL
         val textSkewX = if (italic) ITALIC_TEXT_SKEW else DEFAULT_TEXT_SKEW
         when (font) {
-            "Sans Serif" -> textPaint.typeface = Typeface.create(Typeface.SANS_SERIF, style)
-            "Serif" -> textPaint.typeface = Typeface.create(Typeface.SERIF, style)
-            "Monospace" -> textPaint.typeface = Typeface.create(Typeface.MONOSPACE, style)
-            "STC" ->
+            FontType.SANS_SERIF -> textPaint.typeface = Typeface.create(Typeface.SANS_SERIF, style)
+            FontType.SERIF -> textPaint.typeface = Typeface.create(Typeface.SERIF, style)
+            FontType.MONOSPACE -> textPaint.typeface = Typeface.create(Typeface.MONOSPACE, style)
+            FontType.STC ->
                 try {
                     textPaint.typeface = stc
                     textPaint.textSkewX = textSkewX
                 } catch (e: Exception) {
                     Log.e(TAG, "stc_regular")
                 }
-            "Dubai" ->
+            FontType.DUBAI ->
                 try {
                     textPaint.typeface = dubai
                     textPaint.textSkewX = textSkewX
@@ -270,10 +281,10 @@ class TextTool(
         val height = boxHeight
         val position = PointF(toolPosition.x, toolPosition.y)
         textPaint.color = toolPaint.previewColor
-        createAndSetBitmap()
         toolPosition.set(position)
         boxWidth = width
         boxHeight = height
+        workspace.invalidate()
     }
 
     override fun resetInternalState() = Unit
@@ -281,6 +292,7 @@ class TextTool(
     override fun onClickOnButton() {
         highlightBox()
         val toolPosition = PointF(toolPosition.x, toolPosition.y)
+
         val typeFaceInfo = SerializableTypeface(
             font,
             bold,
@@ -289,6 +301,7 @@ class TextTool(
             textPaint.textSize,
             textPaint.textSkewX
         )
+
         val command = commandFactory.createTextToolCommand(
             multilineText,
             textPaint,

@@ -42,6 +42,10 @@ import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
@@ -91,6 +95,11 @@ import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 import java.io.File
 import java.util.Locale
 
+private const val TEMP_IMAGE_COROUTINE_DELAY_MILLI_SEC = 1000
+private const val MILLI_SEC_TO_SEC = 1000
+private const val TEMP_IMAGE_SAVE_INTERVAL = 60
+private const val TEMP_IMAGE_IDLE_INTERVAL = 2 * TEMP_IMAGE_COROUTINE_DELAY_MILLI_SEC
+
 class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     @VisibleForTesting
@@ -129,6 +138,24 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private var deferredRequestPermissionsResult: Runnable? = null
     private lateinit var progressBar: ContentLoadingProgressBar
 
+    @Volatile
+    private var lastInteractionTime = System.currentTimeMillis()
+    @Volatile
+    private var minuteTemporaryCopiesCounter = 0
+    @Volatile
+    private var userInteraction = false
+    private var isTemporaryFileSavingTest = false
+
+    private val isRunningEspressoTests: Boolean by lazy {
+        try {
+            Class.forName("androidx.test.espresso.Espresso")
+            true
+        } catch (e: ClassNotFoundException) {
+            Log.e(TAG, "Application is not in test mode.")
+            false
+        }
+    }
+
     companion object {
         const val TAG = "MainActivity"
         private const val IS_FULLSCREEN_KEY = "isFullscreen"
@@ -136,10 +163,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         private const val IS_OPENED_FROM_CATROID_KEY = "isOpenedFromCatroid"
         private const val IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY =
             "isOpenedFromFormulaEditorInCatroid"
-        private const val WAS_INITIAL_ANIMATION_PLAYED = "wasInitialAnimationPlayed"
         private const val SAVED_PICTURE_URI_KEY = "savedPictureUri"
         private const val CAMERA_IMAGE_URI_KEY = "cameraImageUri"
         private const val APP_FRAGMENT_KEY = "customActivityState"
+        private const val SHARED_PREFS_NAME = "preferences"
+        private const val FIRST_LAUNCH_AFTER_INSTALL = "firstLaunchAfterInstall"
     }
 
     override val presenter: MainActivityContracts.Presenter
@@ -192,8 +220,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                     Log.e(TAG, "Image might be an ora file instead")
                     OpenRasterFileFormatConversion.importOraFile(
                         myContentResolver,
-                        receivedUri,
-                        applicationContext
+                        receivedUri
                     ).bitmapList?.let { bitmapList ->
                         commandManager.setInitialStateCommand(
                             commandFactory.createInitCommand(
@@ -241,7 +268,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         onCreateDrawingSurface()
         presenterMain.onCreateTool()
 
+        var isOpenedFromCatroid = false
         val receivedIntent = intent
+        isTemporaryFileSavingTest = intent.getBooleanExtra("isTemporaryFileSavingTest", false)
         when {
             validateIntent(receivedIntent) -> {
                 if (handleIntent(receivedIntent)) {
@@ -257,28 +286,42 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
                 val pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME)
                 presenterMain.initializeFromCleanState(picturePath, pictureName)
+                if (presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
+                    commandManager.loadCommandsCatrobatImage(presenterMain.openTemporaryFile(workspace))
+                }
             }
             else -> {
                 val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)
                 val isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false)
-                val isOpenedFromCatroid =
+                isOpenedFromCatroid =
                     savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
                 val isOpenedFromFormulaEditorInCatroid = savedInstanceState.getBoolean(
                     IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY, false
                 )
-                val wasInitialAnimationPlayed =
-                    savedInstanceState.getBoolean(WAS_INITIAL_ANIMATION_PLAYED, false)
                 val savedPictureUri = savedInstanceState.getParcelable<Uri>(SAVED_PICTURE_URI_KEY)
                 val cameraImageUri = savedInstanceState.getParcelable<Uri>(CAMERA_IMAGE_URI_KEY)
                 presenterMain.restoreState(
                     isFullscreen, isSaved, isOpenedFromCatroid, isOpenedFromFormulaEditorInCatroid,
-                    wasInitialAnimationPlayed, savedPictureUri, cameraImageUri
+                    savedPictureUri, cameraImageUri
                 )
             }
         }
 
         commandManager.addCommandListener(this)
+        lastInteractionTime = System.currentTimeMillis()
+        if ((!isRunningEspressoTests || isTemporaryFileSavingTest) && !isOpenedFromCatroid) {
+            startAutoSaveCoroutine()
+        }
         presenterMain.finishInitialize()
+
+        if (!org.catrobat.paintroid.BuildConfig.DEBUG) {
+            val prefs = getSharedPreferences(SHARED_PREFS_NAME, 0)
+
+            if (prefs.getBoolean(FIRST_LAUNCH_AFTER_INSTALL, true)) {
+                prefs.edit().putBoolean(FIRST_LAUNCH_AFTER_INSTALL, false).apply()
+                presenterMain.showHelpClicked()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -399,7 +442,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             perspective,
             defaultToolController,
             preferences,
-            context
+            context,
+            filesDir
         )
         defaultToolController.setOnColorPickedListener(PresenterColorPickedListener(presenterMain))
         keyboardListener = KeyboardListener(drawerLayout)
@@ -434,7 +478,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             layerModel,
             perspective,
             toolReference,
-            toolOptionsViewController
+            toolOptionsViewController,
+            supportFragmentManager
         )
         layerPresenter.setDrawingSurface(drawingSurface)
         appFragment.perspective = perspective
@@ -528,7 +573,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY,
                 model.isOpenedFromFormulaEditorInCatroid
             )
-            putBoolean(WAS_INITIAL_ANIMATION_PLAYED, model.wasInitialAnimationPlayed())
             putParcelable(SAVED_PICTURE_URI_KEY, model.savedPictureUri)
             putParcelable(CAMERA_IMAGE_URI_KEY, model.cameraImageUri)
         }
@@ -609,5 +653,30 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     override fun hideContentLoadingProgressBar() {
         progressBar.hide()
+    }
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        lastInteractionTime = System.currentTimeMillis()
+        userInteraction = true
+    }
+
+    @Synchronized
+    private fun addToMinuteTemporaryCopiesCounter(seconds: Int) {
+        this.minuteTemporaryCopiesCounter += seconds
+    }
+
+    private fun startAutoSaveCoroutine() {
+        CoroutineScope(Dispatchers.Default).launch {
+            while (true) {
+                delay(TEMP_IMAGE_COROUTINE_DELAY_MILLI_SEC.toLong())
+                addToMinuteTemporaryCopiesCounter(TEMP_IMAGE_COROUTINE_DELAY_MILLI_SEC / MILLI_SEC_TO_SEC)
+                if ((System.currentTimeMillis() - lastInteractionTime >= TEMP_IMAGE_IDLE_INTERVAL || minuteTemporaryCopiesCounter >= TEMP_IMAGE_SAVE_INTERVAL) && userInteraction) {
+                    presenterMain.saveNewTemporaryImage()
+                    minuteTemporaryCopiesCounter = 0
+                    userInteraction = false
+                }
+            }
+        }
     }
 }

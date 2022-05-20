@@ -43,6 +43,7 @@ import org.catrobat.paintroid.test.espresso.util.UiInteractions;
 import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
+import org.catrobat.paintroid.ui.Perspective;
 import org.hamcrest.core.AllOf;
 import org.junit.Before;
 import org.junit.Rule;
@@ -64,6 +65,7 @@ import androidx.test.rule.ActivityTestRule;
 import static org.catrobat.paintroid.common.ConstantsKt.CATROBAT_IMAGE_ENDING;
 import static org.catrobat.paintroid.common.ConstantsKt.PAINTROID_PICTURE_NAME;
 import static org.catrobat.paintroid.common.ConstantsKt.PAINTROID_PICTURE_PATH;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
@@ -793,6 +795,29 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(
 				withText("50")
 		));
+	}
+
+	@Test
+	public void testPreserveZoomAfterPipetteUsage() {
+		Perspective perspective = launchActivityRule.getActivity().getPerspective();
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		float scale = 4f;
+
+		perspective.setScale(scale);
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(withId(R.id.color_picker_pipette_btn)).perform(click());
+		onView(withId(R.id.doneAction)).perform(click());
+
+		onColorPickerView()
+				.performCloseColorPickerWithDialogButton();
+
+		assertEquals(scale, perspective.getScale(), Float.MIN_VALUE);
 	}
 
 	@Test

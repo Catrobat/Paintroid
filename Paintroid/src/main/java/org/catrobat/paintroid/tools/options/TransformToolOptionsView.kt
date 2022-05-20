@@ -34,6 +34,8 @@ interface TransformToolOptionsView {
     interface Callback {
         fun autoCropClicked()
 
+        fun setCenterClicked()
+
         fun rotateCounterClockwiseClicked()
 
         fun rotateClockwiseClicked()

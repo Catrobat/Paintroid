@@ -25,21 +25,19 @@ package org.catrobat.paintroid.ui.dragndrop
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.LightingColorFilter
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.AdapterView.OnItemLongClickListener
 import android.widget.ListView
 import org.catrobat.paintroid.presenter.LayerPresenter
 import kotlin.math.max
 import kotlin.math.min
 
-private const val ALPHA_VALUE = 192
-
-class DragAndDropListView : ListView, ListItemLongClickHandler {
+class DragAndDropListView : ListView, ListItemDragHandler {
     private var view: View? = null
     private var hoveringListItem: BitmapDrawable? = null
     private var viewBounds: Rect? = null
@@ -61,10 +59,6 @@ class DragAndDropListView : ListView, ListItemLongClickHandler {
     )
 
     init {
-        onItemLongClickListener = OnItemLongClickListener { _, view, position, _ ->
-            presenter?.onLongClickLayerAtPosition(position, view)
-            true
-        }
         onItemClickListener = OnItemClickListener { _, view, position, _ ->
             presenter?.onClickLayerAtPosition(position, view)
         }
@@ -97,7 +91,7 @@ class DragAndDropListView : ListView, ListItemLongClickHandler {
         return true
     }
 
-    override fun handleOnItemLongClick(position: Int, view: View) {
+    override fun startDragging(position: Int, view: View) {
         this.view?.visibility = VISIBLE
         this.view = view
         initialPosition = position
@@ -129,12 +123,14 @@ class DragAndDropListView : ListView, ListItemLongClickHandler {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         view.draw(canvas)
+        val colorFilter = LightingColorFilter(BRIGHTNESS_MUL_VALUE, BRIGHTNESS_ADD_VALUE)
         val drawable = BitmapDrawable(resources, bitmap)
+        drawable.colorFilter = colorFilter
         viewBounds = Rect(view.left, view.top, view.right, view.bottom)
         viewBounds?.let {
             drawable.bounds = it
         }
-        drawable.alpha = ALPHA_VALUE
+        drawable.alpha = Companion.ALPHA_VALUE
         return drawable
     }
 
@@ -205,5 +201,11 @@ class DragAndDropListView : ListView, ListItemLongClickHandler {
             presenter?.reorderItems(initialPosition, position)
         }
         stopDragging()
+    }
+
+    companion object {
+        private const val ALPHA_VALUE = 192
+        private const val BRIGHTNESS_MUL_VALUE = 0xffffff
+        private const val BRIGHTNESS_ADD_VALUE = 0x222222
     }
 }
