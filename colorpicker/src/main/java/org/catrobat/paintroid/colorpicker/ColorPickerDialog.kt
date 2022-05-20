@@ -51,6 +51,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.LinkedList
+import kotlin.collections.ArrayList
 
 private const val FF = 0xff
 private const val HSV_INITIALIZER = 3
@@ -60,13 +62,16 @@ private const val CURRENT_COLOR = "CurrentColor"
 private const val INITIAL_COLOR = "InitialColor"
 private const val REQUEST_CODE = 1
 private const val MAX_ALPHA_VALUE = 255
+private const val COLOR_HISTORY = "colorHistory"
 const val COLOR_EXTRA = "colorExtra"
 const val BITMAP_HEIGHT_EXTRA = "bitmapHeightNameExtra"
 const val BITMAP_WIDTH_EXTRA = "bitmapWidthNameExtra"
 
-class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
+class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener, OnColorFinallySelectedListener, OnColorInHistoryChangedListener {
     @VisibleForTesting
     var onColorPickedListener = mutableListOf<OnColorPickedListener>()
+    @VisibleForTesting
+    var onColorHistoryUpdatedListener = mutableListOf<OnColorHistoryUpdatedListener>()
     private var colorToApply = 0
 
     private lateinit var colorPickerView: ColorPickerView
@@ -76,6 +81,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
     private lateinit var checkeredShader: Shader
     private lateinit var currentBitmap: Bitmap
     private lateinit var alphaSliderView: AlphaSliderView
+    private lateinit var colorHistoryView: ColorHistoryView
 
     companion object {
         private val TAG = ColorPickerDialog::class.java.simpleName
@@ -83,7 +89,8 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         fun newInstance(
             @ColorInt initialColor: Int,
             catroidFlag: Boolean,
-            openedFromFormulaEditorInCatroidFlag: Boolean = false
+            openedFromFormulaEditorInCatroidFlag: Boolean = false,
+            colorHistory: List<Int>
         ): ColorPickerDialog {
             val dialog = ColorPickerDialog()
             val alpha = if (openedFromFormulaEditorInCatroidFlag) MAX_ALPHA_VALUE else {
@@ -103,6 +110,7 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
                     OPENED_FROM_FORMULA_EDITOR_CATROID_FLAG,
                     openedFromFormulaEditorInCatroidFlag
                 )
+                putIntegerArrayList(COLOR_HISTORY, ArrayList(colorHistory))
             }
             dialog.arguments = bundle
             return dialog
@@ -141,7 +149,11 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         newColorView = dialogView.findViewById(R.id.color_picker_new_color_view)
         colorPickerView = dialogView.findViewById(R.id.color_picker_view)
         colorPickerView.setOnColorChangedListener(this)
+        colorPickerView.setOnColorFinallySelectedListener(this)
         alphaSliderView = dialogView.findViewById(R.id.color_alpha_slider)
+        colorHistoryView = dialogView.findViewById(R.id.color_history_view)
+        colorHistoryView.setOnColorInHistoryChangedListener(this)
+        colorHistoryView.setTextLayout(dialogView.findViewById(R.id.color_history_text_layout))
 
         val arguments = savedInstanceState ?: requireArguments()
         arguments.apply {
@@ -150,6 +162,10 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
                 getBoolean(OPENED_FROM_FORMULA_EDITOR_CATROID_FLAG)
             colorPickerView.isOpenedFromFormulaEditorInCatroid =
                 openedFromFormulaEditorInCatroidFlag
+            val savedHistory = getIntegerArrayList(COLOR_HISTORY)
+            savedHistory?.let {
+                colorHistoryView.updateColorHistory(LinkedList(savedHistory))
+            }
             setCurrentColor(getInt(CURRENT_COLOR, Color.BLACK))
             setInitialColor(
                 getInt(INITIAL_COLOR, Color.BLACK),
@@ -218,15 +234,23 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
         super.onSaveInstanceState(outState)
         outState.putInt(CURRENT_COLOR, colorPickerView.getSelectedColor())
         outState.putInt(INITIAL_COLOR, colorPickerView.initialColor)
+        outState.putIntegerArrayList(COLOR_HISTORY, ArrayList(colorHistoryView.colorHistory))
     }
 
     fun addOnColorPickedListener(listener: OnColorPickedListener) {
         onColorPickedListener.add(listener)
     }
 
+    fun addOnHistoryUpdatedListener(listener: OnColorHistoryUpdatedListener) {
+        onColorHistoryUpdatedListener.add(listener)
+    }
+
     private fun updateColorChange(color: Int) {
         onColorPickedListener.forEach {
             it.colorChanged(color)
+        }
+        onColorHistoryUpdatedListener.forEach {
+            it.historyChanged(ArrayList(colorHistoryView.colorHistory))
         }
     }
 
@@ -296,5 +320,14 @@ class ColorPickerDialog : AppCompatDialogFragment(), OnColorChangedListener {
                 setCurrentColor(it)
             }
         }
+    }
+
+    override fun colorFinallySelected(color: Int) {
+        colorHistoryView.addToHistory(colorToApply)
+    }
+
+    override fun colorInHistoryChanged(color: Int) {
+        colorPickerView.setSelectedColor(color)
+        colorChanged(color)
     }
 }

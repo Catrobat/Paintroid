@@ -39,6 +39,7 @@ import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.WelcomeActivity
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
+import org.catrobat.paintroid.colorpicker.OnColorHistoryUpdatedListener
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.common.ABOUT_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG
@@ -132,6 +133,11 @@ class MainActivityNavigator(
                 mainActivity.presenter.setBottomNavigationColor(color)
             }
         })
+        dialog.addOnHistoryUpdatedListener(object : OnColorHistoryUpdatedListener {
+            override fun historyChanged(colorHistory: List<Int>) {
+                mainActivity.model.colorHistory = colorHistory
+            }
+        })
         mainActivity.presenter.bitmap?.let { dialog.setBitmap(it) }
     }
 
@@ -197,7 +203,8 @@ class MainActivityNavigator(
                 val dialog = ColorPickerDialog.newInstance(
                     it.drawPaint.color,
                     mainActivity.model.isOpenedFromCatroid,
-                    mainActivity.model.isOpenedFromFormulaEditorInCatroid
+                    mainActivity.model.isOpenedFromFormulaEditorInCatroid,
+                    mainActivity.model.colorHistory
                 )
                 setupColorPickerDialogListeners(dialog)
                 showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)

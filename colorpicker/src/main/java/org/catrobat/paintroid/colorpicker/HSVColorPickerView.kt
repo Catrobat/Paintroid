@@ -65,6 +65,7 @@ class HSVColorPickerView : View {
     private val satValRect: RectF
     private val hueRect: RectF
     private var onColorChangedListener: OnColorChangedListener? = null
+    private var onColorFinallySelectedListener: OnColorFinallySelectedListener? = null
     private var startTouchPoint: Point? = null
 
     var selectedColor: Int
@@ -290,6 +291,14 @@ class HSVColorPickerView : View {
         onColorChangedListener = listener
     }
 
+    private fun onColorFinallySelected() {
+        onColorFinallySelectedListener?.colorFinallySelected(selectedColor)
+    }
+
+    fun setOnColorFinallySelectedListener(listener: OnColorFinallySelectedListener?) {
+        onColorFinallySelectedListener = listener
+    }
+
     override fun onDraw(canvas: Canvas) {
         if (drawingRect.width() <= 0 || drawingRect.height() <= 0) {
             return
@@ -309,6 +318,7 @@ class HSVColorPickerView : View {
             MotionEvent.ACTION_UP -> {
                 startTouchPoint = null
                 update = moveTrackersIfNeeded(event)
+                onColorFinallySelected()
             }
         }
         if (update) {
@@ -338,5 +348,9 @@ class HSVColorPickerView : View {
 
     fun interface OnColorChangedListener {
         fun colorChanged(color: Int)
+    }
+
+    fun interface OnColorFinallySelectedListener {
+        fun colorFinallySelected(color: Int)
     }
 }

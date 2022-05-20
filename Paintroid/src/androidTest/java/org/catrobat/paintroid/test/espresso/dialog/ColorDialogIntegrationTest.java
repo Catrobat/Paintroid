@@ -19,44 +19,72 @@
 
 package org.catrobat.paintroid.test.espresso.dialog;
 
+import android.app.Activity;
+import android.app.Instrumentation;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.view.View;
+import android.widget.Button;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.colorpicker.HSVColorPickerView;
 import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.colorpicker.RgbSelectorView;
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.UiInteractions;
+import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
+import org.hamcrest.core.AllOf;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import static org.catrobat.paintroid.common.ConstantsKt.CATROBAT_IMAGE_ENDING;
+import static org.catrobat.paintroid.common.ConstantsKt.PAINTROID_PICTURE_NAME;
+import static org.catrobat.paintroid.common.ConstantsKt.PAINTROID_PICTURE_PATH;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterLeft;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterRight;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackground;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withTextColor;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.pressBack;
@@ -64,8 +92,12 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.hasSibling;
 import static androidx.test.espresso.matcher.ViewMatchers.hasTextColor;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
@@ -78,6 +110,8 @@ public class ColorDialogIntegrationTest {
 	private static final String TAB_VIEW_PRESET_SELECTOR_CLASS = PresetSelectorView.class.getSimpleName();
 	private static final String TAB_VIEW_HSV_SELECTOR_CLASS = HSVColorPickerView.class.getSimpleName();
 	private static final String TAB_VIEW_RGBA_SELECTOR_CLASS = RgbSelectorView.class.getSimpleName();
+	private static final String IMAGE_NAME = "colorDialogTestCatrobatImage";
+	private static final String IMAGE_TO_LOAD_NAME = "loadFile";
 
 	private static final String TEXT_RGB_MIN = "0";
 	private static final String TEXT_RGB_MAX = "255";
@@ -91,9 +125,14 @@ public class ColorDialogIntegrationTest {
 	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Rule
+	public IntentsTestRule<MainActivity> launchActivityRuleWithIntent = new IntentsTestRule<>(MainActivity.class, false, false);
+
+	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	private ToolReference toolReference;
+
+	private List<File> deletionFileList = new ArrayList<>();
 
 	@Before
 	public void setUp() {
@@ -137,7 +176,7 @@ public class ColorDialogIntegrationTest {
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_preset))).perform(scrollTo(), click());
 		onView(withClassName(containsString(TAB_VIEW_PRESET_SELECTOR_CLASS))).check(matches(isDisplayed()));
 	}
 
@@ -356,28 +395,37 @@ public class ColorDialogIntegrationTest {
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
+		onView(withId(R.id.color_picker_color_rgb_textview_red)).perform(scrollTo());
 		onView(withId(R.id.color_picker_color_rgb_textview_red)).check(matches(allOf(isDisplayed(), withText(R.string.color_red), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_red)))));
 		onView(withId(R.id.color_picker_color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_green)))));
 		onView(withId(R.id.color_picker_color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_blue)))));
+		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).perform(scrollTo());
 		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_alpha)))));
 
+		onView(withId(R.id.color_picker_color_rgb_textview_red)).perform(scrollTo());
 		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(scrollTo());
 		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(scrollTo());
 		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(isDisplayed()));
 
+		onView(withId(R.id.color_picker_rgb_red_value)).perform(scrollTo());
 		onView(withId(R.id.color_picker_rgb_red_value)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_picker_rgb_green_value)).check(matches(isDisplayed()));
 		onView(withId(R.id.color_picker_rgb_blue_value)).check(matches(isDisplayed()));
+		onView(withId(R.id.color_picker_rgb_alpha_value)).perform(scrollTo());
 		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(isDisplayed()));
 		onView(allOf(withText(TEXT_PERCENT_SIGN), hasSibling(withId(R.id.color_picker_rgb_alpha_value)))).check(matches(isDisplayed()));
 
 		int currentSelectedColor = presetColors.getColor(0, Color.BLACK);
 
+		onView(withId(R.id.color_picker_rgb_red_value)).perform(scrollTo());
 		onView(withId(R.id.color_picker_rgb_red_value)).check(matches(withText(Integer.toString(Color.red(currentSelectedColor)))));
 		onView(withId(R.id.color_picker_rgb_green_value)).check(matches(withText(Integer.toString(Color.green(currentSelectedColor)))));
 		onView(withId(R.id.color_picker_rgb_blue_value)).check(matches(withText(Integer.toString(Color.blue(currentSelectedColor)))));
+		onView(withId(R.id.color_picker_rgb_alpha_value)).perform(scrollTo());
 		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(
 				withText(
 						Integer.toString(
@@ -385,25 +433,24 @@ public class ColorDialogIntegrationTest {
 						)
 				)
 		));
-
-		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(scrollTo(), touchCenterLeft());
 		onView(withId(R.id.color_picker_rgb_red_value)).check(matches(withText(TEXT_RGB_MIN)));
-		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(scrollTo(), touchCenterRight());
 		onView(withId(R.id.color_picker_rgb_red_value)).check(matches(withText(TEXT_RGB_MAX)));
 
-		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(scrollTo(), touchCenterLeft());
 		onView(withId(R.id.color_picker_rgb_green_value)).check(matches(withText(TEXT_RGB_MIN)));
-		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(scrollTo(), touchCenterRight());
 		onView(withId(R.id.color_picker_rgb_green_value)).check(matches(withText(TEXT_RGB_MAX)));
 
-		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(scrollTo(), touchCenterLeft());
 		onView(withId(R.id.color_picker_rgb_blue_value)).check(matches(withText(TEXT_RGB_MIN)));
-		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(scrollTo(), touchCenterRight());
 		onView(withId(R.id.color_picker_rgb_blue_value)).check(matches(withText(TEXT_RGB_MAX)));
 
-		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(scrollTo(), touchCenterLeft());
 		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MIN)));
-		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(scrollTo(), touchCenterRight());
 		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(withText(TEXT_ALPHA_MAX)));
 
 		// Select color red #FFFF0000 by using hex input
@@ -412,17 +459,17 @@ public class ColorDialogIntegrationTest {
 		onColorPickerView()
 				.checkNewColorViewColor(Color.RED);
 
-		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(scrollTo(), click());
 
 		// Select color blue #FF0000FF by using seekbars
-		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(touchCenterLeft());
-		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(touchCenterLeft());
-		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
-		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(scrollTo(), touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(scrollTo(), touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(scrollTo(), touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(scrollTo(), touchCenterRight());
 
 		onColorPickerView()
 				.onPositiveButton()
-				.perform(click());
+				.perform(scrollTo(), click());
 
 		assertNotEquals("Selected color changed to blue from black", toolReference.getTool().getDrawPaint().getColor(), Color.BLACK);
 		assertEquals("Selected color is not blue", toolReference.getTool().getDrawPaint().getColor(), Color.BLUE);
@@ -470,10 +517,10 @@ public class ColorDialogIntegrationTest {
 				withText(
 						String.format("#FF%06X", 0xFFFFFF & currentSelectColor))));
 
-		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv))).perform(click());
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_hsv))).perform(scrollTo(), click());
 		onView(withClassName(containsString(TAB_VIEW_HSV_SELECTOR_CLASS))).check(matches(isDisplayed()));
 
-		onColorPickerView().perform(touchCenterMiddle());
+		onColorPickerView().perform(scrollTo(), touchCenterMiddle());
 
 		onColorPickerView()
 				.onPositiveButton()
@@ -491,10 +538,10 @@ public class ColorDialogIntegrationTest {
 				withText(
 						String.format("#FF%06X", 0xFFFFFF & currentSelectColor))));
 
-		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(touchCenterLeft());
-		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterLeft());
-		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(touchCenterLeft());
-		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(scrollTo(), touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(scrollTo(), touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(scrollTo(), touchCenterLeft());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(scrollTo(), touchCenterRight());
 
 		onColorPickerView()
 				.onPositiveButton()
@@ -686,7 +733,8 @@ public class ColorDialogIntegrationTest {
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
 		onView(withId(R.id.color_picker_color_rgb_hex)).perform(replaceText("#FFFF0000xxxx"));
 
-		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(scrollTo(), touchCenterRight());
+		onView(withId(R.id.color_picker_color_rgb_hex)).perform(scrollTo());
 		onView(withId(R.id.color_picker_color_rgb_hex)).check(matches(
 				withText(
 						String.format("#FF%06X", 0xFFFFFF & 0xFF0000FF))));
@@ -745,5 +793,251 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_rgb_alpha_value)).check(matches(
 				withText("50")
 		));
+	}
+
+	@Test
+	public void testColorHistoryShowsPresetSelectorColors() {
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
+		onColorPickerView()
+				.performOpenColorPicker();
+		for (int counterColors = 0; counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY; counterColors++) {
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors);
+		}
+		onColorPickerView()
+				.onPositiveButton()
+				.perform(click());
+		for (int counterColors = 0; counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY; counterColors++) {
+			onColorPickerView()
+					.performOpenColorPicker();
+			onColorPickerView()
+					.performClickOnHistoryColor(MAXIMUM_COLORS_IN_HISTORY - 1);
+
+			onColorPickerView()
+					.onPositiveButton()
+					.perform(click());
+
+			int arrayColor = presetColors.getColor(counterColors, Color.BLACK);
+			int selectedColor = Objects.requireNonNull(toolReference.getTool()).getDrawPaint().getColor();
+
+			assertEquals("Color in history doesn't match selection", arrayColor, selectedColor);
+		}
+		presetColors.recycle();
+	}
+
+	@Test
+	public void testColorHistorySelectMoreThanMaxHistoryColors() {
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
+		onColorPickerView()
+				.performOpenColorPicker();
+		for (int counterColors = 0; counterColors < presetColors.length() && counterColors <= ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY; counterColors++) {
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors);
+		}
+		for (int historyCounter = 0, colorCounter = MAXIMUM_COLORS_IN_HISTORY; historyCounter < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY; historyCounter++, colorCounter--) {
+			onColorPickerView()
+					.checkHistoryColor(historyCounter, presetColors.getColor(colorCounter, Color.BLACK));
+		}
+		presetColors.recycle();
+	}
+
+	@Test
+	public void testColorHistoryShowsRGBSelectorColors() {
+		launchActivityRule.getActivity();
+
+		onColorPickerView()
+				.performOpenColorPicker();
+
+		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba))).perform(click());
+		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))).check(matches(isDisplayed()));
+
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(scrollTo(), touchCenterRight());
+		onColorPickerView().checkHistoryColor(0, 0xFFFF0000);
+		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).perform(scrollTo(), touchCenterLeft());
+		onColorPickerView().checkHistoryColor(0, 0xFF000000);
+
+		onView(withId(R.id.color_picker_color_rgb_seekbar_green)).perform(scrollTo(), touchCenterRight());
+		onColorPickerView().checkHistoryColor(0, 0xFF00FF00);
+		onView(withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(scrollTo(), touchCenterRight());
+		onColorPickerView().checkHistoryColor(0, 0xFF00FFFF);
+		onColorPickerView().checkHistoryColor(3, 0xFFFF0000);
+
+		onView(withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(scrollTo(), touchCenterLeft());
+		onColorPickerView().checkHistoryColor(0, 0x0000FFFF);
+		onColorPickerView().checkHistoryColor(3, 0xFF000000);
+	}
+
+	@Test
+	public void testColorHistoryPreservedWhenClickingNewImage() {
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
+		onColorPickerView()
+				.performOpenColorPicker();
+		for (int counterColors = 0; counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY; counterColors++) {
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors);
+		}
+		onColorPickerView()
+				.onPositiveButton()
+				.perform(click());
+		onTopBarView().performOpenMoreOptions();
+		onView(withText(R.string.menu_new_image)).perform(click());
+
+		onColorPickerView()
+				.performOpenColorPicker();
+		onColorPickerView().checkHistoryColor(3, presetColors.getColor(0, Color.BLACK));
+		presetColors.recycle();
+	}
+
+	@Test
+	public void testColorHistoryPreservedWhenLoadingFile() {
+		Intent intent = new Intent();
+		intent.putExtra(PAINTROID_PICTURE_PATH, "");
+		intent.putExtra(PAINTROID_PICTURE_NAME, IMAGE_TO_LOAD_NAME);
+		launchActivityRuleWithIntent.launchActivity(intent);
+		final Activity activity = launchActivityRuleWithIntent.getActivity();
+		final Resources resources = activity.getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
+		createImageIntent(activity);
+		onColorPickerView()
+				.performOpenColorPicker();
+		for (int counterColors = 0; counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY; counterColors++) {
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors);
+		}
+		onColorPickerView()
+				.onPositiveButton()
+				.perform(click());
+		onTopBarView().performOpenMoreOptions();
+		onView(withText(R.string.menu_load_image)).perform(click());
+
+		onColorPickerView()
+				.performOpenColorPicker();
+		onColorPickerView().checkHistoryColor(3, presetColors.getColor(0, Color.BLACK));
+		presetColors.recycle();
+		if (!deletionFileList.isEmpty() && deletionFileList.get(0) != null && deletionFileList.get(0).exists()) {
+			assertTrue(deletionFileList.get(0).delete());
+		}
+	}
+
+	@Test
+	public void testColorHistoryDeletedWhenRestartingApp() {
+		final Resources resources = launchActivityRule.getActivity().getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
+		onColorPickerView()
+				.performOpenColorPicker();
+		for (int counterColors = 0; counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY; counterColors++) {
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors);
+		}
+		launchActivityRule.finishActivity();
+		launchActivityRule.launchActivity(new Intent());
+
+		onColorPickerView()
+				.performOpenColorPicker();
+		onView(withId(R.id.color_history_text_view)).check(matches(not(isDisplayed())));
+		presetColors.recycle();
+	}
+
+	@Test
+	public void testSaveColorHistoryInCatrobatFile() {
+		final MainActivity activity = launchActivityRule.getActivity();
+		final Resources resources = activity.getResources();
+		final TypedArray presetColors = resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors);
+
+		onColorPickerView()
+				.performOpenColorPicker();
+		for (int counterColors = 0; counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY; counterColors++) {
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors);
+		}
+		onColorPickerView()
+				.onPositiveButton()
+				.perform(click());
+
+		saveCatrobatImage();
+		Uri uri = activity.model.getSavedPictureUri();
+		launchActivityRule.finishActivity();
+
+		Intent intent = new Intent();
+		intent.putExtra(PAINTROID_PICTURE_PATH, "");
+		intent.putExtra(PAINTROID_PICTURE_NAME, IMAGE_NAME);
+		launchActivityRuleWithIntent.launchActivity(intent);
+		intent = new Intent();
+		intent.setData(uri);
+		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
+
+		onColorPickerView()
+				.performOpenColorPicker();
+		for (int counterColors = 0; counterColors + MAXIMUM_COLORS_IN_HISTORY < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY; counterColors++) {
+			onColorPickerView()
+					.performClickColorPickerPresetSelectorButton(counterColors + MAXIMUM_COLORS_IN_HISTORY);
+		}
+		onColorPickerView()
+				.onPositiveButton()
+				.perform(click());
+
+		onDrawingSurfaceView()
+				.perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onTopBarView().performOpenMoreOptions();
+		onView(withText(R.string.menu_load_image)).perform(click());
+
+		onView(allOf(withId(android.R.id.button2), withText(R.string.discard_button_text), isAssignableFrom(Button.class))).perform(click());
+
+		onColorPickerView()
+				.performOpenColorPicker();
+		onColorPickerView().checkHistoryColor(3, presetColors.getColor(0, Color.BLACK));
+		presetColors.recycle();
+		if (!deletionFileList.isEmpty() && deletionFileList.get(0) != null && deletionFileList.get(0).exists()) {
+			assertTrue(deletionFileList.get(0).delete());
+		}
+	}
+
+	private Uri createTestImageFile(Activity activity) {
+		Bitmap bitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		canvas.drawColor(Color.WHITE);
+		canvas.drawBitmap(bitmap, 0F, 0F, null);
+
+		File imageFile = new File(activity.getExternalFilesDir(null).getAbsolutePath(), IMAGE_TO_LOAD_NAME + ".jpg");
+		Uri imageUri = Uri.fromFile(imageFile);
+		try {
+			OutputStream fos = activity.getContentResolver().openOutputStream(Objects.requireNonNull(imageUri));
+			assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos));
+			assert fos != null;
+			fos.close();
+		} catch (IOException e) {
+			throw new AssertionError("Picture file could not be created.", e);
+		}
+
+		deletionFileList.add(imageFile);
+		return imageUri;
+	}
+
+	private void createImageIntent(Activity activity) {
+		Intent intent = new Intent();
+		intent.setData(createTestImageFile(activity));
+		Instrumentation.ActivityResult resultOK = new Instrumentation.ActivityResult(Activity.RESULT_OK, intent);
+		intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK);
+	}
+
+	private void saveCatrobatImage() {
+		onTopBarView()
+				.performOpenMoreOptions();
+		onView(withText(R.string.menu_save_image))
+				.perform(scrollTo(), click());
+		onView(withId(R.id.pocketpaint_save_dialog_spinner))
+				.perform(click());
+		onData(AllOf.allOf(is(instanceOf(String.class)),
+				is(CATROBAT_IMAGE_ENDING))).inRoot(isPlatformPopup()).perform(click());
+
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(replaceText(IMAGE_NAME));
+		onView(withText(R.string.save_button_text))
+				.perform(ViewActions.click());
 	}
 }

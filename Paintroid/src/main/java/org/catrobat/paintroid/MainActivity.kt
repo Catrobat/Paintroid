@@ -184,9 +184,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         try {
             if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
                 try {
-                    commandManager.loadCommandsCatrobatImage(
-                        workspace.getCommandSerializationHelper().readFromFile(receivedUri)
-                    )
+                    val fileContent = workspace.getCommandSerializationHelper().readFromFile(receivedUri)
+                    commandManager.loadCommandsCatrobatImage(fileContent.commandModel)
+                    presenterMain.setColorHistoryAfterLoadImage(fileContent.colorHistory)
                     return false
                 } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
                     Log.e(TAG, "Image might be an ora file instead")
@@ -366,13 +366,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         )
         perspective = Perspective(layerModel.width, layerModel.height)
         val listener = DefaultWorkspace.Listener { drawingSurface.refreshDrawingSurface() }
+        model = MainActivityModel()
         workspace = DefaultWorkspace(
             layerModel,
             perspective,
             listener,
-            CommandSerializationUtilities(this, commandManager)
+            CommandSerializationUtilities(this, commandManager, model)
         )
-        model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,

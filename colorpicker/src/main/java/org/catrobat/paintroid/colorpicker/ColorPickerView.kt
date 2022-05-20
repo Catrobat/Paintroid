@@ -44,7 +44,8 @@ class ColorPickerView : LinearLayoutCompat {
     private var selectedColor = Color.BLACK
     var initialColor = 0
     var isOpenedFromFormulaEditorInCatroid = false
-    private var listener: OnColorChangedListener? = null
+    private var colorChangedListener: OnColorChangedListener? = null
+    private var colorFinallySelectedListener: OnColorFinallySelectedListener? = null
 
     constructor(context: Context) : super(context)
 
@@ -145,11 +146,19 @@ class ColorPickerView : LinearLayoutCompat {
     }
 
     private fun onColorChanged() {
-        listener?.colorChanged(selectedColor)
+        colorChangedListener?.colorChanged(selectedColor)
     }
 
     fun setOnColorChangedListener(listener: OnColorChangedListener?) {
-        this.listener = listener
+        this.colorChangedListener = listener
+    }
+
+    fun setOnColorFinallySelectedListener(listener: OnColorFinallySelectedListener?) {
+        this.colorFinallySelectedListener = listener
+    }
+
+    private fun onColorFinallySelected(color: Int) {
+        colorFinallySelectedListener?.colorFinallySelected(color)
     }
 
     override fun onSaveInstanceState(): Parcelable {
@@ -170,17 +179,31 @@ class ColorPickerView : LinearLayoutCompat {
         super.onAttachedToWindow()
         preSelectorView.setOnColorChangedListener { color ->
             setSelectedColor(color, preSelectorView)
+            onColorFinallySelected(color)
         }
         hsvSelectorView.hsvColorPickerView.setOnColorChangedListener { color ->
             setSelectedColor(color, hsvSelectorView)
         }
+        hsvSelectorView.hsvColorPickerView.setOnColorFinallySelectedListener { color ->
+            onColorFinallySelected(color)
+        }
         rgbSelectorView.setOnColorChangedListener { color ->
             setSelectedColor(color, rgbSelectorView)
+        }
+        rgbSelectorView.setOnColorFinallySelectedListener { color ->
+            onColorFinallySelected(color)
         }
         alphaSliderView.getAlphaSlider()?.setOnColorChangedListener(
             object : AlphaSlider.OnColorChangedListener {
                 override fun colorChanged(color: Int) {
                     setSelectedColor(color, alphaSliderView)
+                }
+            }
+        )
+        alphaSliderView.getAlphaSlider()?.setOnColorFinallySelectedListener(
+            object : AlphaSlider.OnColorFinallySelectedListener {
+                override fun colorFinallySelected(color: Int) {
+                    onColorFinallySelected(color)
                 }
             }
         )

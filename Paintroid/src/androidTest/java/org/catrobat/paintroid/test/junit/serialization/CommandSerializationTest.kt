@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,6 +56,7 @@ import org.catrobat.paintroid.command.serialization.CommandSerializationUtilitie
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.model.MainActivityModel
 import org.catrobat.paintroid.tools.drawable.HeartDrawable
 import org.catrobat.paintroid.tools.drawable.OvalDrawable
 import org.catrobat.paintroid.tools.drawable.RectangleDrawable
@@ -73,6 +74,7 @@ class CommandSerializationTest {
     private lateinit var commandSerializer: CommandSerializationUtilities
     private lateinit var expectedModel: CommandManagerModel
     private lateinit var paint: Paint
+    private lateinit var model: MainActivityModel
     private val commandFactory = DefaultCommandFactory()
 
     companion object {
@@ -85,8 +87,9 @@ class CommandSerializationTest {
         val context = mock(Context::class.java)
         val resources = mock(Resources::class.java)
         val commandManger = mock(AsyncCommandManager::class.java)
+        val model = mock(MainActivityModel::class.java)
 
-        commandSerializer = CommandSerializationUtilities(context, commandManger)
+        commandSerializer = CommandSerializationUtilities(context, commandManger, model)
         val initialCommand: Command =
             commandFactory.createInitCommand(WORKSPACE_WIDTH, WORKSPACE_HEIGHT)
         expectedModel = CommandManagerModel(initialCommand, ArrayList())

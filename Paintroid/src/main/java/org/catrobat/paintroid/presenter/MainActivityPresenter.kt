@@ -78,6 +78,7 @@ import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.ui.LayerAdapter
 import org.catrobat.paintroid.ui.Perspective
 import java.io.File
@@ -757,6 +758,7 @@ open class MainActivityPresenter(
         if (result.model != null) {
             commandManager.loadCommandsCatrobatImage(result.model)
             resetPerspectiveAfterNextCommand = true
+            setColorHistoryAfterLoadImage(result.colorHistory)
             return
         }
         if (result.toBeScaled) {
@@ -953,6 +955,18 @@ open class MainActivityPresenter(
 
     override fun setAntialiasingOnOkClicked() {
         navigator.setAntialiasingOnToolPaint()
+    }
+
+    override fun setColorHistoryAfterLoadImage(colorHistory: List<Int>?) {
+        var history = colorHistory
+        history = history ?: ArrayList()
+        model.colorHistory = history
+        var newPaintColor: Int = DefaultToolPaint(context).color
+        if (history.isNotEmpty()) {
+            newPaintColor = history[history.size - 1]
+        }
+        toolController.currentTool?.changePaintColor(newPaintColor)
+        setBottomNavigationColor(newPaintColor)
     }
 
     companion object {

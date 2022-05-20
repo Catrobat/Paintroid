@@ -16,25 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.catrobat.paintroid.model
 
-import android.net.Uri
-import org.catrobat.paintroid.contract.MainActivityContracts
-import java.util.LinkedList
+package org.catrobat.paintroid.command.serialization
 
-open class MainActivityModel : MainActivityContracts.Model {
-    private var wasInitialAnimationPlayed = false
-    override var isOpenedFromCatroid = false
-    override var isOpenedFromFormulaEditorInCatroid = false
-    override var isFullscreen = false
-    override var isSaved = false
-    override var savedPictureUri: Uri? = null
-    override var cameraImageUri: Uri? = null
-    override var colorHistory: List<Int> = LinkedList()
+import org.catrobat.paintroid.model.CommandManagerModel
 
-    override fun wasInitialAnimationPlayed(): Boolean = wasInitialAnimationPlayed
-
-    override fun setInitialAnimationPlayed(wasInitialAnimationPlayed: Boolean) {
-        this.wasInitialAnimationPlayed = wasInitialAnimationPlayed
-    }
-}
+data class CatrobatFileContent(val commandModel: CommandManagerModel, val colorHistory: ArrayList<Int>?)

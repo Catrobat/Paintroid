@@ -29,3 +29,15 @@ interface OnColorPickedListener {
 interface OnImageViewPointClickedListener {
     fun colorChanged(color: Int)
 }
+
+interface OnColorHistoryUpdatedListener {
+    fun historyChanged(colorHistory: List<Int>)
+}
+
+interface OnColorFinallySelectedListener {
+    fun colorFinallySelected(color: Int)
+}
+
+interface OnColorInHistoryChangedListener {
+    fun colorInHistoryChanged(color: Int)
+}

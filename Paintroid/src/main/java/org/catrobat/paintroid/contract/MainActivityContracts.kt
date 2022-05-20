@@ -291,6 +291,8 @@ interface MainActivityContracts {
         fun loadScaledImage(uri: Uri?, @ActivityRequestCode requestCode: Int)
 
         fun setAntialiasingOnOkClicked()
+
+        fun setColorHistoryAfterLoadImage(colorHistory: List<Int>?)
     }
 
     interface Model {
@@ -300,6 +302,7 @@ interface MainActivityContracts {
         var isFullscreen: Boolean
         var isOpenedFromCatroid: Boolean
         var isOpenedFromFormulaEditorInCatroid: Boolean
+        var colorHistory: List<Int>
 
         fun wasInitialAnimationPlayed(): Boolean
 

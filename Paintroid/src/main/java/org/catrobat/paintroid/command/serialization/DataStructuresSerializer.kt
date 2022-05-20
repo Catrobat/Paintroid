@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -128,6 +128,31 @@ class DataStructuresSerializer {
         override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out Point>): Point {
             return with(input) {
                 Point(readInt(), readInt())
+            }
+        }
+    }
+
+    class IntegerArrayListSerializer(version: Int) : VersionSerializer<ArrayList<Int>>(version) {
+        override fun write(kryo: Kryo, output: Output, arrayList: ArrayList<Int>) {
+            with(output) {
+                writeInt(arrayList.size)
+                arrayList.forEach { intValue ->
+                    writeInt(intValue)
+                }
+            }
+        }
+
+        override fun read(kryo: Kryo, input: Input, type: Class<out ArrayList<Int>>): ArrayList<Int> =
+            super.handleVersions(this, kryo, input, type)
+
+        override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out ArrayList<Int>>): ArrayList<Int> {
+            return with(input) {
+                val size = readInt()
+                val intList = ArrayList<Int>()
+                repeat(size) {
+                    intList.add(readInt())
+                }
+                intList
             }
         }
     }

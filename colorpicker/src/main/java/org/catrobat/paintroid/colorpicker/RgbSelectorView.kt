@@ -50,6 +50,7 @@ class RgbSelectorView : LinearLayoutCompat {
     private var alphaRow: LinearLayoutCompat
     private var editTextHex: AppCompatEditText
     private var onColorChangedListener: OnColorChangedListener? = null
+    private var onColorFinallySelectedListener: OnColorFinallySelectedListener? = null
 
     var selectedColor: Int
         get() = Color.argb(
@@ -181,10 +182,20 @@ class RgbSelectorView : LinearLayoutCompat {
         onColorChangedListener = listener
     }
 
+    private fun onColorFinallySelected(color: Int) {
+        onColorFinallySelectedListener?.colorFinallySelected(color)
+    }
+
+    fun setOnColorFinallySelectedListener(listener: OnColorFinallySelectedListener?) {
+        onColorFinallySelectedListener = listener
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         val seekBarListener: OnSeekBarChangeListener = object : OnSeekBarChangeListener {
-            override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                onColorFinallySelected(selectedColor)
+            }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
 
@@ -233,6 +244,10 @@ class RgbSelectorView : LinearLayoutCompat {
 
     fun interface OnColorChangedListener {
         fun colorChanged(color: Int)
+    }
+
+    fun interface OnColorFinallySelectedListener {
+        fun colorFinallySelected(color: Int)
     }
 
     fun setAlphaRow(catroidFlag: Boolean, openedFromFormulaEditorInCatroidFlag: Boolean) {

@@ -75,6 +75,7 @@ class AlphaSlider(
     companion object {
         var alphaValue = MAX_ALPHA
         private lateinit var onColorChangedListener: OnColorChangedListener
+        private lateinit var onColorFinallySelectedListener: OnColorFinallySelectedListener
         private var selectedColor = 0
         private var currentColor = 0
     }
@@ -163,6 +164,7 @@ class AlphaSlider(
             MotionEvent.ACTION_UP -> {
                 startTouchPoint = null
                 update = moveTrackersIfNeeded(event)
+                onColorFinallyChanged()
             }
         }
         if (update) {
@@ -210,6 +212,14 @@ class AlphaSlider(
         fun colorChanged(color: Int)
     }
 
+    fun setOnColorFinallySelectedListener(listener: OnColorFinallySelectedListener) {
+        onColorFinallySelectedListener = listener
+    }
+
+    interface OnColorFinallySelectedListener {
+        fun colorFinallySelected(color: Int)
+    }
+
     fun getSelectedColor(): Int {
         val hsv = FloatArray(HSV_INITIALIZER)
         Color.colorToHSV(selectedColor, hsv)
@@ -220,6 +230,10 @@ class AlphaSlider(
 
     private fun onColorChanged() {
         onColorChangedListener?.colorChanged(getSelectedColor())
+    }
+
+    private fun onColorFinallyChanged() {
+        onColorFinallySelectedListener?.colorFinallySelected(getSelectedColor())
     }
 
     fun setSelectedColor(color: Int) {

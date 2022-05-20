@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -62,7 +62,8 @@ class LoadImage(
         val mimeType: String? = getMimeType(uri, resolver)
         return if (mimeType == "application/zip" || mimeType == "application/octet-stream") {
             try {
-                BitmapReturnValue(workspace.getCommandSerializationHelper().readFromFile(uri))
+                val fileContent = workspace.getCommandSerializationHelper().readFromFile(uri)
+                BitmapReturnValue(fileContent.commandModel, fileContent.colorHistory)
             } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
                 Log.e(TAG, "Image might be an ora file instead")
                 OpenRasterFileFormatConversion.importOraFile(
