@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -117,6 +117,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     @VisibleForTesting
     lateinit var toolOptionsViewController: ToolOptionsViewController
 
+    lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
+
     private lateinit var layerPresenter: LayerPresenter
     private lateinit var drawingSurface: DrawingSurface
     private lateinit var presenterMain: MainActivityContracts.Presenter
@@ -124,7 +126,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private lateinit var keyboardListener: KeyboardListener
     private lateinit var appFragment: PaintroidApplicationFragment
     private lateinit var defaultToolController: DefaultToolController
-    private lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
     private lateinit var commandFactory: CommandFactory
     private var deferredRequestPermissionsResult: Runnable? = null
     private lateinit var progressBar: ContentLoadingProgressBar

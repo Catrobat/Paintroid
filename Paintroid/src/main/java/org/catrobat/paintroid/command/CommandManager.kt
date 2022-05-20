@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,6 +43,16 @@ interface CommandManager {
     fun reset()
 
     fun shutdown()
+
+    fun undoIgnoringColorChanges()
+
+    fun undoIgnoringColorChangesAndAddCommand(command: Command)
+
+    fun undoInConnectedLinesMode()
+
+    fun redoInConnectedLinesMode()
+
+    fun getCommandManagerModelForCatrobatImage(): CommandManagerModel?
 
     interface CommandListener {
         fun commandPostExecute()

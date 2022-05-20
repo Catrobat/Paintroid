@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.command.implementation
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.Point
@@ -30,6 +31,7 @@ import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirecti
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.common.CommonFactory
+import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory
 import org.catrobat.paintroid.tools.helper.toPoint
@@ -167,4 +169,7 @@ class DefaultCommandFactory : CommandFactory {
         boxHeight: Float,
         boxRotation: Float
     ): Command = CutCommand(toPoint(toolPosition), boxWidth, boxHeight, boxRotation)
+
+    override fun createColorChangedCommand(toolReference: ToolReference, context: Context, color: Int): Command =
+        ColorChangedCommand(toolReference, context, color)
 }

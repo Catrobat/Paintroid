@@ -17,23 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.command.implementation
+package org.catrobat.paintroid.test.utils
 
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.PointF
-import org.catrobat.paintroid.command.Command
-import org.catrobat.paintroid.contract.LayerContracts
+import androidx.test.espresso.action.ViewActions
+import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction
 
-class PointCommand(var paint: Paint, point: PointF) : Command {
-
-    var point = point; private set
-
-    override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
-        canvas.drawPoint(point.x, point.y, paint)
-    }
-
-    override fun freeResources() {
-        // No resources to free
+class TestUtils private constructor() {
+    companion object {
+        @JvmStatic
+        fun selectColorInDialog(colorIdx: Int) {
+            ColorPickerViewInteraction.onColorPickerView()
+                .performOpenColorPicker()
+            ColorPickerViewInteraction.onColorPickerView()
+                .performClickColorPickerPresetSelectorButton(colorIdx)
+            ColorPickerViewInteraction.onColorPickerView()
+                .onPositiveButton()
+                .perform(ViewActions.click())
+        }
     }
 }

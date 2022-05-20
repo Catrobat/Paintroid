@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,9 +43,11 @@ import androidx.test.rule.ActivityTestRule;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipeAccurate;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.catrobat.paintroid.test.utils.TestUtils.selectColorInDialog;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
@@ -323,5 +325,45 @@ public class UndoRedoIntegrationTest {
 				.performClose();
 
 		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE);
+	}
+
+	@Test
+	public void testChangeColorUndoRedo() {
+		selectColorInDialog(0);
+		selectColorInDialog(1);
+		selectColorInDialog(2);
+
+		onTopBarView().performUndo();
+		onTopBarView().performUndo();
+		onTopBarView().performUndo();
+		onColorPickerView()
+				.performOpenColorPicker();
+		onColorPickerView().checkCurrentViewColor(Color.BLACK);
+		onColorPickerView()
+				.onNegativeButton()
+				.perform(click());
+		onTopBarView().performRedo();
+		onTopBarView().performRedo();
+		onTopBarView().performRedo();
+
+		onDrawingSurfaceView().perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.parseColor("#FF078707"), BitmapLocationProvider.HALFWAY_TOP_MIDDLE);
+
+		onTopBarView().performUndo();
+		onTopBarView().performUndo();
+		onTopBarView().performUndo();
+
+		onDrawingSurfaceView().perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE));
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.parseColor("#FF0074CD"), BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE);
+
+		onTopBarView().performUndo();
+		onTopBarView().performUndo();
+		onTopBarView().performRedo();
+
+		onDrawingSurfaceView().perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+
+		DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.parseColor("#FF0074CD"), BitmapLocationProvider.HALFWAY_TOP_MIDDLE);
 	}
 }

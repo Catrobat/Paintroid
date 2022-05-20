@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -174,7 +174,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
         Output(stream).use { output ->
             output.writeString(MAGIC_VALUE)
             output.writeInt(CURRENT_IMAGE_VERSION)
-            kryo.writeObject(output, commandManager.commandManagerModel)
+            kryo.writeObject(output, commandManager.getCommandManagerModelForCatrobatImage())
         }
     }
 

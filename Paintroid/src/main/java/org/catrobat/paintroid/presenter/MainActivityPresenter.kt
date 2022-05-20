@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2021 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
@@ -78,6 +79,7 @@ import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.ui.LayerAdapter
 import org.catrobat.paintroid.ui.Perspective
 import java.io.File
@@ -528,7 +530,13 @@ open class MainActivityPresenter(
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
-            commandManager.undo()
+            setBottomNavigationColor(Color.BLACK)
+            if (toolController.currentTool is LineTool) {
+                (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
+            } else {
+                toolController.currentTool?.changePaintColor(Color.BLACK)
+                commandManager.undo()
+            }
         }
     }
 
@@ -536,7 +544,11 @@ open class MainActivityPresenter(
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
-            commandManager.redo()
+            if (toolController.currentTool is LineTool) {
+                (toolController.currentTool as LineTool).redoLineTool()
+            } else {
+                commandManager.redo()
+            }
         }
     }
 

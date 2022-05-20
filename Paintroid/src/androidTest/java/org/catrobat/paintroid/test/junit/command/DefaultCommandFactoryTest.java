@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,12 +19,15 @@
 
 package org.catrobat.paintroid.test.junit.command;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.implementation.AddLayerCommand;
+import org.catrobat.paintroid.command.implementation.ColorChangedCommand;
 import org.catrobat.paintroid.command.implementation.CompositeCommand;
 import org.catrobat.paintroid.command.implementation.CropCommand;
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory;
@@ -36,8 +39,12 @@ import org.catrobat.paintroid.command.implementation.ReorderLayersCommand;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.command.implementation.RotateCommand;
 import org.catrobat.paintroid.command.implementation.SelectLayerCommand;
+import org.catrobat.paintroid.tools.ToolReference;
+import org.catrobat.paintroid.tools.implementation.DefaultToolReference;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection.FLIP_HORIZONTAL;
 import static org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection.ROTATE_LEFT;
@@ -48,6 +55,9 @@ import static org.junit.Assert.assertThat;
 public class DefaultCommandFactoryTest {
 
 	private DefaultCommandFactory commandFactory;
+
+	@Mock
+	private Context context;
 
 	@Before
 	public void setUp() {
@@ -130,5 +140,13 @@ public class DefaultCommandFactoryTest {
 	public void testCreateResizeCommand() {
 		Command command = commandFactory.createResizeCommand(10, 20);
 		assertThat(command, is(instanceOf(ResizeCommand.class)));
+	}
+
+	@Test
+	public void testCreateColorChangedCommand() {
+		ToolReference toolReference = new DefaultToolReference();
+		MockitoAnnotations.initMocks(this);
+		Command command = commandFactory.createColorChangedCommand(toolReference, context, Color.WHITE);
+		assertThat(command, is(instanceOf(ColorChangedCommand.class)));
 	}
 }

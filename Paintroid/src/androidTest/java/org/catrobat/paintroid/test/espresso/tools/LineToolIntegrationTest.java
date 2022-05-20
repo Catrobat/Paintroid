@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,6 +44,7 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceI
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.catrobat.paintroid.test.utils.TestUtils.selectColorInDialog;
 import static org.hamcrest.Matchers.allOf;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -482,6 +483,115 @@ public class LineToolIntegrationTest {
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_LEFT);
+
+		onTopBarView().performClickCheckmark();
+	}
+
+	@Test
+	public void testColorChangesInConnectedLineMode() {
+		onToolProperties().setColor(Color.BLACK);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE));
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+
+		onTopBarView().performClickPlus();
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT));
+
+		selectColorInDialog(0);
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.parseColor("#FF0074CD"), BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT);
+
+		selectColorInDialog(1);
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.parseColor("#FF00B4F1"), BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT);
+
+		onTopBarView().performUndo();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.parseColor("#FF0074CD"), BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT);
+
+		onTopBarView().performRedo();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.parseColor("#FF00B4F1"), BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT);
+
+		onTopBarView().performUndo();
+		onTopBarView().performUndo();
+		onTopBarView().performUndo();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT);
+
+		onTopBarView().performUndo();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
+
+		onTopBarView().performRedo();
+		onTopBarView().performRedo();
+		onTopBarView().performRedo();
+		onTopBarView().performRedo();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.parseColor("#FF0074CD"), BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT);
+
+		onTopBarView().performClickCheckmark();
+	}
+
+	@Test
+	public void testColorChangesAndQuittingConnectedLineMode() {
+		onToolProperties().setColor(Color.BLACK);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE));
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE));
+
+		onTopBarView().performClickPlus();
+
+		onDrawingSurfaceView()
+				.perform(swipe(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT));
+
+		selectColorInDialog(0);
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.parseColor("#FF0074CD"), BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT);
+
+		selectColorInDialog(1);
+
+		selectColorInDialog(2);
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.parseColor("#FF078707"), BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT);
+
+		onTopBarView().performUndo();
+		onTopBarView().performUndo();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.parseColor("#FF00B4F1"), BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.parseColor("#FF0074CD"), BitmapLocationProvider.HALFWAY_BOTTOM_LEFT);
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE);
+
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.parseColor("#FF0074CD"), BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE);
 
 		onTopBarView().performClickCheckmark();
 	}
