@@ -87,7 +87,10 @@ pipeline {
 
         stage('Upload AKP to Alpha') {
             when {
-                environment name: 'APPROVE_UPLOAD_APK', value: 'yes'
+                allOf {
+                    environment name: 'APPROVE_UPLOAD_APK', value: 'yes'
+                    environment name: 'GOOGLE_PLAYSTORE_RELEASE', value: 'yes'
+                }
             }
             steps {
                 script {
@@ -98,7 +101,10 @@ pipeline {
 
         stage('Upload AKP to AppGallery') {
             when {
-                environment name: 'APPROVE_UPLOAD_APK', value: 'yes'
+                allOf {
+                    environment name: 'APPROVE_UPLOAD_APK', value: 'yes'
+                    environment name: 'GOOGLE_PLAYSTORE_RELEASE', value: 'no'
+                }
             }
             steps {
                 script {
