@@ -1474,4 +1474,11 @@ public class MainActivityPresenterTest {
 		assertTrue(presenter.isFinishing());
 		assertFalse(presenter.isFinishing());
 	}
+
+	@Test
+	public void testShowScaleDialogWhenNotEnoughMemory() {
+		BitmapReturnValue bmr = new BitmapReturnValue(workspace.getBitmapLisOfAllLayers(), workspace.getBitmapOfAllLayers(), true);
+		presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, null, bmr);
+		verify(navigator).showScaleImageRequestDialog(null, LOAD_IMAGE_IMPORT_PNG);
+	}
 }

@@ -40,6 +40,7 @@ import androidx.test.annotation.UiThreadTest;
 import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.DEFAULT_BOX_RESIZE_MARGIN;
 import static org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShapeKt.MAXIMUM_BORDER_RATIO;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -116,5 +117,22 @@ public class ImportToolTest {
 
 		assertEquals(width, tool.boxWidth, Float.MIN_VALUE);
 		assertEquals(height, tool.boxHeight, Float.MIN_VALUE);
+	}
+
+	@Test
+	public void testImportGetsDownscaledWhenNotEnoughMemory() {
+		drawingSurfaceWidth = 1080;
+		drawingSurfaceHeight = 1920;
+		when(workspace.getHeight()).thenReturn(1920);
+		when(workspace.getWidth()).thenReturn(1080);
+
+		final int width = drawingSurfaceWidth * 8;
+		final int height = drawingSurfaceHeight * 8;
+
+		Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		tool.setBitmapFromSource(bitmap);
+
+		assertTrue(tool.boxHeight < height);
+		assertTrue(tool.boxWidth < width);
 	}
 }
