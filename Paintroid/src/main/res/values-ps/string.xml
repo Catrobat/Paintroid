@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">جیب رنګ</string>
     <string name="button_brush">برش</string>
     <string name="button_cursor">کرسر </string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">پایپټ</string>
     <string name="button_undo">له سره</string>
     <string name="button_redo">بیا تکرار</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">لاس</string>
     <string name="button_watercolor">د اوبو رنګ</string>
     <string name="button_spray_can">سپری کولی شی</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">تطبیق کړئ</string>
     <string name="button_checkmark">چک مارک</string>
     <string name="button_plus">د کرښې برخه وصل کړئ</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">رنګ غوره کړئ یا تنظیم کړئ.</string>
     <string name="help_content_hand">د کینوس حرکت کولو لپاره خپله ګوته حرکت وکړئ.</string>
     <string name="help_content_spray_can">خپله ګوته په عکس کې حرکت وکړئ ترڅو د سپری کین ب .ه جوړه کړئ.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">بیرته پروژې ته</string>
     <string name="closing_security_question_title">پریږده</string>
     <string name="closing_security_question">بدلونونه خوندي کړئ؟</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">ډک کړئ</string>
     <string name="shape_tool_dialog_outline_title">خاکه</string>
     <string name="fill_tool_dialog_color_tolerance_title">د رنګ زغم</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">کیڼ لور ته وګرځوئ</string>
     <string name="transform_tool_rotate_right">ښي خوا ته وګرځئ</string>
     <string name="transform_tool_flip_vertical">عمودی فلپ کول</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">عرض</string>
     <string name="transform_height_text">لوړوالی</string>
     <string name="transform_auto_crop_text">اتومات</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">px</string>
     <string name="stamp_tool_copy_hint">د مینځپانګې کاپي کولو لپاره اوږد فشار ورکړئ</string>
     <string name="layers_title">پرتونه</string>
@@ -154,6 +160,7 @@
     <string name="pocketpaint_catrobat_message_dialog">د پاکټ پینټ اصلي انځور بڼه. دا بڼه کمانډونه او پرتونه یادوي.</string>
     <string name="permission_info_external_storage_text">دا ایپ په سمه توګه کار کولو لپاره غوښتل شوي اجازې ته اړتیا لري. ځایی حافظې ته د عکسونو خوندي کولو لپاره ، ایپ دې ته د لوستلو او لیکلو لاسرسي ته اړتیا لري.</string>
     <string name="permission_info_permanent_denial_text">دا ایپ په سمه توګه کار کولو لپاره غوښتل شوي اجازې ته اړتیا لري. ځایی حافظې ته د عکسونو خوندي کولو لپاره ، ایپ دې ته د لوستلو او لیکلو لاسرسي ته اړتیا لري.         لکه څنګه چې تاسو د بیا نه پوښتنه کولو سره اجازه رد کړې ، مهرباني وکړئ د خپل تلیفون تنظیماتو ته لاړشئ او اړین اجازې ورکړئ که تاسو غواړئ اړوند افعال وکاروئ.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
     <string name="cursor_draw_inactive">موقعیت ته پین کړئ، بیا د انځور کولو پیل کولو لپاره ټایپ کړئ.</string>
     <string name="cursor_draw_active">د انځور کولو لپاره پین کړئ، بیا د انځور کولو بندولو لپاره بیا ټایپ کړئ.</string>

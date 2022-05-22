@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">பாக்கெட் பெயிண்ட்</string>
     <string name="button_brush">தூரிகை</string>
     <string name="button_cursor">கர்சர்</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">குழாயி</string>
     <string name="button_undo">செயல்தவிர்</string>
     <string name="button_redo">மீண்டும்செய்</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">கை</string>
     <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">தெளிப்பு முடியும்</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">அமல்படுத்து</string>
     <string name="button_checkmark">செக்மார்க்</string>
     <string name="button_plus">Connect Line Segment</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">ஒரு வண்ணத்தைத் தேர்ந்தெடுக்கவும் அல்லது சரிசெய்யவும்</string>
     <string name="help_content_hand">கேன்வாஸை நகர்த்த உங்கள் விரலை நகர்த்தவும்.</string>
     <string name="help_content_spray_can">ஒரு ஸ்ப்ரே கேன் வடிவத்தை உருவாக்க உங்கள் விரலை படத்தில் நகர்த்தவும்.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">திட்டத்திற்குத் திரும்பு</string>
     <string name="closing_security_question_title">நிறுத்து</string>
     <string name="closing_security_question">மாற்றங்களை சேமிக்க வேண்டுமா?</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">நிரப்பு</string>
     <string name="shape_tool_dialog_outline_title">வெளிக்கோடு</string>
     <string name="fill_tool_dialog_color_tolerance_title">வண்ண சகிப்புத்தன்மை</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">இடதுபுறம் சுழற்று</string>
     <string name="transform_tool_rotate_right">வலதுபுறம் சுழற்று</string>
     <string name="transform_tool_flip_vertical">செங்குத்தாக புரட்டு.</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">அகலம்</string>
     <string name="transform_height_text">உயரம்</string>
     <string name="transform_auto_crop_text">ஆட்டோ</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">px</string>
     <string name="stamp_tool_copy_hint">உள்ளடக்கத்தை நகலெடுக்க நீண்ட நேரம் அழுத்தவும்</string>
     <string name="layers_title">அடுக்குகள்</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">இந்த செயலி சரியாக செயல்பட கோரப்பட்ட அனுமதி தேவை. உள்ளூர் நினைவகத்தில் படங்களைச் சேமிக்க, பயன்பாட்டைப் படிக்க மற்றும் எழுத அணுகல் தேவை.</string>
     <string name="permission_info_permanent_denial_text">இந்த செயலி சரியாக செயல்பட கோரப்பட்ட அனுமதி தேவை. உள்ளூர் நினைவகத்தில் படங்களைச் சேமிக்க, பயன்பாட்டைப் படிக்க மற்றும் எழுத அணுகல் தேவை.
         நீங்கள் அனுமதி மறுத்ததால், மீண்டும் கேட்க வேண்டாம், தயவுசெய்து உங்கள் தொலைபேசி அமைப்புகளுக்குச் சென்று, தொடர்புடைய செயல்பாடுகளைப் பயன்படுத்த விரும்பினால் தேவையான அனுமதிகளை வழங்கவும்.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">விளிம்புகளை அவற்றின் புதிய நிலைக்கு இழுத்து, பின்னர் படப் பகுதியை பெரிதாக்க அல்லது செதுக்க தட்டவும்.</string>
     <string name="cursor_draw_inactive">நிலைக்கு பான், பின்னர் ஓவியம் தொடங்க தட்டவும்.</string>
     <string name="cursor_draw_active">வரைய பான், பின்னர் ஓவியத்தை நிறுத்த மீண்டும் தட்டவும்.</string>

@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Пензель</string>
     <string name="button_cursor">Курсор</string>
+    <string name="button_set_center">Встановити центр</string>
     <string name="button_pipette">Піпетка</string>
     <string name="button_undo">Скасувати</string>
     <string name="button_redo">Повторити</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">Рух</string>
     <string name="button_watercolor">Акварель</string>
     <string name="button_spray_can">Балончик</string>
+    <string name="button_smudge">Палець</string>
     <string name="button_apply">Застосувати</string>
     <string name="button_checkmark">Пташка</string>
     <string name="button_plus">Продовжити лінію</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">Оберіть чи змініть колір.</string>
     <string name="help_content_hand">Рухайте полотно пальцем.</string>
     <string name="help_content_spray_can">Малюйте пальцем, ніби аерозольним балончиком.</string>
+    <string name="help_content_smudge">Перемістіть палець на зображення на різних малюнках, щоб розмити їх.</string>
     <string name="closing_catroid_security_question_title">Назад до проєкту</string>
     <string name="closing_security_question_title">Вихід</string>
     <string name="closing_security_question">Зберегти зміни?</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">Заливка</string>
     <string name="shape_tool_dialog_outline_title">Контур</string>
     <string name="fill_tool_dialog_color_tolerance_title">Чутливість до кольору</string>
+    <string name="smudge_tool_dialog_pressure_title">Тиск</string>
+    <string name="smudge_tool_dialog_drag_title">Перетягнути</string>
     <string name="transform_tool_rotate_left">обернути ліворуч</string>
     <string name="transform_tool_rotate_right">обернути праворуч</string>
     <string name="transform_tool_flip_vertical">віддзеркалити вертикально</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">Шир.</string>
     <string name="transform_height_text">Вис.</string>
     <string name="transform_auto_crop_text">Авто</string>
+    <string name="transform_set_center_text">Встановити центр</string>
     <string name="pixel">п.</string>
     <string name="stamp_tool_copy_hint">Створіть дубль кнопкою «Копіювати»</string>
     <string name="layers_title">Шари</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">Застосунку бракує дозволу для коректної роботи. Щоб зберігати зображення в локальній пам\'яті, дозвольте застосунку читання й запис.</string>
     <string name="permission_info_permanent_denial_text">Застосунку бракує дозволу для коректної роботи. Щоб зберігати зображення в локальній пам\'яті, дозвольте застосунку читання й запис.
         Ви заборонили доступ назовсім. Будь ласка, надайте необхідні дозволи в налаштуваннях телефону, якщо бажаєте використовувати ці функції.</string>
+    <string name="set_center_info_text">Торкніться екрану, щоб визначити нові позиції в центрі.</string>
     <string name="transform_info_text">Змістіть краї й застосуйте розтягнення чи зріз полотна пташкою.</string>
     <string name="cursor_draw_inactive">Прицільтесь і торкніть, щоб почати лінію.</string>
     <string name="cursor_draw_active">Посуньте курсор і торкніть іще раз, щоб зупинити лінію.</string>

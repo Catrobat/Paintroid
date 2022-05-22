@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">رنگ جیب Pocket Paint</string>
     <string name="button_brush">برس</string>
     <string name="button_cursor">مکان نما</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">پاپت</string>
     <string name="button_undo">خنثی کردن</string>
     <string name="button_redo">باز کرد</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">دست</string>
     <string name="button_watercolor">آبرنگ</string>
     <string name="button_spray_can">قوطی اسپری</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">بکار ببر</string>
     <string name="button_checkmark">سوال سحی </string>
     <string name="button_plus">اتصال بخش خط</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">رنگ را انتخاب یا تنظیم کنید.</string>
     <string name="help_content_hand">انگشت خود را حرکت دهید تا بوم را حرکت دهید.</string>
     <string name="help_content_spray_can">انگشت خود را بر روی تصویر حرکت دهید تا یک الگوی اسپری ایجاد شود.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">بازگشت به پروژه</string>
     <string name="closing_security_question_title">ترک کن</string>
     <string name="closing_security_question">ذخیره تغییرات؟</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">پر کن</string>
     <string name="shape_tool_dialog_outline_title">رئوس مطالب</string>
     <string name="fill_tool_dialog_color_tolerance_title">تحمل رنگ</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">چرخش چپ</string>
     <string name="transform_tool_rotate_right">چرخش راست</string>
     <string name="transform_tool_flip_vertical">تلنگر عمودی</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">عرض</string>
     <string name="transform_height_text">ارتفاع</string>
     <string name="transform_auto_crop_text">خودکار</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">پیکسل</string>
     <string name="stamp_tool_copy_hint">مطبوعات طولانی برای کپی محتوا</string>
     <string name="layers_title">لایه های</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">این برنامه نیاز به اجازه درخواست شده برای عملکرد به درستی دارد. به منظور ذخیره تصاویر به حافظه محلی، برنامه نیاز به خواندن و نوشتن دسترسی به آن دارد.</string>
     <string name="permission_info_permanent_denial_text">این برنامه نیاز به اجازه درخواست شده برای عملکرد به درستی دارد. به منظور ذخیره تصاویر به حافظه محلی، برنامه نیاز به خواندن و نوشتن دسترسی به آن دارد.
         همانطور که مجوز را رد کردید، دوباره درخواست نکنید، لطفا به تنظیمات تلفن خود بروید و اگر بخواهید از توابع مرتبط استفاده کنید، مجوزهای مورد نیاز را دریافت کنید.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
     <string name="cursor_draw_inactive">پان به موقعیت، سپس برای شروع نقاشی ضربه بزنید.</string>
     <string name="cursor_draw_active">پان به قرعه کشی، سپس برای متوقف کردن نقاشی ضربه بزنید.</string>

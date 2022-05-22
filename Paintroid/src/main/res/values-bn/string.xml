@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">পকেট পেইন্ট</string>
     <string name="button_brush">তুলি</string>
     <string name="button_cursor">কার্সার</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">পিপেট</string>
     <string name="button_undo">পূর্বাবস্থায় ফিরুন</string>
     <string name="button_redo">পুনরায় করুন</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">হাত</string>
     <string name="button_watercolor">জলরং</string>
     <string name="button_spray_can">স্প্রে করতে পারেন</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">প্রয়োগ করুন</string>
     <string name="button_checkmark">চেক চিহ্ন</string>
     <string name="button_plus">লাইন সংযোগ রেখাংশ</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">রঙ নির্বাচন বা সমন্বয় করুন</string>
     <string name="help_content_hand">ক্যানভাসটি সরানোর জন্য আপনার আঙুলটি সরান।</string>
     <string name="help_content_spray_can">স্প্রে ক্যান প্যাটার্ন তৈরি করতে ইমেজটিতে আপনার আঙুলটি সরান।</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">প্রজেক্টে ফিরে যান</string>
     <string name="closing_security_question_title">বের হোন</string>
     <string name="closing_security_question">পরিবর্তনগুলোর সংরক্ষন?</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">পূরণ করুন</string>
     <string name="shape_tool_dialog_outline_title">রূপরেখা</string>
     <string name="fill_tool_dialog_color_tolerance_title">রঙ সহনশীলতা</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">বামে ঘুরান</string>
     <string name="transform_tool_rotate_right">ডানে ঘুরান</string>
     <string name="transform_tool_flip_vertical">উল্লম্ব উল্টানো</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">প্রস্থ</string>
     <string name="transform_height_text">উচ্চতা</string>
     <string name="transform_auto_crop_text">অটো</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">পিক্সেল</string>
     <string name="stamp_tool_copy_hint">বিষয়বস্তু অনুলিপি করতে দীর্ঘ চাপুন</string>
     <string name="layers_title">স্তর</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">এই অ্যাপ্লিকেশনটির সঠিকভাবে কাজ করার জন্য অনুরোধ করা অনুমতি দরকার। স্থানীয় মেমোরিতে চিত্রগুলি সংরক্ষণ করার জন্য, অ্যাপ্লিকেশনটির এতে পড়ার এবং লেখার অ্যাক্সেসের প্রয়োজন।</string>
     <string name="permission_info_permanent_denial_text">এই অ্যাপ্লিকেশনটির সঠিকভাবে কাজ করার জন্য অনুরোধ করা অনুমতি দরকার। স্থানীয় মেমোরিতে চিত্রগুলি সংরক্ষণ করার জন্য, অ্যাপ্লিকেশনটির এতে পড়ার এবং লেখার অ্যাক্সেসের প্রয়োজন।
         আপনি আবারও জিজ্ঞাসা করবেন না এমন অনুমতি যেমন অস্বীকার করেছেন, দয়া করে আপনার ফোন সেটিংসে যান এবং যদি আপনি সম্পর্কিত ফাংশনগুলি ব্যবহার করতে চান তবে প্রয়োজনীয় অনুমতিগুলি দিন।</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">প্রান্তগুলি তাদের নতুন অবস্থানে টেনে আনুন, তারপরে চিত্রের ক্ষেত্রটি প্রসারিত করতে বা কাটতে আলতো চাপুন।</string>
     <string name="cursor_draw_inactive">অবস্থানে প্যান করুন, তারপরে পেইন্টিং শুরু করতে আলতো চাপুন।</string>
     <string name="cursor_draw_active">আঁকতে প্যান করুন, তারপরে পেইন্টিং বন্ধ করতে আবার আলতো চাপুন।</string>

@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">포켓 페인트</string>
     <string name="button_brush">붓</string>
     <string name="button_cursor">커서</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">색 고르기</string>
     <string name="button_undo">취소</string>
     <string name="button_redo">다시 실행</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">손</string>
     <string name="button_watercolor">수채화</string>
     <string name="button_spray_can">스프레이 캔</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">사용하기</string>
     <string name="button_checkmark">체크 표시</string>
     <string name="button_plus">라인 세그먼트 연결</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">선택 하거나 색상 조정</string>
     <string name="help_content_hand">캔버스를 이동하려면 터치하세요.</string>
     <string name="help_content_spray_can">이미지에서 손가락을 움직여 스프레이 캔 패턴을 만듭니다.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">프로젝트로 돌아가기</string>
     <string name="closing_security_question_title">종료</string>
     <string name="closing_security_question">변경사항을 저장하시겠습니까?</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">채우기</string>
     <string name="shape_tool_dialog_outline_title">테두리</string>
     <string name="fill_tool_dialog_color_tolerance_title">색상 허용 오차</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">왼쪽으로 돌리기</string>
     <string name="transform_tool_rotate_right">오른쪽으로 돌리기</string>
     <string name="transform_tool_flip_vertical">수직 뒤집기</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">폭</string>
     <string name="transform_height_text">높이</string>
     <string name="transform_auto_crop_text">자동</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">픽셀</string>
     <string name="stamp_tool_copy_hint">복사하려면 길게 터치</string>
     <string name="layers_title">레이어</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">이 앱이 제대로 작동하려면 요청된 권한이 필요합니다. 이미지를 로컬 메모리에 저장하려면 앱에 읽기 및 쓰기 권한이 필요합니다.</string>
     <string name="permission_info_permanent_denial_text">이 앱이 제대로 작동하려면 요청된 권한이 필요합니다. 이미지를 로컬 메모리에 저장하려면 앱에 읽기 및 쓰기 권한이 필요합니다.
         다시 묻지 않음으로 권한을 거부 했으므로 관련 기능을 사용하려면 휴대폰 설정으로 이동하여 필요한 권한을 부여하십시오.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">새로운 위치로 가장자리를 끌고, 확대하거나 자르려면 탭하세요.</string>
     <string name="cursor_draw_inactive">위치를 끌어 정하고, 시작하려면 터치하세요.</string>
     <string name="cursor_draw_active">그리려면 끌고, 그리기를 중지하려면 다시 탭하세요.</string>

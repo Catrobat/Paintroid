@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">بوكت بينت</string>
     <string name="button_brush">فرشاة</string>
     <string name="button_cursor">مؤشر</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">التقاط اللون</string>
     <string name="button_undo">التراجع عن</string>
     <string name="button_redo">الإعادة</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">اليد</string>
     <string name="button_watercolor">اللون المائي</string>
     <string name="button_spray_can">يمكن الرش</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">تطبيق</string>
     <string name="button_checkmark">علامة الاختيار</string>
     <string name="button_plus">توصيل شريحة الخط</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">تحديد أو ضبط اللون</string>
     <string name="help_content_hand">حرك إصبعك لتحريك الكانفاس.</string>
     <string name="help_content_spray_can">حرك إصبعك على الصورة لإنشاء رذاذ يمكن أن ينمط.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">الرجوع إلى البرنامج</string>
     <string name="closing_security_question_title">إنهاء/خروج</string>
     <string name="closing_security_question">حفظ التغييرات؟</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">تعبئة</string>
     <string name="shape_tool_dialog_outline_title">خط محيطي</string>
     <string name="fill_tool_dialog_color_tolerance_title">تفاوت اللون</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">تدوير لليسار</string>
     <string name="transform_tool_rotate_right">تدوير لليمين</string>
     <string name="transform_tool_flip_vertical">قلب عمودي</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">العرض</string>
     <string name="transform_height_text">الارتفاع</string>
     <string name="transform_auto_crop_text">تلقائي</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">بكسل</string>
     <string name="stamp_tool_copy_hint">اضغط مطولاً لنسخ المحتوى</string>
     <string name="layers_title">الطبقات</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">هذا التطبيق يحتاج إلى الإذن المطلوب ليعمل بشكل صحيح. من أجل حفظ الصور في الذاكرة المحلية، يحتاج التطبيق إلى الوصول إلى القراءة والكتابة.</string>
     <string name="permission_info_permanent_denial_text">هذا التطبيق يحتاج إلى الإذن المطلوب ليعمل بشكل صحيح. من أجل حفظ الصور في الذاكرة المحلية، يحتاج التطبيق إلى الوصول إلى القراءة والكتابة.
         كما رفضت الإذن مع لا تطلب مرة أخرى، الرجاء الذهاب إلى إعدادات الهاتف الخاص بك ومنح الأذونات المطلوبة إذا كنت ترغب في استخدام الوظائف المرتبطة بها.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">اسحب الحواف إلى المركز الجديد، ثم اضغط للتكبير أو اقتصاص صورة المنطقة.</string>
     <string name="cursor_draw_inactive">حرك ببطئ لتحديد الموضع, ثم انقر لبدء التلوين.</string>
     <string name="cursor_draw_active">حرك ببطئ للرسم, ثم انقر مجدداً لإيقاف التلوين.</string>
