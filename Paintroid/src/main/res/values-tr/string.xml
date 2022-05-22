@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2021 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="pocketpaint_app_name">Cep Boyası</string>
+    <string name="button_brush">Fırça</string>
+    <string name="button_cursor">İmleç</string>
+    <string name="button_set_center">Merkezi Ayarla</string>
+    <string name="button_pipette">Renk Seçici</string>
+    <string name="button_undo">Geri Al</string>
+    <string name="button_redo">Yinele</string>
+    <string name="button_info">Bilgi</string>
+    <string name="button_stamp">Kopyalama Aracı</string>
+    <string name="button_import_image">Resim Ekle</string>
+    <string name="button_eraser">Silgi</string>
+    <string name="button_transform">Dönüştür</string>
+    <string name="button_fill">Doldur</string>
+    <string name="button_line">Çizgi</string>
+    <string name="button_text">Metin</string>
+    <string name="button_shape">Şekiller</string>
+    <string name="button_hand">El</string>
+    <string name="button_watercolor">Suluboya</string>
+    <string name="button_spray_can">Sprey Kutusu</string>
+    <string name="button_smudge">Leke</string>
+    <string name="button_apply">Uygula</string>
+    <string name="button_checkmark">Onay İşareti</string>
+    <string name="button_plus">Hat Segmentini Bağla</string>
+    <string name="done">Tamam</string>
+    <string name="gallery">Galeri</string>
+    <string name="load_sticker_error">Çıkartma yüklenemedi</string>
+    <string name="error_unknown_error">Bilinmeyen bir hata oluştu.</string>
+    <string name="cap_circle">Daire</string>
+    <string name="cap_square">Kare</string>
+    <string name="stamptool_paste">Yapıştır</string>
+    <string name="stamptool_copy">Kopyala</string>
+    <string name="stamptool_cut">Kes</string>
+    <string name="stickers">Çıkartmalar</string>
+    <string name="dialog_tools_title">Araçlar</string>
+    <string name="dialog_error_save_title">Dosya yüklenirken/kaydedilirken hata</string>
+    <string name="dialog_error_sdcard_text">Resmi veya SD kartı kontrol et!</string>
+    <string name="dialog_brush_width_text">Fırça Genişliği</string>
+    <string name="dialog_warning_new_image">Değişiklikler Kaydedilsin mi?</string>
+    <string name="help_title">Yardım</string>
+    <string name="help_content_eraser">Resmin parçalarını silgiyle siliyormuş gibi çıkart.</string>
+    <string name="help_content_brush">Renk veya fırça boyutunu değiştirmek için alt araç çubuğundaki sembollere dokun.</string>
+    <string name="help_content_watercolor">Suluboya efektli fırça aracına benzer. Bununla birlikte, renk menüsündeki kaydırıcı ile fırçanın gücünü de değiştirebilirsiniz.</string>
+    <string name="help_content_eyedropper">Renk seçmek için resme dokun.</string>
+    <string name="help_content_undo">Önceki eylemi geri almak için dokun.</string>
+    <string name="help_content_redo">Geri alınan eylemi yinelemek için dokun.</string>
+    <string name="help_content_fill">Bir alanı seçili renkle doldurmak için resme dokun.</string>
+    <string name="help_content_cursor">İmleci çizmek istediğiniz yere konumlandırın. İmleci etkinleştirmek için dokunun. Çizmek için parmağınızı hareket ettirin. Devre dışı bırakmak için tekrar dokunun.</string>
+    <string name="help_content_transform">Resmi dönüştürmek için kullan.</string>
+    <string name="help_content_stamp">Damgalamak istediğiniz alanı kapsayacak şekilde dikdörtgeni taşıyın ve yeniden boyutlandırın. Alanı seçmek için uzun basın. Taşıyın, ardından damgalamak için onay işaretine dokunun.</string>
+    <string name="help_content_import_png">Galerideki bir resmi damga aracına aktarın.</string>
+    <string name="help_content_line">Düz bir çizgi çiz.</string>
+    <string name="help_content_text">Metin yazın ve biçimlendirin. Daha sonra metin kutusunu yeniden boyutlandırın. Metni görüntüye eklemek için onay işaretine dokunun.</string>
+    <string name="help_content_shape">Bir şekil seçin ve seçilen şekli eklemek için onay işaretine dokunun.</string>
+    <string name="help_content_layer">Yeni katmanlar oluşturun veya mevcut katmanları değiştirin.</string>
+    <string name="help_content_color_chooser">Seçim yap veya bir renk ayarla</string>
+    <string name="help_content_hand">Tuvali hareket ettirmek için parmağınızı hareket ettirin.</string>
+    <string name="help_content_spray_can">Bir sprey kutusu deseni oluşturmak için parmağınızı resmin üzerinde hareket ettirin.</string>
+    <string name="help_content_smudge">Resimleri lekelemek için parmağınızı resmin üzerinde hareket ettirin.</string>
+    <string name="closing_catroid_security_question_title">Projeye geri dön</string>
+    <string name="closing_security_question_title">Çık</string>
+    <string name="closing_security_question">Değişiklikleri kaydet?</string>
+    <string name="menu_new_image">Yeni resim</string>
+    <string name="menu_discard_image">Resmi sil</string>
+    <string name="no_longclick_on_hidden_layer">Yalnızca tüm katmanlar görünür durumdaysa birleştirebilir veya yeniden sıralayabilirsiniz</string>
+    <string name="no_tools_on_hidden_layer">Gizli katmanda hiçbir araç etkin değil</string>
+    <string name="menu_load_image">Resim yükle</string>
+    <string name="menu_save_image">Resmi kaydet</string>
+    <string name="menu_save_copy">Kopyasını kaydet</string>
+    <string name="menu_hide_menu">Tam ekran</string>
+    <string name="share_image_menu">Resmi paylaş</string>
+    <string name="share_image_via_text">Resmi şununla gönder</string>
+    <string name="menu_rate_us">Bizi değerlendirin!</string>
+    <string name="menu_export">Dışa aktar</string>
+    <string name="menu_feedback">Geri bildirim</string>
+    <string name="menu_advanced">Gelişmiş Ayarlar</string>
+    <string name="saved_to">Görüntü şuraya kaydedildi\n</string>
+    <string name="saved">Resim kaydedildi</string>
+    <string name="copy_to">Kopyası şuraya kaydedildi\n</string>
+    <string name="copy">Kopyası kaydedildi</string>
+    <string name="menu_quit">Çık</string>
+    <string name="save_button_text">Kaydet</string>
+    <string name="discard_button_text">Vazgeç</string>
+    <string name="cancel_button_text">İptal et</string>
+    <string name="overwrite_button_text">Üzerine Yaz</string>
+    <string name="resize_nothing_to_resize">yeniden boyutlandırılacak bir şey yok</string>
+    <string name="resize_cannot_resize_to_this_size">bu boyuta yeniden boyutlandırılamaz</string>
+    <string name="resize_max_image_resolution_reached">maksimum görüntü çözünürlüğüne ulaşıldı</string>
+    <string name="text_tool_dialog_input_title">Metniniz:</string>
+    <string name="text_tool_dialog_format_options">Format seçenekleri:</string>
+    <string name="text_tool_dialog_underline_shortcut">U</string>
+    <string name="text_tool_dialog_italic_shortcut">I</string>
+    <string name="text_tool_dialog_bold_shortcut">B</string>
+    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
+    <string name="text_tool_dialog_input_hint">Yazmak için buraya dokunun</string>
+    <string name="text_tool_dialog_font_monospace">Monospace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">Dubai</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
+    <string name="shape_tool_dialog_rect_title">Dikdörtgen</string>
+    <string name="shape_tool_dialog_ellipse_title">Elips</string>
+    <string name="shape_tool_dialog_star_title">Yıldız</string>
+    <string name="shape_tool_dialog_heart_title">Kalp</string>
+    <string name="shape_tool_dialog_fill_title">Doldur</string>
+    <string name="shape_tool_dialog_outline_title">taslak</string>
+    <string name="fill_tool_dialog_color_tolerance_title">Renk toleransı</string>
+    <string name="smudge_tool_dialog_pressure_title">Baskı yapma</string>
+    <string name="smudge_tool_dialog_drag_title">Sürükle</string>
+    <string name="transform_tool_rotate_left">sola dön</string>
+    <string name="transform_tool_rotate_right">sağa dön</string>
+    <string name="transform_tool_flip_vertical">dikey Çevir</string>
+    <string name="transform_tool_flip_horizontal">yatay Çevir</string>
+    <string name="transform_tool_resize_text">boyutlandırma</string>
+    <string name="transform_tool_auto_crop_text">ekin/büyüt</string>
+    <string name="transform_width_text">Genişlik</string>
+    <string name="transform_height_text">Yükseklik</string>
+    <string name="transform_auto_crop_text">Otomatik</string>
+    <string name="transform_set_center_text">Merkeze ayarla</string>
+    <string name="pixel">px</string>
+    <string name="stamp_tool_copy_hint">İçeriği kopyalamak için uzun basın</string>
+    <string name="layers_title">Katmanlar</string>
+    <string name="layer_new">Yeni Katman</string>
+    <string name="layer_delete">Katmanı Sil</string>
+    <string name="layer_too_many_layers">Çok fazla katman</string>
+    <string name="layer_merged">Birleştirilmiş Katmanlar</string>
+    <string name="layer_background">Katman arka planı</string>
+    <string name="dialog_shape_text">Şekil</string>
+    <string name="dialog_loading_image_failed_title">Resim yüklenirken hata oluştu</string>
+    <string name="dialog_loading_image_failed_text">Geçerli bir resim değil</string>
+    <string name="dialog_settings">Ayarlar</string>
+    <string name="dialog_save_image_name">Resim adı</string>
+    <string name="dialog_save_image_format">Resim formatı</string>
+    <string name="dialog_antialiasing">Kenar yumuşatma</string>
+    <string name="dialog_smoothing">yumuşatma</string>
+    <string name="dialog_save_jpg_option_quality">Kalite:</string>
+    <string name="pocketpaint_jpg_message_dialog"><b> Minimum depolama alanı kullanır </b>. <b> Şeffaflığı</b> hatırlamaz.</string>
+    <string name="pocketpaint_png_message_dialog">Kayıpsız sıkıştırma. Şeffaflık korunur.</string>
+    <string name="pocketpaint_ora_message_dialog">Bu dosya biçimi <b>katmanları </b>hatırlar. <b>Openraster formatını destekleyen uygulamalar tarafından açılabilir.</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">Cep Boyası\'nın yerel görüntü formatı. Bu format komutları ve katmanları hatırlar.</string>
+    <string name="permission_info_external_storage_text">Bu uygulamanın düzgün çalışması için istenen izne ihtiyacı var. Görüntüleri yerel belleğe kaydetmek için uygulamanın okuma ve yazma erişimine ihtiyacı vardır.</string>
+    <string name="permission_info_permanent_denial_text">Bu uygulamanın düzgün çalışması için istenen izne ihtiyacı var. Görüntüleri yerel belleğe kaydetmek için uygulamanın okuma ve yazma erişimine ihtiyacı vardır. İzninizi reddettiğiniz için bir daha sormayın.</string>
+    <string name="set_center_info_text">Yeni merkez konumunu tanımlamak için ekrana dokunun.</string>
+    <string name="transform_info_text">Kenarları yeni konumlarına sürükleyin, görüntü alanını büyütmek veya kırpmak için onay işaretine dokunun.</string>
+    <string name="cursor_draw_inactive">Konumlandırmak için kaydırın, ardından boyamaya başlamak için dokunun.</string>
+    <string name="cursor_draw_active">Çizmek için kaydırın, ardından boyamayı durdurmak için tekrar dokunun.</string>
+    <string name="welcome_to_pocket_paint">Cep Boyası\'na hoş geldiniz</string>
+    <string name="intro_welcome_text">Cep Boyası ile yaratıcılığınızın sınırı yok. Yeniyseniz tanıtımı başlatın; Cep Boyası\'nı biliyorsanız bu kısmı atlayın.</string>
+    <string name="intro_tool_more_information">Daha fazla bilgi almak için bir araca tıkla</string>
+    <string name="more_possibilities">Daha fazla olanak</string>
+    <string name="intro_possibilities_text">Ana menüyü açmak ve değişiklikleri geri almak veya yeniden yapmak için üst çubuğu kullanın</string>
+    <string name="landscape">Yatay</string>
+    <string name="intro_landscape_text">En iyi çizim deneyimi için Cep Boyası yatay modda çizimi de destekler.</string>
+    <string name="enjoy_pocket_paint">Her şey ayarlandı. Cep Boyası\'nın keyfini çıkar.</string>
+    <string name="intro_get_started">Başla ve yeni bir şaheser yarat.</string>
+    <string name="lets_go">Hadi gidelim</string>
+    <string name="next">İleri</string>
+    <string name="skip">Atla</string>
+    <string name="pocketpaint_about_title">Daha fazla</string>
+    <string name="pocketpaint_about_content">Cep Boyası, Catrobat projesinin bir parçası olan bir resim düzenleme kitaplığıdır.\n\nCatrobat, akıllı telefonlar için görsel bir programlama dili ve yaratıcılık araçları setidir.\n\nCep Boyası\'nın kaynak kodu esas olarak %s altında lisanslanmıştır.\nLisansın kesin ayrıntıları için aşağıdaki bağlantıya bakınız.</string>
+    <string name="pocketpaint_about_url_license_description">Cep Boyası kaynak kodu lisansı</string>
+    <string name="pocketpaint_about_url_catrobat_description">Catrobat hakkında</string>
+    <string name="pocketpaint_intro">Giriş</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Giriş, bölünmüş ekranı desteklemez.</string>
+    <string name="pocketpaint_overwrite_title">Dosyanın üzerine yazılsın mı?</string>
+    <string name="pocketpaint_overwrite">Mevcut bir görüntünün üzerine yazmak üzeresiniz (ipucu: Yeni bir görüntü olarak kaydetmek için \"%s\" seçeneğini kullanın). Yine de kaydedilsin mi?</string>
+    <string name="pocketpaint_like_us">Cep Boyası\'nı sevdin mi?</string>
+    <string name="pocketpaint_rate_us">Cep Boyası\'nı değerlendirmek ister misiniz?</string>
+    <string name="pocketpaint_feedback">Bunu duyduğumuza üzüldük. Deneyimlerinizi bizimle paylaşmak istiyorsanız, lütfen contact@catrobat.org adresine yazınız.</string>
+    <string name="pocketpaint_yes">Evet</string>
+    <string name="pocketpaint_no">Hayır</string>
+    <string name="pocketpaint_cancel">İptal et</string>
+    <string name="pocketpaint_not_now">Daha sonra</string>
+    <string name="pocketpaint_rate_us_title">Cep Boyas\'ını Değerlendir</string>
+    <string name="bottom_navigation_tools">Araçlar</string>
+    <string name="bottom_navigation_current">şimdiki</string>
+    <string name="bottom_navigation_color">Renk</string>
+    <string name="bottom_navigation_layers">Katmanlar</string>
+    <string name="bottom_navigation_item">Alt gezinme öğesi</string>
+    <string name="intro_bottom_navigation_tools_description">Kullanmak istediğiniz araca geçin.</string>
+    <string name="intro_bottom_navigation_current_description">Halihazırda kullanılan aracı gösterir ve seçeneklerini açar.</string>
+    <string name="intro_bottom_navigation_color_description">Şu anda kullanılan rengi gösterir ve renk seçiciyi açar.</string>
+    <string name="intro_bottom_navigation_layers_description">Katman menüsünü açar ve katmanlarınızı yönetmenizi sağlar.</string>
+    <string name="pocketpaint_tool_icon_description">Mevcut araç simgesi</string>
+    <string name="dialog_scale_title">Resim yüklenemeyecek kadar büyük</string>
+    <string name="dialog_scale_message">Resim yüklenemeyecek kadar büyük. Görüntüyü otomatik olarak küçültmek için Tamam\'a tıklayın.</string>
+</resources>

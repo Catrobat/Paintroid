@@ -40,7 +40,10 @@ import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.colorpicker.ColorPickerDialog
+import org.catrobat.paintroid.common.COLOR_PICKER_DIALOG_TAG
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.listener.DrawingSurfaceListener
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask
@@ -65,6 +68,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var perspective: Perspective
     private lateinit var toolReference: ToolReference
     private lateinit var toolOptionsViewController: ToolOptionsViewController
+    private lateinit var fragmentManager: FragmentManager
 
     constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
@@ -117,12 +121,14 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         layerModel: LayerContracts.Model,
         perspective: Perspective,
         toolReference: ToolReference,
-        toolOptionsViewController: ToolOptionsViewController
+        toolOptionsViewController: ToolOptionsViewController,
+        fragmentManager: FragmentManager
     ) {
         this.layerModel = layerModel
         this.perspective = perspective
         this.toolReference = toolReference
         this.toolOptionsViewController = toolOptionsViewController
+        this.fragmentManager = fragmentManager
     }
 
     @Synchronized
@@ -196,7 +202,9 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         surfaceReady = true
         val currentToolType = toolReference.tool?.toolType
-        if (currentToolType != ToolType.IMPORTPNG && currentToolType != ToolType.TRANSFORM && currentToolType != ToolType.TEXT) {
+        var isColorPickerDialogAdded = false
+        fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG)?.let { fragment -> isColorPickerDialogAdded = (fragment as ColorPickerDialog).isAdded }
+        if (currentToolType != ToolType.IMPORTPNG && currentToolType != ToolType.TRANSFORM && currentToolType != ToolType.TEXT && !isColorPickerDialogAdded) {
             perspective.resetScaleAndTranslation()
         }
         perspective.setSurfaceFrame(holder.surfaceFrame)

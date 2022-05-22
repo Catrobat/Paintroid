@@ -20,8 +20,6 @@
 package org.catrobat.paintroid.test.espresso.tools;
 
 import android.content.pm.ActivityInfo;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
@@ -36,6 +34,7 @@ import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
+import org.catrobat.paintroid.tools.FontType;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.TextTool;
@@ -47,8 +46,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,7 +68,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
@@ -88,16 +84,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class TextToolIntegrationTest {
-	private static final String TEST_TEXT = "testing 123";
+	private static final String TEST_TEXT = "123 www 123";
 	private static final String TEST_TEXT_ADVANCED = "testing 123 new";
-	private static final String TEST_ARABIC_TEXT = "السلام عليكم 123";
 	private static final String TEST_TEXT_MULTILINE = "testing\nmultiline\ntext\n\n123";
-
-	private static final String FONT_MONOSPACE = "Monospace";
-	private static final String FONT_SERIF = "Serif";
-	private static final String FONT_SANS_SERIF = "Sans Serif";
-	private static final String FONT_STC = "STC";
-	private static final String FONT_DUBAI = "Dubai";
 
 	private static final double EQUALS_DELTA = 0.25d;
 	@Rule
@@ -194,45 +183,46 @@ public class TextToolIntegrationTest {
 		enterTestText();
 		assertEquals(TEST_TEXT, textTool.text);
 
-		selectFormatting(FormattingOptions.SERIF);
-		assertEquals(FONT_SERIF, textTool.font);
-		assertEquals(FONT_SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
+		selectFontType(FontType.SERIF);
+		assertEquals(FontType.SERIF, textTool.font);
+		assertEquals(FontType.SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
 
 		selectFormatting(FormattingOptions.UNDERLINE);
 		assertTrue(textTool.underlined);
 		assertTrue(underlinedToggleButton.isChecked());
-		assertEquals(getFontString(FormattingOptions.UNDERLINE), underlinedToggleButton.getText().toString());
+		assertEquals(getFormattingOptionAsString(FormattingOptions.UNDERLINE), underlinedToggleButton.getText().toString());
 
 		selectFormatting(FormattingOptions.UNDERLINE);
 		assertFalse(textTool.underlined);
 		assertFalse(underlinedToggleButton.isChecked());
-		assertEquals(getFontString(FormattingOptions.UNDERLINE), underlinedToggleButton.getText().toString());
+		assertEquals(getFormattingOptionAsString(FormattingOptions.UNDERLINE), underlinedToggleButton.getText().toString());
 
 		selectFormatting(FormattingOptions.ITALIC);
 		assertTrue(getToolMemberItalic());
 		assertTrue(italicToggleButton.isChecked());
-		assertEquals(getFontString(FormattingOptions.ITALIC), italicToggleButton.getText().toString());
+		assertEquals(getFormattingOptionAsString(FormattingOptions.ITALIC), italicToggleButton.getText().toString());
 
 		selectFormatting(FormattingOptions.ITALIC);
 		assertFalse(getToolMemberItalic());
 		assertFalse(italicToggleButton.isChecked());
-		assertEquals(getFontString(FormattingOptions.ITALIC), italicToggleButton.getText().toString());
+		assertEquals(getFormattingOptionAsString(FormattingOptions.ITALIC), italicToggleButton.getText().toString());
 
 		selectFormatting(FormattingOptions.BOLD);
 		assertTrue(getToolMemberBold());
 		assertTrue(boldToggleButton.isChecked());
-		assertEquals(getFontString(FormattingOptions.BOLD), boldToggleButton.getText().toString());
+		assertEquals(getFormattingOptionAsString(FormattingOptions.BOLD), boldToggleButton.getText().toString());
 
 		selectFormatting(FormattingOptions.BOLD);
 		assertFalse(getToolMemberBold());
 		assertFalse(boldToggleButton.isChecked());
-		assertEquals(getFontString(FormattingOptions.BOLD), boldToggleButton.getText().toString());
+		assertEquals(getFormattingOptionAsString(FormattingOptions.BOLD), boldToggleButton.getText().toString());
 	}
 
 	@Test
 	public void testDialogAndTextBoxAfterReopenDialog() {
 		enterTestText();
-		selectFormatting(FormattingOptions.SANS_SERIF);
+		selectFontType(FontType.SANS_SERIF);
+
 		selectFormatting(FormattingOptions.UNDERLINE);
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
@@ -243,14 +233,12 @@ public class TextToolIntegrationTest {
 		PointF boxPosition = getToolMemberBoxPosition();
 		PointF newBoxPosition = new PointF(boxPosition.x + 100, boxPosition.y + 200);
 		setToolMemberBoxPosition(newBoxPosition);
-		setToolMemberBoxHeight(50.0f);
-		setToolMemberBoxWidth(50.0f);
 
 		onToolBarView()
 				.performOpenToolOptionsView();
 
 		assertEquals(TEST_TEXT, textEditText.getText().toString());
-		assertEquals(FONT_SANS_SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
+		assertEquals(FontType.SANS_SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
@@ -260,7 +248,7 @@ public class TextToolIntegrationTest {
 	@Test
 	public void testStateRestoredAfterOrientationChange() {
 		enterTestText();
-		selectFormatting(FormattingOptions.SANS_SERIF);
+		selectFontType(FontType.SANS_SERIF);
 		selectFormatting(FormattingOptions.UNDERLINE);
 		selectFormatting(FormattingOptions.ITALIC);
 		selectFormatting(FormattingOptions.BOLD);
@@ -273,7 +261,7 @@ public class TextToolIntegrationTest {
 		textTool = (TextTool) toolReference.getTool();
 
 		assertEquals(TEST_TEXT, textEditText.getText().toString());
-		assertEquals(FONT_SANS_SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
+		assertEquals(FontType.SANS_SERIF, ((FontListAdapter) fontList.getAdapter()).getSelectedItem());
 		assertTrue(underlinedToggleButton.isChecked());
 		assertTrue(italicToggleButton.isChecked());
 		assertTrue(boldToggleButton.isChecked());
@@ -290,107 +278,73 @@ public class TextToolIntegrationTest {
 		assertFalse(boldToggleButton.isChecked());
 		assertFalse(italicToggleButton.isChecked());
 
-		ArrayList<FormattingOptions> fonts = new ArrayList<>();
-		fonts.add(FormattingOptions.SERIF);
-		fonts.add(FormattingOptions.SANS_SERIF);
-		fonts.add(FormattingOptions.MONOSPACE);
+		ArrayList<FontType> fonts = new ArrayList<>();
+		fonts.add(FontType.SERIF);
+		fonts.add(FontType.SANS_SERIF);
+		fonts.add(FontType.MONOSPACE);
+		fonts.add(FontType.DUBAI);
+		fonts.add(FontType.STC);
 
-		for (FormattingOptions font : fonts) {
+		checkTextBoxDimensionsAndDefaultPosition();
+
+		for (FontType font : fonts) {
+			layerModel.getCurrentLayer().getBitmap().eraseColor(Color.TRANSPARENT);
+
 			float boxWidth = getToolMemberBoxWidth();
 			float boxHeight = getToolMemberBoxHeight();
-			int[] pixelsBefore;
-			int[] pixelsAfter;
 
-			selectFormatting(font);
-			checkTextBoxDimensionsAndDefaultPosition();
+			selectFontType(font);
 			assertFalse(boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
 
-			Bitmap bitmap = getToolMemberDrawingBitmap();
+			PointF canvasPoint = centerBox();
 
-			pixelsBefore = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
+			layerModel.getCurrentLayer().getBitmap().eraseColor(Color.TRANSPARENT);
+			onTopBarView()
+					.performClickCheckmark();
+
+			int surfaceBitmapHeight = layerModel.getHeight();
+			int[] pixelsDrawingSurface = new int[surfaceBitmapHeight];
+			layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, 1, (int) canvasPoint.x, 0, 1, surfaceBitmapHeight);
+			int pixelAmountBefore = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+			assert pixelAmountBefore > 0;
+
 			selectFormatting(FormattingOptions.UNDERLINE);
 			assertTrue(underlinedToggleButton.isChecked());
-			bitmap = getToolMemberDrawingBitmap();
-			pixelsAfter = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsAfter, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
-			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
 
-			boxWidth = getToolMemberBoxWidth();
+			layerModel.getCurrentLayer().getBitmap().eraseColor(Color.TRANSPARENT);
+			onTopBarView()
+					.performClickCheckmark();
+
+			layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, 1, (int) canvasPoint.x, 0, 1, surfaceBitmapHeight);
+			int pixelAmountAfter = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+			assert pixelAmountAfter > 0;
+
+			assertTrue(pixelAmountBefore < pixelAmountAfter);
+
 			selectFormatting(FormattingOptions.ITALIC);
 			assertTrue(italicToggleButton.isChecked());
-			if (font != FormattingOptions.MONOSPACE) {
-				assertTrue(getToolMemberBoxWidth() < boxWidth);
-			} else {
-				assertTrue(getToolMemberItalic());
-			}
+			assertTrue(getToolMemberItalic());
 
-			pixelsBefore = new int[bitmap.getWidth()];
-			bitmap.getPixels(pixelsBefore, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
+			layerModel.getCurrentLayer().getBitmap().eraseColor(Color.TRANSPARENT);
+			onTopBarView()
+					.performClickCheckmark();
+
+			layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, 1, (int) canvasPoint.x, 0, 1, surfaceBitmapHeight);
+			pixelAmountBefore = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+			assert pixelAmountBefore > 0;
+
 			selectFormatting(FormattingOptions.BOLD);
 			assertTrue(boldToggleButton.isChecked());
-			bitmap = getToolMemberDrawingBitmap();
-			pixelsAfter = new int[bitmap.getWidth()];
-			bitmap.getPixels(pixelsAfter, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
-			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
 
-			selectFormatting(FormattingOptions.UNDERLINE);
-			assertFalse(underlinedToggleButton.isChecked());
-			selectFormatting(FormattingOptions.ITALIC);
-			assertFalse(italicToggleButton.isChecked());
-			selectFormatting(FormattingOptions.BOLD);
-			assertFalse(boldToggleButton.isChecked());
-		}
-	}
+			layerModel.getCurrentLayer().getBitmap().eraseColor(Color.TRANSPARENT);
+			onTopBarView()
+					.performClickCheckmark();
 
-	@Test
-	public void testCheckBoxSizeAndContentAfterFormattingToDubaiAndStc() {
-		enterArabicTestText();
+			layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, 1, (int) canvasPoint.x, 0, 1, surfaceBitmapHeight);
+			pixelAmountAfter = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+			assert pixelAmountAfter > 0;
 
-		assertFalse(underlinedToggleButton.isChecked());
-		assertFalse(boldToggleButton.isChecked());
-		assertFalse(italicToggleButton.isChecked());
-
-		List<FormattingOptions> fonts = Arrays.asList(FormattingOptions.STC, FormattingOptions.DUBAI);
-
-		for (FormattingOptions font : fonts) {
-			float boxWidth = getToolMemberBoxWidth();
-			float boxHeight = getToolMemberBoxHeight();
-			int[] pixelsBefore;
-			int[] pixelsAfter;
-
-			selectFormatting(font);
-			checkTextBoxDimensionsAndDefaultPosition();
-			assertFalse(boxWidth == getToolMemberBoxWidth() && boxHeight == getToolMemberBoxHeight());
-
-			Bitmap bitmap = getToolMemberDrawingBitmap();
-
-			pixelsBefore = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsBefore, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
-			selectFormatting(FormattingOptions.UNDERLINE);
-			assertTrue(underlinedToggleButton.isChecked());
-			bitmap = getToolMemberDrawingBitmap();
-			pixelsAfter = new int[bitmap.getHeight()];
-			bitmap.getPixels(pixelsAfter, 0, 1, bitmap.getWidth() / 2, 0, 1, bitmap.getHeight());
-			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
-
-			boxWidth = getToolMemberBoxWidth();
-			selectFormatting(FormattingOptions.ITALIC);
-			assertTrue(italicToggleButton.isChecked());
-			if (font != FormattingOptions.DUBAI) {
-				assertEquals(getToolMemberBoxWidth(), boxWidth, 5);
-			} else {
-				assertTrue(getToolMemberItalic());
-			}
-
-			pixelsBefore = new int[bitmap.getWidth()];
-			bitmap.getPixels(pixelsBefore, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
-			selectFormatting(FormattingOptions.BOLD);
-			assertTrue(boldToggleButton.isChecked());
-			bitmap = getToolMemberDrawingBitmap();
-			pixelsAfter = new int[bitmap.getWidth()];
-			bitmap.getPixels(pixelsAfter, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
-			assertTrue(countPixelsWithColor(pixelsAfter, Color.BLACK) > countPixelsWithColor(pixelsBefore, Color.BLACK));
+			assertTrue(pixelAmountAfter > pixelAmountBefore);
 
 			selectFormatting(FormattingOptions.UNDERLINE);
 			assertFalse(underlinedToggleButton.isChecked());
@@ -444,28 +398,7 @@ public class TextToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptionsView();
 
-		Bitmap bitmap = getToolMemberDrawingBitmap();
-		int[] pixelsTool = new int[bitmap.getWidth()];
-		int yPos = Math.round(bitmap.getHeight() / 2.0f);
-		bitmap.getPixels(pixelsTool, 0, bitmap.getWidth(), 0, yPos, bitmap.getWidth(), 1);
-		int numberOfBlackPixels = countPixelsWithColor(pixelsTool, Color.BLACK);
-
-		PointF screenPoint = new PointF(activityHelper.getDisplayWidth() / 2.0f, activityHelper.getDisplayHeight() / 2.0f);
-		int statusBarHeight = 0;
-		int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
-		if (resourceId > 0) {
-			statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
-		}
-
-		int actionBarHeight;
-		final TypedArray styledAttributes = activity.getTheme().obtainStyledAttributes(
-				new int[]{android.R.attr.actionBarSize}
-		);
-		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
-		PointF canvasPoint = new PointF(screenPoint.x, screenPoint.y - actionBarHeight - statusBarHeight);
-		canvasPoint.x = (float) Math.round(canvasPoint.x);
-		canvasPoint.y = (float) Math.round(canvasPoint.y);
-		setToolMemberBoxPosition(canvasPoint);
+		PointF canvasPoint = centerBox();
 
 		onTopBarView()
 				.performClickCheckmark();
@@ -474,7 +407,7 @@ public class TextToolIntegrationTest {
 		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
 		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		int pixelAmount = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
-		assert pixelAmount > numberOfBlackPixels - 15 && pixelAmount < numberOfBlackPixels + 15;
+		assert pixelAmount > 0;
 
 		onTopBarView()
 				.performUndo();
@@ -487,7 +420,7 @@ public class TextToolIntegrationTest {
 
 		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
 		pixelAmount = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
-		assert pixelAmount > numberOfBlackPixels - 15 && pixelAmount < numberOfBlackPixels + 15;
+		assert pixelAmount > 0;
 	}
 
 	@Test
@@ -497,13 +430,7 @@ public class TextToolIntegrationTest {
 		onToolBarView()
 				.performCloseToolOptionsView();
 
-		float newBoxWidth = getToolMemberBoxWidth() * 1.5f;
-		float newBoxHeight = getToolMemberBoxHeight() * 1.5f;
-		setToolMemberBoxWidth(newBoxWidth);
-		setToolMemberBoxHeight(newBoxHeight);
-
-		float boxPositionX = getToolMemberBoxPosition().x;
-		float boxPositionY = getToolMemberBoxPosition().y;
+		PointF canvasPoint = centerBox();
 
 		onToolProperties()
 				.setColor(Color.WHITE);
@@ -511,14 +438,28 @@ public class TextToolIntegrationTest {
 		Paint paint = textTool.textPaint;
 		int selectedColor = paint.getColor();
 		assertEquals(Color.WHITE, selectedColor);
-		Bitmap bitmap = getToolMemberDrawingBitmap();
-		int[] pixels = new int[bitmap.getWidth()];
-		bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, bitmap.getHeight() / 2, bitmap.getWidth(), 1);
-		assertEquals(countPixelsWithColor(pixels, Color.BLACK), 0);
-		assertTrue(countPixelsWithColor(pixels, selectedColor) > 0);
 
-		assertEquals(boxPositionX, getToolMemberBoxPosition().x, EQUALS_DELTA);
-		assertEquals(boxPositionY, getToolMemberBoxPosition().y, EQUALS_DELTA);
+		onTopBarView()
+				.performClickCheckmark();
+
+		int surfaceBitmapWidth = layerModel.getWidth();
+		int[] pixelsDrawingSurface = new int[surfaceBitmapWidth];
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		int pixelAmount = countPixelsWithColor(pixelsDrawingSurface, Color.WHITE);
+		assert pixelAmount > 0;
+
+		onToolProperties()
+				.setColor(Color.BLACK);
+
+		selectedColor = paint.getColor();
+		assertEquals(Color.BLACK, selectedColor);
+
+		onTopBarView()
+				.performClickCheckmark();
+
+		layerModel.getCurrentLayer().getBitmap().getPixels(pixelsDrawingSurface, 0, surfaceBitmapWidth, 0, (int) canvasPoint.y, surfaceBitmapWidth, 1);
+		pixelAmount = countPixelsWithColor(pixelsDrawingSurface, Color.BLACK);
+		assert pixelAmount > 0;
 	}
 
 	@Test
@@ -538,6 +479,8 @@ public class TextToolIntegrationTest {
 
 	@Test
 	public void testMultiLineText() {
+		checkTextBoxDimensionsAndDefaultPosition();
+
 		enterMultilineTestText();
 
 		onToolBarView()
@@ -547,8 +490,6 @@ public class TextToolIntegrationTest {
 		String[] actualTextSplitUp = getToolMemberMultilineText();
 
 		assertArrayEquals(expectedTextSplitUp, actualTextSplitUp);
-
-		checkTextBoxDimensionsAndDefaultPosition();
 	}
 
 	@Test
@@ -637,19 +578,25 @@ public class TextToolIntegrationTest {
 		assertNotEquals(initialPosition, positionAfterZoom);
 	}
 
-	private void checkTextBoxDimensions() {
-		int boxOffset = BOX_OFFSET;
-		float textSizeMagnificationFactor = TEXT_SIZE_MAGNIFICATION_FACTOR;
+	private PointF centerBox() {
+		PointF screenPoint = new PointF(activityHelper.getDisplayWidth() / 2.0f, activityHelper.getDisplayHeight() / 2.0f);
+		PointF canvasPoint = new PointF(screenPoint.x, screenPoint.y);
+		canvasPoint.x = (float) Math.round(canvasPoint.x);
+		canvasPoint.y = (float) Math.round(canvasPoint.y);
+		setToolMemberBoxPosition(canvasPoint);
+		return canvasPoint;
+	}
 
+	private void checkTextBoxDimensions() {
 		float actualBoxWidth = getToolMemberBoxWidth();
 		float actualBoxHeight = getToolMemberBoxHeight();
 
 		boolean italic = italicToggleButton.isChecked();
 
-		String font = ((FontListAdapter) fontList.getAdapter()).getSelectedItem();
+		FontType font = ((FontListAdapter) fontList.getAdapter()).getSelectedItem();
 
 		String stringTextSize = textSize.getText().toString();
-		float textSize = Float.parseFloat(stringTextSize) * textSizeMagnificationFactor;
+		float textSize = Float.parseFloat(stringTextSize) * TEXT_SIZE_MAGNIFICATION_FACTOR;
 
 		Paint textPaint = new Paint();
 		textPaint.setAntiAlias(true);
@@ -658,16 +605,16 @@ public class TextToolIntegrationTest {
 		int style = italic ? Typeface.ITALIC : Typeface.NORMAL;
 
 		switch (font) {
-			case FONT_SANS_SERIF:
+			case SANS_SERIF:
 				textPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, style));
 				break;
-			case FONT_SERIF:
+			case SERIF:
 				textPaint.setTypeface(Typeface.create(Typeface.SERIF, style));
 				break;
-			case FONT_STC:
+			case STC:
 				textPaint.setTypeface(ResourcesCompat.getFont(launchActivityRule.getActivity(), R.font.stc_regular));
 				break;
-			case FONT_DUBAI:
+			case DUBAI:
 				textPaint.setTypeface(ResourcesCompat.getFont(launchActivityRule.getActivity(), R.font.dubai));
 				break;
 			default:
@@ -687,10 +634,10 @@ public class TextToolIntegrationTest {
 				maxTextWidth = textWidth;
 			}
 		}
-		float expectedBoxWidth = maxTextWidth + 2 * boxOffset;
+		float expectedBoxWidth = maxTextWidth + 2 * BOX_OFFSET;
 
 		float textHeight = textDescent - textAscent;
-		float expectedBoxHeight = textHeight * multilineText.length + 2 * boxOffset;
+		float expectedBoxHeight = textHeight * multilineText.length + 2 * BOX_OFFSET;
 
 		assertEquals(expectedBoxWidth, actualBoxWidth, EQUALS_DELTA);
 		assertEquals(expectedBoxHeight, actualBoxHeight, EQUALS_DELTA);
@@ -722,6 +669,7 @@ public class TextToolIntegrationTest {
 		 * current IME does not understand how to translatePerspective the string into key events). As a
 		 * workaround, you can use replaceText action to set the text directly in the EditText field.
 		 */
+
 		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(replaceText(textToEnter));
 		Espresso.closeSoftKeyboard();
 		onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).check(matches(withText(textToEnter)));
@@ -731,46 +679,40 @@ public class TextToolIntegrationTest {
 		enterTextInput(TEST_TEXT);
 	}
 
-	private void enterArabicTestText() {
-		enterTextInput(TEST_ARABIC_TEXT);
-	}
-
 	private void enterMultilineTestText() {
 		enterTextInput(TEST_TEXT_MULTILINE);
 	}
 
 	private void selectFormatting(FormattingOptions format) {
-		switch (format) {
-			case MONOSPACE:
-			case SERIF:
+		onView(withText(getFormattingOptionAsString(format))).perform(click());
+	}
+
+	private void selectFontType(FontType fontType) {
+		onView(withId(R.id.pocketpaint_text_tool_dialog_list_font))
+				.perform(RecyclerViewActions.scrollTo(hasDescendant(withText(getFontTypeAsString(fontType)))));
+		onView(withText(getFontTypeAsString(fontType)))
+				.perform(click());
+	}
+
+	private String getFontTypeAsString(FontType fontType) {
+		switch (fontType) {
 			case SANS_SERIF:
+				return activity.getString(R.string.text_tool_dialog_font_sans_serif);
+			case SERIF:
+				return activity.getString(R.string.text_tool_dialog_font_serif);
+			case MONOSPACE:
+				return activity.getString(R.string.text_tool_dialog_font_monospace);
 			case STC:
+				return activity.getString(R.string.text_tool_dialog_font_arabic_stc);
 			case DUBAI:
-				onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(getFontString(format)))));
-				onView(withId(R.id.pocketpaint_text_tool_dialog_list_font)).perform(RecyclerViewActions.actionOnItem(hasDescendant(withText(getFontString(format))), click()));
-				break;
-			case UNDERLINE:
-			case ITALIC:
-			case BOLD:
-				onView(withText(getFontString(format))).perform(click());
-				break;
+				return activity.getString(R.string.text_tool_dialog_font_dubai);
 			default:
-				fail("Formatting option not supported.");
+				return null;
 		}
 	}
 
-	private String getFontString(FormattingOptions format) {
+	private String getFormattingOptionAsString(FormattingOptions format) {
 		switch (format) {
-			case MONOSPACE:
-				return FONT_MONOSPACE;
-			case SERIF:
-				return FONT_SERIF;
-			case SANS_SERIF:
-				return FONT_SANS_SERIF;
-			case STC:
-				return FONT_STC;
-			case DUBAI:
-				return FONT_DUBAI;
 			case UNDERLINE:
 				return activity.getString(R.string.text_tool_dialog_underline_shortcut);
 			case ITALIC:
@@ -796,16 +738,8 @@ public class TextToolIntegrationTest {
 		return textTool.boxWidth;
 	}
 
-	private void setToolMemberBoxWidth(float width) {
-		textTool.boxWidth = width;
-	}
-
 	private float getToolMemberBoxHeight() {
 		return textTool.boxHeight;
-	}
-
-	private void setToolMemberBoxHeight(float height) {
-		textTool.boxHeight = height;
 	}
 
 	private PointF getToolMemberBoxPosition() {
@@ -828,15 +762,11 @@ public class TextToolIntegrationTest {
 		return textTool.bold;
 	}
 
-	private Bitmap getToolMemberDrawingBitmap() {
-		return textTool.drawingBitmap;
-	}
-
 	private String[] getToolMemberMultilineText() {
 		return textTool.getMultilineText();
 	}
 
 	private enum FormattingOptions {
-		UNDERLINE, ITALIC, BOLD, MONOSPACE, SERIF, SANS_SERIF, STC, DUBAI
+		UNDERLINE, ITALIC, BOLD
 	}
 }

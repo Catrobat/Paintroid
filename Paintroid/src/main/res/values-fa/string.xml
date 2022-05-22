@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2021 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="pocketpaint_app_name">رنگ جیب Pocket Paint</string>
+    <string name="button_brush">برس</string>
+    <string name="button_cursor">مکان نما</string>
+    <string name="button_set_center">Set Center</string>
+    <string name="button_pipette">پاپت</string>
+    <string name="button_undo">خنثی کردن</string>
+    <string name="button_redo">باز کرد</string>
+    <string name="button_info">اطلاعات</string>
+    <string name="button_stamp">مهر</string>
+    <string name="button_import_image">وارد کردن تصویر</string>
+    <string name="button_eraser">پاک کن</string>
+    <string name="button_transform">تبدیل</string>
+    <string name="button_fill">پر کن</string>
+    <string name="button_line">ردیف</string>
+    <string name="button_text">متن</string>
+    <string name="button_shape">شکل ها</string>
+    <string name="button_hand">دست</string>
+    <string name="button_watercolor">آبرنگ</string>
+    <string name="button_spray_can">قوطی اسپری</string>
+    <string name="button_smudge">Smudge</string>
+    <string name="button_apply">بکار ببر</string>
+    <string name="button_checkmark">سوال سحی </string>
+    <string name="button_plus">اتصال بخش خط</string>
+    <string name="done">انجام شد</string>
+    <string name="gallery">گالری</string>
+    <string name="load_sticker_error">برچسب را نمی توان بارگیری کرد</string>
+    <string name="error_unknown_error">چیزی اشتباه شد</string>
+    <string name="cap_circle">دایره</string>
+    <string name="cap_square">مربع</string>
+    <string name="stamptool_paste">علاوه کن</string>
+    <string name="stamptool_copy">نقل</string>
+    <string name="stamptool_cut">قطع کن</string>
+    <string name="stickers">برچسب ها</string>
+    <string name="dialog_tools_title">ابزارها</string>
+    <string name="dialog_error_save_title">خطا بارگیری / فایل ذخیره کن</string>
+    <string name="dialog_error_sdcard_text">تصویر یا کارت SD را بررسی کنید!</string>
+    <string name="dialog_brush_width_text">عرض ضربه</string>
+    <string name="dialog_warning_new_image">ذخیره تغییرات؟</string>
+    <string name="help_title">کمک</string>
+    <string name="help_content_eraser">بخش هایی از تصویر را با یک پاک کن حذف کنید.</string>
+    <string name="help_content_brush">برای تغییر رنگ یا اندازه قلم مو بر روی نمادها در نوار پایین ضربه بزنید.</string>
+    <string name="help_content_watercolor">مشابه ابزار قلم مو با افکت آبرنگ. با این حال می توانید قدرت قلم مو را با نوار لغزنده در منوی رنگ تغییر دهید.</string>
+    <string name="help_content_eyedropper">برای انتخاب یک رنگ روی تصویر ضربه بزنید.</string>
+    <string name="help_content_undo">ضربه بزنید تا اقدام قبلی خود را لغو کنید.</string>
+    <string name="help_content_redo">ضربه بزنید تا یک اقدام لغو شود.</string>
+    <string name="help_content_fill">روی تصویر ضربه بزنید تا یک منطقه را با رنگ انتخاب شده پر کنید.</string>
+    <string name="help_content_cursor">مکان نما را جایی که می خواهید قرعه کشی کنید. برای فعال کردن مکان نما ضربه بزنید. انگشت خود را به قرعه کشی حرکت دهید. دوباره ضربه بزنید تا غیرفعال شود.</string>
+    <string name="help_content_transform">برای تبدیل تصویر از آن استفاده کنید.</string>
+    <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and tap again to stamp.</string>
+    <string name="help_content_import_png">تصویر را از گالری به ابزار تمبر وارد کنید.</string>
+    <string name="help_content_line">یک خط مستقیم را بکشید. </string>
+    <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
+    <string name="help_content_shape">Choose a shape and tap it to insert the selected shape.</string>
+    <string name="help_content_layer">ایجاد لایه های جدید و یا تغییر موجودات موجود.</string>
+    <string name="help_content_color_chooser">رنگ را انتخاب یا تنظیم کنید.</string>
+    <string name="help_content_hand">انگشت خود را حرکت دهید تا بوم را حرکت دهید.</string>
+    <string name="help_content_spray_can">انگشت خود را بر روی تصویر حرکت دهید تا یک الگوی اسپری ایجاد شود.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
+    <string name="closing_catroid_security_question_title">بازگشت به پروژه</string>
+    <string name="closing_security_question_title">ترک کن</string>
+    <string name="closing_security_question">ذخیره تغییرات؟</string>
+    <string name="menu_new_image">عکس جدید</string>
+    <string name="menu_discard_image">تصویر را از بین ببر</string>
+    <string name="no_longclick_on_hidden_layer">شما فقط قادر به ادغام یا مرتب کردن مجدد اگر تمام لایه ها قابل مشاهده باشند</string>
+    <string name="no_tools_on_hidden_layer">هیچ ابزار در لایه پنهان موجود نیست</string>
+    <string name="menu_load_image">تصویر اضافه کن</string>
+    <string name="menu_save_image">ذخیره تصویر</string>
+    <string name="menu_save_copy">ذخیره کپی</string>
+    <string name="menu_hide_menu">تمام صفحه</string>
+    <string name="share_image_menu">به اشتراک گذاری تصویر</string>
+    <string name="share_image_via_text">ارسال تصویر از طریق</string>
+    <string name="menu_rate_us">به ما رای دهید!</string>
+    <string name="menu_export">صادر</string>
+    <string name="menu_feedback">بازخورد</string>
+    <string name="menu_advanced">تنظیمات پیشرفته</string>
+    <string name="saved_to">تصویر ذخیره شده در\n</string>
+    <string name="saved">تصویر ذخیره شد</string>
+    <string name="copy_to">تصویر ذخیره شد در\n</string>
+    <string name="copy">کپی ذخیره شد</string>
+    <string name="menu_quit">ترک کن</string>
+    <string name="save_button_text">ذخیره</string>
+    <string name="discard_button_text">لغو تغییرات</string>
+    <string name="cancel_button_text">لغو </string>
+    <string name="overwrite_button_text">روی نوشتن</string>
+    <string name="resize_nothing_to_resize">چیز برای تغییر اندازه نیست</string>
+    <string name="resize_cannot_resize_to_this_size">نمی تواند به این اندازه تغییر اندازه دهد</string>
+    <string name="resize_max_image_resolution_reached">حداکثر رزولوشن تصویر رسیده است</string>
+    <string name="text_tool_dialog_input_title">متن تو:</string>
+    <string name="text_tool_dialog_format_options">گزینه ها فرمت:</string>
+    <string name="text_tool_dialog_underline_shortcut">U</string>
+    <string name="text_tool_dialog_italic_shortcut">I</string>
+    <string name="text_tool_dialog_bold_shortcut">B</string>
+    <string name="text_tool_dialog_strike_through_shortcut">ا ب ت </string>
+    <string name="text_tool_dialog_input_hint">برای نوشتن اینجا را ضربه بزنید</string>
+    <string name="text_tool_dialog_font_monospace">Monospace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">Dubai</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
+    <string name="shape_tool_dialog_rect_title">مستطیل</string>
+    <string name="shape_tool_dialog_ellipse_title">بیضی</string>
+    <string name="shape_tool_dialog_star_title">ستاره</string>
+    <string name="shape_tool_dialog_heart_title">قلب</string>
+    <string name="shape_tool_dialog_fill_title">پر کن</string>
+    <string name="shape_tool_dialog_outline_title">رئوس مطالب</string>
+    <string name="fill_tool_dialog_color_tolerance_title">تحمل رنگ</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
+    <string name="transform_tool_rotate_left">چرخش چپ</string>
+    <string name="transform_tool_rotate_right">چرخش راست</string>
+    <string name="transform_tool_flip_vertical">تلنگر عمودی</string>
+    <string name="transform_tool_flip_horizontal">تلنگر افقی</string>
+    <string name="transform_tool_resize_text">تغییر اندازه دوباره</string>
+    <string name="transform_tool_auto_crop_text">محصول / بزرگ شدن</string>
+    <string name="transform_width_text">عرض</string>
+    <string name="transform_height_text">ارتفاع</string>
+    <string name="transform_auto_crop_text">خودکار</string>
+    <string name="transform_set_center_text">Set center</string>
+    <string name="pixel">پیکسل</string>
+    <string name="stamp_tool_copy_hint">مطبوعات طولانی برای کپی محتوا</string>
+    <string name="layers_title">لایه های</string>
+    <string name="layer_new">لایه جدید</string>
+    <string name="layer_delete">لایه را حذف کنید</string>
+    <string name="layer_too_many_layers"> لایه های بیش از حد</string>
+    <string name="layer_merged">لایه ها ادغام شده</string>
+    <string name="layer_background">پس زمینه لایه</string>
+    <string name="dialog_shape_text">شکل</string>
+    <string name="dialog_loading_image_failed_title">خطا در بارگیری تصویر</string>
+    <string name="dialog_loading_image_failed_text">تصویر معتبر نیست</string>
+    <string name="dialog_settings">تنظیمات</string>
+    <string name="dialog_save_image_name">نام تصویر</string>
+    <string name="dialog_save_image_format">فرمت تصویر</string>
+    <string name="dialog_antialiasing">ضد تبخیر</string>
+    <string name="dialog_smoothing">صاف کردن</string>
+    <string name="dialog_save_jpg_option_quality">کیفیت:</string>
+    <string name="pocketpaint_jpg_message_dialog">طول می کشد <b> فضای ذخیره سازی حداقل </b>. <b>هیچ شفافیت </b>به یاد میآید.</string>
+    <string name="pocketpaint_png_message_dialog">فشرده سازی بدون افتادگی. شفافیت حفظ می شود. </string>
+    <string name="pocketpaint_ora_message_dialog">این فرمت <b> لایه های </b> را به یاد می آورد. <b> این را می توان با برنامه هایی که از فرمت OpenRaster پشتیبانی می کنند باز می شود. </b></string>
+    <string name="pocketpaint_catrobat_message_dialog">فرمت تصویر بومی Pocket Paint. این فرمت دستورات و لایه ها را به خاطر می آورد.</string>
+    <string name="permission_info_external_storage_text">این برنامه نیاز به اجازه درخواست شده برای عملکرد به درستی دارد. به منظور ذخیره تصاویر به حافظه محلی، برنامه نیاز به خواندن و نوشتن دسترسی به آن دارد.</string>
+    <string name="permission_info_permanent_denial_text">این برنامه نیاز به اجازه درخواست شده برای عملکرد به درستی دارد. به منظور ذخیره تصاویر به حافظه محلی، برنامه نیاز به خواندن و نوشتن دسترسی به آن دارد.
+        همانطور که مجوز را رد کردید، دوباره درخواست نکنید، لطفا به تنظیمات تلفن خود بروید و اگر بخواهید از توابع مرتبط استفاده کنید، مجوزهای مورد نیاز را دریافت کنید.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
+    <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+    <string name="cursor_draw_inactive">پان به موقعیت، سپس برای شروع نقاشی ضربه بزنید.</string>
+    <string name="cursor_draw_active">پان به قرعه کشی، سپس برای متوقف کردن نقاشی ضربه بزنید.</string>
+    <string name="welcome_to_pocket_paint">به رنگ جیب  Pocket Paint خوش آمدید</string>
+    <string name="intro_welcome_text">با رنگ جیب Pocket Paint هیچ محدودیتی برای خلاقیت شما وجود ندارد. اگر شما جدید هستید، مقدمه را شروع کنید یا آن را پر کنید اگر قبلا با رنگ جیب Pocket Paint  آشنا هستید.</string>
+    <string name="intro_tool_more_information">بر روی یک ابزار کلیک کنید تا اطلاعات بیشتری بدست اورید</string>
+    <string name="more_possibilities">امکانات بیشتر</string>
+    <string name="intro_possibilities_text">از نوار بالا برای باز کردن منوی اصلی و تغییرات مجدد یا تغییر مجدد استفاده کنید</string>
+    <string name="landscape">مناظر طبیعی</string>
+    <string name="intro_landscape_text">رنگ جیبی Pocket Pain همچنین از طراحی در حالت افقی پشتیبانی می کند تا بهترین تجربه نقاشی را به شما بدهد.</string>
+    <string name="enjoy_pocket_paint">همه شما تنظیم شده اید. از رنگ جیب Pocket Paint لزت ببرید. </string>
+    <string name="intro_get_started">شروع کنید و یک شاهکار جدید ایجاد کنید.</string>
+    <string name="lets_go">بیا بریم</string>
+    <string name="next">بعد</string>
+    <string name="skip">رد کن</string>
+    <string name="pocketpaint_about_title">در باره</string>
+    <string name="pocketpaint_about_content">رنگ جیبی Pocket Paint یک کتابخانه ویرایش تصویری است که بخشی از پروژه کاتروبات Catrobat است.\n\n کاتروبات Catrobat یک زبان برنامه نویسی بصری و مجموعه ای از ابزار خلاقیت برای گوشی های هوشمند است.\n\n کد منبع رنگ جیب عمدتا تحت مجوز%s\nمجاز است. جزئیات دقیق مجوز، لینک زیر را ببینید.</string>
+    <string name="pocketpaint_about_url_license_description">مجوز کد رنگ جیبی Pocket Paint</string>
+    <string name="pocketpaint_about_url_catrobat_description">درباره کاتروبات Catrobat</string>
+    <string name="pocketpaint_intro">اینترو</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">مقدمه از صفحه تقسیم پشتیبانی نمی کند.</string>
+    <string name="pocketpaint_overwrite_title">بازنویسی فایل؟</string>
+    <string name="pocketpaint_overwrite">شما می خواهید یک تصویر موجود را بازنویسی کنید (اشاره: برای ذخیره آن به عنوان یک تصویر جدید، از گزینه \"%s\" استفاده کنید). زخیره در هر حال؟</string>
+    <string name="pocketpaint_like_us">آیا رنگ جیبی Pocket Paint را دوست دارید؟</string>
+    <string name="pocketpaint_rate_us">آیا می خواهید رنگ جیبی Pocket Paint را ارزیابی کنید؟</string>
+    <string name="pocketpaint_feedback">ما متاسفیم که این را مشنویم. اگر می خواهید تجربه خود را با ما به اشتراک بگذارید، لطفا به contact@catrobat.org بنویسید</string>
+    <string name="pocketpaint_yes">بله</string>
+    <string name="pocketpaint_no">نخیر</string>
+    <string name="pocketpaint_cancel">لغو </string>
+    <string name="pocketpaint_not_now">الان نه</string>
+    <string name="pocketpaint_rate_us_title">رنگ جیبی Pocket Paint ارزیابی کنید</string>
+    <string name="bottom_navigation_tools">ابزارها</string>
+    <string name="bottom_navigation_current">جاری</string>
+    <string name="bottom_navigation_color">رنگ</string>
+    <string name="bottom_navigation_layers">لایه های</string>
+    <string name="bottom_navigation_item">مورد برای ناوبری پایین</string>
+    <string name="intro_bottom_navigation_tools_description">به ابزار مورد نظر خود مراجعه کنید.</string>
+    <string name="intro_bottom_navigation_current_description">ابزار مورد استفاده را نشان می دهد و گزینه های آن را باز می کند.</string>
+    <string name="intro_bottom_navigation_color_description">رنگ در حال حاضر مورد استفاده را نشان می دهد و جمع کننده رنگ را باز می کند.</string>
+    <string name="intro_bottom_navigation_layers_description">منوی لایه را باز می کند و به شما اجازه می دهد لایه های خود را مدیریت کنید.</string>
+    <string name="pocketpaint_tool_icon_description">آیکون فعلی ابزار</string>
+    <string name="dialog_scale_title">تصویر بیش از حد بزرگ برای بارگذاری است</string>
+    <string name="dialog_scale_message">تصویر بیش از حد بزرگ برای بارگذاری است. روی OK کلیک کنید تا تصویر را به طور خودکار به پایین بکشید.</string>
+</resources>

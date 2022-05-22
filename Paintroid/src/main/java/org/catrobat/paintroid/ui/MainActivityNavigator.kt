@@ -457,12 +457,12 @@ class MainActivityNavigator(
         }
         if (!isExport && mainActivity.model.isOpenedFromCatroid) {
             val name = getFileName(uri)
-            if (name != null && (name.endsWith("jpg") || name.endsWith("jpeg"))) {
+            if (name != null && (name.endsWith(FileIO.FileType.JPG.value) || name.endsWith("jpeg"))) {
                 FileIO.compressFormat = Bitmap.CompressFormat.JPEG
-                FileIO.ending = ".jpg"
+                FileIO.fileType = FileIO.FileType.JPG
             } else {
                 FileIO.compressFormat = Bitmap.CompressFormat.PNG
-                FileIO.ending = ".png"
+                FileIO.fileType = FileIO.FileType.PNG
             }
             FileIO.filename = "image$imageNumber"
             FileIO.catroidFlag = true

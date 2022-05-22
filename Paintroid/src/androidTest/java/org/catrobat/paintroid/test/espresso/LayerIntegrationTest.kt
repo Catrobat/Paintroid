@@ -33,6 +33,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
@@ -44,6 +45,7 @@ import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
@@ -351,6 +353,7 @@ class LayerIntegrationTest {
             .perform(click())
         onView(withText(R.string.save_button_text))
             .perform(click())
+        onView(isRoot()).perform(waitFor(100))
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.PIPETTE)
         DrawingSurfaceInteraction.onDrawingSurfaceView()
@@ -642,8 +645,10 @@ class LayerIntegrationTest {
             .performAddLayer()
             .checkLayerCount(2)
             .performToggleLayerVisibility(0)
-            .performLongClickLayer(0)
-        onView(withText(R.string.no_longclick_on_hidden_layer)).inRoot(RootMatchers.withDecorView(Matchers.not(launchActivityRule.activity.window.decorView))).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+            .performStartDragging(0)
+        onView(withText(R.string.no_longclick_on_hidden_layer))
+            .inRoot(RootMatchers.withDecorView(Matchers.not(launchActivityRule.activity.window.decorView)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
     @Test

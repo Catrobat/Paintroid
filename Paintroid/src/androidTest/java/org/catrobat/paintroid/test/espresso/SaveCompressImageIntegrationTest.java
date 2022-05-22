@@ -50,6 +50,7 @@ import java.util.UUID;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.rule.ActivityTestRule;
 
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
@@ -65,6 +66,7 @@ import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -124,6 +126,7 @@ public class SaveCompressImageIntegrationTest {
 		onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(click());
 		onData(allOf(is(instanceOf(String.class)), is("jpg"))).inRoot(isPlatformPopup()).perform(click());
 		onView(withText(R.string.save_button_text)).perform(click());
+		onView(isRoot()).perform(waitFor(100));
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inMutable = true;
 		Bitmap compressedBitmap = FileIO.INSTANCE.decodeBitmapFromUri(this.activity.getContentResolver(), Objects.requireNonNull(activity.model.getSavedPictureUri()), options, this.activity.getApplicationContext());

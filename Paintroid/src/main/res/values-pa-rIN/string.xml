@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">ਜੇਬ ਪੇਂਟ</string>
     <string name="button_brush">ਬੁਰਸ਼</string>
     <string name="button_cursor">ਕਰਸਰ</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">ਪਾਈਪੇਟ</string>
     <string name="button_undo">ਵਾਪਿਸ</string>
     <string name="button_redo">ਦੁਬਾਰਾ ਕਰੋ</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">ਹੱਥ</string>
     <string name="button_watercolor">ਪਾਣੀ ਦਾ ਰੰਗ</string>
     <string name="button_spray_can">ਸਪਰੇ ਕਰ ਸਕਦੇ ਹੋ</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">ਲਾਗੂ ਕਰੋ</string>
     <string name="button_checkmark">ਚੈੱਕਮਾਰਕ</string>
     <string name="button_plus">ਲਾਈਨ ਖੰਡ ਨੂੰ ਕਨੈਕਟ ਕਰੋ</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">ਕੋਈ ਰੰਗ ਚੁਣੋ ਜਾਂ ਵਿਵਸਥ ਕਰੋ.</string>
     <string name="help_content_hand">ਕੈਨਵਸ ਜਾਣ ਲਈ ਆਪਣੀ ਉਂਗਲ ਨੂੰ ਹਿਲਾਓ.</string>
     <string name="help_content_spray_can">ਇੱਕ ਸਪਰੇਅ ਕੈਨ ਪੈਟਰਨ ਬਣਾਉਣ ਲਈ ਚਿੱਤਰ ਉੱਤੇ ਆਪਣੀ ਉਂਗਲ ਨੂੰ ਹਿਲਾਓ.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">ਪ੍ਰੋਜੈਕਟ ਤੇ ਵਾਪਸ</string>
     <string name="closing_security_question_title">ਛੱਡੋ</string>
     <string name="closing_security_question">ਤਬਦੀਲੀ ਸੰਭਾਲੋ?</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">ਭਰੋ</string>
     <string name="shape_tool_dialog_outline_title">ਆਉਟਲਾਈਨ</string>
     <string name="fill_tool_dialog_color_tolerance_title">ਰੰਗ ਸਹਿਣਸ਼ੀਲਤਾ</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">ਖੱਬੇ ਪਾਸੇ ਘੁੰਮਾਓ</string>
     <string name="transform_tool_rotate_right">ਸੱਜੇ ਘੁੰਮਾਓ</string>
     <string name="transform_tool_flip_vertical">ਲੰਬਕਾਰੀ ਫਲਿੱਪ</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">ਚੌੜਾਈ</string>
     <string name="transform_height_text">ਕੱਦ</string>
     <string name="transform_auto_crop_text">ਆਟੋ</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">px</string>
     <string name="stamp_tool_copy_hint">ਸਮੱਗਰੀ ਦੀ ਨਕਲ ਕਰਨ ਲਈ ਲੰਮੇ ਸਮੇਂ ਲਈ ਦਬਾਓ</string>
     <string name="layers_title">ਪਰਤਾਂ</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">ਇਸ ਐਪ ਨੂੰ ਸਹੀ ਤਰ੍ਹਾਂ ਕੰਮ ਕਰਨ ਲਈ ਬੇਨਤੀ ਕੀਤੀ ਅਨੁਮਤੀ ਦੀ ਲੋੜ ਹੈ. ਸਥਾਨਕ ਮੈਮੋਰੀ ਵਿਚ ਚਿੱਤਰਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਕਰਨ ਲਈ, ਐਪ ਨੂੰ ਇਸ ਨੂੰ ਪੜ੍ਹਨ ਅਤੇ ਲਿਖਣ ਦੀ ਪਹੁੰਚ ਦੀ ਜ਼ਰੂਰਤ ਹੈ.</string>
     <string name="permission_info_permanent_denial_text">ਇਸ ਐਪ ਨੂੰ ਸਹੀ ਤਰ੍ਹਾਂ ਕੰਮ ਕਰਨ ਲਈ ਬੇਨਤੀ ਕੀਤੀ ਅਨੁਮਤੀ ਦੀ ਲੋੜ ਹੈ. ਸਥਾਨਕ ਮੈਮੋਰੀ ਵਿਚ ਚਿੱਤਰਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਕਰਨ ਲਈ, ਐਪ ਨੂੰ ਇਸ ਨੂੰ ਪੜ੍ਹਨ ਅਤੇ ਲਿਖਣ ਦੀ ਪਹੁੰਚ ਦੀ ਜ਼ਰੂਰਤ ਹੈ.
          ਜਿਵੇਂ ਕਿ ਤੁਸੀਂ ਆਗਿਆ ਤੋਂ ਇਨਕਾਰ ਕਰ ਦਿੱਤਾ ਹੈ ਦੁਬਾਰਾ ਨਾ ਪੁੱਛੋ, ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਫੋਨ ਸੈਟਿੰਗਾਂ ਤੇ ਜਾਓ ਅਤੇ ਜੇ ਤੁਸੀਂ ਸੰਬੰਧਿਤ ਕਾਰਜਾਂ ਦੀ ਵਰਤੋਂ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ਤਾਂ ਲੋੜੀਂਦੀਆਂ ਆਗਿਆ ਦਿਓ.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">ਕਿਨਾਰਿਆਂ ਨੂੰ ਉਨ੍ਹਾਂ ਦੀ ਨਵੀਂ ਸਥਿਤੀ \'ਤੇ ਖਿੱਚੋ, ਚਿੱਤਰ ਖੇਤਰ ਨੂੰ ਵੱਡਾ ਕਰਨ ਜਾਂ ਫਸਣ ਲਈ ਚੈੱਕਮਾਰਕ\' ਤੇ ਟੈਪ ਕਰੋ.</string>
     <string name="cursor_draw_inactive">ਸਥਿਤੀ ਤੇ ਪੈਨ ਕਰੋ, ਫਿਰ ਪੇਂਟਿੰਗ ਨੂੰ ਅਰੰਭ ਕਰਨ ਲਈ ਟੈਪ ਕਰੋ.</string>
     <string name="cursor_draw_active">ਖਿੱਚਣ ਲਈ ਪੈਨ ਕਰੋ, ਫਿਰ ਪੇਂਟਿੰਗ ਨੂੰ ਰੋਕਣ ਲਈ ਦੁਬਾਰਾ ਟੈਪ ਕਰੋ.</string>

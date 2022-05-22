@@ -44,7 +44,6 @@ import static org.hamcrest.Matchers.instanceOf;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -103,10 +102,11 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
-	public LayerMenuViewInteraction performLongClickLayer(int listPosition) {
+	public LayerMenuViewInteraction performStartDragging(int listPosition) {
 		check(matches(isDisplayed()));
 		onLayerAt(listPosition)
-				.perform(longClick());
+				.onChildView(withId(R.id.pocketpaint_layer_drag_handle))
+				.perform(click());
 		return this;
 	}
 

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2015 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/pocketpaint_stroke_width_width_text_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="10dp"
+        style="@style/TextFieldTheme">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/pocketpaint_stroke_width_width_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="number"
+            android:padding="4dp"
+            android:minEms="3"
+            android:saveEnabled="false"
+            android:background="@drawable/pocketpaint_round_rect_shape"
+            android:textColor="?attr/colorAccent"
+            android:textStyle="bold"
+            android:layoutDirection="ltr"
+            tools:ignore="LabelFor"
+            android:gravity="center"
+            tools:text="100" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <SeekBar
+        android:id="@+id/pocketpaint_stroke_width_seek_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:minHeight="30dip"
+        android:layout_marginEnd="10dp"
+        android:layout_alignTop="@id/pocketpaint_stroke_width_width_text_layout"
+        android:layout_toEndOf="@+id/pocketpaint_stroke_width_width_text_layout"
+        android:layout_alignBottom="@id/pocketpaint_stroke_width_width_text_layout"
+        android:layout_alignParentEnd="true"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp">
+        <!--> This Linear layout is needed for the preview.
+        The Brush tool searches for the Top of the parent<-->
+        <org.catrobat.paintroid.ui.tools.BrushToolView
+            android:id="@+id/pocketpaint_brush_tool_preview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/pocketpaint_stroke_types"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layoutDirection="ltr"
+            app:singleSelection="true"
+            app:singleLine="true">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/pocketpaint_stroke_ibtn_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ChipTheme"
+                android:checkable="true"
+                app:chipIcon="@drawable/ic_pocketpaint_tool_circle"
+                android:checked="true"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/pocketpaint_stroke_ibtn_rect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ChipTheme"
+                app:chipIcon="@drawable/ic_pocketpaint_tool_square" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/pocketpaint_smudge_tool_dialog_pressure_input_text_view"
+                    style="@style/PocketPaintToolSubtitle"
+                    android:labelFor="@+id/pocketpaint_smudge_tool_dialog_pressure_input"
+                    android:text="@string/smudge_tool_dialog_pressure_title" />
+
+                <View style="@style/PocketPaintToolSectionDivider" />
+
+                <LinearLayout style="@style/PocketPaintToolSection">
+
+                    <SeekBar
+                        android:id="@+id/pocketpaint_pressure_seek_bar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="100"
+                        android:minHeight="30dip" />
+
+                    <Space style="@style/PocketPaintToolHorizontalSpace" />
+
+                    <EditText
+                        android:id="@+id/pocketpaint_smudge_tool_dialog_pressure_input"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:minEms="3"
+                        android:saveEnabled="false"
+                        android:textColor="?attr/colorAccent"
+                        android:textCursorDrawable="@null"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/pocketpaint_smudge_tool_dialog_drag_input_text_view"
+                    style="@style/PocketPaintToolSubtitle"
+                    android:labelFor="@+id/pocketpaint_smudge_tool_dialog_drag_input"
+                    android:text="@string/smudge_tool_dialog_drag_title" />
+
+                <View style="@style/PocketPaintToolSectionDivider" />
+
+                <LinearLayout style="@style/PocketPaintToolSection">
+
+                    <SeekBar
+                        android:id="@+id/pocketpaint_drag_seek_bar"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="100"
+                        android:minHeight="30dip" />
+
+                    <Space style="@style/PocketPaintToolHorizontalSpace" />
+
+                    <EditText
+                        android:id="@+id/pocketpaint_smudge_tool_dialog_drag_input"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:minEms="3"
+                        android:saveEnabled="false"
+                        android:textColor="?attr/colorAccent"
+                        android:textCursorDrawable="@null"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</RelativeLayout>

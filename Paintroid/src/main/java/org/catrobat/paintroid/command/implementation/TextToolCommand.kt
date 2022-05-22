@@ -19,11 +19,9 @@
 
 package org.catrobat.paintroid.command.implementation
 
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
-import android.graphics.Rect
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.contract.LayerContracts
@@ -49,36 +47,36 @@ class TextToolCommand(
     var typeFaceInfo = typeFaceInfo; private set
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
-        val textDescent = textPaint.descent()
         val textAscent = textPaint.ascent()
-        val textHeight = textDescent - textAscent
-        val textBoxHeight = textHeight * multilineText.size + 2 * boxOffset
-        var maxTextWidth = 0f
-        multilineText.forEach { str ->
-            val textWidth = textPaint.measureText(str)
-            if (textWidth > maxTextWidth) {
-                maxTextWidth = textWidth
-            }
+        val textDescent = textPaint.descent()
+        val textHeight = (textDescent - textAscent) * multilineText.size
+        val lineHeight = textHeight / multilineText.size
+        val maxTextWidth = multilineText.maxOf { line ->
+            textPaint.measureText(line)
         }
-        val textBoxWidth = maxTextWidth + 2 * boxOffset
-        val textBitmap = Bitmap.createBitmap(
-            textBoxWidth.toInt(), textBoxHeight.toInt(),
-            Bitmap.Config.ARGB_8888
-        )
-        val textCanvas = Canvas(textBitmap)
-        multilineText.forEachIndexed { index, str ->
-            textCanvas.drawText(str, boxOffset, boxOffset - textAscent + textHeight * index, textPaint)
-        }
-        val srcRect = Rect(0, 0, textBoxWidth.toInt(), textBoxHeight.toInt())
-        val dstRect = Rect(
-            (-boxWidth / 2.0f).toInt(), (-boxHeight / 2.0f).toInt(),
-            (boxWidth / 2.0f).toInt(), (boxHeight / 2.0f).toInt()
-        )
+
         with(canvas) {
             save()
             translate(toolPosition.x, toolPosition.y)
             rotate(rotationAngle)
-            drawBitmap(textBitmap, srcRect, dstRect, textPaint)
+
+            val widthScaling = (boxWidth - 2 * boxOffset) / maxTextWidth
+            val heightScaling = (boxHeight - 2 * boxOffset) / textHeight
+            canvas.scale(widthScaling, heightScaling)
+
+            val scaledHeightOffset = boxOffset / heightScaling
+            val scaledWidthOffset = boxOffset / widthScaling
+            val scaledBoxWidth = boxWidth / widthScaling
+            val scaledBoxHeight = boxHeight / heightScaling
+
+            multilineText.forEachIndexed { index, textLine ->
+                canvas.drawText(
+                    textLine,
+                    -(scaledBoxWidth / 2) + scaledWidthOffset,
+                    -(scaledBoxHeight / 2) + scaledHeightOffset - textAscent + lineHeight * index,
+                    textPaint
+                )
+            }
             restore()
         }
     }
