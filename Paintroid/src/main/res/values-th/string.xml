@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">พ็อกเก็ตเพ้นท์</string>
     <string name="button_brush">พู่กัน</string>
     <string name="button_cursor">เคอร์เซอร์</string>
+    <string name="button_set_center">ตั้งศูนย์</string>
     <string name="button_pipette">ดูดสี</string>
     <string name="button_undo">เลิกทำ</string>
     <string name="button_redo">ทำซ้ำ</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">มือ</string>
     <string name="button_watercolor">สีน้ำ</string>
     <string name="button_spray_can">กระป๋องสเปรย์</string>
+    <string name="button_smudge">รอยเปื้อน</string>
     <string name="button_apply">นำไปใช้</string>
     <string name="button_checkmark">เครื่องหมายถูก</string>
     <string name="button_plus">เชื่อมต่อส่วนสาย</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">เลือกหรือปรับสี</string>
     <string name="help_content_hand">เลื่อนนิ้วของคุณเพื่อย้ายผืนผ้าใบ</string>
     <string name="help_content_spray_can">เลื่อนนิ้วของคุณบนภาพเพื่อสร้างรูปแบบกระป๋องสเปรย์</string>
+    <string name="help_content_smudge">เลื่อนนิ้วไปที่รูปภาพบนภาพวาดต่างๆ เพื่อทารอยเปื้อน</string>
     <string name="closing_catroid_security_question_title">กลับไปที่โครงการ</string>
     <string name="closing_security_question_title">ออก</string>
     <string name="closing_security_question">บันทึกการเปลี่ยนแปลง?</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">เติม</string>
     <string name="shape_tool_dialog_outline_title">เค้าโครง</string>
     <string name="fill_tool_dialog_color_tolerance_title">ความอดทนของสี</string>
+    <string name="smudge_tool_dialog_pressure_title">ความดัน</string>
+    <string name="smudge_tool_dialog_drag_title">ลาก</string>
     <string name="transform_tool_rotate_left">หมุนซ้าย</string>
     <string name="transform_tool_rotate_right">หมุน​ขวา</string>
     <string name="transform_tool_flip_vertical">พลิกแนวตั้ง</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">ความกว้าง</string>
     <string name="transform_height_text">ความสูง</string>
     <string name="transform_auto_crop_text">อัตโนมัติ</string>
+    <string name="transform_set_center_text">ตั้งศูนย์</string>
     <string name="pixel">พิกเซล</string>
     <string name="stamp_tool_copy_hint">กดค้างเพื่อคัดลอกเนื้อหา</string>
     <string name="layers_title">เลเยอร์</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">แอปนี้ต้องการสิทธิ์ที่ร้องขอเพื่อให้สามารถทำงานได้อย่างถูกต้อง ในการบันทึกภาพไปยังหน่วยความจำภายในแอปจำเป็นต้องมีสิทธิ์ในการอ่านและเขียน</string>
     <string name="permission_info_permanent_denial_text">แอปนี้ต้องการสิทธิ์ที่ร้องขอเพื่อให้สามารถทำงานได้อย่างถูกต้อง ในการบันทึกภาพไปยังหน่วยความจำภายในแอปจำเป็นต้องมีสิทธิ์ในการอ่านและเขียน
          เนื่องจากคุณปฏิเสธการอนุญาตไม่ต้องถามอีกโปรดไปที่การตั้งค่าโทรศัพท์และให้สิทธิ์ที่จำเป็นหากคุณต้องการใช้ฟังก์ชั่นที่เกี่ยวข้อง</string>
+    <string name="set_center_info_text">แตะหน้าจอเพื่อกำหนดตำแหน่งศูนย์กลางใหม่</string>
     <string name="transform_info_text">ลากขอบไปยังตำแหน่งใหม่จากนั้นแตะเพื่อขยายหรือครอบตัดพื้นที่ภาพ</string>
     <string name="cursor_draw_inactive">เลื่อนไปที่ตำแหน่งแล้วแตะเพื่อเริ่มวาดภาพ</string>
     <string name="cursor_draw_active">เลื่อนเพื่อวาดจากนั้นแตะอีกครั้งเพื่อหยุดการทาสี</string>

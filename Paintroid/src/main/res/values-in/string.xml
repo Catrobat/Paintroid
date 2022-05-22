@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Kuas</string>
     <string name="button_cursor">Kursor</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">Pipet</string>
     <string name="button_undo">Urung</string>
     <string name="button_redo">Ulangi</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">Tangan</string>
     <string name="button_watercolor">Cat air</string>
     <string name="button_spray_can">Kaleng semprot</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">Menerapkan</string>
     <string name="button_checkmark">Tanda cek</string>
     <string name="button_plus">Hubungkan Segmen Garis</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">Pilih atau sesuaikan warna.</string>
     <string name="help_content_hand">Gerakkan jari Anda untuk memindahkan kanvas.</string>
     <string name="help_content_spray_can">Gerakkan jari Anda pada gambar untuk membuat pola kaleng semprot.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">Kembali ke proyek</string>
     <string name="closing_security_question_title">Keluar</string>
     <string name="closing_security_question">Simpan Perubahan?</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">Isi</string>
     <string name="shape_tool_dialog_outline_title">Garis besar</string>
     <string name="fill_tool_dialog_color_tolerance_title">Toleransi warna</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">putar ke kiri</string>
     <string name="transform_tool_rotate_right">Putar ke kanan</string>
     <string name="transform_tool_flip_vertical">balik vertikal</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">Lebar</string>
     <string name="transform_height_text">Tinggi</string>
     <string name="transform_auto_crop_text">Mobil</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">px</string>
     <string name="stamp_tool_copy_hint">Tekan lama untuk menyalin konten</string>
     <string name="layers_title">Lapisan</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">Aplikasi ini membutuhkan izin yang diminta agar berfungsi dengan baik. Untuk menyimpan gambar ke memori lokal, aplikasi membutuhkan akses baca dan tulis ke dalamnya.</string>
     <string name="permission_info_permanent_denial_text">Aplikasi ini membutuhkan izin yang diminta agar berfungsi dengan baik. Untuk menyimpan gambar ke memori lokal, aplikasi membutuhkan akses baca dan tulis ke dalamnya.
         Karena Anda telah menolak izin dengan jangan tanya lagi, silakan buka pengaturan ponsel Anda dan berikan izin yang diperlukan jika Anda ingin menggunakan fungsi terkait.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">Seret tepi ke posisi barunya, ketuk tanda centang untuk memperbesar atau memotong area gambar.</string>
     <string name="cursor_draw_inactive">Geser ke posisi, lalu ketuk untuk mulai mengecat.</string>
     <string name="cursor_draw_active">Geser untuk menggambar, lalu ketuk lagi untuk berhenti melukis.</string>

@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">پاڪيٽ پينٽ</string>
     <string name="button_brush">برش</string>
     <string name="button_cursor">ڪرسر</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">چوسڻو</string>
     <string name="button_undo">ڊاهيو</string>
     <string name="button_redo">واپس موٽايو</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">Hand</string>
     <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">Spray can</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">Apply</string>
     <string name="button_checkmark">Checkmark</string>
     <string name="button_plus">Connect Line Segment</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">Select or adjust a color.</string>
     <string name="help_content_hand">Move your finger to move the canvas.</string>
     <string name="help_content_spray_can">Move your finger on the image to create a spray can pattern.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="closing_security_question_title">بند ڪريو</string>
     <string name="closing_security_question">ڇا تبديليون محفوظ ٿين?</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">ڀريو</string>
     <string name="shape_tool_dialog_outline_title">Outline</string>
     <string name="fill_tool_dialog_color_tolerance_title">رنگ تحمل</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">rotate left</string>
     <string name="transform_tool_rotate_right">rotate right</string>
     <string name="transform_tool_flip_vertical">flip vertical</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">Width</string>
     <string name="transform_height_text">Height</string>
     <string name="transform_auto_crop_text">Auto</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">px</string>
     <string name="stamp_tool_copy_hint">ڪاپي ڪرڻ لاء ٽچ دٻائي ٻيهو</string>
     <string name="layers_title">ليير</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
     <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
         As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
     <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
     <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>

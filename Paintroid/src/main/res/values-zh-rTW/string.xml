@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">Pocket Paint 口袋小畫家</string>
     <string name="button_brush">筆刷</string>
     <string name="button_cursor">游標</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">吸管</string>
     <string name="button_undo">復原</string>
     <string name="button_redo">重做</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">手</string>
     <string name="button_watercolor">水彩</string>
     <string name="button_spray_can">噴霧罐</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">申請</string>
     <string name="button_checkmark">複選標記</string>
     <string name="button_plus">連接線段</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">選擇或調整顏色。</string>
     <string name="help_content_hand">移動手指即可移動畫布。</string>
     <string name="help_content_spray_can">在圖像上移動手指即可創建噴霧罐圖案。</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">返回專案</string>
     <string name="closing_security_question_title">離開</string>
     <string name="closing_security_question">儲存修改?</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">填滿</string>
     <string name="shape_tool_dialog_outline_title">大綱</string>
     <string name="fill_tool_dialog_color_tolerance_title">色差</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">向左旋轉</string>
     <string name="transform_tool_rotate_right">右旋</string>
     <string name="transform_tool_flip_vertical">垂直翻轉</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">寬度</string>
     <string name="transform_height_text">高度</string>
     <string name="transform_auto_crop_text">汽車</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">像素</string>
     <string name="stamp_tool_copy_hint">長按即可複制內容</string>
     <string name="layers_title">層數</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">此應用需要所請求的權限才能正常運行。為了將圖像保存到本地內存，應用程序需要對其進行讀寫訪問。</string>
     <string name="permission_info_permanent_denial_text">此應用需要所請求的權限才能正常運行。為了將圖像保存到本地內存，應用程序需要對其進行讀寫訪問。
         由於您已拒絕的許可，請不要再詢問，因此，如果要使用關聯的功能，請進入手機設置並授予所需的許可權。</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">將邊緣拖動到新位置，點擊複選標記以放大或裁剪圖像區域。</string>
     <string name="cursor_draw_inactive">平移至位置，然後點按以開始繪畫。</string>
     <string name="cursor_draw_active">平移以繪畫，然後再次點擊以停止繪畫。</string>

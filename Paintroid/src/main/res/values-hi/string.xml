@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">पॉकेट पेंट</string>
     <string name="button_brush">ब्रश</string>
     <string name="button_cursor">कर्सर</string>
+    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">पिपेट</string>
     <string name="button_undo">वापस</string>
     <string name="button_redo">फिर से करें</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">हाथ</string>
     <string name="button_watercolor">आबरंग</string>
     <string name="button_spray_can">स्प्रे कैन</string>
+    <string name="button_smudge">Smudge</string>
     <string name="button_apply">लागू करें</string>
     <string name="button_checkmark">सही का निशान</string>
     <string name="button_plus">कनेक्ट लाइन सेगमेंट</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">रंग का चयन या समायोजन करें।</string>
     <string name="help_content_hand">कैनवास को स्थानांतरित करने के लिए अपनी उंगली को हिलाएं।</string>
     <string name="help_content_spray_can">एक स्प्रे पैटर्न बनाने के लिए अपनी उंगली को छवि पर ले जाएं।</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="closing_catroid_security_question_title">वापस परियोजना के लिए</string>
     <string name="closing_security_question_title">बंद करें</string>
     <string name="closing_security_question">परिवर्तन सहेजें?</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">भरें</string>
     <string name="shape_tool_dialog_outline_title">रेखांकित करें</string>
     <string name="fill_tool_dialog_color_tolerance_title">रंग सहिष्णुता</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
     <string name="transform_tool_rotate_left">बायीं तरफ</string>
     <string name="transform_tool_rotate_right">दाएं घुमाएं</string>
     <string name="transform_tool_flip_vertical">ऊर्ध्वाधर पलटें</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">चौड़ाई</string>
     <string name="transform_height_text">ऊंचाई</string>
     <string name="transform_auto_crop_text">ऑटो</string>
+    <string name="transform_set_center_text">Set center</string>
     <string name="pixel">पिक्सल</string>
     <string name="stamp_tool_copy_hint">लांग प्रेस सामग्री की प्रतिलिपि करने के लिए</string>
     <string name="layers_title">परतों</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">इस एप्लिकेशन को ठीक से काम करने के लिए अनुरोध की अनुमति की आवश्यकता है। छवियों को स्थानीय मेमोरी में सहेजने के लिए, एप्लिकेशन को उस तक पहुंच पढ़ने और लिखने की आवश्यकता होती है।</string>
     <string name="permission_info_permanent_denial_text">इस एप्लिकेशन को ठीक से काम करने के लिए अनुरोध की अनुमति की आवश्यकता है। छवियों को स्थानीय मेमोरी में सहेजने के लिए, एप्लिकेशन को उस तक पहुंच पढ़ने और लिखने की आवश्यकता होती है।
         जैसा कि आपने दोबारा अनुमति नहीं देने से इनकार कर दिया है, कृपया अपनी फोन सेटिंग में जाएं और यदि आप संबंधित कार्यों का उपयोग करना चाहते हैं तो आवश्यक अनुमति दें।</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
     <string name="transform_info_text">किनारों को अपनी नई स्थिति में खींचें, फिर छवि क्षेत्र को विस्तार देने या क्रॉप करने के लिए टैप करें.</string>
     <string name="cursor_draw_inactive">स्थिति के लिए पैन, तो पेंटिंग शुरू करने के लिए नल.</string>
     <string name="cursor_draw_active">ड्रा करने के लिए पैन, तो पेंटिंग को रोकने के लिए फिर से नल ।</string>

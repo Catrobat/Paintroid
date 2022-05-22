@@ -18,10 +18,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Pędzel</string>
     <string name="button_cursor">Kursor</string>
+    <string name="button_set_center">Ustaw Środek</string>
     <string name="button_pipette">Pipeta</string>
     <string name="button_undo">Cofnij</string>
     <string name="button_redo">Ponów</string>
@@ -37,6 +38,7 @@
     <string name="button_hand">Ręka</string>
     <string name="button_watercolor">Akwarela</string>
     <string name="button_spray_can">Sprej</string>
+    <string name="button_smudge">Smuga</string>
     <string name="button_apply">Zastosuj</string>
     <string name="button_checkmark">Zaznaczenie</string>
     <string name="button_plus">Połącz segment linii</string>
@@ -74,6 +76,7 @@
     <string name="help_content_color_chooser">Wybierz lub dostosuj kolor</string>
     <string name="help_content_hand">Przesuń palec, aby przesunąć kanwę.</string>
     <string name="help_content_spray_can">Przesuń palcem po obrazie, aby użyć spreju.</string>
+    <string name="help_content_smudge">Przesuń palcem na obrazku na różnych rysunkach, aby je rozmazać.</string>
     <string name="closing_catroid_security_question_title">Powrót do projektu</string>
     <string name="closing_security_question_title">Opuść</string>
     <string name="closing_security_question">Zapisać zmiany?</string>
@@ -93,8 +96,8 @@
     <string name="menu_advanced">Ustawienia zaawansowane</string>
     <string name="saved_to">Obraz zapisany do\n</string>
     <string name="saved">Obraz został zapisany</string>
-    <string name="copy_to">Kopia zapisana do\n</string>
-    <string name="copy">Kopia została zapisana</string>
+    <string name="copy_to">Kopia została zapisana do\n</string>
+    <string name="copy">Kopiuj</string>
     <string name="menu_quit">Opuść</string>
     <string name="save_button_text">Zapisz</string>
     <string name="discard_button_text">Odrzuć</string>
@@ -122,6 +125,8 @@
     <string name="shape_tool_dialog_fill_title">Zamaluj</string>
     <string name="shape_tool_dialog_outline_title">Zarys</string>
     <string name="fill_tool_dialog_color_tolerance_title">Tolerancja kolorów</string>
+    <string name="smudge_tool_dialog_pressure_title">Ciśnienie</string>
+    <string name="smudge_tool_dialog_drag_title">Przeciągnij</string>
     <string name="transform_tool_rotate_left">obróć w lewo</string>
     <string name="transform_tool_rotate_right">obróć w prawo</string>
     <string name="transform_tool_flip_vertical">odbij w pionie</string>
@@ -131,6 +136,7 @@
     <string name="transform_width_text">Szerokość</string>
     <string name="transform_height_text">Wysokość</string>
     <string name="transform_auto_crop_text">Automatycznie</string>
+    <string name="transform_set_center_text">Ustaw środek</string>
     <string name="pixel">px</string>
     <string name="stamp_tool_copy_hint">Naciśnij długo, aby skopiować zawartość</string>
     <string name="layers_title">Warstwy</string>
@@ -155,6 +161,7 @@
     <string name="permission_info_external_storage_text">Ta aplikacja potrzebuje żądanych uprawnień do prawidłowego funkcjonowania. Aby zapisać obrazy w pamięci lokalnej, aplikacja potrzebuje dostępu do czytania i zapisu.</string>
     <string name="permission_info_permanent_denial_text">Ta aplikacja potrzebuje żądanych uprawnień do prawidłowego funkcjonowania. Aby zapisać obrazy w pamięci lokalnej, aplikacja potrzebuje dostępu do czytania i zapisu.
         Ponieważ odmówiłeś uprawnień, nie pytaj ponownie, przejdź do ustawień telefonu i przyznaj wymagane uprawnienia, jeśli chcesz używać powiązanych funkcji.</string>
+    <string name="set_center_info_text">Dotknij ekranu, aby zdefiniować nową pozycję środkową.</string>
     <string name="transform_info_text">Przeciągnij krawędzie do nowej pozycji, a następnie naciśnij, aby powiększyć lub przyciąć obszar obrazu.</string>
     <string name="cursor_draw_inactive">Przesuń w wybrane miejsce, następnie dotknij, aby zacząć malowanie.</string>
     <string name="cursor_draw_active">Przesuń, aby rysować, naciśnij ponownie, aby zatrzymać malowanie.</string>
