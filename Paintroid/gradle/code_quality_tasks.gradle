@@ -31,7 +31,7 @@ dependencies {
 
     checkstyle 'com.puppycrawl.tools:checkstyle:7.6'
 
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0"
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.20.0"
 }
 
 task checkstyle(type: Checkstyle) {
@@ -70,7 +70,7 @@ task pmd(type: Pmd) {
 }
 
 detekt {
-    toolVersion = "1.14.2"
+    toolVersion = "1.20.0"
     config = files("$rootDir/Paintroid/config/detekt.yml")
     input = files("$rootDir/colorpicker/", "$rootDir/Paintroid/")
 }
