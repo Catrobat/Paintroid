@@ -44,6 +44,8 @@
     <string name="done">Done</string>
 
     <string name="gallery">Gallery</string>
+    
+    <string name="no_connection_sticker">Cannot access stickers at the moment. Please check your internet connection, or try again later.</string>
 
     <string name="stamptool_paste">Paste</string>
     <string name="stamptool_copy">Copy</string>
