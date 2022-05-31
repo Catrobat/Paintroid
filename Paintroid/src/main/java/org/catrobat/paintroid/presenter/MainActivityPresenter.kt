@@ -47,11 +47,11 @@ import org.catrobat.paintroid.common.CREATE_FILE_DEFAULT
 import org.catrobat.paintroid.common.LOAD_IMAGE_CATROID
 import org.catrobat.paintroid.common.LOAD_IMAGE_DEFAULT
 import org.catrobat.paintroid.common.LOAD_IMAGE_IMPORT_PNG
-import org.catrobat.paintroid.common.MainActivityConstants.PermissionRequestCode
+import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.CreateFileRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode
+import org.catrobat.paintroid.common.MainActivityConstants.PermissionRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.SaveImageRequestCode
-import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
@@ -293,7 +293,8 @@ open class MainActivityPresenter(
         FileIO.fileType = FileIO.FileType.PNG
         FileIO.isCatrobatImage = false
         FileIO.deleteTempFile(internalMemoryPath)
-        val initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
+        val initCommand =
+            commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
         commandManager.setInitialStateCommand(initCommand)
         commandManager.reset()
     }
@@ -885,7 +886,7 @@ open class MainActivityPresenter(
         if (bottomBarViewHolder.isVisible) {
             bottomBarViewHolder.hide()
         } else {
-            if (!layerAdapter!!.presenter.getLayerItem(workspace.currentLayerIndex).isVisible) {
+            if (layerAdapter?.presenter?.getLayerItem(workspace.currentLayerIndex)?.isVisible == false) {
                 navigator.showToast(R.string.no_tools_on_hidden_layer, Toast.LENGTH_SHORT)
                 return
             }

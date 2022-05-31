@@ -169,16 +169,14 @@ open class BrushTool(
             return false
         }
 
-        val distance = sqrt(
-            (
-                (coordinate.x - initialEventCoordinate!!.x) *
-                    (coordinate.x - initialEventCoordinate!!.x) +
-                    (coordinate.y - initialEventCoordinate!!.y)
-                ).toDouble()
-        )
-        val speed = distance / drawTime
+        var distance: Double? = null
+        initialEventCoordinate?.apply {
+            distance =
+                sqrt(((coordinate.x - x) * (coordinate.x - x) + (coordinate.y - y) * (coordinate.y - y)).toDouble())
+        }
+        val speed = distance?.div(drawTime)
 
-        if (!smoothing || speed < threshold) {
+        if (!smoothing || speed != null && speed < threshold) {
             val command = commandFactory.createPathCommand(bitmapPaint, pathToDraw)
             commandManager.addCommand(command)
         } else {

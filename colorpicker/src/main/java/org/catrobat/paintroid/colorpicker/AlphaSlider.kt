@@ -174,16 +174,16 @@ class AlphaSlider(
     }
 
     private fun moveTrackersIfNeeded(event: MotionEvent): Boolean {
-        if (startTouchPoint == null) {
-            return false
-        }
-        var update = true
-        val startX = startTouchPoint!!.x
-        val startY = startTouchPoint!!.y
-        if (alphaRectangle.contains(startX.toFloat(), startY.toFloat())) {
-            alphaValue = pointToAlpha(event.x.toInt())
-        } else {
-            update = false
+        var update = false
+        startTouchPoint?.apply {
+            update = true
+            val startX = x
+            val startY = y
+            if (alphaRectangle.contains(startX.toFloat(), startY.toFloat())) {
+                alphaValue = pointToAlpha(event.x.toInt())
+            } else {
+                update = false
+            }
         }
         return update
     }
