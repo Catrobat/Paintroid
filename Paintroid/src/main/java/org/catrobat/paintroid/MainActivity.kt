@@ -44,6 +44,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -143,7 +145,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private lateinit var drawerLayoutViewHolder: DrawerLayoutViewHolder
     private lateinit var keyboardListener: KeyboardListener
     private lateinit var appFragment: PaintroidApplicationFragment
-    private lateinit var defaultToolController: DefaultToolController
+    lateinit var defaultToolController: DefaultToolController
     private lateinit var commandFactory: CommandFactory
     private var deferredRequestPermissionsResult: Runnable? = null
     private lateinit var progressBar: ContentLoadingProgressBar
@@ -496,7 +498,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             layerModel, layerListView, layerMenuViewHolder,
             commandManager, DefaultCommandFactory(), layerNavigator
         )
-        val layerAdapter = LayerAdapter(layerPresenter)
+        val layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
+        layerListView.layoutManager = layoutManager
+        layerListView.manager = layoutManager
+        val layerAdapter = LayerAdapter(layerPresenter, this, layerListView.listener)
+        layerListView.setLayerAdapter(layerAdapter)
         presenterMain.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
         layerListView.setPresenter(layerPresenter)

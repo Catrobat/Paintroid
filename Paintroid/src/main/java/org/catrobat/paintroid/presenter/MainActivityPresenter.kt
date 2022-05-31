@@ -605,7 +605,7 @@ open class MainActivityPresenter(
     override fun showLayerMenuClicked() {
         idlingResource.increment()
         layerAdapter?.apply {
-            for (i in 0 until count) {
+            for (i in 0 until itemCount) {
                 val currentHolder = getViewHolderAt(i)
                 currentHolder?.let {
                     if (it.bitmap != null) {
