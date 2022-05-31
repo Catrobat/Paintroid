@@ -18,6 +18,7 @@ import org.catrobat.paintroid.tools.common.CommonBrushChangedListener
 import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener
 import org.catrobat.paintroid.tools.options.SmudgeToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import kotlin.math.sqrt
 
 const val PERCENT_100 = 100f
 const val BITMAP_ROTATION_FACTOR = -0.0f
@@ -114,12 +115,14 @@ class SmudgeTool(
             Canvas(it).apply {
                 translate(-coordinate.x + maxSmudgeSize / 2f, -coordinate.y + maxSmudgeSize / 2f)
                 rotate(BITMAP_ROTATION_FACTOR, coordinate.x, coordinate.y)
-                drawBitmap(layerBitmap!!, 0f, 0f, null)
+                layerBitmap?.let { bitmap ->
+                    drawBitmap(bitmap, 0f, 0f, null)
+                }
             }
-        }
 
-        if (toolPaint.strokeCap == Paint.Cap.ROUND) {
-            currentBitmap = getBitmapClippedCircle(currentBitmap!!)
+            if (toolPaint.strokeCap == Paint.Cap.ROUND) {
+                currentBitmap = getBitmapClippedCircle(it)
+            }
         }
 
         if (!currentBitmapHasColor()) {
@@ -129,35 +132,37 @@ class SmudgeTool(
         }
 
         prevPoint = PointF(coordinate.x, coordinate.y)
-        pointArray.add(PointF(prevPoint!!.x, prevPoint!!.y))
+        prevPoint?.apply {
+            pointArray.add(PointF(x, y))
+        }
 
         return true
     }
 
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
+
         if (currentBitmap != null) {
             if (pressure < DRAW_THRESHOLD) { // Needed to stop drawing preview when bitmap becomes too transparent. Has no effect on final drawing.
                 return false
             }
 
-            val x = coordinate.x - prevPoint!!.x
-            val y = coordinate.y - prevPoint!!.y
+            prevPoint?.apply {
+                val x1 = coordinate.x - x
+                val y1 = coordinate.y - y
 
-            val distance = kotlin.math.floor(kotlin.math.sqrt(x * x + y * y) / DISTANCE_SMOOTHING)
-            val xInterval = x / distance
-            val yInterval = y / distance
+                val distance = (sqrt(x1 * x1 + y1 * y1) / DISTANCE_SMOOTHING).toInt()
+                val xInterval = x1 / distance
+                val yInterval = y1 / distance
 
-            var i = 0
-            while (i < distance) {
-                prevPoint!!.x += xInterval
-                prevPoint!!.y += yInterval
+                repeat(distance) {
+                    x += xInterval
+                    y += yInterval
 
-                pressure -= PRESSURE_UPDATE_STEP
+                    pressure -= PRESSURE_UPDATE_STEP
 
-                pointArray.add(PointF(prevPoint!!.x, prevPoint!!.y))
-
-                i++
+                    pointArray.add(PointF(x, y))
+                }
             }
             return true
         } else {
@@ -183,10 +188,12 @@ class SmudgeTool(
     }
 
     private fun currentBitmapHasColor(): Boolean {
-        for (x in 0 until currentBitmap!!.width) {
-            for (y in 0 until currentBitmap!!.height) {
-                if (currentBitmap!!.getPixel(x, y) != 0) {
-                    return true
+        currentBitmap?.apply {
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    if (getPixel(x, y) != 0) {
+                        return true
+                    }
                 }
             }
         }
@@ -195,15 +202,17 @@ class SmudgeTool(
 
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false
-        if (!pointArray.isEmpty() && currentBitmap != null) {
-            val command = commandFactory.createSmudgePathCommand(
-                currentBitmap!!,
-                pointArray,
-                maxPressure,
-                maxSmudgeSize,
-                minSmudgeSize
-            )
-            commandManager.addCommand(command)
+        if (pointArray.isNotEmpty() && currentBitmap != null) {
+            currentBitmap?.let {
+                val command = commandFactory.createSmudgePathCommand(
+                    it,
+                    pointArray,
+                    maxPressure,
+                    maxSmudgeSize,
+                    minSmudgeSize
+                )
+                commandManager.addCommand(command)
+            }
 
             numOfPointsOnPath = if (numOfPointsOnPath < 0) {
                 pointArray.size
@@ -235,7 +244,7 @@ class SmudgeTool(
             var pressure = maxPressure
             val colorMatrix = ColorMatrix()
             val paint = Paint()
-            var bitmap = currentBitmap!!.copy(Bitmap.Config.ARGB_8888, false)
+            var bitmap = currentBitmap?.copy(Bitmap.Config.ARGB_8888, false)
 
             pointPath.forEach {
                 colorMatrix.setScale(1f, 1f, 1f, pressure)
@@ -248,10 +257,12 @@ class SmudgeTool(
                 )
 
                 Canvas(newBitmap).apply {
-                    drawBitmap(bitmap, 0f, 0f, paint)
+                    bitmap?.let { currentBitmap ->
+                        drawBitmap(currentBitmap, 0f, 0f, paint)
+                    }
                 }
 
-                bitmap.recycle()
+                bitmap?.recycle()
                 bitmap = newBitmap
 
                 val rect = RectF(-size / 2f, -size / 2f, size / 2f, size / 2f)
@@ -259,14 +270,16 @@ class SmudgeTool(
                     save()
                     clipRect(0, 0, workspace.width, workspace.height)
                     translate(it.x, it.y)
-                    drawBitmap(bitmap, null, rect, Paint(Paint.DITHER_FLAG))
+                    bitmap?.let { currentBitmap ->
+                        drawBitmap(currentBitmap, null, rect, Paint(Paint.DITHER_FLAG))
+                    }
                     restore()
                 }
                 size -= step
                 pressure -= PRESSURE_UPDATE_STEP
             }
 
-            bitmap.recycle()
+            bitmap?.recycle()
         }
     }
 

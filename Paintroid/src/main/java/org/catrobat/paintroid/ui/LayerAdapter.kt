@@ -82,7 +82,9 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
         val dragHandle = localConvertView?.findViewById<AppCompatImageView>(R.id.pocketpaint_layer_drag_handle)
         dragHandle?.setOnTouchListener { _, event ->
             when (event.action) {
-                MotionEvent.ACTION_DOWN -> presenter.onStartDragging(position, localConvertView!!)
+                MotionEvent.ACTION_DOWN -> localConvertView?.let {
+                    presenter.onStartDragging(position, it)
+                }
                 MotionEvent.ACTION_UP -> presenter.onStopDragging()
             }
 
