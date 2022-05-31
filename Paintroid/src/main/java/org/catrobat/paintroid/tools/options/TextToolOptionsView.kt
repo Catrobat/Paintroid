@@ -18,6 +18,8 @@
  */
 package org.catrobat.paintroid.tools.options
 
+import org.catrobat.paintroid.tools.FontType
+
 interface TextToolOptionsView {
     fun setState(
         bold: Boolean,
@@ -25,7 +27,7 @@ interface TextToolOptionsView {
         underlined: Boolean,
         text: String,
         textSize: Int,
-        font: String
+        fontType: FontType
     )
 
     fun setCallback(listener: Callback)
@@ -33,7 +35,7 @@ interface TextToolOptionsView {
     interface Callback {
         fun setText(text: String)
 
-        fun setFont(font: String)
+        fun setFont(fontType: FontType)
 
         fun setUnderlined(underlined: Boolean)
 

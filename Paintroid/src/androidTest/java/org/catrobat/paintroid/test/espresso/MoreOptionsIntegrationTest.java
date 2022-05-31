@@ -36,13 +36,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.catrobat.paintroid.common.ConstantsKt.TEMP_PICTURE_NAME;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.intent.Intents;
 import androidx.test.espresso.intent.matcher.IntentMatchers;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -65,6 +66,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -79,6 +81,8 @@ public class MoreOptionsIntegrationTest {
 
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
+
+	public String defaultPictureName = "moreOptionsImageTest";
 
 	@Before
 	public void setUp() {
@@ -178,7 +182,10 @@ public class MoreOptionsIntegrationTest {
 	@Test
 	public void testShowLikeUsDialogOnFirstSave() {
 		onView(withText(R.string.menu_save_image)).perform(click());
+		onView(withId(R.id.pocketpaint_image_name_save_text))
+				.perform(ViewActions.replaceText("likeus"));
 		onView(withText(R.string.save_button_text)).perform(click());
+		onView(isRoot()).perform(waitFor(100));
 		onView(withText(R.string.pocketpaint_like_us)).check(matches(isDisplayed()));
 	}
 
@@ -207,7 +214,7 @@ public class MoreOptionsIntegrationTest {
 		onData(allOf(is(instanceOf(String.class)),
 				is("png"))).inRoot(isPlatformPopup()).perform(click());
 		onView(withId(R.id.pocketpaint_image_name_save_text))
-				.perform(replaceText(TEMP_PICTURE_NAME));
+				.perform(replaceText(defaultPictureName));
 
 		onView(withText(R.string.save_button_text))
 				.perform(click());
@@ -219,7 +226,7 @@ public class MoreOptionsIntegrationTest {
 		onView(withText(R.string.menu_save_image)).perform(click());
 
 		onView(withText("png")).check(matches(isDisplayed()));
-		onView(withText(TEMP_PICTURE_NAME)).check(matches(isDisplayed()));
+		onView(withText(defaultPictureName)).check(matches(isDisplayed()));
 	}
 
 	@Test

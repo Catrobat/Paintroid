@@ -57,6 +57,7 @@ import org.catrobat.paintroid.command.serialization.CommandSerializationUtilitie
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.drawable.HeartDrawable
 import org.catrobat.paintroid.tools.drawable.OvalDrawable
 import org.catrobat.paintroid.tools.drawable.RectangleDrawable
@@ -65,9 +66,8 @@ import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import kotlin.collections.ArrayList
+import org.mockito.Mockito.mock
 
 class CommandSerializationTest {
 
@@ -174,13 +174,14 @@ class CommandSerializationTest {
     @Test
     fun testSerializeTextToolCommand() {
         val typeface = SerializableTypeface(
-            "Monospace",
-            bold = true,
+            FontType.MONOSPACE,
+            bold = false,
             underline = false,
             italic = true,
             textSize = 25f,
             textSkewX = -0.25f
         )
+
         expectedModel.commands.add(
             commandFactory.createTextToolCommand(
                 arrayOf("Serialization", "is", "fun", "!.?)4`\""),
@@ -569,8 +570,11 @@ class CommandSerializationTest {
         actualTypeFace: SerializableTypeface,
         expectedTypeFace: SerializableTypeface
     ) =
-        actualTypeFace.font == expectedTypeFace.font && actualTypeFace.bold == expectedTypeFace.bold && actualTypeFace.underline == expectedTypeFace.underline &&
-            actualTypeFace.italic == expectedTypeFace.italic && actualTypeFace.textSize == expectedTypeFace.textSize &&
+        actualTypeFace.font == expectedTypeFace.font &&
+            actualTypeFace.bold == expectedTypeFace.bold &&
+            actualTypeFace.underline == expectedTypeFace.underline &&
+            actualTypeFace.italic == expectedTypeFace.italic &&
+            actualTypeFace.textSize == expectedTypeFace.textSize &&
             actualTypeFace.textSkewX == expectedTypeFace.textSkewX
 
     private fun equalsGeometricFillCommand(

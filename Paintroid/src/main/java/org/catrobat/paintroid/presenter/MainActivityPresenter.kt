@@ -47,11 +47,11 @@ import org.catrobat.paintroid.common.CREATE_FILE_DEFAULT
 import org.catrobat.paintroid.common.LOAD_IMAGE_CATROID
 import org.catrobat.paintroid.common.LOAD_IMAGE_DEFAULT
 import org.catrobat.paintroid.common.LOAD_IMAGE_IMPORT_PNG
-import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
+import org.catrobat.paintroid.common.MainActivityConstants.PermissionRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.CreateFileRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.LoadImageRequestCode
-import org.catrobat.paintroid.common.MainActivityConstants.PermissionRequestCode
 import org.catrobat.paintroid.common.MainActivityConstants.SaveImageRequestCode
+import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
@@ -77,12 +77,12 @@ import org.catrobat.paintroid.iotasks.BitmapReturnValue
 import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
+import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.LayerAdapter
 import org.catrobat.paintroid.ui.Perspective
 import java.io.File
-import java.lang.IllegalArgumentException
 
 @SuppressWarnings("LongParameterList", "LargeClass", "ThrowingExceptionsWithoutMessageOrCause")
 open class MainActivityPresenter(
@@ -102,10 +102,12 @@ open class MainActivityPresenter(
     private val toolController: ToolController,
     private val sharedPreferences: UserPreferences,
     override val context: Context,
+    private val internalMemoryPath: File
 ) : MainActivityContracts.Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
     private var layerAdapter: LayerAdapter? = null
     private var resetPerspectiveAfterNextCommand = false
     private var isExport = false
+    private var wasImageLoaded = false
     private val isImageUnchanged: Boolean
         get() = !commandManager.isUndoAvailable
 
@@ -128,12 +130,12 @@ open class MainActivityPresenter(
         }
 
     override fun loadImageClicked() {
-        switchBetweenVersions(PERMISSION_REQUEST_CODE_LOAD_PICTURE)
+        switchBetweenVersions(PERMISSION_REQUEST_CODE_LOAD_PICTURE, false)
         setFirstCheckBoxInLayerMenu()
     }
 
     private fun setFirstCheckBoxInLayerMenu() {
-        layerAdapter?.getViewHolderAt(0)?.apply { setCheckBox(true) }
+        layerAdapter?.getViewHolderAt(0)?.apply { setLayerVisibilityCheckbox(true) }
     }
 
     override fun saveBeforeLoadImage() {
@@ -168,7 +170,7 @@ open class MainActivityPresenter(
     }
 
     private fun showSecurityQuestionBeforeExit() {
-        if ((isImageUnchanged || model.isSaved) && (!model.isOpenedFromCatroid || !FileIO.wasImageLoaded)) {
+        if ((isImageUnchanged || model.isSaved) && (!model.isOpenedFromCatroid || !wasImageLoaded)) {
             finishActivity()
         } else if (model.isOpenedFromCatroid) {
             saveBeforeFinish()
@@ -287,15 +289,11 @@ open class MainActivityPresenter(
         resetPerspectiveAfterNextCommand = true
         model.savedPictureUri = null
         FileIO.filename = "image"
-        FileIO.uriFileJpg = null
-        FileIO.uriFilePng = null
-        FileIO.currentFileNameJpg = null
-        FileIO.currentFileNamePng = null
         FileIO.compressFormat = Bitmap.CompressFormat.PNG
-        FileIO.ending = ".png"
+        FileIO.fileType = FileIO.FileType.PNG
         FileIO.isCatrobatImage = false
-        val initCommand =
-            commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
+        FileIO.deleteTempFile(internalMemoryPath)
+        val initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
         commandManager.setInitialStateCommand(initCommand)
         commandManager.reset()
     }
@@ -310,21 +308,20 @@ open class MainActivityPresenter(
 
     override fun switchBetweenVersions(@PermissionRequestCode requestCode: Int, isExport: Boolean) {
         this.isExport = isExport
+
+        if (model.isOpenedFromCatroid) {
+            FileIO.storeImageUri = model.savedPictureUri
+        }
+
         if (navigator.isSdkAboveOrEqualM) {
             askForReadAndWriteExternalStoragePermission(requestCode)
             when (requestCode) {
-                PERMISSION_REQUEST_CODE_LOAD_PICTURE -> {
-                }
-                PERMISSION_REQUEST_CODE_IMPORT_PICTURE -> {
-                }
-                PERMISSION_EXTERNAL_STORAGE_SAVE -> {
-                    checkForDefaultFilename()
-                    showLikeUsDialogIfFirstTimeSave()
-                }
-                PERMISSION_EXTERNAL_STORAGE_SAVE_COPY -> checkForDefaultFilename()
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW -> checkForDefaultFilename()
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY -> checkForDefaultFilename()
-                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH -> checkForDefaultFilename()
+                PERMISSION_REQUEST_CODE_LOAD_PICTURE, PERMISSION_REQUEST_CODE_IMPORT_PICTURE -> Unit
+                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
+                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
+                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
+                PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
+                PERMISSION_EXTERNAL_STORAGE_SAVE -> checkForDefaultFilename()
             }
         } else {
             if (requestCode == PERMISSION_REQUEST_CODE_LOAD_PICTURE) {
@@ -442,34 +439,34 @@ open class MainActivityPresenter(
                     PERMISSION_EXTERNAL_STORAGE_SAVE -> {
                         saveImageConfirmClicked(
                             SAVE_IMAGE_DEFAULT,
-                            model.savedPictureUri
+                            FileIO.storeImageUri
                         )
                         checkForDefaultFilename()
                         showLikeUsDialogIfFirstTimeSave()
                     }
-                    PERMISSION_EXTERNAL_STORAGE_SAVE_COPY -> {
-                        saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT)
-                        checkForDefaultFilename()
-                    }
                     PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH -> {
                         saveImageConfirmClicked(
                             SAVE_IMAGE_FINISH,
-                            model.savedPictureUri
+                            FileIO.storeImageUri
                         )
                         checkForDefaultFilename()
                     }
                     PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW -> {
                         saveImageConfirmClicked(
                             SAVE_IMAGE_LOAD_NEW,
-                            model.savedPictureUri
+                            FileIO.storeImageUri
                         )
                         checkForDefaultFilename()
                     }
                     PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY -> {
                         saveImageConfirmClicked(
                             SAVE_IMAGE_NEW_EMPTY,
-                            model.savedPictureUri
+                            FileIO.storeImageUri
                         )
+                        checkForDefaultFilename()
+                    }
+                    PERMISSION_EXTERNAL_STORAGE_SAVE_COPY -> {
+                        saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT)
                         checkForDefaultFilename()
                     }
                     PERMISSION_REQUEST_CODE_LOAD_PICTURE ->
@@ -576,7 +573,7 @@ open class MainActivityPresenter(
 
     override fun initializeFromCleanState(extraPicturePath: String?, extraPictureName: String?) {
         model.isOpenedFromCatroid = extraPicturePath != null
-        FileIO.wasImageLoaded = false
+        wasImageLoaded = false
         if (extraPicturePath != null) {
             val imageFile = File(extraPicturePath)
             if (imageFile.exists()) {
@@ -649,7 +646,6 @@ open class MainActivityPresenter(
         isSaved: Boolean,
         isOpenedFromCatroid: Boolean,
         isOpenedFromFormulaEditorInCatroid: Boolean,
-        wasInitialAnimationPlayed: Boolean,
         savedPictureUri: Uri?,
         cameraImageUri: Uri?
     ) {
@@ -657,7 +653,6 @@ open class MainActivityPresenter(
         model.isSaved = isSaved
         model.isOpenedFromCatroid = isOpenedFromCatroid
         model.isOpenedFromFormulaEditorInCatroid = isOpenedFromFormulaEditorInCatroid
-        model.setInitialAnimationPlayed(wasInitialAnimationPlayed)
         model.savedPictureUri = savedPictureUri
         model.cameraImageUri = cameraImageUri
         navigator.restoreFragmentListeners()
@@ -781,20 +776,20 @@ open class MainActivityPresenter(
                     model.savedPictureUri = null
                 }
                 model.cameraImageUri = null
-                FileIO.wasImageLoaded = true
+                wasImageLoaded = true
                 if (uri != null) {
                     val name = getFileName(uri)
                     if (name != null) {
-                        if (name.endsWith("jpg") || name.endsWith("jpeg")) {
+                        if (name.endsWith(FileIO.FileType.JPG.value) || name.endsWith("jpeg")) {
                             FileIO.compressFormat = Bitmap.CompressFormat.JPEG
-                            FileIO.ending = ".jpg"
+                            FileIO.fileType = FileIO.FileType.JPG
                             FileIO.isCatrobatImage = false
-                        } else if (name.endsWith("png")) {
+                        } else if (name.endsWith(FileIO.FileType.PNG.value)) {
                             FileIO.compressFormat = Bitmap.CompressFormat.PNG
-                            FileIO.ending = ".png"
+                            FileIO.fileType = FileIO.FileType.PNG
                             FileIO.isCatrobatImage = false
                         } else {
-                            FileIO.ending = ".ora"
+                            FileIO.fileType = FileIO.FileType.ORA
                             FileIO.isCatrobatImage = true
                         }
                     }
@@ -890,7 +885,7 @@ open class MainActivityPresenter(
         if (bottomBarViewHolder.isVisible) {
             bottomBarViewHolder.hide()
         } else {
-            if (!layerAdapter!!.presenter.getLayerItem(workspace.currentLayerIndex).checkBox) {
+            if (!layerAdapter!!.presenter.getLayerItem(workspace.currentLayerIndex).isVisible) {
                 navigator.showToast(R.string.no_tools_on_hidden_layer, Toast.LENGTH_SHORT)
                 return
             }
@@ -955,6 +950,16 @@ open class MainActivityPresenter(
     override fun setAntialiasingOnOkClicked() {
         navigator.setAntialiasingOnToolPaint()
     }
+
+    override fun saveNewTemporaryImage() {
+        FileIO.saveTemporaryPictureFile(internalMemoryPath, workspace)
+    }
+
+    override fun openTemporaryFile(workspace: Workspace): CommandManagerModel? =
+        FileIO.openTemporaryPictureFile(workspace)
+
+    override fun checkForTemporaryFile(): Boolean =
+        FileIO.checkForTemporaryFile(internalMemoryPath)
 
     companion object {
         @JvmStatic

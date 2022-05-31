@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2021 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="pocketpaint_app_name">Pocket Paint</string>
+    <string name="button_brush">Pincel</string>
+    <string name="button_cursor">Cursor</string>
+    <string name="button_set_center">Set Center</string>
+    <string name="button_pipette">Pipeta</string>
+    <string name="button_undo">Deshacer</string>
+    <string name="button_redo">Rehacer</string>
+    <string name="button_info">Información</string>
+    <string name="button_stamp">Estampar</string>
+    <string name="button_import_image">Importar Imagen</string>
+    <string name="button_eraser">Borrador</string>
+    <string name="button_transform">Transformar</string>
+    <string name="button_fill">Llenar</string>
+    <string name="button_line">Línea</string>
+    <string name="button_text">Texto</string>
+    <string name="button_shape">Formas</string>
+    <string name="button_hand">Mano</string>
+    <string name="button_watercolor">Agua color</string>
+    <string name="button_spray_can">Lata de spray</string>
+    <string name="button_smudge">Smudge</string>
+    <string name="button_apply">Aplicar</string>
+    <string name="button_checkmark">Marca de verificación</string>
+    <string name="button_plus">Conectar segmento de línea</string>
+    <string name="done">Listo</string>
+    <string name="gallery">Galería</string>
+    <string name="load_sticker_error">No se ha podido cargar el Sticker</string>
+    <string name="error_unknown_error">Se ha producido un error desconocido.</string>
+    <string name="cap_circle">Círculo</string>
+    <string name="cap_square">Cuadrado</string>
+    <string name="stamptool_paste">Pegar</string>
+    <string name="stamptool_copy">Copiar</string>
+    <string name="stamptool_cut">Cortar</string>
+    <string name="stickers">Pegatinas</string>
+    <string name="dialog_tools_title">Herramientas</string>
+    <string name="dialog_error_save_title">Error cargar/guardar archivo</string>
+    <string name="dialog_error_sdcard_text">Revisar la imagen del cheque o tarjeta SD!</string>
+    <string name="dialog_brush_width_text">Anchura del trazo</string>
+    <string name="dialog_warning_new_image">¿Guardar cambios?</string>
+    <string name="help_title">Ayuda</string>
+    <string name="help_content_eraser">Quite partes de la imagen como si utilizara una goma de borrar.</string>
+    <string name="help_content_brush">Pulse sobre los símbolos de la barra de abajo para cambiar el color o el tamaño del pincel.</string>
+    <string name="help_content_watercolor">Similar a la herramienta de enjuague con efecto acuático. Sin embargo, también puede cambiar la fuerza del frustre con la barra deslizante en el menú de colores.</string>
+    <string name="help_content_eyedropper">Pulse sobre la imagen para seleccionar un color.</string>
+    <string name="help_content_undo">Pulse deshacer, para deshacer la acción anterior.</string>
+    <string name="help_content_redo">Pulse rehacer una acción deshecha.</string>
+    <string name="help_content_fill">Pulse sobre la imagen para rellenar un área con el color seleccionado.</string>
+    <string name="help_content_cursor">Posicione el cursor donde desea dibujar. Pulse para activar el cursor. Mueve el dedo para dibujar. Presione otra vez para desactivar.</string>
+    <string name="help_content_transform">Úsalo para cambiar el tamaño de la imagen.</string>
+    <string name="help_content_stamp">Mueve y cambie el tamaño del rectángulo para cubrir el área que deseas marcar. Pulsación larga para seleccionar el área. Mueve y pulsa de nuevo para marcar.</string>
+    <string name="help_content_import_png">Importe una imagen de la galería a la herramienta Insertar dibujo.</string>
+    <string name="help_content_line">Trazar una línea recta.</string>
+    <string name="help_content_text">Escribir texto y darle formato. Redimensionar el cuadro de texto más tarde. Pulse para insertar el texto en la imagen.</string>
+    <string name="help_content_shape">Elege una forma y pulsa para insertar la forma seleccionada</string>
+    <string name="help_content_layer">Crear nuevas capas o modificar existentes</string>
+    <string name="help_content_color_chooser">Seleccionar o ajustar un color</string>
+    <string name="help_content_hand">Mueve el dedo para mover el lienzo.</string>
+    <string name="help_content_spray_can">Mueve el dedo sobre la imagen para crear un patrón de lata de spray.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
+    <string name="closing_catroid_security_question_title">Regresar al proyecto</string>
+    <string name="closing_security_question_title">Salir</string>
+    <string name="closing_security_question">Guardar Cambios?</string>
+    <string name="menu_new_image">Nueva imagen</string>
+    <string name="menu_discard_image">Descartar imagen</string>
+    <string name="no_longclick_on_hidden_layer">Sólo podrá fusionar o reordenar si todas las capas son visibles</string>
+    <string name="no_tools_on_hidden_layer">No hay herramientas disponibles en la capa oculta</string>
+    <string name="menu_load_image">Cargar Imagen</string>
+    <string name="menu_save_image">Guardar imagen</string>
+    <string name="menu_save_copy">Guardar copia</string>
+    <string name="menu_hide_menu">Pantalla Completa</string>
+    <string name="share_image_menu">Compartir imagen</string>
+    <string name="share_image_via_text">Enviar imagen por</string>
+    <string name="menu_rate_us">Valóranos!</string>
+    <string name="menu_export">Exportar</string>
+    <string name="menu_feedback">Comentarios</string>
+    <string name="menu_advanced">Ajustes avanzados</string>
+    <string name="saved_to">Imagen guardada en\n</string>
+    <string name="saved">Imagen guardada</string>
+    <string name="copy_to">Copia guardada en\n</string>
+    <string name="copy">Copia guardada</string>
+    <string name="menu_quit">Salir</string>
+    <string name="save_button_text">Guardar</string>
+    <string name="discard_button_text">Ignorar</string>
+    <string name="cancel_button_text">Cancelar</string>
+    <string name="overwrite_button_text">Sobrescribir</string>
+    <string name="resize_nothing_to_resize">nada para cambiar el tamaño</string>
+    <string name="resize_cannot_resize_to_this_size">no se puede cambiar el tamaño</string>
+    <string name="resize_max_image_resolution_reached">resolución de imagen máxima alcanzada</string>
+    <string name="text_tool_dialog_input_title">Tu texto:</string>
+    <string name="text_tool_dialog_format_options">Opciones de formato:</string>
+    <string name="text_tool_dialog_underline_shortcut">U</string>
+    <string name="text_tool_dialog_italic_shortcut">I</string>
+    <string name="text_tool_dialog_bold_shortcut">B</string>
+    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
+    <string name="text_tool_dialog_input_hint">Pulsa aquí para escribir</string>
+    <string name="text_tool_dialog_font_monospace">Monospace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">Dubai</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
+    <string name="shape_tool_dialog_rect_title">Rectángulo</string>
+    <string name="shape_tool_dialog_ellipse_title">Elipsis</string>
+    <string name="shape_tool_dialog_star_title">Estrella</string>
+    <string name="shape_tool_dialog_heart_title">Corazón</string>
+    <string name="shape_tool_dialog_fill_title">Llenar</string>
+    <string name="shape_tool_dialog_outline_title">Contorno</string>
+    <string name="fill_tool_dialog_color_tolerance_title">Tolerancia de color</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
+    <string name="transform_tool_rotate_left">girar a la izquierda</string>
+    <string name="transform_tool_rotate_right">girar a la derecha</string>
+    <string name="transform_tool_flip_vertical">voltear verticalmente</string>
+    <string name="transform_tool_flip_horizontal">voltear Horizontalmente</string>
+    <string name="transform_tool_resize_text">cambiar tamaño</string>
+    <string name="transform_tool_auto_crop_text">recortar/agrandar</string>
+    <string name="transform_width_text">Ancho</string>
+    <string name="transform_height_text">Alto</string>
+    <string name="transform_auto_crop_text">Auto</string>
+    <string name="transform_set_center_text">Set center</string>
+    <string name="pixel">px</string>
+    <string name="stamp_tool_copy_hint">Pulsación larga para copiar contenido</string>
+    <string name="layers_title">Capas</string>
+    <string name="layer_new">Nueva capa</string>
+    <string name="layer_delete">Eliminar capa</string>
+    <string name="layer_too_many_layers">Demasiadas capas</string>
+    <string name="layer_merged">Capas fusionadas</string>
+    <string name="layer_background">Capa de fondo</string>
+    <string name="dialog_shape_text">Forma</string>
+    <string name="dialog_loading_image_failed_title">Error en la carga de la imagen</string>
+    <string name="dialog_loading_image_failed_text">No es una imagen válida</string>
+    <string name="dialog_settings">Configuración</string>
+    <string name="dialog_save_image_name">Nombre de la imagen</string>
+    <string name="dialog_save_image_format">Formato de la imagen</string>
+    <string name="dialog_antialiasing">Antialiasing</string>
+    <string name="dialog_smoothing">Alisado</string>
+    <string name="dialog_save_jpg_option_quality">Calidad:</string>
+    <string name="pocketpaint_jpg_message_dialog">Ocupa un <b>espacio de almacenamiento mínimo</b>. <b>No se recuerda ninguna transparencia</b>.</string>
+    <string name="pocketpaint_png_message_dialog">Compresión sin pérdidas. Se conserva la transparencia.</string>
+    <string name="pocketpaint_ora_message_dialog">Este formato recuerda las <b>capas</b>. <b>Puede ser abierto por aplicaciones que soporten el formato Openraster.</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">Formato de imagen nativa de Pocket Paint. Este formato recuerda comandos y capas.</string>
+    <string name="permission_info_external_storage_text">Esta aplicación necesita el permiso solicitado para funcionar correctamente. Para guardar las imágenes en la memoria local, la app necesita acceso de lectura y escritura a la misma.</string>
+    <string name="permission_info_permanent_denial_text">Esta aplicación necesita el permiso solicitado para funcionar correctamente. Para guardar las imágenes en la memoria local, la app necesita acceso de lectura y escritura a la misma.
+        Como has denegado el permiso con no preguntar de nuevo, por favor, ve a los ajustes de tu teléfono y concede los permisos necesarios si deseas utilizar las funciones asociadas.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
+    <string name="transform_info_text">Arrastra los bordes a su nueva posición, luego pulsa para agrandar o recortar el área de imagen.</string>
+    <string name="cursor_draw_inactive">Pan a la posición, después pulsa para empezar a pintar.</string>
+    <string name="cursor_draw_active">Pan a dibujar, después pulsa y deja de dibujar.</string>
+    <string name="welcome_to_pocket_paint">Bienvenidos a Pocket Paint</string>
+    <string name="intro_welcome_text">Con Pocket Paint no hay límites a tu creatividad. Si eres nuevo empieza con la intro o simplemente omítela si ya estás familiarizado con Pocket Paint.</string>
+    <string name="intro_tool_more_information">Haz clic en Herramienta para obtener más información</string>
+    <string name="more_possibilities">Más posibilidades</string>
+    <string name="intro_possibilities_text">Utilice la barra superior para abrir el menú principal y deshacer o rehacer los cambios</string>
+    <string name="landscape">Apaisado</string>
+    <string name="intro_landscape_text">Pocket Paint también soporta dibujo en modo horizontal para darle la mejor experiencia pintando.</string>
+    <string name="enjoy_pocket_paint">Ya estás listo/a. Disfruta Pocket Paint.</string>
+    <string name="intro_get_started">Empieza y crea una nueva obra maestra.</string>
+    <string name="lets_go">Vamos.</string>
+    <string name="next">Siguiente</string>
+    <string name="skip">Ignorar</string>
+    <string name="pocketpaint_about_title">Acerca de</string>
+    <string name="pocketpaint_about_content">Pocket Paint es una librería de edición de imágenes que forma parte del proyecto Catrobat.\n\nCatrobat es un lenguaje de programación visual y un conjunto de herramientas de creatividad para smartphones.\n\nEl código fuente de Pocket Paint está licenciado principalmente bajo la licencia %s.\nPara conocer los detalles precisos de la licencia consulta el siguiente enlace.</string>
+    <string name="pocketpaint_about_url_license_description">Licencia del código fuente de Pocket Paint</string>
+    <string name="pocketpaint_about_url_catrobat_description">Acerca de Catrobat</string>
+    <string name="pocketpaint_intro">Introducción</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Intro no soporta la pantalla dividida</string>
+    <string name="pocketpaint_overwrite_title">¿Sobreescribir archivo?</string>
+    <string name="pocketpaint_overwrite">Está a punto de sobrescribir una imagen existente (pista: para guardarla como una nueva imagen, utilice la opción \"%s\"). ¿Guardar de todos modos?</string>
+    <string name="pocketpaint_like_us">¿Te gusta el Pocket Paint?</string>
+    <string name="pocketpaint_rate_us">¿Quieres valorar Pocket Paint?</string>
+    <string name="pocketpaint_feedback">Lamentamos oírlo. Si quieres compartir tu experiencia con nosotros, escríbenos a contact@catrobat.org</string>
+    <string name="pocketpaint_yes">Sí</string>
+    <string name="pocketpaint_no">No</string>
+    <string name="pocketpaint_cancel">Cancelar</string>
+    <string name="pocketpaint_not_now">Ahora no</string>
+    <string name="pocketpaint_rate_us_title">Valore la pintura de bolsillo</string>
+    <string name="bottom_navigation_tools">Herramientas</string>
+    <string name="bottom_navigation_current">Actual</string>
+    <string name="bottom_navigation_color">Color</string>
+    <string name="bottom_navigation_layers">Capas</string>
+    <string name="bottom_navigation_item">Elemento de navegación inferior</string>
+    <string name="intro_bottom_navigation_tools_description">Cambia a la herramienta que quieras utilizar.</string>
+    <string name="intro_bottom_navigation_current_description">Muestra la herramienta utilizada actualmente y abre sus opciones.</string>
+    <string name="intro_bottom_navigation_color_description">Muestra el color utilizado actualmente y abre el selector de color.</string>
+    <string name="intro_bottom_navigation_layers_description">Abre el menú de capas y permite gestionarlas.</string>
+    <string name="pocketpaint_tool_icon_description">Icono de la herramienta actual</string>
+    <string name="dialog_scale_title">La imagen es demasiado grande para cargar</string>
+    <string name="dialog_scale_message">La imagen es demasiado grande para cargarla. Haga clic en Aceptar para reducir la escala de la imagen automáticamente.</string>
+</resources>

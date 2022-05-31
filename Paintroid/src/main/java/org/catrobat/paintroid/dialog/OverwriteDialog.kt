@@ -22,10 +22,8 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
+import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.R
-
-private const val PERMISSION = "permission"
-private const val IS_EXPORT = "isExport"
 
 class OverwriteDialog : MainActivityDialogFragment() {
     private var permission = 0
@@ -34,20 +32,27 @@ class OverwriteDialog : MainActivityDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val arguments = requireArguments()
-        permission = arguments.getInt(PERMISSION)
         isExport = arguments.getBoolean(IS_EXPORT)
+        permission = arguments.getInt(PERMISSION)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext(), R.style.PocketPaintAlertDialog)
+            .setTitle(R.string.pocketpaint_overwrite_title)
             .setMessage(
                 resources.getString(
                     R.string.pocketpaint_overwrite,
                     getString(R.string.menu_save_copy)
                 )
             )
-            .setTitle(R.string.pocketpaint_overwrite_title)
             .setPositiveButton(R.string.overwrite_button_text) { _, _ ->
+                val resolver = requireContext().contentResolver
+                val storeImageUri = when (FileIO.fileType) {
+                    FileIO.FileType.JPG, FileIO.FileType.PNG -> FileIO.getUriForFilenameInPicturesFolder(FileIO.defaultFileName, resolver)
+                    FileIO.FileType.ORA, FileIO.FileType.CATROBAT -> FileIO.getUriForFilenameInDownloadsFolder(FileIO.defaultFileName, resolver)
+                }
+
+                FileIO.storeImageUri = storeImageUri
                 presenter.switchBetweenVersions(permission, isExport)
                 dismiss()
             }
@@ -55,6 +60,9 @@ class OverwriteDialog : MainActivityDialogFragment() {
             .create()
 
     companion object {
+        private const val PERMISSION = "permission"
+        private const val IS_EXPORT = "isExport"
+
         fun newInstance(permissionCode: Int, isExport: Boolean): OverwriteDialog =
             OverwriteDialog().apply {
                 arguments = bundleOf(PERMISSION to permissionCode, IS_EXPORT to isExport)

@@ -1,6 +1,6 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2021 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -39,6 +39,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.io.File;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -89,6 +91,8 @@ public class MainActivityIntegrationTest {
 	private UserPreferences sharedPreferences;
 	@Mock
 	private Context context;
+	@Mock
+	private File internalMemoryPath;
 
 	@InjectMocks
 	private MainActivityPresenter presenter;

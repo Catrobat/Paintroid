@@ -19,16 +19,16 @@
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" >
+    android:padding="?dialogPreferredPadding">
 
     <RelativeLayout
-        android:layout_width="244dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="27dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/pocketpaint_save_info_title"
@@ -51,17 +51,16 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="244dp"
-        android:layout_height="56dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="27dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
 
         <TextView
             android:id="@+id/pocketpaint_image_format_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/pocketpaint_btn_save_info"
             android:text="@string/dialog_save_image_format"
             android:textSize="12sp" />
 
@@ -70,36 +69,33 @@
             style="@style/PocketpaintSpinnerTheme"
             android:layout_width="157dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="23dp"
+            android:layout_below="@+id/pocketpaint_image_format_title"
+            android:spinnerMode="dropdown"
             android:textSize="14sp"
-            android:theme="@style/CustomTextViewStyle"
-            android:spinnerMode="dropdown" />
+            android:theme="@style/CustomTextViewStyle" />
 
         <ImageButton
             android:id="@+id/pocketpaint_btn_save_info"
             style="@style/PocketPaintSelectableButton"
             android:layout_width="25dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="56dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="11dp"
-            android:layout_toEndOf="@+id/pocketpaint_save_dialog_spinner"
+            android:layout_alignParentEnd="true"
             android:contentDescription="@string/button_info"
             android:src="@drawable/ic_pocketpaint_save_info" />
 
         <View
             android:layout_width="151dp"
             android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="8dp"
+            android:layout_below="@+id/pocketpaint_save_dialog_spinner"
             android:layout_marginStart="3dp"
             android:background="@color/pocketpaint_main_drawing_surface_inactive" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/pocketpaint_save_format_specific_options"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false" />
 
 </LinearLayout>

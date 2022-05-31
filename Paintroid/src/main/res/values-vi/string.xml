@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2021 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="pocketpaint_app_name">Pocket Paint</string>
+    <string name="button_brush">Cọ</string>
+    <string name="button_cursor">Con trỏ</string>
+    <string name="button_set_center">Set Center</string>
+    <string name="button_pipette">Pipette</string>
+    <string name="button_undo">Phục hồi</string>
+    <string name="button_redo">Làm lại</string>
+    <string name="button_info">Thông tin</string>
+    <string name="button_stamp">Con dấu</string>
+    <string name="button_import_image">Chuyển nhập hình ảnh</string>
+    <string name="button_eraser">Tẩy</string>
+    <string name="button_transform">Biến đổi</string>
+    <string name="button_fill">Chèn kín</string>
+    <string name="button_line">Đường thẳng</string>
+    <string name="button_text">Bản văn</string>
+    <string name="button_shape">Hình dạng</string>
+    <string name="button_hand">Tay</string>
+    <string name="button_watercolor">Watercolor</string>
+    <string name="button_spray_can">Bình xịt</string>
+    <string name="button_smudge">Smudge</string>
+    <string name="button_apply">Ứng dụng</string>
+    <string name="button_checkmark">Đánh dấu</string>
+    <string name="button_plus">Connect Line Segment</string>
+    <string name="done">Đã Thực hiện</string>
+    <string name="gallery">Bộ sưu tập</string>
+    <string name="load_sticker_error">Không thể tải Hình dán</string>
+    <string name="error_unknown_error">Đã xảy ra lỗi.</string>
+    <string name="cap_circle">Vòng tròn</string>
+    <string name="cap_square">Quảng trường</string>
+    <string name="stamptool_paste">Dán</string>
+    <string name="stamptool_copy">Sao chép</string>
+    <string name="stamptool_cut">Cắt</string>
+    <string name="stickers">Hình dán</string>
+    <string name="dialog_tools_title">Công cụ</string>
+    <string name="dialog_error_save_title">Lỗi tải/lưu tập tin</string>
+    <string name="dialog_error_sdcard_text">Kiểm tra hình ảnh hoặc thẻ SD!</string>
+    <string name="dialog_brush_width_text">Chiều rộng không cố định</string>
+    <string name="dialog_warning_new_image">Lưu Thay Đổi?</string>
+    <string name="help_title">Trợ giúp</string>
+    <string name="help_content_eraser">Xóa bỏ các phần của bức ảnh với tẩy.</string>
+    <string name="help_content_brush">Nhấp vào biểu tượng trên thanh công cụ phía dưới để thay đổi màu sắc hoặc kích thước cọ vẽ.</string>
+    <string name="help_content_watercolor">Similar to the brush tool with a watercolor effect. However you can also change the strength of the brush with the slider in the color menu.</string>
+    <string name="help_content_eyedropper">Nhấp vào hình ảnh để chọn màu.</string>
+    <string name="help_content_undo">Nhấp để quay lại hành động trước của bạn.</string>
+    <string name="help_content_redo">Bấm vào để làm lại hành động chưa được hoàn thành.</string>
+    <string name="help_content_fill">Nhấp vào hình ảnh để lấp đầy vùng với màu sắc được chọn.</string>
+    <string name="help_content_cursor">Hướng con trỏ chuột vào vị trí mà bạn muốn vẽ. Bấm vào để kích hoạt con trỏ. Di chuyển các ngón tay của bạn để vẽ. Bấm một lần nữa để tắt.</string>
+    <string name="help_content_transform">Sử dụng để biến đổi hình ảnh.</string>
+    <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Long press to select the area. Move and tap again to stamp.</string>
+    <string name="help_content_import_png">Nhập hình ảnh từ thư viện lên công cụ tem.</string>
+    <string name="help_content_line">Vẽ một đường thẳng.</string>
+    <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap to insert the text on the image.</string>
+    <string name="help_content_shape">Choose a shape and tap it to insert the selected shape.</string>
+    <string name="help_content_layer">Tạo các lớp mới hoặc sửa đổi các lớp hiện có.</string>
+    <string name="help_content_color_chooser">Chọn hoặc điều chỉnh màu.</string>
+    <string name="help_content_hand">Di chuyển ngón tay của bạn để di chuyển canvas.</string>
+    <string name="help_content_spray_can">Di chuyển ngón tay của bạn trên hình ảnh để tạo mẫu bình xịt.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
+    <string name="closing_catroid_security_question_title">Quay lại dự án</string>
+    <string name="closing_security_question_title">Thoát</string>
+    <string name="closing_security_question">Lưu thay đổi?</string>
+    <string name="menu_new_image">Hình ảnh mới</string>
+    <string name="menu_discard_image">Bỏ hình ảnh</string>
+    <string name="no_longclick_on_hidden_layer">Bạn chỉ có thể hợp nhất hoặc sắp xếp lại thứ tự nếu tất cả các lớp đều hiển thị</string>
+    <string name="no_tools_on_hidden_layer">Không có công cụ nào trên lớp ẩn</string>
+    <string name="menu_load_image">Tải hình ảnh</string>
+    <string name="menu_save_image">Lưu ảnh</string>
+    <string name="menu_save_copy">Lưu bản sao</string>
+    <string name="menu_hide_menu">Toàn màn hình</string>
+    <string name="share_image_menu">Chia sẻ hình ảnh</string>
+    <string name="share_image_via_text">Gửi hình ảnh qua</string>
+    <string name="menu_rate_us">Đánh giá chúng tôi!</string>
+    <string name="menu_export">Xuất</string>
+    <string name="menu_feedback">Phản hồi</string>
+    <string name="menu_advanced">Advanced settings</string>
+    <string name="saved_to">Đã lưu hình ảnh vào\n</string>
+    <string name="saved">Đã lưu ảnh</string>
+    <string name="copy_to">Sao chép được lưu vào\n</string>
+    <string name="copy">Bản sao đã lưu</string>
+    <string name="menu_quit">Thoát</string>
+    <string name="save_button_text">Lưu</string>
+    <string name="discard_button_text">Loại bỏ</string>
+    <string name="cancel_button_text">Hủy bỏ</string>
+    <string name="overwrite_button_text">Ghi đè</string>
+    <string name="resize_nothing_to_resize">không có gì để thay đổi kích cỡ</string>
+    <string name="resize_cannot_resize_to_this_size">không thể thay đổi kích thước thành kích thước này</string>
+    <string name="resize_max_image_resolution_reached">hình ảnh đã đạt độ phân giải tối đa</string>
+    <string name="text_tool_dialog_input_title">Văn bản của bạn:</string>
+    <string name="text_tool_dialog_format_options">Tùy chọn định dạng:</string>
+    <string name="text_tool_dialog_underline_shortcut">U</string>
+    <string name="text_tool_dialog_italic_shortcut">I</string>
+    <string name="text_tool_dialog_bold_shortcut">B</string>
+    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
+    <string name="text_tool_dialog_input_hint">Nhấn vào đây để viết</string>
+    <string name="text_tool_dialog_font_monospace">Monospace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">Dubai</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
+    <string name="shape_tool_dialog_rect_title">Hình chữ nhật</string>
+    <string name="shape_tool_dialog_ellipse_title">Hình elip</string>
+    <string name="shape_tool_dialog_star_title">Ngôi sao</string>
+    <string name="shape_tool_dialog_heart_title">Tim</string>
+    <string name="shape_tool_dialog_fill_title">Chèn kín</string>
+    <string name="shape_tool_dialog_outline_title">Đề cương</string>
+    <string name="fill_tool_dialog_color_tolerance_title">Dung sai màu</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
+    <string name="transform_tool_rotate_left">xoay trái</string>
+    <string name="transform_tool_rotate_right">xoay phải</string>
+    <string name="transform_tool_flip_vertical">lật dọc</string>
+    <string name="transform_tool_flip_horizontal">lật ngang</string>
+    <string name="transform_tool_resize_text">resize</string>
+    <string name="transform_tool_auto_crop_text">crop/enlarge</string>
+    <string name="transform_width_text">Width</string>
+    <string name="transform_height_text">Height</string>
+    <string name="transform_auto_crop_text">Auto</string>
+    <string name="transform_set_center_text">Set center</string>
+    <string name="pixel">px</string>
+    <string name="stamp_tool_copy_hint">Tap on copy to copy content</string>
+    <string name="layers_title">Layers</string>
+    <string name="layer_new">New layer</string>
+    <string name="layer_delete">Delete layer</string>
+    <string name="layer_too_many_layers">Too many layers</string>
+    <string name="layer_merged">Layers merged</string>
+    <string name="layer_background">Layer background</string>
+    <string name="dialog_shape_text">Hình dạng</string>
+    <string name="dialog_loading_image_failed_title">Lỗi khi tải hình ảnh</string>
+    <string name="dialog_loading_image_failed_text">Not a valid image</string>
+    <string name="dialog_settings">Cài đặt</string>
+    <string name="dialog_save_image_name">Tên hình ảnh</string>
+    <string name="dialog_save_image_format">Image format</string>
+    <string name="dialog_antialiasing">Antialiasing</string>
+    <string name="dialog_smoothing">Smoothing</string>
+    <string name="dialog_save_jpg_option_quality">Quality:</string>
+    <string name="pocketpaint_jpg_message_dialog">Takes up <b>minimal storage space</b>. <b>No transparency</b> is remembered.</string>
+    <string name="pocketpaint_png_message_dialog">Lossless compression. Transparency is preserved.</string>
+    <string name="pocketpaint_ora_message_dialog">This format remembers <b>layers</b>. <b>It can be opened by apps that support the Openraster format.</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">Pocket Paint\'s native image format. This format remembers commands and layers.</string>
+    <string name="permission_info_external_storage_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.</string>
+    <string name="permission_info_permanent_denial_text">This app needs the requested permission to function properly. In order to save images to the local memory, the app needs read and write access to it.
+        As you have denied permission with do not ask again, please go to your phone settings and grant the required permissions if you wish to use the associated functions.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
+    <string name="transform_info_text">Drag edges to their new position, then tap to enlarge or crop the image area.</string>
+    <string name="cursor_draw_inactive">Pan to position, then tap to start painting.</string>
+    <string name="cursor_draw_active">Pan to draw, then tap again to stop painting.</string>
+    <string name="welcome_to_pocket_paint">Welcome To Pocket Paint</string>
+    <string name="intro_welcome_text">With Pocket Paint there are no limits to your creativity. If you are new, start the intro, or skip it if you are already familiar with Pocket Paint.</string>
+    <string name="intro_tool_more_information">Tap on a tool to get more information</string>
+    <string name="more_possibilities">More possibilities</string>
+    <string name="intro_possibilities_text">Use the top bar to open the overflow menu and to undo or redo changes</string>
+    <string name="landscape">Landscape</string>
+    <string name="intro_landscape_text">Pocket Paint also supports drawing in landscape mode to give you the best painting experience.</string>
+    <string name="enjoy_pocket_paint">You are all set. Enjoy Pocket Paint.</string>
+    <string name="intro_get_started">Get started and create a new masterpiece.</string>
+    <string name="lets_go">Let\'s go</string>
+    <string name="next">Next</string>
+    <string name="skip">Bỏ qua</string>
+    <string name="pocketpaint_about_title">About</string>
+    <string name="pocketpaint_about_content">Pocket Paint is a picture editing library that is part of the Catrobat project.\n\nCatrobat is a visual programming language and set of creativity tools for smartphones.\n\nThe source code of Pocket Paint is mainly licensed under the %s.\nFor precise details of the license see the link below.</string>
+    <string name="pocketpaint_about_url_license_description">Pocket Paint source code license</string>
+    <string name="pocketpaint_about_url_catrobat_description">Về Catrobat</string>
+    <string name="pocketpaint_intro">Intro</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">Intro does not support split screen.</string>
+    <string name="pocketpaint_overwrite_title">Overwrite File?</string>
+    <string name="pocketpaint_overwrite">You are about to overwrite an existing image (hint: To save it as a new image, use the \"%s\" option). Save anyway?</string>
+    <string name="pocketpaint_like_us">Do you like Pocket Paint?</string>
+    <string name="pocketpaint_rate_us">Would you like to rate Pocket Paint?</string>
+    <string name="pocketpaint_feedback">We are sorry to hear that. If you want to share your experience with us, please write to contact@catrobat.org</string>
+    <string name="pocketpaint_yes">Có</string>
+    <string name="pocketpaint_no">Không</string>
+    <string name="pocketpaint_cancel">Hủy bỏ</string>
+    <string name="pocketpaint_not_now">Not now</string>
+    <string name="pocketpaint_rate_us_title">Rate Pocket Paint</string>
+    <string name="bottom_navigation_tools">Công cụ</string>
+    <string name="bottom_navigation_current">Current</string>
+    <string name="bottom_navigation_color">Color</string>
+    <string name="bottom_navigation_layers">Layers</string>
+    <string name="bottom_navigation_item">Item for bottom navigation</string>
+    <string name="intro_bottom_navigation_tools_description">Switch to the tool you want to use.</string>
+    <string name="intro_bottom_navigation_current_description">Shows the currently used tool and opens its options.</string>
+    <string name="intro_bottom_navigation_color_description">Shows the currently used color and opens the color picker.</string>
+    <string name="intro_bottom_navigation_layers_description">Opens the layer menu and lets you manage your layers.</string>
+    <string name="pocketpaint_tool_icon_description">Current tool icon</string>
+    <string name="dialog_scale_title">Image is too big to load</string>
+    <string name="dialog_scale_message">The image is too big to load. Tap OK to scale down the image automatically.</string>
+</resources>

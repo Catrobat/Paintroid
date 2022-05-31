@@ -150,7 +150,7 @@ class DefaultCommandManager(
         val currentLayer = layerModel.currentLayer
         val canvas = commonFactory.createCanvas()
         if (currentLayer != null) {
-            if (currentLayer.checkBox) {
+            if (currentLayer.isVisible) {
                 canvas.setBitmap(currentLayer.bitmap)
             } else {
                 canvas.setBitmap(currentLayer.transparentBitmap)
@@ -191,12 +191,12 @@ class DefaultCommandManager(
         if (layerCount > 1) {
             for (index in layerCount - 1 downTo 0) {
                 layerModel.getLayerAt(index)?.let {
-                    checkBoxes[index] = it.checkBox
+                    checkBoxes[index] = it.isVisible
                 } ?: run { success = false }
             }
         } else {
             layerModel.getLayerAt(0)?.let {
-                checkBoxes[0] = it.checkBox
+                checkBoxes[0] = it.isVisible
             } ?: run { success = false }
         }
 
@@ -210,7 +210,7 @@ class DefaultCommandManager(
                 if (!checkBoxes[index]) {
                     destinationLayer?.let {
                         it.switchBitmaps(false)
-                        it.checkBox = false
+                        it.isVisible = false
                     }
                 }
             }
@@ -218,7 +218,7 @@ class DefaultCommandManager(
             val destinationLayer = layerModel.currentLayer
             if (destinationLayer != null && !checkBoxes[0]) {
                 destinationLayer.switchBitmaps(false)
-                destinationLayer.checkBox = false
+                destinationLayer.isVisible = false
             }
         }
     }

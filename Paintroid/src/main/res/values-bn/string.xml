@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2021 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="pocketpaint_app_name">পকেট পেইন্ট</string>
+    <string name="button_brush">তুলি</string>
+    <string name="button_cursor">কার্সার</string>
+    <string name="button_set_center">Set Center</string>
+    <string name="button_pipette">পিপেট</string>
+    <string name="button_undo">পূর্বাবস্থায় ফিরুন</string>
+    <string name="button_redo">পুনরায় করুন</string>
+    <string name="button_info">তথ্য</string>
+    <string name="button_stamp">স্ট্যাম্প</string>
+    <string name="button_import_image">ছবি আমদানি করুন</string>
+    <string name="button_eraser">রাবার</string>
+    <string name="button_transform">রুপান্তর</string>
+    <string name="button_fill">পূরণ করুন</string>
+    <string name="button_line">লাইন</string>
+    <string name="button_text">পাঠ্য</string>
+    <string name="button_shape">আকার</string>
+    <string name="button_hand">হাত</string>
+    <string name="button_watercolor">জলরং</string>
+    <string name="button_spray_can">স্প্রে করতে পারেন</string>
+    <string name="button_smudge">Smudge</string>
+    <string name="button_apply">প্রয়োগ করুন</string>
+    <string name="button_checkmark">চেক চিহ্ন</string>
+    <string name="button_plus">লাইন সংযোগ রেখাংশ</string>
+    <string name="done">করা হয়েছে</string>
+    <string name="gallery">গ্যালারী</string>
+    <string name="load_sticker_error">স্টিকার লোড করা যায়নি</string>
+    <string name="error_unknown_error">কিছু একটা ভুল হয়েছে</string>
+    <string name="cap_circle">বৃত্ত</string>
+    <string name="cap_square">বর্গক্ষেত্র</string>
+    <string name="stamptool_paste">আটকান</string>
+    <string name="stamptool_copy">অনুলিপি</string>
+    <string name="stamptool_cut">কাটা</string>
+    <string name="stickers">স্টিকার</string>
+    <string name="dialog_tools_title">সরঞ্জামসমূহ</string>
+    <string name="dialog_error_save_title">ফাইল লোড / সংরক্ষণের সময় ভুল</string>
+    <string name="dialog_error_sdcard_text">চিত্র বা এসডি-কার্ড পরীক্ষা করুন!</string>
+    <string name="dialog_brush_width_text">স্ট্রোকের প্রস্থ</string>
+    <string name="dialog_warning_new_image">পরিবর্তনগুলো সংরক্ষণ করুন</string>
+    <string name="help_title">সাহায্য</string>
+    <string name="help_content_eraser">ইরেজারের মতো চিত্রের অংশগুলি সরান।</string>
+    <string name="help_content_brush">রঙ বা ব্রাশের আকার পরিবর্তন করতে নীচের বারের চিহ্নগুলিতে আলতো চাপুন।</string>
+    <string name="help_content_watercolor">জল রং এবং তুলি টুল অনুরূপ। তবে আপনি রঙ মেনুতে স্লাইডার দিয়ে তুলির আকার পরিবর্তন করতে পারেন।</string>
+    <string name="help_content_eyedropper">রঙ নির্বাচন করতে ছবিতে আলতো চাপুন।</string>
+    <string name="help_content_undo">আপনার ক্রিয়াটি পূর্বাবস্থায় ফিরিয়ে আনতে আলতো চাপুন।</string>
+    <string name="help_content_redo">অসম্পন্ন ক্রিয়াটি পুনরায় করিতে আলতো চাপুন।</string>
+    <string name="help_content_fill">নির্বাচিত রঙ দিয়ে কোনও অঞ্চল পূরণ করতে চিত্রটিতে আলতো চাপুন।</string>
+    <string name="help_content_cursor">আপনি যেখানে আঁকতে চান সেখানে কার্সারটি অবস্থান করুন। কার্সারটি সক্রিয় করতে আলতো চাপুন। আঁকার জন্য আপনার আঙুল সরান। নিষ্ক্রিয় করতে আবার আলতো চাপুন।</string>
+    <string name="help_content_transform">চিত্রটি রূপান্তর করতে ব্যবহার করুন।</string>
+    <string name="help_content_stamp">আপনি যে অঞ্চলটি স্ট্যাম্প করতে চান তা কাভার করতে আয়তক্ষেত্রটি সরান এবং পুনরায় আকার দিন। অঞ্চলটি নির্বাচন করতে দীর্ঘক্ষণ টিপুন। স্ট্যাম্প করতে আবার সরান এবং আলতো চাপুন।</string>
+    <string name="help_content_import_png">গ্যালারী থেকে স্ট্যাম্প সরঞ্জামে একটি চিত্র নিয়ে আসুন।</string>
+    <string name="help_content_line">একটি সরল রেখা আঁকুন।</string>
+    <string name="help_content_text">পাঠ্য লিখুন এবং এটি ফর্ম্যাট করুন। এরপরে পাঠ্য বাক্সটিকে পুনরায় আকার দিন। চিত্রটিতে পাঠ্য যোগ করতে আলতো চাপুন।</string>
+    <string name="help_content_shape">একটি আকৃতি নির্বাচন করুন এবং নির্বাচিত আকৃতিটি যোগ করতে এটিতে আলতো চাপুন</string>
+    <string name="help_content_layer">নতুন স্তর তৈরি করুন বা বিদ্যমানগুলি সংশোধন করুন</string>
+    <string name="help_content_color_chooser">রঙ নির্বাচন বা সমন্বয় করুন</string>
+    <string name="help_content_hand">ক্যানভাসটি সরানোর জন্য আপনার আঙুলটি সরান।</string>
+    <string name="help_content_spray_can">স্প্রে ক্যান প্যাটার্ন তৈরি করতে ইমেজটিতে আপনার আঙুলটি সরান।</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
+    <string name="closing_catroid_security_question_title">প্রজেক্টে ফিরে যান</string>
+    <string name="closing_security_question_title">বের হোন</string>
+    <string name="closing_security_question">পরিবর্তনগুলোর সংরক্ষন?</string>
+    <string name="menu_new_image">নতুন ছবি</string>
+    <string name="menu_discard_image">চিত্র বাতিল করুন</string>
+    <string name="no_longclick_on_hidden_layer">সমস্ত স্তর দৃশ্যমান থাকলে আপনি কেবল মার্জ বা পুনঃক্রম করতে সক্ষম হবেন</string>
+    <string name="no_tools_on_hidden_layer">লুকানো স্তরে কোনও সরঞ্জাম উপলব্ধ নেই</string>
+    <string name="menu_load_image">চিত্র লোড করুন</string>
+    <string name="menu_save_image">চিত্র সংরক্ষণ করুন</string>
+    <string name="menu_save_copy">অনুলিপি সংরক্ষণ করুন</string>
+    <string name="menu_hide_menu">পূর্ণস্ক্রিন</string>
+    <string name="share_image_menu">ছবি শেয়ার করুন</string>
+    <string name="share_image_via_text">এর মাধ্যমে চিত্র প্রেরণ করুন</string>
+    <string name="menu_rate_us">আমাদের মতামত দিন</string>
+    <string name="menu_export">রপ্তানি</string>
+    <string name="menu_feedback">মতামত</string>
+    <string name="menu_advanced">উন্নত সেটিংস</string>
+    <string name="saved_to">চিত্রটি এতে সংরক্ষণ করা হয়েছে\n</string>
+    <string name="saved">চিত্র সংরক্ষিত হয়েছে</string>
+    <string name="copy_to">অনুলিপি এতে সংরক্ষণ করা হয়েছে\n</string>
+    <string name="copy">অনুলিপি সংরক্ষণ করা হয়েছে</string>
+    <string name="menu_quit">বের হোন</string>
+    <string name="save_button_text">সংরক্ষণ করুন</string>
+    <string name="discard_button_text">বাতিল করুন</string>
+    <string name="cancel_button_text">বাতিল</string>
+    <string name="overwrite_button_text">ওভাররাইট</string>
+    <string name="resize_nothing_to_resize">পুনঃস্থাপন করার মত কিছু নেই</string>
+    <string name="resize_cannot_resize_to_this_size">এই আকার পরিবর্তন করতে পারে না</string>
+    <string name="resize_max_image_resolution_reached">সর্বোচ্চ চিত্রের রেজোলিউশনে পৌঁছেছে</string>
+    <string name="text_tool_dialog_input_title">তোমার পাঠ</string>
+    <string name="text_tool_dialog_format_options">ফর্ম্যাট অপশন</string>
+    <string name="text_tool_dialog_underline_shortcut">উ</string>
+    <string name="text_tool_dialog_italic_shortcut">আমি</string>
+    <string name="text_tool_dialog_bold_shortcut">খ</string>
+    <string name="text_tool_dialog_strike_through_shortcut">এবিসি</string>
+    <string name="text_tool_dialog_input_hint">লিখতে এখানে আলতো চাপুন</string>
+    <string name="text_tool_dialog_font_monospace">মনোস্পেস</string>
+    <string name="text_tool_dialog_font_serif">সেরিফ</string>
+    <string name="text_tool_dialog_font_sans_serif">সেরিফ ছাড়া</string>
+    <string name="text_tool_dialog_font_dubai">দুবাই</string>
+    <string name="text_tool_dialog_font_arabic_stc">এসটিসি</string>
+    <string name="shape_tool_dialog_rect_title">আয়তক্ষেত্র</string>
+    <string name="shape_tool_dialog_ellipse_title">উপবৃত্ত</string>
+    <string name="shape_tool_dialog_star_title">তারা</string>
+    <string name="shape_tool_dialog_heart_title">ভালোবাসা</string>
+    <string name="shape_tool_dialog_fill_title">পূরণ করুন</string>
+    <string name="shape_tool_dialog_outline_title">রূপরেখা</string>
+    <string name="fill_tool_dialog_color_tolerance_title">রঙ সহনশীলতা</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
+    <string name="transform_tool_rotate_left">বামে ঘুরান</string>
+    <string name="transform_tool_rotate_right">ডানে ঘুরান</string>
+    <string name="transform_tool_flip_vertical">উল্লম্ব উল্টানো</string>
+    <string name="transform_tool_flip_horizontal">আনুভুমিকভাবে ঘোরাও</string>
+    <string name="transform_tool_resize_text">পুনরায় আকার দিন</string>
+    <string name="transform_tool_auto_crop_text">কাটা/পরিবর্ধন</string>
+    <string name="transform_width_text">প্রস্থ</string>
+    <string name="transform_height_text">উচ্চতা</string>
+    <string name="transform_auto_crop_text">অটো</string>
+    <string name="transform_set_center_text">Set center</string>
+    <string name="pixel">পিক্সেল</string>
+    <string name="stamp_tool_copy_hint">বিষয়বস্তু অনুলিপি করতে দীর্ঘ চাপুন</string>
+    <string name="layers_title">স্তর</string>
+    <string name="layer_new">নতুন স্তর</string>
+    <string name="layer_delete">স্তর মুছুন</string>
+    <string name="layer_too_many_layers">অনেকগুলি স্তর</string>
+    <string name="layer_merged">স্তরগুলি একত্রিত হয়েছে</string>
+    <string name="layer_background">স্তর ব্যাকগ্রাউন্ড</string>
+    <string name="dialog_shape_text">আকার</string>
+    <string name="dialog_loading_image_failed_title">চিত্র লোড করার সময় ভুল</string>
+    <string name="dialog_loading_image_failed_text">বৈধ চিত্র নয়</string>
+    <string name="dialog_settings">সেটিংস</string>
+    <string name="dialog_save_image_name">ছবির নাম</string>
+    <string name="dialog_save_image_format">চিত্র বিন্যাস</string>
+    <string name="dialog_antialiasing">অ্যান্টিয়ালাইজিং</string>
+    <string name="dialog_smoothing">মসৃণ</string>
+    <string name="dialog_save_jpg_option_quality">গুণ:</string>
+    <string name="pocketpaint_jpg_message_dialog"><b> ন্যূনতম সঞ্চয় স্থান </b>নেয় T<b>কোনও স্বচ্ছতা</b>মনে নেই।</string>
+    <string name="pocketpaint_png_message_dialog">ক্ষয়হীন সংকোচনের। স্বচ্ছতা সংরক্ষণ করা হয়।</string>
+    <string name="pocketpaint_ora_message_dialog">এই ফর্ম্যাটটি <b> স্তরগুলি</b>মনে রাখে। <b> এটি অ্যাপ্লিকেশনগুলি ওপেনারস্টার ফর্ম্যাটকে সমর্থন করে opened</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">পকেট পেইন্টের নেটিভ ইমেজ ফর্ম্যাট। এই বিন্যাসটি কমান্ড এবং স্তরগুলি মনে রাখে।</string>
+    <string name="permission_info_external_storage_text">এই অ্যাপ্লিকেশনটির সঠিকভাবে কাজ করার জন্য অনুরোধ করা অনুমতি দরকার। স্থানীয় মেমোরিতে চিত্রগুলি সংরক্ষণ করার জন্য, অ্যাপ্লিকেশনটির এতে পড়ার এবং লেখার অ্যাক্সেসের প্রয়োজন।</string>
+    <string name="permission_info_permanent_denial_text">এই অ্যাপ্লিকেশনটির সঠিকভাবে কাজ করার জন্য অনুরোধ করা অনুমতি দরকার। স্থানীয় মেমোরিতে চিত্রগুলি সংরক্ষণ করার জন্য, অ্যাপ্লিকেশনটির এতে পড়ার এবং লেখার অ্যাক্সেসের প্রয়োজন।
+        আপনি আবারও জিজ্ঞাসা করবেন না এমন অনুমতি যেমন অস্বীকার করেছেন, দয়া করে আপনার ফোন সেটিংসে যান এবং যদি আপনি সম্পর্কিত ফাংশনগুলি ব্যবহার করতে চান তবে প্রয়োজনীয় অনুমতিগুলি দিন।</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
+    <string name="transform_info_text">প্রান্তগুলি তাদের নতুন অবস্থানে টেনে আনুন, তারপরে চিত্রের ক্ষেত্রটি প্রসারিত করতে বা কাটতে আলতো চাপুন।</string>
+    <string name="cursor_draw_inactive">অবস্থানে প্যান করুন, তারপরে পেইন্টিং শুরু করতে আলতো চাপুন।</string>
+    <string name="cursor_draw_active">আঁকতে প্যান করুন, তারপরে পেইন্টিং বন্ধ করতে আবার আলতো চাপুন।</string>
+    <string name="welcome_to_pocket_paint">পকেট পেইন্ট আপনাকে স্বাগতম</string>
+    <string name="intro_welcome_text">পকেট পেইন্টের সাথে আপনার সৃজনশীলতার সীমাবদ্ধতা নেই। আপনি যদি নতুন হিসেবে সূচনা করেন বা পকেট পেইন্টের সাথে ইতিমধ্যে পরিচিত হন তবে এটি এড়িয়ে যান।</string>
+    <string name="intro_tool_more_information">আরও তথ্য পেতে একটি সরঞ্জামে ক্লিক করুন</string>
+    <string name="more_possibilities">আরও সম্ভাবনা</string>
+    <string name="intro_possibilities_text">প্রধান মেনু খুলতে উপরের বারটি ব্যবহার করুন এবং পরিবর্তনগুলি পূর্বাবস্থায় ফেরান বা পুনরায় করুন</string>
+    <string name="landscape">আড়াআড়ি</string>
+    <string name="intro_landscape_text">পকেট পেইন্ট আপনাকে সেরা চিত্রের অভিজ্ঞতা দেওয়ার জন্য ল্যান্ডস্কেপ মোডে অঙ্কন সমর্থন করে।</string>
+    <string name="enjoy_pocket_paint">আপনি সব নিয়মিত. পকেট পেইন্ট উপভোগ করুন।</string>
+    <string name="intro_get_started">শুরু করুন এবং একটি নতুন মাস্টারপিস তৈরি করুন।</string>
+    <string name="lets_go">চলো যাই</string>
+    <string name="next">পরবর্তী</string>
+    <string name="skip">এড়িয়ে যান</string>
+    <string name="pocketpaint_about_title">সম্পর্কে</string>
+    <string name="pocketpaint_about_content">পকেট পেইন্ট একটি চিত্র সম্পাদনা গ্রন্থাগার যা ক্যাট্রোব্যাট প্রকল্পের অংশ।\n\nক্যাটরোব্যাট একটি ভিজ্যুয়াল প্রোগ্রামিং ভাষা এবং স্মার্টফোনের জন্য সৃজনশীলতার সরঞ্জামগুলির সেট।\n\nপকেট পেইন্টের উত্স কোডটি মূলত %s এর অধীনে লাইসেন্সযুক্ত।\nলাইসেন্সের সুনির্দিষ্ট বিবরণের জন্য নীচের লিঙ্কটি দেখুন।</string>
+    <string name="pocketpaint_about_url_license_description">পকেট পেইন্ট সোর্স কোড লাইসেন্স</string>
+    <string name="pocketpaint_about_url_catrobat_description">ক্যাট্রোব্যাট সম্পর্কে</string>
+    <string name="pocketpaint_intro">সূচনা</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">ইন্ট্রো স্প্লিট স্ক্রিন সমর্থন করে না</string>
+    <string name="pocketpaint_overwrite_title">ওভাররাইট ফাইল?</string>
+    <string name="pocketpaint_overwrite">আপনি একটি বিদ্যমান চিত্র ওভাররাইট করতে চলেছেন (ইঙ্গিত: এটি একটি নতুন চিত্র হিসাবে সংরক্ষণ করতে, \"%s\" বিকল্পটি ব্যবহার করুন)। যাইহোক সংরক্ষণ করবেন?</string>
+    <string name="pocketpaint_like_us">আপনি পকেট পেইন্ট পছন্দ করেন?</string>
+    <string name="pocketpaint_rate_us">আপনি কি পকেট পেইন্ট রেট করতে চান?</string>
+    <string name="pocketpaint_feedback">এটি শুনে আমরা অত্যন্ত দুঃখিত। আপনি যদি আমাদের সাথে আপনার অভিজ্ঞতা ভাগ করতে চান তবে যোগাযোগ করুন@catrobat.org এ লিখুন</string>
+    <string name="pocketpaint_yes">হ্যাঁ</string>
+    <string name="pocketpaint_no">না</string>
+    <string name="pocketpaint_cancel">বাতিল</string>
+    <string name="pocketpaint_not_now">এখন না</string>
+    <string name="pocketpaint_rate_us_title">হার পকেট পেইন্ট</string>
+    <string name="bottom_navigation_tools">সরঞ্জামসমূহ</string>
+    <string name="bottom_navigation_current">কারেন্ট</string>
+    <string name="bottom_navigation_color">রঙ</string>
+    <string name="bottom_navigation_layers">স্তর</string>
+    <string name="bottom_navigation_item">নীচে নেভিগেশনের জন্য আইটেম</string>
+    <string name="intro_bottom_navigation_tools_description">আপনি যে সরঞ্জামটি ব্যবহার করতে চান তাতে স্যুইচ করুন।</string>
+    <string name="intro_bottom_navigation_current_description">বর্তমানে ব্যবহৃত সরঞ্জাম দেখায় এবং এর বিকল্পগুলি খুলবে।</string>
+    <string name="intro_bottom_navigation_color_description">বর্তমানে ব্যবহৃত রঙ দেখায় এবং রঙ চয়নকারীটি খোলে।</string>
+    <string name="intro_bottom_navigation_layers_description">স্তর মেনু খোলে এবং আপনাকে আপনার স্তরগুলি পরিচালনা করতে দেয়।</string>
+    <string name="pocketpaint_tool_icon_description">বর্তমান সরঞ্জাম আইকন</string>
+    <string name="dialog_scale_title">চিত্র লোড করার জন্য খুব বড় is</string>
+    <string name="dialog_scale_message">চিত্রটি লোড করার জন্য খুব বড়। চিত্রটি স্বয়ংক্রিয়ভাবে স্কেল করতে ওকে ক্লিক করুন।</string>
+</resources>

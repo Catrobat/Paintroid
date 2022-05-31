@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ *  Paintroid: An image manipulation application for Android.
+ *  Copyright (C) 2010-2021 The Catrobat Team
+ *  (<http://developer.catrobat.org/credits>)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Affero General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU Affero General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Affero General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="pocketpaint_app_name">Pocket Paint</string>
+    <string name="button_brush">Pinceau</string>
+    <string name="button_cursor">Curseur</string>
+    <string name="button_set_center">Set Center</string>
+    <string name="button_pipette">Pipette</string>
+    <string name="button_undo">Défaire</string>
+    <string name="button_redo">Rétablir</string>
+    <string name="button_info">Information</string>
+    <string name="button_stamp">Tampon</string>
+    <string name="button_import_image">Importer une image</string>
+    <string name="button_eraser">Gomme</string>
+    <string name="button_transform">Transformer</string>
+    <string name="button_fill">Remplir</string>
+    <string name="button_line">Ligne</string>
+    <string name="button_text">Texte</string>
+    <string name="button_shape">Formes</string>
+    <string name="button_hand">Main</string>
+    <string name="button_watercolor">Aquarelle</string>
+    <string name="button_spray_can">Bombe aérosol</string>
+    <string name="button_smudge">Smudge</string>
+    <string name="button_apply">Appliquer</string>
+    <string name="button_checkmark">Checkmark</string>
+    <string name="button_plus">Connecter le segment de ligne</string>
+    <string name="done">Terminé</string>
+    <string name="gallery">Galerie</string>
+    <string name="load_sticker_error">Impossible de charger l\'image</string>
+    <string name="error_unknown_error">Une erreur inconnue est survenue.</string>
+    <string name="cap_circle">Cercle</string>
+    <string name="cap_square">Carré</string>
+    <string name="stamptool_paste">Coller</string>
+    <string name="stamptool_copy">Copier</string>
+    <string name="stamptool_cut">Couper</string>
+    <string name="stickers">Stickers</string>
+    <string name="dialog_tools_title">Outils</string>
+    <string name="dialog_error_save_title">Erreur de chargement/sauvegarde du fichier</string>
+    <string name="dialog_error_sdcard_text">Vérifie l\'image ou la carte SD !</string>
+    <string name="dialog_brush_width_text">Largeur du trait</string>
+    <string name="dialog_warning_new_image">Enregistrer changements?</string>
+    <string name="help_title">Aide</string>
+    <string name="help_content_eraser">Supprime des parties de l\'image comme avec une gomme.</string>
+    <string name="help_content_brush">Tape sur les symboles de la barre inférieure pour modifier la couleur ou la taille du pinceau.</string>
+    <string name="help_content_watercolor">Similaire à l\'outil pinceau avec un effet aquarelle. Cependant, tu peux aussi modifier la force du pinceau avec le curseur dans le menu des couleurs.</string>
+    <string name="help_content_eyedropper">Tape sur l\'image pour sélectionner une couleur.</string>
+    <string name="help_content_undo">Tape pour annuler ton action précédente.</string>
+    <string name="help_content_redo">Tape pour refaire une action annulée.</string>
+    <string name="help_content_fill">Tape sur l\'image pour remplir une zone avec la couleur sélectionnée.</string>
+    <string name="help_content_cursor">Positionne le curseur à l\'endroit où tu veux dessiner. Touche pour activer le curseur. Déplace ton doigt pour dessiner. Tape à nouveau pour le désactiver.</string>
+    <string name="help_content_transform">Sert à transformer l\'image.</string>
+    <string name="help_content_stamp">Déplace et redimensionne le rectangle pour couvrir la zone que tu veux tamponner. Tape sur copier ou couter pour sélectionner la zone. Déplace-la, puis tape sur coller pour tamponner.</string>
+    <string name="help_content_import_png">Importe une image de la galerie dans l\'outil tampon.</string>
+    <string name="help_content_line">Dessine une ligne droite.</string>
+    <string name="help_content_text">Écris du texte et mets-le en forme. Redimensionne ensuite la zone de texte. Tape pour insérer le texte sur l\'image.</string>
+    <string name="help_content_shape">Choisis une forme et tape dessus pour insérer la forme sélectionnée.</string>
+    <string name="help_content_layer">Crée de nouvelles couches ou modifie les couches existantes.</string>
+    <string name="help_content_color_chooser">Sélectionne ou ajuste une couleur.</string>
+    <string name="help_content_hand">Déplace ton doigt pour déplacer la toile.</string>
+    <string name="help_content_spray_can">Déplace ton doigt sur l\'image pour créer un motif de bombe aérosol.</string>
+    <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
+    <string name="closing_catroid_security_question_title">Retour au projet</string>
+    <string name="closing_security_question_title">Quitter</string>
+    <string name="closing_security_question">Enregistrer changements ?</string>
+    <string name="menu_new_image">Nouvelle image</string>
+    <string name="menu_discard_image">Rejeter l\'image</string>
+    <string name="no_longclick_on_hidden_layer">Tu ne peux fusionner ou réorganiser que si toutes les couches sont visibles</string>
+    <string name="no_tools_on_hidden_layer">Les outils ne sont pas disponibles sur les couche cachées</string>
+    <string name="menu_load_image">Charger l\'image</string>
+    <string name="menu_save_image">Sauvegarder l\'image</string>
+    <string name="menu_save_copy">Sauvegarder une copie</string>
+    <string name="menu_hide_menu">Plein écran</string>
+    <string name="share_image_menu">Partager l\'image</string>
+    <string name="share_image_via_text">Envoyer une image via</string>
+    <string name="menu_rate_us">Note-nous !</string>
+    <string name="menu_export">Exportation</string>
+    <string name="menu_feedback">Feed-back</string>
+    <string name="menu_advanced">Paramètres avancés</string>
+    <string name="saved_to">Image enregistrée dans\n</string>
+    <string name="saved">Image enregistrée</string>
+    <string name="copy_to">Copie enregistrée dans\n</string>
+    <string name="copy">Copie enregistrée</string>
+    <string name="menu_quit">Quitter</string>
+    <string name="save_button_text">Enregistrer</string>
+    <string name="discard_button_text">Abandonner</string>
+    <string name="cancel_button_text">Annuler</string>
+    <string name="overwrite_button_text">Écraser</string>
+    <string name="resize_nothing_to_resize">rien à redimensionner</string>
+    <string name="resize_cannot_resize_to_this_size">ne peut pas redimensionner à cette taille</string>
+    <string name="resize_max_image_resolution_reached">résolution maximale de l\'image atteinte</string>
+    <string name="text_tool_dialog_input_title">Ton texte :</string>
+    <string name="text_tool_dialog_format_options">Options de formatage :</string>
+    <string name="text_tool_dialog_underline_shortcut">U</string>
+    <string name="text_tool_dialog_italic_shortcut">l</string>
+    <string name="text_tool_dialog_bold_shortcut">B</string>
+    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
+    <string name="text_tool_dialog_input_hint">Tape ici pour écrire</string>
+    <string name="text_tool_dialog_font_monospace">Monoespace</string>
+    <string name="text_tool_dialog_font_serif">Serif</string>
+    <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
+    <string name="text_tool_dialog_font_dubai">Dubai</string>
+    <string name="text_tool_dialog_font_arabic_stc">STC</string>
+    <string name="shape_tool_dialog_rect_title">Rectangle</string>
+    <string name="shape_tool_dialog_ellipse_title">Ellipse</string>
+    <string name="shape_tool_dialog_star_title">Étoile</string>
+    <string name="shape_tool_dialog_heart_title">Coeur</string>
+    <string name="shape_tool_dialog_fill_title">Remplir</string>
+    <string name="shape_tool_dialog_outline_title">Contour</string>
+    <string name="fill_tool_dialog_color_tolerance_title">Tolérance de couleur</string>
+    <string name="smudge_tool_dialog_pressure_title">Pressure</string>
+    <string name="smudge_tool_dialog_drag_title">Drag</string>
+    <string name="transform_tool_rotate_left">pivoter à gauche</string>
+    <string name="transform_tool_rotate_right">pivoter à droite</string>
+    <string name="transform_tool_flip_vertical">inverser verticalement</string>
+    <string name="transform_tool_flip_horizontal">inverser horizontalement</string>
+    <string name="transform_tool_resize_text">redimensionner</string>
+    <string name="transform_tool_auto_crop_text">rogner/agrandir</string>
+    <string name="transform_width_text">Largeur</string>
+    <string name="transform_height_text">Hauteur</string>
+    <string name="transform_auto_crop_text">Auto</string>
+    <string name="transform_set_center_text">Set center</string>
+    <string name="pixel">px</string>
+    <string name="stamp_tool_copy_hint">Tape copier pour copier le contenu</string>
+    <string name="layers_title">Couches</string>
+    <string name="layer_new">Nouvelle couche</string>
+    <string name="layer_delete">Supprimer la couche</string>
+    <string name="layer_too_many_layers">Trop de couches</string>
+    <string name="layer_merged">Couches fusionnées</string>
+    <string name="layer_background">Arrière-plan de la couce</string>
+    <string name="dialog_shape_text">Forme</string>
+    <string name="dialog_loading_image_failed_title">Erreur de chargement de l\'image</string>
+    <string name="dialog_loading_image_failed_text">Pas une image valide</string>
+    <string name="dialog_settings">Options</string>
+    <string name="dialog_save_image_name">Nom de l\'image</string>
+    <string name="dialog_save_image_format">Format d\'image</string>
+    <string name="dialog_antialiasing">Anticrénelage</string>
+    <string name="dialog_smoothing">Lissage</string>
+    <string name="dialog_save_jpg_option_quality">Qualité :</string>
+    <string name="pocketpaint_jpg_message_dialog">Prend <b>espace de stockage minimal</b>. <b>Aucune transparence</b> n\'est mémorisée.</string>
+    <string name="pocketpaint_png_message_dialog">Compression sans perte. La transparence est préservée.</string>
+    <string name="pocketpaint_ora_message_dialog">Ce format se souvient des <b>couches</b>. <b>Il peut être ouvert par des applications qui prennent en charge le format Openraster.</b></string>
+    <string name="pocketpaint_catrobat_message_dialog">Le format d\'image natif de Pocket Paint. Ce format se souvient des commandes et des couches.</string>
+    <string name="permission_info_external_storage_text">Cette application a besoin de l\'autorisation requise pour fonctionner correctement. Afin d\'enregistrer des images dans la mémoire locale, l\'application a besoin d\'y accéder en lecture et en écriture.</string>
+    <string name="permission_info_permanent_denial_text">Cette application a besoin de l\'autorisation requise pour fonctionner correctement. Afin d\'enregistrer des images dans la mémoire locale, l\'application a besoin d\'y accéder en lecture et en écriture.
+        Comme tu as refusé l\'autorisation avec la fonction Ne pas demander à nouveau, va dans les options de ton téléphone et accorde les autorisations requises si tu souhaites utiliser les fonctions associées.</string>
+    <string name="set_center_info_text">Tap the screen to define the new center position.</string>
+    <string name="transform_info_text">Fais glisser les bords vers leur nouvelle position, puis tape sur la coche pour agrandir ou recadrer la zone de l\'image.</string>
+    <string name="cursor_draw_inactive">Glisse pour positionner, puis tape pour commencer à peindre.</string>
+    <string name="cursor_draw_active">Glisse pour dessiner, puis tape à nouveau pour arrêter de peindre.</string>
+    <string name="welcome_to_pocket_paint">Bienvenue sur Pocket Paint</string>
+    <string name="intro_welcome_text">Avec Pocket Paint, il n\'y a pas de limites à ta créativité. Si tu es nouveau, commence l\'intro, ou saute-la si tu connais déjà Pocket Paint.</string>
+    <string name="intro_tool_more_information">Tape sur un outil pour obtenir plus d\'informations</string>
+    <string name="more_possibilities">Plus de possibilités</string>
+    <string name="intro_possibilities_text">Utilise la barre supérieure pour ouvrir le menu de débordement et pour annuler ou refaire les modifications</string>
+    <string name="landscape">Paysage</string>
+    <string name="intro_landscape_text">Pocket Paint te permets aussi le dessin en mode paysage pour t\'offrir la meilleure expérience de peinture.</string>
+    <string name="enjoy_pocket_paint">Tu es prêt. Profite de Pocket Paint.</string>
+    <string name="intro_get_started">Commence à créer un nouveau chef-d\'œuvre.</string>
+    <string name="lets_go">Allons-y</string>
+    <string name="next">Continuer</string>
+    <string name="skip">Ignorer</string>
+    <string name="pocketpaint_about_title">À propos de</string>
+    <string name="pocketpaint_about_content">Pocket Paint est une bibliothèque d\'édition d\'images qui fait partie du projet Catrobat.\n\nCatrobat est un langage de programmation visuel et un ensemble d\'outils de créativité pour les smartphones.\n\nLe code source de Pocket Paint est principalement sous la licence %s.\nPour plus de détails sur la licence, voir le lien ci-dessous.</string>
+    <string name="pocketpaint_about_url_license_description">Licence de code source Pocket Paint</string>
+    <string name="pocketpaint_about_url_catrobat_description">À propos de Catrobat</string>
+    <string name="pocketpaint_intro">Intro</string>
+    <string name="pocketpaint_intro_split_screen_not_supported">L\'intro ne permets pas d\'écran partagé.</string>
+    <string name="pocketpaint_overwrite_title">Écraser le fichier ?</string>
+    <string name="pocketpaint_overwrite">Tu es sur le point d\'écraser une image existante (conseil : pour l\'enregistrer comme une nouvelle image, utilise l\'option \"%s\"). Sauvegarder tout de même ?</string>
+    <string name="pocketpaint_like_us">Tu aimes Pocket Paint ?</string>
+    <string name="pocketpaint_rate_us">Tu aimerais évaluer Pocket Paint ?</string>
+    <string name="pocketpaint_feedback">Nous sommes désolés d\'apprendre cela. Si tu veux partager ton expérience avec nous, écris à contact@catrobat.org</string>
+    <string name="pocketpaint_yes">Oui</string>
+    <string name="pocketpaint_no">Non</string>
+    <string name="pocketpaint_cancel">Annuler</string>
+    <string name="pocketpaint_not_now">Pas maintenant</string>
+    <string name="pocketpaint_rate_us_title">Évalue Pocket Paint</string>
+    <string name="bottom_navigation_tools">Outils</string>
+    <string name="bottom_navigation_current">Actuel</string>
+    <string name="bottom_navigation_color">Couleur</string>
+    <string name="bottom_navigation_layers">Couches</string>
+    <string name="bottom_navigation_item">Élément pour la navigation en bas</string>
+    <string name="intro_bottom_navigation_tools_description">Passe à l\'outil que tu veux utiliser.</string>
+    <string name="intro_bottom_navigation_current_description">Affiche l\'outil actuellement utilisé et ouvre ses options.</string>
+    <string name="intro_bottom_navigation_color_description">Affiche la couleur actuellement utilisée et ouvre le sélecteur de couleurs.</string>
+    <string name="intro_bottom_navigation_layers_description">Ouvre le menu des couches et te permet de gérer tes couches.</string>
+    <string name="pocketpaint_tool_icon_description">Icône de l\'outil actuel</string>
+    <string name="dialog_scale_title">L\'image est trop grande pour être chargée</string>
+    <string name="dialog_scale_message">L\'image est trop grande pour être chargée. Tape sur OK pour réduire l\'image automatiquement.</string>
+</resources>

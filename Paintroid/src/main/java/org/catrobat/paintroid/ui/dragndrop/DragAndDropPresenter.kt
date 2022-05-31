@@ -33,7 +33,5 @@ interface DragAndDropPresenter {
 
     fun markMergeable(position: Int, mergeWith: Int)
 
-    fun onLongClickLayerAtPosition(position: Int, view: View)
-
     fun onClickLayerAtPosition(position: Int, view: View)
 }
