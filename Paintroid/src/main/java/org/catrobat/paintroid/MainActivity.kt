@@ -269,7 +269,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         onCreateDrawingSurface()
         presenterMain.onCreateTool()
 
-        var isOpenedFromCatroid = false
         val receivedIntent = intent
         isTemporaryFileSavingTest = intent.getBooleanExtra("isTemporaryFileSavingTest", false)
         when {
@@ -287,14 +286,15 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 val picturePath = intent.getStringExtra(PAINTROID_PICTURE_PATH)
                 val pictureName = intent.getStringExtra(PAINTROID_PICTURE_NAME)
                 presenterMain.initializeFromCleanState(picturePath, pictureName)
-                if (presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
+
+                if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
                     commandManager.loadCommandsCatrobatImage(presenterMain.openTemporaryFile(workspace))
                 }
             }
             else -> {
                 val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)
                 val isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false)
-                isOpenedFromCatroid =
+                val isOpenedFromCatroid =
                     savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
                 val isOpenedFromFormulaEditorInCatroid = savedInstanceState.getBoolean(
                     IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY, false
@@ -310,12 +310,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
         commandManager.addCommandListener(this)
         lastInteractionTime = System.currentTimeMillis()
-        if ((!isRunningEspressoTests || isTemporaryFileSavingTest) && !isOpenedFromCatroid) {
+        if ((!isRunningEspressoTests || isTemporaryFileSavingTest) && !model.isOpenedFromCatroid) {
             startAutoSaveCoroutine()
         }
         presenterMain.finishInitialize()
 
-        if (!org.catrobat.paintroid.BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             val prefs = getSharedPreferences(SHARED_PREFS_NAME, 0)
 
             if (prefs.getBoolean(FIRST_LAUNCH_AFTER_INSTALL, true)) {
