@@ -29,7 +29,7 @@ import org.catrobat.paintroid.ui.Perspective
 
 class DefaultWorkspace(
     private val layerModel: LayerContracts.Model,
-    override val perspective: Perspective,
+    override var perspective: Perspective,
     private val listener: Listener,
     private val serializationHelper: CommandSerializationUtilities
 ) : Workspace {

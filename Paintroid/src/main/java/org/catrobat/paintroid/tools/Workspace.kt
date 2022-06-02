@@ -35,7 +35,7 @@ interface Workspace {
     val currentLayerIndex: Int
     val scaleForCenterBitmap: Float
     var scale: Float
-    val perspective: Perspective
+    var perspective: Perspective
 
     fun contains(point: PointF): Boolean
 
