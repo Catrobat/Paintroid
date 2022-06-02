@@ -64,6 +64,7 @@ pipeline {
         stage('Build Debug-APK') {
             steps {
                 sh "./gradlew -Pindependent='#$env.BUILD_NUMBER $env.BRANCH_NAME' assembleDebug"
+                renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                 archiveArtifacts 'app/build/outputs/apk/debug/paintroid-debug*.apk'
                 plot csvFileName: 'dexcount.csv', csvSeries: [[displayTableFlag: false, exclusionValues: '', file: 'Paintroid/build/outputs/dexcount/*.csv', inclusionFlag: 'OFF', url: '']], group: 'APK Stats', numBuilds: '180', style: 'line', title: 'dexcount'
             }
@@ -81,12 +82,13 @@ pipeline {
                 sh 'rm -rf Catroid; mkdir Catroid'
                 dir('Catroid') {
                     git branch: params.CATROID_BRANCH, url: 'https://github.com/Catrobat/Catroid.git'
-                    sh 'rm -f catroid/src/main/libs/*.aar'
-                    sh 'mv -f ../colorpicker/build/outputs/aar/colorpicker-debug.aar catroid/src/main/libs/colorpicker-LOCAL.aar'
-                    sh 'mv -f ../Paintroid/build/outputs/aar/Paintroid-debug.aar catroid/src/main/libs/Paintroid-LOCAL.aar'
-
-                    archiveArtifacts 'catroid/src/main/libs/colorpicker-LOCAL.aar'
-                    archiveArtifacts 'catroid/src/main/libs/Paintroid-LOCAL.aar'
+                    sh "rm -f catroid/src/main/libs/*.aar"
+                    sh "mv -f ../colorpicker/build/outputs/aar/colorpicker-debug.aar catroid/src/main/libs/colorpicker-LOCAL.aar"
+                    sh "mv -f ../Paintroid/build/outputs/aar/Paintroid-debug.aar catroid/src/main/libs/Paintroid-LOCAL.aar"
+                }
+                renameApks("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                dir('Catroid') {
+                    archiveArtifacts "catroid/src/main/libs/*.aar"
                     sh "./gradlew assembleCatroidDebug"
                     archiveArtifacts 'catroid/build/outputs/apk/catroid/debug/catroid-catroid-debug.apk'
                 }

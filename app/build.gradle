@@ -83,23 +83,6 @@ android {
         signedRelease {
             signingConfig signingConfigs.signedRelease
         }
-        debug {
-            def branchName = System.getenv("BRANCH_NAME")
-            def buildNumber = System.getenv("BUILD_NUMBER")
-
-            //only rename when env is setup via jenkins
-            if (branchName && buildNumber) {
-                //loop over all variants is necessary to expose outputFileName variable
-                android.applicationVariants.all { variant ->
-                    if (variant.name == "debug") {
-                        variant.outputs.all { output ->
-                            def fileName = "${getProperty("archivesBaseName")}-debug-$branchName-${buildNumber}.apk"
-                            outputFileName = fileName
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
