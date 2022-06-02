@@ -200,7 +200,6 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
                 }
                 commandModel = kryo.readObject(input, CommandManagerModel::class.java)
             }
-
         } catch (ex: KryoException) {
             Log.d(TAG, "KryoException while reading autosave: " + ex.message)
         }

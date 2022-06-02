@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.BlurMaskFilter
+import android.graphics.PointF
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -30,6 +31,9 @@ import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 private const val MAX_ALPHA_VALUE = 255
 private const val MAX_NEW_RANGE = 150
 private const val MIN_NEW_RANGE = 20
+
+private const val MAX_STROKE_WIDTH_INCREASE = 2
+private const val MAX_STROKE_WIDTH_DECREASE = .5
 
 class WatercolorTool(
     brushToolOptionsView: BrushToolOptionsView,
@@ -72,4 +76,6 @@ class WatercolorTool(
         newValue = MAX_NEW_RANGE - newValue + MIN_NEW_RANGE
         return newValue.toFloat()
     }
+
+    
 }
