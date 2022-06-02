@@ -24,11 +24,11 @@
     <string name="color_green">Зелений</string>
     <string name="color_blue">Синій</string>
     <string name="color_alpha">Альфа</string>
-    <string name="color_hex">Шістнадцятковий</string>
+    <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Застосувати</string>
     <string name="color_picker_cancel">Скасувати</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">зараз</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">буде</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">поточний</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">новий</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Піпетка</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Зберегти зміни?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Бажаєте зберегти свої зміни?</string>
