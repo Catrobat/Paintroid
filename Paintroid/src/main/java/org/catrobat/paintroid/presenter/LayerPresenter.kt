@@ -72,7 +72,7 @@ class LayerPresenter(
                 val lineTool = currentTool as LineTool
                 if (!lineTool.lineFinalized && lineTool.startpointSet && !lineTool.endpointSet) {
                     if (commandManager.isUndoAvailable) {
-                        commandManager.undo()
+                        commandManager.undoIgnoringColorChanges()
                     }
                     lineTool.startPointToDraw = null
                     lineTool.startpointSet = false

@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.command.implementation
 
+import android.graphics.Color
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
@@ -73,11 +74,15 @@ class DefaultCommandManager(
     override fun addCommand(command: Command?) {
         redoCommandList.clear()
         command?.let { undoCommandList.addFirst(it) }
+        executeCommand(command)
+        notifyCommandExecuted()
+    }
+
+    private fun executeCommand(command: Command?) {
         val currentLayer = layerModel.currentLayer
         val canvas = commonFactory.createCanvas()
         canvas.setBitmap(currentLayer?.bitmap)
         command?.run(canvas, layerModel)
-        notifyCommandExecuted()
     }
 
     override fun loadCommandsCatrobatImage(model: CommandManagerModel?) {
@@ -90,9 +95,16 @@ class DefaultCommandManager(
     }
 
     override fun undo() {
-        var success = true
         val command = undoCommandList.pop()
         redoCommandList.addFirst(command)
+
+        handleUndo(command)
+
+        notifyCommandExecuted()
+    }
+
+    private fun handleUndo(command: Command) {
+        var success = true
         var layerCount = layerModel.layerCount
         val currentCommandName = command.javaClass.simpleName
         val addLayerCommandRegex = AddLayerCommand::class.java.simpleName.toRegex()
@@ -139,8 +151,27 @@ class DefaultCommandManager(
         if (!currentCommandName.matches(mergeLayerCommandRegex)) {
             fetchBackCheckBoxes(layerCount, checkBoxes)
         }
+    }
 
-        notifyCommandExecuted()
+    private fun executeAllCommands() {
+        val layerCount = layerModel.layerCount
+        val checkBoxes: MutableList<Boolean> = ArrayList(Collections.nCopies(layerCount, true))
+
+        backUpCheckBoxes(layerCount, checkBoxes)
+
+        layerModel.reset()
+
+        val canvas = commonFactory.createCanvas()
+
+        initialStateCommand?.run(canvas, layerModel)
+
+        val iterator = undoCommandList.descendingIterator()
+        while (iterator.hasNext()) {
+            val currentLayer = layerModel.currentLayer
+            canvas.setBitmap(currentLayer?.bitmap)
+            iterator.next().run(canvas, layerModel)
+        }
+        fetchBackCheckBoxes(layerCount, checkBoxes)
     }
 
     override fun redo() {
@@ -175,6 +206,117 @@ class DefaultCommandManager(
     }
 
     override fun shutdown() = Unit
+
+    override fun undoIgnoringColorChanges() {
+        addAndExecuteCommands(separateColorCommandsAndUndo())
+        notifyCommandExecuted()
+    }
+
+    override fun undoIgnoringColorChangesAndAddCommand(command: Command) {
+        val colorCommandList = separateColorCommandsAndUndo()
+        undoCommandList.addFirst(command)
+        redoCommandList.clear()
+        executeCommand(command)
+        addAndExecuteCommands(colorCommandList)
+        notifyCommandExecuted()
+    }
+
+    private fun separateColorCommandsAndUndo(): Deque<Command> {
+        val colorCommandList = removeColorCommands()
+        if (undoCommandList.isNotEmpty() && undoCommandList.first != null) {
+            val command = undoCommandList.pop()
+            redoCommandList.addFirst(command)
+            handleUndo(command)
+        }
+        return colorCommandList
+    }
+
+    override fun undoInConnectedLinesMode() {
+        val colorCommandList = removeColorCommands()
+        if (undoCommandList.isNotEmpty()) {
+            val commandForUndo: Command
+            if (colorCommandList.isNotEmpty()) {
+                commandForUndo = colorCommandList.pop()
+            } else {
+                commandForUndo = undoCommandList.pop()
+            }
+            redoCommandList.addFirst(commandForUndo)
+            handleUndo(commandForUndo)
+            recolorLastLine(colorCommandList)
+        } else {
+            if (colorCommandList.isNotEmpty()) {
+                addCommands(colorCommandList)
+            }
+            if (undoCommandList.isNotEmpty()) {
+                undo()
+            }
+        }
+    }
+
+    private fun recolorLastLine(colorCommandList: Deque<Command>) {
+        if (undoCommandList.isNotEmpty() && undoCommandList.first !is ColorChangedCommand) {
+            val firstNonColorCommand = undoCommandList.pop()
+            val colorCommand: Command
+            var color = Color.BLACK
+            if (colorCommandList.isNotEmpty()) {
+                colorCommand = colorCommandList.first
+                if (colorCommand is ColorChangedCommand) {
+                    color = colorCommand.color
+                }
+            } else if (undoCommandList.isNotEmpty()) {
+                val iterator = undoCommandList.iterator()
+                while (iterator.hasNext()) {
+                    val possibleInitialColor = iterator.next()
+                    if (possibleInitialColor is ColorChangedCommand) {
+                        color = possibleInitialColor.color
+                        break
+                    }
+                }
+            }
+            if (firstNonColorCommand is PathCommand) {
+                handleUndo(firstNonColorCommand)
+                firstNonColorCommand.paint.color = color
+                undoCommandList.addFirst(firstNonColorCommand)
+                executeCommand(firstNonColorCommand)
+            } else if (firstNonColorCommand is PointCommand) {
+                handleUndo(firstNonColorCommand)
+                firstNonColorCommand.paint.color = color
+                undoCommandList.addFirst(firstNonColorCommand)
+                executeCommand(firstNonColorCommand)
+            }
+        }
+        addAndExecuteCommands(colorCommandList)
+        notifyCommandExecuted()
+    }
+
+    override fun redoInConnectedLinesMode() {
+        val command = redoCommandList.pop()
+        if (command is ColorChangedCommand) {
+            val colorCommandList = removeColorCommands()
+            if (undoCommandList.isNotEmpty()) {
+                val firstNonColorCommand = undoCommandList.first
+                val color = command.color
+
+                if (firstNonColorCommand is PathCommand) {
+                    firstNonColorCommand.paint.color = color
+                } else if (firstNonColorCommand is PointCommand) {
+                    firstNonColorCommand.paint.color = color
+                }
+                executeAllCommands()
+            }
+            addAndExecuteCommands(colorCommandList)
+        }
+        undoCommandList.addFirst(command)
+
+        executeCommand(command)
+        notifyCommandExecuted()
+    }
+
+    override fun getCommandManagerModelForCatrobatImage(): CommandManagerModel? {
+        var adaptedModel: CommandManagerModel? = null
+        commandManagerModel?.let { it1 -> adaptedModel = CommandManagerModel(it1.initialCommand, it1.commands.filter { it !is ColorChangedCommand }.toMutableList()) }
+        return adaptedModel
+    }
 
     override fun setInitialStateCommand(command: Command) {
         initialStateCommand = command
@@ -220,6 +362,31 @@ class DefaultCommandManager(
                 destinationLayer.switchBitmaps(false)
                 destinationLayer.isVisible = false
             }
+        }
+    }
+
+    private fun removeColorCommands(): Deque<Command> {
+        val colorCommandList: Deque<Command> = ArrayDeque()
+        while (undoCommandList.isNotEmpty() && undoCommandList.first is ColorChangedCommand) {
+            colorCommandList.addLast(undoCommandList.pop())
+        }
+        return colorCommandList
+    }
+
+    private fun addAndExecuteCommands(commands: Deque<Command>) {
+        val iterator = commands.descendingIterator()
+        while (iterator.hasNext()) {
+            val command = iterator.next()
+            undoCommandList.addFirst(command)
+            executeCommand(command)
+        }
+    }
+
+    private fun addCommands(commands: Deque<Command>) {
+        val iterator = commands.descendingIterator()
+        while (iterator.hasNext()) {
+            val command = iterator.next()
+            undoCommandList.addFirst(command)
         }
     }
 }

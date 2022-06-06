@@ -40,6 +40,8 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.WelcomeActivity
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
+import org.catrobat.paintroid.command.CommandFactory
+import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.common.ABOUT_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.CATROBAT_INFORMATION_DIALOG_TAG
@@ -98,6 +100,8 @@ class MainActivityNavigator(
     override val isSdkAboveOrEqualQ: Boolean
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
+    private var commandFactory: CommandFactory = DefaultCommandFactory()
+
     private fun showFragment(
         fragment: Fragment,
         tag: String = CATROID_MEDIA_GALLERY_FRAGMENT_TAG
@@ -128,8 +132,8 @@ class MainActivityNavigator(
     private fun setupColorPickerDialogListeners(dialog: ColorPickerDialog) {
         dialog.addOnColorPickedListener(object : OnColorPickedListener {
             override fun colorChanged(color: Int) {
-                toolReference.tool?.changePaintColor(color)
-                mainActivity.presenter.setBottomNavigationColor(color)
+                val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
+                mainActivity.commandManager.addCommand(command)
             }
         })
         mainActivity.presenter.bitmap?.let { dialog.setBitmap(it) }

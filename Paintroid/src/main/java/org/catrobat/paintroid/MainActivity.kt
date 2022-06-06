@@ -127,6 +127,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     @VisibleForTesting
     lateinit var toolOptionsViewController: ToolOptionsViewController
 
+    lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
+
     private lateinit var layerPresenter: LayerPresenter
     private lateinit var drawingSurface: DrawingSurface
     private lateinit var presenterMain: MainActivityContracts.Presenter
@@ -134,7 +136,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private lateinit var keyboardListener: KeyboardListener
     private lateinit var appFragment: PaintroidApplicationFragment
     private lateinit var defaultToolController: DefaultToolController
-    private lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
     private lateinit var commandFactory: CommandFactory
     private var deferredRequestPermissionsResult: Runnable? = null
     private lateinit var progressBar: ContentLoadingProgressBar

@@ -213,7 +213,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
         Output(stream).use { output ->
             output.writeString(MAGIC_VALUE)
             output.writeInt(CURRENT_IMAGE_VERSION)
-            kryo.writeObject(output, commandManager.commandManagerModel)
+            kryo.writeObject(output, commandManager.getCommandManagerModelForCatrobatImage())
         }
     }
 
