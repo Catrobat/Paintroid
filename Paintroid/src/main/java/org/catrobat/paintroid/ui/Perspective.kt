@@ -22,6 +22,7 @@ import android.graphics.Canvas
 import android.graphics.PointF
 import android.graphics.Rect
 import androidx.annotation.VisibleForTesting
+import org.catrobat.paintroid.MainActivity
 import kotlin.jvm.Synchronized
 import kotlin.math.max
 import kotlin.math.min
@@ -72,22 +73,44 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
 
     val scaleForCenterBitmap: Float
         get() {
-            val screenSizeRatio = surfaceWidth.toFloat() / surfaceHeight
-            val bitmapSizeRatio = bitmapWidth.toFloat() / bitmapHeight
-            var ratioDependentScale = if (screenSizeRatio > bitmapSizeRatio) {
-                surfaceHeight.toFloat() / bitmapHeight
+            var ratioDependentScale = 0f
+            if (fullscreen) {
+                val displayHeight: Int? = mainActivity?.resources?.displayMetrics?.heightPixels
+                var screenSizeRatio = 0f
+                if (displayHeight != null) {
+                    screenSizeRatio = surfaceWidth.toFloat() / displayHeight.toFloat()
+                }
+                val bitmapSizeRatio = bitmapWidth.toFloat() / bitmapHeight
+                if (screenSizeRatio > bitmapSizeRatio) {
+                    if (displayHeight != null) {
+                        ratioDependentScale = displayHeight.toFloat() / bitmapHeight.toFloat()
+                    }
+                } else {
+                    ratioDependentScale = surfaceWidth.toFloat() / bitmapWidth.toFloat()
+                }
+                ratioDependentScale = min(ratioDependentScale, 1f)
+                ratioDependentScale = max(ratioDependentScale, MIN_SCALE)
             } else {
-                surfaceWidth.toFloat() / bitmapWidth
+                val screenSizeRatio = surfaceWidth.toFloat() / surfaceHeight
+                val bitmapSizeRatio = bitmapWidth.toFloat() / bitmapHeight
+                ratioDependentScale = if (screenSizeRatio > bitmapSizeRatio) {
+                    surfaceHeight.toFloat() / bitmapHeight.toFloat()
+                } else {
+                    surfaceWidth.toFloat() / bitmapWidth.toFloat()
+                }
+                ratioDependentScale = min(ratioDependentScale, 1f)
+                ratioDependentScale = max(ratioDependentScale, MIN_SCALE)
             }
-            ratioDependentScale = min(ratioDependentScale, 1f)
-            ratioDependentScale = max(ratioDependentScale, MIN_SCALE)
             return ratioDependentScale
         }
 
     private var initialTranslationX = 0f
+    var oldHeight = 0f
+    var mainActivity: MainActivity? = null
 
     @Synchronized
     fun setSurfaceFrame(surfaceFrame: Rect) {
+        if (surfaceHeight == 0) oldHeight = surfaceFrame.bottom.toFloat()
         surfaceFrame.apply {
             surfaceWidth = right
             surfaceCenterX = exactCenterX()
@@ -109,13 +132,52 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
             surfaceTranslationX = 0f
             surfaceTranslationY = 0f
         } else {
-            surfaceTranslationX = surfaceWidth / 2f - bitmapWidth / 2f
-            initialTranslationX = surfaceTranslationX
-            surfaceTranslationY = surfaceHeight / 2f - bitmapHeight / 2f
-            initialTranslationY = surfaceTranslationY
+            if (fullscreen) {
+                val displayHeight: Int? = mainActivity?.resources?.displayMetrics?.heightPixels
+                surfaceTranslationX = surfaceWidth / 2f - bitmapWidth / 2f
+                initialTranslationX = surfaceTranslationX
+                if (displayHeight != null) {
+                    surfaceTranslationY = displayHeight.toFloat() / 2f - bitmapHeight / 2f
+                } else {
+                    surfaceTranslationY = bitmapHeight.toFloat() / 2f - bitmapHeight / 2f
+                }
+                initialTranslationY = surfaceTranslationY
+            } else {
+                surfaceTranslationX = surfaceWidth / 2f - bitmapWidth / 2f
+                initialTranslationX = surfaceTranslationX
+                if (oldHeight > 0) surfaceHeight = oldHeight.toInt()
+                surfaceTranslationY = surfaceHeight / 2f - bitmapHeight / 2f
+                initialTranslationY = surfaceTranslationY
+            }
         }
-        val zoomFactor = if (fullscreen) 1.0f else BORDER_ZOOM_FACTOR
+        val zoomFactor = if (fullscreen) {
+            calculateZoomFactor()
+        } else {
+            BORDER_ZOOM_FACTOR
+        }
         surfaceScale = scaleForCenterBitmap * zoomFactor
+    }
+
+    @Synchronized
+    fun calculateZoomFactor(): Float {
+        val displayHeight: Int? = mainActivity?.resources?.displayMetrics?.heightPixels
+        if (bitmapHeight > bitmapWidth) {
+            if (bitmapHeight > surfaceHeight) {
+                return 1.0f
+            } else {
+                if (displayHeight != null) {
+                    return displayHeight.toFloat() / bitmapHeight.toFloat()
+                } else {
+                    return surfaceHeight.toFloat() / bitmapHeight.toFloat()
+                }
+            }
+        } else {
+            if (bitmapWidth >= surfaceWidth) {
+                return 1.0f
+            } else {
+                return surfaceWidth.toFloat() / bitmapWidth.toFloat()
+            }
+        }
     }
 
     @Synchronized
