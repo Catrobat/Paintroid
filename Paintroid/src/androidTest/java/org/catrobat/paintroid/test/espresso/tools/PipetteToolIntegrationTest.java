@@ -1,6 +1,6 @@
 /*
  *  Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2015 The Catrobat Team
+ *  Copyright (C) 2010-2022 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -28,15 +28,18 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import androidx.test.espresso.action.GeneralLocation;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipe;
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerPreviewInteraction.onColorPickerPreview;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -47,7 +50,7 @@ import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInter
 public class PipetteToolIntegrationTest {
 
 	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+	public ActivityScenarioRule<MainActivity> launchActivityRule = new ActivityScenarioRule<>(MainActivity.class);
 
 	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
@@ -59,7 +62,7 @@ public class PipetteToolIntegrationTest {
 	}
 
 	@Test
-	public void testOnEmptyBitmap() {
+	public void testOnEmptyBitmapPipetteTools() {
 		onToolProperties()
 				.checkMatchesColor(Color.BLACK);
 
@@ -77,7 +80,29 @@ public class PipetteToolIntegrationTest {
 	}
 
 	@Test
-	public void testPipetteAfterBrushOnSingleLayer() {
+	public void testOnEmptyBitmapPipetteColorPicker() {
+		onToolProperties()
+				.checkMatchesColor(Color.BLACK);
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
+
+		onColorPickerView()
+				.performOpenColorPicker()
+				.perform(swipe(DrawingSurfaceLocationProvider.TOP_MIDDLE,
+						DrawingSurfaceLocationProvider.BOTTOM_MIDDLE));
+		onColorPickerView()
+				.clickPipetteButton();
+
+		onColorPickerPreview()
+				.perform(touchAt(GeneralLocation.CENTER));
+
+		onColorPickerPreview()
+				.checkColorPreviewColor(Color.TRANSPARENT);
+	}
+
+	@Test
+	public void testPipetteToolAfterBrushOnSingleLayer() {
 		onToolProperties()
 				.setColor(Color.RED);
 		onDrawingSurfaceView()
@@ -100,7 +125,35 @@ public class PipetteToolIntegrationTest {
 	}
 
 	@Test
-	public void testPipetteAfterBrushOnMultiLayer() {
+	public void testPipetteColorPickerAfterBrushOnSingleLayer() {
+		onToolProperties()
+				.setColor(Color.RED);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.RED, BitmapLocationProvider.MIDDLE);
+
+		onToolProperties()
+				.setColorResource(R.color.pocketpaint_color_picker_transparent)
+				.checkMatchesColor(Color.TRANSPARENT);
+
+		onColorPickerView()
+				.performOpenColorPicker()
+				.perform(swipe(DrawingSurfaceLocationProvider.TOP_MIDDLE,
+						DrawingSurfaceLocationProvider.BOTTOM_MIDDLE));
+		onColorPickerView()
+				.clickPipetteButton();
+
+		onColorPickerPreview()
+				.perform(touchAt(GeneralLocation.CENTER));
+
+		onColorPickerPreview()
+				.checkColorPreviewColor(Color.RED);
+	}
+
+	@Test
+	public void testPipetteToolAfterBrushOnMultiLayer() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
@@ -128,10 +181,156 @@ public class PipetteToolIntegrationTest {
 				.checkMatchesColor(Color.BLACK);
 	}
 
-	@Ignore("Flaky on Jenkins, for further information https://github.com/Catrobat/Paintroid/pull/794")
+	@Test
+	public void testPipetteColorPickerAfterBrushOnMultiLayer() {
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+
+		onLayerMenuView()
+				.performOpen()
+				.performAddLayer()
+				.performClose();
+
+		onToolProperties()
+				.setColor(Color.TRANSPARENT);
+
+		onColorPickerView()
+				.performOpenColorPicker()
+				.checkCurrentViewColor(Color.TRANSPARENT);
+
+		onColorPickerView()
+				.perform(swipe(DrawingSurfaceLocationProvider.TOP_MIDDLE,
+						DrawingSurfaceLocationProvider.BOTTOM_MIDDLE));
+		onColorPickerView()
+				.clickPipetteButton();
+
+		onColorPickerPreview()
+				.checkColorPreviewColor(Color.TRANSPARENT);
+
+		onColorPickerPreview()
+				.perform(touchAt(GeneralLocation.CENTER));
+
+		onColorPickerPreview()
+				.checkColorPreviewColor(Color.BLACK);
+	}
+
+	@Test
+	public void testPipetteColorPickerAfterBrushOnSingleLayerAcceptColor() {
+		onToolProperties()
+				.setColor(Color.RED);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.RED, BitmapLocationProvider.MIDDLE);
+
+		onToolProperties()
+				.setColorResource(R.color.pocketpaint_color_picker_transparent)
+				.checkMatchesColor(Color.TRANSPARENT);
+
+		onColorPickerView()
+				.performOpenColorPicker()
+				.perform(swipe(DrawingSurfaceLocationProvider.TOP_MIDDLE,
+						DrawingSurfaceLocationProvider.BOTTOM_MIDDLE));
+		onColorPickerView()
+				.clickPipetteButton();
+
+		onColorPickerPreview()
+				.perform(touchAt(GeneralLocation.CENTER));
+
+		onColorPickerPreview()
+				.performCloseColorPickerPreviewWithDoneButton();
+
+		onColorPickerView()
+				.checkNewColorViewColor(Color.RED);
+	}
+
+	@Test
+	public void testPipetteColorPickerShowDoneDialog() {
+		onToolProperties()
+				.setColor(Color.BLACK);
+
+		onColorPickerView()
+				.performOpenColorPicker()
+				.perform(swipe(DrawingSurfaceLocationProvider.TOP_MIDDLE,
+						DrawingSurfaceLocationProvider.BOTTOM_MIDDLE));
+		onColorPickerView()
+				.clickPipetteButton();
+
+		onColorPickerPreview()
+				.perform(touchAt(GeneralLocation.CENTER));
+
+		onColorPickerPreview()
+				.assertShowColorPickerPreviewBackDialog();
+	}
+
+	@Test
+	public void testPipetteColorPickerAfterBrushOnSingleLayerRejectColorWithDoneDialog() {
+		onToolProperties()
+				.setColor(Color.RED);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.RED, BitmapLocationProvider.MIDDLE);
+
+		onToolProperties()
+				.setColorResource(R.color.pocketpaint_color_picker_transparent)
+				.checkMatchesColor(Color.TRANSPARENT);
+
+		onColorPickerView()
+				.performOpenColorPicker()
+				.perform(swipe(DrawingSurfaceLocationProvider.TOP_MIDDLE,
+						DrawingSurfaceLocationProvider.BOTTOM_MIDDLE));
+		onColorPickerView()
+				.clickPipetteButton();
+
+		onColorPickerPreview()
+				.perform(touchAt(GeneralLocation.CENTER));
+
+		onColorPickerPreview()
+				.performCloseColorPickerPreviewWithBackButtonDecline();
+
+		onColorPickerView()
+				.checkNewColorViewColor(Color.TRANSPARENT);
+	}
+
+	@Test
+	public void testPipetteColorPickerAfterBrushOnSingleLayerAcceptColorWithDoneDialog() {
+		onToolProperties()
+				.setColor(Color.RED);
+		onDrawingSurfaceView()
+				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.RED, BitmapLocationProvider.MIDDLE);
+
+		onToolProperties()
+				.setColorResource(R.color.pocketpaint_color_picker_transparent)
+				.checkMatchesColor(Color.TRANSPARENT);
+
+		onColorPickerView()
+				.performOpenColorPicker()
+				.perform(swipe(DrawingSurfaceLocationProvider.TOP_MIDDLE,
+						DrawingSurfaceLocationProvider.BOTTOM_MIDDLE));
+		onColorPickerView()
+				.clickPipetteButton();
+
+		onColorPickerPreview()
+				.perform(touchAt(GeneralLocation.CENTER));
+
+		onColorPickerPreview()
+				.performCloseColorPickerPreviewWithBackButtonAccept();
+
+		onColorPickerView()
+				.checkNewColorViewColor(Color.RED);
+	}
+
 	@Test
 	public void testPipetteAfterUndo() {
-
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
@@ -153,7 +352,6 @@ public class PipetteToolIntegrationTest {
 				.checkMatchesColor(Color.TRANSPARENT);
 	}
 
-	@Ignore("Flaky on Jenkins, for further information https://github.com/Catrobat/Paintroid/pull/794")
 	@Test
 	public void testPipetteAfterRedo() {
 

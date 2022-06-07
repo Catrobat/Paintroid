@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -75,6 +75,11 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 				// Caused by: java.lang.SecurityException:
 				// Injecting to another application requires INJECT_EVENTS permission
 				.perform(closeSoftKeyboard());
+	}
+
+	public ViewInteraction clickPipetteButton() {
+		return onView(withId(R.id.color_picker_pipette_btn))
+				.perform(click());
 	}
 
 	public void checkCurrentViewColor(int color) {
