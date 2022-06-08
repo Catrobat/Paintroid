@@ -51,6 +51,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
@@ -224,9 +225,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         try {
             if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
                 try {
-                    commandManager.loadCommandsCatrobatImage(
-                        workspace.getCommandSerializationHelper().readFromFile(receivedUri)
-                    )
+                    val fileContent = workspace.getCommandSerializationHelper().readFromFile(receivedUri)
+                    commandManager.loadCommandsCatrobatImage(fileContent.commandModel)
+                    presenterMain.setColorHistoryAfterLoadImage(fileContent.colorHistory)
                     return false
                 } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
                     Log.e(TAG, "Image might be an ora file instead")
@@ -307,11 +308,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 presenterMain.initializeFromCleanState(picturePath, pictureName)
 
                 if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
-                    commandManager.loadCommandsCatrobatImage(
-                        presenterMain.openTemporaryFile(
-                            workspace
-                        )
-                    )
+                    val workspaceReturnValue = presenterMain.openTemporaryFile(workspace)
+                    commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
+                    model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
+                    model.colorHistory.colors.lastOrNull()?.let {
+                        toolReference.tool?.changePaintColor(it)
+                        presenterMain.setBottomNavigationColor(it)
+                    }
                 }
                 workspace.perspective.setBitmapDimensions(layerModel.width, layerModel.height)
             }
@@ -438,13 +441,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         )
         perspective = Perspective(layerModel.width, layerModel.height)
         val listener = DefaultWorkspace.Listener { drawingSurface.refreshDrawingSurface() }
+        model = MainActivityModel()
         workspace = DefaultWorkspace(
             layerModel,
             perspective,
             listener,
-            CommandSerializationUtilities(this, commandManager)
+            CommandSerializationUtilities(this, commandManager, model)
         )
-        model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,
