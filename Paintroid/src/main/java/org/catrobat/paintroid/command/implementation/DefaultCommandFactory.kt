@@ -40,7 +40,7 @@ class DefaultCommandFactory : CommandFactory {
     private val commonFactory = CommonFactory()
     override fun createInitCommand(width: Int, height: Int): Command = CompositeCommand().apply {
         addCommand(SetDimensionCommand(width, height))
-        addCommand(AddLayerCommand(commonFactory))
+        addCommand(AddEmptyLayerCommand(commonFactory))
     }
 
     override fun createInitCommand(bitmap: Bitmap): Command = CompositeCommand().apply {
@@ -57,10 +57,10 @@ class DefaultCommandFactory : CommandFactory {
 
     override fun createResetCommand(): Command = CompositeCommand().apply {
         addCommand(ResetCommand())
-        addCommand(AddLayerCommand(commonFactory))
+        addCommand(AddEmptyLayerCommand(commonFactory))
     }
 
-    override fun createAddLayerCommand(): Command = AddLayerCommand(commonFactory)
+    override fun createAddEmptyLayerCommand(): Command = AddEmptyLayerCommand(commonFactory)
 
     override fun createSelectLayerCommand(position: Int): Command = SelectLayerCommand(position)
 

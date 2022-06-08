@@ -25,7 +25,7 @@ import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.Layer
 
-class AddLayerCommand(private val commonFactory: CommonFactory) : Command {
+class AddEmptyLayerCommand(private val commonFactory: CommonFactory) : Command {
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
         val layer = Layer(

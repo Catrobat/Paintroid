@@ -59,7 +59,7 @@ import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
 import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
 import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_IMPORT_PICTURE
-import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_LOAD_PICTURE
+import org.catrobat.paintroid.common.PERMISSION_REQUEST_CODE_REPLACE_PICTURE
 import org.catrobat.paintroid.common.REQUEST_CODE_IMPORT_PNG
 import org.catrobat.paintroid.common.REQUEST_CODE_INTRO
 import org.catrobat.paintroid.common.REQUEST_CODE_LOAD_PICTURE
@@ -131,9 +131,14 @@ open class MainActivityPresenter(
             return sharedPreferences.preferenceImageNumber
         }
 
-    override fun loadImageClicked() {
-        switchBetweenVersions(PERMISSION_REQUEST_CODE_LOAD_PICTURE, false)
+    override fun replaceImageClicked() {
+        switchBetweenVersions(PERMISSION_REQUEST_CODE_REPLACE_PICTURE, false)
         setFirstCheckBoxInLayerMenu()
+    }
+
+    override fun addImageToCurrentLayerClicked() {
+        setTool(ToolType.IMPORTPNG)
+        switchBetweenVersions(PERMISSION_REQUEST_CODE_IMPORT_PICTURE)
     }
 
     private fun setFirstCheckBoxInLayerMenu() {
@@ -295,8 +300,7 @@ open class MainActivityPresenter(
         FileIO.fileType = FileIO.FileType.PNG
         FileIO.isCatrobatImage = false
         FileIO.deleteTempFile(internalMemoryPath)
-        val initCommand =
-            commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
+        val initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
         commandManager.setInitialStateCommand(initCommand)
         commandManager.reset()
     }
@@ -319,7 +323,8 @@ open class MainActivityPresenter(
         if (navigator.isSdkAboveOrEqualM) {
             askForReadAndWriteExternalStoragePermission(requestCode)
             when (requestCode) {
-                PERMISSION_REQUEST_CODE_LOAD_PICTURE, PERMISSION_REQUEST_CODE_IMPORT_PICTURE -> Unit
+                PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
+                PERMISSION_REQUEST_CODE_IMPORT_PICTURE -> Unit
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
@@ -327,7 +332,7 @@ open class MainActivityPresenter(
                 PERMISSION_EXTERNAL_STORAGE_SAVE -> checkForDefaultFilename()
             }
         } else {
-            if (requestCode == PERMISSION_REQUEST_CODE_LOAD_PICTURE) {
+            if (requestCode == PERMISSION_REQUEST_CODE_REPLACE_PICTURE) {
                 if (isImageUnchanged || model.isSaved) {
                     navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
                     setFirstCheckBoxInLayerMenu()
@@ -472,7 +477,7 @@ open class MainActivityPresenter(
                         saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT)
                         checkForDefaultFilename()
                     }
-                    PERMISSION_REQUEST_CODE_LOAD_PICTURE ->
+                    PERMISSION_REQUEST_CODE_REPLACE_PICTURE ->
                         if (isImageUnchanged || model.isSaved) {
                             navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
                         } else {

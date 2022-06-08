@@ -142,7 +142,7 @@ class LayerPresenter(
     override fun addLayer() {
         if (layerCount < MAX_LAYERS) {
             checkIfLineToolInUse()
-            commandManager.addCommand(commandFactory.createAddLayerCommand())
+            commandManager.addCommand(commandFactory.createAddEmptyLayerCommand())
         } else {
             navigator.showToast(R.string.layer_too_many_layers, Toast.LENGTH_SHORT)
         }

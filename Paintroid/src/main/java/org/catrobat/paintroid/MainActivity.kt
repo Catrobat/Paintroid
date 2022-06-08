@@ -337,17 +337,18 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             R.id.pocketpaint_options_export -> presenterMain.saveCopyClicked(true)
             R.id.pocketpaint_options_save_image -> presenterMain.saveImageClicked()
             R.id.pocketpaint_options_save_duplicate -> presenterMain.saveCopyClicked(false)
-            R.id.pocketpaint_options_open_image -> presenterMain.loadImageClicked()
+            R.id.pocketpaint_replace_image -> presenterMain.replaceImageClicked()
+            R.id.pocketpaint_add_to_current_layer -> presenterMain.addImageToCurrentLayerClicked()
             R.id.pocketpaint_options_new_image -> presenterMain.newImageClicked()
             R.id.pocketpaint_options_discard_image -> presenterMain.discardImageClicked()
             R.id.pocketpaint_options_fullscreen_mode -> presenterMain.enterFullscreenClicked()
             R.id.pocketpaint_options_rate_us -> presenterMain.rateUsClicked()
             R.id.pocketpaint_options_help -> presenterMain.showHelpClicked()
             R.id.pocketpaint_options_about -> presenterMain.showAboutClicked()
-            android.R.id.home -> presenterMain.backToPocketCodeClicked()
             R.id.pocketpaint_share_image_button -> presenterMain.shareImageClicked()
             R.id.pocketpaint_options_feedback -> presenterMain.sendFeedback()
             R.id.pocketpaint_advanced_settings -> presenterMain.showAdvancedSettingsClicked()
+            android.R.id.home -> presenterMain.backToPocketCodeClicked()
             else -> return false
         }
         return true

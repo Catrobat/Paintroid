@@ -73,7 +73,7 @@ public class LayerTest {
 	@Test
 	public void testCreateManyLayers() {
 		for (int i = 0; i < 10; i++) {
-			commandManager.addCommand(commandFactory.createAddLayerCommand());
+			commandManager.addCommand(commandFactory.createAddEmptyLayerCommand());
 			commandManager.addCommand(commandFactory.createRemoveLayerCommand(1));
 		}
 	}
@@ -83,7 +83,7 @@ public class LayerTest {
 		final CommandListener listener = mock(CommandListener.class);
 
 		commandManager.addCommandListener(listener);
-		commandManager.addCommand(commandFactory.createAddLayerCommand());
+		commandManager.addCommand(commandFactory.createAddEmptyLayerCommand());
 
 		verify(listener, timeout(1000)).commandPostExecute();
 		assertThat(layerModel.getLayerCount(), is(2));
@@ -110,7 +110,7 @@ public class LayerTest {
 		firstLayer.getBitmap().setPixel(1, 2, Color.BLACK);
 
 		commandManager.addCommandListener(listener);
-		commandManager.addCommand(commandFactory.createAddLayerCommand());
+		commandManager.addCommand(commandFactory.createAddEmptyLayerCommand());
 
 		verify(listener, timeout(1000)).commandPostExecute();
 

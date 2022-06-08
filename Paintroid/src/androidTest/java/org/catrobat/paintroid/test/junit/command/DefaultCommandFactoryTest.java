@@ -26,7 +26,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.AddLayerCommand;
+import org.catrobat.paintroid.command.implementation.AddEmptyLayerCommand;
 import org.catrobat.paintroid.command.implementation.ColorChangedCommand;
 import org.catrobat.paintroid.command.implementation.CompositeCommand;
 import org.catrobat.paintroid.command.implementation.CropCommand;
@@ -84,8 +84,8 @@ public class DefaultCommandFactoryTest {
 
 	@Test
 	public void testCreateAddLayerCommand() {
-		Command command = commandFactory.createAddLayerCommand();
-		assertThat(command, is(instanceOf(AddLayerCommand.class)));
+		Command command = commandFactory.createAddEmptyLayerCommand();
+		assertThat(command, is(instanceOf(AddEmptyLayerCommand.class)));
 	}
 
 	@Test

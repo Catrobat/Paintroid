@@ -10,7 +10,18 @@
         android:title="@string/menu_save_copy" />
     <item
         android:id="@+id/pocketpaint_options_open_image"
-        android:title="@string/menu_load_image" />
+        android:title="@string/menu_load_image">
+
+        <menu>
+            <item
+                android:id="@+id/pocketpaint_replace_image"
+                android:title="@string/menu_replace_image"/>
+            <item
+                android:id="@+id/pocketpaint_add_to_current_layer"
+                android:title="@string/menu_add_to_current_layer"/>
+        </menu>
+    </item>
+
     <item
         android:id="@+id/pocketpaint_options_new_image"
         android:title="@string/menu_new_image" />
@@ -20,17 +31,18 @@
     <item
         android:id="@+id/pocketpaint_options_fullscreen_mode"
         android:title="@string/menu_hide_menu" />
-    <item android:id="@+id/pocketpaint_options_rate_us"
-        android:title="@string/menu_rate_us"/>
+    <item
+        android:id="@+id/pocketpaint_options_rate_us"
+        android:title="@string/menu_rate_us" />
     <item
         android:id="@+id/pocketpaint_options_help"
-        android:title="@string/help_title"/>
+        android:title="@string/help_title" />
     <item
         android:id="@+id/pocketpaint_options_about"
         android:title="@string/pocketpaint_menu_about" />
     <item
         android:id="@+id/pocketpaint_share_image_button"
-        android:title="@string/share_image_menu"/>
+        android:title="@string/share_image_menu" />
     <item
         android:id="@+id/pocketpaint_options_feedback"
         android:title="@string/menu_feedback" />

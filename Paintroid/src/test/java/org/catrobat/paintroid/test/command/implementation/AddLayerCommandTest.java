@@ -22,7 +22,7 @@ package org.catrobat.paintroid.test.command.implementation;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-import org.catrobat.paintroid.command.implementation.AddLayerCommand;
+import org.catrobat.paintroid.command.implementation.AddEmptyLayerCommand;
 import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.contract.LayerContracts;
 import org.catrobat.paintroid.model.LayerModel;
@@ -47,7 +47,7 @@ public class AddLayerCommandTest {
 	private Canvas canvas;
 
 	@InjectMocks
-	private AddLayerCommand command;
+	private AddEmptyLayerCommand command;
 
 	@Test
 	public void testSetUp() {

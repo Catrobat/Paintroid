@@ -118,7 +118,7 @@ public class SaveCompressImageIntegrationTest {
 		onTopBarView()
 				.performOpenMoreOptions();
 		onView(withText(R.string.menu_load_image)).perform(click());
-
+		onView(withText(R.string.menu_replace_image)).perform(click());
 		onTopBarView()
 				.performOpenMoreOptions();
 		onView(withText(R.string.menu_save_image)).perform(click());
