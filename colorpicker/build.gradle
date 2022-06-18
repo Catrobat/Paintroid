@@ -21,6 +21,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.github.panpf.bintray-publish'
 
+apply from: 'gradle/code_quality_tasks.gradle'
+
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
 

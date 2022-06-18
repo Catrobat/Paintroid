@@ -219,7 +219,7 @@ class AlphaSlider(
     }
 
     private fun onColorChanged() {
-        onColorChangedListener?.colorChanged(getSelectedColor())
+        onColorChangedListener.colorChanged(getSelectedColor())
     }
 
     fun setSelectedColor(color: Int) {

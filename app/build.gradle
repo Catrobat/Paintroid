@@ -88,10 +88,12 @@ android {
 
 tasks.withType(Detekt).configureEach {
     jvmTarget = "1.8"
+    classpath.setFrom("$rootDir/config/detekt.yml")
     exclude("**/resources/**")
     exclude("**/build/**")
 }
 
 dependencies {
     implementation project(':Paintroid')
+    implementation project(':colorpicker')
 }

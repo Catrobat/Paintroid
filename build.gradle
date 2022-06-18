@@ -38,7 +38,7 @@ buildscript {
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.14.2"
+    id "io.gitlab.arturbosch.detekt" version "1.15.0"
 }
 
 ext {

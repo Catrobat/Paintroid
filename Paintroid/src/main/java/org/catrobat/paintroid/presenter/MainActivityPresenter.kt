@@ -137,7 +137,7 @@ open class MainActivityPresenter(
     }
 
     private fun setFirstCheckBoxInLayerMenu() {
-        layerAdapter?.getViewHolderAt(0)?.apply { setLayerVisibilityCheckbox(true) }
+        layerAdapter?.getViewHolderAt(0)?.setLayerVisibilityCheckbox(true)
     }
 
     override fun saveBeforeLoadImage() {

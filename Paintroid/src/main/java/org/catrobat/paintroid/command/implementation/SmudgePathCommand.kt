@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,17 +20,23 @@
 package org.catrobat.paintroid.command.implementation
 
 import android.graphics.Bitmap
-import android.graphics.PointF
 import android.graphics.Canvas
 import android.graphics.ColorMatrix
-import android.graphics.Paint
 import android.graphics.ColorMatrixColorFilter
+import android.graphics.Paint
+import android.graphics.PointF
 import android.graphics.RectF
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.implementation.PRESSURE_UPDATE_STEP
 
-class SmudgePathCommand(bitmap: Bitmap, pointPath: MutableList<PointF>, maxPressure: Float, maxSize: Float, minSize: Float) : Command {
+class SmudgePathCommand(
+    bitmap: Bitmap,
+    pointPath: MutableList<PointF>,
+    maxPressure: Float,
+    maxSize: Float,
+    minSize: Float
+) : Command {
 
     var originalBitmap = bitmap; private set
     var pointPath = pointPath; private set
@@ -50,13 +56,10 @@ class SmudgePathCommand(bitmap: Bitmap, pointPath: MutableList<PointF>, maxPress
             colorMatrix.setScale(1f, 1f, 1f, pressure)
             paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
 
-            val newBitmap = Bitmap.createBitmap(maxSize.toInt(), maxSize.toInt(), Bitmap.Config.ARGB_8888)
+            val newBitmap =
+                Bitmap.createBitmap(maxSize.toInt(), maxSize.toInt(), Bitmap.Config.ARGB_8888)
 
-            newBitmap.let {
-                Canvas(it).apply {
-                    drawBitmap(bitmap, 0f, 0f, paint)
-                }
-            }
+            Canvas(newBitmap).drawBitmap(bitmap, 0f, 0f, paint)
 
             bitmap.recycle()
             bitmap = newBitmap

@@ -97,7 +97,7 @@ pipeline {
 
         stage('Static Analysis') {
             steps {
-                sh './gradlew pmd checkstyle lint detekt'
+                sh './gradlew pmd checkstyle lint detektMain'
             }
 
             post {
@@ -106,7 +106,7 @@ pipeline {
                             tools: [androidLintParser(pattern: "$reports/lint*.xml"),
                                     checkStyle(pattern: "$reports/checkstyle.xml"),
                                     pmdParser(pattern: "$reports/pmd.xml"),
-                                    detekt(pattern: "$reports/detekt/detekt.xml")]
+                                    detektMain(pattern: "$reports/detekt/detekt.xml")]
                 }
             }
         }

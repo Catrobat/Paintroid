@@ -20,11 +20,11 @@ package org.catrobat.paintroid.command.serialization
 
 import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.Point
 import android.graphics.PointF
 import android.graphics.RectF
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -55,10 +55,10 @@ import org.catrobat.paintroid.command.implementation.ResizeCommand
 import org.catrobat.paintroid.command.implementation.RotateCommand
 import org.catrobat.paintroid.command.implementation.SelectLayerCommand
 import org.catrobat.paintroid.command.implementation.SetDimensionCommand
+import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.command.implementation.SprayCommand
 import org.catrobat.paintroid.command.implementation.StampCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
-import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
 import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.drawable.HeartDrawable
@@ -145,7 +145,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
         registerMap.forEach { (classRegister, serializer) ->
             val registration = kryo.register(classRegister)
             serializer?.let {
-                registration.serializer = serializer
+                registration.serializer = it
             }
         }
     }
