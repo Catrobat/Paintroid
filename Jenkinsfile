@@ -106,7 +106,7 @@ pipeline {
                             tools: [androidLintParser(pattern: "$reports/lint*.xml"),
                                     checkStyle(pattern: "$reports/checkstyle.xml"),
                                     pmdParser(pattern: "$reports/pmd.xml"),
-                                    detektMain(pattern: "$reports/detekt/detekt.xml")]
+                                    detekt(pattern: "$reports/detekt/detekt.xml")]
                 }
             }
         }
