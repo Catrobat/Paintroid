@@ -76,6 +76,7 @@ import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
+import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.DefaultContextCallback
 import org.catrobat.paintroid.tools.implementation.DefaultToolFactory
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
@@ -447,7 +448,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,
-            DefaultToolFactory(),
+            DefaultToolFactory(this),
             commandManager,
             workspace,
             idlingResource,
@@ -536,9 +537,15 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         topBar.checkmarkButton.setOnClickListener {
             if (toolReference.tool?.toolType?.name.equals(ToolType.TRANSFORM.name)) {
                 (toolReference.tool as TransformTool).checkMarkClicked = true
+                val tool = toolReference.tool as BaseToolWithShape?
+                tool?.onClickOnButton()
+            } else if (toolReference.tool?.toolType?.name.equals(ToolType.CLIP.name)) {
+                val tool = toolReference.tool as ClippingTool?
+                tool?.onClickOnButton()
+            } else {
+                val tool = toolReference.tool as BaseToolWithShape?
+                tool?.onClickOnButton()
             }
-            val tool = toolReference.tool as BaseToolWithShape?
-            tool?.onClickOnButton()
         }
         topBar.plusButton.setOnClickListener {
             val tool = toolReference.tool as LineTool

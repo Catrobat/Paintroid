@@ -31,6 +31,7 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.ToolPaint
 
 const val STROKE_25 = 25f
+const val STROKE_10 = 10f
 
 class DefaultToolPaint(private val context: Context) : ToolPaint {
     private val bitmapPaint = Paint().apply {

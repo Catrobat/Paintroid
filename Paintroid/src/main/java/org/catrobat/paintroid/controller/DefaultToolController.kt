@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.controller
 
 import android.graphics.Bitmap
+import android.graphics.PointF
 import android.os.Bundle
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
@@ -33,6 +34,7 @@ import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
+import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.ImportTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
@@ -71,6 +73,8 @@ class DefaultToolController(
 
     private fun createAndSetupTool(toolType: ToolType): Tool {
         if (toolType != ToolType.HAND) {
+            toolOptionsViewController.removeToolViews()
+        } else if (toolType != ToolType.CLIP) {
             toolOptionsViewController.removeToolViews()
         }
         if (toolList.contains(toolType)) {
@@ -124,11 +128,14 @@ class DefaultToolController(
     private fun switchTool(tool: Tool, backPressed: Boolean) {
         val currentTool = toolReference.tool
         val currentToolType = currentTool?.toolType
-        if (toolList.contains(currentToolType) && !backPressed) {
-            val toolToApply = currentTool as BaseToolWithShape
-            toolToApply.onClickOnButton()
+        if (toolList.contains(currentToolType)) {
+            if (!backPressed) {
+                val toolToApply = currentTool as BaseToolWithShape
+                toolToApply.onClickOnButton()
+            }
+        } else if (currentToolType == ToolType.CLIP) {
+            adjustClippingTool(backPressed)
         }
-
         currentToolType?.let { hidePlusIfShown(it) }
 
         if (currentTool?.toolType == tool.toolType) {
@@ -138,6 +145,19 @@ class DefaultToolController(
         }
         toolReference.tool = tool
         workspace.invalidate()
+    }
+
+    private fun adjustClippingTool(backPressed: Boolean) {
+        val clippingTool = currentTool as ClippingTool
+        if (backPressed) {
+            if (clippingTool.areaClosed) {
+                clippingTool.handleDown(PointF(0f, 0f))
+                clippingTool.wasRecentlyApplied = true
+                clippingTool.resetInternalState(StateChange.NEW_IMAGE_LOADED)
+            }
+        } else {
+            clippingTool.onClickOnButton()
+        }
     }
 
     private fun hidePlusIfShown(currentToolType: ToolType) {

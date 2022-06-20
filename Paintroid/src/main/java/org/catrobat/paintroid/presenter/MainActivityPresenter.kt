@@ -28,6 +28,8 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PointF
 import android.net.Uri
 import android.os.Environment
 import android.provider.DocumentsContract
@@ -80,8 +82,10 @@ import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
 import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.ui.LayerAdapter
 import org.catrobat.paintroid.ui.Perspective
@@ -133,12 +137,17 @@ open class MainActivityPresenter(
             return sharedPreferences.preferenceImageNumber
         }
 
+    var clippingToolInUseAndUndoRedoClicked = false
+    var clippingToolPaint = Paint()
+
     override fun replaceImageClicked() {
+        checkIfClippingToolNeedsAdjustment()
         switchBetweenVersions(PERMISSION_REQUEST_CODE_REPLACE_PICTURE, false)
         setFirstCheckBoxInLayerMenu()
     }
 
     override fun addImageToCurrentLayerClicked() {
+        checkIfClippingToolNeedsAdjustment()
         setTool(ToolType.IMPORTPNG)
         switchBetweenVersions(PERMISSION_REQUEST_CODE_IMPORT_PICTURE)
     }
@@ -156,11 +165,13 @@ open class MainActivityPresenter(
     }
 
     override fun loadNewImage() {
+        checkIfClippingToolNeedsAdjustment()
         navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
         setFirstCheckBoxInLayerMenu()
     }
 
     override fun newImageClicked() {
+        checkIfClippingToolNeedsAdjustment()
         if (isImageUnchanged || model.isSaved) {
             onNewImage()
             setFirstCheckBoxInLayerMenu()
@@ -171,6 +182,7 @@ open class MainActivityPresenter(
     }
 
     override fun saveBeforeNewImage() {
+        checkIfClippingToolNeedsAdjustment()
         navigator.showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
             imageNumber,
@@ -193,6 +205,7 @@ open class MainActivityPresenter(
     }
 
     override fun saveBeforeFinish() {
+        checkIfClippingToolNeedsAdjustment()
         navigator.showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
             imageNumber,
@@ -217,6 +230,8 @@ open class MainActivityPresenter(
     }
 
     override fun shareImageClicked() {
+        checkIfClippingToolNeedsAdjustment()
+        view.refreshDrawingSurface()
         val bitmap: Bitmap? = workspace.bitmapOfAllLayers
         navigator.startShareImageActivity(bitmap)
     }
@@ -524,14 +539,19 @@ open class MainActivityPresenter(
     }
 
     override fun saveImageConfirmClicked(requestCode: Int, uri: Uri?) {
+        checkIfClippingToolNeedsAdjustment()
+        view.refreshDrawingSurface()
         interactor.saveImage(this, requestCode, workspace, uri, context)
     }
 
     override fun saveCopyConfirmClicked(requestCode: Int) {
+        checkIfClippingToolNeedsAdjustment()
+        view.refreshDrawingSurface()
         interactor.saveCopy(this, requestCode, workspace, context)
     }
 
     override fun undoClicked() {
+        idlingResource.increment()
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
@@ -539,13 +559,22 @@ open class MainActivityPresenter(
             if (toolController.currentTool is LineTool) {
                 (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
             } else {
-                toolController.currentTool?.changePaintColor(Color.BLACK)
-                commandManager.undo()
+                if (toolController.currentTool is ClippingTool) {
+                    val clippingTool = toolController.currentTool as ClippingTool
+                    clippingToolPaint = clippingTool.drawPaint
+                    commandManager.undo()
+                    clippingToolInUseAndUndoRedoClicked = true
+                } else {
+                    toolController.currentTool?.changePaintColor(Color.BLACK)
+                    commandManager.undo()
+                }
             }
         }
+        idlingResource.decrement()
     }
 
     override fun redoClicked() {
+        idlingResource.increment()
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
@@ -553,8 +582,12 @@ open class MainActivityPresenter(
                 (toolController.currentTool as LineTool).redoLineTool()
             } else {
                 commandManager.redo()
+                if (toolController.currentTool is ClippingTool) {
+                    clippingToolInUseAndUndoRedoClicked = true
+                }
             }
         }
+        idlingResource.decrement()
     }
 
     override fun showColorPickerClicked() {
@@ -562,6 +595,7 @@ open class MainActivityPresenter(
     }
 
     override fun showLayerMenuClicked() {
+        idlingResource.increment()
         layerAdapter?.apply {
             for (i in 0 until count) {
                 val currentHolder = getViewHolderAt(i)
@@ -573,6 +607,7 @@ open class MainActivityPresenter(
             }
         }
         drawerLayoutViewHolder.openDrawer(Gravity.END)
+        idlingResource.decrement()
     }
 
     override fun onCommandPostExecute() {
@@ -582,9 +617,29 @@ open class MainActivityPresenter(
             workspace.resetPerspective()
         }
         model.isSaved = false
+        if (clippingToolInUseAndUndoRedoClicked) {
+            adjustClippingToolPostCommandExecute()
+        }
         toolController.resetToolInternalState()
         view.refreshDrawingSurface()
         refreshTopBarButtons()
+    }
+
+    fun adjustClippingToolPostCommandExecute() {
+        val clippingTool = toolController.currentTool as ClippingTool
+        if (clippingTool.areaClosed) {
+            commandManager.popFirstCommandInRedo()
+        }
+        clippingTool.areaClosed = false
+        clippingTool.pathToDraw.rewind()
+        clippingTool.pointArray.clear()
+        clippingTool.initialEventCoordinate = null
+        clippingTool.previousEventCoordinate = null
+        clippingTool.changePaintColor(clippingToolPaint.color)
+        clippingTool.mainActivity.bottomNavigationViewHolder
+            .setColorButtonColor(clippingToolPaint.color)
+        (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
+        clippingToolInUseAndUndoRedoClicked = false
     }
 
     override fun setBottomNavigationColor(color: Int) {
@@ -715,6 +770,8 @@ open class MainActivityPresenter(
         toolController.switchTool(type, backPressed)
         if (type === ToolType.IMPORTPNG) {
             showImportDialog()
+        } else if (type == ToolType.CLIP) {
+            (toolController.currentTool as ClippingTool).copyBitmapOfCurrentLayer()
         }
     }
 
@@ -984,6 +1041,29 @@ open class MainActivityPresenter(
 
     override fun checkForTemporaryFile(): Boolean =
         FileIO.checkForTemporaryFile(internalMemoryPath)
+
+    fun checkIfClippingToolNeedsAdjustment() {
+        if (toolController.currentTool is ClippingTool) {
+            val clippingTool = toolController.currentTool as ClippingTool
+            if (clippingTool.areaClosed) {
+                clippingTool.handleDown(
+                    clippingTool.initialEventCoordinate?.x?.let {
+                        clippingTool.initialEventCoordinate?.y?.let { it1 ->
+                            PointF(
+                                it,
+                                it1
+                            )
+                        }
+                    }
+                )
+                (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
+                clippingTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED)
+            } else {
+                (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
+                clippingTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED)
+            }
+        }
+    }
 
     companion object {
         @JvmStatic
