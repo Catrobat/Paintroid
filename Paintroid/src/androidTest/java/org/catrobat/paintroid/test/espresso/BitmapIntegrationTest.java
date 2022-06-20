@@ -19,7 +19,14 @@
 
 package org.catrobat.paintroid.test.espresso;
 
+import android.content.Context;
+import android.graphics.Insets;
+import android.graphics.Rect;
+import android.os.Build;
 import android.util.DisplayMetrics;
+import android.view.WindowInsets;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
@@ -56,9 +63,23 @@ public class BitmapIntegrationTest {
 		Workspace workspace = activity.workspace;
 		final int bitmapWidth = workspace.getWidth();
 		final int bitmapHeight = workspace.getHeight();
-
-		DisplayMetrics metrics = activity.getResources().getDisplayMetrics();
-		assertEquals(metrics.widthPixels, bitmapWidth);
-		assertEquals(metrics.heightPixels, bitmapHeight);
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+			WindowManager windowManager = (WindowManager) activity.getBaseContext().getSystemService(Context.WINDOW_SERVICE);
+			WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+			Insets windowInsets = windowMetrics.getWindowInsets().getInsetsIgnoringVisibility(
+					WindowInsets.Type.navigationBars() | WindowInsets.Type.displayCutout()
+			);
+			float insetsWidth = windowInsets.right + windowInsets.left;
+			float insetsHeight = windowInsets.top + windowInsets.bottom;
+			Rect b = windowMetrics.getBounds();
+			float width = b.width() - insetsWidth;
+			float height = b.height() - insetsHeight;
+			assertEquals(width, bitmapWidth, 1f);
+			assertEquals(height, bitmapHeight, 1f);
+		} else {
+			DisplayMetrics metrics = activity.getResources().getDisplayMetrics();
+			assertEquals(metrics.widthPixels, bitmapWidth);
+			assertEquals(metrics.heightPixels, bitmapHeight);
+		}
 	}
 }
