@@ -24,6 +24,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.Command;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.command.implementation.PathCommand;
@@ -38,7 +39,9 @@ import org.catrobat.paintroid.tools.common.ConstantsKt;
 import org.catrobat.paintroid.tools.implementation.BrushTool;
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -58,6 +61,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.idling.CountingIdlingResource;
+import androidx.test.rule.ActivityTestRule;
+
 @RunWith(MockitoJUnitRunner.class)
 public class BrushToolTest {
 	private static final float MOVE_TOLERANCE = ConstantsKt.MOVE_TOLERANCE;
@@ -76,15 +83,26 @@ public class BrushToolTest {
 
 	private Paint paint;
 	private BrushTool toolToTest;
+	private CountingIdlingResource idlingResource;
+
+	@Rule
+	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Before
 	public void setUp() {
-		toolToTest = new BrushTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
+		idlingResource = launchActivityRule.getActivity().getIdlingResource();
+		IdlingRegistry.getInstance().register(idlingResource);
+		toolToTest = new BrushTool(brushToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager, 0);
 
 		paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setStrokeCap(Paint.Cap.ROUND);
 		paint.setStrokeWidth(STROKE_25);
+	}
+
+	@After
+	public void tearDown() {
+		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 
 	@Test

@@ -21,11 +21,15 @@ package org.catrobat.paintroid.ui.tools
 import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 
-class DefaultToolOptionsViewController(val activity: Activity) : ToolOptionsViewController {
+class DefaultToolOptionsViewController(
+    val activity: Activity,
+    val idlingResource: CountingIdlingResource
+) : ToolOptionsViewController {
     private val bottomNavigation: ViewGroup =
         activity.findViewById(R.id.pocketpaint_main_bottom_navigation)
     private val mainToolOptions: ViewGroup =
@@ -64,9 +68,11 @@ class DefaultToolOptionsViewController(val activity: Activity) : ToolOptionsView
         if (!enabled) {
             return
         }
+        idlingResource.increment()
         toolOptionsShown = false
         mainToolOptions.animate().y(bottomNavigation.y + bottomNavigation.height)
         notifyHide()
+        idlingResource.decrement()
     }
 
     override fun disable() {
@@ -84,6 +90,7 @@ class DefaultToolOptionsViewController(val activity: Activity) : ToolOptionsView
         if (!enabled) {
             return
         }
+        idlingResource.increment()
         toolOptionsShown = true
         mainToolOptions.visibility = View.INVISIBLE
         mainToolOptions.post {
@@ -92,6 +99,7 @@ class DefaultToolOptionsViewController(val activity: Activity) : ToolOptionsView
             mainToolOptions.visibility = View.VISIBLE
         }
         notifyShow()
+        idlingResource.decrement()
     }
 
     override fun showDelayed() {

@@ -24,6 +24,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.test.annotation.UiThreadTest
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
@@ -36,6 +38,7 @@ import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.Perspective
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -52,6 +55,7 @@ class LineToolTest {
     private lateinit var tool: LineTool
     private var screenWidth = 1920
     private var screenHeight = 1080
+    private lateinit var idlingResource: CountingIdlingResource
 
     @get:Rule
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
@@ -67,6 +71,8 @@ class LineToolTest {
 
     @Before
     fun setUp() {
+        idlingResource = launchActivityRule.activity.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
         Mockito.`when`(workspace.perspective).thenReturn(Perspective(screenWidth, screenHeight))
         Mockito.`when`(workspace.width).thenReturn(screenWidth)
         Mockito.`when`(workspace.height).thenReturn(screenHeight)
@@ -87,9 +93,14 @@ class LineToolTest {
             toolOptionsViewController,
             toolPaint,
             workspace,
+            idlingResource,
             commandManager,
             0
         )
+    }
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test

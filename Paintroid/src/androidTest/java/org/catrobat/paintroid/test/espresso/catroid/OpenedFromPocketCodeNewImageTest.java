@@ -84,7 +84,7 @@ public class OpenedFromPocketCodeNewImageTest {
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@ClassRule
-	public static GrantPermissionRule grantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck();
+	public static GrantPermissionRule grantPermissionRule = EspressoUtils.INSTANCE.grantPermissionRulesVersionCheck();
 
 	private File imageFile = null;
 	private MainActivity activity;

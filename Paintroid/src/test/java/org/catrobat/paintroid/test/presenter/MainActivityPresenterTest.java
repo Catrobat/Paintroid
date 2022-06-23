@@ -33,6 +33,7 @@ import android.view.Menu;
 import android.widget.Toast;
 
 import org.catrobat.paintroid.FileIO;
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.UserPreferences;
 import org.catrobat.paintroid.command.Command;
@@ -50,13 +51,13 @@ import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 
 import androidx.core.view.GravityCompat;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import static org.catrobat.paintroid.common.MainActivityConstantsKt.CREATE_FILE_DEFAULT;
 import static org.catrobat.paintroid.common.MainActivityConstantsKt.LOAD_IMAGE_CATROID;
@@ -92,6 +93,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class MainActivityPresenterTest {
+
 	@Mock
 	private MainActivityContracts.MainView view;
 	@Mock
@@ -126,17 +128,22 @@ public class MainActivityPresenterTest {
 	private UserPreferences sharedPreferences;
 	@Mock
 	private Context context;
-
 	@Mock
 	private File internalMemoryPath;
 
-	@InjectMocks
 	private MainActivityPresenter presenter;
 
 	@Before
 	public void setUp() {
 		when(workspace.getBitmapOfAllLayers())
 				.thenReturn(bitmap);
+
+		MainActivity activity = new MainActivity();
+		CountingIdlingResource idlingResource = activity.getIdlingResource();
+		presenter = new MainActivityPresenter(activity, view, model, workspace, navigator,
+				interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
+				bottomNavigationViewHolder, commandFactory, commandManager, perspective,
+				toolController, sharedPreferences, idlingResource, context, internalMemoryPath);
 	}
 
 	@Test

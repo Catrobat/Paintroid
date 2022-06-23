@@ -25,6 +25,7 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
@@ -64,6 +65,7 @@ class TextTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
 ) : BaseToolWithRectangleShape(
@@ -71,6 +73,7 @@ class TextTool(
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
     @VisibleForTesting

@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.junit.tools;
 
 import android.util.DisplayMetrics;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
@@ -31,6 +32,7 @@ import org.catrobat.paintroid.tools.implementation.ShapeTool;
 import org.catrobat.paintroid.tools.options.ShapeToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.Perspective;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,6 +48,10 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
+
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.idling.CountingIdlingResource;
+import androidx.test.rule.ActivityTestRule;
 
 @RunWith(Parameterized.class)
 public class ShapeToolTest {
@@ -68,6 +74,10 @@ public class ShapeToolTest {
 	@Mock
 	private DisplayMetrics displayMetrics;
 	private ShapeTool shapeTool;
+	private CountingIdlingResource idlingResource;
+
+	@Rule
+	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 	@Parameters(name = "{0}")
 	public static Iterable<DrawableShape> data() {
@@ -81,6 +91,8 @@ public class ShapeToolTest {
 
 	@Before
 	public void setUp() {
+		idlingResource = launchActivityRule.getActivity().getIdlingResource();
+		IdlingRegistry.getInstance().register(idlingResource);
 		when(workspace.getWidth()).thenReturn(100);
 		when(workspace.getHeight()).thenReturn(100);
 		when(workspace.getScale()).thenReturn(1f);
@@ -90,8 +102,13 @@ public class ShapeToolTest {
 		displayMetrics.widthPixels = 100;
 		displayMetrics.heightPixels = 100;
 
-		shapeTool = new ShapeTool(shapeToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, 0);
+		shapeTool = new ShapeTool(shapeToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager, 0);
 		shapeTool.setBaseShape(shape);
+	}
+
+	@After
+	public void tearDown() {
+		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 
 	@Test

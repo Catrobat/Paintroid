@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.tools.implementation
 
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -45,6 +46,7 @@ class DefaultToolFactory : ToolFactory {
         toolOptionsViewController: ToolOptionsViewController,
         commandManager: CommandManager,
         workspace: Workspace,
+        idlingResource: CountingIdlingResource,
         toolPaint: ToolPaint,
         contextCallback: ContextCallback,
         onColorPickedListener: OnColorPickedListener
@@ -57,6 +59,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -66,6 +69,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -74,6 +78,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -82,6 +87,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 onColorPickedListener,
             )
@@ -91,6 +97,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -100,6 +107,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -109,6 +117,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -118,6 +127,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -127,6 +137,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -136,6 +147,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -144,6 +156,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -153,6 +166,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -162,6 +176,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )
@@ -171,7 +186,8 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
-                commandManager
+                idlingResource,
+                commandManager,
             )
             else -> BrushTool(
                 DefaultBrushToolOptionsView(toolLayout),
@@ -179,6 +195,7 @@ class DefaultToolFactory : ToolFactory {
                 toolOptionsViewController,
                 toolPaint,
                 workspace,
+                idlingResource,
                 commandManager,
                 DRAW_TIME_INIT
             )

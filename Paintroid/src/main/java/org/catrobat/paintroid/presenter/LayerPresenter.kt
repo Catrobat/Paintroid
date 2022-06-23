@@ -33,7 +33,6 @@ import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.dragndrop.DragAndDropPresenter
 import org.catrobat.paintroid.ui.dragndrop.ListItemDragHandler
 import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
-import java.util.ArrayList
 import java.util.Collections.swap
 
 class LayerPresenter(

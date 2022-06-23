@@ -301,11 +301,13 @@ class MainActivityNavigator(
     }
 
     override fun showOverwriteDialog(permissionCode: Int, isExport: Boolean) {
+        mainActivity.idlingResource.increment()
         val overwriteDialog = OverwriteDialog.newInstance(permissionCode, isExport)
         overwriteDialog.show(
             mainActivity.supportFragmentManager,
             OVERWRITE_INFORMATION_DIALOG_TAG
         )
+        mainActivity.idlingResource.decrement()
     }
 
     override fun showPngInformationDialog() {

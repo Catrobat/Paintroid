@@ -31,6 +31,7 @@ import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.implementation.FillTool;
 import org.catrobat.paintroid.ui.Perspective;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -39,7 +40,9 @@ import org.junit.runner.RunWith;
 
 import java.io.File;
 
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -74,15 +77,23 @@ public class FillToolIntegrationTest {
 	private Perspective perspective;
 	private ToolReference toolReference;
 	private MainActivity mainActivity;
+	private CountingIdlingResource idlingResource;
 
 	@Before
 	public void setUp() {
 		mainActivity = launchActivityRule.getActivity();
 		perspective = mainActivity.perspective;
 		toolReference = mainActivity.toolReference;
+		idlingResource = mainActivity.getIdlingResource();
+		IdlingRegistry.getInstance().register(idlingResource);
 
 		onToolBarView()
 				.performSelectTool(ToolType.FILL);
+	}
+
+	@After
+	public void tearDown() {
+		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 
 	@Test

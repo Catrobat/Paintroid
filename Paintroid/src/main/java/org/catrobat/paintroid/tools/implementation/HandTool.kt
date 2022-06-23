@@ -20,6 +20,7 @@ package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Canvas
 import android.graphics.PointF
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -32,9 +33,17 @@ class HandTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
-) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
+) : BaseTool(
+    contextCallback,
+    toolOptionsViewController,
+    toolPaint,
+    workspace,
+    idlingResource,
+    commandManager
+) {
     override val toolType: ToolType
         get() = ToolType.HAND
 

@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.tools
 
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
@@ -28,6 +29,7 @@ interface ToolFactory {
         toolOptionsViewController: ToolOptionsViewController,
         commandManager: CommandManager,
         workspace: Workspace,
+        idlingResource: CountingIdlingResource,
         toolPaint: ToolPaint,
         contextCallback: ContextCallback,
         onColorPickedListener: OnColorPickedListener

@@ -33,21 +33,22 @@ import org.catrobat.paintroid.presenter.MainActivityPresenter;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.ui.Perspective;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
+import static org.mockito.Mockito.verify;
+
 import java.io.File;
 
+import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
-
-import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
-import static org.mockito.Mockito.verify;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
@@ -94,7 +95,6 @@ public class MainActivityIntegrationTest {
 	@Mock
 	private File internalMemoryPath;
 
-	@InjectMocks
 	private MainActivityPresenter presenter;
 
 	@Rule
@@ -102,6 +102,15 @@ public class MainActivityIntegrationTest {
 
 	@Rule
 	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
+
+	@Before
+	public void init() {
+		MockitoAnnotations.initMocks(this);
+		CountingIdlingResource idlingResource = launchActivityRule.getActivity().getIdlingResource();
+		presenter = new MainActivityPresenter(launchActivityRule.getActivity(), view, model, workspace, navigator,
+				interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder, bottomNavigationViewHolder,
+				commandFactory, commandManager, perspective, toolController, sharedPreferences, idlingResource, context, internalMemoryPath);
+	}
 
 	@Test
 	public void testMoreOptionsMenuAboutTextIsCorrect() {
@@ -137,7 +146,6 @@ public class MainActivityIntegrationTest {
 	@Test
 	public void testHandleActivityResultWhenIntentIsNull() {
 		launchActivityRule.getActivity().onActivityResult(0, Activity.RESULT_OK, null);
-		MockitoAnnotations.initMocks(this);
 		presenter.handleActivityResult(0, Activity.RESULT_OK, null);
 		verify(view).superHandleActivityResult(0, Activity.RESULT_OK, null);
 	}

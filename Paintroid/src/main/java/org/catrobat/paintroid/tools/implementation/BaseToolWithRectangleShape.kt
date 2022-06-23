@@ -33,6 +33,7 @@ import android.os.CountDownTimer
 import android.util.DisplayMetrics
 import androidx.annotation.ColorRes
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.common.INVALID_RESOURCE_ID
@@ -90,12 +91,14 @@ abstract class BaseToolWithRectangleShape(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager
 ) : BaseToolWithShape(
     contextCallback,
     toolOptionsViewController,
     toolPaint,
     workspace,
+    idlingResource,
     commandManager
 ) {
     private val rotationArrowArcStrokeWidth: Int

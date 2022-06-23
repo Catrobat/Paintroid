@@ -21,7 +21,11 @@ package org.catrobat.paintroid.test.junit.tools
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.idling.CountingIdlingResource
+import androidx.test.rule.ActivityTestRule
 import kotlinx.coroutines.isActive
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.implementation.SprayCommand
@@ -37,6 +41,7 @@ import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
@@ -51,9 +56,15 @@ class SprayToolTest {
         Mockito.mock(ToolOptionsViewController::class.java)
     private val contextCallback = Mockito.mock(ContextCallback::class.java)
     private lateinit var tool: SprayTool
+    private lateinit var idlingResource: CountingIdlingResource
+
+    @get:Rule
+    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
     @Before
     fun setUp() {
+        idlingResource = launchActivityRule.activity.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
         val paint = Paint()
         paint.color = Color.BLACK
         paint.strokeCap = Paint.Cap.ROUND
@@ -68,6 +79,7 @@ class SprayToolTest {
             toolOptionsViewController,
             toolPaint,
             workspace,
+            idlingResource,
             commandManager,
             0
         )
@@ -76,6 +88,7 @@ class SprayToolTest {
     @After
     fun tearDown() {
         tool.resetInternalState(Tool.StateChange.ALL)
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test

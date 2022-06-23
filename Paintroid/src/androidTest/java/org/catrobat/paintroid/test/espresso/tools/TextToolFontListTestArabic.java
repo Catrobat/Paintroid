@@ -26,6 +26,7 @@ import android.view.View;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule;
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.junit.Rule;
@@ -41,7 +42,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import static org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils.checkTextDirection;
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.getConfiguration;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.atPosition;
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTypeFace;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
@@ -71,7 +71,7 @@ public class TextToolFontListTestArabic {
 
 	@Test
 	public void testTextFontFaceOfFontSpinnerArabic() {
-		assertEquals(View.LAYOUT_DIRECTION_RTL, getConfiguration().getLayoutDirection());
+		assertEquals(View.LAYOUT_DIRECTION_RTL, EspressoUtils.INSTANCE.getConfiguration().getLayoutDirection());
 		assertTrue(checkTextDirection(Locale.getDefault().getDisplayName()));
 
 		onToolBarView()

@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
 
+import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener;
 import org.catrobat.paintroid.command.CommandManager;
 import org.catrobat.paintroid.tools.ContextCallback;
@@ -31,7 +32,9 @@ import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.implementation.PipetteTool;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -47,6 +50,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.idling.CountingIdlingResource;
+import androidx.test.rule.ActivityTestRule;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class PipetteToolTest {
@@ -70,8 +77,15 @@ public class PipetteToolTest {
 
 	private PipetteTool toolToTest;
 
+	private CountingIdlingResource idlingResource;
+
+	@Rule
+	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+
 	@Before
 	public void setUp() {
+		idlingResource = launchActivityRule.getActivity().getIdlingResource();
+		IdlingRegistry.getInstance().register(idlingResource);
 		Bitmap bitmap = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
 		bitmap.setPixel(X_COORDINATE_RED, 0, Color.RED);
 		bitmap.setPixel(X_COORDINATE_GREEN, 0, Color.GREEN);
@@ -87,7 +101,12 @@ public class PipetteToolTest {
 			}
 		});
 
-		toolToTest = new PipetteTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager, listener);
+		toolToTest = new PipetteTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager, listener);
+	}
+
+	@After
+	public void tearDown() {
+		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 
 	@Test

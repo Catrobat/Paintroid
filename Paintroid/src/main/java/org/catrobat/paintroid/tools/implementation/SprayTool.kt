@@ -24,6 +24,7 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
+import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -53,9 +54,10 @@ class SprayTool(
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
     workspace: Workspace,
+    idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
     override var drawTime: Long
-) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, commandManager) {
+) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
 
     @VisibleForTesting
     var sprayToolScope = CoroutineScope(Dispatchers.Main)
