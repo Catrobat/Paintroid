@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,30 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.catrobat.paintroid.test.espresso.util;
+package org.catrobat.paintroid.test.utils
 
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
+import android.graphics.PointF
+import org.mockito.Mockito
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
+import org.mockito.stubbing.Stubber
 
-import java.util.Locale;
+class PointFAnswer(private val pointX: Float, private val pointY: Float) : Answer<Any?> {
+    override fun answer(invocation: InvocationOnMock): Any? {
+        val point = invocation.getArgument<PointF>(0)
+        point.x = pointX
+        point.y = pointY
+        return null
+    }
 
-public final class LanguageSupport {
-	private LanguageSupport() {
-		throw new IllegalArgumentException();
-	}
-
-	public static void setLocale(Context context, Locale locale) {
-		if (Build.VERSION.SDK_INT >= 24) {
-			Locale.setDefault(Locale.Category.DISPLAY, locale);
-		} else {
-			Locale.setDefault(locale);
-		}
-
-		Resources resources = context.getResources();
-		Configuration conf = resources.getConfiguration();
-		conf.setLocale(locale);
-		resources.updateConfiguration(conf, resources.getDisplayMetrics());
-	}
+    companion object {
+        @JvmStatic
+        fun setPointFTo(x: Float, y: Float): Stubber = Mockito.doAnswer(PointFAnswer(x, y))
+    }
 }

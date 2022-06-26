@@ -1,4 +1,4 @@
-/**
+/*
  *  Paintroid: An image manipulation application for Android.
  *  Copyright (C) 2010-2022 The Catrobat Team
  *  (<http://developer.catrobat.org/credits>)
@@ -28,7 +28,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public abstract class PaintroidAsserts {
-
 	public static void assertPaintEquals(Paint expectedPaint, Paint actualPaint) {
 		assertPaintEquals(null, expectedPaint, actualPaint);
 	}
