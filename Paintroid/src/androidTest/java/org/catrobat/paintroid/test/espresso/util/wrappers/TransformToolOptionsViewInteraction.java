@@ -33,6 +33,7 @@ import static org.hamcrest.Matchers.not;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -98,6 +99,12 @@ public final class TransformToolOptionsViewInteraction extends CustomViewInterac
 	public TransformToolOptionsViewInteraction performApplyResize() {
 		onView(withId(R.id.pocketpaint_transform_apply_resize_btn))
 				.perform(click());
+		return this;
+	}
+
+	public TransformToolOptionsViewInteraction performEditResizeTextField(String size) {
+		onView(withId(R.id.pocketpaint_transform_resize_percentage_text))
+				.perform(replaceText(size));
 		return this;
 	}
 
