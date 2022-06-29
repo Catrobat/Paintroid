@@ -19,48 +19,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/color_picker_rgb_base_layout"
-    android:layout_height="match_parent"
     android:layout_width="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <View
-        android:layout_height="1dp"
-        android:layout_width="1000dp" />
+        android:layout_width="1000dp"
+        android:layout_height="1dp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp">
+        android:paddingVertical="12dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:gravity="center_vertical"
             android:id="@+id/color_picker_color_rgb_textview_red"
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
             android:layout_width="0dp"
-            android:paddingEnd="5dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1.2"
+            android:gravity="center_vertical"
             android:paddingStart="0dp"
+            android:paddingEnd="5dp"
             android:text="@string/color_red"
             android:textColor="@color/pocketpaint_color_picker_rgb_red" />
 
         <SeekBar
             android:id="@+id/color_picker_color_rgb_seekbar_red"
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_weight="4.5"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="4.5"
             android:max="255" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:gravity="center_vertical|end"
             android:id="@+id/color_picker_rgb_red_value"
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
             android:text="255"
             android:textColor="?attr/colorAccent"
             tools:ignore="HardcodedText" />
@@ -68,39 +67,38 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp">
+        android:paddingVertical="12dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:gravity="center_vertical"
             android:id="@+id/color_picker_color_rgb_textview_green"
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
             android:layout_width="0dp"
-            android:paddingEnd="5dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1.2"
+            android:gravity="center_vertical"
             android:paddingStart="0dp"
+            android:paddingEnd="5dp"
             android:text="@string/color_green"
             android:textColor="@color/pocketpaint_color_picker_rgb_green" />
 
         <SeekBar
             android:id="@+id/color_picker_color_rgb_seekbar_green"
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_weight="4.5"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="4.5"
             android:max="255" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:gravity="center_vertical|end"
             android:id="@+id/color_picker_rgb_green_value"
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
             android:text="255"
             android:textColor="?attr/colorAccent"
             tools:ignore="HardcodedText" />
@@ -108,39 +106,39 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp">
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:gravity="center_vertical"
             android:id="@+id/color_picker_color_rgb_textview_blue"
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
             android:layout_width="0dp"
-            android:paddingEnd="5dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1.2"
+            android:gravity="center_vertical"
             android:paddingStart="0dp"
+            android:paddingEnd="5dp"
             android:text="@string/color_blue"
             android:textColor="@color/pocketpaint_color_picker_rgb_blue" />
 
         <SeekBar
             android:id="@+id/color_picker_color_rgb_seekbar_blue"
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_weight="4.5"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="4.5"
             android:max="255" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:gravity="center_vertical|end"
             android:id="@+id/color_picker_rgb_blue_value"
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
             android:text="255"
             android:textColor="?attr/colorAccent"
             tools:ignore="HardcodedText" />
@@ -149,54 +147,53 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/color_picker_alpha_row"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="12dp"
-        android:paddingTop="12dp">
+        android:paddingVertical="12dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:gravity="center_vertical"
             android:id="@+id/color_picker_color_rgb_textview_alpha"
-            android:layout_gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
             android:layout_width="0dp"
-            android:paddingEnd="5dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1.2"
+            android:gravity="center_vertical"
             android:paddingStart="0dp"
+            android:paddingEnd="5dp"
             android:text="@string/color_alpha"
-            android:textColor="@color/pocketpaint_color_picker_rgb_alpha" />
+            android:textColor="@color/pocketpaint_color_picker_hex_black" />
 
         <SeekBar
             android:id="@+id/color_picker_color_rgb_seekbar_alpha"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4.5"
-            android:layout_width="0dp"
             android:max="255" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_width="0dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:gravity="center_vertical|end"
                 android:id="@+id/color_picker_rgb_alpha_value"
-                android:layout_gravity="center_vertical"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="2"
+                android:gravity="center_vertical|end"
                 android:text="100"
                 android:textColor="?attr/colorAccent"
                 tools:ignore="HardcodedText" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:gravity="center_vertical|start"
-                android:layout_gravity="center_vertical|start"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical|start"
+                android:layout_weight="1"
+                android:gravity="center_vertical|start"
                 android:text="%"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?attr/colorAccent"
@@ -205,35 +202,28 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <TableLayout
-        android:layout_height="match_parent"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:stretchColumns="1">
+        android:layout_height="wrap_content"
+        android:paddingVertical="12dp">
 
-        <TableRow
-            android:layout_height="match_parent"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/color_picker_color_rgb_textview_hex"
             android:layout_width="match_parent"
-            android:paddingBottom="12dp"
-            android:paddingTop="12dp">
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/color_hex"
+            android:textColor="@color/pocketpaint_color_picker_hex_black" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:gravity="center_vertical"
-                android:id="@+id/color_picker_color_rgb_textview_hex"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:text="@string/color_hex"
-                android:textColor="@color/pocketpaint_color_picker_hex_black" />
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:hint="#"
-                android:id="@+id/color_picker_color_rgb_hex"
-                android:inputType="textNoSuggestions"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:maxLength="18"
-                tools:ignore="HardcodedText" />
-        </TableRow>
-    </TableLayout>
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/color_picker_color_rgb_hex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:hint="#"
+            android:inputType="textNoSuggestions"
+            android:maxLength="18"
+            tools:ignore="HardcodedText" />
+    </RelativeLayout>
 
 </LinearLayout>
