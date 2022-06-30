@@ -701,8 +701,6 @@ open class MainActivityPresenter(
         bottomBarViewHolder.hide()
         if (toolController.toolType === toolType && toolController.hasToolOptionsView()) {
             toolController.toggleToolOptionsView()
-        } else if (view.isKeyboardShown) {
-            view.hideKeyboard()
         } else {
             switchTool(toolType)
         }
@@ -711,6 +709,7 @@ open class MainActivityPresenter(
 
     private fun switchTool(type: ToolType, backPressed: Boolean = false) {
         navigator.setMaskFilterToNull()
+        view.hideKeyboard()
         setTool(type)
         toolController.switchTool(type, backPressed)
         if (type === ToolType.IMPORTPNG) {
