@@ -31,6 +31,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
@@ -300,6 +301,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                         )
                     )
                 }
+                workspace.perspective.setBitmapDimensions(layerModel.width, layerModel.height)
             }
             else -> {
                 val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)
@@ -349,7 +351,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             R.id.pocketpaint_options_open_image -> presenterMain.loadImageClicked()
             R.id.pocketpaint_options_new_image -> presenterMain.newImageClicked()
             R.id.pocketpaint_options_discard_image -> presenterMain.discardImageClicked()
-            R.id.pocketpaint_options_fullscreen_mode -> presenterMain.enterFullscreenClicked()
+            R.id.pocketpaint_options_fullscreen_mode -> {
+                perspective.mainActivity = this
+                presenterMain.enterFullscreenClicked()
+            }
             R.id.pocketpaint_options_rate_us -> presenterMain.rateUsClicked()
             R.id.pocketpaint_options_help -> presenterMain.showHelpClicked()
             R.id.pocketpaint_options_about -> presenterMain.showAboutClicked()
@@ -644,8 +649,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     override fun enterFullscreen() {
         drawingSurface.disableAutoScroll()
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        window.clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.hide(WindowInsets.Type.statusBars())
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
+        }
     }
 
     override fun exitFullscreen() {
