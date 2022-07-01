@@ -188,7 +188,9 @@ interface MainActivityContracts {
 
         fun removeMoreOptionsItems(menu: Menu?)
 
-        fun loadImageClicked()
+        fun replaceImageClicked()
+
+        fun addImageToCurrentLayerClicked()
 
         fun loadNewImage()
 

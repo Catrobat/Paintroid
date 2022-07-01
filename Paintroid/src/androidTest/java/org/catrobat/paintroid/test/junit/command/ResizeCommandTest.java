@@ -24,7 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 
 import org.catrobat.paintroid.command.Command;
-import org.catrobat.paintroid.command.implementation.AddLayerCommand;
+import org.catrobat.paintroid.command.implementation.AddEmptyLayerCommand;
 import org.catrobat.paintroid.command.implementation.ResizeCommand;
 import org.catrobat.paintroid.common.CommonFactory;
 import org.catrobat.paintroid.model.Layer;
@@ -83,12 +83,12 @@ public class ResizeCommandTest {
 	public void testLayerStayInSameOrderOnResize() {
 		layerModel.getLayerAt(0).getBitmap().eraseColor(Color.GREEN);
 
-		Command addLayerCommand = new AddLayerCommand(new CommonFactory());
+		Command addLayerCommand = new AddEmptyLayerCommand(new CommonFactory());
 		addLayerCommand.run(canvasUnderTest, layerModel);
 
 		layerModel.getLayerAt(0).getBitmap().eraseColor(Color.YELLOW);
 
-		addLayerCommand = new AddLayerCommand(new CommonFactory());
+		addLayerCommand = new AddEmptyLayerCommand(new CommonFactory());
 		addLayerCommand.run(canvasUnderTest, layerModel);
 
 		layerModel.getLayerAt(0).getBitmap().eraseColor(Color.BLUE);
@@ -103,10 +103,10 @@ public class ResizeCommandTest {
 
 	@Test
 	public void testAllLayersAreResized() {
-		Command addLayerCommand = new AddLayerCommand(new CommonFactory());
+		Command addLayerCommand = new AddEmptyLayerCommand(new CommonFactory());
 		addLayerCommand.run(canvasUnderTest, layerModel);
 
-		addLayerCommand = new AddLayerCommand(new CommonFactory());
+		addLayerCommand = new AddEmptyLayerCommand(new CommonFactory());
 		addLayerCommand.run(canvasUnderTest, layerModel);
 
 		Command commandUnderTest = new ResizeCommand(NEW_WIDTH, NEW_HEIGHT);

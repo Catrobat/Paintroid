@@ -36,7 +36,7 @@ import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
-import org.catrobat.paintroid.command.implementation.AddLayerCommand
+import org.catrobat.paintroid.command.implementation.AddEmptyLayerCommand
 import org.catrobat.paintroid.command.implementation.CompositeCommand
 import org.catrobat.paintroid.command.implementation.CropCommand
 import org.catrobat.paintroid.command.implementation.CutCommand
@@ -103,7 +103,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
             put(SetDimensionCommand::class.java, SetDimensionCommandSerializer(version))
             put(SprayCommand::class.java, SprayCommandSerializer(version))
             put(Paint::class.java, PaintSerializer(version, activityContext))
-            put(AddLayerCommand::class.java, AddLayerCommandSerializer(version))
+            put(AddEmptyLayerCommand::class.java, AddLayerCommandSerializer(version))
             put(SelectLayerCommand::class.java, SelectLayerCommandSerializer(version))
             put(LoadCommand::class.java, LoadCommandSerializer(version))
             put(TextToolCommand::class.java, TextToolCommandSerializer(version, activityContext))

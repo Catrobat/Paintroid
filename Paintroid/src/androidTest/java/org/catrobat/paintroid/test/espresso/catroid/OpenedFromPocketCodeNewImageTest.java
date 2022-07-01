@@ -132,6 +132,7 @@ public class OpenedFromPocketCodeNewImageTest {
 				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_load_image)).perform(click());
+		onView(withText(R.string.menu_replace_image)).perform(click());
 		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
 
 		onDrawingSurfaceView()
@@ -149,6 +150,7 @@ public class OpenedFromPocketCodeNewImageTest {
 				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_load_image)).perform(click());
+		onView(withText(R.string.menu_replace_image)).perform(click());
 		onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist());
 
 		onDrawingSurfaceView()

@@ -68,7 +68,7 @@ import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_E
 import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW;
 import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY;
 import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY;
-import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_REQUEST_CODE_LOAD_PICTURE;
+import static org.catrobat.paintroid.common.MainActivityConstantsKt.PERMISSION_REQUEST_CODE_REPLACE_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstantsKt.REQUEST_CODE_INTRO;
 import static org.catrobat.paintroid.common.MainActivityConstantsKt.REQUEST_CODE_LOAD_PICTURE;
 import static org.catrobat.paintroid.common.MainActivityConstantsKt.RESULT_INTRO_MW_NOT_SUPPORTED;
@@ -240,7 +240,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testLoadImageClickedLoad() {
-		presenter.loadImageClicked();
+		presenter.replaceImageClicked();
 
 		verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
 		verifyNoMoreInteractions(interactor);
@@ -250,7 +250,7 @@ public class MainActivityPresenterTest {
 	public void testLoadImageClickedSaveFirst() {
 		when(commandManager.isUndoAvailable()).thenReturn(true);
 		when(model.isSaved()).thenReturn(false);
-		presenter.loadImageClicked();
+		presenter.replaceImageClicked();
 
 		verify(navigator).showSaveBeforeLoadImageDialog();
 		verifyNoMoreInteractions(interactor);
@@ -940,7 +940,7 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testHandlePermissionResultLoadPermissionGranted() {
-		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_LOAD_PICTURE,
+		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
 				new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
@@ -951,7 +951,7 @@ public class MainActivityPresenterTest {
 	public void testHandlePermissionResultLoadPermissionPermanentlyDenied() {
 		String[] permission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
 		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
-		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_LOAD_PICTURE,
+		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
 				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
 		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
@@ -961,11 +961,11 @@ public class MainActivityPresenterTest {
 	public void testHandlePermissionResultLoadPermissionNotGranted() {
 		String[] permission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
 		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
-		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_LOAD_PICTURE,
+		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
 				permission,
 				new int[]{PackageManager.PERMISSION_DENIED});
 		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-				permission, PERMISSION_REQUEST_CODE_LOAD_PICTURE
+				permission, PERMISSION_REQUEST_CODE_REPLACE_PICTURE
 		);
 	}
 

@@ -40,7 +40,7 @@ interface CommandFactory {
 
     fun createResetCommand(): Command
 
-    fun createAddLayerCommand(): Command
+    fun createAddEmptyLayerCommand(): Command
 
     fun createSelectLayerCommand(position: Int): Command
 

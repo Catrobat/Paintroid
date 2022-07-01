@@ -177,6 +177,7 @@ class OraFileFormatIntegrationTest {
         Intents.intending(IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK)
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(ViewActions.click())
+        onView(withText(R.string.menu_replace_image)).perform(ViewActions.click())
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
             .checkLayerCount(3)

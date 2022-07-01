@@ -107,11 +107,11 @@ class DefaultCommandManager(
         var success = true
         var layerCount = layerModel.layerCount
         val currentCommandName = command.javaClass.simpleName
-        val addLayerCommandRegex = AddLayerCommand::class.java.simpleName.toRegex()
+        val addEmptyLayerCommandRegex = AddEmptyLayerCommand::class.java.simpleName.toRegex()
         val mergeLayerCommandRegex = MergeLayersCommand::class.java.simpleName.toRegex()
 
         var backupLayer: LayerContracts.Layer? = null
-        if (currentCommandName.matches(addLayerCommandRegex)) {
+        if (currentCommandName.matches(addEmptyLayerCommandRegex)) {
             layerCount--
             backupLayer = layerModel.getLayerAt(0)
             success = layerModel.removeLayerAt(0)

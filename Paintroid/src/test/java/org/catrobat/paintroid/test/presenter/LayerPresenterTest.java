@@ -215,7 +215,7 @@ public class LayerPresenterTest {
 		layerModel.addLayerAt(0, mock(Layer.class));
 		layerModel.addLayerAt(1, mock(Layer.class));
 		Command command = mock(Command.class);
-		when(commandFactory.createAddLayerCommand()).thenReturn(command);
+		when(commandFactory.createAddEmptyLayerCommand()).thenReturn(command);
 
 		createPresenter();
 		layerPresenter.addLayer();

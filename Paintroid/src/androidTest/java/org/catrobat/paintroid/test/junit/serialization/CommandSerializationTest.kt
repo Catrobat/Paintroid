@@ -28,7 +28,7 @@ import android.graphics.RectF
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.command.Command
-import org.catrobat.paintroid.command.implementation.AddLayerCommand
+import org.catrobat.paintroid.command.implementation.AddEmptyLayerCommand
 import org.catrobat.paintroid.command.implementation.AsyncCommandManager
 import org.catrobat.paintroid.command.implementation.CompositeCommand
 import org.catrobat.paintroid.command.implementation.CropCommand
@@ -103,7 +103,7 @@ class CommandSerializationTest {
 
     @Test
     fun testSerializeAddLayerCommand() {
-        expectedModel.commands.add(commandFactory.createAddLayerCommand())
+        expectedModel.commands.add(commandFactory.createAddEmptyLayerCommand())
         assertSerializeAndDeserialize()
     }
 
@@ -351,7 +351,7 @@ class CommandSerializationTest {
             add(commandFactory.createSprayCommand(floatArrayOf(20f, 347.5f, 99.239f), paint))
             add(commandFactory.createResizeCommand(400, 200))
             add(commandFactory.createRotateCommand(RotateCommand.RotateDirection.ROTATE_RIGHT))
-            add(commandFactory.createAddLayerCommand())
+            add(commandFactory.createAddEmptyLayerCommand())
             add(commandFactory.createPointCommand(paint, PointF(30.43f, 40.28f)))
         }
     }
@@ -382,7 +382,7 @@ class CommandSerializationTest {
             return false
         }
         return when (expectedCommand) {
-            is AddLayerCommand -> true
+            is AddEmptyLayerCommand -> true
             is CompositeCommand -> equalsCompositeCommand(
                 expectedCommand, actualCommand as CompositeCommand
             )
