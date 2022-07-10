@@ -7,38 +7,46 @@
     android:padding="8dp">
 
     <com.google.android.material.chip.Chip
-        android:id="@+id/action_copy"
+        android:id="@+id/action_cut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:text="@string/stamptool_copy"
+        android:text="@string/stamptool_cut"
         android:theme="@style/Theme.MaterialComponents.Light"
-        app:chipIcon="@drawable/ic_pocketpaint_copy"
-        app:chipStartPadding="8dp" />
+        app:chipIcon="@drawable/ic_pocketpaint_cut"
+        app:chipStartPadding="8dp"
+        android:textColor="@color/pocketpaint_colorPrimary"
+        app:chipStrokeColor="#a9a9a9"
+        app:chipStrokeWidth="1dp"
+        app:chipBackgroundColor="#ffffff"/>
 
     <Space
         android:id="@+id/space_one"
         style="@style/PocketPaintToolHorizontalSpace"
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/action_copy" />
+        android:layout_toEndOf="@+id/action_cut" />
 
     <com.google.android.material.chip.Chip
-        android:id="@+id/action_cut"
+        android:id="@+id/action_copy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/space_one"
-        android:text="@string/stamptool_cut"
+        android:text="@string/stamptool_copy"
         android:theme="@style/Theme.MaterialComponents.Light"
-        app:chipIcon="@drawable/ic_pocketpaint_cut"
-        app:chipStartPadding="8dp" />
+        app:chipIcon="@drawable/ic_pocketpaint_copy"
+        app:chipStartPadding="8dp"
+        android:textColor="@color/pocketpaint_colorPrimary"
+        app:chipStrokeColor="#a9a9a9"
+        app:chipStrokeWidth="1dp"
+        app:chipBackgroundColor="#ffffff"/>
 
     <Space
         android:id="@+id/space_two"
         style="@style/PocketPaintToolHorizontalSpace"
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/action_cut" />
+        android:layout_toEndOf="@+id/action_copy" />
 
     <com.google.android.material.chip.Chip
         android:id="@+id/action_paste"
@@ -49,6 +57,10 @@
         android:text="@string/stamptool_paste"
         android:theme="@style/Theme.MaterialComponents.Light"
         app:chipIcon="@drawable/ic_pocketpaint_paste_chip_icon_selector"
-        app:chipStartPadding="8dp" />
+        app:chipStartPadding="8dp"
+        android:textColor="@color/pocketpaint_colorPrimary"
+        app:chipStrokeColor="#a9a9a9"
+        app:chipStrokeWidth="1dp"
+        app:chipBackgroundColor="#ffffff"/>
 
 </RelativeLayout>
