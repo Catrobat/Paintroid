@@ -1,11 +1,5 @@
 package org.catrobat.paintroid.test.espresso;
 
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -16,10 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-
-import androidx.test.espresso.intent.Intents;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
@@ -32,20 +22,29 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
+import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import androidx.test.espresso.intent.Intents;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+
 @RunWith(AndroidJUnit4.class)
 public class MainActivityIntentTest {
 
+	private static ArrayList<File> deletionFileList = null;
 	@Rule
 	public ActivityTestRule<MainActivity> launchActivityTestRule = new ActivityTestRule<>(MainActivity.class);
-
 	private ContentResolver contentResolver;
-	private static ArrayList<File> deletionFileList = null;
 
 	@Before
 	public void setUp() {
