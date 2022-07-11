@@ -21,6 +21,9 @@ package org.catrobat.paintroid
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PointF
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION
@@ -226,6 +229,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                     return false
                 } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
                     Log.e(TAG, "Image might be an ora file instead")
+                    OpenRasterFileFormatConversion.mainActivity = this
                     OpenRasterFileFormatConversion.importOraFile(
                         myContentResolver,
                         receivedUri
@@ -236,6 +240,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                             )
                         )
                     }
+                    val paint = Paint()
+                    val coordinate = PointF(0.0f, 0.0f)
+                    paint.color = Color.TRANSPARENT
+                    commandManager.addCommand(commandFactory.createPointCommand(paint, coordinate))
+                    commandManager.undo()
+                    commandManager.reset()
                 }
             } else {
                 FileIO.filename = "image"
@@ -275,6 +285,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         onCreateLayerMenu()
         onCreateDrawingSurface()
         presenterMain.onCreateTool()
+        OpenRasterFileFormatConversion.mainActivity = this
 
         val receivedIntent = intent
         isTemporaryFileSavingTest = intent.getBooleanExtra("isTemporaryFileSavingTest", false)
@@ -444,6 +455,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             DefaultContextCallback(context)
         )
         val preferences = UserPreferences(getPreferences(MODE_PRIVATE))
+        val navigator = MainActivityNavigator(this, toolReference)
         presenterMain = MainActivityPresenter(
             this,
             this,
@@ -464,6 +476,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             context,
             filesDir
         )
+        FileIO.navigator = navigator
         defaultToolController.setOnColorPickedListener(PresenterColorPickedListener(presenterMain))
         keyboardListener = KeyboardListener(drawerLayout)
         setTopBarListeners(topBarViewHolder)

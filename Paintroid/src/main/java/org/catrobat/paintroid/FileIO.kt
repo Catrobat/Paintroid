@@ -48,6 +48,7 @@ import org.catrobat.paintroid.common.TEMP_IMAGE_NAME
 import org.catrobat.paintroid.common.TEMP_IMAGE_PATH
 import org.catrobat.paintroid.common.TEMP_IMAGE_TEMP_PATH
 import org.catrobat.paintroid.common.TEMP_PICTURE_NAME
+import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.iotasks.BitmapReturnValue
 import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.presenter.MainActivityPresenter
@@ -86,6 +87,8 @@ object FileIO {
     var compressFormat = CompressFormat.PNG
 
     var catroidFlag = false
+
+    var navigator: MainActivityContracts.Navigator? = null
 
     @JvmField
     var isCatrobatImage = false
@@ -400,7 +403,6 @@ object FileIO {
         return total
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun getUriForFilename(contentLocationUri: Uri, filename: String, resolver: ContentResolver): Uri? {
         val selectionArgs = arrayOf(filename)
         val selection = "_display_name=?"
@@ -450,7 +452,7 @@ object FileIO {
     fun checkFileExists(fileType: FileType, filename: String, resolver: ContentResolver): Boolean {
         return when (fileType) {
             FileType.JPG, FileType.PNG -> checkFileExistsInPicturesFolder(filename, resolver)
-            FileType.CATROBAT, FileType.ORA -> checkFileExistsInDownloadsFolder(filename, resolver)
+            FileType.ORA, FileType.CATROBAT -> checkFileExistsInDownloadsFolder(filename, resolver)
         }
     }
 

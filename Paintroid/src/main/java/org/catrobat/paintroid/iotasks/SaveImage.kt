@@ -124,7 +124,13 @@ class SaveImage(
                         imageUri
                     }
                 } else if (FileIO.fileType == FileIO.FileType.CATROBAT) {
-                    workspace.getCommandSerializationHelper().writeToFile(filename)
+                    if (uri != null) {
+                        uri?.let {
+                            workspace.getCommandSerializationHelper().overWriteFile(filename, it, callback.contentResolver)
+                        }
+                    } else {
+                        workspace.getCommandSerializationHelper().writeToFile(filename)
+                    }
                 } else {
                     getImageUri(callback, bitmap)
                 }
