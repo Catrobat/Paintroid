@@ -92,6 +92,8 @@ public class MainActivityIntentTest {
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
+
+		Intents.release();
 	}
 
 	private Uri createTestImageFile() {
