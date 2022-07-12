@@ -284,8 +284,4 @@ class SmudgeTool(
             bitmap?.recycle()
         }
     }
-
-    override fun changePaintColor(color: Int) {
-        // Doesn't need to change the color.
-    }
 }
