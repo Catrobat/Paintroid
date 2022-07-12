@@ -115,7 +115,7 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
 
         override fun setSelected(position: Int, bottomNavigationViewHolder: BottomNavigationViewHolder?, defaultToolController: DefaultToolController?) {
             if (!layerPresenter.getLayerItem(position).isVisible) {
-                defaultToolController?.switchTool(ToolType.HAND, false)
+                defaultToolController?.switchTool(ToolType.HAND)
                 bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
             }
             layerBackground.setBackgroundColor(Color.BLUE)
