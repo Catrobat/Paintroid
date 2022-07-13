@@ -98,6 +98,7 @@ import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder
 import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
+import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController
 import java.io.File
 import java.util.Locale
 
@@ -133,6 +134,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     lateinit var toolOptionsViewController: ToolOptionsViewController
 
     var idlingResource: CountingIdlingResource = CountingIdlingResource("MainIdleResource")
+
+    @VisibleForTesting
+    lateinit var zoomWindowController: DefaultZoomWindowController
 
     lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
 
@@ -427,6 +431,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val bottomBarLayout = findViewById<View>(R.id.pocketpaint_main_bottom_bar)
         val bottomNavigationView = findViewById<View>(R.id.pocketpaint_main_bottom_navigation)
         toolOptionsViewController = DefaultToolOptionsViewController(this, idlingResource)
+        zoomWindowController = DefaultZoomWindowController(this, layerModel)
         drawerLayoutViewHolder = DrawerLayoutViewHolder(drawerLayout)
         val topBarViewHolder = TopBarViewHolder(topBarLayout)
         val bottomBarViewHolder = BottomBarViewHolder(bottomBarLayout)
@@ -513,6 +518,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             idlingResource,
             supportFragmentManager,
             toolOptionsViewController
+            zoomWindowController,
         )
         layerPresenter.setDrawingSurface(drawingSurface)
         appFragment.perspective = perspective

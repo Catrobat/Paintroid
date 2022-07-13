@@ -24,11 +24,14 @@ import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
+import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController
+import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 import java.util.EnumSet
 import kotlin.collections.ArrayList
 import kotlin.collections.MutableList
@@ -56,6 +59,7 @@ open class DrawingSurfaceListener(
     private val drawerEdgeSize: Int = (DRAWER_EDGE_SIZE * displayDensity + CONSTANT_1).toInt()
     private var autoScroll = true
     private var timerStartDraw = 0.toLong()
+    private lateinit var zoomController: ZoomWindowController
 
     private var recentTouchEventsData: MutableList<TouchEventData> = mutableListOf()
 
@@ -101,6 +105,12 @@ open class DrawingSurfaceListener(
     private fun setEvenPointAndViewDimensionsForAutoScrollTask(view: View) {
         autoScrollTask.setEventPoint(eventTouchPoint.x, eventTouchPoint.y)
         autoScrollTask.setViewDimensions(view.width, view.height)
+    }
+
+    fun setZoomController(
+        zoomWindowContoller: ZoomWindowController
+    ) {
+        zoomController = zoomWindowContoller
     }
 
     private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
@@ -149,6 +159,7 @@ open class DrawingSurfaceListener(
             if (xOld > 0 && xMidPoint != xOld || yOld > 0 && yMidPoint != yOld) {
                 callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld)
             }
+            zoomController.dismissOnPinch()
         }
     }
 
@@ -172,6 +183,8 @@ open class DrawingSurfaceListener(
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                     autoScrollTask.start()
                 }
+                /////////////////
+                zoomController.show(canvasTouchPoint)
             }
             MotionEvent.ACTION_MOVE -> handleActionMove(currentTool, view, event)
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
@@ -207,6 +220,7 @@ open class DrawingSurfaceListener(
                 eventX = 0f
                 eventY = 0f
                 touchMode = TouchMode.DRAW
+                zoomController.dismiss()
             }
         }
         drawingSurface.refreshDrawingSurface()

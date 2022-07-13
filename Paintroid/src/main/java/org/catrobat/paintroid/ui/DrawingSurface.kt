@@ -54,6 +54,7 @@ import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 
 open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private val canvasRect = Rect()
@@ -71,6 +72,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var toolOptionsViewController: ToolOptionsViewController
     private lateinit var fragmentManager: FragmentManager
     private lateinit var idlingResource: CountingIdlingResource
+    private lateinit var zoomController: ZoomWindowController
 
     constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
@@ -126,6 +128,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         idlingResource: CountingIdlingResource,
         fragmentManager: FragmentManager,
         toolOptionsViewController: ToolOptionsViewController
+        zoomController: ZoomWindowController
     ) {
         this.layerModel = layerModel
         this.perspective = perspective
@@ -133,7 +136,8 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         this.toolOptionsViewController = toolOptionsViewController
         this.idlingResource = idlingResource
         this.fragmentManager = fragmentManager
-        this.toolOptionsViewController = toolOptionsViewController
+        this.zoomController = zoomController
+        drawingSurfaceListener.setZoomController(zoomWindowContoller = zoomController)
     }
 
     @Synchronized
