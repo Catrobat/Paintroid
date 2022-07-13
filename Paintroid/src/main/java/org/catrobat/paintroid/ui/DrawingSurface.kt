@@ -53,6 +53,7 @@ import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 
 open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private val canvasRect = Rect()
@@ -69,6 +70,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var toolReference: ToolReference
     private lateinit var toolOptionsViewController: ToolOptionsViewController
     private lateinit var fragmentManager: FragmentManager
+    private lateinit var zoomController: ZoomWindowController
 
     constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
@@ -109,7 +111,8 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
             override fun getToolOptionsViewController(): ToolOptionsViewController =
                 toolOptionsViewController
         }
-        drawingSurfaceListener = DrawingSurfaceListener(autoScrollTask, callback, density)
+        drawingSurfaceListener =
+            DrawingSurfaceListener(autoScrollTask, callback, density)
         setOnTouchListener(drawingSurfaceListener)
     }
 
@@ -122,13 +125,16 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         perspective: Perspective,
         toolReference: ToolReference,
         toolOptionsViewController: ToolOptionsViewController,
-        fragmentManager: FragmentManager
+        fragmentManager: FragmentManager,
+        zoomController: ZoomWindowController
     ) {
         this.layerModel = layerModel
         this.perspective = perspective
         this.toolReference = toolReference
         this.toolOptionsViewController = toolOptionsViewController
         this.fragmentManager = fragmentManager
+        this.zoomController = zoomController
+        drawingSurfaceListener.setZoomController(zoomWindowContoller = zoomController)
     }
 
     @Synchronized
