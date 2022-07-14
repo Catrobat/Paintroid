@@ -290,7 +290,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val receivedIntent = intent
         isTemporaryFileSavingTest = intent.getBooleanExtra("isTemporaryFileSavingTest", false)
         when {
-            validateIntent(receivedIntent) -> {
+            validateIntent(receivedIntent) && savedInstanceState == null -> {
                 if (handleIntent(receivedIntent)) {
                     commandManager.reset()
                 }
