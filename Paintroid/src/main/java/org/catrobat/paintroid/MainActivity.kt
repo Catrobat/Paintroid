@@ -517,7 +517,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             toolReference,
             idlingResource,
             supportFragmentManager,
-            toolOptionsViewController
+            toolOptionsViewController,
             zoomWindowController,
         )
         layerPresenter.setDrawingSurface(drawingSurface)

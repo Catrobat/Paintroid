@@ -127,7 +127,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         toolReference: ToolReference,
         idlingResource: CountingIdlingResource,
         fragmentManager: FragmentManager,
-        toolOptionsViewController: ToolOptionsViewController
+        toolOptionsViewController: ToolOptionsViewController,
         zoomController: ZoomWindowController
     ) {
         this.layerModel = layerModel
