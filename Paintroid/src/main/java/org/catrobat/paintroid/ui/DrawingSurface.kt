@@ -54,7 +54,6 @@ import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
-import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 
 open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private val canvasRect = Rect()
