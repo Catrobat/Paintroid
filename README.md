@@ -1,34 +1,51 @@
-Paintroid
-=========
-
-Paintroid, also known as **Pocket Paint**, is associated to [Catroid](https://github.com/Catrobat/Catroid). It is a graphical paint editor application for the Android platform that, among others, allows setting parts of pictures to transparent.
-
-Since Pocket Paint is now available in **Google Play store** you can also download Paintroid (Pocket Paint) from [here](https://play.google.com/store/apps/details?id=org.catrobat.paintroid). Alternatively, you can find it on **F-Droid** [here](https://f-droid.org/packages/org.catrobat.paintroid/).
-
-
-For more information oriented towards developers please visit our [developers page](http://developer.catrobat.org/).
-
-# Issues #
-**Please report all bugs on our [Jira Bugtracker](https://jira.catrob.at/secure/CreateIssue.jspa?pid=10401&issuetype=1)**
-
-# Contributing #
-
-If you want to contribute we suggest that you start with [forking](https://help.github.com/articles/fork-a-repo/) our repository and browse the code. Then you can look at our [Issue-Tracker](https://jira.catrob.at/secure/RapidBoard.jspa?rapidView=60) and start with fixing one ticket. We strictly use [Test-Driven Development](http://c2.com/cgi/wiki?TestDrivenDevelopment) and [Clean Code](http://www.planetgeek.ch/wp-content/uploads/2013/06/Clean-Code-V2.2.pdf), so first read everything you can about these development methods. Code developed in a different style will not be accepted. 
-After you've created a pull request we will review your code and do a full testrun on your branch.
-
-If you want to implement a new feature, please ask about the details in JIRA or our IRC channel (#catrobat or #catrobatdev) first.
-
-Let's start to set up the working environment using the instructions in our  [Wiki](https://github.com/Catrobat/Catroid/wiki/Setup-working-environment)!
+⚠️ **__If you have not heard about who Catrobat is, what we are doing and in what ways you can contribute, then you might want to take a step back and check out the start of our [step-by-step guide](https://github.com/Catrobat/Catroid/blob/develop/README.md).__**
+```diff
+👷 TODO: Change link to README in Catrobat's .github repository when added!
+```
+💡 *If any step in the following process is unclear, misleading, or incorrect, you can directly contribute by issuing a pull request with the updated information!*
 
 
-# Resources and links #
-* [Google Play Store Download](https://play.google.com/store/apps/details?id=org.catrobat.paintroid)
-* [F-Droid Download](https://f-droid.org/packages/org.catrobat.paintroid/)
-* [Frequently Asked Questions](https://github.com/Catrobat/Catroid/wiki/Frequently-Asked-Questions)
-* [Credits](http://developer.catrobat.org/credits)
-* [Statistics on OpenHub](https://www.openhub.net/p/catrobat/)
-* [Twitter](http://twitter.com/Catroid)
-* [Our Google group](https://groups.google.com/forum/?fromgroups#!forum/catrobat)
 
-# License #
-[License](http://developer.catrobat.org/licenses) of our project (mainly AGPL v3).
+# Paintroid
+The Paintroid team is responsible for our graphical paint editor application "Pocket Paint", available on Android. Combined with "Pocket Code", it enables users to create even better games on their smartphones. If you are interested in contributing to our Paintroid team but have not used the "Pocket Paint" yet, it's about time to do so. Go back to "Pocket Code" and use the embedded editor to improve your game, or play with the [stand-alone version](https://play.google.com/store/apps/details?id=org.catrobat.paintroid) before proceeding! If you like "Pocket Paint" you are invited to make your first contribution by rating the app ;)
+
+
+## Team Culture
+We work as a team and expect everyone to follow the rules. In our daily work, we use the methods listed below to create high-quality code. We support each other but also anticipate newcomers to learn about our coding principles proactively:
+
+- [Test-Driven Development](http://wiki.c2.com/?TestDrivenDevelopment)
+- [Clean Code](https://www.planetgeek.ch/wp-content/uploads/2013/06/Clean-Code-V2.2.pdf)
+- Jira Workflow
+- Style Guide
+- Code Reviews
+- Pair Programming
+- Biweekly Meetings (remote)
+
+## Technologies
+Below you can find an outline of the technologies we currently use at Catty. If you want to contribute to our team, your tech stack should cover most of the technologies. But don't worry! If you are uncertain about a specific technology, you can learn it along the way. Google is your friend ;)
+
+### Languages
+[![Java](http://img.shields.io/badge/Java-darkblue)](https://www.java.com/en/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-darkblue)](https://kotlinlang.org/)
+[![Flutter](https://img.shields.io/badge/Flutter-nice_to_have-green?labelColor=darkblue)](https://flutter.dev/)
+
+### Infrastructure (IDE, Version Control, Issue Tracking, ...)
+[![Android Studio](https://img.shields.io/badge/Android_Studio-purple)](https://developer.android.com/studio)
+[![Jenkins](https://img.shields.io/badge/Jenkins-nice_to_have-green?labelColor=purple)](https://www.jenkins.io/)
+[![Git](https://img.shields.io/badge/Git-purple)](https://git-scm.com/)
+[![Jira](https://img.shields.io/badge/Jira-purple)](https://jira.catrob.at/secure/Dashboard.jspa)
+
+### Knowledge Repository
+[![Confluence](https://img.shields.io/badge/Confluence-orange)](https://confluence.catrob.at/)
+
+### Communication
+[![Slack](https://img.shields.io/badge/Slack-green)](https://slack.com/)
+
+
+## Start Contribution
+If you feel confident that your tech stack matches our requirements, then we invite you to [start contributing](https://github.com/Catrobat/Catty/blob/develop/.github/onboarding.md)!
+
+## Issues
+You found a bug? 
+1. Perfect, please check the [open issues on Jira](https://jira.catrob.at/browse/PAINTROID-466?jql=project%20%3D%20PAINTROID%20AND%20issuetype%20%3D%20Bug%20AND%20resolution%20%3D%20Unresolved%20ORDER%20BY%20priority%20DESC%2C%20key%20DESC) first to avoid duplicate tickets!
+2. If the bug has not been reported yet, please report it using the [issue template on Jira](https://jira.catrob.at/secure/CreateIssue.jspa?pid=12001&issuetype=1).
