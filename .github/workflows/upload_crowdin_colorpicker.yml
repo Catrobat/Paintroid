@@ -12,7 +12,7 @@
 #
 # - Secrets required!
 #
-name: Synchronize Color Picker Crowdin
+name: Upload Color Picker Crowdin
 
 #
 # New base strings could be uploaded on the merge of a new feature.
@@ -42,7 +42,7 @@ jobs:
     # Only should run on the main repo. (Running without the secrets would result in a fail anyway!)
     if: github.repository == 'Catrobat/Paintroid'
 
-    name: Synchronize Crowdin Translations
+    name: Upload Crowdin Translations
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -51,11 +51,9 @@ jobs:
         with:
           upload_sources: true
           upload_translations: false
-          download_translations: true
+          download_translations: false
           config: 'crowdin_colorpicker.yml'
-          localization_branch_name:  l10n_colorpicker_crowdin_action
-          create_pull_request: true
-          pull_request_title: 'New Colorpicker Crowdin translations by Github Action'
+          pull_request_title: 'New Colorpicker Crowdin translations upload by Github Action'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
