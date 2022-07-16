@@ -27,7 +27,6 @@ Below you can find an outline of the technologies we currently use at Catty. If 
 ### Languages
 [![Java](http://img.shields.io/badge/Java-darkblue)](https://www.java.com/en/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-darkblue)](https://kotlinlang.org/)
-[![Flutter](https://img.shields.io/badge/Flutter-nice_to_have-green?labelColor=darkblue)](https://flutter.dev/)
 
 ### Infrastructure (IDE, Version Control, Issue Tracking, ...)
 [![Android Studio](https://img.shields.io/badge/Android_Studio-purple)](https://developer.android.com/studio)
