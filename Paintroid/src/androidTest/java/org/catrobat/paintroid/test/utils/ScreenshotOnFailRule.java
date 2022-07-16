@@ -80,6 +80,7 @@ public class ScreenshotOnFailRule extends TestWatcher {
 		}
 
 		String filename = description.getClassName() + "-" + description.getMethodName() + ".png";
+		Log.i(LOG_TAG, "Saving screenshot under " + path + "/" + filename);
 		saveScreenshot(screenshot, new File(path, filename));
 	}
 

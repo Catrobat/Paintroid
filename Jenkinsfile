@@ -121,10 +121,17 @@ pipeline {
                     }
                     post {
                         always {
-                            sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
-                            sh './gradlew stopEmulator'
                             junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
                             archiveArtifacts 'logcat.txt'
+                        }
+                        failure {
+                            sh 'rm -rf /home/user/androidData; mkdir /home/user/androidData'
+                            sh '/home/user/android/sdk/platform-tools/adb pull /storage/emulated/0/Android/data/org.catrobat.paintroid.test/files /home/user/androidData'
+                            archiveArtifacts "/home/user/androidData/**/*"
+                            archiveArtifacts "/home/user/androidData/*"
+                        }
+                        cleanup {
+                            sh './gradlew stopEmulator'
                         }
                     }
                 }
