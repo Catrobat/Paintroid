@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="PocketPaintTitleTextStyle">
     <item name="android:textColor">@color/pocketpaint_colorAccent</item>
@@ -112,6 +112,7 @@
         <item name="colorControlActivated">?colorAccent</item>
         <item name="bottomNavigationStyle">@style/CustomBottomNavigationViewStyle</item>
         <item name="colorButtonNormal">@color/pocketpaint_lighter_gray</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
     <style name="CustomBottomNavigationViewStyle" parent="Widget.MaterialComponents.BottomNavigationView">
