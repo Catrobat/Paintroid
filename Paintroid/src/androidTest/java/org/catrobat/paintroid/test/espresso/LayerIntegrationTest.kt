@@ -740,6 +740,7 @@ class LayerIntegrationTest {
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(click())
+        onView(withText(R.string.menu_replace_image)).perform(click())
         Intents.release()
         onView(withText(R.string.dialog_warning_new_image)).check(ViewAssertions.doesNotExist())
         onView(withText(R.string.pocketpaint_ok)).perform(click())

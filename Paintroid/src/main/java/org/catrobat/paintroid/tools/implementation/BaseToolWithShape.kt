@@ -84,6 +84,7 @@ abstract class BaseToolWithShape @SuppressLint("VisibleForTests") constructor(
         }
         linePaint = Paint()
         linePaint.color = primaryShapeColor
+        linePaint.pathEffect = null
     }
 
     abstract fun drawShape(canvas: Canvas)

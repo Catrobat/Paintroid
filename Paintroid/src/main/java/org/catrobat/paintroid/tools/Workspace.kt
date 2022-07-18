@@ -31,7 +31,7 @@ interface Workspace {
     val surfaceHeight: Int
     val bitmapOfAllLayers: Bitmap?
     val bitmapLisOfAllLayers: List<Bitmap?>
-    val bitmapOfCurrentLayer: Bitmap?
+    var bitmapOfCurrentLayer: Bitmap?
     val currentLayerIndex: Int
     val scaleForCenterBitmap: Float
     var scale: Float

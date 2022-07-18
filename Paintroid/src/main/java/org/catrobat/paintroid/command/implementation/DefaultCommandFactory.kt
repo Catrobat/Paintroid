@@ -128,7 +128,13 @@ class DefaultCommandFactory : CommandFactory {
         commonFactory.createSerializablePath(path)
     )
 
-    override fun createSmudgePathCommand(bitmap: Bitmap, pointPath: MutableList<PointF>, maxPressure: Float, maxSize: Float, minSize: Float): Command {
+    override fun createSmudgePathCommand(
+        bitmap: Bitmap,
+        pointPath: MutableList<PointF>,
+        maxPressure: Float,
+        maxSize: Float,
+        minSize: Float
+    ): Command {
         val copy = mutableListOf<PointF>()
 
         pointPath.forEach {
@@ -170,6 +176,12 @@ class DefaultCommandFactory : CommandFactory {
         boxRotation
     )
 
+    override fun createClippingCommand(bitmap: Bitmap, pathBitmap: Bitmap): Command =
+        ClippingCommand(
+            bitmap,
+            pathBitmap
+        )
+
     override fun createSprayCommand(sprayedPoints: FloatArray, paint: Paint): Command =
         SprayCommand(sprayedPoints, paint)
 
@@ -180,6 +192,10 @@ class DefaultCommandFactory : CommandFactory {
         boxRotation: Float
     ): Command = CutCommand(toPoint(toolPosition), boxWidth, boxHeight, boxRotation)
 
-    override fun createColorChangedCommand(toolReference: ToolReference, context: Context, color: Int): Command =
+    override fun createColorChangedCommand(
+        toolReference: ToolReference,
+        context: Context,
+        color: Int
+    ): Command =
         ColorChangedCommand(toolReference, context, color)
 }

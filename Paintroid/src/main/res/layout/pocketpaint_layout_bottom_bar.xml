@@ -234,5 +234,18 @@
                 style="@style/PocketPaintToolSelectionButtonTextView"
                 android:text="@string/button_smudge"/>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pocketpaint_tools_clipping"
+            tools:ignore="UseCompoundDrawables"
+            style="@style/PocketPaintToolSelectionButton">
+            <ImageView
+                style="@style/PocketPaintToolSelectionButtonImageView"
+                android:src="@drawable/ic_pocketpaint_tool_clipping"
+                android:contentDescription="@string/button_clip"/>
+            <TextView
+                style="@style/PocketPaintToolSelectionButtonTextView"
+                android:text="@string/button_clip"/>
+        </LinearLayout>
     </TableRow>
 </TableLayout>

@@ -30,6 +30,8 @@ import java.util.Collections
 import java.util.Deque
 import kotlin.collections.ArrayList
 
+const val FIVE = 5
+
 class DefaultCommandManager(
     private val commonFactory: CommonFactory,
     private val layerModel: LayerContracts.Model
@@ -74,6 +76,12 @@ class DefaultCommandManager(
     override fun addCommand(command: Command?) {
         redoCommandList.clear()
         command?.let { undoCommandList.addFirst(it) }
+        executeCommand(command)
+        notifyCommandExecuted()
+    }
+
+    override fun addCommandWithoutUndo(command: Command?) {
+        redoCommandList.clear()
         executeCommand(command)
         notifyCommandExecuted()
     }
@@ -196,7 +204,6 @@ class DefaultCommandManager(
         undoCommandList.clear()
         redoCommandList.clear()
         layerModel.reset()
-
         if (initialStateCommand != null) {
             val canvas = commonFactory.createCanvas()
             initialStateCommand?.run(canvas, layerModel)
@@ -314,8 +321,38 @@ class DefaultCommandManager(
 
     override fun getCommandManagerModelForCatrobatImage(): CommandManagerModel? {
         var adaptedModel: CommandManagerModel? = null
-        commandManagerModel?.let { it1 -> adaptedModel = CommandManagerModel(it1.initialCommand, it1.commands.filter { it !is ColorChangedCommand }.toMutableList()) }
+        commandManagerModel?.let { it1 ->
+            adaptedModel = CommandManagerModel(
+                it1.initialCommand,
+                it1.commands.filter {
+                    it !is ColorChangedCommand
+                }.toMutableList()
+            )
+        }
         return adaptedModel
+    }
+
+    override fun adjustUndoListForClippingTool() {
+        val commandName = undoCommandList.first.toString().split(".", "@")[FIVE]
+        if (commandName == ClippingCommand::class.java.simpleName) {
+            val clippingCommand = undoCommandList.pop()
+            undoCommandList.pop()
+            undoCommandList.addFirst(clippingCommand)
+        }
+    }
+
+    override fun undoInClippingTool() {
+        val command = undoCommandList.pop()
+        handleUndo(command)
+        notifyCommandExecuted()
+    }
+
+    override fun popFirstCommandInUndo() {
+        undoCommandList.pop()
+    }
+
+    override fun popFirstCommandInRedo() {
+        redoCommandList.pop()
     }
 
     override fun setInitialStateCommand(command: Command) {

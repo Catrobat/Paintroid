@@ -87,6 +87,7 @@ import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog
 import org.catrobat.paintroid.dialog.SaveInformationDialog
 import org.catrobat.paintroid.dialog.ScaleImageOnLoadDialog
 import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment.MediaGalleryListener
 
@@ -132,8 +133,13 @@ class MainActivityNavigator(
     private fun setupColorPickerDialogListeners(dialog: ColorPickerDialog) {
         dialog.addOnColorPickedListener(object : OnColorPickedListener {
             override fun colorChanged(color: Int) {
-                val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
-                mainActivity.commandManager.addCommand(command)
+                if (toolReference.tool?.toolType != ToolType.CLIP) {
+                    val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
+                    mainActivity.commandManager.addCommand(command)
+                } else {
+                    val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
+                    mainActivity.commandManager.addCommandWithoutUndo(command)
+                }
             }
         })
         mainActivity.presenter.bitmap?.let { dialog.setBitmap(it) }

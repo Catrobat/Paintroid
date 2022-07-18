@@ -39,6 +39,7 @@ import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.command.implementation.ClippingCommand
 import org.catrobat.paintroid.command.implementation.AddEmptyLayerCommand
 import org.catrobat.paintroid.command.implementation.CompositeCommand
 import org.catrobat.paintroid.command.implementation.CropCommand
@@ -141,6 +142,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
             put(SerializablePath.Cube::class.java, SerializablePath.PathActionCubeSerializer(version))
             put(Bitmap::class.java, BitmapSerializer(version))
             put(SmudgePathCommand::class.java, SmudgePathCommandSerializer(version))
+            put(ClippingCommand::class.java, ClippingCommandSerializer(version))
         }
     }
 
