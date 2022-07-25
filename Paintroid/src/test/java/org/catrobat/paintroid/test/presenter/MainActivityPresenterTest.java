@@ -270,7 +270,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
-		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, context);
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, null, context);
 		verifyNoMoreInteractions(interactor);
 	}
 
@@ -495,16 +495,16 @@ public class MainActivityPresenterTest {
 
 	@Test
 	public void testSaveCopyConfirmCLickedThenSaveImage() {
-		presenter.saveCopyConfirmClicked(0);
+		presenter.saveCopyConfirmClicked(0, null);
 
-		verify(interactor).saveCopy(presenter, 0, workspace, context);
+		verify(interactor).saveCopy(presenter, 0, workspace, null, context);
 	}
 
 	@Test
 	public void testSaveCopyConfirmClickedThenUseRequestCode() {
-		presenter.saveCopyConfirmClicked(-1);
+		presenter.saveCopyConfirmClicked(-1, null);
 
-		verify(interactor).saveCopy(presenter, -1, workspace, context);
+		verify(interactor).saveCopy(presenter, -1, workspace, null, context);
 	}
 
 	@Test
@@ -1008,7 +1008,7 @@ public class MainActivityPresenterTest {
 				new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 
-		verify(interactor).saveCopy(any(SaveImage.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(context));
+		verify(interactor).saveCopy(any(SaveImage.SaveImageCallback.class), eq(SAVE_IMAGE_DEFAULT), eq(workspace), eq(null), eq(context));
 	}
 
 	@Test
@@ -1173,7 +1173,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
-		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, context);
+		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, null, context);
 	}
 
 	@Test
