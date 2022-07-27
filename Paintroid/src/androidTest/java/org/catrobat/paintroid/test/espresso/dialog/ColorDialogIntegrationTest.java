@@ -736,7 +736,7 @@ public class ColorDialogIntegrationTest {
 				.onPositiveButton()
 				.perform(click());
 		onToolProperties()
-				.checkMatchesColor(Color.parseColor("#80000000"));
+				.checkMatchesColor(Color.parseColor("#7F000000"));
 		IdlingRegistry.getInstance().unregister(idlingResource);
 	}
 

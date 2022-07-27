@@ -31,6 +31,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.net.Uri
+import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -85,6 +86,9 @@ import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
+import org.catrobat.paintroid.tools.implementation.CLICK_TIMEOUT_MILLIS
+import org.catrobat.paintroid.tools.implementation.CONSTANT_3
 import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.ui.LayerAdapter
@@ -112,6 +116,7 @@ open class MainActivityPresenter(
     override val context: Context,
     private val internalMemoryPath: File
 ) : MainActivityContracts.Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
+    private var downTimer: CountDownTimer? = null
     private var layerAdapter: LayerAdapter? = null
     private var resetPerspectiveAfterNextCommand = false
     private var isExport = false
@@ -420,7 +425,7 @@ open class MainActivityPresenter(
                     return
                 }
                 setTool(ToolType.IMPORTPNG)
-                toolController.switchTool(ToolType.IMPORTPNG, false)
+                toolController.switchTool(ToolType.IMPORTPNG)
                 interactor.loadFile(
                     this,
                     LOAD_IMAGE_IMPORT_PNG,
@@ -532,7 +537,8 @@ open class MainActivityPresenter(
         } else if (model.isFullscreen) {
             exitFullscreenClicked()
         } else if (!toolController.isDefaultTool) {
-            switchTool(ToolType.BRUSH, true)
+            if (toolController.currentTool?.toolType == ToolType.CLIP) toolController.adjustClippingToolOnBackPressed(true)
+            switchTool(ToolType.BRUSH)
         } else {
             showSecurityQuestionBeforeExit()
         }
@@ -757,21 +763,44 @@ open class MainActivityPresenter(
         if (toolController.toolType === toolType && toolController.hasToolOptionsView()) {
             toolController.toggleToolOptionsView()
         } else {
+            checkForImplicitToolApplication()
             switchTool(toolType)
         }
         idlingResource.decrement()
     }
 
-    private fun switchTool(type: ToolType, backPressed: Boolean = false) {
+    private fun checkForImplicitToolApplication() {
+        val currentTool = toolController.currentTool
+        val currentToolType = currentTool?.toolType
+        if (toolController.toolList.contains(currentToolType)) {
+            val toolToApply = currentTool as BaseToolWithShape
+            toolToApply.onClickOnButton()
+        } else if (currentToolType == ToolType.CLIP) (currentTool as ClippingTool).onClickOnButton()
+    }
+
+    private fun switchTool(type: ToolType) {
         navigator.setMaskFilterToNull()
         view.hideKeyboard()
-        setTool(type)
-        toolController.switchTool(type, backPressed)
-        if (type === ToolType.IMPORTPNG) {
-            showImportDialog()
-        } else if (type == ToolType.CLIP) {
-            (toolController.currentTool as ClippingTool).copyBitmapOfCurrentLayer()
-        }
+        downTimer = object :
+            CountDownTimer(
+                if (toolController.toolList.contains(toolController.currentTool?.toolType)) CLICK_TIMEOUT_MILLIS else 0L,
+                CLICK_TIMEOUT_MILLIS / CONSTANT_3
+            ) {
+            override fun onTick(millisUntilFinished: Long) {
+                workspace.invalidate()
+            }
+            override fun onFinish() {
+                downTimer?.cancel()
+                workspace.invalidate()
+                setTool(type)
+                toolController.switchTool(type)
+                if (type === ToolType.IMPORTPNG) {
+                    showImportDialog()
+                } else if (type == ToolType.CLIP) {
+                    (toolController.currentTool as ClippingTool).copyBitmapOfCurrentLayer()
+                }
+            }
+        }.start()
     }
 
     private fun setTool(toolType: ToolType) {
@@ -799,7 +828,7 @@ open class MainActivityPresenter(
         when (requestCode) {
             LOAD_IMAGE_IMPORT_PNG -> {
                 setTool(ToolType.IMPORTPNG)
-                toolController.switchTool(ToolType.IMPORTPNG, false)
+                toolController.switchTool(ToolType.IMPORTPNG)
                 interactor.loadFile(
                     this,
                     LOAD_IMAGE_IMPORT_PNG,
