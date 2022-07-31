@@ -39,9 +39,10 @@ class MainActivityInteractor(private val idlingResource: CountingIdlingResource)
         callback: SaveImageCallback,
         requestCode: Int,
         workspace: Workspace,
+        uri: Uri?,
         context: Context
     ) {
-        SaveImage(callback, requestCode, workspace, null, true, context, scopeIO, idlingResource).execute()
+        SaveImage(callback, requestCode, workspace, uri, true, context, scopeIO, idlingResource).execute()
     }
 
     override fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String) {

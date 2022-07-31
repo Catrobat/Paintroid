@@ -320,7 +320,6 @@ open class MainActivityPresenter(
         FileIO.filename = "image"
         FileIO.compressFormat = Bitmap.CompressFormat.PNG
         FileIO.fileType = FileIO.FileType.PNG
-        FileIO.isCatrobatImage = false
         FileIO.deleteTempFile(internalMemoryPath)
         val initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
         commandManager.setInitialStateCommand(initCommand)
@@ -496,7 +495,10 @@ open class MainActivityPresenter(
                         checkForDefaultFilename()
                     }
                     PERMISSION_EXTERNAL_STORAGE_SAVE_COPY -> {
-                        saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT)
+                        saveCopyConfirmClicked(
+                            SAVE_IMAGE_DEFAULT,
+                            FileIO.storeImageUri
+                        )
                         checkForDefaultFilename()
                     }
                     PERMISSION_REQUEST_CODE_REPLACE_PICTURE ->
@@ -550,10 +552,10 @@ open class MainActivityPresenter(
         interactor.saveImage(this, requestCode, workspace, uri, context)
     }
 
-    override fun saveCopyConfirmClicked(requestCode: Int) {
+    override fun saveCopyConfirmClicked(requestCode: Int, uri: Uri?) {
         checkIfClippingToolNeedsAdjustment()
         view.refreshDrawingSurface()
-        interactor.saveCopy(this, requestCode, workspace, context)
+        interactor.saveCopy(this, requestCode, workspace, uri, context)
     }
 
     override fun undoClicked() {
@@ -862,6 +864,13 @@ open class MainActivityPresenter(
         if (result.model != null) {
             commandManager.loadCommandsCatrobatImage(result.model)
             resetPerspectiveAfterNextCommand = true
+            FileIO.fileType = FileIO.FileType.CATROBAT
+            if (uri != null) {
+                val name = getFileName(uri)
+                if (name != null) {
+                    FileIO.filename = name.substring(0, name.length - FileIO.fileType.toExtension().length)
+                }
+            }
             return
         }
         if (result.toBeScaled) {
@@ -892,15 +901,13 @@ open class MainActivityPresenter(
                         if (name.endsWith(FileIO.FileType.JPG.value) || name.endsWith("jpeg")) {
                             FileIO.compressFormat = Bitmap.CompressFormat.JPEG
                             FileIO.fileType = FileIO.FileType.JPG
-                            FileIO.isCatrobatImage = false
                         } else if (name.endsWith(FileIO.FileType.PNG.value)) {
                             FileIO.compressFormat = Bitmap.CompressFormat.PNG
                             FileIO.fileType = FileIO.FileType.PNG
-                            FileIO.isCatrobatImage = false
                         } else {
                             FileIO.fileType = FileIO.FileType.ORA
-                            FileIO.isCatrobatImage = true
                         }
+                        FileIO.filename = name.substring(0, name.length - FileIO.fileType.toExtension().length)
                     }
                 }
             }

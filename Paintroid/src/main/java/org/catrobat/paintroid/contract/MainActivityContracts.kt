@@ -248,7 +248,7 @@ interface MainActivityContracts {
 
         fun saveImageConfirmClicked(requestCode: Int, uri: Uri?)
 
-        fun saveCopyConfirmClicked(requestCode: Int)
+        fun saveCopyConfirmClicked(requestCode: Int, uri: Uri?)
 
         fun undoClicked()
 
@@ -311,7 +311,13 @@ interface MainActivityContracts {
     }
 
     interface Interactor {
-        fun saveCopy(callback: SaveImageCallback, requestCode: Int, workspace: Workspace, context: Context)
+        fun saveCopy(
+            callback: SaveImageCallback,
+            requestCode: Int,
+            workspace: Workspace,
+            uri: Uri?,
+            context: Context
+        )
 
         fun createFile(callback: CreateFileCallback, requestCode: Int, filename: String)
 
