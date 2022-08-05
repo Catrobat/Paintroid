@@ -46,5 +46,5 @@ If you feel confident that your tech stack matches our requirements, then we inv
 
 ## Issues
 You found a bug? 
-1. Perfect, please check the [open issues on Jira](https://jira.catrob.at/browse/PAINTROID-466?jql=project%20%3D%20PAINTROID%20AND%20issuetype%20%3D%20Bug%20AND%20resolution%20%3D%20Unresolved%20ORDER%20BY%20priority%20DESC%2C%20key%20DESC) first to avoid duplicate tickets!
+1. Perfect, please check the [open issues on Jira](https://jira.catrob.at/projects/PAINTROID/issues/?filter=allopenissues) first to avoid duplicate tickets!
 2. If the bug has not been reported yet, please report it using the [issue template on Jira](https://jira.catrob.at/secure/CreateIssue.jspa?pid=12001&issuetype=1).
