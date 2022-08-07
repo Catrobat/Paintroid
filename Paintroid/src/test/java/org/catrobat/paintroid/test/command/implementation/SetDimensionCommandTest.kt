@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,28 +16,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.command.implementation
 
-package org.catrobat.paintroid.test.command.implementation;
+import android.graphics.Canvas
+import org.catrobat.paintroid.model.LayerModel
+import org.catrobat.paintroid.command.implementation.SetDimensionCommand
+import org.hamcrest.CoreMatchers
+import org.junit.Assert
+import org.junit.Test
 
-import android.graphics.Canvas;
+class SetDimensionCommandTest {
+    @Test
+    fun testRun() {
+        val layerModel = LayerModel()
+        val command = SetDimensionCommand(3, 4)
+        command.run(Canvas(), layerModel)
 
-import org.catrobat.paintroid.command.implementation.SetDimensionCommand;
-import org.catrobat.paintroid.model.LayerModel;
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-public class SetDimensionCommandTest {
-
-	@Test
-	public void testRun() {
-		LayerModel layerModel = new LayerModel();
-		SetDimensionCommand command = new SetDimensionCommand(3, 4);
-
-		command.run(new Canvas(), layerModel);
-
-		assertThat(layerModel.getWidth(), is(3));
-		assertThat(layerModel.getHeight(), is(4));
-	}
+        Assert.assertThat(layerModel.width, CoreMatchers.`is`(3))
+        Assert.assertThat(layerModel.height, CoreMatchers.`is`(4))
+    }
 }
