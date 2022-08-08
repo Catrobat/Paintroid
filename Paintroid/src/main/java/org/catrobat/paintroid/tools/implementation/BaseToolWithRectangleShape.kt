@@ -87,12 +87,12 @@ private const val BUNDLE_BOX_HEIGHT = "BOX_HEIGHT"
 private const val BUNDLE_BOX_ROTATION = "BOX_ROTATION"
 
 abstract class BaseToolWithRectangleShape(
-    contextCallback: ContextCallback,
-    toolOptionsViewController: ToolOptionsViewController,
-    toolPaint: ToolPaint,
-    workspace: Workspace,
-    idlingResource: CountingIdlingResource,
-    commandManager: CommandManager
+    contextCallback: ContextCallback?,
+    toolOptionsViewController: ToolOptionsViewController?,
+    toolPaint: ToolPaint?,
+    workspace: Workspace?,
+    idlingResource: CountingIdlingResource?,
+    commandManager: CommandManager?
 ) : BaseToolWithShape(
     contextCallback,
     toolOptionsViewController,
