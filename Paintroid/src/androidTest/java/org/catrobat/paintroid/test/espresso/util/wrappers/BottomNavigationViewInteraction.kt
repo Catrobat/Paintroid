@@ -33,7 +33,8 @@ class BottomNavigationViewInteraction private constructor() :
     CustomViewInteraction(Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_bottom_navigation))) {
     fun onToolsClicked(): ViewInteraction {
         return Espresso.onView(
-            Matchers.allOf(ViewMatchers.withId(R.id.icon),
+            Matchers.allOf(
+                ViewMatchers.withId(R.id.icon),
                 ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.action_tools))
             )
         ).perform(ViewActions.click())
@@ -41,7 +42,8 @@ class BottomNavigationViewInteraction private constructor() :
 
     fun onCurrentClicked(): ViewInteraction {
         return Espresso.onView(
-            Matchers.allOf(ViewMatchers.withId(R.id.icon),
+            Matchers.allOf(
+                ViewMatchers.withId(R.id.icon),
                 ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.action_current_tool))
             )
         ).perform(ViewActions.click())
@@ -49,7 +51,8 @@ class BottomNavigationViewInteraction private constructor() :
 
     fun checkShowsCurrentTool(toolType: ToolType): ViewInteraction {
         Espresso.onView(
-            Matchers.allOf(ViewMatchers.withId(R.id.icon),
+            Matchers.allOf(
+                ViewMatchers.withId(R.id.icon),
                 ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.action_current_tool))
             )
         ).check(ViewAssertions.matches(UiMatcher.withDrawable(toolType.drawableResource)))
@@ -59,7 +62,8 @@ class BottomNavigationViewInteraction private constructor() :
 
     fun onColorClicked(): ViewInteraction {
         return Espresso.onView(
-            Matchers.allOf(ViewMatchers.withId(R.id.icon),
+            Matchers.allOf(
+                ViewMatchers.withId(R.id.icon),
                 ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.action_color_picker))
             )
         ).perform(ViewActions.click())
@@ -67,7 +71,8 @@ class BottomNavigationViewInteraction private constructor() :
 
     fun onLayersClicked(): ViewInteraction {
         return Espresso.onView(
-            Matchers.allOf(ViewMatchers.withId(R.id.icon),
+            Matchers.allOf(
+                ViewMatchers.withId(R.id.icon),
                 ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.action_layers))
             )
         ).perform(ViewActions.click())
@@ -75,8 +80,6 @@ class BottomNavigationViewInteraction private constructor() :
 
     companion object {
         @JvmStatic
-		fun onBottomNavigationView(): BottomNavigationViewInteraction {
-            return BottomNavigationViewInteraction()
-        }
+        fun onBottomNavigationView(): BottomNavigationViewInteraction { return BottomNavigationViewInteraction() }
     }
 }
