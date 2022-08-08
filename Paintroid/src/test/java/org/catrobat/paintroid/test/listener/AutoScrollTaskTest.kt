@@ -61,14 +61,17 @@ class AutoScrollTaskTest {
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyInt(),
-                ArgumentMatchers.anyInt()))
+                ArgumentMatchers.anyInt()
+            )
+        )
             .thenReturn(autoScrollDirection)
         autoScrollTask?.run()
         Mockito.verify(callback)?.getToolAutoScrollDirection(
             ArgumentMatchers.anyFloat(),
             ArgumentMatchers.anyFloat(),
             ArgumentMatchers.anyInt(),
-            ArgumentMatchers.anyInt())
+            ArgumentMatchers.anyInt()
+        )
         ArgumentMatchers.eq(autoScrollTask)?.let { Mockito.verify(handler)?.postDelayed(it, ArgumentMatchers.anyLong()) }
     }
 
@@ -166,7 +169,9 @@ class AutoScrollTaskTest {
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyInt(),
-                ArgumentMatchers.anyInt()))
+                ArgumentMatchers.anyInt()
+            )
+        )
             .thenReturn(autoScrollDirection)
         autoScrollTask?.start()
         ArgumentMatchers.eq(autoScrollTask)?.let { Mockito.verify(handler)?.postDelayed(it, ArgumentMatchers.anyLong()) }
@@ -184,7 +189,9 @@ class AutoScrollTaskTest {
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyInt(),
-                ArgumentMatchers.anyInt()))
+                ArgumentMatchers.anyInt()
+            )
+        )
             .thenReturn(autoScrollDirection)
         autoScrollTask.start()
         autoScrollTask.start()
@@ -204,8 +211,7 @@ class AutoScrollTaskTest {
 
     @Test
     fun testStartIgnoredTools() {
-        Mockito.`when`(callback?.getCurrentToolType())
-            .thenReturn(ToolType.FILL, ToolType.TRANSFORM)
+        Mockito.`when`(callback?.getCurrentToolType()).thenReturn(ToolType.FILL, ToolType.TRANSFORM)
         autoScrollTask?.setEventPoint(3f, 5f)
         autoScrollTask?.setViewDimensions(39, 42)
         autoScrollTask?.start()
@@ -227,7 +233,9 @@ class AutoScrollTaskTest {
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyInt(),
-                ArgumentMatchers.anyInt()))
+                ArgumentMatchers.anyInt()
+            )
+        )
             .thenReturn(autoScrollDirection)
         autoScrollTask?.start()
         autoScrollTask?.stop()

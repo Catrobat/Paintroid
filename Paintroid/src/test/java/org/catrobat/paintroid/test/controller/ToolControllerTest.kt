@@ -77,13 +77,15 @@ class ToolControllerTest {
             workspace,
             idlingResource,
             toolPaint,
-            contextCallback)
+            contextCallback
+        )
     }
 
     @Test
     fun testSetUp() {
         Mockito.verifyZeroInteractions(toolReference, toolOptionsViewController, toolFactory,
-                                       commandManager, workspace, toolPaint, contextCallback)
+                                       commandManager, workspace, toolPaint, contextCallback
+        )
         Assert.assertNotNull(toolController)
     }
 
@@ -115,7 +117,8 @@ class ToolControllerTest {
             ToolType.COLORCHOOSER,
             ToolType.HAND,
             ToolType.WATERCOLOR,
-            ToolType.SMUDGE)
+            ToolType.SMUDGE
+        )
         Mockito.`when`(toolReference.tool).thenReturn(tool)
 
         Assert.assertFalse(toolController.isDefaultTool)

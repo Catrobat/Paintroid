@@ -66,7 +66,8 @@ class LayerPresenterTest {
 
     private fun createPresenter() {
         layerPresenter = LayerPresenter(layerModel, listItemDragHandler, layerMenuViewHolder,
-                                        commandManager, commandFactory, navigator)
+                                        commandManager, commandFactory, navigator
+        )
         layerPresenter.setAdapter(layerAdapter)
     }
 
@@ -74,7 +75,8 @@ class LayerPresenterTest {
     fun testSetUp() {
         createPresenter()
         Mockito.verifyZeroInteractions(layerAdapter, layerMenuViewHolder, listItemDragHandler,
-            commandManager, commandFactory, navigator)
+            commandManager, commandFactory, navigator
+        )
     }
 
     @Test
@@ -93,7 +95,9 @@ class LayerPresenterTest {
         Mockito.verify(layerViewHolder).updateImageView(firstLayerBitmap)
         Mockito.verify(layerViewHolder).setLayerVisibilityCheckbox(false)
         Mockito.verifyNoMoreInteractions(layerViewHolder)
-        Mockito.verifyZeroInteractions(commandManager, commandFactory, layerAdapter, listItemDragHandler, layerMenuViewHolder)
+        Mockito.verifyZeroInteractions(commandManager, commandFactory, layerAdapter,
+                                       listItemDragHandler, layerMenuViewHolder
+        )
     }
 
     @Test
@@ -114,7 +118,9 @@ class LayerPresenterTest {
         Mockito.verify(layerViewHolder).updateImageView(secondLayer.transparentBitmap)
         Mockito.verify(layerViewHolder).setLayerVisibilityCheckbox(false)
         Mockito.verifyNoMoreInteractions(layerViewHolder)
-        Mockito.verifyZeroInteractions(firstLayer, commandManager, layerAdapter, listItemDragHandler, layerMenuViewHolder)
+        Mockito.verifyZeroInteractions(firstLayer, commandManager, layerAdapter,
+                                       listItemDragHandler, layerMenuViewHolder
+        )
     }
 
     @Test
@@ -233,7 +239,9 @@ class LayerPresenterTest {
         layerModel.addLayerAt(0, Mockito.mock(Layer::class.java))
         createPresenter()
         layerPresenter.removeLayer()
-        Mockito.verifyZeroInteractions(commandManager, commandFactory, layerMenuViewHolder, layerAdapter, listItemDragHandler)
+        Mockito.verifyZeroInteractions(commandManager, commandFactory, layerMenuViewHolder,
+                                       layerAdapter, listItemDragHandler
+        )
     }
 
     @Test
@@ -259,7 +267,9 @@ class LayerPresenterTest {
         layerModel.addLayerAt(0, Mockito.mock(Layer::class.java))
         createPresenter()
         layerPresenter.onStartDragging(0, view)
-        Mockito.verifyZeroInteractions(listItemDragHandler, commandManager, commandFactory, layerMenuViewHolder, layerAdapter)
+        Mockito.verifyZeroInteractions(listItemDragHandler, commandManager, commandFactory,
+                                       layerMenuViewHolder, layerAdapter
+        )
     }
 
     @Test
@@ -270,7 +280,9 @@ class LayerPresenterTest {
         layerModel.addLayerAt(1, Mockito.mock(Layer::class.java))
         createPresenter()
         layerPresenter.onStartDragging(2, view)
-        Mockito.verifyZeroInteractions(listItemDragHandler, commandManager, commandFactory, layerMenuViewHolder, layerAdapter)
+        Mockito.verifyZeroInteractions(listItemDragHandler, commandManager, commandFactory,
+                                       layerMenuViewHolder, layerAdapter
+        )
     }
 
     @Test

@@ -68,6 +68,7 @@ class DrawingSurfaceListenerTest {
     private val firstMovementTimestamp: Long = 150
     private val secondMovementTimestamp: Long = 170
     private val actionUpTimestamp: Long = 175
+
     @Before
     fun setUp() {
         Mockito.`when`(callback?.getCurrentTool()).thenReturn(currentTool)
@@ -142,11 +143,13 @@ class DrawingSurfaceListenerTest {
     fun testOnTouchDownIgnoredIfInsideDrawerLeftEdge() {
         val drawingSurface = Mockito.mock(DrawingSurface::class.java)
         val motionEvent = Mockito.mock(MotionEvent::class.java)
+
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_DOWN)
         Mockito.`when`(motionEvent.x).thenReturn(20 * DISPLAY_DENSITY - 1)
         Mockito.`when`(motionEvent.y).thenReturn(5f)
-        val onTouchResult = drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
-        Assert.assertFalse(onTouchResult)
+
+        val onTouchResult = drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
+        if (onTouchResult != null) { Assert.assertFalse(onTouchResult) }
         Mockito.verifyNoMoreInteractions(autoScrollTask, currentTool)
     }
 
@@ -154,10 +157,12 @@ class DrawingSurfaceListenerTest {
     fun testOnTouchDownIgnoredIfInsideDrawerRightEdge() {
         val drawingSurface = Mockito.mock(DrawingSurface::class.java)
         val motionEvent = Mockito.mock(MotionEvent::class.java)
+
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_DOWN)
         Mockito.`when`(motionEvent.x).thenReturn(67f)
         Mockito.`when`(motionEvent.y).thenReturn(5f)
         Mockito.`when`(drawingSurface.width).thenReturn((67 + 20 * DISPLAY_DENSITY - 1).toInt())
+
         val onTouchResult = drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
         Assert.assertFalse(onTouchResult)
         Mockito.verifyNoMoreInteractions(autoScrollTask, currentTool)
@@ -186,13 +191,16 @@ class DrawingSurfaceListenerTest {
     fun testOnTouchMoveInDrawModeAfterPinch() {
         val drawingSurface = Mockito.mock(DrawingSurface::class.java)
         val motionEvent = Mockito.mock(MotionEvent::class.java)
+
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE)
         Mockito.`when`(motionEvent.x).thenReturn(5f)
         Mockito.`when`(motionEvent.y).thenReturn(3f)
+
         Mockito.`when`(motionEvent.pointerCount).thenReturn(2, 1)
         drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
         drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
         drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
+
         Mockito.verify(currentTool, Mockito.never())?.handleMove(ArgumentMatchers.any(PointF::class.java))
         Mockito.verify(autoScrollTask, Mockito.never())
             ?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
@@ -204,13 +212,16 @@ class DrawingSurfaceListenerTest {
     fun testOnTouchMoveInPinchMode() {
         val drawingSurface = Mockito.mock(DrawingSurface::class.java)
         val motionEvent = Mockito.mock(MotionEvent::class.java)
+
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE)
         Mockito.`when`(motionEvent.x).thenReturn(7f)
         Mockito.`when`(motionEvent.y).thenReturn(11f)
         Mockito.`when`(motionEvent.pointerCount).thenReturn(2)
+
         drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
         drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
         drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
+
         Mockito.verify(currentTool, Mockito.never())?.handleMove(ArgumentMatchers.any(PointF::class.java))
         Mockito.verify(autoScrollTask, Mockito.never())
             ?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
@@ -317,9 +328,11 @@ class DrawingSurfaceListenerTest {
         Mockito.verify(currentTool, Mockito.never())?.handleDown(ArgumentMatchers.any(PointF::class.java))
         Mockito.verify(currentTool, Mockito.never())?.handleMove(ArgumentMatchers.any(PointF::class.java))
         Mockito.verify(autoScrollTask, Mockito.never())
-            ?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
+            ?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat()
+            )
         Mockito.verify(autoScrollTask, Mockito.never())
-            ?.setViewDimensions(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt())
+            ?.setViewDimensions(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt()
+            )
         Mockito.verify(callback)?.translatePerspective(10f, -10f)
         Mockito.verify(callback, Mockito.never())?.multiplyPerspectiveScale(ArgumentMatchers.anyFloat())
     }
@@ -415,15 +428,18 @@ class DrawingSurfaceListenerTest {
             firstMovementPositionX,
             firstMovementPositionY,
             drawingSurface,
-            firstMovementTimestamp)
+            firstMovementTimestamp
+        )
         triggerMovementEventWithTimestamp(
             secondMovementPositionX,
             secondMovementPositionY,
             drawingSurface,
-            secondMovementTimestamp)
+            secondMovementTimestamp
+        )
         triggerTouchUpEvent(actionUpTimestamp, drawingSurface)
         Mockito.verify(currentTool)
-            ?.handleUp(PointFMatcher.pointFEquals(firstMovementPositionX, firstMovementPositionY))
+            ?.handleUp(PointFMatcher.pointFEquals(firstMovementPositionX, firstMovementPositionY)
+            )
     }
 
     @Test
@@ -435,17 +451,21 @@ class DrawingSurfaceListenerTest {
             firstMovementPositionX,
             firstMovementPositionY,
             drawingSurface,
-            firstMovementTimestamp)
+            firstMovementTimestamp
+        )
         triggerMovementEventWithTimestamp(
             secondMovementPositionX,
             secondMovementPositionY,
             drawingSurface,
-            secondMovementTimestamp)
+            secondMovementTimestamp
+        )
         triggerTouchUpEvent(tooLateTimestamp, drawingSurface)
         Mockito.verify(currentTool)?.handleUp(
             PointFMatcher.pointFEquals(
                 actionUpMovementPositionX,
-                actionUpMovementPositionY))
+                actionUpMovementPositionY
+            )
+        )
     }
 
     @Test
@@ -457,17 +477,20 @@ class DrawingSurfaceListenerTest {
             firstMovementPositionX,
             firstMovementPositionY,
             drawingSurface,
-            firstMovementTimestamp)
+            firstMovementTimestamp
+        )
         triggerMovementEventWithTimestamp(
             secondMovementPositionX,
             secondMovementPositionY,
             drawingSurface,
-            secondMovementTimestamp)
+            secondMovementTimestamp
+        )
         triggerTouchUpEvent(muchLaterTimestamp, drawingSurface)
         Mockito.verify(currentTool)?.handleUp(
             PointFMatcher.pointFEquals(
                 actionUpMovementPositionX,
-                actionUpMovementPositionY))
+                actionUpMovementPositionY)
+        )
     }
 
     @Test
@@ -480,15 +503,18 @@ class DrawingSurfaceListenerTest {
             farAwayPositionX,
             farAwayPositionY,
             drawingSurface,
-            firstMovementTimestamp)
+            firstMovementTimestamp
+        )
         triggerMovementEventWithTimestamp(
             secondMovementPositionX,
             secondMovementPositionY,
             drawingSurface,
-            secondMovementTimestamp)
+            secondMovementTimestamp
+        )
         triggerTouchUpEvent(actionUpTimestamp, drawingSurface)
         Mockito.verify(currentTool)?.handleUp(
-            PointFMatcher.pointFEquals(actionUpMovementPositionX, actionUpMovementPositionY))
+            PointFMatcher.pointFEquals(actionUpMovementPositionX, actionUpMovementPositionY)
+        )
     }
 
     companion object {

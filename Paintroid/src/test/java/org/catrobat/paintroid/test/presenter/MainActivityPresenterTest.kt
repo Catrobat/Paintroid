@@ -146,7 +146,8 @@ class MainActivityPresenterTest {
             activity, view, model, workspace, navigator,
             interactor, topBarViewHolder, bottomBarViewHolder, drawerLayoutViewHolder,
             bottomNavigationViewHolder, commandFactory, commandManager, perspective,
-            toolController, sharedPreferences, idlingResource, context, internalMemoryPath)
+            toolController, sharedPreferences, idlingResource, context, internalMemoryPath
+        )
     }
 
     @Test
@@ -154,7 +155,8 @@ class MainActivityPresenterTest {
         Mockito.verifyZeroInteractions(
             view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
             drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
-            bottomNavigationViewHolder, toolController, sharedPreferences, internalMemoryPath)
+            bottomNavigationViewHolder, toolController, sharedPreferences, internalMemoryPath
+        )
     }
 
     @Test
@@ -260,9 +262,9 @@ class MainActivityPresenterTest {
         presenter.saveCopyClicked(false)
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-            sharedPreferences.preferenceImageNumber,
-            false)
-        presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+            sharedPreferences.preferenceImageNumber, false)
+        presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+        )
         Mockito.verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, null, context)
         Mockito.verifyNoMoreInteractions(interactor)
     }
@@ -272,9 +274,9 @@ class MainActivityPresenterTest {
         presenter.saveImageClicked()
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE,
-            sharedPreferences.preferenceImageNumber,
-            false)
+            sharedPreferences.preferenceImageNumber, false)
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
+
         Mockito.verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, null, context)
         Mockito.verifyNoMoreInteractions(interactor)
     }
@@ -381,7 +383,8 @@ class MainActivityPresenterTest {
         Mockito.`when`(intent.data).thenReturn(uri)
         presenter.handleActivityResult(REQUEST_CODE_LOAD_PICTURE, Activity.RESULT_OK, intent)
         Mockito.verify(interactor)
-            .loadFile(presenter, LOAD_IMAGE_DEFAULT, uri, context, false, workspace)
+            .loadFile(presenter, LOAD_IMAGE_DEFAULT, uri, context, false, workspace
+            )
     }
 
     @Test
@@ -571,7 +574,8 @@ class MainActivityPresenterTest {
             isOpenedFromCatroid = false,
             isOpenedFromFormulaEditorInCatroid = false,
             savedPictureUri = null,
-            cameraImageUri = null)
+            cameraImageUri = null
+        )
         Mockito.verify(navigator).restoreFragmentListeners()
     }
 
@@ -583,7 +587,8 @@ class MainActivityPresenterTest {
             isFullscreen = false, isSaved = false, isOpenedFromCatroid = false,
             isOpenedFromFormulaEditorInCatroid = false,
             savedPictureUri = savedPictureUri,
-            cameraImageUri = cameraImageUri)
+            cameraImageUri = cameraImageUri
+        )
 
         Mockito.verify(model).isFullscreen = false
         Mockito.verify(model).isSaved = false
@@ -603,7 +608,8 @@ class MainActivityPresenterTest {
             isOpenedFromCatroid = true,
             isOpenedFromFormulaEditorInCatroid = true,
             savedPictureUri = savedPictureUri,
-            cameraImageUri = cameraImageUri)
+            cameraImageUri = cameraImageUri
+        )
         Mockito.verify(model).isFullscreen = true
         Mockito.verify(model).isSaved = true
         Mockito.verify(model).isOpenedFromCatroid = true
@@ -620,7 +626,8 @@ class MainActivityPresenterTest {
             isOpenedFromCatroid = false,
             isOpenedFromFormulaEditorInCatroid = false,
             savedPictureUri = null,
-            cameraImageUri = null)
+            cameraImageUri = null
+        )
         Mockito.verify(toolController).resetToolInternalStateOnImageLoaded()
     }
 
@@ -758,7 +765,8 @@ class MainActivityPresenterTest {
         Mockito.verifyZeroInteractions(
             view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
             drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
-            toolController)
+            toolController
+        )
     }
 
     @Test
@@ -866,7 +874,8 @@ class MainActivityPresenterTest {
         presenter.handleRequestPermissionsResult(
             PERMISSION_REQUEST_CODE_REPLACE_PICTURE, arrayOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE),
-            intArrayOf(PackageManager.PERMISSION_GRANTED))
+            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
         Mockito.verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
     }
 
@@ -876,7 +885,8 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true)
         presenter.handleRequestPermissionsResult(
             PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
@@ -886,24 +896,28 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false)
         presenter.handleRequestPermissionsResult(
             PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermissionRationaleDialog(
             PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_REQUEST_CODE_REPLACE_PICTURE)
+            permission, PERMISSION_REQUEST_CODE_REPLACE_PICTURE
+        )
     }
 
     @Test
     fun testHandlePermissionResultSavePermissionGranted() {
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE, arrayOf(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE), intArrayOf(PackageManager.PERMISSION_GRANTED))
+                Manifest.permission.WRITE_EXTERNAL_STORAGE), intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
         val uri = model.savedPictureUri
         Mockito.verify(interactor).saveImage(
             ArgumentMatchers.any(SaveImageCallback::class.java),
             ArgumentMatchers.eq(SAVE_IMAGE_DEFAULT),
             ArgumentMatchers.eq(workspace),
             ArgumentMatchers.eq(uri),
-            ArgumentMatchers.eq(context))
+            ArgumentMatchers.eq(context)
+        )
     }
 
     @Test
@@ -912,7 +926,8 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true)
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
@@ -921,10 +936,12 @@ class MainActivityPresenterTest {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false)
         presenter.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE, permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            PERMISSION_EXTERNAL_STORAGE_SAVE, permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermissionRationaleDialog(
             PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_EXTERNAL_STORAGE_SAVE)
+            permission, PERMISSION_EXTERNAL_STORAGE_SAVE
+        )
     }
 
     @Test
@@ -932,13 +949,15 @@ class MainActivityPresenterTest {
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, arrayOf(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            intArrayOf(PackageManager.PERMISSION_GRANTED))
+            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
         Mockito.verify(interactor).saveCopy(
             ArgumentMatchers.any(SaveImageCallback::class.java),
             ArgumentMatchers.eq(SAVE_IMAGE_DEFAULT),
             ArgumentMatchers.eq(workspace),
             ArgumentMatchers.eq<Uri?>(null),
-            ArgumentMatchers.eq(context))
+            ArgumentMatchers.eq(context)
+        )
     }
 
     @Test
@@ -947,10 +966,12 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false)
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermissionRationaleDialog(
             PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+        )
     }
 
     @Test
@@ -959,7 +980,8 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true)
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
@@ -968,7 +990,8 @@ class MainActivityPresenterTest {
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, arrayOf(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            intArrayOf(PackageManager.PERMISSION_GRANTED))
+            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
         Mockito.verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace, FileIO.storeImageUri, context)
     }
 
@@ -978,10 +1001,12 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false)
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermissionRationaleDialog(
             PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
+            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
+        )
     }
 
     @Test
@@ -990,7 +1015,8 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true)
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
@@ -1000,10 +1026,12 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false)
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermissionRationaleDialog(
             PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
+            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
+        )
     }
 
     @Test
@@ -1012,7 +1040,8 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true)
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
@@ -1021,7 +1050,8 @@ class MainActivityPresenterTest {
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, arrayOf(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            intArrayOf(PackageManager.PERMISSION_GRANTED))
+            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
         Mockito.verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, FileIO.storeImageUri, context)
     }
 
@@ -1031,10 +1061,12 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false)
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermissionRationaleDialog(
             PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
+            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
+        )
     }
 
     @Test
@@ -1043,7 +1075,8 @@ class MainActivityPresenterTest {
         Mockito.`when`(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true)
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-            permission, intArrayOf(PackageManager.PERMISSION_DENIED))
+            permission, intArrayOf(PackageManager.PERMISSION_DENIED)
+        )
         Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
@@ -1052,7 +1085,8 @@ class MainActivityPresenterTest {
         presenter.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, arrayOf(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            intArrayOf(PackageManager.PERMISSION_GRANTED))
+            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
         Mockito.verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace, FileIO.storeImageUri, context)
     }
 
@@ -1060,31 +1094,36 @@ class MainActivityPresenterTest {
     fun testHandlePermissionResultWhenStoragePermissionGrantedAndRequestCodeUnknownThenCallBaseHandle() {
         presenter.handleRequestPermissionsResult(100,
             arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-            intArrayOf(PackageManager.PERMISSION_GRANTED))
+            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
         Mockito.verify(view).superHandleRequestPermissionsResult(100,
             arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-            intArrayOf(PackageManager.PERMISSION_GRANTED))
+            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
     }
 
     @Test
     fun testHandlePermissionResultWhenCameraPermissionGrantedAndRequestCodeUnknownThenCallBaseHandle() {
         presenter.handleRequestPermissionsResult(123, arrayOf(Manifest.permission.CAMERA),
-            intArrayOf(PackageManager.PERMISSION_GRANTED))
+            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
         Mockito.verify(view).superHandleRequestPermissionsResult(123,
             arrayOf(Manifest.permission.CAMERA),
-            intArrayOf(PackageManager.PERMISSION_GRANTED))
+            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
     }
 
     @Test
     fun testHandlePermissionResultWhenMultiplePermissionsThenCallBaseHandle() {
         presenter.handleRequestPermissionsResult(456, arrayOf(
                 Manifest.permission.CAMERA,
-                Manifest.permission.CAMERA),
-            intArrayOf(PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_DENIED))
+                Manifest.permission.CAMERA
+        ), intArrayOf(PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_DENIED))
         Mockito.verify(view).superHandleRequestPermissionsResult(
             456,
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.CAMERA),
-            intArrayOf(PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_DENIED))
+            intArrayOf(PackageManager.PERMISSION_GRANTED, PackageManager.PERMISSION_DENIED)
+        )
     }
 
     @Test
@@ -1092,7 +1131,8 @@ class MainActivityPresenterTest {
         presenter.saveCopyClicked(false)
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
         Mockito.verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace, null, context)
     }
@@ -1105,11 +1145,13 @@ class MainActivityPresenterTest {
         presenter.saveCopyClicked(false)
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
         Mockito.verify(navigator).askForPermission(
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+        )
     }
 
     @Test
@@ -1121,12 +1163,14 @@ class MainActivityPresenterTest {
         presenter.saveBeforeFinish()
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
         Mockito.verify(interactor).saveImage(
             ArgumentMatchers.any(MainActivityPresenter::class.java),
             ArgumentMatchers.anyInt(), ArgumentMatchers.any(Workspace::class.java),
-            ArgumentMatchers.eq(null as Uri?), ArgumentMatchers.any(Context::class.java))
+            ArgumentMatchers.eq(null as Uri?), ArgumentMatchers.any(Context::class.java)
+        )
     }
 
     @Test
@@ -1138,11 +1182,13 @@ class MainActivityPresenterTest {
         presenter.saveCopyClicked(false)
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
         Mockito.verify(navigator).askForPermission(
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+        )
     }
 
     @Test
@@ -1150,9 +1196,12 @@ class MainActivityPresenterTest {
         presenter.saveImageClicked()
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
-        Mockito.verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace, FileIO.storeImageUri, context)
+        Mockito.verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace,
+                                             FileIO.storeImageUri, context
+        )
     }
 
     @Test
@@ -1163,11 +1212,13 @@ class MainActivityPresenterTest {
         presenter.saveImageClicked()
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
         Mockito.verify(navigator).askForPermission(
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE)
+            PERMISSION_EXTERNAL_STORAGE_SAVE
+        )
     }
 
     @Test
@@ -1175,10 +1226,12 @@ class MainActivityPresenterTest {
         presenter.saveBeforeFinish()
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
         Mockito.verify(interactor)
-            .saveImage(presenter, SAVE_IMAGE_FINISH, workspace, FileIO.storeImageUri, context)
+            .saveImage(presenter, SAVE_IMAGE_FINISH, workspace, FileIO.storeImageUri, context
+            )
     }
 
     @Test
@@ -1189,11 +1242,13 @@ class MainActivityPresenterTest {
         presenter.saveBeforeFinish()
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
         Mockito.verify(navigator).askForPermission(
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
+            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
+        )
     }
 
     @Test
@@ -1201,10 +1256,12 @@ class MainActivityPresenterTest {
         presenter.saveBeforeNewImage()
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
         Mockito.verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY,
-                                             workspace, FileIO.storeImageUri, context)
+                                             workspace, FileIO.storeImageUri, context
+        )
     }
 
     @Test
@@ -1215,11 +1272,13 @@ class MainActivityPresenterTest {
         presenter.saveBeforeNewImage()
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
         Mockito.verify(navigator).askForPermission(
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
+            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
+        )
     }
 
     @Test
@@ -1227,9 +1286,12 @@ class MainActivityPresenterTest {
         with(presenter) { saveBeforeLoadImage() }
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
-        Mockito.verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace, FileIO.storeImageUri, context)
+        Mockito.verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace,
+                                             FileIO.storeImageUri, context
+        )
     }
 
     @Test
@@ -1240,11 +1302,13 @@ class MainActivityPresenterTest {
         presenter.saveBeforeLoadImage()
         Mockito.verify(navigator).showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-            sharedPreferences.preferenceImageNumber, false)
+            sharedPreferences.preferenceImageNumber, false
+        )
         presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
         Mockito.verify(navigator).askForPermission(
             arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
+            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
+        )
     }
 
     @Test
@@ -1404,7 +1468,8 @@ class MainActivityPresenterTest {
     @Test
     fun testShowScaleDialogWhenNotEnoughMemory() {
         val bmr =
-            BitmapReturnValue(workspace.bitmapLisOfAllLayers, workspace.bitmapOfAllLayers, true)
+            BitmapReturnValue(workspace.bitmapLisOfAllLayers, workspace.bitmapOfAllLayers, true
+            )
         presenter.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, null, bmr)
         Mockito.verify(navigator).showScaleImageRequestDialog(null, LOAD_IMAGE_IMPORT_PNG)
     }
