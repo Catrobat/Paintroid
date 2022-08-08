@@ -25,6 +25,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
@@ -90,6 +91,9 @@ import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment.MediaGalleryListener
+import java.io.FileOutputStream
+
+const val THREE = 3
 
 class MainActivityNavigator(
     private val mainActivity: MainActivity,
@@ -457,6 +461,20 @@ class MainActivityNavigator(
         showDialogFragmentSafely(dialog, SCALE_IMAGE_FRAGMENT_TAG)
     }
 
+    private fun checkIfImageUsesTransparency(): Boolean {
+        val bitmapOfAllLayers = mainActivity.workspace.bitmapOfAllLayers
+        if (bitmapOfAllLayers != null) {
+            for (x in 0 until bitmapOfAllLayers.width) {
+                for (y in 0 until bitmapOfAllLayers.height) {
+                    if (bitmapOfAllLayers.getPixel(x, y) == Color.TRANSPARENT) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
     @SuppressLint("VisibleForTests")
     override fun showSaveImageInformationDialogWhenStandalone(
         permissionCode: Int,
@@ -469,12 +487,28 @@ class MainActivityNavigator(
         }
         if (!isExport && mainActivity.model.isOpenedFromCatroid) {
             val name = getFileName(uri)
-            if (name != null && (name.endsWith(FileIO.FileType.JPG.value) || name.endsWith("jpeg"))) {
+            val usesAlpha = checkIfImageUsesTransparency()
+            if (name != null && (!usesAlpha || name.endsWith(FileIO.FileType.JPG.value) || name.endsWith("jpeg"))) {
                 FileIO.compressFormat = Bitmap.CompressFormat.JPEG
                 FileIO.fileType = FileIO.FileType.JPG
+                val out = FileOutputStream(name)
+                mainActivity.workspace.bitmapOfAllLayers?.compress(Bitmap.CompressFormat.JPEG, THREE, out)
+                out.close()
+                // var newName = name.dropLast(THREE)
+                // newName += "jpeg"
+                // val newFile = File(mainActivity.getExternalFilesDir(null)?.absolutePath, newName)
+                // val newUri: Uri? = Uri.fromFile(newFile)
+                // if (newUri != null) {
+                //     mainActivity.model.savedPictureUri = newUri
+                // }
             } else {
-                FileIO.compressFormat = Bitmap.CompressFormat.PNG
-                FileIO.fileType = FileIO.FileType.PNG
+                if (!usesAlpha) {
+                    FileIO.compressFormat = Bitmap.CompressFormat.JPEG
+                    FileIO.fileType = FileIO.FileType.JPG
+                } else {
+                    FileIO.compressFormat = Bitmap.CompressFormat.PNG
+                    FileIO.fileType = FileIO.FileType.PNG
+                }
             }
             FileIO.filename = "image$imageNumber"
             FileIO.catroidFlag = true

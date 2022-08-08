@@ -27,8 +27,10 @@ import android.graphics.Color
 import android.net.Uri
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBackUnconditionally
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsTestRule
@@ -37,6 +39,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.FileIO.createNewEmptyPictureFile
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
@@ -62,10 +65,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
 import java.io.IOException
-import java.lang.AssertionError
-import java.lang.NullPointerException
 import java.util.Objects
-import kotlin.collections.ArrayList
 
 private const val IMAGE_NAME = "testFile"
 
@@ -79,16 +79,19 @@ class OpenedFromPocketCodeWithImageTest {
     @get:Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
 
-    private var imageFile: File? = null
-    private var activity: MainActivity? = null
-    private var deletionFileList: ArrayList<File?>? = null
+    private lateinit var imageFile: File
+    private lateinit var activity: MainActivity
+    private lateinit var deletionFileList: ArrayList<File>
+    private lateinit var idlingResource: CountingIdlingResource
 
     @Before
     fun setUp() {
         deletionFileList = ArrayList()
         activity = launchActivityRule.activity
+        idlingResource = activity.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
         imageFile = getNewImageFile(IMAGE_NAME)
-        deletionFileList!!.add(imageFile)
+        deletionFileList.add(imageFile)
         launchActivityRule.activity.model.savedPictureUri = Uri.fromFile(imageFile)
         launchActivityRule.activity.model.isOpenedFromCatroid = true
         ToolBarViewInteraction.onToolBarView()
@@ -97,30 +100,57 @@ class OpenedFromPocketCodeWithImageTest {
 
     @After
     fun tearDown() {
-        for (file in deletionFileList!!) {
-            if (file != null && file.exists()) {
+        for (file in deletionFileList) {
+            if (file.exists()) {
                 assertTrue(file.delete())
             }
         }
+        IdlingRegistry.getInstance().unregister(idlingResource)
     }
 
     @Test
     fun testSave() {
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.FILL)
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        val lastModifiedBefore = imageFile!!.lastModified()
-        val fileSizeBefore = imageFile!!.length()
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.BRUSH)
+        activity.toolPaint.color = Color.TRANSPARENT
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        val lastModifiedBefore = imageFile.lastModified()
+        val fileSizeBefore = imageFile.length()
         pressBackUnconditionally()
         runBlocking {
             delay(500)
         }
         verifyImageFile(lastModifiedBefore, fileSizeBefore)
+        val correctEnding = imageFile.name.endsWith(".png")
+        assertTrue(correctEnding)
+    }
+
+    @Test
+    fun testSaveFilledImage() {
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.FILL)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        val lastModifiedBefore = imageFile.lastModified()
+        val fileSizeBefore = imageFile.length()
+        pressBackUnconditionally()
+        pressBackUnconditionally()
+        runBlocking {
+            delay(500)
+        }
+        verifyImageFileWhenFileEndingChanges(lastModifiedBefore, fileSizeBefore)
+        assertTrue(FileIO.compressFormat == Bitmap.CompressFormat.JPEG)
     }
 
     @Test
     fun testLoadWithoutChange() {
-        val lastModifiedBefore = imageFile!!.lastModified()
-        val fileSizeBefore = imageFile!!.length()
+        val lastModifiedBefore = imageFile.lastModified()
+        val fileSizeBefore = imageFile.length()
         createImageIntent()
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
@@ -137,8 +167,8 @@ class OpenedFromPocketCodeWithImageTest {
 
     @Test
     fun testLoadWithChange() {
-        val lastModifiedBefore = imageFile!!.lastModified()
-        val fileSizeBefore = imageFile!!.length()
+        val lastModifiedBefore = imageFile.lastModified()
+        val fileSizeBefore = imageFile.length()
         createImageIntent()
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
@@ -154,7 +184,7 @@ class OpenedFromPocketCodeWithImageTest {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
         pressBackUnconditionally()
-        verifyImageFile(lastModifiedBefore, fileSizeBefore)
+        verifyImageFileWhenFileEndingChanges(lastModifiedBefore, fileSizeBefore)
     }
 
     @Test
@@ -162,16 +192,16 @@ class OpenedFromPocketCodeWithImageTest {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         pressBackUnconditionally()
-        val lastModifiedBefore = imageFile!!.lastModified()
-        val fileSizeBefore = imageFile!!.length()
+        val lastModifiedBefore = imageFile.lastModified()
+        val fileSizeBefore = imageFile.length()
         assertThat(
             "Image modified",
-            imageFile!!.lastModified(),
+            imageFile.lastModified(),
             Matchers.equalTo(lastModifiedBefore)
         )
         assertThat(
             "Saved image length changed",
-            imageFile!!.length(),
+            imageFile.length(),
             Matchers.equalTo(fileSizeBefore)
         )
     }
@@ -197,12 +227,12 @@ class OpenedFromPocketCodeWithImageTest {
         canvas.drawColor(Color.WHITE)
         canvas.drawBitmap(bitmap, 0f, 0f, null)
         val uncompressedImageFile = File(
-            activity!!.getExternalFilesDir(null)!!.absolutePath,
+            activity.getExternalFilesDir(null)!!.absolutePath,
             "uncompressed_$IMAGE_NAME.jpg"
         )
         try {
             val uncompressedImageUri = Uri.fromFile(uncompressedImageFile)
-            val fos = activity!!.contentResolver.openOutputStream(
+            val fos = activity.contentResolver.openOutputStream(
                 Objects.requireNonNull(uncompressedImageUri)
             )
             assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos))
@@ -214,29 +244,46 @@ class OpenedFromPocketCodeWithImageTest {
         val compressor = Compressor(launchActivityRule.activity)
         compressor.setCompressFormat(Bitmap.CompressFormat.JPEG)
         compressor.setQuality(100)
-        compressor.setDestinationDirectoryPath(activity!!.getExternalFilesDir(null)!!.absolutePath + "/Pictures")
-        deletionFileList!!.add(uncompressedImageFile)
+        compressor.setDestinationDirectoryPath(activity.getExternalFilesDir(null)!!.absolutePath + "/Pictures")
+        deletionFileList.add(uncompressedImageFile)
         imageFile = try {
             compressor.compressToFile(uncompressedImageFile, "$IMAGE_NAME.png")
         } catch (e: IOException) {
             throw AssertionError("Test Picture file could not be created.", e)
         }
-        deletionFileList!!.add(imageFile)
+        deletionFileList.add(imageFile)
         return Uri.fromFile(imageFile)
     }
 
     private fun verifyImageFile(lastModifiedBefore: Long, fileSizeBefore: Long) {
         val path =
             launchActivityRule.activityResult.resultData.getStringExtra(PAINTROID_PICTURE_PATH)
-        assertEquals(imageFile!!.absolutePath, path)
+        assertEquals(imageFile.absolutePath, path)
         assertThat(
             "Image modification not saved",
-            imageFile!!.lastModified(),
+            imageFile.lastModified(),
             Matchers.greaterThan(lastModifiedBefore)
         )
         assertThat(
             "Saved image length not changed",
-            imageFile!!.length(),
+            imageFile.length(),
+            Matchers.greaterThan(fileSizeBefore)
+        )
+    }
+
+    private fun verifyImageFileWhenFileEndingChanges(lastModifiedBefore: Long, fileSizeBefore: Long) {
+        val path =
+            launchActivityRule.activityResult.resultData.getStringExtra(PAINTROID_PICTURE_PATH)
+        imageFile = File(path.toString())
+        assertEquals(imageFile.absolutePath, path)
+        assertThat(
+            "Image modification not saved",
+            imageFile.lastModified(),
+            Matchers.greaterThan(lastModifiedBefore)
+        )
+        assertThat(
+            "Saved image length not changed",
+            imageFile.length(),
             Matchers.greaterThan(fileSizeBefore)
         )
     }
