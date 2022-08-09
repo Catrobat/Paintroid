@@ -245,6 +245,8 @@ open class MainActivityPresenter(
         val dialogHasBeenShown = sharedPreferences.preferenceLikeUsDialogValue
         if (!dialogHasBeenShown && !model.isOpenedFromCatroid) {
             navigator.showLikeUsDialog()
+            println("CHANGE TO SHOWCASE")
+            println("CHANGE TO SHOWCASE")
             sharedPreferences.setPreferenceLikeUsDialogValue()
         }
     }
