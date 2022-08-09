@@ -63,7 +63,7 @@ class ColorDialogIntegrationTest {
     @Before
     fun setUp() { toolReference = launchActivityRule.activity.toolReference }
 
-    private fun getColorById(colorId: Int): Int { return launchActivityRule.activity.resources.getColor(colorId) }
+    private fun getColorById(colorId: Int): Int = launchActivityRule.activity.resources.getColor(colorId)
 
     @Test
     fun testStandardTabSelected() {
@@ -259,9 +259,8 @@ class ColorDialogIntegrationTest {
             val arrayColor = presetColors.getColor(counterColors, Color.BLACK)
             onView(
                 Matchers.allOf(
-                    ViewMatchers.withId(R.id.color_picker_new_color_view), Matchers.instanceOf(
-                        View::class.java
-                    )
+                    ViewMatchers.withId(R.id.color_picker_new_color_view),
+                    Matchers.instanceOf(View::class.java)
                 )
             )
                 .check(ViewAssertions.matches(UiMatcher.withBackgroundColor(arrayColor)))
@@ -308,9 +307,8 @@ class ColorDialogIntegrationTest {
             onColorPickerView().performClickColorPickerPresetSelectorButton(counterColors)
             onView(
                 Matchers.allOf(
-                    ViewMatchers.withId(R.id.color_picker_current_color_view), Matchers.instanceOf(
-                        View::class.java
-                    )
+                    ViewMatchers.withId(R.id.color_picker_current_color_view),
+                    Matchers.instanceOf(View::class.java)
                 )
             )
                 .check(ViewAssertions.matches(initialColor?.let { UiMatcher.withBackgroundColor(it) }))
@@ -371,13 +369,8 @@ class ColorDialogIntegrationTest {
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
         ).perform(ViewActions.click())
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_PRESET_SELECTOR_CLASS
-                )
-            )
-        ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(ViewMatchers.withClassName(Matchers.containsString(TAB_VIEW_PRESET_SELECTOR_CLASS)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onColorPickerView().performClickColorPickerPresetSelectorButton(0)
         onView(
             Matchers.allOf(
@@ -385,13 +378,8 @@ class ColorDialogIntegrationTest {
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_RGBA_SELECTOR_CLASS
-                )
-            )
-        ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(ViewMatchers.withClassName(Matchers.containsString(TAB_VIEW_RGBA_SELECTOR_CLASS)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_textview_red)).check(
             ViewAssertions.matches(
                 Matchers.allOf(
@@ -455,24 +443,13 @@ class ColorDialogIntegrationTest {
         val currentSelectedColor = presetColors.getColor(0, Color.BLACK)
         onView(ViewMatchers.withId(R.id.color_picker_rgb_red_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
-                    Color.red(currentSelectedColor).toString()
-                )
-            )
+                ViewMatchers.withText(Color.red(currentSelectedColor).toString()))
         )
         onView(ViewMatchers.withId(R.id.color_picker_rgb_green_value)).check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(
-                    Color.green(currentSelectedColor).toString()
-                )
-            )
+            ViewAssertions.matches(ViewMatchers.withText(Color.green(currentSelectedColor).toString()))
         )
         onView(ViewMatchers.withId(R.id.color_picker_rgb_blue_value)).check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(
-                    Color.blue(currentSelectedColor).toString()
-                )
-            )
+            ViewAssertions.matches(ViewMatchers.withText(Color.blue(currentSelectedColor).toString()))
         )
         onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value)).check(
             ViewAssertions.matches(
@@ -484,68 +461,35 @@ class ColorDialogIntegrationTest {
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_red))
             .perform(UiInteractions.touchCenterLeft())
         onView(ViewMatchers.withId(R.id.color_picker_rgb_red_value)).check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(
-                    TEXT_RGB_MIN
-                )
-            )
+            ViewAssertions.matches(ViewMatchers.withText(TEXT_RGB_MIN))
         )
-        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_red))
-            .perform(UiInteractions.touchCenterRight())
+        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_red)).perform(UiInteractions.touchCenterRight())
         onView(ViewMatchers.withId(R.id.color_picker_rgb_red_value)).check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(
-                    TEXT_RGB_MAX
-                )
-            )
+            ViewAssertions.matches(ViewMatchers.withText(TEXT_RGB_MAX))
         )
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_green))
             .perform(UiInteractions.touchCenterLeft())
         onView(ViewMatchers.withId(R.id.color_picker_rgb_green_value)).check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(
-                    TEXT_RGB_MIN
-                )
-            )
+            ViewAssertions.matches(ViewMatchers.withText(TEXT_RGB_MIN))
         )
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_green))
             .perform(UiInteractions.touchCenterRight())
         onView(ViewMatchers.withId(R.id.color_picker_rgb_green_value)).check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(
-                    TEXT_RGB_MAX
-                )
-            )
+            ViewAssertions.matches(ViewMatchers.withText(TEXT_RGB_MAX))
         )
-        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
-            .perform(UiInteractions.touchCenterLeft())
+        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(UiInteractions.touchCenterLeft())
         onView(ViewMatchers.withId(R.id.color_picker_rgb_blue_value)).check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(
-                    TEXT_RGB_MIN
-                )
-            )
+            ViewAssertions.matches(ViewMatchers.withText(TEXT_RGB_MIN))
         )
-        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
-            .perform(UiInteractions.touchCenterRight())
+        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue)).perform(UiInteractions.touchCenterRight())
         onView(ViewMatchers.withId(R.id.color_picker_rgb_blue_value)).check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(
-                    TEXT_RGB_MAX
-                )
-            )
+            ViewAssertions.matches(ViewMatchers.withText(TEXT_RGB_MAX))
         )
-        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
-            .perform(UiInteractions.touchCenterLeft())
+        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(UiInteractions.touchCenterLeft())
         onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value)).check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(
-                    TEXT_ALPHA_MIN
-                )
-            )
+            ViewAssertions.matches(ViewMatchers.withText(TEXT_ALPHA_MIN))
         )
-        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
-            .perform(UiInteractions.touchCenterRight())
+        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(UiInteractions.touchCenterRight())
         onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value)).check(
             ViewAssertions.matches(
                 ViewMatchers.withText(
@@ -555,10 +499,8 @@ class ColorDialogIntegrationTest {
         )
 
         // Select color red #FFFF0000 by using hex input
-        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .perform(ViewActions.replaceText("#FFFF0000"))
-        onColorPickerView()
-            .checkNewColorViewColor(Color.RED)
+        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).perform(ViewActions.replaceText("#FFFF0000"))
+        onColorPickerView().checkNewColorViewColor(Color.RED)
         onView(
             Matchers.allOf(
                 ViewMatchers.withId(R.id.color_picker_tab_icon),
@@ -573,46 +515,28 @@ class ColorDialogIntegrationTest {
             .perform(UiInteractions.touchCenterLeft())
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
             .perform(UiInteractions.touchCenterRight())
-        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
-            .perform(UiInteractions.touchCenterRight())
-        onColorPickerView()
-            .onPositiveButton()
-            .perform(ViewActions.click())
-        Assert.assertNotEquals(
-            "Selected color changed to blue from black",
-            toolReference?.tool?.drawPaint?.color?.toLong(),
-            Color.BLACK.toLong()
-        )
-        Assert.assertEquals(
-            "Selected color is not blue",
-            toolReference?.tool?.drawPaint?.color?.toLong(),
-            Color.BLUE.toLong()
-        )
+        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha)).perform(UiInteractions.touchCenterRight())
+        onColorPickerView().onPositiveButton().perform(ViewActions.click())
+        Assert.assertNotEquals("Selected color changed to blue from black", toolReference?.tool?.drawPaint?.color?.toLong(), Color.BLACK.toLong())
+        Assert.assertEquals("Selected color is not blue", toolReference?.tool?.drawPaint?.color?.toLong(), Color.BLUE.toLong())
     }
 
     @Test
     fun testHEXEditTextMaxInputLength() {
-        onColorPickerView()
-            .performOpenColorPicker()
+        onColorPickerView().performOpenColorPicker()
         onView(
             Matchers.allOf(
                 ViewMatchers.withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_RGBA_SELECTOR_CLASS
-                )
-            )
-        ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(ViewMatchers.withClassName(Matchers.containsString(
+            TAB_VIEW_RGBA_SELECTOR_CLASS)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("#0123456789ABCDEF01234"))
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).check(
-            ViewAssertions.matches(
-                ViewMatchers.withText(String.format("#0123456789ABCDEF0"))
-            )
+            ViewAssertions.matches(ViewMatchers.withText(String.format("#0123456789ABCDEF0")))
         )
     }
 
@@ -625,17 +549,10 @@ class ColorDialogIntegrationTest {
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
         ).perform(ViewActions.click())
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_PRESET_SELECTOR_CLASS
-                )
-            )
-        ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(ViewMatchers.withClassName(Matchers.containsString(TAB_VIEW_PRESET_SELECTOR_CLASS)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onColorPickerView().performClickColorPickerPresetSelectorButton(10)
-        onColorPickerView()
-            .onPositiveButton()
-            .perform(ViewActions.click())
+        onColorPickerView().onPositiveButton().perform(ViewActions.click())
         var currentSelectColor = toolReference!!.tool!!.drawPaint.color
         onColorPickerView().performOpenColorPicker()
         onView(
@@ -644,12 +561,7 @@ class ColorDialogIntegrationTest {
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_RGBA_SELECTOR_CLASS
-                )
-            )
+        onView(ViewMatchers.withClassName(Matchers.containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).check(
             ViewAssertions.matches(
@@ -662,18 +574,11 @@ class ColorDialogIntegrationTest {
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_hsv)
             )
         ).perform(ViewActions.click())
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_HSV_SELECTOR_CLASS
-                )
-            )
+        onView(ViewMatchers.withClassName(Matchers.containsString(TAB_VIEW_HSV_SELECTOR_CLASS))
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onColorPickerView().perform(UiInteractions.touchCenterMiddle())
-        onColorPickerView()
-            .onPositiveButton()
-            .perform(ViewActions.click())
-        currentSelectColor = toolReference!!.tool!!.drawPaint.color
+        onColorPickerView().onPositiveButton().perform(ViewActions.click())
+        currentSelectColor = toolReference?.tool?.drawPaint?.color
         onColorPickerView().performOpenColorPicker()
         onView(
             Matchers.allOf(
@@ -681,12 +586,7 @@ class ColorDialogIntegrationTest {
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_RGBA_SELECTOR_CLASS
-                )
-            )
+        onView(ViewMatchers.withClassName(Matchers.containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).check(
             ViewAssertions.matches(
@@ -701,9 +601,7 @@ class ColorDialogIntegrationTest {
             .perform(UiInteractions.touchCenterLeft())
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
             .perform(UiInteractions.touchCenterRight())
-        onColorPickerView()
-            .onPositiveButton()
-            .perform(ViewActions.click())
+        onColorPickerView().onPositiveButton().perform(ViewActions.click())
         currentSelectColor = toolReference!!.tool!!.drawPaint.color
         onColorPickerView().performOpenColorPicker()
         onView(
@@ -712,12 +610,7 @@ class ColorDialogIntegrationTest {
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_RGBA_SELECTOR_CLASS
-                )
-            )
+        onView(ViewMatchers.withClassName(Matchers.containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).check(
             ViewAssertions.matches(
@@ -743,48 +636,39 @@ class ColorDialogIntegrationTest {
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        //set to invalid length of 6 (alpha missing)
-        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .perform(ViewActions.replaceText("#FF0000"))
-        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .check(ViewAssertions.matches(ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)))
-
-        //set to invalid value
-        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .perform(ViewActions.replaceText("#FFXXYYZZ"))
+        // set to invalid length of 6 (alpha missing)
+        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).perform(ViewActions.replaceText("#FF0000"))
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
             .check(ViewAssertions.matches(ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)))
 
-        //set to invalid value (# missing)
+        // set to invalid value
+        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).perform(ViewActions.replaceText("#FFXXYYZZ"))
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .perform(ViewActions.replaceText("FF000000"))
+            .check(ViewAssertions.matches(ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)))
+
+        // set to invalid value (# missing)
+        onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).perform(ViewActions.replaceText("FF000000"))
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
             .check(ViewAssertions.matches(ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)))
     }
 
     @Test
     fun testHEXEditTextMarkingCorrectInputAfterWrongInput() {
-        onColorPickerView()
-            .performOpenColorPicker()
+        onColorPickerView().performOpenColorPicker()
         onView(
             Matchers.allOf(
                 ViewMatchers.withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_RGBA_SELECTOR_CLASS
-                )
-            )
-        ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(ViewMatchers.withClassName(Matchers.containsString(TAB_VIEW_RGBA_SELECTOR_CLASS)))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        //set to invalid length of 6 (alpha missing)
+        // set to invalid length of 6 (alpha missing)
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("#FF0000"))
 
-        //set correct HEX value
+        // set correct HEX value
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("#FF000000"))
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
@@ -800,15 +684,10 @@ class ColorDialogIntegrationTest {
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_RGBA_SELECTOR_CLASS
-                )
-            )
+        onView(ViewMatchers.withClassName(Matchers.containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        //Initial text color should be black
+        // Initial text color should be black
         onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
             .check(ViewAssertions.matches(ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_correct_black)))
     }
@@ -825,9 +704,7 @@ class ColorDialogIntegrationTest {
         val initialColor = toolReference?.tool?.drawPaint?.color
         onColorPickerView().performOpenColorPicker()
         onColorPickerView().performClickColorPickerPresetSelectorButton(0)
-        onColorPickerView()
-            .onNegativeButton()
-            .perform(ViewActions.click())
+        onColorPickerView().onNegativeButton().perform(ViewActions.click())
         if (initialColor != null) { onToolProperties().checkMatchesColor(initialColor) }
     }
 
@@ -872,13 +749,7 @@ class ColorDialogIntegrationTest {
         )
             .perform(ViewActions.click())
         launchActivityRule.activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        onView(
-            ViewMatchers.withClassName(
-                Matchers.containsString(
-                    TAB_VIEW_RGBA_SELECTOR_CLASS
-                )
-            )
-        )
+        onView(ViewMatchers.withClassName(Matchers.containsString(TAB_VIEW_RGBA_SELECTOR_CLASS)))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
@@ -888,9 +759,7 @@ class ColorDialogIntegrationTest {
             launchActivityRule.activity.resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors)
         onColorPickerView().performOpenColorPicker()
         onColorPickerView().performClickColorPickerPresetSelectorButton(presetColors.length() - 1)
-        onColorPickerView()
-            .onPositiveButton()
-            .perform(ViewActions.click())
+        onColorPickerView().onPositiveButton().perform(ViewActions.click())
         onColorPickerView().performOpenColorPicker()
         onView(
             Matchers.allOf(
@@ -987,9 +856,7 @@ class ColorDialogIntegrationTest {
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
         ).perform(ViewActions.scrollTo(), ViewActions.click())
-        onColorPickerView()
-            .onPositiveButton()
-            .perform(ViewActions.click())
+        onColorPickerView().onPositiveButton().perform(ViewActions.click())
         onToolProperties().checkMatchesColor(Color.parseColor("#7F000000"))
         IdlingRegistry.getInstance().unregister(idlingResource)
     }
