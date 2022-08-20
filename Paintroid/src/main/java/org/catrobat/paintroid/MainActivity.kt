@@ -108,10 +108,6 @@ private const val TEMP_IMAGE_SAVE_INTERVAL = 60
 private const val TEMP_IMAGE_IDLE_INTERVAL = 2 * TEMP_IMAGE_COROUTINE_DELAY_MILLI_SEC
 
 class MainActivity : AppCompatActivity(), MainView, CommandListener {
-
-    @VisibleForTesting
-    lateinit var model: MainActivityContracts.Model
-
     @VisibleForTesting
     lateinit var perspective: Perspective
 
@@ -122,12 +118,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     lateinit var layerModel: LayerContracts.Model
 
     @VisibleForTesting
-    lateinit var commandManager: CommandManager
-
-    @VisibleForTesting
-    lateinit var toolPaint: ToolPaint
-
-    @VisibleForTesting
     lateinit var toolReference: ToolReference
 
     @VisibleForTesting
@@ -135,7 +125,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     var idlingResource: CountingIdlingResource = CountingIdlingResource("MainIdleResource")
 
+    lateinit var commandManager: CommandManager
+    lateinit var toolPaint: ToolPaint
     lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
+    lateinit var model: MainActivityContracts.Model
 
     private lateinit var layerPresenter: LayerPresenter
     private lateinit var drawingSurface: DrawingSurface
@@ -726,4 +719,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             }
         }
     }
+
+    fun getVersionCode(): String = runCatching {
+        packageManager.getPackageInfo(packageName, 0).versionName
+    }.getOrDefault("")
 }
