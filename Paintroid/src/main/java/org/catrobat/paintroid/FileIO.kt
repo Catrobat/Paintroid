@@ -91,9 +91,6 @@ object FileIO {
     var navigator: MainActivityContracts.Navigator? = null
 
     @JvmField
-    var isCatrobatImage = false
-
-    @JvmField
     var storeImageUri: Uri? = null
 
     var temporaryFilePath: String? = null

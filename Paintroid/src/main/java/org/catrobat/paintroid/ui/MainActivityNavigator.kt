@@ -476,7 +476,6 @@ class MainActivityNavigator(
             }
             FileIO.filename = "image$imageNumber"
             FileIO.catroidFlag = true
-            FileIO.isCatrobatImage = false
             mainActivity.presenter.switchBetweenVersions(permissionCode, isExport)
             return
         }

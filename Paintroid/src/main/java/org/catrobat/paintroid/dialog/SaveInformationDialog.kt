@@ -42,7 +42,6 @@ import org.catrobat.paintroid.FileIO.FileType.JPG
 import org.catrobat.paintroid.FileIO.FileType.CATROBAT
 import org.catrobat.paintroid.FileIO.FileType.ORA
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
 import java.util.Locale
 
 private const val STANDARD_FILE_NAME = "image"
@@ -72,7 +71,6 @@ class SaveInformationDialog :
             isExport: Boolean
         ): SaveInformationDialog {
             if (isStandard) {
-                FileIO.isCatrobatImage = false
                 FileIO.filename = STANDARD_FILE_NAME
                 FileIO.compressFormat = Bitmap.CompressFormat.PNG
                 FileIO.fileType = PNG
@@ -118,9 +116,7 @@ class SaveInformationDialog :
             .setPositiveButton(R.string.save_button_text) { _, _ ->
                 FileIO.filename = imageName.text.toString()
                 FileIO.storeImageUri = null
-                if (permission != PERMISSION_EXTERNAL_STORAGE_SAVE_COPY &&
-                    FileIO.checkFileExists(FileIO.fileType, FileIO.defaultFileName, requireContext().contentResolver)
-                ) {
+                if (FileIO.checkFileExists(FileIO.fileType, FileIO.defaultFileName, requireContext().contentResolver)) {
                     presenter.showOverwriteDialog(permission, isExport)
                 } else {
                     presenter.switchBetweenVersions(permission, isExport)
@@ -168,10 +164,10 @@ class SaveInformationDialog :
     private fun initInfoButton(view: View) {
         val infoButton: AppCompatImageButton = view.findViewById(R.id.pocketpaint_btn_save_info)
         infoButton.setOnClickListener {
-            when {
-                FileIO.isCatrobatImage -> presenter.showOraInformationDialog()
-                FileIO.compressFormat == Bitmap.CompressFormat.JPEG -> presenter.showJpgInformationDialog()
-                FileIO.fileType == CATROBAT -> presenter.showCatrobatInformationDialog()
+            when (FileIO.fileType) {
+                JPG -> presenter.showJpgInformationDialog()
+                ORA -> presenter.showOraInformationDialog()
+                CATROBAT -> presenter.showCatrobatInformationDialog()
                 else -> presenter.showPngInformationDialog()
             }
         }
@@ -193,33 +189,31 @@ class SaveInformationDialog :
 
     private fun setFileDetails(
         compressFormat: Bitmap.CompressFormat,
-        isCatrobatImage: Boolean,
-        fileType: FileType,
-        isJpg: Boolean = false
+        fileType: FileType
     ) {
         specificFormatLayout.removeAllViews()
-        if (isJpg) {
+        if (fileType == JPG) {
             specificFormatLayout.addView(jpgView)
         }
         FileIO.compressFormat = compressFormat
-        FileIO.isCatrobatImage = isCatrobatImage
         FileIO.fileType = fileType
     }
 
     private fun setSpinnerSelection() {
-        when {
-            FileIO.isCatrobatImage -> spinner.setSelection(2)
-            FileIO.compressFormat == Bitmap.CompressFormat.PNG -> spinner.setSelection(0)
-            else -> spinner.setSelection(1)
+        when (FileIO.fileType) {
+            JPG -> spinner.setSelection(JPG.ordinal)
+            ORA -> spinner.setSelection(ORA.ordinal)
+            CATROBAT -> spinner.setSelection(CATROBAT.ordinal)
+            else -> spinner.setSelection(PNG.ordinal)
         }
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (parent?.getItemAtPosition(position).toString().toLowerCase(Locale.getDefault())) {
-            JPG.value -> setFileDetails(Bitmap.CompressFormat.JPEG, false, JPG, true)
-            PNG.value -> setFileDetails(Bitmap.CompressFormat.PNG, false, PNG)
-            ORA.value -> setFileDetails(Bitmap.CompressFormat.PNG, true, ORA)
-            CATROBAT.value -> setFileDetails(Bitmap.CompressFormat.PNG, false, CATROBAT)
+            JPG.value -> setFileDetails(Bitmap.CompressFormat.JPEG, JPG)
+            PNG.value -> setFileDetails(Bitmap.CompressFormat.PNG, PNG)
+            ORA.value -> setFileDetails(Bitmap.CompressFormat.PNG, ORA)
+            CATROBAT.value -> setFileDetails(Bitmap.CompressFormat.PNG, CATROBAT)
         }
     }
 

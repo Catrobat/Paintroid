@@ -194,7 +194,7 @@ class LayerPresenter(
         drawingSurface?.refreshDrawingSurface()
         getDestinationLayer(position, false)?.let { layer ->
             if (model.currentLayer == layer) {
-                defaultToolController?.switchTool(ToolType.HAND, false)
+                defaultToolController?.switchTool(ToolType.HAND)
                 bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
             }
         }
@@ -205,7 +205,7 @@ class LayerPresenter(
         getDestinationLayer(position, true)?.let { layer ->
             viewHolder.updateImageView(layer.bitmap)
             if (model.currentLayer == layer) {
-                defaultToolController?.switchTool(ToolType.BRUSH, false)
+                defaultToolController?.switchTool(ToolType.BRUSH)
                 bottomNavigationViewHolder?.showCurrentTool(ToolType.BRUSH)
             }
         }

@@ -22,16 +22,25 @@ import android.graphics.Bitmap
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolType
+import java.util.HashSet
 
 interface ToolController {
     val isDefaultTool: Boolean
     val toolType: ToolType?
     val toolColor: Int?
     val currentTool: Tool?
+    val toolList: HashSet<ToolType>
+        get() = hashSetOf(
+            ToolType.TEXT,
+            ToolType.TRANSFORM,
+            ToolType.IMPORTPNG,
+            ToolType.SHAPE,
+            ToolType.LINE
+        )
 
     fun setOnColorPickedListener(onColorPickedListener: OnColorPickedListener)
 
-    fun switchTool(toolType: ToolType, backPressed: Boolean)
+    fun switchTool(toolType: ToolType)
 
     fun hideToolOptionsView()
 
@@ -54,4 +63,6 @@ interface ToolController {
     fun hasToolOptionsView(): Boolean
 
     fun setBitmapFromSource(bitmap: Bitmap?)
+
+    fun adjustClippingToolOnBackPressed(backPressed: Boolean)
 }

@@ -74,14 +74,14 @@ private const val DEFAULT_ROTATION_ENABLED = false
 private const val DEFAULT_RESIZE_POINTS_VISIBLE = true
 private const val DEFAULT_RESPECT_MAXIMUM_BORDER_RATIO = true
 private const val DEFAULT_RESPECT_MAXIMUM_BOX_RESOLUTION = false
-private const val CLICK_TIMEOUT_MILLIS = 250
+internal const val CLICK_TIMEOUT_MILLIS = 250L
 private const val RIGHT_ANGLE = 90f
 private const val STRAIGHT_ANGLE = 180f
 private const val COMPLETE_ANGLE = 360f
 private const val SIDES = 4
 private const val CONSTANT_1 = 10
 private const val CONSTANT_2 = 8
-private const val CONSTANT_3 = 3
+internal const val CONSTANT_3 = 3
 private const val BUNDLE_BOX_WIDTH = "BOX_WIDTH"
 private const val BUNDLE_BOX_HEIGHT = "BOX_HEIGHT"
 private const val BUNDLE_BOX_ROTATION = "BOX_ROTATION"
@@ -674,8 +674,8 @@ abstract class BaseToolWithRectangleShape(
     fun highlightBox() {
         downTimer = object :
             CountDownTimer(
-                CLICK_TIMEOUT_MILLIS.toLong(),
-                (CLICK_TIMEOUT_MILLIS / CONSTANT_3).toLong()
+                CLICK_TIMEOUT_MILLIS,
+                CLICK_TIMEOUT_MILLIS / CONSTANT_3
             ) {
             override fun onTick(millisUntilFinished: Long) {
                 highlightBoxWhenClickInBox(true)

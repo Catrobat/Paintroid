@@ -33,7 +33,6 @@ import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
 import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.ImportTool
 import org.catrobat.paintroid.tools.implementation.LineTool
@@ -50,14 +49,6 @@ class DefaultToolController(
     private val contextCallback: ContextCallback
 ) : ToolController {
     private lateinit var onColorPickedListener: OnColorPickedListener
-    private val toolList =
-        hashSetOf(
-            ToolType.TEXT,
-            ToolType.TRANSFORM,
-            ToolType.IMPORTPNG,
-            ToolType.SHAPE,
-            ToolType.LINE
-        )
 
     override val isDefaultTool: Boolean
         get() = toolReference.tool?.toolType == ToolType.BRUSH
@@ -103,8 +94,8 @@ class DefaultToolController(
         this.onColorPickedListener = onColorPickedListener
     }
 
-    override fun switchTool(toolType: ToolType, backPressed: Boolean) {
-        switchTool(createAndSetupTool(toolType), backPressed)
+    override fun switchTool(toolType: ToolType) {
+        switchTool(createAndSetupTool(toolType))
     }
 
     override fun hideToolOptionsView() {
@@ -125,20 +116,12 @@ class DefaultToolController(
         toolReference.tool?.resetInternalState(StateChange.NEW_IMAGE_LOADED)
     }
 
-    private fun switchTool(tool: Tool, backPressed: Boolean) {
+    private fun switchTool(tool: Tool) {
         val currentTool = toolReference.tool
         val currentToolType = currentTool?.toolType
-        if (toolList.contains(currentToolType)) {
-            if (!backPressed) {
-                val toolToApply = currentTool as BaseToolWithShape
-                toolToApply.onClickOnButton()
-            }
-        } else if (currentToolType == ToolType.CLIP) {
-            adjustClippingTool(backPressed)
-        }
         currentToolType?.let { hidePlusIfShown(it) }
 
-        if (currentTool?.toolType == tool.toolType) {
+        if (currentToolType == tool.toolType) {
             val toolBundle = Bundle()
             currentTool.onSaveInstanceState(toolBundle)
             tool.onRestoreInstanceState(toolBundle)
@@ -147,7 +130,7 @@ class DefaultToolController(
         workspace.invalidate()
     }
 
-    private fun adjustClippingTool(backPressed: Boolean) {
+    override fun adjustClippingToolOnBackPressed(backPressed: Boolean) {
         val clippingTool = currentTool as ClippingTool
         if (backPressed) {
             if (clippingTool.areaClosed) {
