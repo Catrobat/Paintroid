@@ -27,12 +27,13 @@ import android.util.DisplayMetrics
 import android.view.Menu
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
 import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
-import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.iotasks.WorkspaceReturnValue
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.LayerAdapter
@@ -296,9 +297,11 @@ interface MainActivityContracts {
 
         fun saveNewTemporaryImage()
 
-        fun openTemporaryFile(workspace: Workspace): CommandManagerModel?
+        fun openTemporaryFile(workspace: Workspace): WorkspaceReturnValue?
 
         fun checkForTemporaryFile(): Boolean
+
+        fun setColorHistoryAfterLoadImage(colorHistory: ColorHistory?)
     }
 
     interface Model {
@@ -308,6 +311,11 @@ interface MainActivityContracts {
         var isFullscreen: Boolean
         var isOpenedFromCatroid: Boolean
         var isOpenedFromFormulaEditorInCatroid: Boolean
+        var colorHistory: ColorHistory
+
+        fun wasInitialAnimationPlayed(): Boolean
+
+        fun setInitialAnimationPlayed(wasInitialAnimationPlayed: Boolean)
     }
 
     interface Interactor {
