@@ -127,6 +127,7 @@ dependencies {
     implementation 'androidx.exifinterface:exifinterface:1.3.2'
     implementation 'com.esotericsoftware:kryo:5.1.1'
     implementation 'id.zelory:compressor:2.1.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     debugImplementation 'androidx.multidex:multidex:2.0.0'
 

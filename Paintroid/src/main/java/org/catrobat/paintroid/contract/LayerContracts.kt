@@ -23,6 +23,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.ui.DrawingSurface
+import org.catrobat.paintroid.ui.dragndrop.ListItemDragHandler
 import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 
 interface LayerContracts {
@@ -41,6 +42,8 @@ interface LayerContracts {
             viewHolder: LayerViewHolder,
             isOpen: Boolean
         )
+
+        fun getListItemDragHandler(): ListItemDragHandler
 
         fun refreshLayerMenuViewHolder()
 

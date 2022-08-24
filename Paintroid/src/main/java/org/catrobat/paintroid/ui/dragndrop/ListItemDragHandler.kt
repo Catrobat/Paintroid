@@ -26,6 +26,5 @@ import android.view.View
 
 interface ListItemDragHandler {
     fun startDragging(position: Int, view: View)
-
     fun stopDragging()
 }

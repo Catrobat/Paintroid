@@ -150,10 +150,9 @@ public class LayerPresenterTest {
 
 	@Test
 	public void testRefreshLayerMenuViewHolderOnAddDisabled() {
-		layerModel.addLayerAt(0, mock(Layer.class));
-		layerModel.addLayerAt(1, mock(Layer.class));
-		layerModel.addLayerAt(2, mock(Layer.class));
-		layerModel.addLayerAt(3, mock(Layer.class));
+		for (int i = 0; i < 100; i++) {
+			layerModel.addLayerAt(i, mock(Layer.class));
+		}
 
 		createPresenter();
 		layerPresenter.refreshLayerMenuViewHolder();
@@ -226,10 +225,9 @@ public class LayerPresenterTest {
 
 	@Test
 	public void testAddLayerWhenTooManyLayers() {
-		layerModel.addLayerAt(0, mock(Layer.class));
-		layerModel.addLayerAt(1, mock(Layer.class));
-		layerModel.addLayerAt(2, mock(Layer.class));
-		layerModel.addLayerAt(3, mock(Layer.class));
+		for (int i = 0; i < 100; i++) {
+			layerModel.addLayerAt(i, mock(Layer.class));
+		}
 
 		createPresenter();
 		layerPresenter.addLayer();
