@@ -71,6 +71,7 @@ class DefaultToolOptionsViewController(
         idlingResource.increment()
         toolOptionsShown = false
         mainToolOptions.animate().y(bottomNavigation.y + bottomNavigation.height)
+        mainToolOptions.visibility = View.GONE
         notifyHide()
         idlingResource.decrement()
     }

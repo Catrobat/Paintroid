@@ -84,6 +84,36 @@
                 tools:ignore="RelativeOverlap" />
         </RelativeLayout>
 
+        <org.catrobat.paintroid.colorpicker.ColorHistoryView
+            android:id="@+id/color_history_view"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <LinearLayout
+            android:id="@+id/color_history_text_layout"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="6dp"
+            android:weightSum="2"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/color_history_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/color_picker_history_recently_used"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/pocketpaint_color_picker_gray"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"

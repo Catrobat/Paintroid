@@ -22,7 +22,6 @@
     <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Brush</string>
     <string name="button_cursor">Cursor</string>
-    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">Pipette</string>
     <string name="button_undo">Undo</string>
     <string name="button_redo">Redo</string>
@@ -42,15 +41,9 @@
     <string name="button_clip">Clip area</string>
     <string name="button_apply">Apply</string>
     <string name="button_checkmark">Checkmark</string>
-    <string name="button_plus">Connect Line Segment</string>
     <string name="done">Done</string>
 
     <string name="gallery">Gallery</string>
-    <string name="load_sticker_error">Could not load Sticker</string>
-    <string name="error_unknown_error">Something went wrong.</string>
-
-    <string name="cap_circle">Circle</string>
-    <string name="cap_square">Square</string>
 
     <string name="stamptool_paste">Paste</string>
     <string name="stamptool_copy">Copy</string>
@@ -85,7 +78,6 @@
     <string name="help_content_spray_can">Move your finger on the image to create a spray can pattern.</string>
     <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
     <string name="help_content_clip">Mark area which should not be erased.</string>
-    <string name="closing_catroid_security_question_title">Back to project</string>
     <string name="closing_security_question_title">Quit</string>
     <string name="closing_security_question">Save changes?</string>
     <string name="menu_new_image">New image</string>
@@ -119,12 +111,9 @@
     <string name="resize_cannot_resize_to_this_size">cannot resize to this size</string>
     <string name="resize_max_image_resolution_reached">max image resolution reached</string>
 
-    <string name="text_tool_dialog_input_title">Your text:</string>
-    <string name="text_tool_dialog_format_options">Format options:</string>
     <string name="text_tool_dialog_underline_shortcut">U</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
-    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">Tap here to write</string>
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>
@@ -165,7 +154,6 @@
     <string name="layer_merged">Layers merged</string>
     <string name="layer_background">Layer background</string>
 
-    <string name="dialog_shape_text">Shape</string>
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image</string>
     <string name="dialog_settings">Settings</string>
