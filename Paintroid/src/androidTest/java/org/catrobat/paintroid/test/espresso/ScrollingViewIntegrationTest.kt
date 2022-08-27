@@ -268,11 +268,9 @@ class ScrollingViewIntegrationTest {
         )
         val endPointSurface = PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight)
         val endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface)
-        val message = (
-            "startX(" + startPointCanvas.x + ") != endX(" + endPointCanvas.x +
+        val message = "startX(" + startPointCanvas.x + ") != endX(" + endPointCanvas.x +
                 ") " +
                 "|| startY(" + startPointCanvas.y + ") != endY(" + endPointCanvas.y + ")"
-            )
         Assert.assertTrue(
             message,
             startPointCanvas.x != endPointCanvas.x || startPointCanvas.y != endPointCanvas.y

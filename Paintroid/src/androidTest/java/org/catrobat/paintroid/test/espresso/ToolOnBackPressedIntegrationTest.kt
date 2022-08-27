@@ -203,13 +203,10 @@ class ToolOnBackPressedIntegrationTest {
     fun testBrushToolBackPressedFromCatroidAndUsePicture() {
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        val pathToFile =
-            (
-                launchActivityRule.activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-                    .toString() + File.separator +
-                    defaultPictureName +
-                    FILE_ENDING
-                )
+        val pathToFile = launchActivityRule.activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            .toString() + File.separator +
+            defaultPictureName +
+            FILE_ENDING
         saveFile = File(pathToFile)
         launchActivityRule.activity.model.savedPictureUri = Uri.fromFile(saveFile)
         launchActivityRule.activity.model.isOpenedFromCatroid = true

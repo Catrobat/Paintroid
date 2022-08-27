@@ -43,9 +43,7 @@ enum class BitmapLocationProvider : CoordinatesProvider {
         override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .5f, .25f)
     },
     HALFWAY_TOP_LEFT {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .25f, .25f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .25f, .25f)
     },
     HALFWAY_BOTTOM_RIGHT {
         override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .75f, .75f)

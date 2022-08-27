@@ -104,10 +104,7 @@ object UiMatcher {
                     return color == background.color
                 } else if (background is LayerDrawable) {
                     val drawable = background.getDrawable(0)
-                    return (
-                        drawable is ColorDrawable &&
-                            color == drawable.color
-                        )
+                    return drawable is ColorDrawable && color == drawable.color
                 }
                 return false
             }
