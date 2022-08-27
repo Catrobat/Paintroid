@@ -23,10 +23,10 @@ import org.catrobat.paintroid.R;
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils;
 import org.catrobat.paintroid.tools.ToolType;
 
-import androidx.test.espresso.ViewInteraction;
-
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 import static org.hamcrest.Matchers.not;
+
+import androidx.test.espresso.ViewInteraction;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;

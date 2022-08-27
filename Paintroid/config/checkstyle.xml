@@ -296,8 +296,4 @@
     <property name="onCommentFormat" value="@formatter\:on" />
   </module>
 
-  <module name="SuppressionFilter">
-    <property name="file" value="Paintroid/config/checkstyle_suppressions.xml" />
-  </module>
-
 </module>

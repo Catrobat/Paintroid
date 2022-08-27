@@ -23,6 +23,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.colorpicker.ColorHistoryView;
 import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 
 import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
@@ -46,6 +47,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public final class ColorPickerViewInteraction extends CustomViewInteraction {
 	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
+	public static final int MAXIMUM_COLORS_IN_HISTORY = 4;
 
 	protected ColorPickerViewInteraction() {
 		super(onView(withId(R.id.color_picker_view)));
@@ -111,5 +113,28 @@ public final class ColorPickerViewInteraction extends CustomViewInteraction {
 				.perform(scrollTo())
 				.perform(click());
 		return this;
+	}
+
+	public ColorPickerViewInteraction performClickOnHistoryColor(int buttonPosition) {
+		final int colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW;
+
+		onView(allOf(isDescendantOfA(withClassName(containsString(ColorHistoryView.class.getSimpleName()))),
+				isDescendantOfA(isAssignableFrom(TableLayout.class)),
+				isDescendantOfA(isAssignableFrom(TableRow.class)),
+				hasTablePosition(0, colorButtonColPosition)))
+				.perform(closeSoftKeyboard())
+				.perform(scrollTo())
+				.perform(click());
+		return this;
+	}
+
+	public void checkHistoryColor(int buttonPosition, int color) {
+		final int colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW;
+
+		onView(allOf(isDescendantOfA(withClassName(containsString(ColorHistoryView.class.getSimpleName()))),
+				isDescendantOfA(isAssignableFrom(TableLayout.class)),
+				isDescendantOfA(isAssignableFrom(TableRow.class)),
+				hasTablePosition(0, colorButtonColPosition)))
+				.check(matches(withBackgroundColor(color)));
 	}
 }

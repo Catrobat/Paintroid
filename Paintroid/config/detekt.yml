@@ -203,7 +203,7 @@ formatting:
     active: false
     autoCorrect: true
   Indentation:
-    active: true
+    active: false
     autoCorrect: true
     indentSize: 4
     continuationIndentSize: 4
@@ -253,7 +253,7 @@ formatting:
     active: true
     autoCorrect: true
   ParameterListWrapping:
-    active: true
+    active: false
     autoCorrect: true
     indentSize: 4
   SpacingAroundColon:
@@ -509,7 +509,7 @@ style:
   SafeCast:
     active: true
   SerialVersionUIDInSerializableClass:
-    active: true
+    active: false
   SpacingBetweenPackageAndImports:
     active: true
   ThrowsCount:

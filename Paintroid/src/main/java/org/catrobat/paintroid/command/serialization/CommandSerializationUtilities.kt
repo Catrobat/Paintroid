@@ -37,6 +37,7 @@ import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.KryoException
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
+import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.implementation.ClippingCommand
@@ -66,6 +67,8 @@ import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
 import org.catrobat.paintroid.common.SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME
 import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
+import org.catrobat.paintroid.contract.MainActivityContracts
+import org.catrobat.paintroid.iotasks.WorkspaceReturnValue
 import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.drawable.HeartDrawable
 import org.catrobat.paintroid.tools.drawable.OvalDrawable
@@ -78,7 +81,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.OutputStream
 
-class CommandSerializationUtilities(private val activityContext: Context, private val commandManager: CommandManager) {
+class CommandSerializationUtilities(private val activityContext: Context, private val commandManager: CommandManager, private val model: MainActivityContracts.Model) {
 
     companion object {
         const val CURRENT_IMAGE_VERSION = 1
@@ -142,6 +145,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
             put(SerializablePath.Cube::class.java, SerializablePath.PathActionCubeSerializer(version))
             put(Bitmap::class.java, BitmapSerializer(version))
             put(SmudgePathCommand::class.java, SmudgePathCommandSerializer(version))
+            put(ColorHistory::class.java, ColorHistorySerializer(version))
             put(ClippingCommand::class.java, ClippingCommandSerializer(version))
         }
     }
@@ -224,8 +228,9 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
         }
     }
 
-    fun readFromInternalMemory(stream: FileInputStream): CommandManagerModel? {
+    fun readFromInternalMemory(stream: FileInputStream): WorkspaceReturnValue {
         var commandModel: CommandManagerModel? = null
+        var colorHistory: ColorHistory? = null
 
         try {
             Input(stream).use { input ->
@@ -238,6 +243,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
                     registerClasses()
                 }
                 commandModel = kryo.readObject(input, CommandManagerModel::class.java)
+                colorHistory = kryo.readObject(input, ColorHistory::class.java)
             }
         } catch (ex: KryoException) {
             Log.d(TAG, "KryoException while reading autosave: " + ex.message)
@@ -245,7 +251,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
 
         commandModel?.commands?.reverse()
 
-        return commandModel
+        return WorkspaceReturnValue(commandModel, colorHistory)
     }
 
     private fun writeToStream(stream: OutputStream) {
@@ -253,11 +259,15 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
             output.writeString(MAGIC_VALUE)
             output.writeInt(CURRENT_IMAGE_VERSION)
             kryo.writeObject(output, commandManager.getCommandManagerModelForCatrobatImage())
+            if (model.colorHistory.colors.isNotEmpty()) {
+                kryo.writeObject(output, model.colorHistory)
+            }
         }
     }
 
-    fun readFromFile(uri: Uri): CommandManagerModel {
+    fun readFromFile(uri: Uri): CatrobatFileContent {
         var commandModel: CommandManagerModel
+        var colorHistory: ColorHistory? = null
 
         activityContext.contentResolver.openInputStream(uri).use { contentResolverStream ->
             Input(contentResolverStream).use { input ->
@@ -270,11 +280,14 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
                     registerClasses()
                 }
                 commandModel = kryo.readObject(input, CommandManagerModel::class.java)
+                if (input.canReadInt()) {
+                    colorHistory = kryo.readObject(input, ColorHistory::class.java)
+                }
             }
         }
 
         commandModel.commands.reverse()
-        return commandModel
+        return CatrobatFileContent(commandModel, colorHistory)
     }
 
     class NotCatrobatImageException(message: String) : Exception(message)

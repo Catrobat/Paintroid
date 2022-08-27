@@ -38,4 +38,17 @@
     <issue id="ShowToast">
         <ignore path="src/main/java/org/catrobat/paintroid/ui/ToastFactory.java" />
     </issue>
+
+    <issue id="UnusedResources">
+        <ignore path="res/drawable/ic_launcher_background.xml" />
+    </issue>
+
+    <issue id="UnusedResources">
+        <ignore path="res/drawable/ic_launcher_foreground.xml" />
+    </issue>
+
+    <issue id="UnusedResources">
+        <ignore regexp="res/mipmap*" />
+    </issue>
+
 </lint>

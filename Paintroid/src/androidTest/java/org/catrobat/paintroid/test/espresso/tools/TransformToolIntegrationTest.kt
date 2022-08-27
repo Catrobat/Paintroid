@@ -1172,6 +1172,24 @@ class TransformToolIntegrationTest {
     }
 
     @Test
+    fun testResizeTextChangesSeekbar() {
+        onToolBarView()
+            .performSelectTool(ToolType.TRANSFORM)
+        var seekBar =
+            mainActivity.findViewById<SeekBar>(R.id.pocketpaint_transform_resize_seekbar)
+        var progress = seekBar.progress
+        onTransformToolOptionsView()
+            .checkPercentageTextMatches(progress)
+            .performEditResizeTextField("50")
+
+        seekBar =
+            launchActivityRule.activity.findViewById(R.id.pocketpaint_transform_resize_seekbar)
+        progress = seekBar.progress
+
+        assertEquals(progress, 50)
+    }
+
+    @Test
     fun testTransformToolDoesNotResetPerspectiveScale() {
         val scale = 2.0f
         perspective.scale = scale

@@ -19,10 +19,10 @@
 
 buildscript {
     repositories {
-        jcenter()
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'org.catrobat.gradle.androidemulators:android-emulators-gradle:1.0.1'
+        classpath 'com.github.Catrobat:Gradle:v1.6.2'
     }
 }
 
