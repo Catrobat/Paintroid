@@ -20,13 +20,13 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers
-import org.catrobat.paintroid.R
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
-import org.catrobat.paintroid.tools.ToolType
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
+import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
+import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers
 
 class BottomNavigationViewInteraction private constructor() :
@@ -80,6 +80,6 @@ class BottomNavigationViewInteraction private constructor() :
 
     companion object {
         @JvmStatic
-        fun onBottomNavigationView(): BottomNavigationViewInteraction { return BottomNavigationViewInteraction() }
+        fun onBottomNavigationView(): BottomNavigationViewInteraction = BottomNavigationViewInteraction()
     }
 }

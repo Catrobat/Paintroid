@@ -19,23 +19,23 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers
 
-import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers
 import org.catrobat.paintroid.R
-import androidx.test.espresso.ViewInteraction
 
 class BrushPickerViewInteraction private constructor() :
-    CustomViewInteraction(Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_layout_tool_options))) {
-    fun onStrokeWidthSeekBar(): ViewInteraction { return Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_stroke_width_seek_bar)) }
+    CustomViewInteraction(onView(ViewMatchers.withId(R.id.pocketpaint_layout_tool_options))) {
+    fun onStrokeWidthSeekBar(): ViewInteraction = onView(ViewMatchers.withId(R.id.pocketpaint_stroke_width_seek_bar))
 
-    fun onStrokeWidthTextView(): ViewInteraction { return Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_stroke_width_width_text)) }
+    fun onStrokeWidthTextView(): ViewInteraction = onView(ViewMatchers.withId(R.id.pocketpaint_stroke_width_width_text))
 
-    fun onStrokeCapSquareView(): ViewInteraction { return Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_stroke_ibtn_rect)) }
+    fun onStrokeCapSquareView(): ViewInteraction = onView(ViewMatchers.withId(R.id.pocketpaint_stroke_ibtn_rect))
 
-    fun onStrokeCapRoundView(): ViewInteraction { return Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_stroke_ibtn_circle)) }
+    fun onStrokeCapRoundView(): ViewInteraction = onView(ViewMatchers.withId(R.id.pocketpaint_stroke_ibtn_circle))
 
     companion object {
         @JvmStatic
-		fun onBrushPickerView(): BrushPickerViewInteraction { return BrushPickerViewInteraction() }
+        fun onBrushPickerView(): BrushPickerViewInteraction = BrushPickerViewInteraction()
     }
 }

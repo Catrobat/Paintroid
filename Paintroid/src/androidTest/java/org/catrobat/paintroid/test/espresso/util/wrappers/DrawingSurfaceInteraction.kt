@@ -39,23 +39,25 @@ class DrawingSurfaceInteraction private constructor() :
         @ColorInt expectedColor: Int,
         coordinateProvider: CoordinatesProvider
     ): DrawingSurfaceInteraction {
-        check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
-            override fun describeTo(description: Description) {
-                description.appendText(
-                    "Color at coordinates is " + Integer.toHexString(expectedColor)
-                )
-            }
+        check(
+            ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
+                override fun describeTo(description: Description) {
+                    description.appendText(
+                        "Color at coordinates is " + Integer.toHexString(expectedColor)
+                    )
+                }
 
-            override fun matchesSafely(view: View?): Boolean {
-                val activity = MainActivityHelper.getMainActivityFromView(view)
-                val currentLayer = activity.layerModel.currentLayer
-                val coordinates = coordinateProvider.calculateCoordinates(view)
-                val actualColor = currentLayer?.bitmap?.getPixel(
-                    coordinates[0].toInt(), coordinates[1].toInt()
-                )
-                return expectedColor == actualColor
-            }
-        }))
+                override fun matchesSafely(view: View?): Boolean {
+                    val activity = MainActivityHelper.getMainActivityFromView(view)
+                    val currentLayer = activity.layerModel.currentLayer
+                    val coordinates = coordinateProvider.calculateCoordinates(view)
+                    val actualColor = currentLayer?.bitmap?.getPixel(
+                        coordinates[0].toInt(), coordinates[1].toInt()
+                    )
+                    return expectedColor == actualColor
+                }
+            })
+        )
         return this
     }
 
@@ -64,20 +66,22 @@ class DrawingSurfaceInteraction private constructor() :
         x: Float,
         y: Float
     ): DrawingSurfaceInteraction {
-        check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
-            override fun describeTo(description: Description) {
-                description.appendText(
-                    "Color at coordinates is " + Integer.toHexString(expectedColor)
-                )
-            }
+        check(
+            ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
+                override fun describeTo(description: Description) {
+                    description.appendText(
+                        "Color at coordinates is " + Integer.toHexString(expectedColor)
+                    )
+                }
 
-            override fun matchesSafely(view: View?): Boolean {
-                val activity = MainActivityHelper.getMainActivityFromView(view)
-                val currentLayer = activity.layerModel.currentLayer
-                val actualColor = currentLayer?.bitmap?.getPixel(x.toInt(), y.toInt())
-                return expectedColor == actualColor
-            }
-        }))
+                override fun matchesSafely(view: View?): Boolean {
+                    val activity = MainActivityHelper.getMainActivityFromView(view)
+                    val currentLayer = activity.layerModel.currentLayer
+                    val actualColor = currentLayer?.bitmap?.getPixel(x.toInt(), y.toInt())
+                    return expectedColor == actualColor
+                }
+            })
+        )
         return this
     }
 
@@ -94,6 +98,6 @@ class DrawingSurfaceInteraction private constructor() :
 
     companion object {
         @JvmStatic
-		fun onDrawingSurfaceView(): DrawingSurfaceInteraction { return DrawingSurfaceInteraction() }
+        fun onDrawingSurfaceView(): DrawingSurfaceInteraction = DrawingSurfaceInteraction()
     }
 }

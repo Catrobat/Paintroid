@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.espresso.util.wrappers
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.catrobat.paintroid.R
@@ -36,15 +37,15 @@ class ShapeToolOptionsViewInteraction private constructor() :
             DrawableShape.HEART -> R.id.pocketpaint_shapes_heart_btn
             DrawableShape.STAR -> R.id.pocketpaint_shapes_star_btn
         }
-        throw IllegalArgumentException()
+        throw IllegalArgumentException("No button found for base shape $baseShape")
     }
 
     private fun getButtonIdFromShapeDrawType(shapeDrawType: DrawableStyle): Int {
-         when (shapeDrawType) {
+        when (shapeDrawType) {
             DrawableStyle.STROKE -> R.id.pocketpaint_shape_ibtn_outline
             DrawableStyle.FILL -> R.id.pocketpaint_shape_ibtn_fill
         }
-        throw IllegalArgumentException()
+        throw IllegalArgumentException("No button found for shape draw type $shapeDrawType")
     }
 
     fun performSelectShape(shape: DrawableShape): ShapeToolOptionsViewInteraction {
@@ -59,13 +60,13 @@ class ShapeToolOptionsViewInteraction private constructor() :
         return this
     }
 
-    fun performSetOutlineWidth(setWidth: ViewAction?) {
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_shape_stroke_width_seek_bar))
-            .perform(setWidth)
-    }
+    fun performSetOutlineWidth(
+        setWidth: ViewAction?
+    ): ViewInteraction? = Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_shape_stroke_width_seek_bar))
+        .perform(setWidth)
 
     companion object {
         @JvmStatic
-		fun onShapeToolOptionsView(): ShapeToolOptionsViewInteraction { return ShapeToolOptionsViewInteraction() }
+        fun onShapeToolOptionsView(): ShapeToolOptionsViewInteraction = ShapeToolOptionsViewInteraction()
     }
 }

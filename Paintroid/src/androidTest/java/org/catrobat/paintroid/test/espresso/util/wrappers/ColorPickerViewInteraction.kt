@@ -35,9 +35,7 @@ import org.hamcrest.Matchers
 open class ColorPickerViewInteraction protected constructor() :
     CustomViewInteraction(Espresso.onView(ViewMatchers.withId(R.id.color_picker_view))) {
     fun onPositiveButton(): ViewInteraction {
-        return Espresso.onView(ViewMatchers.withId(android.R.id.button1)) // to avoid following exception when running on emulator:
-            // Caused by: java.lang.SecurityException:
-            // Injecting to another application requires INJECT_EVENTS permission
+        return Espresso.onView(ViewMatchers.withId(android.R.id.button1))
             .perform(ViewActions.closeSoftKeyboard())
     }
 
@@ -47,9 +45,7 @@ open class ColorPickerViewInteraction protected constructor() :
     }
 
     fun onNegativeButton(): ViewInteraction {
-        return Espresso.onView(ViewMatchers.withId(android.R.id.button2)) // to avoid following exception when running on emulator:
-            // Caused by: java.lang.SecurityException:
-            // Injecting to another application requires INJECT_EVENTS permission
+        return Espresso.onView(ViewMatchers.withId(android.R.id.button2))
             .perform(ViewActions.closeSoftKeyboard())
     }
 
@@ -79,7 +75,8 @@ open class ColorPickerViewInteraction protected constructor() :
         val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
         Espresso.onView(
             Matchers.allOf(
-                ViewMatchers.isDescendantOfA(ViewMatchers.withClassName(
+                ViewMatchers.isDescendantOfA(
+                    ViewMatchers.withClassName(
                         Matchers.containsString(PresetSelectorView::class.java.simpleName)
                     )
                 ),
@@ -101,6 +98,6 @@ open class ColorPickerViewInteraction protected constructor() :
     companion object {
         private const val COLOR_PICKER_BUTTONS_PER_ROW = 4
         @JvmStatic
-		fun onColorPickerView(): ColorPickerViewInteraction { return ColorPickerViewInteraction() }
+        fun onColorPickerView(): ColorPickerViewInteraction = ColorPickerViewInteraction()
     }
 }

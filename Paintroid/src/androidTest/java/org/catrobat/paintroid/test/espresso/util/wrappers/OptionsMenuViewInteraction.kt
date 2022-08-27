@@ -1,12 +1,12 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers
 
 import androidx.annotation.StringRes
+import androidx.appcompat.widget.MenuPopupWindow.MenuDropDownListView
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
-import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.Espresso
 import org.hamcrest.CoreMatchers
-import androidx.appcompat.widget.MenuPopupWindow.MenuDropDownListView
 import org.hamcrest.Matchers
 
 class OptionsMenuViewInteraction private constructor() {
@@ -22,8 +22,9 @@ class OptionsMenuViewInteraction private constructor() {
 
     companion object {
         lateinit var optionsMenu: ViewInteraction
+
         @JvmStatic
-		fun onOptionsMenu(): OptionsMenuViewInteraction { return OptionsMenuViewInteraction() }
+        fun onOptionsMenu(): OptionsMenuViewInteraction = OptionsMenuViewInteraction()
     }
 
     init {

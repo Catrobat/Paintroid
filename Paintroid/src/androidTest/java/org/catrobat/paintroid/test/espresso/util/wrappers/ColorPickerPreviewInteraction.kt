@@ -30,16 +30,12 @@ import org.catrobat.paintroid.test.espresso.util.UiMatcher
 class ColorPickerPreviewInteraction private constructor() :
     CustomViewInteraction(Espresso.onView(ViewMatchers.withId(R.id.previewSurface))) {
     private fun onPositiveButton(): ViewInteraction {
-        return Espresso.onView(ViewMatchers.withId(android.R.id.button1)) // to avoid following exception when running on emulator:
-            // Caused by: java.lang.SecurityException:
-            // Injecting to another application requires INJECT_EVENTS permission
+        return Espresso.onView(ViewMatchers.withId(android.R.id.button1))
             .perform(ViewActions.closeSoftKeyboard())
     }
 
     private fun onNegativeButton(): ViewInteraction {
-        return Espresso.onView(ViewMatchers.withId(android.R.id.button2)) // to avoid following exception when running on emulator:
-            // Caused by: java.lang.SecurityException:
-            // Injecting to another application requires INJECT_EVENTS permission
+        return Espresso.onView(ViewMatchers.withId(android.R.id.button2))
             .perform(ViewActions.closeSoftKeyboard())
     }
 
@@ -84,6 +80,6 @@ class ColorPickerPreviewInteraction private constructor() :
 
     companion object {
         @JvmStatic
-		fun onColorPickerPreview(): ColorPickerPreviewInteraction { return ColorPickerPreviewInteraction() }
+        fun onColorPickerPreview(): ColorPickerPreviewInteraction = ColorPickerPreviewInteraction()
     }
 }

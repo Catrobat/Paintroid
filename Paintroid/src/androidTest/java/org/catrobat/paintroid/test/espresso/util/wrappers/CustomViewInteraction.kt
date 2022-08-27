@@ -19,16 +19,16 @@
 
 package org.catrobat.paintroid.test.espresso.util.wrappers
 
-import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.Root
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewAssertion
+import androidx.test.espresso.ViewInteraction
 import org.hamcrest.Matcher
 
-abstract class CustomViewInteraction protected constructor(protected var viewInteraction: ViewInteraction?) {
-    fun perform(vararg viewActions: ViewAction?): ViewInteraction? { return viewInteraction?.perform(*viewActions) }
+open class CustomViewInteraction protected constructor(protected var viewInteraction: ViewInteraction?) {
+    fun perform(vararg viewActions: ViewAction?): ViewInteraction? = viewInteraction?.perform(*viewActions)
 
-    fun inRoot(var1: Matcher<Root?>?): ViewInteraction? { return viewInteraction?.inRoot(var1) }
+    fun inRoot(var1: Matcher<Root?>?): ViewInteraction? = viewInteraction?.inRoot(var1)
 
-    fun check(viewAssert: ViewAssertion?): ViewInteraction? { return viewInteraction?.check(viewAssert) }
+    fun check(viewAssert: ViewAssertion?): ViewInteraction? = viewInteraction?.check(viewAssert)
 }

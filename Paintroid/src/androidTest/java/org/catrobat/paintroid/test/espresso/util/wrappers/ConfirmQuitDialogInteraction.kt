@@ -78,6 +78,6 @@ class ConfirmQuitDialogInteraction private constructor() : CustomViewInteraction
 
     companion object {
         @JvmStatic
-        fun onConfirmQuitDialog(): ConfirmQuitDialogInteraction { return ConfirmQuitDialogInteraction() }
+        fun onConfirmQuitDialog(): ConfirmQuitDialogInteraction = ConfirmQuitDialogInteraction()
     }
 }
