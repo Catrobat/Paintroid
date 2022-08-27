@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,20 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.catrobat.paintroid.colorpicker
 
-interface OnColorChangedListener {
-    fun colorChanged(color: Int)
-}
+package org.catrobat.paintroid.command.serialization
 
-interface OnColorPickedListener {
-    fun colorChanged(color: Int)
-}
+import org.catrobat.paintroid.colorpicker.ColorHistory
+import org.catrobat.paintroid.model.CommandManagerModel
 
-interface OnImageViewPointClickedListener {
-    fun colorChanged(color: Int)
-}
-
-interface OnColorInHistoryChangedListener {
-    fun colorInHistoryChanged(color: Int)
-}
+data class CatrobatFileContent(val commandModel: CommandManagerModel, val colorHistory: ColorHistory?)

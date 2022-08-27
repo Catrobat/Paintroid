@@ -16,24 +16,26 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/pocketpaint_layer_side_nav_menu"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/pocketpaint_layer_actions_container"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/pocketpaint_layer_side_nav_button_visibility"
             style="?borderlessButtonStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
             android:contentDescription="@string/layer_new"
+            android:id="@+id/pocketpaint_layer_side_nav_button_visibility"
+            android:layout_height="wrap_content"
+            android:layout_width="50dp"
             android:padding="5dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_pocketpaint_layers_visibility"
@@ -41,13 +43,13 @@
             android:tint="@android:color/white" />
 
         <ImageButton
-            android:id="@+id/pocketpaint_layer_side_nav_button_add"
             style="?borderlessButtonStyle"
-            android:layout_width="50dp"
+            android:contentDescription="@string/layer_new"
+            android:id="@+id/pocketpaint_layer_side_nav_button_add"
             android:layout_height="wrap_content"
             android:layout_marginStart="-2dp"
             android:layout_toEndOf="@+id/pocketpaint_layer_side_nav_button_visibility"
-            android:contentDescription="@string/layer_new"
+            android:layout_width="50dp"
             android:padding="5dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_pocketpaint_layers_add_selector"
@@ -55,30 +57,31 @@
             android:tint="@android:color/white" />
 
         <ImageButton
-            android:id="@+id/pocketpaint_layer_side_nav_button_delete"
             style="?borderlessButtonStyle"
-            android:layout_width="50dp"
+            android:contentDescription="@string/layer_delete"
+            android:id="@+id/pocketpaint_layer_side_nav_button_delete"
             android:layout_height="wrap_content"
             android:layout_marginStart="-1dp"
             android:layout_toEndOf="@+id/pocketpaint_layer_side_nav_button_add"
-            android:contentDescription="@string/layer_delete"
+            android:layout_width="50dp"
             android:padding="5dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_pocketpaint_layers_delete_selector"
             android:theme="@style/PocketPaintHighlightColorTheme"
             android:tint="@android:color/white" />
 
+        <org.catrobat.paintroid.ui.dragndrop.DragAndDropListView
+            android:background="@color/pocketpaint_colorPrimary"
+            android:id="@+id/pocketpaint_layer_side_nav_list"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="true"
+            android:layout_marginTop="45dp"
+            android:layout_marginStart="-147dp"
+            tools:listitem="@layout/pocketpaint_item_layer"
+            />
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <org.catrobat.paintroid.ui.dragndrop.DragAndDropListView
-        android:id="@+id/pocketpaint_layer_side_nav_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/pocketpaint_layer_actions_container"
-        android:background="@color/pocketpaint_colorPrimary"
-        android:splitMotionEvents="true"
-        tools:listitem="@layout/pocketpaint_item_layer">
-
-    </org.catrobat.paintroid.ui.dragndrop.DragAndDropListView>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

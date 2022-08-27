@@ -25,86 +25,88 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.ui.dragndrop.DragAndDropListView
 import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 
-class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), LayerContracts.Adapter {
-    private val viewHolders: SparseArray<LayerContracts.LayerViewHolder> = SparseArray()
+private const val RESIZE_LENGTH = 400f
 
-    override fun getCount() = presenter.layerCount
+class LayerAdapter(
+    val presenter: LayerContracts.Presenter,
+    val mainActivity: MainActivity,
+    var listener: DragAndDropListView.OnItemClickListener
+) : RecyclerView.Adapter<LayerAdapter.LayerViewHolder>(), LayerContracts.Adapter {
 
-    override fun getItem(position: Int): LayerContracts.Layer = presenter.getLayerItem(position)
-
-    override fun getItemId(position: Int) = presenter.getLayerItemId(position)
-
-    override fun notifyDataSetChanged() {
-        viewHolders.clear()
-        super.notifyDataSetChanged()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LayerViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
+            .inflate(R.layout.pocketpaint_item_layer, parent, false)
+        return LayerViewHolder(itemView, presenter)
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
-        var localConvertView = convertView
-        val viewHolder: LayerContracts.LayerViewHolder
-        if (localConvertView == null) {
-            val inflater = LayoutInflater.from(parent.context)
-            localConvertView = inflater.inflate(R.layout.pocketpaint_item_layer, parent, false)
-            viewHolder = LayerViewHolder(localConvertView, presenter)
-            localConvertView.tag = viewHolder
-        } else {
-            viewHolder = localConvertView.tag as LayerContracts.LayerViewHolder
-        }
-        viewHolders.put(position, viewHolder)
-        val isShown = presenter.isShown()
-        presenter.onBindLayerViewHolderAtPosition(position, viewHolder, isShown)
-        val checkBox = localConvertView?.findViewById<CheckBox>(R.id.pocketpaint_checkbox_layer)
-        checkBox?.setOnClickListener {
-            with(presenter) {
-                if (checkBox.isChecked) {
-                    unhideLayer(position, viewHolder)
-                    getLayerItem(position).isVisible = true
-                } else {
-                    hideLayer(position)
-                    getLayerItem(position).isVisible = false
-                }
-            }
-        }
+    override fun onBindViewHolder(holder: LayerViewHolder, position: Int) {
+        viewHolders.put(position, holder)
+        presenter.onBindLayerViewHolderAtPosition(position, holder, presenter.isShown())
+    }
 
-        val dragHandle = localConvertView?.findViewById<AppCompatImageView>(R.id.pocketpaint_layer_drag_handle)
-        dragHandle?.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> localConvertView?.let {
-                    presenter.onStartDragging(position, it)
-                }
-                MotionEvent.ACTION_UP -> presenter.onStopDragging()
-            }
+    override fun getItemCount(): Int = presenter.layerCount
 
-            true
-        }
+    val viewHolders: SparseArray<LayerContracts.LayerViewHolder> = SparseArray()
 
-        return localConvertView
+    fun clearViewHolders() {
+        viewHolders.clear()
     }
 
     override fun getViewHolderAt(position: Int): LayerContracts.LayerViewHolder? = viewHolders[position]
 
-    internal class LayerViewHolder(private val itemView: View, private val layerPresenter: LayerContracts.Presenter) : LayerContracts.LayerViewHolder {
+    inner class LayerViewHolder(
+        itemView: View,
+        private val layerPresenter: LayerContracts.Presenter
+    ) : LayerContracts.LayerViewHolder, RecyclerView.ViewHolder(itemView) {
         private val layerBackground: LinearLayout = itemView.findViewById(R.id.pocketpaint_item_layer_background)
         private val imageView: ImageView = itemView.findViewById(R.id.pocketpaint_item_layer_image)
         private var currentBitmap: Bitmap? = null
         private val layerVisibilityCheckbox: CheckBox = itemView.findViewById(R.id.pocketpaint_checkbox_layer)
         private var isSelected = false
 
-        companion object {
-            private const val RESIZE_LENGTH = 400f
+        init {
+            this.view.setOnClickListener {
+                listener.onItemClick(adapterPosition, imageView)
+            }
+
+            val checkBox = itemView.findViewById<CheckBox>(R.id.pocketpaint_checkbox_layer)
+            checkBox?.setOnClickListener {
+                with(presenter) {
+                    if (checkBox.isChecked) {
+                        unhideLayer(adapterPosition, viewHolders.get(adapterPosition))
+                        getLayerItem(adapterPosition).isVisible = true
+                    } else {
+                        hideLayer(adapterPosition)
+                        getLayerItem(adapterPosition).isVisible = false
+                    }
+                }
+            }
+            val dragHandle =
+                itemView.findViewById<AppCompatImageView>(R.id.pocketpaint_layer_drag_handle)
+            dragHandle?.setOnTouchListener { _, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> view.let {
+                        presenter.onStartDragging(adapterPosition, it)
+                    }
+                    MotionEvent.ACTION_UP -> presenter.onStopDragging()
+                }
+                true
+            }
         }
 
         override val bitmap: Bitmap?
@@ -113,7 +115,11 @@ class LayerAdapter(val presenter: LayerContracts.Presenter) : BaseAdapter(), Lay
         override val view: View
             get() = itemView
 
-        override fun setSelected(position: Int, bottomNavigationViewHolder: BottomNavigationViewHolder?, defaultToolController: DefaultToolController?) {
+        override fun setSelected(
+            position: Int,
+            bottomNavigationViewHolder: BottomNavigationViewHolder?,
+            defaultToolController: DefaultToolController?
+        ) {
             if (!layerPresenter.getLayerItem(position).isVisible) {
                 defaultToolController?.switchTool(ToolType.HAND)
                 bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
