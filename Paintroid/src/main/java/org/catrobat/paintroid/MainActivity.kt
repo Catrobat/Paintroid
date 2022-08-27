@@ -44,6 +44,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -51,6 +53,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.CommandManager.CommandListener
@@ -108,10 +111,6 @@ private const val TEMP_IMAGE_SAVE_INTERVAL = 60
 private const val TEMP_IMAGE_IDLE_INTERVAL = 2 * TEMP_IMAGE_COROUTINE_DELAY_MILLI_SEC
 
 class MainActivity : AppCompatActivity(), MainView, CommandListener {
-
-    @VisibleForTesting
-    lateinit var model: MainActivityContracts.Model
-
     @VisibleForTesting
     lateinit var perspective: Perspective
 
@@ -122,12 +121,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     lateinit var layerModel: LayerContracts.Model
 
     @VisibleForTesting
-    lateinit var commandManager: CommandManager
-
-    @VisibleForTesting
-    lateinit var toolPaint: ToolPaint
-
-    @VisibleForTesting
     lateinit var toolReference: ToolReference
 
     @VisibleForTesting
@@ -135,7 +128,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     var idlingResource: CountingIdlingResource = CountingIdlingResource("MainIdleResource")
 
+    lateinit var commandManager: CommandManager
+    lateinit var toolPaint: ToolPaint
     lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
+    lateinit var model: MainActivityContracts.Model
 
     private lateinit var layerPresenter: LayerPresenter
     private lateinit var drawingSurface: DrawingSurface
@@ -143,7 +139,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private lateinit var drawerLayoutViewHolder: DrawerLayoutViewHolder
     private lateinit var keyboardListener: KeyboardListener
     private lateinit var appFragment: PaintroidApplicationFragment
-    private lateinit var defaultToolController: DefaultToolController
+    lateinit var defaultToolController: DefaultToolController
     private lateinit var commandFactory: CommandFactory
     private var deferredRequestPermissionsResult: Runnable? = null
     private lateinit var progressBar: ContentLoadingProgressBar
@@ -224,9 +220,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         try {
             if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
                 try {
-                    commandManager.loadCommandsCatrobatImage(
-                        workspace.getCommandSerializationHelper().readFromFile(receivedUri)
-                    )
+                    val fileContent = workspace.getCommandSerializationHelper().readFromFile(receivedUri)
+                    commandManager.loadCommandsCatrobatImage(fileContent.commandModel)
+                    presenterMain.setColorHistoryAfterLoadImage(fileContent.colorHistory)
                     return false
                 } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
                     Log.e(TAG, "Image might be an ora file instead")
@@ -307,11 +303,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 presenterMain.initializeFromCleanState(picturePath, pictureName)
 
                 if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
-                    commandManager.loadCommandsCatrobatImage(
-                        presenterMain.openTemporaryFile(
-                            workspace
-                        )
-                    )
+                    val workspaceReturnValue = presenterMain.openTemporaryFile(workspace)
+                    commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
+                    model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
+                    model.colorHistory.colors.lastOrNull()?.let {
+                        toolReference.tool?.changePaintColor(it)
+                        presenterMain.setBottomNavigationColor(it)
+                    }
                 }
                 workspace.perspective.setBitmapDimensions(layerModel.width, layerModel.height)
             }
@@ -438,13 +436,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         )
         perspective = Perspective(layerModel.width, layerModel.height)
         val listener = DefaultWorkspace.Listener { drawingSurface.refreshDrawingSurface() }
+        model = MainActivityModel()
         workspace = DefaultWorkspace(
             layerModel,
             perspective,
             listener,
-            CommandSerializationUtilities(this, commandManager)
+            CommandSerializationUtilities(this, commandManager, model)
         )
-        model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,
@@ -496,7 +494,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             layerModel, layerListView, layerMenuViewHolder,
             commandManager, DefaultCommandFactory(), layerNavigator
         )
-        val layerAdapter = LayerAdapter(layerPresenter)
+        val layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
+        layerListView.layoutManager = layoutManager
+        layerListView.manager = layoutManager
+        val layerAdapter = LayerAdapter(layerPresenter, this, layerListView.listener)
+        layerListView.setLayerAdapter(layerAdapter)
         presenterMain.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
         layerListView.setPresenter(layerPresenter)
@@ -726,4 +728,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             }
         }
     }
+
+    fun getVersionCode(): String = runCatching {
+        packageManager.getPackageInfo(packageName, 0).versionName
+    }.getOrDefault("")
 }

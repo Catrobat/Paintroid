@@ -95,10 +95,11 @@ class MainActivityNavigator(
     private val mainActivity: MainActivity,
     private val toolReference: ToolReference
 ) : MainActivityContracts.Navigator {
-
     override val isSdkAboveOrEqualM: Boolean
+        @SuppressLint("AnnotateVersionCheck")
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     override val isSdkAboveOrEqualQ: Boolean
+        @SuppressLint("AnnotateVersionCheck")
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     private var commandFactory: CommandFactory = DefaultCommandFactory()
@@ -133,15 +134,17 @@ class MainActivityNavigator(
     private fun setupColorPickerDialogListeners(dialog: ColorPickerDialog) {
         dialog.addOnColorPickedListener(object : OnColorPickedListener {
             override fun colorChanged(color: Int) {
+                val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
+                mainActivity.model.colorHistory.addColor(color)
+
                 if (toolReference.tool?.toolType != ToolType.CLIP) {
-                    val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
                     mainActivity.commandManager.addCommand(command)
                 } else {
-                    val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
                     mainActivity.commandManager.addCommandWithoutUndo(command)
                 }
             }
         })
+
         mainActivity.presenter.bitmap?.let { dialog.setBitmap(it) }
     }
 
@@ -168,13 +171,10 @@ class MainActivityNavigator(
         try {
             mainActivity.startActivity(openPlayStore)
         } catch (e: ActivityNotFoundException) {
-            val uriNoPlayStore =
-                Uri.parse("http://play.google.com/store/apps/details?id=$applicationId")
+            val uriNoPlayStore = Uri.parse("http://play.google.com/store/apps/details?id=$applicationId")
             val noPlayStoreInstalled = Intent(Intent.ACTION_VIEW, uriNoPlayStore)
-            val activityInfo = noPlayStoreInstalled.resolveActivityInfo(
-                mainActivity.packageManager, noPlayStoreInstalled.flags
-            )
-            if (activityInfo.exported) {
+
+            runCatching {
                 mainActivity.startActivity(noPlayStoreInstalled)
             }
         }
@@ -207,7 +207,8 @@ class MainActivityNavigator(
                 val dialog = ColorPickerDialog.newInstance(
                     it.drawPaint.color,
                     mainActivity.model.isOpenedFromCatroid,
-                    mainActivity.model.isOpenedFromFormulaEditorInCatroid
+                    mainActivity.model.isOpenedFromFormulaEditorInCatroid,
+                    mainActivity.model.colorHistory
                 )
                 setupColorPickerDialogListeners(dialog)
                 showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)
