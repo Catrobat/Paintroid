@@ -19,81 +19,53 @@
 
 package org.catrobat.paintroid.test.espresso.util
 
-import androidx.test.espresso.action.CoordinatesProvider
 import android.graphics.PointF
 import android.view.View
+import androidx.test.espresso.action.CoordinatesProvider
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
 
 enum class DrawingSurfaceLocationProvider : CoordinatesProvider {
     MIDDLE {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .5f, .5f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .5f, .5f)
     },
     HALFWAY_LEFT_MIDDLE {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .25f, .5f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .25f, .5f)
     },
     HALFWAY_RIGHT_MIDDLE {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .75f, .5f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .75f, .5f)
     },
     TOP_MIDDLE {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .5f, 0f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .5f, 0f)
     },
     HALFWAY_TOP_MIDDLE {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .5f, .25f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .5f, .25f)
     },
     HALFWAY_BOTTOM_MIDDLE {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .5f, .75f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .5f, .75f)
     },
     HALFWAY_TOP_LEFT {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .25f, .25f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .25f, .25f)
     },
     HALFWAY_TOP_RIGHT {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .75f, .25f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .75f, .25f)
     },
     HALFWAY_BOTTOM_LEFT {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .25f, .75f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .25f, .75f)
     },
     HALFWAY_BOTTOM_RIGHT {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .75f, .75f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .75f, .75f)
     },
     BOTTOM_RIGHT_CLOSE_CENTER {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .55f, .55f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .55f, .55f)
     },
     BOTTOM_RIGHT_CORNER {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, 1f, 1f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, 1f, 1f)
     },
     BOTTOM_MIDDLE {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, .5f, 1f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, .5f, 1f)
     },
     OUTSIDE_MIDDLE_RIGHT {
-        override fun calculateCoordinates(view: View): FloatArray {
-            return calculatePercentageOffset(view, 1.5f, .5f)
-        }
+        override fun calculateCoordinates(view: View): FloatArray = calculatePercentageOffset(view, 1.5f, .5f)
     },
     TOOL_POSITION {
         override fun calculateCoordinates(view: View): FloatArray {

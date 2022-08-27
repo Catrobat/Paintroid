@@ -24,6 +24,7 @@ import android.net.Uri
 import android.os.Environment
 import android.view.Gravity
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.DrawerActions
@@ -38,11 +39,11 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.grantPermissionRulesVersionCheck
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
-import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ConfirmQuitDialogInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ConfirmQuitDialogInteraction.onConfirmQuitDialog
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
@@ -90,51 +91,51 @@ class ToolOnBackPressedIntegrationTest {
 
     @Test
     fun testBrushToolBackPressed() {
-        DrawingSurfaceInteraction.onDrawingSurfaceView()
+        onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         Espresso.pressBack()
-        ConfirmQuitDialogInteraction.onConfirmQuitDialog()
+        onConfirmQuitDialog()
             .checkPositiveButton(ViewAssertions.matches(ViewMatchers.isDisplayed()))
             .checkNegativeButton(ViewAssertions.matches(ViewMatchers.isDisplayed()))
             .checkNeutralButton(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
             .checkMessage(ViewAssertions.matches(ViewMatchers.isDisplayed()))
             .checkTitle(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.pressBack()
-        ConfirmQuitDialogInteraction.onConfirmQuitDialog()
+        onConfirmQuitDialog()
             .checkPositiveButton(ViewAssertions.doesNotExist())
             .checkNegativeButton(ViewAssertions.doesNotExist())
             .checkNeutralButton(ViewAssertions.doesNotExist())
             .checkMessage(ViewAssertions.doesNotExist())
             .checkTitle(ViewAssertions.doesNotExist())
         Espresso.pressBack()
-        ConfirmQuitDialogInteraction.onConfirmQuitDialog().onNegativeButton()
+        onConfirmQuitDialog().onNegativeButton()
             .perform(ViewActions.click())
         assertTrue(launchActivityRule.activity.isFinishing)
     }
 
+    @Suppress("LongMethod")
     @Test
     @Throws(IOException::class)
     fun testBrushToolBackPressedWithSaveAndOverride() {
-        TopBarViewInteraction.onTopBarView()
-            .performOpenMoreOptions()
-        Espresso.onView(ViewMatchers.withText(R.string.menu_save_image))
+        onTopBarView().performOpenMoreOptions()
+        onView(ViewMatchers.withText(R.string.menu_save_image))
             .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_save_info_title))
+        onView(ViewMatchers.withId(R.id.pocketpaint_save_info_title))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
+        onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
+        onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
+        onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
             .perform(ViewActions.click())
         Espresso.onData(
             AllOf.allOf(Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)), Matchers.`is`<String>("png"))
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
+        onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText(defaultPictureName))
-        Espresso.onView(ViewMatchers.withText(R.string.save_button_text))
+        onView(ViewMatchers.withText(R.string.save_button_text))
             .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(200))
+        onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(200))
 
         val filename = defaultPictureName + FILE_ENDING
         val resolver = launchActivityRule.activity.contentResolver
@@ -144,30 +145,30 @@ class ToolOnBackPressedIntegrationTest {
         var inputStream = resolver.openInputStream(uri!!)
         val oldBitmap = BitmapFactory.decodeStream(inputStream, null, options)
 
-        DrawingSurfaceInteraction.onDrawingSurfaceView()
+        onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         Espresso.pressBack()
-        ConfirmQuitDialogInteraction.onConfirmQuitDialog().onPositiveButton()
+        onConfirmQuitDialog().onPositiveButton()
             .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_save_info_title))
+        onView(ViewMatchers.withId(R.id.pocketpaint_save_info_title))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
+        onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
+        onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
+        onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
             .perform(ViewActions.click())
         Espresso.onData(
             AllOf.allOf(Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)), Matchers.`is`<String>("png"))
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
+        onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText(defaultPictureName))
-        Espresso.onView(ViewMatchers.withText(R.string.save_button_text))
+        onView(ViewMatchers.withText(R.string.save_button_text))
             .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(200))
-        Espresso.onView(ViewMatchers.withText(R.string.overwrite_button_text))
+        onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(200))
+        onView(ViewMatchers.withText(R.string.overwrite_button_text))
             .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(200))
+        onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(200))
         uri = getUriForFilenameInPicturesFolder(filename, resolver)
         assertNotNull(uri)
         inputStream = uri?.let { resolver.openInputStream(it) }
@@ -200,18 +201,20 @@ class ToolOnBackPressedIntegrationTest {
     @Test
     @Throws(SecurityException::class, IllegalArgumentException::class, InterruptedException::class)
     fun testBrushToolBackPressedFromCatroidAndUsePicture() {
-        DrawingSurfaceInteraction.onDrawingSurfaceView()
+        onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         val pathToFile =
-            (launchActivityRule.activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-                .toString() + File.separator
-                + defaultPictureName
-                + FILE_ENDING)
+            (
+                launchActivityRule.activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                    .toString() + File.separator +
+                    defaultPictureName +
+                    FILE_ENDING
+                )
         saveFile = File(pathToFile)
         launchActivityRule.activity.model.savedPictureUri = Uri.fromFile(saveFile)
         launchActivityRule.activity.model.isOpenedFromCatroid = true
         Espresso.pressBackUnconditionally()
-        Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(2000))
+        onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(2000))
         assertTrue(launchActivityRule.activity.isFinishing)
         saveFile?.exists()?.let { assertTrue(it) }
         assertThat(saveFile?.length(), Matchers.`is`(Matchers.greaterThan(0L)))
@@ -219,20 +222,20 @@ class ToolOnBackPressedIntegrationTest {
 
     @Test
     fun testCloseLayerDialogOnBackPressed() {
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_drawer_layout))
+        onView(ViewMatchers.withId(R.id.pocketpaint_drawer_layout))
             .perform(DrawerActions.open(Gravity.END))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.pressBack()
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_drawer_layout))
+        onView(ViewMatchers.withId(R.id.pocketpaint_drawer_layout))
             .check(ViewAssertions.matches(DrawerMatchers.isClosed()))
     }
 
     @Test
     fun testCloseColorPickerDialogOnBackPressed() {
-        ColorPickerViewInteraction.onColorPickerView()
+        onColorPickerView()
             .performOpenColorPicker()
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        ColorPickerViewInteraction.onColorPickerView()
+        onColorPickerView()
             .perform(ViewActions.closeSoftKeyboard())
             .perform(ViewActions.pressBack())
             .check(ViewAssertions.doesNotExist())

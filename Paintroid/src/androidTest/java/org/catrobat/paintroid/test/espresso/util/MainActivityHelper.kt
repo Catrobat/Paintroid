@@ -28,7 +28,7 @@ import android.view.View
 import android.view.WindowInsets
 import org.catrobat.paintroid.MainActivity
 
-class MainActivityHelper(private val activity: MainActivity) {
+data class MainActivityHelper(private val activity: MainActivity) {
     private val displaySize: Point
         get() {
             val displaySize = Point()
@@ -60,13 +60,13 @@ class MainActivityHelper(private val activity: MainActivity) {
 
     companion object {
         @JvmStatic
-		fun getMainActivityFromView(view: View): MainActivity {
+        fun getMainActivityFromView(view: View): MainActivity {
             var context = view.context
             while (context is ContextWrapper) {
                 if (context is MainActivity) { return context }
                 context = context.baseContext
             }
-            throw RuntimeException("View context does not implement MainActivity")
+            throw NullPointerException("View context does not implement MainActivity")
         }
     }
 }

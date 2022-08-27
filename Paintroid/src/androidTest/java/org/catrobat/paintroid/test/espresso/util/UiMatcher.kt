@@ -49,7 +49,7 @@ import org.hamcrest.TypeSafeMatcher
 
 object UiMatcher {
     @JvmStatic
-	fun atPosition(position: Int, itemMatcher: Matcher<View>): BoundedMatcher<View?, RecyclerView> {
+    fun atPosition(position: Int, itemMatcher: Matcher<View>): BoundedMatcher<View?, RecyclerView> {
         Preconditions.checkNotNull(itemMatcher)
         return object : BoundedMatcher<View?, RecyclerView>(RecyclerView::class.java) {
             override fun describeTo(description: Description) {
@@ -67,18 +67,22 @@ object UiMatcher {
     }
 
     @JvmStatic
-	fun hasTypeFace(typeface: Typeface): TypeSafeMatcher<View?> {
+    fun hasTypeFace(typeface: Typeface): TypeSafeMatcher<View?> {
         return object : TypeSafeMatcher<View?>() {
             override fun matchesSafely(view: View?): Boolean { return view is TextView && view.typeface === typeface }
 
-            override fun describeTo(description: Description) { description.appendText("the selected TextView doesn't have the TypeFace:$typeface") }
+            override fun describeTo(
+                description: Description
+            ) { description.appendText("the selected TextView doesn't have the TypeFace:$typeface") }
         }
     }
 
     @JvmStatic
-	fun hasTablePosition(rowIndex: Int, columnIndex: Int): Matcher<View> {
+    fun hasTablePosition(rowIndex: Int, columnIndex: Int): Matcher<View> {
         return object : TypeSafeMatcher<View>() {
-            override fun describeTo(description: Description) { description.appendText("is child in cell @($rowIndex|$columnIndex)") }
+            override fun describeTo(
+                description: Description
+            ) { description.appendText("is child in cell @($rowIndex|$columnIndex)") }
 
             public override fun matchesSafely(view: View): Boolean {
                 val tableRow = view.parent as? ViewGroup ?: return false
@@ -92,7 +96,7 @@ object UiMatcher {
     }
 
     @JvmStatic
-	fun withBackgroundColor(color: Int): Matcher<View> {
+    fun withBackgroundColor(color: Int): Matcher<View> {
         return object : TypeSafeMatcher<View>() {
             override fun matchesSafely(view: View): Boolean {
                 val background = view.background ?: return false
@@ -100,18 +104,22 @@ object UiMatcher {
                     return color == background.color
                 } else if (background is LayerDrawable) {
                     val drawable = background.getDrawable(0)
-                    return (drawable is ColorDrawable
-                        && color == drawable.color)
+                    return (
+                        drawable is ColorDrawable &&
+                            color == drawable.color
+                        )
                 }
                 return false
             }
 
-            override fun describeTo(description: Description) { description.appendText("with background color: $color") }
+            override fun describeTo(
+                description: Description
+            ) { description.appendText("with background color: $color") }
         }
     }
 
     @JvmStatic
-	fun withTextColor(color: Int): TypeSafeMatcher<View?> {
+    fun withTextColor(color: Int): TypeSafeMatcher<View?> {
         return object : TypeSafeMatcher<View?>() {
             override fun matchesSafely(view: View?): Boolean {
                 if (view !is TextView) { return false }
@@ -124,7 +132,7 @@ object UiMatcher {
     }
 
     @JvmStatic
-	fun withProgress(progress: Int): TypeSafeMatcher<View?> {
+    fun withProgress(progress: Int): TypeSafeMatcher<View?> {
         return object : TypeSafeMatcher<View?>() {
             override fun matchesSafely(view: View?): Boolean {
                 if (view !is SeekBar) { return false }
@@ -137,7 +145,7 @@ object UiMatcher {
     }
 
     @JvmStatic
-	fun withBackground(resourceId: Int): Matcher<View> {
+    fun withBackground(resourceId: Int): Matcher<View> {
         return object : TypeSafeMatcher<View>() {
             var resourceName: String? = null
             override fun matchesSafely(target: View): Boolean {
@@ -171,7 +179,7 @@ object UiMatcher {
     }
 
     @JvmStatic
-	fun withDrawable(resourceId: Int): Matcher<View> {
+    fun withDrawable(resourceId: Int): Matcher<View> {
         return object : TypeSafeMatcher<View>() {
             var resourceName: String? = null
             override fun matchesSafely(target: View): Boolean {
@@ -218,7 +226,7 @@ object UiMatcher {
     }
 
     @JvmStatic
-	fun withAdaptedData(resourceId: Int): Matcher<View> {
+    fun withAdaptedData(resourceId: Int): Matcher<View> {
         return object : TypeSafeMatcher<View>() {
             override fun describeTo(description: Description) { description.appendText("with class name: ") }
 

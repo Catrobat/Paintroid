@@ -43,18 +43,20 @@ import org.hamcrest.Matchers
 object UiInteractions {
 
     @JvmStatic
-	fun waitFor(millis: Long): ViewAction {
+    fun waitFor(millis: Long): ViewAction {
         return object : ViewAction {
-            override fun getConstraints(): Matcher<View> { return ViewMatchers.isRoot() }
+            override fun getConstraints(): Matcher<View> = ViewMatchers.isRoot()
+            override fun getDescription(): String = "Wait for $millis milliseconds."
 
-            override fun getDescription(): String { return "Wait for $millis milliseconds." }
-
-            override fun perform(uiController: UiController, view: View) { uiController.loopMainThreadForAtLeast(millis) }
+            override fun perform(
+                uiController: UiController,
+                view: View
+            ) { uiController.loopMainThreadForAtLeast(millis) }
         }
     }
 
     @JvmStatic
-	fun assertListViewCount(expectedCount: Int): ViewAssertion {
+    fun assertListViewCount(expectedCount: Int): ViewAssertion {
         return ViewAssertion { view: View, noViewFoundException: NoMatchingViewException? ->
             if (noViewFoundException != null) { throw noViewFoundException }
             val adapter = (view as ListView).adapter
@@ -63,7 +65,7 @@ object UiInteractions {
     }
 
     @JvmStatic
-	fun setProgress(progress: Int): ViewAction {
+    fun setProgress(progress: Int): ViewAction {
         return object : ViewAction {
             override fun getConstraints(): Matcher<View> { return ViewMatchers.isAssignableFrom(SeekBar::class.java) }
 
@@ -73,69 +75,80 @@ object UiInteractions {
         }
     }
 
-    fun touchAt(x: Int, y: Int): ViewAction { return touchAt(x.toFloat(), y.toFloat()) }
-
-    fun touchLongAt(x: Float, y: Float): ViewAction { return touchAt(x, y, Tap.LONG) }
+    fun touchAt(x: Int, y: Int): ViewAction = touchAt(x.toFloat(), y.toFloat())
+    fun touchLongAt(x: Float, y: Float): ViewAction = touchAt(x, y, Tap.LONG)
+    @JvmOverloads
+    fun touchAt(
+        provider: CoordinatesProvider?,
+        tapStyle: Tapper? = Tap.SINGLE
+    ): ViewAction = ViewActions.actionWithAssertions(
+        GeneralClickAction(tapStyle, provider, Press.FINGER, 0, 0)
+    )
 
     @JvmOverloads
-    fun touchAt(provider: CoordinatesProvider?, tapStyle: Tapper? = Tap.SINGLE): ViewAction {
-        return ViewActions.actionWithAssertions(
-            GeneralClickAction(tapStyle, provider, Press.FINGER, 0, 0)
-        )
-    }
+    fun touchAt(
+        coordinates: PointF,
+        tapStyle: Tapper? = Tap.SINGLE
+    ): ViewAction = touchAt(coordinates.x, coordinates.y, tapStyle)
 
+    @JvmStatic
     @JvmOverloads
-    fun touchAt(coordinates: PointF, tapStyle: Tapper? = Tap.SINGLE): ViewAction { return touchAt(coordinates.x, coordinates.y, tapStyle) }
+    fun touchAt(
+        x: Float,
+        y: Float,
+        tapStyle: Tapper? = Tap.SINGLE
+    ): ViewAction = ViewActions.actionWithAssertions(
+        GeneralClickAction(tapStyle, PositionCoordinatesProvider.at(x, y), Press.FINGER, 0, 0)
+    )
 
     @JvmStatic
-	@JvmOverloads
-    fun touchAt(x: Float, y: Float, tapStyle: Tapper? = Tap.SINGLE): ViewAction {
-        return ViewActions.actionWithAssertions(
-            GeneralClickAction(tapStyle, PositionCoordinatesProvider.at(x, y), Press.FINGER, 0, 0)
-        )
-    }
+    fun touchCenterLeft(): ViewAction = GeneralClickAction(
+        Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER, 0, 0
+    )
+    @JvmStatic
+    fun touchCenterMiddle(): ViewAction = GeneralClickAction(
+        Tap.SINGLE, GeneralLocation.CENTER, Press.FINGER, 0, 0
+    )
 
     @JvmStatic
-	fun touchCenterLeft(): ViewAction { return GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER, 0, 0) }
+    fun touchCenterRight(): ViewAction = GeneralClickAction(
+        Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER, 0, 0
+    )
+
+    fun swipe(
+        start: PointF,
+        end: PointF
+    ): ViewAction = swipe(start.x.toInt(), start.y.toInt(), end.x.toInt(), end.y.toInt())
+
+    private fun swipe(
+        startX: Int,
+        startY: Int,
+        endX: Int,
+        endY: Int
+    ): ViewAction = swipe(
+        PositionCoordinatesProvider.at(startX.toFloat(), startY.toFloat()),
+        PositionCoordinatesProvider.at(endX.toFloat(), endY.toFloat())
+    )
 
     @JvmStatic
-	fun touchCenterMiddle(): ViewAction { return GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER, Press.FINGER, 0, 0) }
-
-    @JvmStatic
-	fun touchCenterRight(): ViewAction { return GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_RIGHT, Press.FINGER, 0, 0) }
-
-    fun swipe(start: PointF, end: PointF): ViewAction { return swipe(start.x.toInt(), start.y.toInt(), end.x.toInt(), end.y.toInt()) }
-
-    private fun swipe(startX: Int, startY: Int, endX: Int, endY: Int): ViewAction {
-        return swipe(
-            PositionCoordinatesProvider.at(startX.toFloat(), startY.toFloat()),
-            PositionCoordinatesProvider.at(endX.toFloat(), endY.toFloat())
-        )
-    }
-
-    @JvmStatic
-	fun swipe(
+    fun swipe(
         startCoordinatesProvider: CoordinatesProvider?,
         endCoordinatesProvider: CoordinatesProvider?
-    ): ViewAction {
-        return GeneralSwipeAction(
-            Swipe.FAST,
-            startCoordinatesProvider,
-            endCoordinatesProvider,
-            Press.FINGER
-        )
-    }
+    ): ViewAction = GeneralSwipeAction(
+        Swipe.FAST,
+        startCoordinatesProvider,
+        endCoordinatesProvider,
+        Press.FINGER
+    )
 
     @JvmStatic
-	fun swipeAccurate(
+    fun swipeAccurate(
         startCoordinatesProvider: CoordinatesProvider?,
         endCoordinatesProvider: CoordinatesProvider?
-    ): ViewAction {
-        return GeneralSwipeAction(
-            CustomSwiper.ACCURATE,
-            startCoordinatesProvider,
-            endCoordinatesProvider,
-            Press.FINGER
-        )
-    }
+    ): ViewAction = GeneralSwipeAction(
+        CustomSwiper.ACCURATE,
+        startCoordinatesProvider,
+        endCoordinatesProvider,
+        Press.FINGER
+    )
 }

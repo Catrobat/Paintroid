@@ -22,22 +22,22 @@
 package org.catrobat.paintroid.test.espresso
 
 import android.R
-import org.junit.runner.RunWith
-import androidx.test.rule.ActivityTestRule
-import org.catrobat.paintroid.MainActivity
-import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
-import org.catrobat.paintroid.ui.Perspective
-import org.junit.Before
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import android.graphics.PointF
-import org.catrobat.paintroid.tools.ToolType
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
+import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.ui.Perspective
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ScrollingViewIntegrationTest {
@@ -110,8 +110,8 @@ class ScrollingViewIntegrationTest {
         var statusBarHeight = 0
         val resourceId =
             mainActivity.resources?.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId != null) {
-            if (resourceId > 0) { statusBarHeight = mainActivity.resources.getDimensionPixelSize(resourceId) }
+        if (resourceId != null && resourceId > 0) {
+            statusBarHeight = mainActivity.resources.getDimensionPixelSize(resourceId)
         }
         val actionBarHeight: Int
         val styledAttributes =
@@ -150,7 +150,7 @@ class ScrollingViewIntegrationTest {
         Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.touchCenterMiddle())
     }
 
-    fun longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(clickPoint: PointF) {
+    private fun longpressOnPointAndCheckIfCanvasPointHasChangedInXAndY(clickPoint: PointF) {
         var statusBarHeight = 0
         val resourceId =
             mainActivity.resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -174,7 +174,7 @@ class ScrollingViewIntegrationTest {
         Assert.assertNotEquals("view should scroll in y", startPointCanvas.y, endPointCanvas.y, delta)
     }
 
-    fun longpressOnPointAndCheckIfCanvasPointHasChangedInXOrY(clickPoint: PointF) {
+    private fun longpressOnPointAndCheckIfCanvasPointHasChangedInXOrY(clickPoint: PointF) {
         var statusBarHeight = 0
         val resourceId = mainActivity.resources.getIdentifier("status_bar_height", "dimen", "android")
         if (resourceId > 0) { statusBarHeight = mainActivity.resources.getDimensionPixelSize(resourceId) }
@@ -196,7 +196,7 @@ class ScrollingViewIntegrationTest {
         )
     }
 
-    fun longpressOnPointAndCheckIfCanvasPointHasNotChanged(clickPoint: PointF) {
+    private fun longpressOnPointAndCheckIfCanvasPointHasNotChanged(clickPoint: PointF) {
         var statusBarHeight = 0
         val resourceId =
             mainActivity.resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -230,7 +230,14 @@ class ScrollingViewIntegrationTest {
         actionBarHeight = styledAttributes.getDimension(0, 0f).toInt()
         val startPointSurface = PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight)
         val startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface)
-        Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint))
+        Espresso.onView(ViewMatchers.isRoot()).perform(
+            toPoint?.let {
+                UiInteractions.swipe(
+                    fromPoint,
+                    it
+                )
+            }
+        )
         val endPointSurface = PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight)
         val endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface)
 
@@ -238,7 +245,7 @@ class ScrollingViewIntegrationTest {
         Assert.assertNotEquals("scrolling did not work in y", startPointCanvas.y, endPointCanvas.y)
     }
 
-    fun dragAndCheckIfCanvasHasMovedInXOrY(fromPoint: PointF, toPoint: PointF?) {
+    private fun dragAndCheckIfCanvasHasMovedInXOrY(fromPoint: PointF, toPoint: PointF?) {
         var statusBarHeight = 0
         val resourceId =
             mainActivity.resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -251,11 +258,21 @@ class ScrollingViewIntegrationTest {
         actionBarHeight = styledAttributes.getDimension(0, 0f).toInt()
         val startPointSurface = PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight)
         val startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface)
-        Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint))
+        Espresso.onView(ViewMatchers.isRoot()).perform(
+            toPoint?.let {
+                UiInteractions.swipe(
+                    fromPoint,
+                    it
+                )
+            }
+        )
         val endPointSurface = PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight)
         val endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface)
-        val message = ("startX(" + startPointCanvas.x + ") != endX(" + endPointCanvas.x
-            + ") || startY(" + startPointCanvas.y + ") != endY(" + endPointCanvas.y + ")")
+        val message = (
+            "startX(" + startPointCanvas.x + ") != endX(" + endPointCanvas.x +
+                ") " +
+                "|| startY(" + startPointCanvas.y + ") != endY(" + endPointCanvas.y + ")"
+            )
         Assert.assertTrue(
             message,
             startPointCanvas.x != endPointCanvas.x || startPointCanvas.y != endPointCanvas.y
@@ -272,7 +289,14 @@ class ScrollingViewIntegrationTest {
         actionBarHeight = styledAttributes.getDimension(0, 0f).toInt()
         val startPointSurface = PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight)
         val startPointCanvas = perspective.getCanvasPointFromSurfacePoint(startPointSurface)
-        Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.swipe(fromPoint, toPoint))
+        Espresso.onView(ViewMatchers.isRoot()).perform(
+            toPoint?.let {
+                UiInteractions.swipe(
+                    fromPoint,
+                    it
+                )
+            }
+        )
         val endPointSurface = PointF(fromPoint.x, fromPoint.y + actionBarHeight + statusBarHeight)
         val endPointCanvas = perspective.getCanvasPointFromSurfacePoint(endPointSurface)
         val delta = 0.5f

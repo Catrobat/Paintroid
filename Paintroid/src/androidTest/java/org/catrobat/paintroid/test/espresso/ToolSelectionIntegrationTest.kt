@@ -21,19 +21,19 @@
 
 package org.catrobat.paintroid.test.espresso
 
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast
-import org.junit.runner.RunWith
-import androidx.test.rule.ActivityTestRule
-import org.catrobat.paintroid.MainActivity
-import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
-import org.junit.Before
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
-import org.catrobat.paintroid.tools.ToolType
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
+import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast
 import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
+import org.catrobat.paintroid.tools.ToolType
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ToolSelectionIntegrationTest {
@@ -44,27 +44,28 @@ class ToolSelectionIntegrationTest {
     var screenshotOnFailRule = ScreenshotOnFailRule()
 
     @Before
-    fun setUp() { ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.BRUSH) }
+    fun setUp() { onToolBarView().performSelectTool(ToolType.BRUSH) }
 
     @Test
     fun testToolSelectionToast() {
         val toolType = ToolType.CURSOR
-        ToolBarViewInteraction.onToolBarView().performSelectTool(toolType)
+        onToolBarView().performSelectTool(toolType)
         waitForToast(ViewMatchers.withText(toolType.nameResource), 1000)
     }
 
     @Test
     fun testIfCurrentToolIsShownInBottomNavigation() {
         for (toolType in ToolType.values()) {
-            if (toolType === ToolType.IMPORTPNG
-                || toolType === ToolType.COLORCHOOSER
-                || toolType === ToolType.REDO
-                || toolType === ToolType.UNDO
-                || toolType === ToolType.PIPETTE
-                || toolType === ToolType.LAYER) {
+            val tool = toolType === ToolType.IMPORTPNG ||
+                toolType === ToolType.COLORCHOOSER ||
+                toolType === ToolType.REDO ||
+                toolType === ToolType.UNDO ||
+                toolType === ToolType.PIPETTE ||
+                toolType === ToolType.LAYER
+            if (tool) {
                 continue
             }
-            ToolBarViewInteraction.onToolBarView().performSelectTool(toolType)
+            onToolBarView().performSelectTool(toolType)
             BottomNavigationViewInteraction.onBottomNavigationView().checkShowsCurrentTool(toolType)
         }
     }
