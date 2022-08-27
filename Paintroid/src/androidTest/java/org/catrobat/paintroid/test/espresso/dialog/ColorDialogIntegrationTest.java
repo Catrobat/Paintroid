@@ -37,7 +37,6 @@ import org.catrobat.paintroid.colorpicker.PresetSelectorView;
 import org.catrobat.paintroid.colorpicker.RgbSelectorView;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.UiInteractions;
-import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.ui.Perspective;

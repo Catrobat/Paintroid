@@ -28,7 +28,6 @@ import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper;
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction;
-import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.ui.Perspective;
