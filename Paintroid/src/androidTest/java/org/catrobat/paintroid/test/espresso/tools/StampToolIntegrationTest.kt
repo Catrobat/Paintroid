@@ -88,13 +88,13 @@ class StampToolIntegrationTest {
 
         val topLeft = stampTool.drawingBitmap?.getPixel(0, 0)
         val topRight =
-            (stampTool.drawingBitmap?.width)?.minus(1)
+            stampTool.drawingBitmap?.width?.minus(1)
                 ?.let { stampTool.drawingBitmap?.getPixel(it, 0) }
         val bottomLeft =
-            (stampTool.drawingBitmap?.height)?.minus(1)?.let {
+            stampTool.drawingBitmap?.height?.minus(1)?.let {
                 stampTool.drawingBitmap?.getPixel(0, it)
             }
-        val bottomRight = (stampTool.drawingBitmap?.width)?.minus(1)?.let {
+        val bottomRight = stampTool.drawingBitmap?.width?.minus(1)?.let {
             stampTool.drawingBitmap?.height?.minus(1)
                 ?.let { it1 -> stampTool.drawingBitmap?.getPixel(it, it1) }
         }
@@ -116,7 +116,9 @@ class StampToolIntegrationTest {
         if (stampTool != null) { stampTool.toolPosition[stampTool.toolPosition.x] = stampTool.toolPosition.y * .5f }
 
         onStampToolViewInteraction().performPaste()
-        stampTool?.toolPosition?.let { onDrawingSurfaceView().checkPixelColor(Color.BLACK, it.x, stampTool.toolPosition.y) }
+        stampTool?.toolPosition?.let {
+            onDrawingSurfaceView().checkPixelColor(Color.BLACK, it.x, stampTool.toolPosition.y)
+        }
     }
 
     @Test
@@ -131,10 +133,13 @@ class StampToolIntegrationTest {
                 .checkPixelColor(
                     Color.TRANSPARENT,
                     it,
-                    stampTool.toolPosition.y)
+                    stampTool.toolPosition.y
+                )
         }
         onStampToolViewInteraction().performPaste()
-        stampTool?.toolPosition?.let { onDrawingSurfaceView().checkPixelColor(Color.BLACK, it.x, stampTool.toolPosition.y) }
+        stampTool?.toolPosition?.let {
+            onDrawingSurfaceView().checkPixelColor(Color.BLACK, it.x, stampTool.toolPosition.y)
+        }
     }
 
     @Test
@@ -171,8 +176,8 @@ class StampToolIntegrationTest {
         val toolPosition = PointF(perspective.surfaceCenterX, perspective.surfaceCenterY)
 
         stampTool?.toolPosition?.set(toolPosition)
-        if (stampTool != null) { stampTool.boxWidth = (bitmapWidth * STAMP_RESIZE_FACTOR) }
-        if (stampTool != null) { stampTool.boxHeight = (bitmapHeight * STAMP_RESIZE_FACTOR) }
+        if (stampTool != null) { stampTool.boxWidth = bitmapWidth * STAMP_RESIZE_FACTOR }
+        if (stampTool != null) { stampTool.boxHeight = bitmapHeight * STAMP_RESIZE_FACTOR }
         onStampToolViewInteraction().performPaste()
         if (stampTool != null) { Assert.assertNotNull(stampTool.drawingBitmap) }
     }

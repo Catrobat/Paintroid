@@ -67,9 +67,9 @@ class ShapeToolIntegrationTest {
         onToolBarView().performSelectTool(ToolType.SHAPE)
     }
 
-    private fun getCurrentToolBitmapPaint(): Paint? { return (toolReference?.tool as ShapeTool?)?.shapeBitmapPaint }
+    private fun getCurrentToolBitmapPaint(): Paint? = (toolReference?.tool as ShapeTool?)?.shapeBitmapPaint
 
-    private fun getToolPaint(): Paint { return mainActivity.toolPaint.paint }
+    private fun getToolPaint(): Paint = mainActivity.toolPaint.paint
 
     @Test
     fun testEllipseIsDrawnOnBitmap() {

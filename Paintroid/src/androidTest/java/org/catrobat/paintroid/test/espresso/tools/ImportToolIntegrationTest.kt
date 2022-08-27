@@ -21,25 +21,23 @@
 
 package org.catrobat.paintroid.test.espresso.tools
 
-import org.junit.runner.RunWith
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
-import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule
-import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
-import org.junit.Before
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
-import org.catrobat.paintroid.tools.ToolType
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers
 import org.catrobat.paintroid.R
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.action.ViewActions
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
+import org.catrobat.paintroid.tools.ToolType
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ImportToolIntegrationTest {
