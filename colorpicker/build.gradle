@@ -19,7 +19,6 @@
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.github.panpf.bintray-publish'
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
@@ -33,12 +32,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     buildTypes {
@@ -49,19 +48,6 @@ android {
         signedRelease {
         }
     }
-}
-
-publish {
-    userOrg = 'catrobat'
-    repoName = 'Paintroid'
-    groupId = 'org.catrobat.paintroid'
-    artifactId = 'colorpicker'
-    publishVersion = rootProject.ext.androidVersionName
-    licences = ['AGPL-V3']
-    desc = 'A simple color picker for Android'
-    website = 'https://github.com/Catrobat/Paintroid'
-    issueTracker = 'https://jira.catrob.at/browse/PAINTROID'
-    repository = "${website}.git"
 }
 
 dependencies {

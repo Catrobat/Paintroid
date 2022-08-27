@@ -55,10 +55,6 @@
         <item name="android:textColorHint">@android:color/tab_indicator_text</item>
     </style>
 
-    <style name="ButtonTheme" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@android:color/darker_gray</item>
-    </style>
-
     <style name="TextFieldTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="hintEnabled">false</item>
     </style>
@@ -178,12 +174,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="PocketPaintToolTitle" parent="PocketPaintToolSubtitle">
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="PocketPaintToolSubtitle">

@@ -157,7 +157,7 @@
                 android:progress="100"
                 android:minHeight="30dip" />
 
-            <TextView
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/pocketpaint_transform_resize_percentage_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -165,9 +165,12 @@
                 android:textColor="?attr/colorAccent"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:gravity="end"
-                android:text="100"
-                tools:ignore="HardCodedText" />
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:layoutDirection="ltr"
+                android:gravity="center"
+                tools:text="100"
+                android:importantForAutofill="no" />
 
             <TextView
                 android:layout_width="wrap_content"
