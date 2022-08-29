@@ -64,7 +64,8 @@ class LoadImage(
         val mimeType: String? = getMimeType(uri, resolver)
         return if (mimeType == "application/zip" || mimeType == "application/octet-stream") {
             try {
-                BitmapReturnValue(workspace.getCommandSerializationHelper().readFromFile(uri))
+                val fileContent = workspace.getCommandSerializationHelper().readFromFile(uri)
+                BitmapReturnValue(fileContent.commandModel, fileContent.colorHistory)
             } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
                 Log.e(TAG, "Image might be an ora file instead")
                 OpenRasterFileFormatConversion.importOraFile(

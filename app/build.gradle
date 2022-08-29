@@ -53,8 +53,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     signingConfigs {
@@ -94,4 +94,6 @@ tasks.withType(Detekt).configureEach {
 
 dependencies {
     implementation project(':Paintroid')
+
+    implementation 'com.android.support:support-core-utils:28.0.0'
 }

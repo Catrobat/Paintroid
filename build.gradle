@@ -21,24 +21,23 @@
 buildscript {
     ext.kotlin_version = '1.4.32'
     repositories {
+        mavenCentral()
         google()
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
+        classpath 'com.android.tools.build:gradle:7.2.1'
         classpath 'com.hiya:jacoco-android:0.2'
-        classpath 'org.catrobat.gradle.androidemulators:android-emulators-gradle:1.6.2'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:1.0.2'
-        classpath 'com.github.panpf.bintray-publish:bintray-publish:1.0.0'
+        classpath 'com.github.Catrobat:Gradle:1.6.2'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:3.1.0'
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.20.0"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.14.2"
+    id "io.gitlab.arturbosch.detekt" version "1.20.0"
 }
 
 ext {
@@ -60,6 +59,6 @@ allprojects {
     repositories {
         mavenLocal()
         google()
-        jcenter()
+        mavenCentral()
     }
 }

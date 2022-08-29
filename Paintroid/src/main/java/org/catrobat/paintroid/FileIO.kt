@@ -50,7 +50,7 @@ import org.catrobat.paintroid.common.TEMP_IMAGE_TEMP_PATH
 import org.catrobat.paintroid.common.TEMP_PICTURE_NAME
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.iotasks.BitmapReturnValue
-import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.iotasks.WorkspaceReturnValue
 import org.catrobat.paintroid.presenter.MainActivityPresenter
 import org.catrobat.paintroid.tools.Workspace
 import java.io.File
@@ -635,17 +635,17 @@ object FileIO {
         temporaryFilePath = TEMP_IMAGE_PATH
     }
 
-    fun openTemporaryPictureFile(workspace: Workspace): CommandManagerModel? {
-        var commandModel: CommandManagerModel? = null
+    fun openTemporaryPictureFile(workspace: Workspace): WorkspaceReturnValue? {
+        var workspaceReturnValue: WorkspaceReturnValue? = null
         if (temporaryFilePath != null) {
             try {
                 val stream = FileInputStream(temporaryFilePath)
-                commandModel = workspace.getCommandSerializationHelper().readFromInternalMemory(stream)
+                workspaceReturnValue = workspace.getCommandSerializationHelper().readFromInternalMemory(stream)
             } catch (e: IOException) {
                 Log.e("Cannot read", "Can't read from stream", e)
             }
         }
-        return commandModel
+        return workspaceReturnValue
     }
 
     fun deleteTempFile(internalMemoryPath: File) {

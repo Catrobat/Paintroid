@@ -26,6 +26,8 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.common.MAX_LAYERS
+import org.catrobat.paintroid.common.MEGABYTE_IN_BYTE
+import org.catrobat.paintroid.common.MINIMUM_HEAP_SPACE_FOR_NEW_LAYER
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.tools.ToolType
@@ -64,6 +66,8 @@ class LayerPresenter(
     init {
         layers = ArrayList(model.layers)
     }
+
+    override fun getListItemDragHandler(): ListItemDragHandler = listItemDragHandler
 
     private fun isPositionValid(position: Int): Boolean = position >= 0 && position < layers.size
 
@@ -114,7 +118,9 @@ class LayerPresenter(
         this.defaultToolController = defaultToolController
     }
 
-    override fun setBottomNavigationViewHolder(bottomNavigationViewHolder: BottomNavigationViewHolder) {
+    override fun setBottomNavigationViewHolder(
+        bottomNavigationViewHolder: BottomNavigationViewHolder
+    ) {
         this.bottomNavigationViewHolder = bottomNavigationViewHolder
     }
 
@@ -139,7 +145,11 @@ class LayerPresenter(
     }
 
     override fun refreshLayerMenuViewHolder() {
-        if (layerCount < MAX_LAYERS) {
+        val runtime = Runtime.getRuntime()
+        val usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE_IN_BYTE
+        val maxHeapSizeInMB = runtime.maxMemory() / MEGABYTE_IN_BYTE
+        val availHeapSizeInMB = maxHeapSizeInMB - usedMemInMB
+        if (layerCount < MAX_LAYERS && availHeapSizeInMB > MINIMUM_HEAP_SPACE_FOR_NEW_LAYER) {
             layerMenuViewHolder.enableAddLayerButton()
         } else {
             layerMenuViewHolder.disableAddLayerButton()

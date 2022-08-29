@@ -66,8 +66,10 @@ class FontListAdapter internal constructor(
     override fun getItemCount(): Int = fontTypes.size
 
     fun setSelectedIndex(selectedIndex: Int) {
+        val oldSelectedIndex = this.selectedIndex
         this.selectedIndex = selectedIndex
-        notifyDataSetChanged()
+        notifyItemChanged(oldSelectedIndex)
+        notifyItemChanged(selectedIndex)
     }
 
     fun getSelectedItem(): FontType = fontTypes[selectedIndex]

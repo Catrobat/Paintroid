@@ -46,6 +46,7 @@ import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.common.CREATE_FILE_DEFAULT
@@ -82,8 +83,8 @@ import org.catrobat.paintroid.iotasks.BitmapReturnValue
 import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
-import org.catrobat.paintroid.model.CommandManagerModel
 import org.catrobat.paintroid.tools.Tool
+import org.catrobat.paintroid.iotasks.WorkspaceReturnValue
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
@@ -91,6 +92,7 @@ import org.catrobat.paintroid.tools.implementation.CLICK_TIMEOUT_MILLIS
 import org.catrobat.paintroid.tools.implementation.CONSTANT_3
 import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
+import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.ui.LayerAdapter
 import org.catrobat.paintroid.ui.Perspective
 import java.io.File
@@ -605,7 +607,7 @@ open class MainActivityPresenter(
     override fun showLayerMenuClicked() {
         idlingResource.increment()
         layerAdapter?.apply {
-            for (i in 0 until count) {
+            for (i in 0 until itemCount) {
                 val currentHolder = getViewHolderAt(i)
                 currentHolder?.let {
                     if (it.bitmap != null) {
@@ -864,6 +866,7 @@ open class MainActivityPresenter(
         if (result.model != null) {
             commandManager.loadCommandsCatrobatImage(result.model)
             resetPerspectiveAfterNextCommand = true
+            setColorHistoryAfterLoadImage(result.colorHistory)
             FileIO.fileType = FileIO.FileType.CATROBAT
             if (uri != null) {
                 val name = getFileName(uri)
@@ -1071,11 +1074,23 @@ open class MainActivityPresenter(
         FileIO.saveTemporaryPictureFile(internalMemoryPath, workspace)
     }
 
-    override fun openTemporaryFile(workspace: Workspace): CommandManagerModel? =
+    override fun openTemporaryFile(workspace: Workspace): WorkspaceReturnValue? =
         FileIO.openTemporaryPictureFile(workspace)
 
     override fun checkForTemporaryFile(): Boolean =
         FileIO.checkForTemporaryFile(internalMemoryPath)
+
+    override fun setColorHistoryAfterLoadImage(colorHistory: ColorHistory?) {
+        var history = colorHistory
+        history = history ?: ColorHistory()
+        model.colorHistory = history
+        var newPaintColor: Int = DefaultToolPaint(context).color
+        if (history.colors.isNotEmpty()) {
+            newPaintColor = history.colors.last()
+        }
+        toolController.currentTool?.changePaintColor(newPaintColor)
+        setBottomNavigationColor(newPaintColor)
+    }
 
     fun checkIfClippingToolNeedsAdjustment() {
         if (toolController.currentTool is ClippingTool) {

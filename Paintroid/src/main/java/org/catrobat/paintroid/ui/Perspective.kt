@@ -33,11 +33,9 @@ private const val SCROLL_BORDER = 50f
 private const val BORDER_ZOOM_FACTOR = 0.95f
 
 open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: Int) {
-    @VisibleForTesting
     @JvmField
     var surfaceWidth = 0
 
-    @VisibleForTesting
     @JvmField
     var surfaceHeight = 0
 
@@ -52,11 +50,9 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
     @VisibleForTesting
     var surfaceScale = 1f
 
-    @VisibleForTesting
     @JvmField
     var surfaceTranslationX = 0f
 
-    @VisibleForTesting
     @JvmField
     var surfaceTranslationY = 0f
     var fullscreen = false

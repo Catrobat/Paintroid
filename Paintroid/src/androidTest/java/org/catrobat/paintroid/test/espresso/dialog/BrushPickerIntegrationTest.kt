@@ -59,9 +59,9 @@ class BrushPickerIntegrationTest {
     @Before
     fun setUp() { onToolBarView().performSelectTool(ToolType.BRUSH) }
 
-    private fun getCurrentToolBitmapPaint(): Paint { return launchActivityRule.activity.toolPaint.paint }
+    private fun getCurrentToolBitmapPaint(): Paint = launchActivityRule.activity.toolPaint.paint
 
-    private fun getCurrentToolCanvasPaint(): Paint { return launchActivityRule.activity.toolPaint.previewPaint }
+    private fun getCurrentToolCanvasPaint(): Paint = launchActivityRule.activity.toolPaint.previewPaint
 
     private fun assertStrokePaint(strokePaint: Paint, expectedStrokeWidth: Int, expectedCap: Cap) {
         val paintStrokeWidth = strokePaint.strokeWidth.toInt()

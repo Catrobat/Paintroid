@@ -22,6 +22,7 @@
  */
 package org.catrobat.paintroid.ui.dragndrop
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -31,13 +32,19 @@ import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ListView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.catrobat.paintroid.presenter.LayerPresenter
+import org.catrobat.paintroid.ui.LayerAdapter
 import kotlin.math.max
 import kotlin.math.min
 
-class DragAndDropListView : ListView, ListItemDragHandler {
+private const val SCROLL_UP = -1
+private const val SCROLL_DOWN = 1
+private const val THREEHUNDRED = 300
+private const val FIVE = 5
+
+class DragAndDropListView : RecyclerView, ListItemDragHandler {
     private var view: View? = null
     private var hoveringListItem: BitmapDrawable? = null
     private var viewBounds: Rect? = null
@@ -47,34 +54,57 @@ class DragAndDropListView : ListView, ListItemDragHandler {
     private var mergePosition = 0
     private var downY = 0f
     private var offsetToCenter = 0
+    private var scrollAmount = 0
+    private lateinit var layerAdapter: LayerAdapter
+    internal lateinit var manager: LinearLayoutManager
+    internal var listener: OnItemClickListener
 
-    constructor(context: Context?) : super(context)
+    interface OnItemClickListener {
+        fun onItemClick(position: Int, view: View)
+    }
 
-    constructor(context: Context?, attributes: AttributeSet?) : super(context, attributes)
+    constructor(context: Context) : super(context)
 
-    constructor(context: Context?, attributes: AttributeSet?, defStyle: Int) : super(
+    constructor(context: Context, attributes: AttributeSet?) : super(context, attributes)
+
+    constructor(context: Context, attributes: AttributeSet?, defStyle: Int) : super(
         context,
         attributes,
         defStyle
     )
 
     init {
-        onItemClickListener = OnItemClickListener { _, view, position, _ ->
-            presenter?.onClickLayerAtPosition(position, view)
+        listener = object :
+            OnItemClickListener {
+            override fun onItemClick(position: Int, view: View) {
+                presenter?.onClickLayerAtPosition(position, view)
+            }
         }
+        setHasFixedSize(true)
+        adapter?.setHasStableIds(true)
     }
 
     fun setPresenter(presenter: DragAndDropPresenter) {
         this.presenter = presenter
     }
 
+    fun setLayerAdapter(adapter: LayerAdapter) {
+        this.layerAdapter = adapter
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         hoveringListItem ?: return super.onTouchEvent(event)
         when (event.action) {
-            MotionEvent.ACTION_UP -> handleTouchUp()
+            MotionEvent.ACTION_UP -> {
+                handleTouchUp()
+                downY = event.y
+                notifyDataSetChanged()
+                parent.requestDisallowInterceptTouchEvent(false)
+            }
             MotionEvent.ACTION_CANCEL -> stopDragging()
             MotionEvent.ACTION_DOWN -> downY = event.y
             MotionEvent.ACTION_MOVE -> {
+                parent.requestDisallowInterceptTouchEvent(true)
                 val dY = event.y - downY
                 downY += dY
                 downY -= offsetToCenter
@@ -84,11 +114,36 @@ class DragAndDropListView : ListView, ListItemDragHandler {
                     val bottom = top + it.height()
                     hoveringListItem?.setBounds(it.left, top, it.right, bottom)
                 }
+                val didScroll = handleScroll(viewBounds)
                 invalidate()
-                swapListItems()
+                if (!didScroll) swapListItems()
             }
         }
         return true
+    }
+
+    private fun handleScroll(bounds: Rect?): Boolean {
+        val hoverViewTop = bounds?.top
+        val hoverHeight = bounds?.height()
+        if (scrollAmount == 0) {
+            scrollAmount = height / FIVE
+        }
+        if (hoverViewTop != null && canScrollVertically(SCROLL_UP) && hoverViewTop <= 0) {
+            val firstVisible = manager.findFirstVisibleItemPosition()
+            smoothScrollBy(0, -scrollAmount)
+            swapItems(firstVisible, true)
+            return true
+        }
+
+        if (hoverViewTop != null && hoverHeight != null && canScrollVertically(SCROLL_DOWN) &&
+            hoverViewTop > height - THREEHUNDRED
+        ) {
+            val lastVisible = manager.findLastVisibleItemPosition()
+            smoothScrollBy(0, scrollAmount)
+            swapItems(lastVisible, true)
+            return true
+        }
+        return false
     }
 
     override fun startDragging(position: Int, view: View) {
@@ -112,6 +167,7 @@ class DragAndDropListView : ListView, ListItemDragHandler {
         view = null
         hoveringListItem = null
         invalidate()
+        notifyDataSetChanged()
     }
 
     public override fun dispatchDraw(canvas: Canvas) {
@@ -130,7 +186,7 @@ class DragAndDropListView : ListView, ListItemDragHandler {
         viewBounds?.let {
             drawable.bounds = it
         }
-        drawable.alpha = Companion.ALPHA_VALUE
+        drawable.alpha = ALPHA_VALUE
         return drawable
     }
 
@@ -140,23 +196,31 @@ class DragAndDropListView : ListView, ListItemDragHandler {
     }
 
     private fun getItemAbove(itemPositionAbove: Int): View? =
-        if (isPositionValid(itemPositionAbove)) getChildAt(itemPositionAbove) else null
+        if (isPositionValid(itemPositionAbove)) layerAdapter.getViewHolderAt(itemPositionAbove)?.view else null
 
     private fun getItemBelow(itemPositionBelow: Int): View? =
-        if (isPositionValid(itemPositionBelow)) getChildAt(itemPositionBelow) else null
+        if (isPositionValid(itemPositionBelow)) layerAdapter.getViewHolderAt(itemPositionBelow)?.view else null
 
-    private fun swapItems(swapWith: Int) {
+    private fun swapItems(swapWith: Int, isScrolling: Boolean) {
         presenter?.let { position = it.swapItemsVisually(position, swapWith) }
         view?.visibility = VISIBLE
-        view = getChildAt(position)
-        view?.visibility = INVISIBLE
         mergePosition = -1
-        invalidateViews()
+        if (isScrolling) {
+            adapter?.notifyItemMoved(position, swapWith)
+        } else {
+            notifyDataSetChanged()
+        }
     }
 
     private fun mergeItems(mergeWith: Int) {
         presenter?.markMergeable(position, mergeWith)
         mergePosition = mergeWith
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun notifyDataSetChanged() {
+        this.adapter?.notifyDataSetChanged()
+        this.layerAdapter.clearViewHolders()
     }
 
     private fun swapListItems() {
@@ -182,17 +246,17 @@ class DragAndDropListView : ListView, ListItemDragHandler {
         }
         if (isAbove || isBelow) {
             val swapWith = if (isAbove) itemPositionBelow else itemPositionAbove
-            swapItems(swapWith)
+            swapItems(swapWith, false)
         } else if (canMergeUpwards || canMergeDownwards) {
             val mergeWith = if (canMergeUpwards) itemPositionAbove else itemPositionBelow
             mergeItems(mergeWith)
         } else if (mergePosition != -1) {
             mergePosition = -1
-            invalidateViews()
+            notifyDataSetChanged()
         }
     }
 
-    private fun isPositionValid(position: Int): Boolean = position in 0 until count
+    private fun isPositionValid(position: Int): Boolean = position in 0 until layerAdapter.itemCount
 
     private fun handleTouchUp() {
         if (mergePosition != -1) {
