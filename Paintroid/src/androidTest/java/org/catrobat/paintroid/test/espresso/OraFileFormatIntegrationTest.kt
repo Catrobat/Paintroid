@@ -44,9 +44,9 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.grantPermissionRulesVersionCheck
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.hamcrest.Matchers.instanceOf
 import org.hamcrest.Matchers.`is`
@@ -94,8 +94,8 @@ class OraFileFormatIntegrationTest {
 
     @Test
     fun testSaveAsOraFile() {
-        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(ViewActions.click())
         onData(AllOf.allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("ora")))
@@ -112,8 +112,8 @@ class OraFileFormatIntegrationTest {
 
     @Test
     fun testSaveAndOverrideOraFile() {
-        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(ViewActions.click())
         onData(AllOf.allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("ora")))
@@ -124,8 +124,8 @@ class OraFileFormatIntegrationTest {
         onView(isRoot()).perform(waitFor(100))
         onView(withText(R.string.pocketpaint_no)).perform(ViewActions.click())
         onView(withText(R.string.pocketpaint_ok)).perform(ViewActions.click())
-        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
         onView(withText(R.string.save_button_text)).perform(ViewActions.click())
         onView(withText(R.string.pocketpaint_overwrite_title)).check(
@@ -144,20 +144,20 @@ class OraFileFormatIntegrationTest {
 
     @Test
     fun testOraFileWithMultipleLayersSaveAndLoad() {
-        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
             .performAddLayer()
             .checkLayerCount(2)
             .performClose()
-        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE))
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
             .performAddLayer()
             .checkLayerCount(3)
             .performClose()
-        onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(DrawingSurfaceLocationProvider.BOTTOM_MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(ViewActions.click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(ViewActions.click())
         onData(AllOf.allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("ora")))
@@ -175,7 +175,7 @@ class OraFileFormatIntegrationTest {
         intent.data = fileUri
         val resultOK = ActivityResult(Activity.RESULT_OK, intent)
         Intents.intending(IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK)
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(ViewActions.click())
         onView(withText(R.string.menu_replace_image)).perform(ViewActions.click())
         LayerMenuViewInteraction.onLayerMenuView()

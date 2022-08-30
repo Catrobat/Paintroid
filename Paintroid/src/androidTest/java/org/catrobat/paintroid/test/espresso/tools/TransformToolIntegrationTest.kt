@@ -16,6 +16,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+@file:Suppress("DEPRECATION")
+
 package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Bitmap
@@ -38,12 +41,12 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.waitForToast
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView
+import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.Companion.onTransformToolOptionsView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
@@ -336,6 +339,7 @@ class TransformToolIntegrationTest {
             .checkBitmapDimension(initialWidth, initialHeight)
     }
 
+    @Suppress("LongMethod")
     @Test
     fun testIfClickOnCanvasCrops() {
         onToolBarView()
@@ -704,7 +708,7 @@ class TransformToolIntegrationTest {
         )
         onDrawingSurfaceView()
             .perform(UiInteractions.swipe(dragFrom, dragTo))
-            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
+            ?.perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
         val enlargedBitmap = layerModel.currentLayer!!.bitmap!!
         val bitmapSize = enlargedBitmap.height + enlargedBitmap.width
         assertTrue(bitmapSize < maxBitmapSize)
@@ -974,6 +978,7 @@ class TransformToolIntegrationTest {
             .checkMatchesColorResource(R.color.pocketpaint_color_picker_green1)
     }
 
+    @Suppress("LongMethod")
     @Test
     fun testRotateMultipleColors() {
         onDrawingSurfaceView()
@@ -1057,7 +1062,7 @@ class TransformToolIntegrationTest {
             .performSelectTool(ToolType.BRUSH)
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
-            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
+            ?.perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
             .performSelectLayer(1)

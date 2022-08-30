@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@file:Suppress("DEPRECATION")
+
 package org.catrobat.paintroid.test.espresso
 
 import android.net.Uri
@@ -37,7 +39,7 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.hamcrest.Matchers
@@ -85,7 +87,7 @@ class CatrobatImageIOIntegrationTest {
 
     @Test
     fun testWriteAndReadCatrobatImage() {
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()

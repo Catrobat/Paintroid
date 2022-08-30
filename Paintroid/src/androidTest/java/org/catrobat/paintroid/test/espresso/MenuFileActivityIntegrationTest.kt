@@ -62,14 +62,14 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider.
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.grantPermissionRulesVersionCheck
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.instanceOf
+import org.hamcrest.Matchers.`is`
 import org.hamcrest.core.AllOf.allOf
 import org.hamcrest.core.IsNot
 import org.junit.After
@@ -126,9 +126,9 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testNewEmptyDrawingWithSave() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_new_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))
@@ -136,13 +136,14 @@ class MenuFileActivityIntegrationTest {
             .perform(replaceText("test987654"))
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
     fun testLoadImageDialog() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(click())
         onView(withText(R.string.menu_replace_image)).perform(click())
         onView(withText(R.string.dialog_warning_new_image)).check(matches(isDisplayed()))
@@ -152,52 +153,53 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testLoadImageDialogIntentCancel() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
         val resultCancel = ActivityResult(Activity.RESULT_CANCELED, Intent())
         Intents.intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultCancel)
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(click())
         onView(withText(R.string.menu_replace_image)).perform(click())
         onView(withText(R.string.discard_button_text)).perform(click())
         onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist())
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
     fun testLoadImageDialogIntentOK() {
-        onDrawingSurfaceView().perform(touchAt(HALFWAY_RIGHT_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(HALFWAY_RIGHT_MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
         val intent = Intent()
         intent.data = createTestImageFile()
         val resultOK = ActivityResult(Activity.RESULT_OK, intent)
         Intents.intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK)
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(click())
         onView(withText(R.string.menu_replace_image)).perform(click())
         onView(withText(R.string.discard_button_text)).perform(click())
         onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist())
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
     fun testLoadImageDialogOnBackPressed() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(click())
         pressBack()
-        onDrawingSurfaceView().check(matches(isDisplayed()))
+        DrawingSurfaceInteraction.onDrawingSurfaceView().check(matches(isDisplayed()))
     }
 
     @Test
     fun testOnHelpDisabled() {
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.help_title)).check(matches(IsNot.not(isClickable())))
     }
 
     @Test
     fun testWarningDialogOnNewImage() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_new_image)).perform(click())
         onView(withText(R.string.dialog_warning_new_image)).check(matches(isDisplayed()))
         onView(withText(R.string.save_button_text)).check(matches(isDisplayed()))
@@ -208,33 +210,34 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testNewEmptyDrawingWithDiscard() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_new_image)).perform(click())
         onView(withText(R.string.discard_button_text)).perform(click())
         onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist())
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
     fun testNewEmptyDrawingDialogOnBackPressed() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_new_image)).perform(click())
         onView(withText(R.string.dialog_warning_new_image)).check(matches(isDisplayed()))
         onView(withText(R.string.save_button_text)).check(matches(isDisplayed()))
         onView(withText(R.string.discard_button_text)).check(matches(isDisplayed()))
         pressBack()
         onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist())
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
     fun testSavedStateChangeAfterSave() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
         assertFalse(activity.model.isSaved)
         pressMenuKey()
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("test98765"))
@@ -247,8 +250,8 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testSaveImage() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))
@@ -268,8 +271,8 @@ class MenuFileActivityIntegrationTest {
             .edit()
             .clear()
             .commit()
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("testSaveCopy"))
@@ -285,8 +288,8 @@ class MenuFileActivityIntegrationTest {
         val oldFile = File(activity.model.savedPictureUri.toString())
         onView(withText(R.string.pocketpaint_no)).perform(click())
         onView(withText(R.string.pocketpaint_ok)).perform(click())
-        onDrawingSurfaceView().perform(touchAt(HALFWAY_BOTTOM_MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(HALFWAY_BOTTOM_MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_copy)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("copy1"))
@@ -306,8 +309,8 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testAskForSaveAfterSavedOnce() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("AskForSaveAfterSavedOnce"))
@@ -315,15 +318,15 @@ class MenuFileActivityIntegrationTest {
         onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
         pressBack()
         onView(withText(R.string.menu_quit)).check(matches(isDisplayed()))
     }
 
     @Test
     fun testShowOverwriteDialogAfterSavingAgain() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText("12345test12345"))
@@ -331,7 +334,7 @@ class MenuFileActivityIntegrationTest {
         onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))
@@ -342,14 +345,14 @@ class MenuFileActivityIntegrationTest {
     fun testCheckImageNumberIncrementAfterSaveWithStandardName() {
         FileIO.filename = "image"
         val imageNumber = launchActivityRule.activity.presenter.imageNumber
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(200))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(isRoot()).perform(waitFor(200))
         val newImageNumber = launchActivityRule.activity.presenter.imageNumber
@@ -358,8 +361,8 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testCheckImageNumberSameAfterSaveWithNonStandardName() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         val imageNumber = launchActivityRule.activity.presenter.imageNumber
         onView(withId(R.id.pocketpaint_image_name_save_text))
@@ -374,8 +377,8 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testCheckSaveFileWithDifferentFormats() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_save_info_title)).check(matches(isDisplayed()))
         onView(withId(R.id.pocketpaint_image_name_save_text)).check(matches(isDisplayed()))
@@ -390,7 +393,7 @@ class MenuFileActivityIntegrationTest {
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
         val oldFile = File(activity.model.savedPictureUri.toString())
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner)).perform(click())
         onData(allOf(`is`(instanceOf<Any>(String::class.java)), `is`<String>("jpg")))
@@ -408,12 +411,12 @@ class MenuFileActivityIntegrationTest {
     @Test
     fun testCheckSaveImageDialogShowJPGSpinnerText() {
         createImageIntent()
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(click())
         onView(withText(R.string.menu_replace_image)).perform(click())
         onView(withText(R.string.dialog_warning_new_image)).check(doesNotExist())
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner))
             .check(matches(withSpinnerText(containsString("jpg"))))
@@ -422,8 +425,8 @@ class MenuFileActivityIntegrationTest {
     @Test
     fun testCheckSaveImageDialogShowPNGSpinnerText() {
         FileIO.fileType = FileIO.FileType.PNG
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner))
             .check(matches(withSpinnerText(containsString("png"))))
@@ -432,8 +435,8 @@ class MenuFileActivityIntegrationTest {
     @Test
     fun testCheckSaveImageDialogShowORASpinnerText() {
         FileIO.fileType = FileIO.FileType.ORA
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withId(R.id.pocketpaint_save_dialog_spinner))
             .check(matches(withSpinnerText(containsString("ora"))))
@@ -441,8 +444,8 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testCheckSaveImageDialogShowsSavedImageOptions() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         val imageName = "test12345"
         onView(withId(R.id.pocketpaint_image_name_save_text)).perform(replaceText(imageName))
@@ -453,7 +456,7 @@ class MenuFileActivityIntegrationTest {
         onView(isRoot()).perform(waitFor(100))
         assertNotNull(activity.model.savedPictureUri)
         addUriToDeletionFileList(activity.model.savedPictureUri)
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(imageName)).check(matches(isDisplayed()))
         onView(withText("png")).check(matches(isDisplayed()))
@@ -461,8 +464,8 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testCheckCopyIsAlwaysDefaultOptions() {
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_copy)).perform(click())
         var imageNumber = launchActivityRule.activity.presenter.imageNumber
         onView(withText("png")).check(matches(isDisplayed()))
@@ -472,7 +475,7 @@ class MenuFileActivityIntegrationTest {
             .inRoot(RootMatchers.isPlatformPopup()).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_copy)).perform(click())
         imageNumber = launchActivityRule.activity.presenter.imageNumber
         onView(withText("png")).check(matches(isDisplayed()))
@@ -515,13 +518,14 @@ class MenuFileActivityIntegrationTest {
         intent.data = createTestImageFile()
         val result = ActivityResult(Activity.RESULT_OK, intent)
         Intents.intending(hasAction(Intent.ACTION_GET_CONTENT)).respondWith(result)
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(click())
         onView(withText(R.string.menu_replace_image)).perform(click())
         ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.ERASER)
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+        DrawingSurfaceInteraction.onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
@@ -530,13 +534,13 @@ class MenuFileActivityIntegrationTest {
         FileIO.filename = name
         FileIO.fileType = FileIO.FileType.PNG
         FileIO.compressFormat = Bitmap.CompressFormat.PNG
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(200))
         val uri = activity.model.savedPictureUri
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))
@@ -557,13 +561,13 @@ class MenuFileActivityIntegrationTest {
         FileIO.filename = name
         FileIO.fileType = FileIO.FileType.JPG
         FileIO.compressFormat = Bitmap.CompressFormat.JPEG
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(200))
         val uri = activity.model.savedPictureUri
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(100))
@@ -584,12 +588,12 @@ class MenuFileActivityIntegrationTest {
         FileIO.filename = name
         FileIO.fileType = FileIO.FileType.ORA
         FileIO.compressFormat = Bitmap.CompressFormat.PNG
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(500))
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(500))
@@ -623,12 +627,12 @@ class MenuFileActivityIntegrationTest {
         FileIO.filename = name
         FileIO.fileType = FileIO.FileType.CATROBAT
         FileIO.compressFormat = Bitmap.CompressFormat.PNG
-        onTopBarView().performOpenMoreOptions()
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(500))
-        onDrawingSurfaceView().perform(touchAt(MIDDLE))
-        onTopBarView().performOpenMoreOptions()
+        DrawingSurfaceInteraction.onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(500))
