@@ -166,6 +166,14 @@ abstract class BaseToolWithRectangleShape(
     private var touchDownPositionX = 0f
     private var touchDownPositionY = 0f
 
+    enum class OptionsViewStates {
+        HIDDEN,
+        VISIBLE,
+    }
+
+    private var optionsViewState = OptionsViewStates.VISIBLE
+
+
     init {
         val orientation = contextCallback.orientation
         val boxSize =
@@ -249,21 +257,33 @@ abstract class BaseToolWithRectangleShape(
     }
 
     private fun hideToolSpecificLayout() {
-        toolOptionsViewController.slideDown(
-            toolOptionsViewController.toolSpecificOptionsLayout, true
-        )
+        if (optionsViewState == OptionsViewStates.VISIBLE) {
+            if (this !is TextTool) {
+                toolOptionsViewController.slideDown(
+                    toolOptionsViewController.toolSpecificOptionsLayout, true
+                )
+            }
+            toolOptionsViewController.animateBottomAndTopNavigation(true)
+            optionsViewState = OptionsViewStates.HIDDEN
+        }
     }
 
     private fun showToolSpecificLayout() {
-        toolOptionsViewController.slideUp(
-            toolOptionsViewController.toolSpecificOptionsLayout, false
-        )
+        if (optionsViewState == OptionsViewStates.HIDDEN) {
+            if (this !is TextTool) {
+                toolOptionsViewController.slideUp(
+                    toolOptionsViewController.toolSpecificOptionsLayout, false
+                )
+            }
+
+            toolOptionsViewController.animateBottomAndTopNavigation(false)
+            optionsViewState = OptionsViewStates.VISIBLE
+        }
     }
 
     override fun handleDown(coordinate: PointF?): Boolean {
         movedDistance.set(0f, 0f)
-        super.handleDown(coordinate)
-        hideToolSpecificLayout()
+
         coordinate?.apply {
             previousEventCoordinate = PointF(x, y)
             currentAction = getAction(x, y)
@@ -277,6 +297,7 @@ abstract class BaseToolWithRectangleShape(
         if (previousEventCoordinate == null || currentAction == null) {
             return false
         }
+        hideToolSpecificLayout()
         ifNotNull(coordinate, previousEventCoordinate) { (coordinate, previousEventCoordinate) ->
             val delta = PointF(
                 coordinate.x - previousEventCoordinate.x,
@@ -299,7 +320,6 @@ abstract class BaseToolWithRectangleShape(
             return false
         }
         showToolSpecificLayout()
-        super.handleUp(coordinate)
         ifNotNull(coordinate, previousEventCoordinate) { (coordinate, previousEventCoordinate) ->
             movedDistance.x += abs(coordinate.x - previousEventCoordinate.x)
             movedDistance.y += abs(coordinate.y - previousEventCoordinate.y)

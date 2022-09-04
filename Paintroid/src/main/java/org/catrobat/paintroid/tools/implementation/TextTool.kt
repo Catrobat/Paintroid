@@ -38,6 +38,7 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import kotlin.Exception
+import kotlin.math.abs
 
 @VisibleForTesting
 const val TEXT_SIZE_MAGNIFICATION_FACTOR = 3f
@@ -108,6 +109,8 @@ class TextTool(
     private var oldBoxWidth = 0f
     private var oldBoxHeight = 0f
     private var oldToolPosition: PointF? = null
+
+    private var textToolOptionsViewState = OptionsViewStates.VISIBLE
 
     @get:VisibleForTesting
     val multilineText: Array<String>
@@ -204,32 +207,41 @@ class TextTool(
         updateTypeface()
     }
 
-    private fun hideTextLayout() {
-        toolOptionsViewController.slideUp(textToolOptionsView.getTopLayout(), true)
-        toolOptionsViewController.animateBottomAndTopNavigation(true)
-        toolOptionsViewController.slideDown(textToolOptionsView.getBottomLayout(), true)
+    private fun hideTextToolLayout() {
+        if (textToolOptionsViewState == OptionsViewStates.VISIBLE) {
+            toolOptionsViewController.slideUp(textToolOptionsView.getTopLayout(), true)
+            toolOptionsViewController.slideDown(textToolOptionsView.getBottomLayout(), true)
+            textToolOptionsViewState = OptionsViewStates.HIDDEN
+        }
     }
 
-    private fun showTextLayout() {
-        toolOptionsViewController.slideDown(textToolOptionsView.getTopLayout(), false)
-        toolOptionsViewController.animateBottomAndTopNavigation(false)
-        toolOptionsViewController.slideUp(textToolOptionsView.getBottomLayout(), false)
+    private fun showTextToolLayout() {
+        if (textToolOptionsViewState == OptionsViewStates.HIDDEN) {
+            toolOptionsViewController.slideDown(textToolOptionsView.getTopLayout(), false)
+            toolOptionsViewController.slideUp(textToolOptionsView.getBottomLayout(), false)
+            textToolOptionsViewState = OptionsViewStates.VISIBLE
+        }
     }
 
-    override fun handleDown(coordinate: PointF?): Boolean {
-        hideTextLayout()
-        toolOptionsViewController.disable()
-        super.handleDown(coordinate)
-        toolOptionsViewController.enable()
-        return true
+    override fun handleMove(coordinate: PointF?): Boolean {
+        textToolOptionsView.hideKeyboard()
+        hideTextToolLayout()
+        return super.handleMove(coordinate)
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
-        toolOptionsViewController.disable()
-        val returnValue = super.handleUp(coordinate)
-        toolOptionsViewController.enable()
-        showTextLayout()
-        return returnValue
+        coordinate?.let {
+            if (abs(toolPosition.x - it.x) <= boxWidth / 2 && abs(toolPosition.y - it.y) <= boxHeight / 2) {
+                super.handleUp(coordinate)
+                showTextToolLayout()
+                textToolOptionsView.showKeyboard()
+            } else {
+                textToolOptionsView.hideKeyboard()
+                hideTextToolLayout()
+                super.handleUp(coordinate)
+            }
+        }
+        return true
     }
 
     override fun drawBitmap(canvas: Canvas, boxWidth: Float, boxHeight: Float) {
