@@ -62,7 +62,7 @@ class CatrobatImageIOIntegrationTest {
     @get:Rule
     val grantPermissionRule: GrantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck()
 
-    private lateinit var uriFile: Uri
+    private var uriFile: Uri? = null
     private lateinit var activity: MainActivity
 
     companion object {
@@ -70,14 +70,12 @@ class CatrobatImageIOIntegrationTest {
     }
 
     @Before
-    fun setUp() {
-        activity = launchActivityRule.activity
-    }
+    fun setUp() { activity = launchActivityRule.activity }
 
     @After
     fun tearDown() {
-        with(File(uriFile.path!!)) {
-            if (exists()) {
+        with(uriFile?.path?.let { File(it) }) {
+            if (this?.exists() == true) {
                 delete()
             }
         }
@@ -108,7 +106,7 @@ class CatrobatImageIOIntegrationTest {
         uriFile = activity.model.savedPictureUri!!
         Assert.assertNotNull(uriFile)
         Assert.assertNotNull(
-            activity.workspace.getCommandSerializationHelper().readFromFile(uriFile)
+            activity.workspace.getCommandSerializationHelper().readFromFile(uriFile!!)
         )
     }
 }
