@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.presenter
 
+import android.graphics.PointF
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -25,9 +26,12 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.common.MAX_LAYERS
+import org.catrobat.paintroid.common.MEGABYTE_IN_BYTE
+import org.catrobat.paintroid.common.MINIMUM_HEAP_SPACE_FOR_NEW_LAYER
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.dragndrop.DragAndDropPresenter
@@ -63,6 +67,8 @@ class LayerPresenter(
         layers = ArrayList(model.layers)
     }
 
+    override fun getListItemDragHandler(): ListItemDragHandler = listItemDragHandler
+
     private fun isPositionValid(position: Int): Boolean = position >= 0 && position < layers.size
 
     private fun checkIfLineToolInUse() {
@@ -83,6 +89,23 @@ class LayerPresenter(
         }
     }
 
+    private fun checkIfClippingToolInUse(): Boolean {
+        if (defaultToolController?.currentTool?.toolType == ToolType.CLIP) {
+            val clippingTool = defaultToolController?.currentTool as ClippingTool
+            clippingTool.wasRecentlyApplied = true
+            if (clippingTool.areaClosed) {
+                clippingTool.handleDown(PointF(0f, 0f))
+                clippingTool.initialEventCoordinate = null
+                clippingTool.previousEventCoordinate = null
+                clippingTool.pathToDraw.rewind()
+                clippingTool.pointArray.clear()
+            }
+            return true
+        } else {
+            return false
+        }
+    }
+
     override fun setAdapter(layerAdapter: LayerContracts.Adapter) {
         this.adapter = layerAdapter
     }
@@ -95,7 +118,9 @@ class LayerPresenter(
         this.defaultToolController = defaultToolController
     }
 
-    override fun setBottomNavigationViewHolder(bottomNavigationViewHolder: BottomNavigationViewHolder) {
+    override fun setBottomNavigationViewHolder(
+        bottomNavigationViewHolder: BottomNavigationViewHolder
+    ) {
         this.bottomNavigationViewHolder = bottomNavigationViewHolder
     }
 
@@ -120,7 +145,11 @@ class LayerPresenter(
     }
 
     override fun refreshLayerMenuViewHolder() {
-        if (layerCount < MAX_LAYERS) {
+        val runtime = Runtime.getRuntime()
+        val usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE_IN_BYTE
+        val maxHeapSizeInMB = runtime.maxMemory() / MEGABYTE_IN_BYTE
+        val availHeapSizeInMB = maxHeapSizeInMB - usedMemInMB
+        if (layerCount < MAX_LAYERS && availHeapSizeInMB > MINIMUM_HEAP_SPACE_FOR_NEW_LAYER) {
             layerMenuViewHolder.enableAddLayerButton()
         } else {
             layerMenuViewHolder.disableAddLayerButton()
@@ -141,7 +170,9 @@ class LayerPresenter(
     override fun addLayer() {
         if (layerCount < MAX_LAYERS) {
             checkIfLineToolInUse()
+            val clippingToolInUse = checkIfClippingToolInUse()
             commandManager.addCommand(commandFactory.createAddEmptyLayerCommand())
+            if (clippingToolInUse) (defaultToolController?.currentTool as ClippingTool).copyBitmapOfCurrentLayer()
         } else {
             navigator.showToast(R.string.layer_too_many_layers, Toast.LENGTH_SHORT)
         }
@@ -150,9 +181,11 @@ class LayerPresenter(
     override fun removeLayer() {
         if (layerCount > 1) {
             checkIfLineToolInUse()
+            val clippingToolInUse = checkIfClippingToolInUse()
             val layerToDelete = model.currentLayer ?: return
             val index = model.getLayerIndexOf(layerToDelete)
             commandManager.addCommand(commandFactory.createRemoveLayerCommand(index))
+            if (clippingToolInUse) (defaultToolController?.currentTool as ClippingTool).copyBitmapOfCurrentLayer()
         }
     }
 
@@ -171,7 +204,7 @@ class LayerPresenter(
         drawingSurface?.refreshDrawingSurface()
         getDestinationLayer(position, false)?.let { layer ->
             if (model.currentLayer == layer) {
-                defaultToolController?.switchTool(ToolType.HAND, false)
+                defaultToolController?.switchTool(ToolType.HAND)
                 bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
             }
         }
@@ -182,7 +215,7 @@ class LayerPresenter(
         getDestinationLayer(position, true)?.let { layer ->
             viewHolder.updateImageView(layer.bitmap)
             if (model.currentLayer == layer) {
-                defaultToolController?.switchTool(ToolType.BRUSH, false)
+                defaultToolController?.switchTool(ToolType.BRUSH)
                 bottomNavigationViewHolder?.showCurrentTool(ToolType.BRUSH)
             }
         }
@@ -197,11 +230,13 @@ class LayerPresenter(
         checkIfLineToolInUse()
         layers.getOrNull(mergeWith)?.let { actualLayer ->
             val actualPosition = model.getLayerIndexOf(actualLayer)
+            val clippingToolInUse = checkIfClippingToolInUse()
             if (position != actualPosition && actualPosition > -1) {
                 commandManager.addCommand(
                     commandFactory.createMergeLayersCommand(position, actualPosition)
                 )
                 navigator.showToast(R.string.layer_merged, Toast.LENGTH_SHORT)
+                if (clippingToolInUse) (defaultToolController?.currentTool as ClippingTool).copyBitmapOfCurrentLayer()
             }
         }
     }
@@ -210,6 +245,7 @@ class LayerPresenter(
         if (position != swapWith) {
             checkIfLineToolInUse()
             commandManager.addCommand(commandFactory.createReorderLayersCommand(position, swapWith))
+            checkIfClippingToolInUse()
         }
     }
 
@@ -253,6 +289,7 @@ class LayerPresenter(
         if (position != model.currentLayer?.let { model.getLayerIndexOf(it) }) {
             checkIfLineToolInUse()
             commandManager.addCommand(commandFactory.createSelectLayerCommand(position))
+            checkIfClippingToolInUse()
         }
     }
 

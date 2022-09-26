@@ -17,7 +17,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="PocketPaintTitleTextStyle">
     <item name="android:textColor">@color/pocketpaint_colorAccent</item>
@@ -53,10 +53,6 @@
         <item name="appBarLayoutStyle">@style/appBarLayout</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textColorHint">@android:color/tab_indicator_text</item>
-    </style>
-
-    <style name="ButtonTheme" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@android:color/darker_gray</item>
     </style>
 
     <style name="TextFieldTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
@@ -112,6 +108,7 @@
         <item name="colorControlActivated">?colorAccent</item>
         <item name="bottomNavigationStyle">@style/CustomBottomNavigationViewStyle</item>
         <item name="colorButtonNormal">@color/pocketpaint_lighter_gray</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
     <style name="CustomBottomNavigationViewStyle" parent="Widget.MaterialComponents.BottomNavigationView">
@@ -177,12 +174,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="PocketPaintToolTitle" parent="PocketPaintToolSubtitle">
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="PocketPaintToolSubtitle">

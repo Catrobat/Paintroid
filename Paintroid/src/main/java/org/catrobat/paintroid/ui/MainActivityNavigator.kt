@@ -87,6 +87,7 @@ import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog
 import org.catrobat.paintroid.dialog.SaveInformationDialog
 import org.catrobat.paintroid.dialog.ScaleImageOnLoadDialog
 import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment.MediaGalleryListener
 
@@ -94,10 +95,11 @@ class MainActivityNavigator(
     private val mainActivity: MainActivity,
     private val toolReference: ToolReference
 ) : MainActivityContracts.Navigator {
-
     override val isSdkAboveOrEqualM: Boolean
+        @SuppressLint("AnnotateVersionCheck")
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     override val isSdkAboveOrEqualQ: Boolean
+        @SuppressLint("AnnotateVersionCheck")
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     private var commandFactory: CommandFactory = DefaultCommandFactory()
@@ -133,9 +135,16 @@ class MainActivityNavigator(
         dialog.addOnColorPickedListener(object : OnColorPickedListener {
             override fun colorChanged(color: Int) {
                 val command = commandFactory.createColorChangedCommand(toolReference, mainActivity, color)
-                mainActivity.commandManager.addCommand(command)
+                mainActivity.model.colorHistory.addColor(color)
+
+                if (toolReference.tool?.toolType != ToolType.CLIP) {
+                    mainActivity.commandManager.addCommand(command)
+                } else {
+                    mainActivity.commandManager.addCommandWithoutUndo(command)
+                }
             }
         })
+
         mainActivity.presenter.bitmap?.let { dialog.setBitmap(it) }
     }
 
@@ -162,13 +171,10 @@ class MainActivityNavigator(
         try {
             mainActivity.startActivity(openPlayStore)
         } catch (e: ActivityNotFoundException) {
-            val uriNoPlayStore =
-                Uri.parse("http://play.google.com/store/apps/details?id=$applicationId")
+            val uriNoPlayStore = Uri.parse("http://play.google.com/store/apps/details?id=$applicationId")
             val noPlayStoreInstalled = Intent(Intent.ACTION_VIEW, uriNoPlayStore)
-            val activityInfo = noPlayStoreInstalled.resolveActivityInfo(
-                mainActivity.packageManager, noPlayStoreInstalled.flags
-            )
-            if (activityInfo.exported) {
+
+            runCatching {
                 mainActivity.startActivity(noPlayStoreInstalled)
             }
         }
@@ -201,7 +207,8 @@ class MainActivityNavigator(
                 val dialog = ColorPickerDialog.newInstance(
                     it.drawPaint.color,
                     mainActivity.model.isOpenedFromCatroid,
-                    mainActivity.model.isOpenedFromFormulaEditorInCatroid
+                    mainActivity.model.isOpenedFromFormulaEditorInCatroid,
+                    mainActivity.model.colorHistory
                 )
                 setupColorPickerDialogListeners(dialog)
                 showDialogFragmentSafely(dialog, COLOR_PICKER_DIALOG_TAG)
@@ -472,7 +479,6 @@ class MainActivityNavigator(
             }
             FileIO.filename = "image$imageNumber"
             FileIO.catroidFlag = true
-            FileIO.isCatrobatImage = false
             mainActivity.presenter.switchBetweenVersions(permissionCode, isExport)
             return
         }

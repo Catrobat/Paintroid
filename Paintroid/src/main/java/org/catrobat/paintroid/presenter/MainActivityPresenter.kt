@@ -28,7 +28,10 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PointF
 import android.net.Uri
+import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -43,6 +46,7 @@ import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
+import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.common.CREATE_FILE_DEFAULT
@@ -79,10 +83,16 @@ import org.catrobat.paintroid.iotasks.BitmapReturnValue
 import org.catrobat.paintroid.iotasks.CreateFile.CreateFileCallback
 import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
-import org.catrobat.paintroid.model.CommandManagerModel
+import org.catrobat.paintroid.tools.Tool
+import org.catrobat.paintroid.iotasks.WorkspaceReturnValue
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.implementation.BaseToolWithShape
+import org.catrobat.paintroid.tools.implementation.CLICK_TIMEOUT_MILLIS
+import org.catrobat.paintroid.tools.implementation.CONSTANT_3
+import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
+import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.ui.LayerAdapter
 import org.catrobat.paintroid.ui.Perspective
 import java.io.File
@@ -108,6 +118,7 @@ open class MainActivityPresenter(
     override val context: Context,
     private val internalMemoryPath: File
 ) : MainActivityContracts.Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
+    private var downTimer: CountDownTimer? = null
     private var layerAdapter: LayerAdapter? = null
     private var resetPerspectiveAfterNextCommand = false
     private var isExport = false
@@ -133,12 +144,17 @@ open class MainActivityPresenter(
             return sharedPreferences.preferenceImageNumber
         }
 
+    var clippingToolInUseAndUndoRedoClicked = false
+    var clippingToolPaint = Paint()
+
     override fun replaceImageClicked() {
+        checkIfClippingToolNeedsAdjustment()
         switchBetweenVersions(PERMISSION_REQUEST_CODE_REPLACE_PICTURE, false)
         setFirstCheckBoxInLayerMenu()
     }
 
     override fun addImageToCurrentLayerClicked() {
+        checkIfClippingToolNeedsAdjustment()
         setTool(ToolType.IMPORTPNG)
         switchBetweenVersions(PERMISSION_REQUEST_CODE_IMPORT_PICTURE)
     }
@@ -156,11 +172,13 @@ open class MainActivityPresenter(
     }
 
     override fun loadNewImage() {
+        checkIfClippingToolNeedsAdjustment()
         navigator.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
         setFirstCheckBoxInLayerMenu()
     }
 
     override fun newImageClicked() {
+        checkIfClippingToolNeedsAdjustment()
         if (isImageUnchanged || model.isSaved) {
             onNewImage()
             setFirstCheckBoxInLayerMenu()
@@ -171,6 +189,7 @@ open class MainActivityPresenter(
     }
 
     override fun saveBeforeNewImage() {
+        checkIfClippingToolNeedsAdjustment()
         navigator.showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
             imageNumber,
@@ -193,6 +212,7 @@ open class MainActivityPresenter(
     }
 
     override fun saveBeforeFinish() {
+        checkIfClippingToolNeedsAdjustment()
         navigator.showSaveImageInformationDialogWhenStandalone(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
             imageNumber,
@@ -217,6 +237,8 @@ open class MainActivityPresenter(
     }
 
     override fun shareImageClicked() {
+        checkIfClippingToolNeedsAdjustment()
+        view.refreshDrawingSurface()
         val bitmap: Bitmap? = workspace.bitmapOfAllLayers
         navigator.startShareImageActivity(bitmap)
     }
@@ -300,7 +322,6 @@ open class MainActivityPresenter(
         FileIO.filename = "image"
         FileIO.compressFormat = Bitmap.CompressFormat.PNG
         FileIO.fileType = FileIO.FileType.PNG
-        FileIO.isCatrobatImage = false
         FileIO.deleteTempFile(internalMemoryPath)
         val initCommand = commandFactory.createInitCommand(metrics.widthPixels, metrics.heightPixels)
         commandManager.setInitialStateCommand(initCommand)
@@ -405,7 +426,7 @@ open class MainActivityPresenter(
                     return
                 }
                 setTool(ToolType.IMPORTPNG)
-                toolController.switchTool(ToolType.IMPORTPNG, false)
+                toolController.switchTool(ToolType.IMPORTPNG)
                 interactor.loadFile(
                     this,
                     LOAD_IMAGE_IMPORT_PNG,
@@ -476,7 +497,10 @@ open class MainActivityPresenter(
                         checkForDefaultFilename()
                     }
                     PERMISSION_EXTERNAL_STORAGE_SAVE_COPY -> {
-                        saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT)
+                        saveCopyConfirmClicked(
+                            SAVE_IMAGE_DEFAULT,
+                            FileIO.storeImageUri
+                        )
                         checkForDefaultFilename()
                     }
                     PERMISSION_REQUEST_CODE_REPLACE_PICTURE ->
@@ -517,21 +541,27 @@ open class MainActivityPresenter(
         } else if (model.isFullscreen) {
             exitFullscreenClicked()
         } else if (!toolController.isDefaultTool) {
-            switchTool(ToolType.BRUSH, true)
+            if (toolController.currentTool?.toolType == ToolType.CLIP) toolController.adjustClippingToolOnBackPressed(true)
+            switchTool(ToolType.BRUSH)
         } else {
             showSecurityQuestionBeforeExit()
         }
     }
 
     override fun saveImageConfirmClicked(requestCode: Int, uri: Uri?) {
+        checkIfClippingToolNeedsAdjustment()
+        view.refreshDrawingSurface()
         interactor.saveImage(this, requestCode, workspace, uri, context)
     }
 
-    override fun saveCopyConfirmClicked(requestCode: Int) {
-        interactor.saveCopy(this, requestCode, workspace, context)
+    override fun saveCopyConfirmClicked(requestCode: Int, uri: Uri?) {
+        checkIfClippingToolNeedsAdjustment()
+        view.refreshDrawingSurface()
+        interactor.saveCopy(this, requestCode, workspace, uri, context)
     }
 
     override fun undoClicked() {
+        idlingResource.increment()
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
@@ -539,13 +569,22 @@ open class MainActivityPresenter(
             if (toolController.currentTool is LineTool) {
                 (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
             } else {
-                toolController.currentTool?.changePaintColor(Color.BLACK)
-                commandManager.undo()
+                if (toolController.currentTool is ClippingTool) {
+                    val clippingTool = toolController.currentTool as ClippingTool
+                    clippingToolPaint = clippingTool.drawPaint
+                    commandManager.undo()
+                    clippingToolInUseAndUndoRedoClicked = true
+                } else {
+                    toolController.currentTool?.changePaintColor(Color.BLACK)
+                    commandManager.undo()
+                }
             }
         }
+        idlingResource.decrement()
     }
 
     override fun redoClicked() {
+        idlingResource.increment()
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
@@ -553,8 +592,12 @@ open class MainActivityPresenter(
                 (toolController.currentTool as LineTool).redoLineTool()
             } else {
                 commandManager.redo()
+                if (toolController.currentTool is ClippingTool) {
+                    clippingToolInUseAndUndoRedoClicked = true
+                }
             }
         }
+        idlingResource.decrement()
     }
 
     override fun showColorPickerClicked() {
@@ -562,8 +605,9 @@ open class MainActivityPresenter(
     }
 
     override fun showLayerMenuClicked() {
+        idlingResource.increment()
         layerAdapter?.apply {
-            for (i in 0 until count) {
+            for (i in 0 until itemCount) {
                 val currentHolder = getViewHolderAt(i)
                 currentHolder?.let {
                     if (it.bitmap != null) {
@@ -573,6 +617,7 @@ open class MainActivityPresenter(
             }
         }
         drawerLayoutViewHolder.openDrawer(Gravity.END)
+        idlingResource.decrement()
     }
 
     override fun onCommandPostExecute() {
@@ -582,9 +627,29 @@ open class MainActivityPresenter(
             workspace.resetPerspective()
         }
         model.isSaved = false
+        if (clippingToolInUseAndUndoRedoClicked) {
+            adjustClippingToolPostCommandExecute()
+        }
         toolController.resetToolInternalState()
         view.refreshDrawingSurface()
         refreshTopBarButtons()
+    }
+
+    fun adjustClippingToolPostCommandExecute() {
+        val clippingTool = toolController.currentTool as ClippingTool
+        if (clippingTool.areaClosed) {
+            commandManager.popFirstCommandInRedo()
+        }
+        clippingTool.areaClosed = false
+        clippingTool.pathToDraw.rewind()
+        clippingTool.pointArray.clear()
+        clippingTool.initialEventCoordinate = null
+        clippingTool.previousEventCoordinate = null
+        clippingTool.changePaintColor(clippingToolPaint.color)
+        clippingTool.mainActivity.bottomNavigationViewHolder
+            .setColorButtonColor(clippingToolPaint.color)
+        (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
+        clippingToolInUseAndUndoRedoClicked = false
     }
 
     override fun setBottomNavigationColor(color: Int) {
@@ -702,19 +767,44 @@ open class MainActivityPresenter(
         if (toolController.toolType === toolType && toolController.hasToolOptionsView()) {
             toolController.toggleToolOptionsView()
         } else {
+            checkForImplicitToolApplication()
             switchTool(toolType)
         }
         idlingResource.decrement()
     }
 
-    private fun switchTool(type: ToolType, backPressed: Boolean = false) {
+    private fun checkForImplicitToolApplication() {
+        val currentTool = toolController.currentTool
+        val currentToolType = currentTool?.toolType
+        if (toolController.toolList.contains(currentToolType)) {
+            val toolToApply = currentTool as BaseToolWithShape
+            toolToApply.onClickOnButton()
+        } else if (currentToolType == ToolType.CLIP) (currentTool as ClippingTool).onClickOnButton()
+    }
+
+    private fun switchTool(type: ToolType) {
         navigator.setMaskFilterToNull()
         view.hideKeyboard()
-        setTool(type)
-        toolController.switchTool(type, backPressed)
-        if (type === ToolType.IMPORTPNG) {
-            showImportDialog()
-        }
+        downTimer = object :
+            CountDownTimer(
+                if (toolController.toolList.contains(toolController.currentTool?.toolType)) CLICK_TIMEOUT_MILLIS else 0L,
+                CLICK_TIMEOUT_MILLIS / CONSTANT_3
+            ) {
+            override fun onTick(millisUntilFinished: Long) {
+                workspace.invalidate()
+            }
+            override fun onFinish() {
+                downTimer?.cancel()
+                workspace.invalidate()
+                setTool(type)
+                toolController.switchTool(type)
+                if (type === ToolType.IMPORTPNG) {
+                    showImportDialog()
+                } else if (type == ToolType.CLIP) {
+                    (toolController.currentTool as ClippingTool).copyBitmapOfCurrentLayer()
+                }
+            }
+        }.start()
     }
 
     private fun setTool(toolType: ToolType) {
@@ -742,7 +832,7 @@ open class MainActivityPresenter(
         when (requestCode) {
             LOAD_IMAGE_IMPORT_PNG -> {
                 setTool(ToolType.IMPORTPNG)
-                toolController.switchTool(ToolType.IMPORTPNG, false)
+                toolController.switchTool(ToolType.IMPORTPNG)
                 interactor.loadFile(
                     this,
                     LOAD_IMAGE_IMPORT_PNG,
@@ -776,6 +866,14 @@ open class MainActivityPresenter(
         if (result.model != null) {
             commandManager.loadCommandsCatrobatImage(result.model)
             resetPerspectiveAfterNextCommand = true
+            setColorHistoryAfterLoadImage(result.colorHistory)
+            FileIO.fileType = FileIO.FileType.CATROBAT
+            if (uri != null) {
+                val name = getFileName(uri)
+                if (name != null) {
+                    FileIO.filename = name.substring(0, name.length - FileIO.fileType.toExtension().length)
+                }
+            }
             return
         }
         if (result.toBeScaled) {
@@ -806,15 +904,13 @@ open class MainActivityPresenter(
                         if (name.endsWith(FileIO.FileType.JPG.value) || name.endsWith("jpeg")) {
                             FileIO.compressFormat = Bitmap.CompressFormat.JPEG
                             FileIO.fileType = FileIO.FileType.JPG
-                            FileIO.isCatrobatImage = false
                         } else if (name.endsWith(FileIO.FileType.PNG.value)) {
                             FileIO.compressFormat = Bitmap.CompressFormat.PNG
                             FileIO.fileType = FileIO.FileType.PNG
-                            FileIO.isCatrobatImage = false
                         } else {
                             FileIO.fileType = FileIO.FileType.ORA
-                            FileIO.isCatrobatImage = true
                         }
+                        FileIO.filename = name.substring(0, name.length - FileIO.fileType.toExtension().length)
                     }
                 }
             }
@@ -978,11 +1074,46 @@ open class MainActivityPresenter(
         FileIO.saveTemporaryPictureFile(internalMemoryPath, workspace)
     }
 
-    override fun openTemporaryFile(workspace: Workspace): CommandManagerModel? =
+    override fun openTemporaryFile(workspace: Workspace): WorkspaceReturnValue? =
         FileIO.openTemporaryPictureFile(workspace)
 
     override fun checkForTemporaryFile(): Boolean =
         FileIO.checkForTemporaryFile(internalMemoryPath)
+
+    override fun setColorHistoryAfterLoadImage(colorHistory: ColorHistory?) {
+        var history = colorHistory
+        history = history ?: ColorHistory()
+        model.colorHistory = history
+        var newPaintColor: Int = DefaultToolPaint(context).color
+        if (history.colors.isNotEmpty()) {
+            newPaintColor = history.colors.last()
+        }
+        toolController.currentTool?.changePaintColor(newPaintColor)
+        setBottomNavigationColor(newPaintColor)
+    }
+
+    fun checkIfClippingToolNeedsAdjustment() {
+        if (toolController.currentTool is ClippingTool) {
+            val clippingTool = toolController.currentTool as ClippingTool
+            if (clippingTool.areaClosed) {
+                clippingTool.handleDown(
+                    clippingTool.initialEventCoordinate?.x?.let {
+                        clippingTool.initialEventCoordinate?.y?.let { it1 ->
+                            PointF(
+                                it,
+                                it1
+                            )
+                        }
+                    }
+                )
+                (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
+                clippingTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED)
+            } else {
+                (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
+                clippingTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED)
+            }
+        }
+    }
 
     companion object {
         @JvmStatic

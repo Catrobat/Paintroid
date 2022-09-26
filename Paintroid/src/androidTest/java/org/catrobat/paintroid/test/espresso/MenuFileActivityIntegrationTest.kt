@@ -421,7 +421,7 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testCheckSaveImageDialogShowPNGSpinnerText() {
-        FileIO.compressFormat = Bitmap.CompressFormat.PNG
+        FileIO.fileType = FileIO.FileType.PNG
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
@@ -431,7 +431,7 @@ class MenuFileActivityIntegrationTest {
 
     @Test
     fun testCheckSaveImageDialogShowORASpinnerText() {
-        FileIO.isCatrobatImage = true
+        FileIO.fileType = FileIO.FileType.ORA
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
@@ -522,6 +522,138 @@ class MenuFileActivityIntegrationTest {
         onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testSameFileNameAfterOverwritePng() {
+        val name = "testPNG"
+        FileIO.filename = name
+        FileIO.fileType = FileIO.FileType.PNG
+        FileIO.compressFormat = Bitmap.CompressFormat.PNG
+        onTopBarView().performOpenMoreOptions()
+        onView(withText(R.string.menu_save_image)).perform(click())
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(200))
+        val uri = activity.model.savedPictureUri
+        onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        onTopBarView().performOpenMoreOptions()
+        onView(withText(R.string.menu_save_image)).perform(click())
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
+        onView(withText(R.string.overwrite_button_text)).check(matches(isDisplayed()))
+        onView(withText(R.string.overwrite_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(500))
+
+        val oldFileName = uri?.path?.let { File(it).name }
+        val newFileName = activity.model.savedPictureUri?.path?.let { File(it).name }
+
+        assertEquals(oldFileName, newFileName)
+        addUriToDeletionFileList(activity.model.savedPictureUri)
+    }
+
+    @Test
+    fun testSameFileNameAfterOverwriteJpg() {
+        val name = "testJPG"
+        FileIO.filename = name
+        FileIO.fileType = FileIO.FileType.JPG
+        FileIO.compressFormat = Bitmap.CompressFormat.JPEG
+        onTopBarView().performOpenMoreOptions()
+        onView(withText(R.string.menu_save_image)).perform(click())
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(200))
+        val uri = activity.model.savedPictureUri
+        onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        onTopBarView().performOpenMoreOptions()
+        onView(withText(R.string.menu_save_image)).perform(click())
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(100))
+        onView(withText(R.string.overwrite_button_text)).check(matches(isDisplayed()))
+        onView(withText(R.string.overwrite_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(500))
+
+        val oldFileName = uri?.path?.let { File(it).name }
+        val newFileName = activity.model.savedPictureUri?.path?.let { File(it).name }
+
+        assertEquals(oldFileName, newFileName)
+        addUriToDeletionFileList(activity.model.savedPictureUri)
+    }
+
+    @Test
+    fun testSameFileNameAfterOverwriteOra() {
+        val name = "testORA"
+        FileIO.filename = name
+        FileIO.fileType = FileIO.FileType.ORA
+        FileIO.compressFormat = Bitmap.CompressFormat.PNG
+        onTopBarView().performOpenMoreOptions()
+        onView(withText(R.string.menu_save_image)).perform(click())
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(500))
+        onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        onTopBarView().performOpenMoreOptions()
+        onView(withText(R.string.menu_save_image)).perform(click())
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(500))
+        onView(withText(R.string.overwrite_button_text)).check(matches(isDisplayed()))
+        onView(withText(R.string.overwrite_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(500))
+
+        var newFileName = "new"
+        val uri = activity.model.savedPictureUri
+        if (uri != null) {
+            val cursor = activity.contentResolver.query(
+                uri,
+                arrayOf(MediaStore.Images.ImageColumns.DISPLAY_NAME),
+                null, null, null
+            )
+            cursor?.use {
+                if (cursor.moveToFirst()) {
+                    newFileName =
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME))
+                }
+            }
+        }
+
+        assertEquals(newFileName, "testORA.ora")
+        addUriToDeletionFileList(activity.model.savedPictureUri)
+    }
+
+    @Test
+    fun testSameFileNameAfterOverwriteCatrobatImage() {
+        val name = "testCI"
+        FileIO.filename = name
+        FileIO.fileType = FileIO.FileType.CATROBAT
+        FileIO.compressFormat = Bitmap.CompressFormat.PNG
+        onTopBarView().performOpenMoreOptions()
+        onView(withText(R.string.menu_save_image)).perform(click())
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(500))
+        onDrawingSurfaceView().perform(touchAt(MIDDLE))
+        onTopBarView().performOpenMoreOptions()
+        onView(withText(R.string.menu_save_image)).perform(click())
+        onView(withText(R.string.save_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(500))
+        onView(withText(R.string.overwrite_button_text)).check(matches(isDisplayed()))
+        onView(withText(R.string.overwrite_button_text)).perform(click())
+        onView(isRoot()).perform(waitFor(500))
+
+        var newFileName = "new"
+        val uri = activity.model.savedPictureUri
+        if (uri != null) {
+            val cursor = activity.contentResolver.query(
+                uri,
+                arrayOf(MediaStore.Images.ImageColumns.DISPLAY_NAME),
+                null, null, null
+            )
+            cursor?.use {
+                if (cursor.moveToFirst()) {
+                    newFileName =
+                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME))
+                }
+            }
+        }
+
+        assertEquals(newFileName, "testCI.catrobat-image")
+        addUriToDeletionFileList(activity.model.savedPictureUri)
     }
 
     private fun addUriToDeletionFileList(uri: Uri?) {

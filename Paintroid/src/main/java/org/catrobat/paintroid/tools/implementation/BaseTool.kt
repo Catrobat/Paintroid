@@ -41,8 +41,7 @@ import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 abstract class BaseTool(
     @JvmField
     open var contextCallback: ContextCallback,
-    @JvmField
-    protected var toolOptionsViewController: ToolOptionsViewController,
+    @JvmField var toolOptionsViewController: ToolOptionsViewController,
     @JvmField
     protected var toolPaint: ToolPaint,
     @JvmField
@@ -59,7 +58,7 @@ abstract class BaseTool(
     protected var scrollBehavior: ScrollBehavior
 
     @JvmField
-    protected var previousEventCoordinate: PointF?
+    var previousEventCoordinate: PointF?
 
     @JvmField
     protected var commandFactory: CommandFactory = DefaultCommandFactory()
@@ -69,6 +68,9 @@ abstract class BaseTool(
         scrollBehavior = PointScrollBehavior(scrollTolerance)
         movedDistance = PointF(0f, 0f)
         previousEventCoordinate = PointF(0f, 0f)
+        if (toolPaint != null && toolPaint.paint != null && toolPaint.paint.pathEffect != null) {
+            toolPaint.paint.pathEffect = null
+        }
     }
 
     override fun onSaveInstanceState(bundle: Bundle?) = Unit

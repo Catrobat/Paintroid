@@ -186,6 +186,10 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
         brushToolPreview.invalidate()
     }
 
+    override fun hideCaps() {
+        // Should never be reached
+    }
+
     private fun updateStrokeWidthChange(strokeWidth: Int) {
         brushChangedListener?.setStrokeWidth(strokeWidth)
     }

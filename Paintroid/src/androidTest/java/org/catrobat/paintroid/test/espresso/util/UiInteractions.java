@@ -20,17 +20,16 @@
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SeekBar;
 
 import org.hamcrest.Matcher;
 
-import androidx.test.espresso.NoMatchingViewException;
+import static org.catrobat.paintroid.test.espresso.util.CustomSwiper.ACCURATE;
+import static org.hamcrest.Matchers.is;
+
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
@@ -46,9 +45,6 @@ import androidx.test.espresso.action.Tap;
 import androidx.test.espresso.action.Tapper;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.viewpager.widget.ViewPager;
-
-import static org.catrobat.paintroid.test.espresso.util.CustomSwiper.ACCURATE;
-import static org.hamcrest.Matchers.is;
 
 import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
@@ -85,16 +81,15 @@ public final class UiInteractions {
 		};
 	}
 
-	public static ViewAssertion assertListViewCount(final int expectedCount) {
-		return new ViewAssertion() {
-			@Override
-			public void check(View view, NoMatchingViewException noViewFoundException) {
-				if (noViewFoundException != null) {
-					throw noViewFoundException;
-				}
+	public static ViewAssertion assertRecyclerViewCount(final int expectedCount) {
+		return (view, noViewFoundException) -> {
+			if (noViewFoundException != null) {
+				throw noViewFoundException;
+			}
 
-				ListAdapter adapter = ((ListView) view).getAdapter();
-				assertThat(adapter.getCount(), is(expectedCount));
+			org.catrobat.paintroid.ui.LayerAdapter adapter = (org.catrobat.paintroid.ui.LayerAdapter) ((androidx.recyclerview.widget.RecyclerView) view).getAdapter();
+			if (adapter != null) {
+				assertThat(adapter.getItemCount(), is(expectedCount));
 			}
 		};
 	}
@@ -121,23 +116,20 @@ public final class UiInteractions {
 
 	public static ViewAction clickOutside(final Direction direction) {
 		return actionWithAssertions(
-				new GeneralClickAction(Tap.SINGLE, new CoordinatesProvider() {
-					@Override
-					public float[] calculateCoordinates(View view) {
-						Rect r = new Rect();
-						view.getGlobalVisibleRect(r);
-						switch (direction) {
-							case ABOVE:
-								return new float[]{r.centerX(), r.top - 50};
-							case BELOW:
-								return new float[]{r.centerX(), r.bottom + 50};
-							case LEFT:
-								return new float[]{r.left - 50, r.centerY()};
-							case RIGHT:
-								return new float[]{r.right + 50, r.centerY()};
-						}
-						return null;
+				new GeneralClickAction(Tap.SINGLE, view -> {
+					android.graphics.Rect r = new android.graphics.Rect();
+					view.getGlobalVisibleRect(r);
+					switch (direction) {
+						case ABOVE:
+							return new float[]{r.centerX(), r.top - 50};
+						case BELOW:
+							return new float[]{r.centerX(), r.bottom + 50};
+						case LEFT:
+							return new float[]{r.left - 50, r.centerY()};
+						case RIGHT:
+							return new float[]{r.right + 50, r.centerY()};
 					}
+					return null;
 				}, Press.FINGER, 0, 1)
 		);
 	}

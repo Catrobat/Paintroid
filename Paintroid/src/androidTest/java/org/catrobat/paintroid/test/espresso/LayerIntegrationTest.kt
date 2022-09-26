@@ -26,23 +26,28 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isClickable
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
+import junit.framework.AssertionFailedError
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.common.MAX_LAYERS
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
@@ -66,6 +71,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
+
+private const val FOUR_LAYERS = 4
 
 @RunWith(AndroidJUnit4::class)
 class LayerIntegrationTest {
@@ -109,13 +116,13 @@ class LayerIntegrationTest {
     fun testShowLayerMenu() {
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
-            .check(ViewAssertions.matches(isDisplayed()))
+            .check(matches(isDisplayed()))
     }
 
     @Test
     fun testInitialSetup() {
         LayerMenuViewInteraction.onLayerMenuView()
-            .check(ViewAssertions.matches(Matchers.not(isDisplayed())))
+            .check(matches(Matchers.not(isDisplayed())))
         assertIfLayerAddButtonIsEnabled()
         assertIfLayerDeleteButtonIsDisabled()
     }
@@ -130,19 +137,6 @@ class LayerIntegrationTest {
     }
 
     @Test
-    fun testTryAddMoreLayersThanLimit() {
-        LayerMenuViewInteraction.onLayerMenuView()
-            .checkLayerCount(1)
-            .performOpen()
-            .performAddLayer()
-            .performAddLayer()
-            .performAddLayer()
-            .checkLayerCount(4)
-            .performAddLayer()
-            .checkLayerCount(4)
-    }
-
-    @Test
     fun testButtonsAddOneLayer() {
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
@@ -152,26 +146,22 @@ class LayerIntegrationTest {
             .check(
                 assertIfAddLayerButtonIsEnabled()
             )
-        asserIfDeleteLayerButtonIsDisabled()
+        assertIfDeleteLayerButtonIsDisabled()
         LayerMenuViewInteraction.onLayerMenuView()
             .performAddLayer()
             .performAddLayer()
             .checkLayerCount(4)
-        assertIfLayerAddButtonIsDisabled()
-        asserIfDeleteLayerButtonIsDisabled()
         LayerMenuViewInteraction.onLayerMenuView()
             .performDeleteLayer()
             .performDeleteLayer()
             .performDeleteLayer()
             .checkLayerCount(1)
-        assertIfLayerAddButtonIsEnabled()
-        assertIfLayerDeleteButtonIsDisabled()
     }
 
     private fun assertIfLayerAddButtonIsEnabled() {
         LayerMenuViewInteraction.onLayerMenuView().onButtonAdd()
             .check(
-                ViewAssertions.matches(
+                matches(
                     Matchers.allOf(
                         isEnabled(),
                         UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add)
@@ -189,8 +179,6 @@ class LayerIntegrationTest {
             .performAddLayer()
             .performClose()
             .checkLayerCount(4)
-        assertIfLayerAddButtonIsDisabled()
-        asserIfDeleteLayerButtonIsDisabled()
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
         onView(withText(R.string.menu_new_image))
@@ -206,10 +194,10 @@ class LayerIntegrationTest {
             .checkLayerCount(1)
     }
 
-    private fun asserIfDeleteLayerButtonIsDisabled() {
+    private fun assertIfDeleteLayerButtonIsDisabled() {
         LayerMenuViewInteraction.onLayerMenuView().onButtonDelete()
             .check(
-                ViewAssertions.matches(
+                matches(
                     Matchers.allOf(
                         isEnabled(),
                         UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_delete)
@@ -221,7 +209,7 @@ class LayerIntegrationTest {
     private fun assertIfLayerAddButtonIsDisabled() {
         LayerMenuViewInteraction.onLayerMenuView().onButtonAdd()
             .check(
-                ViewAssertions.matches(
+                matches(
                     Matchers.allOf(
                         Matchers.not(isEnabled()),
                         UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add_disabled)
@@ -233,7 +221,7 @@ class LayerIntegrationTest {
     private fun assertIfLayerDeleteButtonIsDisabled() {
         LayerMenuViewInteraction.onLayerMenuView().onButtonDelete()
             .check(
-                ViewAssertions.matches(
+                matches(
                     Matchers.allOf(
                         Matchers.not(isEnabled()),
                         UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_delete_disabled)
@@ -242,7 +230,7 @@ class LayerIntegrationTest {
             )
     }
 
-    private fun assertIfAddLayerButtonIsEnabled() = ViewAssertions.matches(
+    private fun assertIfAddLayerButtonIsEnabled() = matches(
         Matchers.allOf(
             isEnabled(),
             UiMatcher.withDrawable(R.drawable.ic_pocketpaint_layers_add)
@@ -740,6 +728,7 @@ class LayerIntegrationTest {
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
         onView(withText(R.string.menu_load_image)).perform(click())
+        onView(withText(R.string.menu_replace_image)).perform(click())
         Intents.release()
         onView(withText(R.string.dialog_warning_new_image)).check(ViewAssertions.doesNotExist())
         onView(withText(R.string.pocketpaint_ok)).perform(click())
@@ -751,7 +740,57 @@ class LayerIntegrationTest {
             .performAddLayer()
             .performAddLayer()
             .performAddLayer()
-            .checkLayerCount(MAX_LAYERS)
+            .checkLayerCount(FOUR_LAYERS)
+    }
+
+    @Test
+    fun testAddTenLayers() {
+        LayerMenuViewInteraction.onLayerMenuView()
+            .checkLayerCount(1)
+            .performOpen()
+            .performAddLayer()
+            .checkLayerCount(2)
+            .performAddLayer()
+            .checkLayerCount(3)
+            .performAddLayer()
+            .checkLayerCount(4)
+            .performAddLayer()
+            .checkLayerCount(5)
+            .performAddLayer()
+            .checkLayerCount(6)
+            .performAddLayer()
+            .checkLayerCount(7)
+            .performAddLayer()
+            .checkLayerCount(8)
+            .performAddLayer()
+            .checkLayerCount(9)
+            .performAddLayer()
+            .checkLayerCount(10)
+    }
+
+    @Test
+    fun testAddAsManyLayersAsPossibleAndScrollToEndOfList() {
+        LayerMenuViewInteraction.onLayerMenuView()
+            .checkLayerCount(1)
+            .performOpen()
+            .performAddLayer()
+            .checkLayerCount(2)
+        var layerCount = 3
+        while (true) {
+            try {
+                LayerMenuViewInteraction.onLayerMenuView()
+                    .performAddLayer()
+                    .checkLayerCount(layerCount)
+                onView(withId(R.id.pocketpaint_layer_side_nav_button_add)).check(matches(isClickable()))
+                layerCount++
+            } catch (ignore: AssertionFailedError) {
+                break
+            }
+        }
+        assertIfLayerAddButtonIsDisabled()
+        LayerMenuViewInteraction.onLayerMenuView()
+            .checkLayerCount(--layerCount)
+        onView(withId(R.id.pocketpaint_layer_side_nav_list)).perform(scrollToPosition<RecyclerView.ViewHolder>(99))
     }
 
     private fun createTestImageFile(): Uri {

@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid.ui.tools
 
+import android.content.Context
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -25,26 +26,30 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatSeekBar
-import androidx.appcompat.widget.AppCompatTextView
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.TransformToolOptionsView
+import java.lang.NumberFormatException
 import java.text.NumberFormat
 import java.text.ParseException
 import java.util.Locale
 
 private const val HUNDRED = 100
+private const val MIN_VAL = 1
 
 class DefaultTransformToolOptionsView(rootView: ViewGroup) : TransformToolOptionsView {
+    private val root: ViewGroup = rootView
     private val heightTextWatcher: TransformToolSizeTextWatcher
     private val widthTextWatcher: TransformToolSizeTextWatcher
     private val widthEditText: AppCompatEditText
     private val heightEditText: AppCompatEditText
     private val resizeSeekBar: AppCompatSeekBar
-    private val percentageText: AppCompatTextView
+    private val percentageText: AppCompatEditText
     private var callback: TransformToolOptionsView.Callback? = null
 
     companion object {
@@ -52,7 +57,7 @@ class DefaultTransformToolOptionsView(rootView: ViewGroup) : TransformToolOption
     }
 
     init {
-        val inflater = LayoutInflater.from(rootView.context)
+        val inflater = LayoutInflater.from(root.context)
         val optionsView = inflater.inflate(R.layout.dialog_pocketpaint_transform_tool, rootView)
         widthEditText = optionsView.findViewById(R.id.pocketpaint_transform_width_value)
         heightEditText = optionsView.findViewById(R.id.pocketpaint_transform_height_value)
@@ -68,8 +73,33 @@ class DefaultTransformToolOptionsView(rootView: ViewGroup) : TransformToolOption
                 callback?.setBoxHeight(value)
             }
         }
+
         widthEditText.addTextChangedListener(widthTextWatcher)
         heightEditText.addTextChangedListener(heightTextWatcher)
+
+        percentageText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, HUNDRED))
+        percentageText.setText(String.format(Locale.getDefault(), "%d", resizeSeekBar.progress))
+        percentageText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) =
+                Unit
+
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) =
+                Unit
+
+            override fun afterTextChanged(editable: Editable) {
+                val percentageTextString = percentageText.text.toString()
+                val percentageTextInt: Int = try {
+                    percentageTextString.toInt()
+                } catch (exp: NumberFormatException) {
+                    exp.localizedMessage?.let {
+                        Log.d(TAG, it)
+                    }
+                    MIN_VAL
+                }
+                resizeSeekBar.progress = percentageTextInt
+                percentageText.setSelection(percentageText.length())
+            }
+        })
         optionsView.findViewById<View>(R.id.pocketpaint_transform_auto_crop_btn)
             .setOnClickListener {
                 callback?.autoCropClicked()
@@ -96,6 +126,8 @@ class DefaultTransformToolOptionsView(rootView: ViewGroup) : TransformToolOption
             }
         optionsView.findViewById<View>(R.id.pocketpaint_transform_apply_resize_btn)
             .setOnClickListener {
+                hideKeyboard()
+
                 callback?.applyResizeClicked(resizeSeekBar.progress)
                 callback?.hideToolOptions()
                 resizeSeekBar.progress = HUNDRED
@@ -106,12 +138,14 @@ class DefaultTransformToolOptionsView(rootView: ViewGroup) : TransformToolOption
                     seekBar.progress = 1
                     return
                 }
-                percentageText.text = String.format(Locale.getDefault(), "%d", progress)
+                percentageText.setText(String.format(Locale.getDefault(), "%d", progress))
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
 
-            override fun onStopTrackingTouch(seekBar: SeekBar) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                percentageText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
+            }
         })
     }
 
@@ -162,5 +196,10 @@ class DefaultTransformToolOptionsView(rootView: ViewGroup) : TransformToolOption
                 e.message?.let { Log.e(TAG, it) }
             }
         }
+    }
+
+    private fun hideKeyboard() {
+        val imm = root.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(root.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 }

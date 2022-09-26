@@ -32,6 +32,8 @@ interface CommandManager {
 
     fun addCommand(command: Command?)
 
+    fun addCommandWithoutUndo(command: Command?)
+
     fun setInitialStateCommand(command: Command)
 
     fun loadCommandsCatrobatImage(model: CommandManagerModel?)
@@ -53,6 +55,14 @@ interface CommandManager {
     fun redoInConnectedLinesMode()
 
     fun getCommandManagerModelForCatrobatImage(): CommandManagerModel?
+
+    fun adjustUndoListForClippingTool()
+
+    fun undoInClippingTool()
+
+    fun popFirstCommandInUndo()
+
+    fun popFirstCommandInRedo()
 
     interface CommandListener {
         fun commandPostExecute()

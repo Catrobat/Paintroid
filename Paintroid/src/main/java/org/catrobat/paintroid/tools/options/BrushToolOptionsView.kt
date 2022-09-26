@@ -32,6 +32,8 @@ interface BrushToolOptionsView {
 
     fun setBrushPreviewListener(onBrushPreviewListener: OnBrushPreviewListener)
 
+    fun hideCaps()
+
     interface OnBrushChangedListener {
         fun setCap(strokeCap: Cap)
 

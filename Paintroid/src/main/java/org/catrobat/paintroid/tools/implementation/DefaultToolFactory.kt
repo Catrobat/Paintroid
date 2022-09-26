@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.tools.implementation
 
 import androidx.test.espresso.idling.CountingIdlingResource
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -40,7 +41,8 @@ import org.catrobat.paintroid.ui.tools.DefaultSmudgeToolOptionsView
 private const val DRAW_TIME_INIT: Long = 30_000_000
 
 @SuppressWarnings("LongMethod")
-class DefaultToolFactory : ToolFactory {
+class DefaultToolFactory(mainActivity: MainActivity) : ToolFactory {
+    var mainActivity: MainActivity = mainActivity
     override fun createTool(
         toolType: ToolType,
         toolOptionsViewController: ToolOptionsViewController,
@@ -188,6 +190,17 @@ class DefaultToolFactory : ToolFactory {
                 workspace,
                 idlingResource,
                 commandManager,
+            )
+            ToolType.CLIP -> ClippingTool(
+                DefaultBrushToolOptionsView(toolLayout),
+                contextCallback,
+                toolOptionsViewController,
+                toolPaint,
+                workspace,
+                idlingResource,
+                commandManager,
+                DRAW_TIME_INIT,
+                mainActivity
             )
             else -> BrushTool(
                 DefaultBrushToolOptionsView(toolLayout),

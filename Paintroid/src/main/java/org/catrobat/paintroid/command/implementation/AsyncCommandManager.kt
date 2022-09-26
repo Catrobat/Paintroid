@@ -65,6 +65,20 @@ open class AsyncCommandManager(
                     synchronized(layerModel) { commandManager.addCommand(command) }
                 }
                 withContext(Dispatchers.Main) {
+                    commandManager.adjustUndoListForClippingTool()
+                    notifyCommandPostExecute()
+                }
+            }
+        }
+    }
+
+    override fun addCommandWithoutUndo(command: Command?) {
+        CoroutineScope(Dispatchers.Default).launch {
+            mutex.withLock {
+                if (!shuttingDown) {
+                    synchronized(layerModel) { commandManager.addCommandWithoutUndo(command) }
+                }
+                withContext(Dispatchers.Main) {
                     notifyCommandPostExecute()
                 }
             }
@@ -136,6 +150,22 @@ open class AsyncCommandManager(
 
     override fun setInitialStateCommand(command: Command) {
         synchronized(layerModel) { commandManager.setInitialStateCommand(command) }
+    }
+
+    override fun adjustUndoListForClippingTool() {
+        synchronized(layerModel) { commandManager.adjustUndoListForClippingTool() }
+    }
+
+    override fun undoInClippingTool() {
+        synchronized(layerModel) { commandManager.undoInClippingTool() }
+    }
+
+    override fun popFirstCommandInUndo() {
+        synchronized(layerModel) { commandManager.popFirstCommandInUndo() }
+    }
+
+    override fun popFirstCommandInRedo() {
+        synchronized(layerModel) { commandManager.popFirstCommandInRedo() }
     }
 
     private fun manageUndoAndRedo(callFunction: () -> Unit, condition: Boolean) {

@@ -76,7 +76,13 @@ interface CommandFactory {
 
     fun createPathCommand(paint: Paint, path: SerializablePath): Command
 
-    fun createSmudgePathCommand(bitmap: Bitmap, pointPath: MutableList<PointF>, maxPressure: Float, maxSize: Float, minSize: Float): Command
+    fun createSmudgePathCommand(
+        bitmap: Bitmap,
+        pointPath: MutableList<PointF>,
+        maxPressure: Float,
+        maxSize: Float,
+        minSize: Float
+    ): Command
 
     fun createTextToolCommand(
         multilineText: Array<String>,
@@ -109,4 +115,9 @@ interface CommandFactory {
     ): Command
 
     fun createColorChangedCommand(toolReference: ToolReference, context: Context, color: Int): Command
+
+    fun createClippingCommand(
+        bitmap: Bitmap,
+        pathBitmap: Bitmap
+    ): Command
 }

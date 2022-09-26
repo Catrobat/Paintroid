@@ -113,7 +113,7 @@ class SaveImage(
                 idlingResource.increment()
                 val bitmap = workspace.bitmapOfAllLayers
                 val filename = FileIO.defaultFileName
-                currentUri = if (FileIO.isCatrobatImage) {
+                currentUri = if (FileIO.fileType == FileIO.FileType.ORA) {
                     val bitmapList = workspace.bitmapLisOfAllLayers
                     if (uri != null && filename.endsWith(FileIO.FileType.ORA.toExtension())) {
                         uri?.let {

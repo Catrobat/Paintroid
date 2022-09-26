@@ -17,7 +17,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+apply plugin: 'com.android.library'
+apply plugin: 'com.hiya.jacoco-android'
+apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'kotlin-android'
 apply plugin: 'org.catrobat.gradle.androidemulators'
+apply plugin: 'maven-publish'
+
+apply from: 'gradle/adb_tasks.gradle'
+apply from: 'gradle/code_quality_tasks.gradle'
 
 emulators {
     install project.hasProperty('installSdk')
@@ -42,15 +50,6 @@ emulators {
     }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'com.hiya.jacoco-android'
-apply plugin: 'com.github.panpf.bintray-publish'
-apply plugin: 'com.getkeepsafe.dexcount'
-apply plugin: 'kotlin-android'
-
-apply from: 'gradle/adb_tasks.gradle'
-apply from: 'gradle/code_quality_tasks.gradle'
-
 jacoco {
     toolVersion = "0.8.5"
 }
@@ -74,8 +73,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     buildTypes {
@@ -98,7 +97,6 @@ android {
         // specific ignores should be defined via lint.xml file
         lintConfig file('config/lint.xml')
         ignore 'ClickableViewAccessibility', 'StaticFieldLeak', 'GradleDependency', 'OldTargetApi', 'LintBaseline'
-        baseline file('config/lint-baseline.xml')
         textReport true
         xmlReport true
         htmlReport true
@@ -130,6 +128,7 @@ dependencies {
     implementation 'com.esotericsoftware:kryo:5.1.1'
     implementation 'id.zelory:compressor:2.1.1'
     androidTestImplementation project(path: ':Paintroid')
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     debugImplementation 'androidx.multidex:multidex:2.0.0'
 
@@ -155,19 +154,6 @@ dependencies {
 
 tasks.withType(Javadoc).all {
     enabled = false
-}
-
-publish {
-    userOrg = 'catrobat'
-    repoName = 'Paintroid'
-    groupId = 'org.catrobat.paintroid'
-    artifactId = 'paintroid'
-    publishVersion = rootProject.ext.androidVersionName
-    licences = ['AGPL-V3']
-    desc = 'A graphical paint editor library for Android'
-    website = 'https://github.com/Catrobat/Paintroid'
-    issueTracker = 'https://jira.catrob.at/browse/PAINTROID'
-    repository = "${website}.git"
 }
 
 if (project.hasProperty('jenkins')) {

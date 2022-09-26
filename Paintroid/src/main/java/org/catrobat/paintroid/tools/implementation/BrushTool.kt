@@ -21,7 +21,6 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
-import androidx.annotation.VisibleForTesting
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
@@ -61,16 +60,16 @@ open class BrushTool(
     override val toolType: ToolType
         get() = ToolType.BRUSH
 
-    @VisibleForTesting
     @JvmField
     var pathToDraw: SerializablePath = SerializablePath()
-    private var initialEventCoordinate: PointF? = null
+    var initialEventCoordinate: PointF? = null
     private var pathInsideBitmap = false
     private val drawToolMovedDistance = PointF(0f, 0f)
 
-    private val pointArray = mutableListOf<PointF>()
+    val pointArray = mutableListOf<PointF>()
 
     init {
+        toolOptionsViewController.enable()
         pathToDraw.incReserve(1)
         brushToolOptionsView.setBrushChangedListener(CommonBrushChangedListener(this))
         brushToolOptionsView.setBrushPreviewListener(
