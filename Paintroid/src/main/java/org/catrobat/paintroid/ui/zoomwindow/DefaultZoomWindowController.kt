@@ -1,33 +1,92 @@
 package org.catrobat.paintroid.ui.zoomwindow
 
-import android.app.Activity
-import android.graphics.PointF
-import android.os.Build
-import android.util.Log
+import android.graphics.*
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RelativeLayout
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.tools.Tool
+import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.Workspace
+import kotlin.math.roundToInt
 
-class DefaultZoomWindowController(val activity: Activity, val layerModel: LayerContracts.Model) : ZoomWindowController {
+
+class DefaultZoomWindowController
+    (val activity: MainActivity,
+    val layerModel: LayerContracts.Model,
+    val workspace: Workspace,
+    val toolReference: ToolReference) :
+    ZoomWindowController {
+
+    private val canvasRect = Rect()
+    private val checkeredPattern = Paint()
+    private val framePaint = Paint()
+
+    // Getting the dimensions of the zoom window
+    private val windowHeight =
+        activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_height)
+    private val windowWidth =
+        activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_width)
+
+    // CHEQUERED
+    private val backgroundBitmap =
+        Bitmap.createBitmap(layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
+
+    // GREY BACKGROUND
+    private val greyBackgroundBitmap =
+        Bitmap.createBitmap(
+            layerModel.width + windowWidth,
+            layerModel.height + windowHeight,
+            Bitmap.Config.ARGB_8888
+        )
+
+    init {
+        framePaint.color = Color.BLACK
+        framePaint.style = Paint.Style.STROKE
+        framePaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
+        val checkerboard =
+            BitmapFactory.decodeResource(activity.resources, R.drawable.pocketpaint_checkeredbg)
+        val shader = BitmapShader(checkerboard, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
+        checkeredPattern.shader = shader
+        checkeredPattern.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
+
+        val backgroundCanvas: Canvas? = backgroundBitmap?.let { Canvas(it) }
+
+        canvasRect.set(0, 0, layerModel.width, layerModel.height)
+
+        backgroundCanvas?.drawRect(canvasRect, checkeredPattern)
+        backgroundCanvas?.drawRect(canvasRect, framePaint)
+
+        val greyBackgroundCanvas = Canvas(greyBackgroundBitmap)
+        greyBackgroundCanvas.drawColor(
+            activity.resources.getColor(R.color.pocketpaint_main_drawing_surface_background)
+        )
+    }
 
     private val zoomWindow: RelativeLayout =
         activity.findViewById(R.id.pocketpaint_zoom_window)
     private val zoomWindowShape: ViewGroup =
         activity.findViewById(R.id.pocketpaint_zoom_window_inner)
+    private val zoomWindowImage: ImageView =
+        activity.findViewById(R.id.pocketpaint_zoom_window_image)
+    private var coordinates: PointF? = null
 
     override fun show(coordinates: PointF) {
-        if(isPointOnCanvas(coordinates.x, coordinates.y)){
-            if(shouldBeInTheRight(coordinates = coordinates)) {
-                Log.d("TAG", "YES")
-                setLayoutAlignment(right = true)
+        // Check if the tool is a compatible tool
+        if(checkCurrentTool(toolReference.tool)) {
+            if (isPointOnCanvas(coordinates.x, coordinates.y)) {
+                if (shouldBeInTheRight(coordinates = coordinates)) {
+                    setLayoutAlignment(right = true)
+                } else {
+                    setLayoutAlignment(right = false)
+                }
+                zoomWindow.visibility = View.VISIBLE
+                zoomWindowImage.setImageBitmap(cropBitmap(workspace.bitmapOfAllLayers, coordinates))
             }
-            else {
-                setLayoutAlignment(right = false)
-            }
-
-            zoomWindow.visibility = View.VISIBLE
         }
     }
 
@@ -37,6 +96,26 @@ class DefaultZoomWindowController(val activity: Activity, val layerModel: LayerC
 
     override fun dismissOnPinch() {
         zoomWindow.visibility = View.GONE
+    }
+
+    override fun onMove(coordinates: PointF) {
+        if(shouldBeInTheRight(coordinates = coordinates)) {
+            setLayoutAlignment(right = true)
+        }
+        else {
+            setLayoutAlignment(right = false)
+        }
+        if(isPointOnCanvas(coordinates.x, coordinates.y)){
+            if(zoomWindow.visibility == View.GONE)
+                zoomWindow.visibility = View.VISIBLE
+            this.coordinates = coordinates
+        } else {
+            dismiss()
+        }
+    }
+
+    override fun getBitmap(bitmap: Bitmap?) {
+        zoomWindowImage.setImageBitmap(coordinates?.let { cropBitmap(bitmap, it) })
     }
 
     private fun isPointOnCanvas(pointX: Float, pointY: Float): Boolean =
@@ -58,12 +137,74 @@ class DefaultZoomWindowController(val activity: Activity, val layerModel: LayerC
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
             params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.d("TAG", params.getRule(RelativeLayout.ALIGN_PARENT_RIGHT).toString())
-        }
-
-        Log.d("TAG", params.rules.contentToString())
-        Log.d("TAG", params.rules.indexOf(-1).toString())
         zoomWindowShape.layoutParams = params
+    }
+
+    private fun cropBitmap(bitmap: Bitmap?, coordinates: PointF) : Bitmap? {
+
+        val bitmapWithBackground: Bitmap? = mergeBackground(bitmap)
+
+        // StartX and StartY coordinates
+        // StartX and StartY - windowWidth / 2, without the grey background
+        // But since we are adding the grey background, windowWidth / 2 should be added
+        // So they get cancelled
+        val startX: Int = (coordinates.x).roundToInt()
+        val startY: Int = (coordinates.y).roundToInt()
+
+        val croppedBitmap: Bitmap? =
+            Bitmap.createBitmap(windowWidth, windowHeight, Bitmap.Config.ARGB_8888)
+
+        val canvas: Canvas? = croppedBitmap?.let { Canvas(it) }
+
+        val paint = Paint()
+        paint.isAntiAlias = true
+
+        val rect = Rect(0, 0, windowWidth, windowHeight)
+        val rectF = RectF(rect)
+
+        canvas?.drawOval(rectF, paint)
+
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+
+        bitmapWithBackground?.let {
+            canvas?.drawBitmap(it,
+                Rect(startX, startY, startX+windowWidth, startY+windowHeight),
+                rect,
+                paint
+            ) }
+
+        return croppedBitmap
+    }
+
+    private fun mergeBackground(bitmap: Bitmap?): Bitmap? {
+
+        // Adding the extra width and height for the grey background
+        val bmOverlay =
+            Bitmap.createBitmap(
+                layerModel.width + windowWidth,
+                layerModel.height + windowHeight,
+                Bitmap.Config.ARGB_8888
+            )
+        val canvas = Canvas(bmOverlay)
+
+        canvas.drawBitmap(greyBackgroundBitmap, Matrix(), null)
+        canvas.drawBitmap(backgroundBitmap, windowWidth / 2f, windowHeight / 2f, null)
+        bitmap?.let { canvas.drawBitmap(it, windowWidth / 2f, windowHeight / 2f, null) }
+
+        return bmOverlay
+    }
+
+    private fun checkCurrentTool(tool: Tool?): Boolean {
+        if(
+            tool?.toolType?.name.equals(ToolType.HAND.name) ||
+            tool?.toolType?.name.equals(ToolType.FILL.name) ||
+            tool?.toolType?.name.equals(ToolType.STAMP.name) ||
+            tool?.toolType?.name.equals(ToolType.TRANSFORM.name) ||
+            tool?.toolType?.name.equals(ToolType.IMPORTPNG.name) ||
+            tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
+            tool?.toolType?.name.equals(ToolType.TEXT.name)
+        )
+            return false
+        return true
     }
 }

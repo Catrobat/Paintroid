@@ -1,5 +1,7 @@
 package org.catrobat.paintroid.ui.zoomwindow
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.PointF
 
 interface ZoomWindowController {
@@ -8,4 +10,8 @@ interface ZoomWindowController {
     fun dismiss()
 
     fun dismissOnPinch()
+
+    fun onMove(coordinates: PointF)
+
+    fun getBitmap(bitmap: Bitmap?)
 }

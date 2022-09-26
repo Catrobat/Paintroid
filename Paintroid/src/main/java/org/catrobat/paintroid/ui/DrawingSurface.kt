@@ -53,6 +53,7 @@ import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceList
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 
@@ -137,7 +138,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         this.idlingResource = idlingResource
         this.fragmentManager = fragmentManager
         this.zoomController = zoomController
-        drawingSurfaceListener.setZoomController(zoomWindowContoller = zoomController)
+        drawingSurfaceListener.setZoomController(zoomWindowController = zoomController)
     }
 
     @Synchronized
@@ -168,7 +169,22 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 }
 
                 val tool = toolReference.tool
-                tool?.draw(surfaceViewCanvas)
+
+                // Will create the zoom window only if the tool is a compatible tool
+                if(checkCurrentTool(tool)){
+                    val bitmapOfDrawingBoard = layerModel.currentLayer?.bitmap
+                    surfaceViewCanvas.setBitmap(bitmapOfDrawingBoard)
+
+                    tool?.draw(surfaceViewCanvas)
+
+                    handler.post(
+                        Runnable {
+                            zoomController.getBitmap(bitmapOfDrawingBoard)
+                        }
+                    )
+                } else {
+                    tool?.draw(surfaceViewCanvas)
+                }
             }
         }
     }
@@ -198,6 +214,20 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
 
     fun disableAutoScroll() {
         drawingSurfaceListener.disableAutoScroll()
+    }
+
+    private fun checkCurrentTool(tool: Tool?): Boolean {
+        if(
+            tool?.toolType?.name.equals(ToolType.HAND.name) ||
+            tool?.toolType?.name.equals(ToolType.FILL.name) ||
+            tool?.toolType?.name.equals(ToolType.STAMP.name) ||
+            tool?.toolType?.name.equals(ToolType.TRANSFORM.name) ||
+            tool?.toolType?.name.equals(ToolType.IMPORTPNG.name) ||
+            tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
+            tool?.toolType?.name.equals(ToolType.TEXT.name)
+        )
+            return false
+        return true
     }
 
     @Synchronized

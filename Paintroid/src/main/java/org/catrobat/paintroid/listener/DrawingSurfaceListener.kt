@@ -24,13 +24,11 @@ import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
-import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
-import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController
 import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 import java.util.EnumSet
 import kotlin.collections.ArrayList
@@ -108,9 +106,9 @@ open class DrawingSurfaceListener(
     }
 
     fun setZoomController(
-        zoomWindowContoller: ZoomWindowController
+        zoomWindowController: ZoomWindowController
     ) {
-        zoomController = zoomWindowContoller
+        zoomController = zoomWindowController
     }
 
     private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
@@ -141,6 +139,7 @@ open class DrawingSurfaceListener(
                 }
                 currentTool.handleMove(canvasTouchPoint)
             }
+            zoomController.onMove(canvasTouchPoint)
         } else {
             disableAutoScroll()
             if (touchMode == TouchMode.DRAW) {
@@ -183,7 +182,6 @@ open class DrawingSurfaceListener(
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                     autoScrollTask.start()
                 }
-                /////////////////
                 zoomController.show(canvasTouchPoint)
             }
             MotionEvent.ACTION_MOVE -> handleActionMove(currentTool, view, event)

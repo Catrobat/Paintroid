@@ -431,7 +431,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val bottomBarLayout = findViewById<View>(R.id.pocketpaint_main_bottom_bar)
         val bottomNavigationView = findViewById<View>(R.id.pocketpaint_main_bottom_navigation)
         toolOptionsViewController = DefaultToolOptionsViewController(this, idlingResource)
-        zoomWindowController = DefaultZoomWindowController(this, layerModel)
         drawerLayoutViewHolder = DrawerLayoutViewHolder(drawerLayout)
         val topBarViewHolder = TopBarViewHolder(topBarLayout)
         val bottomBarViewHolder = BottomBarViewHolder(bottomBarLayout)
@@ -447,6 +446,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             perspective,
             listener,
             CommandSerializationUtilities(this, commandManager)
+        )
+        zoomWindowController = DefaultZoomWindowController(
+            this,
+            layerModel,
+            workspace,
+            toolReference
         )
         model = MainActivityModel()
         defaultToolController = DefaultToolController(

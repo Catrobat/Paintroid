@@ -37,10 +37,6 @@ public class ZoomWindowInteraction extends CustomViewInteraction {
 
                 int rulesFromLayout = layoutParams.getRule(verb);
 
-                Log.d("TAG", String.valueOf(rulesFromLayout));
-                for(int i : layoutParams.getRules())
-                    Log.d("TAG", String.valueOf(i));
-
                 return rulesFromLayout == -1;
             }
 
