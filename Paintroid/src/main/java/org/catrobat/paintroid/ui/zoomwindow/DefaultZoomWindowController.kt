@@ -33,11 +33,18 @@ class DefaultZoomWindowController
         activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_width)
 
     // CHEQUERED
-    private val backgroundBitmap =
+    private val chequeredBackgroundBitmap =
         Bitmap.createBitmap(layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
 
     // GREY BACKGROUND
     private val greyBackgroundBitmap =
+        Bitmap.createBitmap(
+            layerModel.width + windowWidth,
+            layerModel.height + windowHeight,
+            Bitmap.Config.ARGB_8888
+        )
+
+    private val backgroundBitmap =
         Bitmap.createBitmap(
             layerModel.width + windowWidth,
             layerModel.height + windowHeight,
@@ -54,7 +61,7 @@ class DefaultZoomWindowController
         checkeredPattern.shader = shader
         checkeredPattern.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC)
 
-        val backgroundCanvas: Canvas? = backgroundBitmap?.let { Canvas(it) }
+        val backgroundCanvas: Canvas? = chequeredBackgroundBitmap?.let { Canvas(it) }
 
         canvasRect.set(0, 0, layerModel.width, layerModel.height)
 
@@ -65,6 +72,13 @@ class DefaultZoomWindowController
         greyBackgroundCanvas.drawColor(
             activity.resources.getColor(R.color.pocketpaint_main_drawing_surface_background)
         )
+
+
+        val canvasBackground = Canvas(backgroundBitmap)
+
+        canvasBackground.drawBitmap(greyBackgroundBitmap, Matrix(), null)
+        canvasBackground.drawBitmap(
+            chequeredBackgroundBitmap, windowWidth / 2f, windowHeight / 2f, null)
     }
 
     private val zoomWindow: RelativeLayout =
@@ -187,8 +201,16 @@ class DefaultZoomWindowController
             )
         val canvas = Canvas(bmOverlay)
 
-        canvas.drawBitmap(greyBackgroundBitmap, Matrix(), null)
-        canvas.drawBitmap(backgroundBitmap, windowWidth / 2f, windowHeight / 2f, null)
+        canvas.drawBitmap(backgroundBitmap, Matrix(), null)
+
+        // Add the current layer if the tool is line or cursor tool
+        if(toolReference.tool?.toolType?.name.equals(ToolType.LINE.name) ||
+            toolReference.tool?.toolType?.name.equals(ToolType.CURSOR.name)) {
+            layerModel.currentLayer?.bitmap?.let {
+                canvas.drawBitmap(it, windowWidth / 2f, windowHeight / 2f, null)
+            }
+        }
+
         bitmap?.let { canvas.drawBitmap(it, windowWidth / 2f, windowHeight / 2f, null) }
 
         return bmOverlay

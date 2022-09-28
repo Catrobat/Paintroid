@@ -171,19 +171,50 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 val tool = toolReference.tool
 
                 // Will create the zoom window only if the tool is a compatible tool
-                if(checkCurrentTool(tool)){
-                    val bitmapOfDrawingBoard = layerModel.currentLayer?.bitmap
-                    surfaceViewCanvas.setBitmap(bitmapOfDrawingBoard)
+                when(checkCurrentTool(tool)) {
+                    0 -> {
+                        // NON-COMPATIBLE TOOLS
+                        tool?.draw(surfaceViewCanvas)
+                    }
+                    1 -> {
+                        // LINE TOOL
+                        // Does not return the contents of the current layer
+                        // But only the new lines drawn
 
-                    tool?.draw(surfaceViewCanvas)
+                        val bitmapOfDrawingBoard = Bitmap.createBitmap(
+                            layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
 
-                    handler.post(
-                        Runnable {
-                            zoomController.getBitmap(bitmapOfDrawingBoard)
-                        }
-                    )
-                } else {
-                    tool?.draw(surfaceViewCanvas)
+                        tool?.draw(surfaceViewCanvas)
+
+                        val canvas = Canvas(bitmapOfDrawingBoard)
+                        tool?.draw(canvas)
+
+                        handler.post(
+                            Runnable {
+                                zoomController.getBitmap(bitmapOfDrawingBoard)
+                            }
+                        )
+                    }
+                    2 -> {
+                        // CURSOR TOOL
+                        // Does not return the contents of the current layer
+                        // But only the new lines drawn
+
+                        tool?.draw(surfaceViewCanvas)
+                    }
+                    3 -> {
+                        // OTHER COMPATIBLE TOOLS
+                        val bitmapOfDrawingBoard = layerModel.currentLayer?.bitmap
+                        surfaceViewCanvas.setBitmap(bitmapOfDrawingBoard)
+
+                        tool?.draw(surfaceViewCanvas)
+
+                        handler.post(
+                            Runnable {
+                                zoomController.getBitmap(bitmapOfDrawingBoard)
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -216,7 +247,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         drawingSurfaceListener.disableAutoScroll()
     }
 
-    private fun checkCurrentTool(tool: Tool?): Boolean {
+    private fun checkCurrentTool(tool: Tool?): Int {
         if(
             tool?.toolType?.name.equals(ToolType.HAND.name) ||
             tool?.toolType?.name.equals(ToolType.FILL.name) ||
@@ -226,8 +257,13 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
             tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
             tool?.toolType?.name.equals(ToolType.TEXT.name)
         )
-            return false
-        return true
+            return 0
+        else if(tool?.toolType?.name.equals(ToolType.LINE.name))
+            return 1
+        else if (tool?.toolType?.name.equals(ToolType.CURSOR.name))
+            return 2
+        else
+            return 3
     }
 
     @Synchronized
