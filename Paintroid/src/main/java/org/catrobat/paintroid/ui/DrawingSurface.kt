@@ -177,7 +177,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                         tool?.draw(surfaceViewCanvas)
                     }
                     1 -> {
-                        // LINE TOOL
+                        // LINE TOOL OR CURSOR TOOL
                         // Does not return the contents of the current layer
                         // But only the new lines drawn
 
@@ -196,13 +196,6 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                         )
                     }
                     2 -> {
-                        // CURSOR TOOL
-                        // Does not return the contents of the current layer
-                        // But only the new lines drawn
-
-                        tool?.draw(surfaceViewCanvas)
-                    }
-                    3 -> {
                         // OTHER COMPATIBLE TOOLS
                         val bitmapOfDrawingBoard = layerModel.currentLayer?.bitmap
                         surfaceViewCanvas.setBitmap(bitmapOfDrawingBoard)
@@ -258,12 +251,13 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
             tool?.toolType?.name.equals(ToolType.TEXT.name)
         )
             return 0
-        else if(tool?.toolType?.name.equals(ToolType.LINE.name))
+        else if(
+            tool?.toolType?.name.equals(ToolType.LINE.name) ||
+            tool?.toolType?.name.equals(ToolType.CURSOR.name)
+        )
             return 1
-        else if (tool?.toolType?.name.equals(ToolType.CURSOR.name))
-            return 2
         else
-            return 3
+            return 2
     }
 
     @Synchronized

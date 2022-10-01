@@ -112,6 +112,11 @@ class TransformTool(
     override val toolType: ToolType
         get() = ToolType.TRANSFORM
 
+    override fun toolPositionCoordinates(coordinate: PointF): PointF {
+        // The tool coordinate is same as the touch coordinate
+        return coordinate
+    }
+
     init {
         rotationEnabled = ROTATION_ENABLED
         resizePointsVisible = RESIZE_POINTS_VISIBLE

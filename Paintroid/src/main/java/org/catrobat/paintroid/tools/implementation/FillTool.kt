@@ -87,6 +87,11 @@ class FillTool(
         return true
     }
 
+    override fun toolPositionCoordinates(coordinate: PointF): PointF {
+        // The tool coordinate is same as the touch coordinate
+        return coordinate
+    }
+
     public override fun resetInternalState() = Unit
 
     override val toolType: ToolType = ToolType.FILL
