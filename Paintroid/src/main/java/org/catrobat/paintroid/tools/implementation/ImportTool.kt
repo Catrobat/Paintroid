@@ -20,6 +20,7 @@ package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.PointF
 import android.os.Bundle
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
@@ -47,6 +48,11 @@ class ImportTool(
 
     override val toolType: ToolType
         get() = ToolType.IMPORTPNG
+
+    override fun toolPositionCoordinates(coordinate: PointF): PointF {
+        // The tool coordinate is same as the touch coordinate
+        return coordinate
+    }
 
     init {
         rotationEnabled = true

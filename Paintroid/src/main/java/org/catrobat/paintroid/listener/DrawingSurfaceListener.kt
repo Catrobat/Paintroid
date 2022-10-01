@@ -139,7 +139,11 @@ open class DrawingSurfaceListener(
                 }
                 currentTool.handleMove(canvasTouchPoint)
             }
-            zoomController.onMove(canvasTouchPoint)
+            if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name))  {
+                zoomController.onMove(canvasTouchPoint)
+            } else {
+                zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint))
+            }
         } else {
             disableAutoScroll()
             if (touchMode == TouchMode.DRAW) {
@@ -182,7 +186,12 @@ open class DrawingSurfaceListener(
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                     autoScrollTask.start()
                 }
-                zoomController.show(canvasTouchPoint)
+                if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
+                    zoomController.show(canvasTouchPoint)
+                } else {
+                    currentTool?.toolPositionCoordinates(canvasTouchPoint)
+                        ?.let { zoomController.show(it) }
+                }
             }
             MotionEvent.ACTION_MOVE -> handleActionMove(currentTool, view, event)
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
@@ -219,6 +228,7 @@ open class DrawingSurfaceListener(
                 eventY = 0f
                 touchMode = TouchMode.DRAW
                 zoomController.dismiss()
+                callback.getCurrentTool()?.handToolMode()
             }
         }
         drawingSurface.refreshDrawingSurface()
