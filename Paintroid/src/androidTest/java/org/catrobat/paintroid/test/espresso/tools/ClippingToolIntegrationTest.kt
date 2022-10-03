@@ -177,8 +177,8 @@ class ClippingToolIntegrationTest {
         val colorInAreaCurrentLayer = workspace.bitmapOfCurrentLayer?.getPixel(inAreaX.toInt(), inAreaY.toInt())
         val colorOutOfAreaCurrentLayer = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
 
-        val colorInAreaSecondLayer = workspace.bitmapLisOfAllLayers[1]?.getPixel(inAreaX.toInt(), inAreaY.toInt())
-        val colorOutOfAreaSecondLayer = workspace.bitmapLisOfAllLayers[1]?.getPixel(outOfAreaX, outOfAreaY)
+        val colorInAreaSecondLayer = workspace.bitmapListOfAllLayers[1]?.getPixel(inAreaX.toInt(), inAreaY.toInt())
+        val colorOutOfAreaSecondLayer = workspace.bitmapListOfAllLayers[1]?.getPixel(outOfAreaX, outOfAreaY)
 
         assertEquals(colorInAreaCurrentLayer, Color.YELLOW)
         assertEquals(colorOutOfAreaCurrentLayer, Color.TRANSPARENT)

@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.model.Layer;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -35,9 +36,14 @@ import static org.catrobat.paintroid.test.espresso.util.UiInteractions.assertRec
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 
 import androidx.annotation.ColorInt;
+import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.DrawerActions;
 
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
+import static org.hamcrest.Matchers.instanceOf;
+
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -71,14 +77,23 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
-	public androidx.test.espresso.ViewInteraction onLayerAt(int listPosition) {
-		return onView(withId(org.catrobat.paintroid.R.id.pocketpaint_layer_side_nav_list)).perform(androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition(listPosition, click()));
+	public DataInteraction onLayerAt(int listPosition) {
+		return onData(instanceOf(Layer.class))
+				.inAdapterView(withId(R.id.pocketpaint_layer_side_nav_list))
+				.atPosition(listPosition);
 	}
 
 	public LayerMenuViewInteraction performOpen() {
 		onBottomNavigationView()
 				.onLayersClicked();
 		check(matches(isDisplayed()));
+		return this;
+	}
+
+	public LayerMenuViewInteraction performSetOpacityTo(int opacityPercentage, int listPosition) {
+		onLayerAt(listPosition)
+				.onChildView(withId(R.id.pocketpaint_layer_opacity_seekbar))
+				.perform(setProgress(opacityPercentage));
 		return this;
 	}
 
@@ -92,6 +107,7 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	public LayerMenuViewInteraction performSelectLayer(int listPosition) {
 		check(matches(isDisplayed()));
 		onLayerAt(listPosition)
+				.onChildView(withId(R.id.pocketpaint_layer_preview_container))
 				.perform(click());
 		return this;
 	}

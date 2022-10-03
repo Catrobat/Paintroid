@@ -20,9 +20,11 @@
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
 import org.hamcrest.Matcher;
@@ -45,6 +47,8 @@ import androidx.test.espresso.action.Tap;
 import androidx.test.espresso.action.Tapper;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.viewpager.widget.ViewPager;
+
+import java.lang.reflect.Method;
 
 import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
@@ -108,7 +112,13 @@ public final class UiInteractions {
 
 			@Override
 			public void perform(UiController uiController, View view) {
-				((SeekBar) view).setProgress(progress);
+				try {
+					Method privateSetProgressMethod = ProgressBar.class.getDeclaredMethod("setProgressInternal", Integer.TYPE, Boolean.TYPE, Boolean.TYPE);
+					privateSetProgressMethod.setAccessible(true);
+					privateSetProgressMethod.invoke(view, progress, true, true);
+				} catch (ReflectiveOperationException e) {
+					Log.e("SET PROGRESS", "could not set progress");
+				}
 			}
 		};
 	}
@@ -178,6 +188,14 @@ public final class UiInteractions {
 
 	public static ViewAction touchCenterLeft() {
 		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER, 0, 0);
+	}
+
+	public static ViewAction touchCenterTop() {
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.TOP_CENTER, Press.FINGER, 0, 0);
+	}
+
+	public static ViewAction touchCenterBottom() {
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.BOTTOM_CENTER, Press.FINGER, 0, 0);
 	}
 
 	public static ViewAction touchCenterMiddle() {

@@ -28,6 +28,7 @@ import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection
 import org.catrobat.paintroid.command.implementation.RotateCommand.RotateDirection
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
+import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 
@@ -36,13 +37,15 @@ interface CommandFactory {
 
     fun createInitCommand(bitmap: Bitmap): Command
 
-    fun createInitCommand(bitmapList: List<Bitmap?>): Command
+    fun createInitCommand(layers: List<LayerContracts.Layer>): Command
 
     fun createResetCommand(): Command
 
     fun createAddEmptyLayerCommand(): Command
 
     fun createSelectLayerCommand(position: Int): Command
+
+    fun createLayerOpacityCommand(position: Int, opacityPercentage: Int): Command
 
     fun createRemoveLayerCommand(index: Int): Command
 

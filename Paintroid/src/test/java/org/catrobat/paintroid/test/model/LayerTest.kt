@@ -19,12 +19,12 @@
 
 package org.catrobat.paintroid.test.model
 
-import org.junit.runner.RunWith
-import org.mockito.Mock
 import android.graphics.Bitmap
 import org.catrobat.paintroid.model.Layer
 import org.junit.Assert
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -38,8 +38,8 @@ class LayerTest {
 
     @Test
     fun testGetBitmap() {
-        val firstLayer = Layer(firstBitmap)
-        val secondLayer = Layer(secondBitmap)
+        val firstLayer = Layer(firstBitmap!!)
+        val secondLayer = Layer(secondBitmap!!)
 
         Assert.assertEquals(firstBitmap, firstLayer.bitmap)
         Assert.assertEquals(secondBitmap, secondLayer.bitmap)
@@ -53,8 +53,8 @@ class LayerTest {
 
     @Test
     fun testSetBitmap() {
-        val layer = Layer(firstBitmap)
-        layer.bitmap = secondBitmap
+        val layer = Layer(firstBitmap!!)
+        layer.bitmap = secondBitmap!!
 
         Assert.assertEquals(secondBitmap, layer.bitmap)
         Assert.assertTrue(layer.isVisible)
