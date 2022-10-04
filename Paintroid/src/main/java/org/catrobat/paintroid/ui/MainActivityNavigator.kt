@@ -22,6 +22,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -34,58 +35,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import org.catrobat.paintroid.FileIO
-import org.catrobat.paintroid.MainActivity
-import org.catrobat.paintroid.R
-import org.catrobat.paintroid.WelcomeActivity
+import org.catrobat.paintroid.*
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
-import org.catrobat.paintroid.common.ABOUT_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.ADVANCED_SETTINGS_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.CATROBAT_INFORMATION_DIALOG_TAG
-import org.catrobat.paintroid.common.CATROID_MEDIA_GALLERY_FRAGMENT_TAG
-import org.catrobat.paintroid.common.COLOR_PICKER_DIALOG_TAG
-import org.catrobat.paintroid.common.FEEDBACK_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.INDETERMINATE_PROGRESS_DIALOG_TAG
-import org.catrobat.paintroid.common.JPG_INFORMATION_DIALOG_TAG
-import org.catrobat.paintroid.common.LIKE_US_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.LOAD_DIALOG_FRAGMENT_TAG
+import org.catrobat.paintroid.common.*
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
-import org.catrobat.paintroid.common.ORA_INFORMATION_DIALOG_TAG
-import org.catrobat.paintroid.common.OVERWRITE_INFORMATION_DIALOG_TAG
-import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
-import org.catrobat.paintroid.common.PERMISSION_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
-import org.catrobat.paintroid.common.PNG_INFORMATION_DIALOG_TAG
-import org.catrobat.paintroid.common.RATE_US_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.SAVE_DIALOG_FRAGMENT_TAG
-import org.catrobat.paintroid.common.SAVE_INFORMATION_DIALOG_TAG
-import org.catrobat.paintroid.common.SAVE_QUESTION_FRAGMENT_TAG
-import org.catrobat.paintroid.common.SCALE_IMAGE_FRAGMENT_TAG
 import org.catrobat.paintroid.contract.MainActivityContracts
-import org.catrobat.paintroid.dialog.AboutDialog
-import org.catrobat.paintroid.dialog.AdvancedSettingsDialog
-import org.catrobat.paintroid.dialog.CatrobatImageInfoDialog
-import org.catrobat.paintroid.dialog.FeedbackDialog
-import org.catrobat.paintroid.dialog.ImportImageDialog
-import org.catrobat.paintroid.dialog.IndeterminateProgressDialog
-import org.catrobat.paintroid.dialog.InfoDialog
-import org.catrobat.paintroid.dialog.JpgInfoDialog
-import org.catrobat.paintroid.dialog.LikeUsDialog
-import org.catrobat.paintroid.dialog.OraInfoDialog
-import org.catrobat.paintroid.dialog.OverwriteDialog
-import org.catrobat.paintroid.dialog.PermanentDenialPermissionInfoDialog
-import org.catrobat.paintroid.dialog.PermissionInfoDialog
+import org.catrobat.paintroid.dialog.*
 import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
-import org.catrobat.paintroid.dialog.PngInfoDialog
-import org.catrobat.paintroid.dialog.RateUsDialog
-import org.catrobat.paintroid.dialog.SaveBeforeFinishDialog
-import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog
-import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog
-import org.catrobat.paintroid.dialog.SaveInformationDialog
-import org.catrobat.paintroid.dialog.ScaleImageOnLoadDialog
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment
@@ -296,6 +255,14 @@ class MainActivityNavigator(
         feedbackDialog.show(
             mainActivity.supportFragmentManager,
             FEEDBACK_DIALOG_FRAGMENT_TAG
+        )
+    }
+
+    override fun showZoomWindowSettingsDialog(sharedPreferences: UserPreferences) {
+        val zoomWindowSettingsDialog = ZoomWindowSettingsDialog(sharedPreferences)
+        zoomWindowSettingsDialog.show(
+            mainActivity.supportFragmentManager,
+            ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG
         )
     }
 

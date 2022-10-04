@@ -375,6 +375,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             R.id.pocketpaint_options_about -> presenterMain.showAboutClicked()
             R.id.pocketpaint_share_image_button -> presenterMain.shareImageClicked()
             R.id.pocketpaint_options_feedback -> presenterMain.sendFeedback()
+            R.id.pocketpaint_zoom_window_settings ->
+                presenterMain.showZoomWindowSettingsClicked(
+                    UserPreferences(getPreferences(MODE_PRIVATE))
+                )
             R.id.pocketpaint_advanced_settings -> presenterMain.showAdvancedSettingsClicked()
             android.R.id.home -> presenterMain.backToPocketCodeClicked()
             else -> return false
@@ -451,7 +455,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             this,
             layerModel,
             workspace,
-            toolReference
+            toolReference,
+            UserPreferences(getPreferences(MODE_PRIVATE))
         )
         model = MainActivityModel()
         defaultToolController = DefaultToolController(
@@ -528,6 +533,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             supportFragmentManager,
             toolOptionsViewController,
             zoomWindowController,
+            UserPreferences(getPreferences(MODE_PRIVATE))
         )
         layerPresenter.setDrawingSurface(drawingSurface)
         appFragment.perspective = perspective

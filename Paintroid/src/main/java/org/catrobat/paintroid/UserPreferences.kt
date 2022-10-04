@@ -21,6 +21,8 @@ package org.catrobat.paintroid
 import android.content.SharedPreferences
 import org.catrobat.paintroid.common.IMAGE_NUMBER_SHARED_PREFERENCES_TAG
 import org.catrobat.paintroid.common.SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG
+import org.catrobat.paintroid.common.ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG
+import org.catrobat.paintroid.common.ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG
 
 open class UserPreferences(var preferences: SharedPreferences) {
     open val preferenceLikeUsDialogValue: Boolean
@@ -31,6 +33,23 @@ open class UserPreferences(var preferences: SharedPreferences) {
             preferences
                 .edit()
                 .putInt(IMAGE_NUMBER_SHARED_PREFERENCES_TAG, value)
+                .apply()
+        }
+    open var preferenceZoomWindowEnabled: Boolean
+        get() = preferences.getBoolean(ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG, true)
+        set(value) {
+            preferences
+                .edit()
+                .putBoolean(ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG, value)
+                .apply()
+        }
+
+    open var preferenceZoomWindowZoomPercentage: Int
+        get() = preferences.getInt(ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG, 100)
+        set(value) {
+            preferences
+                .edit()
+                .putInt(ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG, value)
                 .apply()
         }
 

@@ -21,12 +21,14 @@ package org.catrobat.paintroid.contract
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.DisplayMetrics
 import android.view.Menu
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
@@ -57,6 +59,8 @@ interface MainActivityContracts {
         fun showRateUsDialog()
 
         fun showFeedbackDialog()
+
+        fun showZoomWindowSettingsDialog(sharedPreferences: UserPreferences)
 
         fun showAdvancedSettingsDialog()
 
@@ -214,6 +218,8 @@ interface MainActivityContracts {
         fun showHelpClicked()
 
         fun showAboutClicked()
+
+        fun showZoomWindowSettingsClicked(sharedPreferences: UserPreferences)
 
         fun showAdvancedSettingsClicked()
 

@@ -97,6 +97,7 @@
     <string name="menu_export">Export</string>
     <string name="menu_feedback">Feedback</string>
     <string name="menu_advanced">Advanced settings</string>
+    <string name="menu_zoom_settings">Zoom Window Settings</string>
     <string name="saved_to">Image saved to\n</string>
     <string name="saved">Image saved</string>
     <string name="copy_to">Copy saved to\n</string>
@@ -163,6 +164,11 @@
 
     <string name="dialog_antialiasing">Antialiasing</string>
     <string name="dialog_smoothing">Smoothing</string>
+
+    <string name="dialog_zoom_window_enabled">Enabled</string>
+    <string name="dialog_zoom_window_from_size" translatable="false">100</string>
+    <string name="dialog_zoom_window_to_size" translatable="false">300</string>
+    <string name="dialog_zoom_window_initial_value" translatable="false">100</string>
 
     <string name="dialog_save_jpg_option_quality">Quality:</string>
 
