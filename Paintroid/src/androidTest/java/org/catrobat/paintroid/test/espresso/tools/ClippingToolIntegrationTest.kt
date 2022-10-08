@@ -144,7 +144,7 @@ class ClippingToolIntegrationTest {
             .performClose()
 
         DrawingSurfaceInteraction.onDrawingSurfaceView()
-            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+            .checkPixelColorOnLayer(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
 
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))

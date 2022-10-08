@@ -32,6 +32,8 @@ import org.hamcrest.Matcher;
 import static org.catrobat.paintroid.test.espresso.util.CustomSwiper.ACCURATE;
 import static org.hamcrest.Matchers.is;
 
+import java.lang.reflect.Method;
+
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewAssertion;
@@ -47,8 +49,6 @@ import androidx.test.espresso.action.Tap;
 import androidx.test.espresso.action.Tapper;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.viewpager.widget.ViewPager;
-
-import java.lang.reflect.Method;
 
 import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
@@ -253,7 +253,7 @@ public final class UiInteractions {
 	}
 
 	private static class UnconstrainedScrollToAction implements ViewAction {
-		private ViewAction action = new ScrollToAction();
+		private final ViewAction action = new ScrollToAction();
 
 		@Override
 		public Matcher<View> getConstraints() {
@@ -273,7 +273,7 @@ public final class UiInteractions {
 
 	public static class DefinedLongTap implements Tapper {
 
-		private int longPressTimeout;
+		private final int longPressTimeout;
 
 		DefinedLongTap(int longPressTimeout) {
 			this.longPressTimeout = longPressTimeout;

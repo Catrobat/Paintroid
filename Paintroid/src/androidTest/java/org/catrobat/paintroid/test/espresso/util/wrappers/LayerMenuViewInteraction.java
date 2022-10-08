@@ -27,23 +27,19 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.model.Layer;
+import org.catrobat.paintroid.test.utils.RecyclerViewMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.assertRecyclerViewCount;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 
 import androidx.annotation.ColorInt;
-import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.contrib.DrawerActions;
 
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
-import static org.hamcrest.Matchers.instanceOf;
-
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -77,10 +73,8 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
-	public DataInteraction onLayerAt(int listPosition) {
-		return onData(instanceOf(Layer.class))
-				.inAdapterView(withId(R.id.pocketpaint_layer_side_nav_list))
-				.atPosition(listPosition);
+	public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
+		return new RecyclerViewMatcher(recyclerViewId);
 	}
 
 	public LayerMenuViewInteraction performOpen() {
@@ -91,8 +85,8 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	}
 
 	public LayerMenuViewInteraction performSetOpacityTo(int opacityPercentage, int listPosition) {
-		onLayerAt(listPosition)
-				.onChildView(withId(R.id.pocketpaint_layer_opacity_seekbar))
+		onView(withRecyclerView(R.id.pocketpaint_layer_side_nav_list)
+				.atPositionOnView(listPosition, R.id.pocketpaint_layer_opacity_seekbar))
 				.perform(setProgress(opacityPercentage));
 		return this;
 	}
@@ -106,15 +100,14 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 
 	public LayerMenuViewInteraction performSelectLayer(int listPosition) {
 		check(matches(isDisplayed()));
-		onLayerAt(listPosition)
-				.onChildView(withId(R.id.pocketpaint_layer_preview_container))
+		onView(withRecyclerView(R.id.pocketpaint_layer_side_nav_list)
+				.atPositionOnView(listPosition, R.id.pocketpaint_layer_preview_container))
 				.perform(click());
 		return this;
 	}
 
 	public LayerMenuViewInteraction performStartDragging(int listPosition) {
 		check(matches(isDisplayed()));
-		onLayerAt(listPosition);
 		onView(withIndex(withId(org.catrobat.paintroid.R.id.pocketpaint_layer_drag_handle), listPosition)).perform(click());
 		return this;
 	}
@@ -140,7 +133,7 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	}
 
 	public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
-		return new TypeSafeMatcher<View>() {
+		return new TypeSafeMatcher<>() {
 			int currentIndex = 0;
 
 			@Override
@@ -158,19 +151,20 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 	}
 
 	public LayerMenuViewInteraction checkLayerAtPositionHasTopLeftPixelWithColor(int listPosition, @ColorInt final int expectedColor) {
-		onView(withIndex(withId(org.catrobat.paintroid.R.id.pocketpaint_item_layer_image), listPosition)).check(matches(new org.hamcrest.TypeSafeMatcher<android.view.View>() {
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
-			}
+		onView(withIndex(withId(org.catrobat.paintroid.R.id.pocketpaint_item_layer_image), listPosition))
+				.check(matches(new org.hamcrest.TypeSafeMatcher<View>() {
+					@Override
+					public void describeTo(Description description) {
+						description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
+					}
 
-			@Override
-			protected boolean matchesSafely(View view) {
-				Bitmap bitmap = getBitmap(((ImageView) view).getDrawable());
-				int actualColor = bitmap.getPixel(0, 0);
-				return actualColor == expectedColor;
-			}
-		}));
+					@Override
+					protected boolean matchesSafely(View view) {
+						Bitmap bitmap = getBitmap(((ImageView) view).getDrawable());
+						int actualColor = bitmap.getPixel(0, 0);
+						return actualColor == expectedColor;
+					}
+				}));
 		return this;
 	}
 

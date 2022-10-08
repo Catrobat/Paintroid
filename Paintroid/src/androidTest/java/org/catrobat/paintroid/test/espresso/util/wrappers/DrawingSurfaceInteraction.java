@@ -71,6 +71,25 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 		return this;
 	}
 
+	public DrawingSurfaceInteraction checkPixelColorOnLayer(@ColorInt final int expectedColor, final CoordinatesProvider coordinateProvider) {
+		check(matches(new TypeSafeMatcher<View>() {
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
+			}
+
+			@Override
+			protected boolean matchesSafely(View view) {
+				MainActivity activity = getMainActivityFromView(view);
+				Bitmap currentBitmap = activity.layerModel.getCurrentLayer().getBitmap();
+				float[] coordinates = coordinateProvider.calculateCoordinates(view);
+				int actualColor = currentBitmap.getPixel((int) coordinates[0], (int) coordinates[1]);
+				return expectedColor == actualColor;
+			}
+		}));
+		return this;
+	}
+
 	public DrawingSurfaceInteraction checkPixelColor(@ColorInt final int expectedColor, final float x, final float y) {
 		check(matches(new TypeSafeMatcher<View>() {
 			@Override
