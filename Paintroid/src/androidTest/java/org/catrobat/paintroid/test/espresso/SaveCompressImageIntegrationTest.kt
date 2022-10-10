@@ -31,6 +31,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -64,13 +65,13 @@ import java.util.UUID
 import kotlin.Throws
 
 class SaveCompressImageIntegrationTest {
-    @Rule
+    @get:Rule
     var activityTestRule: ActivityTestRule<MainActivity> = IntentsTestRule(MainActivity::class.java)
 
-    @Rule
+    @get:Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
-    private lateinit var testImageFile: File
-    private lateinit var activity: MainActivity
+    private var testImageFile: File? = null
+    private var activity: MainActivity? = null
 
     @Before
     fun setUp() {
@@ -81,6 +82,7 @@ class SaveCompressImageIntegrationTest {
             deletionFileList.add(testImageFile)
             val bitmap = createTestBitmap()
             val outputStream: OutputStream = FileOutputStream(testImageFile)
+
             Assert.assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream))
             outputStream.close()
         } catch (e: IOException) {
@@ -94,7 +96,7 @@ class SaveCompressImageIntegrationTest {
 
     @After
     fun tearDown() {
-        for (file in deletionFileList) {
+        for (file in deletionFileList!!) {
             if (file != null && file.exists()) { Assert.assertTrue(file.delete()) }
         }
     }
@@ -103,32 +105,33 @@ class SaveCompressImageIntegrationTest {
     @Throws(IOException::class)
     fun testSaveImage() {
         val testName = UUID.randomUUID().toString()
-        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
-        Espresso.onView(ViewMatchers.withText(R.string.menu_load_image)).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withText(R.string.menu_replace_image)).perform(ViewActions.click())
-        TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
-        Espresso.onView(ViewMatchers.withText(R.string.menu_save_image)).perform(ViewActions.click())
-        Espresso.onView(
-            ViewMatchers.withId(
-                R.id.pocketpaint_image_name_save_text
-            )
-        ).perform(
-            ViewActions.replaceText(testName)
-        )
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner)).perform(ViewActions.click())
+        
+        onTopBarView().performOpenMoreOptions()
+        onView(ViewMatchers.withText(R.string.menu_load_image)).perform(ViewActions.click())
+        onTopBarView().performOpenMoreOptions()
+        onView(ViewMatchers.withText(R.string.menu_save_image)).perform(ViewActions.click())
+        onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
+            .perform(ViewActions.replaceText(testName))
+        onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
+            .perform(ViewActions.click())
         Espresso.onData(
             AllOf.allOf(
                 Matchers.`is`(Matchers.instanceOf<Any>(String::class.java)),
                 Matchers.`is`<String>("jpg")
             )
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withText(R.string.save_button_text)).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(100))
+        onView(ViewMatchers.withText(R.string.save_button_text)).perform(ViewActions.click())
+        onView(ViewMatchers.isRoot()).perform(UiInteractions.waitFor(100))
+
         val options = BitmapFactory.Options()
         options.inMutable = true
         val compressedBitmap = Objects.requireNonNull(
-            activity.model.savedPictureUri
-        )?.let { decodeBitmapFromUri(activity.contentResolver, it, options, activity.applicationContext) }
+            activity?.model?.savedPictureUri
+        )?.let {
+            activity?.let { it1 ->
+                decodeBitmapFromUri(it1.contentResolver, it, options, activity?.applicationContext)
+            }
+        }
         val testBitmap = getBitmapFromFile(testImageFile)
 
         Assert.assertThat(compressedBitmap?.width, Matchers.`is`(Matchers.equalTo(testBitmap?.width)))
@@ -147,17 +150,12 @@ class SaveCompressImageIntegrationTest {
         r.nextBytes(b)
         bitmap = Bitmap.createBitmap(width, height, bitmapConfig)
         val canvas = Canvas(bitmap)
-        var byteIndex = 0
+
         val paint = Paint()
         for (i in 0 until height) {
             for (j in 0 until width) {
                 val color: Int =
-                    Color.argb(
-                        b[byteIndex++].toInt(),
-                        b[byteIndex++].toInt(),
-                        b[byteIndex++].toInt(),
-                        b[byteIndex++].toInt()
-                    )
+                    Color.argb(b[byteIndex].toInt(), b[byteIndex].toInt(), b[byteIndex].toInt(), b[byteIndex].toInt())
                 paint.color = color
                 canvas.drawPoint(j.toFloat(), i.toFloat(), paint)
             }
