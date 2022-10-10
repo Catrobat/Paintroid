@@ -25,33 +25,35 @@
     android:paddingTop="@dimen/pocketpaint_welcome_margin_top">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:contentDescription="@string/pocketpaint_tool_icon_description"
         android:id="@+id/pocketpaint_tools_info_icon"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/pocketpaint_textview_intro_tools_header"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_header"
+        android:layout_toEndOf="@+id/pocketpaint_textview_intro_tools_header"
+        android:contentDescription="@string/pocketpaint_tool_icon_description"
         app:tint="@color/pocketpaint_color_picker_white"
         tools:src="@drawable/ic_pocketpaint_dialog_warning" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/PocketPaintWelcomeText"
         android:id="@+id/pocketpaint_tools_info_description"
-        android:layout_below="@+id/pocketpaint_textview_intro_tools_header"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
-        android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
-        android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_possibilities"
+        style="@style/PocketPaintWelcomeText"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pocketpaint_textview_intro_tools_header"
+        android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
+        android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
+        android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
         android:text="@string/intro_bottom_navigation_tools_description"
         tools:text="tool_description" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/PocketPaintWelcomeHeader"
         android:id="@+id/pocketpaint_textview_intro_tools_header"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
-        android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
+        style="@style/PocketPaintWelcomeHeader"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
+        android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_header"
+        android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
         android:text="@string/dialog_tools_title" />
 
     <androidx.appcompat.widget.AppCompatTextView

@@ -27,9 +27,10 @@
         style="@style/PocketPaintWelcomeHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
         android:layout_marginStart="@dimen/pocketpaint_welcome_margin_side"
-        android:minLines="2"
+        android:layout_marginEnd="@dimen/pocketpaint_welcome_margin_side"
+        android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_header"
+        android:minLines="1"
         android:text="@string/landscape" />
 
     <TextView

@@ -21,8 +21,8 @@
     android:layout_width="match_parent">
 
     <include
-        layout="@layout/pocketpaint_layout_top_bar"
-        android:id="@+id/pocketpaint_intro_possibilities_topbar" />
+        android:id="@+id/pocketpaint_intro_possibilities_topbar"
+        layout="@layout/pocketpaint_layout_top_bar" />
 
     <LinearLayout
         android:id="@+id/pocketpaint_intro_possibilities_bottom_bar_ll"
@@ -53,38 +53,41 @@
             android:layout_marginTop="15dp"
             android:layout_width="match_parent"
             android:orientation="horizontal" />
+
+
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/pocketpaint_intro_possibilities_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/pocketpaint_intro_possibilities_bottom_bar_ll"
+        android:layout_below="@id/pocketpaint_intro_possibilities_topbar"
+        android:layout_alignParentStart="true"
         android:background="#d20097a7"
         android:gravity="top"
-        android:id="@+id/pocketpaint_intro_possibilities_textview"
-        android:layout_above="@id/pocketpaint_intro_possibilities_bottom_bar_ll"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/pocketpaint_intro_possibilities_topbar"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
         android:orientation="vertical"
-        android:paddingEnd="@dimen/pocketpaint_welcome_margin_side"
         android:paddingStart="@dimen/pocketpaint_welcome_margin_side"
         android:paddingTop="@dimen/pocketpaint_welcome_margin_top_possibilities"
+        android:paddingEnd="@dimen/pocketpaint_welcome_margin_side"
         android:visibility="visible">
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/PocketPaintWelcomeHeader"
             android:id="@+id/pocketpaint_intro_possibilities_head"
-            android:layout_height="wrap_content"
+            style="@style/PocketPaintWelcomeHeader"
             android:layout_width="match_parent"
-            android:minLines="2"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_header"
+            android:minLines="1"
             android:text="@string/more_possibilities" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/PocketPaintWelcomeText"
             android:id="@+id/pocketpaint_intro_possibilities_text"
-            android:layout_below="@id/pocketpaint_intro_possibilities_head"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
+            style="@style/PocketPaintWelcomeText"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pocketpaint_intro_possibilities_head"
+            android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
             android:text="@string/intro_possibilities_text" />
 
     </RelativeLayout>
