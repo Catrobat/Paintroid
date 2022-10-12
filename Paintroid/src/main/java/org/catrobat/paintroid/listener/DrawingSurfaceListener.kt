@@ -18,7 +18,6 @@
  */
 package org.catrobat.paintroid.listener
 
-import android.content.SharedPreferences
 import android.graphics.Point
 import android.graphics.PointF
 import android.os.Handler
@@ -147,10 +146,10 @@ open class DrawingSurfaceListener(
                 currentTool.handleMove(canvasTouchPoint)
             }
             if(callZoomWindow) {
-                if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name))  {
-                    zoomController.onMove(canvasTouchPoint)
-                } else {
+                if (zoomController.checkCurrentTool(callback.getCurrentTool()) == 1) {
                     zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint))
+                } else {
+                    zoomController.onMove(canvasTouchPoint)
                 }
             }
         } else {
@@ -196,11 +195,12 @@ open class DrawingSurfaceListener(
                     autoScrollTask.start()
                 }
                 if(sharedPreferences.preferenceZoomWindowEnabled) {
-                    if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
-                        zoomController.show(canvasTouchPoint)
+                    if (zoomController.checkCurrentTool(callback.getCurrentTool()) == 1)  {
+                        currentTool?.let {
+                            zoomController.onMove(it.toolPositionCoordinates(canvasTouchPoint))
+                        }
                     } else {
-                        currentTool?.toolPositionCoordinates(canvasTouchPoint)
-                            ?.let { zoomController.show(it) }
+                        zoomController.onMove(canvasTouchPoint)
                     }
                     callZoomWindow = true
                 } else {

@@ -1,8 +1,6 @@
 package org.catrobat.paintroid.ui.zoomwindow
 
-import android.content.SharedPreferences
 import android.graphics.*
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -94,8 +92,8 @@ class DefaultZoomWindowController
     private var coordinates: PointF? = null
 
     override fun show(coordinates: PointF) {
-        // Check if the tool is a compatible tool
-        if(checkCurrentTool(toolReference.tool) && sharedPreferences.preferenceZoomWindowEnabled) {
+//         Check if the tool is a compatible tool
+        if(checkCurrentTool(toolReference.tool) != 0 && sharedPreferences.preferenceZoomWindowEnabled) {
             if (isPointOnCanvas(coordinates.x, coordinates.y)) {
                 if (shouldBeInTheRight(coordinates = coordinates)) {
                     setLayoutAlignment(right = true)
@@ -124,9 +122,11 @@ class DefaultZoomWindowController
             setLayoutAlignment(right = false)
         }
         if(isPointOnCanvas(coordinates.x, coordinates.y)){
-            if(zoomWindow.visibility == View.GONE)
-                zoomWindow.visibility = View.VISIBLE
-            this.coordinates = coordinates
+            if(checkCurrentTool(toolReference.tool) != 0 && sharedPreferences.preferenceZoomWindowEnabled) {
+                if (zoomWindow.visibility == View.GONE)
+                    zoomWindow.visibility = View.VISIBLE
+                this.coordinates = coordinates
+            }
         } else {
             dismiss()
         }
@@ -204,8 +204,7 @@ class DefaultZoomWindowController
         canvas.drawBitmap(backgroundBitmap, Matrix(), null)
 
         // Add the current layer if the tool is line or cursor tool
-        if(toolReference.tool?.toolType?.name.equals(ToolType.LINE.name) ||
-            toolReference.tool?.toolType?.name.equals(ToolType.CURSOR.name)) {
+        if(checkCurrentTool(toolReference.tool) == 1) {
             layerModel.currentLayer?.bitmap?.let {
                 canvas.drawBitmap(it, windowSideDimen / 2f, windowSideDimen / 2f, null)
             }
@@ -221,17 +220,25 @@ class DefaultZoomWindowController
         return windowSideDimen - (zoomIndex * zoomFactor)
     }
 
-    private fun checkCurrentTool(tool: Tool?): Boolean {
+    override fun checkCurrentTool(tool: Tool?): Int {
         if(
             tool?.toolType?.name.equals(ToolType.HAND.name) ||
             tool?.toolType?.name.equals(ToolType.FILL.name) ||
-            tool?.toolType?.name.equals(ToolType.STAMP.name) ||
-            tool?.toolType?.name.equals(ToolType.TRANSFORM.name) ||
-            tool?.toolType?.name.equals(ToolType.IMPORTPNG.name) ||
-            tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
-            tool?.toolType?.name.equals(ToolType.TEXT.name)
+            tool?.toolType?.name.equals(ToolType.TRANSFORM.name)
         )
-            return false
-        return true
+            // NON-COMPATIBLE
+            return 0
+        else if(
+            tool?.toolType?.name.equals(ToolType.LINE.name) ||
+            tool?.toolType?.name.equals(ToolType.CURSOR.name) ||
+            tool?.toolType?.name.equals(ToolType.TEXT.name) ||
+            tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
+            tool?.toolType?.name.equals(ToolType.IMPORTPNG.name) ||
+            tool?.toolType?.name.equals(ToolType.STAMP.name)
+        )
+            return 1
+        else
+            // COMPATIBLE
+            return 2
     }
 }

@@ -118,7 +118,7 @@ class TextTool(
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF {
         // The tool coordinate is same as the touch coordinate
-        return coordinate
+        return PointF(toolPosition.x - (boxWidth / 2), toolPosition.y - (boxHeight / 2))
     }
 
     init {

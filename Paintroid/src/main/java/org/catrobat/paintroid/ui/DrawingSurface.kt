@@ -19,7 +19,6 @@
 package org.catrobat.paintroid.ui
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.BitmapShader
@@ -55,7 +54,6 @@ import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceList
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
-import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 
@@ -176,7 +174,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 val tool = toolReference.tool
 
                 // Will create the zoom window only if the tool is a compatible tool
-                when(checkCurrentTool(tool)) {
+                when(zoomController.checkCurrentTool(tool)) {
                     0 -> {
                         // NON-COMPATIBLE TOOLS
                         tool?.draw(surfaceViewCanvas)
@@ -243,26 +241,6 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
 
     fun disableAutoScroll() {
         drawingSurfaceListener.disableAutoScroll()
-    }
-
-    private fun checkCurrentTool(tool: Tool?): Int {
-        if(
-            tool?.toolType?.name.equals(ToolType.HAND.name) ||
-            tool?.toolType?.name.equals(ToolType.FILL.name) ||
-            tool?.toolType?.name.equals(ToolType.STAMP.name) ||
-            tool?.toolType?.name.equals(ToolType.TRANSFORM.name) ||
-            tool?.toolType?.name.equals(ToolType.IMPORTPNG.name) ||
-            tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
-            tool?.toolType?.name.equals(ToolType.TEXT.name)
-        )
-            return 0
-        else if(
-            tool?.toolType?.name.equals(ToolType.LINE.name) ||
-            tool?.toolType?.name.equals(ToolType.CURSOR.name)
-        )
-            return 1
-        else
-            return 2
     }
 
     @Synchronized
