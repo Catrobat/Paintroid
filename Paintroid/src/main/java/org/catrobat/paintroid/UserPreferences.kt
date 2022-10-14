@@ -25,6 +25,7 @@ import org.catrobat.paintroid.common.ZOOM_WINDOW_ENABLED_SHARED_PREFERENCES_TAG
 import org.catrobat.paintroid.common.ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG
 
 open class UserPreferences(var preferences: SharedPreferences) {
+
     open val preferenceLikeUsDialogValue: Boolean
         get() = preferences.getBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, false)
     open var preferenceImageNumber: Int
@@ -45,7 +46,10 @@ open class UserPreferences(var preferences: SharedPreferences) {
         }
 
     open var preferenceZoomWindowZoomPercentage: Int
-        get() = preferences.getInt(ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG, 100)
+        get() = preferences.getInt(
+            ZOOM_WINDOW_ZOOM_PERCENTAGE_SHARED_PREFERENCES_TAG,
+            initialZoomPercent
+        )
         set(value) {
             preferences
                 .edit()
@@ -58,5 +62,9 @@ open class UserPreferences(var preferences: SharedPreferences) {
             .edit()
             .putBoolean(SHOW_LIKE_US_DIALOG_SHARED_PREFERENCES_TAG, true)
             .apply()
+    }
+
+    companion object {
+        const val initialZoomPercent: Int = 100
     }
 }

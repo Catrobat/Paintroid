@@ -21,7 +21,6 @@ package org.catrobat.paintroid.contract
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.DisplayMetrics

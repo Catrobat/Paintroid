@@ -6,7 +6,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 import static org.catrobat.paintroid.test.espresso.util.MainActivityHelper.getMainActivityFromView;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -15,9 +14,7 @@ import org.catrobat.paintroid.R;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import java.util.Arrays;
-
-public class ZoomWindowInteraction extends CustomViewInteraction {
+public final class ZoomWindowInteraction extends CustomViewInteraction {
 
     private ZoomWindowInteraction() {
         super(onView(withId(R.id.pocketpaint_zoom_window)));

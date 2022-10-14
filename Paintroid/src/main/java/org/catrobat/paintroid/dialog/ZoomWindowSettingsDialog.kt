@@ -3,9 +3,7 @@ package org.catrobat.paintroid.dialog
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -13,8 +11,6 @@ import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.slider.Slider
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
-import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms
-import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 
 class ZoomWindowSettingsDialog(
     private val sharedPreferences: UserPreferences

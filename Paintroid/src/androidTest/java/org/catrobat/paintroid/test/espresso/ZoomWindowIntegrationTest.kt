@@ -1,41 +1,35 @@
 package org.catrobat.paintroid.test.espresso
 
-import android.content.Intent
 import android.os.Build
-import android.text.Layout
 import android.widget.RelativeLayout
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.CoordinatesProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
-import org.catrobat.paintroid.common.TEMP_IMAGE_PATH
-import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchCenterMiddle
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.tools.ToolType
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
-import java.io.File
 import org.catrobat.paintroid.R
 import org.junit.Test
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
-import org.catrobat.paintroid.test.espresso.util.UiInteractions.PressAndReleaseActions.*
-import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchLongAt
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.PressAndReleaseActions.tearDownPressAndRelease
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.PressAndReleaseActions.pressAction
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.PressAndReleaseActions.releaseAction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ZoomWindowInteraction.onZoomWindow
 import org.junit.After
-
 
 @RunWith(AndroidJUnit4::class)
 class ZoomWindowIntegrationTest {
 
     @get:Rule
     val launchActivityRule = ActivityTestRule(MainActivity::class.java)
-
     @Before
     fun setUp() {
         ToolBarViewInteraction.onToolBarView()
@@ -53,7 +47,7 @@ class ZoomWindowIntegrationTest {
             .perform(pressAction(DrawingSurfaceLocationProvider.MIDDLE))
 
         onView(withId(R.id.pocketpaint_zoom_window))
-            .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+            .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 
         onDrawingSurfaceView()
             .perform(releaseAction())
@@ -68,7 +62,7 @@ class ZoomWindowIntegrationTest {
             .perform(releaseAction())
 
         onView(withId(R.id.pocketpaint_zoom_window))
-            .check(matches(withEffectiveVisibility(Visibility.GONE)))
+            .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)))
     }
 
     @Test

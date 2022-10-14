@@ -114,7 +114,6 @@ open class DrawingSurfaceListener(
     ) {
         zoomController = zoomWindowController
         this.sharedPreferences = sharedPreferences
-
     }
 
     private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
@@ -145,12 +144,8 @@ open class DrawingSurfaceListener(
                 }
                 currentTool.handleMove(canvasTouchPoint)
             }
-            if(callZoomWindow) {
-                if (zoomController.checkCurrentTool(callback.getCurrentTool()) == 1) {
-                    zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint))
-                } else {
-                    zoomController.onMove(canvasTouchPoint)
-                }
+            if (callZoomWindow) {
+                handleZoomOnMove(currentTool)
             }
         } else {
             disableAutoScroll()
@@ -174,6 +169,14 @@ open class DrawingSurfaceListener(
         }
     }
 
+    private fun handleZoomOnMove(currentTool: Tool) {
+        if (zoomController.checkCurrentTool(callback.getCurrentTool()) == 1) {
+            zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint))
+        } else {
+            zoomController.onMove(canvasTouchPoint)
+        }
+    }
+
     override fun onTouch(view: View, event: MotionEvent): Boolean {
         val drawingSurface = view as DrawingSurface
         val currentTool = callback.getCurrentTool()
@@ -194,8 +197,8 @@ open class DrawingSurfaceListener(
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                     autoScrollTask.start()
                 }
-                if(sharedPreferences.preferenceZoomWindowEnabled) {
-                    if (zoomController.checkCurrentTool(callback.getCurrentTool()) == 1)  {
+                if (sharedPreferences.preferenceZoomWindowEnabled) {
+                    if (zoomController.checkCurrentTool(callback.getCurrentTool()) == 1) {
                         currentTool?.let {
                             zoomController.onMove(it.toolPositionCoordinates(canvasTouchPoint))
                         }
@@ -241,7 +244,7 @@ open class DrawingSurfaceListener(
                 eventX = 0f
                 eventY = 0f
                 touchMode = TouchMode.DRAW
-                if(callZoomWindow) zoomController.dismiss()
+                if (callZoomWindow) zoomController.dismiss()
                 callback.getCurrentTool()?.handToolMode()
             }
         }

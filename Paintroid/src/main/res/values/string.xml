@@ -245,7 +245,6 @@
     <string name="dialog_scale_title">Image is too big to load</string>
     <string name="dialog_scale_message">The image is too big to load. Tap OK to scale down the image automatically.</string>
 
-    <string name="zoom_window_test_press_action">Press</string>
-    <string name="zoom_window_test_release_action">Release</string>
+    <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
 
 </resources>

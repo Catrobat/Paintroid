@@ -68,10 +68,9 @@ class ShapeTool(
     override val toolType: ToolType
         get() = ToolType.SHAPE
 
-    override fun toolPositionCoordinates(coordinate: PointF): PointF {
+    override fun toolPositionCoordinates(coordinate: PointF): PointF =
         // The tool coordinate is same as the touch coordinate
-        return PointF(toolPosition.x - (boxWidth / 2), toolPosition.y - (boxHeight / 2))
-    }
+        PointF(toolPosition.x - boxWidth / 2, toolPosition.y - boxHeight / 2)
 
     init {
         rotationEnabled = true

@@ -174,7 +174,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 val tool = toolReference.tool
 
                 // Will create the zoom window only if the tool is a compatible tool
-                when(zoomController.checkCurrentTool(tool)) {
+                when (zoomController.checkCurrentTool(tool)) {
                     0 -> {
                         // NON-COMPATIBLE TOOLS
                         tool?.draw(surfaceViewCanvas)
