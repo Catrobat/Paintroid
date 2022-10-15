@@ -49,6 +49,7 @@ open class BrushTool(
     workspace: Workspace,
     idlingResource: CountingIdlingResource,
     commandManager: CommandManager,
+    var useEventDependentStrokeWidth: Boolean,
     override var drawTime: Long
 ) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
     protected open val previewPaint: Paint
@@ -85,7 +86,9 @@ open class BrushTool(
         canvas.run {
             save()
             clipRect(0, 0, workspace.width, workspace.height)
-            drawPath(pathToDraw, previewPaint)
+            if (useEventDependentStrokeWidth)
+            else
+                drawPath(pathToDraw, previewPaint)
             restore()
         }
     }
