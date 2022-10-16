@@ -41,9 +41,9 @@ plugins {
 }
 
 ext {
-    androidCompileSdkVersion = 30
+    androidCompileSdkVersion = 31
     androidMinSdkVersion = 21
-    androidTargetSdkVersion = 30
+    androidTargetSdkVersion = 31
 
     androidSupportLibraryVersion = '28.0.0'
 
