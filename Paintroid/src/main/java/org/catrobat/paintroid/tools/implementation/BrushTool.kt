@@ -68,17 +68,14 @@ open class BrushTool(
     private var pathInsideBitmap = false
     private val drawToolMovedDistance = PointF(0f, 0f)
 
-    var startPressure = 0f
-    var startTouchSize = 0f
-    var initWidth = 0f
-    var bezierPoints = mutableListOf<PointF>()
-    var bezierPointsWidths = mutableListOf<Float>()
+    private var startPressure = 0f
+    private var startTouchSize = 0f
+    private var initWidth = 0f
+    private var bezierPoints = mutableListOf<PointF>()
+    private var bezierPointsWidths = mutableListOf<Float>()
 
-    var allBezierPointsRight = mutableListOf<PointF>()
-    var allBezierPointsLeft = mutableListOf<PointF>()
-
-    var tempShiftStart1 = PointF(0f, 0f)
-    var tempShiftStart2 = PointF(0f, 0f)
+    private var allBezierPointsRight = mutableListOf<PointF>()
+    private var allBezierPointsLeft = mutableListOf<PointF>()
 
     val pointArray = mutableListOf<PointF>()
 
@@ -99,10 +96,14 @@ open class BrushTool(
         canvas.run {
             save()
             clipRect(0, 0, workspace.width, workspace.height)
-            if (useEventDependentStrokeWidth)
+            if (useEventDependentStrokeWidth) {
+                previewPaint.style = Paint.Style.FILL
+                bitmapPaint.style = Paint.Style.FILL
                 drawPath(getClosedPathFromPoints(), previewPaint)
+            }
             else
                 drawPath(pathToDraw, previewPaint)
+
             restore()
         }
     }
@@ -111,8 +112,6 @@ open class BrushTool(
         coordinate ?: return false
 
         if (useEventDependentStrokeWidth) {
-            tempShiftStart1 = coordinate
-            tempShiftStart2 = coordinate
             bezierPoints.add(coordinate)
             bezierPointsWidths.add(0f)
         } else {
@@ -151,7 +150,6 @@ open class BrushTool(
         val end = PointF(canvasTouchPoint.x, canvasTouchPoint.y)
 
         if (bezierPoints.isEmpty()) return true
-        //if (bezierPoints.last() == end) return true
 
         val shiftBy = getNextStrokeWidth(event)
 
@@ -160,9 +158,6 @@ open class BrushTool(
             bezierPointsWidths.add(shiftBy)
             return true
         }
-
-        allBezierPointsRight.add(tempShiftStart1)
-        allBezierPointsLeft.add(tempShiftStart2)
 
         val dir = getDirectionalVector(bezierPoints[0], bezierPoints[3])
         val orthogonal = getNormalizedOrthogonalVector(dir)
@@ -193,8 +188,6 @@ open class BrushTool(
 
             bezierPoints.clear()
             bezierPointsWidths.clear()
-            tempShiftStart1 = PointF(0f,0f)
-            tempShiftStart2 = PointF(0f,0f)
 
             val path = getClosedPathFromPoints()
 
@@ -286,10 +279,6 @@ open class BrushTool(
         val command = commandFactory.createPointCommand(bitmapPaint, coordinate)
         commandManager.addCommand(command)
         return true
-    }
-
-    private fun getMiddlePoint(A: PointF, B: PointF): PointF {
-        return PointF(A.x + ((B.x - A.x) / 2), A.y + ((B.y - A.y) / 2))
     }
 
     private fun getDirectionalVector(A: PointF, B: PointF): PointF {
