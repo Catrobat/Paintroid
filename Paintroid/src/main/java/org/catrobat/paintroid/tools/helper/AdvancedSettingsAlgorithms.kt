@@ -7,6 +7,8 @@ object AdvancedSettingsAlgorithms {
     @kotlin.jvm.JvmField
     var smoothing = true
 
+    var useEventSize = false
+
     const val threshold = 0.2
     const val divider = 3
 
