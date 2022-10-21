@@ -49,6 +49,7 @@ class WatercolorTool(
     workspace,
     idlingResource,
     commandManager,
+    true,
     drawTime
 ) {
     override val toolType: ToolType

@@ -21,6 +21,7 @@ package org.catrobat.paintroid.tools.implementation
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PointF
+import android.view.MotionEvent
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
@@ -67,6 +68,18 @@ open class BrushTool(
     private var pathInsideBitmap = false
     private val drawToolMovedDistance = PointF(0f, 0f)
 
+    var startPressure = 0f
+    var startTouchSize = 0f
+    var initWidth = 0f
+    var bezierPoints = mutableListOf<PointF>()
+    var bezierPointsWidths = mutableListOf<Float>()
+
+    var allBezierPointsRight = mutableListOf<PointF>()
+    var allBezierPointsLeft = mutableListOf<PointF>()
+
+    var tempShiftStart1 = PointF(0f, 0f)
+    var tempShiftStart2 = PointF(0f, 0f)
+
     val pointArray = mutableListOf<PointF>()
 
     init {
@@ -87,6 +100,7 @@ open class BrushTool(
             save()
             clipRect(0, 0, workspace.width, workspace.height)
             if (useEventDependentStrokeWidth)
+                drawPath(getClosedPathFromPoints(), previewPaint)
             else
                 drawPath(pathToDraw, previewPaint)
             restore()
@@ -95,12 +109,21 @@ open class BrushTool(
 
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
-        initialEventCoordinate = PointF(coordinate.x, coordinate.y)
-        previousEventCoordinate = PointF(coordinate.x, coordinate.y)
-        pathToDraw.moveTo(coordinate.x, coordinate.y)
-        drawToolMovedDistance.set(0f, 0f)
-        pointArray.add(PointF(coordinate.x, coordinate.y))
-        pathInsideBitmap = workspace.contains(coordinate)
+
+        if (useEventDependentStrokeWidth) {
+            tempShiftStart1 = coordinate
+            tempShiftStart2 = coordinate
+            bezierPoints.add(coordinate)
+            bezierPointsWidths.add(0f)
+        } else {
+            initialEventCoordinate = PointF(coordinate.x, coordinate.y)
+            previousEventCoordinate = PointF(coordinate.x, coordinate.y)
+            pathToDraw.moveTo(coordinate.x, coordinate.y)
+            drawToolMovedDistance.set(0f, 0f)
+            pointArray.add(PointF(coordinate.x, coordinate.y))
+            pathInsideBitmap = workspace.contains(coordinate)
+        }
+
         return true
     }
 
@@ -124,29 +147,89 @@ open class BrushTool(
         return true
     }
 
+    fun handleMoveEvent(canvasTouchPoint: PointF, event: MotionEvent): Boolean {
+        val end = PointF(canvasTouchPoint.x, canvasTouchPoint.y)
+
+        if (bezierPoints.isEmpty()) return true
+        //if (bezierPoints.last() == end) return true
+
+        val shiftBy = getNextStrokeWidth(event)
+
+        if (bezierPoints.size < 4) {
+            bezierPoints.add(end)
+            bezierPointsWidths.add(shiftBy)
+            return true
+        }
+
+        allBezierPointsRight.add(tempShiftStart1)
+        allBezierPointsLeft.add(tempShiftStart2)
+
+        val dir = getDirectionalVector(bezierPoints[0], bezierPoints[3])
+        val orthogonal = getNormalizedOrthogonalVector(dir)
+
+        for (i in bezierPoints.indices) {
+            if (i == 0) continue
+            val shifted1 = getPointShiftedByDistance1(bezierPoints[i], orthogonal, bezierPointsWidths[i])
+            allBezierPointsRight.add(shifted1)
+
+            val shifted2 = getPointShiftedByDistance2(bezierPoints[i], orthogonal, bezierPointsWidths[i])
+            allBezierPointsLeft.add(shifted2)
+        }
+
+        val bezierPointsTemp = bezierPoints[3]
+        val bezierWidthTemp = bezierPointsWidths[3]
+        bezierPoints.clear()
+        bezierPointsWidths.clear()
+        bezierPoints.add(bezierPointsTemp)
+        bezierPointsWidths.add(bezierWidthTemp)
+
+        return true
+    }
+
     override fun handleUp(coordinate: PointF?): Boolean {
-        if (eventCoordinatesAreNull() || coordinate == null) {
-            return false
-        }
+        if (useEventDependentStrokeWidth) {
+            if (coordinate == null) return false
+            if (allBezierPointsLeft.size < 3) return false
 
-        if (!pathInsideBitmap && workspace.contains(coordinate)) {
-            pathInsideBitmap = true
-        }
+            bezierPoints.clear()
+            bezierPointsWidths.clear()
+            tempShiftStart1 = PointF(0f,0f)
+            tempShiftStart2 = PointF(0f,0f)
 
-        previousEventCoordinate?.let {
-            drawToolMovedDistance.set(
-                drawToolMovedDistance.x + abs(coordinate.x - it.x),
-                drawToolMovedDistance.y + abs(coordinate.y - it.y)
-            )
-        }
+            val path = getClosedPathFromPoints()
 
-        return if (MOVE_TOLERANCE < max(drawToolMovedDistance.x, drawToolMovedDistance.y)) {
-            addPathCommand(coordinate)
+            allBezierPointsRight.clear()
+            allBezierPointsLeft.clear()
+
+            bitmapPaint.style = Paint.Style.FILL
+            val command = commandFactory.createPathCommand(bitmapPaint, path)
+            commandManager.addCommand(command)
+
+            return true
         } else {
-            initialEventCoordinate?.let {
-                return addPointCommand(it)
+            if (eventCoordinatesAreNull() || coordinate == null) {
+                return false
             }
-            false
+
+            if (!pathInsideBitmap && workspace.contains(coordinate)) {
+                pathInsideBitmap = true
+            }
+
+            previousEventCoordinate?.let {
+                drawToolMovedDistance.set(
+                    drawToolMovedDistance.x + abs(coordinate.x - it.x),
+                    drawToolMovedDistance.y + abs(coordinate.y - it.y)
+                )
+            }
+
+            return if (MOVE_TOLERANCE < max(drawToolMovedDistance.x, drawToolMovedDistance.y)) {
+                addPathCommand(coordinate)
+            } else {
+                initialEventCoordinate?.let {
+                    return addPointCommand(it)
+                }
+                false
+            }
         }
     }
 
@@ -203,5 +286,73 @@ open class BrushTool(
         val command = commandFactory.createPointCommand(bitmapPaint, coordinate)
         commandManager.addCommand(command)
         return true
+    }
+
+    private fun getMiddlePoint(A: PointF, B: PointF): PointF {
+        return PointF(A.x + ((B.x - A.x) / 2), A.y + ((B.y - A.y) / 2))
+    }
+
+    private fun getDirectionalVector(A: PointF, B: PointF): PointF {
+        return PointF(A.x - B.x, A.y - B.y)
+    }
+
+    private fun getNormalizedOrthogonalVector(vector: PointF): PointF {
+        val orth = PointF(vector.y, -vector.x)
+        val length = sqrt(orth.x * orth.x + orth.y * orth.y)
+        return PointF(orth.x/length, orth.y/length)
+    }
+
+    private fun getPointShiftedByDistance1(point: PointF, orth: PointF, shiftBy: Float): PointF {
+        return PointF(point.x + shiftBy*orth.x, point.y + shiftBy*orth.y)
+    }
+
+    private fun getPointShiftedByDistance2(point: PointF, orth: PointF, shiftBy: Float): PointF {
+        return PointF(point.x - shiftBy*orth.x, point.y - shiftBy*orth.y)
+    }
+
+    private fun getClosedPathFromPoints() : SerializablePath
+    {
+        val path = SerializablePath()
+
+        if (allBezierPointsLeft.size < 4) return path
+
+        path.incReserve(allBezierPointsLeft.size * 2)
+
+        path.moveTo(allBezierPointsRight[0].x, allBezierPointsRight[0].y)
+        var i = 0
+        while (i < allBezierPointsRight.count() - 3) {
+            path.cubicTo(allBezierPointsRight[i+1].x, allBezierPointsRight[i+1].y,
+                         allBezierPointsRight[i+2].x, allBezierPointsRight[i+2].y,
+                         allBezierPointsRight[i+3].x, allBezierPointsRight[i+3].y)
+            i += 3
+        }
+
+        i = allBezierPointsLeft.size - 1
+
+        while (i > 3) {
+            path.cubicTo(allBezierPointsLeft[i-1].x, allBezierPointsLeft[i-1].y,
+                         allBezierPointsLeft[i-2].x, allBezierPointsLeft[i-2].y,
+                         allBezierPointsLeft[i-3].x, allBezierPointsLeft[i-3].y)
+            i -= 3
+        }
+
+        path.close()
+
+        return path
+    }
+
+    private fun getNextStrokeWidth(event : MotionEvent) : Float {
+        val newWidth: Float = if (event.pressure > startPressure)
+            event.pressure * 80 * bitmapPaint.strokeWidth / 100
+        else if (event.pressure < startPressure)
+            event.pressure * 80 * bitmapPaint.strokeWidth / 100
+        else
+            initWidth
+
+        initWidth = newWidth
+        startTouchSize = event.size
+        startPressure = event.pressure
+
+        return newWidth
     }
 }

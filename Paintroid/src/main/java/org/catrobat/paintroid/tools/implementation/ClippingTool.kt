@@ -41,6 +41,7 @@ class ClippingTool(
     workspace,
     idlingResource,
     commandManager,
+    false,
     drawTime
 ) {
     private var newBitmap: Bitmap? = null

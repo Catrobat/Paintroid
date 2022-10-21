@@ -27,6 +27,7 @@ import android.view.View.OnTouchListener
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.implementation.BrushTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import java.util.EnumSet
@@ -129,7 +130,10 @@ open class DrawingSurfaceListener(
                 if (autoScroll) {
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                 }
-                currentTool.handleMove(canvasTouchPoint)
+                if (currentTool is BrushTool && currentTool.useEventDependentStrokeWidth)
+                    currentTool.handleMoveEvent(canvasTouchPoint, event)
+                else
+                    currentTool.handleMove(canvasTouchPoint)
             }
         } else {
             disableAutoScroll()

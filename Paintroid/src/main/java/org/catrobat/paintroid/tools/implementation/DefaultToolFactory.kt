@@ -210,6 +210,7 @@ class DefaultToolFactory(mainActivity: MainActivity) : ToolFactory {
                 workspace,
                 idlingResource,
                 commandManager,
+                false,
                 DRAW_TIME_INIT
             )
         }
