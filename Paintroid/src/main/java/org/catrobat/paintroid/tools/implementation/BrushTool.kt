@@ -35,6 +35,7 @@ import org.catrobat.paintroid.tools.common.CommonBrushPreviewListener
 import org.catrobat.paintroid.tools.common.MOVE_TOLERANCE
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.smoothing
+import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.useEventSize
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.threshold
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
@@ -331,12 +332,11 @@ open class BrushTool(
     }
 
     private fun getNextStrokeWidth(event : MotionEvent) : Float {
-        val newWidth: Float = if (event.pressure > startPressure)
+        val newWidth = if (useEventSize) {
+            event.size * 80 * bitmapPaint.strokeWidth / 100
+        } else {
             event.pressure * 80 * bitmapPaint.strokeWidth / 100
-        else if (event.pressure < startPressure)
-            event.pressure * 80 * bitmapPaint.strokeWidth / 100
-        else
-            initWidth
+        }
 
         initWidth = newWidth
         startTouchSize = event.size
