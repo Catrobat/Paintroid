@@ -26,6 +26,7 @@ import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.implementation.BrushTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
@@ -117,7 +118,10 @@ open class DrawingSurfaceListener(
                 }
             } else if (touchMode != TouchMode.PINCH) {
                 touchMode = TouchMode.DRAW
-                currentTool.handleMove(canvasTouchPoint)
+                if (currentTool is BrushTool && currentTool.useEventDependentStrokeWidth)
+                    currentTool.handleMoveEvent(canvasTouchPoint, event)
+                else
+                    currentTool.handleMove(canvasTouchPoint)
             }
             handleZoomWindowOnMove(currentTool, event)
         } else {

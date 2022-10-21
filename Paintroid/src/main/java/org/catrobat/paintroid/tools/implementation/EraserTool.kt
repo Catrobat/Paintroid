@@ -46,6 +46,7 @@ class EraserTool(
     workspace,
     idlingResource,
     commandManager,
+    false,
     drawTime
 ) {
     override val previewPaint: Paint
