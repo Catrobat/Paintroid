@@ -19,7 +19,6 @@
 package org.catrobat.paintroid.ui
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.BitmapShader
@@ -44,7 +43,6 @@ import androidx.core.content.ContextCompat
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.fragment.app.FragmentManager
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.common.COLOR_PICKER_DIALOG_TAG
 import org.catrobat.paintroid.contract.LayerContracts
@@ -76,7 +74,6 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var fragmentManager: FragmentManager
     private lateinit var idlingResource: CountingIdlingResource
     private lateinit var zoomController: ZoomWindowController
-    private lateinit var sharedPreferences: UserPreferences
 
     constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
@@ -132,8 +129,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         idlingResource: CountingIdlingResource,
         fragmentManager: FragmentManager,
         toolOptionsViewController: ToolOptionsViewController,
-        zoomController: ZoomWindowController,
-        sharedPreferences: UserPreferences
+        zoomController: ZoomWindowController
     ) {
         this.layerModel = layerModel
         this.perspective = perspective
@@ -142,8 +138,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         this.idlingResource = idlingResource
         this.fragmentManager = fragmentManager
         this.zoomController = zoomController
-        drawingSurfaceListener.setZoomController(zoomController, sharedPreferences)
-        this.sharedPreferences = sharedPreferences
+        drawingSurfaceListener.setZoomController(zoomWindowController = zoomController)
     }
 
     @Synchronized

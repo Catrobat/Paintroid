@@ -47,9 +47,6 @@
         android:id="@+id/pocketpaint_options_feedback"
         android:title="@string/menu_feedback" />
     <item
-        android:id="@+id/pocketpaint_zoom_window_settings"
-        android:title="@string/menu_zoom_settings" />
-    <item
         android:id="@+id/pocketpaint_advanced_settings"
         android:title="@string/menu_advanced" />
 </menu>

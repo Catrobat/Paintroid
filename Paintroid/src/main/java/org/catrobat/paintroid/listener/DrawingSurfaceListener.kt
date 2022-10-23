@@ -18,14 +18,12 @@
  */
 package org.catrobat.paintroid.listener
 
-import android.content.SharedPreferences
 import android.graphics.Point
 import android.graphics.PointF
 import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
-import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolType
@@ -46,7 +44,7 @@ private const val JITTER_DISTANCE_THRESHOLD = 50f
 open class DrawingSurfaceListener(
     private val autoScrollTask: AutoScrollTask,
     private val callback: DrawingSurfaceListenerCallback,
-    private val displayDensity: Float,
+    private val displayDensity: Float
 ) : OnTouchListener {
     private var touchMode: TouchMode
     private var pointerDistance = 0f
@@ -60,8 +58,6 @@ open class DrawingSurfaceListener(
     private var autoScroll = true
     private var timerStartDraw = 0.toLong()
     private lateinit var zoomController: ZoomWindowController
-    private var callZoomWindow: Boolean = true
-    private lateinit var sharedPreferences: UserPreferences
 
     private var recentTouchEventsData: MutableList<TouchEventData> = mutableListOf()
 
@@ -110,12 +106,9 @@ open class DrawingSurfaceListener(
     }
 
     fun setZoomController(
-        zoomWindowController: ZoomWindowController,
-        sharedPreferences: UserPreferences
+        zoomWindowController: ZoomWindowController
     ) {
         zoomController = zoomWindowController
-        this.sharedPreferences = sharedPreferences
-
     }
 
     private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
@@ -146,12 +139,10 @@ open class DrawingSurfaceListener(
                 }
                 currentTool.handleMove(canvasTouchPoint)
             }
-            if(callZoomWindow) {
-                if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name))  {
-                    zoomController.onMove(canvasTouchPoint)
-                } else {
-                    zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint))
-                }
+            if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name))  {
+                zoomController.onMove(canvasTouchPoint)
+            } else {
+                zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint))
             }
         } else {
             disableAutoScroll()
@@ -195,16 +186,11 @@ open class DrawingSurfaceListener(
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                     autoScrollTask.start()
                 }
-                if(sharedPreferences.preferenceZoomWindowEnabled) {
-                    if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
-                        zoomController.show(canvasTouchPoint)
-                    } else {
-                        currentTool?.toolPositionCoordinates(canvasTouchPoint)
-                            ?.let { zoomController.show(it) }
-                    }
-                    callZoomWindow = true
+                if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
+                    zoomController.show(canvasTouchPoint)
                 } else {
-                    callZoomWindow = false
+                    currentTool?.toolPositionCoordinates(canvasTouchPoint)
+                        ?.let { zoomController.show(it) }
                 }
             }
             MotionEvent.ACTION_MOVE -> handleActionMove(currentTool, view, event)
@@ -241,7 +227,7 @@ open class DrawingSurfaceListener(
                 eventX = 0f
                 eventY = 0f
                 touchMode = TouchMode.DRAW
-                if(callZoomWindow) zoomController.dismiss()
+                zoomController.dismiss()
                 callback.getCurrentTool()?.handToolMode()
             }
         }

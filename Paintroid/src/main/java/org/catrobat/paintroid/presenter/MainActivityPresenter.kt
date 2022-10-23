@@ -279,10 +279,6 @@ open class MainActivityPresenter(
         navigator.showAboutDialog()
     }
 
-    override fun showZoomWindowSettingsClicked(sharedPreferences: UserPreferences) {
-        navigator.showZoomWindowSettingsDialog(sharedPreferences)
-    }
-
     override fun showAdvancedSettingsClicked() {
         navigator.showAdvancedSettingsDialog()
     }
