@@ -69,8 +69,6 @@ open class BrushTool(
     private var pathInsideBitmap = false
     private val drawToolMovedDistance = PointF(0f, 0f)
 
-    private var startPressure = 0f
-    private var startTouchSize = 0f
     private var initWidth = 0f
     private var bezierPoints = mutableListOf<PointF>()
     private var bezierPointsWidths = mutableListOf<Float>()
@@ -165,10 +163,10 @@ open class BrushTool(
 
         for (i in bezierPoints.indices) {
             if (i == 0) continue
-            val shifted1 = getPointShiftedByDistance1(bezierPoints[i], orthogonal, bezierPointsWidths[i])
+            val shifted1 = getPointShiftedByDistanceRight(bezierPoints[i], orthogonal, bezierPointsWidths[i])
             allBezierPointsRight.add(shifted1)
 
-            val shifted2 = getPointShiftedByDistance2(bezierPoints[i], orthogonal, bezierPointsWidths[i])
+            val shifted2 = getPointShiftedByDistanceLeft(bezierPoints[i], orthogonal, bezierPointsWidths[i])
             allBezierPointsLeft.add(shifted2)
         }
 
@@ -292,11 +290,11 @@ open class BrushTool(
         return PointF(orth.x/length, orth.y/length)
     }
 
-    private fun getPointShiftedByDistance1(point: PointF, orth: PointF, shiftBy: Float): PointF {
+    private fun getPointShiftedByDistanceRight(point: PointF, orth: PointF, shiftBy: Float): PointF {
         return PointF(point.x + shiftBy*orth.x, point.y + shiftBy*orth.y)
     }
 
-    private fun getPointShiftedByDistance2(point: PointF, orth: PointF, shiftBy: Float): PointF {
+    private fun getPointShiftedByDistanceLeft(point: PointF, orth: PointF, shiftBy: Float): PointF {
         return PointF(point.x - shiftBy*orth.x, point.y - shiftBy*orth.y)
     }
 
@@ -325,7 +323,6 @@ open class BrushTool(
                          allBezierPointsLeft[i-3].x, allBezierPointsLeft[i-3].y)
             i -= 3
         }
-
         path.close()
 
         return path
@@ -333,14 +330,11 @@ open class BrushTool(
 
     private fun getNextStrokeWidth(event : MotionEvent) : Float {
         val newWidth = if (useEventSize) {
-            event.size * 80 * bitmapPaint.strokeWidth / 100
+            event.size * 800 * bitmapPaint.strokeWidth / 100
         } else {
             event.pressure * 80 * bitmapPaint.strokeWidth / 100
         }
-
         initWidth = newWidth
-        startTouchSize = event.size
-        startPressure = event.pressure
 
         return newWidth
     }
