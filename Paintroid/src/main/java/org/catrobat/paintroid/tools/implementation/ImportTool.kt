@@ -49,10 +49,9 @@ class ImportTool(
     override val toolType: ToolType
         get() = ToolType.IMPORTPNG
 
-    override fun toolPositionCoordinates(coordinate: PointF): PointF {
+    override fun toolPositionCoordinates(coordinate: PointF): PointF =
         // The tool coordinate is same as the touch coordinate
-        return coordinate
-    }
+        coordinate
 
     init {
         rotationEnabled = true

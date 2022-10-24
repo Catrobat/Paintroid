@@ -139,7 +139,7 @@ open class DrawingSurfaceListener(
                 }
                 currentTool.handleMove(canvasTouchPoint)
             }
-            if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name))  {
+            if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
                 zoomController.onMove(canvasTouchPoint)
             } else {
                 zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint))
@@ -186,7 +186,7 @@ open class DrawingSurfaceListener(
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                     autoScrollTask.start()
                 }
-                if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
+                if (!currentTool?.toolType?.name.equals(ToolType.CURSOR.name)) {
                     zoomController.show(canvasTouchPoint)
                 } else {
                     currentTool?.toolPositionCoordinates(canvasTouchPoint)
@@ -228,7 +228,7 @@ open class DrawingSurfaceListener(
                 eventY = 0f
                 touchMode = TouchMode.DRAW
                 zoomController.dismiss()
-                callback.getCurrentTool()?.handToolMode()
+                currentTool?.handToolMode()
             }
         }
         drawingSurface.refreshDrawingSurface()

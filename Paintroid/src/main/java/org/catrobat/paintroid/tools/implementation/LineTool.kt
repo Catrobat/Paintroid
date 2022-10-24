@@ -321,10 +321,9 @@ class LineTool(
         return true
     }
 
-    override fun toolPositionCoordinates(coordinate: PointF): PointF {
+    override fun toolPositionCoordinates(coordinate: PointF): PointF =
         // The tool coordinate is same as the touch coordinate
-        return coordinate
-    }
+        coordinate
 
     override fun resetInternalState() {
         initialEventCoordinate = null
