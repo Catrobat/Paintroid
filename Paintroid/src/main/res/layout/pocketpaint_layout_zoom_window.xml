@@ -6,21 +6,14 @@
     android:visibility="gone"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/pocketpaint_zoom_window_inner"
+    <ImageView
         android:layout_width="@dimen/pocketpaint_zoom_window_width"
         android:layout_height="@dimen/pocketpaint_zoom_window_height"
+        android:id="@+id/pocketpaint_zoom_window_image"
         android:layout_marginTop="50dp"
         android:layout_marginHorizontal="10dp"
         android:padding="3dp"
         android:background="@drawable/pocketpaint_zoom_window_shape"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/pocketpaint_zoom_window_image"/>
-
-    </LinearLayout>
+        android:contentDescription="@string/zoom_window_description" />
 
 </RelativeLayout>

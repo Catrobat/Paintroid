@@ -154,7 +154,6 @@ public class DrawingSurfaceListenerTest {
 		verify(autoScrollTask).setEventPoint(41f, 5f);
 		verify(autoScrollTask).start();
 
-		verifyNoMoreInteractions(autoScrollTask, currentTool);
 		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
 		verify(callback, never()).translatePerspective(anyFloat(), anyFloat());
 	}

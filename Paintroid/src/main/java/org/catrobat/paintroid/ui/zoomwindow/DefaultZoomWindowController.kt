@@ -93,8 +93,6 @@ class DefaultZoomWindowController
 
     private val zoomWindow: RelativeLayout =
         activity.findViewById(R.id.pocketpaint_zoom_window)
-    private val zoomWindowShape: ViewGroup =
-        activity.findViewById(R.id.pocketpaint_zoom_window_inner)
     private val zoomWindowImage: ImageView =
         activity.findViewById(R.id.pocketpaint_zoom_window_image)
     private var coordinates: PointF? = null
@@ -153,7 +151,7 @@ class DefaultZoomWindowController
 
     private fun setLayoutAlignment(right: Boolean) {
         val params: RelativeLayout.LayoutParams =
-            zoomWindowShape.layoutParams as RelativeLayout.LayoutParams
+            zoomWindow.layoutParams as RelativeLayout.LayoutParams
         if (right) {
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
             params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT)
@@ -161,7 +159,7 @@ class DefaultZoomWindowController
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
             params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT)
         }
-        zoomWindowShape.layoutParams = params
+        zoomWindow.layoutParams = params
     }
 
     private fun cropBitmap(bitmap: Bitmap?, coordinates: PointF): Bitmap? {
