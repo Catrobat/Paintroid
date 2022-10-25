@@ -14,7 +14,6 @@ import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import org.catrobat.paintroid.MainActivity
