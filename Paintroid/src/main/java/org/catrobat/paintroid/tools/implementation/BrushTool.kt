@@ -330,7 +330,7 @@ open class BrushTool(
 
     private fun getNextStrokeWidth(event : MotionEvent) : Float {
         val newWidth = if (useEventSize) {
-            event.size * 800 * bitmapPaint.strokeWidth / 100
+            event.size * 80 * bitmapPaint.strokeWidth / 100
         } else {
             event.pressure * 80 * bitmapPaint.strokeWidth / 100
         }
