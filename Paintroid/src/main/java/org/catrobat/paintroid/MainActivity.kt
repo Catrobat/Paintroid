@@ -264,11 +264,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private fun validateIntent(receivedIntent: Intent): Boolean {
         val receivedAction = receivedIntent.action
         val receivedType = receivedIntent.type
-        return receivedAction != null && receivedType != null && (receivedAction == Intent.ACTION_SEND || receivedAction == Intent.ACTION_EDIT || receivedAction == Intent.ACTION_VIEW) && (
+
+        return (receivedAction != null && receivedType != null && (receivedAction == Intent.ACTION_SEND || receivedAction == Intent.ACTION_VIEW) && (
             receivedType.startsWith(
                 "image/"
             ) || receivedType.startsWith("application/")
-            )
+            )) || receivedAction == Intent.ACTION_EDIT
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
