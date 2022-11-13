@@ -35,5 +35,6 @@
         android:name="android.permission.CHANGE_CONFIGURATION"
         tools:ignore="ProtectedPermissions" />
 
-    <application android:name="androidx.multidex.MultiDexApplication" />
+    <application android:name="androidx.multidex.MultiDexApplication"
+        android:exported="false" />
 </manifest>
