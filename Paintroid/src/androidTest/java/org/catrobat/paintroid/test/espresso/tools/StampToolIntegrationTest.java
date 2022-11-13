@@ -25,7 +25,9 @@ import android.graphics.Color;
 import android.graphics.PointF;
 
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
+import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction;
 import org.catrobat.paintroid.test.espresso.util.wrappers.StampToolViewInteraction;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
@@ -112,6 +114,52 @@ public class StampToolIntegrationTest {
 		assertEquals(topRight, Color.BLACK);
 		assertEquals(bottomLeft, Color.BLACK);
 		assertEquals(bottomRight, Color.BLACK);
+	}
+
+	@Test
+	public void testStampToolConsidersLayerOpacity() {
+		onToolBarView()
+				.performSelectTool(ToolType.SHAPE);
+
+		onShapeToolOptionsView()
+				.performSelectShape(DrawableShape.RECTANGLE);
+
+		onTopBarView()
+				.performClickCheckmark();
+
+		onToolBarView()
+				.performSelectTool(ToolType.STAMP);
+
+		LayerMenuViewInteraction.onLayerMenuView()
+				.performOpen()
+				.performSetOpacityTo(50, 0)
+				.performClose();
+
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+				.performCopy();
+
+		StampTool stampTool = (StampTool) toolReference.getTool();
+		int fiftyPercentOpacityBlack = Color.argb(255 / 2, 0, 0, 0);
+		int centerPixel = stampTool.drawingBitmap.getPixel(stampTool.drawingBitmap.getWidth() / 2, stampTool.drawingBitmap.getHeight() / 2);
+		assertEquals(centerPixel, Color.BLACK);
+
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+				.performPaste();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(fiftyPercentOpacityBlack, BitmapLocationProvider.MIDDLE);
+
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+				.performCut();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
+
+		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+				.performPaste();
+
+		onDrawingSurfaceView()
+				.checkPixelColor(fiftyPercentOpacityBlack, BitmapLocationProvider.MIDDLE);
 	}
 
 	@Test

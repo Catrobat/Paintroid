@@ -25,10 +25,9 @@ import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.CommandManagerModel
+import java.util.Deque
 import java.util.ArrayDeque
 import java.util.Collections
-import java.util.Deque
-import kotlin.collections.ArrayList
 
 const val FIVE = 5
 
@@ -43,6 +42,9 @@ class DefaultCommandManager(
 
     override val isBusy: Boolean
         get() = false
+
+    override val lastExecutedCommand: Command?
+        get() = undoCommandList.firstOrNull()
 
     override val isUndoAvailable: Boolean
         get() = !undoCommandList.isEmpty()
@@ -188,12 +190,8 @@ class DefaultCommandManager(
 
         val currentLayer = layerModel.currentLayer
         val canvas = commonFactory.createCanvas()
-        if (currentLayer != null) {
-            if (currentLayer.isVisible) {
-                canvas.setBitmap(currentLayer.bitmap)
-            } else {
-                canvas.setBitmap(currentLayer.transparentBitmap)
-            }
+        currentLayer?.let {
+            canvas.setBitmap(it.bitmap)
         }
 
         command.run(canvas, layerModel)
@@ -388,7 +386,6 @@ class DefaultCommandManager(
                 val destinationLayer = layerModel.getLayerAt(index)
                 if (!checkBoxes[index]) {
                     destinationLayer?.let {
-                        it.switchBitmaps(false)
                         it.isVisible = false
                     }
                 }
@@ -396,7 +393,6 @@ class DefaultCommandManager(
         } else {
             val destinationLayer = layerModel.currentLayer
             if (destinationLayer != null && !checkBoxes[0]) {
-                destinationLayer.switchBitmaps(false)
                 destinationLayer.isVisible = false
             }
         }

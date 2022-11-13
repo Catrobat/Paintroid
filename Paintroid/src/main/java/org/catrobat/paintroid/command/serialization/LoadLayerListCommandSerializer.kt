@@ -23,39 +23,47 @@ import android.graphics.BitmapFactory
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
-import org.catrobat.paintroid.command.implementation.LoadBitmapListCommand
+import org.catrobat.paintroid.command.implementation.LoadLayerListCommand
+import org.catrobat.paintroid.model.Layer
 
-class LoadBitmapListCommandSerializer(version: Int) :
-    VersionSerializer<LoadBitmapListCommand>(version) {
+class LoadLayerListCommandSerializer(version: Int) :
+    VersionSerializer<LoadLayerListCommand>(version) {
 
     companion object {
         private const val COMPRESSION_QUALITY = 100
     }
 
-    override fun write(kryo: Kryo, output: Output, command: LoadBitmapListCommand) {
-        output.writeInt(command.loadedImageList.size)
-        command.loadedImageList.forEach { bitmap ->
-            bitmap?.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, output)
+    override fun write(kryo: Kryo, output: Output, command: LoadLayerListCommand) {
+        output.writeInt(command.loadedLayers.size)
+        command.loadedLayers.forEach { layer ->
+            layer.bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, output)
+            output.writeInt(layer.opacityPercentage)
         }
     }
 
     override fun read(
         kryo: Kryo,
         input: Input,
-        type: Class<out LoadBitmapListCommand>
-    ): LoadBitmapListCommand =
+        type: Class<out LoadLayerListCommand>
+    ): LoadLayerListCommand =
         super.handleVersions(this, kryo, input, type)
 
     override fun readCurrentVersion(
         kryo: Kryo,
         input: Input,
-        type: Class<out LoadBitmapListCommand>
-    ): LoadBitmapListCommand {
+        type: Class<out LoadLayerListCommand>
+    ): LoadLayerListCommand {
         val size = input.readInt()
-        val bitmapList = ArrayList<Bitmap>()
+        val layerList = ArrayList<Layer>()
         repeat(size) {
-            bitmapList.add(BitmapFactory.decodeStream(input))
+            val bitmap = BitmapFactory.decodeStream(input)
+            val alpha = input.readInt()
+            val layer = Layer(bitmap).apply {
+                opacityPercentage = alpha
+            }
+            layerList.add(layer)
         }
-        return LoadBitmapListCommand(bitmapList)
+
+        return LoadLayerListCommand(layerList)
     }
 }
