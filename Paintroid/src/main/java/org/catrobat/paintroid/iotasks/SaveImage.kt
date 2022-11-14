@@ -29,14 +29,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.FileIO
-import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.command.serialization.CommandSerializer
+import org.catrobat.paintroid.contract.LayerContracts
 import java.io.IOException
 import java.lang.ref.WeakReference
 
 class SaveImage(
     activity: SaveImageCallback,
     private val requestCode: Int,
-    private val workspace: Workspace,
+    private val layerModel: LayerContracts.Model,
+    private val commandSerializer: CommandSerializer,
     private var uri: Uri?,
     private val saveAsCopy: Boolean,
     private val context: Context,
@@ -63,14 +65,14 @@ class SaveImage(
     }
 
     private fun saveOraFile(
-        bitmapList: List<Bitmap?>,
+        layers: List<LayerContracts.Layer>,
         uri: Uri,
         fileName: String,
         bitmap: Bitmap?,
         contentResolver: ContentResolver?
     ): Uri? = try {
         OpenRasterFileFormatConversion.saveOraFileToUri(
-            bitmapList,
+            layers,
             uri,
             fileName,
             bitmap,
@@ -82,13 +84,13 @@ class SaveImage(
     }
 
     private fun exportOraFile(
-        bitmapList: List<Bitmap?>,
+        layers: List<LayerContracts.Layer>,
         fileName: String,
         bitmap: Bitmap?,
         contentResolver: ContentResolver?
     ): Uri? = try {
         OpenRasterFileFormatConversion.exportToOraFile(
-            bitmapList,
+            layers,
             fileName,
             bitmap,
             contentResolver
@@ -111,25 +113,25 @@ class SaveImage(
         scopeIO.launch {
             try {
                 idlingResource.increment()
-                val bitmap = workspace.bitmapOfAllLayers
+                val bitmap = layerModel.getBitmapOfAllLayers()
                 val filename = FileIO.defaultFileName
                 currentUri = if (FileIO.fileType == FileIO.FileType.ORA) {
-                    val bitmapList = workspace.bitmapLisOfAllLayers
+                    val layers = layerModel.layers
                     if (uri != null && filename.endsWith(FileIO.FileType.ORA.toExtension())) {
                         uri?.let {
-                            saveOraFile(bitmapList, it, filename, bitmap, callback.contentResolver)
+                            saveOraFile(layers, it, filename, bitmap, callback.contentResolver)
                         }
                     } else {
-                        val imageUri = exportOraFile(bitmapList, filename, bitmap, callback.contentResolver)
+                        val imageUri = exportOraFile(layers, filename, bitmap, callback.contentResolver)
                         imageUri
                     }
                 } else if (FileIO.fileType == FileIO.FileType.CATROBAT) {
                     if (uri != null) {
                         uri?.let {
-                            workspace.getCommandSerializationHelper().overWriteFile(filename, it, callback.contentResolver)
+                            commandSerializer.overWriteFile(filename, it, callback.contentResolver)
                         }
                     } else {
-                        workspace.getCommandSerializationHelper().writeToFile(filename)
+                        commandSerializer.writeToFile(filename)
                     }
                 } else {
                     getImageUri(callback, bitmap)

@@ -35,6 +35,7 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
@@ -107,8 +108,6 @@ class CatrobatImageIOIntegrationTest {
             .perform(ViewActions.click())
         uriFile = activity.model.savedPictureUri!!
         Assert.assertNotNull(uriFile)
-        Assert.assertNotNull(
-            activity.workspace.getCommandSerializationHelper().readFromFile(uriFile!!)
-        )
+        Assert.assertNotNull(CommandSerializer(activity, activity.commandManager, activity.model).readFromFile(uriFile!!))
     }
 }

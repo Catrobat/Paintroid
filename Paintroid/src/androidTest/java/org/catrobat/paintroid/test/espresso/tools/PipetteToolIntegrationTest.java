@@ -174,7 +174,7 @@ public class PipetteToolIntegrationTest {
 				.checkMatchesColor(Color.TRANSPARENT);
 
 		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolProperties()

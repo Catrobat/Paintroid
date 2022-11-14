@@ -41,6 +41,9 @@ open class AsyncCommandManager(
     override val isBusy: Boolean
         get() = mutex.isLocked
 
+    override val lastExecutedCommand: Command?
+        get() = commandManager.lastExecutedCommand
+
     override val commandManagerModel
         get() = commandManager.commandManagerModel
 

@@ -23,7 +23,7 @@ import com.google.android.material.navigation.NavigationView
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
 
-class LayerMenuViewHolder(val layerLayout: NavigationView) : LayerContracts.LayerMenuViewHolder {
+class LayerMenuViewHolder(private val layerLayout: NavigationView) : LayerContracts.LayerMenuViewHolder {
     val layerAddButton: View = layerLayout.findViewById(R.id.pocketpaint_layer_side_nav_button_add)
     val layerDeleteButton: View = layerLayout.findViewById(R.id.pocketpaint_layer_side_nav_button_delete)
 
