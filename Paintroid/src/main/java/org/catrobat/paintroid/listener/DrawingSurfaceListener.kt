@@ -118,10 +118,11 @@ open class DrawingSurfaceListener(
                 }
             } else if (touchMode != TouchMode.PINCH) {
                 touchMode = TouchMode.DRAW
-                if (currentTool is BrushTool && currentTool.useEventDependentStrokeWidth)
+                if (currentTool is BrushTool && currentTool.useEventDependentStrokeWidth) {
                     currentTool.handleMoveEvent(canvasTouchPoint, event)
-                else
+                } else {
                     currentTool.handleMove(canvasTouchPoint)
+                }
             }
             handleZoomWindowOnMove(currentTool, event)
         } else {
