@@ -130,10 +130,12 @@ open class DrawingSurfaceListener(
                 if (autoScroll) {
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                 }
-                if (currentTool is BrushTool && currentTool.useEventDependentStrokeWidth)
+                if (currentTool is BrushTool && currentTool.useEventDependentStrokeWidth) {
                     currentTool.handleMoveEvent(canvasTouchPoint, event)
-                else
+
+                } else {
                     currentTool.handleMove(canvasTouchPoint)
+                }
             }
         } else {
             disableAutoScroll()

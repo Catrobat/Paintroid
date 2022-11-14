@@ -281,8 +281,7 @@ open class BrushTool(
         return true
     }
 
-    private fun getDirectionalVector(vecA: PointF, vecB: PointF): PointF
-        = PointF(vecA.x - vecB.x, vecA.y - vecB.y)
+    private fun getDirectionalVector(vecA: PointF, vecB: PointF): PointF = PointF(vecA.x - vecB.x, vecA.y - vecB.y)
 
     private fun getNormalizedOrthogonalVector(vector: PointF): PointF {
         val orth = PointF(vector.y, -vector.x)
@@ -290,14 +289,10 @@ open class BrushTool(
         return PointF(orth.x / length, orth.y / length)
     }
 
-    private fun getPointShiftedByDistanceRight(point: PointF, orth: PointF, shiftBy: Float): PointF
-        = PointF(point.x + shiftBy * orth.x, point.y + shiftBy * orth.y)
+    private fun getPointShiftedByDistanceRight(point: PointF, orth: PointF, shiftBy: Float): PointF = PointF(point.x + shiftBy * orth.x, point.y + shiftBy * orth.y)
 
-
-    private fun getPointShiftedByDistanceLeft(point: PointF, orth: PointF, shiftBy: Float): PointF
-        = PointF(point.x - shiftBy * orth.x, point.y - shiftBy * orth.y)
-
-
+    private fun getPointShiftedByDistanceLeft(point: PointF, orth: PointF, shiftBy: Float): PointF = PointF(point.x - shiftBy * orth.x, point.y - shiftBy * orth.y)
+    
     private fun getClosedPathFromPoints(): SerializablePath {
         val path = SerializablePath()
 
