@@ -69,6 +69,8 @@ open class BrushTool(
     private var pathInsideBitmap = false
     private val drawToolMovedDistance = PointF(0f, 0f)
 
+    private val neededBezierPoints = 4
+    private val neededPointsLeft = 3
     private var initWidth = 0f
     private var bezierPoints = mutableListOf<PointF>()
     private var bezierPointsWidths = mutableListOf<Float>()
@@ -99,10 +101,9 @@ open class BrushTool(
                 previewPaint.style = Paint.Style.FILL
                 bitmapPaint.style = Paint.Style.FILL
                 drawPath(getClosedPathFromPoints(), previewPaint)
-            }
-            else
+            } else {
                 drawPath(pathToDraw, previewPaint)
-
+            }
             restore()
         }
     }
@@ -152,13 +153,13 @@ open class BrushTool(
 
         val shiftBy = getNextStrokeWidth(event)
 
-        if (bezierPoints.size < 4) {
+        if (bezierPoints.size < neededBezierPoints) {
             bezierPoints.add(end)
             bezierPointsWidths.add(shiftBy)
             return true
         }
 
-        val dir = getDirectionalVector(bezierPoints[0], bezierPoints[3])
+        val dir = getDirectionalVector(bezierPoints.first(), bezierPoints.last())
         val orthogonal = getNormalizedOrthogonalVector(dir)
 
         for (i in bezierPoints.indices) {
@@ -170,8 +171,8 @@ open class BrushTool(
             allBezierPointsLeft.add(shifted2)
         }
 
-        val bezierPointsTemp = bezierPoints[3]
-        val bezierWidthTemp = bezierPointsWidths[3]
+        val bezierPointsTemp = bezierPoints.last()
+        val bezierWidthTemp = bezierPointsWidths.last()
         bezierPoints.clear()
         bezierPointsWidths.clear()
         bezierPoints.add(bezierPointsTemp)
@@ -183,7 +184,7 @@ open class BrushTool(
     override fun handleUp(coordinate: PointF?): Boolean {
         if (useEventDependentStrokeWidth) {
             if (coordinate == null) return false
-            if (allBezierPointsLeft.size < 3) return false
+            if (allBezierPointsLeft.size < neededBezierPoints) return false
 
             bezierPoints.clear()
             bezierPointsWidths.clear()
@@ -280,47 +281,45 @@ open class BrushTool(
         return true
     }
 
-    private fun getDirectionalVector(A: PointF, B: PointF): PointF {
-        return PointF(A.x - B.x, A.y - B.y)
-    }
+    private fun getDirectionalVector(vecA: PointF, vecB: PointF): PointF
+        = PointF(vecA.x - vecB.x, vecA.y - vecB.y)
 
     private fun getNormalizedOrthogonalVector(vector: PointF): PointF {
         val orth = PointF(vector.y, -vector.x)
         val length = sqrt(orth.x * orth.x + orth.y * orth.y)
-        return PointF(orth.x/length, orth.y/length)
+        return PointF(orth.x / length, orth.y / length)
     }
 
-    private fun getPointShiftedByDistanceRight(point: PointF, orth: PointF, shiftBy: Float): PointF {
-        return PointF(point.x + shiftBy*orth.x, point.y + shiftBy*orth.y)
-    }
+    private fun getPointShiftedByDistanceRight(point: PointF, orth: PointF, shiftBy: Float): PointF
+        = PointF(point.x + shiftBy * orth.x, point.y + shiftBy * orth.y)
 
-    private fun getPointShiftedByDistanceLeft(point: PointF, orth: PointF, shiftBy: Float): PointF {
-        return PointF(point.x - shiftBy*orth.x, point.y - shiftBy*orth.y)
-    }
 
-    private fun getClosedPathFromPoints() : SerializablePath
-    {
+    private fun getPointShiftedByDistanceLeft(point: PointF, orth: PointF, shiftBy: Float): PointF
+        = PointF(point.x - shiftBy * orth.x, point.y - shiftBy * orth.y)
+
+
+    private fun getClosedPathFromPoints(): SerializablePath {
         val path = SerializablePath()
 
-        if (allBezierPointsLeft.size < 4) return path
+        if (allBezierPointsLeft.size < neededBezierPoints) return path
 
         path.incReserve(allBezierPointsLeft.size * 2)
 
         path.moveTo(allBezierPointsRight[0].x, allBezierPointsRight[0].y)
         var i = 0
-        while (i < allBezierPointsRight.count() - 3) {
-            path.cubicTo(allBezierPointsRight[i+1].x, allBezierPointsRight[i+1].y,
-                         allBezierPointsRight[i+2].x, allBezierPointsRight[i+2].y,
-                         allBezierPointsRight[i+3].x, allBezierPointsRight[i+3].y)
+        while (i < allBezierPointsRight.count() - neededPointsLeft) {
+            path.cubicTo(allBezierPointsRight[i + 1].x, allBezierPointsRight[i + 1].y,
+                         allBezierPointsRight[i + 2].x, allBezierPointsRight[i + 2].y,
+                         allBezierPointsRight[i + 3].x, allBezierPointsRight[i + 3].y)
             i += 3
         }
 
         i = allBezierPointsLeft.size - 1
 
         while (i > 3) {
-            path.cubicTo(allBezierPointsLeft[i-1].x, allBezierPointsLeft[i-1].y,
-                         allBezierPointsLeft[i-2].x, allBezierPointsLeft[i-2].y,
-                         allBezierPointsLeft[i-3].x, allBezierPointsLeft[i-3].y)
+            path.cubicTo(allBezierPointsLeft[i - 1].x, allBezierPointsLeft[i - 1].y,
+                         allBezierPointsLeft[i - 2].x, allBezierPointsLeft[i - 2].y,
+                         allBezierPointsLeft[i - 3].x, allBezierPointsLeft[i - 3].y)
             i -= 3
         }
         path.close()
@@ -328,7 +327,7 @@ open class BrushTool(
         return path
     }
 
-    private fun getNextStrokeWidth(event : MotionEvent) : Float {
+    private fun getNextStrokeWidth(event: MotionEvent): Float {
         val newWidth = if (useEventSize) {
             event.size * 80 * bitmapPaint.strokeWidth / 100
         } else {
