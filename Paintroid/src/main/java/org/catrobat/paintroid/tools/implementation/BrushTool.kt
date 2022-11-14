@@ -71,6 +71,7 @@ open class BrushTool(
 
     private val neededBezierPoints = 4
     private val neededPointsLeft = 3
+    private val eventValueMultiplier: Float = 0.8F
     private var initWidth = 0f
     private var bezierPoints = mutableListOf<PointF>()
     private var bezierPointsWidths = mutableListOf<Float>()
@@ -330,9 +331,9 @@ open class BrushTool(
 
     private fun getNextStrokeWidth(event: MotionEvent): Float {
         val newWidth = if (useEventSize) {
-            event.size * 80 * bitmapPaint.strokeWidth / 100
+            event.size * eventValueMultiplier * bitmapPaint.strokeWidth
         } else {
-            event.pressure * 80 * bitmapPaint.strokeWidth / 100
+            event.pressure * eventValueMultiplier * bitmapPaint.strokeWidth
         }
         initWidth = newWidth
 
