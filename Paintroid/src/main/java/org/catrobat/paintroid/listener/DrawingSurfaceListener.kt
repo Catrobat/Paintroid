@@ -132,7 +132,6 @@ open class DrawingSurfaceListener(
                 }
                 if (currentTool is BrushTool && currentTool.useEventDependentStrokeWidth) {
                     currentTool.handleMoveEvent(canvasTouchPoint, event)
-
                 } else {
                     currentTool.handleMove(canvasTouchPoint)
                 }

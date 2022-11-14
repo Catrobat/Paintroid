@@ -292,7 +292,7 @@ open class BrushTool(
     private fun getPointShiftedByDistanceRight(point: PointF, orth: PointF, shiftBy: Float): PointF = PointF(point.x + shiftBy * orth.x, point.y + shiftBy * orth.y)
 
     private fun getPointShiftedByDistanceLeft(point: PointF, orth: PointF, shiftBy: Float): PointF = PointF(point.x - shiftBy * orth.x, point.y - shiftBy * orth.y)
-    
+
     private fun getClosedPathFromPoints(): SerializablePath {
         val path = SerializablePath()
 
@@ -303,18 +303,24 @@ open class BrushTool(
         path.moveTo(allBezierPointsRight[0].x, allBezierPointsRight[0].y)
         var i = 0
         while (i < allBezierPointsRight.count() - neededPointsLeft) {
-            path.cubicTo(allBezierPointsRight[i + 1].x, allBezierPointsRight[i + 1].y,
-                         allBezierPointsRight[i + 2].x, allBezierPointsRight[i + 2].y,
-                         allBezierPointsRight[i + 3].x, allBezierPointsRight[i + 3].y)
+            val startingPointIndex: Int = i + 1
+            val middlePointIndex: Int = i + 2
+            val endPointIndex: Int = i + 3
+            path.cubicTo(allBezierPointsRight[startingPointIndex].x, allBezierPointsRight[startingPointIndex].y,
+                         allBezierPointsRight[middlePointIndex].x, allBezierPointsRight[middlePointIndex].y,
+                         allBezierPointsRight[endPointIndex].x, allBezierPointsRight[endPointIndex].y)
             i += 3
         }
 
         i = allBezierPointsLeft.size - 1
 
         while (i > 3) {
-            path.cubicTo(allBezierPointsLeft[i - 1].x, allBezierPointsLeft[i - 1].y,
-                         allBezierPointsLeft[i - 2].x, allBezierPointsLeft[i - 2].y,
-                         allBezierPointsLeft[i - 3].x, allBezierPointsLeft[i - 3].y)
+            val startingPointIndex: Int = i + 1
+            val middlePointIndex: Int = i + 2
+            val endPointIndex: Int = i + 3
+            path.cubicTo(allBezierPointsLeft[startingPointIndex].x, allBezierPointsLeft[startingPointIndex].y,
+                         allBezierPointsLeft[middlePointIndex].x, allBezierPointsLeft[middlePointIndex].y,
+                         allBezierPointsLeft[endPointIndex].x, allBezierPointsLeft[endPointIndex].y)
             i -= 3
         }
         path.close()
