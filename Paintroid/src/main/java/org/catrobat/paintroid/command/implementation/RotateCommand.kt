@@ -43,20 +43,11 @@ class RotateCommand(rotateDirection: RotateDirection) : Command {
         val iterator: Iterator<LayerContracts.Layer> = layerModel.listIterator(0)
         while (iterator.hasNext()) {
             val currentLayer = iterator.next()
-            currentLayer.bitmap?.let {
-                val rotatedBitmap = Bitmap.createBitmap(
-                    it, 0, 0,
-                    layerModel.width, layerModel.height, rotateMatrix, true
-                )
-                currentLayer.bitmap = rotatedBitmap
-            }
-            currentLayer.transparentBitmap?.let {
-                val rotatedBitmap = Bitmap.createBitmap(
-                    it, 0, 0,
-                    layerModel.width, layerModel.height, rotateMatrix, true
-                )
-                currentLayer.transparentBitmap = rotatedBitmap
-            }
+            val rotatedBitmap = Bitmap.createBitmap(
+                currentLayer.bitmap, 0, 0,
+                layerModel.width, layerModel.height, rotateMatrix, true
+            )
+            currentLayer.bitmap = rotatedBitmap
         }
         val tmpWidth = layerModel.width
         layerModel.width = layerModel.height

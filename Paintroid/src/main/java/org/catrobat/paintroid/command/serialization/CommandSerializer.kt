@@ -48,7 +48,8 @@ import org.catrobat.paintroid.command.implementation.CutCommand
 import org.catrobat.paintroid.command.implementation.FillCommand
 import org.catrobat.paintroid.command.implementation.FlipCommand
 import org.catrobat.paintroid.command.implementation.GeometricFillCommand
-import org.catrobat.paintroid.command.implementation.LoadBitmapListCommand
+import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
+import org.catrobat.paintroid.command.implementation.LoadLayerListCommand
 import org.catrobat.paintroid.command.implementation.LoadCommand
 import org.catrobat.paintroid.command.implementation.MergeLayersCommand
 import org.catrobat.paintroid.command.implementation.PathCommand
@@ -81,7 +82,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.OutputStream
 
-class CommandSerializationUtilities(private val activityContext: Context, private val commandManager: CommandManager, private val model: MainActivityContracts.Model) {
+open class CommandSerializer(private val activityContext: Context, private val commandManager: CommandManager, private val model: MainActivityContracts.Model) {
 
     companion object {
         const val CURRENT_IMAGE_VERSION = 1
@@ -131,7 +132,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
             put(SerializablePath.Line::class.java, SerializablePath.PathActionLineSerializer(version))
             put(SerializablePath.Quad::class.java, SerializablePath.PathActionQuadSerializer(version))
             put(SerializablePath.Rewind::class.java, SerializablePath.PathActionRewindSerializer(version))
-            put(LoadBitmapListCommand::class.java, LoadBitmapListCommandSerializer(version))
+            put(LoadLayerListCommand::class.java, LoadLayerListCommandSerializer(version))
             put(GeometricFillCommand::class.java, GeometricFillCommandSerializer(version))
             put(HeartDrawable::class.java, GeometricFillCommandSerializer.HeartDrawableSerializer(version))
             put(OvalDrawable::class.java, GeometricFillCommandSerializer.OvalDrawableSerializer(version))
@@ -147,6 +148,7 @@ class CommandSerializationUtilities(private val activityContext: Context, privat
             put(SmudgePathCommand::class.java, SmudgePathCommandSerializer(version))
             put(ColorHistory::class.java, ColorHistorySerializer(version))
             put(ClippingCommand::class.java, ClippingCommandSerializer(version))
+            put(LayerOpacityCommand::class.java, LayerOpacityCommandSerializer(version))
         }
     }
 

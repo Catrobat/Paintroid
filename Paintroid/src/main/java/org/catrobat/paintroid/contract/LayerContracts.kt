@@ -37,11 +37,9 @@ interface LayerContracts {
         val layerCount: Int
         val presenter: Presenter
 
-        fun onBindLayerViewHolderAtPosition(
-            position: Int,
-            viewHolder: LayerViewHolder,
-            isOpen: Boolean
-        )
+        fun onSelectedLayerInvisible()
+
+        fun onSelectedLayerVisible()
 
         fun getListItemDragHandler(): ListItemDragHandler
 
@@ -55,9 +53,11 @@ interface LayerContracts {
 
         fun removeLayer()
 
-        fun hideLayer(position: Int)
+        fun changeLayerOpacity(position: Int, opacityPercentage: Int)
 
-        fun unhideLayer(position: Int, viewHolder: LayerViewHolder)
+        fun setLayerVisibility(position: Int, isVisible: Boolean)
+
+        fun refreshDrawingSurface()
 
         fun setAdapter(layerAdapter: Adapter)
 
@@ -74,27 +74,25 @@ interface LayerContracts {
         fun onStartDragging(position: Int, view: View)
 
         fun onStopDragging()
+
+        fun setLayerSelected(position: Int)
+
+        fun getSelectedLayer(): Layer?
     }
 
     interface LayerViewHolder {
         val bitmap: Bitmap?
         val view: View
 
-        fun setSelected(
-            position: Int,
-            bottomNavigationViewHolder: BottomNavigationViewHolder?,
-            defaultToolController: DefaultToolController?
-        )
+        fun setSelected(isSelected: Boolean)
 
-        fun setSelected()
-
-        fun setDeselected()
-
-        fun updateImageView(bitmap: Bitmap?)
+        fun updateImageView(layer: Layer)
 
         fun setMergable()
 
         fun isSelected(): Boolean
+
+        fun bindView()
 
         fun setLayerVisibilityCheckbox(setTo: Boolean)
     }
@@ -112,11 +110,11 @@ interface LayerContracts {
     }
 
     interface Layer {
-        var bitmap: Bitmap?
-        var transparentBitmap: Bitmap?
+        var bitmap: Bitmap
         var isVisible: Boolean
+        var opacityPercentage: Int
 
-        fun switchBitmaps(isUnhide: Boolean)
+        fun getValueForOpacityPercentage(): Int
     }
 
     interface Model {
@@ -139,6 +137,10 @@ interface LayerContracts {
         fun setLayerAt(position: Int, layer: Layer)
 
         fun removeLayerAt(position: Int): Boolean
+
+        fun getBitmapOfAllLayers(): Bitmap?
+
+        fun getBitmapListOfAllLayers(): List<Bitmap?>
     }
 
     interface Navigator {
