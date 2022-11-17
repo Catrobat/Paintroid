@@ -790,7 +790,11 @@ class LayerIntegrationTest {
         assertIfLayerAddButtonIsDisabled()
         LayerMenuViewInteraction.onLayerMenuView()
             .checkLayerCount(--layerCount)
-        onView(withId(R.id.pocketpaint_layer_side_nav_list)).perform(scrollToPosition<RecyclerView.ViewHolder>(99))
+        onView(withId(R.id.pocketpaint_layer_side_nav_list)).perform(
+            scrollToPosition<RecyclerView.ViewHolder>(
+                99
+            )
+        )
     }
 
     private fun createTestImageFile(): Uri {

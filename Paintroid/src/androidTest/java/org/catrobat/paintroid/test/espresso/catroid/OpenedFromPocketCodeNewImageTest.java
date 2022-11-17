@@ -76,16 +76,12 @@ public class OpenedFromPocketCodeNewImageTest {
 
 	private static final String IMAGE_NAME = "testFile";
 	private static final String IMAGE_TO_LOAD_NAME = "loadFile";
-
-	@Rule
-	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
-
-	@Rule
-	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
-
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.INSTANCE.grantPermissionRulesVersionCheck();
-
+	@Rule
+	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 	private File imageFile = null;
 	private MainActivity activity;
 	private ArrayList<File> deletionFileList = null;

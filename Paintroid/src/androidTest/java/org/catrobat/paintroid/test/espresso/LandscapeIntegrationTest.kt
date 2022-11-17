@@ -88,7 +88,9 @@ class LandscapeIntegrationTest {
     }
 
     @After
-    fun tearDown() { IdlingRegistry.getInstance().unregister(idlingResource) }
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(idlingResource)
+    }
 
     @Test
     fun testLandscapeMode() {
@@ -106,7 +108,9 @@ class LandscapeIntegrationTest {
                 toolType == ToolType.UNDO ||
                 toolType == ToolType.LAYER ||
                 !toolType.hasOptions()
-            if (tool) { continue }
+            if (tool) {
+                continue
+            }
             onToolBarView()
                 .performSelectTool(toolType)
             if (toolOptionsViewController?.isVisible?.not() == true) {
@@ -415,7 +419,9 @@ class LandscapeIntegrationTest {
                 toolType == ToolType.UNDO ||
                 toolType == ToolType.LAYER ||
                 !toolType.hasOptions()
-            if (tools) { continue }
+            if (tools) {
+                continue
+            }
             onToolBarView()
                 .performSelectTool(toolType)
             onBottomNavigationView()
@@ -423,7 +429,9 @@ class LandscapeIntegrationTest {
         }
     }
 
-    private fun setOrientation(orientation: Int) { activityTestRule.activity.requestedOrientation = orientation }
+    private fun setOrientation(orientation: Int) {
+        activityTestRule.activity.requestedOrientation = orientation
+    }
 
     companion object {
         @ColorInt

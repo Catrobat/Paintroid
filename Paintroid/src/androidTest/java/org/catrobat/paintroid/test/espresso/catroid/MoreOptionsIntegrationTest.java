@@ -58,14 +58,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class MoreOptionsIntegrationTest {
 
-	@Rule
-	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
-
-	@Rule
-	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
-
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.INSTANCE.grantPermissionRulesVersionCheck();
+	@Rule
+	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, false);
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Before
 	public void setUp() {

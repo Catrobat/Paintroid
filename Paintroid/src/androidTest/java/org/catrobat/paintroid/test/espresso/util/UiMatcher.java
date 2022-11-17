@@ -383,7 +383,7 @@ public final class UiMatcher {
 	}
 
 	public static Matcher<View> checkDotsColors(final int activeIndex, final int colorActive,
-			final int colorInactive) {
+												final int colorInactive) {
 
 		return new BoundedMatcher<View, LinearLayout>(LinearLayout.class) {
 			private String errorTextView = null;

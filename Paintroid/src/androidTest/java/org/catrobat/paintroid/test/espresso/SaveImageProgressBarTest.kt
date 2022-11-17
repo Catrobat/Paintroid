@@ -49,6 +49,7 @@ class SaveImageProgressBarTest {
     companion object {
         private const val IMAGE_NAME = "fileName"
     }
+
     @Before
     fun setUp() {
         activity = launchActivityRule.activity
@@ -56,7 +57,8 @@ class SaveImageProgressBarTest {
 
     @Test
     fun testProgressBarShown() {
-        val progressBar = activity.findViewById<ContentLoadingProgressBar>(R.id.pocketpaint_content_loading_progress_bar)
+        val progressBar =
+            activity.findViewById<ContentLoadingProgressBar>(R.id.pocketpaint_content_loading_progress_bar)
         progressBar.show()
         SystemClock.sleep(501)
         onView(withId(R.id.pocketpaint_content_loading_progress_bar))
@@ -66,7 +68,8 @@ class SaveImageProgressBarTest {
 
     @Test
     fun testProgressBarNotShown() {
-        val progressBar = activity.findViewById<ContentLoadingProgressBar>(R.id.pocketpaint_content_loading_progress_bar)
+        val progressBar =
+            activity.findViewById<ContentLoadingProgressBar>(R.id.pocketpaint_content_loading_progress_bar)
         progressBar.show()
         onView(withId(R.id.pocketpaint_content_loading_progress_bar))
             .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))

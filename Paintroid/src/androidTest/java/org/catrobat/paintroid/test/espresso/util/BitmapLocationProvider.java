@@ -28,7 +28,7 @@ import androidx.test.espresso.action.CoordinatesProvider;
 
 import static org.catrobat.paintroid.test.espresso.util.MainActivityHelper.getMainActivityFromView;
 
-public enum BitmapLocationProvider implements CoordinatesProvider{
+public enum BitmapLocationProvider implements CoordinatesProvider {
 	MIDDLE {
 		@Override
 		public float[] calculateCoordinates(View view) {
@@ -95,6 +95,6 @@ public enum BitmapLocationProvider implements CoordinatesProvider{
 		Workspace workspace = mainActivity.workspace;
 		float pointX = (workspace.getWidth() - 1) * percentageX;
 		float pointY = workspace.getHeight() * percentageY;
-		return new float[] {pointX, pointY};
+		return new float[]{pointX, pointY};
 	}
 }

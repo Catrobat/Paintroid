@@ -48,6 +48,10 @@ public class ShapeToolEraseIntegrationTest {
 
 	@Parameter
 	public DrawableShape shape;
+	@Rule
+	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Parameters(name = "{0}")
 	public static Iterable<Object[]> data() {
@@ -58,12 +62,6 @@ public class ShapeToolEraseIntegrationTest {
 				{DrawableShape.STAR}
 		});
 	}
-
-	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 
 	@Test
 	public void testEraseWithFilledShape() {

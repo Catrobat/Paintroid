@@ -42,7 +42,9 @@ class BitmapIntegrationTest {
     var screenshotOnFailRule = ScreenshotOnFailRule()
 
     @Before
-    fun setUp() { onToolBarView().performSelectTool(ToolType.BRUSH) }
+    fun setUp() {
+        onToolBarView().performSelectTool(ToolType.BRUSH)
+    }
 
     @Test
     fun drawingSurfaceBitmapIsDisplaySize() {

@@ -279,8 +279,20 @@ class UndoRedoIntegrationTest {
 
         onTopBarView().performUndo()
         perspective?.scale?.let { Assert.assertEquals(scale, it, Float.MIN_VALUE) }
-        perspective?.surfaceTranslationX?.let { Assert.assertEquals(translationX.toFloat(), it, Float.MIN_VALUE) }
-        perspective?.surfaceTranslationY?.let { Assert.assertEquals(translationY.toFloat(), it, Float.MIN_VALUE) }
+        perspective?.surfaceTranslationX?.let {
+            Assert.assertEquals(
+                translationX.toFloat(),
+                it,
+                Float.MIN_VALUE
+            )
+        }
+        perspective?.surfaceTranslationY?.let {
+            Assert.assertEquals(
+                translationY.toFloat(),
+                it,
+                Float.MIN_VALUE
+            )
+        }
     }
 
     @Test
@@ -298,8 +310,20 @@ class UndoRedoIntegrationTest {
 
         onTopBarView().performRedo()
         perspective?.scale?.let { Assert.assertEquals(scale, it, Float.MIN_VALUE) }
-        perspective?.surfaceTranslationX?.let { Assert.assertEquals(translationX.toFloat(), it, Float.MIN_VALUE) }
-        perspective?.surfaceTranslationY?.let { Assert.assertEquals(translationY.toFloat(), it, Float.MIN_VALUE) }
+        perspective?.surfaceTranslationX?.let {
+            Assert.assertEquals(
+                translationX.toFloat(),
+                it,
+                Float.MIN_VALUE
+            )
+        }
+        perspective?.surfaceTranslationY?.let {
+            Assert.assertEquals(
+                translationY.toFloat(),
+                it,
+                Float.MIN_VALUE
+            )
+        }
     }
 
     @Test

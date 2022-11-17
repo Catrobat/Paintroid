@@ -89,19 +89,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class ToolOnBackPressedIntegrationTest {
 
 	private static final String FILE_ENDING = ".png";
-
-	@Rule
-	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, true);
-
-	@Rule
-	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
-
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.INSTANCE.grantPermissionRulesVersionCheck();
-
+	public final String defaultPictureName = "catroidTemp";
+	@Rule
+	public IntentsTestRule<MainActivity> launchActivityRule = new IntentsTestRule<>(MainActivity.class, false, true);
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 	private File saveFile = null;
 	private ToolReference toolReference;
-	public final String defaultPictureName = "catroidTemp";
 
 	@Before
 	public void setUp() {

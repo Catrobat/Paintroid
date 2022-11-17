@@ -111,6 +111,7 @@ class MainActivityIntegrationTest {
 
     @get:Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
+
     @Before
     fun init() {
         MockitoAnnotations.initMocks(this)

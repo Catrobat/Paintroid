@@ -101,7 +101,9 @@ class ToolOptionsIntegrationTest(
     }
 
     @After
-    fun tearDown() { testImageFile?.let { assertTrue(it.delete()) } }
+    fun tearDown() {
+        testImageFile?.let { assertTrue(it.delete()) }
+    }
 
     @Test
     fun testToolOptions() {

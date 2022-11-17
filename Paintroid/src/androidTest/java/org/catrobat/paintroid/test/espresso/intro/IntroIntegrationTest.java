@@ -64,7 +64,7 @@ public class IntroIntegrationTest {
 		ViewPager viewPager = activityTestRule.getActivity().viewPager;
 		IntroPageViewAdapter adapter = (IntroPageViewAdapter) viewPager.getAdapter();
 
-		for (int layout: adapter.layouts) {
+		for (int layout : adapter.layouts) {
 			if (layout == R.layout.pocketpaint_slide_intro_tools_selection) {
 				break;
 			}
@@ -74,7 +74,7 @@ public class IntroIntegrationTest {
 		onView(withId(R.id.pocketpaint_textview_intro_tools_header))
 				.check(matches(isDisplayed()));
 
-		for (ToolType toolType: ToolType.values()) {
+		for (ToolType toolType : ToolType.values()) {
 			if (!toolType.equals(ToolType.UNDO) && !toolType.equals(ToolType.REDO) && !toolType.equals(ToolType.LAYER) && !toolType.equals(ToolType.COLORCHOOSER)) {
 				onView(withId(toolType.getToolButtonID())).perform(click());
 				onView(withText(toolType.getHelpTextResource())).check(matches(isDisplayed()));

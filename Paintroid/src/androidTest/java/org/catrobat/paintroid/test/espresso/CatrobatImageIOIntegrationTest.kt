@@ -72,7 +72,9 @@ class CatrobatImageIOIntegrationTest {
     }
 
     @Before
-    fun setUp() { activity = launchActivityRule.activity }
+    fun setUp() {
+        activity = launchActivityRule.activity
+    }
 
     @After
     fun tearDown() {

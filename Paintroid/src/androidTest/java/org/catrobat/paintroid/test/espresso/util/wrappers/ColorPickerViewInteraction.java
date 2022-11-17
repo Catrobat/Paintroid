@@ -46,8 +46,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public final class ColorPickerViewInteraction extends CustomViewInteraction {
-	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
 	public static final int MAXIMUM_COLORS_IN_HISTORY = 4;
+	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
 
 	protected ColorPickerViewInteraction() {
 		super(onView(withId(R.id.color_picker_view)));
