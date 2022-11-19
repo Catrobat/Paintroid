@@ -30,13 +30,17 @@ class SplitScreenTests {
 
     @Before
     fun setUp() {
-        uiAutomation = InstrumentationRegistry.getInstrumentation().getUiAutomation()
+        uiAutomation = InstrumentationRegistry.getInstrumentation().uiAutomation
         mainActivity = launchActivityRule.activity
         workspace = mainActivity.workspace
         MoreOptionTestsHelper.setupEnvironment(mainActivity)
         ColorPickerTestHelper.setupEnvironment(mainActivity)
         ClippingToolTestHelper.setupEnvironment(mainActivity)
         ShapeToolTestHelper.setupEnvironment(mainActivity)
+        TextToolTestHelper.setupEnvironment(mainActivity)
+        StampToolTestHelper.setupEnvironment(mainActivity)
+        TransformToolTestHelper.setupEnvironment(mainActivity)
+        WatercolorToolTestHelper.setupEnvironment(mainActivity)
 
         startActivity(launchActivityRule.activity, Intent(Intent.ACTION_DIAL), null)
     }
@@ -172,10 +176,34 @@ class SplitScreenTests {
         ShapeToolTestHelper.testEllipseIsDrawnOnBitmap()
     }
 
+    @Test
+    fun testDialogToolInteraction() {
+        focusPocketPaint()
+        TextToolTestHelper.testDialogToolInteraction()
+    }
+
+    @Test
+    fun testCutAndPastePixel() {
+        focusPocketPaint()
+        StampToolTestHelper.testCutAndPastePixel()
+    }
+
+    @Test
+    fun testMoveCroppingBordersOnEmptyBitmapAndDoCrop() {
+        focusPocketPaint()
+        TransformToolTestHelper.testMoveCroppingBordersOnEmptyBitmapAndDoCrop()
+    }
+
+    @Test
+    fun drawOnBitmapThenChangeMaskFilter() {
+        focusPocketPaint()
+        WatercolorToolTestHelper.drawOnBitmapThenChangeMaskFilter()
+    }
+
     private fun focusPocketPaint() {
         Thread.sleep(500)
-        var x: Int = workspace.width / 2
-        var y = 2 * workspace.height - workspace.height / 2
+        val x: Int = workspace.width / 2
+        val y = 2 * workspace.height - workspace.height / 2
 
         val motionDown = MotionEvent.obtain(
             SystemClock.uptimeMillis(),

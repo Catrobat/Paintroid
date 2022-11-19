@@ -93,9 +93,7 @@ object MoreOptionTestsHelper {
             .perform(ViewActions.click())
         var uriFile: Uri = model.savedPictureUri!!
         Assert.assertNotNull(uriFile)
-        Assert.assertNotNull(
-            workspace.getCommandSerializationHelper().readFromFile(uriFile!!)
-        )
+
     }
 
     fun setAntiAliasingNotOnWhenCancelPressed() {

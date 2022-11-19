@@ -25,13 +25,14 @@ import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.Layer
 
-class LoadBitmapListCommand(loadedImageList: List<Bitmap?>) : Command {
+class LoadLayerListCommand(loadedLayers: List<LayerContracts.Layer>) : Command {
 
-    var loadedImageList = loadedImageList; private set
+    var loadedLayers = loadedLayers; private set
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
-        loadedImageList.forEachIndexed { index, bitmap ->
-            val currentLayer = Layer(bitmap?.copy(Bitmap.Config.ARGB_8888, true))
+        loadedLayers.forEachIndexed { index, layer ->
+            val currentLayer = Layer(layer.bitmap.copy(Bitmap.Config.ARGB_8888, true))
+            currentLayer.opacityPercentage = layer.opacityPercentage
             layerModel.addLayerAt(index, currentLayer)
         }
         layerModel.currentLayer = layerModel.getLayerAt(0)

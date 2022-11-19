@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.iotasks
 
 import android.graphics.Bitmap
+import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.model.CommandManagerModel
 
@@ -26,7 +27,7 @@ data class BitmapReturnValue(
     @JvmField
     var model: CommandManagerModel?,
     @JvmField
-    var bitmapList: List<Bitmap?>?,
+    var layerList: List<LayerContracts.Layer>?,
     @JvmField
     var bitmap: Bitmap?,
     @JvmField
@@ -34,7 +35,7 @@ data class BitmapReturnValue(
     @JvmField
     var colorHistory: ColorHistory?
 ) {
-    constructor(bitmapList: List<Bitmap?>?, bitmap: Bitmap?, toBeScaled: Boolean) : this(
+    constructor(bitmapList: List<LayerContracts.Layer>?, bitmap: Bitmap?, toBeScaled: Boolean) : this(
         null,
         bitmapList,
         bitmap,
