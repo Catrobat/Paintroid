@@ -32,6 +32,7 @@ import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.command.serialization.SerializableTypeface
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.drawable.ShapeDrawable
 import org.catrobat.paintroid.tools.helper.JavaFillAlgorithmFactory
 import org.catrobat.paintroid.tools.helper.toPoint
@@ -45,14 +46,15 @@ class DefaultCommandFactory : CommandFactory {
 
     override fun createInitCommand(bitmap: Bitmap): Command = CompositeCommand().apply {
         addCommand(SetDimensionCommand(bitmap.width, bitmap.height))
-        addCommand(LoadCommand(bitmap.copy(Bitmap.Config.ARGB_8888, false)))
+        addCommand(LoadCommand(bitmap))
     }
 
-    override fun createInitCommand(bitmapList: List<Bitmap?>): Command = CompositeCommand().apply {
-        bitmapList[0]?.let {
-            addCommand(SetDimensionCommand(it.width, it.height))
+    override fun createInitCommand(layers: List<LayerContracts.Layer>): Command = CompositeCommand().apply {
+        layers[0].let {
+            val bitmap = it.bitmap
+            addCommand(SetDimensionCommand(bitmap.width, bitmap.height))
         }
-        addCommand(LoadBitmapListCommand(bitmapList))
+        addCommand(LoadLayerListCommand(layers))
     }
 
     override fun createResetCommand(): Command = CompositeCommand().apply {
@@ -63,6 +65,8 @@ class DefaultCommandFactory : CommandFactory {
     override fun createAddEmptyLayerCommand(): Command = AddEmptyLayerCommand(commonFactory)
 
     override fun createSelectLayerCommand(position: Int): Command = SelectLayerCommand(position)
+
+    override fun createLayerOpacityCommand(position: Int, opacityPercentage: Int): Command = LayerOpacityCommand(position, opacityPercentage)
 
     override fun createRemoveLayerCommand(index: Int): Command = RemoveLayerCommand(index)
 

@@ -20,8 +20,9 @@ package org.catrobat.paintroid.test.junit.command
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import org.catrobat.paintroid.command.implementation.LoadBitmapListCommand
+import org.catrobat.paintroid.command.implementation.LoadLayerListCommand
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.model.Layer
 import org.catrobat.paintroid.model.LayerModel
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert
@@ -32,29 +33,30 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class LoadBitmapListCommandTest {
+class LoadLayerListCommandTest {
 
     private var canvas: Canvas = Mockito.mock(Canvas::class.java)
     private var layerModel: LayerContracts.Model = LayerModel()
 
-    private lateinit var commandUnderTest: LoadBitmapListCommand
-    private lateinit var bitmapList: MutableList<Bitmap>
+    private lateinit var commandUnderTest: LoadLayerListCommand
+    private lateinit var layerList: MutableList<LayerContracts.Layer>
 
     @Before
     fun setUp() {
-        bitmapList = mutableListOf()
+        layerList = mutableListOf()
         for (i in 1..3) {
-            bitmapList.add(Bitmap.createBitmap(2 * i, 2, Bitmap.Config.ARGB_8888))
+            val layer = Layer(Bitmap.createBitmap(2 * i, 2, Bitmap.Config.ARGB_8888))
+            layerList.add(layer)
         }
-        commandUnderTest = LoadBitmapListCommand(bitmapList)
+        commandUnderTest = LoadLayerListCommand(layerList)
     }
 
     @Test
     fun testRunCopiesImage() {
         commandUnderTest.run(canvas, layerModel)
-        Assert.assertTrue(layerModel.currentLayer!!.bitmap!!.sameAs(bitmapList[0]))
-        Assert.assertTrue(layerModel.getLayerAt(1)!!.bitmap!!.sameAs(bitmapList[1]))
-        Assert.assertTrue(layerModel.getLayerAt(2)!!.bitmap!!.sameAs(bitmapList[2]))
+        Assert.assertTrue(layerModel.currentLayer!!.bitmap.sameAs(layerList[0].bitmap))
+        Assert.assertTrue(layerModel.getLayerAt(1)!!.bitmap.sameAs(layerList[1].bitmap))
+        Assert.assertTrue(layerModel.getLayerAt(2)!!.bitmap.sameAs(layerList[2].bitmap))
     }
 
     @Test

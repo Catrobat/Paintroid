@@ -60,7 +60,8 @@ import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.command.implementation.AsyncCommandManager
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandManager
-import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
+import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_NAME
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
@@ -69,6 +70,7 @@ import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
+import org.catrobat.paintroid.listener.DrawerLayoutListener
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.model.MainActivityModel
@@ -133,6 +135,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
     lateinit var model: MainActivityContracts.Model
 
+    private lateinit var commandSerializer: CommandSerializer
     private lateinit var layerPresenter: LayerPresenter
     private lateinit var drawingSurface: DrawingSurface
     private lateinit var presenterMain: MainActivityContracts.Presenter
@@ -220,20 +223,20 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         try {
             if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
                 try {
-                    val fileContent = workspace.getCommandSerializationHelper().readFromFile(receivedUri)
+                    val fileContent = commandSerializer.readFromFile(receivedUri)
                     commandManager.loadCommandsCatrobatImage(fileContent.commandModel)
                     presenterMain.setColorHistoryAfterLoadImage(fileContent.colorHistory)
                     return false
-                } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
+                } catch (e: CommandSerializer.NotCatrobatImageException) {
                     Log.e(TAG, "Image might be an ora file instead")
                     OpenRasterFileFormatConversion.mainActivity = this
                     OpenRasterFileFormatConversion.importOraFile(
                         myContentResolver,
                         receivedUri
-                    ).bitmapList?.let { bitmapList ->
+                    ).layerList?.let { layerList ->
                         commandManager.setInitialStateCommand(
                             commandFactory.createInitCommand(
-                                bitmapList
+                                layerList
                             )
                         )
                     }
@@ -303,7 +306,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 presenterMain.initializeFromCleanState(picturePath, pictureName)
 
                 if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
-                    val workspaceReturnValue = presenterMain.openTemporaryFile(workspace)
+                    val workspaceReturnValue = presenterMain.openTemporaryFile()
                     commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
                     model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
                     model.colorHistory.colors.lastOrNull()?.let {
@@ -316,8 +319,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             else -> {
                 val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)
                 val isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false)
-                val isOpenedFromCatroid =
-                    savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
+                val isOpenedFromCatroid = savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
                 val isOpenedFromFormulaEditorInCatroid = savedInstanceState.getBoolean(
                     IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY, false
                 )
@@ -441,8 +443,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             layerModel,
             perspective,
             listener,
-            CommandSerializationUtilities(this, commandManager, model)
         )
+        commandSerializer = CommandSerializer(this, commandManager, model)
+        model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,
@@ -473,7 +476,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             preferences,
             idlingResource,
             context,
-            filesDir
+            filesDir,
+            commandSerializer
         )
         FileIO.navigator = navigator
         defaultToolController.setOnColorPickedListener(PresenterColorPickedListener(presenterMain))
@@ -487,6 +491,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     private fun onCreateLayerMenu() {
         val layerLayout = findViewById<NavigationView>(R.id.pocketpaint_nav_view_layer)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout)
         val layerListView = findViewById<DragAndDropListView>(R.id.pocketpaint_layer_side_nav_list)
         val layerMenuViewHolder = LayerMenuViewHolder(layerLayout)
         val layerNavigator = LayerNavigator(applicationContext)
@@ -497,7 +502,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
         layerListView.layoutManager = layoutManager
         layerListView.manager = layoutManager
-        val layerAdapter = LayerAdapter(layerPresenter, this, layerListView.listener)
+        val layerAdapter = LayerAdapter(layerPresenter, this)
         layerListView.setLayerAdapter(layerAdapter)
         presenterMain.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
@@ -505,6 +510,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         layerListView.adapter = layerAdapter
         layerPresenter.refreshLayerMenuViewHolder()
         setLayerMenuListeners(layerMenuViewHolder)
+        val drawerLayoutListener = DrawerLayoutListener(this, layerPresenter)
+        drawerLayout.addDrawerListener(drawerLayoutListener)
     }
 
     private fun onCreateDrawingSurface() {
@@ -515,7 +522,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             toolReference,
             idlingResource,
             supportFragmentManager,
-            toolOptionsViewController
+            toolOptionsViewController,
+            drawerLayoutViewHolder
         )
         layerPresenter.setDrawingSurface(drawingSurface)
         appFragment.perspective = perspective
@@ -592,7 +600,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     override fun commandPostExecute() {
         if (!finishing) {
-            layerPresenter.invalidate()
+            if (commandManager.lastExecutedCommand !is LayerOpacityCommand) {
+                layerPresenter.invalidate()
+            }
             presenterMain.onCommandPostExecute()
         }
     }

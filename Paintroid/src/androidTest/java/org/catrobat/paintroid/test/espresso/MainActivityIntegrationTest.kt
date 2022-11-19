@@ -37,6 +37,7 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.Interactor
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
@@ -103,6 +104,9 @@ class MainActivityIntegrationTest {
     private val context: Context? = null
 
     @Mock
+    private val commandSerializer: CommandSerializer? = null
+
+    @Mock
     private val internalMemoryPath: File? = null
     private var presenter: MainActivityPresenter? = null
 
@@ -132,7 +136,8 @@ class MainActivityIntegrationTest {
                     commandFactory!!,
                     commandManager!!,
                     perspective!!,
-                    toolController!!, sharedPreferences!!, idlingResource, it1, it
+                    toolController!!, sharedPreferences!!, idlingResource, it1, it,
+                    commandSerializer!!
                 )
             }
         }

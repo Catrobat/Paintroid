@@ -54,13 +54,17 @@ public class FillCommandTest {
 	private static final float NO_TOLERANCE = 0.0f;
 	private static final float HALF_TOLERANCE = MAX_ABSOLUTE_TOLERANCE / 2.0f;
 	private static final float MAX_TOLERANCE = MAX_ABSOLUTE_TOLERANCE;
+	private static final int INITIAL_HEIGHT = 80;
+	private static final int INITIAL_WIDTH = 80;
 
 	private LayerContracts.Model layerModel;
+	private Bitmap bitmapUnderTest;
 
 	@Before
 	public void setUp() {
+		bitmapUnderTest = Bitmap.createBitmap(INITIAL_WIDTH, INITIAL_HEIGHT, Bitmap.Config.ARGB_8888);
 		layerModel = new LayerModel();
-		Layer layer = new Layer(null);
+		Layer layer = new Layer(bitmapUnderTest);
 		layerModel.addLayerAt(0, layer);
 		layerModel.setCurrentLayer(layer);
 	}

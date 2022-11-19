@@ -27,11 +27,13 @@ import android.view.View;
 import android.widget.ImageView;
 
 import org.catrobat.paintroid.R;
+import org.catrobat.paintroid.test.utils.RecyclerViewMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import static org.catrobat.paintroid.test.espresso.util.UiInteractions.assertRecyclerViewCount;
+import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
 import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
 
 import androidx.annotation.ColorInt;
@@ -89,14 +91,21 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
-	public androidx.test.espresso.ViewInteraction onLayerAt(int listPosition) {
-		return onView(withId(org.catrobat.paintroid.R.id.pocketpaint_layer_side_nav_list)).perform(androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition(listPosition, click()));
+	public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
+		return new RecyclerViewMatcher(recyclerViewId);
 	}
 
 	public LayerMenuViewInteraction performOpen() {
 		onBottomNavigationView()
 				.onLayersClicked();
 		check(matches(isDisplayed()));
+		return this;
+	}
+
+	public LayerMenuViewInteraction performSetOpacityTo(int opacityPercentage, int listPosition) {
+		onView(withRecyclerView(R.id.pocketpaint_layer_side_nav_list)
+				.atPositionOnView(listPosition, R.id.pocketpaint_layer_opacity_seekbar))
+				.perform(setProgress(opacityPercentage));
 		return this;
 	}
 
@@ -109,14 +118,14 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 
 	public LayerMenuViewInteraction performSelectLayer(int listPosition) {
 		check(matches(isDisplayed()));
-		onLayerAt(listPosition)
+		onView(withRecyclerView(R.id.pocketpaint_layer_side_nav_list)
+				.atPositionOnView(listPosition, R.id.pocketpaint_layer_preview_container))
 				.perform(click());
 		return this;
 	}
 
 	public LayerMenuViewInteraction performStartDragging(int listPosition) {
 		check(matches(isDisplayed()));
-		onLayerAt(listPosition);
 		onView(withIndex(withId(org.catrobat.paintroid.R.id.pocketpaint_layer_drag_handle), listPosition)).perform(click());
 		return this;
 	}
@@ -141,20 +150,39 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
-	public LayerMenuViewInteraction checkLayerAtPositionHasTopLeftPixelWithColor(int listPosition, @ColorInt final int expectedColor) {
-		onView(withIndex(withId(org.catrobat.paintroid.R.id.pocketpaint_item_layer_image), listPosition)).check(matches(new org.hamcrest.TypeSafeMatcher<android.view.View>() {
+	public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
+		return new TypeSafeMatcher<>() {
+			int currentIndex = 0;
+
 			@Override
 			public void describeTo(Description description) {
-				description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
+				description.appendText("with index: ");
+				description.appendValue(index);
+				matcher.describeTo(description);
 			}
 
 			@Override
-			protected boolean matchesSafely(View view) {
-				Bitmap bitmap = getBitmap(((ImageView) view).getDrawable());
-				int actualColor = bitmap.getPixel(0, 0);
-				return actualColor == expectedColor;
+			public boolean matchesSafely(View view) {
+				return matcher.matches(view) && currentIndex++ == index;
 			}
-		}));
+		};
+	}
+
+	public LayerMenuViewInteraction checkLayerAtPositionHasTopLeftPixelWithColor(int listPosition, @ColorInt final int expectedColor) {
+		onView(withIndex(withId(org.catrobat.paintroid.R.id.pocketpaint_item_layer_image), listPosition))
+				.check(matches(new org.hamcrest.TypeSafeMatcher<View>() {
+					@Override
+					public void describeTo(Description description) {
+						description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
+					}
+
+					@Override
+					protected boolean matchesSafely(View view) {
+						Bitmap bitmap = getBitmap(((ImageView) view).getDrawable());
+						int actualColor = bitmap.getPixel(0, 0);
+						return actualColor == expectedColor;
+					}
+				}));
 		return this;
 	}
 
