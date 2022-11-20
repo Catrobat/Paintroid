@@ -27,7 +27,8 @@
         tools:ignore="ProtectedPermissions" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
 
     <!-- Allows changing locales -->
@@ -35,6 +36,7 @@
         android:name="android.permission.CHANGE_CONFIGURATION"
         tools:ignore="ProtectedPermissions" />
 
-    <application android:name="androidx.multidex.MultiDexApplication"
+    <application
+        android:name="androidx.multidex.MultiDexApplication"
         android:exported="false" />
 </manifest>

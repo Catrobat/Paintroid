@@ -6,7 +6,7 @@
         <activity
             android:name=".ColorPickerPreviewActivity"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar.Bridge"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>
