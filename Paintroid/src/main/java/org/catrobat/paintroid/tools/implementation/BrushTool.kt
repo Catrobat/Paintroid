@@ -145,7 +145,6 @@ open class BrushTool(
 
     fun handleMoveEvent(canvasTouchPoint: PointF, event: MotionEvent): Boolean {
         val canvasPoint = PointF(canvasTouchPoint.x, canvasTouchPoint.y)
-
         val shiftBy = getNextStrokeWidth(event)
         currentPath.addNewPoint(canvasPoint, shiftBy)
         return true
@@ -156,7 +155,6 @@ open class BrushTool(
             if (coordinate == null) return false
 
             currentPath.addEndPoint(coordinate)
-
             val path = currentPath.getClosedPathFromPoints()
 
             bitmapPaint.style = Paint.Style.FILL
