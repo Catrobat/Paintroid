@@ -4,54 +4,48 @@ import android.graphics.PointF
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import kotlin.math.sqrt
 
+data class Cubic(val p1: PointF, val p2: PointF, val p3: PointF)
+
 class PathContainer {
+    private var cubicsRight = mutableListOf<Cubic>()
+    private var cubicsLeft  = mutableListOf<Cubic>()
 
-
-    private var allBezierPointsRight = mutableListOf<PointF>()
-    private var allBezierPointsLeft = mutableListOf<PointF>()
-
-    private var neededBezierPoints = 4
-    private var neededPointsLeft = 3
+    private val neededBezierPoints = 3
     private var bezierPoints = mutableListOf<PointF>()
     private var bezierPointsWidths = mutableListOf<Float>()
 
+    private var lastEndPoint = PointF(0f,0f)
+
+    private var lastPath: SerializablePath = SerializablePath()
     fun getClosedPathFromPoints(): SerializablePath {
         val path = SerializablePath()
 
-        if (allBezierPointsLeft.size < neededBezierPoints) return path
+        if (cubicsLeft.size < neededBezierPoints) return path
 
-        path.incReserve(allBezierPointsLeft.size * 2)
+        path.incReserve(cubicsLeft.size * 6)
 
-        path.moveTo(allBezierPointsRight[0].x, allBezierPointsRight[0].y)
-        var i = 0
-        while (i < allBezierPointsRight.count() - neededPointsLeft) {
-            val startingPointIndex: Int = i + 1
-            val middlePointIndex: Int = i + 2
-            val endPointIndex: Int = i + 3
-            path.cubicTo(allBezierPointsRight[startingPointIndex].x, allBezierPointsRight[startingPointIndex].y,
-                         allBezierPointsRight[middlePointIndex].x, allBezierPointsRight[middlePointIndex].y,
-                         allBezierPointsRight[endPointIndex].x, allBezierPointsRight[endPointIndex].y)
-            i += 3
+        path.moveTo(cubicsLeft[0].p1.x, cubicsLeft[0].p1.y)
+        try {
+            cubicsRight.forEach { cubic ->
+                path.cubicTo(cubic.p1.x, cubic.p1.y, cubic.p2.x, cubic.p2.y, cubic.p3.x, cubic.p3.y)
+            }
+            path.lineTo(cubicsLeft.last().p3.x, cubicsLeft.last().p3.y)
+            val reversed = cubicsLeft.reversed()
+            reversed.forEach { cubic ->
+                path.cubicTo(cubic.p3.x, cubic.p3.y, cubic.p2.x, cubic.p2.y, cubic.p1.x, cubic.p1.y)
+            }
+        } catch(e: Exception) {
+            return lastPath
         }
 
-        i = allBezierPointsLeft.size - 1
-
-        while (i > 3) {
-            val startingPointIndex: Int = i - 1
-            val middlePointIndex: Int = i - 2
-            val endPointIndex: Int = i - 3
-            path.cubicTo(allBezierPointsLeft[startingPointIndex].x, allBezierPointsLeft[startingPointIndex].y,
-                         allBezierPointsLeft[middlePointIndex].x, allBezierPointsLeft[middlePointIndex].y,
-                         allBezierPointsLeft[endPointIndex].x, allBezierPointsLeft[endPointIndex].y)
-            i -= 3
-        }
         path.close()
-
+        lastPath = path
         return path
     }
 
     fun addStartPoint(coordinate: PointF) {
         addNewPoint(coordinate, 0f)
+        lastEndPoint = coordinate
     }
 
     fun addNewPoint(canvasPoint: PointF, shiftBy: Float) {
@@ -61,24 +55,21 @@ class PathContainer {
             return
         }
 
-        val dir = getDirectionalVector(bezierPoints.first(), bezierPoints.last())
-        val orthogonal = getNormalizedOrthogonalVector(dir)
+        val currentPointsRight = mutableListOf<PointF>()
+        val currentPointsLeft = mutableListOf<PointF>()
 
+        val orthogonal = getNormalizedOrthogonalVector(getDirectionalVector(lastEndPoint, bezierPoints.last()))
         for (i in bezierPoints.indices) {
-            if (i == 0) continue
-            val shifted1 = getPointShiftedByDistanceRight(bezierPoints[i], orthogonal, bezierPointsWidths[i])
-            allBezierPointsRight.add(shifted1)
-
-            val shifted2 = getPointShiftedByDistanceLeft(bezierPoints[i], orthogonal, bezierPointsWidths[i])
-            allBezierPointsLeft.add(shifted2)
+            currentPointsRight.add(getPointShiftedByDistanceRight(bezierPoints[i], orthogonal, bezierPointsWidths[i]))
+            currentPointsLeft.add(getPointShiftedByDistanceLeft(bezierPoints[i], orthogonal, bezierPointsWidths[i]))
         }
 
-        val bezierPointsTemp = bezierPoints.last()
-        val bezierWidthTemp = bezierPointsWidths.last()
+        cubicsRight.add(Cubic(currentPointsRight[0], currentPointsRight[1], currentPointsRight[2]))
+        cubicsLeft.add(Cubic(currentPointsLeft[0], currentPointsLeft[1], currentPointsLeft[2]))
+
+        lastEndPoint = bezierPoints.last()
         bezierPoints.clear()
         bezierPointsWidths.clear()
-        bezierPoints.add(bezierPointsTemp)
-        bezierPointsWidths.add(bezierWidthTemp)
     }
 
     fun addEndPoint(coordinate: PointF) {
