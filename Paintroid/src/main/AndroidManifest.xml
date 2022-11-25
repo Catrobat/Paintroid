@@ -48,6 +48,7 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/PocketPaintSplashTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
