@@ -37,6 +37,7 @@ import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.smoothing
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.useEventSize
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.threshold
+import org.catrobat.paintroid.tools.helper.PathContainer
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import kotlin.math.abs
@@ -69,17 +70,12 @@ open class BrushTool(
     private var pathInsideBitmap = false
     private val drawToolMovedDistance = PointF(0f, 0f)
 
-    private val neededBezierPoints = 4
-    private val neededPointsLeft = 3
-    private val eventValueMultiplier: Float = 0.8F
+    private var eventValueMultiplier: Float = 0.8F
     private var initWidth = 0f
-    private var bezierPoints = mutableListOf<PointF>()
-    private var bezierPointsWidths = mutableListOf<Float>()
-
-    private var allBezierPointsRight = mutableListOf<PointF>()
-    private var allBezierPointsLeft = mutableListOf<PointF>()
 
     val pointArray = mutableListOf<PointF>()
+
+    private var currentPath: PathContainer = PathContainer()
 
     init {
         toolOptionsViewController.enable()
@@ -101,7 +97,7 @@ open class BrushTool(
             if (useEventDependentStrokeWidth) {
                 previewPaint.style = Paint.Style.FILL
                 bitmapPaint.style = Paint.Style.FILL
-                drawPath(getClosedPathFromPoints(), previewPaint)
+                drawPath(currentPath.getClosedPathFromPoints(), previewPaint)
             } else {
                 drawPath(pathToDraw, previewPaint)
             }
@@ -113,8 +109,8 @@ open class BrushTool(
         coordinate ?: return false
 
         if (useEventDependentStrokeWidth) {
-            bezierPoints.add(coordinate)
-            bezierPointsWidths.add(0f)
+            currentPath = PathContainer()
+            currentPath.addStartPoint(coordinate)
         } else {
             initialEventCoordinate = PointF(coordinate.x, coordinate.y)
             previousEventCoordinate = PointF(coordinate.x, coordinate.y)
@@ -148,52 +144,20 @@ open class BrushTool(
     }
 
     fun handleMoveEvent(canvasTouchPoint: PointF, event: MotionEvent): Boolean {
-        val end = PointF(canvasTouchPoint.x, canvasTouchPoint.y)
-
-        if (bezierPoints.isEmpty()) return true
+        val canvasPoint = PointF(canvasTouchPoint.x, canvasTouchPoint.y)
 
         val shiftBy = getNextStrokeWidth(event)
-
-        if (bezierPoints.size < neededBezierPoints) {
-            bezierPoints.add(end)
-            bezierPointsWidths.add(shiftBy)
-            return true
-        }
-
-        val dir = getDirectionalVector(bezierPoints.first(), bezierPoints.last())
-        val orthogonal = getNormalizedOrthogonalVector(dir)
-
-        for (i in bezierPoints.indices) {
-            if (i == 0) continue
-            val shifted1 = getPointShiftedByDistanceRight(bezierPoints[i], orthogonal, bezierPointsWidths[i])
-            allBezierPointsRight.add(shifted1)
-
-            val shifted2 = getPointShiftedByDistanceLeft(bezierPoints[i], orthogonal, bezierPointsWidths[i])
-            allBezierPointsLeft.add(shifted2)
-        }
-
-        val bezierPointsTemp = bezierPoints.last()
-        val bezierWidthTemp = bezierPointsWidths.last()
-        bezierPoints.clear()
-        bezierPointsWidths.clear()
-        bezierPoints.add(bezierPointsTemp)
-        bezierPointsWidths.add(bezierWidthTemp)
-
+        currentPath.addNewPoint(canvasPoint, shiftBy)
         return true
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
         if (useEventDependentStrokeWidth) {
             if (coordinate == null) return false
-            if (allBezierPointsLeft.size < neededBezierPoints) return false
 
-            bezierPoints.clear()
-            bezierPointsWidths.clear()
+            currentPath.addEndPoint(coordinate)
 
-            val path = getClosedPathFromPoints()
-
-            allBezierPointsRight.clear()
-            allBezierPointsLeft.clear()
+            val path = currentPath.getClosedPathFromPoints()
 
             bitmapPaint.style = Paint.Style.FILL
             val command = commandFactory.createPathCommand(bitmapPaint, path)
@@ -280,53 +244,6 @@ open class BrushTool(
         val command = commandFactory.createPointCommand(bitmapPaint, coordinate)
         commandManager.addCommand(command)
         return true
-    }
-
-    private fun getDirectionalVector(vecA: PointF, vecB: PointF): PointF = PointF(vecA.x - vecB.x, vecA.y - vecB.y)
-
-    private fun getNormalizedOrthogonalVector(vector: PointF): PointF {
-        val orth = PointF(vector.y, -vector.x)
-        val length = sqrt(orth.x * orth.x + orth.y * orth.y)
-        return PointF(orth.x / length, orth.y / length)
-    }
-
-    private fun getPointShiftedByDistanceRight(point: PointF, orth: PointF, shiftBy: Float): PointF = PointF(point.x + shiftBy * orth.x, point.y + shiftBy * orth.y)
-
-    private fun getPointShiftedByDistanceLeft(point: PointF, orth: PointF, shiftBy: Float): PointF = PointF(point.x - shiftBy * orth.x, point.y - shiftBy * orth.y)
-
-    private fun getClosedPathFromPoints(): SerializablePath {
-        val path = SerializablePath()
-
-        if (allBezierPointsLeft.size < neededBezierPoints) return path
-
-        path.incReserve(allBezierPointsLeft.size * 2)
-
-        path.moveTo(allBezierPointsRight[0].x, allBezierPointsRight[0].y)
-        var i = 0
-        while (i < allBezierPointsRight.count() - neededPointsLeft) {
-            val startingPointIndex: Int = i + 1
-            val middlePointIndex: Int = i + 2
-            val endPointIndex: Int = i + 3
-            path.cubicTo(allBezierPointsRight[startingPointIndex].x, allBezierPointsRight[startingPointIndex].y,
-                         allBezierPointsRight[middlePointIndex].x, allBezierPointsRight[middlePointIndex].y,
-                         allBezierPointsRight[endPointIndex].x, allBezierPointsRight[endPointIndex].y)
-            i += 3
-        }
-
-        i = allBezierPointsLeft.size - 1
-
-        while (i > 3) {
-            val startingPointIndex: Int = i + 1
-            val middlePointIndex: Int = i + 2
-            val endPointIndex: Int = i + 3
-            path.cubicTo(allBezierPointsLeft[startingPointIndex].x, allBezierPointsLeft[startingPointIndex].y,
-                         allBezierPointsLeft[middlePointIndex].x, allBezierPointsLeft[middlePointIndex].y,
-                         allBezierPointsLeft[endPointIndex].x, allBezierPointsLeft[endPointIndex].y)
-            i -= 3
-        }
-        path.close()
-
-        return path
     }
 
     private fun getNextStrokeWidth(event: MotionEvent): Float {
