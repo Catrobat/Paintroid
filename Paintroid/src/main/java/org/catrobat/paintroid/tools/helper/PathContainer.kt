@@ -37,9 +37,9 @@ class PathContainer {
         i = allBezierPointsLeft.size - 1
 
         while (i > 3) {
-            val startingPointIndex: Int = i + 1
-            val middlePointIndex: Int = i + 2
-            val endPointIndex: Int = i + 3
+            val startingPointIndex: Int = i - 1
+            val middlePointIndex: Int = i - 2
+            val endPointIndex: Int = i - 3
             path.cubicTo(allBezierPointsLeft[startingPointIndex].x, allBezierPointsLeft[startingPointIndex].y,
                          allBezierPointsLeft[middlePointIndex].x, allBezierPointsLeft[middlePointIndex].y,
                          allBezierPointsLeft[endPointIndex].x, allBezierPointsLeft[endPointIndex].y)
