@@ -27,6 +27,7 @@ import android.util.DisplayMetrics
 import android.view.Menu
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
 import org.catrobat.paintroid.dialog.PermissionInfoDialog.PermissionType
@@ -35,7 +36,6 @@ import org.catrobat.paintroid.iotasks.LoadImage.LoadImageCallback
 import org.catrobat.paintroid.iotasks.SaveImage.SaveImageCallback
 import org.catrobat.paintroid.iotasks.WorkspaceReturnValue
 import org.catrobat.paintroid.tools.ToolType
-import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.ui.LayerAdapter
 import java.io.File
 
@@ -297,7 +297,7 @@ interface MainActivityContracts {
 
         fun saveNewTemporaryImage()
 
-        fun openTemporaryFile(workspace: Workspace): WorkspaceReturnValue?
+        fun openTemporaryFile(): WorkspaceReturnValue?
 
         fun checkForTemporaryFile(): Boolean
 
@@ -322,7 +322,8 @@ interface MainActivityContracts {
         fun saveCopy(
             callback: SaveImageCallback,
             requestCode: Int,
-            workspace: Workspace,
+            layerModel: LayerContracts.Model,
+            commandSerializer: CommandSerializer,
             uri: Uri?,
             context: Context
         )
@@ -332,7 +333,8 @@ interface MainActivityContracts {
         fun saveImage(
             callback: SaveImageCallback,
             requestCode: Int,
-            workspace: Workspace,
+            layerModel: LayerContracts.Model,
+            commandSerializer: CommandSerializer,
             uri: Uri?,
             context: Context
         )
@@ -343,7 +345,7 @@ interface MainActivityContracts {
             uri: Uri?,
             context: Context,
             scaling: Boolean,
-            workspace: Workspace
+            commandSerializer: CommandSerializer,
         )
     }
 
@@ -373,6 +375,8 @@ interface MainActivityContracts {
         fun closeDrawer(gravity: Int, animate: Boolean)
 
         fun isDrawerOpen(gravity: Int): Boolean
+
+        fun isDrawerVisible(gravity: Int): Boolean
 
         fun openDrawer(gravity: Int)
     }

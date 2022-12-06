@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2015 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,27 +18,18 @@
  */
 package org.catrobat.paintroid.command.implementation
 
-import android.graphics.Bitmap
 import android.graphics.Canvas
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 
-class ResizeCommand(newWidth: Int, newHeight: Int) : Command {
-
-    var newWidth = newWidth; private set
-    var newHeight = newHeight; private set
+class LayerOpacityCommand(
+    val position: Int,
+    val opacityPercentage: Int
+) : Command {
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
-        val iterator = layerModel.listIterator(0)
-        while (iterator.hasNext()) {
-            val currentLayer = iterator.next()
-            currentLayer.bitmap?.let { currentBitmap ->
-                val resizedBitmap = Bitmap.createScaledBitmap(currentBitmap, newWidth, newHeight, true)
-                currentLayer.bitmap = resizedBitmap
-            }
-        }
-        layerModel.height = newHeight
-        layerModel.width = newWidth
+        val layer = layerModel.getLayerAt(position)
+        layer?.opacityPercentage = opacityPercentage
     }
 
     override fun freeResources() {

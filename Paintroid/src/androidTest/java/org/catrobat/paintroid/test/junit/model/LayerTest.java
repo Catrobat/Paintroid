@@ -136,33 +136,6 @@ public class LayerTest {
 	}
 
 	@Test
-	public void testHideThenUnhideLayer() {
-		LayerContracts.Layer layerToHide = layerModel.getLayerAt(0);
-
-		layerToHide.getBitmap().setPixel(1, 1, Color.BLACK);
-		layerToHide.getBitmap().setPixel(2, 1, Color.BLACK);
-		layerToHide.getBitmap().setPixel(3, 1, Color.BLACK);
-		layerToHide.getBitmap().setPixel(4, 1, Color.BLACK);
-
-		Bitmap bitmapCopy = layerToHide.getTransparentBitmap();
-
-		layerToHide.switchBitmaps(false);
-		layerToHide.setBitmap(bitmapCopy);
-
-		assertThat(layerToHide.getBitmap().getPixel(1, 1), is(Color.TRANSPARENT));
-		assertThat(layerToHide.getBitmap().getPixel(2, 1), is(Color.TRANSPARENT));
-		assertThat(layerToHide.getBitmap().getPixel(3, 1), is(Color.TRANSPARENT));
-		assertThat(layerToHide.getBitmap().getPixel(4, 1), is(Color.TRANSPARENT));
-
-		layerToHide.switchBitmaps(true);
-
-		assertThat(layerToHide.getBitmap().getPixel(1, 1), is(Color.BLACK));
-		assertThat(layerToHide.getBitmap().getPixel(2, 1), is(Color.BLACK));
-		assertThat(layerToHide.getBitmap().getPixel(3, 1), is(Color.BLACK));
-		assertThat(layerToHide.getBitmap().getPixel(4, 1), is(Color.BLACK));
-	}
-
-	@Test
 	public void testGetLayerAt() {
 		for (int i = 0; i < layerModel.getLayerCount(); i++) {
 			assertNotNull(layerModel.getLayerAt(i));
