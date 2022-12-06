@@ -37,6 +37,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
+import android.view.Gravity
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
@@ -47,14 +48,15 @@ import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.common.COLOR_PICKER_DIALOG_TAG
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.listener.DrawingSurfaceListener
-import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTaskCallback
+import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceListenerCallback
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
+import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder
 
 open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private val canvasRect = Rect()
@@ -70,6 +72,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var perspective: Perspective
     private lateinit var toolReference: ToolReference
     private lateinit var toolOptionsViewController: ToolOptionsViewController
+    private lateinit var drawerLayoutViewHolder: DrawerLayoutViewHolder
     private lateinit var fragmentManager: FragmentManager
     private lateinit var idlingResource: CountingIdlingResource
     private lateinit var zoomController: ZoomWindowController
@@ -128,6 +131,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         idlingResource: CountingIdlingResource,
         fragmentManager: FragmentManager,
         toolOptionsViewController: ToolOptionsViewController,
+        drawerLayoutViewHolder: DrawerLayoutViewHolder,
         zoomController: ZoomWindowController
     ) {
         this.layerModel = layerModel
@@ -136,6 +140,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         this.toolOptionsViewController = toolOptionsViewController
         this.idlingResource = idlingResource
         this.fragmentManager = fragmentManager
+        this.drawerLayoutViewHolder = drawerLayoutViewHolder
         this.zoomController = zoomController
         drawingSurfaceListener.setZoomController(zoomWindowController = zoomController)
     }
@@ -159,11 +164,12 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 surfaceViewCanvas.drawRect(canvasRect, checkeredPattern)
                 surfaceViewCanvas.drawRect(canvasRect, framePaint)
 
-                val iterator = layerModel.listIterator(layerModel.layerCount)
-
-                while (iterator.hasPrevious()) {
-                    iterator.previous().bitmap?.let {
-                        surfaceViewCanvas.drawBitmap(it, 0f, 0f, null)
+                layerModel.layers.asReversed().forEach { layer ->
+                    if (layer.isVisible) {
+                        val alphaPaint = Paint().apply {
+                            alpha = layer.getValueForOpacityPercentage()
+                        }
+                        surfaceViewCanvas.drawBitmap(layer.bitmap, 0f, 0f, alphaPaint)
                     }
                 }
 
@@ -263,20 +269,12 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-    @Synchronized
-    fun setBitmap(bitmap: Bitmap?) {
-        layerModel.currentLayer?.bitmap = bitmap
-    }
-
     fun isPointOnCanvas(pointX: Int, pointY: Int): Boolean =
         pointX > 0 && pointX < layerModel.width && pointY > 0 && pointY < layerModel.height
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         surfaceReady = true
-        val currentToolType = toolReference.tool?.toolType
-        var isColorPickerDialogAdded = false
-        fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG)?.let { fragment -> isColorPickerDialogAdded = (fragment as ColorPickerDialog).isAdded }
-        if (currentToolType != ToolType.IMPORTPNG && currentToolType != ToolType.TRANSFORM && currentToolType != ToolType.TEXT && !isColorPickerDialogAdded) {
+        if (shouldResetScaleAndTranslation()) {
             perspective.resetScaleAndTranslation()
         }
         perspective.setSurfaceFrame(holder.surfaceFrame)
@@ -293,6 +291,13 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         surfaceReady = false
         drawingThread?.stop()
+    }
+
+    private fun shouldResetScaleAndTranslation(): Boolean {
+        val currentToolType = toolReference.tool?.toolType
+        var isColorPickerDialogAdded = false
+        fragmentManager.findFragmentByTag(COLOR_PICKER_DIALOG_TAG)?.let { fragment -> isColorPickerDialogAdded = (fragment as ColorPickerDialog).isAdded }
+        return currentToolType != ToolType.IMPORTPNG && currentToolType != ToolType.TRANSFORM && currentToolType != ToolType.TEXT && !isColorPickerDialogAdded && !drawerLayoutViewHolder.isDrawerVisible(Gravity.END)
     }
 
     private open inner class AutoScrollTaskCallbackImpl : AutoScrollTaskCallback {

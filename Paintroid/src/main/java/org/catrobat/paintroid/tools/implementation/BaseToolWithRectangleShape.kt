@@ -382,7 +382,14 @@ abstract class BaseToolWithRectangleShape(
         drawingBitmap?.let {
             tempDrawingRectangle.set(-boxWidth / 2, -boxHeight / 2, boxWidth / 2, boxHeight / 2)
             canvas.clipRect(tempDrawingRectangle)
-            canvas.drawBitmap(it, null, tempDrawingRectangle, null)
+
+            val alphaPaint = Paint().apply {
+                workspace.layerModel.currentLayer?.let { layer ->
+                    alpha = layer.getValueForOpacityPercentage()
+                }
+            }
+
+            canvas.drawBitmap(it, null, tempDrawingRectangle, alphaPaint)
         }
     }
 

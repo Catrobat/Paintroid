@@ -91,50 +91,6 @@ public class LayerPresenterTest {
 	}
 
 	@Test
-	public void testOnBindLayerViewHolderAtSelectedPosition() {
-		LayerViewHolder layerViewHolder = mock(LayerViewHolder.class);
-		Layer firstLayer = mock(Layer.class);
-
-		Bitmap firstLayerBitmap = mock(Bitmap.class);
-		when(firstLayer.getTransparentBitmap()).thenReturn(firstLayerBitmap);
-
-		layerModel.addLayerAt(0, firstLayer);
-		layerModel.setCurrentLayer(firstLayer);
-
-		createPresenter();
-		layerPresenter.onBindLayerViewHolderAtPosition(0, layerViewHolder, false);
-
-		verify(layerViewHolder).setSelected(0, null, null);
-		verify(layerViewHolder).updateImageView(firstLayerBitmap);
-		verify(layerViewHolder).setLayerVisibilityCheckbox(false);
-		verifyNoMoreInteractions(layerViewHolder);
-		verifyZeroInteractions(commandManager, commandFactory, layerAdapter,
-				listItemDragHandler, layerMenuViewHolder);
-	}
-
-	@Test
-	public void testOnBindLayerViewHolderAtDeselectedPosition() {
-		LayerViewHolder layerViewHolder = mock(LayerViewHolder.class);
-		Layer firstLayer = mock(Layer.class);
-		Layer secondLayer = mock(Layer.class);
-		Bitmap secondLayerBitmap = mock(Bitmap.class);
-		when(secondLayer.getTransparentBitmap()).thenReturn(secondLayerBitmap);
-		layerModel.addLayerAt(0, firstLayer);
-		layerModel.addLayerAt(1, secondLayer);
-		layerModel.setCurrentLayer(firstLayer);
-
-		createPresenter();
-		layerPresenter.onBindLayerViewHolderAtPosition(1, layerViewHolder, false);
-
-		verify(layerViewHolder).setDeselected();
-		verify(layerViewHolder).updateImageView(secondLayer.getTransparentBitmap());
-		verify(layerViewHolder).setLayerVisibilityCheckbox(false);
-		verifyNoMoreInteractions(layerViewHolder);
-		verifyZeroInteractions(firstLayer, commandManager, layerAdapter,
-				listItemDragHandler, layerMenuViewHolder);
-	}
-
-	@Test
 	public void testRefreshLayerMenuViewHolder() {
 		layerModel.addLayerAt(0, mock(Layer.class));
 		layerModel.addLayerAt(1, mock(Layer.class));
@@ -265,8 +221,8 @@ public class LayerPresenterTest {
 	@Test
 	public void testOnDragLayerAtPosition() {
 		View view = mock(View.class);
-		Layer firstLayer = new Layer(null);
-		Layer secondLayer = new Layer(null);
+		Layer firstLayer = new Layer(mock(Bitmap.class));
+		Layer secondLayer = new Layer(mock(Bitmap.class));
 		assertTrue(firstLayer.isVisible());
 		assertTrue(secondLayer.isVisible());
 		layerModel.addLayerAt(0, firstLayer);
@@ -303,7 +259,6 @@ public class LayerPresenterTest {
 
 	@Test
 	public void testOnClickLayerAtPositionWhenDeselected() {
-		View view = mock(View.class);
 		layerModel.addLayerAt(0, mock(Layer.class));
 		layerModel.addLayerAt(1, mock(Layer.class));
 		layerModel.setCurrentLayer(layerModel.getLayerAt(1));
@@ -311,27 +266,25 @@ public class LayerPresenterTest {
 		when(commandFactory.createSelectLayerCommand(0)).thenReturn(command);
 
 		createPresenter();
-		layerPresenter.onClickLayerAtPosition(0, view);
+		layerPresenter.setLayerSelected(0);
 
 		verify(commandManager).addCommand(command);
 	}
 
 	@Test
 	public void testOnClickLayerAtPositionWhenAlreadySelected() {
-		View view = mock(View.class);
 		Layer layer = mock(Layer.class);
 		layerModel.addLayerAt(0, layer);
 		layerModel.setCurrentLayer(layer);
 
 		createPresenter();
-		layerPresenter.onClickLayerAtPosition(0, view);
+		layerPresenter.setLayerSelected(0);
 
 		verifyZeroInteractions(commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
 	}
 
 	@Test
 	public void testOnClickLayerAtPositionWhenPositionOutOfBounds() {
-		View view = mock(View.class);
 		Layer firstLayer = mock(Layer.class);
 		Layer secondLayer = mock(Layer.class);
 		layerModel.addLayerAt(0, firstLayer);
@@ -339,7 +292,7 @@ public class LayerPresenterTest {
 		layerModel.setCurrentLayer(firstLayer);
 
 		createPresenter();
-		layerPresenter.onClickLayerAtPosition(2, view);
+		layerPresenter.setLayerSelected(2);
 
 		verifyZeroInteractions(commandManager, commandFactory, layerMenuViewHolder, layerAdapter);
 	}

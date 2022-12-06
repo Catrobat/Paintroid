@@ -95,12 +95,12 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/pocketpaint_nav_view_layer"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center">
 
             <include layout="@layout/pocketpaint_layout_main_menu_layer"
-                android:layout_width="150dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content" />
         </com.google.android.material.navigation.NavigationView>
 

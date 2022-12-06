@@ -21,7 +21,7 @@ package org.catrobat.paintroid.tools
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.RectF
-import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
+import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.ui.Perspective
 
 interface Workspace {
@@ -30,12 +30,13 @@ interface Workspace {
     val surfaceWidth: Int
     val surfaceHeight: Int
     val bitmapOfAllLayers: Bitmap?
-    val bitmapLisOfAllLayers: List<Bitmap?>
+    val bitmapListOfAllLayers: List<Bitmap?>
     var bitmapOfCurrentLayer: Bitmap?
     val currentLayerIndex: Int
     val scaleForCenterBitmap: Float
     var scale: Float
     var perspective: Perspective
+    val layerModel: LayerContracts.Model
 
     fun contains(point: PointF): Boolean
 
@@ -48,6 +49,4 @@ interface Workspace {
     fun getCanvasPointFromSurfacePoint(surfacePoint: PointF): PointF
 
     fun invalidate()
-
-    fun getCommandSerializationHelper(): CommandSerializationUtilities
 }
