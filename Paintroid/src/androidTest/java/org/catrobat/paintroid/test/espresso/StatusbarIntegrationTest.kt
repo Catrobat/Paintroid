@@ -40,13 +40,16 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class StatusbarIntegrationTest {
     @get:Rule
-    var launchActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+    var launchActivityRule: ActivityTestRule<MainActivity> =
+        ActivityTestRule(MainActivity::class.java)
 
     @get:Rule
     var screenshotOnFailRule: ScreenshotOnFailRule = ScreenshotOnFailRule()
 
     @Before
-    fun setUp() { onToolBarView().performSelectTool(ToolType.BRUSH) }
+    fun setUp() {
+        onToolBarView().performSelectTool(ToolType.BRUSH)
+    }
 
     @Test
     fun statusBarButtonsShouldAllBeVisible() {

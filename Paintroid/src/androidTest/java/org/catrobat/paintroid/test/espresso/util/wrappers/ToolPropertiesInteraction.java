@@ -39,6 +39,7 @@ public final class ToolPropertiesInteraction extends CustomViewInteraction {
 	private ToolPropertiesInteraction() {
 		super(null);
 	}
+
 	public static ToolPropertiesInteraction onToolProperties() {
 		return new ToolPropertiesInteraction();
 	}

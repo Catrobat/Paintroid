@@ -42,7 +42,9 @@ class ToolSelectionIntegrationTest {
     var screenshotOnFailRule = ScreenshotOnFailRule()
 
     @Before
-    fun setUp() { onToolBarView().performSelectTool(ToolType.BRUSH) }
+    fun setUp() {
+        onToolBarView().performSelectTool(ToolType.BRUSH)
+    }
 
     @Test
     fun testToolSelectionToast() {
@@ -60,7 +62,9 @@ class ToolSelectionIntegrationTest {
                 toolType === ToolType.UNDO ||
                 toolType === ToolType.PIPETTE ||
                 toolType === ToolType.LAYER
-            if (tool) { continue }
+            if (tool) {
+                continue
+            }
             onToolBarView().performSelectTool(toolType)
             onBottomNavigationView().checkShowsCurrentTool(toolType)
         }

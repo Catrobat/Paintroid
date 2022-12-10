@@ -39,6 +39,7 @@ class FileFromOtherSourceIntegrationTest {
     var screenshotOnFailRule = ScreenshotOnFailRule()
     private var resolver: ContentResolver? = null
     private var activity: MainActivity? = null
+
     @Before
     fun setUp() {
         ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.BRUSH)
@@ -46,6 +47,7 @@ class FileFromOtherSourceIntegrationTest {
         activity = launchActivityRule.activity
         resolver = launchActivityRule.activity.contentResolver
     }
+
     @Test
     fun testGetSharedPictureFromOtherApp() {
         val intent = Intent()
@@ -146,6 +148,7 @@ class FileFromOtherSourceIntegrationTest {
         private var deletionFileList: ArrayList<File>? = null
 
         @get:ClassRule
-        var grantPermissionRule: GrantPermissionRule = EspressoUtils.grantPermissionRulesVersionCheck()
+        var grantPermissionRule: GrantPermissionRule =
+            EspressoUtils.grantPermissionRulesVersionCheck()
     }
 }

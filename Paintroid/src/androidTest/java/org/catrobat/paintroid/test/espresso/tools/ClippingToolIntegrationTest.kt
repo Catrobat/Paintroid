@@ -174,8 +174,10 @@ class ClippingToolIntegrationTest {
         val outOfAreaX = workspace.width - 10
         val outOfAreaY = workspace.height - 10
 
-        val colorInAreaCurrentLayer = workspace.bitmapOfCurrentLayer?.getPixel(inAreaX.toInt(), inAreaY.toInt())
-        val colorOutOfAreaCurrentLayer = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
+        val colorInAreaCurrentLayer =
+            workspace.bitmapOfCurrentLayer?.getPixel(inAreaX.toInt(), inAreaY.toInt())
+        val colorOutOfAreaCurrentLayer =
+            workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
 
         val colorInAreaSecondLayer = workspace.bitmapListOfAllLayers[1]?.getPixel(inAreaX.toInt(), inAreaY.toInt())
         val colorOutOfAreaSecondLayer = workspace.bitmapListOfAllLayers[1]?.getPixel(outOfAreaX, outOfAreaY)
@@ -207,7 +209,8 @@ class ClippingToolIntegrationTest {
             .performOpen()
             .performClose()
 
-        val bitmapColor = workspace.bitmapOfCurrentLayer?.getPixel(middleTop.x.toInt(), middleTop.y.toInt())
+        val bitmapColor =
+            workspace.bitmapOfCurrentLayer?.getPixel(middleTop.x.toInt(), middleTop.y.toInt())
         assertEquals(bitmapColor, Color.BLACK)
     }
 
@@ -257,7 +260,8 @@ class ClippingToolIntegrationTest {
         TopBarViewInteraction.onTopBarView()
             .performUndo()
 
-        val colorOutOfAreaAfterUndo = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
+        val colorOutOfAreaAfterUndo =
+            workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
         assertEquals(colorOutOfAreaAfterUndo, Color.BLACK)
     }
 
@@ -307,13 +311,15 @@ class ClippingToolIntegrationTest {
         TopBarViewInteraction.onTopBarView()
             .performUndo()
 
-        val colorOutOfAreaAfterUndo = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
+        val colorOutOfAreaAfterUndo =
+            workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
         assertEquals(colorOutOfAreaAfterUndo, Color.BLACK)
 
         TopBarViewInteraction.onTopBarView()
             .performRedo()
 
-        val colorOutOfAreaAfterRedo = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
+        val colorOutOfAreaAfterRedo =
+            workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
         assertEquals(colorOutOfAreaAfterRedo, Color.TRANSPARENT)
     }
 }

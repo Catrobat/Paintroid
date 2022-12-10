@@ -55,6 +55,24 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return new LayerMenuViewInteraction();
 	}
 
+	public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
+		return new TypeSafeMatcher<View>() {
+			int currentIndex = 0;
+
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("with index: ");
+				description.appendValue(index);
+				matcher.describeTo(description);
+			}
+
+			@Override
+			public boolean matchesSafely(View view) {
+				return matcher.matches(view) && currentIndex++ == index;
+			}
+		};
+	}
+
 	public ViewInteraction onButtonAdd() {
 		return onView(withId(R.id.pocketpaint_layer_side_nav_button_add));
 	}
@@ -130,24 +148,6 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		check(matches(isDisplayed()));
 		onView(withIndex(withId(R.id.pocketpaint_checkbox_layer), position)).perform(click());
 		return this;
-	}
-
-	public static Matcher<View> withIndex(final Matcher<View> matcher, final int index) {
-		return new TypeSafeMatcher<>() {
-			int currentIndex = 0;
-
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("with index: ");
-				description.appendValue(index);
-				matcher.describeTo(description);
-			}
-
-			@Override
-			public boolean matchesSafely(View view) {
-				return matcher.matches(view) && currentIndex++ == index;
-			}
-		};
 	}
 
 	public LayerMenuViewInteraction checkLayerAtPositionHasTopLeftPixelWithColor(int listPosition, @ColorInt final int expectedColor) {

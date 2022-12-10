@@ -96,8 +96,10 @@ class IndeterminateProgressDialogIntegrationTest {
     @Test
     fun testDialogIsRotateAble() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            activityTestRule.activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            activityTestRule.activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            activityTestRule.activity.requestedOrientation =
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            activityTestRule.activity.requestedOrientation =
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
     }
 }

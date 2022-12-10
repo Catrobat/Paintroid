@@ -39,6 +39,17 @@ public class MainActivityHelper {
 		this.activity = activity;
 	}
 
+	public static MainActivity getMainActivityFromView(View view) {
+		Context context = view.getContext();
+		while (context instanceof ContextWrapper) {
+			if (context instanceof MainActivity) {
+				return (MainActivity) context;
+			}
+			context = ((ContextWrapper) context).getBaseContext();
+		}
+		throw new RuntimeException("View context does not implement MainActivity");
+	}
+
 	public Point getDisplaySize() {
 		Point displaySize = new Point();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -74,16 +85,5 @@ public class MainActivityHelper {
 
 	public void setScreenOrientation(int orientation) {
 		activity.setRequestedOrientation(orientation);
-	}
-
-	public static MainActivity getMainActivityFromView(View view) {
-		Context context = view.getContext();
-		while (context instanceof ContextWrapper) {
-			if (context instanceof MainActivity) {
-				return (MainActivity) context;
-			}
-			context = ((ContextWrapper) context).getBaseContext();
-		}
-		throw new RuntimeException("View context does not implement MainActivity");
 	}
 }

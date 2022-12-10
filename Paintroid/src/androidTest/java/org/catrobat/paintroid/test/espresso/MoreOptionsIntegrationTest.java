@@ -73,15 +73,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class MoreOptionsIntegrationTest {
 
-	@Rule
-	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
-
 	@ClassRule
 	public static GrantPermissionRule grantPermissionRule = EspressoUtils.INSTANCE.grantPermissionRulesVersionCheck();
-
+	@Rule
+	public ActivityTestRule<MainActivity> activityTestRule = new ActivityTestRule<>(MainActivity.class);
+	@Rule
+	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
 	public String defaultPictureName = "moreOptionsImageTest";
 
 	@Before
@@ -165,6 +162,7 @@ public class MoreOptionsIntegrationTest {
 	public void testMoreOptionsItemMenuCopyClick() {
 		onView(withText(R.string.menu_save_copy)).perform(click());
 	}
+
 	@Test
 	public void testMoreOptionsFeedbackClick() {
 		Intent intent = new Intent();

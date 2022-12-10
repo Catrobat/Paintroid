@@ -206,7 +206,7 @@ public class BrushPickerIntegrationTest {
 	@Test
 	public void setAntiAliasingOffWhenAdvancedSettingsTurnOffAndOn() {
 		onTopBarView()
-			.performOpenMoreOptions();
+				.performOpenMoreOptions();
 
 		onView(withText(R.string.menu_advanced))
 				.check(matches(isDisplayed()));

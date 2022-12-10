@@ -94,7 +94,9 @@ class SaveCompressImageIntegrationTest {
     @After
     fun tearDown() {
         for (file in deletionFileList!!) {
-            if (file != null && file.exists()) { Assert.assertTrue(file.delete()) }
+            if (file != null && file.exists()) {
+                Assert.assertTrue(file.delete())
+            }
         }
     }
 
@@ -130,8 +132,14 @@ class SaveCompressImageIntegrationTest {
         }
         val testBitmap = getBitmapFromFile(testImageFile)
 
-        Assert.assertThat(compressedBitmap?.width, Matchers.`is`(Matchers.equalTo(testBitmap?.width)))
-        Assert.assertThat(compressedBitmap?.height, Matchers.`is`(Matchers.equalTo(testBitmap?.height)))
+        Assert.assertThat(
+            compressedBitmap?.width,
+            Matchers.`is`(Matchers.equalTo(testBitmap?.width))
+        )
+        Assert.assertThat(
+            compressedBitmap?.height,
+            Matchers.`is`(Matchers.equalTo(testBitmap?.height))
+        )
     }
 
     private fun createTestBitmap(): Bitmap {
@@ -151,7 +159,12 @@ class SaveCompressImageIntegrationTest {
         for (i in 0 until height) {
             for (j in 0 until width) {
                 val color: Int =
-                    Color.argb(b[byteIndex].toInt(), b[byteIndex].toInt(), b[byteIndex].toInt(), b[byteIndex].toInt())
+                    Color.argb(
+                        b[byteIndex].toInt(),
+                        b[byteIndex].toInt(),
+                        b[byteIndex].toInt(),
+                        b[byteIndex].toInt()
+                    )
                 paint.color = color
                 canvas.drawPoint(j.toFloat(), i.toFloat(), paint)
             }

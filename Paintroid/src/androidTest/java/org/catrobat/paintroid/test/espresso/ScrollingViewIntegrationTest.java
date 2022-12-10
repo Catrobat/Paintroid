@@ -87,7 +87,7 @@ public class ScrollingViewIntegrationTest {
 
 		int actionBarHeight;
 		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
-				new int[] {android.R.attr.actionBarSize}
+				new int[]{android.R.attr.actionBarSize}
 		);
 		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 
@@ -137,7 +137,7 @@ public class ScrollingViewIntegrationTest {
 
 		int actionBarHeight;
 		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
-				new int[] {android.R.attr.actionBarSize}
+				new int[]{android.R.attr.actionBarSize}
 		);
 		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 
@@ -188,7 +188,7 @@ public class ScrollingViewIntegrationTest {
 
 		int actionBarHeight;
 		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
-				new int[] {android.R.attr.actionBarSize}
+				new int[]{android.R.attr.actionBarSize}
 		);
 		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 
@@ -214,7 +214,7 @@ public class ScrollingViewIntegrationTest {
 
 		int actionBarHeight;
 		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
-				new int[] {android.R.attr.actionBarSize}
+				new int[]{android.R.attr.actionBarSize}
 		);
 		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 
@@ -238,7 +238,7 @@ public class ScrollingViewIntegrationTest {
 
 		int actionBarHeight;
 		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
-				new int[] {android.R.attr.actionBarSize}
+				new int[]{android.R.attr.actionBarSize}
 		);
 		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 
@@ -264,7 +264,7 @@ public class ScrollingViewIntegrationTest {
 
 		int actionBarHeight;
 		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
-				new int[] {android.R.attr.actionBarSize}
+				new int[]{android.R.attr.actionBarSize}
 		);
 		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 
@@ -289,7 +289,7 @@ public class ScrollingViewIntegrationTest {
 
 		int actionBarHeight;
 		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
-				new int[] {android.R.attr.actionBarSize}
+				new int[]{android.R.attr.actionBarSize}
 		);
 		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 
@@ -315,7 +315,7 @@ public class ScrollingViewIntegrationTest {
 
 		int actionBarHeight;
 		final TypedArray styledAttributes = mainActivity.getTheme().obtainStyledAttributes(
-				new int[] {android.R.attr.actionBarSize}
+				new int[]{android.R.attr.actionBarSize}
 		);
 		actionBarHeight = (int) styledAttributes.getDimension(0, 0);
 

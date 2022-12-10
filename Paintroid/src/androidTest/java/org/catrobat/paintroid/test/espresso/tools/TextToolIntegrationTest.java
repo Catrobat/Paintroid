@@ -783,12 +783,12 @@ public class TextToolIntegrationTest {
 		textTool.boxWidth = boxWidth;
 	}
 
-	private void setToolMemberBoxHeight(float boxHeight) {
-		textTool.boxHeight = boxHeight;
-	}
-
 	private float getToolMemberBoxHeight() {
 		return textTool.boxHeight;
+	}
+
+	private void setToolMemberBoxHeight(float boxHeight) {
+		textTool.boxHeight = boxHeight;
 	}
 
 	private PointF getToolMemberBoxPosition() {
