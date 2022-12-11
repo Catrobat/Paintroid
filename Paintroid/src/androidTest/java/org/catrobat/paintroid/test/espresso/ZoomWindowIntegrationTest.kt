@@ -75,9 +75,6 @@ class ZoomWindowIntegrationTest {
             onZoomWindow()
                 .checkAlignment(RelativeLayout.ALIGN_PARENT_RIGHT)
         } else {
-            // Layout params rules for ALIGN_PARENT_LEFT and ALIGN_PARENT_RIGHT from
-            // https://developer.android.com/reference/android/widget/RelativeLayout.LayoutParams#getRules()
-            // for API level less than M
             onZoomWindow()
                 .checkAlignmentBelowM(11)
         }

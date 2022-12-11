@@ -16,7 +16,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
 public final class ZoomWindowInteraction extends CustomViewInteraction {
 	private ZoomWindowInteraction() {
-		super(onView(withId(R.id.pocketpaint_zoom_window)));
+		super(onView(withId(R.id.pocketpaint_zoom_window_image)));
 	}
 
 	public static ZoomWindowInteraction onZoomWindow() {
@@ -29,7 +29,7 @@ public final class ZoomWindowInteraction extends CustomViewInteraction {
 			protected boolean matchesSafely(View view) {
 				MainActivity activity = getMainActivityFromView(view);
 				RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
-						activity.findViewById(R.id.pocketpaint_zoom_window).getLayoutParams();
+						activity.findViewById(R.id.pocketpaint_zoom_window_image).getLayoutParams();
 
 				int rulesFromLayout = layoutParams.getRule(verb);
 
@@ -50,7 +50,7 @@ public final class ZoomWindowInteraction extends CustomViewInteraction {
 			protected boolean matchesSafely(View view) {
 				MainActivity activity = getMainActivityFromView(view);
 				RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
-						activity.findViewById(R.id.pocketpaint_zoom_window).getLayoutParams();
+						activity.findViewById(R.id.pocketpaint_zoom_window_image).getLayoutParams();
 
 				int[] rulesFromLayout = layoutParams.getRules();
 

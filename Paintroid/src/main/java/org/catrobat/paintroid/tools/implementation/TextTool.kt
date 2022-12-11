@@ -116,9 +116,7 @@ class TextTool(
     override val toolType: ToolType
         get() = ToolType.TEXT
 
-    override fun toolPositionCoordinates(coordinate: PointF): PointF =
-        // The tool coordinate is same as the touch coordinate
-        coordinate
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     init {
         rotationEnabled = ROTATION_ENABLED

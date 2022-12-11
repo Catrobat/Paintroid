@@ -103,9 +103,7 @@ class SprayTool(
         return true
     }
 
-    override fun toolPositionCoordinates(coordinate: PointF): PointF =
-        // The tool coordinate is same as the touch coordinate
-        coordinate
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun handleMove(coordinate: PointF?): Boolean {
         currentCoordinate = coordinate

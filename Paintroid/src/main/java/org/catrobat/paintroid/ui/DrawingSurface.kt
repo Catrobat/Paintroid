@@ -57,6 +57,7 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder
+import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController
 
 open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private val canvasRect = Rect()
@@ -174,18 +175,11 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 }
 
                 val tool = toolReference.tool
-
-                // Will create the zoom window only if the tool is a compatible tool
-                when (checkCurrentTool(tool)) {
-                    0 -> {
-                        // NON-COMPATIBLE TOOLS
+                when (zoomController.checkIfToolCompatibleWithZoomWindow(tool)) {
+                    DefaultZoomWindowController.Constants.NOT_COMPATIBLE -> {
                         tool?.draw(surfaceViewCanvas)
                     }
-                    1 -> {
-                        // LINE TOOL OR CURSOR TOOL
-                        // Does not return the contents of the current layer
-                        // But only the new lines drawn
-
+                    DefaultZoomWindowController.Constants.COMPATIBLE_NEW -> {
                         val bitmapOfDrawingBoard = Bitmap.createBitmap(
                             layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
 
@@ -200,8 +194,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                             }
                         )
                     }
-                    2 -> {
-                        // OTHER COMPATIBLE TOOLS
+                    DefaultZoomWindowController.Constants.COMPATIBLE_ALL -> {
                         val bitmapOfDrawingBoard = layerModel.currentLayer?.bitmap
                         surfaceViewCanvas.setBitmap(bitmapOfDrawingBoard)
 
@@ -243,30 +236,6 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
 
     fun disableAutoScroll() {
         drawingSurfaceListener.disableAutoScroll()
-    }
-
-    private fun checkCurrentTool(tool: Tool?): Int {
-        if (
-            tool?.toolType?.name.equals(ToolType.HAND.name) ||
-            tool?.toolType?.name.equals(ToolType.FILL.name) ||
-            tool?.toolType?.name.equals(ToolType.STAMP.name) ||
-            tool?.toolType?.name.equals(ToolType.TRANSFORM.name)
-        ) {
-            return 0
-        } else if (
-            tool?.toolType?.name.equals(ToolType.IMPORTPNG.name) ||
-            tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
-            tool?.toolType?.name.equals(ToolType.TEXT.name)
-        ) {
-            return 0
-        } else if (
-            tool?.toolType?.name.equals(ToolType.LINE.name) ||
-            tool?.toolType?.name.equals(ToolType.CURSOR.name)
-        ) {
-            return 1
-        } else {
-            return 2
-        }
     }
 
     fun isPointOnCanvas(pointX: Int, pointY: Int): Boolean =

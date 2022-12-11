@@ -36,17 +36,14 @@ class DefaultZoomWindowController
     private val checkeredPattern = Paint()
     private val framePaint = Paint()
 
-    // Getting the dimensions of the zoom window
     private val windowHeight =
         activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_height)
     private val windowWidth =
         activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_width)
 
-    // CHEQUERED
     private val chequeredBackgroundBitmap =
         Bitmap.createBitmap(layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
 
-    // GREY BACKGROUND
     private val greyBackgroundBitmap =
         Bitmap.createBitmap(
             layerModel.width + windowWidth,
@@ -97,8 +94,7 @@ class DefaultZoomWindowController
     private var coordinates: PointF? = null
 
     override fun show(coordinates: PointF) {
-//         Check if the tool is a compatible tool
-        if (checkCurrentTool(toolReference.tool) &&
+        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE &&
             isPointOnCanvas(coordinates.x, coordinates.y)) {
             if (shouldBeInTheRight(coordinates = coordinates)) {
                 setLayoutAlignment(right = true)
@@ -150,7 +146,7 @@ class DefaultZoomWindowController
 
     private fun setLayoutAlignment(right: Boolean) {
         val params: RelativeLayout.LayoutParams =
-            zoomWindow.layoutParams as RelativeLayout.LayoutParams
+            zoomWindowImage.layoutParams as RelativeLayout.LayoutParams
         if (right) {
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
             params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT)
@@ -158,17 +154,13 @@ class DefaultZoomWindowController
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
             params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT)
         }
-        zoomWindow.layoutParams = params
+        zoomWindowImage.layoutParams = params
     }
 
     private fun cropBitmap(bitmap: Bitmap?, coordinates: PointF): Bitmap? {
 
         val bitmapWithBackground: Bitmap? = mergeBackground(bitmap)
 
-        // StartX and StartY coordinates
-        // StartX and StartY - windowWidth / 2, without the grey background
-        // But since we are adding the grey background, windowWidth / 2 should be added
-        // So they get cancelled
         val startX: Int = coordinates.x.roundToInt()
         val startY: Int = coordinates.y.roundToInt()
 
@@ -199,18 +191,16 @@ class DefaultZoomWindowController
 
     private fun mergeBackground(bitmap: Bitmap?): Bitmap? {
 
-        // Adding the extra width and height for the grey background
-        val bmOverlay =
+        val bitmapOverlay =
             Bitmap.createBitmap(
                 layerModel.width + windowWidth,
                 layerModel.height + windowHeight,
                 Bitmap.Config.ARGB_8888
             )
-        val canvas = Canvas(bmOverlay)
+        val canvas = Canvas(bitmapOverlay)
 
         canvas.drawBitmap(backgroundBitmap, Matrix(), null)
 
-        // Add the current layer if the tool is line or cursor tool
         if (toolReference.tool?.toolType?.name.equals(ToolType.LINE.name) ||
             toolReference.tool?.toolType?.name.equals(ToolType.CURSOR.name)) {
             layerModel.currentLayer?.bitmap?.let {
@@ -220,25 +210,36 @@ class DefaultZoomWindowController
 
         bitmap?.let { canvas.drawBitmap(it, windowWidth / 2f, windowHeight / 2f, null) }
 
-        return bmOverlay
+        return bitmapOverlay
     }
 
-    private fun checkCurrentTool(tool: Tool?): Boolean {
+    override fun checkIfToolCompatibleWithZoomWindow(tool: Tool?): Constants {
         if (
             tool?.toolType?.name.equals(ToolType.HAND.name) ||
             tool?.toolType?.name.equals(ToolType.FILL.name) ||
             tool?.toolType?.name.equals(ToolType.STAMP.name) ||
             tool?.toolType?.name.equals(ToolType.TRANSFORM.name)
         ) {
-            return false
+            return Constants.NOT_COMPATIBLE
         } else if (
             tool?.toolType?.name.equals(ToolType.IMPORTPNG.name) ||
             tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
             tool?.toolType?.name.equals(ToolType.TEXT.name)
         ) {
-            return false
+            return Constants.NOT_COMPATIBLE
+        } else if (
+            tool?.toolType?.name.equals(ToolType.LINE.name) ||
+            tool?.toolType?.name.equals(ToolType.CURSOR.name)
+        ) {
+            return Constants.COMPATIBLE_NEW
         } else {
-            return true
+            return Constants.COMPATIBLE_ALL
         }
+    }
+
+    enum class Constants {
+        NOT_COMPATIBLE,
+        COMPATIBLE_NEW,
+        COMPATIBLE_ALL
     }
 }
