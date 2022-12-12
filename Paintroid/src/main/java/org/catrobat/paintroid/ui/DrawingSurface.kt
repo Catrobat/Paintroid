@@ -176,9 +176,9 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
 
                 val tool = toolReference.tool
                 when (zoomController.checkIfToolCompatibleWithZoomWindow(tool)) {
-                    DefaultZoomWindowController.Constants.NOT_COMPATIBLE -> {
+                    DefaultZoomWindowController.Constants.NOT_COMPATIBLE ->
                         tool?.draw(surfaceViewCanvas)
-                    }
+
                     DefaultZoomWindowController.Constants.COMPATIBLE_NEW -> {
                         val bitmapOfDrawingBoard = Bitmap.createBitmap(
                             layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
