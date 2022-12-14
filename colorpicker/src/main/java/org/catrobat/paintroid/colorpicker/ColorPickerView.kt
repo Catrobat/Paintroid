@@ -139,7 +139,7 @@ class ColorPickerView : LinearLayoutCompat {
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.toggleSoftInputFromWindow(
             rootView.applicationWindowToken,
-            InputMethodManager.SHOW_FORCED,
+            InputMethodManager.SHOW_IMPLICIT,
             0
         )
     }
