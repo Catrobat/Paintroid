@@ -27,6 +27,6 @@
     <dimen name="pocketpaint_welcome_navigation_height">40dp</dimen>
     <dimen name="pocketpaint_welcome_margin_side">50dp</dimen>
     <dimen name="pocketpaint_welcome_margin_top">100dp</dimen>
-    <dimen name="pocketpaint_welcome_margin_top_possibilities">50dp</dimen>
-    <dimen name="pocketpaint_welcome_margin_top_text">25dp</dimen>
+    <dimen name="pocketpaint_welcome_margin_top_possibilities">150dp</dimen>
+    <dimen name="pocketpaint_welcome_margin_top_text">15dp</dimen>
 </resources>

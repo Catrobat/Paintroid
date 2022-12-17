@@ -45,13 +45,13 @@
         android:layout_width="match_parent">
 
         <View
-            android:background="@drawable/pocketpaint_checkeredbg_repeat"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
-            android:layout_marginEnd="30dp"
             android:layout_marginStart="30dp"
             android:layout_marginTop="15dp"
-            android:layout_width="match_parent"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/pocketpaint_checkeredbg_repeat"
             android:orientation="horizontal" />
     </LinearLayout>
 
@@ -71,10 +71,11 @@
         android:visibility="visible">
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/PocketPaintWelcomeHeader"
             android:id="@+id/pocketpaint_intro_possibilities_head"
-            android:layout_height="wrap_content"
+            style="@style/PocketPaintWelcomeHeader"
+
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:minLines="2"
             android:text="@string/more_possibilities" />
 
