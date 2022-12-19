@@ -567,7 +567,6 @@ open class MainActivityPresenter(
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
-            setBottomNavigationColor(Color.BLACK)
             if (toolController.currentTool is LineTool) {
                 (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
             } else {
@@ -577,7 +576,6 @@ open class MainActivityPresenter(
                     commandManager.undo()
                     clippingToolInUseAndUndoRedoClicked = true
                 } else {
-                    toolController.currentTool?.changePaintColor(Color.BLACK)
                     commandManager.undo()
                 }
             }
