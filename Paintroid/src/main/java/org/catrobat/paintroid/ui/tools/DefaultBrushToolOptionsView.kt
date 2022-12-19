@@ -31,6 +31,7 @@ import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
@@ -47,12 +48,12 @@ private const val MAX_VAL = 100
 class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
     private var brushSizeText: EditText
     private var brushWidthSeekBar: SeekBar
+    private var strokeCapButtonsGroup: ChipGroup
     private var buttonCircle: Chip
     private val buttonRect: Chip
     private var brushToolPreview: BrushToolPreview
     private var brushChangedListener: OnBrushChangedListener? = null
     private var currentView = rootView
-    private val capsView: View
 
     companion object {
         private val TAG = DefaultBrushToolOptionsView::class.java.simpleName
@@ -62,13 +63,13 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
         val inflater = LayoutInflater.from(rootView.context)
         val brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_stroke, rootView, true)
         brushPickerView.apply {
+            strokeCapButtonsGroup = findViewById(R.id.pocketpaint_stroke_types)
             buttonCircle = findViewById(R.id.pocketpaint_stroke_ibtn_circle)
             buttonRect = findViewById(R.id.pocketpaint_stroke_ibtn_rect)
             brushWidthSeekBar = findViewById(R.id.pocketpaint_stroke_width_seek_bar)
             brushWidthSeekBar.setOnSeekBarChangeListener(OnBrushChangedWidthSeekBarListener())
             brushSizeText = findViewById(R.id.pocketpaint_stroke_width_width_text)
             brushToolPreview = findViewById(R.id.pocketpaint_brush_tool_preview)
-            capsView = findViewById(R.id.pocketpaint_stroke_types)
         }
         brushSizeText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
         buttonCircle.setOnClickListener { onCircleButtonClicked() }
@@ -102,7 +103,7 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
     }
 
     override fun hideCaps() {
-        capsView.visibility = View.GONE
+        strokeCapButtonsGroup.visibility = View.GONE
     }
 
     private fun onCircleButtonClicked() {
@@ -139,6 +140,13 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
                     .toInt()
             )
         )
+    }
+
+    override fun setStrokeCapButtonChecked(strokeCap: Cap) {
+        when (strokeCap) {
+            Cap.ROUND -> strokeCapButtonsGroup.check(buttonCircle.id)
+            Cap.SQUARE -> strokeCapButtonsGroup.check(buttonRect.id)
+        }
     }
 
     override fun setBrushChangedListener(onBrushChangedListener: OnBrushChangedListener) {

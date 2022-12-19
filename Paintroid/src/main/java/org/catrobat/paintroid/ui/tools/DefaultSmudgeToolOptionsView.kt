@@ -30,6 +30,7 @@ import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.implementation.DEFAULT_PRESSURE_IN_PERCENT
@@ -48,6 +49,7 @@ private const val MAX_VAL = 100
 class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView {
     private val brushSizeText: EditText
     private val brushWidthSeekBar: SeekBar
+    private var strokeButtonsGroup: ChipGroup
     private val buttonCircle: Chip
     private val buttonRect: Chip
     private val brushToolPreview: BrushToolPreview
@@ -68,6 +70,7 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
         val inflater = LayoutInflater.from(rootView.context)
         val brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_smudge_tool, rootView, true)
         brushPickerView.apply {
+            strokeButtonsGroup = findViewById(R.id.pocketpaint_stroke_types)
             buttonCircle = findViewById(R.id.pocketpaint_stroke_ibtn_circle)
             buttonRect = findViewById(R.id.pocketpaint_stroke_ibtn_rect)
             brushWidthSeekBar = findViewById(R.id.pocketpaint_stroke_width_seek_bar)
@@ -175,6 +178,13 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
                 paint.strokeWidth.toInt()
             )
         )
+    }
+
+    override fun setStrokeCapButtonChecked(strokeCap: Cap) {
+        when (strokeCap) {
+            Cap.ROUND -> strokeButtonsGroup.check(buttonCircle.id)
+            Cap.SQUARE -> strokeButtonsGroup.check(buttonRect.id)
+        }
     }
 
     override fun setBrushChangedListener(onBrushChangedListener: OnBrushChangedListener) {
