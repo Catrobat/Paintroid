@@ -425,7 +425,6 @@ class LineTool(
             val endX = endPointToDraw?.x
             val endY = endPointToDraw?.y
             if (commandManager.isUndoAvailable) {
-                commandManager.undoIgnoringColorChanges()
                 val finalPath = SerializablePath().apply {
                     if (startX != null && startY != null && endX != null && endY != null) {
                         moveTo(startX, startY)
