@@ -28,9 +28,9 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
-private const val MAX_ALPHA_VALUE = 255
-private const val MAX_NEW_RANGE = 150
-private const val MIN_NEW_RANGE = 20
+const val MAX_ALPHA_VALUE = 255
+const val MAX_NEW_RANGE = 150
+const val MIN_NEW_RANGE = 20
 
 class WatercolorTool(
     brushToolOptionsView: BrushToolOptionsView,
@@ -66,13 +66,14 @@ class WatercolorTool(
         bitmapPaint.maskFilter = BlurMaskFilter(calcRange(bitmapPaint.alpha), BlurMaskFilter.Blur.INNER)
         previewPaint.maskFilter = BlurMaskFilter(calcRange(previewPaint.alpha), BlurMaskFilter.Blur.INNER)
     }
+    companion object {
+        fun calcRange(value: Int): Float {
+            val oldRange = MAX_ALPHA_VALUE
+            val newRange = MAX_NEW_RANGE - MIN_NEW_RANGE
+            var newValue = value * newRange / oldRange + MIN_NEW_RANGE
 
-    private fun calcRange(value: Int): Float {
-        val oldRange = MAX_ALPHA_VALUE
-        val newRange = MAX_NEW_RANGE - MIN_NEW_RANGE
-        var newValue = value * newRange / oldRange + MIN_NEW_RANGE
-
-        newValue = MAX_NEW_RANGE - newValue + MIN_NEW_RANGE
-        return newValue.toFloat()
+            newValue = MAX_NEW_RANGE - newValue + MIN_NEW_RANGE
+            return newValue.toFloat()
+        }
     }
 }
