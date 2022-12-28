@@ -57,6 +57,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import androidx.annotation.NonNull;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.idling.CountingIdlingResource;
 import androidx.test.rule.ActivityTestRule;
@@ -426,6 +427,12 @@ public class BaseToolWithRectangleShapeToolTest {
 
 		@Override
 		public void setDrawTime(long drawTime) {
+		}
+
+		@NonNull
+		@Override
+		public PointF toolPositionCoordinates(@NonNull PointF coordinate) {
+			return coordinate;
 		}
 	}
 }

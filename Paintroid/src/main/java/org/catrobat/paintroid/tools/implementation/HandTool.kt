@@ -57,5 +57,7 @@ class HandTool(
 
     override fun handleUp(coordinate: PointF?): Boolean = true
 
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
+
     override fun handToolMode(): Boolean = true
 }

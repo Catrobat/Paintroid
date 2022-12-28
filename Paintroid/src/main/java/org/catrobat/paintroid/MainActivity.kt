@@ -104,6 +104,7 @@ import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder
 import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
+import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController
 import java.io.File
 import java.util.Locale
 
@@ -129,6 +130,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     lateinit var toolOptionsViewController: ToolOptionsViewController
 
     var idlingResource: CountingIdlingResource = CountingIdlingResource("MainIdleResource")
+
+    @VisibleForTesting
+    lateinit var zoomWindowController: DefaultZoomWindowController
 
     lateinit var commandManager: CommandManager
     lateinit var toolPaint: ToolPaint
@@ -446,6 +450,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         )
         commandSerializer = CommandSerializer(this, commandManager, model)
         model = MainActivityModel()
+        zoomWindowController = DefaultZoomWindowController(
+            this,
+            layerModel,
+            workspace,
+            toolReference
+        )
+        model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,
@@ -523,7 +534,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             idlingResource,
             supportFragmentManager,
             toolOptionsViewController,
-            drawerLayoutViewHolder
+            drawerLayoutViewHolder,
+            zoomWindowController,
         )
         layerPresenter.setDrawingSurface(drawingSurface)
         appFragment.perspective = perspective

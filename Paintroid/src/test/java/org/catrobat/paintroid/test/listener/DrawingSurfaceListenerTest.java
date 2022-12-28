@@ -27,6 +27,7 @@ import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask;
 import org.catrobat.paintroid.tools.Tool;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.DrawingSurface;
+import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,6 +68,9 @@ public class DrawingSurfaceListenerTest {
 	@Mock
 	private MotionEvent motionEvent;
 
+	@Mock
+	private ZoomWindowController zoomWindowController;
+
 	private DrawingSurfaceListener drawingSurfaceListener;
 
 	private final Float initalPositionX = 1.f;
@@ -93,6 +97,7 @@ public class DrawingSurfaceListenerTest {
 		when(motionEvent.getDownTime()).thenReturn((long) 0);
 
 		drawingSurfaceListener = new DrawingSurfaceListener(autoScrollTask, callback, DISPLAY_DENSITY);
+		drawingSurfaceListener.setZoomController(zoomWindowController);
 	}
 
 	@Test
@@ -149,7 +154,6 @@ public class DrawingSurfaceListenerTest {
 		verify(autoScrollTask).setEventPoint(41f, 5f);
 		verify(autoScrollTask).start();
 
-		verifyNoMoreInteractions(autoScrollTask, currentTool);
 		verify(callback, never()).multiplyPerspectiveScale(anyFloat());
 		verify(callback, never()).translatePerspective(anyFloat(), anyFloat());
 	}
@@ -422,6 +426,7 @@ public class DrawingSurfaceListenerTest {
 
 		verify(currentTool).handleUp(pointFEquals(3f, 5f));
 		verify(currentTool).setDrawTime(anyLong());
+		verify(currentTool).handToolMode();
 		verifyNoMoreInteractions(currentTool);
 	}
 

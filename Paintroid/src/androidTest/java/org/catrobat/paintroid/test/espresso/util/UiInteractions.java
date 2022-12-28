@@ -53,6 +53,7 @@ import androidx.viewpager.widget.ViewPager;
 import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 
@@ -314,6 +315,74 @@ public final class UiInteractions {
 		public Status sendTap(UiController uiController, float[] coordinates, float[] precision) {
 			return sendTap(uiController, coordinates, precision, InputDevice.SOURCE_UNKNOWN,
 					MotionEvent.BUTTON_PRIMARY);
+		}
+	}
+
+	public static class PressAndReleaseActions {
+
+		static MotionEvent motionEvent = null;
+
+		public static PressAction pressAction(DrawingSurfaceLocationProvider coordinates) {
+			return new PressAction(coordinates);
+		}
+
+		public static ReleaseAction releaseAction() {
+			return new ReleaseAction();
+		}
+
+		public static void tearDownPressAndRelease() {
+			motionEvent = null;
+		}
+
+		public static class PressAction implements ViewAction {
+
+			DrawingSurfaceLocationProvider coordinates;
+
+			PressAction(DrawingSurfaceLocationProvider coords) {
+				this.coordinates = coords;
+			}
+
+			@Override
+			public Matcher<View> getConstraints() {
+				return isDisplayingAtLeast(90);
+			}
+
+			@Override
+			public String getDescription() {
+				return "Press Action";
+			}
+
+			@Override
+			public void perform(UiController uiController, View view) {
+				if (motionEvent != null) {
+					throw new AssertionError("Only one view can be held at a time");
+				}
+				float[] coords = coordinates.calculateCoordinates(view);
+				float[] precision = Press.FINGER.describePrecision();
+
+				motionEvent = MotionEvents.sendDown(uiController, coords, precision).down;
+			}
+		}
+
+		public static class ReleaseAction implements ViewAction {
+
+			@Override
+			public Matcher<View> getConstraints() {
+				return isDisplayingAtLeast(90);
+			}
+
+			@Override
+			public String getDescription() {
+				return "Release";
+			}
+
+			@Override
+			public void perform(UiController uiController, View view) {
+				if (motionEvent == null) {
+					throw new AssertionError("Only one view can be held at a time");
+				}
+				MotionEvents.sendUp(uiController, motionEvent);
+			}
 		}
 	}
 }

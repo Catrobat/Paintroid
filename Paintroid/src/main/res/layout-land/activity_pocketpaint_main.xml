@@ -57,6 +57,13 @@
             android:layout_above="@id/pocketpaint_main_bottom_bar"
             android:layout_below="@+id/pocketpaint_layout_top_bar" />
 
+        <include
+            layout="@layout/pocketpaint_layout_zoom_window"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/pocketpaint_main_bottom_bar"
+            android:layout_below="@id/pocketpaint_layout_top_bar"/>
+
         <androidx.core.widget.ContentLoadingProgressBar
             android:id="@+id/pocketpaint_content_loading_progress_bar"
             style="?android:attr/progressBarStyleLarge"
