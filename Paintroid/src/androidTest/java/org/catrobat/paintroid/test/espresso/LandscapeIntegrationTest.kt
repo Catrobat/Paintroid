@@ -362,8 +362,8 @@ class LandscapeIntegrationTest {
         setOrientation(SCREEN_ORIENTATION_LANDSCAPE)
         pressBack()
         onToolBarView()
-            .performOpenToolOptionsView()
             .performCloseToolOptionsView()
+            .performOpenToolOptionsView()
     }
 
     @Test
@@ -386,8 +386,8 @@ class LandscapeIntegrationTest {
         setOrientation(SCREEN_ORIENTATION_LANDSCAPE)
         pressBack()
         onToolBarView()
-            .performOpenToolOptionsView()
             .performCloseToolOptionsView()
+            .performOpenToolOptionsView()
     }
 
     @Test
@@ -401,8 +401,8 @@ class LandscapeIntegrationTest {
         setOrientation(SCREEN_ORIENTATION_PORTRAIT)
         pressBack()
         onToolBarView()
-            .performOpenToolOptionsView()
             .performCloseToolOptionsView()
+            .performOpenToolOptionsView()
     }
 
     @Test
