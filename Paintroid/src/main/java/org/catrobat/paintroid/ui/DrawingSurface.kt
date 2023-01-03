@@ -34,7 +34,6 @@ import android.graphics.Shader
 import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
-import android.view.Gravity
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.content.ContextCompat
@@ -228,7 +227,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
 
     @Synchronized
     fun setBitmap(bitmap: Bitmap?) {
-        layerModel.currentLayer?.bitmap = bitmap
+        layerModel.currentLayer?.bitmap = bitmap!!
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {

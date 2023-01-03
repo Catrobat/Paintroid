@@ -143,7 +143,7 @@ class LineTool(
             lineFinalized = false
             connectedLines = true
             undoRecentlyClicked = false
-            handleUp(newStartCoordinate)
+            handleAddedLine(newStartCoordinate)
         }
     }
 
@@ -316,6 +316,10 @@ class LineTool(
     override fun handleUp(coordinate: PointF?): Boolean {
         showToolOptions()
         super.handleUp(coordinate)
+        return handleAddedLine(coordinate)
+    }
+
+    fun handleAddedLine(coordinate: PointF?): Boolean {
         undoPreviousLineForConnectedLines = true
         if (changeInitialCoordinateForHandleNormalLine && initialEventCoordinate == null) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }

@@ -1260,8 +1260,8 @@ class TransformToolIntegrationTest {
             TopBarViewInteraction.onTopBarView().performClickCheckmark()
             delay(1500)
         }
-        assertThat(toolSelectionBoxWidth, greaterThan(initialWidth.toFloat()))
-        assertThat(toolSelectionBoxHeight, greaterThan(initialHeight.toFloat()))
+        assertThat(toolSelectionBoxWidth, lessThan(initialWidth.toFloat()))
+        assertThat(toolSelectionBoxHeight, lessThan(initialHeight.toFloat()))
     }
 
     @Test

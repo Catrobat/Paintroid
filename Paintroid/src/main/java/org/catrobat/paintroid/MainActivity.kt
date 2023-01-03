@@ -353,6 +353,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        this.window.decorView.apply {
+            systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_pocketpaint_more_options, menu)
         presenterMain.removeMoreOptionsItems(menu)
@@ -487,7 +494,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             bottomNavigationViewHolder,
             DefaultCommandFactory(),
             commandManager,
-            perspective,
             defaultToolController,
             preferences,
             idlingResource,

@@ -19,13 +19,14 @@
 package org.catrobat.paintroid.ui.tools
 
 import android.app.Activity
-import android.os.Build
 import android.view.View
 import android.view.ViewGroup
-import androidx.test.espresso.idling.CountingIdlingResource
 import android.view.animation.TranslateAnimation
+import androidx.test.espresso.idling.CountingIdlingResource
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.common.ANIMATION_DURATION
+import org.catrobat.paintroid.presenter.MainActivityPresenter
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 
@@ -211,33 +212,16 @@ class DefaultToolOptionsViewController(
     }
 
     override fun animateBottomAndTopNavigation(hide: Boolean) {
-        if (hide) {
-            slideUp(topBar, hide)
-            slideDown(bottomNavigation, hide)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                activity.window.decorView.windowInsetsController?.hide(
-                    android.view.WindowInsets.Type.statusBars()
-                        or android.view.WindowInsets.Type.navigationBars()
-                )
-            } else {
-                activity.window.decorView.apply {
-                    systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
-                }
+        var mainActivityPresenter = (activity as MainActivity).presenter as MainActivityPresenter
+        mainActivityPresenter.hideBottomBarViewHolder()
+        when (hide) {
+            true -> {
+                slideUp(topBar, true)
+                slideDown(bottomNavigation, true)
             }
-        } else {
-            slideUp(bottomNavigation, hide)
-            slideDown(topBar, hide)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                activity.window.decorView.windowInsetsController?.show(
-                    android.view.WindowInsets.Type.statusBars()
-                        or android.view.WindowInsets.Type.navigationBars()
-                )
-            } else {
-                activity.window.decorView.apply {
-                    systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_FULLSCREEN
-                }
+            false -> {
+                slideUp(bottomNavigation, false)
+                slideDown(topBar, false)
             }
         }
     }

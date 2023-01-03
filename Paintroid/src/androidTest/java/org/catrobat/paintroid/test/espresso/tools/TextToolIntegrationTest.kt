@@ -122,7 +122,7 @@ class TextToolIntegrationTest {
         selectFormatting(FormattingOptions.UNDERLINE)
         enterTestText()
         onDrawingSurfaceView()
-            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE))
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(
             ViewActions.replaceText(
                 TEST_TEXT_ADVANCED

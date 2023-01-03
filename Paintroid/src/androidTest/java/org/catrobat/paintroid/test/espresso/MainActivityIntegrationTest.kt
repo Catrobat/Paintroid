@@ -46,7 +46,6 @@ import org.catrobat.paintroid.presenter.MainActivityPresenter
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.ui.Perspective
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -78,9 +77,6 @@ class MainActivityIntegrationTest {
 
     @Mock
     private val workspace: Workspace? = null
-
-    @Mock
-    private val perspective: Perspective? = null
 
     @Mock
     private val toolController: ToolController? = null
@@ -134,7 +130,6 @@ class MainActivityIntegrationTest {
                     bottomNavigationViewHolder!!,
                     commandFactory!!,
                     commandManager!!,
-                    perspective!!,
                     toolController!!, sharedPreferences!!, idlingResource, it1, it,
                     commandSerializer!!
                 )

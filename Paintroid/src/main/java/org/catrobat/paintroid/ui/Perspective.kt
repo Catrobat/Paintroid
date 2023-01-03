@@ -211,12 +211,4 @@ open class Perspective(private var bitmapWidth: Int, private var bitmapHeight: I
         canvas.scale(surfaceScale, surfaceScale, surfaceCenterX, surfaceCenterY)
         canvas.translate(surfaceTranslationX, surfaceTranslationY)
     }
-
-    open fun enterHideButtonsMode() {
-        resetScaleAndTranslation()
-    }
-
-    open fun exitHideButtonsMode() {
-        resetScaleAndTranslation()
-    }
 }

@@ -74,7 +74,6 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
             brushToolPreview = findViewById(R.id.pocketpaint_brush_tool_preview)
             topLayout = findViewById(R.id.pocketpaint_stroke_top_layout)
             bottomLayout = findViewById(R.id.pocketpaint_stroke_bottom_layout)
-            capsView = findViewById(R.id.pocketpaint_stroke_types)
         }
         brushSizeText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
         buttonCircle.setOnClickListener { onCircleButtonClicked() }

@@ -25,10 +25,10 @@ import android.view.View.OnTouchListener
 import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
+import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
 import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
-import java.util.EnumSet
 import kotlin.collections.ArrayList
 import kotlin.collections.MutableList
 import kotlin.collections.mutableListOf
@@ -95,7 +95,7 @@ open class DrawingSurfaceListener(
         this.sharedPreferences = sharedPreferences
     }
 
-    private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
+    private fun handleActionMove(currentTool: Tool?, event: MotionEvent) {
         val xOld: Float
         val yOld: Float
         if (event.pointerCount == 1) {
@@ -169,7 +169,7 @@ open class DrawingSurfaceListener(
         eventTouchPoint.x = canvasTouchPoint.x
         eventTouchPoint.y = canvasTouchPoint.y
         callback.convertToCanvasFromSurface(canvasTouchPoint)
-        when (event.action) {
+        when (event.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_DOWN -> {
                 if (eventTouchPoint.x < drawerEdgeSize || view.getWidth() - eventTouchPoint.x < drawerEdgeSize) {
                     return false
@@ -212,6 +212,10 @@ open class DrawingSurfaceListener(
                 touchMode = TouchMode.DRAW
                 if (callZoomWindow) zoomController.dismiss()
                 callback.getCurrentTool()?.handToolMode()
+            }
+            MotionEvent.ACTION_POINTER_UP -> {
+                currentTool?.handleDown(canvasTouchPoint)
+                currentTool?.handleUp(canvasTouchPoint)
             }
         }
         drawingSurface.refreshDrawingSurface()

@@ -50,7 +50,7 @@ const val DRAW_THRESHOLD = 0.8f
 const val PRESSURE_UPDATE_STEP = 0.004f
 
 class SmudgeTool(
-    val smudgeToolOptionsView: SmudgeToolOptionsView,
+    smudgeToolOptionsView: SmudgeToolOptionsView,
     contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
@@ -117,31 +117,8 @@ class SmudgeTool(
         minSmudgeSize = onePercent * dragInPercent
     }
 
-    private fun hideSpecificLayoutOnHandleDown() {
-        toolOptionsViewController.slideUp(
-            smudgeToolOptionsView.getTopToolOptions(), true
-        )
-
-        toolOptionsViewController.slideDown(
-            smudgeToolOptionsView.getBottomToolOptions(), true
-        )
-    }
-
-    private fun showSpecificLayoutOnHandleUp() {
-        toolOptionsViewController.slideDown(
-            smudgeToolOptionsView.getTopToolOptions(), false
-        )
-
-        toolOptionsViewController.slideUp(
-            smudgeToolOptionsView.getBottomToolOptions(), false
-        )
-    }
-
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
-
-        hideSpecificLayoutOnHandleDown()
-        super.handleDown(coordinate)
 
         if (maxSmudgeSize != toolPaint.strokeWidth) {
             val ratio = minSmudgeSize / maxSmudgeSize
@@ -246,9 +223,6 @@ class SmudgeTool(
 
     override fun handleUp(coordinate: PointF?): Boolean {
         coordinate ?: return false
-
-        showSpecificLayoutOnHandleUp()
-        super.handleUp(coordinate)
 
         if (pointArray.isNotEmpty() && currentBitmap != null) {
             currentBitmap?.let {

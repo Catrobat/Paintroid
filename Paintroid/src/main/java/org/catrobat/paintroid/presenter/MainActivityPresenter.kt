@@ -98,7 +98,6 @@ import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.ui.LayerAdapter
-import org.catrobat.paintroid.ui.Perspective
 import java.io.File
 
 @SuppressWarnings("LongParameterList", "LargeClass", "ThrowingExceptionsWithoutMessageOrCause")
@@ -115,7 +114,6 @@ open class MainActivityPresenter(
     private val bottomNavigationViewHolder: MainActivityContracts.BottomNavigationViewHolder,
     private val commandFactory: CommandFactory,
     private val commandManager: CommandManager,
-    private val perspective: Perspective,
     private val toolController: ToolController,
     private val sharedPreferences: UserPreferences,
     private val idlingResource: CountingIdlingResource,
@@ -723,16 +721,17 @@ open class MainActivityPresenter(
         topBarViewHolder.show()
         bottomNavigationViewHolder.show()
         toolController.enableToolOptionsView()
+        toolController.enableHideOption()
         if (toolOptionsViewWasShown) {
             toolController.showToolOptionsView()
             toolOptionsViewWasShown = false
         }
     }
 
-        if (toolController.toolOptionsViewVisible()) {
-        }
-            toolOptionsViewWasShown = true
     private fun enterHideButtons() {
+        if (toolController.toolOptionsViewVisible()) {
+            toolOptionsViewWasShown = true
+        }
         view.hideKeyboard()
         view.enterHideButtons()
         topBarViewHolder.hide()
@@ -740,7 +739,6 @@ open class MainActivityPresenter(
         bottomNavigationViewHolder.hide()
         toolController.disableToolOptionsView()
         toolController.disableHideOption()
-        perspective.enterHideButtonsMode()
     }
 
     override fun restoreState(
@@ -1132,6 +1130,12 @@ open class MainActivityPresenter(
                 (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
                 clippingTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED)
             }
+        }
+    }
+
+    fun hideBottomBarViewHolder() {
+        if (bottomBarViewHolder.isVisible) {
+            bottomBarViewHolder.hide()
         }
     }
 
