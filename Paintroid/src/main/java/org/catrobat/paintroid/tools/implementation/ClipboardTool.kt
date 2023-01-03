@@ -30,14 +30,14 @@ import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.options.StampToolOptionsView
+import org.catrobat.paintroid.tools.options.ClipboardToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
 private const val BUNDLE_TOOL_READY_FOR_PASTE = "BUNDLE_TOOL_READY_FOR_PASTE"
 private const val BUNDLE_TOOL_DRAWING_BITMAP = "BUNDLE_TOOL_DRAWING_BITMAP"
 
-class StampTool(
-    stampToolOptionsView: StampToolOptionsView,
+class ClipboardTool(
+    clipboardToolOptionsView: ClipboardToolOptionsView,
     contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
@@ -48,7 +48,7 @@ class StampTool(
 ) : BaseToolWithRectangleShape(
     contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager
 ) {
-    private val stampToolOptionsView: StampToolOptionsView
+    private val clipboardToolOptionsView: ClipboardToolOptionsView
     private var readyForPaste = false
     private val isDrawingBitmapReusable: Boolean
         get() {
@@ -59,26 +59,26 @@ class StampTool(
         }
 
     override val toolType: ToolType
-        get() = ToolType.STAMP
+        get() = ToolType.CLIPBOARD
 
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     init {
         rotationEnabled = true
-        this.stampToolOptionsView = stampToolOptionsView
+        this.clipboardToolOptionsView = clipboardToolOptionsView
         setBitmap(Bitmap.createBitmap(boxWidth.toInt(), boxHeight.toInt(), Bitmap.Config.ARGB_8888))
-        val callback: StampToolOptionsView.Callback = object : StampToolOptionsView.Callback {
+        val callback: ClipboardToolOptionsView.Callback = object : ClipboardToolOptionsView.Callback {
             override fun copyClicked() {
                 highlightBox()
                 copyBoxContent()
-                this@StampTool.stampToolOptionsView.enablePaste(true)
+                this@ClipboardTool.clipboardToolOptionsView.enablePaste(true)
             }
 
             override fun cutClicked() {
                 highlightBox()
                 copyBoxContent()
                 cutBoxContent()
-                this@StampTool.stampToolOptionsView.enablePaste(true)
+                this@ClipboardTool.clipboardToolOptionsView.enablePaste(true)
             }
 
             override fun pasteClicked() {
@@ -86,7 +86,7 @@ class StampTool(
                 pasteBoxContent()
             }
         }
-        stampToolOptionsView.setCallback(callback)
+        clipboardToolOptionsView.setCallback(callback)
         toolOptionsViewController.showDelayed()
     }
 
@@ -112,7 +112,7 @@ class StampTool(
 
     private fun pasteBoxContent() {
         drawingBitmap?.let {
-            val command = commandFactory.createStampCommand(
+            val command = commandFactory.createClipboardCommand(
                 it,
                 toolPosition,
                 boxWidth,
@@ -131,7 +131,7 @@ class StampTool(
 
     override fun onClickOnButton() {
         if (!readyForPaste || drawingBitmap == null) {
-            contextCallback.showNotification(R.string.stamp_tool_copy_hint)
+            contextCallback.showNotification(R.string.clipboard_tool_copy_hint)
         } else if (boxIntersectsWorkspace()) {
             pasteBoxContent()
             highlightBox()
@@ -151,6 +151,6 @@ class StampTool(
             readyForPaste = getBoolean(BUNDLE_TOOL_READY_FOR_PASTE, readyForPaste)
             drawingBitmap = getParcelable(BUNDLE_TOOL_DRAWING_BITMAP)
         }
-        stampToolOptionsView.enablePaste(readyForPaste)
+        clipboardToolOptionsView.enablePaste(readyForPaste)
     }
 }

@@ -26,7 +26,7 @@
     <string name="button_undo">Undo</string>
     <string name="button_redo">Redo</string>
     <string name="button_info">Information</string>
-    <string name="button_stamp">Stamp</string>
+    <string name="button_clipboard">Clipboard</string>
     <string name="button_import_image">Import image</string>
     <string name="button_eraser">Eraser</string>
     <string name="button_transform">Transform</string>
@@ -45,9 +45,9 @@
 
     <string name="gallery">Gallery</string>
 
-    <string name="stamptool_paste">Paste</string>
-    <string name="stamptool_copy">Copy</string>
-    <string name="stamptool_cut">Cut</string>
+    <string name="clipboard_tool_paste">Paste</string>
+    <string name="clipboard_tool_copy">Copy</string>
+    <string name="clipboard_tool_cut">Cut</string>
 
     <string name="stickers">Stickers</string>
     <string name="dialog_import_image_title" translatable="false">@string/button_import_image</string>
@@ -67,8 +67,8 @@
     <string name="help_content_fill">Tap on the image to fill an area with the selected color.</string>
     <string name="help_content_cursor">Position the cursor where you want to draw. Tap to activate the cursor. Move your finger to draw. Tap again to deactivate.</string>
     <string name="help_content_transform">Use to transform the image.</string>
-    <string name="help_content_stamp">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
-    <string name="help_content_import_png">Import an image from the gallery to the stamp tool.</string>
+    <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
+    <string name="help_content_import_png">Import an image from the gallery to the clipboard.</string>
     <string name="help_content_line">Draw a straight line.</string>
     <string name="help_content_text">Write text and format it. Resize the text box afterwards. Tap on the checkmark to insert the text on the image.</string>
     <string name="help_content_shape">Choose a shape and tap on the checkmark to insert the selected shape.</string>
@@ -145,7 +145,7 @@
     <string name="transform_set_center_text">Set center</string>
     <string name="pixel">px</string>
 
-    <string name="stamp_tool_copy_hint">Tap on copy to copy content</string>
+    <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
 
     <string name="layers_title">Layers</string>
     <string name="layer_new">New layer</string>

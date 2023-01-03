@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:text="@string/stamptool_copy"
+        android:text="@string/clipboard_tool_copy"
         android:theme="@style/Theme.MaterialComponents.Light"
         app:chipIcon="@drawable/ic_pocketpaint_copy"
         app:chipStartPadding="8dp" />
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/space_one"
-        android:text="@string/stamptool_cut"
+        android:text="@string/clipboard_tool_cut"
         android:theme="@style/Theme.MaterialComponents.Light"
         app:chipIcon="@drawable/ic_pocketpaint_cut"
         app:chipStartPadding="8dp" />
@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/space_two"
-        android:text="@string/stamptool_paste"
+        android:text="@string/clipboard_tool_paste"
         android:theme="@style/Theme.MaterialComponents.Light"
         app:chipIcon="@drawable/ic_pocketpaint_paste_chip_icon_selector"
         app:chipStartPadding="8dp" />
