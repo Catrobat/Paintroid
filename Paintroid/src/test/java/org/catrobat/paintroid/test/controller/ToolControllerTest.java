@@ -103,7 +103,7 @@ public class ToolControllerTest {
 				ToolType.UNDO,
 				ToolType.REDO,
 				ToolType.FILL,
-				ToolType.STAMP,
+				ToolType.CLIPBOARD,
 				ToolType.LINE,
 				ToolType.CURSOR,
 				ToolType.IMPORTPNG,

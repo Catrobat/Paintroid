@@ -74,7 +74,7 @@ class ToolOptionsIntegrationTest(
                 arrayOf(ToolType.CURSOR, true, true),
                 arrayOf(ToolType.FILL, true, true),
                 arrayOf(ToolType.PIPETTE, false, false),
-                arrayOf(ToolType.STAMP, true, true),
+                arrayOf(ToolType.CLIPBOARD, true, true),
                 arrayOf(ToolType.ERASER, true, true),
                 arrayOf(ToolType.TEXT, true, true),
                 arrayOf(ToolType.HAND, false, false),

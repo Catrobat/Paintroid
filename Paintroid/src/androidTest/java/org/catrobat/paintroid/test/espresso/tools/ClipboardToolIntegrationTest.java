@@ -27,8 +27,7 @@ import android.graphics.PointF;
 import org.catrobat.paintroid.MainActivity;
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction;
-import org.catrobat.paintroid.test.espresso.util.wrappers.StampToolViewInteraction;
+import org.catrobat.paintroid.test.espresso.util.wrappers.ClipboardToolViewInteraction;
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
 import org.catrobat.paintroid.tools.ToolReference;
 import org.catrobat.paintroid.tools.ToolType;
@@ -36,7 +35,7 @@ import org.catrobat.paintroid.tools.Workspace;
 import org.catrobat.paintroid.tools.drawable.DrawableShape;
 import org.catrobat.paintroid.tools.drawable.DrawableStyle;
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape;
-import org.catrobat.paintroid.tools.implementation.StampTool;
+import org.catrobat.paintroid.tools.implementation.ClipboardTool;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.Before;
 import org.junit.Rule;
@@ -58,7 +57,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class StampToolIntegrationTest {
+public class ClipboardToolIntegrationTest {
 
 	private static final float SCALE_25 = 0.25f;
 	private static final float STAMP_RESIZE_FACTOR = 1.5f;
@@ -96,19 +95,19 @@ public class StampToolIntegrationTest {
 				.performClickCheckmark();
 
 		onToolBarView()
-				.performSelectTool(ToolType.STAMP);
+				.performSelectTool(ToolType.CLIPBOARD);
 
-		StampTool stampTool = (StampTool) toolReference.getTool();
-		stampTool.boxHeight -= 25;
-		stampTool.boxWidth -= 25;
+		ClipboardTool clipboardTool = (ClipboardTool) toolReference.getTool();
+		clipboardTool.boxHeight -= 25;
+		clipboardTool.boxWidth -= 25;
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performCopy();
 
-		int topLeft = stampTool.drawingBitmap.getPixel(0, 0);
-		int topRight = stampTool.drawingBitmap.getPixel(stampTool.drawingBitmap.getWidth() - 1, 0);
-		int bottomLeft = stampTool.drawingBitmap.getPixel(0, stampTool.drawingBitmap.getHeight() - 1);
-		int bottomRight = stampTool.drawingBitmap.getPixel(stampTool.drawingBitmap.getWidth() - 1, stampTool.drawingBitmap.getHeight() - 1);
+		int topLeft = clipboardTool.drawingBitmap.getPixel(0, 0);
+		int topRight = clipboardTool.drawingBitmap.getPixel(clipboardTool.drawingBitmap.getWidth() - 1, 0);
+		int bottomLeft = clipboardTool.drawingBitmap.getPixel(0, clipboardTool.drawingBitmap.getHeight() - 1);
+		int bottomRight = clipboardTool.drawingBitmap.getPixel(clipboardTool.drawingBitmap.getWidth() - 1, clipboardTool.drawingBitmap.getHeight() - 1);
 
 		assertEquals(topLeft, Color.BLACK);
 		assertEquals(topRight, Color.BLACK);
@@ -117,7 +116,7 @@ public class StampToolIntegrationTest {
 	}
 
 	@Test
-	public void testStampToolConsidersLayerOpacity() {
+	public void testClipboardToolConsidersLayerOpacity() {
 		onToolBarView()
 				.performSelectTool(ToolType.SHAPE);
 
@@ -128,34 +127,34 @@ public class StampToolIntegrationTest {
 				.performClickCheckmark();
 
 		onToolBarView()
-				.performSelectTool(ToolType.STAMP);
+				.performSelectTool(ToolType.CLIPBOARD);
 
-		LayerMenuViewInteraction.onLayerMenuView()
+		org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView()
 				.performOpen()
 				.performSetOpacityTo(50, 0)
 				.performClose();
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performCopy();
 
-		StampTool stampTool = (StampTool) toolReference.getTool();
+		ClipboardTool clipboardTool = (ClipboardTool) toolReference.getTool();
 		int fiftyPercentOpacityBlack = Color.argb(255 / 2, 0, 0, 0);
-		int centerPixel = stampTool.drawingBitmap.getPixel(stampTool.drawingBitmap.getWidth() / 2, stampTool.drawingBitmap.getHeight() / 2);
+		int centerPixel = clipboardTool.drawingBitmap.getPixel(clipboardTool.drawingBitmap.getWidth() / 2, clipboardTool.drawingBitmap.getHeight() / 2);
 		assertEquals(centerPixel, Color.BLACK);
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performPaste();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(fiftyPercentOpacityBlack, BitmapLocationProvider.MIDDLE);
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performCut();
 
 		onDrawingSurfaceView()
 				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performPaste();
 
 		onDrawingSurfaceView()
@@ -169,19 +168,19 @@ public class StampToolIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolBarView()
-				.performSelectTool(ToolType.STAMP);
+				.performSelectTool(ToolType.CLIPBOARD);
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performCopy();
 
-		StampTool stampTool = (StampTool) toolReference.getTool();
-		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
+		ClipboardTool clipboardTool = (ClipboardTool) toolReference.getTool();
+		clipboardTool.toolPosition.set(clipboardTool.toolPosition.x, clipboardTool.toolPosition.y * .5f);
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performPaste();
 
 		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, stampTool.toolPosition.x, stampTool.toolPosition.y);
+				.checkPixelColor(Color.BLACK, clipboardTool.toolPosition.x, clipboardTool.toolPosition.y);
 	}
 
 	@Test
@@ -191,30 +190,30 @@ public class StampToolIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolBarView()
-				.performSelectTool(ToolType.STAMP);
+				.performSelectTool(ToolType.CLIPBOARD);
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performCut();
 
-		StampTool stampTool = (StampTool) toolReference.getTool();
+		ClipboardTool clipboardTool = (ClipboardTool) toolReference.getTool();
 
 		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, stampTool.toolPosition.x, stampTool.toolPosition.y);
+				.checkPixelColor(Color.TRANSPARENT, clipboardTool.toolPosition.x, clipboardTool.toolPosition.y);
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performPaste();
 
 		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, stampTool.toolPosition.x, stampTool.toolPosition.y);
+				.checkPixelColor(Color.BLACK, clipboardTool.toolPosition.x, clipboardTool.toolPosition.y);
 	}
 
 	@Test
-	public void testStampToolNotCapturingOtherLayers() {
+	public void testClipboardToolNotCapturingOtherLayers() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolBarView()
-				.performSelectTool(ToolType.STAMP);
+				.performSelectTool(ToolType.CLIPBOARD);
 
 		onLayerMenuView()
 				.performOpen()
@@ -223,21 +222,21 @@ public class StampToolIntegrationTest {
 		onLayerMenuView()
 				.performClose();
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performCopy();
 
-		StampTool stampTool = (StampTool) toolReference.getTool();
-		stampTool.toolPosition.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
+		ClipboardTool clipboardTool = (ClipboardTool) toolReference.getTool();
+		clipboardTool.toolPosition.set(clipboardTool.toolPosition.x, clipboardTool.toolPosition.y * .5f);
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performPaste();
 
 		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, stampTool.toolPosition.x, stampTool.toolPosition.y * .5f);
+				.checkPixelColor(Color.TRANSPARENT, clipboardTool.toolPosition.x, clipboardTool.toolPosition.y * .5f);
 	}
 
 	@Test
-	public void testStampOutsideDrawingSurface() {
+	public void testClipboardToolOutsideDrawingSurface() {
 		onDrawingSurfaceView()
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
@@ -246,18 +245,18 @@ public class StampToolIntegrationTest {
 		perspective.setScale(SCALE_25);
 
 		onToolBarView()
-				.performSelectTool(ToolType.STAMP);
+				.performSelectTool(ToolType.CLIPBOARD);
 
-		StampTool stampTool = (StampTool) toolReference.getTool();
+		ClipboardTool clipboardTool = (ClipboardTool) toolReference.getTool();
 		PointF toolPosition = new PointF(perspective.surfaceCenterX, perspective.surfaceCenterY);
-		stampTool.toolPosition.set(toolPosition);
-		stampTool.boxWidth = (int) (bitmapWidth * STAMP_RESIZE_FACTOR);
-		stampTool.boxHeight = (int) (bitmapHeight * STAMP_RESIZE_FACTOR);
+		clipboardTool.toolPosition.set(toolPosition);
+		clipboardTool.boxWidth = (int) (bitmapWidth * STAMP_RESIZE_FACTOR);
+		clipboardTool.boxHeight = (int) (bitmapHeight * STAMP_RESIZE_FACTOR);
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performPaste();
 
-		assertNotNull(stampTool.drawingBitmap);
+		assertNotNull(clipboardTool.drawingBitmap);
 	}
 
 	@Test
@@ -266,12 +265,12 @@ public class StampToolIntegrationTest {
 				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
 		onToolBarView()
-				.performSelectTool(ToolType.STAMP);
+				.performSelectTool(ToolType.CLIPBOARD);
 
 		Bitmap emptyBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
 				toolReference.getTool()).drawingBitmap);
 
-		StampToolViewInteraction.Companion.onStampToolViewInteraction()
+		ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction()
 				.performCopy();
 
 		Bitmap expectedBitmap = Bitmap.createBitmap(((BaseToolWithRectangleShape)
@@ -288,7 +287,7 @@ public class StampToolIntegrationTest {
 	}
 
 	@Test
-	public void testStampToolDoesNotResetPerspectiveScale() {
+	public void testClipboardToolDoesNotResetPerspectiveScale() {
 		float scale = 2.0f;
 
 		perspective.setScale(scale);
@@ -297,7 +296,7 @@ public class StampToolIntegrationTest {
 		mainActivity.refreshDrawingSurface();
 
 		onToolBarView()
-				.performSelectTool(ToolType.STAMP);
+				.performSelectTool(ToolType.CLIPBOARD);
 
 		assertEquals(scale, perspective.getScale(), 0.0001f);
 	}

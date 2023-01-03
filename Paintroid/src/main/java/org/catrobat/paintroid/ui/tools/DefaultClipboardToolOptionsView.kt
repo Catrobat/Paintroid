@@ -23,13 +23,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.tools.options.StampToolOptionsView
+import org.catrobat.paintroid.tools.options.ClipboardToolOptionsView
 
-class DefaultStampToolOptionsView(rootView: ViewGroup) : StampToolOptionsView {
+class DefaultClipboardToolOptionsView(rootView: ViewGroup) : ClipboardToolOptionsView {
     private val pasteChip: Chip
     private val copyChip: Chip
     private val cutChip: Chip
-    private var callback: StampToolOptionsView.Callback? = null
+    private var callback: ClipboardToolOptionsView.Callback? = null
 
     private fun initializeListeners() {
         copyChip.setOnClickListener {
@@ -45,7 +45,7 @@ class DefaultStampToolOptionsView(rootView: ViewGroup) : StampToolOptionsView {
         }
     }
 
-    override fun setCallback(callback: StampToolOptionsView.Callback) {
+    override fun setCallback(callback: ClipboardToolOptionsView.Callback) {
         this.callback = callback
     }
 
@@ -56,7 +56,7 @@ class DefaultStampToolOptionsView(rootView: ViewGroup) : StampToolOptionsView {
     init {
         val inflater = LayoutInflater.from(rootView.context)
         val stampToolOptionsView: View =
-            inflater.inflate(R.layout.dialog_pocketpaint_stamp_tool, rootView)
+            inflater.inflate(R.layout.dialog_pocketpaint_clipboard_tool, rootView)
         copyChip = stampToolOptionsView.findViewById(R.id.action_copy)
         pasteChip = stampToolOptionsView.findViewById(R.id.action_paste)
         cutChip = stampToolOptionsView.findViewById(R.id.action_cut)

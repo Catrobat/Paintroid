@@ -32,8 +32,8 @@ import org.catrobat.paintroid.tools.ContextCallback;
 import org.catrobat.paintroid.tools.ToolPaint;
 import org.catrobat.paintroid.tools.ToolType;
 import org.catrobat.paintroid.tools.Workspace;
-import org.catrobat.paintroid.tools.implementation.StampTool;
-import org.catrobat.paintroid.tools.options.StampToolOptionsView;
+import org.catrobat.paintroid.tools.implementation.ClipboardTool;
+import org.catrobat.paintroid.tools.options.ClipboardToolOptionsView;
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController;
 import org.catrobat.paintroid.ui.Perspective;
 import org.junit.After;
@@ -56,7 +56,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class StampToolTest {
+public class ClipboardToolTest {
 	@Mock
 	private ToolPaint toolPaint;
 	@Mock
@@ -64,7 +64,7 @@ public class StampToolTest {
 	@Mock
 	private Workspace workspace;
 	@Mock
-	private StampToolOptionsView stampToolOptions;
+	private ClipboardToolOptionsView clipboardToolOptionsView;
 	@Mock
 	private ToolOptionsViewController toolOptionsViewController;
 	@Mock
@@ -72,7 +72,7 @@ public class StampToolTest {
 	@Mock
 	private DisplayMetrics displayMetrics;
 
-	private StampTool tool;
+	private ClipboardTool tool;
 	private CountingIdlingResource idlingResource;
 
 	@Rule
@@ -96,7 +96,7 @@ public class StampToolTest {
 			}
 		});
 
-		tool = new StampTool(stampToolOptions, contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager, 0);
+		tool = new ClipboardTool(clipboardToolOptionsView, contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager, 0);
 	}
 
 	@After
@@ -131,7 +131,7 @@ public class StampToolTest {
 
 	@Test
 	public void testShouldReturnCorrectToolType() {
-		assertEquals(ToolType.STAMP, tool.getToolType());
+		assertEquals(ToolType.CLIPBOARD, tool.getToolType());
 	}
 
 	@Test

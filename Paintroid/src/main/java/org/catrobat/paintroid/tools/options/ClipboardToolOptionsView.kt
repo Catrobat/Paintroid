@@ -18,7 +18,7 @@
  */
 package org.catrobat.paintroid.tools.options
 
-interface StampToolOptionsView {
+interface ClipboardToolOptionsView {
     fun setCallback(callback: Callback)
 
     fun enablePaste(enable: Boolean)

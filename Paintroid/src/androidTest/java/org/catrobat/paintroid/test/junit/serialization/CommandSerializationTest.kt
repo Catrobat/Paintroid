@@ -50,7 +50,7 @@ import org.catrobat.paintroid.command.implementation.RotateCommand
 import org.catrobat.paintroid.command.implementation.SelectLayerCommand
 import org.catrobat.paintroid.command.implementation.SetDimensionCommand
 import org.catrobat.paintroid.command.implementation.SprayCommand
-import org.catrobat.paintroid.command.implementation.StampCommand
+import org.catrobat.paintroid.command.implementation.ClipboardCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
 import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
@@ -348,7 +348,7 @@ class CommandSerializationTest {
     @Test
     fun testSerializeStampCommand() {
         expectedModel.commands.add(
-            commandFactory.createStampCommand(
+            commandFactory.createClipboardCommand(
                 Bitmap.createBitmap(WORKSPACE_WIDTH, WORKSPACE_HEIGHT, Bitmap.Config.ARGB_8888),
                 PointF(20f, 30f), 40f, 50f, 60f
             )
@@ -438,8 +438,8 @@ class CommandSerializationTest {
             is LoadCommand -> equalsLoadCommand(
                 expectedCommand, actualCommand as LoadCommand
             )
-            is StampCommand -> equalsStampCommand(
-                expectedCommand, actualCommand as StampCommand
+            is ClipboardCommand -> equalsStampCommand(
+                expectedCommand, actualCommand as ClipboardCommand
             )
             is LoadLayerListCommand -> equalsLoadBitmapListCommand(
                 expectedCommand, actualCommand as LoadLayerListCommand
@@ -570,7 +570,7 @@ class CommandSerializationTest {
         return true
     }
 
-    private fun equalsStampCommand(expectedCommand: StampCommand, actualCommand: StampCommand) =
+    private fun equalsStampCommand(expectedCommand: ClipboardCommand, actualCommand: ClipboardCommand) =
         expectedCommand.bitmap!!.sameAs(actualCommand.bitmap) && expectedCommand.coordinates == actualCommand.coordinates &&
             expectedCommand.boxWidth == actualCommand.boxWidth && expectedCommand.boxHeight == actualCommand.boxHeight &&
             expectedCommand.boxRotation == actualCommand.boxRotation

@@ -203,7 +203,7 @@ class LandscapeIntegrationTest {
 
     @Test
     fun testCorrectSelectionInBothOrientationsStampTool() {
-        val toolType = ToolType.STAMP
+        val toolType = ToolType.CLIPBOARD
         onToolBarView()
             .performSelectTool(toolType)
         setOrientation(SCREEN_ORIENTATION_LANDSCAPE)
