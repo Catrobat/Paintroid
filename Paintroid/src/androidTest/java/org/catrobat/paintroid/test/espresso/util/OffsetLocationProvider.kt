@@ -16,34 +16,32 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.util
 
-package org.catrobat.paintroid.test.espresso.util;
+import android.view.View
+import androidx.test.espresso.action.CoordinatesProvider
+import org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider
 
-import android.view.View;
+class OffsetLocationProvider(
+    private val locationProvider: CoordinatesProvider,
+    private val xOffset: Int,
+    private val yOffset: Int
+) : CoordinatesProvider {
+    override fun calculateCoordinates(view: View): FloatArray {
+        val coordinates = locationProvider.calculateCoordinates(view)
+        coordinates[0] += xOffset.toFloat()
+        coordinates[1] += yOffset.toFloat()
+        return coordinates
+    }
 
-import androidx.test.espresso.action.CoordinatesProvider;
-
-public class OffsetLocationProvider implements CoordinatesProvider {
-	private final CoordinatesProvider locationProvider;
-	private final int xOffset;
-	private final int yOffset;
-
-	public OffsetLocationProvider(CoordinatesProvider locationProvider, int xOffset, int yOffset) {
-
-		this.locationProvider = locationProvider;
-		this.xOffset = xOffset;
-		this.yOffset = yOffset;
-	}
-
-	public static CoordinatesProvider withOffset(CoordinatesProvider locationProvider, int xOffset, int yOffset) {
-		return new OffsetLocationProvider(locationProvider, xOffset, yOffset);
-	}
-
-	@Override
-	public float[] calculateCoordinates(View view) {
-		float[] coordinates = locationProvider.calculateCoordinates(view);
-		coordinates[0] += xOffset;
-		coordinates[1] += yOffset;
-		return coordinates;
-	}
+    companion object {
+        @JvmStatic
+        fun withOffset(
+            locationProvider: CoordinatesProvider,
+            xOffset: Int,
+            yOffset: Int
+        ): CoordinatesProvider {
+            return OffsetLocationProvider(locationProvider, xOffset, yOffset)
+        }
+    }
 }

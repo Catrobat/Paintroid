@@ -16,41 +16,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.rtl.util
 
-package org.catrobat.paintroid.test.espresso.rtl.util;
+import android.app.Activity
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.ActivityTestRule
+import org.catrobat.paintroid.test.espresso.util.LanguageSupport
+import java.util.*
 
-import android.app.Activity;
-import android.content.Context;
+class RtlActivityTestRule<T : Activity?>(activityClass: Class<T>?, private val language: String) :
+    ActivityTestRule<T>(activityClass) {
+    override fun beforeActivityLaunched() {
+        super.beforeActivityLaunched()
+        val locale = Locale(language)
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
+        LanguageSupport.setLocale(targetContext, locale)
+    }
 
-import org.catrobat.paintroid.test.espresso.util.LanguageSupport;
-
-import java.util.Locale;
-
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
-
-public class RtlActivityTestRule<T extends Activity> extends ActivityTestRule<T> {
-	private final String language;
-
-	public RtlActivityTestRule(Class<T> activityClass, String language) {
-		super(activityClass);
-		this.language = language;
-	}
-
-	@Override
-	protected void beforeActivityLaunched() {
-		super.beforeActivityLaunched();
-
-		Locale locale = new Locale(language);
-		Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-		LanguageSupport.setLocale(targetContext, locale);
-	}
-
-	@Override
-	protected void afterActivityFinished() {
-		super.afterActivityFinished();
-
-		Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-		LanguageSupport.setLocale(targetContext, new Locale("en"));
-	}
+    override fun afterActivityFinished() {
+        super.afterActivityFinished()
+        val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
+        LanguageSupport.setLocale(targetContext, Locale("en"))
+    }
 }

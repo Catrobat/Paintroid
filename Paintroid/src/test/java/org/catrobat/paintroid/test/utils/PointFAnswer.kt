@@ -16,35 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.utils
 
-package org.catrobat.paintroid.test.utils;
+import org.mockito.stubbing.Answer
+import org.mockito.invocation.InvocationOnMock
+import android.graphics.PointF
+import org.mockito.stubbing.Stubber
+import org.mockito.Mockito
+import org.catrobat.paintroid.test.utils.PointFAnswer
 
-import android.graphics.PointF;
+class PointFAnswer(private val pointX: Float, private val pointY: Float) : Answer<Any?> {
+    override fun answer(invocation: InvocationOnMock): Any? {
+        val point = invocation.getArgument<PointF>(0)
+        point.x = pointX
+        point.y = pointY
+        return null
+    }
 
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.Stubber;
-
-import static org.mockito.Mockito.doAnswer;
-
-public final class PointFAnswer implements Answer {
-	private final float pointX;
-	private final float pointY;
-
-	public PointFAnswer(float x, float y) {
-		this.pointX = x;
-		this.pointY = y;
-	}
-
-	@Override
-	public Object answer(InvocationOnMock invocation) {
-		PointF point = invocation.getArgument(0);
-		point.x = pointX;
-		point.y = pointY;
-		return null;
-	}
-
-	public static Stubber setPointFTo(float x, float y) {
-		return doAnswer(new PointFAnswer(x, y));
-	}
+    companion object {
+        @JvmStatic
+        fun setPointFTo(x: Float, y: Float): Stubber {
+            return Mockito.doAnswer(PointFAnswer(x, y))
+        }
+    }
 }

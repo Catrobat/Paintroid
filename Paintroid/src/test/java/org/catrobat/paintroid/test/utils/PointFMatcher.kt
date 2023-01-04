@@ -16,35 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.utils
 
-package org.catrobat.paintroid.test.utils;
+import org.mockito.ArgumentMatcher
+import android.graphics.PointF
+import org.mockito.ArgumentMatchers
+import org.catrobat.paintroid.test.utils.PointFMatcher
 
-import android.graphics.PointF;
+class PointFMatcher(private val pointX: Float, private val pointY: Float) :
+    ArgumentMatcher<PointF> {
+    override fun matches(argument: PointF): Boolean {
+        return argument.x == pointX && argument.y == pointY
+    }
 
-import org.mockito.ArgumentMatcher;
+    override fun toString(): String {
+        return "PointF($pointX, $pointY)"
+    }
 
-import static org.mockito.ArgumentMatchers.argThat;
-
-public final class PointFMatcher implements ArgumentMatcher<PointF> {
-	private final float pointX;
-	private final float pointY;
-
-	public PointFMatcher(float x, float y) {
-		this.pointX = x;
-		this.pointY = y;
-	}
-
-	@Override
-	public boolean matches(PointF argument) {
-		return argument.x == pointX && argument.y == pointY;
-	}
-
-	@Override
-	public String toString() {
-		return "PointF(" + pointX + ", " + pointY + ")";
-	}
-
-	public static PointF pointFEquals(float x, float y) {
-		return argThat(new PointFMatcher(x, y));
-	}
+    companion object {
+        @JvmStatic
+		fun pointFEquals(x: Float, y: Float): PointF {
+            return ArgumentMatchers.argThat(PointFMatcher(x, y))
+        }
+    }
 }

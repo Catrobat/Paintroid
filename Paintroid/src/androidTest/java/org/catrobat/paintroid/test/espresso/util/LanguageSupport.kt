@@ -16,31 +16,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.util
 
-package org.catrobat.paintroid.test.espresso.util;
+import android.content.Context
+import android.os.Build
+import java.lang.IllegalArgumentException
+import java.util.*
 
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
+class LanguageSupport private constructor() {
+    init {
+        throw IllegalArgumentException()
+    }
 
-import java.util.Locale;
-
-public final class LanguageSupport {
-	private LanguageSupport() {
-		throw new IllegalArgumentException();
-	}
-
-	public static void setLocale(Context context, Locale locale) {
-		if (Build.VERSION.SDK_INT >= 24) {
-			Locale.setDefault(Locale.Category.DISPLAY, locale);
-		} else {
-			Locale.setDefault(locale);
-		}
-
-		Resources resources = context.getResources();
-		Configuration conf = resources.getConfiguration();
-		conf.setLocale(locale);
-		resources.updateConfiguration(conf, resources.getDisplayMetrics());
-	}
+    companion object {
+        fun setLocale(context: Context, locale: Locale?) {
+            if (Build.VERSION.SDK_INT >= 24) {
+                Locale.setDefault(Locale.Category.DISPLAY, locale)
+            } else {
+                Locale.setDefault(locale)
+            }
+            val resources = context.resources
+            val conf = resources.configuration
+            conf.setLocale(locale)
+            resources.updateConfiguration(conf, resources.displayMetrics)
+        }
+    }
 }
