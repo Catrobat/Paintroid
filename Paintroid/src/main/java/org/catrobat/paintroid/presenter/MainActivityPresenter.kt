@@ -32,6 +32,9 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.net.Uri
 import android.os.CountDownTimer
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -1062,6 +1065,9 @@ open class MainActivityPresenter(
 
     override fun importStickersClicked() {
         navigator.showCatroidMediaGallery()
+        if (!checkForInternet(context)) {
+            Toast.makeText(context, context.getString(R.string.no_connection_sticker), Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun bitmapLoadedFromSource(loadedImage: Bitmap) {
@@ -1184,6 +1190,24 @@ open class MainActivityPresenter(
                 cursor?.close()
             }
             return ""
+        }
+
+        private fun checkForInternet(context: Context): Boolean {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val network = connectivityManager.activeNetwork ?: return false
+                val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+                return when {
+                    activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                    activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                    else -> false
+                }
+            } else {
+                @Suppress("DEPRECATION") val networkInfo =
+                        connectivityManager.activeNetworkInfo ?: return false
+                @Suppress("DEPRECATION")
+                return networkInfo.isConnected
+            }
         }
 
         private fun isExternalStorageDocument(uri: Uri): Boolean =
