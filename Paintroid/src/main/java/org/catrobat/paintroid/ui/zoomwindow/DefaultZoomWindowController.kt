@@ -93,16 +93,12 @@ class DefaultZoomWindowController
         activity.findViewById(R.id.pocketpaint_zoom_window_image)
     private var coordinates: PointF? = null
 
-    override fun show(coordinates: PointF) {
+    override fun show(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF) {
         if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE &&
-            isPointOnCanvas(coordinates.x, coordinates.y)) {
-            if (shouldBeInTheRight(coordinates = coordinates)) {
-                setLayoutAlignment(right = true)
-            } else {
-                setLayoutAlignment(right = false)
-            }
+            isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
+            setZoomWindowPosition(displayCoordinates)
             zoomWindow.visibility = View.VISIBLE
-            zoomWindowImage.setImageBitmap(cropBitmap(workspace.bitmapOfAllLayers, coordinates))
+            zoomWindowImage.setImageBitmap(cropBitmap(workspace.bitmapOfAllLayers, drawingSurfaceCoordinates))
         }
     }
 
@@ -114,19 +110,23 @@ class DefaultZoomWindowController
         zoomWindow.visibility = View.GONE
     }
 
-    override fun onMove(coordinates: PointF) {
-        if (shouldBeInTheRight(coordinates = coordinates)) {
-            setLayoutAlignment(right = true)
-        } else {
-            setLayoutAlignment(right = false)
-        }
-        if (isPointOnCanvas(coordinates.x, coordinates.y)) {
+    override fun onMove(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF) {
+        setZoomWindowPosition(displayCoordinates)
+        if (isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
             if (zoomWindow.visibility == View.GONE) {
                 zoomWindow.visibility = View.VISIBLE
             }
-            this.coordinates = coordinates
+            this.coordinates = drawingSurfaceCoordinates
         } else {
             dismiss()
+        }
+    }
+
+    private fun setZoomWindowPosition(displayCoordinates: PointF) {
+        if (shouldBeInTheRight(coordinates = displayCoordinates)) {
+            setLayoutAlignment(right = true)
+        } else {
+            setLayoutAlignment(right = false)
         }
     }
 
@@ -138,7 +138,8 @@ class DefaultZoomWindowController
         pointX > 0 && pointX < layerModel.width && pointY > 0 && pointY < layerModel.height
 
     private fun shouldBeInTheRight(coordinates: PointF): Boolean {
-        if (coordinates.x < layerModel.width / 2 && coordinates.y < layerModel.height / 2) {
+        if (coordinates.x < activity.resources.displayMetrics.widthPixels / 2 &&
+            coordinates.y < activity.resources.displayMetrics.heightPixels / 2) {
             return true
         }
         return false
