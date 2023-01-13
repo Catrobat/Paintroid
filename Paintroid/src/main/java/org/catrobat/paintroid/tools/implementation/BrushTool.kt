@@ -66,6 +66,8 @@ open class BrushTool(
 
     @JvmField
     var pathToDraw: SerializablePath = SerializablePath()
+    private var currentPath: PathContainer = PathContainer()
+
     var initialEventCoordinate: PointF? = null
     private var pathInsideBitmap = false
     private val drawToolMovedDistance = PointF(0f, 0f)
@@ -74,7 +76,7 @@ open class BrushTool(
 
     val pointArray = mutableListOf<PointF>()
 
-    private var currentPath: PathContainer = PathContainer()
+
 
     init {
         toolOptionsViewController.enable()
@@ -193,6 +195,8 @@ open class BrushTool(
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun resetInternalState() {
+        currentPath = PathContainer()
+
         pathToDraw.rewind()
         pointArray.clear()
         initialEventCoordinate = null
