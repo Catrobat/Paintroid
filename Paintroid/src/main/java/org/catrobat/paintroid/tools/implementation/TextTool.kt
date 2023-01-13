@@ -116,6 +116,8 @@ class TextTool(
     override val toolType: ToolType
         get() = ToolType.TEXT
 
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
+
     init {
         rotationEnabled = ROTATION_ENABLED
         resizePointsVisible = RESIZE_POINTS_VISIBLE

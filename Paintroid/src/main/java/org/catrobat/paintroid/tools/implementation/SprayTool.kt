@@ -103,6 +103,8 @@ class SprayTool(
         return true
     }
 
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
+
     override fun handleMove(coordinate: PointF?): Boolean {
         currentCoordinate = coordinate
         return true

@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.ui
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.BitmapShader
 import android.graphics.Canvas
@@ -54,7 +55,9 @@ import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder
+import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController
 
 open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private val canvasRect = Rect()
@@ -73,6 +76,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var drawerLayoutViewHolder: DrawerLayoutViewHolder
     private lateinit var fragmentManager: FragmentManager
     private lateinit var idlingResource: CountingIdlingResource
+    private lateinit var zoomController: ZoomWindowController
 
     constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
@@ -128,7 +132,8 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         idlingResource: CountingIdlingResource,
         fragmentManager: FragmentManager,
         toolOptionsViewController: ToolOptionsViewController,
-        drawerLayoutViewHolder: DrawerLayoutViewHolder
+        drawerLayoutViewHolder: DrawerLayoutViewHolder,
+        zoomController: ZoomWindowController
     ) {
         this.layerModel = layerModel
         this.perspective = perspective
@@ -137,6 +142,8 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         this.idlingResource = idlingResource
         this.fragmentManager = fragmentManager
         this.drawerLayoutViewHolder = drawerLayoutViewHolder
+        this.zoomController = zoomController
+        drawingSurfaceListener.setZoomController(zoomWindowController = zoomController)
     }
 
     @Synchronized
@@ -168,7 +175,38 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
                 }
 
                 val tool = toolReference.tool
-                tool?.draw(surfaceViewCanvas)
+                when (zoomController.checkIfToolCompatibleWithZoomWindow(tool)) {
+                    DefaultZoomWindowController.Constants.NOT_COMPATIBLE ->
+                        tool?.draw(surfaceViewCanvas)
+
+                    DefaultZoomWindowController.Constants.COMPATIBLE_NEW -> {
+                        val bitmapOfDrawingBoard = Bitmap.createBitmap(
+                            layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
+
+                        tool?.draw(surfaceViewCanvas)
+
+                        val canvas = Canvas(bitmapOfDrawingBoard)
+                        tool?.draw(canvas)
+
+                        handler.post(
+                            Runnable {
+                                zoomController.getBitmap(bitmapOfDrawingBoard)
+                            }
+                        )
+                    }
+                    DefaultZoomWindowController.Constants.COMPATIBLE_ALL -> {
+                        val bitmapOfDrawingBoard = layerModel.currentLayer?.bitmap
+                        surfaceViewCanvas.setBitmap(bitmapOfDrawingBoard)
+
+                        tool?.draw(surfaceViewCanvas)
+
+                        handler.post(
+                            Runnable {
+                                zoomController.getBitmap(bitmapOfDrawingBoard)
+                            }
+                        )
+                    }
+                }
             }
         }
     }

@@ -189,6 +189,8 @@ open class BrushTool(
         }
     }
 
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
+
     override fun resetInternalState() {
         pathToDraw.rewind()
         pointArray.clear()

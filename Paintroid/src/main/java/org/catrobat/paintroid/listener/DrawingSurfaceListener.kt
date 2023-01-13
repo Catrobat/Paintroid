@@ -30,6 +30,7 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.implementation.BrushTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
+import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 import java.util.EnumSet
 import kotlin.collections.ArrayList
 import kotlin.collections.MutableList
@@ -57,6 +58,7 @@ open class DrawingSurfaceListener(
     private val drawerEdgeSize: Int = (DRAWER_EDGE_SIZE * displayDensity + CONSTANT_1).toInt()
     private var autoScroll = true
     private var timerStartDraw = 0.toLong()
+    private lateinit var zoomController: ZoomWindowController
 
     private var recentTouchEventsData: MutableList<TouchEventData> = mutableListOf()
 
@@ -104,6 +106,12 @@ open class DrawingSurfaceListener(
         autoScrollTask.setViewDimensions(view.width, view.height)
     }
 
+    fun setZoomController(
+        zoomWindowController: ZoomWindowController
+    ) {
+        zoomController = zoomWindowController
+    }
+
     private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
         val xOld: Float
         val yOld: Float
@@ -136,6 +144,11 @@ open class DrawingSurfaceListener(
                     currentTool.handleMove(canvasTouchPoint)
                 }
             }
+            if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
+                zoomController.onMove(canvasTouchPoint)
+            } else {
+                zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint))
+            }
         } else {
             disableAutoScroll()
             if (touchMode == TouchMode.DRAW) {
@@ -154,6 +167,7 @@ open class DrawingSurfaceListener(
             if (xOld > 0 && xMidPoint != xOld || yOld > 0 && yMidPoint != yOld) {
                 callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld)
             }
+            zoomController.dismissOnPinch()
         }
     }
 
@@ -176,6 +190,12 @@ open class DrawingSurfaceListener(
                 if (autoScroll) {
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                     autoScrollTask.start()
+                }
+                if (!currentTool?.toolType?.name.equals(ToolType.CURSOR.name)) {
+                    zoomController.show(canvasTouchPoint)
+                } else {
+                    currentTool?.toolPositionCoordinates(canvasTouchPoint)
+                        ?.let { zoomController.show(it) }
                 }
             }
             MotionEvent.ACTION_MOVE -> handleActionMove(currentTool, view, event)
@@ -212,6 +232,8 @@ open class DrawingSurfaceListener(
                 eventX = 0f
                 eventY = 0f
                 touchMode = TouchMode.DRAW
+                zoomController.dismiss()
+                currentTool?.handToolMode()
             }
         }
         drawingSurface.refreshDrawingSurface()
