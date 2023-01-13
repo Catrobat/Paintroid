@@ -20,10 +20,10 @@
 -->
 <resources>
     <!-- PocketPaint theme colors -->
-    <color name="pocketpaint_colorPrimary">#0097A7</color>
-    <color name="pocketpaint_colorPrimaryDark">#00838F</color>
-    <color name="pocketpaint_colorAccent">#33B5E5</color>
-    <color name="pocketpaint_text_color_link">#E68B00</color>
+    <color name="pocketpaint_colorPrimary">#138293</color>
+    <color name="pocketpaint_colorPrimaryDark">#0D6775</color>
+    <color name="pocketpaint_colorAccent">#157DA2</color>
+    <color name="pocketpaint_text_color_link">#BD5800</color>
 
     <!-- PocketPaint main activity -->
     <color name="pocketpaint_main_separator_color">#c8e8ff</color>
@@ -43,4 +43,6 @@
     <color name="pocketpaint_lighter_gray">#DFDADA</color>
     <!-- PocketPaint Highlight Merge Layer -->
     <color name="pocketpaint_color_merge_layer">#33ac86</color>
+    <!-- PocketPaint Tool Highlights -->
+    <color name="pocketpaint_chip_selected_background_color">#33B5E5</color>
 </resources>
