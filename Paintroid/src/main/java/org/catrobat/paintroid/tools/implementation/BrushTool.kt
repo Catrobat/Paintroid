@@ -70,7 +70,6 @@ open class BrushTool(
     private var pathInsideBitmap = false
     private val drawToolMovedDistance = PointF(0f, 0f)
 
-    private var eventValueMultiplier: Float = 0.8F
     private var initWidth = 0f
 
     val pointArray = mutableListOf<PointF>()
@@ -99,6 +98,8 @@ open class BrushTool(
                 bitmapPaint.style = Paint.Style.FILL
                 drawPath(currentPath.getClosedPathFromPoints(), previewPaint)
             } else {
+                previewPaint.style = Paint.Style.STROKE
+                bitmapPaint.style = Paint.Style.STROKE
                 drawPath(pathToDraw, previewPaint)
             }
             restore()
@@ -248,9 +249,9 @@ open class BrushTool(
 
     private fun getNextStrokeWidth(event: MotionEvent): Float {
         val newWidth = if (useEventSize) {
-            event.size * eventValueMultiplier * bitmapPaint.strokeWidth
+            event.size * bitmapPaint.strokeWidth
         } else {
-            event.pressure * eventValueMultiplier * bitmapPaint.strokeWidth
+            event.pressure * bitmapPaint.strokeWidth
         }
         initWidth = newWidth
 
