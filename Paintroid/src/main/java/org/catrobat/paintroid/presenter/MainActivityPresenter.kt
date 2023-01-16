@@ -27,7 +27,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.net.Uri
@@ -570,20 +569,14 @@ open class MainActivityPresenter(
         if (view.isKeyboardShown) {
             view.hideKeyboard()
         } else {
-            setBottomNavigationColor(Color.BLACK)
-            if (toolController.currentTool is LineTool) {
-                (toolController.currentTool as LineTool).undoChangePaintColor(Color.BLACK)
-            } else {
                 if (toolController.currentTool is ClippingTool) {
                     val clippingTool = toolController.currentTool as ClippingTool
                     clippingToolPaint = clippingTool.drawPaint
                     commandManager.undo()
                     clippingToolInUseAndUndoRedoClicked = true
                 } else {
-                    toolController.currentTool?.changePaintColor(Color.BLACK)
                     commandManager.undo()
                 }
-            }
         }
         idlingResource.decrement()
     }
