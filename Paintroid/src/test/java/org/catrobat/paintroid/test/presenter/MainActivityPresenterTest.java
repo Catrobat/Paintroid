@@ -955,6 +955,15 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
+	public void testHandleReadImagePermissionResultLoadPermissionGranted(){
+		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
+				new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+				new int[]{PackageManager.PERMISSION_GRANTED});
+
+		verify(navigator).startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE);
+	}
+
+	@Test
 	public void testHandlePermissionResultLoadPermissionPermanentlyDenied() {
 		String[] permission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
 		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
@@ -965,8 +974,30 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
+	public void testHandleReadImagePermissionResultLoadPermissionPermanentlyDenied() {
+		String[] permission = new String[]{Manifest.permission.READ_MEDIA_IMAGES};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(true);
+		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+		verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog();
+	}
+
+	@Test
 	public void testHandlePermissionResultLoadPermissionNotGranted() {
 		String[] permission = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
+		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
+				permission,
+				new int[]{PackageManager.PERMISSION_DENIED});
+		verify(navigator).showRequestPermissionRationaleDialog(PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+				permission, PERMISSION_REQUEST_CODE_REPLACE_PICTURE
+		);
+	}
+
+	@Test
+	public void testHandleReadImagesPermissionResultLoadPermissionNotGranted() {
+		String[] permission = new String[]{Manifest.permission.READ_MEDIA_IMAGES};
 		when(navigator.isPermissionPermanentlyDenied(permission)).thenReturn(false);
 		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
 				permission,
@@ -1151,6 +1182,17 @@ public class MainActivityPresenterTest {
 
 		verify(view).superHandleRequestPermissionsResult(100,
 				new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+				new int[]{PackageManager.PERMISSION_GRANTED});
+	}
+
+	@Test
+	public void testHandleReadImagePermissionResultWhenStoragePermissionGrantedAndRequestCodeUnknownThenCallBaseHandle() {
+		presenter.handleRequestPermissionsResult(100,
+				new String[]{Manifest.permission.READ_MEDIA_IMAGES},
+				new int[]{PackageManager.PERMISSION_GRANTED});
+
+		verify(view).superHandleRequestPermissionsResult(100,
+				new String[]{Manifest.permission.READ_MEDIA_IMAGES},
 				new int[]{PackageManager.PERMISSION_GRANTED});
 	}
 

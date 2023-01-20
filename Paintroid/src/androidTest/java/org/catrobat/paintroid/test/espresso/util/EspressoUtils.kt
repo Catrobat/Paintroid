@@ -100,7 +100,9 @@ object EspressoUtils {
         get() = InstrumentationRegistry.getInstrumentation().targetContext.resources.configuration
 
     fun grantPermissionRulesVersionCheck(): GrantPermissionRule {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            GrantPermissionRule.grant(Manifest.permission.READ_MEDIA_IMAGES)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             GrantPermissionRule.grant(Manifest.permission.READ_EXTERNAL_STORAGE)
         } else {
             GrantPermissionRule.grant(

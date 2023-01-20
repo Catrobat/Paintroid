@@ -43,6 +43,7 @@ interface MainActivityContracts {
     interface Navigator {
         val isSdkAboveOrEqualM: Boolean
         val isSdkAboveOrEqualQ: Boolean
+        val isSdkAboveOrEqualT: Boolean
 
         fun showColorPickerDialog()
 

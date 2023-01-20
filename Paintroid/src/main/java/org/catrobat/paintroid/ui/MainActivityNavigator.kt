@@ -101,6 +101,9 @@ class MainActivityNavigator(
     override val isSdkAboveOrEqualQ: Boolean
         @SuppressLint("AnnotateVersionCheck")
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+    override val isSdkAboveOrEqualT: Boolean
+        @SuppressLint("AnnotateVersionCheck")
+        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
     private var commandFactory: CommandFactory = DefaultCommandFactory()
 

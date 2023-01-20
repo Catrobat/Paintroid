@@ -383,7 +383,21 @@ open class MainActivityPresenter(
             )
             return
         }
-        if (navigator.isSdkAboveOrEqualQ) {
+
+        if(navigator.isSdkAboveOrEqualT){
+            if (!navigator.doIHavePermission(Manifest.permission.READ_MEDIA_IMAGES)){
+                navigator.askForPermission(
+                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                    requestCode
+                )
+            }else{
+                handleRequestPermissionsResult(
+                    requestCode,
+                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
+                    intArrayOf(PackageManager.PERMISSION_GRANTED)
+                )
+            }
+        } else if (navigator.isSdkAboveOrEqualQ) {
             if (!navigator.doIHavePermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 navigator.askForPermission(
                     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
@@ -469,7 +483,11 @@ open class MainActivityPresenter(
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        if (permissions.size == 1 && (permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE || permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (permissions.size == 1 && (
+                    permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE ||
+                    permissions[0] == Manifest.permission.READ_MEDIA_IMAGES ||
+                    permissions[0] == Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        ) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 when (requestCode) {
                     PERMISSION_EXTERNAL_STORAGE_SAVE -> {
