@@ -713,6 +713,7 @@ open class MainActivityPresenter(
         topBarViewHolder.show()
         bottomNavigationViewHolder.show()
         toolController.enableToolOptionsView()
+        toolController.showToolOptionsView()
         perspective.exitFullscreen()
     }
 
