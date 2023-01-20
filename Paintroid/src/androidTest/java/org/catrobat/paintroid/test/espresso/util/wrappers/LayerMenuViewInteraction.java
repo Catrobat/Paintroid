@@ -106,6 +106,13 @@ public final class LayerMenuViewInteraction extends CustomViewInteraction {
 		return this;
 	}
 
+	public LayerMenuViewInteraction performScrollToPositionInLayerNavigation(int listPosition) {
+		check(matches(isDisplayed()));
+		onView(withId(R.id.pocketpaint_layer_side_nav_list))
+				.perform(androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition(listPosition));
+		return this;
+	}
+
 	public LayerMenuViewInteraction performStartDragging(int listPosition) {
 		check(matches(isDisplayed()));
 		onView(withIndex(withId(org.catrobat.paintroid.R.id.pocketpaint_layer_drag_handle), listPosition)).perform(click());
