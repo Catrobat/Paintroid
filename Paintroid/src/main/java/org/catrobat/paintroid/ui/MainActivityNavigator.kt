@@ -190,7 +190,7 @@ class MainActivityNavigator(
             val queryCursor = mainActivity.contentResolver.query(uri, null, null, null, null)
             queryCursor.use { cursor ->
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
                 }
             }
         }

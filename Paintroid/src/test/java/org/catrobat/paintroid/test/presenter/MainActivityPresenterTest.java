@@ -955,7 +955,7 @@ public class MainActivityPresenterTest {
 	}
 
 	@Test
-	public void testHandleReadImagePermissionResultLoadPermissionGranted(){
+	public void testHandleReadImagePermissionResultLoadPermissionGranted() {
 		presenter.handleRequestPermissionsResult(PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
 				new String[]{Manifest.permission.READ_MEDIA_IMAGES},
 				new int[]{PackageManager.PERMISSION_GRANTED});

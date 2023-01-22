@@ -357,8 +357,8 @@ object FileIO {
         )
         cursor?.use {
             if (cursor.moveToFirst()) {
-                fileName =
-                    cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME))
+//                fileName =
+                fileName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DISPLAY_NAME))
             }
         }
         if (fileName.endsWith(FileType.JPG.toExtension()) || fileName.endsWith(".jpeg")) {
@@ -406,9 +406,9 @@ object FileIO {
         val cursor = resolver.query(contentLocationUri, null, selection, selectionArgs, null)
         cursor?.run {
             while (moveToNext()) {
-                val fileName = getString(cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME))
+                val fileName = getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME))
                 if (fileName == filename) {
-                    val id = cursor.getLong(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
+                    val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID))
                     close()
                     return ContentUris.withAppendedId(contentLocationUri, id)
                 }
