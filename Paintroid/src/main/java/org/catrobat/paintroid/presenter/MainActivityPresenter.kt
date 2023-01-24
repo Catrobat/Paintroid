@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.presenter
 
 import android.Manifest
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentUris
@@ -100,6 +101,8 @@ import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.ui.LayerAdapter
 import org.catrobat.paintroid.ui.Perspective
 import java.io.File
+
+private const val MIN_SDK_FOR_READ_MEDIA_IMAGES = 33
 
 @SuppressWarnings("LongParameterList", "LargeClass", "ThrowingExceptionsWithoutMessageOrCause")
 open class MainActivityPresenter(
@@ -384,6 +387,7 @@ open class MainActivityPresenter(
             return
         }
 
+        @TargetApi(MIN_SDK_FOR_READ_MEDIA_IMAGES)
         when {
             navigator.isSdkAboveOrEqualT ->
                 if (!navigator.doIHavePermission(Manifest.permission.READ_MEDIA_IMAGES)) {
