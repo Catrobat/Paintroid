@@ -112,62 +112,72 @@ open class DrawingSurfaceListener(
         zoomController = zoomWindowController
     }
 
-    private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
+    private fun handleActionMoveOnePointer(currentTool: Tool?, view: View, event: MotionEvent) {
+        currentTool ?: return
+
         val xOld: Float
         val yOld: Float
-        if (event.pointerCount == 1) {
-            currentTool ?: return
-            recentTouchEventsData.add(TouchEventData(event.eventTime, event.x, event.y))
-            removeObsoleteTouchEventsData(event.eventTime)
-            if (currentTool.handToolMode()) {
-                disableAutoScroll()
-                if (touchMode == TouchMode.PINCH) {
-                    xOld = 0f
-                    yOld = 0f
-                    touchMode = TouchMode.DRAW
-                } else {
-                    xOld = eventX
-                    yOld = eventY
-                }
-                newHandEvent(event.x, event.y)
-                if (xOld > 0 && eventX != xOld || yOld > 0 && eventY != yOld) {
-                    callback.translatePerspective(eventX - xOld, eventY - yOld)
-                }
-            } else if (touchMode != TouchMode.PINCH) {
-                touchMode = TouchMode.DRAW
-                if (autoScroll) {
-                    setEvenPointAndViewDimensionsForAutoScrollTask(view)
-                }
-                if (currentTool is BrushTool && currentTool.useEventDependentStrokeWidth) {
-                    currentTool.handleMoveEvent(canvasTouchPoint, event)
-                } else {
-                    currentTool.handleMove(canvasTouchPoint)
-                }
-            }
-            if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
-                zoomController.onMove(canvasTouchPoint)
-            } else {
-                zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint))
-            }
-        } else {
+
+        recentTouchEventsData.add(TouchEventData(event.eventTime, event.x, event.y))
+        removeObsoleteTouchEventsData(event.eventTime)
+        if (currentTool.handToolMode()) {
             disableAutoScroll()
-            if (touchMode == TouchMode.DRAW) {
-                currentTool?.resetInternalState(StateChange.MOVE_CANCELED)
+            if (touchMode == TouchMode.PINCH) {
+                xOld = 0f
+                yOld = 0f
+                touchMode = TouchMode.DRAW
+            } else {
+                xOld = eventX
+                yOld = eventY
             }
-            touchMode = TouchMode.PINCH
-            val pointerDistanceOld = pointerDistance
-            pointerDistance = calculatePointerDistance(event)
-            if (pointerDistanceOld > 0 && pointerDistanceOld != pointerDistance) {
-                val scale = pointerDistance / pointerDistanceOld
-                callback.multiplyPerspectiveScale(scale)
+            newHandEvent(event.x, event.y)
+            if (xOld > 0 && eventX != xOld || yOld > 0 && eventY != yOld) {
+                callback.translatePerspective(eventX - xOld, eventY - yOld)
             }
-            xOld = xMidPoint
-            yOld = yMidPoint
-            calculateMidPoint(event)
-            if (xOld > 0 && xMidPoint != xOld || yOld > 0 && yMidPoint != yOld) {
-                callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld)
+        } else if (touchMode != TouchMode.PINCH) {
+            touchMode = TouchMode.DRAW
+            if (autoScroll) {
+                setEvenPointAndViewDimensionsForAutoScrollTask(view)
             }
-            zoomController.dismissOnPinch()
+            if (currentTool is BrushTool && currentTool.useEventDependentStrokeWidth) {
+                currentTool.handleMoveEvent(canvasTouchPoint, event)
+            } else {
+                currentTool.handleMove(canvasTouchPoint)
+            }
+        }
+        if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
+            zoomController.onMove(canvasTouchPoint)
+        } else {
+            zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint))
+        }
+    }
+
+    private fun handleActionMoveMultiplePointer(currentTool: Tool?, event: MotionEvent) {
+        disableAutoScroll()
+        if (touchMode == TouchMode.DRAW) {
+            currentTool?.resetInternalState(StateChange.MOVE_CANCELED)
+        }
+        touchMode = TouchMode.PINCH
+        val pointerDistanceOld = pointerDistance
+        pointerDistance = calculatePointerDistance(event)
+        if (pointerDistanceOld > 0 && pointerDistanceOld != pointerDistance) {
+            val scale = pointerDistance / pointerDistanceOld
+            callback.multiplyPerspectiveScale(scale)
+        }
+        val xOld: Float = xMidPoint
+        val yOld: Float = yMidPoint
+        calculateMidPoint(event)
+        if (xOld > 0 && xMidPoint != xOld || yOld > 0 && yMidPoint != yOld) {
+            callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld)
+        }
+        zoomController.dismissOnPinch()
+    }
+
+    private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
+        if (event.pointerCount == 1) {
+            handleActionMoveOnePointer(currentTool, view, event)
+        } else {
+            handleActionMoveMultiplePointer(currentTool, event)
         }
     }
 

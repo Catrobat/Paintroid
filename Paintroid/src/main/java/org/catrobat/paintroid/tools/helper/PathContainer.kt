@@ -8,13 +8,13 @@ data class Cubic(val p1: PointF, val p2: PointF, val p3: PointF)
 
 class PathContainer {
     private var cubicsRight = mutableListOf<Cubic>()
-    private var cubicsLeft  = mutableListOf<Cubic>()
+    private var cubicsLeft = mutableListOf<Cubic>()
 
     private val neededBezierPoints = 3
     private var bezierPoints = mutableListOf<PointF>()
     private var bezierPointsWidths = mutableListOf<Float>()
 
-    private var lastEndPoint = PointF(0f,0f)
+    private var lastEndPoint = PointF(0f, 0f)
 
     private var lastPath: SerializablePath = SerializablePath()
     fun getClosedPathFromPoints(): SerializablePath {
@@ -34,7 +34,7 @@ class PathContainer {
             reversed.forEach { cubic ->
                 path.cubicTo(cubic.p3.x, cubic.p3.y, cubic.p2.x, cubic.p2.y, cubic.p1.x, cubic.p1.y)
             }
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             return lastPath
         }
 

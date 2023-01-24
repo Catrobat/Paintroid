@@ -76,8 +76,6 @@ open class BrushTool(
 
     val pointArray = mutableListOf<PointF>()
 
-
-
     init {
         toolOptionsViewController.enable()
         pathToDraw.incReserve(1)
