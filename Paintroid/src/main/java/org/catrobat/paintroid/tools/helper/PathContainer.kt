@@ -25,17 +25,14 @@ class PathContainer {
         path.incReserve(cubicsLeft.size * 6)
 
         path.moveTo(cubicsLeft[0].p1.x, cubicsLeft[0].p1.y)
-        try {
-            cubicsRight.forEach { cubic ->
-                path.cubicTo(cubic.p1.x, cubic.p1.y, cubic.p2.x, cubic.p2.y, cubic.p3.x, cubic.p3.y)
-            }
-            path.lineTo(cubicsLeft.last().p3.x, cubicsLeft.last().p3.y)
-            val reversed = cubicsLeft.reversed()
-            reversed.forEach { cubic ->
-                path.cubicTo(cubic.p3.x, cubic.p3.y, cubic.p2.x, cubic.p2.y, cubic.p1.x, cubic.p1.y)
-            }
-        } catch (e: Exception) {
-            return lastPath
+
+        cubicsRight.forEach { cubic ->
+            path.cubicTo(cubic.p1.x, cubic.p1.y, cubic.p2.x, cubic.p2.y, cubic.p3.x, cubic.p3.y)
+        }
+        path.lineTo(cubicsLeft.last().p3.x, cubicsLeft.last().p3.y)
+        val reversed = cubicsLeft.reversed()
+        reversed.forEach { cubic ->
+            path.cubicTo(cubic.p3.x, cubic.p3.y, cubic.p2.x, cubic.p2.y, cubic.p1.x, cubic.p1.y)
         }
 
         path.close()
