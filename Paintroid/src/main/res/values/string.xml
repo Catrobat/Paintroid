@@ -44,6 +44,8 @@
     <string name="done">Done</string>
 
     <string name="gallery">Gallery</string>
+    
+    <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
 
     <string name="stamptool_paste">Paste</string>
     <string name="stamptool_copy">Copy</string>
@@ -153,6 +155,7 @@
     <string name="layer_too_many_layers">Too many layers</string>
     <string name="layer_merged">Layers merged</string>
     <string name="layer_background">Layer background</string>
+    <string name="layer_preview">Layer preview</string>
 
     <string name="dialog_loading_image_failed_title">Error on loading image</string>
     <string name="dialog_loading_image_failed_text">Not a valid image</string>
@@ -238,5 +241,7 @@
 
     <string name="dialog_scale_title">Image is too big to load</string>
     <string name="dialog_scale_message">The image is too big to load. Tap OK to scale down the image automatically.</string>
+
+    <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
 
 </resources>

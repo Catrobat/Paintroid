@@ -381,4 +381,14 @@ open class CursorTool(
 
         pointArray.clear()
     }
+
+    override fun toolPositionCoordinates(coordinate: PointF): PointF {
+        var finalCoordinates: PointF = PointF(0f, 0f)
+        previousEventCoordinate?.let {
+            val deltaX = coordinate.x - it.x
+            val deltaY = coordinate.y - it.y
+            finalCoordinates = calculateNewClampedToolPosition(deltaX, deltaY)
+        }
+        return finalCoordinates
+    }
 }

@@ -112,6 +112,8 @@ class TransformTool(
     override val toolType: ToolType
         get() = ToolType.TRANSFORM
 
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
+
     init {
         rotationEnabled = ROTATION_ENABLED
         resizePointsVisible = RESIZE_POINTS_VISIBLE

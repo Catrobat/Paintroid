@@ -321,6 +321,8 @@ class LineTool(
         return true
     }
 
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
+
     override fun resetInternalState() {
         initialEventCoordinate = null
         currentCoordinate = null

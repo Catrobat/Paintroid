@@ -32,6 +32,9 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.net.Uri
 import android.os.CountDownTimer
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -49,6 +52,7 @@ import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.common.CREATE_FILE_DEFAULT
 import org.catrobat.paintroid.common.LOAD_IMAGE_CATROID
 import org.catrobat.paintroid.common.LOAD_IMAGE_DEFAULT
@@ -116,7 +120,8 @@ open class MainActivityPresenter(
     private val sharedPreferences: UserPreferences,
     private val idlingResource: CountingIdlingResource,
     override val context: Context,
-    private val internalMemoryPath: File
+    private val internalMemoryPath: File,
+    private val commandSerializer: CommandSerializer
 ) : MainActivityContracts.Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
     private var downTimer: CountDownTimer? = null
     private var layerAdapter: LayerAdapter? = null
@@ -433,7 +438,7 @@ open class MainActivityPresenter(
                     imageUri,
                     context,
                     false,
-                    workspace
+                    commandSerializer
                 )
             }
             REQUEST_CODE_LOAD_PICTURE -> {
@@ -446,7 +451,7 @@ open class MainActivityPresenter(
                     imageUri,
                     context,
                     false,
-                    workspace
+                    commandSerializer
                 )
             }
             REQUEST_CODE_INTRO -> if (resultCode == RESULT_INTRO_MW_NOT_SUPPORTED) {
@@ -551,13 +556,13 @@ open class MainActivityPresenter(
     override fun saveImageConfirmClicked(requestCode: Int, uri: Uri?) {
         checkIfClippingToolNeedsAdjustment()
         view.refreshDrawingSurface()
-        interactor.saveImage(this, requestCode, workspace, uri, context)
+        interactor.saveImage(this, requestCode, workspace.layerModel, commandSerializer, uri, context)
     }
 
     override fun saveCopyConfirmClicked(requestCode: Int, uri: Uri?) {
         checkIfClippingToolNeedsAdjustment()
         view.refreshDrawingSurface()
-        interactor.saveCopy(this, requestCode, workspace, uri, context)
+        interactor.saveCopy(this, requestCode, workspace.layerModel, commandSerializer, uri, context)
     }
 
     override fun undoClicked() {
@@ -611,7 +616,7 @@ open class MainActivityPresenter(
                 val currentHolder = getViewHolderAt(i)
                 currentHolder?.let {
                     if (it.bitmap != null) {
-                        it.updateImageView(it.bitmap)
+                        it.updateImageView(presenter.getLayerItem(i))
                     }
                 }
             }
@@ -669,7 +674,7 @@ open class MainActivityPresenter(
                     model.savedPictureUri,
                     context,
                     false,
-                    workspace
+                    commandSerializer
                 )
             } else if (extraPictureName != null) {
                 interactor.createFile(
@@ -839,7 +844,7 @@ open class MainActivityPresenter(
                     uri,
                     context,
                     true,
-                    workspace
+                    commandSerializer
                 )
             }
             LOAD_IMAGE_CATROID, LOAD_IMAGE_DEFAULT -> interactor.loadFile(
@@ -848,7 +853,7 @@ open class MainActivityPresenter(
                 uri,
                 context,
                 true,
-                workspace
+                commandSerializer
             )
             else -> Log.e(MainActivity.TAG, "wrong request code for loading pictures")
         }
@@ -888,7 +893,7 @@ open class MainActivityPresenter(
                         commandManager.setInitialStateCommand(commandFactory.createInitCommand(it))
                     }
                 } else {
-                    result.bitmapList?.let {
+                    result.layerList?.let {
                         commandManager.setInitialStateCommand(commandFactory.createInitCommand(it))
                     }
                 }
@@ -1060,6 +1065,9 @@ open class MainActivityPresenter(
 
     override fun importStickersClicked() {
         navigator.showCatroidMediaGallery()
+        if (!checkForInternet(context)) {
+            Toast.makeText(context, context.getString(R.string.no_connection_sticker), Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun bitmapLoadedFromSource(loadedImage: Bitmap) {
@@ -1071,11 +1079,11 @@ open class MainActivityPresenter(
     }
 
     override fun saveNewTemporaryImage() {
-        FileIO.saveTemporaryPictureFile(internalMemoryPath, workspace)
+        FileIO.saveTemporaryPictureFile(internalMemoryPath, commandSerializer)
     }
 
-    override fun openTemporaryFile(workspace: Workspace): WorkspaceReturnValue? =
-        FileIO.openTemporaryPictureFile(workspace)
+    override fun openTemporaryFile(): WorkspaceReturnValue? =
+        FileIO.openTemporaryPictureFile(commandSerializer)
 
     override fun checkForTemporaryFile(): Boolean =
         FileIO.checkForTemporaryFile(internalMemoryPath)
@@ -1182,6 +1190,24 @@ open class MainActivityPresenter(
                 cursor?.close()
             }
             return ""
+        }
+
+        private fun checkForInternet(context: Context): Boolean {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val network = connectivityManager.activeNetwork ?: return false
+                val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+                return when {
+                    activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                    activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                    else -> false
+                }
+            } else {
+                @Suppress("DEPRECATION") val networkInfo =
+                        connectivityManager.activeNetworkInfo ?: return false
+                @Suppress("DEPRECATION")
+                return networkInfo.isConnected
+            }
         }
 
         private fun isExternalStorageDocument(uri: Uri): Boolean =

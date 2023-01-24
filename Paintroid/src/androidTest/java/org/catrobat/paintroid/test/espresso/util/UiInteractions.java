@@ -20,15 +20,19 @@
 package org.catrobat.paintroid.test.espresso.util;
 
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
 import org.hamcrest.Matcher;
 
 import static org.catrobat.paintroid.test.espresso.util.CustomSwiper.ACCURATE;
 import static org.hamcrest.Matchers.is;
+
+import java.lang.reflect.Method;
 
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
@@ -49,6 +53,7 @@ import androidx.viewpager.widget.ViewPager;
 import static androidx.test.espresso.action.ViewActions.actionWithAssertions;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 
@@ -108,7 +113,13 @@ public final class UiInteractions {
 
 			@Override
 			public void perform(UiController uiController, View view) {
-				((SeekBar) view).setProgress(progress);
+				try {
+					Method privateSetProgressMethod = ProgressBar.class.getDeclaredMethod("setProgressInternal", Integer.TYPE, Boolean.TYPE, Boolean.TYPE);
+					privateSetProgressMethod.setAccessible(true);
+					privateSetProgressMethod.invoke(view, progress, true, true);
+				} catch (ReflectiveOperationException e) {
+					Log.e("SET PROGRESS", "could not set progress");
+				}
 			}
 		};
 	}
@@ -180,6 +191,14 @@ public final class UiInteractions {
 		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER_LEFT, Press.FINGER, 0, 0);
 	}
 
+	public static ViewAction touchCenterTop() {
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.TOP_CENTER, Press.FINGER, 0, 0);
+	}
+
+	public static ViewAction touchCenterBottom() {
+		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.BOTTOM_CENTER, Press.FINGER, 0, 0);
+	}
+
 	public static ViewAction touchCenterMiddle() {
 		return new GeneralClickAction(Tap.SINGLE, GeneralLocation.CENTER, Press.FINGER, 0, 0);
 	}
@@ -235,7 +254,7 @@ public final class UiInteractions {
 	}
 
 	private static class UnconstrainedScrollToAction implements ViewAction {
-		private ViewAction action = new ScrollToAction();
+		private final ViewAction action = new ScrollToAction();
 
 		@Override
 		public Matcher<View> getConstraints() {
@@ -255,7 +274,7 @@ public final class UiInteractions {
 
 	public static class DefinedLongTap implements Tapper {
 
-		private int longPressTimeout;
+		private final int longPressTimeout;
 
 		DefinedLongTap(int longPressTimeout) {
 			this.longPressTimeout = longPressTimeout;
@@ -296,6 +315,74 @@ public final class UiInteractions {
 		public Status sendTap(UiController uiController, float[] coordinates, float[] precision) {
 			return sendTap(uiController, coordinates, precision, InputDevice.SOURCE_UNKNOWN,
 					MotionEvent.BUTTON_PRIMARY);
+		}
+	}
+
+	public static class PressAndReleaseActions {
+
+		static MotionEvent motionEvent = null;
+
+		public static PressAction pressAction(DrawingSurfaceLocationProvider coordinates) {
+			return new PressAction(coordinates);
+		}
+
+		public static ReleaseAction releaseAction() {
+			return new ReleaseAction();
+		}
+
+		public static void tearDownPressAndRelease() {
+			motionEvent = null;
+		}
+
+		public static class PressAction implements ViewAction {
+
+			DrawingSurfaceLocationProvider coordinates;
+
+			PressAction(DrawingSurfaceLocationProvider coords) {
+				this.coordinates = coords;
+			}
+
+			@Override
+			public Matcher<View> getConstraints() {
+				return isDisplayingAtLeast(90);
+			}
+
+			@Override
+			public String getDescription() {
+				return "Press Action";
+			}
+
+			@Override
+			public void perform(UiController uiController, View view) {
+				if (motionEvent != null) {
+					throw new AssertionError("Only one view can be held at a time");
+				}
+				float[] coords = coordinates.calculateCoordinates(view);
+				float[] precision = Press.FINGER.describePrecision();
+
+				motionEvent = MotionEvents.sendDown(uiController, coords, precision).down;
+			}
+		}
+
+		public static class ReleaseAction implements ViewAction {
+
+			@Override
+			public Matcher<View> getConstraints() {
+				return isDisplayingAtLeast(90);
+			}
+
+			@Override
+			public String getDescription() {
+				return "Release";
+			}
+
+			@Override
+			public void perform(UiController uiController, View view) {
+				if (motionEvent == null) {
+					throw new AssertionError("Only one view can be held at a time");
+				}
+				MotionEvents.sendUp(uiController, motionEvent);
+			}
 		}
 	}
 }

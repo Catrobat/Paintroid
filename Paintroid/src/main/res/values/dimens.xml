@@ -30,4 +30,8 @@
     <dimen name="pocketpaint_welcome_margin_top_header">80dp</dimen>
     <dimen name="pocketpaint_welcome_margin_top_possibilities">44dp</dimen> <!-- 100-topbar -->
     <dimen name="pocketpaint_welcome_margin_top_text">20dp</dimen>
+
+    <!-- PocketPaint Zoom Window -->
+    <dimen name="pocketpaint_zoom_window_height">80dp</dimen>
+    <dimen name="pocketpaint_zoom_window_width">80dp</dimen>
 </resources>
