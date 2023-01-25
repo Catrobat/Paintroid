@@ -24,14 +24,19 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.util.Log
 import org.catrobat.paintroid.command.Command
+import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.contract.LayerContracts
 
-class PathCommand(val paint: Paint, path: Path) : Command {
+class LineToolCommand(paths: List<SerializablePath>) : Command {
 
-    var path = path; private set
+    var paths = paths; private set
 
     override fun run(canvas: Canvas, layerModel: LayerContracts.Model) {
-        canvas.drawPath(path, paint)
+        Log.i("MY_TAG", "drawing ")
+//        pathCommands.forEach{
+//
+//            it.run(canvas, layerModel)
+//        }
     }
 
     override fun freeResources() {

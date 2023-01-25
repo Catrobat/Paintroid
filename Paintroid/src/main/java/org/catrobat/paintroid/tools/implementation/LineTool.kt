@@ -18,10 +18,8 @@
  */
 package org.catrobat.paintroid.tools.implementation
 
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.PointF
-import android.graphics.RectF
+import android.graphics.*
+import android.util.Log
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.CommandManager
@@ -68,6 +66,10 @@ class LineTool(
     var undoRecentlyClicked = false
     var undoPreviousLineForConnectedLines = true
     var changeInitialCoordinateForHandleNormalLine = false
+    private var currentlyTappedRectangle: RectF? = null
+    private val coordinatesBuffer: ArrayList<PointF> = ArrayList()
+    private val drawnRectangles: ArrayList<RectF> = ArrayList()
+    private val rectPaint = Paint()
 
     companion object {
         var topBarViewHolder: TopBarViewHolder? = null
@@ -84,6 +86,20 @@ class LineTool(
         brushToolOptionsView.setCurrentPaint(toolPaint.paint)
         if (topBarViewHolder != null && topBarViewHolder?.plusButton?.visibility == View.VISIBLE) {
             topBarViewHolder?.hidePlusButton()
+        }
+        initRectPaint()
+    }
+
+//    class RectangleConnection {
+//        rectangle: RectF
+//    }
+
+    private fun initRectPaint() {
+        rectPaint.run {
+            style = Paint.Style.FILL
+            color = Color.GRAY
+            alpha = 180
+            strokeWidth = 10.0f
         }
     }
 
@@ -102,6 +118,7 @@ class LineTool(
                 }
             }
         }
+        drawShape(canvas)
     }
 
     fun handleStateBeforeUndo() {
@@ -126,12 +143,47 @@ class LineTool(
         }
     }
 
+    private fun drawRect(
+            canvas: Canvas,
+            position: PointF
+    ) {
+        var outerRadius = 30.0f;
+
+        val strokeRect = RectF(
+        position.x - outerRadius,
+        position.y - outerRadius,
+        position.x + outerRadius,
+        position.y + outerRadius
+        )
+        drawnRectangles.add(strokeRect)
+        canvas.drawRect(strokeRect, rectPaint);
+    }
+
     override fun drawShape(canvas: Canvas) {
-        // This should never be invoked
+        drawnRectangles.clear()
+        if(coordinatesBuffer.size > 0) {
+            coordinatesBuffer.forEach {
+                drawRect(canvas, it)
+            }
+        }
+        if(initialEventCoordinate != null && currentCoordinate != null) {
+            initialEventCoordinate?.let { drawRect(canvas, it) }
+            currentCoordinate?.let { drawRect(canvas, it) }
+        } else {
+            startPointToDraw?.let { drawRect(canvas, it) }
+            endPointToDraw?.let { drawRect(canvas, it) }
+        }
+    }
+
+    private fun bufferPreviousCoordinate(coordinate: PointF) {
+        coordinatesBuffer.run {
+            add(coordinate)
+        }
     }
 
     fun onClickOnPlus() {
         if (startpointSet && endpointSet) {
+            startPointToDraw?.let { bufferPreviousCoordinate(it) }
             val newStartCoordinate = endPointToDraw?.let { PointF(it.x, it.y) }
             initialEventCoordinate = endPointToDraw?.let { PointF(it.x, it.y) }
             previousEventCoordinate = endPointToDraw?.let { PointF(it.x, it.y) }
@@ -181,17 +233,35 @@ class LineTool(
         }
     }
 
+    fun coordinateIntersectsWithRect(coordinate: PointF, rectF: RectF): Boolean =
+            coordinate.x < rectF.right && rectF.left < coordinate.x &&
+            coordinate.y < rectF.bottom && rectF.top < coordinate.y
+
+    private fun findIntersectWithDrawnRect(coordinate: PointF): RectF? {
+        return drawnRectangles.find { coordinateIntersectsWithRect(coordinate, it) }
+    }
+
+//    private fun isIntersectingWithDrawnRect(coordinate: PointF): Boolean {
+//        return findIntersectWithDrawnRect(coordinate) != null
+//    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        currentlyTappedRectangle = findIntersectWithDrawnRect(coordinate)
+        if (currentlyTappedRectangle != null) {
+            return false
+        }
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
         return true
     }
 
     override fun handleMove(coordinate: PointF?): Boolean {
+//        Log.i("MY_TAG", "register handle move ${System.currentTimeMillis()}")
         coordinate ?: return false
         changeInitialCoordinateForHandleNormalLine = true
         if (startpointSet) {
+//            Log.i("MY_TAG", "handle move with satrtpoint set")
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
             previousEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
             if (undoPreviousLineForConnectedLines && commandManager.isUndoAvailable && !undoRecentlyClicked) {
@@ -215,7 +285,7 @@ class LineTool(
             undoRecentlyClicked = false
             resetInternalState()
             startPointToDraw?.let {
-                return addPointCommand(it)
+                addPointCommand(it)
             }
         } else {
             lineFinalized = true
@@ -310,10 +380,13 @@ class LineTool(
         if (xDistance != null && yDistance != null) {
             if (changeInitialCoordinateForHandleNormalLine) {
                 changeInitialCoordinateForHandleNormalLine = false
+//                Log.i("MY_TAG", "handleNormalLine")
                 return handleNormalLine(coordinate, xDistance, yDistance)
             } else if (!startpointSet) {
+//                Log.i("MY_TAG", "handöeStartPoint")
                 return handleStartPoint(xDistance, yDistance)
             } else {
+//                Log.i("MY_TAG", "handleEndPoint")
                 return handleEndPoint(xDistance, yDistance)
             }
         }
@@ -448,7 +521,7 @@ class LineTool(
         brushToolOptionsView.invalidate()
     }
 
-    private fun addPointCommand(coordinate: PointF): Boolean {
+    private fun  addPointCommand(coordinate: PointF): Boolean {
         val command = commandFactory.createPointCommand(this.drawPaint, coordinate)
         commandManager.addCommand(command)
         return true
