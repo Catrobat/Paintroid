@@ -19,9 +19,9 @@
 package org.catrobat.paintroid.tools.implementation
 
 import android.graphics.*
-import android.util.Log
 import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
+import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
@@ -71,6 +71,10 @@ class LineTool(
     private val drawnRectangles: ArrayList<RectF> = ArrayList()
     private val rectPaint = Paint()
 
+    //
+    var pathCommandList: ArrayList<Command> = ArrayList()
+    var drawnPaths: Int = 0
+
     companion object {
         var topBarViewHolder: TopBarViewHolder? = null
     }
@@ -89,10 +93,6 @@ class LineTool(
         }
         initRectPaint()
     }
-
-//    class RectangleConnection {
-//        rectangle: RectF
-//    }
 
     private fun initRectPaint() {
         rectPaint.run {
@@ -144,16 +144,16 @@ class LineTool(
     }
 
     private fun drawRect(
-            canvas: Canvas,
-            position: PointF
+        canvas: Canvas,
+        position: PointF
     ) {
         var outerRadius = 30.0f;
 
         val strokeRect = RectF(
-        position.x - outerRadius,
-        position.y - outerRadius,
-        position.x + outerRadius,
-        position.y + outerRadius
+            position.x - outerRadius,
+            position.y - outerRadius,
+            position.x + outerRadius,
+            position.y + outerRadius
         )
         drawnRectangles.add(strokeRect)
         canvas.drawRect(strokeRect, rectPaint);
@@ -184,6 +184,10 @@ class LineTool(
     fun onClickOnPlus() {
         if (startpointSet && endpointSet) {
             startPointToDraw?.let { bufferPreviousCoordinate(it) }
+
+            // plus means a path is finished
+            drawnPaths++
+
             val newStartCoordinate = endPointToDraw?.let { PointF(it.x, it.y) }
             initialEventCoordinate = endPointToDraw?.let { PointF(it.x, it.y) }
             previousEventCoordinate = endPointToDraw?.let { PointF(it.x, it.y) }
@@ -202,6 +206,12 @@ class LineTool(
         if (topBarViewHolder != null && topBarViewHolder?.plusButton?.visibility == View.VISIBLE) {
             topBarViewHolder?.hidePlusButton()
         }
+
+        // save the "container" of commands
+        pathCommandList.clear()
+        var lenk = coordinatesBuffer
+        drawnPaths = 0
+
         undoRecentlyClicked = false
         if (startpointSet && endpointSet) {
             if (toolSwitched) {
@@ -233,17 +243,13 @@ class LineTool(
         }
     }
 
-    fun coordinateIntersectsWithRect(coordinate: PointF, rectF: RectF): Boolean =
-            coordinate.x < rectF.right && rectF.left < coordinate.x &&
+    private fun coordinateIntersectsWithRect(coordinate: PointF, rectF: RectF): Boolean =
+        coordinate.x < rectF.right && rectF.left < coordinate.x &&
             coordinate.y < rectF.bottom && rectF.top < coordinate.y
 
     private fun findIntersectWithDrawnRect(coordinate: PointF): RectF? {
         return drawnRectangles.find { coordinateIntersectsWithRect(coordinate, it) }
     }
-
-//    private fun isIntersectingWithDrawnRect(coordinate: PointF): Boolean {
-//        return findIntersectWithDrawnRect(coordinate) != null
-//    }
 
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
@@ -257,16 +263,19 @@ class LineTool(
     }
 
     override fun handleMove(coordinate: PointF?): Boolean {
-//        Log.i("MY_TAG", "register handle move ${System.currentTimeMillis()}")
         coordinate ?: return false
         changeInitialCoordinateForHandleNormalLine = true
         if (startpointSet) {
-//            Log.i("MY_TAG", "handle move with satrtpoint set")
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
             previousEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
             if (undoPreviousLineForConnectedLines && commandManager.isUndoAvailable && !undoRecentlyClicked) {
                 undoRecentlyClicked = false
                 commandManager.undoIgnoringColorChanges()
+
+                // if a path is not finalized it needs to be removed in order to add the new adjusted command
+                if(pathCommandList.size == drawnPaths) {
+                    pathCommandList.removeAt(pathCommandList.size - 1)
+                }
             }
             undoPreviousLineForConnectedLines = false
             undoRecentlyClicked = false
@@ -275,7 +284,7 @@ class LineTool(
         return true
     }
 
-    fun handleStartPoint(xDistance: Float, yDistance: Float): Boolean {
+    private fun handleStartPoint(xDistance: Float, yDistance: Float): Boolean {
         startPointToDraw = previousEventCoordinate?.let { PointF(it.x, it.y) }
         startPointToDraw?.x = startPointToDraw?.x?.minus(xDistance)
         startPointToDraw?.y = startPointToDraw?.y?.minus(yDistance)
@@ -294,7 +303,7 @@ class LineTool(
         return true
     }
 
-    fun handleEndPoint(xDistance: Float, yDistance: Float, fromHandleLine: Boolean = false): Boolean {
+    private fun handleEndPoint(xDistance: Float, yDistance: Float, fromHandleLine: Boolean = false): Boolean {
         if (previousEventCoordinate?.let { workspace.contains(it) } == false) {
             return false
         }
@@ -315,6 +324,9 @@ class LineTool(
         }
         val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
 
+        // add the new command
+        pathCommandList.add(command)
+
         if (!fromHandleLine && !undoRecentlyClicked) {
             if (commandManager.isUndoAvailable && !undoRecentlyClicked) {
                 commandManager.undoIgnoringColorChangesAndAddCommand(command)
@@ -330,7 +342,7 @@ class LineTool(
         return true
     }
 
-    fun handleNormalLine(coordinate: PointF, xDistance: Float, yDistance: Float): Boolean {
+    private fun handleNormalLine(coordinate: PointF, xDistance: Float, yDistance: Float): Boolean {
         val bounds = RectF()
         if (startpointSet) {
             return handleEndPoint(xDistance, yDistance, true)
@@ -358,9 +370,14 @@ class LineTool(
             topBarViewHolder?.showPlusButton()
         }
 
+        // erste linie
         if (workspace.intersectsWith(bounds)) {
             val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
             commandManager.addCommand(command)
+
+            pathCommandList.add(command)
+            drawnPaths++
+
         }
         resetInternalState()
         return true
@@ -380,13 +397,10 @@ class LineTool(
         if (xDistance != null && yDistance != null) {
             if (changeInitialCoordinateForHandleNormalLine) {
                 changeInitialCoordinateForHandleNormalLine = false
-//                Log.i("MY_TAG", "handleNormalLine")
                 return handleNormalLine(coordinate, xDistance, yDistance)
             } else if (!startpointSet) {
-//                Log.i("MY_TAG", "handöeStartPoint")
                 return handleStartPoint(xDistance, yDistance)
             } else {
-//                Log.i("MY_TAG", "handleEndPoint")
                 return handleEndPoint(xDistance, yDistance)
             }
         }
