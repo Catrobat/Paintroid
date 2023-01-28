@@ -3,5 +3,5 @@
     <item android:state_checked="true"
         android:color="@color/pocketpaint_colorPrimary" />
     <item android:state_checked="false"
-        android:color="@android:color/transparent" />
+        android:color="@color/design_default_color_background" />
 </selector>
