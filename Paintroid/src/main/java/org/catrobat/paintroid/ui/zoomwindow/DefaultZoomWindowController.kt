@@ -218,7 +218,10 @@ class DefaultZoomWindowController
             tool?.toolType?.name.equals(ToolType.HAND.name) ||
             tool?.toolType?.name.equals(ToolType.FILL.name) ||
             tool?.toolType?.name.equals(ToolType.STAMP.name) ||
-            tool?.toolType?.name.equals(ToolType.TRANSFORM.name) ||
+            tool?.toolType?.name.equals(ToolType.TRANSFORM.name)
+        ) {
+            return Constants.NOT_COMPATIBLE
+        } else if (
             tool?.toolType?.name.equals(ToolType.IMPORTPNG.name) ||
             tool?.toolType?.name.equals(ToolType.SHAPE.name) ||
             tool?.toolType?.name.equals(ToolType.TEXT.name)
