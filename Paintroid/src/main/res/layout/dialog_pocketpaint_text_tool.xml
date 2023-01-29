@@ -26,9 +26,11 @@
         style="@style/TextFieldTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp">
+        android:layout_toStartOf="@id/pocketpaint_text_tool_dialog_list_font"
+        android:layout_margin="10dp"
+        tools:ignore="RelativeOverlap">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/pocketpaint_font_size_text"
@@ -54,8 +56,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
         android:layout_margin="10dp"
+        android:layout_toEndOf="@id/pocketpaint_text_tool_dialog_list_font"
         android:layout_marginTop="@dimen/toolbar_height"
         tools:ignore="RelativeOverlap,RtlHardcoded">
 
