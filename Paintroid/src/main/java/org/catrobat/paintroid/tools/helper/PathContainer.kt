@@ -10,6 +10,7 @@ class PathContainer {
     private var cubicsRight = mutableListOf<Cubic>()
     private var cubicsLeft = mutableListOf<Cubic>()
 
+    @Suppress("MagicNumber")
     private val neededBezierPoints = 3
     private var bezierPoints = mutableListOf<PointF>()
     private var bezierPointsWidths = mutableListOf<Float>()
@@ -22,9 +23,11 @@ class PathContainer {
 
         if (cubicsLeft.size < neededBezierPoints) return path
 
+        @Suppress("MagicNumber")
         path.incReserve(cubicsLeft.size * 6)
 
         path.moveTo(cubicsLeft[0].p1.x, cubicsLeft[0].p1.y)
+        @Suppress("SwallowedException")
         try {
             cubicsRight.forEach { cubic ->
                 path.cubicTo(cubic.p1.x, cubic.p1.y, cubic.p2.x, cubic.p2.y, cubic.p3.x, cubic.p3.y)
@@ -37,7 +40,6 @@ class PathContainer {
         } catch (ex: ConcurrentModificationException) {
             return lastPath
         }
-
 
         path.close()
         lastPath = path
