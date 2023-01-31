@@ -23,6 +23,7 @@ import android.view.View
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.command.implementation.PathCommand
 import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.catrobat.paintroid.tools.ContextCallback
 import org.catrobat.paintroid.tools.ToolPaint
@@ -66,14 +67,19 @@ class LineTool(
     var undoRecentlyClicked = false
     var undoPreviousLineForConnectedLines = true
     var changeInitialCoordinateForHandleNormalLine = false
-    private var currentlyTappedRectangle: RectF? = null
-    private val coordinatesBuffer: ArrayList<PointF> = ArrayList()
-    private val drawnRectangles: ArrayList<RectF> = ArrayList()
     private val rectPaint = Paint()
 
     //
-    var pathCommandList: ArrayList<Command> = ArrayList()
+    var lineCommandList: ArrayList<LineCommand> = ArrayList()
     var drawnPaths: Int = 0
+    var currentCanvas: Canvas? = null
+
+    var activeStartVertex: LineCommand? = null
+    var activeEndVertex: LineCommand? = null
+
+    var movingVertexModeActive: Boolean = false
+
+    var lineId: Int = 0
 
     companion object {
         var topBarViewHolder: TopBarViewHolder? = null
@@ -104,6 +110,7 @@ class LineTool(
     }
 
     override fun draw(canvas: Canvas) {
+        currentCanvas = canvas
         initialEventCoordinate?.let { initialCoordinate ->
             currentCoordinate?.let { currentCoordinate ->
                 canvas.run {
@@ -143,48 +150,30 @@ class LineTool(
         }
     }
 
-    private fun drawRect(
-        canvas: Canvas,
-        position: PointF
-    ) {
+    private fun createVertex(coordinate: PointF): RectF {
         var outerRadius = 30.0f;
 
-        val strokeRect = RectF(
-            position.x - outerRadius,
-            position.y - outerRadius,
-            position.x + outerRadius,
-            position.y + outerRadius
+        return RectF(
+            coordinate.x - outerRadius,
+            coordinate.y - outerRadius,
+            coordinate.x + outerRadius,
+            coordinate.y + outerRadius
         )
-        drawnRectangles.add(strokeRect)
-        canvas.drawRect(strokeRect, rectPaint);
     }
 
     override fun drawShape(canvas: Canvas) {
-        drawnRectangles.clear()
-        if(coordinatesBuffer.size > 0) {
-            coordinatesBuffer.forEach {
-                drawRect(canvas, it)
+        lineCommandList.forEach {
+            if(it.isFirstLine) {
+                it.startVertex?.let { it1 -> canvas.drawRect(it1, rectPaint) }
+                it.endVertex?.let { it1 -> canvas.drawRect(it1, rectPaint) }
+            } else {
+                it.endVertex?.let { it1 -> canvas.drawRect(it1, rectPaint) }
             }
-        }
-        if(initialEventCoordinate != null && currentCoordinate != null) {
-            initialEventCoordinate?.let { drawRect(canvas, it) }
-            currentCoordinate?.let { drawRect(canvas, it) }
-        } else {
-            startPointToDraw?.let { drawRect(canvas, it) }
-            endPointToDraw?.let { drawRect(canvas, it) }
-        }
-    }
-
-    private fun bufferPreviousCoordinate(coordinate: PointF) {
-        coordinatesBuffer.run {
-            add(coordinate)
         }
     }
 
     fun onClickOnPlus() {
         if (startpointSet && endpointSet) {
-            startPointToDraw?.let { bufferPreviousCoordinate(it) }
-
             // plus means a path is finished
             drawnPaths++
 
@@ -207,9 +196,8 @@ class LineTool(
             topBarViewHolder?.hidePlusButton()
         }
 
-        // save the "container" of commands
-        pathCommandList.clear()
-        var lenk = coordinatesBuffer
+        // save the "container" of commands to the command manager
+        lineCommandList.clear()
         drawnPaths = 0
 
         undoRecentlyClicked = false
@@ -243,20 +231,44 @@ class LineTool(
         }
     }
 
-    private fun coordinateIntersectsWithRect(coordinate: PointF, rectF: RectF): Boolean =
+    private fun isInsideVertex(coordinate: PointF, rectF: RectF): Boolean =
         coordinate.x < rectF.right && rectF.left < coordinate.x &&
             coordinate.y < rectF.bottom && rectF.top < coordinate.y
 
-    private fun findIntersectWithDrawnRect(coordinate: PointF): RectF? {
-        return drawnRectangles.find { coordinateIntersectsWithRect(coordinate, it) }
+    private fun vertexWasClicked(coordinate: PointF): Boolean {
+        if(lineCommandList.isEmpty()) return false
+
+        activeStartVertex = null
+        activeEndVertex= null
+        lineCommandList.forEach {
+            if(it.startVertex?.let { it1 -> isInsideVertex(coordinate, it1) } == true) {
+                activeStartVertex = it
+            }
+            if(it.endVertex?.let { it1 -> isInsideVertex(coordinate, it1) } == true) {
+                activeEndVertex = it
+            }
+        }
+
+        return !(activeStartVertex == null && activeEndVertex == null)
     }
 
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
-        currentlyTappedRectangle = findIntersectWithDrawnRect(coordinate)
-        if (currentlyTappedRectangle != null) {
-            return false
+
+        // vertex was clicked
+        // if (vertexWasClicked(coordinate)) {
+        //     movingVertexModeActive = true
+        //     return false
+        // }
+
+        // drawing surface was clicked -> new endpoint. Need to check íf it is a new line
+        // or an existing line was changed
+        if(lineCommandList.isNotEmpty() && lineCommandList.size == drawnPaths) {
+            lineId--
+            lineCommandList.removeAt(lineCommandList.size - 1)
         }
+
+
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
         return true
@@ -264,6 +276,16 @@ class LineTool(
 
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
+
+
+        if(movingVertexModeActive) {
+            (activeStartVertex?.command as PathCommand).path
+            (activeEndVertex?.command as PathCommand).path.lineTo(coordinate.x, coordinate.y)
+            commandManager.addCommand(activeStartVertex!!.command)
+            commandManager.addCommand(activeEndVertex!!.command)
+            return false
+        }
+
         changeInitialCoordinateForHandleNormalLine = true
         if (startpointSet) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
@@ -271,11 +293,6 @@ class LineTool(
             if (undoPreviousLineForConnectedLines && commandManager.isUndoAvailable && !undoRecentlyClicked) {
                 undoRecentlyClicked = false
                 commandManager.undoIgnoringColorChanges()
-
-                // if a path is not finalized it needs to be removed in order to add the new adjusted command
-                if(pathCommandList.size == drawnPaths) {
-                    pathCommandList.removeAt(pathCommandList.size - 1)
-                }
             }
             undoPreviousLineForConnectedLines = false
             undoRecentlyClicked = false
@@ -325,8 +342,7 @@ class LineTool(
         val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
 
         // add the new command
-        pathCommandList.add(command)
-
+        createLineCommand(command)
         if (!fromHandleLine && !undoRecentlyClicked) {
             if (commandManager.isUndoAvailable && !undoRecentlyClicked) {
                 commandManager.undoIgnoringColorChangesAndAddCommand(command)
@@ -370,12 +386,13 @@ class LineTool(
             topBarViewHolder?.showPlusButton()
         }
 
-        // erste linie
+        // add first path 
         if (workspace.intersectsWith(bounds)) {
             val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
             commandManager.addCommand(command)
 
-            pathCommandList.add(command)
+            createLineCommand(command, true)
+
             drawnPaths++
 
         }
@@ -383,7 +400,19 @@ class LineTool(
         return true
     }
 
+    private fun createLineCommand(command: Command, isFirstLine: Boolean = false) {
+        var startVertex = startPointToDraw?.let { createVertex(it) }
+        var endVertex = endPointToDraw?.let { createVertex(it) }
+
+        if (startVertex != null && endVertex != null) {
+            lineCommandList.add(LineCommand(command, startVertex, endVertex, lineId++, isFirstLine))
+        }
+    }
+
     override fun handleUp(coordinate: PointF?): Boolean {
+
+        movingVertexModeActive = false
+
         undoPreviousLineForConnectedLines = true
         if (changeInitialCoordinateForHandleNormalLine && initialEventCoordinate == null) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
@@ -540,4 +569,22 @@ class LineTool(
         commandManager.addCommand(command)
         return true
     }
+
+
+    class LineCommand {
+        var command: Command
+        var startVertex: RectF? = null
+        var endVertex: RectF? = null
+        var isFirstLine: Boolean = false
+        var id: Int = 0
+
+        constructor(command: Command, startVertex: RectF, endVertex: RectF, id: Int,  isFirstLine: Boolean = false) {
+            this.command = command
+            this.startVertex = startVertex
+            this.endVertex = endVertex
+            this.isFirstLine = isFirstLine
+            this.id = id
+        }
+    }
+
 }

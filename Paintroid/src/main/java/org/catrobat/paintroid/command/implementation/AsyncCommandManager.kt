@@ -171,6 +171,10 @@ open class AsyncCommandManager(
         synchronized(layerModel) { commandManager.popFirstCommandInRedo() }
     }
 
+    override fun updatePathCommands(startCommand: Command, endCommand: Command) {
+        synchronized(layerModel) { commandManager.updatePathCommands(startCommand, endCommand) }
+    }
+
     private fun manageUndoAndRedo(callFunction: () -> Unit, condition: Boolean) {
         CoroutineScope(Dispatchers.Default).launch {
             mutex.withLock {

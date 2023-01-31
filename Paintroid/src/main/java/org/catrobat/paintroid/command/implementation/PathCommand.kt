@@ -37,4 +37,8 @@ class PathCommand(val paint: Paint, path: Path) : Command {
     override fun freeResources() {
         // No resources to free
     }
+
+    fun setPath(newPath: Path) {
+        this.path = newPath
+    }
 }

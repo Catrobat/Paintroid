@@ -353,6 +353,10 @@ class DefaultCommandManager(
         redoCommandList.pop()
     }
 
+    override fun updatePathCommands(startCommand: Command, endCommand: Command) {
+        TODO("Not yet implemented")
+    }
+
     override fun setInitialStateCommand(command: Command) {
         initialStateCommand = command
     }
