@@ -65,7 +65,7 @@ interface CommandManager {
 
     fun popFirstCommandInRedo()
 
-    fun updatePathCommands(startCommand: Command, endCommand: Command)
+    fun executeAllCommands()
 
     interface CommandListener {
         fun commandPostExecute()

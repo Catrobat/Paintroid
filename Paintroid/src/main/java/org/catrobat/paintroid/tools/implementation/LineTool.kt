@@ -35,6 +35,10 @@ import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
 
+const val RECT_PAINT_ALPHA = 180
+const val RECT_PAINT_STROKE_WIDTH = 10.0f
+const val VERTEX_WIDTH = 30.0f
+
 class LineTool(
     private val brushToolOptionsView: BrushToolOptionsView,
     contextCallback: ContextCallback,
@@ -73,12 +77,9 @@ class LineTool(
     var lineCommandList: ArrayList<LineCommand> = ArrayList()
     var drawnPaths: Int = 0
     var currentCanvas: Canvas? = null
-
     var activeStartVertex: LineCommand? = null
     var activeEndVertex: LineCommand? = null
-
     var movingVertexModeActive: Boolean = false
-
     var lineId: Int = 0
 
     companion object {
@@ -104,8 +105,8 @@ class LineTool(
         rectPaint.run {
             style = Paint.Style.FILL
             color = Color.GRAY
-            alpha = 180
-            strokeWidth = 10.0f
+            alpha = RECT_PAINT_ALPHA
+            strokeWidth = RECT_PAINT_STROKE_WIDTH
         }
     }
 
@@ -151,7 +152,7 @@ class LineTool(
     }
 
     private fun createVertex(coordinate: PointF): RectF {
-        var outerRadius = 30.0f;
+        var outerRadius = VERTEX_WIDTH
 
         return RectF(
             coordinate.x - outerRadius,
@@ -163,7 +164,7 @@ class LineTool(
 
     override fun drawShape(canvas: Canvas) {
         lineCommandList.forEach {
-            if(it.isFirstLine) {
+            if (it.isFirstLine) {
                 it.startVertex?.let { it1 -> canvas.drawRect(it1, rectPaint) }
                 it.endVertex?.let { it1 -> canvas.drawRect(it1, rectPaint) }
             } else {
@@ -207,12 +208,13 @@ class LineTool(
                 val startY = startPointToDraw?.y
                 val endX = endPointToDraw?.x
                 val endY = endPointToDraw?.y
-                val finalPath = SerializablePath().apply {
-                    if (startX != null && startY != null && endX != null && endY != null) {
-                        moveTo(startX, startY)
-                        lineTo(endX, endY)
-                    }
-                }
+                // val finalPath = SerializablePath().apply {
+                //     if (startX != null && startY != null && endX != null && endY != null) {
+                //         moveTo(startX, startY)
+                //         lineTo(endX, endY)
+                //     }
+                // }
+                val finalPath = createPath(startX, startY, endX, endY)
                 lineFinalized = true
                 toolSwitched = false
                 val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
@@ -236,15 +238,15 @@ class LineTool(
             coordinate.y < rectF.bottom && rectF.top < coordinate.y
 
     private fun vertexWasClicked(coordinate: PointF): Boolean {
-        if(lineCommandList.isEmpty()) return false
+        if (lineCommandList.isEmpty()) return false
 
         activeStartVertex = null
-        activeEndVertex= null
+        activeEndVertex = null
         lineCommandList.forEach {
-            if(it.startVertex?.let { it1 -> isInsideVertex(coordinate, it1) } == true) {
+            if (it.startVertex?.let { it1 -> isInsideVertex(coordinate, it1) } == true) {
                 activeStartVertex = it
             }
-            if(it.endVertex?.let { it1 -> isInsideVertex(coordinate, it1) } == true) {
+            if (it.endVertex?.let { it1 -> isInsideVertex(coordinate, it1) } == true) {
                 activeEndVertex = it
             }
         }
@@ -256,18 +258,17 @@ class LineTool(
         coordinate ?: return false
 
         // vertex was clicked
-        // if (vertexWasClicked(coordinate)) {
-        //     movingVertexModeActive = true
-        //     return false
-        // }
+        if (vertexWasClicked(coordinate)) {
+            movingVertexModeActive = true
+            return false
+        }
 
         // drawing surface was clicked -> new endpoint. Need to check íf it is a new line
         // or an existing line was changed
-        if(lineCommandList.isNotEmpty() && lineCommandList.size == drawnPaths) {
+        if (lineCommandList.isNotEmpty() && lineCommandList.size == drawnPaths) {
             lineId--
             lineCommandList.removeAt(lineCommandList.size - 1)
         }
-
 
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
@@ -277,12 +278,31 @@ class LineTool(
     override fun handleMove(coordinate: PointF?): Boolean {
         coordinate ?: return false
 
+        if (movingVertexModeActive) {
+            if (activeStartVertex != null) {
+                activeStartVertex?.startCoordinate = coordinate
+                activeStartVertex?.startVertex = createVertex(coordinate)
 
-        if(movingVertexModeActive) {
-            (activeStartVertex?.command as PathCommand).path
-            (activeEndVertex?.command as PathCommand).path.lineTo(coordinate.x, coordinate.y)
-            commandManager.addCommand(activeStartVertex!!.command)
-            commandManager.addCommand(activeEndVertex!!.command)
+                var updatedPath = createPath(activeStartVertex?.startCoordinate?.x,
+                                             activeStartVertex?.startCoordinate?.y,
+                                             activeStartVertex?.endCoordinate?.x,
+                                             activeStartVertex?.endCoordinate?.y)
+                (activeStartVertex?.command as PathCommand).setPath(updatedPath)
+            }
+
+            if (activeEndVertex != null) {
+                activeEndVertex?.endCoordinate = coordinate
+                activeEndVertex?.endVertex = createVertex(coordinate)
+
+                var updatedPath = createPath(activeEndVertex?.startCoordinate?.x,
+                                         activeEndVertex?.startCoordinate?.y,
+                                         activeEndVertex?.endCoordinate?.x,
+                                         activeEndVertex?.endCoordinate?.y)
+                (activeEndVertex?.command as PathCommand).setPath(updatedPath)
+            }
+
+            commandManager.executeAllCommands()
+
             return false
         }
 
@@ -333,16 +353,18 @@ class LineTool(
         val endX = endPointToDraw?.x
         val endY = endPointToDraw?.y
 
-        val finalPath = SerializablePath().apply {
-            if (startX != null && startY != null && endX != null && endY != null) {
-                moveTo(startX, startY)
-                lineTo(endX, endY)
-            }
-        }
+        // val finalPath = SerializablePath().apply {
+        //     if (startX != null && startY != null && endX != null && endY != null) {
+        //         moveTo(startX, startY)
+        //         lineTo(endX, endY)
+        //     }
+        // }
+        val finalPath = createPath(startX, startY, endX, endY)
         val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
 
         // add the new command
-        createLineCommand(command)
+        startPointToDraw?.let { endPointToDraw?.let { it1 -> createLineCommand(command, it, it1) } }
+
         if (!fromHandleLine && !undoRecentlyClicked) {
             if (commandManager.isUndoAvailable && !undoRecentlyClicked) {
                 commandManager.undoIgnoringColorChangesAndAddCommand(command)
@@ -386,32 +408,33 @@ class LineTool(
             topBarViewHolder?.showPlusButton()
         }
 
-        // add first path 
+        // add first path
         if (workspace.intersectsWith(bounds)) {
             val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
             commandManager.addCommand(command)
 
-            createLineCommand(command, true)
+            initialEventCoordinate?.let { createLineCommand(command, it, coordinate, true) }
 
             drawnPaths++
-
         }
         resetInternalState()
         return true
     }
 
-    private fun createLineCommand(command: Command, isFirstLine: Boolean = false) {
+    private fun createLineCommand(command: Command, startCoordinate: PointF, endCoordinate: PointF, isFirstLine: Boolean = false) {
         var startVertex = startPointToDraw?.let { createVertex(it) }
         var endVertex = endPointToDraw?.let { createVertex(it) }
 
         if (startVertex != null && endVertex != null) {
-            lineCommandList.add(LineCommand(command, startVertex, endVertex, lineId++, isFirstLine))
+            lineCommandList.add(LineCommand(command, startVertex, endVertex, startCoordinate, endCoordinate, lineId++, isFirstLine))
         }
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
 
         movingVertexModeActive = false
+        activeStartVertex = null
+        activeEndVertex = null
 
         undoPreviousLineForConnectedLines = true
         if (changeInitialCoordinateForHandleNormalLine && initialEventCoordinate == null) {
@@ -460,12 +483,13 @@ class LineTool(
             val endX = endPointToDraw?.x
             val endY = endPointToDraw?.y
             if (commandManager.isUndoAvailable) {
-                val finalPath = SerializablePath().apply {
-                    if (startX != null && startY != null && endX != null && endY != null) {
-                        moveTo(startX, startY)
-                        lineTo(endX, endY)
-                    }
-                }
+                // val finalPath = SerializablePath().apply {
+                //     if (startX != null && startY != null && endX != null && endY != null) {
+                //         moveTo(startX, startY)
+                //         lineTo(endX, endY)
+                //     }
+                // }
+                val finalPath = createPath(startX, startY, endX, endY)
                 val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
                 commandManager.undoIgnoringColorChangesAndAddCommand(command)
             }
@@ -514,12 +538,13 @@ class LineTool(
             val endX = endPointToDraw?.x
             val endY = endPointToDraw?.y
             if (commandManager.isUndoAvailable) {
-                val finalPath = SerializablePath().apply {
-                    if (startX != null && startY != null && endX != null && endY != null) {
-                        moveTo(startX, startY)
-                        lineTo(endX, endY)
-                    }
-                }
+                // val finalPath = SerializablePath().apply {
+                //     if (startX != null && startY != null && endX != null && endY != null) {
+                //         moveTo(startX, startY)
+                //         lineTo(endX, endY)
+                //     }
+                // }
+                val finalPath = createPath(startX, startY, endX, endY)
                 val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
                 commandManager.undoIgnoringColorChangesAndAddCommand(command)
             }
@@ -544,12 +569,13 @@ class LineTool(
             val endY = endPointToDraw?.y
             if (commandManager.isUndoAvailable) {
                 commandManager.undoIgnoringColorChanges()
-                val finalPath = SerializablePath().apply {
-                    if (startX != null && startY != null && endX != null && endY != null) {
-                        moveTo(startX, startY)
-                        lineTo(endX, endY)
-                    }
-                }
+                // val finalPath = SerializablePath().apply {
+                //     if (startX != null && startY != null && endX != null && endY != null) {
+                //         moveTo(startX, startY)
+                //         lineTo(endX, endY)
+                //     }
+                // }
+                val finalPath = createPath(startX, startY, endX, endY)
                 val command = commandFactory.createPathCommand(toolPaint.paint, finalPath)
                 commandManager.undoIgnoringColorChangesAndAddCommand(command)
             }
@@ -564,12 +590,21 @@ class LineTool(
         brushToolOptionsView.invalidate()
     }
 
-    private fun  addPointCommand(coordinate: PointF): Boolean {
+    private fun addPointCommand(coordinate: PointF): Boolean {
         val command = commandFactory.createPointCommand(this.drawPaint, coordinate)
         commandManager.addCommand(command)
         return true
     }
 
+    private fun createPath(startX: Float?, startY: Float?, endX: Float?, endY: Float?): SerializablePath {
+        var path = SerializablePath().apply {
+            if (startX != null && startY != null && endX != null && endY != null) {
+                moveTo(startX, startY)
+                lineTo(endX, endY)
+            }
+        }
+        return path
+    }
 
     class LineCommand {
         var command: Command
@@ -577,14 +612,17 @@ class LineTool(
         var endVertex: RectF? = null
         var isFirstLine: Boolean = false
         var id: Int = 0
+        var startCoordinate: PointF? = null
+        var endCoordinate: PointF? = null
 
-        constructor(command: Command, startVertex: RectF, endVertex: RectF, id: Int,  isFirstLine: Boolean = false) {
+        constructor(command: Command, startVertex: RectF, endVertex: RectF, startCoordinate: PointF, endCoordinate: PointF, id: Int, isFirstLine: Boolean = false) {
             this.command = command
             this.startVertex = startVertex
             this.endVertex = endVertex
+            this.startCoordinate = startCoordinate
+            this.endCoordinate = endCoordinate
             this.isFirstLine = isFirstLine
             this.id = id
         }
     }
-
 }

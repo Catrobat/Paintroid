@@ -163,7 +163,7 @@ class DefaultCommandManager(
         }
     }
 
-    private fun executeAllCommands() {
+    override fun executeAllCommands() {
         val layerCount = layerModel.layerCount
         val checkBoxes: MutableList<Boolean> = ArrayList(Collections.nCopies(layerCount, true))
 
@@ -351,10 +351,6 @@ class DefaultCommandManager(
 
     override fun popFirstCommandInRedo() {
         redoCommandList.pop()
-    }
-
-    override fun updatePathCommands(startCommand: Command, endCommand: Command) {
-        TODO("Not yet implemented")
     }
 
     override fun setInitialStateCommand(command: Command) {

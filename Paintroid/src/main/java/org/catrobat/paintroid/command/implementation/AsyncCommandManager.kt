@@ -171,8 +171,8 @@ open class AsyncCommandManager(
         synchronized(layerModel) { commandManager.popFirstCommandInRedo() }
     }
 
-    override fun updatePathCommands(startCommand: Command, endCommand: Command) {
-        synchronized(layerModel) { commandManager.updatePathCommands(startCommand, endCommand) }
+    override fun executeAllCommands() {
+        synchronized(layerModel) { commandManager.executeAllCommands() }
     }
 
     private fun manageUndoAndRedo(callFunction: () -> Unit, condition: Boolean) {
