@@ -49,7 +49,7 @@ private const val STROKE_WIDTH = 5f
 private const val CONSTANT_1 = 0.5f
 
 class SprayTool(
-    var stampToolOptionsView: SprayToolOptionsView,
+    var sprayToolOptionsView: SprayToolOptionsView,
     override var contextCallback: ContextCallback,
     toolOptionsViewController: ToolOptionsViewController,
     toolPaint: ToolPaint,
@@ -76,15 +76,14 @@ class SprayTool(
     private val previewCanvas = Canvas(previewBitmap)
 
     init {
-        toolPaint.strokeWidth = STROKE_WIDTH
-
-        stampToolOptionsView.setCallback(object : SprayToolOptionsView.Callback {
+        sprayToolOptionsView.setCallback(object : SprayToolOptionsView.Callback {
             override fun radiusChanged(radius: Int) {
                 sprayRadius = DEFAULT_RADIUS + radius * 2
             }
         })
 
-        stampToolOptionsView.setCurrentPaint(toolPaint.paint)
+        sprayToolOptionsView.setCurrentPaint(toolPaint.paint)
+        toolPaint.strokeWidth = STROKE_WIDTH
         toolOptionsViewController.showDelayed()
     }
 
@@ -131,7 +130,7 @@ class SprayTool(
         super.onRestoreInstanceState(bundle)
         bundle?.getInt(BUNDLE_RADIUS)?.let { radius ->
             sprayRadius = radius
-            stampToolOptionsView.setRadius(radius)
+            sprayToolOptionsView.setRadius(radius)
         }
     }
 
@@ -183,5 +182,9 @@ class SprayTool(
         point.x = radius * cos(theta).toFloat() + (currentCoordinate?.x ?: 0f)
         point.y = radius * sin(theta).toFloat() + (currentCoordinate?.y ?: 0f)
         return point
+    }
+
+    fun resetRadiusToStrokeWidth() {
+        toolPaint.strokeWidth = sprayToolOptionsView.getRadius()
     }
 }
