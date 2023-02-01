@@ -22,7 +22,6 @@ package org.catrobat.paintroid.command.implementation
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
-import android.util.Log
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
 

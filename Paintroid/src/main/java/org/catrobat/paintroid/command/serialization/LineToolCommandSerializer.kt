@@ -18,20 +18,18 @@
  */
 package org.catrobat.paintroid.command.serialization
 
-import android.graphics.Paint
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.command.implementation.LineToolCommand
-import org.catrobat.paintroid.command.implementation.PathCommand
 
 class LineToolCommandSerializer(version: Int) : VersionSerializer<LineToolCommand>(version) {
     override fun write(kryo: Kryo, output: Output, command: LineToolCommand) {
-        val pathSerializer = SerializablePath.PathSerializer(version);
-//        output.writeInt(command.pathCommands.size)
-//        command.pathCommands.forEach {
-//            pathSerializer.write(kryo, output, it)
-//        }
+        // val pathSerializer = SerializablePath.PathSerializer(version)
+        // output.writeInt(command.pathCommands.size)
+        // command.pathCommands.forEach {
+        //    pathSerializer.write(kryo, output, it)
+        // }
     }
 
     override fun read(kryo: Kryo, input: Input, type: Class<out LineToolCommand>): LineToolCommand =
