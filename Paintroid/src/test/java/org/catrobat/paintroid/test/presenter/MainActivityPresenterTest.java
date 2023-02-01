@@ -277,6 +277,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
+		presenter.saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT, null);
 		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace.getLayerModel(), commandSerializer, null, context);
 		verifyNoMoreInteractions(interactor);
 	}
@@ -287,6 +288,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
+		presenter.saveImageConfirmClicked(SAVE_IMAGE_DEFAULT, FileIO.storeImageUri);
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace.getLayerModel(), commandSerializer, null, context);
 
 		verifyNoMoreInteractions(interactor);
@@ -1224,6 +1226,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY);
+		presenter.saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT, null);
 		verify(interactor).saveCopy(presenter, SAVE_IMAGE_DEFAULT, workspace.getLayerModel(), commandSerializer, null, context);
 	}
 
@@ -1272,6 +1275,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE);
+		presenter.saveImageConfirmClicked(SAVE_IMAGE_DEFAULT, FileIO.storeImageUri);
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_DEFAULT, workspace.getLayerModel(), commandSerializer, FileIO.storeImageUri, context);
 	}
 
@@ -1293,6 +1297,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH);
+		presenter.saveImageConfirmClicked(SAVE_IMAGE_FINISH, FileIO.storeImageUri);
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_FINISH, workspace.getLayerModel(), commandSerializer, FileIO.storeImageUri, context);
 	}
 
@@ -1314,6 +1319,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY);
+		presenter.saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, FileIO.storeImageUri);
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_NEW_EMPTY, workspace.getLayerModel(), commandSerializer, FileIO.storeImageUri, context);
 	}
 
@@ -1335,6 +1341,7 @@ public class MainActivityPresenterTest {
 		verify(navigator).showSaveImageInformationDialogWhenStandalone(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, sharedPreferences.getPreferenceImageNumber(), false);
 
 		presenter.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW);
+		presenter.saveImageConfirmClicked(SAVE_IMAGE_LOAD_NEW, FileIO.storeImageUri);
 		verify(interactor).saveImage(presenter, SAVE_IMAGE_LOAD_NEW, workspace.getLayerModel(), commandSerializer, FileIO.storeImageUri, context);
 	}
 
