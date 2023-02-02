@@ -77,13 +77,9 @@ class LineToolIntegrationTest {
     fun testVerticalLineColor() {
         onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
-        onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE,
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE
-                )
-            )
+        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE))
+        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE))
+
         onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
     }
@@ -93,12 +89,9 @@ class LineToolIntegrationTest {
         onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE,
-                    DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
         onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
     }
@@ -108,12 +101,9 @@ class LineToolIntegrationTest {
         onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT))
         onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
     }
@@ -128,12 +118,18 @@ class LineToolIntegrationTest {
 
     @Test
     fun testCheckmarkLineFeature() {
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
         onTopBarView().onCheckmarkButton()
             .check(
                 ViewAssertions.matches(
@@ -150,14 +146,22 @@ class LineToolIntegrationTest {
     @Test
     fun testCheckmarkLineFeatureChangeColor() {
         onToolProperties().setColor(Color.BLACK)
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
-        onToolProperties().setColor(Color.GREEN)
-        onDrawingSurfaceView().checkPixelColor(Color.GREEN, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.GREEN, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+        onToolProperties()
+            .setColor(Color.GREEN)
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.GREEN, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.GREEN, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
         onTopBarView().onCheckmarkButton()
             .check(
                 ViewAssertions.matches(
@@ -175,14 +179,20 @@ class LineToolIntegrationTest {
     @Test
     fun testCheckmarkLineFeatureChangeShape() {
         onToolProperties().setColor(Color.BLACK)
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
         onToolProperties().setCap(Cap.SQUARE)
         onToolProperties().checkCap(Cap.SQUARE)
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
         onTopBarView().onCheckmarkButton()
             .check(
                 ViewAssertions.matches(
@@ -200,14 +210,20 @@ class LineToolIntegrationTest {
     @Test
     fun testCheckmarkLineFeatureChangeStrokeWidth() {
         onToolProperties().setColor(Color.BLACK)
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
         onToolProperties().setStrokeWidth(80f)
         onToolProperties().checkStrokeWidth(80f)
-        onDrawingSurfaceView().checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
         onTopBarView().onCheckmarkButton()
             .check(
                 ViewAssertions.matches(
@@ -224,29 +240,12 @@ class LineToolIntegrationTest {
     @Test
     fun testConnectedLinesFeature() {
         onToolProperties().setColor(Color.BLACK)
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_LEFT)
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
-        onTopBarView().performClickPlus()
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE)
-        onTopBarView().performClickPlus()
-        onDrawingSurfaceView().perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
-        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_LEFT)
-        onTopBarView().performClickCheckmark()
-    }
-
-    @Test
-    fun testConnectedLinesFeatureDrawingLine() {
-        onToolProperties().setColor(Color.BLACK)
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
-                    DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_LEFT)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
         onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
         onTopBarView().performClickPlus()
@@ -256,12 +255,30 @@ class LineToolIntegrationTest {
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE)
         onTopBarView().performClickPlus()
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE,
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onDrawingSurfaceView().checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_LEFT)
+        onTopBarView().performClickCheckmark()
+    }
+
+    @Test
+    fun testConnectedLinesFeatureDrawingLine() {
+        onToolProperties().setColor(Color.BLACK)
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onTopBarView().performClickPlus()
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE)
+        onTopBarView().performClickPlus()
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
         onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_LEFT)
         onTopBarView().performClickCheckmark()
@@ -271,33 +288,24 @@ class LineToolIntegrationTest {
     fun testConnectedLinesFeatureRedrawingLine() {
         onToolProperties().setColor(Color.BLACK)
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
-                    DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
         onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT,
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT))
         onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
         onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
         onTopBarView().performClickPlus()
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE,
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
         onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_LEFT)
         onTopBarView().performClickCheckmark()
@@ -371,48 +379,33 @@ class LineToolIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
         onTopBarView().performClickPlus()
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT))
         onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
         onTopBarView().performUndo()
         onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_LEFT))
         onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
         onTopBarView().performClickPlus()
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT,
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT))
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT))
         onTopBarView().performUndo()
         onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_RIGHT)
@@ -430,12 +423,9 @@ class LineToolIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
         onTopBarView().performClickPlus()
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT))
         selectColorInDialog(0)
         onDrawingSurfaceView()
             .checkPixelColor(
@@ -489,12 +479,9 @@ class LineToolIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
         onTopBarView().performClickPlus()
         onDrawingSurfaceView()
-            .perform(
-                UiInteractions.swipe(
-                    DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT,
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT
-                )
-            )
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_LEFT))
+        onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_RIGHT))
         selectColorInDialog(0)
         onDrawingSurfaceView()
             .checkPixelColor(

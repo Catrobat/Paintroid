@@ -125,7 +125,7 @@ class PipetteToolIntegrationTest {
         onToolBarView().performSelectTool(ToolType.PIPETTE)
         onToolProperties().checkMatchesColor(Color.TRANSPARENT)
         onDrawingSurfaceView()
-            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onToolProperties().checkMatchesColor(Color.BLACK)
     }
