@@ -16,9 +16,6 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-@file:Suppress("DEPRECATION")
-
 package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Color
@@ -30,7 +27,6 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
 import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
@@ -42,12 +38,17 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class FlipToolIntegrationTest {
     @get:Rule
-    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
+    var launchActivityRule = ActivityTestRule(
+        MainActivity::class.java
+    )
 
     @get:Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
     @Before
-    fun setUp(): ToolBarViewInteraction = onToolBarView().performSelectTool(ToolType.BRUSH)
+    fun setUp() {
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.BRUSH)
+    }
 
     @Test
     fun testHorizontalFlip() {
@@ -56,7 +57,7 @@ class FlipToolIntegrationTest {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_MIDDLE)
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE)
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         TransformToolOptionsViewInteraction.onTransformToolOptionsView()
             .performFlipHorizontal()
@@ -72,7 +73,7 @@ class FlipToolIntegrationTest {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
         TransformToolOptionsViewInteraction.onTransformToolOptionsView()
             .performFlipVertical()

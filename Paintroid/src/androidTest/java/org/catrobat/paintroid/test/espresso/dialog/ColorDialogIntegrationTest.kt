@@ -16,9 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-@file:Suppress("DEPRECATION")
-
 package org.catrobat.paintroid.test.espresso.dialog
 
 import android.app.Activity
@@ -36,6 +33,8 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
@@ -57,32 +56,38 @@ import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
 import org.hamcrest.Matchers
 import org.hamcrest.core.AllOf
+import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
-import java.text.MessageFormat.format
 import java.util.Objects
 
-@Suppress("LargeClass")
 @RunWith(AndroidJUnit4::class)
 class ColorDialogIntegrationTest {
     @get:Rule
-    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
+    var launchActivityRule = ActivityTestRule(
+        MainActivity::class.java
+    )
 
     @get:Rule
-    var launchActivityRuleWithIntent = IntentsTestRule(MainActivity::class.java, false, false)
+    var launchActivityRuleWithIntent = IntentsTestRule(
+        MainActivity::class.java, false, false
+    )
 
     @get:Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
     private var toolReference: ToolReference? = null
     private val deletionFileList: List<File?> = ArrayList()
     @Before
-    fun setUp() = launchActivityRule.activity.toolReference.also { toolReference = it }
+    fun setUp() {
+        toolReference = launchActivityRule.activity.toolReference
+    }
 
-    private fun getColorById(colorId: Int): Int = launchActivityRule.activity.resources.getColor(colorId)
+    private fun getColorById(colorId: Int) =
+        launchActivityRule.activity.resources.getColor(colorId)
 
     @Test
     fun testStandardTabSelected() {
@@ -99,14 +104,14 @@ class ColorDialogIntegrationTest {
 
     @Test
     fun testCorrectColorAfterApplyWithoutNewColorSelected() {
-        val initialPaint = toolReference?.tool?.drawPaint
+        val initialPaint = toolReference!!.tool!!.drawPaint
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
             .onPositiveButton()
             .perform(ViewActions.click())
         Assert.assertEquals(
-            initialPaint?.color?.toLong(),
-            toolReference?.tool?.drawPaint?.color?.toLong()
+            initialPaint.color.toLong(),
+            toolReference!!.tool!!.drawPaint.color.toLong()
         )
     }
 
@@ -122,8 +127,8 @@ class ColorDialogIntegrationTest {
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_hsv)
             )
         ).perform(ViewActions.click())
@@ -135,8 +140,8 @@ class ColorDialogIntegrationTest {
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -148,8 +153,8 @@ class ColorDialogIntegrationTest {
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
         ).perform(ViewActions.scrollTo(), ViewActions.click())
@@ -168,51 +173,51 @@ class ColorDialogIntegrationTest {
         launchActivityRule.activity.model.isOpenedFromFormulaEditorInCatroid = true
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_base_layout))
+        Espresso.onView(withId(R.id.color_picker_base_layout))
             .perform(ViewActions.swipeUp())
-        Espresso.onView(ViewMatchers.withId(R.id.color_alpha_slider))
+        Espresso.onView(withId(R.id.color_alpha_slider))
             .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_hsv)
             )
         ).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_base_layout))
+        Espresso.onView(withId(R.id.color_picker_base_layout))
             .perform(ViewActions.swipeUp())
-        Espresso.onView(ViewMatchers.withId(R.id.color_alpha_slider))
+        Espresso.onView(withId(R.id.color_alpha_slider))
             .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
         ColorPickerViewInteraction.onColorPickerView()
             .onPositiveButton()
             .perform(ViewActions.click())
-        val currentSelectColor = toolReference?.tool?.drawPaint?.color
+        val currentSelectColor = toolReference!!.tool!!.drawPaint.color
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_base_layout))
+        Espresso.onView(withId(R.id.color_picker_base_layout))
             .perform(ViewActions.swipeUp())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_alpha_row))
+        Espresso.onView(withId(R.id.color_picker_alpha_row))
             .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
             .check(
                 ViewAssertions.matches(
-                    ViewMatchers.withText(
-                        format(
+                    withText(
+                        String.format(
                             "#%02X%02X%02X",
-                            currentSelectColor?.let {
-                                Color.red(it)
-                            },
-                            currentSelectColor?.let {
-                                Color.green(it)
-                            },
-                            currentSelectColor?.let {
-                                Color.blue(it)
-                            }
+                            Color.red(
+                                currentSelectColor
+                            ),
+                            Color.green(
+                                currentSelectColor
+                            ),
+                            Color.blue(
+                                currentSelectColor
+                            )
                         )
                     )
                 )
@@ -224,19 +229,19 @@ class ColorDialogIntegrationTest {
         launchActivityRule.activity.model.isOpenedFromCatroid = true
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_base_layout))
+        Espresso.onView(withId(R.id.color_picker_base_layout))
             .perform(ViewActions.swipeUp())
-        Espresso.onView(ViewMatchers.withId(R.id.color_alpha_slider))
+        Espresso.onView(withId(R.id.color_alpha_slider))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_hsv)
             )
         ).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_base_layout))
+        Espresso.onView(withId(R.id.color_picker_base_layout))
             .perform(ViewActions.swipeUp())
-        Espresso.onView(ViewMatchers.withId(R.id.color_alpha_slider))
+        Espresso.onView(withId(R.id.color_alpha_slider))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
@@ -244,19 +249,19 @@ class ColorDialogIntegrationTest {
     fun showAlphaSliderIfNotCatroidFlagSet() {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_base_layout))
+        Espresso.onView(withId(R.id.color_picker_base_layout))
             .perform(ViewActions.swipeUp())
-        Espresso.onView(ViewMatchers.withId(R.id.color_alpha_slider))
+        Espresso.onView(withId(R.id.color_alpha_slider))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_hsv)
             )
         ).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_base_layout))
+        Espresso.onView(withId(R.id.color_picker_base_layout))
             .perform(ViewActions.swipeUp())
-        Espresso.onView(ViewMatchers.withId(R.id.color_alpha_slider))
+        Espresso.onView(withId(R.id.color_alpha_slider))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
@@ -265,14 +270,14 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_base_layout))
+        Espresso.onView(withId(R.id.color_picker_base_layout))
             .perform(ViewActions.swipeUp())
-        Espresso.onView(ViewMatchers.withId(R.id.color_alpha_slider))
+        Espresso.onView(withId(R.id.color_alpha_slider))
             .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
     }
 
@@ -288,9 +293,8 @@ class ColorDialogIntegrationTest {
                 .performClickColorPickerPresetSelectorButton(counterColors)
             val arrayColor = presetColors.getColor(counterColors, Color.BLACK)
             Espresso.onView(
-                Matchers.allOf(
-                    ViewMatchers.withId(R.id.color_picker_new_color_view),
-                    Matchers.instanceOf(
+                allOf(
+                    withId(R.id.color_picker_new_color_view), Matchers.instanceOf(
                         View::class.java
                     )
                 )
@@ -314,11 +318,11 @@ class ColorDialogIntegrationTest {
                 .onPositiveButton()
                 .perform(ViewActions.click())
             val arrayColor = presetColors.getColor(counterColors, Color.BLACK)
-            val selectedColor = toolReference?.tool?.drawPaint?.color
+            val selectedColor = toolReference!!.tool!!.drawPaint.color
             Assert.assertEquals(
                 "Color in array and selected color not the same",
                 arrayColor.toLong(),
-                selectedColor?.toLong()
+                selectedColor.toLong()
             )
         }
         presetColors.recycle()
@@ -326,48 +330,44 @@ class ColorDialogIntegrationTest {
 
     @Test
     fun testCurrentColorViewHasInitialColor() {
-        val selectedColor = toolReference?.tool?.drawPaint?.color
+        val selectedColor = toolReference!!.tool!!.drawPaint.color
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
-        if (selectedColor != null) {
-            ColorPickerViewInteraction.onColorPickerView()
-                .checkCurrentViewColor(selectedColor)
-        }
+        ColorPickerViewInteraction.onColorPickerView()
+            .checkCurrentViewColor(selectedColor)
     }
 
     @Test
     fun testCurrentColorViewDoesNotChangeColor() {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
-        val initialColor = toolReference?.tool?.drawPaint?.color
+        val initialColor = toolReference!!.tool!!.drawPaint.color
         val resources = launchActivityRule.activity.resources
         val presetColors =
             resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors)
         for (counterColors in 0 until presetColors.length()) {
             ColorPickerViewInteraction.onColorPickerView()
                 .performClickColorPickerPresetSelectorButton(counterColors)
-            if (initialColor != null) {
-                Espresso.onView(
-                    Matchers.allOf(
-                        ViewMatchers.withId(R.id.color_picker_current_color_view),
-                        Matchers.instanceOf(
-                            View::class.java
-                        )
+            Espresso.onView(
+                allOf(
+                    withId(R.id.color_picker_current_color_view), Matchers.instanceOf(
+                        View::class.java
                     )
-                ).check(ViewAssertions.matches(UiMatcher.withBackgroundColor(initialColor)))
-            }
+                )
+            )
+                .check(ViewAssertions.matches(UiMatcher.withBackgroundColor(initialColor)))
         }
         presetColors.recycle()
     }
 
     @Test
     fun testColorPickerDialogOnBackPressedSelectedColorShouldChange() {
-        val initialColor = toolReference?.tool?.drawPaint?.color
+        val initialColor = toolReference!!.tool!!.drawPaint.color
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
         ).perform(ViewActions.click())
@@ -386,18 +386,17 @@ class ColorDialogIntegrationTest {
         Assert.assertNotEquals(
             "Selected color should not be the same as the initial color",
             colorToSelect.toLong(),
-            initialColor?.toLong()
+            initialColor.toLong()
         )
         ColorPickerViewInteraction.onColorPickerView()
             .performClickColorPickerPresetSelectorButton(colorToSelectIndex)
 
-        // Close color picker dialog
         Espresso.onView(ViewMatchers.isRoot()).perform(ViewActions.pressBack())
-        val currentSelectedColor = toolReference?.tool?.drawPaint?.color
+        val currentSelectedColor = toolReference!!.tool!!.drawPaint.color
         Assert.assertEquals(
             "Selected color has not changed",
             colorToSelect.toLong(),
-            currentSelectedColor?.toLong()
+            currentSelectedColor.toLong()
         )
     }
 
@@ -410,8 +409,8 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
         ).perform(ViewActions.click())
@@ -425,8 +424,8 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performClickColorPickerPresetSelectorButton(0)
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -437,218 +436,211 @@ class ColorDialogIntegrationTest {
                 )
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_textview_red))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_textview_red))
             .perform(ViewActions.scrollTo())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_textview_red)).check(
+        Espresso.onView(withId(R.id.color_picker_color_rgb_textview_red)).check(
             ViewAssertions.matches(
-                Matchers.allOf(
+                allOf(
                     ViewMatchers.isDisplayed(),
-                    ViewMatchers.withText(R.string.color_red),
+                    withText(R.string.color_red),
                     UiMatcher.withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_red))
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_textview_green)).check(
+        Espresso.onView(withId(R.id.color_picker_color_rgb_textview_green)).check(
             ViewAssertions.matches(
-                Matchers.allOf(
+                allOf(
                     ViewMatchers.isDisplayed(),
-                    ViewMatchers.withText(R.string.color_green),
+                    withText(R.string.color_green),
                     UiMatcher.withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_green))
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_textview_blue)).check(
+        Espresso.onView(withId(R.id.color_picker_color_rgb_textview_blue)).check(
             ViewAssertions.matches(
-                Matchers.allOf(
+                allOf(
                     ViewMatchers.isDisplayed(),
-                    ViewMatchers.withText(R.string.color_blue),
+                    withText(R.string.color_blue),
                     UiMatcher.withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_blue))
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_textview_alpha))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_textview_alpha))
             .perform(ViewActions.scrollTo())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_textview_alpha)).check(
+        Espresso.onView(withId(R.id.color_picker_color_rgb_textview_alpha)).check(
             ViewAssertions.matches(
-                Matchers.allOf(
+                allOf(
                     ViewMatchers.isDisplayed(),
-                    ViewMatchers.withText(R.string.color_alpha),
+                    withText(R.string.color_alpha),
                     UiMatcher.withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_alpha))
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_textview_red))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_textview_red))
             .perform(ViewActions.scrollTo())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_red))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_red))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_green))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_green))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_blue))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_alpha))
             .perform(ViewActions.scrollTo())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_alpha))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .perform(ViewActions.scrollTo())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex)).perform(ViewActions.scrollTo())
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_red_value))
-            .perform(ViewActions.scrollTo())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_red_value))
+        Espresso.onView(withId(R.id.color_picker_rgb_red_value)).perform(ViewActions.scrollTo())
+        Espresso.onView(withId(R.id.color_picker_rgb_red_value))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_green_value))
+        Espresso.onView(withId(R.id.color_picker_rgb_green_value))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_blue_value))
+        Espresso.onView(withId(R.id.color_picker_rgb_blue_value))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value))
-            .perform(ViewActions.scrollTo())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value))
+        Espresso.onView(withId(R.id.color_picker_rgb_alpha_value)).perform(ViewActions.scrollTo())
+        Espresso.onView(withId(R.id.color_picker_rgb_alpha_value))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Espresso.onView(
             Matchers.allOf(
-                ViewMatchers.withText(TEXT_PERCENT_SIGN),
-                ViewMatchers.hasSibling(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value))
+                withText(TEXT_PERCENT_SIGN),
+                ViewMatchers.hasSibling(withId(R.id.color_picker_rgb_alpha_value))
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         val currentSelectedColor = presetColors.getColor(0, Color.BLACK)
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_red_value))
-            .perform(ViewActions.scrollTo())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_red_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_red_value)).perform(ViewActions.scrollTo())
+        Espresso.onView(withId(R.id.color_picker_rgb_red_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
-                    Color.red(currentSelectedColor).toString()
+                withText(
+                    Integer.toString(Color.red(currentSelectedColor))
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_green_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_green_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
-                    Color.green(currentSelectedColor).toString()
+                withText(
+                    Integer.toString(Color.green(currentSelectedColor))
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_blue_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_blue_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
-                    Color.blue(currentSelectedColor).toString()
+                withText(
+                    Integer.toString(Color.blue(currentSelectedColor))
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value))
-            .perform(ViewActions.scrollTo())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_alpha_value)).perform(ViewActions.scrollTo())
+        Espresso.onView(withId(R.id.color_picker_rgb_alpha_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
-                    (Color.alpha(currentSelectedColor) / 2.55f).toInt().toString()
+                withText(
+                    Integer.toString((Color.alpha(currentSelectedColor) / 2.55f).toInt())
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_red))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_red))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_red_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_red_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
+                withText(
                     TEXT_RGB_MIN
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_red))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_red))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_red_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_red_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
+                withText(
                     TEXT_RGB_MAX
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_green))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_green))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_green_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_green_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
+                withText(
                     TEXT_RGB_MIN
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_green))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_green))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_green_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_green_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
+                withText(
                     TEXT_RGB_MAX
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_blue))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_blue_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_blue_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
+                withText(
                     TEXT_RGB_MIN
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_blue))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_blue_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_blue_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
+                withText(
                     TEXT_RGB_MAX
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_alpha))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_alpha_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
+                withText(
                     TEXT_ALPHA_MIN
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_alpha))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_alpha_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
+                withText(
                     TEXT_ALPHA_MAX
                 )
             )
         )
 
-        // Select color red #FFFF0000 by using hex input
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("#FFFF0000"))
         ColorPickerViewInteraction.onColorPickerView()
             .checkNewColorViewColor(Color.RED)
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.scrollTo(), ViewActions.click())
 
-        // Select color blue #FF0000FF by using seekbars
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_red))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_red))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_green))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_green))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_blue))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_alpha))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
         ColorPickerViewInteraction.onColorPickerView()
             .onPositiveButton()
             .perform(ViewActions.scrollTo(), ViewActions.click())
         Assert.assertNotEquals(
             "Selected color changed to blue from black",
-            toolReference?.tool?.drawPaint?.color?.toLong(),
+            toolReference!!.tool!!.drawPaint.color.toLong(),
             Color.BLACK.toLong()
         )
         Assert.assertEquals(
             "Selected color is not blue",
-            toolReference?.tool?.drawPaint?.color?.toLong(),
+            toolReference!!.tool!!.drawPaint.color.toLong(),
             Color.BLUE.toLong()
         )
     }
@@ -658,8 +650,8 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -670,11 +662,11 @@ class ColorDialogIntegrationTest {
                 )
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("#0123456789ABCDEF01234"))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).check(
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(format("#0123456789ABCDEF0"))
+                withText(String.format("#0123456789ABCDEF0"))
             )
         )
     }
@@ -685,8 +677,8 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
         ).perform(ViewActions.click())
@@ -702,12 +694,12 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .onPositiveButton()
             .perform(ViewActions.click())
-        var currentSelectColor = toolReference?.tool?.drawPaint?.color
+        var currentSelectColor = toolReference!!.tool!!.drawPaint.color
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -718,16 +710,14 @@ class ColorDialogIntegrationTest {
                 )
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        if (currentSelectColor != null) {
-            Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).check(
-                ViewAssertions.matches(
-                    ViewMatchers.withText(format("#FF%06X", 0xFFFFFF and currentSelectColor))
-                )
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex)).check(
+            ViewAssertions.matches(
+                withText(String.format("#FF%06X", 0xFFFFFF and currentSelectColor))
             )
-        }
+        )
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_hsv)
             )
         ).perform(ViewActions.scrollTo(), ViewActions.click())
@@ -743,12 +733,12 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .onPositiveButton()
             .perform(ViewActions.click())
-        currentSelectColor = toolReference?.tool?.drawPaint?.color
+        currentSelectColor = toolReference!!.tool!!.drawPaint.color
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -759,30 +749,28 @@ class ColorDialogIntegrationTest {
                 )
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        if (currentSelectColor != null) {
-            Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).check(
-                ViewAssertions.matches(
-                    ViewMatchers.withText(format("#FF%06X", 0xFFFFFF and currentSelectColor))
-                )
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex)).check(
+            ViewAssertions.matches(
+                withText(String.format("#FF%06X", 0xFFFFFF and currentSelectColor))
             )
-        }
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_red))
+        )
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_red))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_blue))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_green))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_green))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_alpha))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
         ColorPickerViewInteraction.onColorPickerView()
             .onPositiveButton()
             .perform(ViewActions.click())
-        currentSelectColor = toolReference?.tool?.drawPaint?.color
+        currentSelectColor = toolReference!!.tool!!.drawPaint.color
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -793,13 +781,11 @@ class ColorDialogIntegrationTest {
                 )
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        if (currentSelectColor != null) {
-            Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).check(
-                ViewAssertions.matches(
-                    ViewMatchers.withText(format("#FF%06X", 0xFFFFFF and currentSelectColor))
-                )
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex)).check(
+            ViewAssertions.matches(
+                withText(String.format("#FF%06X", 0xFFFFFF and currentSelectColor))
             )
-        }
+        )
     }
 
     @Test
@@ -807,8 +793,8 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -820,35 +806,20 @@ class ColorDialogIntegrationTest {
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        // set to invalid length of 6 (alpha missing)
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("#FF0000"))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .check(
-                ViewAssertions.matches(
-                    ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)
-                )
-            )
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
+            .check(ViewAssertions.matches(ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)))
 
-        // set to invalid value
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("#FFXXYYZZ"))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .check(
-                ViewAssertions.matches(
-                    ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)
-                )
-            )
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
+            .check(ViewAssertions.matches(ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)))
 
-        // set to invalid value (# missing)
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("FF000000"))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .check(
-                ViewAssertions.matches(
-                    ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)
-                )
-            )
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
+            .check(ViewAssertions.matches(ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_wrong_value_red)))
     }
 
     @Test
@@ -856,8 +827,8 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -869,19 +840,13 @@ class ColorDialogIntegrationTest {
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        // set to invalid length of 6 (alpha missing)
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("#FF0000"))
 
-        // set correct HEX value
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("#FF000000"))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .check(
-                ViewAssertions.matches(
-                    ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_correct_black)
-                )
-            )
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
+            .check(ViewAssertions.matches(ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_correct_black)))
     }
 
     @Test
@@ -889,8 +854,8 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -902,20 +867,15 @@ class ColorDialogIntegrationTest {
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-        // Inital text color should be black
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .check(
-                ViewAssertions.matches(
-                    ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_correct_black)
-                )
-            )
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
+            .check(ViewAssertions.matches(ViewMatchers.hasTextColor(R.color.pocketpaint_color_picker_hex_correct_black)))
     }
 
     @Test
     fun testOpenColorPickerOnClickOnColorButton() {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_base_layout))
+        Espresso.onView(withId(R.id.color_picker_base_layout))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         ColorPickerViewInteraction.onColorPickerView()
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -923,7 +883,7 @@ class ColorDialogIntegrationTest {
 
     @Test
     fun testStandardColorDoesNotChangeOnCancelButtonPress() {
-        val initialColor = toolReference?.tool?.drawPaint?.color
+        val initialColor = toolReference!!.tool!!.drawPaint.color
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         ColorPickerViewInteraction.onColorPickerView()
@@ -931,56 +891,44 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .onNegativeButton()
             .perform(ViewActions.click())
-        if (initialColor != null) {
-            ToolPropertiesInteraction.onToolProperties()
-                .checkMatchesColor(initialColor)
-        }
+        ToolPropertiesInteraction.onToolProperties()
+            .checkMatchesColor(initialColor)
     }
 
     @Test
     fun testStandardColorDoesChangeOnCancel() {
-        val initialColor = toolReference?.tool?.drawPaint?.color
+        val initialColor = toolReference!!.tool!!.drawPaint.color
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         ColorPickerViewInteraction.onColorPickerView()
             .performClickColorPickerPresetSelectorButton(0)
         ColorPickerViewInteraction.onColorPickerView()
             .perform(ViewActions.pressBack())
-        if (initialColor != null) {
-            ToolPropertiesInteraction.onToolProperties()
-                .checkDoesNotMatchColor(initialColor)
-        }
+        ToolPropertiesInteraction.onToolProperties()
+            .checkDoesNotMatchColor(initialColor)
     }
 
     @Test
     fun testColorOnlyUpdatesOncePerColorPickerIntent() {
-        val initialColor = toolReference?.tool?.drawPaint?.color
+        val initialColor = toolReference!!.tool!!.drawPaint.color
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         ColorPickerViewInteraction.onColorPickerView()
             .performClickColorPickerPresetSelectorButton(0)
-        if (initialColor != null) {
-            ToolPropertiesInteraction.onToolProperties()
-                .checkMatchesColor(initialColor)
-        }
+        ToolPropertiesInteraction.onToolProperties()
+            .checkMatchesColor(initialColor)
         ColorPickerViewInteraction.onColorPickerView()
             .performClickColorPickerPresetSelectorButton(1)
-        if (initialColor != null) {
-            ToolPropertiesInteraction.onToolProperties()
-                .checkMatchesColor(initialColor)
-        }
+        ToolPropertiesInteraction.onToolProperties()
+            .checkMatchesColor(initialColor)
         ColorPickerViewInteraction.onColorPickerView()
             .performClickColorPickerPresetSelectorButton(2)
-        if (initialColor != null) {
-            ToolPropertiesInteraction.onToolProperties()
-                .checkMatchesColor(initialColor)
-        }
+        ToolPropertiesInteraction.onToolProperties()
+            .checkMatchesColor(initialColor)
         ColorPickerViewInteraction.onColorPickerView()
             .perform(ViewActions.pressBack())
-        if (initialColor != null) {
-            ToolPropertiesInteraction.onToolProperties()
-                .checkDoesNotMatchColor(initialColor)
-        }
+        ToolPropertiesInteraction.onToolProperties()
+            .checkDoesNotMatchColor(initialColor)
     }
 
     @Test
@@ -997,8 +945,8 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         )
@@ -1028,36 +976,36 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_red_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_red_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
-                    Color.red(Color.TRANSPARENT).toString()
+                withText(
+                    Integer.toString(Color.red(Color.TRANSPARENT))
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_green_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_green_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
-                    Color.green(Color.TRANSPARENT).toString()
+                withText(
+                    Integer.toString(Color.green(Color.TRANSPARENT))
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_blue_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_blue_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
-                    Color.blue(Color.TRANSPARENT).toString()
+                withText(
+                    Integer.toString(Color.blue(Color.TRANSPARENT))
                 )
             )
         )
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_alpha_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(
-                    (Color.alpha(Color.TRANSPARENT) / 2.55f).toInt().toString()
+                withText(
+                    Integer.toString((Color.alpha(Color.TRANSPARENT) / 2.55f).toInt())
                 )
             )
         )
@@ -1069,20 +1017,19 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex))
             .perform(ViewActions.replaceText("#FFFF0000xxxx"))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_blue))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex))
-            .perform(ViewActions.scrollTo())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_hex)).check(
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex)).perform(ViewActions.scrollTo())
+        Espresso.onView(withId(R.id.color_picker_color_rgb_hex)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText(format("#FF%06X", 0xFFFFFF and -0xffff01))
+                withText(String.format("#FF%06X", 0xFFFFFF and -0xffff01))
             )
         )
     }
@@ -1091,19 +1038,19 @@ class ColorDialogIntegrationTest {
     fun testPipetteButtonIsDisplayed() {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_pipette_btn))
+        Espresso.onView(withId(R.id.color_picker_pipette_btn))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-            .check(ViewAssertions.matches(ViewMatchers.withText(R.string.color_picker_pipette)))
+            .check(ViewAssertions.matches(withText(R.string.color_picker_pipette)))
     }
 
     @Test
     fun testColorViewsAreDisplayed() {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_new_color_view))
+        Espresso.onView(withId(R.id.color_picker_new_color_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(UiMatcher.withBackgroundColor(Color.BLACK)))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_current_color_view))
+        Espresso.onView(withId(R.id.color_picker_current_color_view))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
             .check(ViewAssertions.matches(UiMatcher.withBackgroundColor(Color.BLACK)))
     }
@@ -1115,16 +1062,16 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_alpha))
             .perform(UiInteractions.touchCenterMiddle())
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
         ).perform(ViewActions.scrollTo(), ViewActions.click())
@@ -1141,22 +1088,22 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_preset)
             )
         ).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.color_alpha_slider))
+        Espresso.onView(withId(R.id.color_alpha_slider))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterMiddle())
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_rgb_alpha_value)).check(
+        Espresso.onView(withId(R.id.color_picker_rgb_alpha_value)).check(
             ViewAssertions.matches(
-                ViewMatchers.withText("50")
+                withText("50")
             )
         )
     }
@@ -1170,9 +1117,8 @@ class ColorDialogIntegrationTest {
         perspective.scale = scale
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_pipette_btn))
-            .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.doneAction)).perform(ViewActions.click())
+        Espresso.onView(withId(R.id.color_picker_pipette_btn)).perform(ViewActions.click())
+        Espresso.onView(withId(R.id.doneAction)).perform(ViewActions.click())
         ColorPickerViewInteraction.onColorPickerView()
             .performCloseColorPickerWithDialogButton()
         Assert.assertEquals(scale, perspective.scale, Float.MIN_VALUE)
@@ -1185,10 +1131,7 @@ class ColorDialogIntegrationTest {
             resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors)
         run {
             var counterColors = 0
-            while (
-                counterColors < presetColors.length() &&
-                counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY
-            ) {
+            while (counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY) {
                 ColorPickerViewInteraction.onColorPickerView()
                     .performOpenColorPicker()
                 ColorPickerViewInteraction.onColorPickerView()
@@ -1200,10 +1143,7 @@ class ColorDialogIntegrationTest {
             }
         }
         var counterColors = 0
-        while (
-            counterColors < presetColors.length() &&
-            counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY
-        ) {
+        while (counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY) {
             ColorPickerViewInteraction.onColorPickerView()
                 .performOpenColorPicker()
             ColorPickerViewInteraction.onColorPickerView()
@@ -1212,7 +1152,9 @@ class ColorDialogIntegrationTest {
                 .onPositiveButton()
                 .perform(ViewActions.click())
             val arrayColor = presetColors.getColor(counterColors, Color.BLACK)
-            val selectedColor = Objects.requireNonNull(toolReference?.tool)?.drawPaint?.color
+            val selectedColor = Objects.requireNonNull(
+                toolReference!!.tool
+            )?.drawPaint?.color
             Assert.assertEquals(
                 "Color in history doesn't match selection",
                 arrayColor.toLong(),
@@ -1229,10 +1171,7 @@ class ColorDialogIntegrationTest {
         val presetColors =
             resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors)
         var counterColors = 0
-        while (
-            counterColors < presetColors.length() &&
-            counterColors <= ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY
-        ) {
+        while (counterColors < presetColors.length() && counterColors <= ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY) {
             ColorPickerViewInteraction.onColorPickerView()
                 .performOpenColorPicker()
             ColorPickerViewInteraction.onColorPickerView()
@@ -1261,8 +1200,8 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -1273,13 +1212,13 @@ class ColorDialogIntegrationTest {
                 )
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_red))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_red))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_green))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_green))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_blue))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_alpha))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterRight())
         ColorPickerViewInteraction.onColorPickerView()
             .onPositiveButton()
@@ -1288,8 +1227,8 @@ class ColorDialogIntegrationTest {
             .performOpenColorPicker()
         ColorPickerViewInteraction.onColorPickerView().checkHistoryColor(0, -0x1)
         Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.color_picker_tab_icon),
+            allOf(
+                withId(R.id.color_picker_tab_icon),
                 UiMatcher.withBackground(R.drawable.ic_color_picker_tab_rgba)
             )
         ).perform(ViewActions.click())
@@ -1300,13 +1239,13 @@ class ColorDialogIntegrationTest {
                 )
             )
         ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_red))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_red))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_green))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_green))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_blue))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_blue))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
-        Espresso.onView(ViewMatchers.withId(R.id.color_picker_color_rgb_seekbar_alpha))
+        Espresso.onView(withId(R.id.color_picker_color_rgb_seekbar_alpha))
             .perform(ViewActions.scrollTo(), UiInteractions.touchCenterLeft())
         ColorPickerViewInteraction.onColorPickerView()
             .onPositiveButton()
@@ -1322,10 +1261,7 @@ class ColorDialogIntegrationTest {
         val presetColors =
             resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors)
         var counterColors = 0
-        while (
-            counterColors < presetColors.length() &&
-            counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY
-        ) {
+        while (counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY) {
             ColorPickerViewInteraction.onColorPickerView()
                 .performOpenColorPicker()
             ColorPickerViewInteraction.onColorPickerView()
@@ -1336,9 +1272,8 @@ class ColorDialogIntegrationTest {
             counterColors++
         }
         TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
-        Espresso.onView(ViewMatchers.withText(R.string.menu_new_image)).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withText(R.string.discard_button_text))
-            .perform(ViewActions.click())
+        Espresso.onView(withText(R.string.menu_new_image)).perform(ViewActions.click())
+        Espresso.onView(withText(R.string.discard_button_text)).perform(ViewActions.click())
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         ColorPickerViewInteraction.onColorPickerView()
@@ -1354,10 +1289,7 @@ class ColorDialogIntegrationTest {
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         var counterColors = 0
-        while (
-            counterColors < presetColors.length() &&
-            counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY
-        ) {
+        while (counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY) {
             ColorPickerViewInteraction.onColorPickerView()
                 .performClickColorPickerPresetSelectorButton(counterColors)
             counterColors++
@@ -1366,15 +1298,11 @@ class ColorDialogIntegrationTest {
         launchActivityRule.launchActivity(Intent())
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
-        Espresso.onView(ViewMatchers.withId(R.id.color_history_text_view)).check(
-            ViewAssertions.matches(
-                Matchers.not(ViewMatchers.isDisplayed())
-            )
-        )
+        Espresso.onView(withId(R.id.color_history_text_view))
+            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.isDisplayed())))
         presetColors.recycle()
     }
 
-    @Suppress("LongMethod")
     @Test
     fun testSaveColorHistoryInCatrobatFile() {
         val activity = launchActivityRule.activity
@@ -1383,10 +1311,7 @@ class ColorDialogIntegrationTest {
             resources.obtainTypedArray(R.array.pocketpaint_color_picker_preset_colors)
         run {
             var counterColors = 0
-            while (
-                counterColors < presetColors.length() &&
-                counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY
-            ) {
+            while (counterColors < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY) {
                 ColorPickerViewInteraction.onColorPickerView()
                     .performOpenColorPicker()
                 ColorPickerViewInteraction.onColorPickerView()
@@ -1409,16 +1334,11 @@ class ColorDialogIntegrationTest {
         val resultOK = ActivityResult(Activity.RESULT_OK, intent)
         Intents.intending(IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT)).respondWith(resultOK)
         var counterColors = 0
-        while (
-            counterColors + ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY < presetColors.length() &&
-            counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY
-        ) {
+        while (counterColors + ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY < presetColors.length() && counterColors < ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY) {
             ColorPickerViewInteraction.onColorPickerView()
                 .performOpenColorPicker()
             ColorPickerViewInteraction.onColorPickerView()
-                .performClickColorPickerPresetSelectorButton(
-                    counterColors + ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY
-                )
+                .performClickColorPickerPresetSelectorButton(counterColors + ColorPickerViewInteraction.MAXIMUM_COLORS_IN_HISTORY)
             ColorPickerViewInteraction.onColorPickerView()
                 .onPositiveButton()
                 .perform(ViewActions.click())
@@ -1427,32 +1347,30 @@ class ColorDialogIntegrationTest {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         TopBarViewInteraction.onTopBarView().performOpenMoreOptions()
-        Espresso.onView(ViewMatchers.withText(R.string.menu_load_image))
-            .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withText(R.string.menu_replace_image))
-            .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withText(R.string.discard_button_text))
-            .perform(ViewActions.click())
+        Espresso.onView(withText(R.string.menu_load_image)).perform(ViewActions.click())
+        Espresso.onView(withText(R.string.menu_replace_image)).perform(ViewActions.click())
+        Espresso.onView(withText(R.string.discard_button_text)).perform(ViewActions.click())
         ColorPickerViewInteraction.onColorPickerView()
             .performOpenColorPicker()
         ColorPickerViewInteraction.onColorPickerView()
             .checkHistoryColor(3, presetColors.getColor(0, Color.BLACK))
         presetColors.recycle()
-        if (deletionFileList.isNotEmpty() && deletionFileList[0] != null && deletionFileList[0]?.exists() == true
+        if (!deletionFileList.isEmpty() && deletionFileList[0] != null && deletionFileList[0]!!
+                .exists()
         ) {
-            deletionFileList[0]?.delete()?.let { Assert.assertTrue(it) }
+            Assert.assertTrue(deletionFileList[0]!!.delete())
         }
     }
 
     private fun saveCatrobatImage() {
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
-        Espresso.onView(ViewMatchers.withText(R.string.menu_save_image))
+        Espresso.onView(withText(R.string.menu_save_image))
             .perform(ViewActions.scrollTo(), ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_save_dialog_spinner))
+        Espresso.onView(withId(R.id.pocketpaint_save_dialog_spinner))
             .perform(ViewActions.click())
         Espresso.onData(
-            AllOf.allOf(
+            AllOf.allOf<String>(
                 Matchers.`is`(
                     Matchers.instanceOf<Any>(
                         String::class.java
@@ -1461,9 +1379,9 @@ class ColorDialogIntegrationTest {
                 Matchers.`is`<String>(CATROBAT_IMAGE_ENDING)
             )
         ).inRoot(RootMatchers.isPlatformPopup()).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
+        Espresso.onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText(IMAGE_NAME))
-        Espresso.onView(ViewMatchers.withText(R.string.save_button_text))
+        Espresso.onView(withText(R.string.save_button_text))
             .perform(ViewActions.click())
     }
 
