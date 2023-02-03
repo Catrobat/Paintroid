@@ -30,10 +30,10 @@ import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.wrappers.ClipboardToolViewInteraction.Companion.onClipboardToolViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView
-import org.catrobat.paintroid.test.espresso.util.wrappers.StampToolViewInteraction.Companion.onStampToolViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
@@ -43,7 +43,7 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.drawable.DrawableShape
 import org.catrobat.paintroid.tools.drawable.DrawableStyle
 import org.catrobat.paintroid.tools.implementation.BaseToolWithRectangleShape
-import org.catrobat.paintroid.tools.implementation.StampTool
+import org.catrobat.paintroid.tools.implementation.ClipboardTool
 import org.catrobat.paintroid.ui.Perspective
 import org.junit.Assert
 import org.junit.Before
@@ -52,7 +52,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class StampToolIntegrationTest {
+class ClipboardToolIntegrationTest {
     @get:Rule
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
@@ -78,15 +78,15 @@ class StampToolIntegrationTest {
             .performSelectShape(DrawableShape.RECTANGLE)
             .performSelectShapeDrawType(DrawableStyle.STROKE)
         onTopBarView().performClickCheckmark()
-        onToolBarView().performSelectTool(ToolType.STAMP)
-        val stampTool = toolReference?.tool as StampTool?
+        onToolBarView().performSelectTool(ToolType.CLIPBOARD)
+        val stampTool = toolReference?.tool as ClipboardTool?
         if (stampTool != null) {
             stampTool.boxHeight = stampTool.boxHeight.minus(25f)
         }
         if (stampTool != null) {
             stampTool.boxWidth = stampTool.boxWidth.minus(25f)
         }
-        onStampToolViewInteraction()
+        onClipboardToolViewInteraction()
             .performCopy()
         val topLeft = stampTool?.drawingBitmap?.getPixel(0, 0)
         val topRight = stampTool?.drawingBitmap?.getPixel(stampTool.drawingBitmap?.width?.minus(1) ?: 0, 0)
@@ -108,11 +108,11 @@ class StampToolIntegrationTest {
     fun testCopyPixel() {
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        onToolBarView().performSelectTool(ToolType.STAMP)
-        onStampToolViewInteraction().performCopy()
-        val stampTool = toolReference?.tool as StampTool?
+        onToolBarView().performSelectTool(ToolType.CLIPBOARD)
+        onClipboardToolViewInteraction().performCopy()
+        val stampTool = toolReference?.tool as ClipboardTool?
         stampTool?.toolPosition?.set(stampTool.toolPosition.x, stampTool.toolPosition.y * .5f)
-        onStampToolViewInteraction().performPaste()
+        onClipboardToolViewInteraction().performPaste()
         stampTool?.toolPosition?.let {
             onDrawingSurfaceView()
                 .checkPixelColor(Color.BLACK, stampTool.toolPosition.x, it.y)
@@ -124,10 +124,10 @@ class StampToolIntegrationTest {
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onToolBarView()
-            .performSelectTool(ToolType.STAMP)
-        onStampToolViewInteraction()
+            .performSelectTool(ToolType.CLIPBOARD)
+        onClipboardToolViewInteraction()
             .performCut()
-        val stampTool = toolReference?.tool as StampTool?
+        val stampTool = toolReference?.tool as ClipboardTool?
         stampTool?.toolPosition?.let {
             onDrawingSurfaceView()
                 .checkPixelColor(
@@ -136,7 +136,7 @@ class StampToolIntegrationTest {
                     it.y
                 )
         }
-        onStampToolViewInteraction().performPaste()
+        onClipboardToolViewInteraction().performPaste()
         stampTool?.toolPosition?.x?.let {
             onDrawingSurfaceView()
                 .checkPixelColor(Color.BLACK, it, stampTool.toolPosition.y)
@@ -148,17 +148,17 @@ class StampToolIntegrationTest {
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onToolBarView()
-            .performSelectTool(ToolType.STAMP)
+            .performSelectTool(ToolType.CLIPBOARD)
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
             .performAddLayer()
         LayerMenuViewInteraction.onLayerMenuView()
             .performClose()
-        onStampToolViewInteraction()
+        onClipboardToolViewInteraction()
             .performCopy()
-        val stampTool = toolReference?.tool as StampTool?
+        val stampTool = toolReference?.tool as ClipboardTool?
         stampTool!!.toolPosition[stampTool.toolPosition.x] = stampTool.toolPosition.y * .5f
-        onStampToolViewInteraction()
+        onClipboardToolViewInteraction()
             .performPaste()
         onDrawingSurfaceView()
             .checkPixelColor(
@@ -176,8 +176,8 @@ class StampToolIntegrationTest {
         val bitmapHeight = workspace?.height
         perspective?.scale = SCALE_25
         onToolBarView()
-            .performSelectTool(ToolType.STAMP)
-        val stampTool = toolReference?.tool as StampTool?
+            .performSelectTool(ToolType.CLIPBOARD)
+        val stampTool = toolReference?.tool as ClipboardTool?
         val toolPosition = perspective?.surfaceCenterX?.let {
             perspective?.surfaceCenterY?.let {
                     it1 ->
@@ -193,7 +193,7 @@ class StampToolIntegrationTest {
         if (bitmapHeight != null) {
             stampTool?.boxHeight = bitmapHeight * STAMP_RESIZE_FACTOR
         }
-        onStampToolViewInteraction().performPaste()
+        onClipboardToolViewInteraction().performPaste()
         Assert.assertNotNull(stampTool?.drawingBitmap)
     }
 
@@ -202,12 +202,12 @@ class StampToolIntegrationTest {
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onToolBarView()
-            .performSelectTool(ToolType.STAMP)
+            .performSelectTool(ToolType.CLIPBOARD)
         val emptyBitmap =
             (toolReference?.tool as BaseToolWithRectangleShape?)?.drawingBitmap?.let {
                 Bitmap.createBitmap(it)
             }
-        onStampToolViewInteraction().performCopy()
+        onClipboardToolViewInteraction().performCopy()
         val expectedBitmap =
             (toolReference?.tool as BaseToolWithRectangleShape?)?.drawingBitmap?.let {
                 Bitmap.createBitmap(it)
@@ -232,7 +232,7 @@ class StampToolIntegrationTest {
         perspective?.surfaceTranslationX = 50F
         perspective?.surfaceTranslationY = 200F
         mainActivity?.refreshDrawingSurface()
-        onToolBarView().performSelectTool(ToolType.STAMP)
+        onToolBarView().performSelectTool(ToolType.CLIPBOARD)
         perspective?.scale?.let { Assert.assertEquals(scale, it, 0.0001f) }
     }
 
