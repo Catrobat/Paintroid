@@ -16,20 +16,17 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-@file:Suppress("DEPRECATION")
-
 package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Color
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.drawable.DrawableShape
@@ -41,45 +38,46 @@ import org.junit.runners.Parameterized
 @RunWith(Parameterized::class)
 class ShapeToolEraseIntegrationTest {
     @Parameterized.Parameter
-    var shape: DrawableShape? = null
+    lateinit var shape: DrawableShape
 
-    @get:Rule
-    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
+    @JvmField
+    @Rule
+    val launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
-    @get:Rule
-    var screenshotOnFailRule = ScreenshotOnFailRule()
-    @Test
-    fun testEraseWithFilledShape() {
-        onToolBarView()
-            .performSelectTool(ToolType.SHAPE)
-            .performCloseToolOptionsView()
-        onTopBarView()
-            .performClickCheckmark()
-        onDrawingSurfaceView()
-            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
-        onToolProperties()
-            .setColor(Color.TRANSPARENT)
-        onToolBarView()
-            .performOpenToolOptionsView()
-        onShapeToolOptionsView()
-            .performSelectShape(shape)
-        onToolBarView()
-            .performCloseToolOptionsView()
-        onTopBarView()
-            .performClickCheckmark()
-        onDrawingSurfaceView()
-            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
-    }
+    @JvmField
+    @Rule
+    val screenshotOnFailRule = ScreenshotOnFailRule()
 
     companion object {
+        @JvmStatic
         @Parameterized.Parameters(name = "{0}")
-        fun data(): Iterable<Array<Any>> {
-            return listOf(
-                arrayOf(DrawableShape.RECTANGLE),
-                arrayOf(DrawableShape.OVAL),
-                arrayOf(DrawableShape.HEART),
-                arrayOf(DrawableShape.STAR)
-            )
-        }
+        fun data() = listOf(
+            arrayOf(DrawableShape.RECTANGLE),
+            arrayOf(DrawableShape.OVAL),
+            arrayOf(DrawableShape.HEART),
+            arrayOf(DrawableShape.STAR)
+        )
+    }
+    @Test
+    fun testEraseWithFilledShape() {
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.SHAPE)
+            .performCloseToolOptionsView()
+        TopBarViewInteraction.onTopBarView()
+            .performClickCheckmark()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        ToolPropertiesInteraction.onToolProperties()
+            .setColor(Color.TRANSPARENT)
+        ToolBarViewInteraction.onToolBarView()
+            .performOpenToolOptionsView()
+        ShapeToolOptionsViewInteraction.onShapeToolOptionsView()
+            .performSelectShape(shape)
+        ToolBarViewInteraction.onToolBarView()
+            .performCloseToolOptionsView()
+        TopBarViewInteraction.onTopBarView()
+            .performClickCheckmark()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
     }
 }

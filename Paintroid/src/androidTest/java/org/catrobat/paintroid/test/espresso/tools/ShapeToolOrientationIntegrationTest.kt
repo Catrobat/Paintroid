@@ -48,23 +48,40 @@ import org.junit.runners.Parameterized
 
 @RunWith(Parameterized::class)
 class ShapeToolOrientationIntegrationTest {
-    @get:Rule
-    var activityTestRule = ActivityTestRule(MainActivity::class.java)
 
     @get:Rule
-    var screenshotOnFailRule = ScreenshotOnFailRule()
+    val activityTestRule = ActivityTestRule(MainActivity::class.java)
+
+    @get:Rule
+    val screenshotOnFailRule = ScreenshotOnFailRule()
 
     @Parameterized.Parameter
-    var shape: DrawableShape? = null
+    lateinit var shape: DrawableShape
 
+    @JvmField
     @Parameterized.Parameter(1)
-    var shapeId = 0
-    private var workspace: Workspace? = null
+    var shapeId: Int = 0
+
+    lateinit var workspace: Workspace
+
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters(name = "{0}")
+        fun data(): Iterable<Array<Any>> = listOf(
+            arrayOf(DrawableShape.RECTANGLE, R.id.pocketpaint_shapes_square_btn),
+            arrayOf(DrawableShape.OVAL, R.id.pocketpaint_shapes_circle_btn),
+            arrayOf(DrawableShape.HEART, R.id.pocketpaint_shapes_heart_btn),
+            arrayOf(DrawableShape.STAR, R.id.pocketpaint_shapes_star_btn)
+        )
+    }
+
     @Before
     fun setUp() {
         workspace = activityTestRule.activity.workspace
-        onToolBarView().performSelectTool(ToolType.SHAPE)
+        onToolBarView()
+            .performSelectTool(ToolType.SHAPE)
     }
+
 
     @Test
     fun testRememberShapeAfterOrientationChange() {
@@ -112,30 +129,6 @@ class ShapeToolOrientationIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOOL_POSITION))
         if (expectedBitmap != null) {
             Assert.assertTrue(expectedBitmap.sameAs(workspace?.bitmapOfCurrentLayer))
-        }
-    }
-
-    companion object {
-        @Parameterized.Parameters(name = "{0}")
-        fun data(): Iterable<Array<Any>> {
-            return listOf(
-                arrayOf(
-                    DrawableShape.RECTANGLE,
-                    R.id.pocketpaint_shapes_square_btn
-                ),
-                arrayOf(
-                    DrawableShape.OVAL,
-                    R.id.pocketpaint_shapes_circle_btn
-                ),
-                arrayOf(
-                    DrawableShape.HEART,
-                    R.id.pocketpaint_shapes_heart_btn
-                ),
-                arrayOf(
-                    DrawableShape.STAR,
-                    R.id.pocketpaint_shapes_star_btn
-                )
-            )
         }
     }
 }

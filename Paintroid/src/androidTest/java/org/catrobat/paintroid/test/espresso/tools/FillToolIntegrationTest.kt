@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@file:Suppress("DEPRECATION")
-
 package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Color
@@ -28,6 +26,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
@@ -36,10 +35,10 @@ import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
@@ -49,7 +48,6 @@ import org.catrobat.paintroid.ui.Perspective
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -58,7 +56,9 @@ import java.io.File
 @RunWith(AndroidJUnit4::class)
 class FillToolIntegrationTest {
     @get:Rule
-    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
+    var launchActivityRule = ActivityTestRule(
+        MainActivity::class.java
+    )
 
     @get:Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
@@ -66,6 +66,7 @@ class FillToolIntegrationTest {
     private var toolReference: ToolReference? = null
     private var mainActivity: MainActivity? = null
     private var idlingResource: CountingIdlingResource? = null
+
     @Before
     fun setUp() {
         mainActivity = launchActivityRule.activity
@@ -73,52 +74,55 @@ class FillToolIntegrationTest {
         toolReference = mainActivity?.toolReference
         idlingResource = mainActivity?.idlingResource
         IdlingRegistry.getInstance().register(idlingResource)
-        onToolBarView().performSelectTool(ToolType.FILL)
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.FILL)
     }
 
     @After
-    fun tearDown() = IdlingRegistry.getInstance().unregister(idlingResource)
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(idlingResource)
+    }
 
     @Test
     fun testFloodFillIfImageLoaded() {
-        mainActivity?.model?.savedPictureUri = Uri.fromFile(File("dummy"))
-        onToolProperties()
+        mainActivity!!.model.savedPictureUri = Uri.fromFile(File("dummy"))
+        ToolPropertiesInteraction.onToolProperties()
             .checkMatchesColor(Color.BLACK)
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
-        mainActivity?.model?.savedPictureUri = null
+        mainActivity!!.model.savedPictureUri = null
     }
 
     @Test
     fun testBitmapIsFilled() {
-        onToolProperties()
+        ToolPropertiesInteraction.onToolProperties()
             .checkMatchesColor(Color.BLACK)
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
     fun testNothingHappensWhenClickedOutsideDrawingArea() {
-        perspective?.multiplyScale(.5f)
-        onToolProperties()
+        perspective!!.multiplyScale(.5f)
+        ToolPropertiesInteraction.onToolProperties()
             .checkMatchesColor(Color.BLACK)
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_RIGHT))
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
     }
 
     @Test
     fun testOnlyFillInnerArea() {
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.BRUSH)
-        onToolProperties()
+        ToolPropertiesInteraction.onToolProperties()
             .checkMatchesColor(Color.BLACK)
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(
                 UiInteractions.swipeAccurate(
                     DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE,
@@ -143,13 +147,13 @@ class FillToolIntegrationTest {
                     DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE
                 )
             )
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.FILL)
-        onToolProperties()
+        ToolPropertiesInteraction.onToolProperties()
             .setColorResource(R.color.pocketpaint_color_picker_green1)
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColorResource(
                 R.color.pocketpaint_color_picker_green1,
                 BitmapLocationProvider.MIDDLE
@@ -160,21 +164,19 @@ class FillToolIntegrationTest {
 
     @Test
     fun testFillToolOptionsDialog() {
-        val fillTool = toolReference?.tool as FillTool?
-        fillTool?.getToleranceAbsoluteValue(DEFAULT_TOLERANCE_IN_PERCENT)?.let {
-            Assert.assertEquals(
-                "Wrong fill tool member value for color tolerance",
-                it.toDouble(),
-                fillTool.colorTolerance.toDouble(),
-                TOLERANCE_DELTA
-            )
-        }
-        onToolBarView()
+        val fillTool = toolReference!!.tool as FillTool?
+        Assert.assertEquals(
+            "Wrong fill tool member value for color tolerance",
+            fillTool!!.getToleranceAbsoluteValue(DEFAULT_TOLERANCE_IN_PERCENT).toDouble(),
+            fillTool.colorTolerance.toDouble(),
+            TOLERANCE_DELTA
+        )
+        ToolBarViewInteraction.onToolBarView()
             .performClickSelectedToolButton()
         val colorToleranceInput =
-            Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
+            Espresso.onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
         val colorToleranceSeekBar =
-            Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_color_tolerance_seek_bar))
+            Espresso.onView(withId(R.id.pocketpaint_color_tolerance_seek_bar))
         val testToleranceText = "100"
         colorToleranceInput.check(
             ViewAssertions.matches(
@@ -189,52 +191,46 @@ class FillToolIntegrationTest {
         )
         colorToleranceInput.check(ViewAssertions.matches(ViewMatchers.withText(testToleranceText)))
         colorToleranceSeekBar.check(ViewAssertions.matches(UiMatcher.withProgress(testToleranceText.toInt())))
-        val expectedAbsoluteTolerance = fillTool?.getToleranceAbsoluteValue(100)
-        if (fillTool != null) {
-            expectedAbsoluteTolerance?.let {
-                Assert.assertEquals(
-                    "Wrong fill tool member value for color tolerance",
-                    it.toDouble(),
-                    fillTool.colorTolerance.toDouble(),
-                    TOLERANCE_DELTA
-                )
-            }
-        }
+        val expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(100)
+        Assert.assertEquals(
+            "Wrong fill tool member value for color tolerance",
+            expectedAbsoluteTolerance.toDouble(),
+            fillTool.colorTolerance.toDouble(),
+            TOLERANCE_DELTA
+        )
 
         // Close tool options
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performClickSelectedToolButton()
     }
 
     @Test
     fun testFillToolDialogAfterToolSwitch() {
-        val fillTool = toolReference?.tool as FillTool?
-        onToolBarView()
+        val fillTool = toolReference!!.tool as FillTool?
+        ToolBarViewInteraction.onToolBarView()
             .performClickSelectedToolButton()
         val colorToleranceInput =
-            Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
+            Espresso.onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
         val colorToleranceSeekBar =
-            Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_color_tolerance_seek_bar))
+            Espresso.onView(withId(R.id.pocketpaint_color_tolerance_seek_bar))
         val toleranceInPercent = 50
         colorToleranceInput.perform(ViewActions.replaceText(toleranceInPercent.toString()))
-        val expectedAbsoluteTolerance = fillTool?.getToleranceAbsoluteValue(toleranceInPercent)
-        if (expectedAbsoluteTolerance != null) {
-            Assert.assertEquals(
-                "Wrong fill tool member value for color tolerance",
-                expectedAbsoluteTolerance.toDouble(),
-                fillTool.colorTolerance.toDouble(),
-                TOLERANCE_DELTA
-            )
-        }
+        val expectedAbsoluteTolerance = fillTool!!.getToleranceAbsoluteValue(toleranceInPercent)
+        Assert.assertEquals(
+            "Wrong fill tool member value for color tolerance",
+            expectedAbsoluteTolerance.toDouble(),
+            fillTool.colorTolerance.toDouble(),
+            TOLERANCE_DELTA
+        )
 
         // Close tool options
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performClickSelectedToolButton()
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.BRUSH)
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.FILL)
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performClickSelectedToolButton()
         colorToleranceInput.check(
             ViewAssertions.matches(
@@ -252,29 +248,27 @@ class FillToolIntegrationTest {
         )
     }
 
-    @Ignore("Fails on Jenkins, trying out if everything works without this test or if error is due to a bug on Jenkins")
     @Test
     fun testFillToolUndoRedoWithTolerance() {
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.BRUSH)
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
-        onToolProperties()
+        ToolPropertiesInteraction.onToolProperties()
             .setColorResource(R.color.pocketpaint_color_picker_brown2)
             .checkMatchesColorResource(R.color.pocketpaint_color_picker_brown2)
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.FILL)
-            .performOpenToolOptionsView()
-        Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
+        Espresso.onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
             .perform(ViewActions.replaceText(100.toString()))
-        onToolBarView()
+        ToolBarViewInteraction.onToolBarView()
             .performCloseToolOptionsView()
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        onDrawingSurfaceView()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColorResource(
                 R.color.pocketpaint_color_picker_brown2,
                 BitmapLocationProvider.MIDDLE
@@ -283,12 +277,14 @@ class FillToolIntegrationTest {
                 R.color.pocketpaint_color_picker_brown2,
                 BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE
             )
-        onTopBarView().performUndo()
-        onDrawingSurfaceView()
+        TopBarViewInteraction.onTopBarView()
+            .performUndo()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
-        onTopBarView().performRedo()
-        onDrawingSurfaceView()
+        TopBarViewInteraction.onTopBarView()
+            .performRedo()
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColorResource(
                 R.color.pocketpaint_color_picker_brown2,
                 BitmapLocationProvider.MIDDLE
