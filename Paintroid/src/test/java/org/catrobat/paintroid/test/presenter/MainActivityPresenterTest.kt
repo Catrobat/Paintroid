@@ -1294,7 +1294,6 @@ class MainActivityPresenterTest {
             ArgumentMatchers.eq(null as Uri?),
             any<Context>()
         )
-
     }
 
     @Test
