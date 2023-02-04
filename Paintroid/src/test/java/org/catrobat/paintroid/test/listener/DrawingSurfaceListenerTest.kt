@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.test.listener
 
 import android.graphics.PointF
@@ -24,11 +23,12 @@ import android.view.MotionEvent
 import org.catrobat.paintroid.listener.DrawingSurfaceListener
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceListenerCallback
-import org.catrobat.paintroid.test.utils.PointFMatcher
+import org.catrobat.paintroid.test.utils.PointFMatcher.Companion.pointFEquals
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.DrawingSurface
+import org.catrobat.paintroid.ui.zoomwindow.ZoomWindowController
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -54,6 +54,9 @@ class DrawingSurfaceListenerTest {
 
     @Mock
     private val motionEvent: MotionEvent? = null
+
+    @Mock
+    private val zoomWindowController: ZoomWindowController? = null
     private var drawingSurfaceListener: DrawingSurfaceListener? = null
     private val initalPositionX = 1f
     private val initalPositionY = 1f
@@ -68,30 +71,33 @@ class DrawingSurfaceListenerTest {
     private val firstMovementTimestamp: Long = 150
     private val secondMovementTimestamp: Long = 170
     private val actionUpTimestamp: Long = 175
-
     @Before
     fun setUp() {
-        Mockito.`when`(callback?.getCurrentTool()).thenReturn(currentTool)
-        Mockito.`when`(callback?.getToolOptionsViewController()).thenReturn(toolOptionsViewController)
-        Mockito.`when`(motionEvent?.downTime).thenReturn(0.toLong())
-        drawingSurfaceListener =
-            autoScrollTask?.let { callback?.let { it1 -> DrawingSurfaceListener(it, it1, DISPLAY_DENSITY) } }
+        Mockito.`when`(callback!!.getCurrentTool())
+            .thenReturn(currentTool)
+        Mockito.`when`(callback.getToolOptionsViewController())
+            .thenReturn(toolOptionsViewController)
+        Mockito.`when`(motionEvent!!.downTime).thenReturn(0L)
+        drawingSurfaceListener = DrawingSurfaceListener(autoScrollTask!!, callback, DISPLAY_DENSITY)
+        drawingSurfaceListener!!.setZoomController(zoomWindowController!!)
     }
 
     @Test
-    fun testSetUp() { Mockito.verifyZeroInteractions(currentTool, callback, autoScrollTask) }
+    fun testSetUp() {
+        Mockito.verifyZeroInteractions(currentTool, callback, autoScrollTask)
+    }
 
     private fun triggerTouchDownEvent(
         startPositionX: Float,
         startPositionY: Float,
         drawingSurface: DrawingSurface
     ) {
-        Mockito.`when`(motionEvent?.action).thenReturn(MotionEvent.ACTION_DOWN)
-        Mockito.`when`(motionEvent?.x).thenReturn(startPositionX)
-        Mockito.`when`(motionEvent?.y).thenReturn(startPositionY)
+        Mockito.`when`(motionEvent!!.action).thenReturn(MotionEvent.ACTION_DOWN)
+        Mockito.`when`(motionEvent.x).thenReturn(startPositionX)
+        Mockito.`when`(motionEvent.y).thenReturn(startPositionY)
         Mockito.`when`(drawingSurface.width).thenReturn(width)
         Mockito.`when`(drawingSurface.height).thenReturn(height)
-        if (motionEvent != null) { drawingSurfaceListener?.onTouch(drawingSurface, motionEvent) }
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
     }
 
     private fun triggerMovementEvent(
@@ -99,13 +105,13 @@ class DrawingSurfaceListenerTest {
         positionY: Float,
         drawingSurface: DrawingSurface
     ) {
-        Mockito.`when`(motionEvent?.action).thenReturn(MotionEvent.ACTION_MOVE)
-        Mockito.`when`(motionEvent?.x).thenReturn(positionX)
-        Mockito.`when`(motionEvent?.y).thenReturn(positionY)
-        Mockito.`when`(motionEvent?.pointerCount).thenReturn(1)
+        Mockito.`when`(motionEvent!!.action).thenReturn(MotionEvent.ACTION_MOVE)
+        Mockito.`when`(motionEvent.x).thenReturn(positionX)
+        Mockito.`when`(motionEvent.y).thenReturn(positionY)
+        Mockito.`when`(motionEvent.pointerCount).thenReturn(1)
         Mockito.`when`(drawingSurface.width).thenReturn(width)
         Mockito.`when`(drawingSurface.height).thenReturn(height)
-        if (motionEvent != null) { drawingSurfaceListener?.onTouch(drawingSurface, motionEvent) }
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
     }
 
     private fun triggerMovementEventWithTimestamp(
@@ -118,56 +124,58 @@ class DrawingSurfaceListenerTest {
         triggerMovementEvent(positionX, positionY, drawingSurface)
     }
 
-    private fun triggerTouchUpEvent(timestamp: Long, drawingSurface: DrawingSurface) {
-        Mockito.`when`(motionEvent?.eventTime).thenReturn(timestamp)
-        Mockito.`when`(motionEvent?.action).thenReturn(MotionEvent.ACTION_UP)
-        Mockito.`when`(motionEvent?.x).thenReturn(actionUpMovementPositionX)
-        Mockito.`when`(motionEvent?.y).thenReturn(actionUpMovementPositionY)
+    fun triggerTouchUpEvent(timestamp: Long, drawingSurface: DrawingSurface) {
+        Mockito.`when`(motionEvent!!.eventTime).thenReturn(timestamp)
+        Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_UP)
+        Mockito.`when`(motionEvent.x).thenReturn(actionUpMovementPositionX)
+        Mockito.`when`(motionEvent.y).thenReturn(actionUpMovementPositionY)
         Mockito.`when`(drawingSurface.width).thenReturn(width)
         Mockito.`when`(drawingSurface.height).thenReturn(height)
-        if (motionEvent != null) { drawingSurfaceListener?.onTouch(drawingSurface, motionEvent) }
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
     }
 
     @Test
     fun testOnTouchDown() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         triggerTouchDownEvent(41f, 5f, drawingSurface)
-        Mockito.verify(callback)?.convertToCanvasFromSurface(PointFMatcher.pointFEquals(41f, 5f))
-        Mockito.verify(currentTool)?.handleDown(PointFMatcher.pointFEquals(41f, 5f))
+        Mockito.verify<DrawingSurfaceListenerCallback?>(callback)
+            .convertToCanvasFromSurface(pointFEquals(41f, 5f))
+        Mockito.verify<Tool?>(currentTool).handleDown(pointFEquals(41f, 5f))
         Mockito.verify(autoScrollTask)?.setViewDimensions(width, height)
         Mockito.verify(autoScrollTask)?.setEventPoint(41f, 5f)
         Mockito.verify(autoScrollTask)?.start()
-        Mockito.verifyNoMoreInteractions(autoScrollTask, currentTool)
-        Mockito.verify(callback, Mockito.never())?.multiplyPerspectiveScale(ArgumentMatchers.anyFloat())
-        Mockito.verify(
-            callback, Mockito.never()
-        )?.translatePerspective(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
+        Mockito.verify(callback, Mockito.never())
+            ?.multiplyPerspectiveScale(ArgumentMatchers.anyFloat())
+        Mockito.verify(callback, Mockito.never())
+            ?.translatePerspective(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
     }
 
     @Test
     fun testOnTouchDownIgnoredIfInsideDrawerLeftEdge() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
-
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_DOWN)
         Mockito.`when`(motionEvent.x).thenReturn(20 * DISPLAY_DENSITY - 1)
         Mockito.`when`(motionEvent.y).thenReturn(5f)
-
-        val onTouchResult = drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        if (onTouchResult != null) { Assert.assertFalse(onTouchResult) }
+        val onTouchResult = drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Assert.assertFalse(onTouchResult)
         Mockito.verifyNoMoreInteractions(autoScrollTask, currentTool)
     }
 
     @Test
     fun testOnTouchDownIgnoredIfInsideDrawerRightEdge() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
-
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_DOWN)
         Mockito.`when`(motionEvent.x).thenReturn(67f)
         Mockito.`when`(motionEvent.y).thenReturn(5f)
         Mockito.`when`(drawingSurface.width).thenReturn((67 + 20 * DISPLAY_DENSITY - 1).toInt())
-
         val onTouchResult = drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
         Assert.assertFalse(onTouchResult)
         Mockito.verifyNoMoreInteractions(autoScrollTask, currentTool)
@@ -175,10 +183,13 @@ class DrawingSurfaceListenerTest {
 
     @Test
     fun testOnTouchMoveInDrawMode() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         triggerMovementEvent(5f, 3f, drawingSurface)
-        Mockito.verify(callback)?.convertToCanvasFromSurface(PointFMatcher.pointFEquals(5f, 3f))
-        Mockito.verify(currentTool)?.handleMove(PointFMatcher.pointFEquals(5f, 3f))
+        Mockito.verify<DrawingSurfaceListenerCallback?>(callback)
+            .convertToCanvasFromSurface(pointFEquals(5f, 3f))
+        Mockito.verify<Tool?>(currentTool).handleMove(pointFEquals(5f, 3f))
         Mockito.verify(autoScrollTask)?.setEventPoint(5f, 3f)
         Mockito.verify(autoScrollTask)?.setViewDimensions(width, height)
         Mockito.verifyNoMoreInteractions(autoScrollTask)
@@ -186,7 +197,9 @@ class DrawingSurfaceListenerTest {
 
     @Test
     fun testOnTouchMoveInDrawModeDoesNotStopAutoScroll() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         triggerMovementEvent(5f, 3f, drawingSurface)
         Mockito.verify(autoScrollTask, Mockito.never())?.stop()
         Mockito.verify(autoScrollTask, Mockito.never())?.isRunning
@@ -194,19 +207,22 @@ class DrawingSurfaceListenerTest {
 
     @Test
     fun testOnTouchMoveInDrawModeAfterPinch() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
-
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE)
         Mockito.`when`(motionEvent.x).thenReturn(5f)
         Mockito.`when`(motionEvent.y).thenReturn(3f)
-
         Mockito.`when`(motionEvent.pointerCount).thenReturn(2, 1)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-
-        Mockito.verify(currentTool, Mockito.never())?.handleMove(ArgumentMatchers.any(PointF::class.java))
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify(currentTool, Mockito.never())?.handleMove(
+            ArgumentMatchers.any(
+                PointF::class.java
+            )
+        )
         Mockito.verify(autoScrollTask, Mockito.never())
             ?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
         Mockito.verify(autoScrollTask, Mockito.never())
@@ -215,19 +231,22 @@ class DrawingSurfaceListenerTest {
 
     @Test
     fun testOnTouchMoveInPinchMode() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
-
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE)
         Mockito.`when`(motionEvent.x).thenReturn(7f)
         Mockito.`when`(motionEvent.y).thenReturn(11f)
         Mockito.`when`(motionEvent.pointerCount).thenReturn(2)
-
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-
-        Mockito.verify(currentTool, Mockito.never())?.handleMove(ArgumentMatchers.any(PointF::class.java))
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify(currentTool, Mockito.never())?.handleMove(
+            ArgumentMatchers.any(
+                PointF::class.java
+            )
+        )
         Mockito.verify(autoScrollTask, Mockito.never())
             ?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
         Mockito.verify(autoScrollTask, Mockito.never())
@@ -240,19 +259,33 @@ class DrawingSurfaceListenerTest {
 
     @Test
     fun testOnTouchMoveInHandMode() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE)
         Mockito.`when`(motionEvent.x).thenReturn(7f)
         Mockito.`when`(motionEvent.y).thenReturn(11f)
         Mockito.`when`(motionEvent.pointerCount).thenReturn(1)
-        Mockito.`when`(currentTool?.handToolMode()).thenReturn(true)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        Mockito.verify(currentTool, Mockito.never())?.handleUp(ArgumentMatchers.any(PointF::class.java))
-        Mockito.verify(currentTool, Mockito.never())?.handleDown(ArgumentMatchers.any(PointF::class.java))
-        Mockito.verify(currentTool, Mockito.never())?.handleMove(ArgumentMatchers.any(PointF::class.java))
+        Mockito.`when`(currentTool!!.handToolMode()).thenReturn(true)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify(currentTool, Mockito.never()).handleUp(
+            ArgumentMatchers.any(
+                PointF::class.java
+            )
+        )
+        Mockito.verify(currentTool, Mockito.never()).handleDown(
+            ArgumentMatchers.any(
+                PointF::class.java
+            )
+        )
+        Mockito.verify(currentTool, Mockito.never()).handleMove(
+            ArgumentMatchers.any(
+                PointF::class.java
+            )
+        )
         Mockito.verify(autoScrollTask, Mockito.never())
             ?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
         Mockito.verify(autoScrollTask, Mockito.never())
@@ -265,32 +298,38 @@ class DrawingSurfaceListenerTest {
 
     @Test
     fun testOnTouchMoveInPinchModeStopsAutoScroll() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE)
         Mockito.`when`(motionEvent.pointerCount).thenReturn(2)
         Mockito.`when`(motionEvent.x).thenReturn(50f)
-        Mockito.`when`(autoScrollTask?.isRunning).thenReturn(true)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        Mockito.verify(autoScrollTask)?.stop()
+        Mockito.`when`(autoScrollTask!!.isRunning).thenReturn(true)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify(autoScrollTask).stop()
     }
 
     @Test
     fun testOnTouchMoveInHandModeStopsAutoScroll() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE)
         Mockito.`when`(motionEvent.pointerCount).thenReturn(1)
-        Mockito.`when`(currentTool?.handToolMode()).thenReturn(true)
+        Mockito.`when`(currentTool!!.handToolMode()).thenReturn(true)
         Mockito.`when`(motionEvent.x).thenReturn(50f)
-        Mockito.`when`(autoScrollTask?.isRunning).thenReturn(true)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        Mockito.verify(autoScrollTask)?.stop()
+        Mockito.`when`(autoScrollTask!!.isRunning).thenReturn(true)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify(autoScrollTask).stop()
     }
 
     @Test
     fun testOnTouchMoveTranslateInPinchMode() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE)
         Mockito.`when`(motionEvent.getX(0)).thenReturn(7f)
@@ -298,14 +337,18 @@ class DrawingSurfaceListenerTest {
         Mockito.`when`(motionEvent.getX(1)).thenReturn(23f)
         Mockito.`when`(motionEvent.getY(1)).thenReturn(29f)
         Mockito.`when`(motionEvent.pointerCount).thenReturn(2)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
         Mockito.`when`(motionEvent.getX(0)).thenReturn(17f)
         Mockito.`when`(motionEvent.getY(0)).thenReturn(1f)
         Mockito.`when`(motionEvent.getX(1)).thenReturn(33f)
         Mockito.`when`(motionEvent.getY(1)).thenReturn(19f)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        Mockito.verify(currentTool, Mockito.never())?.handleMove(ArgumentMatchers.any(PointF::class.java))
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify(currentTool, Mockito.never())?.handleMove(
+            ArgumentMatchers.any(
+                PointF::class.java
+            )
+        )
         Mockito.verify(autoScrollTask, Mockito.never())
             ?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
         Mockito.verify(autoScrollTask, Mockito.never())
@@ -317,36 +360,49 @@ class DrawingSurfaceListenerTest {
 
     @Test
     fun testOnTouchMoveTranslateInHandMode() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE)
         Mockito.`when`(motionEvent.x).thenReturn(7f)
         Mockito.`when`(motionEvent.y).thenReturn(11f)
         Mockito.`when`(motionEvent.pointerCount).thenReturn(1)
-        Mockito.`when`(currentTool?.handToolMode()).thenReturn(true)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
+        Mockito.`when`(currentTool!!.handToolMode()).thenReturn(true)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
         Mockito.`when`(motionEvent.x).thenReturn(17f)
         Mockito.`when`(motionEvent.y).thenReturn(1f)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        Mockito.verify(currentTool, Mockito.never())?.handleUp(ArgumentMatchers.any(PointF::class.java))
-        Mockito.verify(currentTool, Mockito.never())?.handleDown(ArgumentMatchers.any(PointF::class.java))
-        Mockito.verify(currentTool, Mockito.never())?.handleMove(ArgumentMatchers.any(PointF::class.java))
-        Mockito.verify(autoScrollTask, Mockito.never())
-            ?.setEventPoint(
-                ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat()
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify(currentTool, Mockito.never()).handleUp(
+            ArgumentMatchers.any(
+                PointF::class.java
             )
-        Mockito.verify(autoScrollTask, Mockito.never())
-            ?.setViewDimensions(
-                ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt()
+        )
+        Mockito.verify(currentTool, Mockito.never()).handleDown(
+            ArgumentMatchers.any(
+                PointF::class.java
             )
+        )
+        Mockito.verify(currentTool, Mockito.never()).handleMove(
+            ArgumentMatchers.any(
+                PointF::class.java
+            )
+        )
+        Mockito.verify(autoScrollTask, Mockito.never())
+            ?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
+        Mockito.verify(autoScrollTask, Mockito.never())
+            ?.setViewDimensions(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt())
         Mockito.verify(callback)?.translatePerspective(10f, -10f)
-        Mockito.verify(callback, Mockito.never())?.multiplyPerspectiveScale(ArgumentMatchers.anyFloat())
+        Mockito.verify(callback, Mockito.never())
+            ?.multiplyPerspectiveScale(ArgumentMatchers.anyFloat())
     }
 
     @Test
     fun testOnTouchMoveScaleInPinchMode() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE)
         Mockito.`when`(motionEvent.getX(0)).thenReturn(2f)
@@ -354,88 +410,109 @@ class DrawingSurfaceListenerTest {
         Mockito.`when`(motionEvent.getX(1)).thenReturn(4f)
         Mockito.`when`(motionEvent.getY(1)).thenReturn(4f)
         Mockito.`when`(motionEvent.pointerCount).thenReturn(2)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
         Mockito.`when`(motionEvent.getX(0)).thenReturn(1f)
         Mockito.`when`(motionEvent.getY(0)).thenReturn(1f)
         Mockito.`when`(motionEvent.getX(1)).thenReturn(5f)
         Mockito.`when`(motionEvent.getY(1)).thenReturn(5f)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
         Mockito.`when`(motionEvent.getX(0)).thenReturn(2f)
         Mockito.`when`(motionEvent.getY(0)).thenReturn(2f)
         Mockito.`when`(motionEvent.getX(1)).thenReturn(4f)
         Mockito.`when`(motionEvent.getY(1)).thenReturn(4f)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        Mockito.verify(currentTool, Mockito.never())?.handleMove(ArgumentMatchers.any(PointF::class.java))
-        Mockito.verify(
-            autoScrollTask, Mockito.never()
-        )?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
-        Mockito.verify(
-            autoScrollTask, Mockito.never()
-        )?.setViewDimensions(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt())
-        Mockito.verify(
-            callback, Mockito.never()
-        )?.translatePerspective(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify(currentTool, Mockito.never())?.handleMove(
+            ArgumentMatchers.any(
+                PointF::class.java
+            )
+        )
+        Mockito.verify(autoScrollTask, Mockito.never())
+            ?.setEventPoint(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
+        Mockito.verify(autoScrollTask, Mockito.never())
+            ?.setViewDimensions(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt())
+        Mockito.verify(callback, Mockito.never())
+            ?.translatePerspective(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
         Mockito.verify(callback)?.multiplyPerspectiveScale((2f - 4f) / (1f - 5f))
         Mockito.verify(callback)?.multiplyPerspectiveScale((1f - 5f) / (2f - 4f))
     }
 
     @Test
     fun testOnTouchUp() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_UP)
         Mockito.`when`(motionEvent.x).thenReturn(3f)
         Mockito.`when`(motionEvent.y).thenReturn(5f)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        Mockito.verify(currentTool)?.handleUp(PointFMatcher.pointFEquals(3f, 5f))
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify<Tool?>(currentTool).handleUp(pointFEquals(3f, 5f))
         Mockito.verify(currentTool)?.drawTime = ArgumentMatchers.anyLong()
+        Mockito.verify(currentTool)?.handToolMode()
         Mockito.verifyNoMoreInteractions(currentTool)
     }
 
     @Test
     fun testOnTouchUpAfterPinchResetsTool() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
-        Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP)
+        Mockito.`when`(motionEvent.action)
+            .thenReturn(MotionEvent.ACTION_MOVE, MotionEvent.ACTION_UP)
         Mockito.`when`(motionEvent.x).thenReturn(3f)
         Mockito.`when`(motionEvent.y).thenReturn(5f)
         Mockito.`when`(motionEvent.pointerCount).thenReturn(2)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
         Mockito.verify(currentTool, Mockito.times(2))?.resetInternalState(StateChange.MOVE_CANCELED)
-        Mockito.verify(currentTool, Mockito.never())?.handleMove(ArgumentMatchers.any(PointF::class.java))
-        Mockito.verify(currentTool, Mockito.never())?.handleUp(ArgumentMatchers.any(PointF::class.java))
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        Mockito.verify(currentTool)?.handleUp(PointFMatcher.pointFEquals(3f, 5f))
+        Mockito.verify(currentTool, Mockito.never())?.handleMove(
+            ArgumentMatchers.any(
+                PointF::class.java
+            )
+        )
+        Mockito.verify(currentTool, Mockito.never())?.handleUp(
+            ArgumentMatchers.any(
+                PointF::class.java
+            )
+        )
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify<Tool?>(currentTool).handleUp(pointFEquals(3f, 5f))
     }
 
     @Test
     fun testOnTouchUpStopsAutoScroll() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
-        Mockito.`when`(autoScrollTask?.isRunning).thenReturn(true)
+        Mockito.`when`(autoScrollTask!!.isRunning).thenReturn(true)
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_UP)
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
-        Mockito.verify(autoScrollTask)?.stop()
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
+        Mockito.verify(autoScrollTask).stop()
     }
 
     @Test
     fun testDisableAutoScroll() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val motionEvent = Mockito.mock(MotionEvent::class.java)
         Mockito.`when`(motionEvent.action).thenReturn(MotionEvent.ACTION_DOWN)
         Mockito.`when`(motionEvent.x).thenReturn(41f)
         Mockito.`when`(motionEvent.y).thenReturn(5f)
         Mockito.`when`(drawingSurface.width).thenReturn(width)
         Mockito.`when`(drawingSurface.height).thenReturn(height)
-        drawingSurfaceListener?.disableAutoScroll()
-        drawingSurfaceListener?.onTouch(drawingSurface, motionEvent)
+        drawingSurfaceListener!!.disableAutoScroll()
+        drawingSurfaceListener!!.onTouch(drawingSurface, motionEvent)
         Mockito.verify(autoScrollTask, Mockito.never())?.start()
     }
 
     @Test
     fun testTouchCorrection() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         triggerTouchDownEvent(initalPositionX, initalPositionY, drawingSurface)
         triggerMovementEventWithTimestamp(
             firstMovementPositionX,
@@ -450,15 +527,15 @@ class DrawingSurfaceListenerTest {
             secondMovementTimestamp
         )
         triggerTouchUpEvent(actionUpTimestamp, drawingSurface)
-        Mockito.verify(currentTool)
-            ?.handleUp(
-                PointFMatcher.pointFEquals(firstMovementPositionX, firstMovementPositionY)
-            )
+        Mockito.verify<Tool?>(currentTool)
+            .handleUp(pointFEquals(firstMovementPositionX, firstMovementPositionY))
     }
 
     @Test
     fun testTouchCorrectionWithInvalidDelayBetweenMovements() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val tooLateTimestamp = secondMovementTimestamp + 15
         triggerTouchDownEvent(initalPositionX, initalPositionY, drawingSurface)
         triggerMovementEventWithTimestamp(
@@ -474,17 +551,15 @@ class DrawingSurfaceListenerTest {
             secondMovementTimestamp
         )
         triggerTouchUpEvent(tooLateTimestamp, drawingSurface)
-        Mockito.verify(currentTool)?.handleUp(
-            PointFMatcher.pointFEquals(
-                actionUpMovementPositionX,
-                actionUpMovementPositionY
-            )
-        )
+        Mockito.verify<Tool?>(currentTool)
+            .handleUp(pointFEquals(actionUpMovementPositionX, actionUpMovementPositionY))
     }
 
     @Test
     fun testTouchCorrectionWithTooBigDelayBeforeUP() {
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         val muchLaterTimestamp: Long = 220
         triggerTouchDownEvent(initalPositionX, initalPositionY, drawingSurface)
         triggerMovementEventWithTimestamp(
@@ -500,19 +575,17 @@ class DrawingSurfaceListenerTest {
             secondMovementTimestamp
         )
         triggerTouchUpEvent(muchLaterTimestamp, drawingSurface)
-        Mockito.verify(currentTool)?.handleUp(
-            PointFMatcher.pointFEquals(
-                actionUpMovementPositionX,
-                actionUpMovementPositionY
-            )
-        )
+        Mockito.verify<Tool?>(currentTool)
+            .handleUp(pointFEquals(actionUpMovementPositionX, actionUpMovementPositionY))
     }
 
     @Test
     fun testTouchCorrectionWithDistanceAboveJitterThreshold() {
         val farAwayPositionX = 20.0f
         val farAwayPositionY = 20.0f
-        val drawingSurface = Mockito.mock(DrawingSurface::class.java)
+        val drawingSurface = Mockito.mock(
+            DrawingSurface::class.java
+        )
         triggerTouchDownEvent(initalPositionX, initalPositionY, drawingSurface)
         triggerMovementEventWithTimestamp(
             farAwayPositionX,
@@ -527,9 +600,8 @@ class DrawingSurfaceListenerTest {
             secondMovementTimestamp
         )
         triggerTouchUpEvent(actionUpTimestamp, drawingSurface)
-        Mockito.verify(currentTool)?.handleUp(
-            PointFMatcher.pointFEquals(actionUpMovementPositionX, actionUpMovementPositionY)
-        )
+        Mockito.verify<Tool?>(currentTool)
+            .handleUp(pointFEquals(actionUpMovementPositionX, actionUpMovementPositionY))
     }
 
     companion object {

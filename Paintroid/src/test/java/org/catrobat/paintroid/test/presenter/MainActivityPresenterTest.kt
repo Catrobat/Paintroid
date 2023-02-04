@@ -31,6 +31,7 @@ import android.util.DisplayMetrics
 import android.view.Menu
 import android.widget.Toast
 import androidx.core.view.GravityCompat
+import com.nhaarman.mockitokotlin2.any
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
@@ -75,12 +76,12 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import java.io.File
 
-@Suppress("LargeClass")
 @RunWith(MockitoJUnitRunner.Silent::class)
 class MainActivityPresenterTest {
     @Mock
@@ -193,12 +194,14 @@ class MainActivityPresenterTest {
     @Test
     fun testNewImageClickedWhenUnchangedThenSetNewInitialState() {
         val displayMetrics = DisplayMetrics()
-        Mockito.`when`(view?.displayMetrics).thenReturn(displayMetrics)
+        Mockito.`when`(view!!.displayMetrics).thenReturn(displayMetrics)
         displayMetrics.widthPixels = 300
         displayMetrics.heightPixels = 500
-        val command = Mockito.mock(Command::class.java)
-        Mockito.`when`(commandFactory?.createInitCommand(300, 500)).thenReturn(command)
-        presenter?.newImageClicked()
+        val command = Mockito.mock(
+            Command::class.java
+        )
+        Mockito.`when`(commandFactory!!.createInitCommand(300, 500)).thenReturn(command)
+        presenter!!.newImageClicked()
         Mockito.verify(commandManager)?.setInitialStateCommand(command)
         Mockito.verify(commandManager)?.reset()
         Mockito.verifyNoMoreInteractions(navigator)
@@ -206,142 +209,130 @@ class MainActivityPresenterTest {
 
     @Test
     fun testNewImageClickedWhenUndoAvailableAndSavedSetNewInitialState() {
-        Mockito.`when`(commandManager?.isUndoAvailable).thenReturn(true)
-        Mockito.`when`(model?.isSaved).thenReturn(true)
+        Mockito.`when`(commandManager!!.isUndoAvailable).thenReturn(true)
+        Mockito.`when`(model!!.isSaved).thenReturn(true)
         val displayMetrics = DisplayMetrics()
-        Mockito.`when`(view?.displayMetrics).thenReturn(displayMetrics)
+        Mockito.`when`(view!!.displayMetrics).thenReturn(displayMetrics)
         displayMetrics.widthPixels = 200
         displayMetrics.heightPixels = 100
-        val command = Mockito.mock(Command::class.java)
-        Mockito.`when`(commandFactory?.createInitCommand(200, 100)).thenReturn(command)
-        presenter?.newImageClicked()
-        Mockito.verify(commandManager)?.setInitialStateCommand(command)
-        Mockito.verify(commandManager)?.reset()
+        val command = Mockito.mock(
+            Command::class.java
+        )
+        Mockito.`when`(commandFactory!!.createInitCommand(200, 100)).thenReturn(command)
+        presenter!!.newImageClicked()
+        Mockito.verify(commandManager).setInitialStateCommand(command)
+        Mockito.verify(commandManager).reset()
         Mockito.verifyNoMoreInteractions(navigator)
     }
 
     @Test
     fun testNewImageClickedWhenUndoAvailableAndNotSavedThenShowSaveBeforeNewImage() {
-        Mockito.`when`(commandManager?.isUndoAvailable).thenReturn(true)
-        Mockito.`when`(model?.isSaved).thenReturn(false)
-        presenter?.newImageClicked()
+        Mockito.`when`(commandManager!!.isUndoAvailable).thenReturn(true)
+        Mockito.`when`(model!!.isSaved).thenReturn(false)
+        presenter!!.newImageClicked()
         Mockito.verify(navigator)?.showSaveBeforeNewImageDialog()
         Mockito.verifyNoMoreInteractions(navigator)
     }
 
     @Test
     fun testDiscardImageClickedThenClearsLayers() {
-        val command = Mockito.mock(Command::class.java)
-        Mockito.`when`(commandFactory?.createResetCommand()).thenReturn(command)
-        presenter?.discardImageClicked()
+        val command = Mockito.mock(
+            Command::class.java
+        )
+        Mockito.`when`(commandFactory!!.createResetCommand()).thenReturn(command)
+        presenter!!.discardImageClicked()
         Mockito.verify(commandManager)?.addCommand(command)
         Mockito.verifyNoMoreInteractions(commandManager, navigator)
     }
 
     @Test
     fun testBackToCatroidClickedWhenUnchangedThenFinishActivity() {
-        presenter?.backToPocketCodeClicked()
+        presenter!!.backToPocketCodeClicked()
         Mockito.verify(navigator)?.finishActivity()
         Mockito.verifyNoMoreInteractions(navigator)
     }
 
     @Test
     fun testBackToCatroidClickedWhenUndoAvailableThenShowSaveDialog() {
-        Mockito.`when`(commandManager?.isUndoAvailable).thenReturn(true)
-        presenter?.backToPocketCodeClicked()
+        Mockito.`when`(commandManager!!.isUndoAvailable).thenReturn(true)
+        presenter!!.backToPocketCodeClicked()
         Mockito.verify(navigator)?.showSaveBeforeFinishDialog()
         Mockito.verifyNoMoreInteractions(navigator)
     }
 
     @Test
     fun testBackToCatroidClickedWhenUndoAvailableAndSavedThenFinishActivity() {
-        Mockito.`when`(model?.isSaved).thenReturn(true)
-        Mockito.`when`(commandManager?.isUndoAvailable).thenReturn(true)
-        presenter?.backToPocketCodeClicked()
+        Mockito.`when`(model!!.isSaved).thenReturn(true)
+        Mockito.`when`(commandManager!!.isUndoAvailable).thenReturn(true)
+        presenter!!.backToPocketCodeClicked()
         Mockito.verify(navigator)?.finishActivity()
         Mockito.verifyNoMoreInteractions(navigator)
     }
 
     @Test
     fun testLoadImageClickedLoad() {
-        presenter?.replaceImageClicked()
-        Mockito.verify(navigator)?.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
+        presenter!!.replaceImageClicked()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
         Mockito.verifyNoMoreInteractions(interactor)
     }
 
     @Test
     fun testLoadImageClickedSaveFirst() {
-        Mockito.`when`(commandManager?.isUndoAvailable).thenReturn(true)
-        Mockito.`when`(model?.isSaved).thenReturn(false)
-        presenter?.replaceImageClicked()
+        Mockito.`when`(commandManager!!.isUndoAvailable).thenReturn(true)
+        Mockito.`when`(model!!.isSaved).thenReturn(false)
+        presenter!!.replaceImageClicked()
         Mockito.verify(navigator)?.showSaveBeforeLoadImageDialog()
         Mockito.verifyNoMoreInteractions(interactor)
     }
 
     @Test
     fun testLoadNewImage() {
-        presenter?.loadNewImage()
-        Mockito.verify(navigator)?.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
+        presenter!!.loadNewImage()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
         Mockito.verifyNoMoreInteractions(interactor)
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testSaveCopyClickedThenSaveImage() {
-        presenter?.saveCopyClicked(false)
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        presenter!!.saveCopyClicked(false)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                commandSerializer?.let { it2 ->
-                    if (context != null) {
-                        Mockito.verify(interactor)?.saveCopy(
-                            it, SAVE_IMAGE_DEFAULT, it1,
-                            it2, null,
-                            context
-                        )
-                    }
-                }
-            }
-        }
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+        Mockito.verify<Interactor?>(interactor).saveCopy(
+            presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
+            commandSerializer!!, null,
+            context!!
+        )
         Mockito.verifyNoMoreInteractions(interactor)
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testSaveImageClickedThenSaveImage() {
-        presenter?.saveImageClicked()
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        presenter!!.saveImageClicked()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveImage(
-                        it, SAVE_IMAGE_DEFAULT, it1,
-                        commandSerializer, null,
-                        context
-                    )
-                }
-            }
-        }
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
+        Mockito.verify<Interactor?>(interactor).saveImage(
+            presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
+            commandSerializer!!, null,
+            context!!
+        )
         Mockito.verifyNoMoreInteractions(interactor)
     }
 
     @Test
     fun testEnterFullscreenClicked() {
-        presenter?.enterFullscreenClicked()
+        presenter!!.enterFullscreenClicked()
         Mockito.verify(model)?.isFullscreen = true
         Mockito.verify(topBarViewHolder)?.hide()
         Mockito.verify(view)?.hideKeyboard()
@@ -352,7 +343,7 @@ class MainActivityPresenterTest {
 
     @Test
     fun testExitFullscreenClicked() {
-        presenter?.exitFullscreenClicked()
+        presenter!!.exitFullscreenClicked()
         Mockito.verify(model)?.isFullscreen = false
         Mockito.verify(topBarViewHolder)?.show()
         Mockito.verify(view)?.exitFullscreen()
@@ -362,14 +353,15 @@ class MainActivityPresenterTest {
 
     @Test
     fun testShowHelpClickedThenStartWelcomeActivity() {
-        presenter?.showHelpClicked()
-        Mockito.verify(navigator)?.startWelcomeActivity(REQUEST_CODE_INTRO)
+        presenter!!.showHelpClicked()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .startWelcomeActivity(REQUEST_CODE_INTRO)
         Mockito.verifyNoMoreInteractions(navigator)
     }
 
     @Test
     fun testShowAboutClickedThenShowAboutDialog() {
-        presenter?.showAboutClicked()
+        presenter!!.showAboutClicked()
         Mockito.verify(navigator)?.showAboutDialog()
         Mockito.verifyNoMoreInteractions(navigator)
     }
@@ -377,56 +369,58 @@ class MainActivityPresenterTest {
     @Test
     fun testOnNewImageThenResetCommandManager() {
         val metrics = Mockito.mock(DisplayMetrics::class.java)
-        Mockito.`when`(view?.displayMetrics).thenReturn(metrics)
-        presenter?.onNewImage()
+        Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
+        presenter!!.onNewImage()
         Mockito.verify(commandManager)?.reset()
     }
 
     @Test
     fun testOnNewImageWhenCommandReturnsThenResetPerspective() {
         val metrics = Mockito.mock(DisplayMetrics::class.java)
-        Mockito.`when`(view?.displayMetrics).thenReturn(metrics)
-        presenter?.onNewImage()
-        presenter?.onCommandPostExecute()
+        Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
+        presenter!!.onNewImage()
+        presenter!!.onCommandPostExecute()
         Mockito.verify(workspace)?.resetPerspective()
     }
 
     @Test
     fun testOnNewImageThenSetInitialStateCommand() {
         val displayMetrics = DisplayMetrics()
-        Mockito.`when`(view?.displayMetrics).thenReturn(displayMetrics)
+        Mockito.`when`(view!!.displayMetrics).thenReturn(displayMetrics)
         displayMetrics.widthPixels = 300
         displayMetrics.heightPixels = 500
-        val command = Mockito.mock(Command::class.java)
-        Mockito.`when`(commandFactory?.createInitCommand(300, 500)).thenReturn(command)
-        presenter?.onNewImage()
+        val command = Mockito.mock(
+            Command::class.java
+        )
+        Mockito.`when`(commandFactory!!.createInitCommand(300, 500)).thenReturn(command)
+        presenter!!.onNewImage()
         Mockito.verify(commandManager)?.setInitialStateCommand(command)
     }
 
     @Test
     fun testOnNewImageThenResetSavedPictureUri() {
         val metrics = Mockito.mock(DisplayMetrics::class.java)
-        Mockito.`when`(view?.displayMetrics).thenReturn(metrics)
-        presenter?.onNewImage()
+        Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
+        presenter!!.onNewImage()
         Mockito.verify(model)?.savedPictureUri = null
     }
 
     @Test
     fun testHandleActivityResultWhenUnhandledThenForwardResult() {
         val metrics = Mockito.mock(DisplayMetrics::class.java)
-        Mockito.`when`(view?.displayMetrics).thenReturn(metrics)
+        Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
         val intent = Mockito.mock(Intent::class.java)
-        presenter?.handleActivityResult(0, Activity.RESULT_OK, intent)
-        Mockito.verify(view)?.superHandleActivityResult(0, Activity.RESULT_OK, intent)
+        presenter!!.handleActivityResult(0, Activity.RESULT_OK, intent)
+        Mockito.verify(view).superHandleActivityResult(0, Activity.RESULT_OK, intent)
     }
 
     @Test
     fun testHandleActivityResultWhenUnhandledAndResultNotOKThenForwardResult() {
         val metrics = Mockito.mock(DisplayMetrics::class.java)
-        Mockito.`when`(view?.displayMetrics).thenReturn(metrics)
+        Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
         val intent = Mockito.mock(Intent::class.java)
-        presenter?.handleActivityResult(0, Activity.RESULT_CANCELED, intent)
-        Mockito.verify(view)?.superHandleActivityResult(0, Activity.RESULT_CANCELED, intent)
+        presenter!!.handleActivityResult(0, Activity.RESULT_CANCELED, intent)
+        Mockito.verify(view).superHandleActivityResult(0, Activity.RESULT_CANCELED, intent)
     }
 
     @Test
@@ -434,45 +428,42 @@ class MainActivityPresenterTest {
         val metrics = Mockito.mock(DisplayMetrics::class.java)
         metrics.widthPixels = 13
         metrics.heightPixels = 17
-        Mockito.`when`(view?.displayMetrics).thenReturn(metrics)
+        Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
         val intent = Mockito.mock(Intent::class.java)
         val uri = Mockito.mock(Uri::class.java)
         Mockito.`when`(intent.data).thenReturn(uri)
-        presenter?.handleActivityResult(REQUEST_CODE_LOAD_PICTURE, Activity.RESULT_OK, intent)
-        presenter?.let {
-            if (context != null && commandSerializer != null) {
-                Mockito.verify(interactor)?.loadFile(
-                    it, LOAD_IMAGE_DEFAULT, uri,
-                    context, false, commandSerializer
-                )
-            }
-        }
+        presenter!!.handleActivityResult(REQUEST_CODE_LOAD_PICTURE, Activity.RESULT_OK, intent)
+        Mockito.verify<Interactor?>(interactor).loadFile(
+            presenter!!, LOAD_IMAGE_DEFAULT, uri,
+            context!!, false,
+            commandSerializer!!
+        )
     }
 
     @Test
     fun testHandleActivityResultWhenResultNotOkThenDoNothing() {
         val metrics = Mockito.mock(DisplayMetrics::class.java)
-        Mockito.`when`(view?.displayMetrics).thenReturn(metrics)
+        Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
         val intent = Mockito.mock(Intent::class.java)
-        presenter?.handleActivityResult(0, Activity.RESULT_CANCELED, intent)
+        presenter!!.handleActivityResult(0, Activity.RESULT_CANCELED, intent)
         Mockito.verifyZeroInteractions(interactor, navigator)
     }
 
     @Test
     fun testHandleActivityResultWhenRequestIntroAndResultOKThenDoNothing() {
         val metrics = Mockito.mock(DisplayMetrics::class.java)
-        Mockito.`when`(view?.displayMetrics).thenReturn(metrics)
+        Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
         val intent = Mockito.mock(Intent::class.java)
-        presenter?.handleActivityResult(REQUEST_CODE_INTRO, Activity.RESULT_OK, intent)
+        presenter!!.handleActivityResult(REQUEST_CODE_INTRO, Activity.RESULT_OK, intent)
         Mockito.verifyZeroInteractions(interactor, navigator)
     }
 
     @Test
     fun testHandleActivityResultWhenRequestIntroAndResultSplitScreenNotSupportedThenShowToast() {
         val metrics = Mockito.mock(DisplayMetrics::class.java)
-        Mockito.`when`(view?.displayMetrics).thenReturn(metrics)
+        Mockito.`when`(view!!.displayMetrics).thenReturn(metrics)
         val intent = Mockito.mock(Intent::class.java)
-        presenter?.handleActivityResult(REQUEST_CODE_INTRO, RESULT_INTRO_MW_NOT_SUPPORTED, intent)
+        presenter!!.handleActivityResult(REQUEST_CODE_INTRO, RESULT_INTRO_MW_NOT_SUPPORTED, intent)
         Mockito.verify(navigator)
             ?.showToast(R.string.pocketpaint_intro_split_screen_not_supported, Toast.LENGTH_LONG)
         Mockito.verifyZeroInteractions(interactor, navigator)
@@ -480,212 +471,182 @@ class MainActivityPresenterTest {
 
     @Test
     fun testOnBackPressedWhenUntouchedThenFinishActivity() {
-        Mockito.`when`(toolController?.isDefaultTool).thenReturn(true)
-        presenter?.onBackPressed()
+        Mockito.`when`(toolController!!.isDefaultTool).thenReturn(true)
+        presenter!!.onBackPressed()
         Mockito.verify(navigator)?.finishActivity()
     }
 
     @Test
     fun testOnBackPressedWhenStartDrawerOpenThenCloseDrawer() {
-        Mockito.`when`(drawerLayoutViewHolder?.isDrawerOpen(GravityCompat.START)).thenReturn(true)
-        presenter?.onBackPressed()
-        Mockito.verify(drawerLayoutViewHolder)?.closeDrawer(GravityCompat.START, true)
+        Mockito.`when`(drawerLayoutViewHolder!!.isDrawerOpen(GravityCompat.START)).thenReturn(true)
+        presenter!!.onBackPressed()
+        Mockito.verify(drawerLayoutViewHolder).closeDrawer(GravityCompat.START, true)
     }
 
     @Test
     fun testOnBackPressedWhenEndDrawerOpenThenCloseDrawer() {
         Mockito.`when`(drawerLayoutViewHolder!!.isDrawerOpen(GravityCompat.END)).thenReturn(true)
-        presenter?.onBackPressed()
+        presenter!!.onBackPressed()
         Mockito.verify(drawerLayoutViewHolder).closeDrawer(GravityCompat.END, true)
     }
 
     @Test
     fun testOnBackPressedWhenIsFullscreenThenExitFullscreen() {
-        Mockito.`when`(model?.isFullscreen).thenReturn(true)
-        presenter?.onBackPressed()
-        Mockito.verify(model)?.isFullscreen = false
+        Mockito.`when`(model!!.isFullscreen).thenReturn(true)
+        presenter!!.onBackPressed()
+        Mockito.verify(model).isFullscreen = false
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testSaveImageConfirmClickedThenSaveImage() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.saveImageConfirmClicked(0, uri)
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveImage(
-                        it, 0, it1,
-                        commandSerializer, uri, context
-                    )
-                }
-            }
-        }
+        presenter!!.saveImageConfirmClicked(0, uri)
+        Mockito.verify(interactor)?.saveImage(
+            presenter!!, 0, workspace!!.layerModel,
+            commandSerializer!!, uri,
+            context!!
+        )
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testSaveImageConfirmClickedThenUseRequestCode() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.saveImageConfirmClicked(-1, uri)
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveImage(
-                        it, -1, it1,
-                        commandSerializer, uri, context
-                    )
-                }
-            }
-        }
+        presenter!!.saveImageConfirmClicked(-1, uri)
+        Mockito.verify(interactor)?.saveImage(
+            presenter!!, -1, workspace!!.layerModel,
+            commandSerializer!!, uri,
+            context!!
+        )
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testSaveCopyConfirmCLickedThenSaveImage() {
-        presenter?.saveCopyConfirmClicked(0, null)
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveCopy(
-                        it, 0, it1,
-                        commandSerializer, null, context
-                    )
-                }
-            }
-        }
+        presenter!!.saveCopyConfirmClicked(0, null)
+        Mockito.verify(interactor)?.saveCopy(
+            presenter!!, 0, workspace!!.layerModel,
+            commandSerializer!!, null,
+            context!!
+        )
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testSaveCopyConfirmClickedThenUseRequestCode() {
-        presenter?.saveCopyConfirmClicked(-1, null)
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveCopy(
-                        it, -1, it1,
-                        commandSerializer, null, context
-                    )
-                }
-            }
-        }
+        presenter!!.saveCopyConfirmClicked(-1, null)
+        Mockito.verify(interactor)?.saveCopy(
+            presenter!!, -1, workspace!!.layerModel,
+            commandSerializer!!, null,
+            context!!
+        )
     }
 
     @Test
     fun testUndoClickedWhenKeyboardOpenedThenCloseKeyboard() {
-        Mockito.`when`(view?.isKeyboardShown).thenReturn(true)
-        presenter?.undoClicked()
-        Mockito.verify(view)?.hideKeyboard()
+        Mockito.`when`(view!!.isKeyboardShown).thenReturn(true)
+        presenter!!.undoClicked()
+        Mockito.verify(view).hideKeyboard()
         Mockito.verifyZeroInteractions(commandManager)
     }
 
     @Test
     fun testUndoClickedThenExecuteUndo() {
-        presenter?.undoClicked()
+        presenter!!.undoClicked()
         Mockito.verify(commandManager)?.undo()
     }
 
     @Test
     fun testRedoClickedWhenKeyboardOpenedThenCloseKeyboard() {
-        Mockito.`when`(view?.isKeyboardShown).thenReturn(true)
-        presenter?.redoClicked()
-        Mockito.verify(view)?.hideKeyboard()
+        Mockito.`when`(view!!.isKeyboardShown).thenReturn(true)
+        presenter!!.redoClicked()
+        Mockito.verify(view).hideKeyboard()
         Mockito.verifyZeroInteractions(commandManager)
     }
 
     @Test
     fun testRedoClickedThenExecuteRedo() {
-        presenter?.redoClicked()
+        presenter!!.redoClicked()
         Mockito.verify(commandManager)?.redo()
     }
 
     @Test
     fun testShowLayerMenuClickedThenShowLayerDrawer() {
-        presenter?.showLayerMenuClicked()
+        presenter!!.showLayerMenuClicked()
         Mockito.verify(drawerLayoutViewHolder)?.openDrawer(GravityCompat.END)
     }
 
     @Test
     fun testOnCommandPostExecuteThenSetModelUnsaved() {
-        presenter?.onCommandPostExecute()
+        presenter!!.onCommandPostExecute()
         Mockito.verify(model)?.isSaved = false
     }
 
     @Test
     fun testOnCommandPostExecuteThenResetInternalToolState() {
-        presenter?.onCommandPostExecute()
+        presenter!!.onCommandPostExecute()
         Mockito.verify(toolController)?.resetToolInternalState()
     }
 
     @Test
     fun testOnCommandPostExecuteThenRefreshDrawingSurface() {
-        presenter?.onCommandPostExecute()
+        presenter!!.onCommandPostExecute()
         Mockito.verify(view)?.refreshDrawingSurface()
     }
 
     @Test
     fun testOnCommandPostExecuteThenSetUndoRedoButtons() {
-        presenter?.onCommandPostExecute()
+        presenter!!.onCommandPostExecute()
         Mockito.verify(topBarViewHolder)?.disableRedoButton()
         Mockito.verify(topBarViewHolder)?.disableUndoButton()
     }
 
     @Test
     fun testSetTopBarColorThenSetColorButtonColor() {
-        presenter?.setBottomNavigationColor(Color.GREEN)
+        presenter!!.setBottomNavigationColor(Color.GREEN)
         Mockito.verify(bottomNavigationViewHolder)?.setColorButtonColor(Color.GREEN)
     }
 
     @Test
     fun testInitializeFromCleanStateWhenDefaultThenUnsetSavedPictureUri() {
-        presenter?.initializeFromCleanState(null, null)
+        presenter!!.initializeFromCleanState(null, null)
         Mockito.verify(model)?.isOpenedFromCatroid = false
         Mockito.verify(model)?.savedPictureUri = null
     }
 
     @Test
     fun testInitializeFromCleanStateWhenDefaultThenResetTool() {
-        presenter?.initializeFromCleanState(null, null)
+        presenter!!.initializeFromCleanState(null, null)
         Mockito.verify(toolController)?.resetToolInternalStateOnImageLoaded()
     }
 
     @Test
     fun testInitializeFromCleanStateWhenFromCatroidAndPathNotExistentThenCreateFile() {
-        presenter?.initializeFromCleanState("testPath", "testName")
+        presenter!!.initializeFromCleanState("testPath", "testName")
         Mockito.verify(model)?.isOpenedFromCatroid = true
-        presenter?.let { Mockito.verify(interactor)?.createFile(it, CREATE_FILE_DEFAULT, "testName") }
+        Mockito.verify<Interactor?>(interactor)
+            .createFile(presenter!!, CREATE_FILE_DEFAULT, "testName")
     }
 
     @Test
     fun testInitializeFromCleanStateWhenFromCatroidAndPathExistsThenLoadFile() {
         val uri = Mockito.mock(Uri::class.java)
-        Mockito.`when`(model?.savedPictureUri).thenReturn(uri)
-        Mockito.`when`(view?.getUriFromFile(ArgumentMatchers.any(File::class.java)))
-            .thenReturn(uri)
-        presenter?.initializeFromCleanState("/", "testName")
-        Mockito.verify(model)?.isOpenedFromCatroid = true
-        Mockito.verify(model)?.savedPictureUri = uri
-        presenter?.let {
-            if (context != null && commandSerializer != null) {
-                Mockito.verify(interactor)?.loadFile(
-                    it, LOAD_IMAGE_CATROID, uri,
-                    context, false, commandSerializer
-                )
-            }
-        }
+        Mockito.`when`(model!!.savedPictureUri).thenReturn(uri)
+        Mockito.`when`(
+            view!!.getUriFromFile(
+                any<File>()
+            )
+        ).thenReturn(uri)
+        presenter!!.initializeFromCleanState("/", "testName")
+        Mockito.verify(model).isOpenedFromCatroid = true
+        Mockito.verify(model).savedPictureUri = uri
+        Mockito.verify<Interactor?>(interactor).loadFile(
+            presenter!!, LOAD_IMAGE_CATROID, uri,
+            context!!, false,
+            commandSerializer!!
+        )
     }
 
     @Test
     fun testRestoreStateThenRestoreFragmentListeners() {
-        presenter?.restoreState(
-            isFullscreen = false,
-            isSaved = false,
-            isOpenedFromCatroid = false,
-            isOpenedFromFormulaEditorInCatroid = false,
-            savedPictureUri = null,
-            cameraImageUri = null
-        )
+        presenter!!.restoreState(false, false, false, false, null, null)
         Mockito.verify(navigator)?.restoreFragmentListeners()
     }
 
@@ -693,14 +654,7 @@ class MainActivityPresenterTest {
     fun testRestoreStateThenSetModel() {
         val savedPictureUri = Mockito.mock(Uri::class.java)
         val cameraImageUri = Mockito.mock(Uri::class.java)
-        presenter?.restoreState(
-            false,
-            isSaved = false,
-            isOpenedFromCatroid = false,
-            isOpenedFromFormulaEditorInCatroid = false,
-            savedPictureUri = savedPictureUri,
-            cameraImageUri = cameraImageUri
-        )
+        presenter!!.restoreState(false, false, false, false, savedPictureUri, cameraImageUri)
         Mockito.verify(model)?.isFullscreen = false
         Mockito.verify(model)?.isSaved = false
         Mockito.verify(model)?.isOpenedFromCatroid = false
@@ -713,14 +667,7 @@ class MainActivityPresenterTest {
     fun testRestoreStateWhenStatesSetThenSetModel() {
         val savedPictureUri = Mockito.mock(Uri::class.java)
         val cameraImageUri = Mockito.mock(Uri::class.java)
-        presenter?.restoreState(
-            isFullscreen = true,
-            isSaved = true,
-            isOpenedFromCatroid = true,
-            isOpenedFromFormulaEditorInCatroid = true,
-            savedPictureUri = savedPictureUri,
-            cameraImageUri = cameraImageUri
-        )
+        presenter!!.restoreState(true, true, true, true, savedPictureUri, cameraImageUri)
         Mockito.verify(model)?.isFullscreen = true
         Mockito.verify(model)?.isSaved = true
         Mockito.verify(model)?.isOpenedFromCatroid = true
@@ -731,125 +678,118 @@ class MainActivityPresenterTest {
 
     @Test
     fun testRestoreStateThenResetTool() {
-        presenter?.restoreState(
-            isFullscreen = false,
-            isSaved = false,
-            isOpenedFromCatroid = false,
-            isOpenedFromFormulaEditorInCatroid = false,
-            savedPictureUri = null,
-            cameraImageUri = null
-        )
+        presenter!!.restoreState(false, false, false, false, null, null)
         Mockito.verify(toolController)?.resetToolInternalStateOnImageLoaded()
     }
 
     @Test
     fun testOnCreateToolCallsToolController() {
-        presenter?.onCreateTool()
+        presenter!!.onCreateTool()
         Mockito.verify(toolController)?.createTool()
         Mockito.verifyNoMoreInteractions(toolController)
     }
 
     @Test
     fun testFinishInitializeThenSetUndoRedoButtons() {
-        presenter?.finishInitialize()
+        presenter!!.finishInitialize()
         Mockito.verify(topBarViewHolder)?.disableUndoButton()
         Mockito.verify(topBarViewHolder)?.disableRedoButton()
     }
 
     @Test
     fun testFinishInitializeWhenUndoAvailableThenSetUndoRedoButtons() {
-        Mockito.`when`(commandManager?.isUndoAvailable).thenReturn(true)
-        presenter?.finishInitialize()
+        Mockito.`when`(commandManager!!.isUndoAvailable).thenReturn(true)
+        presenter!!.finishInitialize()
         Mockito.verify(topBarViewHolder)?.enableUndoButton()
         Mockito.verify(topBarViewHolder)?.disableRedoButton()
     }
 
     @Test
     fun testFinishInitializeWhenRedoAvailableThenSetUndoRedoButtons() {
-        Mockito.`when`(commandManager?.isRedoAvailable).thenReturn(true)
-        presenter?.finishInitialize()
+        Mockito.`when`(commandManager!!.isRedoAvailable).thenReturn(true)
+        presenter!!.finishInitialize()
         Mockito.verify(topBarViewHolder)?.disableUndoButton()
         Mockito.verify(topBarViewHolder)?.enableRedoButton()
     }
 
     @Test
     fun testFinishInitializeWhenNotFullscreenThenRestoreState() {
-        presenter?.finishInitialize()
+        presenter!!.finishInitialize()
         Mockito.verify(view)?.exitFullscreen()
     }
 
     @Test
     fun testFinishInitializeWhenFullscreenThenRestoreState() {
-        Mockito.`when`(model?.isFullscreen).thenReturn(true)
-        presenter?.finishInitialize()
+        Mockito.`when`(model!!.isFullscreen).thenReturn(true)
+        presenter!!.finishInitialize()
         Mockito.verify(view)?.enterFullscreen()
     }
 
     @Test
     fun testFinishInitializeThenRestoreColorButtonColor() {
-        Mockito.`when`(model?.isFullscreen).thenReturn(true)
-        Mockito.`when`(toolController?.toolColor).thenReturn(Color.RED)
-        presenter?.finishInitialize()
+        Mockito.`when`(model!!.isFullscreen).thenReturn(true)
+        Mockito.`when`(toolController!!.toolColor).thenReturn(Color.RED)
+        presenter!!.finishInitialize()
         Mockito.verify(bottomNavigationViewHolder)?.setColorButtonColor(Color.RED)
     }
 
     @Test
     fun testFinishInitializeWhenDefaultThenInitializeActionBarDefault() {
-        presenter?.finishInitialize()
+        presenter!!.finishInitialize()
         Mockito.verify(view)?.initializeActionBar(false)
     }
 
     @Test
     fun testFinishInitializeWhenFromCatroidThenInitializeActionBarCatroid() {
-        Mockito.`when`(model?.isOpenedFromCatroid).thenReturn(true)
-        presenter?.finishInitialize()
+        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
+        presenter!!.finishInitialize()
         Mockito.verify(view)?.initializeActionBar(true)
     }
 
     @Test
     fun testFinishInitializeWhenDefaultThenRemoveCatroidNavigationItems() {
-        presenter?.removeMoreOptionsItems(menu)
+        presenter!!.removeMoreOptionsItems(menu)
         Mockito.verify(topBarViewHolder)?.removeCatroidMenuItems(menu)
     }
 
     @Test
     fun testFinishInitializeWhenFromCatroidThenRemoveSaveNavigationItems() {
-        Mockito.`when`(model?.isOpenedFromCatroid).thenReturn(true)
-        presenter?.removeMoreOptionsItems(menu)
+        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
+        presenter!!.removeMoreOptionsItems(menu)
         Mockito.verify(topBarViewHolder)?.removeStandaloneMenuItems(menu)
     }
 
     @Test
     fun testFinishInitializeWhenCommandManagerBusyRestoreProgressDialog() {
-        Mockito.`when`(commandManager?.isBusy).thenReturn(true)
-        presenter?.finishInitialize()
+        Mockito.`when`(commandManager!!.isBusy).thenReturn(true)
+        presenter!!.finishInitialize()
         Mockito.verify(navigator)?.showIndeterminateProgressDialog()
     }
 
     @Test
     fun testFinishInitializeWhenCommandManagerIdleThenDoNothing() {
-        presenter?.finishInitialize()
+        presenter!!.finishInitialize()
         Mockito.verify(navigator, Mockito.never())?.showIndeterminateProgressDialog()
     }
 
     @Test
     fun testToolClickedWhenSameToolTypeThenToggleOptions() {
-        Mockito.`when`(toolController?.toolType).thenReturn(ToolType.TEXT)
-        Mockito.`when`(toolController?.hasToolOptionsView()).thenReturn(true)
-        presenter?.toolClicked(ToolType.TEXT)
-        Mockito.verify(toolController)?.toggleToolOptionsView()
+        Mockito.`when`(toolController!!.toolType).thenReturn(ToolType.TEXT)
+        Mockito.`when`(toolController.hasToolOptionsView()).thenReturn(true)
+        presenter!!.toolClicked(ToolType.TEXT)
+        Mockito.verify(toolController).toggleToolOptionsView()
     }
 
     @Test
     fun testToolClickedWhenKeyboardShownThenHideKeyboard() {
-        Mockito.`when`(view?.isKeyboardShown).thenReturn(true)
-        presenter?.toolClicked(ToolType.ERASER)
-        Mockito.verify(view)?.hideKeyboard()
+        Mockito.`when`(view!!.isKeyboardShown).thenReturn(true)
+        presenter!!.toolClicked(ToolType.ERASER)
+        Mockito.verify(view).hideKeyboard()
     }
 
     @Test
     fun testOnCreateFilePostExecuteWhenFailedThenShowDialog() {
-        presenter?.onCreateFilePostExecute(CREATE_FILE_DEFAULT, null)
+        presenter!!.onCreateFilePostExecute(CREATE_FILE_DEFAULT, null)
         Mockito.verify(navigator)?.showSaveErrorDialog()
     }
 
@@ -857,8 +797,8 @@ class MainActivityPresenterTest {
     fun testOnCreateFilePostExecuteWhenDefaultThenSetUri() {
         val file = Mockito.mock(File::class.java)
         val uri = Mockito.mock(Uri::class.java)
-        Mockito.`when`(view?.getUriFromFile(file)).thenReturn(uri)
-        presenter?.onCreateFilePostExecute(CREATE_FILE_DEFAULT, file)
+        Mockito.`when`(view!!.getUriFromFile(file)).thenReturn(uri)
+        presenter!!.onCreateFilePostExecute(CREATE_FILE_DEFAULT, file)
         Mockito.verify(model)?.savedPictureUri = uri
         Mockito.verifyZeroInteractions(navigator)
     }
@@ -866,12 +806,12 @@ class MainActivityPresenterTest {
     @Test(expected = IllegalArgumentException::class)
     fun testOnCreateFilePostExecuteWhenInvalidRequestThenThrowException() {
         val file = Mockito.mock(File::class.java)
-        presenter?.onCreateFilePostExecute(0, file)
+        presenter!!.onCreateFilePostExecute(0, file)
     }
 
     @Test
     fun testOnLoadImagePreExecuteDoesNothing() {
-        presenter?.onLoadImagePreExecute(LOAD_IMAGE_DEFAULT)
+        presenter!!.onLoadImagePreExecute(LOAD_IMAGE_DEFAULT)
         Mockito.verifyZeroInteractions(
             view, model, navigator, interactor, topBarViewHolder, workspace, perspective,
             drawerLayoutViewHolder, commandFactory, commandManager, bottomBarViewHolder,
@@ -881,7 +821,7 @@ class MainActivityPresenterTest {
 
     @Test
     fun testOnLoadImagePostExecuteWhenFailedThenShowDialog() {
-        presenter?.onLoadImagePostExecute(0, null, null)
+        presenter!!.onLoadImagePostExecute(0, null, null)
         Mockito.verify(navigator)?.showLoadErrorDialog()
     }
 
@@ -890,7 +830,7 @@ class MainActivityPresenterTest {
         val uri = Mockito.mock(Uri::class.java)
         val bitmap = Mockito.mock(Bitmap::class.java)
         val returnValue = BitmapReturnValue(null, bitmap, false)
-        presenter?.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, returnValue)
+        presenter!!.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, returnValue)
         Mockito.verify(model)?.savedPictureUri = null
         Mockito.verify(model)?.cameraImageUri = null
     }
@@ -900,9 +840,11 @@ class MainActivityPresenterTest {
         val uri = Mockito.mock(Uri::class.java)
         val bitmap = Mockito.mock(Bitmap::class.java)
         val returnValue = BitmapReturnValue(null, bitmap, false)
-        val command = Mockito.mock(Command::class.java)
-        Mockito.`when`(commandFactory?.createInitCommand(bitmap)).thenReturn(command)
-        presenter?.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, returnValue)
+        val command = Mockito.mock(
+            Command::class.java
+        )
+        Mockito.`when`(commandFactory!!.createInitCommand(bitmap)).thenReturn(command)
+        presenter!!.onLoadImagePostExecute(LOAD_IMAGE_DEFAULT, uri, returnValue)
         Mockito.verify(commandManager)?.setInitialStateCommand(command)
         Mockito.verify(commandManager)?.reset()
         Mockito.verifyNoMoreInteractions(commandManager)
@@ -913,9 +855,9 @@ class MainActivityPresenterTest {
         val uri = Mockito.mock(Uri::class.java)
         val bitmap = Mockito.mock(Bitmap::class.java)
         val returnValue = BitmapReturnValue(null, bitmap, false)
-        Mockito.`when`(toolController?.toolType).thenReturn(ToolType.IMPORTPNG)
-        presenter?.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, uri, returnValue)
-        Mockito.verify(toolController)?.setBitmapFromSource(bitmap)
+        Mockito.`when`(toolController!!.toolType).thenReturn(ToolType.IMPORTPNG)
+        presenter!!.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, uri, returnValue)
+        Mockito.verify(toolController).setBitmapFromSource(bitmap)
         Mockito.verifyZeroInteractions(commandManager)
     }
 
@@ -924,9 +866,11 @@ class MainActivityPresenterTest {
         val uri = Mockito.mock(Uri::class.java)
         val bitmap = Mockito.mock(Bitmap::class.java)
         val returnValue = BitmapReturnValue(null, bitmap, false)
-        presenter?.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, uri, returnValue)
+        presenter!!.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, uri, returnValue)
         Mockito.verify(toolController, Mockito.never())?.setBitmapFromSource(
-            ArgumentMatchers.any(Bitmap::class.java)
+            ArgumentMatchers.any(
+                Bitmap::class.java
+            )
         )
         Mockito.verifyZeroInteractions(commandManager)
     }
@@ -936,7 +880,7 @@ class MainActivityPresenterTest {
         val uri = Mockito.mock(Uri::class.java)
         val bitmap = Mockito.mock(Bitmap::class.java)
         val returnValue = BitmapReturnValue(null, bitmap, false)
-        presenter?.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, returnValue)
+        presenter!!.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, returnValue)
         Mockito.verify(model)?.savedPictureUri = uri
         Mockito.verify(model)?.cameraImageUri = null
         Mockito.verifyNoMoreInteractions(model)
@@ -947,9 +891,11 @@ class MainActivityPresenterTest {
         val uri = Mockito.mock(Uri::class.java)
         val bitmap = Mockito.mock(Bitmap::class.java)
         val returnValue = BitmapReturnValue(null, bitmap, false)
-        val command = Mockito.mock(Command::class.java)
-        Mockito.`when`(commandFactory?.createInitCommand(bitmap)).thenReturn(command)
-        presenter?.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, returnValue)
+        val command = Mockito.mock(
+            Command::class.java
+        )
+        Mockito.`when`(commandFactory!!.createInitCommand(bitmap)).thenReturn(command)
+        presenter!!.onLoadImagePostExecute(LOAD_IMAGE_CATROID, uri, returnValue)
         Mockito.verify(commandManager)?.setInitialStateCommand(command)
         Mockito.verify(commandManager)?.reset()
         Mockito.verifyNoMoreInteractions(commandManager)
@@ -960,304 +906,284 @@ class MainActivityPresenterTest {
         val uri = Mockito.mock(Uri::class.java)
         val bitmap = Mockito.mock(Bitmap::class.java)
         val returnValue = BitmapReturnValue(null, bitmap, false)
-        presenter?.onLoadImagePostExecute(0, uri, returnValue)
+        presenter!!.onLoadImagePostExecute(0, uri, returnValue)
     }
 
     @Test
     fun testOnSaveImagePreExecuteThenShowProgressDialog() {
-        presenter?.onSaveImagePreExecute(0)
+        presenter!!.onSaveImagePreExecute(0)
         Mockito.verify(view)?.showContentLoadingProgressBar()
     }
 
     @Test
     fun testOnSaveImagePostExecuteWhenFailedThenShowDialog() {
-        presenter?.onSaveImagePostExecute(0, null, false)
+        presenter!!.onSaveImagePostExecute(0, null, false)
         Mockito.verify(navigator)?.showSaveErrorDialog()
     }
 
     @Test
     fun testHandlePermissionResultLoadPermissionGranted() {
-        presenter?.handleRequestPermissionsResult(
-            PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
-            arrayOf(
+        presenter!!.handleRequestPermissionsResult(
+            PERMISSION_REQUEST_CODE_REPLACE_PICTURE, arrayOf<String>(
                 Manifest.permission.READ_EXTERNAL_STORAGE
-            ),
-            intArrayOf(PackageManager.PERMISSION_GRANTED)
+            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
         )
-        Mockito.verify(navigator)?.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
     }
 
     @Test
     fun testHandlePermissionResultLoadPermissionPermanentlyDenied() {
         val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermanentlyDeniedPermissionRationaleDialog()
+        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
     @Test
     fun testHandlePermissionResultLoadPermissionNotGranted() {
         val permission = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_REQUEST_CODE_REPLACE_PICTURE,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermissionRationaleDialog(
-            PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_REQUEST_CODE_REPLACE_PICTURE
-        )
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showRequestPermissionRationaleDialog(
+                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+                permission,
+                PERMISSION_REQUEST_CODE_REPLACE_PICTURE
+            )
     }
 
     @Test
     fun testHandlePermissionResultSavePermissionGranted() {
-        Mockito.`when`(workspace?.layerModel).thenReturn(Mockito.mock(LayerModel::class.java))
-        presenter?.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE,
-            arrayOf(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
-            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        Mockito.`when`(workspace!!.layerModel).thenReturn(
+            Mockito.mock(
+                LayerModel::class.java
+            )
         )
-        val uri = model?.savedPictureUri
-        ArgumentMatchers.eq(commandSerializer)?.let {
-            ArgumentMatchers.eq(context)?.let { it1 ->
-                Mockito.verify(interactor)?.saveImage(
-                    ArgumentMatchers.any(SaveImageCallback::class.java),
-                    ArgumentMatchers.eq(SAVE_IMAGE_DEFAULT),
-                    ArgumentMatchers.any(LayerModel::class.java),
-                    it,
-                    ArgumentMatchers.eq(uri),
-                    it1
-                )
-            }
-        }
+        presenter!!.handleRequestPermissionsResult(
+            PERMISSION_EXTERNAL_STORAGE_SAVE, arrayOf<String>(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
+        val uri = model!!.savedPictureUri
+        Mockito.verify<Interactor?>(interactor).saveImage(
+            any<SaveImageCallback>(),
+            ArgumentMatchers.eq(SAVE_IMAGE_DEFAULT),
+            any<LayerModel>(),
+            any<CommandSerializer>(),
+            ArgumentMatchers.eq<Uri?>(null),
+            any<Context>(),
+        )
     }
 
     @Test
     fun testHandlePermissionResultSavePermissionPermanentlyDenied() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermanentlyDeniedPermissionRationaleDialog()
+        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
     @Test
     fun testHandlePermissionResultSavePermissionNotGranted() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermissionRationaleDialog(
-            PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_EXTERNAL_STORAGE_SAVE
-        )
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showRequestPermissionRationaleDialog(
+                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+                permission,
+                PERMISSION_EXTERNAL_STORAGE_SAVE
+            )
     }
 
     @Test
     fun testHandlePermissionResultSaveCopyPermissionGranted() {
-        Mockito.`when`(workspace?.layerModel).thenReturn(Mockito.mock(LayerModel::class.java))
-        presenter?.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-            arrayOf(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
-            intArrayOf(PackageManager.PERMISSION_GRANTED)
+        Mockito.`when`(workspace!!.layerModel).thenReturn(
+            Mockito.mock(
+                LayerModel::class.java
+            )
         )
-        ArgumentMatchers.eq(commandSerializer)?.let {
-            ArgumentMatchers.eq(context)?.let { it1 ->
-                Mockito.verify(interactor)?.saveCopy(
-                    ArgumentMatchers.any(SaveImageCallback::class.java),
-                    ArgumentMatchers.eq(SAVE_IMAGE_DEFAULT),
-                    ArgumentMatchers.any(LayerModel::class.java),
-                    it,
-                    ArgumentMatchers.eq<Uri?>(null),
-                    it1
-                )
-            }
-        }
+        presenter!!.handleRequestPermissionsResult(
+            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY, arrayOf<String>(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
+        )
+        Mockito.verify<Interactor?>(interactor).saveCopy(
+            any<SaveImageCallback>(),
+            ArgumentMatchers.eq(SAVE_IMAGE_DEFAULT),
+            any<LayerModel>(),
+            any<CommandSerializer>(),
+            ArgumentMatchers.eq<Uri?>(null),
+            any<Context>(),
+        )
     }
 
     @Test
     fun testHandlePermissionResultSaveCopyPermissionNotGranted() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermissionRationaleDialog(
-            PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
-        )
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showRequestPermissionRationaleDialog(
+                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+                permission,
+                PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+            )
     }
 
     @Test
     fun testHandlePermissionResultSaveCopyPermissionPermanentlyDenied() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermanentlyDeniedPermissionRationaleDialog()
+        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testHandlePermissionResultSaveBeforeFinishPermissionGranted() {
-        presenter?.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-            arrayOf(
+        presenter!!.handleRequestPermissionsResult(
+            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH, arrayOf<String>(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
-            intArrayOf(PackageManager.PERMISSION_GRANTED)
+            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
         )
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveImage(
-                        it, SAVE_IMAGE_FINISH, it1,
-                        commandSerializer, FileIO.storeImageUri,
-                        context
-                    )
-                }
-            }
-        }
+        Mockito.verify<Interactor?>(interactor).saveImage(
+            presenter!!, SAVE_IMAGE_FINISH, workspace!!.layerModel,
+            commandSerializer!!, FileIO.storeImageUri,
+            context!!
+        )
     }
 
     @Test
     fun testHandlePermissionResultSaveBeforeFinishPermissionNotGranted() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermissionRationaleDialog(
-            PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
-        )
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showRequestPermissionRationaleDialog(
+                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+                permission,
+                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
+            )
     }
 
     @Test
     fun testHandlePermissionResultSaveBeforeFinishPermissionPermanentlyDenied() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermanentlyDeniedPermissionRationaleDialog()
+        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
     @Test
     fun testHandlePermissionResultSaveBeforeLoadNewPermissionNotGranted() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermissionRationaleDialog(
-            PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
-        )
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showRequestPermissionRationaleDialog(
+                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+                permission,
+                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
+            )
     }
 
     @Test
     fun testHandlePermissionResultSaveBeforeLoadNewPermissionPermanentlyDenied() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermanentlyDeniedPermissionRationaleDialog()
+        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testHandlePermissionResultSaveBeforeLoadNewPermissionGranted() {
-        presenter?.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-            arrayOf(
+        presenter!!.handleRequestPermissionsResult(
+            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW, arrayOf<String>(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
-            intArrayOf(PackageManager.PERMISSION_GRANTED)
+            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
         )
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveImage(
-                        it, SAVE_IMAGE_LOAD_NEW, it1,
-                        commandSerializer, FileIO.storeImageUri,
-                        context
-                    )
-                }
-            }
-        }
+        Mockito.verify<Interactor?>(interactor).saveImage(
+            presenter!!, SAVE_IMAGE_LOAD_NEW, workspace!!.layerModel,
+            commandSerializer!!, FileIO.storeImageUri,
+            context!!
+        )
     }
 
     @Test
     fun testHandlePermissionResultSaveBeforeNewEmptyPermissionNotGranted() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(false)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(false)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermissionRationaleDialog(
-            PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
-            permission, PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
-        )
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showRequestPermissionRationaleDialog(
+                PermissionInfoDialog.PermissionType.EXTERNAL_STORAGE,
+                permission,
+                PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
+            )
     }
 
     @Test
     fun testHandlePermissionResultSaveBeforeNewEmptyPermissionPermanentlyDenied() {
         val permission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        Mockito.`when`(navigator?.isPermissionPermanentlyDenied(permission)).thenReturn(true)
-        presenter?.handleRequestPermissionsResult(
+        Mockito.`when`(navigator!!.isPermissionPermanentlyDenied(permission)).thenReturn(true)
+        presenter!!.handleRequestPermissionsResult(
             PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
             permission, intArrayOf(PackageManager.PERMISSION_DENIED)
         )
-        Mockito.verify(navigator)?.showRequestPermanentlyDeniedPermissionRationaleDialog()
+        Mockito.verify(navigator).showRequestPermanentlyDeniedPermissionRationaleDialog()
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testHandlePermissionResultSaveBeforeNewEmptyPermissionGranted() {
-        presenter?.handleRequestPermissionsResult(
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-            arrayOf(
+        presenter!!.handleRequestPermissionsResult(
+            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY, arrayOf<String>(
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ),
-            intArrayOf(PackageManager.PERMISSION_GRANTED)
+            ), intArrayOf(PackageManager.PERMISSION_GRANTED)
         )
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveImage(
-                        it, SAVE_IMAGE_NEW_EMPTY, it1,
-                        commandSerializer, FileIO.storeImageUri,
-                        context
-                    )
-                }
-            }
-        }
+        Mockito.verify<Interactor?>(interactor).saveImage(
+            presenter!!, SAVE_IMAGE_NEW_EMPTY, workspace!!.layerModel,
+            commandSerializer!!, FileIO.storeImageUri,
+            context!!
+        )
     }
 
     @Test
     fun testHandlePermissionResultWhenStoragePermissionGrantedAndRequestCodeUnknownThenCallBaseHandle() {
-        presenter?.handleRequestPermissionsResult(
+        presenter!!.handleRequestPermissionsResult(
             100,
             arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
             intArrayOf(PackageManager.PERMISSION_GRANTED)
@@ -1271,7 +1197,7 @@ class MainActivityPresenterTest {
 
     @Test
     fun testHandlePermissionResultWhenCameraPermissionGrantedAndRequestCodeUnknownThenCallBaseHandle() {
-        presenter?.handleRequestPermissionsResult(
+        presenter!!.handleRequestPermissionsResult(
             123,
             arrayOf(Manifest.permission.CAMERA),
             intArrayOf(PackageManager.PERMISSION_GRANTED)
@@ -1285,7 +1211,7 @@ class MainActivityPresenterTest {
 
     @Test
     fun testHandlePermissionResultWhenMultiplePermissionsThenCallBaseHandle() {
-        presenter?.handleRequestPermissionsResult(
+        presenter!!.handleRequestPermissionsResult(
             456,
             arrayOf(
                 Manifest.permission.CAMERA,
@@ -1303,296 +1229,257 @@ class MainActivityPresenterTest {
         )
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testOnNavigationItemSelectedSaveCopyPermissionGranted() {
-        presenter?.saveCopyClicked(false)
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        presenter!!.saveCopyClicked(false)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveCopy(
-                        it, SAVE_IMAGE_DEFAULT, it1,
-                        commandSerializer, null,
-                        context
-                    )
-                }
-            }
-        }
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+        Mockito.verify<Interactor?>(interactor).saveCopy(
+            presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
+            commandSerializer!!, null,
+            context!!
+        )
     }
 
     @Test
     fun testOnNavigationItemSelectedSaveCopyPermissionNotGranted() {
-        Mockito.`when`(navigator?.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator?.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        presenter?.saveCopyClicked(false)
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        presenter!!.saveCopyClicked(false)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
-        Mockito.verify(navigator)?.askForPermission(
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
+            arrayOf<String>(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ), PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
         )
     }
 
     @Test
     fun testNoPermissionCheckOnSaveBeforeFinishWhenOpenedFromCatroid() {
-        Mockito.`when`(workspace?.layerModel).thenReturn(
-            Mockito.mock(LayerModel::class.java)
+        Mockito.`when`(workspace!!.layerModel).thenReturn(
+            Mockito.mock(
+                LayerModel::class.java
+            )
         )
-        Mockito.`when`(navigator?.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator?.isSdkAboveOrEqualM).thenReturn(true)
-        Mockito.`when`(model?.isOpenedFromCatroid).thenReturn(true)
-        presenter?.saveBeforeFinish()
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(true)
+        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
+        presenter!!.saveBeforeFinish()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
-        ArgumentMatchers.eq(commandSerializer)?.let {
-            Mockito.verify(interactor)?.saveImage(
-                ArgumentMatchers.any(MainActivityPresenter::class.java),
-                ArgumentMatchers.anyInt(),
-                ArgumentMatchers.any(LayerModel::class.java),
-                it,
-                ArgumentMatchers.eq(null as Uri?),
-                ArgumentMatchers.any(Context::class.java)
-            )
-        }
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
+
+        Mockito.verify(interactor)?.saveImage(
+            any<MainActivityPresenter>(),
+            anyInt(),
+            any<LayerModel>(),
+            any<CommandSerializer>(),
+            ArgumentMatchers.eq(null as Uri?),
+            any<Context>()
+        )
+
     }
 
     @Test
     fun testPermissionCheckOnExportWhenOpenedFromCatroid() {
-        Mockito.`when`(navigator?.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator?.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        Mockito.`when`(model?.isOpenedFromCatroid).thenReturn(true)
-        presenter?.saveCopyClicked(false)
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
+        presenter!!.saveCopyClicked(false)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_COPY,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
-        Mockito.verify(navigator)?.askForPermission(
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
+            arrayOf<String>(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ), PERMISSION_EXTERNAL_STORAGE_SAVE_COPY
         )
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testOnNavigationItemSelectedSavePermissionGranted() {
-        presenter?.saveImageClicked()
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        presenter!!.saveImageClicked()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveImage(
-                        it, SAVE_IMAGE_DEFAULT, it1,
-                        commandSerializer, FileIO.storeImageUri,
-                        context
-                    )
-                }
-            }
-        }
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
+        Mockito.verify<Interactor?>(interactor).saveImage(
+            presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
+            commandSerializer!!, FileIO.storeImageUri,
+            context!!
+        )
     }
 
     @Test
     fun testOnNavigationItemSelectedSavePermissionNotGranted() {
-        Mockito.`when`(navigator?.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator?.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        presenter?.saveImageClicked()
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        presenter!!.saveImageClicked()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
-        Mockito.verify(navigator)?.askForPermission(
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
+            arrayOf<String>(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ), PERMISSION_EXTERNAL_STORAGE_SAVE
         )
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testSaveAndFinishPermissionGranted() {
-        presenter?.saveBeforeFinish()
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        presenter!!.saveBeforeFinish()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveImage(
-                        it, SAVE_IMAGE_FINISH, it1,
-                        commandSerializer, FileIO.storeImageUri,
-                        context
-                    )
-                }
-            }
-        }
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
+        Mockito.verify<Interactor?>(interactor).saveImage(
+            presenter!!, SAVE_IMAGE_FINISH, workspace!!.layerModel,
+            commandSerializer!!, FileIO.storeImageUri,
+            context!!
+        )
     }
 
     @Test
     fun testSaveAndFinishPermissionNotGranted() {
-        Mockito.`when`(navigator?.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator?.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        presenter?.saveBeforeFinish()
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        presenter!!.saveBeforeFinish()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
-        Mockito.verify(navigator)?.askForPermission(
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
+            arrayOf<String>(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ), PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH
         )
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testSaveAndNewImagePermissionGranted() {
-        presenter?.saveBeforeNewImage()
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        presenter!!.saveBeforeNewImage()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
-        presenter?.let {
-            if (commandSerializer != null && context != null) {
-                workspace?.layerModel?.let { it1 ->
-                    Mockito.verify(interactor)?.saveImage(
-                        it, SAVE_IMAGE_NEW_EMPTY, it1,
-                        commandSerializer, FileIO.storeImageUri,
-                        context
-                    )
-                }
-            }
-        }
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
+        Mockito.verify<Interactor?>(interactor).saveImage(
+            presenter!!, SAVE_IMAGE_NEW_EMPTY, workspace!!.layerModel,
+            commandSerializer!!, FileIO.storeImageUri,
+            context!!
+        )
     }
 
     @Test
     fun testSaveAndNewImagePermissionNotGranted() {
-        Mockito.`when`(navigator?.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator?.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        presenter?.saveBeforeNewImage()
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        presenter!!.saveBeforeNewImage()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
-        Mockito.verify(navigator)?.askForPermission(
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
+            arrayOf<String>(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ), PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY
         )
     }
 
-    @Suppress("NestedBlockDepth")
     @Test
     fun testSaveAndLoadImagePermissionGranted() {
-        presenter?.saveBeforeLoadImage()
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        presenter!!.saveBeforeLoadImage()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
-        presenter?.let {
-            workspace?.layerModel?.let { it1 ->
-                if (commandSerializer != null && context != null) {
-                    Mockito.verify(interactor)?.saveImage(
-                        it, SAVE_IMAGE_LOAD_NEW, it1,
-                        commandSerializer, FileIO.storeImageUri,
-                        context
-                    )
-                }
-            }
-        }
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
+        Mockito.verify<Interactor?>(interactor).saveImage(
+            presenter!!, SAVE_IMAGE_LOAD_NEW, workspace!!.layerModel,
+            commandSerializer!!, FileIO.storeImageUri,
+            context!!
+        )
     }
 
     @Test
     fun testSaveAndLoadImagePermissionNotGranted() {
-        Mockito.`when`(navigator?.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        Mockito.`when`(navigator!!.doIHavePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             .thenReturn(false)
-        Mockito.`when`(navigator?.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
-        presenter?.saveBeforeLoadImage()
-        sharedPreferences?.preferenceImageNumber?.let {
-            Mockito.verify(navigator)?.showSaveImageInformationDialogWhenStandalone(
+        Mockito.`when`(navigator.isSdkAboveOrEqualM).thenReturn(false).thenReturn(true)
+        presenter!!.saveBeforeLoadImage()
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showSaveImageInformationDialogWhenStandalone(
                 PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW,
-                it,
+                sharedPreferences!!.preferenceImageNumber,
                 false
             )
-        }
-        presenter?.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
-        Mockito.verify(navigator)?.askForPermission(
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
+        presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator).askForPermission(
+            arrayOf<String>(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ), PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW
         )
     }
 
     @Test
     fun testOnSaveImagePostExecuteThenDismissProgressDialog() {
-        presenter?.onSaveImagePostExecute(0, null, false)
+        presenter!!.onSaveImagePostExecute(0, null, false)
         Mockito.verify(view)?.hideContentLoadingProgressBar()
     }
 
     @Test
     fun testOnSaveImagePostExecuteWhenNotSavedAsCopyThenShowSaveToast() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false)
-        if (model?.isOpenedFromCatroid == true) {
-            val path = context?.let { getPathFromUri(it, uri) }
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false)
+        if (!model!!.isOpenedFromCatroid) {
+            val path = getPathFromUri(context!!, uri)
             Mockito.verify(navigator)?.showToast(
-                context?.getString(R.string.saved_to) + path, Toast.LENGTH_LONG
+                context.getString(R.string.saved_to) + path, Toast.LENGTH_LONG
             )
         } else {
             Mockito.verify(navigator)?.showToast(R.string.saved, Toast.LENGTH_LONG)
@@ -1602,7 +1489,7 @@ class MainActivityPresenterTest {
     @Test
     fun testOnSaveImagePostExecuteWhenNotSavedAsCopyThenSetModelUri() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false)
         Mockito.verify(model)?.savedPictureUri = uri
         Mockito.verify(model)?.isSaved = true
     }
@@ -1610,11 +1497,11 @@ class MainActivityPresenterTest {
     @Test
     fun testOnSaveImagePostExecuteWhenSavedAsCopyThenShowCopyToast() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true)
-        if (model?.isOpenedFromCatroid == true) {
-            val path = context?.let { getPathFromUri(it, uri) }
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true)
+        if (!model!!.isOpenedFromCatroid) {
+            val path = getPathFromUri(context!!, uri)
             Mockito.verify(navigator)?.showToast(
-                context?.getString(R.string.copy_to) + path, Toast.LENGTH_LONG
+                context.getString(R.string.copy_to) + path, Toast.LENGTH_LONG
             )
         } else {
             Mockito.verify(navigator)?.showToast(R.string.copy, Toast.LENGTH_LONG)
@@ -1624,7 +1511,7 @@ class MainActivityPresenterTest {
     @Test
     fun testOnSaveImagePostExecuteWhenSavedAsCopyThenDoNotTouchModel() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, true)
         Mockito.verify(model, Mockito.never())?.savedPictureUri = ArgumentMatchers.any(
             Uri::class.java
         )
@@ -1639,30 +1526,30 @@ class MainActivityPresenterTest {
     @Test
     fun testOnSaveImagePostExecuteWhenSavedThenBroadcastToPictureGallery() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false)
         Mockito.verify(navigator)?.broadcastAddPictureToGallery(uri)
     }
 
     @Test
     fun testOnSaveImagePostExecuteWhenSavedAsCopyThenBroadcastToPictureGallery() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true)
         Mockito.verify(navigator)?.broadcastAddPictureToGallery(uri)
     }
 
     @Test
     fun testOnSaveImagePostExecuteWhenSavedFromCatroidThenDoNotBroadcastToPictureGallery() {
         val uri = Mockito.mock(Uri::class.java)
-        Mockito.`when`(model?.isOpenedFromCatroid).thenReturn(true)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false)
+        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false)
         Mockito.verify(navigator, Mockito.never())?.broadcastAddPictureToGallery(uri)
     }
 
     @Test
     fun testOnSaveImagePostExecuteWhenSavedAsCopyFromCatroidThenBroadcastToPictureGallery() {
         val uri = Mockito.mock(Uri::class.java)
-        Mockito.`when`(model?.isOpenedFromCatroid).thenReturn(true)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true)
+        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, true)
         Mockito.verify(navigator)?.broadcastAddPictureToGallery(uri)
     }
 
@@ -1670,12 +1557,14 @@ class MainActivityPresenterTest {
     fun testOnSaveImagePostExecuteWhenChooseNewThenSetNewInitialState() {
         val uri = Mockito.mock(Uri::class.java)
         val displayMetrics = DisplayMetrics()
-        Mockito.`when`(view?.displayMetrics).thenReturn(displayMetrics)
+        Mockito.`when`(view!!.displayMetrics).thenReturn(displayMetrics)
         displayMetrics.widthPixels = 300
         displayMetrics.heightPixels = 500
-        val command = Mockito.mock(Command::class.java)
-        Mockito.`when`(commandFactory?.createInitCommand(300, 500)).thenReturn(command)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_NEW_EMPTY, uri, false)
+        val command = Mockito.mock(
+            Command::class.java
+        )
+        Mockito.`when`(commandFactory!!.createInitCommand(300, 500)).thenReturn(command)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_NEW_EMPTY, uri, false)
         Mockito.verify(commandManager)?.setInitialStateCommand(command)
         Mockito.verify(commandManager)?.reset()
     }
@@ -1683,7 +1572,7 @@ class MainActivityPresenterTest {
     @Test
     fun testOnSaveImagePostExecuteWhenDefaultThenDoNotShowDialog() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_DEFAULT, uri, false)
         Mockito.verify(navigator, Mockito.never())?.startLoadImageActivity(ArgumentMatchers.anyInt())
         Mockito.verify(navigator, Mockito.never())?.returnToPocketCode(ArgumentMatchers.anyString())
         Mockito.verify(navigator, Mockito.never())?.finishActivity()
@@ -1692,61 +1581,63 @@ class MainActivityPresenterTest {
     @Test
     fun testOnSaveImagePostExecuteWhenFinishThenFinishActivity() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false)
         Mockito.verify(navigator)?.finishActivity()
     }
 
     @Test
     fun testOnSaveImagePostExecuteWhenLoadThenStartActivity() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_LOAD_NEW, uri, false)
-        Mockito.verify(navigator)?.startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_LOAD_NEW, uri, false)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .startLoadImageActivity(REQUEST_CODE_LOAD_PICTURE)
     }
 
     @Test
     fun testOnSaveImagePostExecuteWhenExitToCatroidThenReturnToCatroid() {
         val uri = Mockito.mock(Uri::class.java)
         Mockito.`when`(uri.path).thenReturn("testPath")
-        Mockito.`when`(model?.isOpenedFromCatroid).thenReturn(true)
-        presenter?.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false)
+        Mockito.`when`(model!!.isOpenedFromCatroid).thenReturn(true)
+        presenter!!.onSaveImagePostExecute(SAVE_IMAGE_FINISH, uri, false)
         Mockito.verify(navigator)?.returnToPocketCode("testPath")
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun testOnSaveImagePostExecuteWhenInvalidRequestThenThrowException() {
         val uri = Mockito.mock(Uri::class.java)
-        presenter?.onSaveImagePostExecute(0, uri, false)
+        presenter!!.onSaveImagePostExecute(0, uri, false)
     }
 
     @Test
     fun testOnRateUsClicked() {
-        presenter?.rateUsClicked()
+        presenter!!.rateUsClicked()
         Mockito.verify(navigator)?.rateUsClicked()
     }
 
     @Test
     fun testGetContentResolver() {
         val resolver = Mockito.mock(ContentResolver::class.java)
-        Mockito.`when`(view?.myContentResolver).thenReturn(resolver)
-        val result = presenter?.contentResolver
+        Mockito.`when`(view!!.myContentResolver).thenReturn(resolver)
+        val result = presenter!!.contentResolver
         Assert.assertEquals(resolver, result)
     }
 
     @Test
     fun testIsFinishing() {
-        Mockito.`when`(view?.finishing).thenReturn(true, false)
-        presenter?.isFinishing?.let { Assert.assertTrue(it) }
-        presenter?.isFinishing?.let { Assert.assertFalse(it) }
+        Mockito.`when`(view!!.finishing).thenReturn(true, false)
+        Assert.assertTrue(presenter!!.isFinishing)
+        Assert.assertFalse(presenter!!.isFinishing)
     }
 
     @Test
     fun testShowScaleDialogWhenNotEnoughMemory() {
         val bmr = BitmapReturnValue(
-            workspace?.layerModel?.layers,
-            workspace?.layerModel?.getBitmapOfAllLayers(),
+            workspace!!.layerModel.layers,
+            workspace.layerModel.getBitmapOfAllLayers(),
             true
         )
-        presenter?.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, null, bmr)
-        Mockito.verify(navigator)?.showScaleImageRequestDialog(null, LOAD_IMAGE_IMPORT_PNG)
+        presenter!!.onLoadImagePostExecute(LOAD_IMAGE_IMPORT_PNG, null, bmr)
+        Mockito.verify<MainActivityContracts.Navigator?>(navigator)
+            .showScaleImageRequestDialog(null, LOAD_IMAGE_IMPORT_PNG)
     }
 }
