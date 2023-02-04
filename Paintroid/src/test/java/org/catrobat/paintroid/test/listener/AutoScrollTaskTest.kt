@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.test.listener
 
 import android.graphics.Point
@@ -25,17 +24,19 @@ import android.os.Handler
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTaskCallback
 import org.catrobat.paintroid.test.utils.PointFAnswer
-import org.catrobat.paintroid.test.utils.PointFMatcher
+import org.catrobat.paintroid.test.utils.PointFMatcher.Companion.pointFEquals
 import org.catrobat.paintroid.tools.ToolType
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import java.lang.IllegalStateException
 
 @RunWith(MockitoJUnitRunner::class)
 class AutoScrollTaskTest {
@@ -50,14 +51,16 @@ class AutoScrollTaskTest {
     @Test
     fun testSetUp() {
         Mockito.verifyZeroInteractions(handler, callback)
-        autoScrollTask?.isRunning?.let { Assert.assertFalse(it) }
+        Assert.assertFalse(autoScrollTask!!.isRunning)
     }
 
     @Test
     fun testRun() {
-        val autoScrollDirection = Mockito.mock(Point::class.java)
+        val autoScrollDirection = Mockito.mock(
+            Point::class.java
+        )
         Mockito.`when`(
-            callback?.getToolAutoScrollDirection(
+            callback!!.getToolAutoScrollDirection(
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyInt(),
@@ -65,111 +68,117 @@ class AutoScrollTaskTest {
             )
         )
             .thenReturn(autoScrollDirection)
-        autoScrollTask?.run()
-        Mockito.verify(callback)?.getToolAutoScrollDirection(
+        autoScrollTask!!.run()
+        Mockito.verify(callback).getToolAutoScrollDirection(
             ArgumentMatchers.anyFloat(),
             ArgumentMatchers.anyFloat(),
             ArgumentMatchers.anyInt(),
             ArgumentMatchers.anyInt()
         )
-        ArgumentMatchers.eq(
-            autoScrollTask
-        )?.let { Mockito.verify(handler)?.postDelayed(it, ArgumentMatchers.anyLong()) }
+        Mockito.verify(handler)
+            ?.postDelayed(ArgumentMatchers.eq(autoScrollTask), ArgumentMatchers.anyLong())
     }
 
     @Test
     fun testRunAutoScrollLeft() {
-        val autoScrollDirection = Mockito.mock(Point::class.java)
+        val autoScrollDirection = Mockito.mock(
+            Point::class.java
+        )
         autoScrollDirection.x = -1
-        Mockito.`when`(callback?.getToolAutoScrollDirection(3f, 5f, 39, 42))
+        Mockito.`when`(callback!!.getToolAutoScrollDirection(3f, 5f, 39, 42))
             .thenReturn(autoScrollDirection)
-        Mockito.`when`(callback?.isPointOnCanvas(7, 11)).thenReturn(true)
-        PointFAnswer.setPointFTo(7f, 11f).`when`(callback)
-            ?.convertToCanvasFromSurface(PointFMatcher.pointFEquals(3f, 5f))
-        autoScrollTask?.setEventPoint(3f, 5f)
-        autoScrollTask?.setViewDimensions(39, 42)
-        autoScrollTask?.run()
-        Mockito.verify(callback)?.translatePerspective(-1 * 2f, 0f)
-        Mockito.verify(callback)?.handleToolMove(PointFMatcher.pointFEquals(7f, 11f))
-        Mockito.verify(callback)?.refreshDrawingSurface()
-        ArgumentMatchers.eq(autoScrollTask)
-            ?.let { Mockito.verify(handler)?.postDelayed(it, ArgumentMatchers.anyLong()) }
+        Mockito.`when`(callback.isPointOnCanvas(7, 11)).thenReturn(true)
+        PointFAnswer.setPointFTo(7f, 11f).`when`<AutoScrollTaskCallback?>(callback)
+            .convertToCanvasFromSurface(pointFEquals(3f, 5f))
+        autoScrollTask!!.setEventPoint(3f, 5f)
+        autoScrollTask.setViewDimensions(39, 42)
+        autoScrollTask.run()
+        Mockito.verify(callback).translatePerspective(-1 * 2f, 0f)
+        Mockito.verify<AutoScrollTaskCallback?>(callback).handleToolMove(pointFEquals(7f, 11f))
+        Mockito.verify(callback).refreshDrawingSurface()
+        Mockito.verify(handler)
+            ?.postDelayed(ArgumentMatchers.eq(autoScrollTask), ArgumentMatchers.anyLong())
     }
 
     @Test
     fun testRunAutoScrollLeftWhenNotOnCanvas() {
-        val autoScrollDirection = Mockito.mock(Point::class.java)
+        val autoScrollDirection = Mockito.mock(
+            Point::class.java
+        )
         autoScrollDirection.x = -1
-        Mockito.`when`(callback?.getToolAutoScrollDirection(3f, 5f, 39, 42))
+        Mockito.`when`(callback!!.getToolAutoScrollDirection(3f, 5f, 39, 42))
             .thenReturn(autoScrollDirection)
-        PointFAnswer.setPointFTo(
-            7f, 11f
-        ).`when`(callback)?.convertToCanvasFromSurface(PointFMatcher.pointFEquals(3f, 5f))
-        autoScrollTask?.setEventPoint(3f, 5f)
-        autoScrollTask?.setViewDimensions(39, 42)
-        autoScrollTask?.run()
+        PointFAnswer.setPointFTo(7f, 11f).`when`<AutoScrollTaskCallback?>(callback)
+            .convertToCanvasFromSurface(pointFEquals(3f, 5f))
+        autoScrollTask!!.setEventPoint(3f, 5f)
+        autoScrollTask.setViewDimensions(39, 42)
+        autoScrollTask.run()
         Mockito.verify(callback, Mockito.never())
-            ?.translatePerspective(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
-        Mockito.verify(callback, Mockito.never())?.handleToolMove(ArgumentMatchers.any(PointF::class.java))
-        Mockito.verify(callback, Mockito.never())?.refreshDrawingSurface()
-        ArgumentMatchers.eq(autoScrollTask)
-            ?.let { Mockito.verify(handler)?.postDelayed(it, ArgumentMatchers.anyLong()) }
+            .translatePerspective(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
+        verify(callback, never()).handleToolMove(any<PointF>())
+        Mockito.verify(callback, Mockito.never()).refreshDrawingSurface()
+        Mockito.verify(handler)
+            ?.postDelayed(ArgumentMatchers.eq(autoScrollTask), ArgumentMatchers.anyLong())
     }
 
     @Test
     fun testRunAutoScrollUp() {
-        val autoScrollDirection = Mockito.mock(Point::class.java)
+        val autoScrollDirection = Mockito.mock(
+            Point::class.java
+        )
         autoScrollDirection.y = -1
         Mockito.`when`(callback!!.getToolAutoScrollDirection(3f, 5f, 39, 42))
             .thenReturn(autoScrollDirection)
         Mockito.`when`(callback.isPointOnCanvas(7, 11)).thenReturn(true)
-        PointFAnswer.setPointFTo(7f, 11f).`when`(callback)
-            .convertToCanvasFromSurface(PointFMatcher.pointFEquals(3f, 5f))
-        autoScrollTask?.setEventPoint(3f, 5f)
-        autoScrollTask?.setViewDimensions(39, 42)
-        autoScrollTask?.run()
+        PointFAnswer.setPointFTo(7f, 11f).`when`<AutoScrollTaskCallback?>(callback)
+            .convertToCanvasFromSurface(pointFEquals(3f, 5f))
+        autoScrollTask!!.setEventPoint(3f, 5f)
+        autoScrollTask.setViewDimensions(39, 42)
+        autoScrollTask.run()
         Mockito.verify(callback).translatePerspective(0f, -1 * 2f)
-        Mockito.verify(callback).handleToolMove(PointFMatcher.pointFEquals(7f, 11f))
+        Mockito.verify<AutoScrollTaskCallback?>(callback).handleToolMove(pointFEquals(7f, 11f))
         Mockito.verify(callback).refreshDrawingSurface()
-        ArgumentMatchers.eq(autoScrollTask)
-            ?.let { Mockito.verify(handler)?.postDelayed(it, ArgumentMatchers.anyLong()) }
+        Mockito.verify(handler)
+            ?.postDelayed(ArgumentMatchers.eq(autoScrollTask), ArgumentMatchers.anyLong())
     }
 
     @Test
     fun testRunAutoScrollUpWhenNotOnCanvas() {
-        val autoScrollDirection = Mockito.mock(Point::class.java)
+        val autoScrollDirection = Mockito.mock(
+            Point::class.java
+        )
         autoScrollDirection.y = -1
         Mockito.`when`(callback!!.getToolAutoScrollDirection(3f, 5f, 39, 42))
             .thenReturn(autoScrollDirection)
-        PointFAnswer.setPointFTo(7f, 11f).`when`(callback)
-            .convertToCanvasFromSurface(PointFMatcher.pointFEquals(3f, 5f))
-        autoScrollTask?.setEventPoint(3f, 5f)
-        autoScrollTask?.setViewDimensions(39, 42)
-        autoScrollTask?.run()
+        PointFAnswer.setPointFTo(7f, 11f).`when`<AutoScrollTaskCallback?>(callback)
+            .convertToCanvasFromSurface(pointFEquals(3f, 5f))
+        autoScrollTask!!.setEventPoint(3f, 5f)
+        autoScrollTask.setViewDimensions(39, 42)
+        autoScrollTask.run()
         Mockito.verify(callback, Mockito.never())
             .translatePerspective(ArgumentMatchers.anyFloat(), ArgumentMatchers.anyFloat())
-        Mockito.verify(callback, Mockito.never()).handleToolMove(ArgumentMatchers.any(PointF::class.java))
+        verify(callback, never()).handleToolMove(any<PointF>())
         Mockito.verify(callback, Mockito.never()).refreshDrawingSurface()
-        ArgumentMatchers.eq(autoScrollTask)
-            ?.let { Mockito.verify(handler)?.postDelayed(it, ArgumentMatchers.anyLong()) }
+        Mockito.verify(handler)
+            ?.postDelayed(ArgumentMatchers.eq(autoScrollTask), ArgumentMatchers.anyLong())
     }
 
     @Test
     fun testStop() {
-        autoScrollTask?.stop()
+        autoScrollTask!!.stop()
         Mockito.verifyZeroInteractions(handler, callback)
-        autoScrollTask?.isRunning?.let { Assert.assertFalse(it) }
+        Assert.assertFalse(autoScrollTask.isRunning)
     }
 
     @Test
     fun testStart() {
-        autoScrollTask?.setEventPoint(3f, 5f)
-        autoScrollTask?.setViewDimensions(39, 42)
-
-        val autoScrollDirection = Mockito.mock(Point::class.java)
-
+        autoScrollTask!!.setEventPoint(3f, 5f)
+        autoScrollTask.setViewDimensions(39, 42)
+        val autoScrollDirection = Mockito.mock(
+            Point::class.java
+        )
         Mockito.`when`(
-            callback?.getToolAutoScrollDirection(
+            callback!!.getToolAutoScrollDirection(
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyInt(),
@@ -177,21 +186,21 @@ class AutoScrollTaskTest {
             )
         )
             .thenReturn(autoScrollDirection)
-        autoScrollTask?.start()
-        ArgumentMatchers.eq(
-            autoScrollTask
-        )?.let { Mockito.verify(handler)?.postDelayed(it, ArgumentMatchers.anyLong()) }
-        autoScrollTask?.isRunning?.let { Assert.assertTrue(it) }
+        autoScrollTask.start()
+        Mockito.verify(handler)
+            ?.postDelayed(ArgumentMatchers.eq(autoScrollTask), ArgumentMatchers.anyLong())
+        Assert.assertTrue(autoScrollTask.isRunning)
     }
 
     @Test(expected = IllegalStateException::class)
     fun testStartWhenAlreadyRunning() {
-        autoScrollTask?.setEventPoint(3f, 5f)
-        autoScrollTask?.setViewDimensions(39, 42)
-
-        val autoScrollDirection = Mockito.mock(Point::class.java)
+        autoScrollTask!!.setEventPoint(3f, 5f)
+        autoScrollTask.setViewDimensions(39, 42)
+        val autoScrollDirection = Mockito.mock(
+            Point::class.java
+        )
         Mockito.`when`(
-            callback?.getToolAutoScrollDirection(
+            callback!!.getToolAutoScrollDirection(
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyInt(),
@@ -199,43 +208,44 @@ class AutoScrollTaskTest {
             )
         )
             .thenReturn(autoScrollDirection)
-        autoScrollTask?.start()
-        autoScrollTask?.start()
+        autoScrollTask.start()
+        autoScrollTask.start()
     }
 
     @Test(expected = IllegalStateException::class)
     fun testStartWithZeroWidth() {
-        autoScrollTask?.setViewDimensions(0, 42)
-        autoScrollTask?.start()
+        autoScrollTask!!.setViewDimensions(0, 42)
+        autoScrollTask.start()
     }
 
     @Test(expected = IllegalStateException::class)
     fun testStartWithZeroHeight() {
-        autoScrollTask?.setViewDimensions(42, 0)
-        autoScrollTask?.start()
+        autoScrollTask!!.setViewDimensions(42, 0)
+        autoScrollTask.start()
     }
 
     @Test
     fun testStartIgnoredTools() {
-        Mockito.`when`(callback?.getCurrentToolType()).thenReturn(ToolType.FILL, ToolType.TRANSFORM)
-        autoScrollTask?.setEventPoint(3f, 5f)
-        autoScrollTask?.setViewDimensions(39, 42)
-        autoScrollTask?.start()
-        autoScrollTask?.start()
-        autoScrollTask?.start()
-
-        autoScrollTask?.isRunning?.let { Assert.assertFalse(it) }
+        Mockito.`when`(callback!!.getCurrentToolType())
+            .thenReturn(ToolType.FILL, ToolType.TRANSFORM)
+        autoScrollTask!!.setEventPoint(3f, 5f)
+        autoScrollTask.setViewDimensions(39, 42)
+        autoScrollTask.start()
+        autoScrollTask.start()
+        autoScrollTask.start()
+        Assert.assertFalse(autoScrollTask.isRunning)
         Mockito.verifyZeroInteractions(handler)
     }
 
     @Test
     fun testStopAfterStart() {
-        autoScrollTask?.setEventPoint(3f, 5f)
-        autoScrollTask?.setViewDimensions(39, 42)
-
-        val autoScrollDirection = Mockito.mock(Point::class.java)
+        autoScrollTask!!.setEventPoint(3f, 5f)
+        autoScrollTask.setViewDimensions(39, 42)
+        val autoScrollDirection = Mockito.mock(
+            Point::class.java
+        )
         Mockito.`when`(
-            callback?.getToolAutoScrollDirection(
+            callback!!.getToolAutoScrollDirection(
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyFloat(),
                 ArgumentMatchers.anyInt(),
@@ -243,13 +253,11 @@ class AutoScrollTaskTest {
             )
         )
             .thenReturn(autoScrollDirection)
-        autoScrollTask?.start()
-        autoScrollTask?.stop()
-
-        if (autoScrollTask != null) {
-            Mockito.verify(handler)?.postDelayed(ArgumentMatchers.eq(autoScrollTask),
-            ArgumentMatchers.anyLong())
-        }
-        autoScrollTask?.isRunning?.let { Assert.assertFalse(it) }
+        autoScrollTask.start()
+        autoScrollTask.stop()
+        Mockito.verify(handler)
+            ?.postDelayed(ArgumentMatchers.eq(autoScrollTask), ArgumentMatchers.anyLong())
+        Mockito.verify(handler)?.removeCallbacks(autoScrollTask)
+        Assert.assertFalse(autoScrollTask.isRunning)
     }
 }
