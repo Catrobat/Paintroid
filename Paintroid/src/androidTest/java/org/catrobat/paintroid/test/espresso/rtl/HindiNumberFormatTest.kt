@@ -42,9 +42,11 @@ import org.junit.Test
 
 @RunWith(AndroidJUnit4::class)
 class HindiNumberFormatTest {
+    @JvmField
     @Rule
     var launchActivityRule: ActivityTestRule<MainActivity> = RtlActivityTestRule(MainActivity::class.java, "ar")
 
+    @JvmField
     @Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
 

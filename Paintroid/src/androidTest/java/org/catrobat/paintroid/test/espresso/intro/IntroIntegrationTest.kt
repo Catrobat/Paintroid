@@ -22,9 +22,11 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class IntroIntegrationTest {
+    @JvmField
     @Rule
     var activityTestRule = ActivityTestRule(WelcomeActivity::class.java)
 
+    @JvmField
     @Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
 
@@ -50,7 +52,7 @@ class IntroIntegrationTest {
     fun testOnLetsGoPressedActivityFinished() {
         val viewPager = activityTestRule.activity.viewPager
         val adapter = viewPager.adapter as IntroPageViewAdapter?
-        for (i in 0 until (adapter?.layouts?.size?.minus(1) ?: 0)) {
+        repeat(adapter?.layouts?.size!! - 1) {
             onView(withId(R.id.pocketpaint_btn_next)).perform(ViewActions.click())
         }
         onView(withId(R.id.pocketpaint_btn_next)).perform(ViewActions.click())

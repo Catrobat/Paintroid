@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,24 +16,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.test.junit.tools
 
+import androidx.test.espresso.idling.CountingIdlingResource
+import androidx.test.rule.ActivityTestRule
+import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.command.CommandFactory
+import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.tools.ContextCallback
+import org.catrobat.paintroid.tools.ToolPaint
+import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.tools.implementation.FillTool
+import org.catrobat.paintroid.tools.options.FillToolOptionsView
+import org.catrobat.paintroid.tools.options.ToolOptionsViewController
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.catrobat.paintroid.tools.options.FillToolOptionsView
-import org.catrobat.paintroid.tools.ContextCallback
-import org.catrobat.paintroid.tools.options.ToolOptionsViewController
-import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.tools.ToolPaint
-import org.catrobat.paintroid.command.CommandManager
-import org.catrobat.paintroid.command.CommandFactory
-import org.catrobat.paintroid.contract.LayerContracts
-import org.mockito.InjectMocks
-import org.catrobat.paintroid.tools.implementation.FillTool
-import org.catrobat.paintroid.tools.ToolType
-import org.junit.Assert
-import org.junit.Test
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -44,6 +47,8 @@ class FillToolTest {
     @Mock
     var contextCallback: ContextCallback? = null
 
+    @Mock
+    private val fillToolOptionsView: FillToolOptionsView? = null
     @Mock
     var toolOptionsViewController: ToolOptionsViewController? = null
 
@@ -62,12 +67,25 @@ class FillToolTest {
     @Mock
     var layerModel: LayerContracts.Model? = null
 
-    @InjectMocks
-    var toolToTest: FillTool? = null
+    private var toolToTest: FillTool? = null
 
+    private var idlingResource: CountingIdlingResource? = null
+
+    @Rule
+    @JvmField
+    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
+    @Before
+    fun setUp() {
+        idlingResource = launchActivityRule.activity.idlingResource
+        toolToTest = FillTool(
+            fillToolOptionsView!!,
+            contextCallback!!, toolOptionsViewController!!, toolPaint!!, workspace!!,
+            idlingResource!!, commandManager!!, 0
+        )
+    }
     @Test
     fun testShouldReturnCorrectToolType() {
-        val toolType = toolToTest!!.toolType
+        val toolType = toolToTest?.toolType
         Assert.assertEquals(ToolType.FILL, toolType)
     }
 }

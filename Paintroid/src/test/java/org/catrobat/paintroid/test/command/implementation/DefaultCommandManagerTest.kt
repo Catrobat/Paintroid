@@ -31,11 +31,12 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.contract.LayerContracts
-import org.mockito.ArgumentMatchers
 import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.junit.MockitoJUnitRunner
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 
 @RunWith(MockitoJUnitRunner::class)
 class DefaultCommandManagerTest {
@@ -81,7 +82,7 @@ class DefaultCommandManagerTest {
         commandManager.addCommandListener(commandListener!!)
         commandManager.addCommand(command)
 
-        Mockito.verify(command).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
+        Mockito.verify(command).run(any<Canvas>(), eq(layerModel))
         Mockito.verify(commandListener).commandPostExecute()
 
         Assert.assertFalse(commandManager.isRedoAvailable)
@@ -102,7 +103,7 @@ class DefaultCommandManagerTest {
         commandManager.undo()
 
         val inOrder = Mockito.inOrder(command, commandListener)
-        inOrder.verify(command).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
+        inOrder.verify(command).run(any<Canvas>(), eq(layerModel))
         inOrder.verify(commandListener, Mockito.times(2)).commandPostExecute()
 
         Assert.assertTrue(commandManager.isRedoAvailable)
@@ -126,11 +127,11 @@ class DefaultCommandManagerTest {
         commandManager.undo()
 
         val inOrder = Mockito.inOrder(firstCommand, secondCommand, thirdCommand)
-        inOrder.verify(firstCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(secondCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(thirdCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(firstCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(secondCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
+        inOrder.verify(firstCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(secondCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(thirdCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(firstCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(secondCommand).run(any<Canvas>(), eq(layerModel))
         inOrder.verifyNoMoreInteractions()
 
         Assert.assertTrue(commandManager.isRedoAvailable)
@@ -156,12 +157,12 @@ class DefaultCommandManagerTest {
         commandManager.redo()
 
         val inOrder = Mockito.inOrder(firstCommand, secondCommand, thirdCommand)
-        inOrder.verify(firstCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(secondCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(thirdCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(firstCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(secondCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(thirdCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
+        inOrder.verify(firstCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(secondCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(thirdCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(firstCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(secondCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(thirdCommand).run(any<Canvas>(), eq(layerModel))
         inOrder.verifyNoMoreInteractions()
 
         Assert.assertFalse(commandManager.isRedoAvailable)
@@ -192,13 +193,13 @@ class DefaultCommandManagerTest {
         commandManager.redo()
 
         val inOrder = Mockito.inOrder(firstCommand, secondCommand, thirdCommand)
-        inOrder.verify(firstCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(secondCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(thirdCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(firstCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(secondCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(firstCommand, Mockito.times(2)).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
-        inOrder.verify(secondCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
+        inOrder.verify(firstCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(secondCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(thirdCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(firstCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(secondCommand).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(firstCommand, Mockito.times(2)).run(any<Canvas>(), eq(layerModel))
+        inOrder.verify(secondCommand).run(any<Canvas>(), eq(layerModel))
         inOrder.verifyNoMoreInteractions()
 
         Assert.assertTrue(commandManager.isRedoAvailable)
@@ -243,7 +244,7 @@ class DefaultCommandManagerTest {
         commandManager.reset()
 
         Mockito.verify(commandListener).commandPostExecute()
-        Mockito.verify(initialStateCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
+        Mockito.verify(initialStateCommand).run(any<Canvas>(), eq(layerModel))
         Assert.assertThat(layerModel.layerCount, CoreMatchers.`is`(0))
     }
 
@@ -262,7 +263,7 @@ class DefaultCommandManagerTest {
         commandManager.addCommand(command)
         commandManager.undo()
 
-        Mockito.verify(initialStateCommand).run(ArgumentMatchers.any(Canvas::class.java), ArgumentMatchers.eq(layerModel))
+        Mockito.verify(initialStateCommand).run(any<Canvas>(), eq(layerModel))
     }
 
     @Test

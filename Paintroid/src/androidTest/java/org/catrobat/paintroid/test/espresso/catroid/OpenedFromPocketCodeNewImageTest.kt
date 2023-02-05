@@ -46,6 +46,8 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.intent.Intents
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.ClassRule
@@ -65,14 +67,17 @@ import java.util.Objects
 
 @RunWith(AndroidJUnit4::class)
 class OpenedFromPocketCodeNewImageTest {
+    @JvmField
     @Rule
     var launchActivityRule = IntentsTestRule(MainActivity::class.java, false, false)
 
+    @JvmField
     @Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
     private var imageFile: File? = null
     private var activity: MainActivity? = null
     private lateinit var deletionFileList: ArrayList<File?>
+    private var idlingResource: CountingIdlingResource? = null
 
     @Before
     fun setUp() {
@@ -82,6 +87,8 @@ class OpenedFromPocketCodeNewImageTest {
         launchActivityRule.launchActivity(intent)
         deletionFileList = ArrayList()
         activity = launchActivityRule.activity
+        idlingResource = activity?.idlingResource
+        IdlingRegistry.getInstance().register(idlingResource)
         imageFile = getNewImageFile(IMAGE_NAME)
         deletionFileList.add(imageFile)
         ToolBarViewInteraction.onToolBarView().performSelectTool(ToolType.BRUSH)
@@ -89,6 +96,7 @@ class OpenedFromPocketCodeNewImageTest {
 
     @After
     fun tearDown() {
+        IdlingRegistry.getInstance().unregister(idlingResource)
         for (file in deletionFileList) {
             if (file != null && file.exists()) { Assert.assertTrue(file.delete()) }
         }
@@ -189,6 +197,7 @@ class OpenedFromPocketCodeNewImageTest {
         private const val IMAGE_NAME = "testFile"
         private const val IMAGE_TO_LOAD_NAME = "loadFile"
 
+        @JvmField
         @ClassRule
         var grantPermissionRule = grantPermissionRulesVersionCheck()
     }

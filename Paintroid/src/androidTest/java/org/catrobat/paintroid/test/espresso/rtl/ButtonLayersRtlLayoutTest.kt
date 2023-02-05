@@ -38,9 +38,11 @@ import org.junit.Test
 
 @RunWith(AndroidJUnit4::class)
 class ButtonLayersRtlLayoutTest {
+    @JvmField
     @Rule
     var mainActivityActivityTestRule: ActivityTestRule<MainActivity> = RtlActivityTestRule(MainActivity::class.java, "ar")
 
+    @JvmField
     @Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
 
