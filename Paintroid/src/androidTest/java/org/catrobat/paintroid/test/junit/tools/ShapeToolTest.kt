@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2015 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-@file:Suppress("DEPRECATION")
-
 package org.catrobat.paintroid.test.junit.tools
 
 import android.util.DisplayMetrics
@@ -46,87 +43,89 @@ import org.junit.runners.Parameterized
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
 
 @RunWith(Parameterized::class)
 class ShapeToolTest {
     @Rule
-    var mockito: MockitoRule = MockitoJUnit.rule()
+    @JvmField
+    var mockito = MockitoJUnit.rule()
 
+    @JvmField
     @Parameterized.Parameter
-    lateinit var shape: DrawableShape
+    var shape: DrawableShape? = null
 
     @Mock
-    private lateinit var commandManager: CommandManager
+    private val commandManager: CommandManager? = null
 
     @Mock
-    private lateinit var shapeToolOptions: ShapeToolOptionsView
+    private val shapeToolOptions: ShapeToolOptionsView? = null
 
     @Mock
-    private lateinit var toolOptionsViewController: ToolOptionsViewController
+    private val toolOptionsViewController: ToolOptionsViewController? = null
 
     @Mock
-    private lateinit var contextCallback: ContextCallback
+    private val contextCallback: ContextCallback? = null
 
     @Mock
-    private lateinit var workspace: Workspace
+    private val workspace: Workspace? = null
 
     @Mock
-    private lateinit var toolPaint: ToolPaint
+    private val toolPaint: ToolPaint? = null
 
     @Mock
     private val displayMetrics: DisplayMetrics? = null
     private var shapeTool: ShapeTool? = null
-    private lateinit var idlingResource: CountingIdlingResource
+    private var idlingResource: CountingIdlingResource? = null
 
     @Rule
+    @JvmField
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
     @Before
     fun setUp() {
         idlingResource = launchActivityRule.activity.idlingResource
         IdlingRegistry.getInstance().register(idlingResource)
-        Mockito.`when`(workspace.width).thenReturn(100)
+        Mockito.`when`(workspace!!.width).thenReturn(100)
         Mockito.`when`(workspace.height).thenReturn(100)
         Mockito.`when`(workspace.scale).thenReturn(1f)
         Mockito.`when`(workspace.perspective).thenReturn(Perspective(100, 100))
-        Mockito.`when`(contextCallback.displayMetrics).thenReturn(displayMetrics)
-        displayMetrics?.widthPixels = 100
-        displayMetrics?.heightPixels = 100
+        Mockito.`when`(contextCallback!!.displayMetrics).thenReturn(displayMetrics)
+        displayMetrics!!.widthPixels = 100
+        displayMetrics.heightPixels = 100
         shapeTool = ShapeTool(
-            shapeToolOptions,
-            contextCallback,
-            toolOptionsViewController,
-            toolPaint,
-            workspace,
-            idlingResource,
-            commandManager, 0
+            shapeToolOptions!!,
+            contextCallback, toolOptionsViewController!!, toolPaint!!, workspace,
+            idlingResource!!, commandManager!!, 0
         )
-        shapeTool?.setBaseShape(shape)
+        shapeTool!!.setBaseShape(shape!!)
     }
 
     @After
-    fun tearDown() { IdlingRegistry.getInstance().unregister(idlingResource) }
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(idlingResource)
+    }
 
     @Test
     fun testShouldReturnCorrectToolType() {
-        val toolType = shapeTool?.toolType
+        val toolType = shapeTool!!.toolType
         Assert.assertEquals(ToolType.SHAPE, toolType)
     }
 
     @Test
     fun testShouldReturnCorrectBaseShape() {
-        val baseShape = shapeTool?.getBaseShape()
+        val baseShape = shapeTool!!.getBaseShape()
         Assert.assertEquals(shape, baseShape)
     }
-
     companion object {
+        @JvmStatic
         @Parameterized.Parameters(name = "{0}")
-        fun data(): Iterable<DrawableShape> = listOf(
-            DrawableShape.RECTANGLE,
-            DrawableShape.OVAL,
-            DrawableShape.HEART,
-            DrawableShape.STAR
-        )
+        fun data(): Iterable<DrawableShape> {
+            return listOf(
+                DrawableShape.RECTANGLE,
+                DrawableShape.OVAL,
+                DrawableShape.HEART,
+                DrawableShape.STAR
+            )
+        }
     }
 }

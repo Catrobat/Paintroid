@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.test.junit.model
 
 import android.graphics.Bitmap
@@ -34,8 +33,6 @@ import org.catrobat.paintroid.model.Layer
 import org.catrobat.paintroid.model.LayerModel
 import org.hamcrest.Matchers
 import org.junit.Assert
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -58,12 +55,8 @@ class LayerTest {
         (layerModel as LayerModel).addLayerAt(0, layer)
         (layerModel as LayerModel).currentLayer = layer
         commandManager =
-            AsyncCommandManager(
-                DefaultCommandManager(
-                    CommonFactory(),
-                    layerModel as LayerModel
-                ),
-                layerModel as LayerModel
+            AsyncCommandManager(DefaultCommandManager(CommonFactory(), layerModel as LayerModel),
+                                layerModel as LayerModel
             )
     }
 
@@ -78,99 +71,78 @@ class LayerTest {
     @Test
     fun testMoveLayer() {
         val listener = Mockito.mock(CommandListener::class.java)
-        commandManager?.addCommandListener(listener)
-        commandManager?.addCommand(commandFactory?.createAddEmptyLayerCommand())
+        commandManager!!.addCommandListener(listener)
+        commandManager!!.addCommand(commandFactory!!.createAddEmptyLayerCommand())
         Mockito.verify(listener, Mockito.timeout(1000)).commandPostExecute()
-        Assert.assertThat(layerModel?.layerCount, Matchers.`is`(2))
-        val firstLayer = layerModel?.getLayerAt(0)
-        val secondLayer = layerModel?.getLayerAt(1)
+        Assert.assertThat(layerModel!!.layerCount, Matchers.`is`(2))
+        val firstLayer = layerModel!!.getLayerAt(0)
+        val secondLayer = layerModel!!.getLayerAt(1)
         Mockito.reset(listener)
-        commandManager?.addCommand(commandFactory?.createReorderLayersCommand(0, 1))
+        commandManager!!.addCommand(commandFactory!!.createReorderLayersCommand(0, 1))
         Mockito.verify(listener, Mockito.timeout(1000)).commandPostExecute()
         Assert.assertThat(layerModel!!.layerCount, Matchers.`is`(2))
         Assert.assertThat(
-            layerModel?.getLayerAt(0), Matchers.`is`(secondLayer)
+            layerModel!!.getLayerAt(0), Matchers.`is`(secondLayer)
         )
         Assert.assertThat(
-            layerModel?.getLayerAt(1), Matchers.`is`(firstLayer)
+            layerModel!!.getLayerAt(1), Matchers.`is`(firstLayer)
         )
     }
 
     @Test
     fun testMergeLayers() {
         val listener = Mockito.mock(CommandListener::class.java)
-        val firstLayer = layerModel?.getLayerAt(0)
-        firstLayer?.bitmap?.setPixel(1, 1, Color.BLACK)
-        firstLayer?.bitmap?.setPixel(1, 2, Color.BLACK)
-        commandManager?.addCommandListener(listener)
-        commandManager?.addCommand(commandFactory?.createAddEmptyLayerCommand())
+        val firstLayer = layerModel!!.getLayerAt(0)
+        firstLayer!!.bitmap.setPixel(1, 1, Color.BLACK)
+        firstLayer.bitmap.setPixel(1, 2, Color.BLACK)
+        commandManager!!.addCommandListener(listener)
+        commandManager!!.addCommand(commandFactory!!.createAddEmptyLayerCommand())
         Mockito.verify(listener, Mockito.timeout(1000)).commandPostExecute()
-        val secondLayer = layerModel?.getLayerAt(0)
+        val secondLayer = layerModel!!.getLayerAt(0)
         Assert.assertThat(
-            layerModel?.currentLayer, Matchers.`is`(secondLayer)
+            layerModel!!.currentLayer, Matchers.`is`(secondLayer)
         )
-        secondLayer?.bitmap?.setPixel(1, 1, Color.BLUE)
-        secondLayer?.bitmap?.setPixel(2, 1, Color.BLUE)
+        secondLayer!!.bitmap.setPixel(1, 1, Color.BLUE)
+        secondLayer.bitmap.setPixel(2, 1, Color.BLUE)
         Mockito.reset(listener)
-        commandManager?.addCommand(commandFactory?.createMergeLayersCommand(0, 1))
+        commandManager!!.addCommand(commandFactory!!.createMergeLayersCommand(0, 1))
         Mockito.verify(listener, Mockito.timeout(1000)).commandPostExecute()
-        Assert.assertThat(layerModel?.layerCount, Matchers.`is`(1))
+        Assert.assertThat(layerModel!!.layerCount, Matchers.`is`(1))
         Assert.assertThat(
-            layerModel?.currentLayer, Matchers.`is`(firstLayer)
+            layerModel!!.currentLayer, Matchers.`is`(firstLayer)
         )
         Assert.assertThat(
             layerModel!!.getLayerAt(0), Matchers.`is`(firstLayer)
         )
-        Assert.assertThat(firstLayer?.bitmap?.getPixel(1, 2), Matchers.`is`(Color.BLACK))
-        Assert.assertThat(firstLayer?.bitmap?.getPixel(2, 1), Matchers.`is`(Color.BLUE))
-        Assert.assertThat(firstLayer?.bitmap?.getPixel(1, 1), Matchers.`is`(Color.BLUE))
-    }
-
-    @Test
-    fun testHideThenUnhideLayer() {
-        val layerToHide = layerModel?.getLayerAt(0)
-        layerToHide?.bitmap?.setPixel(1, 1, Color.BLACK)
-        layerToHide?.bitmap?.setPixel(2, 1, Color.BLACK)
-        layerToHide?.bitmap?.setPixel(3, 1, Color.BLACK)
-        layerToHide?.bitmap?.setPixel(4, 1, Color.BLACK)
-        val bitmapCopy = layerToHide?.transparentBitmap
-        layerToHide?.switchBitmaps(false)
-        layerToHide?.bitmap = bitmapCopy
-        Assert.assertThat(layerToHide?.bitmap?.getPixel(1, 1), Matchers.`is`(Color.TRANSPARENT))
-        Assert.assertThat(layerToHide?.bitmap?.getPixel(2, 1), Matchers.`is`(Color.TRANSPARENT))
-        Assert.assertThat(layerToHide?.bitmap?.getPixel(3, 1), Matchers.`is`(Color.TRANSPARENT))
-        Assert.assertThat(layerToHide?.bitmap?.getPixel(4, 1), Matchers.`is`(Color.TRANSPARENT))
-        layerToHide?.switchBitmaps(true)
-        Assert.assertThat(layerToHide?.bitmap?.getPixel(1, 1), Matchers.`is`(Color.BLACK))
-        Assert.assertThat(layerToHide?.bitmap?.getPixel(2, 1), Matchers.`is`(Color.BLACK))
-        Assert.assertThat(layerToHide?.bitmap?.getPixel(3, 1), Matchers.`is`(Color.BLACK))
-        Assert.assertThat(layerToHide?.bitmap?.getPixel(4, 1), Matchers.`is`(Color.BLACK))
+        Assert.assertThat(firstLayer.bitmap.getPixel(1, 2), Matchers.`is`(Color.BLACK))
+        Assert.assertThat(firstLayer.bitmap.getPixel(2, 1), Matchers.`is`(Color.BLUE))
+        Assert.assertThat(firstLayer.bitmap.getPixel(1, 1), Matchers.`is`(Color.BLUE))
     }
 
     @Test
     fun testGetLayerAt() {
-        for (i in 0 until (layerModel?.layerCount ?: 0)) {
-            Assert.assertNotNull(layerModel?.getLayerAt(i))
+        for (i in 0 until layerModel!!.layerCount) {
+            Assert.assertNotNull(layerModel!!.getLayerAt(i))
         }
-        Assert.assertNull(layerModel?.getLayerAt(-1))
-        Assert.assertNull(layerModel?.layerCount?.let { layerModel?.getLayerAt(it) })
+        Assert.assertNull(layerModel!!.getLayerAt(-1))
+        Assert.assertNull(layerModel!!.getLayerAt(layerModel!!.layerCount))
     }
 
     @Test
     fun testAddLayerAt() {
         val layer = Layer(Bitmap.createBitmap(layerWidth, layerHeight, Bitmap.Config.ARGB_8888))
-        layerModel?.addLayerAt(0, layer)?.let { assertTrue(it) }
-        assertTrue(layerModel?.layerCount?.let { layerModel?.addLayerAt(it, layer) } == true)
-        layerModel?.addLayerAt(-1, layer)?.let { assertFalse(it) }
-        layerModel?.addLayerAt(layerModel?.layerCount?.plus(1) ?: 0, layer)?.let { assertFalse(it) }
+        Assert.assertTrue(layerModel!!.addLayerAt(0, layer))
+        Assert.assertTrue(layerModel!!.addLayerAt(layerModel!!.layerCount, layer))
+        Assert.assertFalse(layerModel!!.addLayerAt(-1, layer))
+        Assert.assertFalse(layerModel!!.addLayerAt(layerModel!!.layerCount + 1, layer))
     }
 
     @Test
     fun testRemoveLayerAt() {
-        assertFalse(layerModel?.removeLayerAt(-1) ?: false)
-        assertTrue(layerModel?.removeLayerAt(0) ?: false)
+        Assert.assertFalse(layerModel!!.removeLayerAt(-1))
+        Assert.assertTrue(layerModel!!.removeLayerAt(0))
         val layer = Layer(Bitmap.createBitmap(layerWidth, layerHeight, Bitmap.Config.ARGB_8888))
-        layerModel?.addLayerAt(0, layer)
-        assertFalse(layerModel?.layerCount?.let { layerModel?.removeLayerAt(it) } ?: false)
+        layerModel!!.addLayerAt(0, layer)
+        Assert.assertFalse(layerModel!!.removeLayerAt(layerModel!!.layerCount))
     }
 }

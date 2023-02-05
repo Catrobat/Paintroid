@@ -16,46 +16,47 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.catrobat.paintroid.test.espresso.catroid
 
-import org.catrobat.paintroid.test.espresso.util.EspressoUtils.grantPermissionRulesVersionCheck
-import org.junit.runner.RunWith
-import androidx.test.espresso.intent.rule.IntentsTestRule
-import org.catrobat.paintroid.MainActivity
-import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
-import org.junit.Before
 import android.content.Intent
 import android.graphics.Color
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.OptionsMenuViewInteraction
-import org.catrobat.paintroid.R
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
-import org.catrobat.paintroid.test.espresso.util.UiInteractions
-import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
-import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.intent.rule.IntentsTestRule
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
-import org.junit.ClassRule
+import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.R
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_NAME
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils.grantPermissionRulesVersionCheck
+import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.OptionsMenuViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.junit.Assert
+import org.junit.Before
+import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class MoreOptionsIntegrationTest {
+    @JvmField
     @Rule
-    var launchActivityRule = IntentsTestRule(MainActivity::class.java, false, false)
-
+    var launchActivityRule = IntentsTestRule(
+        MainActivity::class.java, false, false
+    )
+    @JvmField
     @Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
-
     @Before
     fun setUp() {
         val intent = Intent()
@@ -90,7 +91,7 @@ class MoreOptionsIntegrationTest {
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
-        Espresso.onView(ViewMatchers.withText(R.string.menu_discard_image))
+        Espresso.onView(withText(R.string.menu_discard_image))
             .perform(ViewActions.click())
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
@@ -104,17 +105,16 @@ class MoreOptionsIntegrationTest {
             .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
-        Espresso.onView(ViewMatchers.withText(R.string.share_image_menu))
+        Espresso.onView(withText(R.string.share_image_menu))
             .perform(ViewActions.click())
-
         val mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         val uiObject = mDevice.findObject(UiSelector())
-
         Assert.assertTrue(uiObject.exists())
         mDevice.pressBack()
     }
 
     companion object {
+        @JvmField
         @ClassRule
         var grantPermissionRule = grantPermissionRulesVersionCheck()
     }

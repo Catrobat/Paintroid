@@ -72,6 +72,7 @@ class ImportToolTest {
     private lateinit var idlingResource: CountingIdlingResource
 
     @Rule
+    @JvmField
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
     @UiThreadTest
