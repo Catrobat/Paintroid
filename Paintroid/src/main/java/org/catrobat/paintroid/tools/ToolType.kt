@@ -80,10 +80,10 @@ enum class ToolType(
         INVALID_RESOURCE_ID,
         true
     ),
-    STAMP(
-        R.string.button_stamp,
-        R.string.help_content_stamp,
-        R.drawable.ic_pocketpaint_tool_stamp,
+    CLIPBOARD(
+        R.string.button_clipboard,
+        R.string.help_content_clipboard,
+        R.drawable.ic_pocketpaint_tool_clipboard,
         EnumSet.of(StateChange.ALL),
         R.id.pocketpaint_tools_stamp,
         INVALID_RESOURCE_ID,

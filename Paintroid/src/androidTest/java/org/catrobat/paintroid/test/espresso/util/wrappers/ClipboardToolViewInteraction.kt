@@ -24,27 +24,27 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.catrobat.paintroid.R
 
-class StampToolViewInteraction(viewInteraction: ViewInteraction) :
+class ClipboardToolViewInteraction(viewInteraction: ViewInteraction) :
     CustomViewInteraction(viewInteraction) {
 
     companion object {
-        fun onStampToolViewInteraction(): StampToolViewInteraction =
-            StampToolViewInteraction(onView(withId(R.id.pocketpaint_layout_tool_specific_options)))
+        fun onClipboardToolViewInteraction(): ClipboardToolViewInteraction =
+            ClipboardToolViewInteraction(onView(withId(R.id.pocketpaint_layout_tool_specific_options)))
     }
 
-    fun performCopy(): StampToolViewInteraction {
+    fun performCopy(): ClipboardToolViewInteraction {
         onView(withId(R.id.action_copy))
             .perform(click())
         return this
     }
 
-    fun performCut(): StampToolViewInteraction {
+    fun performCut(): ClipboardToolViewInteraction {
         onView(withId(R.id.action_cut))
             .perform(click())
         return this
     }
 
-    fun performPaste(): StampToolViewInteraction {
+    fun performPaste(): ClipboardToolViewInteraction {
         onView(withId(R.id.action_paste))
             .perform(click())
         return this

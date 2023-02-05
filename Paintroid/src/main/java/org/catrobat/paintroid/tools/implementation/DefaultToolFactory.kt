@@ -33,7 +33,7 @@ import org.catrobat.paintroid.ui.tools.DefaultBrushToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultFillToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultShapeToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultSprayToolOptionsView
-import org.catrobat.paintroid.ui.tools.DefaultStampToolOptionsView
+import org.catrobat.paintroid.ui.tools.DefaultClipboardToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultTextToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultTransformToolOptionsView
 import org.catrobat.paintroid.ui.tools.DefaultSmudgeToolOptionsView
@@ -65,8 +65,8 @@ class DefaultToolFactory(mainActivity: MainActivity) : ToolFactory {
                 commandManager,
                 DRAW_TIME_INIT
             )
-            ToolType.STAMP -> StampTool(
-                DefaultStampToolOptionsView(toolLayout),
+            ToolType.CLIPBOARD -> ClipboardTool(
+                DefaultClipboardToolOptionsView(toolLayout),
                 contextCallback,
                 toolOptionsViewController,
                 toolPaint,
