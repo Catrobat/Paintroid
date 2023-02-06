@@ -37,6 +37,11 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.catrobat.paintroid.common.RESULT_INTRO_MW_NOT_SUPPORTED
+import org.catrobat.paintroid.databinding.ActivityPocketpaintWelcomeBinding
+import org.catrobat.paintroid.databinding.PocketpaintLayoutHelpBottomBarBinding
+import org.catrobat.paintroid.databinding.PocketpaintLayoutTopBarBinding
+import org.catrobat.paintroid.databinding.PocketpaintSlideIntroToolsSelectionBinding
+import org.catrobat.paintroid.databinding.PocketpaintSlideIntroWelcomeBinding
 import org.catrobat.paintroid.intro.IntroPageViewAdapter
 import org.catrobat.paintroid.tools.ToolType
 import java.util.Locale
@@ -56,6 +61,10 @@ class WelcomeActivity : AppCompatActivity() {
     private lateinit var dotsLayout: LinearLayoutCompat
     private lateinit var btnSkip: AppCompatButton
     private lateinit var btnNext: AppCompatButton
+    private lateinit var binding:PocketpaintSlideIntroWelcomeBinding
+    private lateinit var bindingw:ActivityPocketpaintWelcomeBinding
+    private lateinit var bindingl:PocketpaintSlideIntroToolsSelectionBinding
+    private lateinit var bindingt:PocketpaintLayoutTopBarBinding
 
     private var viewPagerPageChangeListener: ViewPager.OnPageChangeListener =
         object : ViewPager.SimpleOnPageChangeListener() {
@@ -75,29 +84,35 @@ class WelcomeActivity : AppCompatActivity() {
             }
 
             override fun onPageScrollStateChanged(state: Int) {
+                binding = PocketpaintSlideIntroWelcomeBinding.inflate(layoutInflater)
+                bindingw=  ActivityPocketpaintWelcomeBinding.inflate(layoutInflater)
+                bindingt = PocketpaintLayoutTopBarBinding.inflate(layoutInflater)
+
                 super.onPageScrollStateChanged(state)
                 if (state == ViewPager.SCROLL_STATE_IDLE) {
                     val toolTypes = ToolType.values()
                     if (layouts[pos] == R.layout.pocketpaint_slide_intro_possibilities) {
                         val head: AppCompatTextView =
-                            findViewById(R.id.pocketpaint_intro_possibilities_head)
+                            binding.pocketpaintIntroWelcomeHead as AppCompatTextView
                         val description: AppCompatTextView =
-                            findViewById(R.id.pocketpaint_intro_possibilities_text)
+                            binding.pocketpaintIntroWelcomeText as AppCompatTextView
                         setUpUndoAndRedoButtons(head, description)
                         setUpNavigationView(head, description)
                     } else if (layouts[pos] == R.layout.pocketpaint_slide_intro_tools_selection) {
+
                         val view = findViewById<View>(R.id.pocketpaint_intro_bottom_bar)
+                        bindingl = PocketpaintSlideIntroToolsSelectionBinding.inflate(layoutInflater)
                         for (type in toolTypes) {
                             val toolButton = view.findViewById<View>(type.toolButtonID) ?: continue
                             toolButton.setOnClickListener {
                                 val toolName =
-                                    findViewById<AppCompatTextView>(R.id.pocketpaint_textview_intro_tools_header)
+                                    bindingl.pocketpaintTextviewIntroToolsHeader
                                 toolName.setText(type.nameResource)
                                 val toolDescription =
-                                    findViewById<AppCompatTextView>(R.id.pocketpaint_tools_info_description)
+                                    bindingl.pocketpaintToolsInfoDescription
                                 toolDescription.setText(type.helpTextResource)
                                 val icon =
-                                    findViewById<AppCompatImageView>(R.id.pocketpaint_tools_info_icon)
+                                    bindingl.pocketpaintToolsInfoIcon
                                 icon.setImageResource(type.drawableResource)
                             }
                         }
@@ -108,11 +123,11 @@ class WelcomeActivity : AppCompatActivity() {
 
     private fun setUpUndoAndRedoButtons(head: AppCompatTextView, description: AppCompatTextView) {
         val topBar: AppBarLayout =
-            findViewById(R.id.pocketpaint_intro_possibilities_topbar)
+            bindingt.pocketpaintLayoutTopBar
         val undo: AppCompatImageButton =
-            topBar.findViewById(R.id.pocketpaint_btn_top_undo)
+            bindingt.pocketpaintBtnTopUndo as AppCompatImageButton
         val redo: AppCompatImageButton =
-            topBar.findViewById(R.id.pocketpaint_btn_top_redo)
+            bindingt.pocketpaintBtnTopRedo as AppCompatImageButton
         undo.setOnClickListener {
             head.setText(ToolType.UNDO.nameResource)
             description.setText(ToolType.UNDO.helpTextResource)
@@ -159,10 +174,10 @@ class WelcomeActivity : AppCompatActivity() {
             return
         }
         setContentView(R.layout.activity_pocketpaint_welcome)
-        viewPager = findViewById(R.id.pocketpaint_view_pager)
-        dotsLayout = findViewById(R.id.pocketpaint_layout_dots)
-        btnSkip = findViewById(R.id.pocketpaint_btn_skip)
-        btnNext = findViewById(R.id.pocketpaint_btn_next)
+        viewPager = bindingw.pocketpaintViewPager
+        dotsLayout = bindingw.pocketpaintLayoutDots
+        btnSkip = bindingw.pocketpaintBtnSkip
+        btnNext = bindingw.pocketpaintBtnNext
         colorActive = ContextCompat.getColor(this, R.color.pocketpaint_welcome_dot_active)
         colorInactive = ContextCompat.getColor(this, R.color.pocketpaint_welcome_dot_inactive)
         layouts = intArrayOf(

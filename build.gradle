@@ -41,7 +41,7 @@ plugins {
 }
 
 ext {
-    androidCompileSdkVersion = 30
+    androidCompileSdkVersion = 31
     androidMinSdkVersion = 21
     androidTargetSdkVersion = 30
 

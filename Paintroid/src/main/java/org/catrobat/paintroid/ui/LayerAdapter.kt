@@ -40,6 +40,8 @@ import kotlinx.coroutines.runBlocking
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.databinding.PocketpaintItemLayerBinding
+import org.catrobat.paintroid.databinding.PocketpaintLayoutMainMenuLayerBinding
 import org.catrobat.paintroid.model.MAX_LAYER_OPACITY_PERCENTAGE
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 
@@ -53,10 +55,12 @@ class LayerAdapter(
     val mainActivity: MainActivity,
 ) : RecyclerView.Adapter<LayerAdapter.LayerViewHolder>(), LayerContracts.Adapter {
     private val viewHolders: SparseArray<LayerContracts.LayerViewHolder> = SparseArray()
+    private lateinit var binding:PocketpaintItemLayerBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LayerViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.pocketpaint_item_layer, parent, false)
+        binding = PocketpaintItemLayerBinding.bind(itemView)
         return LayerViewHolder(itemView, presenter)
     }
 
@@ -77,13 +81,13 @@ class LayerAdapter(
         itemView: View,
         private val layerPresenter: LayerContracts.Presenter
     ) : LayerContracts.LayerViewHolder, RecyclerView.ViewHolder(itemView) {
-        private val layerBackground: LinearLayout = itemView.findViewById(R.id.pocketpaint_item_layer)
-        private val imageView: ImageView = itemView.findViewById(R.id.pocketpaint_item_layer_image)
-        private val dragHandle: ImageView = itemView.findViewById(R.id.pocketpaint_layer_drag_handle)
-        private val opacitySeekBar: SeekBar = itemView.findViewById(R.id.pocketpaint_layer_opacity_seekbar)
-        private val opacityEditText: AppCompatEditText = itemView.findViewById(R.id.pocketpaint_layer_opacity_value)
+        private val layerBackground: LinearLayout = binding.pocketpaintItemLayer
+        private val imageView: ImageView = binding.pocketpaintItemLayerImage
+        private val dragHandle: ImageView = binding.pocketpaintLayerDragHandle
+        private val opacitySeekBar: SeekBar = binding.pocketpaintLayerOpacitySeekbar
+        private val opacityEditText: AppCompatEditText = binding.pocketpaintLayerOpacityValue
         private var currentBitmap: Bitmap? = null
-        private val layerVisibilityCheckbox: CheckBox = itemView.findViewById(R.id.pocketpaint_checkbox_layer)
+        private val layerVisibilityCheckbox: CheckBox = binding.pocketpaintCheckboxLayer
         private var isSelected = false
 
         override val bitmap: Bitmap?

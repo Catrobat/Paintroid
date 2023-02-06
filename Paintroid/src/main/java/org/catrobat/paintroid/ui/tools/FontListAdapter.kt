@@ -27,6 +27,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.PocketpaintItemFontBinding
 import org.catrobat.paintroid.tools.FontType
 
 class FontListAdapter internal constructor(
@@ -36,6 +37,7 @@ class FontListAdapter internal constructor(
 ) : RecyclerView.Adapter<FontListAdapter.ViewHolder>() {
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
     private var selectedIndex = 0
+    private lateinit var binding:PocketpaintItemFontBinding
 
     private val sansSerif = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL)
     private val monospace = Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL)
@@ -53,6 +55,7 @@ class FontListAdapter internal constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view: View = mInflater.inflate(R.layout.pocketpaint_item_font, parent, false)
+        binding = PocketpaintItemFontBinding.bind(view)
         return ViewHolder(view)
     }
 
@@ -77,7 +80,7 @@ class FontListAdapter internal constructor(
     inner class ViewHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-        var fontChip: Chip = itemView.findViewById(R.id.pocketpaint_font_type)
+        var fontChip: Chip = binding.pocketpaintFontType
 
         init {
             fontChip.setOnClickListener(this)

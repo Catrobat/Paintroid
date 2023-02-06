@@ -25,13 +25,15 @@ import android.widget.ImageButton
 import androidx.appcompat.widget.Toolbar
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.MainActivityContracts
+import org.catrobat.paintroid.databinding.PocketpaintLayoutTopBarBinding
 
 class TopBarViewHolder(val layout: ViewGroup) : MainActivityContracts.TopBarViewHolder {
-    private val toolbar: Toolbar = layout.findViewById(R.id.pocketpaint_toolbar)
-    val undoButton: ImageButton = layout.findViewById(R.id.pocketpaint_btn_top_undo)
-    val redoButton: ImageButton = layout.findViewById(R.id.pocketpaint_btn_top_redo)
-    val checkmarkButton: ImageButton = layout.findViewById(R.id.pocketpaint_btn_top_checkmark)
-    var plusButton: ImageButton = layout.findViewById(R.id.pocketpaint_btn_top_plus)
+    private  var binding: PocketpaintLayoutTopBarBinding = PocketpaintLayoutTopBarBinding.bind(layout)
+    private val toolbar: Toolbar =binding.pocketpaintToolbar
+    val undoButton: ImageButton = binding.pocketpaintBtnTopUndo
+    val redoButton: ImageButton = binding.pocketpaintBtnTopRedo
+    val checkmarkButton: ImageButton = binding.pocketpaintBtnTopCheckmark
+    var plusButton: ImageButton = binding.pocketpaintBtnTopPlus
 
     override val height: Int
         get() = layout.height

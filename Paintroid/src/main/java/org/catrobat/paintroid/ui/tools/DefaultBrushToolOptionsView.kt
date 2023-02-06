@@ -32,6 +32,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.DialogPocketpaintStrokeBinding
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView.OnBrushChangedListener
@@ -53,6 +54,7 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
     private var brushChangedListener: OnBrushChangedListener? = null
     private var currentView = rootView
     private val capsView: View
+    private lateinit var binding:DialogPocketpaintStrokeBinding
 
     companion object {
         private val TAG = DefaultBrushToolOptionsView::class.java.simpleName
@@ -61,14 +63,15 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
     init {
         val inflater = LayoutInflater.from(rootView.context)
         val brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_stroke, rootView, true)
+        binding = DialogPocketpaintStrokeBinding.bind(brushPickerView)
         brushPickerView.apply {
-            buttonCircle = findViewById(R.id.pocketpaint_stroke_ibtn_circle)
-            buttonRect = findViewById(R.id.pocketpaint_stroke_ibtn_rect)
-            brushWidthSeekBar = findViewById(R.id.pocketpaint_stroke_width_seek_bar)
+            buttonCircle = binding.pocketpaintStrokeIbtnCircle
+            buttonRect = binding.pocketpaintStrokeIbtnRect
+            brushWidthSeekBar = binding.pocketpaintStrokeWidthSeekBar
             brushWidthSeekBar.setOnSeekBarChangeListener(OnBrushChangedWidthSeekBarListener())
-            brushSizeText = findViewById(R.id.pocketpaint_stroke_width_width_text)
-            brushToolPreview = findViewById(R.id.pocketpaint_brush_tool_preview)
-            capsView = findViewById(R.id.pocketpaint_stroke_types)
+            brushSizeText = binding.pocketpaintStrokeWidthWidthText
+            brushToolPreview = binding.pocketpaintBrushToolPreview
+            capsView = binding.pocketpaintStrokeTypes
         }
         brushSizeText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
         buttonCircle.setOnClickListener { onCircleButtonClicked() }
@@ -115,11 +118,12 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
     fun adjustOptionsView() {
         val inflater = LayoutInflater.from(currentView.context)
         val brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_stroke, currentView, true)
+        val binding2 = DialogPocketpaintStrokeBinding.bind(brushPickerView)
         brushPickerView.apply {
-            brushWidthSeekBar = findViewById(R.id.pocketpaint_stroke_width_seek_bar)
+            brushWidthSeekBar = binding2.pocketpaintStrokeWidthSeekBar
             brushWidthSeekBar.setOnSeekBarChangeListener(OnBrushChangedWidthSeekBarListener())
-            brushSizeText = findViewById(R.id.pocketpaint_stroke_width_width_text)
-            brushToolPreview = findViewById(R.id.pocketpaint_brush_tool_preview)
+            brushSizeText = binding2.pocketpaintStrokeWidthWidthText
+            brushToolPreview = binding2.pocketpaintBrushToolPreview
         }
     }
 

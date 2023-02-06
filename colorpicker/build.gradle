@@ -22,7 +22,9 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
-
+    viewBinding {
+        enabled = true
+    }
     defaultConfig {
         minSdkVersion rootProject.ext.androidMinSdkVersion
         targetSdkVersion rootProject.ext.androidTargetSdkVersion

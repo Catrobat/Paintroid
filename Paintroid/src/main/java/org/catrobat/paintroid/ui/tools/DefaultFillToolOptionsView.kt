@@ -29,6 +29,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatSeekBar
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.DialogPocketpaintFillToolBinding
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.implementation.DEFAULT_TOLERANCE_IN_PERCENT
 import org.catrobat.paintroid.tools.options.FillToolOptionsView
@@ -37,6 +38,7 @@ import java.util.Locale
 
 private const val MIN_VAL = 0
 private const val MAX_VAL = 100
+private lateinit var binding: DialogPocketpaintFillToolBinding
 
 class DefaultFillToolOptionsView(toolSpecificOptionsLayout: ViewGroup) : FillToolOptionsView {
     private val colorToleranceSeekBar: AppCompatSeekBar
@@ -45,12 +47,14 @@ class DefaultFillToolOptionsView(toolSpecificOptionsLayout: ViewGroup) : FillToo
 
     init {
         val inflater = LayoutInflater.from(toolSpecificOptionsLayout.context)
+
         val fillToolOptionsView =
             inflater.inflate(R.layout.dialog_pocketpaint_fill_tool, toolSpecificOptionsLayout)
+        binding = DialogPocketpaintFillToolBinding.bind(fillToolOptionsView)
         colorToleranceSeekBar =
-            fillToolOptionsView.findViewById(R.id.pocketpaint_color_tolerance_seek_bar)
+            binding.pocketpaintColorToleranceSeekBar as AppCompatSeekBar
         colorToleranceEditText =
-            fillToolOptionsView.findViewById(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input)
+            binding.pocketpaintFillToolDialogColorToleranceInput as AppCompatEditText
         colorToleranceEditText.filters =
             arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
         colorToleranceSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {

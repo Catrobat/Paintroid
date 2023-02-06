@@ -8,9 +8,10 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.DialogPocketpaintAdvancedSettingsBinding
 import org.catrobat.paintroid.tools.helper.AdvancedSettingsAlgorithms.smoothing
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint.Companion.antialiasing
-
+private lateinit var binding: DialogPocketpaintAdvancedSettingsBinding
 class AdvancedSettingsDialog : MainActivityDialogFragment() {
     private var initValueAntialiasing: Boolean = antialiasing
     private var initValueSmoothing: Boolean = smoothing
@@ -18,8 +19,9 @@ class AdvancedSettingsDialog : MainActivityDialogFragment() {
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val antialiasingSwitch = view.findViewById<SwitchCompat>(R.id.pocketpaint_antialiasing)
-        val smoothSwitch = view.findViewById<SwitchCompat>(R.id.pocketpaint_smoothing)
+        binding = DialogPocketpaintAdvancedSettingsBinding.bind(view)
+        val antialiasingSwitch = binding.pocketpaintAntialiasing
+        val smoothSwitch = binding.pocketpaintSmoothing
 
         antialiasingSwitch.isChecked = antialiasing
         smoothSwitch.isChecked = smoothing

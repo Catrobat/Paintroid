@@ -23,8 +23,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.DialogPocketpaintStampToolBinding
 import org.catrobat.paintroid.tools.options.StampToolOptionsView
-
+private lateinit var binding: DialogPocketpaintStampToolBinding
 class DefaultStampToolOptionsView(rootView: ViewGroup) : StampToolOptionsView {
     private val pasteChip: Chip
     private val copyChip: Chip
@@ -57,9 +58,10 @@ class DefaultStampToolOptionsView(rootView: ViewGroup) : StampToolOptionsView {
         val inflater = LayoutInflater.from(rootView.context)
         val stampToolOptionsView: View =
             inflater.inflate(R.layout.dialog_pocketpaint_stamp_tool, rootView)
-        copyChip = stampToolOptionsView.findViewById(R.id.action_copy)
-        pasteChip = stampToolOptionsView.findViewById(R.id.action_paste)
-        cutChip = stampToolOptionsView.findViewById(R.id.action_cut)
+        binding = DialogPocketpaintStampToolBinding.bind(stampToolOptionsView)
+        copyChip = binding.actionCopy
+        pasteChip = binding.actionPaste
+        cutChip = binding.actionCut
         enablePaste(false)
         initializeListeners()
     }

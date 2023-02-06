@@ -31,6 +31,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import com.google.android.material.chip.Chip
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.DialogPocketpaintSmudgeToolBinding
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.implementation.DEFAULT_PRESSURE_IN_PERCENT
 import org.catrobat.paintroid.tools.implementation.DEFAULT_DRAG_IN_PERCENT
@@ -52,6 +53,7 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
     private val buttonRect: Chip
     private val brushToolPreview: BrushToolPreview
     private var brushChangedListener: OnBrushChangedListener? = null
+    private lateinit var binding:DialogPocketpaintSmudgeToolBinding
 
     private var callback: SmudgeToolOptionsView.Callback? = null
 
@@ -67,18 +69,19 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
     init {
         val inflater = LayoutInflater.from(rootView.context)
         val brushPickerView = inflater.inflate(R.layout.dialog_pocketpaint_smudge_tool, rootView, true)
+        binding=DialogPocketpaintSmudgeToolBinding.bind(brushPickerView)
         brushPickerView.apply {
-            buttonCircle = findViewById(R.id.pocketpaint_stroke_ibtn_circle)
-            buttonRect = findViewById(R.id.pocketpaint_stroke_ibtn_rect)
-            brushWidthSeekBar = findViewById(R.id.pocketpaint_stroke_width_seek_bar)
+            buttonCircle = binding.pocketpaintStrokeIbtnCircle
+            buttonRect = binding.pocketpaintStrokeIbtnRect
+            brushWidthSeekBar = binding.pocketpaintStrokeWidthSeekBar
             brushWidthSeekBar.setOnSeekBarChangeListener(OnBrushChangedWidthSeekBarListener())
-            brushSizeText = findViewById(R.id.pocketpaint_stroke_width_width_text)
-            brushToolPreview = findViewById(R.id.pocketpaint_brush_tool_preview)
-            pressureText = findViewById(R.id.pocketpaint_smudge_tool_dialog_pressure_input)
-            pressureSeekBar = findViewById(R.id.pocketpaint_pressure_seek_bar)
+            brushSizeText = binding.pocketpaintStrokeWidthWidthText
+            brushToolPreview = binding.pocketpaintBrushToolPreview
+            pressureText = binding.pocketpaintSmudgeToolDialogPressureInput
+            pressureSeekBar = binding.pocketpaintPressureSeekBar
             pressureSeekBar.setOnSeekBarChangeListener(OnPressureChangedSeekBarListener())
-            dragText = findViewById(R.id.pocketpaint_smudge_tool_dialog_drag_input)
-            dragSeekBar = findViewById(R.id.pocketpaint_drag_seek_bar)
+            dragText = binding.pocketpaintSmudgeToolDialogDragInput
+            dragSeekBar = binding.pocketpaintDragSeekBar
             dragSeekBar.setOnSeekBarChangeListener(OnDragChangedSeekBarListener())
         }
         brushSizeText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))

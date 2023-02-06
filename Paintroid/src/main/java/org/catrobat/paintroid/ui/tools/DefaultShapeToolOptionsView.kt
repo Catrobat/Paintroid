@@ -31,6 +31,9 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatSeekBar
 import androidx.appcompat.widget.AppCompatTextView
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.DialogPocketpaintShapesBinding
+import org.catrobat.paintroid.databinding.DialogPocketpaintSmudgeToolBinding
+import org.catrobat.paintroid.databinding.DialogPocketpaintTextToolBinding
 import org.catrobat.paintroid.tools.drawable.DrawableShape
 import org.catrobat.paintroid.tools.drawable.DrawableStyle
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
@@ -42,6 +45,7 @@ private const val MIN_STROKE_WIDTH = 1
 private const val STARTING_OUTLINE_WIDTH = 25
 private const val MIN_VAL = 1
 private const val MAX_VAL = 100
+private lateinit var binding:DialogPocketpaintShapesBinding
 
 class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
     private var callback: ShapeToolOptionsView.Callback? = null
@@ -61,19 +65,20 @@ class DefaultShapeToolOptionsView(rootView: ViewGroup) : ShapeToolOptionsView {
     init {
         val inflater = LayoutInflater.from(rootView.context)
         val shapeToolView = inflater.inflate(R.layout.dialog_pocketpaint_shapes, rootView)
+        binding  = DialogPocketpaintShapesBinding.bind(shapeToolView)
         shapeToolView.run {
-            squareButton = findViewById(R.id.pocketpaint_shapes_square_btn)
-            circleButton = findViewById(R.id.pocketpaint_shapes_circle_btn)
-            heartButton = findViewById(R.id.pocketpaint_shapes_heart_btn)
-            starButton = findViewById(R.id.pocketpaint_shapes_star_btn)
-            fillButton = findViewById(R.id.pocketpaint_shape_ibtn_fill)
-            outlineButton = findViewById(R.id.pocketpaint_shape_ibtn_outline)
-            shapeToolDialogTitle = findViewById(R.id.pocketpaint_shape_tool_dialog_title)
-            shapeToolFillOutline = findViewById(R.id.pocketpaint_shape_tool_fill_outline)
-            outlineView = findViewById(R.id.pocketpaint_outline_view_border)
-            outlineTextView = findViewById(R.id.pocketpaint_outline_view_text_view)
-            outlineWidthSeekBar = findViewById(R.id.pocketpaint_shape_stroke_width_seek_bar)
-            outlineWidthEditText = findViewById(R.id.pocketpaint_shape_outline_edit)
+            squareButton = org.catrobat.paintroid.ui.tools.binding.pocketpaintShapesSquareBtn as AppCompatImageButton
+            circleButton = binding.pocketpaintShapesCircleBtn as AppCompatImageButton
+            heartButton = binding.pocketpaintShapesHeartBtn as AppCompatImageButton
+            starButton = binding.pocketpaintShapesStarBtn as AppCompatImageButton
+            fillButton = binding.pocketpaintShapeIbtnFill as AppCompatImageButton
+            outlineButton = binding.pocketpaintShapeIbtnOutline as AppCompatImageButton
+            shapeToolDialogTitle = binding.pocketpaintShapeToolDialogTitle as AppCompatTextView
+            shapeToolFillOutline = binding.pocketpaintShapeToolFillOutline as AppCompatTextView
+            outlineView = binding.pocketpaintOutlineViewBorder
+            outlineTextView = binding.pocketpaintOutlineViewTextView as AppCompatTextView
+            outlineWidthSeekBar = binding.pocketpaintShapeStrokeWidthSeekBar as AppCompatSeekBar
+            outlineWidthEditText = binding.pocketpaintShapeOutlineEdit as AppCompatEditText
         }
         outlineWidthEditText.filters =
             arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
