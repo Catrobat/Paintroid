@@ -47,6 +47,7 @@ class DefaultToolOptionsViewController(
         get() = toolOptionsShown
 
     init {
+
         mainToolOptions.visibility = View.INVISIBLE
     }
 

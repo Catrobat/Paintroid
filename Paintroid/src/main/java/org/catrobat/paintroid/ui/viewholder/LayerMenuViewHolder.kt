@@ -22,10 +22,16 @@ import android.view.View
 import com.google.android.material.navigation.NavigationView
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.databinding.PocketpaintLayoutMainMenuLayerBinding
 
 class LayerMenuViewHolder(private val layerLayout: NavigationView) : LayerContracts.LayerMenuViewHolder {
-    val layerAddButton: View = layerLayout.findViewById(R.id.pocketpaint_layer_side_nav_button_add)
-    val layerDeleteButton: View = layerLayout.findViewById(R.id.pocketpaint_layer_side_nav_button_delete)
+
+
+      var binding: PocketpaintLayoutMainMenuLayerBinding = PocketpaintLayoutMainMenuLayerBinding.bind(layerLayout)
+
+
+    val layerAddButton: View = binding.pocketpaintLayerSideNavButtonAdd
+    val layerDeleteButton: View = binding.pocketpaintLayerSideNavButtonDelete
 
     override fun isShown(): Boolean = layerLayout.isShown
 

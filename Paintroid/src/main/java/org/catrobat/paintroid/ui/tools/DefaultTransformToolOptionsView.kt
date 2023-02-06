@@ -32,6 +32,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatSeekBar
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.DialogPocketpaintTransformToolBinding
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 import org.catrobat.paintroid.tools.options.TransformToolOptionsView
 import java.lang.NumberFormatException
@@ -51,6 +52,7 @@ class DefaultTransformToolOptionsView(rootView: ViewGroup) : TransformToolOption
     private val resizeSeekBar: AppCompatSeekBar
     private val percentageText: AppCompatEditText
     private var callback: TransformToolOptionsView.Callback? = null
+    private lateinit var binding: DialogPocketpaintTransformToolBinding
 
     companion object {
         private val TAG = DefaultTransformToolOptionsView::class.java.simpleName
@@ -59,10 +61,11 @@ class DefaultTransformToolOptionsView(rootView: ViewGroup) : TransformToolOption
     init {
         val inflater = LayoutInflater.from(root.context)
         val optionsView = inflater.inflate(R.layout.dialog_pocketpaint_transform_tool, rootView)
-        widthEditText = optionsView.findViewById(R.id.pocketpaint_transform_width_value)
-        heightEditText = optionsView.findViewById(R.id.pocketpaint_transform_height_value)
-        resizeSeekBar = optionsView.findViewById(R.id.pocketpaint_transform_resize_seekbar)
-        percentageText = optionsView.findViewById(R.id.pocketpaint_transform_resize_percentage_text)
+        binding = DialogPocketpaintTransformToolBinding.bind(optionsView)
+        widthEditText = binding.pocketpaintTransformWidthValue as AppCompatEditText
+        heightEditText = binding.pocketpaintTransformHeightValue as AppCompatEditText
+        resizeSeekBar = binding.pocketpaintTransformResizeSeekbar as AppCompatSeekBar
+        percentageText = binding.pocketpaintTransformResizePercentageText
         widthTextWatcher = object : TransformToolSizeTextWatcher() {
             override fun setValue(value: Float) {
                 callback?.setBoxWidth(value)
@@ -100,31 +103,31 @@ class DefaultTransformToolOptionsView(rootView: ViewGroup) : TransformToolOption
                 percentageText.setSelection(percentageText.length())
             }
         })
-        optionsView.findViewById<View>(R.id.pocketpaint_transform_auto_crop_btn)
+        binding.pocketpaintTransformAutoCropBtn
             .setOnClickListener {
                 callback?.autoCropClicked()
             }
-        optionsView.findViewById<View>(R.id.pocketpaint_transform_set_center_btn)
+        binding.pocketpaintTransformSetCenterBtn
             .setOnClickListener {
                 callback?.setCenterClicked()
             }
-        optionsView.findViewById<View>(R.id.pocketpaint_transform_rotate_left_btn)
+        binding.pocketpaintTransformRotateLeftBtn
             .setOnClickListener {
                 callback?.rotateCounterClockwiseClicked()
             }
-        optionsView.findViewById<View>(R.id.pocketpaint_transform_rotate_right_btn)
+        binding.pocketpaintTransformRotateRightBtn
             .setOnClickListener {
                 callback?.rotateClockwiseClicked()
             }
-        optionsView.findViewById<View>(R.id.pocketpaint_transform_flip_horizontal_btn)
+        binding.pocketpaintTransformFlipHorizontalBtn
             .setOnClickListener {
                 callback?.flipHorizontalClicked()
             }
-        optionsView.findViewById<View>(R.id.pocketpaint_transform_flip_vertical_btn)
+        binding.pocketpaintTransformFlipVerticalBtn
             .setOnClickListener {
                 callback?.flipVerticalClicked()
             }
-        optionsView.findViewById<View>(R.id.pocketpaint_transform_apply_resize_btn)
+        binding.pocketpaintTransformApplyResizeBtn
             .setOnClickListener {
                 hideKeyboard()
 

@@ -40,6 +40,9 @@ if (!project.hasProperty("signingKeystore")) {
 }
 
 android {
+    viewBinding {
+        enabled = true
+    }
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
     defaultConfig {
         applicationId appId

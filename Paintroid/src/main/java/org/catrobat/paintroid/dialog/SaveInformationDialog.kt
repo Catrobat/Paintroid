@@ -42,6 +42,8 @@ import org.catrobat.paintroid.FileIO.FileType.JPG
 import org.catrobat.paintroid.FileIO.FileType.CATROBAT
 import org.catrobat.paintroid.FileIO.FileType.ORA
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.DialogPocketpaintSaveBinding
+import org.catrobat.paintroid.databinding.DialogPocketpaintSaveJpgSubDialogBinding
 import java.util.Locale
 
 private const val STANDARD_FILE_NAME = "image"
@@ -62,6 +64,8 @@ class SaveInformationDialog :
     private lateinit var fileName: String
     private var permission = 0
     private var isExport = false
+    private lateinit var binding:DialogPocketpaintSaveBinding
+    private lateinit var bindings:DialogPocketpaintSaveJpgSubDialogBinding
 
     companion object {
         fun newInstance(
@@ -91,6 +95,8 @@ class SaveInformationDialog :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = DialogPocketpaintSaveBinding.inflate(inflater)
+        bindings = DialogPocketpaintSaveJpgSubDialogBinding.inflate(inflater)
         val arguments = requireArguments()
         arguments.apply {
             permission = getInt(PERMISSION)
@@ -138,7 +144,9 @@ class SaveInformationDialog :
     }
 
     private fun initSpecificFormatLayout(view: View) {
+
         specificFormatLayout = view.findViewById(R.id.pocketpaint_save_format_specific_options)
+
     }
 
     private fun initJpgView() {
@@ -150,19 +158,19 @@ class SaveInformationDialog :
     }
 
     private fun initSeekBar() {
-        val seekBar: SeekBar = jpgView.findViewById(R.id.pocketpaint_jpg_seekbar_save_info)
+        val seekBar: SeekBar = bindings.pocketpaintJpgSeekbarSaveInfo
         seekBar.progress = FileIO.compressQuality
         seekBar.setOnSeekBarChangeListener(this)
     }
 
     private fun initPercentage() {
-        percentage = jpgView.findViewById(R.id.pocketpaint_percentage_save_info)
+        percentage = bindings.pocketpaintPercentageSaveInfo as AppCompatTextView
         val percentageString = FileIO.compressQuality.toString().plus('%')
         percentage.text = percentageString
     }
 
     private fun initInfoButton(view: View) {
-        val infoButton: AppCompatImageButton = view.findViewById(R.id.pocketpaint_btn_save_info)
+        val infoButton: AppCompatImageButton = binding.pocketpaintBtnSaveInfo as AppCompatImageButton
         infoButton.setOnClickListener {
             when (FileIO.fileType) {
                 JPG -> presenter.showJpgInformationDialog()
@@ -174,7 +182,7 @@ class SaveInformationDialog :
     }
 
     private fun initSpinner(view: View) {
-        spinner = view.findViewById(R.id.pocketpaint_save_dialog_spinner)
+        spinner = binding.pocketpaintSaveDialogSpinner
         val spinnerArray = FileType.values().map { it.value }
         val adapter = ArrayAdapter(spinner.context, android.R.layout.simple_spinner_item, spinnerArray)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -183,7 +191,7 @@ class SaveInformationDialog :
     }
 
     private fun initImageName(view: View) {
-        imageName = view.findViewById(R.id.pocketpaint_image_name_save_text)
+        imageName = binding.pocketpaintImageNameSaveText as AppCompatEditText
         imageName.setText(fileName)
     }
 

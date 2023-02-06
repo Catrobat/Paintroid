@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.DialogPocketpaintTextToolBinding
 import org.catrobat.paintroid.tools.FontType
 import org.catrobat.paintroid.tools.options.TextToolOptionsView
 
@@ -39,6 +40,7 @@ private const val DEFAULT_TEXTSIZE = "20"
 private const val MAX_TEXTSIZE = "300"
 private const val MIN_FONT_SIZE = 1
 private const val MAX_FONT_SIZE = 300
+//private lateinit var binding:De
 
 class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     private val context: Context = rootView.context
@@ -50,18 +52,20 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     private val italicToggleButton: MaterialButton
     private val boldToggleButton: MaterialButton
     private val fontTypes: List<FontType>
+    private lateinit var binding: DialogPocketpaintTextToolBinding
 
     init {
         val inflater = LayoutInflater.from(context)
         val textToolView = inflater.inflate(R.layout.dialog_pocketpaint_text_tool, rootView)
-        textEditText = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_input_text)
-        fontList = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_list_font)
+        binding = DialogPocketpaintTextToolBinding.bind(textToolView)
+        textEditText = binding.pocketpaintTextToolDialogInputText
+        fontList = binding.pocketpaintTextToolDialogListFont
         underlinedToggleButton =
-            textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_underlined)
+            binding.pocketpaintTextToolDialogToggleUnderlined
         italicToggleButton =
-            textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_italic)
-        boldToggleButton = textToolView.findViewById(R.id.pocketpaint_text_tool_dialog_toggle_bold)
-        fontSizeText = textToolView.findViewById(R.id.pocketpaint_font_size_text)
+            binding.pocketpaintTextToolDialogToggleItalic
+        boldToggleButton = binding.pocketpaintTextToolDialogToggleBold
+        fontSizeText = binding.pocketpaintFontSizeText
         fontSizeText.setText(DEFAULT_TEXTSIZE)
         underlinedToggleButton.paintFlags =
             underlinedToggleButton.paintFlags or Paint.UNDERLINE_TEXT_FLAG

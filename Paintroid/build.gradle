@@ -63,7 +63,9 @@ jacocoAndroidUnitTestReport {
 
 android {
     compileSdkVersion rootProject.ext.androidCompileSdkVersion
-
+    viewBinding {
+        enabled = true
+    }
     defaultConfig {
         minSdkVersion rootProject.ext.androidMinSdkVersion
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
@@ -71,7 +73,6 @@ android {
         versionCode rootProject.ext.androidVersionCode
         versionName rootProject.ext.androidVersionName
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
@@ -128,6 +129,7 @@ dependencies {
     implementation 'com.esotericsoftware:kryo:5.1.1'
     implementation 'id.zelory:compressor:2.1.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.databinding:databinding-runtime:7.3.0'
 
     debugImplementation 'androidx.multidex:multidex:2.0.0'
 

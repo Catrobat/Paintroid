@@ -31,26 +31,31 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.text.HtmlCompat
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.databinding.DialogPocketpaintAboutBinding
 
+private lateinit var binding:DialogPocketpaintAboutBinding
 class AboutDialog : AppCompatDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
+
     ): View? {
         return if (showsDialog) {
             super.onCreateView(inflater, container, savedInstanceState)
         } else {
             inflater.inflate(R.layout.dialog_pocketpaint_about, container, false)
+
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val aboutVersionView = view.findViewById<TextView>(R.id.pocketpaint_about_version)
-        val aboutContentView = view.findViewById<TextView>(R.id.pocketpaint_about_content)
-        val aboutLicenseView = view.findViewById<TextView>(R.id.pocketpaint_about_license_url)
-        val aboutCatrobatView = view.findViewById<TextView>(R.id.pocketpaint_about_catrobat_url)
+        binding = DialogPocketpaintAboutBinding.bind(view)
+        val aboutVersionView = binding.pocketpaintAboutVersion
+        val aboutContentView = binding.pocketpaintAboutContent
+        val aboutLicenseView = binding.pocketpaintAboutLicenseUrl
+        val aboutCatrobatView = binding.pocketpaintAboutCatrobatUrl
         val activity = requireActivity() as MainActivity
         val aboutVersion = getString(R.string.pocketpaint_about_version, activity.getVersionCode())
         aboutVersionView.text = aboutVersion
