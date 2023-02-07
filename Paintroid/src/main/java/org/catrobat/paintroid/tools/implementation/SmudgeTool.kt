@@ -73,7 +73,7 @@ class SmudgeTool(
             )
         )
         smudgeToolOptionsView.setCurrentPaint(toolPaint.paint)
-
+        smudgeToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
         smudgeToolOptionsView.setCallback(object : SmudgeToolOptionsView.Callback {
             override fun onPressureChanged(pressure: Int) {
                 updatePressure(pressure)

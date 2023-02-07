@@ -82,6 +82,7 @@ class LineTool(
             )
         )
         brushToolOptionsView.setCurrentPaint(toolPaint.paint)
+        brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
         if (topBarViewHolder != null && topBarViewHolder?.plusButton?.visibility == View.VISIBLE) {
             topBarViewHolder?.hidePlusButton()
         }
