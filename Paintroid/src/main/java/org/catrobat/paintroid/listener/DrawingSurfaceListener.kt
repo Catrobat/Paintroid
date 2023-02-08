@@ -147,6 +147,7 @@ open class DrawingSurfaceListener(
         } else {
             disableAutoScroll()
             if (touchMode == TouchMode.DRAW) {
+                saveToolActionBeforeZoom(PointF(event.x, event.y))
                 currentTool?.resetInternalState(StateChange.MOVE_CANCELED)
             }
             touchMode = TouchMode.PINCH
@@ -163,6 +164,15 @@ open class DrawingSurfaceListener(
                 callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld)
             }
             zoomController.dismissOnPinch()
+        }
+    }
+
+    private fun saveToolActionBeforeZoom(point: PointF) {
+        val currentTool = callback.getCurrentTool()
+        if (currentTool?.toolType?.name.equals(ToolType.CURSOR.name) ||
+            currentTool?.toolType?.name.equals(ToolType.LINE.name)) {
+            currentTool?.handleUp(point)
+            currentTool?.handleDown(point)
         }
     }
 
