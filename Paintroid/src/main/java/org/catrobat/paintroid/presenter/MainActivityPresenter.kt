@@ -19,6 +19,7 @@
 package org.catrobat.paintroid.presenter
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentUris
@@ -1042,6 +1043,7 @@ open class MainActivityPresenter(
         }
     }
 
+    @SuppressLint("Range")
     private fun getFileName(uri: Uri): String? {
         var result: String? = null
         if (uri.scheme == "content") {
