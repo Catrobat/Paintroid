@@ -54,7 +54,7 @@ private const val MAX_SCALE = 50f
 private const val MATRIX_SIZE = 9
 private const val DELAY_MILLIS = 150L
 
-class ZoomableImageView :
+class  ZoomableImageView :
     AppCompatImageView,
     View.OnTouchListener,
     GestureDetector.OnGestureListener {

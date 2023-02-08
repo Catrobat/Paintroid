@@ -20,14 +20,14 @@ package org.catrobat.paintroid.ui.viewholder
 
 import android.view.Menu
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.AppBarLayout
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.databinding.PocketpaintLayoutTopBarBinding
 
-class TopBarViewHolder(val layout: ViewGroup) : MainActivityContracts.TopBarViewHolder {
+class TopBarViewHolder(val layout: AppBarLayout) : MainActivityContracts.TopBarViewHolder {
     private  var binding: PocketpaintLayoutTopBarBinding = PocketpaintLayoutTopBarBinding.bind(layout)
     private val toolbar: Toolbar =binding.pocketpaintToolbar
     val undoButton: ImageButton = binding.pocketpaintBtnTopUndo

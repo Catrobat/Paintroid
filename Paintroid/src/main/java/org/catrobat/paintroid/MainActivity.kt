@@ -33,7 +33,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -69,6 +68,8 @@ import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.DefaultToolController
+import org.catrobat.paintroid.databinding.ActivityPocketpaintMainBinding
+import org.catrobat.paintroid.databinding.PocketpaintLayoutMainMenuLayerBinding
 import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
 import org.catrobat.paintroid.listener.DrawerLayoutListener
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
@@ -150,7 +151,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     private lateinit var commandFactory: CommandFactory
     private var deferredRequestPermissionsResult: Runnable? = null
     private lateinit var progressBar: ContentLoadingProgressBar
-
+    private lateinit var binding:ActivityPocketpaintMainBinding
+    private lateinit var bindingm:PocketpaintLayoutMainMenuLayerBinding
     @Volatile
     private var lastInteractionTime = System.currentTimeMillis()
 
@@ -283,7 +285,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         super.onCreate(savedInstanceState)
         getAppFragment()
         PaintroidApplication.cacheDir = cacheDir
-        setContentView(R.layout.activity_pocketpaint_main)
+
+        binding= ActivityPocketpaintMainBinding.inflate(layoutInflater)
+        bindingm = PocketpaintLayoutMainMenuLayerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         onCreateGlobals()
         onCreateMainView()
         onCreateLayerMenu()
@@ -427,16 +432,16 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     private fun onCreateMainView() {
         val context: Context = this
-        val drawerLayout = findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout)
-        val topBarLayout = findViewById<ViewGroup>(R.id.pocketpaint_layout_top_bar)
-        val bottomBarLayout = findViewById<View>(R.id.pocketpaint_main_bottom_bar)
-        val bottomNavigationView = findViewById<View>(R.id.pocketpaint_main_bottom_navigation)
-        toolOptionsViewController = DefaultToolOptionsViewController(this, idlingResource)
-        drawerLayoutViewHolder = DrawerLayoutViewHolder(drawerLayout)
-        val topBarViewHolder = TopBarViewHolder(topBarLayout)
-        val bottomBarViewHolder = BottomBarViewHolder(bottomBarLayout)
+//        val drawerLayout = findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout)
+//        val topBarLayout = findViewById<ViewGroup>(R.id.pocketpaint_layout_top_bar)
+//        val bottomBarLayout = findViewById<View>(R.id.pocketpaint_main_bottom_bar)
+//        val bottomNavigationView = findViewById<View>(R.id.pocketpaint_main_bottom_navigation)
+       toolOptionsViewController = DefaultToolOptionsViewController(this, idlingResource)
+        drawerLayoutViewHolder = DrawerLayoutViewHolder(binding.pocketpaintDrawerLayout)
+        val topBarViewHolder = TopBarViewHolder(binding.pocketpaintLayoutTopBar.pocketpaintLayoutTopBar)
+        val bottomBarViewHolder = BottomBarViewHolder(binding.pocketpaintMainBottomBar)
         bottomNavigationViewHolder = BottomNavigationViewHolder(
-            bottomNavigationView,
+            binding.pocketpaintMainBottomNavigation,
             resources.configuration.orientation,
             applicationContext
         )
@@ -476,7 +481,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             workspace,
             MainActivityNavigator(this, toolReference),
             MainActivityInteractor(idlingResource),
-            topBarViewHolder,
+            TopBarViewHolder(binding.pocketpaintLayoutTopBar.pocketpaintLayoutTopBar),
             bottomBarViewHolder,
             drawerLayoutViewHolder,
             bottomNavigationViewHolder,
@@ -492,22 +497,22 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         )
         FileIO.navigator = navigator
         defaultToolController.setOnColorPickedListener(PresenterColorPickedListener(presenterMain))
-        keyboardListener = KeyboardListener(drawerLayout)
+        keyboardListener = KeyboardListener(binding.pocketpaintDrawerLayout)
         setTopBarListeners(topBarViewHolder)
         setBottomBarListeners(bottomBarViewHolder)
         setBottomNavigationListeners(bottomNavigationViewHolder)
         setActionBarToolTips(topBarViewHolder, context)
-        progressBar = findViewById(R.id.pocketpaint_content_loading_progress_bar)
+        progressBar = binding.pocketpaintContentLoadingProgressBar
     }
 
     private fun onCreateLayerMenu() {
-        val layerLayout = findViewById<NavigationView>(R.id.pocketpaint_nav_view_layer)
-        val drawerLayout = findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout)
+        val layerLayout = binding.pocketpaintNavViewLayer
+        val drawerLayout = binding.pocketpaintDrawerLayout
         val layerListView = findViewById<DragAndDropListView>(R.id.pocketpaint_layer_side_nav_list)
         val layerMenuViewHolder = LayerMenuViewHolder(layerLayout)
         val layerNavigator = LayerNavigator(applicationContext)
         layerPresenter = LayerPresenter(
-            layerModel, layerListView, layerMenuViewHolder,
+            layerModel, bindingm.pocketpaintLayerSideNavList, layerMenuViewHolder,
             commandManager, DefaultCommandFactory(), layerNavigator
         )
         val layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
@@ -526,7 +531,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     private fun onCreateDrawingSurface() {
-        drawingSurface = findViewById(R.id.pocketpaint_drawing_surface_view)
+        drawingSurface = binding.pocketpaintDrawingSurfaceView
         drawingSurface.setArguments(
             layerModel,
             perspective,

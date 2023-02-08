@@ -36,12 +36,14 @@ import com.nostra13.universalimageloader.core.assist.FailReason
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.common.MEDIA_GALLEY_URL
+import org.catrobat.paintroid.databinding.DialogPocketpaintWebviewBinding
 import org.catrobat.paintroid.web.MediaGalleryWebViewClient
 import org.catrobat.paintroid.web.MediaGalleryWebViewClient.WebClientCallback
 
 class CatroidMediaGalleryFragment : Fragment(), WebClientCallback {
     private var webView: WebView? = null
     private var listener: MediaGalleryListener? = null
+    private lateinit var binding:DialogPocketpaintWebviewBinding
 
     fun setMediaGalleryListener(listener: MediaGalleryListener) {
         this.listener = listener
@@ -56,7 +58,8 @@ class CatroidMediaGalleryFragment : Fragment(), WebClientCallback {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        webView = view.findViewById(R.id.webview)
+        binding = DialogPocketpaintWebviewBinding.bind(view)
+        webView = binding.webview
         webView?.apply {
             settings.javaScriptEnabled = true
             webViewClient = MediaGalleryWebViewClient(this@CatroidMediaGalleryFragment)
