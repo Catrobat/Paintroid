@@ -44,7 +44,6 @@ ext {
     androidCompileSdkVersion = 33
     androidMinSdkVersion = 21
     androidTargetSdkVersion = 33
-
     androidSupportLibraryVersion = '28.0.0'
 
     androidVersionCode = 48

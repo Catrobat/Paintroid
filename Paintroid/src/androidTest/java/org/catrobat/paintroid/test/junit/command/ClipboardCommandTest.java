@@ -28,7 +28,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 
 import org.catrobat.paintroid.PaintroidApplication;
-import org.catrobat.paintroid.command.implementation.StampCommand;
+import org.catrobat.paintroid.command.implementation.ClipboardCommand;
 import org.catrobat.paintroid.model.Layer;
 import org.catrobat.paintroid.model.LayerModel;
 import org.catrobat.paintroid.test.utils.PaintroidAsserts;
@@ -44,7 +44,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-public class StampCommandTest {
+public class ClipboardCommandTest {
 
 	private Bitmap stampBitmapUnderTest;
 
@@ -53,7 +53,7 @@ public class StampCommandTest {
 	private static final int INITIAL_HEIGHT = 80;
 	private static final int INITIAL_WIDTH = 80;
 
-	private StampCommand commandUnderTest;
+	private ClipboardCommand commandUnderTest;
 	private PointF pointUnderTest;
 	private Canvas canvasUnderTest;
 	private Bitmap canvasBitmapUnderTest;
@@ -79,7 +79,7 @@ public class StampCommandTest {
 
 		stampBitmapUnderTest = canvasBitmapUnderTest.copy(Config.ARGB_8888, true);
 		stampBitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR);
-		commandUnderTest = new StampCommand(stampBitmapUnderTest, new Point(canvasBitmapUnderTest.getWidth() / 2,
+		commandUnderTest = new ClipboardCommand(stampBitmapUnderTest, new Point(canvasBitmapUnderTest.getWidth() / 2,
 				canvasBitmapUnderTest.getHeight() / 2), canvasBitmapUnderTest.getWidth(),
 				canvasBitmapUnderTest.getHeight(), 0);
 	}
@@ -106,7 +106,7 @@ public class StampCommandTest {
 	@Test
 	public void testRunRotateStamp() {
 		stampBitmapUnderTest.setPixel(0, 0, Color.GREEN);
-		commandUnderTest = new StampCommand(stampBitmapUnderTest, new Point((int) pointUnderTest.x,
+		commandUnderTest = new ClipboardCommand(stampBitmapUnderTest, new Point((int) pointUnderTest.x,
 				(int) pointUnderTest.y), canvasBitmapUnderTest.getWidth(), canvasBitmapUnderTest.getHeight(), 180);
 		commandUnderTest.run(canvasUnderTest, new LayerModel());
 		stampBitmapUnderTest.setPixel(0, 0, Color.CYAN);

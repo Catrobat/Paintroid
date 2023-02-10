@@ -26,15 +26,15 @@ import com.esotericsoftware.kryo.KryoException
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.FileIO
-import org.catrobat.paintroid.command.implementation.StampCommand
+import org.catrobat.paintroid.command.implementation.ClipboardCommand
 
-class StampCommandSerializer(version: Int) : VersionSerializer<StampCommand>(version) {
+class ClipboardCommandSerializer(version: Int) : VersionSerializer<ClipboardCommand>(version) {
 
     companion object {
         private const val COMPRESSION_QUALITY = 100
     }
 
-    override fun write(kryo: Kryo, output: Output, command: StampCommand) {
+    override fun write(kryo: Kryo, output: Output, command: ClipboardCommand) {
         with(kryo) {
             with(output) {
                 var bitmap = command.fileToStoredBitmap?.let { file ->
@@ -50,10 +50,10 @@ class StampCommandSerializer(version: Int) : VersionSerializer<StampCommand>(ver
         }
     }
 
-    override fun read(kryo: Kryo, input: Input, type: Class<out StampCommand>): StampCommand =
+    override fun read(kryo: Kryo, input: Input, type: Class<out ClipboardCommand>): ClipboardCommand =
         super.handleVersions(this, kryo, input, type)
 
-    override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out StampCommand>): StampCommand {
+    override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out ClipboardCommand>): ClipboardCommand {
         return with(kryo) {
             with(input) {
                 val bitmap = BitmapFactory.decodeStream(input)
@@ -61,7 +61,7 @@ class StampCommandSerializer(version: Int) : VersionSerializer<StampCommand>(ver
                 val width = readFloat()
                 val height = readFloat()
                 val rotation = readFloat()
-                StampCommand(bitmap, coordinates, width, height, rotation)
+                ClipboardCommand(bitmap, coordinates, width, height, rotation)
             }
         }
     }

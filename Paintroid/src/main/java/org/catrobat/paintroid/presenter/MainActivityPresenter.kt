@@ -152,6 +152,7 @@ open class MainActivityPresenter(
 
     var clippingToolInUseAndUndoRedoClicked = false
     var clippingToolPaint = Paint()
+    var toolOptionsViewWasShown = false
 
     override fun replaceImageClicked() {
         checkIfClippingToolNeedsAdjustment()
@@ -742,9 +743,16 @@ open class MainActivityPresenter(
         bottomNavigationViewHolder.show()
         toolController.enableToolOptionsView()
         perspective.exitFullscreen()
+        if (toolOptionsViewWasShown) {
+            toolController.showToolOptionsView()
+            toolOptionsViewWasShown = false
+        }
     }
 
     private fun enterFullscreen() {
+        if (toolController.toolOptionsViewVisible()) {
+            toolOptionsViewWasShown = true
+        }
         view.hideKeyboard()
         view.enterFullscreen()
         topBarViewHolder.hide()

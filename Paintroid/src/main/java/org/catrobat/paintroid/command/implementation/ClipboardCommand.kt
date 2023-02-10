@@ -32,7 +32,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.Random
 
-class StampCommand(bitmap: Bitmap, position: Point, width: Float, height: Float, rotation: Float) :
+class ClipboardCommand(bitmap: Bitmap, position: Point, width: Float, height: Float, rotation: Float) :
     Command {
 
     var bitmap: Bitmap? = bitmap.copy(Bitmap.Config.ARGB_8888, false); private set

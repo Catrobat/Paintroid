@@ -155,11 +155,11 @@
             style="@style/PocketPaintToolSelectionButton">
             <ImageView
                 style="@style/PocketPaintToolSelectionButtonImageView"
-                android:src="@drawable/ic_pocketpaint_tool_stamp"
-                android:contentDescription="@string/button_stamp"/>
+                android:src="@drawable/ic_pocketpaint_tool_clipboard"
+                android:contentDescription="@string/button_clipboard"/>
             <TextView
                 style="@style/PocketPaintToolSelectionButtonTextView"
-                android:text="@string/button_stamp"/>
+                android:text="@string/button_clipboard"/>
         </LinearLayout>
 
         <LinearLayout

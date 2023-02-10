@@ -166,13 +166,13 @@ class DefaultCommandFactory : CommandFactory {
     override fun createResizeCommand(newWidth: Int, newHeight: Int): Command =
         ResizeCommand(newWidth, newHeight)
 
-    override fun createStampCommand(
+    override fun createClipboardCommand(
         bitmap: Bitmap,
         toolPosition: PointF,
         boxWidth: Float,
         boxHeight: Float,
         boxRotation: Float
-    ): Command = StampCommand(
+    ): Command = ClipboardCommand(
         bitmap,
         toPoint(toolPosition),
         boxWidth,

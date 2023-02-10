@@ -28,6 +28,8 @@ interface BrushToolOptionsView {
 
     fun setCurrentPaint(paint: Paint)
 
+    fun setStrokeCapButtonChecked(strokeCap: Cap)
+
     fun setBrushChangedListener(onBrushChangedListener: OnBrushChangedListener)
 
     fun setBrushPreviewListener(onBrushPreviewListener: OnBrushPreviewListener)

@@ -62,7 +62,7 @@ import org.catrobat.paintroid.command.implementation.RotateCommand
 import org.catrobat.paintroid.command.implementation.SelectLayerCommand
 import org.catrobat.paintroid.command.implementation.SetDimensionCommand
 import org.catrobat.paintroid.command.implementation.SprayCommand
-import org.catrobat.paintroid.command.implementation.StampCommand
+import org.catrobat.paintroid.command.implementation.ClipboardCommand
 import org.catrobat.paintroid.command.implementation.TextToolCommand
 import org.catrobat.paintroid.command.implementation.SmudgePathCommand
 import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
@@ -140,7 +140,7 @@ open class CommandSerializer(private val activityContext: Context, private val c
             put(StarDrawable::class.java, GeometricFillCommandSerializer.StarDrawableSerializer(version))
             put(ShapeDrawable::class.java, null)
             put(RectF::class.java, DataStructuresSerializer.RectFSerializer(version))
-            put(StampCommand::class.java, StampCommandSerializer(version))
+            put(ClipboardCommand::class.java, ClipboardCommandSerializer(version))
             put(SerializableTypeface::class.java, SerializableTypeface.TypefaceSerializer(version))
             put(PointCommand::class.java, PointCommandSerializer(version))
             put(SerializablePath.Cube::class.java, SerializablePath.PathActionCubeSerializer(version))
