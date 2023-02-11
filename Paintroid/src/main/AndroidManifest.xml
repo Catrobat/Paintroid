@@ -30,7 +30,8 @@
 
     <application
         android:largeHeap="true"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/PocketPaintTheme">
         <provider
             android:name=".MyProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -45,10 +46,10 @@
             android:exported="false"
             android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/PocketPaintSplashTheme" />
+            android:theme="@style/Theme.App.Starting" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/PocketPaintSplashTheme"
+            android:theme="@style/Theme.App.Starting"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />

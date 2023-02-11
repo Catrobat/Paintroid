@@ -39,7 +39,7 @@ import org.catrobat.paintroid.tools.common.ScrollBehavior
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 
 abstract class BaseTool(
-    @JvmField
+
     open var contextCallback: ContextCallback,
     @JvmField var toolOptionsViewController: ToolOptionsViewController,
     @JvmField
