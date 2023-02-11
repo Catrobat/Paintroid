@@ -34,8 +34,6 @@ class PointFAnswer(private val pointX: Float, private val pointY: Float) :
     }
 
     companion object {
-        fun setPointFTo(x: Float, y: Float): Stubber {
-            return Mockito.doAnswer(PointFAnswer(x, y))
-        }
+        fun setPointFTo(x: Float, y: Float): Stubber = Mockito.doAnswer(PointFAnswer(x, y))
     }
 }
