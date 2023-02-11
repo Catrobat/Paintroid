@@ -18,6 +18,7 @@
  */
 package org.catrobat.paintroid
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.ContentResolver
@@ -348,6 +349,7 @@ object FileIO {
         return angle
     }
 
+    @SuppressLint("Range")
     fun parseFileName(uri: Uri, resolver: ContentResolver) {
         var fileName = "image"
         val cursor = resolver.query(
@@ -400,6 +402,7 @@ object FileIO {
         return total
     }
 
+    @SuppressLint("Range")
     private fun getUriForFilename(contentLocationUri: Uri, filename: String, resolver: ContentResolver): Uri? {
         val selectionArgs = arrayOf(filename)
         val selection = "_display_name=?"

@@ -19,7 +19,7 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.4.32'
+    ext.kotlin_version = '1.6.0'
     repositories {
         mavenCentral()
         google()
@@ -41,7 +41,7 @@ plugins {
 }
 
 ext {
-    androidCompileSdkVersion = 30
+    androidCompileSdkVersion = 31
     androidMinSdkVersion = 21
     androidTargetSdkVersion = 31
 

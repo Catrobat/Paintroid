@@ -149,6 +149,8 @@ dependencies {
     androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
     testImplementation "androidx.test:core-ktx:1.4.0"
     implementation 'com.android.support.test.espresso:espresso-idling-resource:3.1.0'
+
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
 }
 
 tasks.withType(Javadoc).all {

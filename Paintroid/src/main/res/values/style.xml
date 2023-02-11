@@ -37,10 +37,11 @@
         <item name="android:windowMinWidthMinor">0%</item>
     </style>
 
-    <style name="PocketPaintSplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/pocketpaint_splash</item>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/pocketpaint_splash</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
+        <item name="postSplashScreenTheme">@style/PocketPaintTheme</item>
     </style>
 
     <style name="PocketPaintTheme" parent="PocketPaintTheme.Base">

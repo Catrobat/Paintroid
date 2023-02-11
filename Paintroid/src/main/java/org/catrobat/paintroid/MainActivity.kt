@@ -42,6 +42,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -279,8 +280,8 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.PocketPaintTheme)
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         getAppFragment()
         PaintroidApplication.cacheDir = cacheDir
         setContentView(R.layout.activity_pocketpaint_main)
