@@ -18,8 +18,14 @@
  */
 package org.catrobat.paintroid.test.junit.command
 
-import android.graphics.*
+
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Paint.Cap
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Color
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.implementation.PathCommand
 import org.catrobat.paintroid.model.Layer
@@ -33,7 +39,7 @@ class PathCommandTest {
     private var paintUnderTest: Paint? = null
     private var canvasUnderTest: Canvas? = null
     private lateinit var bitmapUnderTest: Bitmap
-    private  lateinit var canvasBitmapUnderTest: Bitmap
+    private lateinit var canvasBitmapUnderTest: Bitmap
     @Before
     fun setUp() {
         val layerModel = LayerModel()

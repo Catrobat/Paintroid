@@ -217,7 +217,7 @@ class BrushToolTest {
         val command = argument.firstValue
         if (command is PathCommand) {
             assertPathEquals(pathStub, command.path)
-            assertPaintEquals(paint, command.paint)
+            assertPaintEquals(paint!!, command.paint)
         }
     }
 

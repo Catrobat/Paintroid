@@ -1,6 +1,8 @@
 /*
  * Paintroid: An image manipulation application for Android.
+
  * Copyright (C) 2010-2015 The Catrobat Team
+
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,6 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.catrobat.paintroid.test.junit.stubs
 
 import android.graphics.Path
@@ -23,6 +26,7 @@ import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.mockito.Mockito
 
 class PathStub : SerializablePath() {
+
     val stub: SerializablePath = Mockito.mock(SerializablePath::class.java)
 
     fun getStub(): Path {
@@ -49,3 +53,4 @@ class PathStub : SerializablePath() {
         stub.lineTo(x, y)
     }
 }
+

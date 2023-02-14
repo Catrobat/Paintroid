@@ -35,7 +35,7 @@ class CropCommandTest {
     private var resizeCoordinateXRight = 0
     private var resizeCoordinateYBottom = 0
     private var maximumBitmapResolution = 0
-    private  lateinit  var commandUnderTest: Command
+    private lateinit var commandUnderTest: Command
     private lateinit var canvasUnderTest: Canvas
     private lateinit var bitmapUnderTest: Bitmap
     private lateinit var layerUnderTest: Layer
