@@ -16,49 +16,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.junit.stubs
 
-package org.catrobat.paintroid.test.junit.stubs;
+import android.graphics.Path
+import org.catrobat.paintroid.command.serialization.SerializablePath
+import org.mockito.Mockito
 
-import android.graphics.Path;
+class PathStub : SerializablePath() {
+    val stub: SerializablePath = Mockito.mock(SerializablePath::class.java)
 
-import org.catrobat.paintroid.command.serialization.SerializablePath;
+    fun getStub(): Path {
+        return stub
+    }
 
-import static org.mockito.Mockito.mock;
+    override fun reset() {
+        stub.reset()
+    }
 
-public final class PathStub extends SerializablePath {
-	private SerializablePath stub;
+    override fun rewind() {
+        stub.rewind()
+    }
 
-	public PathStub() {
-		super();
-		stub = mock(SerializablePath.class);
-	}
+    override fun moveTo(x: Float, y: Float) {
+        stub.moveTo(x, y)
+    }
 
-	public Path getStub() {
-		return stub;
-	}
+    override fun quadTo(x1: Float, y1: Float, x2: Float, y2: Float) {
+        stub.quadTo(x1, y1, x2, y2)
+    }
 
-	@Override
-	public void reset() {
-		stub.reset();
-	}
-
-	@Override
-	public void rewind() {
-		stub.rewind();
-	}
-
-	@Override
-	public void moveTo(float x, float y) {
-		stub.moveTo(x, y);
-	}
-
-	@Override
-	public void quadTo(float x1, float y1, float x2, float y2) {
-		stub.quadTo(x1, y1, x2, y2);
-	}
-
-	@Override
-	public void lineTo(float x, float y) {
-		stub.lineTo(x, y);
-	}
+    override fun lineTo(x: Float, y: Float) {
+        stub.lineTo(x, y)
+    }
 }
