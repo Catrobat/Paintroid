@@ -21,51 +21,59 @@ package org.catrobat.paintroid.test.junit.command
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Paint.Cap
+import android.graphics.PointF
 import org.catrobat.paintroid.command.Command
-import org.catrobat.paintroid.command.implementation.FlipCommand
-import org.catrobat.paintroid.command.implementation.FlipCommand.FlipDirection
+import org.catrobat.paintroid.command.implementation.PointCommand
 import org.catrobat.paintroid.model.Layer
 import org.catrobat.paintroid.model.LayerModel
-import org.junit.Assert
+import org.catrobat.paintroid.test.utils.PaintroidAsserts.assertBitmapEquals
 import org.junit.Before
 import org.junit.Test
 
-class FlipCommandTest {
+class PointCommandTest {
     private lateinit var commandUnderTest: Command
+    private var paintUnderTest: Paint? = null
+    private var pointUnderTest: PointF? = null
     private var canvasUnderTest: Canvas? = null
     private lateinit var bitmapUnderTest: Bitmap
-    private var layerModel: LayerModel? = null
+    private lateinit var canvasBitmapUnderTest: Bitmap
     @Before
     fun setUp() {
-        layerModel = LayerModel()
-        layerModel!!.width = INITIAL_WIDTH
-        layerModel!!.height = INITIAL_HEIGHT
-        val canvasBitmapUnderTest = Bitmap.createBitmap(INITIAL_WIDTH, INITIAL_HEIGHT, Bitmap.Config.ARGB_8888)
+        val layerModel = LayerModel()
+        layerModel.width = INITIAL_WIDTH
+        layerModel.height = INITIAL_HEIGHT
+        canvasBitmapUnderTest = Bitmap.createBitmap(INITIAL_WIDTH, INITIAL_HEIGHT, Bitmap.Config.ARGB_8888)
         canvasBitmapUnderTest.eraseColor(BITMAP_BASE_COLOR)
         bitmapUnderTest = canvasBitmapUnderTest.copy(Bitmap.Config.ARGB_8888, true)
         val layerUnderTest = Layer(bitmapUnderTest)
         canvasUnderTest = Canvas()
         canvasUnderTest!!.setBitmap(canvasBitmapUnderTest)
-        layerModel!!.addLayerAt(0, layerUnderTest)
-        layerModel!!.currentLayer = layerUnderTest
+        paintUnderTest = Paint()
+        paintUnderTest!!.color = PAINT_BASE_COLOR
+        paintUnderTest!!.strokeWidth = 0f
+        paintUnderTest!!.style = Paint.Style.STROKE
+        paintUnderTest!!.strokeCap = Cap.BUTT
+        pointUnderTest = PointF((INITIAL_WIDTH / 2).toFloat(), (INITIAL_HEIGHT / 2).toFloat())
+        layerModel.addLayerAt(0, layerUnderTest)
+        layerModel.currentLayer = layerUnderTest
+        commandUnderTest = PointCommand(paintUnderTest!!, pointUnderTest!!)
     }
 
     @Test
-    fun testVerticalFlip() {
-        commandUnderTest = FlipCommand(FlipDirection.FLIP_VERTICAL)
-        bitmapUnderTest!!.setPixel(0, INITIAL_HEIGHT / 2, PAINT_BASE_COLOR)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        val pixel = bitmapUnderTest!!.getPixel(INITIAL_WIDTH - 1, INITIAL_WIDTH / 2)
-        Assert.assertEquals(PAINT_BASE_COLOR.toLong(), pixel.toLong())
+    fun testRun() {
+        bitmapUnderTest!!.setPixel(pointUnderTest!!.x.toInt(), pointUnderTest!!.y.toInt(), paintUnderTest!!.color)
+        commandUnderTest!!.run(canvasUnderTest!!, LayerModel())
+        assertBitmapEquals(bitmapUnderTest!!, canvasBitmapUnderTest)
     }
 
     @Test
-    fun testHorizontalFlip() {
-        commandUnderTest = FlipCommand(FlipDirection.FLIP_HORIZONTAL)
-        bitmapUnderTest!!.setPixel(INITIAL_WIDTH / 2, 0, PAINT_BASE_COLOR)
-        commandUnderTest.run(canvasUnderTest!!, layerModel!!)
-        val pixel = bitmapUnderTest!!.getPixel(INITIAL_WIDTH / 2, INITIAL_WIDTH - 1)
-        Assert.assertEquals(PAINT_BASE_COLOR.toLong(), pixel.toLong())
+    fun testRunOutOfBounds() {
+        pointUnderTest = PointF((canvasBitmapUnderTest!!.height + 1).toFloat(), (canvasBitmapUnderTest!!.width + 1).toFloat())
+        commandUnderTest = PointCommand(paintUnderTest!!, pointUnderTest!!)
+        commandUnderTest.run(canvasUnderTest!!, LayerModel())
+        assertBitmapEquals(bitmapUnderTest!!, canvasBitmapUnderTest)
     }
 
     companion object {

@@ -36,13 +36,17 @@ import org.catrobat.paintroid.tools.implementation.MINIMAL_BOX_SIZE
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.Perspective
 import org.hamcrest.Matchers
-import org.junit.*
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.stubbing.Answer
 import com.nhaarman.mockitokotlin2.any
+import org.junit.After
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 
 @RunWith(MockitoJUnitRunner::class)
 class BaseToolWithRectangleShapeToolTest {
@@ -100,13 +104,12 @@ class BaseToolWithRectangleShapeToolTest {
                     point.x >= 0f && point.y >= 0f && point.x < screenWidth && point.y < screenHeight
                 })
         toolToTest = BaseToolWithRectangleShapeImpl(
-                contextCallback,
-                toolOptionsViewController,
-                ToolType.BRUSH,
-                toolPaint,
-                workspace,
-                idlingResource,
-                commandManager
+            contextCallback,
+            toolOptionsViewController,
+            toolPaint,
+            workspace,
+            idlingResource,
+            commandManager
         )
         toolPosition = (toolToTest as BaseToolWithRectangleShapeImpl).toolPosition
         rectWidth = (toolToTest as BaseToolWithRectangleShapeImpl).boxWidth
@@ -168,8 +171,8 @@ class BaseToolWithRectangleShapeToolTest {
     fun testRectangleSizeMaximumWhenZoomed() {
         Mockito.`when`(workspace!!.scale).thenReturn(0.8f, 0.15f, 0.1f)
         toolToTest = BaseToolWithRectangleShapeImpl(
-                contextCallback, toolOptionsViewController, ToolType.SHAPE,
-                toolPaint, workspace, idlingResource, commandManager
+            contextCallback, toolOptionsViewController, toolPaint,
+            workspace, idlingResource, commandManager
         )
         var width = (toolToTest as BaseToolWithRectangleShapeImpl).boxWidth
         var height = (toolToTest as BaseToolWithRectangleShapeImpl).boxHeight
@@ -180,8 +183,8 @@ class BaseToolWithRectangleShapeToolTest {
                 Double.MIN_VALUE
         )
         toolToTest = BaseToolWithRectangleShapeImpl(
-                contextCallback, toolOptionsViewController, ToolType.SHAPE,
-                toolPaint, workspace, idlingResource, commandManager
+            contextCallback, toolOptionsViewController, toolPaint,
+            workspace, idlingResource, commandManager
         )
         width = (toolToTest as BaseToolWithRectangleShapeImpl).boxWidth
         height = (toolToTest as BaseToolWithRectangleShapeImpl).boxHeight
@@ -190,8 +193,8 @@ class BaseToolWithRectangleShapeToolTest {
                 width, height
         )
         toolToTest = BaseToolWithRectangleShapeImpl(
-                contextCallback, toolOptionsViewController, ToolType.SHAPE,
-                toolPaint, workspace, idlingResource, commandManager
+            contextCallback, toolOptionsViewController, toolPaint,
+            workspace, idlingResource, commandManager
         )
         val newWidth = (toolToTest as BaseToolWithRectangleShapeImpl).boxWidth
         val newHeight = (toolToTest as BaseToolWithRectangleShapeImpl).boxHeight
@@ -209,16 +212,15 @@ class BaseToolWithRectangleShapeToolTest {
     fun testRectangleSizeChangeWhenZoomedLevel1ToLevel2() {
         Mockito.`when`(workspace!!.scale).thenReturn(1f, 2f)
         val rectTool1: BaseToolWithRectangleShape = BaseToolWithRectangleShapeImpl(
-                contextCallback, toolOptionsViewController, ToolType.BRUSH,
-                toolPaint, workspace, idlingResource, commandManager
+            contextCallback, toolOptionsViewController, toolPaint,
+            workspace, idlingResource, commandManager
         )
         val rectTool2: BaseToolWithRectangleShape = BaseToolWithRectangleShapeImpl(
-                contextCallback, toolOptionsViewController, ToolType.BRUSH,
-                toolPaint, workspace, idlingResource, commandManager
+            contextCallback, toolOptionsViewController, toolPaint,
+            workspace, idlingResource, commandManager
         )
         Assert.assertTrue(
-                "rectangle should be smaller with scale 2", rectTool1.boxWidth > rectTool2.boxWidth
-                && rectTool1.boxHeight > rectTool2.boxHeight
+                "rectangle should be smaller with scale 2", rectTool1.boxWidth > rectTool2.boxWidth && rectTool1.boxHeight > rectTool2.boxHeight
         )
     }
 
@@ -226,12 +228,12 @@ class BaseToolWithRectangleShapeToolTest {
     fun testRectangleSizeChangeWhenZoomedLevel1ToLevel05() {
         Mockito.`when`(workspace!!.scale).thenReturn(1f, 0.5f)
         val rectTool1: BaseToolWithRectangleShape = BaseToolWithRectangleShapeImpl(
-                contextCallback, toolOptionsViewController, ToolType.BRUSH,
-                toolPaint, workspace, idlingResource, commandManager
+            contextCallback, toolOptionsViewController, toolPaint,
+            workspace, idlingResource, commandManager
         )
         val rectTool05: BaseToolWithRectangleShape = BaseToolWithRectangleShapeImpl(
-                contextCallback, toolOptionsViewController, ToolType.BRUSH,
-                toolPaint, workspace, idlingResource, commandManager
+            contextCallback, toolOptionsViewController, toolPaint,
+            workspace, idlingResource, commandManager
         )
         Assert.assertThat(rectTool1.boxWidth, Matchers.`is`(Matchers.lessThan(rectTool05.boxWidth)))
         Assert.assertThat(
@@ -386,7 +388,7 @@ class BaseToolWithRectangleShapeToolTest {
         Assert.assertTrue(toolToTest!!.boxContainsPoint(topLeftCorner))
         Assert.assertFalse(toolToTest!!.boxContainsPoint(pointInRotatedRectangle))
 
-        //rotate right
+        // rotate right
         toolToTest!!.handleDown(topLeftRotationPoint)
         toolToTest!!.handleMove(PointF(screenWidth / 2f, topLeftRotationPoint.y))
         toolToTest!!.handleUp(PointF(screenWidth / 2f, topLeftRotationPoint.y))
@@ -405,33 +407,29 @@ class BaseToolWithRectangleShapeToolTest {
         Assert.assertEquals(toolToTest!!.toolPosition.y, initialToolPositionY + 9, 0f)
     }
 
-    private inner class BaseToolWithRectangleShapeImpl constructor(
-            contextCallback: ContextCallback?,
-            toolOptionsViewController: ToolOptionsViewController?,
-            toolType: ToolType, toolPaint: ToolPaint?,
-            layerModelWrapper: Workspace?,
-            idlingResource: CountingIdlingResource?,
-            commandManager: CommandManager?
+    private inner class BaseToolWithRectangleShapeImpl(
+        contextCallback: ContextCallback?,
+        toolOptionsViewController: ToolOptionsViewController?,
+        toolPaint: ToolPaint?, layerModelWrapper: Workspace?,
+        idlingResource: CountingIdlingResource?,
+        commandManager: CommandManager?
     ) : BaseToolWithRectangleShape(
             contextCallback!!,
             toolOptionsViewController!!,
             toolPaint!!, layerModelWrapper!!, idlingResource!!, commandManager!!
     ) {
-        public override fun resetInternalState() {}
         override fun onClickOnButton() {
             drawingBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ALPHA_8)
         }
 
         override val toolType: ToolType
-            get() =  ToolType.BRUSH
+            get() = ToolType.BRUSH
 
         override var drawTime: Long
             get() = 0
             set(drawTime) {}
 
-        override fun toolPositionCoordinates(coordinate: PointF): PointF {
-            return coordinate
-        }
+        override fun toolPositionCoordinates(coordinate: PointF) = coordinate
     }
 
     companion object {

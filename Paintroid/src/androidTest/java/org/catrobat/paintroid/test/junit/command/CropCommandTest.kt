@@ -35,7 +35,7 @@ class CropCommandTest {
     private var resizeCoordinateXRight = 0
     private var resizeCoordinateYBottom = 0
     private var maximumBitmapResolution = 0
-    private  lateinit  var commandUnderTest: Command
+    private lateinit var commandUnderTest: Command
     private lateinit var canvasUnderTest: Canvas
     private lateinit var bitmapUnderTest: Bitmap
     private lateinit var layerUnderTest: Layer
@@ -57,8 +57,7 @@ class CropCommandTest {
         resizeCoordinateYTop = 0
         resizeCoordinateXRight = bitmapUnderTest.getWidth() - 1
         resizeCoordinateYBottom = bitmapUnderTest.getHeight() - 1
-        maximumBitmapResolution = (bitmapUnderTest.getWidth() * bitmapUnderTest.getHeight()
-                * MAXIMUM_BITMAP_RESOLUTION_FACTOR)
+        maximumBitmapResolution = (bitmapUnderTest.getWidth() * bitmapUnderTest.getHeight() * MAXIMUM_BITMAP_RESOLUTION_FACTOR)
         commandUnderTest = CropCommand(resizeCoordinateXLeft, resizeCoordinateYTop,
                 resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution)
     }
@@ -75,10 +74,8 @@ class CropCommandTest {
                 resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution)
         commandUnderTest.run(canvasUnderTest!!, layerModel!!)
         val croppedBitmap = layerUnderTest!!.bitmap
-        Assert.assertEquals("Cropping failed, width not correct ", (widthOriginal - resizeCoordinateXLeft
-                - (widthOriginal - (resizeCoordinateXRight + 1))).toLong(), croppedBitmap.width.toLong())
-        Assert.assertEquals("Cropping failed, height not correct ", (heightOriginal - resizeCoordinateYTop
-                - (widthOriginal - (resizeCoordinateYBottom + 1))).toLong(), croppedBitmap.height.toLong())
+        Assert.assertEquals("Cropping failed, width not correct ", (widthOriginal - resizeCoordinateXLeft - (widthOriginal - (resizeCoordinateXRight + 1))).toLong(), croppedBitmap.width.toLong())
+        Assert.assertEquals("Cropping failed, height not correct ", (heightOriginal - resizeCoordinateYTop - (widthOriginal - (resizeCoordinateYBottom + 1))).toLong(), croppedBitmap.height.toLong())
         croppedBitmap.recycle()
     }
 
@@ -94,10 +91,8 @@ class CropCommandTest {
                 resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution)
         commandUnderTest.run(canvasUnderTest!!, layerModel!!)
         val enlargedBitmap = layerUnderTest!!.bitmap
-        Assert.assertEquals("Enlarging failed, width not correct ", (widthOriginal - resizeCoordinateXLeft
-                - (widthOriginal - (resizeCoordinateXRight + 1))).toLong(), enlargedBitmap.width.toLong())
-        Assert.assertEquals("Enlarging failed, height not correct ", (heightOriginal - resizeCoordinateYTop
-                - (widthOriginal - (resizeCoordinateYBottom + 1))).toLong(), enlargedBitmap.height.toLong())
+        Assert.assertEquals("Enlarging failed, width not correct ", (widthOriginal - resizeCoordinateXLeft - (widthOriginal - (resizeCoordinateXRight + 1))).toLong(), enlargedBitmap.width.toLong())
+        Assert.assertEquals("Enlarging failed, height not correct ", (heightOriginal - resizeCoordinateYTop - (widthOriginal - (resizeCoordinateYBottom + 1))).toLong(), enlargedBitmap.height.toLong())
         enlargedBitmap.recycle()
     }
 

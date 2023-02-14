@@ -18,7 +18,12 @@
  */
 package org.catrobat.paintroid.test.junit.command
 
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Point
+import android.graphics.PointF
+import android.graphics.Color
 import androidx.test.platform.app.InstrumentationRegistry
 import org.catrobat.paintroid.PaintroidApplication.Companion.cacheDir
 import org.catrobat.paintroid.command.implementation.ClipboardCommand
@@ -31,10 +36,10 @@ import org.junit.Test
 import java.io.File
 
 class ClipboardCommandTest {
-    private lateinit  var stampBitmapUnderTest: Bitmap
+    private lateinit var stampBitmapUnderTest: Bitmap
     private var commandUnderTest: ClipboardCommand? = null
     private var pointUnderTest: PointF? = null
-    private lateinit  var   canvasUnderTest: Canvas
+    private lateinit var canvasUnderTest: Canvas
     private lateinit var canvasBitmapUnderTest: Bitmap
     private var layerModel: LayerModel? = null
     @Before
@@ -56,7 +61,7 @@ class ClipboardCommandTest {
         stampBitmapUnderTest.eraseColor(BITMAP_REPLACE_COLOR)
         commandUnderTest = ClipboardCommand(stampBitmapUnderTest, Point(canvasBitmapUnderTest.getWidth() / 2,
                 canvasBitmapUnderTest.getHeight() / 2), canvasBitmapUnderTest.getWidth().toFloat(),
-                canvasBitmapUnderTest.getHeight().toFloat(), 0f)
+                                            canvasBitmapUnderTest.getHeight().toFloat(), 0f)
     }
 
     @Test
