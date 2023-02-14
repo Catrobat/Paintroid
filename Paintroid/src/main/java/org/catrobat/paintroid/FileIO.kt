@@ -284,8 +284,8 @@ object FileIO {
         options: BitmapFactory.Options,
         context: Context?
     ): Bitmap? {
-        val inputStream =
-            resolver.openInputStream(uri) ?: throw IOException("Can't open input stream")
+        val inputStream = resolver.openInputStream(uri) ?: throw IOException("Can't open input stream")
+
         return inputStream.use {
             val bitmap = BitmapFactory.decodeStream(it, null, options)
             if (options.inJustDecodeBounds) {
@@ -296,7 +296,7 @@ object FileIO {
             } else {
                 getBitmapOrientationFromUri(uri, context)
             }
-            getOrientedBitmap(bitmap, angle)
+            return getOrientedBitmap(bitmap, angle)
         }
     }
 
