@@ -24,7 +24,10 @@ import android.graphics.PointF
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.rule.ActivityTestRule
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.TestCase.assertTrue
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.Command
@@ -44,7 +47,11 @@ import org.catrobat.paintroid.tools.implementation.STROKE_25
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView.OnBrushChangedListener
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
-import org.junit.*
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Assert
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
@@ -176,7 +183,7 @@ class BrushToolTest {
 
         toolToTest!!.handleDown(event1)
         toolToTest!!.handleMove(event2)
-        val returnValue :Boolean = toolToTest!!.handleUp(event3)
+        val returnValue: Boolean = toolToTest!!.handleUp(event3)
 
         assertTrue(returnValue)
         val stub = pathStub.stub

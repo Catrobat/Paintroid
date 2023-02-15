@@ -34,13 +34,17 @@ import org.catrobat.paintroid.tools.Workspace
 import org.catrobat.paintroid.tools.implementation.PipetteTool
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.hamcrest.Matchers
-import org.junit.*
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import com.nhaarman.mockitokotlin2.any
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.Assert
+
 @RunWith(MockitoJUnitRunner.Silent::class)
 class PipetteToolTest {
     @Mock

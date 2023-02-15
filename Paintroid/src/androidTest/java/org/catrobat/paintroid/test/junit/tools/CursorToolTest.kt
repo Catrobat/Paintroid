@@ -24,7 +24,6 @@ import android.graphics.PointF
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.rule.ActivityTestRule
-
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import org.catrobat.paintroid.MainActivity
@@ -40,12 +39,16 @@ import org.catrobat.paintroid.tools.implementation.CursorTool
 import org.catrobat.paintroid.tools.options.BrushToolOptionsView
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.ui.Perspective
-import org.junit.*
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Assert
+import org.junit.Test
 
 @RunWith(MockitoJUnitRunner::class)
 class CursorToolTest {
@@ -229,8 +232,6 @@ class CursorToolTest {
 
     companion object {
         private val MOVE_TOLERANCE = 5f
-        private fun copyPointF(point: PointF): PointF {
-            return PointF(point.x, point.y)
-        }
+        private fun copyPointF(point: PointF) = PointF(point.x, point.y)
     }
 }

@@ -55,9 +55,9 @@ class CropCommandTest {
         layerModel!!.currentLayer = layerUnderTest
         resizeCoordinateXLeft = 0
         resizeCoordinateYTop = 0
-        resizeCoordinateXRight = bitmapUnderTest.getWidth() - 1
-        resizeCoordinateYBottom = bitmapUnderTest.getHeight() - 1
-        maximumBitmapResolution = (bitmapUnderTest.getWidth() * bitmapUnderTest.getHeight() * MAXIMUM_BITMAP_RESOLUTION_FACTOR)
+        resizeCoordinateXRight = bitmapUnderTest.width - 1
+        resizeCoordinateYBottom = bitmapUnderTest.height - 1
+        maximumBitmapResolution = bitmapUnderTest.width * bitmapUnderTest.height * MAXIMUM_BITMAP_RESOLUTION_FACTOR
         commandUnderTest = CropCommand(resizeCoordinateXLeft, resizeCoordinateYTop,
                 resizeCoordinateXRight, resizeCoordinateYBottom, maximumBitmapResolution)
     }
