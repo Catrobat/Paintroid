@@ -24,7 +24,7 @@
     android:id="@+id/pocketpaint_tools_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:showIn="@layout/activity_pocketpaint_main">
+ >
 
     <TableRow
         android:layout_marginTop="16dp"
