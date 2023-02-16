@@ -286,7 +286,6 @@ object FileIO {
     ): Bitmap? {
         val inputStream =
             resolver.openInputStream(uri) ?: throw IOException("Can't open input stream")
-
         return inputStream.use {
             val bitmap = BitmapFactory.decodeStream(it, null, options)
             if (options.inJustDecodeBounds) {
