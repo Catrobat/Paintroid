@@ -1,6 +1,8 @@
 /*
  * Paintroid: An image manipulation application for Android.
- * Copyright (C) 2010-2022 The Catrobat Team
+
+ * Copyright (C) 2010-2015 The Catrobat Team
+
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,16 +26,28 @@ import org.catrobat.paintroid.command.serialization.SerializablePath
 import org.mockito.Mockito
 
 class PathStub : SerializablePath() {
-    private val stub: SerializablePath = Mockito.mock(SerializablePath::class.java)
+
+    val stub: SerializablePath = Mockito.mock(SerializablePath::class.java)
 
     fun getStub(): Path = stub
-    override fun reset() { stub.reset() }
 
-    override fun rewind() { stub.rewind() }
+    override fun reset() {
+        stub.reset()
+    }
 
-    override fun moveTo(x: Float, y: Float) { stub.moveTo(x, y) }
+    override fun rewind() {
+        stub.rewind()
+    }
 
-    override fun quadTo(x1: Float, y1: Float, x2: Float, y2: Float) { stub.quadTo(x1, y1, x2, y2) }
+    override fun moveTo(x: Float, y: Float) {
+        stub.moveTo(x, y)
+    }
 
-    override fun lineTo(x: Float, y: Float) { stub.lineTo(x, y) }
+    override fun quadTo(x1: Float, y1: Float, x2: Float, y2: Float) {
+        stub.quadTo(x1, y1, x2, y2)
+    }
+
+    override fun lineTo(x: Float, y: Float) {
+        stub.lineTo(x, y)
+    }
 }

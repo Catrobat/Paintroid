@@ -27,6 +27,7 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
+import com.nhaarman.mockitokotlin2.any
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.CommandManager
 import org.catrobat.paintroid.tools.ContextCallback
@@ -43,11 +44,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import com.nhaarman.mockitokotlin2.any
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.stubbing.Answer
 
 @RunWith(MockitoJUnitRunner::class)
 class ClipboardToolTest {
@@ -89,15 +88,17 @@ class ClipboardToolTest {
         Mockito.`when`(workspace.width).thenReturn(200)
         Mockito.`when`(workspace.height).thenReturn(300)
         Mockito.`when`(workspace.perspective).thenReturn(Perspective(200, 300))
-        Mockito.`when`(
-            workspace.getCanvasPointFromSurfacePoint(
-                any<PointF>()
-            )
-        ).then(Answer { invocation -> invocation.getArgument<PointF>(0) })
+        Mockito.`when`(workspace.getCanvasPointFromSurfacePoint(any<PointF>()))
+            .then { invocation -> invocation.getArgument<PointF>(0) }
         tool = ClipboardTool(
             clipboardToolOptionsView!!,
-            contextCallback, toolOptionsViewController!!, toolPaint!!, workspace,
-            idlingResource!!, commandManager!!, 0
+            contextCallback,
+            toolOptionsViewController!!,
+            toolPaint!!,
+            workspace,
+            idlingResource!!,
+            commandManager!!,
+            0
         )
     }
 
@@ -114,11 +115,10 @@ class ClipboardToolTest {
         )
         val initialX = tool!!.toolPosition.x
         val initialY = tool!!.toolPosition.y
-        InstrumentationRegistry.getInstrumentation().runOnMainSync(
-            Runnable {
-                tool!!.handleDown(PointF(initialX, initialY))
-                tool!!.handleMove(PointF(initialX + 2, initialY + 3))
-            })
+        InstrumentationRegistry.getInstrumentation().runOnMainSync {
+            tool!!.handleDown(PointF(initialX, initialY))
+            tool!!.handleMove(PointF(initialX + 2, initialY + 3))
+        }
         Assert.assertEquals(initialX + 2, tool!!.toolPosition.x, Float.MIN_VALUE)
         Assert.assertEquals(initialY + 3, tool!!.toolPosition.y, Float.MIN_VALUE)
         Thread.sleep((ViewConfiguration.getLongPressTimeout() + 50).toLong())
