@@ -18,10 +18,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
-    <color name="pocketpaint_color_picker_rgb_red">#FFEB4618</color>
-    <color name="pocketpaint_color_picker_rgb_green">#FF078707</color>
-    <color name="pocketpaint_color_picker_rgb_blue">#FF0284e7</color>
-    <color name="pocketpaint_color_picker_rgb_alpha">@color/pocketpaint_color_picker_hex_black</color>
+    <color name="pocketpaint_color_picker_rgb_red">#DA3D0E</color>
+    <color name="pocketpaint_color_picker_rgb_green">#138913</color>
+    <color name="pocketpaint_color_picker_rgb_blue">#0C78CB</color>
+    <color name="pocketpaint_color_picker_rgb_alpha">#787676</color>
     <color name="pocketpaint_color_picker_blue1">#FF0074CD</color>
     <color name="pocketpaint_color_picker_blue2">#FF00B4F1</color>
     <color name="pocketpaint_color_picker_green1">#FF078707</color>
