@@ -664,7 +664,7 @@ class MenuFileActivityIntegrationTest {
         }
     }
 
-    private fun addFileToDeletionFileList(fileName: String?, extension: String?){
+    private fun addFileToDeletionFileList(fileName: String?, extension: String?) {
         val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(dir, "$fileName.$extension")
         deletionFileList.add(file)
