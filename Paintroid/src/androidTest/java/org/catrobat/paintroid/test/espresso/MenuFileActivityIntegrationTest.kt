@@ -625,6 +625,8 @@ class MenuFileActivityIntegrationTest {
         FileIO.compressFormat = Bitmap.CompressFormat.PNG
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
+        onView(withId(R.id.pocketpaint_image_name_save_text))
+            .perform(replaceText(name))
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(500))
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
@@ -653,12 +655,18 @@ class MenuFileActivityIntegrationTest {
         }
 
         assertEquals(newFileName, "testCI.catrobat-image")
-        addUriToDeletionFileList(activity.model.savedPictureUri)
+        addFileToDeletionFileList(name, FileIO.fileType.value)
     }
 
     private fun addUriToDeletionFileList(uri: Uri?) {
         uri?.path?.let {
             deletionFileList.add(File(it))
         }
+    }
+
+    private fun addFileToDeletionFileList(fileName: String?, extension: String?){
+        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val file = File(dir, "$fileName.$extension")
+        deletionFileList.add(file)
     }
 }
