@@ -151,15 +151,15 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
 
     private fun onRectButtonClicked() {
         updateStrokeCap(Cap.SQUARE)
-        buttonRect.isSelected = true
-        buttonCircle.isSelected = false
+        buttonRect.isChecked = true
+        buttonCircle.isChecked = false
         invalidate()
     }
 
     private fun onCircleButtonClicked() {
         updateStrokeCap(Cap.ROUND)
-        buttonCircle.isSelected = true
-        buttonRect.isSelected = false
+        buttonCircle.isChecked = true
+        buttonRect.isChecked = false
         invalidate()
     }
 
