@@ -629,6 +629,7 @@ class MenuFileActivityIntegrationTest {
             .perform(replaceText(name))
         onView(withText(R.string.save_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(500))
+        val uri = activity.model.savedPictureUri
         onDrawingSurfaceView().perform(touchAt(MIDDLE))
         onTopBarView().performOpenMoreOptions()
         onView(withText(R.string.menu_save_image)).perform(click())
@@ -638,35 +639,16 @@ class MenuFileActivityIntegrationTest {
         onView(withText(R.string.overwrite_button_text)).perform(click())
         onView(isRoot()).perform(waitFor(500))
 
-        var newFileName = "new"
-        val uri = activity.model.savedPictureUri
-        if (uri != null) {
-            val cursor = activity.contentResolver.query(
-                uri,
-                arrayOf(MediaStore.Images.ImageColumns.DISPLAY_NAME),
-                null, null, null
-            )
-            cursor?.use {
-                if (cursor.moveToFirst()) {
-                    newFileName =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DISPLAY_NAME))
-                }
-            }
-        }
+        val oldFileName = uri?.path?.let { File(it).name }
+        val newFileName = activity.model.savedPictureUri?.path?.let { File(it).name }
 
-        assertEquals(newFileName, "testCI.catrobat-image")
-        addFileToDeletionFileList(name, FileIO.fileType.value)
+        assertEquals(oldFileName, newFileName)
+        addUriToDeletionFileList(activity.model.savedPictureUri)
     }
 
     private fun addUriToDeletionFileList(uri: Uri?) {
         uri?.path?.let {
             deletionFileList.add(File(it))
         }
-    }
-
-    private fun addFileToDeletionFileList(fileName: String?, extension: String?) {
-        val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val file = File(dir, "$fileName.$extension")
-        deletionFileList.add(file)
     }
 }
