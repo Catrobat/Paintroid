@@ -25,7 +25,7 @@ import java.util.*
 
 class LanguageSupport {
     private constructor() {
-        throw IllegalArgumentException()
+        throw IllegalArgumentException("Error")
     }
 
     companion object {

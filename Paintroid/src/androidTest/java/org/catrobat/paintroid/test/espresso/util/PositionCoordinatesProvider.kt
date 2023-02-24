@@ -31,12 +31,10 @@ class PositionCoordinatesProvider(private val xCoordinate: Float, private val yC
     }
 
     companion object {
-        @JvmStatic
 		fun at(x: Float, y: Float): CoordinatesProvider {
             return PositionCoordinatesProvider(x, y)
         }
 
-        @JvmStatic
 		fun calculateViewOffset(view: View, x: Float, y: Float): FloatArray {
             val screenLocation = IntArray(2)
             view.getLocationOnScreen(screenLocation)

@@ -35,7 +35,6 @@ class OffsetLocationProvider(
     }
 
     companion object {
-        @JvmStatic
 		fun withOffset(locationProvider: CoordinatesProvider, xOffset: Int, yOffset: Int): CoordinatesProvider {
             return OffsetLocationProvider(locationProvider, xOffset, yOffset)
         }
