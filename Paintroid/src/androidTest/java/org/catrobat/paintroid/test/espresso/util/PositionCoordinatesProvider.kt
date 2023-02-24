@@ -31,9 +31,7 @@ class PositionCoordinatesProvider(private val xCoordinate: Float, private val yC
     }
 
     companion object {
-		fun at(x: Float, y: Float): CoordinatesProvider {
-            return PositionCoordinatesProvider(x, y)
-        }
+		fun at(x: Float, y: Float): CoordinatesProvider = PositionCoordinatesProvider(x, y)
 
 		fun calculateViewOffset(view: View, x: Float, y: Float): FloatArray {
             val screenLocation = IntArray(2)

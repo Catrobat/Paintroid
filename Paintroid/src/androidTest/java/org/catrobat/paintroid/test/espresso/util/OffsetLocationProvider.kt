@@ -34,9 +34,5 @@ class OffsetLocationProvider(
         return coordinates
     }
 
-    companion object {
-		fun withOffset(locationProvider: CoordinatesProvider, xOffset: Int, yOffset: Int): CoordinatesProvider {
-            return OffsetLocationProvider(locationProvider, xOffset, yOffset)
-        }
-    }
+    fun withOffset(locationProvider: CoordinatesProvider, xOffset: Int, yOffset: Int): CoordinatesProvider = OffsetLocationProvider(locationProvider, xOffset, yOffset)
 }
