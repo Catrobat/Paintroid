@@ -16,6 +16,7 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.catrobat.paintroid.test.espresso.util
 
 import android.view.View
@@ -35,11 +36,7 @@ class OffsetLocationProvider(
 
     companion object {
         @JvmStatic
-		fun withOffset(
-            locationProvider: CoordinatesProvider,
-            xOffset: Int,
-            yOffset: Int
-        ): CoordinatesProvider {
+		fun withOffset(locationProvider: CoordinatesProvider, xOffset: Int, yOffset: Int): CoordinatesProvider {
             return OffsetLocationProvider(locationProvider, xOffset, yOffset)
         }
     }

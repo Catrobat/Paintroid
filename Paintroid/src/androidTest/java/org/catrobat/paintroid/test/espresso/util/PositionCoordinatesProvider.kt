@@ -19,13 +19,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http:></http:>//www.gnu.org/licenses/>.
  */
+
 package org.catrobat.paintroid.test.espresso.util
 
 import android.view.View
 import androidx.test.espresso.action.CoordinatesProvider
 
-class PositionCoordinatesProvider(private val xCoordinate: Float, private val yCoordinate: Float) :
-    CoordinatesProvider {
+class PositionCoordinatesProvider(private val xCoordinate: Float, private val yCoordinate: Float) : CoordinatesProvider {
     override fun calculateCoordinates(view: View): FloatArray {
         return calculateViewOffset(view, xCoordinate, yCoordinate)
     }

@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http:></http:>//www.gnu.org/licenses/>.
  */
+
 package org.catrobat.paintroid.test.espresso.rtl.util
 
 class RtlUiTestUtils private constructor() {
@@ -25,8 +26,7 @@ class RtlUiTestUtils private constructor() {
 
     companion object {
         fun checkTextDirection(string: String): Boolean {
-            return (Character.getDirectionality(string[0]) == Character.DIRECTIONALITY_RIGHT_TO_LEFT
-                    || Character.getDirectionality(string[0]) == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC)
+            return (Character.getDirectionality(string[0]) == Character.DIRECTIONALITY_RIGHT_TO_LEFT || Character.getDirectionality(string[0]) == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC)
         }
     }
 }
