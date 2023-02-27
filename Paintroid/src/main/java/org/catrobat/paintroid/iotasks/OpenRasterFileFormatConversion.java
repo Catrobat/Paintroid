@@ -156,8 +156,9 @@ public final class OpenRasterFileFormatConversion {
 			long date = System.currentTimeMillis();
 			contentValues.put(MediaStore.MediaColumns.DATE_MODIFIED, date / 1000);
 
-			if(xmlByteArray != null)
+			if(xmlByteArray != null) {
 				wholeSize += xmlByteArray.length;
+			}
 			wholeSize += mimeByteArray.length;
 			wholeSize += bitmapByteArray.length;
 			wholeSize += bitmapThumbArray.length;
