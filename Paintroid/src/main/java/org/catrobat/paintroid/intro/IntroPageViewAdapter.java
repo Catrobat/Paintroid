@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.viewpager.widget.PagerAdapter;
 
@@ -35,6 +36,7 @@ public class IntroPageViewAdapter extends PagerAdapter {
 		System.arraycopy(layouts, 0, this.layouts, 0, this.layouts.length);
 	}
 
+	@NonNull
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		LayoutInflater layoutInflater = LayoutInflater.from(container.getContext());
@@ -50,12 +52,12 @@ public class IntroPageViewAdapter extends PagerAdapter {
 	}
 
 	@Override
-	public boolean isViewFromObject(View view, Object obj) {
+	public boolean isViewFromObject(@NonNull View view, @NonNull Object obj) {
 		return view == obj;
 	}
 
 	@Override
-	public void destroyItem(ViewGroup container, int position, Object object) {
+	public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
 		View view = (View) object;
 		container.removeView(view);
 	}

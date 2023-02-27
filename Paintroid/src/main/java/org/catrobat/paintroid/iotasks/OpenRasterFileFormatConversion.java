@@ -98,6 +98,7 @@ public final class OpenRasterFileFormatConversion {
 		mainActivity = toSet;
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public static Uri exportToOraFile(List<LayerContracts.Layer> layers, String fileName, Bitmap bitmapAllLayers, ContentResolver resolver) throws IOException {
 		Uri imageUri;
 		OutputStream outputStream;
@@ -126,7 +127,7 @@ public final class OpenRasterFileFormatConversion {
 		ByteArrayOutputStream bosThumb = new ByteArrayOutputStream();
 		bitmapThumb.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, bosThumb);
 		byte[] bitmapThumbArray = bosThumb.toByteArray();
-		File imageRoot = null;
+		File imageRoot;
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 			//applefile has no file ending. which is important for api level 30.
@@ -155,7 +156,8 @@ public final class OpenRasterFileFormatConversion {
 			long date = System.currentTimeMillis();
 			contentValues.put(MediaStore.MediaColumns.DATE_MODIFIED, date / 1000);
 
-			wholeSize += xmlByteArray.length;
+			if(xmlByteArray != null)
+				wholeSize += xmlByteArray.length;
 			wholeSize += mimeByteArray.length;
 			wholeSize += bitmapByteArray.length;
 			wholeSize += bitmapThumbArray.length;

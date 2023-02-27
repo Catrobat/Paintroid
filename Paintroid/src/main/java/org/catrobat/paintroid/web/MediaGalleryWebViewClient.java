@@ -31,7 +31,7 @@ import org.catrobat.paintroid.R;
 
 public class MediaGalleryWebViewClient extends WebViewClient {
 	private ProgressDialog webViewLoadingDialog;
-	private WebClientCallback callback;
+	private final WebClientCallback callback;
 
 	public interface WebClientCallback {
 		void finish();
