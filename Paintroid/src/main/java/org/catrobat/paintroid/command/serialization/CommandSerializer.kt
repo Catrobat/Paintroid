@@ -23,11 +23,7 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
-import android.graphics.Paint
-import android.graphics.Point
-import android.graphics.PointF
-import android.graphics.RectF
-import android.graphics.Bitmap
+import android.graphics.*
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -40,42 +36,14 @@ import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.Command
 import org.catrobat.paintroid.command.CommandManager
-import org.catrobat.paintroid.command.implementation.ClippingCommand
-import org.catrobat.paintroid.command.implementation.AddEmptyLayerCommand
-import org.catrobat.paintroid.command.implementation.CompositeCommand
-import org.catrobat.paintroid.command.implementation.CropCommand
-import org.catrobat.paintroid.command.implementation.CutCommand
-import org.catrobat.paintroid.command.implementation.FillCommand
-import org.catrobat.paintroid.command.implementation.FlipCommand
-import org.catrobat.paintroid.command.implementation.GeometricFillCommand
-import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
-import org.catrobat.paintroid.command.implementation.LoadLayerListCommand
-import org.catrobat.paintroid.command.implementation.LoadCommand
-import org.catrobat.paintroid.command.implementation.MergeLayersCommand
-import org.catrobat.paintroid.command.implementation.PathCommand
-import org.catrobat.paintroid.command.implementation.PointCommand
-import org.catrobat.paintroid.command.implementation.RemoveLayerCommand
-import org.catrobat.paintroid.command.implementation.ReorderLayersCommand
-import org.catrobat.paintroid.command.implementation.ResetCommand
-import org.catrobat.paintroid.command.implementation.ResizeCommand
-import org.catrobat.paintroid.command.implementation.RotateCommand
-import org.catrobat.paintroid.command.implementation.SelectLayerCommand
-import org.catrobat.paintroid.command.implementation.SetDimensionCommand
-import org.catrobat.paintroid.command.implementation.SprayCommand
-import org.catrobat.paintroid.command.implementation.ClipboardCommand
-import org.catrobat.paintroid.command.implementation.TextToolCommand
-import org.catrobat.paintroid.command.implementation.SmudgePathCommand
+import org.catrobat.paintroid.command.implementation.*
 import org.catrobat.paintroid.common.Constants.DOWNLOADS_DIRECTORY
 import org.catrobat.paintroid.common.SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME
-import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
 import org.catrobat.paintroid.contract.MainActivityContracts
+import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
 import org.catrobat.paintroid.iotasks.WorkspaceReturnValue
 import org.catrobat.paintroid.model.CommandManagerModel
-import org.catrobat.paintroid.tools.drawable.HeartDrawable
-import org.catrobat.paintroid.tools.drawable.OvalDrawable
-import org.catrobat.paintroid.tools.drawable.RectangleDrawable
-import org.catrobat.paintroid.tools.drawable.ShapeDrawable
-import org.catrobat.paintroid.tools.drawable.StarDrawable
+import org.catrobat.paintroid.tools.drawable.*
 import org.catrobat.paintroid.ui.DrawingSurfaceThread
 import java.io.File
 import java.io.FileInputStream
@@ -185,9 +153,9 @@ open class CommandSerializer(private val activityContext: Context, private val c
                 returnUri = Uri.fromFile(imageFile)
             }
 
-            val downloadManager = OpenRasterFileFormatConversion.mainActivity.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val downloadManager = OpenRasterFileFormatConversion.mainActivity!!.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val id = downloadManager.addCompletedDownload(fileName, fileName, true, "application/zip", imageFile.absolutePath, imageFile.length(), true)
-            val sharedPreferences = OpenRasterFileFormatConversion.mainActivity.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, 0)
+            val sharedPreferences = OpenRasterFileFormatConversion.mainActivity!!.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, 0)
             sharedPreferences.edit().putLong(imageFile.absolutePath, id).apply()
         }
 
@@ -211,10 +179,10 @@ open class CommandSerializer(private val activityContext: Context, private val c
         } else {
             val file = File(uri.path.toString())
             val isDeleted = file.delete()
-            val sharedPreferences = OpenRasterFileFormatConversion.mainActivity.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            val sharedPreferences = OpenRasterFileFormatConversion.mainActivity!!.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
             val id = sharedPreferences.getLong(uri.path, -1)
             if (id > -1) {
-                val downloadManager = OpenRasterFileFormatConversion.mainActivity.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                val downloadManager = OpenRasterFileFormatConversion.mainActivity!!.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                 downloadManager.remove(id)
             }
             if (!isDeleted) {
