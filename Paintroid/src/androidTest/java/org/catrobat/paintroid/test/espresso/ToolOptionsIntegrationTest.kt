@@ -24,6 +24,7 @@ import android.app.Activity
 import android.app.Instrumentation.ActivityResult
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Paint.Cap
 import android.net.Uri
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents.intending
@@ -32,6 +33,7 @@ import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.test.espresso.util.wrappers.BrushToolOptionsViewInteraction.Companion.onBrushToolOptionsView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
@@ -52,7 +54,8 @@ import java.io.OutputStream
 class ToolOptionsIntegrationTest(
     private var toolType: ToolType?,
     private var toolOptionsShownInitially: Boolean,
-    private var hasToolOptionsView: Boolean
+    private var hasToolOptionsView: Boolean,
+    private val hasStrokeCapOptions: Boolean
 ) {
     @get:Rule
     var activityTestRule: ActivityTestRule<MainActivity> = IntentsTestRule(MainActivity::class.java)
@@ -61,24 +64,26 @@ class ToolOptionsIntegrationTest(
     var screenshotOnFailRule = ScreenshotOnFailRule()
 
     private var testImageFile: File? = null
-
     companion object {
         @JvmStatic
-        @Parameterized.Parameters(name = "{index}: ToolType={0}, ToolOptionsShownInitially={1}, HasToolOptionsView={2}")
+        @Parameterized.Parameters(name = "{index}: ToolType={0}, ToolOptionsShownInitially={1}, HasToolOptionsView={2}, HasStrokeCapOptions{3}")
         fun data(): Iterable<Array<Any>> {
             return listOf(
-                arrayOf(ToolType.BRUSH, true, true),
-                arrayOf(ToolType.SHAPE, true, true),
-                arrayOf(ToolType.TRANSFORM, true, true),
-                arrayOf(ToolType.LINE, true, true),
-                arrayOf(ToolType.CURSOR, true, true),
-                arrayOf(ToolType.FILL, true, true),
-                arrayOf(ToolType.PIPETTE, false, false),
-                arrayOf(ToolType.CLIPBOARD, true, true),
-                arrayOf(ToolType.ERASER, true, true),
-                arrayOf(ToolType.TEXT, true, true),
-                arrayOf(ToolType.HAND, false, false),
-                arrayOf(ToolType.WATERCOLOR, true, true)
+                arrayOf(ToolType.BRUSH, true, true, true),
+                arrayOf(ToolType.HAND, false, false, false),
+                arrayOf(ToolType.ERASER, true, true, true),
+                arrayOf(ToolType.LINE, true, true, true),
+                arrayOf(ToolType.SHAPE, true, true, false),
+                arrayOf(ToolType.FILL, true, true, false),
+                arrayOf(ToolType.SPRAY, true, true, false),
+                arrayOf(ToolType.CURSOR, true, true, true),
+                arrayOf(ToolType.TEXT, true, true, false),
+                arrayOf(ToolType.TRANSFORM, true, true, false),
+                arrayOf(ToolType.CLIPBOARD, true, true, false),
+                arrayOf(ToolType.PIPETTE, false, false, false),
+                arrayOf(ToolType.WATERCOLOR, true, true, true),
+                arrayOf(ToolType.SMUDGE, true, true, true),
+                arrayOf(ToolType.CLIP, true, true, false)
             )
         }
     }
@@ -117,6 +122,30 @@ class ToolOptionsIntegrationTest(
         } else {
             onToolBarView().onToolOptionsView()
                 .check(matches(not(isDisplayed())))
+        }
+    }
+
+    @Test
+    fun testShouldNotUnselectAlreadySelectedStrokeTypeWhenSelectedAgain() {
+        if (hasStrokeCapOptions) {
+            onToolBarView()
+                .performSelectTool(toolType)
+            if (!toolOptionsShownInitially) {
+                onToolBarView()
+                    .performOpenToolOptionsView()
+            }
+
+            repeat(2) {
+                onBrushToolOptionsView().performSelectStrokeCapType(Cap.ROUND)
+                onBrushToolOptionsView().checkIfStrokeCapIsChecked(Cap.ROUND)
+                onBrushToolOptionsView().checkIfStrokeCapIsNotChecked(Cap.SQUARE)
+            }
+
+            repeat(2) {
+                onBrushToolOptionsView().performSelectStrokeCapType(Cap.SQUARE)
+                onBrushToolOptionsView().checkIfStrokeCapIsChecked(Cap.SQUARE)
+                onBrushToolOptionsView().checkIfStrokeCapIsNotChecked(Cap.ROUND)
+            }
         }
     }
 }
