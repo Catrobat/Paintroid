@@ -18,6 +18,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolReference
@@ -29,32 +30,30 @@ class DefaultZoomWindowController
     (val activity: MainActivity,
     val layerModel: LayerContracts.Model,
     val workspace: Workspace,
-    val toolReference: ToolReference) :
+    val toolReference: ToolReference,
+    val sharedPreferences: UserPreferences) :
     ZoomWindowController {
 
     private val canvasRect = Rect()
     private val checkeredPattern = Paint()
     private val framePaint = Paint()
 
-    private val windowHeight =
-        activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_height)
-    private val windowWidth =
-        activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_width)
+    private val zoomWindowDiameter = activity.resources.getDimensionPixelSize(R.dimen.pocketpaint_zoom_window_diameter)
 
     private val chequeredBackgroundBitmap =
         Bitmap.createBitmap(layerModel.width, layerModel.height, Bitmap.Config.ARGB_8888)
 
     private val greyBackgroundBitmap =
         Bitmap.createBitmap(
-            layerModel.width + windowWidth,
-            layerModel.height + windowHeight,
+            layerModel.width + zoomWindowDiameter,
+            layerModel.height + zoomWindowDiameter,
             Bitmap.Config.ARGB_8888
         )
 
     private val backgroundBitmap =
         Bitmap.createBitmap(
-            layerModel.width + windowWidth,
-            layerModel.height + windowHeight,
+            layerModel.width + zoomWindowDiameter,
+            layerModel.height + zoomWindowDiameter,
             Bitmap.Config.ARGB_8888
         )
 
@@ -84,7 +83,7 @@ class DefaultZoomWindowController
 
         canvasBackground.drawBitmap(greyBackgroundBitmap, Matrix(), null)
         canvasBackground.drawBitmap(
-            chequeredBackgroundBitmap, windowWidth / 2f, windowHeight / 2f, null)
+            chequeredBackgroundBitmap, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null)
     }
 
     private val zoomWindow: RelativeLayout =
@@ -164,18 +163,18 @@ class DefaultZoomWindowController
 
         val bitmapWithBackground: Bitmap? = mergeBackground(bitmap)
 
-        val startX: Int = coordinates.x.roundToInt()
-        val startY: Int = coordinates.y.roundToInt()
+        val startX: Int = coordinates.x.roundToInt() + zoomWindowDiameter / 2 - getSizeOfZoomWindow() / 2
+        val startY: Int = coordinates.y.roundToInt() + zoomWindowDiameter / 2 - getSizeOfZoomWindow() / 2
 
         val croppedBitmap: Bitmap? =
-            Bitmap.createBitmap(windowWidth, windowHeight, Bitmap.Config.ARGB_8888)
+            Bitmap.createBitmap(getSizeOfZoomWindow(), getSizeOfZoomWindow(), Bitmap.Config.ARGB_8888)
 
         val canvas: Canvas? = croppedBitmap?.let { Canvas(it) }
 
         val paint = Paint()
         paint.isAntiAlias = true
 
-        val rect = Rect(0, 0, windowWidth, windowHeight)
+        val rect = Rect(0, 0, getSizeOfZoomWindow(), getSizeOfZoomWindow())
         val rectF = RectF(rect)
 
         canvas?.drawOval(rectF, paint)
@@ -184,7 +183,7 @@ class DefaultZoomWindowController
 
         bitmapWithBackground?.let {
             canvas?.drawBitmap(it,
-                Rect(startX, startY, startX + windowWidth, startY + windowHeight),
+                Rect(startX, startY, startX + getSizeOfZoomWindow(), startY + getSizeOfZoomWindow()),
                 rect,
                 paint
             ) }
@@ -196,8 +195,8 @@ class DefaultZoomWindowController
 
         val bitmapOverlay =
             Bitmap.createBitmap(
-                layerModel.width + windowWidth,
-                layerModel.height + windowHeight,
+                layerModel.width + zoomWindowDiameter,
+                layerModel.height + zoomWindowDiameter,
                 Bitmap.Config.ARGB_8888
             )
         val canvas = Canvas(bitmapOverlay)
@@ -207,13 +206,18 @@ class DefaultZoomWindowController
         if (toolReference.tool?.toolType?.name.equals(ToolType.LINE.name) ||
             toolReference.tool?.toolType?.name.equals(ToolType.CURSOR.name)) {
             layerModel.currentLayer?.bitmap?.let {
-                canvas.drawBitmap(it, windowWidth / 2f, windowHeight / 2f, null)
+                canvas.drawBitmap(it, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null)
             }
         }
 
-        bitmap?.let { canvas.drawBitmap(it, windowWidth / 2f, windowHeight / 2f, null) }
+        bitmap?.let { canvas.drawBitmap(it, zoomWindowDiameter / 2f, zoomWindowDiameter / 2f, null) }
 
         return bitmapOverlay
+    }
+
+    private fun getSizeOfZoomWindow(): Int {
+        val zoomIndex = (sharedPreferences.preferenceZoomWindowZoomPercentage - initialZoomValue) / zoomPercentStepValue
+        return zoomWindowDiameter - zoomIndex * zoomFactor
     }
 
     override fun checkIfToolCompatibleWithZoomWindow(tool: Tool?): Constants {
@@ -244,5 +248,11 @@ class DefaultZoomWindowController
         NOT_COMPATIBLE,
         COMPATIBLE_NEW,
         COMPATIBLE_ALL
+    }
+
+    companion object {
+        const val zoomFactor: Int = 25
+        const val initialZoomValue: Int = 100
+        const val zoomPercentStepValue = 50
     }
 }

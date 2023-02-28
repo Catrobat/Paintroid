@@ -24,6 +24,7 @@ import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.Tool.StateChange
 import org.catrobat.paintroid.tools.ToolType
@@ -58,6 +59,8 @@ open class DrawingSurfaceListener(
     private var autoScroll = true
     private var timerStartDraw = 0.toLong()
     private lateinit var zoomController: ZoomWindowController
+    private var callZoomWindow: Boolean = true
+    private lateinit var sharedPreferences: UserPreferences
 
     private var recentTouchEventsData: MutableList<TouchEventData> = mutableListOf()
 
@@ -106,9 +109,11 @@ open class DrawingSurfaceListener(
     }
 
     fun setZoomController(
-        zoomWindowController: ZoomWindowController
+        zoomWindowController: ZoomWindowController,
+        sharedPreferences: UserPreferences
     ) {
         zoomController = zoomWindowController
+        this.sharedPreferences = sharedPreferences
     }
 
     private fun handleActionMove(currentTool: Tool?, view: View, event: MotionEvent) {
@@ -139,11 +144,7 @@ open class DrawingSurfaceListener(
                 }
                 currentTool.handleMove(canvasTouchPoint)
             }
-            if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
-                zoomController.onMove(canvasTouchPoint, PointF(event.x, event.y))
-            } else {
-                zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint), PointF(event.x, event.y))
-            }
+            handleZoomWindowOnMove(currentTool, event)
         } else {
             disableAutoScroll()
             if (touchMode == TouchMode.DRAW) {
@@ -164,6 +165,16 @@ open class DrawingSurfaceListener(
                 callback.translatePerspective(xMidPoint - xOld, yMidPoint - yOld)
             }
             zoomController.dismissOnPinch()
+        }
+    }
+
+    private fun handleZoomWindowOnMove(currentTool: Tool, event: MotionEvent) {
+        if (sharedPreferences.preferenceZoomWindowEnabled) {
+            if (!callback.getCurrentTool()?.toolType?.name.equals(ToolType.CURSOR.name)) {
+                zoomController.onMove(canvasTouchPoint, PointF(event.x, event.y))
+            } else {
+                zoomController.onMove(currentTool.toolPositionCoordinates(canvasTouchPoint), PointF(event.x, event.y))
+            }
         }
     }
 
@@ -196,12 +207,7 @@ open class DrawingSurfaceListener(
                     setEvenPointAndViewDimensionsForAutoScrollTask(view)
                     autoScrollTask.start()
                 }
-                if (!currentTool?.toolType?.name.equals(ToolType.CURSOR.name)) {
-                    zoomController.show(canvasTouchPoint, PointF(event.x, event.y))
-                } else {
-                    currentTool?.toolPositionCoordinates(canvasTouchPoint)
-                        ?.let { zoomController.show(it, PointF(event.x, event.y)) }
-                }
+                handleZoomWindowOnTouch(currentTool, event)
             }
             MotionEvent.ACTION_MOVE -> handleActionMove(currentTool, view, event)
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
@@ -237,12 +243,26 @@ open class DrawingSurfaceListener(
                 eventX = 0f
                 eventY = 0f
                 touchMode = TouchMode.DRAW
-                zoomController.dismiss()
-                currentTool?.handToolMode()
+                if (callZoomWindow) zoomController.dismiss()
+                callback.getCurrentTool()?.handToolMode()
             }
         }
         drawingSurface.refreshDrawingSurface()
         return true
+    }
+
+    private fun handleZoomWindowOnTouch(currentTool: Tool?, event: MotionEvent) {
+        callZoomWindow = if (sharedPreferences.preferenceZoomWindowEnabled) {
+            if (!currentTool?.toolType?.name.equals(ToolType.CURSOR.name)) {
+                zoomController.show(canvasTouchPoint, PointF(event.x, event.y))
+            } else {
+                currentTool?.toolPositionCoordinates(canvasTouchPoint)
+                        ?.let { zoomController.show(it, PointF(event.x, event.y)) }
+            }
+            true
+        } else {
+            false
+        }
     }
 
     private fun removeObsoleteTouchEventsData(timeStamp: Long) {
