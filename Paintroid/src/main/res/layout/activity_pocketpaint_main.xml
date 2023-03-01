@@ -98,7 +98,9 @@
             android:layout_width="200dp"
             android:background="@drawable/layer_nav_view_background"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|center">
+            android:layout_gravity="end|center"
+            android:clickable="true"
+            android:focusable="true">
 
             <include layout="@layout/pocketpaint_layout_main_menu_layer"
                 android:layout_width="200dp"
