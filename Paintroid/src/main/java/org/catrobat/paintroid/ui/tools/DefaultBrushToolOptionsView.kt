@@ -146,6 +146,7 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
         when (strokeCap) {
             Cap.ROUND -> strokeCapButtonsGroup.check(buttonCircle.id)
             Cap.SQUARE -> strokeCapButtonsGroup.check(buttonRect.id)
+            else -> Unit
         }
     }
 

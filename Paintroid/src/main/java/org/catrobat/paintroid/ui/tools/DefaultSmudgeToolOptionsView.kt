@@ -184,6 +184,7 @@ class DefaultSmudgeToolOptionsView(rootView: ViewGroup) : SmudgeToolOptionsView 
         when (strokeCap) {
             Cap.ROUND -> strokeButtonsGroup.check(buttonCircle.id)
             Cap.SQUARE -> strokeButtonsGroup.check(buttonRect.id)
+            else -> Unit
         }
     }
 
