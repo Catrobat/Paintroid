@@ -100,7 +100,7 @@ interface CommandFactory {
 
     fun createResizeCommand(newWidth: Int, newHeight: Int): Command
 
-    fun createStampCommand(
+    fun createClipboardCommand(
         bitmap: Bitmap,
         toolPosition: PointF,
         boxWidth: Float,

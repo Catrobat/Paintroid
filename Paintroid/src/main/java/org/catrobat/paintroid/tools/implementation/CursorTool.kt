@@ -101,6 +101,7 @@ open class CursorTool(
             setBrushPreviewListener(CommonBrushPreviewListener(toolPaint, toolType))
             setCurrentPaint(toolPaint.paint)
         }
+        brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
     }
 
     override fun changePaintColor(color: Int) {

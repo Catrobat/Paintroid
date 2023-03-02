@@ -43,6 +43,7 @@
         </provider>
 
         <activity
+            android:exported="false"
             android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/PocketPaintSplashTheme" />
