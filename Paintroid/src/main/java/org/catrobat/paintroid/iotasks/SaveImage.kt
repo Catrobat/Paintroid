@@ -75,8 +75,8 @@ class SaveImage(
             layers,
             uri,
             fileName,
-            bitmap,
-            contentResolver
+            bitmap!!,
+            contentResolver!!
         )
     } catch (e: IOException) {
         Log.d(TAG, "Can't save image file ${e.message}")
@@ -92,8 +92,8 @@ class SaveImage(
         OpenRasterFileFormatConversion.exportToOraFile(
             layers,
             fileName,
-            bitmap,
-            contentResolver
+            bitmap!!,
+            contentResolver!!
         )
     } catch (e: IOException) {
         Log.d(TAG, "Can't save image file ${e.message}")
