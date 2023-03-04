@@ -102,6 +102,7 @@
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/pocketpaint_nav_view_layer"
         android:layout_width="200dp"
+        android:background="@drawable/layer_nav_view_background"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center">
 
