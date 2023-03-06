@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,10 @@
 package org.catrobat.paintroid.iotasks
 
 import android.app.DownloadManager
-import android.content.*
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.content.ContentValues
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -27,21 +30,25 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+
 import org.catrobat.paintroid.FileIO.enableAlpha
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.common.MAX_LAYERS
 import org.catrobat.paintroid.common.SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.Layer
+
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.io.OutputStream
 import java.math.BigInteger
-import java.util.*
+import java.util.ArrayList
+import java.util.Objects
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
+
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.parsers.ParserConfigurationException
 import javax.xml.transform.TransformerException
@@ -50,10 +57,10 @@ import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
 //
-//Source:	https://www.openraster.org/baseline/file-layout-spec.html
+// Source:	https://www.openraster.org/baseline/file-layout-spec.html
 //
-//Layout:
-//example.ora  [considered as a folder-like object]
+// Layout:
+// example.ora  [considered as a folder-like object]
 //        ├ mimetype
 //        ├ stack.xml
 //        ├ data/
@@ -73,6 +80,7 @@ class OpenRasterFileFormatConversion private constructor() {
         private const val THUMBNAIL_WIDTH = 256
         private const val THUMBNAIL_HEIGHT = 256
         private const val ORA_VERSION = "0.0.2"
+        private const val ONE_SECOND_IN_MILLISECOND = 1000
         var mainActivity: MainActivity? = null
         fun setContext(toSet: MainActivity?) {
             mainActivity = toSet
@@ -97,21 +105,19 @@ class OpenRasterFileFormatConversion private constructor() {
                 current.bitmap.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, bos)
                 val byteArray = bos.toByteArray()
                 wholeSize += byteArray.size.toFloat()
-                val alphaByteArray =
-                    BigInteger.valueOf(current.opacityPercentage.toLong()).toByteArray()
+                val alphaByteArray = BigInteger.valueOf(current.opacityPercentage.toLong()).toByteArray()
                 wholeSize += alphaByteArray.size.toFloat()
             }
             val bosMerged = ByteArrayOutputStream()
             bitmapAllLayers.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, bosMerged)
             val bitmapByteArray = bosMerged.toByteArray()
-            val bitmapThumb =
-                Bitmap.createScaledBitmap(bitmapAllLayers, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, false)
+            val bitmapThumb = Bitmap.createScaledBitmap(bitmapAllLayers, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, false)
             val bosThumb = ByteArrayOutputStream()
             bitmapThumb.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, bosThumb)
             val bitmapThumbArray = bosThumb.toByteArray()
             var imageRoot: File? = null
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                //applefile has no file ending. which is important for api level 30.
+                // applefile has no file ending. which is important for api level 30.
                 // we can't save an application file in media directory so we have to save it in downloads.
                 contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)
                 contentValues.put(
@@ -121,32 +127,23 @@ class OpenRasterFileFormatConversion private constructor() {
                 contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/applefile")
                 imageUri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
             } else {
-                imageRoot = Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_DOWNLOADS
-                )
+                imageRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 if (!imageRoot.exists() && !imageRoot.mkdirs()) {
                     imageRoot.mkdirs()
                 }
                 val uri = MediaStore.Files.getContentUri("external")
-                contentValues.put(
-                    MediaStore.Files.FileColumns.DATA,
-                    imageRoot.absolutePath + "/" + fileName
-                )
+                contentValues.put(MediaStore.Files.FileColumns.DATA, imageRoot.absolutePath + "/" + fileName)
                 contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)
                 contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/zip")
-                contentValues.put(
-                    MediaStore.Files.FileColumns.MEDIA_TYPE,
-                    MediaStore.Files.FileColumns.MEDIA_TYPE_NONE
-                )
+                contentValues.put(MediaStore.Files.FileColumns.MEDIA_TYPE, MediaStore.Files.FileColumns.MEDIA_TYPE_NONE)
                 val date = System.currentTimeMillis()
-                contentValues.put(MediaStore.MediaColumns.DATE_MODIFIED, date / 1000)
+                contentValues.put(MediaStore.MediaColumns.DATE_MODIFIED, date / ONE_SECOND_IN_MILLISECOND)
                 wholeSize += xmlByteArray!!.size.toFloat()
                 wholeSize += mimeByteArray.size.toFloat()
                 wholeSize += bitmapByteArray.size.toFloat()
                 wholeSize += bitmapThumbArray.size.toFloat()
                 contentValues.put(MediaStore.Images.Media.SIZE, wholeSize)
-                val downloadManager =
-                    mainActivity!!.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                val downloadManager = mainActivity!!.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                 val id = downloadManager.addCompletedDownload(
                     fileName,
                     fileName,
@@ -157,12 +154,8 @@ class OpenRasterFileFormatConversion private constructor() {
                     true
                 )
                 imageUri = resolver.insert(uri, contentValues)
-                val sharedPreferences = mainActivity!!.getSharedPreferences(
-                    SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME,
-                    0
-                )
-                sharedPreferences.edit().putLong(imageRoot.absolutePath + "/" + fileName, id)
-                    .apply()
+                val sharedPreferences = mainActivity!!.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, 0)
+                sharedPreferences.edit().putLong(imageRoot.absolutePath + "/" + fileName, id).apply()
             }
             outputStream = resolver.openOutputStream(Objects.requireNonNull(imageUri)!!)
             val streamZip = ZipOutputStream(outputStream)
@@ -183,8 +176,7 @@ class OpenRasterFileFormatConversion private constructor() {
                 streamZip.write(byteArray, 0, byteArray.size)
                 streamZip.closeEntry()
                 streamZip.putNextEntry(ZipEntry("alpha/$counter"))
-                val alphaByteArray =
-                    BigInteger.valueOf(current.opacityPercentage.toLong()).toByteArray()
+                val alphaByteArray = BigInteger.valueOf(current.opacityPercentage.toLong()).toByteArray()
                 streamZip.write(alphaByteArray, 0, alphaByteArray.size)
                 streamZip.closeEntry()
                 counter++
@@ -302,6 +294,7 @@ class OpenRasterFileFormatConversion private constructor() {
                     layers.add(layer)
                 } else {
                     current = zipInput.nextEntry
+
                 }
             }
             if (layers.isEmpty() || layers.size > MAX_LAYERS) {
