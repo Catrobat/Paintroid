@@ -87,12 +87,7 @@ class OpenRasterFileFormatConversion private constructor() {
         }
 
         @Throws(IOException::class)
-        fun exportToOraFile(
-            layers: List<LayerContracts.Layer>,
-            fileName: String,
-            bitmapAllLayers: Bitmap,
-            resolver: ContentResolver
-        ): Uri? {
+        fun exportToOraFile(layers: List<LayerContracts.Layer>, fileName: String, bitmapAllLayers: Bitmap, resolver: ContentResolver): Uri? {
             val imageUri: Uri?
             val outputStream: OutputStream?
             val contentValues = ContentValues()
@@ -116,44 +111,25 @@ class OpenRasterFileFormatConversion private constructor() {
             bitmapThumb.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, bosThumb)
             val bitmapThumbArray = bosThumb.toByteArray()
             var imageRoot: File? = null
+            contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 // applefile has no file ending. which is important for api level 30.
                 // we can't save an application file in media directory so we have to save it in downloads.
-                contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)
-                contentValues.put(
-                    MediaStore.Files.FileColumns.RELATIVE_PATH,
-                    Environment.DIRECTORY_DOWNLOADS
-                )
+                contentValues.put(MediaStore.Files.FileColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
                 contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/applefile")
                 imageUri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
             } else {
                 imageRoot = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                if (!imageRoot.exists() && !imageRoot.mkdirs()) {
-                    imageRoot.mkdirs()
-                }
-                val uri = MediaStore.Files.getContentUri("external")
+                if (!imageRoot.exists() && !imageRoot.mkdirs()) { imageRoot.mkdirs() }
                 contentValues.put(MediaStore.Files.FileColumns.DATA, imageRoot.absolutePath + "/" + fileName)
-                contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, fileName)
                 contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, "application/zip")
                 contentValues.put(MediaStore.Files.FileColumns.MEDIA_TYPE, MediaStore.Files.FileColumns.MEDIA_TYPE_NONE)
-                val date = System.currentTimeMillis()
-                contentValues.put(MediaStore.MediaColumns.DATE_MODIFIED, date / ONE_SECOND_IN_MILLISECOND)
-                wholeSize += xmlByteArray!!.size.toFloat()
-                wholeSize += mimeByteArray.size.toFloat()
-                wholeSize += bitmapByteArray.size.toFloat()
-                wholeSize += bitmapThumbArray.size.toFloat()
+                contentValues.put(MediaStore.MediaColumns.DATE_MODIFIED, System.currentTimeMillis() / ONE_SECOND_IN_MILLISECOND)
+                wholeSize += xmlByteArray!!.size.toFloat() + mimeByteArray.size.toFloat() + bitmapByteArray.size.toFloat() + bitmapThumbArray.size.toFloat()
                 contentValues.put(MediaStore.Images.Media.SIZE, wholeSize)
                 val downloadManager = mainActivity!!.baseContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                val id = downloadManager.addCompletedDownload(
-                    fileName,
-                    fileName,
-                    true,
-                    "application/zip",
-                    imageRoot.absolutePath + "/" + fileName,
-                    wholeSize.toLong(),
-                    true
-                )
-                imageUri = resolver.insert(uri, contentValues)
+                val id = downloadManager.addCompletedDownload(fileName, fileName, true, "application/zip", imageRoot.absolutePath + "/" + fileName, wholeSize.toLong(), true)
+                imageUri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
                 val sharedPreferences = mainActivity!!.getSharedPreferences(SPECIFIC_FILETYPE_SHARED_PREFERENCES_NAME, 0)
                 sharedPreferences.edit().putLong(imageRoot.absolutePath + "/" + fileName, id).apply()
             }
@@ -294,7 +270,6 @@ class OpenRasterFileFormatConversion private constructor() {
                     layers.add(layer)
                 } else {
                     current = zipInput.nextEntry
-
                 }
             }
             if (layers.isEmpty() || layers.size > MAX_LAYERS) {
