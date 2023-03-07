@@ -111,14 +111,16 @@ class DefaultZoomWindowController
     }
 
     override fun onMove(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF) {
-        setZoomWindowPosition(displayCoordinates)
-        if (isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
-            if (zoomWindow.visibility == View.GONE) {
-                zoomWindow.visibility = View.VISIBLE
+        if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE) {
+            setZoomWindowPosition(displayCoordinates)
+            if (isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
+                if (zoomWindow.visibility == View.GONE) {
+                    zoomWindow.visibility = View.VISIBLE
+                }
+                this.coordinates = drawingSurfaceCoordinates
+            } else {
+                dismiss()
             }
-            this.coordinates = drawingSurfaceCoordinates
-        } else {
-            dismiss()
         }
     }
 
