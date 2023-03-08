@@ -85,7 +85,7 @@ import java.io.OutputStream
 open class CommandSerializer(private val activityContext: Context, private val commandManager: CommandManager, private val model: MainActivityContracts.Model) {
 
     companion object {
-        const val CURRENT_IMAGE_VERSION = 1
+        const val CURRENT_IMAGE_VERSION = 2
         const val MAGIC_VALUE = "CATROBAT"
         private val TAG = DrawingSurfaceThread::class.java.simpleName
     }
