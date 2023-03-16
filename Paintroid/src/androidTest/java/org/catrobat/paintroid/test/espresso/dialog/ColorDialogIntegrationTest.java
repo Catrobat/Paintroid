@@ -28,6 +28,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
@@ -692,7 +693,7 @@ public class ColorDialogIntegrationTest {
 				.perform(click());
 
 		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
+		SystemClock.sleep(1000);
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS)))
 				.check(matches(isDisplayed()));
 	}
