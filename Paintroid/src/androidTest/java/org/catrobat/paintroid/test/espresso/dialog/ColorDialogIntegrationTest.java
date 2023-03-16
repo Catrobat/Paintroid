@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.idling.CountingIdlingResource;
@@ -693,8 +694,7 @@ public class ColorDialogIntegrationTest {
 				.perform(click());
 
 		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		SystemClock.sleep(1000);
-		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS)))
+		onView(allOf(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))))
 				.check(matches(isDisplayed()));
 	}
 
@@ -992,7 +992,6 @@ public class ColorDialogIntegrationTest {
 					.onPositiveButton()
 					.perform(click());
 		}
-
 		onDrawingSurfaceView()
 				.perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE));
 
