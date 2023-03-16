@@ -692,8 +692,8 @@ public class ColorDialogIntegrationTest {
 				.performOpenColorPicker();
 		onView(allOf(withId(R.id.color_picker_tab_icon), withBackground(R.drawable.ic_color_picker_tab_rgba)))
 				.perform(click());
-
 		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		SystemClock.sleep(1000);
 		onView(allOf(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS))))
 				.check(matches(isDisplayed()));
 	}
