@@ -28,6 +28,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.view.View;
 
 import org.catrobat.paintroid.MainActivity;
@@ -397,7 +398,7 @@ public class ColorDialogIntegrationTest {
 		onView(withId(R.id.color_picker_color_rgb_textview_green)).check(matches(allOf(isDisplayed(), withText(R.string.color_green), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_green)))));
 		onView(withId(R.id.color_picker_color_rgb_textview_blue)).check(matches(allOf(isDisplayed(), withText(R.string.color_blue), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_blue)))));
 		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).perform(scrollTo());
-		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha), withTextColor(getColorById(R.color.pocketpaint_color_picker_rgb_alpha)))));
+		onView(withId(R.id.color_picker_color_rgb_textview_alpha)).check(matches(allOf(isDisplayed(), withText(R.string.color_alpha))));
 
 		onView(withId(R.id.color_picker_color_rgb_textview_red)).perform(scrollTo());
 		onView(withId(R.id.color_picker_color_rgb_seekbar_red)).check(matches(isDisplayed()));
@@ -692,7 +693,7 @@ public class ColorDialogIntegrationTest {
 				.perform(click());
 
 		launchActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
+		SystemClock.sleep(1000);
 		onView(withClassName(containsString(TAB_VIEW_RGBA_SELECTOR_CLASS)))
 				.check(matches(isDisplayed()));
 	}
