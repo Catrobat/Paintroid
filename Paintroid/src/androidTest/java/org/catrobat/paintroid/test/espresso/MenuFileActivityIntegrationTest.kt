@@ -644,9 +644,9 @@ class MenuFileActivityIntegrationTest {
 
         assertEquals(oldFileName, newFileName)
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             addFileToDeletionFileList(name, FileIO.fileType.value)
-        }else{
+        } else {
             addUriToDeletionFileList(activity.model.savedPictureUri)
         }
     }
@@ -657,7 +657,7 @@ class MenuFileActivityIntegrationTest {
         }
     }
 
-    private fun addFileToDeletionFileList(fileName: String?, extension: String?){
+    private fun addFileToDeletionFileList(fileName: String?, extension: String?) {
         val dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(dir, "$fileName.$extension")
         deletionFileList.add(file)
