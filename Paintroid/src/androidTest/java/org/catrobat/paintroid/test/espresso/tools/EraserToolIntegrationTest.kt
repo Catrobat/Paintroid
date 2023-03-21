@@ -16,251 +16,227 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package org.catrobat.paintroid.test.espresso.tools;
-
-import android.graphics.Color;
-import android.graphics.Paint.Cap;
-
-import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
-import org.catrobat.paintroid.tools.ToolType;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
-
-import static org.catrobat.paintroid.test.espresso.util.EspressoUtils.DEFAULT_STROKE_WIDTH;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.setProgress;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.BrushPickerViewInteraction.onBrushPickerView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
-import static org.hamcrest.Matchers.allOf;
-
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isSelected;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-@RunWith(AndroidJUnit4.class)
-public class EraserToolIntegrationTest {
-
-	private static final String TEXT_DEFAULT_STROKE_WIDTH = Integer.toString(DEFAULT_STROKE_WIDTH);
-
-	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
-
-	@Test
-	public void testEraseOnEmptyBitmap() {
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
-
-		onToolBarView()
-				.performSelectTool(ToolType.ERASER);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
-	}
-
-	@Test
-	public void testEraseSinglePixel() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-
-		onToolBarView()
-				.performSelectTool(ToolType.ERASER);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
-	}
-
-	@Test
-	public void testSwitchingBetweenBrushAndEraser() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-
-		onToolBarView()
-				.performSelectTool(ToolType.ERASER);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
-
-		onToolBarView()
-				.performSelectTool(ToolType.BRUSH);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-
-		onToolBarView()
-				.performSelectTool(ToolType.ERASER);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
-	}
-
-	@Test
-	public void testChangeEraserBrushSize() {
-		int newStrokeWidth = 90;
-		onBrushPickerView().onStrokeWidthSeekBar()
-				.perform(setProgress(newStrokeWidth))
-				.check(matches(withProgress(newStrokeWidth)));
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-
-		onToolBarView()
-				.performSelectTool(ToolType.ERASER);
-
-		onBrushPickerView().onStrokeWidthSeekBar()
-				.check(matches(allOf(isDisplayed(), withProgress(newStrokeWidth))));
-		onBrushPickerView().onStrokeWidthTextView()
-				.check(matches(allOf(isDisplayed(), withText(Integer.toString(newStrokeWidth)))));
-
-		newStrokeWidth = 80;
-		onBrushPickerView().onStrokeWidthSeekBar()
-				.perform(setProgress(newStrokeWidth))
-				.check(matches(withProgress(newStrokeWidth)));
-
-		onToolBarView()
-				.performCloseToolOptionsView();
-
-		onToolProperties()
-				.checkStrokeWidth(80);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
-	}
-
-	@Test
-	public void testChangeEraserBrushForm() {
-		onBrushPickerView()
-				.onStrokeWidthSeekBar()
-				.perform(setProgress(70));
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-
-		onBrushPickerView()
-				.onStrokeWidthSeekBar()
-				.perform(setProgress(50));
-
-		onToolBarView()
-				.performSelectTool(ToolType.ERASER);
-
-		onBrushPickerView().onStrokeCapSquareView()
-				.perform(click());
-
-		onToolBarView()
-				.performCloseToolOptionsView();
-
-		onToolProperties()
-				.checkCap(Cap.SQUARE);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
-	}
-
-	@Test
-	public void testRestorePreviousToolSettings() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-
-		onToolBarView()
-				.performSelectTool(ToolType.ERASER);
-
-		onBrushPickerView().onStrokeWidthTextView()
-				.check(matches(allOf(isDisplayed(), withText(TEXT_DEFAULT_STROKE_WIDTH))));
-		onBrushPickerView().onStrokeWidthSeekBar()
-				.check(matches(allOf(isDisplayed(), withProgress(DEFAULT_STROKE_WIDTH))));
-
-		int newStrokeWidth = 80;
-		onBrushPickerView().onStrokeWidthSeekBar()
-				.perform(setProgress(newStrokeWidth))
-				.check(matches(withProgress(newStrokeWidth)));
-
-		onBrushPickerView().onStrokeCapSquareView()
-				.perform(click());
-
-		onToolProperties()
-				.checkStrokeWidth(newStrokeWidth)
-				.checkCap(Cap.SQUARE);
-
-		onToolBarView()
-				.performCloseToolOptionsView()
-				.performOpenToolOptionsView();
-
-		onBrushPickerView().onStrokeWidthSeekBar()
-				.check(matches(withProgress(newStrokeWidth)));
-
-		int eraserStrokeWidth = 60;
-		onBrushPickerView().onStrokeWidthSeekBar()
-				.perform(setProgress(eraserStrokeWidth))
-				.check(matches(withProgress(eraserStrokeWidth)));
-
-		onBrushPickerView().onStrokeCapRoundView()
-				.perform(click());
-
-		onToolProperties()
-				.checkStrokeWidth(eraserStrokeWidth)
-				.checkCap(Cap.ROUND);
-
-		onToolBarView()
-				.performSelectTool(ToolType.BRUSH);
-
-		onBrushPickerView().onStrokeWidthSeekBar()
-				.check(matches(withProgress(eraserStrokeWidth)));
-		onBrushPickerView().onStrokeCapRoundView()
-				.check(matches(isSelected()));
-
-		onToolProperties()
-				.checkCap(Cap.ROUND)
-				.checkStrokeWidth(eraserStrokeWidth);
-	}
+package org.catrobat.paintroid.test.espresso.tools
+
+import android.graphics.Color
+import android.graphics.Paint.Cap
+import android.view.View
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
+import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils.DEFAULT_STROKE_WIDTH
+import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.UiMatcher
+import org.catrobat.paintroid.test.espresso.util.wrappers.BrushPickerViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
+import org.catrobat.paintroid.tools.ToolType
+import org.hamcrest.Matchers
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class EraserToolIntegrationTest {
+    @get:Rule
+    var launchActivityRule = ActivityTestRule(
+        MainActivity::class.java
+    )
+
+    @get:Rule
+    var screenshotOnFailRule = ScreenshotOnFailRule()
+    @Test
+    fun testEraseOnEmptyBitmap() {
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.ERASER)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testEraseSinglePixel() {
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.ERASER)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testSwitchingBetweenBrushAndEraser() {
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.ERASER)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.BRUSH)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.ERASER)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testChangeEraserBrushSize() {
+        var newStrokeWidth = 90
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeWidthSeekBar()
+            .perform(UiInteractions.setProgress(newStrokeWidth))
+            .check(ViewAssertions.matches(UiMatcher.withProgress(newStrokeWidth)))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.ERASER)
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeWidthSeekBar()
+            .check(
+                ViewAssertions.matches(
+                    Matchers.allOf(
+                        ViewMatchers.isDisplayed(),
+                        UiMatcher.withProgress(newStrokeWidth)
+                    )
+                )
+            )
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeWidthTextView()
+            .check(
+                ViewAssertions.matches(
+                    Matchers.allOf(
+                        ViewMatchers.isDisplayed(), ViewMatchers.withText(
+                            Integer.toString(newStrokeWidth)
+                        )
+                    )
+                )
+            )
+        newStrokeWidth = 80
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeWidthSeekBar()
+            .perform(UiInteractions.setProgress(newStrokeWidth))
+            .check(ViewAssertions.matches(UiMatcher.withProgress(newStrokeWidth)))
+        ToolBarViewInteraction.onToolBarView()
+            .performCloseToolOptionsView()
+        ToolPropertiesInteraction.onToolProperties()
+            .checkStrokeWidth(80f)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testChangeEraserBrushForm() {
+        BrushPickerViewInteraction.onBrushPickerView()
+            .onStrokeWidthSeekBar()
+            .perform(UiInteractions.setProgress(70))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        BrushPickerViewInteraction.onBrushPickerView()
+            .onStrokeWidthSeekBar()
+            .perform(UiInteractions.setProgress(50))
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.ERASER)
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeCapSquareView()
+            .perform(ViewActions.click())
+        ToolBarViewInteraction.onToolBarView()
+            .performCloseToolOptionsView()
+        ToolPropertiesInteraction.onToolProperties()
+            .checkCap(Cap.SQUARE)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testRestorePreviousToolSettings() {
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.ERASER)
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeWidthTextView()
+            .check(
+                ViewAssertions.matches(
+                    Matchers.allOf(
+                        ViewMatchers.isDisplayed(), ViewMatchers.withText(
+                            TEXT_DEFAULT_STROKE_WIDTH
+                        )
+                    )
+                )
+            )
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeWidthSeekBar()
+            .check(
+                ViewAssertions.matches(
+                    Matchers.allOf<View>(
+                        ViewMatchers.isDisplayed(),
+                        UiMatcher.withProgress(DEFAULT_STROKE_WIDTH)
+                    )
+                )
+            )
+        val newStrokeWidth = 80
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeWidthSeekBar()
+            .perform(UiInteractions.setProgress(newStrokeWidth))
+            .check(ViewAssertions.matches(UiMatcher.withProgress(newStrokeWidth)))
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeCapSquareView()
+            .perform(ViewActions.click())
+        ToolPropertiesInteraction.onToolProperties()
+            .checkStrokeWidth(newStrokeWidth.toFloat())
+            .checkCap(Cap.SQUARE)
+        ToolBarViewInteraction.onToolBarView()
+            .performCloseToolOptionsView()
+            .performOpenToolOptionsView()
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeWidthSeekBar()
+            .check(ViewAssertions.matches(UiMatcher.withProgress(newStrokeWidth)))
+        val eraserStrokeWidth = 60
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeWidthSeekBar()
+            .perform(UiInteractions.setProgress(eraserStrokeWidth))
+            .check(ViewAssertions.matches(UiMatcher.withProgress(eraserStrokeWidth)))
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeCapRoundView()
+            .perform(ViewActions.click())
+        ToolPropertiesInteraction.onToolProperties()
+            .checkStrokeWidth(eraserStrokeWidth.toFloat())
+            .checkCap(Cap.ROUND)
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.BRUSH)
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeWidthSeekBar()
+            .check(ViewAssertions.matches(UiMatcher.withProgress(eraserStrokeWidth)))
+        BrushPickerViewInteraction.onBrushPickerView().onStrokeCapRoundView()
+            .check(ViewAssertions.matches(ViewMatchers.isSelected()))
+        ToolPropertiesInteraction.onToolProperties()
+            .checkCap(Cap.ROUND)
+            .checkStrokeWidth(eraserStrokeWidth.toFloat())
+    }
+
+    companion object {
+        private val TEXT_DEFAULT_STROKE_WIDTH = Integer.toString(DEFAULT_STROKE_WIDTH)
+    }
 }
