@@ -16,38 +16,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.util.wrappers
 
-package org.catrobat.paintroid.test.espresso.util.wrappers;
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import org.catrobat.paintroid.R
 
-import org.catrobat.paintroid.R;
+class BrushPickerViewInteraction private constructor() :
+    CustomViewInteraction(onView(withId(R.id.pocketpaint_layout_tool_options))) {
+    fun onStrokeWidthSeekBar(): ViewInteraction {
+        return onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
+    }
 
-import androidx.test.espresso.ViewInteraction;
+    fun onStrokeWidthTextView(): ViewInteraction {
+        return onView(withId(R.id.pocketpaint_stroke_width_width_text))
+    }
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
+    fun onStrokeCapSquareView(): ViewInteraction {
+        return onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
+    }
 
-public final class BrushPickerViewInteraction extends CustomViewInteraction {
-	private BrushPickerViewInteraction() {
-		super(onView(withId(R.id.pocketpaint_layout_tool_options)));
-	}
+    fun onStrokeCapRoundView(): ViewInteraction {
+        return onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
+    }
 
-	public static BrushPickerViewInteraction onBrushPickerView() {
-		return new BrushPickerViewInteraction();
-	}
-
-	public ViewInteraction onStrokeWidthSeekBar() {
-		return onView(withId(R.id.pocketpaint_stroke_width_seek_bar));
-	}
-
-	public ViewInteraction onStrokeWidthTextView() {
-		return onView(withId(R.id.pocketpaint_stroke_width_width_text));
-	}
-
-	public ViewInteraction onStrokeCapSquareView() {
-		return onView(withId(R.id.pocketpaint_stroke_ibtn_rect));
-	}
-
-	public ViewInteraction onStrokeCapRoundView() {
-		return onView(withId(R.id.pocketpaint_stroke_ibtn_circle));
-	}
+    companion object {
+        @JvmStatic
+		fun onBrushPickerView(): BrushPickerViewInteraction {
+            return BrushPickerViewInteraction()
+        }
+    }
 }

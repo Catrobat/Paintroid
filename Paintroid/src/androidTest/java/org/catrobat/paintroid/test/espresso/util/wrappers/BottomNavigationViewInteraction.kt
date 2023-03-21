@@ -16,59 +16,82 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.util.wrappers
 
-package org.catrobat.paintroid.test.espresso.util.wrappers;
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
+import org.catrobat.paintroid.R
+import org.catrobat.paintroid.test.espresso.util.UiMatcher
+import org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable
+import org.catrobat.paintroid.tools.ToolType
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Matchers
 
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.tools.ToolType;
+class BottomNavigationViewInteraction private constructor() :
+    CustomViewInteraction(onView(withId(R.id.pocketpaint_bottom_navigation))) {
+    fun onToolsClicked(): ViewInteraction {
+        return onView(
+            allOf(
+                withId(R.id.icon),
+                isDescendantOfA(withId(R.id.action_tools))
+            )
+        )
+            .perform(click())
+    }
 
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withDrawable;
-import static org.hamcrest.Matchers.allOf;
+    fun onCurrentClicked(): ViewInteraction {
+        return onView(
+            allOf(
+                withId(R.id.icon),
+                isDescendantOfA(withId(R.id.action_current_tool))
+            )
+        )
+            .perform(click())
+    }
 
-import androidx.test.espresso.ViewInteraction;
+    fun checkShowsCurrentTool(toolType: ToolType): ViewInteraction {
+        onView(
+            allOf(
+                withId(R.id.icon),
+                isDescendantOfA(withId(R.id.action_current_tool))
+            )
+        )
+            .check(matches(withDrawable(toolType.drawableResource)))
+        return onView(withId(R.id.action_current_tool))
+            .check(matches(hasDescendant(withText(toolType.nameResource))))
+    }
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
-import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
+    fun onColorClicked(): ViewInteraction {
+        return onView(
+            Matchers.allOf(
+                withId(R.id.icon),
+                isDescendantOfA(withId(R.id.action_color_picker))
+            )
+        )
+            .perform(click())
+    }
 
-public final class BottomNavigationViewInteraction extends CustomViewInteraction {
-	private BottomNavigationViewInteraction() {
-		super(onView(withId(R.id.pocketpaint_bottom_navigation)));
-	}
+    fun onLayersClicked(): ViewInteraction {
+        return onView(
+            Matchers.allOf(
+                withId(R.id.icon),
+                isDescendantOfA(withId(R.id.action_layers))
+            )
+        )
+            .perform(click())
+    }
 
-	public static BottomNavigationViewInteraction onBottomNavigationView() {
-		return new BottomNavigationViewInteraction();
-	}
-
-	public ViewInteraction onToolsClicked() {
-		return onView(allOf(withId(R.id.icon), isDescendantOfA(withId(R.id.action_tools))))
-				.perform(click());
-	}
-
-	public ViewInteraction onCurrentClicked() {
-		return onView(allOf(withId(R.id.icon), isDescendantOfA(withId(R.id.action_current_tool))))
-				.perform(click());
-	}
-
-	public ViewInteraction checkShowsCurrentTool(ToolType toolType) {
-		onView(allOf(withId(R.id.icon), isDescendantOfA(withId(R.id.action_current_tool))))
-				.check(matches(withDrawable(toolType.getDrawableResource())));
-
-		return onView(withId(R.id.action_current_tool))
-				.check(matches(hasDescendant(withText(toolType.getNameResource()))));
-	}
-
-	public ViewInteraction onColorClicked() {
-		return onView(allOf(withId(R.id.icon), isDescendantOfA(withId(R.id.action_color_picker))))
-				.perform(click());
-	}
-
-	public ViewInteraction onLayersClicked() {
-		return onView(allOf(withId(R.id.icon), isDescendantOfA(withId(R.id.action_layers))))
-				.perform(click());
-	}
+    companion object {
+        @JvmStatic
+		fun onBottomNavigationView(): BottomNavigationViewInteraction {
+            return BottomNavigationViewInteraction()
+        }
+    }
 }
