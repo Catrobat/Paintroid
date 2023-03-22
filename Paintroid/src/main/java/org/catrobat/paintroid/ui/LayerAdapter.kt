@@ -92,7 +92,7 @@ class LayerAdapter(
             get() = itemView
 
         override fun bindView() {
-            val layer = layerPresenter.getLayerItem(position)
+            val layer = layerPresenter.getLayerItem(adapterPosition)
             val isSelected = layer === layerPresenter.getSelectedLayer()
             setSelected(isSelected)
             setLayerVisibilityCheckbox(layer.isVisible)
@@ -100,25 +100,25 @@ class LayerAdapter(
 
             layerVisibilityCheckbox.setOnClickListener {
                 val isVisible = layerVisibilityCheckbox.isChecked
-                layerPresenter.setLayerVisibility(position, isVisible)
+                layerPresenter.setLayerVisibility(adapterPosition, isVisible)
             }
 
             layerBackground.setOnClickListener {
-                layerPresenter.setLayerSelected(position)
+                layerPresenter.setLayerSelected(adapterPosition)
             }
 
             dragHandle.setOnTouchListener { _, event ->
                 when (event.action) {
-                    MotionEvent.ACTION_DOWN -> layerPresenter.onStartDragging(position, itemView)
+                    MotionEvent.ACTION_DOWN -> layerPresenter.onStartDragging(adapterPosition, itemView)
                     MotionEvent.ACTION_UP -> layerPresenter.onStopDragging()
                 }
 
                 true
             }
 
-            opacitySeekBar.progress = layerPresenter.getLayerItem(position).opacityPercentage
+            opacitySeekBar.progress = layerPresenter.getLayerItem(adapterPosition).opacityPercentage
             opacityEditText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
-            opacityEditText.setText(layerPresenter.getLayerItem(position).opacityPercentage.toString())
+            opacityEditText.setText(layerPresenter.getLayerItem(adapterPosition).opacityPercentage.toString())
             opacityEditText.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
@@ -136,10 +136,10 @@ class LayerAdapter(
 
                     if (opacityPercentage != opacitySeekBar.progress) {
                         opacitySeekBar.progress = opacityPercentage
-                        layerPresenter.changeLayerOpacity(position, opacityPercentage)
+                        layerPresenter.changeLayerOpacity(adapterPosition, opacityPercentage)
                     }
 
-                    layerPresenter.getLayerItem(position).opacityPercentage = opacityPercentage
+                    layerPresenter.getLayerItem(adapterPosition).opacityPercentage = opacityPercentage
                     layerPresenter.refreshDrawingSurface()
                 }
             })
@@ -159,7 +159,7 @@ class LayerAdapter(
                 }
 
                 override fun onStopTrackingTouch(seekBar: SeekBar) {
-                    layerPresenter.changeLayerOpacity(position, seekBar.progress)
+                    layerPresenter.changeLayerOpacity(adapterPosition, seekBar.progress)
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar) = Unit
