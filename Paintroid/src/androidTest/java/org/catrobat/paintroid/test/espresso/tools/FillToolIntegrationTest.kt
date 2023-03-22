@@ -16,264 +16,301 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.tools
 
-package org.catrobat.paintroid.test.espresso.tools;
+import android.graphics.Color
+import android.net.Uri
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.IdlingRegistry.getInstance
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.idling.CountingIdlingResource
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
+import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.R
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
+import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.swipeAccurate
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
+import org.catrobat.paintroid.test.espresso.util.UiMatcher
+import org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
+import org.catrobat.paintroid.tools.ToolReference
+import org.catrobat.paintroid.tools.ToolType
+import org.catrobat.paintroid.tools.implementation.DEFAULT_TOLERANCE_IN_PERCENT
+import org.catrobat.paintroid.tools.implementation.FillTool
+import org.catrobat.paintroid.ui.Perspective
+import org.junit.*
+import org.junit.Assert.assertEquals
+import org.junit.runner.RunWith
+import java.io.File
 
-import android.graphics.Color;
-import android.net.Uri;
+@RunWith(AndroidJUnit4::class)
+class FillToolIntegrationTest {
+    @get:Rule
+    var launchActivityRule = ActivityTestRule(
+        MainActivity::class.java
+    )
 
-import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
-import org.catrobat.paintroid.tools.ToolReference;
-import org.catrobat.paintroid.tools.ToolType;
-import org.catrobat.paintroid.tools.implementation.FillTool;
-import org.catrobat.paintroid.ui.Perspective;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+    @get:Rule
+    var screenshotOnFailRule = ScreenshotOnFailRule()
+    private var perspective: Perspective? = null
+    private var toolReference: ToolReference? = null
+    private var mainActivity: MainActivity? = null
+    private var idlingResource: CountingIdlingResource? = null
+    @Before
+    fun setUp() {
+        mainActivity = launchActivityRule.activity
+        perspective = mainActivity?.perspective
+        toolReference = mainActivity?.toolReference
+        idlingResource = mainActivity?.idlingResource
+        getInstance().register(idlingResource)
+        onToolBarView()
+            .performSelectTool(ToolType.FILL)
+    }
 
-import java.io.File;
+    @After
+    fun tearDown() {
+        getInstance().unregister(idlingResource)
+    }
 
-import androidx.test.espresso.IdlingRegistry;
-import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.idling.CountingIdlingResource;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
+    @Test
+    fun testFloodFillIfImageLoaded() {
+        mainActivity!!.model.savedPictureUri = Uri.fromFile(File("dummy"))
+        onToolProperties()
+            .checkMatchesColor(Color.BLACK)
+        onDrawingSurfaceView()
+            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        mainActivity!!.model.savedPictureUri = null
+    }
 
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.swipeAccurate;
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView;
-import static org.catrobat.paintroid.tools.implementation.FillToolKt.DEFAULT_TOLERANCE_IN_PERCENT;
-import static org.junit.Assert.assertEquals;
+    @Test
+    fun testBitmapIsFilled() {
+        onToolProperties()
+            .checkMatchesColor(Color.BLACK)
+        onDrawingSurfaceView()
+            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+    }
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
+    @Test
+    fun testNothingHappensWhenClickedOutsideDrawingArea() {
+        perspective!!.multiplyScale(.5f)
+        onToolProperties()
+            .checkMatchesColor(Color.BLACK)
+        onDrawingSurfaceView()
+            .perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_RIGHT))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+    }
 
-@RunWith(AndroidJUnit4.class)
-public class FillToolIntegrationTest {
+    @Test
+    fun testOnlyFillInnerArea() {
+        onToolBarView()
+            .performSelectTool(ToolType.BRUSH)
+        onToolProperties()
+            .checkMatchesColor(Color.BLACK)
+        onDrawingSurfaceView()
+            .perform(
+                swipeAccurate(
+                    DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE,
+                    DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE
+                )
+            )
+            .perform(
+                swipeAccurate(
+                    DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE,
+                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE
+                )
+            )
+            .perform(
+                swipeAccurate(
+                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE,
+                    DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE
+                )
+            )
+            .perform(
+                swipeAccurate(
+                    DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE,
+                    DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE
+                )
+            )
+        onToolBarView()
+            .performSelectTool(ToolType.FILL)
+        onToolProperties()
+            .setColorResource(R.color.pocketpaint_color_picker_green1)
+        onDrawingSurfaceView()
+            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColorResource(
+                R.color.pocketpaint_color_picker_green1,
+                BitmapLocationProvider.MIDDLE
+            )
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE_RIGHT)
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+    }
 
-	private static final double TOLERANCE_DELTA = 0.05d;
+    @Test
+    fun testFillToolOptionsDialog() {
+        val fillTool = toolReference!!.tool as FillTool?
+        assertEquals(
+            "Wrong fill tool member value for color tolerance",
+            fillTool!!.getToleranceAbsoluteValue(DEFAULT_TOLERANCE_IN_PERCENT).toDouble(),
+            fillTool.colorTolerance.toDouble(),
+            TOLERANCE_DELTA
+        )
+        onToolBarView()
+            .performClickSelectedToolButton()
+        val colorToleranceInput =
+            onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
+        val colorToleranceSeekBar =
+            onView(withId(R.id.pocketpaint_color_tolerance_seek_bar))
+        val testToleranceText = "100"
+        colorToleranceInput.check(
+            matches(
+                withText(
+                    Integer.toString(
+                        DEFAULT_TOLERANCE_IN_PERCENT
+                    )
+                )
+            )
+        )
+        colorToleranceInput.perform(
+            replaceText(testToleranceText),
+            closeSoftKeyboard()
+        )
+        colorToleranceInput.check(matches(withText(testToleranceText)))
+        colorToleranceSeekBar.check(matches(withProgress(testToleranceText.toInt())))
+        val expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(100)
+        assertEquals(
+            "Wrong fill tool member value for color tolerance",
+            expectedAbsoluteTolerance.toDouble(),
+            fillTool.colorTolerance.toDouble(),
+            TOLERANCE_DELTA
+        )
 
-	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
+        // Close tool options
+        onToolBarView()
+            .performClickSelectedToolButton()
+    }
 
-	@Rule
-	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
+    @Test
+    fun testFillToolDialogAfterToolSwitch() {
+        val fillTool = toolReference!!.tool as FillTool?
+        onToolBarView()
+            .performClickSelectedToolButton()
+        val colorToleranceInput =
+            onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
+        val colorToleranceSeekBar =
+            onView(withId(R.id.pocketpaint_color_tolerance_seek_bar))
+        val toleranceInPercent = 50
+        colorToleranceInput.perform(replaceText(toleranceInPercent.toString()))
+        val expectedAbsoluteTolerance = fillTool!!.getToleranceAbsoluteValue(toleranceInPercent)
+        assertEquals(
+            "Wrong fill tool member value for color tolerance",
+            expectedAbsoluteTolerance.toDouble(),
+            fillTool.colorTolerance.toDouble(),
+            TOLERANCE_DELTA
+        )
 
-	private Perspective perspective;
-	private ToolReference toolReference;
-	private MainActivity mainActivity;
-	private CountingIdlingResource idlingResource;
+        // Close tool options
+        onToolBarView()
+            .performClickSelectedToolButton()
+        onToolBarView()
+            .performSelectTool(ToolType.BRUSH)
+        onToolBarView()
+            .performSelectTool(ToolType.FILL)
+        onToolBarView()
+            .performClickSelectedToolButton()
+        colorToleranceInput.check(
+            matches(
+                withText(
+                    Integer.toString(
+                        DEFAULT_TOLERANCE_IN_PERCENT
+                    )
+                )
+            )
+        )
+        colorToleranceSeekBar.check(
+            matches(
+                UiMatcher.withProgress(
+                    DEFAULT_TOLERANCE_IN_PERCENT
+                )
+            )
+        )
+    }
 
-	@Before
-	public void setUp() {
-		mainActivity = launchActivityRule.getActivity();
-		perspective = mainActivity.perspective;
-		toolReference = mainActivity.toolReference;
-		idlingResource = mainActivity.getIdlingResource();
-		IdlingRegistry.getInstance().register(idlingResource);
+    @Ignore("Fails on Jenkins, trying out if everything works without this test or if error is due to a bug on Jenkins")
+    @Test
+    fun testFillToolUndoRedoWithTolerance() {
+        onToolBarView()
+            .performSelectTool(ToolType.BRUSH)
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+        onToolProperties()
+            .setColorResource(R.color.pocketpaint_color_picker_brown2)
+            .checkMatchesColorResource(R.color.pocketpaint_color_picker_brown2)
+        onToolBarView()
+            .performSelectTool(ToolType.FILL)
+            .performOpenToolOptionsView()
+        onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
+            .perform(replaceText(100.toString()))
+        onToolBarView()
+            .performCloseToolOptionsView()
+        onDrawingSurfaceView()
+            .perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColorResource(
+                R.color.pocketpaint_color_picker_brown2,
+                BitmapLocationProvider.MIDDLE
+            )
+            .checkPixelColorResource(
+                R.color.pocketpaint_color_picker_brown2,
+                BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE
+            )
+        onTopBarView()
+            .performUndo()
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onTopBarView()
+            .performRedo()
+        onDrawingSurfaceView()
+            .checkPixelColorResource(
+                R.color.pocketpaint_color_picker_brown2,
+                BitmapLocationProvider.MIDDLE
+            )
+            .checkPixelColorResource(
+                R.color.pocketpaint_color_picker_brown2,
+                BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE
+            )
+    }
 
-		onToolBarView()
-				.performSelectTool(ToolType.FILL);
-	}
-
-	@After
-	public void tearDown() {
-		IdlingRegistry.getInstance().unregister(idlingResource);
-	}
-
-	@Test
-	public void testFloodFillIfImageLoaded() {
-		mainActivity.model.setSavedPictureUri(Uri.fromFile(new File("dummy")));
-
-		onToolProperties()
-				.checkMatchesColor(Color.BLACK);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-
-		mainActivity.model.setSavedPictureUri(null);
-	}
-
-	@Test
-	public void testBitmapIsFilled() {
-		onToolProperties()
-				.checkMatchesColor(Color.BLACK);
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-	}
-
-	@Test
-	public void testNothingHappensWhenClickedOutsideDrawingArea() {
-		perspective.multiplyScale(.5f);
-		onToolProperties()
-				.checkMatchesColor(Color.BLACK);
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.OUTSIDE_MIDDLE_RIGHT));
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE);
-	}
-
-	@Test
-	public void testOnlyFillInnerArea() {
-		onToolBarView()
-				.performSelectTool(ToolType.BRUSH);
-
-		onToolProperties()
-				.checkMatchesColor(Color.BLACK);
-
-		onDrawingSurfaceView()
-				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE))
-				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_RIGHT_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE))
-				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
-				.perform(swipeAccurate(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE, DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
-
-		onToolBarView()
-				.performSelectTool(ToolType.FILL);
-
-		onToolProperties()
-				.setColorResource(R.color.pocketpaint_color_picker_green1);
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColorResource(R.color.pocketpaint_color_picker_green1, BitmapLocationProvider.MIDDLE)
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE_RIGHT)
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
-	}
-
-	@Test
-	public void testFillToolOptionsDialog() {
-		FillTool fillTool = (FillTool) toolReference.getTool();
-		assertEquals(
-				"Wrong fill tool member value for color tolerance",
-				fillTool.getToleranceAbsoluteValue(DEFAULT_TOLERANCE_IN_PERCENT),
-				fillTool.colorTolerance,
-				TOLERANCE_DELTA
-		);
-
-		onToolBarView()
-				.performClickSelectedToolButton();
-
-		final ViewInteraction colorToleranceInput = onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input));
-		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.pocketpaint_color_tolerance_seek_bar));
-
-		String testToleranceText = "100";
-
-		colorToleranceInput.check(matches(withText(Integer.toString(DEFAULT_TOLERANCE_IN_PERCENT))));
-
-		colorToleranceInput.perform(replaceText(testToleranceText), closeSoftKeyboard());
-
-		colorToleranceInput.check(matches(withText(testToleranceText)));
-		colorToleranceSeekBar.check(matches(withProgress(Integer.parseInt(testToleranceText))));
-
-		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(100);
-		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, fillTool.colorTolerance, TOLERANCE_DELTA);
-
-		// Close tool options
-		onToolBarView()
-				.performClickSelectedToolButton();
-	}
-
-	@Test
-	public void testFillToolDialogAfterToolSwitch() {
-		FillTool fillTool = (FillTool) toolReference.getTool();
-
-		onToolBarView()
-				.performClickSelectedToolButton();
-
-		final ViewInteraction colorToleranceInput = onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input));
-		final ViewInteraction colorToleranceSeekBar = onView(withId(R.id.pocketpaint_color_tolerance_seek_bar));
-
-		int toleranceInPercent = 50;
-
-		colorToleranceInput.perform(replaceText(String.valueOf(toleranceInPercent)));
-
-		float expectedAbsoluteTolerance = fillTool.getToleranceAbsoluteValue(toleranceInPercent);
-
-		assertEquals("Wrong fill tool member value for color tolerance", expectedAbsoluteTolerance, fillTool.colorTolerance, TOLERANCE_DELTA);
-
-		// Close tool options
-		onToolBarView()
-				.performClickSelectedToolButton();
-
-		onToolBarView()
-				.performSelectTool(ToolType.BRUSH);
-
-		onToolBarView()
-				.performSelectTool(ToolType.FILL);
-		onToolBarView()
-				.performClickSelectedToolButton();
-
-		colorToleranceInput.check(matches(withText(Integer.toString(DEFAULT_TOLERANCE_IN_PERCENT))));
-		colorToleranceSeekBar.check(matches(withProgress(DEFAULT_TOLERANCE_IN_PERCENT)));
-	}
-
-	@Ignore("Fails on Jenkins, trying out if everything works without this test or if error is due to a bug on Jenkins")
-	@Test
-	public void testFillToolUndoRedoWithTolerance() {
-		onToolBarView()
-				.performSelectTool(ToolType.BRUSH);
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE);
-
-		onToolProperties()
-				.setColorResource(R.color.pocketpaint_color_picker_brown2)
-				.checkMatchesColorResource(R.color.pocketpaint_color_picker_brown2);
-
-		onToolBarView()
-				.performSelectTool(ToolType.FILL)
-				.performOpenToolOptionsView();
-
-		onView(withId(R.id.pocketpaint_fill_tool_dialog_color_tolerance_input))
-				.perform(replaceText(String.valueOf(100)));
-
-		onToolBarView()
-				.performCloseToolOptionsView();
-
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.MIDDLE));
-		onDrawingSurfaceView()
-				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown2, BitmapLocationProvider.MIDDLE)
-				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
-
-		onTopBarView()
-				.performUndo();
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
-
-		onTopBarView()
-				.performRedo();
-
-		onDrawingSurfaceView()
-				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown2, BitmapLocationProvider.MIDDLE)
-				.checkPixelColorResource(R.color.pocketpaint_color_picker_brown2, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
-	}
+    companion object {
+        private const val TOLERANCE_DELTA = 0.05
+    }
 }

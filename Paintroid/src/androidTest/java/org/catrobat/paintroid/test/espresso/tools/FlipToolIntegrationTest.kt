@@ -16,81 +16,73 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.tools
 
-package org.catrobat.paintroid.test.espresso.tools;
+import android.graphics.Color
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
+import org.catrobat.paintroid.MainActivity
+import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
+import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
+import org.catrobat.paintroid.test.espresso.util.UiInteractions
+import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView
+import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
+import org.catrobat.paintroid.tools.ToolType
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
 
-import android.graphics.Color;
+@RunWith(AndroidJUnit4::class)
+class FlipToolIntegrationTest {
+    @get:Rule
+    var launchActivityRule = ActivityTestRule(
+        MainActivity::class.java
+    )
 
-import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider;
-import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider;
-import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule;
-import org.catrobat.paintroid.tools.ToolType;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+    @get:Rule
+    var screenshotOnFailRule = ScreenshotOnFailRule()
+    @Before
+    fun setUp() {
+        onToolBarView()
+            .performSelectTool(ToolType.BRUSH)
+    }
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
+    @Test
+    fun testHorizontalFlip() {
+        onDrawingSurfaceView()
+            .perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_MIDDLE)
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE)
+        onToolBarView()
+            .performSelectTool(ToolType.TRANSFORM)
+        onTransformToolOptionsView()
+            .performFlipHorizontal()
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_TOP_MIDDLE)
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE)
+    }
 
-import static org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView;
-
-@RunWith(AndroidJUnit4.class)
-public class FlipToolIntegrationTest {
-
-	@Rule
-	public ActivityTestRule<MainActivity> launchActivityRule = new ActivityTestRule<>(MainActivity.class);
-
-	@Rule
-	public ScreenshotOnFailRule screenshotOnFailRule = new ScreenshotOnFailRule();
-
-	@Before
-	public void setUp() {
-		onToolBarView()
-				.performSelectTool(ToolType.BRUSH);
-	}
-
-	@Test
-	public void testHorizontalFlip() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_TOP_MIDDLE)
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE);
-
-		onToolBarView()
-				.performSelectTool(ToolType.TRANSFORM);
-
-		onTransformToolOptionsView()
-				.performFlipHorizontal();
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_TOP_MIDDLE)
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_BOTTOM_MIDDLE);
-	}
-
-	@Test
-	public void testVerticalFlip() {
-		onDrawingSurfaceView()
-				.perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE));
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
-
-		onToolBarView()
-				.performSelectTool(ToolType.TRANSFORM);
-
-		onTransformToolOptionsView()
-				.performFlipVertical();
-
-		onDrawingSurfaceView()
-				.checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
-				.checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE);
-	}
+    @Test
+    fun testVerticalFlip() {
+        onDrawingSurfaceView()
+            .perform(touchAt(DrawingSurfaceLocationProvider.HALFWAY_LEFT_MIDDLE))
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+        onToolBarView()
+            .performSelectTool(ToolType.TRANSFORM)
+        onTransformToolOptionsView()
+            .performFlipVertical()
+        onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.HALFWAY_LEFT_MIDDLE)
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.HALFWAY_RIGHT_MIDDLE)
+    }
 }
