@@ -16,95 +16,86 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.catrobat.paintroid.test.espresso.util.wrappers;
+package org.catrobat.paintroid.test.espresso.util.wrappers
 
-import org.catrobat.paintroid.R;
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import org.catrobat.paintroid.R
+import org.catrobat.paintroid.test.espresso.util.UiMatcher
+import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor
 
-import androidx.test.espresso.ViewInteraction;
+class ColorPickerPreviewInteraction private constructor() :
+    CustomViewInteraction(onView(ViewMatchers.withId(R.id.previewSurface))) {
+    fun onPositiveButton(): ViewInteraction {
+        return onView(withId(android.R.id.button1)) // to avoid following exception when running on emulator:
+            // Caused by: java.lang.SecurityException:
+            // Injecting to another application requires INJECT_EVENTS permission
+            .perform(closeSoftKeyboard())
+    }
 
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
+    fun onNegativeButton(): ViewInteraction {
+        return onView(withId(android.R.id.button2)) // to avoid following exception when running on emulator:
+            // Caused by: java.lang.SecurityException:
+            // Injecting to another application requires INJECT_EVENTS permission
+            .perform(closeSoftKeyboard())
+    }
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
+    fun checkColorPreviewColor(color: Int) {
+        onView(withId(R.id.colorPreview))
+            .check(matches(withBackgroundColor(color)))
+    }
 
-public final class ColorPickerPreviewInteraction extends CustomViewInteraction {
+    fun performCloseColorPickerPreviewWithDoneButton(): ColorPickerPreviewInteraction {
+        check(matches(isDisplayed()))
+        onView(withId(R.id.doneAction))
+            .perform(click())
+        return this
+    }
 
-	private ColorPickerPreviewInteraction() {
-		super(onView(withId(R.id.previewSurface)));
-	}
+    fun performCloseColorPickerPreviewWithBackButtonDecline(): ColorPickerPreviewInteraction {
+        check(matches(isDisplayed()))
+        onView(withId(R.id.backAction))
+            .perform(click())
+        onNegativeButton()
+            .perform(click())
+        return this
+    }
 
-	public static ColorPickerPreviewInteraction onColorPickerPreview() {
-		return new ColorPickerPreviewInteraction();
-	}
+    fun performCloseColorPickerPreviewWithBackButtonAccept(): ColorPickerPreviewInteraction {
+        check(matches(isDisplayed()))
+        onView(withId(R.id.backAction))
+            .perform(click())
+        onPositiveButton()
+            .perform(click())
+        return this
+    }
 
-	public ViewInteraction onPositiveButton() {
-		return onView(withId(android.R.id.button1))
-				// to avoid following exception when running on emulator:
-				// Caused by: java.lang.SecurityException:
-				// Injecting to another application requires INJECT_EVENTS permission
-				.perform(closeSoftKeyboard());
-	}
+    fun assertShowColorPickerPreviewBackDialog() {
+        check(matches(isDisplayed()))
+        onView(withId(R.id.backAction))
+            .perform(click())
+        onView(withId(android.R.id.button1))
+            .check(matches(isDisplayed()))
+        onView(withId(android.R.id.button2))
+            .check(matches(isDisplayed()))
+        onView(ViewMatchers.withText(R.string.color_picker_save_dialog_title))
+            .check(matches(isDisplayed()))
+        onView(ViewMatchers.withText(R.string.color_picker_save_dialog_msg))
+            .check(matches(isDisplayed()))
+    }
 
-	public ViewInteraction onNegativeButton() {
-		return onView(withId(android.R.id.button2))
-				// to avoid following exception when running on emulator:
-				// Caused by: java.lang.SecurityException:
-				// Injecting to another application requires INJECT_EVENTS permission
-				.perform(closeSoftKeyboard());
-	}
-
-	public void checkColorPreviewColor(int color) {
-		onView(withId(R.id.colorPreview))
-				.check(matches(withBackgroundColor(color)));
-	}
-
-	public ColorPickerPreviewInteraction performCloseColorPickerPreviewWithDoneButton() {
-		check(matches(isDisplayed()));
-		onView(withId(R.id.doneAction))
-				.perform(click());
-		return this;
-	}
-
-	public ColorPickerPreviewInteraction performCloseColorPickerPreviewWithBackButtonDecline() {
-		check(matches(isDisplayed()));
-		onView(withId(R.id.backAction))
-				.perform(click());
-
-		onNegativeButton()
-				.perform(click());
-		return this;
-	}
-
-	public ColorPickerPreviewInteraction performCloseColorPickerPreviewWithBackButtonAccept() {
-		check(matches(isDisplayed()));
-		onView(withId(R.id.backAction))
-				.perform(click());
-
-		onPositiveButton()
-				.perform(click());
-		return this;
-	}
-
-	public void assertShowColorPickerPreviewBackDialog() {
-		check(matches(isDisplayed()));
-		onView(withId(R.id.backAction))
-				.perform(click());
-
-		onView(withId(android.R.id.button1))
-				.check(matches(isDisplayed()));
-
-		onView(withId(android.R.id.button2))
-				.check(matches(isDisplayed()));
-
-		onView(withText(R.string.color_picker_save_dialog_title))
-				.check(matches(isDisplayed()));
-
-		onView(withText(R.string.color_picker_save_dialog_msg))
-				.check(matches(isDisplayed()));
-	}
+    companion object {
+        fun onColorPickerPreview(): ColorPickerPreviewInteraction {
+            return ColorPickerPreviewInteraction()
+        }
+    }
 }

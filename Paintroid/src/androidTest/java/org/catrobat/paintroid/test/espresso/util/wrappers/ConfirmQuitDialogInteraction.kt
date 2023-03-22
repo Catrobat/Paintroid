@@ -16,68 +16,82 @@
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.util.wrappers
 
-package org.catrobat.paintroid.test.espresso.util.wrappers;
+import android.widget.Button
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewAssertion
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.matcher.RootMatchers
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
+import org.catrobat.paintroid.R
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Matchers
 
-import android.widget.Button;
+class ConfirmQuitDialogInteraction private constructor() : CustomViewInteraction(
+    onView(withText(R.string.closing_security_question))
+        .inRoot(RootMatchers.isDialog())
+) {
+    fun onPositiveButton(): ViewInteraction {
+        return onView(
+            allOf(
+                withId(android.R.id.button1),
+                withText(R.string.save_button_text),
+                isAssignableFrom(
+                    Button::class.java
+                )
+            )
+        )
+    }
 
-import org.catrobat.paintroid.R;
+    fun checkPositiveButton(matcher: ViewAssertion?): ConfirmQuitDialogInteraction {
+        onPositiveButton()
+            .check(matcher)
+        return this
+    }
 
-import androidx.test.espresso.ViewAssertion;
-import androidx.test.espresso.ViewInteraction;
+    fun onNegativeButton(): ViewInteraction {
+        return onView(
+            Matchers.allOf(
+                withId(android.R.id.button2),
+                withText(R.string.discard_button_text),
+                isAssignableFrom(
+                    Button::class.java
+                )
+            )
+        )
+    }
 
-import static org.hamcrest.Matchers.allOf;
+    fun checkNegativeButton(matcher: ViewAssertion?): ConfirmQuitDialogInteraction {
+        onNegativeButton()
+            .check(matcher)
+        return this
+    }
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
+    fun checkNeutralButton(matcher: ViewAssertion?): ConfirmQuitDialogInteraction {
+        onView(withId(android.R.id.button3))
+            .check(matcher)
+        return this
+    }
 
-public final class ConfirmQuitDialogInteraction extends CustomViewInteraction {
-	private ConfirmQuitDialogInteraction() {
-		super(onView(withText(R.string.closing_security_question)).inRoot(isDialog()));
-	}
+    fun checkMessage(matcher: ViewAssertion?): ConfirmQuitDialogInteraction {
+        onView(withText(R.string.closing_security_question))
+            .check(matcher)
+        return this
+    }
 
-	public static ConfirmQuitDialogInteraction onConfirmQuitDialog() {
-		return new ConfirmQuitDialogInteraction();
-	}
+    fun checkTitle(matcher: ViewAssertion?): ConfirmQuitDialogInteraction {
+        onView(withText(R.string.closing_security_question_title))
+            .check(matcher)
+        return this
+    }
 
-	public ViewInteraction onPositiveButton() {
-		return onView(allOf(withId(android.R.id.button1), withText(R.string.save_button_text), isAssignableFrom(Button.class)));
-	}
-
-	public ConfirmQuitDialogInteraction checkPositiveButton(ViewAssertion matcher) {
-		onPositiveButton()
-				.check(matcher);
-		return this;
-	}
-
-	public ViewInteraction onNegativeButton() {
-		return onView(allOf(withId(android.R.id.button2), withText(R.string.discard_button_text), isAssignableFrom(Button.class)));
-	}
-
-	public ConfirmQuitDialogInteraction checkNegativeButton(ViewAssertion matcher) {
-		onNegativeButton()
-				.check(matcher);
-		return this;
-	}
-
-	public ConfirmQuitDialogInteraction checkNeutralButton(ViewAssertion matcher) {
-		onView(withId(android.R.id.button3))
-				.check(matcher);
-		return this;
-	}
-
-	public ConfirmQuitDialogInteraction checkMessage(ViewAssertion matcher) {
-		onView(withText(R.string.closing_security_question))
-				.check(matcher);
-		return this;
-	}
-
-	public ConfirmQuitDialogInteraction checkTitle(ViewAssertion matcher) {
-		onView(withText(R.string.closing_security_question_title))
-				.check(matcher);
-		return this;
-	}
+    companion object {
+        @JvmStatic
+        fun onConfirmQuitDialog(): ConfirmQuitDialogInteraction {
+            return ConfirmQuitDialogInteraction()
+        }
+    }
 }

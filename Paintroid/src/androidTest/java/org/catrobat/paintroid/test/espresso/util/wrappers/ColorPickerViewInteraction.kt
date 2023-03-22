@@ -16,125 +16,144 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.util.wrappers
 
-package org.catrobat.paintroid.test.espresso.util.wrappers;
+import android.widget.TableLayout
+import android.widget.TableRow
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
+import org.catrobat.paintroid.R
+import org.catrobat.paintroid.colorpicker.ColorHistoryView
+import org.catrobat.paintroid.colorpicker.PresetSelectorView
+import org.catrobat.paintroid.test.espresso.util.UiMatcher
+import org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition
+import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor
+import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.Companion.onBottomNavigationView
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.Matchers
 
-import android.widget.TableLayout;
-import android.widget.TableRow;
+class ColorPickerViewInteraction protected constructor() :
+    CustomViewInteraction(onView(withId(R.id.color_picker_view))) {
+    fun onPositiveButton(): ViewInteraction {
+        return onView(withId(android.R.id.button1)) // to avoid following exception when running on emulator:
+            // Caused by: java.lang.SecurityException:
+            // Injecting to another application requires INJECT_EVENTS permission
+            .perform(ViewActions.closeSoftKeyboard())
+    }
 
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.colorpicker.ColorHistoryView;
-import org.catrobat.paintroid.colorpicker.PresetSelectorView;
+    fun performOpenColorPicker(): ColorPickerViewInteraction {
+        onBottomNavigationView()
+            .onColorClicked()
+        return this
+    }
 
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition;
-import static org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor;
-import static org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
+    fun onNegativeButton(): ViewInteraction {
+        return onView(withId(android.R.id.button2)) // to avoid following exception when running on emulator:
+            // Caused by: java.lang.SecurityException:
+            // Injecting to another application requires INJECT_EVENTS permission
+            .perform(closeSoftKeyboard())
+    }
 
-import androidx.test.espresso.ViewInteraction;
+    fun clickPipetteButton(): ViewInteraction {
+        return onView(withId(R.id.color_picker_pipette_btn))
+            .perform(click())
+    }
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
+    fun checkCurrentViewColor(color: Int) {
+        onView(withId(R.id.color_picker_current_color_view))
+            .check(matches(withBackgroundColor(color)))
+    }
 
-public final class ColorPickerViewInteraction extends CustomViewInteraction {
-	private static final int COLOR_PICKER_BUTTONS_PER_ROW = 4;
-	public static final int MAXIMUM_COLORS_IN_HISTORY = 4;
+    fun checkNewColorViewColor(color: Int) {
+        onView(withId(R.id.color_picker_new_color_view))
+            .check(matches(withBackgroundColor(color)))
+    }
 
-	protected ColorPickerViewInteraction() {
-		super(onView(withId(R.id.color_picker_view)));
-	}
+    fun performCloseColorPickerWithDialogButton(): ColorPickerViewInteraction {
+        check(matches(isDisplayed()))
+        onPositiveButton()
+            .perform(click())
+        return this
+    }
 
-	public static ColorPickerViewInteraction onColorPickerView() {
-		return new ColorPickerViewInteraction();
-	}
+    fun performClickColorPickerPresetSelectorButton(buttonPosition: Int): ColorPickerViewInteraction {
+        val colorButtonRowPosition = buttonPosition / COLOR_PICKER_BUTTONS_PER_ROW
+        val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
+        onView(
+            allOf(
+                isDescendantOfA(
+                    withClassName(
+                        Matchers.containsString(
+                            PresetSelectorView::class.java.simpleName
+                        )
+                    )
+                ),
+                isDescendantOfA(isAssignableFrom(TableLayout::class.java)),
+                isDescendantOfA(isAssignableFrom(TableRow::class.java)),
+                hasTablePosition(colorButtonRowPosition, colorButtonColPosition)
+            )
+        )
+            .perform(closeSoftKeyboard())
+            .perform(scrollTo())
+            .perform(click())
+        return this
+    }
 
-	public ViewInteraction onPositiveButton() {
-		return onView(withId(android.R.id.button1))
-				// to avoid following exception when running on emulator:
-				// Caused by: java.lang.SecurityException:
-				// Injecting to another application requires INJECT_EVENTS permission
-				.perform(closeSoftKeyboard());
-	}
+    fun performClickOnHistoryColor(buttonPosition: Int): ColorPickerViewInteraction {
+        val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
+        onView(
+            allOf(
+                isDescendantOfA(
+                    withClassName(
+                        containsString(
+                            ColorHistoryView::class.java.simpleName
+                        )
+                    )
+                ),
+                isDescendantOfA(isAssignableFrom(TableLayout::class.java)),
+                isDescendantOfA(isAssignableFrom(TableRow::class.java)),
+                hasTablePosition(0, colorButtonColPosition)
+            )
+        )
+            .perform(closeSoftKeyboard())
+            .perform(scrollTo())
+            .perform(click())
+        return this
+    }
 
-	public ColorPickerViewInteraction performOpenColorPicker() {
-		onBottomNavigationView()
-				.onColorClicked();
-		return this;
-	}
+    fun checkHistoryColor(buttonPosition: Int, color: Int) {
+        val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
+        Espresso.onView(
+            Matchers.allOf(
+                isDescendantOfA(
+                    withClassName(
+                        Matchers.containsString(
+                            ColorHistoryView::class.java.simpleName
+                        )
+                    )
+                ),
+                isDescendantOfA(isAssignableFrom(TableLayout::class.java)),
+                isDescendantOfA(isAssignableFrom(TableRow::class.java)),
+                hasTablePosition(0, colorButtonColPosition)
+            )
+        )
+            .check(matches(withBackgroundColor(color)))
+    }
 
-	public ViewInteraction onNegativeButton() {
-		return onView(withId(android.R.id.button2))
-				// to avoid following exception when running on emulator:
-				// Caused by: java.lang.SecurityException:
-				// Injecting to another application requires INJECT_EVENTS permission
-				.perform(closeSoftKeyboard());
-	}
-
-	public ViewInteraction clickPipetteButton() {
-		return onView(withId(R.id.color_picker_pipette_btn))
-				.perform(click());
-	}
-
-	public void checkCurrentViewColor(int color) {
-		onView(withId(R.id.color_picker_current_color_view))
-				.check(matches(withBackgroundColor(color)));
-	}
-
-	public void checkNewColorViewColor(int color) {
-		onView(withId(R.id.color_picker_new_color_view))
-				.check(matches(withBackgroundColor(color)));
-	}
-
-	public ColorPickerViewInteraction performCloseColorPickerWithDialogButton() {
-		check(matches(isDisplayed()));
-		onPositiveButton()
-				.perform(click());
-		return this;
-	}
-
-	public ColorPickerViewInteraction performClickColorPickerPresetSelectorButton(int buttonPosition) {
-		final int colorButtonRowPosition = buttonPosition / COLOR_PICKER_BUTTONS_PER_ROW;
-		final int colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW;
-
-		onView(allOf(isDescendantOfA(withClassName(containsString(PresetSelectorView.class.getSimpleName()))),
-				isDescendantOfA(isAssignableFrom(TableLayout.class)),
-				isDescendantOfA(isAssignableFrom(TableRow.class)),
-				hasTablePosition(colorButtonRowPosition, colorButtonColPosition)))
-				.perform(closeSoftKeyboard())
-				.perform(scrollTo())
-				.perform(click());
-		return this;
-	}
-
-	public ColorPickerViewInteraction performClickOnHistoryColor(int buttonPosition) {
-		final int colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW;
-
-		onView(allOf(isDescendantOfA(withClassName(containsString(ColorHistoryView.class.getSimpleName()))),
-				isDescendantOfA(isAssignableFrom(TableLayout.class)),
-				isDescendantOfA(isAssignableFrom(TableRow.class)),
-				hasTablePosition(0, colorButtonColPosition)))
-				.perform(closeSoftKeyboard())
-				.perform(scrollTo())
-				.perform(click());
-		return this;
-	}
-
-	public void checkHistoryColor(int buttonPosition, int color) {
-		final int colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW;
-
-		onView(allOf(isDescendantOfA(withClassName(containsString(ColorHistoryView.class.getSimpleName()))),
-				isDescendantOfA(isAssignableFrom(TableLayout.class)),
-				isDescendantOfA(isAssignableFrom(TableRow.class)),
-				hasTablePosition(0, colorButtonColPosition)))
-				.check(matches(withBackgroundColor(color)));
-	}
+    companion object {
+        private const val COLOR_PICKER_BUTTONS_PER_ROW = 4
+        const val MAXIMUM_COLORS_IN_HISTORY = 4
+        @JvmStatic
+		fun onColorPickerView(): ColorPickerViewInteraction {
+            return ColorPickerViewInteraction()
+        }
+    }
 }
