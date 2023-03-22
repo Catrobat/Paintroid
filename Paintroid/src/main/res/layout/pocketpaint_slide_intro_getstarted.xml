@@ -24,31 +24,71 @@
     android:paddingStart="@dimen/pocketpaint_welcome_margin_side"
     android:paddingTop="@dimen/pocketpaint_welcome_margin_top">
 
+    <include
+        android:id="@+id/pocketpaint_layout_top"
+        layout="@layout/pocketpaint_layout_top_bar" />
+
     <TextView
-        android:id="@+id/pocketpaint_intro_started_head"
+        android:id="@+id/pocketpaint_intro_started_head_id"
         style="@style/PocketPaintWelcomeHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/pocketpaint_layout_top"
         android:minLines="2"
-        android:text="@string/enjoy_pocket_paint"/>
+        android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
+        android:text="@string/enjoy_pocket_paint" />
 
     <TextView
-        android:id="@+id/pocketpaint_intro_started_text"
         style="@style/PocketPaintWelcomeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/pocketpaint_intro_started_head"
+        android:layout_below="@id/pocketpaint_intro_started_head_id"
         android:layout_marginTop="@dimen/pocketpaint_welcome_margin_top_text"
-        android:text="@string/intro_get_started"/>
+        android:text="@string/intro_get_started" />
 
-    <ImageView
-        android:layout_below="@id/pocketpaint_intro_started_text"
+    <include
+        layout="@layout/pocketpaint_layout_tool_options"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/pocketpaint_main_bottom"
+        android:layout_below="@+id/pocketpaint_layout_top" />
+
+    <include
+        layout="@layout/pocketpaint_layout_zoom_window"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/pocketpaint_main_bottom"
+        android:layout_below="@id/pocketpaint_layout_top" />
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/pocketpaint_main_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/pocketpaint_intro_portrait"
+        android:layout_above="@+id/pocketpaint_main_bottom_nav"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="false"
+        android:background="@android:color/background_light"
+        android:visibility="gone">
+
+        <include layout="@layout/pocketpaint_layout_bottom_bar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/pocketpaint_main_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:id="@+id/pocketpaint_image_getstarded"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:contentDescription="@string/pocketpaint_intro" />
+        android:background="?attr/colorPrimary">
+
+        <include layout="@layout/pocketpaint_layout_bottom_navigation" />
+    </LinearLayout>
+
 </RelativeLayout>
