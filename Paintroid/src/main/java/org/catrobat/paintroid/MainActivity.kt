@@ -449,14 +449,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             listener,
         )
         commandSerializer = CommandSerializer(this, commandManager, model)
-        model = MainActivityModel()
         zoomWindowController = DefaultZoomWindowController(
             this,
             layerModel,
             workspace,
             toolReference
         )
-        model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,
