@@ -29,15 +29,11 @@ import androidx.annotation.ColorInt
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.idling.CountingIdlingResource
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withClassName
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
@@ -56,9 +52,7 @@ import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.Tool
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.not
+import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -80,19 +74,15 @@ class LandscapeIntegrationTest {
         get() = mainActivity?.toolReference?.tool
     private val toolOptionsViewController: ToolOptionsViewController?
         get() = mainActivity?.toolOptionsViewController
-
-
     @Before
     fun setUp() {
         mainActivity = activityTestRule.activity
         idlingResource = mainActivity?.idlingResource
-     //   IdlingRegistry.getInstance().register(idlingResource)
         Espresso.registerIdlingResources(idlingResource)
     }
 
     @After
     fun tearDown() {
-      //  IdlingRegistry.getInstance().unregister(idlingResource)
         Espresso.registerIdlingResources(idlingResource)
     }
 
