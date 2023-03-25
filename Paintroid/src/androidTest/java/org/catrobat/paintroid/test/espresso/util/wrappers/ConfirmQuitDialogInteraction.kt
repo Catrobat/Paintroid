@@ -19,12 +19,10 @@
 package org.catrobat.paintroid.test.espresso.util.wrappers
 
 import android.widget.Button
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.RootMatchers
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import org.catrobat.paintroid.R
 import org.hamcrest.CoreMatchers.allOf
@@ -90,8 +88,6 @@ class ConfirmQuitDialogInteraction private constructor() : CustomViewInteraction
 
     companion object {
         @JvmStatic
-        fun onConfirmQuitDialog(): ConfirmQuitDialogInteraction {
-            return ConfirmQuitDialogInteraction()
-        }
+        fun onConfirmQuitDialog(): ConfirmQuitDialogInteraction = ConfirmQuitDialogInteraction()
     }
 }

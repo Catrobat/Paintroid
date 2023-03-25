@@ -20,27 +20,23 @@ package org.catrobat.paintroid.test.espresso.util.wrappers
 
 import android.widget.TableLayout
 import android.widget.TableRow
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.colorpicker.ColorHistoryView
 import org.catrobat.paintroid.colorpicker.PresetSelectorView
-import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.hasTablePosition
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor
-import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.Companion.onBottomNavigationView
+import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.onBottomNavigationView
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matchers
 
-class ColorPickerViewInteraction protected constructor() :
+class ColorPickerViewInteraction private constructor() :
     CustomViewInteraction(onView(withId(R.id.color_picker_view))) {
     fun onPositiveButton(): ViewInteraction {
         return onView(withId(android.R.id.button1)) // to avoid following exception when running on emulator:
@@ -131,11 +127,11 @@ class ColorPickerViewInteraction protected constructor() :
 
     fun checkHistoryColor(buttonPosition: Int, color: Int) {
         val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
-        Espresso.onView(
-            Matchers.allOf(
+        onView(
+            allOf(
                 isDescendantOfA(
                     withClassName(
-                        Matchers.containsString(
+                        containsString(
                             ColorHistoryView::class.java.simpleName
                         )
                     )
@@ -152,8 +148,6 @@ class ColorPickerViewInteraction protected constructor() :
         private const val COLOR_PICKER_BUTTONS_PER_ROW = 4
         const val MAXIMUM_COLORS_IN_HISTORY = 4
         @JvmStatic
-		fun onColorPickerView(): ColorPickerViewInteraction {
-            return ColorPickerViewInteraction()
-        }
+        fun onColorPickerView(): ColorPickerViewInteraction = ColorPickerViewInteraction()
     }
 }

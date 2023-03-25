@@ -18,19 +18,15 @@
  */
 package org.catrobat.paintroid.test.espresso.util.wrappers
 
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withBackgroundColor
 
 class ColorPickerPreviewInteraction private constructor() :
@@ -94,8 +90,6 @@ class ColorPickerPreviewInteraction private constructor() :
     }
 
     companion object {
-        fun onColorPickerPreview(): ColorPickerPreviewInteraction {
-            return ColorPickerPreviewInteraction()
+        fun onColorPickerPreview(): ColorPickerPreviewInteraction = ColorPickerPreviewInteraction()
         }
     }
-}
