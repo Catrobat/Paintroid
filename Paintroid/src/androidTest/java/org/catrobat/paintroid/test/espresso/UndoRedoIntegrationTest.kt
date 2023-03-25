@@ -37,7 +37,8 @@ import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.catrobat.paintroid.test.espresso.util.wrappers.ColorPickerViewInteraction.onColorPickerView
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
+
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction.onLayerMenuView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView

@@ -20,17 +20,12 @@ package org.catrobat.paintroid.test.espresso.tools
 
 import android.graphics.Color
 import android.net.Uri
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingRegistry.getInstance
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.replaceText
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.idling.CountingIdlingResource
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -39,18 +34,12 @@ import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
-import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.swipeAccurate
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
-import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.catrobat.paintroid.test.espresso.util.UiMatcher.withProgress
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.Companion.onToolProperties
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
@@ -254,7 +243,7 @@ class FillToolIntegrationTest {
         )
         colorToleranceSeekBar.check(
             matches(
-                UiMatcher.withProgress(
+                withProgress(
                     DEFAULT_TOLERANCE_IN_PERCENT
                 )
             )

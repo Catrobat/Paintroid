@@ -44,7 +44,7 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.grantPermissionRulesVersionCheck
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.waitFor
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule

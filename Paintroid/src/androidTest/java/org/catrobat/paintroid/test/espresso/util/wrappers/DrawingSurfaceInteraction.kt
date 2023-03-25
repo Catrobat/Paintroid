@@ -21,19 +21,13 @@ package org.catrobat.paintroid.test.espresso.util.wrappers
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.CoordinatesProvider
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import org.catrobat.paintroid.R
-import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper.getMainActivityFromView
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -131,9 +125,7 @@ class DrawingSurfaceInteraction private constructor() :
         check(matches(object : TypeSafeMatcher<View?>() {
             override fun describeTo(description: Description) {
                 description.appendText(
-                    "Bitmap has is size "
-                            + expectedWidth + "x and "
-                            + expectedHeight + "y"
+                    "Bitmap has is size " + expectedWidth + "x and " + expectedHeight + "y"
                 )
             }
 
@@ -178,8 +170,6 @@ class DrawingSurfaceInteraction private constructor() :
 
     companion object {
         @JvmStatic
-		fun onDrawingSurfaceView(): DrawingSurfaceInteraction {
-            return DrawingSurfaceInteraction()
+        fun onDrawingSurfaceView(): DrawingSurfaceInteraction = DrawingSurfaceInteraction()
         }
     }
-}

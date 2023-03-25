@@ -48,9 +48,9 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.Companion.onToolProperties
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.FontType
@@ -61,11 +61,7 @@ import org.catrobat.paintroid.tools.implementation.MARGIN_TOP
 import org.catrobat.paintroid.tools.implementation.TEXT_SIZE_MAGNIFICATION_FACTOR
 import org.catrobat.paintroid.tools.implementation.TextTool
 import org.catrobat.paintroid.ui.tools.FontListAdapter
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Ignore
-import org.junit.Rule
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 import kotlin.math.roundToInt
 

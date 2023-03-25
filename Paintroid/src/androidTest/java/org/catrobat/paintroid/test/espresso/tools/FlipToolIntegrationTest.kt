@@ -24,13 +24,9 @@ import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
-import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.touchAt
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
-import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.TransformToolOptionsViewInteraction.onTransformToolOptionsView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
