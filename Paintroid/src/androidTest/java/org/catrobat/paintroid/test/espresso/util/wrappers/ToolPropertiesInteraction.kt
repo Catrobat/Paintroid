@@ -42,8 +42,6 @@ class ToolPropertiesInteraction private constructor() : CustomViewInteraction(nu
         return this
     }
     fun getCurrentTool(): Tool? = mainActivity.toolReference.tool
-
-
     fun checkMatchesColorResource(@ColorRes expectedColorRes: Int): ToolPropertiesInteraction {
         val expectedColor = ContextCompat.getColor(
             InstrumentationRegistry.getInstrumentation().targetContext,
