@@ -13,6 +13,7 @@ import android.graphics.Shader
 import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
+import android.os.Build
 import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -26,10 +27,12 @@ import org.catrobat.paintroid.tools.Workspace
 import kotlin.math.roundToInt
 
 class DefaultZoomWindowController
-    (val activity: MainActivity,
+    (
+    val activity: MainActivity,
     val layerModel: LayerContracts.Model,
     val workspace: Workspace,
-    val toolReference: ToolReference) :
+    val toolReference: ToolReference
+) :
     ZoomWindowController {
 
     private val canvasRect = Rect()
@@ -76,15 +79,21 @@ class DefaultZoomWindowController
         backgroundCanvas?.drawRect(canvasRect, framePaint)
 
         val greyBackgroundCanvas = Canvas(greyBackgroundBitmap)
-        greyBackgroundCanvas.drawColor(
-            activity.resources.getColor(R.color.pocketpaint_main_drawing_surface_background)
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            greyBackgroundCanvas.drawColor(
+                activity.resources.getColor(
+                    R.color.pocketpaint_main_drawing_surface_background,
+                    activity.theme
+                )
+            )
+        }
 
         val canvasBackground = Canvas(backgroundBitmap)
 
         canvasBackground.drawBitmap(greyBackgroundBitmap, Matrix(), null)
         canvasBackground.drawBitmap(
-            chequeredBackgroundBitmap, windowWidth / 2f, windowHeight / 2f, null)
+            chequeredBackgroundBitmap, windowWidth / 2f, windowHeight / 2f, null
+        )
     }
 
     private val zoomWindow: RelativeLayout =
@@ -95,10 +104,16 @@ class DefaultZoomWindowController
 
     override fun show(drawingSurfaceCoordinates: PointF, displayCoordinates: PointF) {
         if (checkIfToolCompatibleWithZoomWindow(toolReference.tool) != Constants.NOT_COMPATIBLE &&
-            isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)) {
+            isPointOnCanvas(drawingSurfaceCoordinates.x, drawingSurfaceCoordinates.y)
+        ) {
             setZoomWindowPosition(displayCoordinates)
             zoomWindow.visibility = View.VISIBLE
-            zoomWindowImage.setImageBitmap(cropBitmap(workspace.bitmapOfAllLayers, drawingSurfaceCoordinates))
+            zoomWindowImage.setImageBitmap(
+                cropBitmap(
+                    workspace.bitmapOfAllLayers,
+                    drawingSurfaceCoordinates
+                )
+            )
         }
     }
 
@@ -141,7 +156,8 @@ class DefaultZoomWindowController
 
     private fun shouldBeInTheRight(coordinates: PointF): Boolean {
         if (coordinates.x < activity.resources.displayMetrics.widthPixels / 2 &&
-            coordinates.y < activity.resources.displayMetrics.heightPixels / 2) {
+            coordinates.y < activity.resources.displayMetrics.heightPixels / 2
+        ) {
             return true
         }
         return false
@@ -183,11 +199,13 @@ class DefaultZoomWindowController
         paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
 
         bitmapWithBackground?.let {
-            canvas?.drawBitmap(it,
+            canvas?.drawBitmap(
+                it,
                 Rect(startX, startY, startX + windowWidth, startY + windowHeight),
                 rect,
                 paint
-            ) }
+            )
+        }
 
         return croppedBitmap
     }
@@ -205,7 +223,8 @@ class DefaultZoomWindowController
         canvas.drawBitmap(backgroundBitmap, Matrix(), null)
 
         if (toolReference.tool?.toolType?.name.equals(ToolType.LINE.name) ||
-            toolReference.tool?.toolType?.name.equals(ToolType.CURSOR.name)) {
+            toolReference.tool?.toolType?.name.equals(ToolType.CURSOR.name)
+        ) {
             layerModel.currentLayer?.bitmap?.let {
                 canvas.drawBitmap(it, windowWidth / 2f, windowHeight / 2f, null)
             }
