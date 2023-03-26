@@ -41,8 +41,6 @@ import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.fragment.app.FragmentManager
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
-import org.catrobat.paintroid.colorpicker.ColorPickerDialog
-import org.catrobat.paintroid.common.COLOR_PICKER_DIALOG_TAG
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.listener.DrawingSurfaceListener
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceListenerCallback

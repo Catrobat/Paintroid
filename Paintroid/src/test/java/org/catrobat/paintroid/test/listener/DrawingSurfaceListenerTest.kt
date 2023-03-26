@@ -76,7 +76,7 @@ class DrawingSurfaceListenerTest {
             .thenReturn(toolOptionsViewController)
         Mockito.`when`(motionEvent!!.downTime).thenReturn(0L)
         val userPreferences = Mockito.mock(UserPreferences::class.java)
-        drawingSurfaceListener = DrawingSurfaceListener(autoScrollTask!!, callback, DISPLAY_DENSITY)
+        drawingSurfaceListener = DrawingSurfaceListener(callback, DISPLAY_DENSITY)
         drawingSurfaceListener!!.setZoomController(zoomWindowController!!, userPreferences!!)
     }
 

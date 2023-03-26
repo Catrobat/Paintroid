@@ -97,13 +97,13 @@ class SprayTool(
     }
 
     private fun hideToolOptions() {
-        toolOptionsViewController.slideDown(
+        toolOptionsViewController.slideUp(
             toolOptionsViewController.toolSpecificOptionsLayout, true
         )
     }
 
     private fun showToolOptions() {
-        toolOptionsViewController.slideUp(
+        toolOptionsViewController.slideDown(
             toolOptionsViewController.toolSpecificOptionsLayout, false
         )
     }

@@ -46,7 +46,7 @@ const val TEXT_SIZE_MAGNIFICATION_FACTOR = 3f
 const val BOX_OFFSET = 20
 
 @VisibleForTesting
-const val MARGIN_TOP = 50.0f
+const val MARGIN_TOP = 200f
 
 private const val ROTATION_ENABLED = true
 private const val RESIZE_POINTS_VISIBLE = true
