@@ -61,7 +61,11 @@ import org.catrobat.paintroid.tools.implementation.MARGIN_TOP
 import org.catrobat.paintroid.tools.implementation.TEXT_SIZE_MAGNIFICATION_FACTOR
 import org.catrobat.paintroid.tools.implementation.TextTool
 import org.catrobat.paintroid.ui.tools.FontListAdapter
-import org.junit.*
+import org.junit.Before
+import org.junit.Ignore
+import org.junit.Rule
+import org.junit.Test
+import org.junit.Assert
 import org.junit.runner.RunWith
 import kotlin.math.roundToInt
 

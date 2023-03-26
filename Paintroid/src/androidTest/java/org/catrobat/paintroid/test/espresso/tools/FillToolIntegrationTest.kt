@@ -47,8 +47,12 @@ import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.tools.implementation.DEFAULT_TOLERANCE_IN_PERCENT
 import org.catrobat.paintroid.tools.implementation.FillTool
 import org.catrobat.paintroid.ui.Perspective
-import org.junit.*
+import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Ignore
+import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
 

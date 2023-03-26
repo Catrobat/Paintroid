@@ -97,8 +97,6 @@ class ToolPropertiesInteraction private constructor() : CustomViewInteraction(nu
 
     companion object {
         @JvmStatic
-		fun onToolProperties(): ToolPropertiesInteraction {
-            return ToolPropertiesInteraction()
-        }
+        fun onToolProperties(): ToolPropertiesInteraction = ToolPropertiesInteraction()
     }
 }
