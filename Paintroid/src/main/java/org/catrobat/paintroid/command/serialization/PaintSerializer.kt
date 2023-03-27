@@ -45,6 +45,24 @@ class PaintSerializer(version: Int, private val activityContext: Context) : Vers
     override fun read(kryo: Kryo, input: Input, type: Class<out Paint>): Paint =
         super.handleVersions(this, kryo, input, type)
 
+    override fun readV1(serializer: VersionSerializer<Paint>, kryo: Kryo, input: Input, type: Class<out Paint>): Paint {
+        val toolPaint = DefaultToolPaint(activityContext).apply {
+            with(input) {
+                color = readInt()
+                strokeWidth = readFloat()
+                strokeCap = Paint.Cap.values()[readInt()]
+            }
+        }
+
+        return toolPaint.paint.apply {
+            with(input) {
+                isAntiAlias = readBoolean()
+                style = Paint.Style.values()[readInt()]
+                strokeJoin = Paint.Join.values()[readInt()]
+            }
+        }
+    }
+
     override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out Paint>): Paint {
         val toolPaint = DefaultToolPaint(activityContext).apply {
             with(input) {
@@ -59,7 +77,7 @@ class PaintSerializer(version: Int, private val activityContext: Context) : Vers
                 isAntiAlias = readBoolean()
                 style = Paint.Style.values()[readInt()]
                 strokeJoin = Paint.Join.values()[readInt()]
-                var hadFilter: Boolean = input.readBoolean()
+                val hadFilter: Boolean = input.readBoolean()
                 alpha = input.readInt()
                 if (hadFilter) maskFilter = BlurMaskFilter(WatercolorTool.calcRange(alpha), BlurMaskFilter.Blur.INNER)
             }

@@ -19,7 +19,6 @@
 package org.catrobat.paintroid.ui
 
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -168,10 +167,15 @@ class LayerAdapter(
         }
 
         override fun setSelected(isSelected: Boolean) {
-            if (isSelected) {
-                layerBackground.setBackgroundColor(Color.BLUE)
-            } else {
-                layerBackground.setBackgroundResource(R.color.pocketpaint_colorPrimary)
+            when (getBackgroundType(isSelected)) {
+                BackgroundType.TOP_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_top_selected)
+                BackgroundType.TOP_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_top_unselected)
+                BackgroundType.BTM_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_btm_selected)
+                BackgroundType.BTM_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_btm_unselected)
+                BackgroundType.CENTER_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_center_selected)
+                BackgroundType.CENTER_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_center_unselected)
+                BackgroundType.SINGLE_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_single_selected)
+                BackgroundType.SINGLE_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_single_unselected)
             }
             this.isSelected = isSelected
         }
@@ -206,9 +210,36 @@ class LayerAdapter(
         }
 
         override fun setMergable() = layerBackground.setBackgroundResource(R.color.pocketpaint_color_merge_layer)
+
+        private fun getBackgroundType(isSelected: Boolean): BackgroundType {
+            if (presenter.layerCount > 2 && this.adapterPosition > 0 && this.adapterPosition < presenter.layerCount - 1) {
+                return if (isSelected) BackgroundType.CENTER_SELECTED else BackgroundType.CENTER_UNSELECTED
+            }
+
+            if (presenter.layerCount == 1) {
+                return if (isSelected) BackgroundType.SINGLE_SELECTED else BackgroundType.SINGLE_UNSELECTED
+            }
+
+            if (this.adapterPosition == presenter.layerCount - 1) {
+                return if (isSelected) BackgroundType.BTM_SELECTED else BackgroundType.BTM_UNSELECTED
+            }
+
+            return if (isSelected) BackgroundType.TOP_SELECTED else BackgroundType.TOP_UNSELECTED
+        }
     }
 
     companion object {
         private val TAG = LayerAdapter::class.java.simpleName
+    }
+
+    enum class BackgroundType {
+        TOP_SELECTED,
+        TOP_UNSELECTED,
+        BTM_SELECTED,
+        BTM_UNSELECTED,
+        CENTER_SELECTED,
+        CENTER_UNSELECTED,
+        SINGLE_SELECTED,
+        SINGLE_UNSELECTED
     }
 }

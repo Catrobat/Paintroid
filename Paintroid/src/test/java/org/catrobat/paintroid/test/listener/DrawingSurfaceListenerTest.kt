@@ -20,6 +20,7 @@ package org.catrobat.paintroid.test.listener
 
 import android.graphics.PointF
 import android.view.MotionEvent
+import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.listener.DrawingSurfaceListener
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.AutoScrollTask
 import org.catrobat.paintroid.listener.DrawingSurfaceListener.DrawingSurfaceListenerCallback
@@ -78,8 +79,9 @@ class DrawingSurfaceListenerTest {
         Mockito.`when`(callback.getToolOptionsViewController())
             .thenReturn(toolOptionsViewController)
         Mockito.`when`(motionEvent!!.downTime).thenReturn(0L)
+        val userPreferences = Mockito.mock(UserPreferences::class.java)
         drawingSurfaceListener = DrawingSurfaceListener(autoScrollTask!!, callback, DISPLAY_DENSITY)
-        drawingSurfaceListener!!.setZoomController(zoomWindowController!!)
+        drawingSurfaceListener!!.setZoomController(zoomWindowController!!, userPreferences!!)
     }
 
     @Test

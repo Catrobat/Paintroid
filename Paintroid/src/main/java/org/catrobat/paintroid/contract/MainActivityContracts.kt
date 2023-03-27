@@ -27,6 +27,7 @@ import android.util.DisplayMetrics
 import android.view.Menu
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
+import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.common.MainActivityConstants.ActivityRequestCode
@@ -58,6 +59,8 @@ interface MainActivityContracts {
         fun showRateUsDialog()
 
         fun showFeedbackDialog()
+
+        fun showZoomWindowSettingsDialog(sharedPreferences: UserPreferences)
 
         fun showAdvancedSettingsDialog()
 
@@ -215,6 +218,8 @@ interface MainActivityContracts {
         fun showHelpClicked()
 
         fun showAboutClicked()
+
+        fun showZoomWindowSettingsClicked(sharedPreferences: UserPreferences)
 
         fun showAdvancedSettingsClicked()
 

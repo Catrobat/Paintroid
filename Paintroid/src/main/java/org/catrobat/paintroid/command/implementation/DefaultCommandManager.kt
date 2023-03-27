@@ -113,7 +113,7 @@ class DefaultCommandManager(
         notifyCommandExecuted()
     }
 
-    private fun handleUndo(command: Command) {
+    private fun handleUndo(command: Command, ignoreColorCommand: Boolean = false) {
         var success = true
         var layerCount = layerModel.layerCount
         val currentCommandName = command.javaClass.simpleName
@@ -153,9 +153,13 @@ class DefaultCommandManager(
 
         val iterator = undoCommandList.descendingIterator()
         while (iterator.hasNext()) {
+            var nextCommand = iterator.next()
+            if (nextCommand is ColorChangedCommand && ignoreColorCommand) {
+                continue
+            }
             val currentLayer = layerModel.currentLayer
             canvas.setBitmap(currentLayer?.bitmap)
-            iterator.next().run(canvas, layerModel)
+            nextCommand.run(canvas, layerModel)
         }
 
         if (!currentCommandName.matches(mergeLayerCommandRegex)) {
@@ -231,7 +235,7 @@ class DefaultCommandManager(
         if (undoCommandList.isNotEmpty() && undoCommandList.first != null) {
             val command = undoCommandList.pop()
             redoCommandList.addFirst(command)
-            handleUndo(command)
+            handleUndo(command, true)
         }
         return colorCommandList
     }
