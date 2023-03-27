@@ -525,6 +525,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         layerListView.setPresenter(layerPresenter)
         layerListView.adapter = layerAdapter
         layerPresenter.refreshLayerMenuViewHolder()
+        layerPresenter.disableVisibilityAndOpacityButtons()
         setLayerMenuListeners(layerMenuViewHolder)
         val drawerLayoutListener = DrawerLayoutListener(this, layerPresenter)
         drawerLayout.addDrawerListener(drawerLayoutListener)

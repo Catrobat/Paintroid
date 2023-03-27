@@ -140,6 +140,7 @@ class LayerPresenter(
         val usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE_IN_BYTE
         val maxHeapSizeInMB = runtime.maxMemory() / MEGABYTE_IN_BYTE
         val availHeapSizeInMB = maxHeapSizeInMB - usedMemInMB
+
         if (layerCount < MAX_LAYERS && availHeapSizeInMB > MINIMUM_HEAP_SPACE_FOR_NEW_LAYER) {
             layerMenuViewHolder.enableAddLayerButton()
         } else {
@@ -150,6 +151,11 @@ class LayerPresenter(
         } else {
             layerMenuViewHolder.disableRemoveLayerButton()
         }
+    }
+
+    override fun disableVisibilityAndOpacityButtons() {
+        layerMenuViewHolder.disableLayerVisibilityButton()
+        layerMenuViewHolder.disableLayerOpacityButton()
     }
 
     override fun isShown(): Boolean = layerMenuViewHolder.isShown()
