@@ -304,6 +304,7 @@ class MainActivityPresenterTest {
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+        presenter!!.saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT, null)
         Mockito.verify<Interactor?>(interactor).saveCopy(
             presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
             commandSerializer!!, null,
@@ -322,6 +323,7 @@ class MainActivityPresenterTest {
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
+        presenter!!.saveImageConfirmClicked(SAVE_IMAGE_DEFAULT, FileIO.storeImageUri)
         Mockito.verify<Interactor?>(interactor).saveImage(
             presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
             commandSerializer!!, null,
@@ -1239,6 +1241,7 @@ class MainActivityPresenterTest {
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_COPY)
+        presenter!!.saveCopyConfirmClicked(SAVE_IMAGE_DEFAULT, null)
         Mockito.verify<Interactor?>(interactor).saveCopy(
             presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
             commandSerializer!!, null,
@@ -1327,6 +1330,7 @@ class MainActivityPresenterTest {
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE)
+        presenter!!.saveImageConfirmClicked(SAVE_IMAGE_DEFAULT, FileIO.storeImageUri)
         Mockito.verify<Interactor?>(interactor).saveImage(
             presenter!!, SAVE_IMAGE_DEFAULT, workspace!!.layerModel,
             commandSerializer!!, FileIO.storeImageUri,
@@ -1364,6 +1368,7 @@ class MainActivityPresenterTest {
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_FINISH)
+        presenter!!.saveImageConfirmClicked(SAVE_IMAGE_FINISH, FileIO.storeImageUri)
         Mockito.verify<Interactor?>(interactor).saveImage(
             presenter!!, SAVE_IMAGE_FINISH, workspace!!.layerModel,
             commandSerializer!!, FileIO.storeImageUri,
@@ -1401,6 +1406,7 @@ class MainActivityPresenterTest {
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_NEW_EMPTY)
+        presenter!!.saveImageConfirmClicked(SAVE_IMAGE_NEW_EMPTY, FileIO.storeImageUri)
         Mockito.verify<Interactor?>(interactor).saveImage(
             presenter!!, SAVE_IMAGE_NEW_EMPTY, workspace!!.layerModel,
             commandSerializer!!, FileIO.storeImageUri,
@@ -1438,6 +1444,7 @@ class MainActivityPresenterTest {
                 false
             )
         presenter!!.switchBetweenVersions(PERMISSION_EXTERNAL_STORAGE_SAVE_CONFIRMED_LOAD_NEW)
+        presenter!!.saveImageConfirmClicked(SAVE_IMAGE_LOAD_NEW, FileIO.storeImageUri)
         Mockito.verify<Interactor?>(interactor).saveImage(
             presenter!!, SAVE_IMAGE_LOAD_NEW, workspace!!.layerModel,
             commandSerializer!!, FileIO.storeImageUri,
