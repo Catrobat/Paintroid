@@ -44,6 +44,7 @@ import androidx.core.content.ContextCompat
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.fragment.app.FragmentManager
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.common.COLOR_PICKER_DIALOG_TAG
 import org.catrobat.paintroid.contract.LayerContracts
@@ -77,6 +78,7 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
     private lateinit var fragmentManager: FragmentManager
     private lateinit var idlingResource: CountingIdlingResource
     private lateinit var zoomController: ZoomWindowController
+    private lateinit var sharedPreferences: UserPreferences
 
     constructor(context: Context?, attrSet: AttributeSet?) : super(context, attrSet)
 
@@ -133,7 +135,8 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         fragmentManager: FragmentManager,
         toolOptionsViewController: ToolOptionsViewController,
         drawerLayoutViewHolder: DrawerLayoutViewHolder,
-        zoomController: ZoomWindowController
+        zoomController: ZoomWindowController,
+        sharedPreferences: UserPreferences
     ) {
         this.layerModel = layerModel
         this.perspective = perspective
@@ -143,7 +146,8 @@ open class DrawingSurface : SurfaceView, SurfaceHolder.Callback {
         this.fragmentManager = fragmentManager
         this.drawerLayoutViewHolder = drawerLayoutViewHolder
         this.zoomController = zoomController
-        drawingSurfaceListener.setZoomController(zoomWindowController = zoomController)
+        drawingSurfaceListener.setZoomController(zoomController, sharedPreferences)
+        this.sharedPreferences = sharedPreferences
     }
 
     @Synchronized

@@ -21,6 +21,7 @@
 package org.catrobat.paintroid.test.espresso
 
 import android.net.Uri
+import android.os.Environment
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -37,6 +38,7 @@ import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.common.CATROBAT_IMAGE_ENDING
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
@@ -77,10 +79,12 @@ class CatrobatImageIOIntegrationTest {
 
     @After
     fun tearDown() {
-        with(uriFile?.path?.let { File(it) }) {
-            if (this?.exists() == true) {
-                delete()
-            }
+        val imagesDirectory =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
+        val pathToFile = imagesDirectory + File.separator + IMAGE_NAME + "." + CATROBAT_IMAGE_ENDING
+        val imageFile = File(pathToFile)
+        if (imageFile.exists()) {
+            imageFile.delete()
         }
     }
 
@@ -103,8 +107,6 @@ class CatrobatImageIOIntegrationTest {
         onView(withId(R.id.pocketpaint_image_name_save_text))
             .perform(replaceText(IMAGE_NAME))
         onView(withText(R.string.save_button_text)).check(matches(isDisplayed()))
-            .perform(ViewActions.click())
-        onView(withText(R.string.overwrite_button_text)).check(matches(isDisplayed()))
             .perform(ViewActions.click())
         uriFile = activity.model.savedPictureUri!!
         Assert.assertNotNull(uriFile)

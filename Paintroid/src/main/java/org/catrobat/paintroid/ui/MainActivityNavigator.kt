@@ -37,6 +37,7 @@ import androidx.fragment.app.Fragment
 import org.catrobat.paintroid.FileIO
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.WelcomeActivity
 import org.catrobat.paintroid.colorpicker.ColorPickerDialog
 import org.catrobat.paintroid.colorpicker.OnColorPickedListener
@@ -64,6 +65,7 @@ import org.catrobat.paintroid.common.SAVE_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.common.SAVE_INFORMATION_DIALOG_TAG
 import org.catrobat.paintroid.common.SAVE_QUESTION_FRAGMENT_TAG
 import org.catrobat.paintroid.common.SCALE_IMAGE_FRAGMENT_TAG
+import org.catrobat.paintroid.common.ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.dialog.AboutDialog
 import org.catrobat.paintroid.dialog.AdvancedSettingsDialog
@@ -86,6 +88,7 @@ import org.catrobat.paintroid.dialog.SaveBeforeLoadImageDialog
 import org.catrobat.paintroid.dialog.SaveBeforeNewImageDialog
 import org.catrobat.paintroid.dialog.SaveInformationDialog
 import org.catrobat.paintroid.dialog.ScaleImageOnLoadDialog
+import org.catrobat.paintroid.dialog.ZoomWindowSettingsDialog
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.catrobat.paintroid.ui.fragments.CatroidMediaGalleryFragment
@@ -296,6 +299,14 @@ class MainActivityNavigator(
         feedbackDialog.show(
             mainActivity.supportFragmentManager,
             FEEDBACK_DIALOG_FRAGMENT_TAG
+        )
+    }
+
+    override fun showZoomWindowSettingsDialog(sharedPreferences: UserPreferences) {
+        val zoomWindowSettingsDialog = ZoomWindowSettingsDialog(sharedPreferences)
+        zoomWindowSettingsDialog.show(
+            mainActivity.supportFragmentManager,
+            ZOOM_WINDOW_SETTINGS_DIALOG_FRAGMENT_TAG
         )
     }
 
