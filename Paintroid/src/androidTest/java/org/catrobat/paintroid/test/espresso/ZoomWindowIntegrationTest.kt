@@ -6,7 +6,6 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.tools.ToolType
 import org.junit.Before
@@ -22,6 +21,7 @@ import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.PressAndReleaseActions.tearDownPressAndRelease
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.PressAndReleaseActions.pressAction
 import org.catrobat.paintroid.test.espresso.util.UiInteractions.PressAndReleaseActions.releaseAction
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
 import org.catrobat.paintroid.test.espresso.util.wrappers.ZoomWindowInteraction.onZoomWindow
 import org.junit.After
 
