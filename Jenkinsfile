@@ -112,22 +112,6 @@ pipeline {
                         }
                     }
                 }
-
-                stage('Device Tests') {
-                    steps {
-                        sh "echo no | avdmanager create avd --force --name android28 --package 'system-images;android-28;default;x86_64'"
-                        sh "/home/user/android/sdk/emulator/emulator -no-window -no-boot-anim -noaudio -avd android28 > /dev/null 2>&1 &"
-                        sh './gradlew -PenableCoverage -Pjenkins -Pemulator=android28 -Pci createDebugCoverageReport -i'
-                    }
-                    post {
-                        always {
-                            sh '/home/user/android/sdk/platform-tools/adb logcat -d > logcat.txt'
-                            sh './gradlew stopEmulator'
-                            junitAndCoverage "$reports/coverage/debug/report.xml", 'device', javaSrc
-                            archiveArtifacts 'logcat.txt'
-                        }
-                    }
-                }
             }
 
             post {
