@@ -22,12 +22,11 @@
     <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Pincel</string>
     <string name="button_cursor">Cursor</string>
-    <string name="button_set_center">Definir Centro</string>
     <string name="button_pipette">Pipeta</string>
     <string name="button_undo">Desfazer</string>
     <string name="button_redo">Refazer</string>
     <string name="button_info">Informações</string>
-    <string name="button_stamp">Carimbo</string>
+    <string name="button_clipboard">Clipboard</string>
     <string name="button_import_image">Importar imagem</string>
     <string name="button_eraser">Borracha</string>
     <string name="button_transform">Transformar</string>
@@ -39,18 +38,15 @@
     <string name="button_watercolor">Aquarela</string>
     <string name="button_spray_can">Lata de spray</string>
     <string name="button_smudge">borrar</string>
+    <string name="button_clip">Área de recorte</string>
     <string name="button_apply">Aplicar</string>
     <string name="button_checkmark">Marcações</string>
-    <string name="button_plus">Conectar Segmento de Linha</string>
     <string name="done">Concluído</string>
     <string name="gallery">Galeria</string>
-    <string name="load_sticker_error">Não foi possível carregar a figurinha</string>
-    <string name="error_unknown_error">Algo deu errado.</string>
-    <string name="cap_circle">Círculo</string>
-    <string name="cap_square">Quadrado</string>
-    <string name="stamptool_paste">Colar</string>
-    <string name="stamptool_copy">Copiar</string>
-    <string name="stamptool_cut">Cortar</string>
+    <string name="no_connection_sticker">Adesivos não disponíveis, verifique sua conexão com a internet.</string>
+    <string name="clipboard_tool_paste">Colar</string>
+    <string name="clipboard_tool_copy">Copiar</string>
+    <string name="clipboard_tool_cut">Cortar</string>
     <string name="stickers">Figurinhas</string>
     <string name="dialog_tools_title">Ferramentas</string>
     <string name="dialog_error_save_title">Erro ao carregar/salvar arquivo</string>
@@ -67,7 +63,7 @@
     <string name="help_content_fill">Toque na imagem para preencher uma área com a cor selecionada.</string>
     <string name="help_content_cursor">Posicione o cursor onde você deseja desenhar. Toque para ativar o cursor. Mova seu dedo para desenhar. Toque novamente para desativar.</string>
     <string name="help_content_transform">Use para modificar a imagem.</string>
-    <string name="help_content_stamp">Mova e redimensione o retângulo para cobrir toda a área ser carimbada. Pressione para selecionar a área. Mova e então toque novamente para carimbar.</string>
+    <string name="help_content_clipboard">Mova e redimensione o retângulo para cobrir toda a área ser carimbada. Pressione para selecionar a área. Mova e então toque novamente para carimbar.</string>
     <string name="help_content_import_png">Importar uma imagem da galeria para a ferramenta carimbo.</string>
     <string name="help_content_line">Desenhar uma linha reta.</string>
     <string name="help_content_text">Escreva o texto e formate-o. Depois, redimensione a caixa de texto. Toque para inserir o texto na imagem.</string>
@@ -77,7 +73,7 @@
     <string name="help_content_hand">Mova o dedo para mover a tela.</string>
     <string name="help_content_spray_can">Mova o seu dedo na imagem para criar um padrão de spray.</string>
     <string name="help_content_smudge">Mova seu dedo sobre a imagem em diferentes desenhos para borrá-los.</string>
-    <string name="closing_catroid_security_question_title">Voltar ao projeto</string>
+    <string name="help_content_clip">Marque a área que não deve ser apagada.</string>
     <string name="closing_security_question_title">Sair</string>
     <string name="closing_security_question">Salvar alterações?</string>
     <string name="menu_new_image">Nova imagem</string>
@@ -85,6 +81,8 @@
     <string name="no_longclick_on_hidden_layer">Você só pode mesclar ou reordenar se todas as camadas estiverem visíveis</string>
     <string name="no_tools_on_hidden_layer">Nenhuma ferramenta está disponível na camada oculta</string>
     <string name="menu_load_image">Carregar imagem</string>
+    <string name="menu_replace_image">Substituir imagem</string>
+    <string name="menu_add_to_current_layer">Adicionar na camada atual</string>
     <string name="menu_save_image">Salvar imagem</string>
     <string name="menu_save_copy">Salvar cópia</string>
     <string name="menu_hide_menu">Tela cheia</string>
@@ -94,6 +92,7 @@
     <string name="menu_export">Exportar</string>
     <string name="menu_feedback">Comentário</string>
     <string name="menu_advanced">Configurações avançadas</string>
+    <string name="menu_zoom_settings">Zoom window settings</string>
     <string name="saved_to">Imagem salva em\n</string>
     <string name="saved">Imagem salva</string>
     <string name="copy_to">Cópia salva em\n</string>
@@ -106,12 +105,9 @@
     <string name="resize_nothing_to_resize">nada há nada para ser redimensionado</string>
     <string name="resize_cannot_resize_to_this_size">não é possível redimensionar para este tamanho</string>
     <string name="resize_max_image_resolution_reached">resolução máxima de imagem alcançada</string>
-    <string name="text_tool_dialog_input_title">Seu texto:</string>
-    <string name="text_tool_dialog_format_options">Opções de formatação:</string>
     <string name="text_tool_dialog_underline_shortcut">S</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">N</string>
-    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">Toque aqui para escrever</string>
     <string name="text_tool_dialog_font_monospace">Monoespaçada</string>
     <string name="text_tool_dialog_font_serif">Serifa</string>
@@ -138,14 +134,14 @@
     <string name="transform_auto_crop_text">Automático</string>
     <string name="transform_set_center_text">Posicionar no centro</string>
     <string name="pixel">px</string>
-    <string name="stamp_tool_copy_hint">Pressione e segure para copiar o conteúdo</string>
+    <string name="clipboard_tool_copy_hint">Pressione e segure para copiar o conteúdo</string>
     <string name="layers_title">Camadas</string>
     <string name="layer_new">Nova camada</string>
     <string name="layer_delete">Excluir Camada</string>
     <string name="layer_too_many_layers">Há camadas demais</string>
     <string name="layer_merged">Camadas mescladas</string>
     <string name="layer_background">Fundo de camada</string>
-    <string name="dialog_shape_text">Forma</string>
+    <string name="layer_preview">Pré-visualização da camada</string>
     <string name="dialog_loading_image_failed_title">Erro ao carregar imagem</string>
     <string name="dialog_loading_image_failed_text">Não é uma imagem válida</string>
     <string name="dialog_settings">Configurações</string>
@@ -153,6 +149,7 @@
     <string name="dialog_save_image_format">Formato da imagem</string>
     <string name="dialog_antialiasing">Antisserrilhado</string>
     <string name="dialog_smoothing">Alisamento</string>
+    <string name="dialog_zoom_window_enabled">Enabled</string>
     <string name="dialog_save_jpg_option_quality">Qualidade:</string>
     <string name="pocketpaint_jpg_message_dialog">Ocupa <b>espaço mínimo no armazenamento</b>. <b>A transparência</b> não é salva </string>
     <string name="pocketpaint_png_message_dialog">Compressão sem perdas. A transparência é preservada.</string>
@@ -205,4 +202,5 @@
     <string name="pocketpaint_tool_icon_description">Ícone da ferramenta atual</string>
     <string name="dialog_scale_title">A imagem é grande demais para ser carregada</string>
     <string name="dialog_scale_message">A imagem é grande demais para ser carregada. Clique em OK para redimensionar a imagem automaticamente.</string>
+    <string name="zoom_window_description">Usado para exibir uma ampliação na parte da superfície de desenho</string>
 </resources>
