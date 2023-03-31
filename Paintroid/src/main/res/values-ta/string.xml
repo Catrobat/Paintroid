@@ -22,12 +22,11 @@
     <string name="pocketpaint_app_name">பாக்கெட் பெயிண்ட்</string>
     <string name="button_brush">தூரிகை</string>
     <string name="button_cursor">கர்சர்</string>
-    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">குழாயி</string>
     <string name="button_undo">செயல்தவிர்</string>
     <string name="button_redo">மீண்டும்செய்</string>
     <string name="button_info">தகவல்</string>
-    <string name="button_stamp">முத்திரை</string>
+    <string name="button_clipboard">Clipboard</string>
     <string name="button_import_image">படத்தை இறக்குமதி செய்க</string>
     <string name="button_eraser">அழிப்பான்</string>
     <string name="button_transform">மாற்றும்</string>
@@ -39,18 +38,15 @@
     <string name="button_watercolor">Watercolor</string>
     <string name="button_spray_can">தெளிப்பு முடியும்</string>
     <string name="button_smudge">Smudge</string>
+    <string name="button_clip">Clip area</string>
     <string name="button_apply">அமல்படுத்து</string>
     <string name="button_checkmark">செக்மார்க்</string>
-    <string name="button_plus">Connect Line Segment</string>
     <string name="done">முடிந்தது</string>
     <string name="gallery">படம் தேர்ந்தெடு</string>
-    <string name="load_sticker_error">ஸ்டிக்கரை ஏற்ற முடியவில்லை</string>
-    <string name="error_unknown_error">ஏதோ தவறு நடைபெற்றிருக்கிறது.</string>
-    <string name="cap_circle">வட்டம்</string>
-    <string name="cap_square">சதுரம்</string>
-    <string name="stamptool_paste">ஒட்டு</string>
-    <string name="stamptool_copy">நகல்</string>
-    <string name="stamptool_cut">வெட்டு</string>
+    <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
+    <string name="clipboard_tool_paste">Paste</string>
+    <string name="clipboard_tool_copy">நகல்</string>
+    <string name="clipboard_tool_cut">Cut</string>
     <string name="stickers">ஓட்டிகள்</string>
     <string name="dialog_tools_title">கருவிகள்</string>
     <string name="dialog_error_save_title">கோப்பை ஏற்றுவதில் / சேமிப்பதில் பிழை</string>
@@ -67,7 +63,7 @@
     <string name="help_content_fill">தேர்ந்தெடுக்கப்பட்ட வண்ணத்துடன் ஒரு பகுதியை நிரப்ப படத்தைத் தட்டவும்.</string>
     <string name="help_content_cursor">நீங்கள் வரைய விரும்பும் இடத்தில் கர்சரை வைக்கவும். கர்சரை செயல்படுத்த தட்டவும். வரைவதற்கு உங்கள் விரலை நகர்த்தவும். செயலிழக்க மீண்டும் தட்டவும்.</string>
     <string name="help_content_transform">படத்தை மாற்ற பயன்படுத்தவும்.</string>
-    <string name="help_content_stamp">நீங்கள் முத்திரை குத்த விரும்பும் பகுதியை மறைக்க செவ்வகத்தை நகர்த்தவும் மற்றும் அதன் அளவை மாற்றவும். பகுதியைத் தேர்ந்தெடுக்க நீண்ட நேரம் அழுத்தவும். முத்திரைக்கு நகர்த்தவும் மீண்டும் தட்டவும்.</string>
+    <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
     <string name="help_content_import_png">பட தொகுப்பில் இருந்து முத்திரை கருவிக்கு ஒரு படத்தை இறக்குமதி செய்க.</string>
     <string name="help_content_line">ஒரு நேர் கோட்டை வரையவும்.</string>
     <string name="help_content_text">உரையை எழுதி அதை வடிவமைக்கவும். உரை பெட்டியை மறுஅளவாக்குங்கள். படத்தில் உரையைச் செருக தட்டவும்.</string>
@@ -77,7 +73,7 @@
     <string name="help_content_hand">கேன்வாஸை நகர்த்த உங்கள் விரலை நகர்த்தவும்.</string>
     <string name="help_content_spray_can">ஒரு ஸ்ப்ரே கேன் வடிவத்தை உருவாக்க உங்கள் விரலை படத்தில் நகர்த்தவும்.</string>
     <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
-    <string name="closing_catroid_security_question_title">திட்டத்திற்குத் திரும்பு</string>
+    <string name="help_content_clip">Mark area which should not be erased.</string>
     <string name="closing_security_question_title">நிறுத்து</string>
     <string name="closing_security_question">மாற்றங்களை சேமிக்க வேண்டுமா?</string>
     <string name="menu_new_image">புதிய படம்</string>
@@ -85,6 +81,8 @@
     <string name="no_longclick_on_hidden_layer">அனைத்து அடுக்குகளும் தெரிந்தால் மட்டுமே நீங்கள் ஒன்றிணைக்க அல்லது மறுவரிசைப்படுத்த முடியும்</string>
     <string name="no_tools_on_hidden_layer">மறைக்கப்பட்ட அடுக்கில் கருவிகள் இல்லை</string>
     <string name="menu_load_image">படங்களை ஏற்றவும்</string>
+    <string name="menu_replace_image">Replace image</string>
+    <string name="menu_add_to_current_layer">Add to current layer</string>
     <string name="menu_save_image">படத்தை சேமி</string>
     <string name="menu_save_copy">நகலைச் சேமிக்கவும்</string>
     <string name="menu_hide_menu">முழுத்திரை</string>
@@ -94,6 +92,7 @@
     <string name="menu_export">ஏற்றுமதி</string>
     <string name="menu_feedback">பின்னூட்டம்</string>
     <string name="menu_advanced">மேம்பட்ட அமைப்புகள்</string>
+    <string name="menu_zoom_settings">Zoom window settings</string>
     <string name="saved_to">படம் சேமிக்கப்பட்டது\n</string>
     <string name="saved">படம் சேமிக்கப்பட்டது</string>
     <string name="copy_to">நகல் சேமிக்கப்பட்டது\n</string>
@@ -106,12 +105,9 @@
     <string name="resize_nothing_to_resize">மறுஅளவிடுவதற்கு எதுவும் இல்லை</string>
     <string name="resize_cannot_resize_to_this_size">இந்த அளவுக்கு அளவை மாற்ற முடியாது</string>
     <string name="resize_max_image_resolution_reached">அதிகபட்ச படத் தீர்மானம் அடைந்தது</string>
-    <string name="text_tool_dialog_input_title">உங்கள் உரை:</string>
-    <string name="text_tool_dialog_format_options">வடிவமைப்பு விருப்பங்கள்:</string>
     <string name="text_tool_dialog_underline_shortcut">U</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
-    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">எழுத இங்கே தட்டவும்</string>
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>
@@ -138,14 +134,14 @@
     <string name="transform_auto_crop_text">ஆட்டோ</string>
     <string name="transform_set_center_text">Set center</string>
     <string name="pixel">px</string>
-    <string name="stamp_tool_copy_hint">உள்ளடக்கத்தை நகலெடுக்க நீண்ட நேரம் அழுத்தவும்</string>
+    <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
     <string name="layers_title">அடுக்குகள்</string>
     <string name="layer_new">புதிய அடுக்கு</string>
     <string name="layer_delete">அடுக்கை நீக்கு</string>
     <string name="layer_too_many_layers">பல அடுக்குகள்</string>
     <string name="layer_merged">அடுக்குகள் ஒன்றிணைக்கப்பட்டன</string>
     <string name="layer_background">பின்னணியை அடுக்கு</string>
-    <string name="dialog_shape_text">வடிவம்</string>
+    <string name="layer_preview">Layer preview</string>
     <string name="dialog_loading_image_failed_title">படத்தை ஏற்றுவதில் பிழை</string>
     <string name="dialog_loading_image_failed_text">சரியான படம் அல்ல</string>
     <string name="dialog_settings">அமைவுகள்</string>
@@ -153,6 +149,7 @@
     <string name="dialog_save_image_format">பட வடிவம்</string>
     <string name="dialog_antialiasing">தவறழைப்பு எதிர்மறைத்தல்</string>
     <string name="dialog_smoothing">மென்மையாக்கும்</string>
+    <string name="dialog_zoom_window_enabled">Enabled</string>
     <string name="dialog_save_jpg_option_quality">தரம்:</string>
     <string name="pocketpaint_jpg_message_dialog"><b> குறைந்தபட்ச சேமிப்பு இடத்தை </b> எடுக்கும். <b> வெளிப்படைத்தன்மை இல்லை </b> நினைவில் உள்ளது.</string>
     <string name="pocketpaint_png_message_dialog">இழப்பற்ற சுருக்க. வெளிப்படைத்தன்மை பாதுகாக்கப்படுகிறது.</string>
@@ -205,4 +202,5 @@
     <string name="pocketpaint_tool_icon_description">தற்போதைய கருவி ஐகான்</string>
     <string name="dialog_scale_title">படத்தை ஏற்ற மிகவும் பெரியது</string>
     <string name="dialog_scale_message">படத்தை ஏற்ற மிகவும் பெரியது. படத்தை தானாக அளவிட சரி என்பதைக் கிளிக் செய்யவும்.</string>
+    <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
 </resources>

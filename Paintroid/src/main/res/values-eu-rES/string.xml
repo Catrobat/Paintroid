@@ -22,12 +22,11 @@
     <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Pintzela</string>
     <string name="button_cursor">Kurtsorea</string>
-    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">Pipeta</string>
     <string name="button_undo">Desegin</string>
     <string name="button_redo">Berregin</string>
     <string name="button_info">Informazioa</string>
-    <string name="button_stamp">Zigilua</string>
+    <string name="button_clipboard">Clipboard</string>
     <string name="button_import_image">Irudi bat itsatsi</string>
     <string name="button_eraser">Borragoma</string>
     <string name="button_transform">Itxura aldatu</string>
@@ -39,18 +38,15 @@
     <string name="button_watercolor">Akuarela</string>
     <string name="button_spray_can">Espraia</string>
     <string name="button_smudge">Smudge</string>
+    <string name="button_clip">Clip area</string>
     <string name="button_apply">Ezarri</string>
     <string name="button_checkmark">Onartu</string>
-    <string name="button_plus">Marra zatia elkartu</string>
     <string name="done">Eginda</string>
     <string name="gallery">Galeria</string>
-    <string name="load_sticker_error">Ezin izan da Stickerra itsatsi</string>
-    <string name="error_unknown_error">Zerbait ez da ongi atera</string>
-    <string name="cap_circle">Zirkulua</string>
-    <string name="cap_square">Karratua</string>
-    <string name="stamptool_paste">Itsatsi</string>
-    <string name="stamptool_copy">Kopiatu</string>
-    <string name="stamptool_cut">Ebaki</string>
+    <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
+    <string name="clipboard_tool_paste">Paste</string>
+    <string name="clipboard_tool_copy">Copy</string>
+    <string name="clipboard_tool_cut">Cut</string>
     <string name="stickers">Stickerrak</string>
     <string name="dialog_tools_title">Tresnak</string>
     <string name="dialog_error_save_title">Kargatze/gordetze akatsa</string>
@@ -67,7 +63,7 @@
     <string name="help_content_fill">Sakatu kolorez bete nahi duzun irudiaren zatian.</string>
     <string name="help_content_cursor">Kurtsorea marraztu nahi duzu lekuan jarri. Sakatu marrazteko. Mugitu hatza. Sakatu marrazteari uzteko.</string>
     <string name="help_content_transform">Margotzeko oihalaren tamaina edo posizioa aldatzeko erabili.</string>
-    <string name="help_content_stamp">Erabaki zigilu bihurtu nahi duzun zatia laukia handitu edo txikituz eta mugituz. Kopiatu edo ebaki aukeratutako zatia. Mugitu nahi duzun tokira eta sakatu Itsatsi aukera.</string>
+    <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
     <string name="help_content_import_png">Zigiluaren tresna galeriako irudi batekin erabili.</string>
     <string name="help_content_line">Marra zuzen bat marraztu.</string>
     <string name="help_content_text">Idatzi testua eta erabaki letra mota. Aldatu tamaina eta lekua. Sakatu ✓ testua irudian txertatzeko.</string>
@@ -77,7 +73,7 @@
     <string name="help_content_hand">Marrazteko oihala mugitzeko hatza mugitu.</string>
     <string name="help_content_spray_can">Margotu esparai baten itxurarekin.</string>
     <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
-    <string name="closing_catroid_security_question_title">Proiektura itzuli</string>
+    <string name="help_content_clip">Mark area which should not be erased.</string>
     <string name="closing_security_question_title">Atera</string>
     <string name="closing_security_question">Aldaketak gorde?</string>
     <string name="menu_new_image">Irudi berria</string>
@@ -85,6 +81,8 @@
     <string name="no_longclick_on_hidden_layer">Geruzak batu edo berrantolatzeko denak ikusgai egon behar dira</string>
     <string name="no_tools_on_hidden_layer">Ezin da tresnarik erabili ezkutatuta dagoen geruza batean</string>
     <string name="menu_load_image">Irudia kargatu</string>
+    <string name="menu_replace_image">Replace image</string>
+    <string name="menu_add_to_current_layer">Add to current layer</string>
     <string name="menu_save_image">Irudia gorde</string>
     <string name="menu_save_copy">Kopia bat gorde</string>
     <string name="menu_hide_menu">Pantaila osoa</string>
@@ -94,6 +92,7 @@
     <string name="menu_export">Esportatu</string>
     <string name="menu_feedback">Iritzia edo zalantzak</string>
     <string name="menu_advanced">Ezarpen aurreratuak</string>
+    <string name="menu_zoom_settings">Zoom window settings</string>
     <string name="saved_to">Irudia \n gorde da</string>
     <string name="saved">Gorde da irudia</string>
     <string name="copy_to">\n -n gorde da kopia</string>
@@ -106,12 +105,9 @@
     <string name="resize_nothing_to_resize">Ez dago neurria aldatzeko ezer</string>
     <string name="resize_cannot_resize_to_this_size">Ezin da neurri honetara aldatu</string>
     <string name="resize_max_image_resolution_reached">Irudiaren gehieneko erresoluzioa da hau</string>
-    <string name="text_tool_dialog_input_title">Zure testua:</string>
-    <string name="text_tool_dialog_format_options">Heuskarri aukerak</string>
     <string name="text_tool_dialog_underline_shortcut">U</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
-    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">Idatzi hemen:</string>
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>
@@ -138,14 +134,14 @@
     <string name="transform_auto_crop_text">Automatikoa</string>
     <string name="transform_set_center_text">Set center</string>
     <string name="pixel">px</string>
-    <string name="stamp_tool_copy_hint">Sakatu Itsatsi-n zigilua itsasteko</string>
+    <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
     <string name="layers_title">Geruzak</string>
     <string name="layer_new">Geruza berri bat</string>
     <string name="layer_delete">Geruza ezabatu</string>
     <string name="layer_too_many_layers">Geruza gehiegi</string>
     <string name="layer_merged">Geruzak batu egin dira</string>
     <string name="layer_background">Azpiko geruza</string>
-    <string name="dialog_shape_text">Forma</string>
+    <string name="layer_preview">Layer preview</string>
     <string name="dialog_loading_image_failed_title">Ezin izan da irudia kargatu</string>
     <string name="dialog_loading_image_failed_text">Irudi honek ez du balio</string>
     <string name="dialog_settings">Ezarpenak</string>
@@ -153,6 +149,7 @@
     <string name="dialog_save_image_format">Irudiaren formatua</string>
     <string name="dialog_antialiasing">Hertzak borobildu</string>
     <string name="dialog_smoothing">Leundu</string>
+    <string name="dialog_zoom_window_enabled">Enabled</string>
     <string name="dialog_save_jpg_option_quality">Kalitatea:</string>
     <string name="pocketpaint_jpg_message_dialog"><b>Gordetzeko espazio gutxien</b> behar du. <b>Ez da gardentasuna mantentzen</b>.</string>
     <string name="pocketpaint_png_message_dialog">Galerarik gabeko konpresioa. Gardentasuna mantenduko da.</string>
@@ -205,4 +202,5 @@
     <string name="pocketpaint_tool_icon_description">Darabilzun tresnaren ikonoa</string>
     <string name="dialog_scale_title">Irudia handiegia da kargatu ahal izateko</string>
     <string name="dialog_scale_message">Irudia handiegia da kargatzeko. Sakatu Ok automatikoki txikitzeko</string>
+    <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
 </resources>
