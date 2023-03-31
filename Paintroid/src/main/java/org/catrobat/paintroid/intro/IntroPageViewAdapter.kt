@@ -26,37 +26,32 @@ import android.view.ViewGroup;
 import androidx.annotation.VisibleForTesting;
 import androidx.viewpager.widget.PagerAdapter;
 
-public class IntroPageViewAdapter extends PagerAdapter {
-	@VisibleForTesting
-	public int[] layouts;
+class IntroPageViewAdapter(private val layouts: IntArray) : PagerAdapter() {
 
-	public IntroPageViewAdapter(int[] layouts) {
-		this.layouts = new int[layouts.length];
-		System.arraycopy(layouts, 0, this.layouts, 0, this.layouts.length);
-	}
+    @VisibleForTesting
+    var layoutsCopy = IntArray(layouts.size)
 
-	@Override
-	public Object instantiateItem(ViewGroup container, int position) {
-		LayoutInflater layoutInflater = LayoutInflater.from(container.getContext());
+    init {
+        System.arraycopy(layouts, 0, layoutsCopy, 0, layoutsCopy.size)
+    }
 
-		View view = layoutInflater.inflate(layouts[position], container, false);
-		container.addView(view);
-		return view;
-	}
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+        val layoutInflater = LayoutInflater.from(container.context)
+        val view = layoutInflater.inflate(layouts[position], container, false)
+        container.addView(view)
+        return view
+    }
 
-	@Override
-	public int getCount() {
-		return layouts.length;
-	}
+    override fun getCount(): Int {
+        return layouts.size
+    }
 
-	@Override
-	public boolean isViewFromObject(View view, Object obj) {
-		return view == obj;
-	}
+    override fun isViewFromObject(view: View, obj: Any): Boolean {
+        return view == obj
+    }
 
-	@Override
-	public void destroyItem(ViewGroup container, int position, Object object) {
-		View view = (View) object;
-		container.removeView(view);
-	}
+    override fun destroyItem(container: ViewGroup, position: Int, obj: Any) {
+        val view = obj as View
+        container.removeView(view)
+    }
 }
