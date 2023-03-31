@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,6 +52,8 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
     private var buttonCircle: Chip
     private val buttonRect: Chip
     private var brushToolPreview: BrushToolPreview
+    private val topLayout: View
+    private val bottomLayout: View
     private var brushChangedListener: OnBrushChangedListener? = null
     private var currentView = rootView
 
@@ -70,6 +72,8 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
             brushWidthSeekBar.setOnSeekBarChangeListener(OnBrushChangedWidthSeekBarListener())
             brushSizeText = findViewById(R.id.pocketpaint_stroke_width_width_text)
             brushToolPreview = findViewById(R.id.pocketpaint_brush_tool_preview)
+            topLayout = findViewById(R.id.pocketpaint_stroke_top_layout)
+            bottomLayout = findViewById(R.id.pocketpaint_stroke_bottom_layout)
         }
         brushSizeText.filters = arrayOf<InputFilter>(DefaultNumberRangeFilter(MIN_VAL, MAX_VAL))
         buttonCircle.setOnClickListener { onCircleButtonClicked() }
@@ -190,4 +194,8 @@ class DefaultBrushToolOptionsView(rootView: ViewGroup) : BrushToolOptionsView {
             brushSizeText.setText(String.format(Locale.getDefault(), "%d", seekBar.progress))
         }
     }
+
+    override fun getTopToolOptions(): View = topLayout
+
+    override fun getBottomToolOptions(): View = bottomLayout
 }

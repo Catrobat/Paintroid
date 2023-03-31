@@ -41,6 +41,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
@@ -122,7 +124,7 @@ class TextToolIntegrationTest {
         selectFormatting(FormattingOptions.UNDERLINE)
         enterTestText()
         onDrawingSurfaceView()
-            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE))
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         onView(withId(R.id.pocketpaint_text_tool_dialog_input_text)).perform(
             ViewActions.replaceText(
                 TEST_TEXT_ADVANCED
@@ -663,6 +665,9 @@ class TextToolIntegrationTest {
         activity?.refreshDrawingSurface()
         onToolBarView()
             .performSelectTool(ToolType.TEXT)
+        runBlocking {
+            delay(1500)
+        }
         enterTestText()
         activity?.perspective?.let { Assert.assertEquals(scale, it.scale, 0.0001f) }
     }
@@ -682,6 +687,9 @@ class TextToolIntegrationTest {
         activity?.refreshDrawingSurface()
 
         onToolBarView().performSelectTool(ToolType.TEXT)
+        runBlocking {
+            delay(1500)
+        }
         enterTestText()
 
         textToolAfterZoom = activity?.toolReference?.tool as TextTool

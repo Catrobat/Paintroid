@@ -353,6 +353,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        this.window.decorView.apply {
+            systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_pocketpaint_more_options, menu)
         presenterMain.removeMoreOptionsItems(menu)
@@ -370,7 +377,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             R.id.pocketpaint_options_discard_image -> presenterMain.discardImageClicked()
             R.id.pocketpaint_options_fullscreen_mode -> {
                 perspective.mainActivity = this
-                presenterMain.enterFullscreenClicked()
+                presenterMain.enterHideButtonsClicked()
             }
             R.id.pocketpaint_options_rate_us -> presenterMain.rateUsClicked()
             R.id.pocketpaint_options_help -> presenterMain.showHelpClicked()
@@ -487,7 +494,6 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             bottomNavigationViewHolder,
             DefaultCommandFactory(),
             commandManager,
-            perspective,
             defaultToolController,
             preferences,
             idlingResource,
@@ -699,8 +705,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         drawingSurface.refreshDrawingSurface()
     }
 
-    override fun enterFullscreen() {
-        drawingSurface.disableAutoScroll()
+    override fun enterHideButtons() {
         if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())
         } else {
@@ -709,8 +714,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
-    override fun exitFullscreen() {
-        drawingSurface.enableAutoScroll()
+    override fun exitHideButtons() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
         window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
