@@ -19,6 +19,8 @@
 package org.catrobat.paintroid.ui
 
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -33,18 +35,20 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.contract.LayerContracts
+import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion.mainActivity
 import org.catrobat.paintroid.model.MAX_LAYER_OPACITY_PERCENTAGE
 import org.catrobat.paintroid.tools.helper.DefaultNumberRangeFilter
 
 private const val MIN_VAL = 0
 private const val MAX_VAL = 100
-
+private const val CORNER_RADIUS = 20f
 private const val RESIZE_LENGTH = 400f
 
 class LayerAdapter(
@@ -167,24 +171,14 @@ class LayerAdapter(
         }
 
         override fun setSelected(isSelected: Boolean) {
-            val background = when (getBackgroundType(isSelected)) {
-                BackgroundType.TOP_SELECTED -> getDrawableResource("layer_item_top_selected")
-                BackgroundType.TOP_UNSELECTED -> getDrawableResource("layer_item_top_unselected")
-                BackgroundType.BTM_SELECTED -> getDrawableResource("layer_item_btm_selected")
-                BackgroundType.BTM_UNSELECTED -> getDrawableResource("layer_item_btm_unselected")
-                BackgroundType.CENTER_SELECTED -> R.drawable.layer_item_center_selected
-                BackgroundType.CENTER_UNSELECTED -> R.drawable.layer_item_center_unselected
-                BackgroundType.SINGLE_SELECTED -> getDrawableResource("layer_item_single_selected")
+            val background = when (getBackgroundType()) {
+                BackgroundType.SINGLE -> getSingleBackground()
+                BackgroundType.TOP -> getTopBackground(isSelected)
+                BackgroundType.BOTTOM -> getBottomBackground(isSelected)
+                BackgroundType.CENTER -> getCenterBackground(isSelected)
             }
-            layerBackground.setBackgroundResource(background)
+            layerBackground.background = background
             this.isSelected = isSelected
-        }
-
-        private fun getDrawableResource(drawableName: String): Int {
-            val isRTL = mainActivity.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
-            val suffix = if (isRTL) "_rtl" else "_ltr"
-            val resourceName = drawableName + suffix
-            return mainActivity.resources.getIdentifier(resourceName, "drawable", mainActivity.packageName)
         }
 
         override fun isSelected(): Boolean = isSelected
@@ -220,34 +214,86 @@ class LayerAdapter(
 
         override fun setMergable() = layerBackground.setBackgroundResource(R.color.pocketpaint_color_merge_layer)
 
-        private fun getBackgroundType(isSelected: Boolean): BackgroundType {
+        private fun getBackgroundType(): BackgroundType {
             if (presenter.layerCount > 2 && this.adapterPosition > 0 && this.adapterPosition < presenter.layerCount - 1) {
-                return if (isSelected) BackgroundType.CENTER_SELECTED else BackgroundType.CENTER_UNSELECTED
+                return BackgroundType.CENTER
             }
-
             if (presenter.layerCount == 1) {
-                return BackgroundType.SINGLE_SELECTED
+                return BackgroundType.SINGLE
             }
-
             if (this.adapterPosition == presenter.layerCount - 1) {
-                return if (isSelected) BackgroundType.BTM_SELECTED else BackgroundType.BTM_UNSELECTED
+                return BackgroundType.BOTTOM
             }
-
-            return if (isSelected) BackgroundType.TOP_SELECTED else BackgroundType.TOP_UNSELECTED
+            return BackgroundType.TOP
         }
     }
 
     companion object {
         private val TAG = LayerAdapter::class.java.simpleName
+
+        fun getSingleBackground(): Drawable? {
+            var background = ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_single_selected)
+            (background as GradientDrawable).cornerRadii = getRadius(BackgroundType.SINGLE)
+            return background
+        }
+
+        fun getTopBackground(isSelected: Boolean): Drawable? {
+            var background = if (isSelected) {
+                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_top_selected)
+            } else {
+                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_top_unselected)
+            }
+            (background as GradientDrawable).cornerRadii = getRadius(BackgroundType.TOP)
+            return background
+        }
+
+        fun getBottomBackground(isSelected: Boolean): Drawable? {
+            var background = if (isSelected) {
+                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_bottom_selected)
+            } else {
+                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_bottom_unselected)
+            }
+            (background as GradientDrawable).cornerRadii = getRadius(BackgroundType.BOTTOM)
+            return background
+        }
+
+        fun getCenterBackground(isSelected: Boolean): Drawable? {
+            return if (isSelected) {
+                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_center_selected)
+            } else {
+                ContextCompat.getDrawable(mainActivity, R.drawable.layer_item_center_unselected)
+            }
+        }
+
+        private fun getRadius(backgroundType: BackgroundType): FloatArray {
+            val isRTL = mainActivity.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
+            val cornerRadius = CORNER_RADIUS * mainActivity.resources.displayMetrics.density
+
+            return when (backgroundType) {
+                BackgroundType.TOP -> if (isRTL) {
+                    floatArrayOf(0f, 0f, cornerRadius, cornerRadius, 0f, 0f, 0f, 0f)
+                } else {
+                    floatArrayOf(cornerRadius, cornerRadius, 0f, 0f, 0f, 0f, 0f, 0f)
+                }
+                BackgroundType.BOTTOM -> if (isRTL) {
+                    floatArrayOf(0f, 0f, 0f, 0f, cornerRadius, cornerRadius, 0f, 0f)
+                } else {
+                    floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, cornerRadius, cornerRadius)
+                }
+                BackgroundType.SINGLE -> if (isRTL) {
+                    floatArrayOf(0f, 0f, cornerRadius, cornerRadius, cornerRadius, cornerRadius, 0f, 0f)
+                } else {
+                    floatArrayOf(cornerRadius, cornerRadius, 0f, 0f, 0f, 0f, cornerRadius, cornerRadius)
+                }
+                else -> floatArrayOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f)
+            }
+        }
     }
 
     enum class BackgroundType {
-        TOP_SELECTED,
-        TOP_UNSELECTED,
-        BTM_SELECTED,
-        BTM_UNSELECTED,
-        CENTER_SELECTED,
-        CENTER_UNSELECTED,
-        SINGLE_SELECTED
+        TOP,
+        BOTTOM,
+        CENTER,
+        SINGLE
     }
 }

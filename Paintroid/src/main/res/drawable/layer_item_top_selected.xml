@@ -3,6 +3,4 @@
     android:shape="rectangle">
     <solid
         android:color="@color/pocketpaint_colorPrimary" />
-    <corners
-        android:topRightRadius="20dp"/>
 </shape>

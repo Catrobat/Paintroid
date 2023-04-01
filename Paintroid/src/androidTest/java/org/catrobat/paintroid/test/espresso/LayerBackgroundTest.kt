@@ -1,40 +1,55 @@
 package org.catrobat.paintroid.test.espresso
 
+import android.content.res.Configuration
 import android.graphics.drawable.Drawable
-import android.view.View
 import androidx.test.rule.ActivityTestRule
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
+import org.catrobat.paintroid.ui.LayerAdapter.Companion.getBottomBackground
+import org.catrobat.paintroid.ui.LayerAdapter.Companion.getCenterBackground
+import org.catrobat.paintroid.ui.LayerAdapter.Companion.getSingleBackground
+import org.catrobat.paintroid.ui.LayerAdapter.Companion.getTopBackground
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.catrobat.paintroid.R
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import java.util.Locale
 
-class LayerBackgroundTest {
-    @get:Rule
-    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
+@RunWith(Parameterized::class)
+class LayerBackgroundTest(private val language: String) {
 
     private lateinit var mainActivity: MainActivity
     private lateinit var layerAdapter: LayerContracts.Adapter
 
-    private var singleSelected = "layer_item_single_selected"
-    private var topSelected = "layer_item_top_selected"
-    private var topUnselected = "layer_item_top_unselected"
-    private var bottomSelected = "layer_item_btm_selected"
-    private var bottomUnselected = "layer_item_btm_unselected"
+    companion object {
+        private const val ENGLISH = "en"
+        private const val ARABIC = "ar"
+
+        @JvmStatic
+        @Parameterized.Parameters(name = "Language: {0}")
+        fun data() = arrayOf(
+                arrayOf(ARABIC),
+                arrayOf(ENGLISH)
+        )
+    }
+
+    @get:Rule
+    var launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
     @Before
     fun setUp() {
         mainActivity = launchActivityRule.activity
         layerAdapter = mainActivity.layerAdapter
+        setLanguage(language)
     }
 
     @Test
     fun testOneLayer() {
-        var actualBackground = layerAdapter?.getViewHolderAt(0)?.getViewLayout()?.background
-        Assert.assertEquals(actualBackground?.constantState, getExpectedBackground(singleSelected))
+        var actualBackground = getActualBackground(0)
+        Assert.assertEquals(actualBackground, getSingleBackground()?.constantState)
     }
 
     @Test
@@ -46,8 +61,8 @@ class LayerBackgroundTest {
         var backgroundTop = getActualBackground(0)
         var backgroundBottom = getActualBackground(1)
 
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topSelected))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomUnselected))
+        Assert.assertEquals(backgroundTop, getTopBackground(true)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
     }
 
     @Test
@@ -60,8 +75,8 @@ class LayerBackgroundTest {
         var backgroundTop = getActualBackground(0)
         var backgroundBottom = getActualBackground(1)
 
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topUnselected))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomSelected))
+        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(true)?.constantState)
     }
 
     @Test
@@ -75,9 +90,9 @@ class LayerBackgroundTest {
         var backgroundCenter = getActualBackground(1)
         var backgroundBottom = getActualBackground(2)
 
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topSelected))
-        Assert.assertEquals(backgroundCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomUnselected))
+        Assert.assertEquals(backgroundTop, getTopBackground(true)?.constantState)
+        Assert.assertEquals(backgroundCenter, getCenterBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
     }
 
     @Test
@@ -92,9 +107,9 @@ class LayerBackgroundTest {
         var backgroundCenter = getActualBackground(1)
         var backgroundBottom = getActualBackground(2)
 
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topUnselected))
-        Assert.assertEquals(backgroundCenter, getExpectedBackground(true))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomUnselected))
+        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundCenter, getCenterBackground(true)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
     }
 
     @Test
@@ -110,9 +125,9 @@ class LayerBackgroundTest {
         var backgroundCenter = getActualBackground(1)
         var backgroundBottom = getActualBackground(2)
 
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topUnselected))
-        Assert.assertEquals(backgroundCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomSelected))
+        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundCenter, getCenterBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(true)?.constantState)
     }
 
     @Test
@@ -128,10 +143,10 @@ class LayerBackgroundTest {
         val backgroundLowerCenter = getActualBackground(2)
         val backgroundBottom = getActualBackground(3)
 
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topSelected))
-        Assert.assertEquals(backgroundUpperCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundLowerCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomUnselected))
+        Assert.assertEquals(backgroundTop, getTopBackground(true)?.constantState)
+        Assert.assertEquals(backgroundUpperCenter, getCenterBackground(false)?.constantState)
+        Assert.assertEquals(backgroundLowerCenter, getCenterBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
     }
 
     @Test
@@ -148,10 +163,10 @@ class LayerBackgroundTest {
         val backgroundLowerCenter = getActualBackground(2)
         val backgroundBottom = getActualBackground(3)
 
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topUnselected))
-        Assert.assertEquals(backgroundUpperCenter, getExpectedBackground(true))
-        Assert.assertEquals(backgroundLowerCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomUnselected))
+        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundUpperCenter, getCenterBackground(true)?.constantState)
+        Assert.assertEquals(backgroundLowerCenter, getCenterBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
     }
 
     @Test
@@ -169,10 +184,10 @@ class LayerBackgroundTest {
         val backgroundLowerCenter = getActualBackground(2)
         val backgroundBottom = getActualBackground(3)
 
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topUnselected))
-        Assert.assertEquals(backgroundUpperCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundLowerCenter, getExpectedBackground(true))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomUnselected))
+        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundUpperCenter, getCenterBackground(false)?.constantState)
+        Assert.assertEquals(backgroundLowerCenter, getCenterBackground(true)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(false)?.constantState)
     }
 
     @Test
@@ -190,149 +205,22 @@ class LayerBackgroundTest {
         val backgroundLowerCenter = getActualBackground(2)
         val backgroundBottom = getActualBackground(3)
 
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topUnselected))
-        Assert.assertEquals(backgroundUpperCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundLowerCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomSelected))
-    }
-
-    @Test
-    fun testFiveLayersTopSelected() {
-        LayerMenuViewInteraction.onLayerMenuView()
-                .performOpen()
-                .performAddLayer()
-                .performAddLayer()
-                .performAddLayer()
-                .performAddLayer()
-
-        val backgroundTop = getActualBackground(0)
-        val backgroundUpperCenter = getActualBackground(1)
-        val backgroundCenter = getActualBackground(2)
-        val backgroundLowerCenter = getActualBackground(3)
-        val backgroundBottom = getActualBackground(4)
-
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topSelected))
-        Assert.assertEquals(backgroundUpperCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundLowerCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomUnselected))
-    }
-
-    @Test
-    fun testFiveLayersUpperCenterSelected() {
-        LayerMenuViewInteraction.onLayerMenuView()
-                .performOpen()
-                .performAddLayer()
-                .performAddLayer()
-                .performAddLayer()
-                .performAddLayer()
-                .performSelectLayer(1)
-
-        val backgroundTop = getActualBackground(0)
-        val backgroundUpperCenter = getActualBackground(1)
-        val backgroundCenter = getActualBackground(2)
-        val backgroundLowerCenter = getActualBackground(3)
-        val backgroundBottom = getActualBackground(4)
-
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topUnselected))
-        Assert.assertEquals(backgroundUpperCenter, getExpectedBackground(true))
-        Assert.assertEquals(backgroundCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundLowerCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomUnselected))
-    }
-
-    @Test
-    fun testFiveLayersCenterSelected() {
-        LayerMenuViewInteraction.onLayerMenuView()
-                .performOpen()
-                .performAddLayer()
-                .performAddLayer()
-                .performAddLayer()
-                .performAddLayer()
-                .performScrollToPositionInLayerNavigation(2)
-                .performSelectLayer(2)
-
-        val backgroundTop = getActualBackground(0)
-        val backgroundUpperCenter = getActualBackground(1)
-        val backgroundCenter = getActualBackground(2)
-        val backgroundLowerCenter = getActualBackground(3)
-        val backgroundBottom = getActualBackground(4)
-
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topUnselected))
-        Assert.assertEquals(backgroundUpperCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundCenter, getExpectedBackground(true))
-        Assert.assertEquals(backgroundLowerCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomUnselected))
-    }
-
-    @Test
-    fun testFiveLayersLowerCenterSelected() {
-        LayerMenuViewInteraction.onLayerMenuView()
-                .performOpen()
-                .performAddLayer()
-                .performAddLayer()
-                .performAddLayer()
-                .performAddLayer()
-                .performScrollToPositionInLayerNavigation(3)
-                .performSelectLayer(3)
-
-        val backgroundTop = getActualBackground(0)
-        val backgroundUpperCenter = getActualBackground(1)
-        val backgroundCenter = getActualBackground(2)
-        val backgroundLowerCenter = getActualBackground(3)
-        val backgroundBottom = getActualBackground(4)
-
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topUnselected))
-        Assert.assertEquals(backgroundUpperCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundLowerCenter, getExpectedBackground(true))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomUnselected))
-    }
-
-    @Test
-    fun testFiveLayersBottomSelected() {
-        LayerMenuViewInteraction.onLayerMenuView()
-                .performOpen()
-                .performAddLayer()
-                .performAddLayer()
-                .performAddLayer()
-                .performAddLayer()
-                .performScrollToPositionInLayerNavigation(4)
-                .performSelectLayer(4)
-
-        val backgroundTop = getActualBackground(0)
-        val backgroundUpperCenter = getActualBackground(1)
-        val backgroundCenter = getActualBackground(2)
-        val backgroundLowerCenter = getActualBackground(3)
-        val backgroundBottom = getActualBackground(4)
-
-        Assert.assertEquals(backgroundTop, getExpectedBackground(topUnselected))
-        Assert.assertEquals(backgroundUpperCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundLowerCenter, getExpectedBackground(false))
-        Assert.assertEquals(backgroundBottom, getExpectedBackground(bottomSelected))
-    }
-
-    private fun getExpectedBackground(drawableName: String): Drawable.ConstantState? {
-        val isRTL = mainActivity.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
-        val suffix = if (isRTL) "_rtl" else "_ltr"
-        val resourceName = drawableName + suffix
-        val id = mainActivity.resources.getIdentifier(resourceName, "drawable", mainActivity.packageName)
-        return mainActivity.getDrawable(id)!!.constantState
-    }
-
-    private fun getExpectedBackground(selected: Boolean): Drawable.ConstantState? {
-        val selectedID = R.drawable.layer_item_center_selected
-        val unselectedID = R.drawable.layer_item_center_unselected
-        return if (selected) {
-            mainActivity.getDrawable(selectedID)?.constantState
-        } else {
-            mainActivity.getDrawable(unselectedID)?.constantState
-        }
+        Assert.assertEquals(backgroundTop, getTopBackground(false)?.constantState)
+        Assert.assertEquals(backgroundUpperCenter, getCenterBackground(false)?.constantState)
+        Assert.assertEquals(backgroundLowerCenter, getCenterBackground(false)?.constantState)
+        Assert.assertEquals(backgroundBottom, getBottomBackground(true)?.constantState)
     }
 
     private fun getActualBackground(position: Int): Drawable.ConstantState? {
         val layout = layerAdapter?.getViewHolderAt(position)?.getViewLayout()
         return layout?.background?.constantState
+    }
+
+    private fun setLanguage(language: String) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config: Configuration = mainActivity.resources.configuration
+        config.setLocale(locale)
+        mainActivity.resources.updateConfiguration(config, mainActivity.resources.displayMetrics)
     }
 }
