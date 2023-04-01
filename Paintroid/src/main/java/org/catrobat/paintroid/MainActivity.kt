@@ -38,6 +38,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.MimeTypeMap
+import android.widget.ImageButton
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -128,6 +129,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     @VisibleForTesting
     lateinit var toolOptionsViewController: ToolOptionsViewController
+
+    @VisibleForTesting
+    lateinit var layerAdapter: LayerAdapter
 
     var idlingResource: CountingIdlingResource = CountingIdlingResource("MainIdleResource")
 
@@ -512,6 +516,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
     }
 
     private fun onCreateLayerMenu() {
+        setLayoutDirection()
         val layerLayout = findViewById<NavigationView>(R.id.pocketpaint_nav_view_layer)
         val drawerLayout = findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout)
         val layerListView = findViewById<DragAndDropListView>(R.id.pocketpaint_layer_side_nav_list)
@@ -524,7 +529,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
         layerListView.layoutManager = layoutManager
         layerListView.manager = layoutManager
-        val layerAdapter = LayerAdapter(layerPresenter, this)
+        layerAdapter = LayerAdapter(layerPresenter, this)
         layerListView.setLayerAdapter(layerAdapter)
         presenterMain.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
@@ -535,6 +540,18 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         setLayerMenuListeners(layerMenuViewHolder)
         val drawerLayoutListener = DrawerLayoutListener(this, layerPresenter)
         drawerLayout.addDrawerListener(drawerLayoutListener)
+    }
+
+    private fun setLayoutDirection() {
+        var visibilityBtn = findViewById<ImageButton>(R.id.pocketpaint_layer_side_nav_button_visibility)
+        var layerNavigationView = findViewById<NavigationView>(R.id.pocketpaint_nav_view_layer)
+        if (resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL) {
+            visibilityBtn.setBackgroundResource(R.drawable.rounded_corner_top_rtl)
+            layerNavigationView.setBackgroundResource(R.drawable.layer_nav_view_background_rtl)
+        } else {
+            visibilityBtn.setBackgroundResource(R.drawable.rounded_corner_top_ltr)
+            layerNavigationView.setBackgroundResource(R.drawable.layer_nav_view_background_ltr)
+        }
     }
 
     private fun onCreateDrawingSurface() {

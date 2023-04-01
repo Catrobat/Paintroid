@@ -167,20 +167,29 @@ class LayerAdapter(
         }
 
         override fun setSelected(isSelected: Boolean) {
-            when (getBackgroundType(isSelected)) {
-                BackgroundType.TOP_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_top_selected)
-                BackgroundType.TOP_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_top_unselected)
-                BackgroundType.BTM_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_btm_selected)
-                BackgroundType.BTM_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_btm_unselected)
-                BackgroundType.CENTER_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_center_selected)
-                BackgroundType.CENTER_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_center_unselected)
-                BackgroundType.SINGLE_SELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_single_selected)
-                BackgroundType.SINGLE_UNSELECTED -> layerBackground.setBackgroundResource(R.drawable.layer_item_single_unselected)
+            val background = when (getBackgroundType(isSelected)) {
+                BackgroundType.TOP_SELECTED -> getDrawableResource("layer_item_top_selected")
+                BackgroundType.TOP_UNSELECTED -> getDrawableResource("layer_item_top_unselected")
+                BackgroundType.BTM_SELECTED -> getDrawableResource("layer_item_btm_selected")
+                BackgroundType.BTM_UNSELECTED -> getDrawableResource("layer_item_btm_unselected")
+                BackgroundType.CENTER_SELECTED -> R.drawable.layer_item_center_selected
+                BackgroundType.CENTER_UNSELECTED -> R.drawable.layer_item_center_unselected
+                BackgroundType.SINGLE_SELECTED -> getDrawableResource("layer_item_single_selected")
             }
+            layerBackground.setBackgroundResource(background)
             this.isSelected = isSelected
         }
 
+        private fun getDrawableResource(drawableName: String): Int {
+            val isRTL = mainActivity.resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
+            val suffix = if (isRTL) "_rtl" else "_ltr"
+            val resourceName = drawableName + suffix
+            return mainActivity.resources.getIdentifier(resourceName, "drawable", mainActivity.packageName)
+        }
+
         override fun isSelected(): Boolean = isSelected
+
+        override fun getViewLayout(): LinearLayout = layerBackground
 
         override fun updateImageView(layer: LayerContracts.Layer) {
             runBlocking {
@@ -217,7 +226,7 @@ class LayerAdapter(
             }
 
             if (presenter.layerCount == 1) {
-                return if (isSelected) BackgroundType.SINGLE_SELECTED else BackgroundType.SINGLE_UNSELECTED
+                return BackgroundType.SINGLE_SELECTED
             }
 
             if (this.adapterPosition == presenter.layerCount - 1) {
@@ -239,7 +248,6 @@ class LayerAdapter(
         BTM_UNSELECTED,
         CENTER_SELECTED,
         CENTER_UNSELECTED,
-        SINGLE_SELECTED,
-        SINGLE_UNSELECTED
+        SINGLE_SELECTED
     }
 }
