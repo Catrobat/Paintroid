@@ -29,11 +29,11 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.hamcrest.core.IsNot.not
 
 class BrushToolOptionsViewInteraction private constructor() :
-    CustomViewInteraction(onView(withId(R.id.pocketpaint_layout_tool_options))) {
+        CustomViewInteraction(onView(withId(R.id.pocketpaint_layout_tool_options))) {
 
     companion object {
         fun onBrushToolOptionsView(): BrushToolOptionsViewInteraction =
-            BrushToolOptionsViewInteraction()
+                BrushToolOptionsViewInteraction()
     }
 
     private fun getButtonIdFromShapeDrawType(strokeCapType: Cap): Int {
@@ -46,7 +46,7 @@ class BrushToolOptionsViewInteraction private constructor() :
 
     fun performSelectStrokeCapType(strokeCapType: Cap): BrushToolOptionsViewInteraction {
         onView(withId(getButtonIdFromShapeDrawType(strokeCapType)))
-            .perform(click())
+                .perform(click())
         return this
     }
 
