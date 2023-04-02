@@ -9,12 +9,11 @@ private const val CONSTANT_1 = 0.95f
 private const val CONSTANT_2 = 0.31f
 private const val CONSTANT_3 = 0.59f
 
-class PentagonDrawable: ShapeDrawable {
+class PentagonDrawable : ShapeDrawable {
     private val path = Path()
 
     override fun draw(canvas: Canvas, shapeRect: RectF, drawPaint: Paint) {
         val midWidth = shapeRect.width() / 2
-        val midHeight = shapeRect.height() / 2
         val height = shapeRect.height()
         val width = shapeRect.width()
         path.run {
