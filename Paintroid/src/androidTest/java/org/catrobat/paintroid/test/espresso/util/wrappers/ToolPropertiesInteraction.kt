@@ -75,7 +75,7 @@ class ToolPropertiesInteraction private constructor() : CustomViewInteraction(nu
     }
 
     private val currentTool: Tool
-        get() = mainActivity.toolReference as Tool
+        get() = mainActivity.toolReference.tool as Tool
 
     fun setColorResource(@ColorRes colorResource: Int): ToolPropertiesInteraction {
         val color = ContextCompat.getColor(

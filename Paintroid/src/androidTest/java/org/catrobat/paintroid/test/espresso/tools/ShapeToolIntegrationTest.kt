@@ -31,11 +31,11 @@ import org.catrobat.paintroid.test.espresso.util.BitmapLocationProvider
 import org.catrobat.paintroid.test.espresso.util.DrawingSurfaceLocationProvider
 import org.catrobat.paintroid.test.espresso.util.OffsetLocationProvider
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
-import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.onDrawingSurfaceView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.onShapeToolOptionsView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties
-import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction.Companion.onDrawingSurfaceView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ShapeToolOptionsViewInteraction.Companion.onShapeToolOptionsView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.Companion.onToolProperties
+import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.Companion.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
@@ -163,21 +163,28 @@ class ShapeToolIntegrationTest {
 
     @Test
     fun testShapeWithOutlineAlsoWorksWithTransparentColor() {
-        onToolBarView().performSelectTool(ToolType.SHAPE)
-        onShapeToolOptionsView().performSelectShape(DrawableShape.RECTANGLE)
-        onShapeToolOptionsView().performSelectShapeDrawType(DrawableStyle.FILL)
-        onToolProperties().setColor(Color.BLACK)
+        onToolBarView()
+                .performSelectTool(ToolType.SHAPE)
+        onShapeToolOptionsView()
+                .performSelectShape(DrawableShape.RECTANGLE)
+        onShapeToolOptionsView()
+                .performSelectShapeDrawType(DrawableStyle.FILL)
+        onToolProperties()
+                .setColor(Color.BLACK)
         drawShape()
-        onToolBarView().performClickSelectedToolButton()
-        onShapeToolOptionsView().performSelectShape(DrawableShape.OVAL)
-        onShapeToolOptionsView().performSelectShapeDrawType(DrawableStyle.STROKE)
-        onToolProperties().setColor(Color.TRANSPARENT)
+        onToolBarView()
+                .performOpenToolOptionsView()
+        onShapeToolOptionsView()
+                .performSelectShape(DrawableShape.OVAL)
+        onShapeToolOptionsView()
+                .performSelectShapeDrawType(DrawableStyle.STROKE)
+        onToolProperties()
+                .setColor(Color.TRANSPARENT)
         drawShape()
-
         onDrawingSurfaceView()
-            .checkPixelColor(Color.BLACK, DrawingSurfaceLocationProvider.TOOL_POSITION)
+                .checkPixelColor(Color.BLACK, DrawingSurfaceLocationProvider.TOOL_POSITION)
         onDrawingSurfaceView()
-            .checkPixelColor(Color.TRANSPARENT, DrawingSurfaceLocationProvider.TOP_MIDDLE)
+                .checkPixelColor(Color.TRANSPARENT, DrawingSurfaceLocationProvider.TOP_MIDDLE)
     }
 
     @Test

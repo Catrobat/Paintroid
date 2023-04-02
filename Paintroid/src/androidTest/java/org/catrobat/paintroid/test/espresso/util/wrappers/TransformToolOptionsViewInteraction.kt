@@ -30,7 +30,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.hamcrest.Description
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.TypeSafeMatcher
 
@@ -142,5 +141,4 @@ class TransformToolOptionsViewInteraction private constructor() : CustomViewInte
     companion object {
         fun onTransformToolOptionsView(): TransformToolOptionsViewInteraction = TransformToolOptionsViewInteraction()
     }
-
 }

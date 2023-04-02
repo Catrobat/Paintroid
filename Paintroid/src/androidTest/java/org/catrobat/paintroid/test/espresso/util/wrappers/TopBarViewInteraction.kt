@@ -25,22 +25,14 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import org.catrobat.paintroid.R
 
-class TopBarViewInteraction private constructor() : CustomViewInteraction(Espresso.onView(withId(R.id.pocketpaint_layout_top_bar))) {
-    fun onUndoButton(): ViewInteraction {
-        return Espresso.onView(withId(R.id.pocketpaint_btn_top_undo))
-    }
+class TopBarViewInteraction : CustomViewInteraction(Espresso.onView(withId(R.id.pocketpaint_layout_top_bar))) {
+    fun onUndoButton(): ViewInteraction = Espresso.onView(withId(R.id.pocketpaint_btn_top_undo))
 
-    fun onRedoButton(): ViewInteraction {
-        return Espresso.onView(withId(R.id.pocketpaint_btn_top_redo))
-    }
+    fun onRedoButton(): ViewInteraction = Espresso.onView(withId(R.id.pocketpaint_btn_top_redo))
 
-    fun onCheckmarkButton(): ViewInteraction {
-        return Espresso.onView(withId(R.id.pocketpaint_btn_top_checkmark))
-    }
+    fun onCheckmarkButton(): ViewInteraction = Espresso.onView(withId(R.id.pocketpaint_btn_top_checkmark))
 
-    fun onPlusButton(): ViewInteraction {
-        return Espresso.onView(withId(R.id.pocketpaint_btn_top_plus))
-    }
+    fun onPlusButton(): ViewInteraction = Espresso.onView(withId(R.id.pocketpaint_btn_top_plus))
 
     fun performUndo(): TopBarViewInteraction {
         onUndoButton()
@@ -77,8 +69,6 @@ class TopBarViewInteraction private constructor() : CustomViewInteraction(Espres
     }
 
     companion object {
-        fun onTopBarView(): TopBarViewInteraction {
-            return TopBarViewInteraction()
-        }
+        fun onTopBarView(): TopBarViewInteraction = TopBarViewInteraction()
     }
 }

@@ -88,8 +88,6 @@ class ConfirmQuitDialogInteraction private constructor() :
     }
 
     companion object {
-        fun onConfirmQuitDialog(): ConfirmQuitDialogInteraction {
-            return ConfirmQuitDialogInteraction()
-        }
+        fun onConfirmQuitDialog(): ConfirmQuitDialogInteraction = ConfirmQuitDialogInteraction()
     }
 }

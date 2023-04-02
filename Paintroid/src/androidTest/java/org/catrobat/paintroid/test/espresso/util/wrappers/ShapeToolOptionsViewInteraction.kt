@@ -36,7 +36,6 @@ class ShapeToolOptionsViewInteraction private constructor() :
             DrawableShape.HEART -> R.id.pocketpaint_shapes_heart_btn
             DrawableShape.STAR -> R.id.pocketpaint_shapes_star_btn
         }
-        throw IllegalArgumentException()
     }
 
     private fun getButtonIdFromShapeDrawType(shapeDrawType: DrawableStyle): Int {
@@ -44,7 +43,6 @@ class ShapeToolOptionsViewInteraction private constructor() :
             DrawableStyle.STROKE -> R.id.pocketpaint_shape_ibtn_outline
             DrawableStyle.FILL -> R.id.pocketpaint_shape_ibtn_fill
         }
-        throw IllegalArgumentException()
     }
 
     fun performSelectShape(shape: DrawableShape): ShapeToolOptionsViewInteraction {
@@ -65,8 +63,6 @@ class ShapeToolOptionsViewInteraction private constructor() :
     }
 
     companion object {
-        fun onShapeToolOptionsView(): ShapeToolOptionsViewInteraction {
-            return ShapeToolOptionsViewInteraction()
-        }
+        fun onShapeToolOptionsView(): ShapeToolOptionsViewInteraction = ShapeToolOptionsViewInteraction()
     }
 }

@@ -44,8 +44,6 @@ class ZoomWindowInteraction private constructor() : CustomViewInteraction(Espres
     }
 
     companion object {
-        fun onZoomWindow(): ZoomWindowInteraction {
-            return ZoomWindowInteraction()
-        }
+        fun onZoomWindow(): ZoomWindowInteraction = ZoomWindowInteraction()
     }
 }

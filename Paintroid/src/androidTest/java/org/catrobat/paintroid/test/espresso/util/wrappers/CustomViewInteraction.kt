@@ -25,24 +25,15 @@ import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
 import org.hamcrest.Matcher
 
-abstract class CustomViewInteraction protected constructor(protected var viewInteraction: ViewInteraction?) {
-    fun perform(vararg viewActions: ViewAction?): ViewInteraction {
-        return viewInteraction!!.perform(*viewActions)
-    }
+open class CustomViewInteraction constructor(var viewInteraction: ViewInteraction?) {
 
-    fun withFailureHandler(var1: FailureHandler?): ViewInteraction {
-        return viewInteraction!!.withFailureHandler(var1)
-    }
+    fun perform(vararg viewActions: ViewAction?): ViewInteraction = viewInteraction!!.perform(*viewActions)
 
-    fun inRoot(var1: Matcher<Root?>?): ViewInteraction {
-        return viewInteraction!!.inRoot(var1)
-    }
+    fun withFailureHandler(var1: FailureHandler?): ViewInteraction = viewInteraction!!.withFailureHandler(var1)
 
-    fun noActivity(): ViewInteraction {
-        return viewInteraction!!.noActivity()
-    }
+    fun inRoot(var1: Matcher<Root?>?): ViewInteraction = viewInteraction!!.inRoot(var1)
 
-    fun check(viewAssert: ViewAssertion?): ViewInteraction {
-        return viewInteraction!!.check(viewAssert)
-    }
+    fun noActivity(): ViewInteraction = viewInteraction!!.noActivity()
+
+    fun check(viewAssert: ViewAssertion?): ViewInteraction = viewInteraction!!.check(viewAssert)
 }

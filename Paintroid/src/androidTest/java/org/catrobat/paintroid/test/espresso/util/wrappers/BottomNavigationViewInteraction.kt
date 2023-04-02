@@ -83,12 +83,8 @@ class BottomNavigationViewInteraction private constructor() :
             .perform(ViewActions.click())
     }
 
-    companion object
-    {
+    companion object {
         @JvmStatic
-        fun onBottomNavigationView(): BottomNavigationViewInteraction {
-            return BottomNavigationViewInteraction()
-        }
+        fun onBottomNavigationView() = BottomNavigationViewInteraction()
     }
-
-    }
+}

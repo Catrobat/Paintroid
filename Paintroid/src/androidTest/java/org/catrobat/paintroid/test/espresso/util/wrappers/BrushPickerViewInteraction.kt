@@ -25,25 +25,15 @@ import org.catrobat.paintroid.R
 
 class BrushPickerViewInteraction private constructor() :
     CustomViewInteraction(Espresso.onView(withId(R.id.pocketpaint_layout_tool_options))) {
-    fun onStrokeWidthSeekBar(): ViewInteraction {
-        return Espresso.onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
-    }
+    fun onStrokeWidthSeekBar(): ViewInteraction = Espresso.onView(withId(R.id.pocketpaint_stroke_width_seek_bar))
 
-    fun onStrokeWidthTextView(): ViewInteraction {
-        return Espresso.onView(withId(R.id.pocketpaint_stroke_width_width_text))
-    }
+    fun onStrokeWidthTextView(): ViewInteraction = Espresso.onView(withId(R.id.pocketpaint_stroke_width_width_text))
 
-    fun onStrokeCapSquareView(): ViewInteraction {
-        return Espresso.onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
-    }
+    fun onStrokeCapSquareView(): ViewInteraction = Espresso.onView(withId(R.id.pocketpaint_stroke_ibtn_rect))
 
-    fun onStrokeCapRoundView(): ViewInteraction {
-        return Espresso.onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
-    }
+    fun onStrokeCapRoundView(): ViewInteraction = Espresso.onView(withId(R.id.pocketpaint_stroke_ibtn_circle))
 
     companion object {
-        fun onBrushPickerView(): BrushPickerViewInteraction {
-            return BrushPickerViewInteraction()
-        }
+        fun onBrushPickerView(): BrushPickerViewInteraction = BrushPickerViewInteraction()
     }
 }

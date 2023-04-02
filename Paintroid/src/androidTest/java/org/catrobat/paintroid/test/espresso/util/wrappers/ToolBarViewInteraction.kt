@@ -29,15 +29,11 @@ import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewIn
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers
 
-class ToolBarViewInteraction() :
+class ToolBarViewInteraction :
     CustomViewInteraction(Espresso.onView(withId(R.id.pocketpaint_toolbar))) {
-    fun onSelectedToolButton(): ViewInteraction {
-        return Espresso.onView(ViewMatchers.withId(currentToolType.toolButtonID))
-    }
+    fun onSelectedToolButton(): ViewInteraction = Espresso.onView(ViewMatchers.withId(currentToolType.toolButtonID))
 
-    fun onToolOptionsView(): ViewInteraction {
-        return Espresso.onView(withId(R.id.pocketpaint_layout_tool_specific_options))
-    }
+    fun onToolOptionsView(): ViewInteraction = Espresso.onView(withId(R.id.pocketpaint_layout_tool_specific_options))
 
     fun performClickSelectedToolButton(): ToolBarViewInteraction {
         onBottomNavigationView()
@@ -64,7 +60,7 @@ class ToolBarViewInteraction() :
     }
 
     private val currentToolType: ToolType
-        private get() = ToolType.CURSOR;
+        get() = ToolType.CURSOR
 
     fun performOpenToolOptionsView(): ToolBarViewInteraction {
         onToolOptionsView()
@@ -83,8 +79,6 @@ class ToolBarViewInteraction() :
     }
 
     companion object {
-        fun onToolBarView(): ToolBarViewInteraction {
-            return ToolBarViewInteraction()
-        }
+        fun onToolBarView(): ToolBarViewInteraction = ToolBarViewInteraction()
     }
 }

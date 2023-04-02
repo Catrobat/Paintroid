@@ -30,8 +30,6 @@ class OptionsMenuViewInteraction private constructor() {
 
     companion object {
         lateinit var optionsMenu: ViewInteraction
-        fun onOptionsMenu(): OptionsMenuViewInteraction {
-            return OptionsMenuViewInteraction()
-        }
+        fun onOptionsMenu(): OptionsMenuViewInteraction = OptionsMenuViewInteraction()
     }
 }

@@ -49,10 +49,15 @@ import org.catrobat.paintroid.tools.ToolReference
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers
 import org.hamcrest.core.AllOf
-import org.junit.*
 import org.junit.runner.RunWith
 import java.io.File
 import java.io.IOException
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.After
+import org.junit.ClassRule
+import org.junit.Assert
 
 @RunWith(AndroidJUnit4::class)
 class ToolOnBackPressedIntegrationTest {
@@ -190,10 +195,10 @@ class ToolOnBackPressedIntegrationTest {
     fun testBrushToolBackPressedFromCatroidAndUsePicture() {
         onDrawingSurfaceView()
                 .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
-        val pathToFile = (launchActivityRule.activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-                .toString() + File.separator
-                + defaultPictureName
-                + FILE_ENDING)
+        val pathToFile = launchActivityRule.activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                .toString() + File.separator +
+                defaultPictureName +
+                FILE_ENDING
         saveFile = File(pathToFile)
         launchActivityRule.activity.model.savedPictureUri = Uri.fromFile(saveFile)
         launchActivityRule.activity.model.isOpenedFromCatroid = true

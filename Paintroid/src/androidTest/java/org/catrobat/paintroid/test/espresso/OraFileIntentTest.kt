@@ -33,11 +33,16 @@ import org.catrobat.paintroid.FileIO.getBitmapFromUri
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
 import org.catrobat.paintroid.tools.ToolType
-import org.junit.*
+import org.junit.Rule
+import org.junit.Before
+import org.junit.After
+import org.junit.Assert
+import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
 import java.io.IOException
-import java.util.*
+import java.util.Objects
+import kotlin.collections.ArrayList
 
 @RunWith(AndroidJUnit4::class)
 class OraFileIntentTest {

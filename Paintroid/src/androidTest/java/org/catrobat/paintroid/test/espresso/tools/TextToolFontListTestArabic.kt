@@ -38,7 +38,7 @@ import org.catrobat.paintroid.test.espresso.rtl.util.RtlActivityTestRule
 import org.catrobat.paintroid.test.espresso.rtl.util.RtlUiTestUtils
 import org.catrobat.paintroid.test.espresso.util.EspressoUtils.configuration
 import org.catrobat.paintroid.test.espresso.util.UiMatcher
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.onToolBarView
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction.Companion.onToolBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolType
 import org.junit.Assert

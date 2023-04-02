@@ -50,7 +50,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-
 @RunWith(value = Parameterized::class)
 class ToolOptionsIntegrationTest(
         private var toolType: ToolType?,
@@ -109,24 +108,22 @@ class ToolOptionsIntegrationTest(
     @After
     fun tearDown() { testImageFile?.let { assertTrue(it.delete()) } }
 
-    fun onToolBarView(): ToolBarViewInteraction? {
-        return ToolBarViewInteraction()
-    }
+    fun onToolBarView(): ToolBarViewInteraction = ToolBarViewInteraction()
 
     @Test
     fun testToolOptions() {
         onToolBarView()
-                ?.performSelectTool(toolType!!)
+                .performSelectTool(toolType!!)
         if (!toolOptionsShownInitially) {
             onToolBarView()
-                    ?.performOpenToolOptionsView()
+                    .performOpenToolOptionsView()
         }
         if (hasToolOptionsView) {
-            onToolBarView()?.onToolOptionsView()
-                    ?.check(matches(isDisplayed()))
+            onToolBarView().onToolOptionsView()
+                    .check(matches(isDisplayed()))
         } else {
-            onToolBarView()?.onToolOptionsView()
-                    ?.check(matches(not(isDisplayed())))
+            onToolBarView().onToolOptionsView()
+                    .check(matches(not(isDisplayed())))
         }
     }
 
@@ -134,10 +131,10 @@ class ToolOptionsIntegrationTest(
     fun testShouldNotUnselectAlreadySelectedStrokeTypeWhenSelectedAgain() {
         if (hasStrokeCapOptions) {
             onToolBarView()
-                    ?.performSelectTool(toolType!!)
+                    .performSelectTool(toolType!!)
             if (!toolOptionsShownInitially) {
                 onToolBarView()
-                        ?.performOpenToolOptionsView()
+                        .performOpenToolOptionsView()
             }
 
             repeat(2) {

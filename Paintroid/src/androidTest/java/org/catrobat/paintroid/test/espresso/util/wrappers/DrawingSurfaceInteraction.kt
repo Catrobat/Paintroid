@@ -126,9 +126,9 @@ class DrawingSurfaceInteraction private constructor() :
         check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
             override fun describeTo(description: Description) {
                 description.appendText(
-                    "Bitmap has is size "
-                        + expectedWidth + "x and "
-                        + expectedHeight + "y"
+                    "Bitmap has is size " +
+                          expectedWidth + "x and " +
+                          expectedHeight + "y"
                 )
             }
 
@@ -172,8 +172,6 @@ class DrawingSurfaceInteraction private constructor() :
     }
 
     companion object {
-        fun onDrawingSurfaceView(): DrawingSurfaceInteraction {
-            return DrawingSurfaceInteraction()
-        }
+        fun onDrawingSurfaceView(): DrawingSurfaceInteraction = DrawingSurfaceInteraction()
     }
 }

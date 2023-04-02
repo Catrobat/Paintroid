@@ -37,9 +37,11 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class FlipToolIntegrationTest {
+    @JvmField
     @Rule
     var launchActivityRule = ActivityTestRule(MainActivity::class.java)
 
+    @JvmField
     @Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
     @Before

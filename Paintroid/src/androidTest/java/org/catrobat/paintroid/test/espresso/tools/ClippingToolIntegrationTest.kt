@@ -13,7 +13,7 @@ import org.catrobat.paintroid.test.espresso.util.UiInteractions
 import org.catrobat.paintroid.test.espresso.util.wrappers.DrawingSurfaceInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.LayerMenuViewInteraction
 import org.catrobat.paintroid.test.espresso.util.wrappers.ToolBarViewInteraction
-import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.onToolProperties
+import org.catrobat.paintroid.test.espresso.util.wrappers.ToolPropertiesInteraction.Companion.onToolProperties
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.ToolReference
@@ -274,16 +274,16 @@ class ClippingToolIntegrationTest {
         onToolProperties().setColor(Color.BLACK)
 
         DrawingSurfaceInteraction.onDrawingSurfaceView()
-            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+                .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
 
         DrawingSurfaceInteraction.onDrawingSurfaceView()
-            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+                .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
 
         DrawingSurfaceInteraction.onDrawingSurfaceView()
-            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+                .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
 
         ToolBarViewInteraction.onToolBarView()
-            .performSelectTool(ToolType.CLIP)
+                .performSelectTool(ToolType.CLIP)
 
         onToolProperties().setColor(Color.YELLOW)
 
@@ -300,7 +300,7 @@ class ClippingToolIntegrationTest {
         }
 
         TopBarViewInteraction.onTopBarView()
-            .performClickCheckmark()
+                .performClickCheckmark()
 
         val inAreaX = middle.x - 10
         val inAreaY = middle.y - 10
@@ -315,13 +315,13 @@ class ClippingToolIntegrationTest {
         assertEquals(colorOutOfArea, Color.TRANSPARENT)
 
         TopBarViewInteraction.onTopBarView()
-            .performUndo()
+                .performUndo()
 
         val colorOutOfAreaAfterUndo = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
         assertEquals(colorOutOfAreaAfterUndo, Color.BLACK)
 
         TopBarViewInteraction.onTopBarView()
-            .performRedo()
+                .performRedo()
 
         val colorOutOfAreaAfterRedo = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
         assertEquals(colorOutOfAreaAfterRedo, Color.TRANSPARENT)

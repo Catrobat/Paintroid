@@ -33,143 +33,141 @@ import org.catrobat.paintroid.test.espresso.util.UiMatcher
 import org.hamcrest.Matchers
 import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.Companion.onBottomNavigationView
 
-class ColorPickerViewInteraction protected constructor() :
-	CustomViewInteraction(Espresso.onView(withId(R.id.color_picker_view))) {
-	fun onPositiveButton(): ViewInteraction {
-		return Espresso.onView(withId(android.R.id.button1)) // to avoid following exception when running on emulator:
-			// Caused by: java.lang.SecurityException:
-			// Injecting to another application requires INJECT_EVENTS permission
-			.perform(ViewActions.closeSoftKeyboard())
-	}
+class ColorPickerViewInteraction private constructor() :
+    CustomViewInteraction(Espresso.onView(withId(R.id.color_picker_view))) {
+    fun onPositiveButton(): ViewInteraction {
+        return Espresso.onView(withId(android.R.id.button1)) // to avoid following exception when running on emulator:
+            // Caused by: java.lang.SecurityException:
+            // Injecting to another application requires INJECT_EVENTS permission
+            .perform(ViewActions.closeSoftKeyboard())
+    }
 
-	fun performOpenColorPicker(): ColorPickerViewInteraction {
-		onBottomNavigationView()
-			.onColorClicked()
-		return this
-	}
+    fun performOpenColorPicker(): ColorPickerViewInteraction {
+        onBottomNavigationView()
+            .onColorClicked()
+        return this
+    }
 
-	fun onNegativeButton(): ViewInteraction {
-		return Espresso.onView(withId(android.R.id.button2)) // to avoid following exception when running on emulator:
-			// Caused by: java.lang.SecurityException:
-			// Injecting to another application requires INJECT_EVENTS permission
-			.perform(ViewActions.closeSoftKeyboard())
-	}
+    fun onNegativeButton(): ViewInteraction {
+        return Espresso.onView(withId(android.R.id.button2)) // to avoid following exception when running on emulator:
+            // Caused by: java.lang.SecurityException:
+            // Injecting to another application requires INJECT_EVENTS permission
+            .perform(ViewActions.closeSoftKeyboard())
+    }
 
-	fun clickPipetteButton(): ViewInteraction {
-		return Espresso.onView(withId(R.id.color_picker_pipette_btn))
-			.perform(ViewActions.click())
-	}
+    fun clickPipetteButton(): ViewInteraction {
+        return Espresso.onView(withId(R.id.color_picker_pipette_btn))
+            .perform(ViewActions.click())
+    }
 
-	fun checkCurrentViewColor(color: Int) {
-		Espresso.onView(withId(R.id.color_picker_current_color_view))
-			.check(ViewAssertions.matches(UiMatcher.withBackgroundColor(color)))
-	}
+    fun checkCurrentViewColor(color: Int) {
+        Espresso.onView(withId(R.id.color_picker_current_color_view))
+            .check(ViewAssertions.matches(UiMatcher.withBackgroundColor(color)))
+    }
 
-	fun checkNewColorViewColor(color: Int) {
-		Espresso.onView(withId(R.id.color_picker_new_color_view))
-			.check(ViewAssertions.matches(UiMatcher.withBackgroundColor(color)))
-	}
+    fun checkNewColorViewColor(color: Int) {
+        Espresso.onView(withId(R.id.color_picker_new_color_view))
+            .check(ViewAssertions.matches(UiMatcher.withBackgroundColor(color)))
+    }
 
-	fun performCloseColorPickerWithDialogButton(): ColorPickerViewInteraction {
-		check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-		onPositiveButton()
-			.perform(ViewActions.click())
-		return this
-	}
+    fun performCloseColorPickerWithDialogButton(): ColorPickerViewInteraction {
+        check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onPositiveButton()
+            .perform(ViewActions.click())
+        return this
+    }
 
-	fun performClickColorPickerPresetSelectorButton(buttonPosition: Int): ColorPickerViewInteraction {
-		val colorButtonRowPosition = buttonPosition / COLOR_PICKER_BUTTONS_PER_ROW
-		val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
-		Espresso.onView(
-			Matchers.allOf(
-				ViewMatchers.isDescendantOfA(
-					ViewMatchers.withClassName(
-						Matchers.containsString(
-							PresetSelectorView::class.java.simpleName
-						)
-					)
-				),
-				ViewMatchers.isDescendantOfA(
-					ViewMatchers.isAssignableFrom(
-						TableLayout::class.java
-					)
-				),
-				ViewMatchers.isDescendantOfA(
-					ViewMatchers.isAssignableFrom(
-						TableRow::class.java
-					)
-				),
-				UiMatcher.hasTablePosition(colorButtonRowPosition, colorButtonColPosition)
-			)
-		)
-			.perform(ViewActions.closeSoftKeyboard())
-			.perform(ViewActions.scrollTo())
-			.perform(ViewActions.click())
-		return this
-	}
+    fun performClickColorPickerPresetSelectorButton(buttonPosition: Int): ColorPickerViewInteraction {
+        val colorButtonRowPosition = buttonPosition / COLOR_PICKER_BUTTONS_PER_ROW
+        val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
+        Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.isDescendantOfA(
+                    ViewMatchers.withClassName(
+                        Matchers.containsString(
+                            PresetSelectorView::class.java.simpleName
+                        )
+                    )
+                ),
+                ViewMatchers.isDescendantOfA(
+                    ViewMatchers.isAssignableFrom(
+                        TableLayout::class.java
+                    )
+                ),
+                ViewMatchers.isDescendantOfA(
+                    ViewMatchers.isAssignableFrom(
+                        TableRow::class.java
+                    )
+                ),
+                UiMatcher.hasTablePosition(colorButtonRowPosition, colorButtonColPosition)
+            )
+        )
+            .perform(ViewActions.closeSoftKeyboard())
+            .perform(ViewActions.scrollTo())
+            .perform(ViewActions.click())
+        return this
+    }
 
-	fun performClickOnHistoryColor(buttonPosition: Int): ColorPickerViewInteraction {
-		val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
-		Espresso.onView(
-			Matchers.allOf(
-				ViewMatchers.isDescendantOfA(
-					ViewMatchers.withClassName(
-						Matchers.containsString(
-							ColorHistoryView::class.java.simpleName
-						)
-					)
-				),
-				ViewMatchers.isDescendantOfA(
-					ViewMatchers.isAssignableFrom(
-						TableLayout::class.java
-					)
-				),
-				ViewMatchers.isDescendantOfA(
-					ViewMatchers.isAssignableFrom(
-						TableRow::class.java
-					)
-				),
-				UiMatcher.hasTablePosition(0, colorButtonColPosition)
-			)
-		)
-			.perform(ViewActions.closeSoftKeyboard())
-			.perform(ViewActions.scrollTo())
-			.perform(ViewActions.click())
-		return this
-	}
+    fun performClickOnHistoryColor(buttonPosition: Int): ColorPickerViewInteraction {
+        val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
+        Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.isDescendantOfA(
+                    ViewMatchers.withClassName(
+                        Matchers.containsString(
+                            ColorHistoryView::class.java.simpleName
+                        )
+                    )
+                ),
+                ViewMatchers.isDescendantOfA(
+                    ViewMatchers.isAssignableFrom(
+                        TableLayout::class.java
+                    )
+                ),
+                ViewMatchers.isDescendantOfA(
+                    ViewMatchers.isAssignableFrom(
+                        TableRow::class.java
+                    )
+                ),
+                UiMatcher.hasTablePosition(0, colorButtonColPosition)
+            )
+        )
+            .perform(ViewActions.closeSoftKeyboard())
+            .perform(ViewActions.scrollTo())
+            .perform(ViewActions.click())
+        return this
+    }
 
-	fun checkHistoryColor(buttonPosition: Int, color: Int) {
-		val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
-		Espresso.onView(
-			Matchers.allOf(
-				ViewMatchers.isDescendantOfA(
-					ViewMatchers.withClassName(
-						Matchers.containsString(
-							ColorHistoryView::class.java.simpleName
-						)
-					)
-				),
-				ViewMatchers.isDescendantOfA(
-					ViewMatchers.isAssignableFrom(
-						TableLayout::class.java
-					)
-				),
-				ViewMatchers.isDescendantOfA(
-					ViewMatchers.isAssignableFrom(
-						TableRow::class.java
-					)
-				),
-				UiMatcher.hasTablePosition(0, colorButtonColPosition)
-			)
-		)
-			.check(ViewAssertions.matches(UiMatcher.withBackgroundColor(color)))
-	}
+    fun checkHistoryColor(buttonPosition: Int, color: Int) {
+        val colorButtonColPosition = buttonPosition % COLOR_PICKER_BUTTONS_PER_ROW
+        Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.isDescendantOfA(
+                    ViewMatchers.withClassName(
+                        Matchers.containsString(
+                            ColorHistoryView::class.java.simpleName
+                        )
+                    )
+                ),
+                ViewMatchers.isDescendantOfA(
+                        ViewMatchers.isAssignableFrom(
+                        TableLayout::class.java
+                    )
+                ),
+                ViewMatchers.isDescendantOfA(
+                    ViewMatchers.isAssignableFrom(
+                        TableRow::class.java
+                    )
+                ),
+                UiMatcher.hasTablePosition(0, colorButtonColPosition)
+            )
+        )
+            .check(ViewAssertions.matches(UiMatcher.withBackgroundColor(color)))
+    }
 
-	companion object {
-		private const val COLOR_PICKER_BUTTONS_PER_ROW = 4
-		const val MAXIMUM_COLORS_IN_HISTORY = 4
-		fun onColorPickerView(): ColorPickerViewInteraction {
-			return ColorPickerViewInteraction()
-		}
-	}
+    companion object {
+        private const val COLOR_PICKER_BUTTONS_PER_ROW = 4
+        const val MAXIMUM_COLORS_IN_HISTORY = 4
+        fun onColorPickerView(): ColorPickerViewInteraction = ColorPickerViewInteraction()
+    }
 }
