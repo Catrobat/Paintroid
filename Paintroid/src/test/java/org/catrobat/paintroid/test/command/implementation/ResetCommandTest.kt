@@ -19,18 +19,20 @@
 
 package org.catrobat.paintroid.test.command.implementation
 
+import android.graphics.Bitmap
 import android.graphics.Canvas
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.InjectMocks
 import org.catrobat.paintroid.command.implementation.ResetCommand
 import org.catrobat.paintroid.contract.LayerContracts
 import org.catrobat.paintroid.model.Layer
-import org.junit.Before
 import org.catrobat.paintroid.model.LayerModel
 import org.hamcrest.CoreMatchers
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -47,8 +49,8 @@ class ResetCommandTest {
 
     @Test
     fun testRunClearsLayers() {
-        layerModel?.addLayerAt(0, Layer(null))
-        layerModel?.addLayerAt(1, Layer(null))
+        layerModel?.addLayerAt(0, Layer(mock(Bitmap::class.java)))
+        layerModel?.addLayerAt(1, Layer(mock(Bitmap::class.java)))
         canvas?.let { layerModel?.let { it1 -> command?.run(it, it1) } }
         Assert.assertThat(layerModel?.layerCount, CoreMatchers.`is`(0))
     }

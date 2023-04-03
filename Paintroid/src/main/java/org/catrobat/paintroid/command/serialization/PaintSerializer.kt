@@ -19,13 +19,16 @@
 package org.catrobat.paintroid.command.serialization
 
 import android.content.Context
+import android.graphics.BlurMaskFilter
 import android.graphics.Paint
 import com.esotericsoftware.kryo.Kryo
 import com.esotericsoftware.kryo.io.Input
 import com.esotericsoftware.kryo.io.Output
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
+import org.catrobat.paintroid.tools.implementation.WatercolorTool
 
 class PaintSerializer(version: Int, private val activityContext: Context) : VersionSerializer<Paint>(version) {
+
     override fun write(kryo: Kryo, output: Output, paint: Paint) {
         with(output) {
             writeInt(paint.color)
@@ -34,11 +37,31 @@ class PaintSerializer(version: Int, private val activityContext: Context) : Vers
             writeBoolean(paint.isAntiAlias)
             writeInt(paint.style.ordinal)
             writeInt(paint.strokeJoin.ordinal)
+            writeBoolean(paint.maskFilter != null)
+            writeInt(paint.alpha)
         }
     }
 
     override fun read(kryo: Kryo, input: Input, type: Class<out Paint>): Paint =
         super.handleVersions(this, kryo, input, type)
+
+    override fun readV1(serializer: VersionSerializer<Paint>, kryo: Kryo, input: Input, type: Class<out Paint>): Paint {
+        val toolPaint = DefaultToolPaint(activityContext).apply {
+            with(input) {
+                color = readInt()
+                strokeWidth = readFloat()
+                strokeCap = Paint.Cap.values()[readInt()]
+            }
+        }
+
+        return toolPaint.paint.apply {
+            with(input) {
+                isAntiAlias = readBoolean()
+                style = Paint.Style.values()[readInt()]
+                strokeJoin = Paint.Join.values()[readInt()]
+            }
+        }
+    }
 
     override fun readCurrentVersion(kryo: Kryo, input: Input, type: Class<out Paint>): Paint {
         val toolPaint = DefaultToolPaint(activityContext).apply {
@@ -48,11 +71,15 @@ class PaintSerializer(version: Int, private val activityContext: Context) : Vers
                 strokeCap = Paint.Cap.values()[readInt()]
             }
         }
+
         return toolPaint.paint.apply {
             with(input) {
                 isAntiAlias = readBoolean()
                 style = Paint.Style.values()[readInt()]
                 strokeJoin = Paint.Join.values()[readInt()]
+                val hadFilter: Boolean = input.readBoolean()
+                alpha = input.readInt()
+                if (hadFilter) maskFilter = BlurMaskFilter(WatercolorTool.calcRange(alpha), BlurMaskFilter.Blur.INNER)
             }
         }
     }

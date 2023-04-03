@@ -30,6 +30,8 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -48,6 +50,8 @@ class AddLayerCommandTest {
 
     @Test
     fun testAddOneLayer() {
+        `when`(commonFactory!!.createBitmap(3, 5, Bitmap.Config.ARGB_8888)).thenReturn(mock(Bitmap::class.java))
+
         val layerModel = LayerModel()
         layerModel.width = 3
         layerModel.height = 5
@@ -63,13 +67,17 @@ class AddLayerCommandTest {
 
     @Test
     fun testAddTwoLayersAddsToFront() {
-        val layerModel = LayerModel()
+        `when`(commonFactory!!.createBitmap(3, 5, Bitmap.Config.ARGB_8888)).thenReturn(mock(Bitmap::class.java))
 
-        if (canvas != null) { command?.run(canvas, layerModel) }
+        val layerModel = LayerModel()
+        layerModel.width = 3
+        layerModel.height = 5
+
+        canvas?.let { command?.run(it, layerModel) }
 
         val firstLayer = layerModel.getLayerAt(0)
 
-        if (canvas != null) { command?.run(canvas, layerModel) }
+        canvas?.let { command?.run(it, layerModel) }
 
         Assert.assertEquals(2, layerModel.layerCount.toLong())
 
@@ -80,6 +88,7 @@ class AddLayerCommandTest {
 
     @Test
     fun testAddMultipleLayersWillUseSameArguments() {
+        `when`(commonFactory!!.createBitmap(7, 11, Bitmap.Config.ARGB_8888)).thenReturn(mock(Bitmap::class.java))
         val layerModel = LayerModel()
 
         layerModel.width = 7

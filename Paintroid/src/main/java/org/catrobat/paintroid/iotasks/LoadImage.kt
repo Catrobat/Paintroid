@@ -32,8 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.catrobat.paintroid.FileIO
-import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
-import org.catrobat.paintroid.tools.Workspace
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 
 class LoadImage(
     callback: LoadImageCallback,
@@ -41,7 +40,7 @@ class LoadImage(
     private val uri: Uri?,
     context: Context,
     private val scaleImage: Boolean,
-    private val workspace: Workspace,
+    private val commandSerializer: CommandSerializer,
     private val scopeIO: CoroutineScope,
     private val idlingResource: CountingIdlingResource
 ) {
@@ -64,9 +63,9 @@ class LoadImage(
         val mimeType: String? = getMimeType(uri, resolver)
         return if (mimeType == "application/zip" || mimeType == "application/octet-stream") {
             try {
-                val fileContent = workspace.getCommandSerializationHelper().readFromFile(uri)
+                val fileContent = commandSerializer.readFromFile(uri)
                 BitmapReturnValue(fileContent.commandModel, fileContent.colorHistory)
-            } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
+            } catch (e: CommandSerializer.NotCatrobatImageException) {
                 Log.e(TAG, "Image might be an ora file instead")
                 OpenRasterFileFormatConversion.importOraFile(
                     resolver,

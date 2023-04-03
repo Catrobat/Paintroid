@@ -37,6 +37,7 @@ import org.catrobat.paintroid.R
 import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.Interactor
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
@@ -45,7 +46,6 @@ import org.catrobat.paintroid.presenter.MainActivityPresenter
 import org.catrobat.paintroid.test.espresso.util.wrappers.TopBarViewInteraction.onTopBarView
 import org.catrobat.paintroid.test.utils.ScreenshotOnFailRule
 import org.catrobat.paintroid.tools.Workspace
-import org.catrobat.paintroid.ui.Perspective
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -79,9 +79,6 @@ class MainActivityIntegrationTest {
     private val workspace: Workspace? = null
 
     @Mock
-    private val perspective: Perspective? = null
-
-    @Mock
     private val toolController: ToolController? = null
 
     @Mock
@@ -101,6 +98,9 @@ class MainActivityIntegrationTest {
 
     @Mock
     private val context: Context? = null
+
+    @Mock
+    private val commandSerializer: CommandSerializer? = null
 
     @Mock
     private val internalMemoryPath: File? = null
@@ -130,8 +130,8 @@ class MainActivityIntegrationTest {
                     bottomNavigationViewHolder!!,
                     commandFactory!!,
                     commandManager!!,
-                    perspective!!,
-                    toolController!!, sharedPreferences!!, idlingResource, it1, it
+                    toolController!!, sharedPreferences!!, idlingResource, it1, it,
+                    commandSerializer!!
                 )
             }
         }

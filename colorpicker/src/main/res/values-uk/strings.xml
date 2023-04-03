@@ -19,11 +19,11 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="color_picker_title">Палітра</string>
-    <string name="color_picker_tab_icon">Знак вкладки палітри</string>
+    <string name="color_picker_tab_icon">Піктограма вкладки палітри</string>
     <string name="color_red">Червоний</string>
     <string name="color_green">Зелений</string>
     <string name="color_blue">Синій</string>
-    <string name="color_alpha">Альфа</string>
+    <string name="color_alpha">Прозорість</string>
     <string name="color_hex">HEX</string>
     <string name="color_picker_apply">Застосувати</string>
     <string name="color_picker_cancel">Скасувати</string>
@@ -34,4 +34,5 @@
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Бажаєте зберегти свої зміни?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">ні</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">так</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">недавні</string>
 </resources>

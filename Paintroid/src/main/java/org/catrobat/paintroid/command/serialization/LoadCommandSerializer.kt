@@ -32,7 +32,7 @@ class LoadCommandSerializer(version: Int) : VersionSerializer<LoadCommand>(versi
     }
 
     override fun write(kryo: Kryo, output: Output, command: LoadCommand) {
-        command.loadedImage.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, output)
+        command.loadedBitmap.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY, output)
     }
 
     override fun read(kryo: Kryo, input: Input, type: Class<out LoadCommand>): LoadCommand =

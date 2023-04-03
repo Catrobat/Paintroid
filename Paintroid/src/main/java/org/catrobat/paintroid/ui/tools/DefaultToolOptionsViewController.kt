@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,12 @@ package org.catrobat.paintroid.ui.tools
 import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.TranslateAnimation
 import androidx.test.espresso.idling.CountingIdlingResource
+import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.common.ANIMATION_DURATION
+import org.catrobat.paintroid.presenter.MainActivityPresenter
 import org.catrobat.paintroid.tools.options.ToolOptionsViewController
 import org.catrobat.paintroid.tools.options.ToolOptionsVisibilityController
 
@@ -36,8 +40,12 @@ class DefaultToolOptionsViewController(
         activity.findViewById(R.id.pocketpaint_layout_tool_options)
     private val topBarSpecificViewCheckmark: View =
         activity.findViewById(R.id.pocketpaint_btn_top_checkmark)
+    private val topBar: View =
+        activity.findViewById(R.id.pocketpaint_layout_top_bar)
+
     private var toolOptionsShown = false
     private var enabled = true
+    private var hideButtonsEnabled = true
     private var callback: ToolOptionsVisibilityController.Callback? = null
 
     override val toolSpecificOptionsLayout: ViewGroup
@@ -65,7 +73,7 @@ class DefaultToolOptionsViewController(
     }
 
     override fun hide() {
-        if (!enabled) {
+        if (!enabled || !hideButtonsEnabled) {
             return
         }
         idlingResource.increment()
@@ -88,7 +96,7 @@ class DefaultToolOptionsViewController(
     }
 
     override fun show() {
-        if (!enabled) {
+        if (!enabled || !hideButtonsEnabled) {
             return
         }
         idlingResource.increment()
@@ -122,5 +130,99 @@ class DefaultToolOptionsViewController(
 
     override fun hideCheckmark() {
         topBarSpecificViewCheckmark.visibility = View.GONE
+    }
+
+    override fun enableHide() {
+        hideButtonsEnabled = true
+    }
+
+    override fun disableHide() {
+        hideButtonsEnabled = false
+    }
+
+    override fun slideUp(view: View, willHide: Boolean) {
+        if (!enabled || !hideButtonsEnabled) {
+            return
+        }
+
+        if (!willHide) {
+            view.visibility = View.VISIBLE
+            toolOptionsShown = true
+        }
+
+        val animation: TranslateAnimation = if (willHide) {
+            TranslateAnimation(
+                0F,
+                0F,
+                0F,
+                -view.height.toFloat()
+            )
+        } else {
+            TranslateAnimation(
+                0F,
+                0F,
+                view.height.toFloat(),
+                0F
+            )
+        }
+
+        animation.duration = ANIMATION_DURATION
+        view.startAnimation(animation)
+        if (willHide) {
+            view.visibility = View.INVISIBLE
+            toolOptionsShown = false
+            notifyHide()
+        } else {
+            notifyShow()
+        }
+    }
+
+    override fun slideDown(view: View, willHide: Boolean) {
+        if (!enabled || !hideButtonsEnabled) {
+            return
+        }
+
+        val animation: TranslateAnimation = if (willHide) {
+            TranslateAnimation(
+                0F,
+                0F,
+                0F,
+                view.height.toFloat()
+            )
+        } else {
+            TranslateAnimation(
+                0F,
+                0F,
+                -view.height.toFloat(),
+                0F
+            )
+        }
+
+        animation.duration = ANIMATION_DURATION
+        view.startAnimation(animation)
+        if (willHide) {
+            view.visibility = View.INVISIBLE
+            toolOptionsShown = false
+            notifyHide()
+        } else {
+            view.visibility = View.VISIBLE
+            toolOptionsShown = true
+            notifyShow()
+        }
+    }
+
+    override fun animateBottomAndTopNavigation(hide: Boolean) {
+        var mainActivityPresenter = (activity as MainActivity).presenter as MainActivityPresenter
+        mainActivityPresenter.hideBottomBarViewHolder()
+        when (hide) {
+            true -> {
+                slideUp(topBar, true)
+                slideDown(bottomNavigation, true)
+            }
+            false -> {
+                slideUp(bottomNavigation, false)
+                slideDown(topBar, false)
+            }
+        }
     }
 }
