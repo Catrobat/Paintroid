@@ -63,6 +63,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 @SuppressWarnings("LargeClass")
 @RunWith(AndroidJUnit4::class)
@@ -276,7 +277,7 @@ class TransformToolIntegrationTest {
             )
 
         assertEquals(boundingBoxWidth, toolSelectionBoxWidth, Float.MIN_VALUE)
-        assertThat(boundingBoxHeight, greaterThan(toolSelectionBoxHeight))
+        assertEquals(boundingBoxHeight, toolSelectionBoxHeight, Float.MIN_VALUE)
     }
 
     @Test
@@ -1281,9 +1282,13 @@ class TransformToolIntegrationTest {
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CORNER))
         runBlocking {
             TopBarViewInteraction.onTopBarView().performClickCheckmark()
+            delay(1000)
         }
         assertEquals(oldScale, perspective.scale)
         assertEquals(oldTranslationY, perspective.surfaceTranslationY)
+        runBlocking {
+            delay(1000)
+        }
         assertEquals(oldTranslationX, perspective.surfaceTranslationX)
     }
 

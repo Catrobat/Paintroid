@@ -25,6 +25,7 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.catrobat.paintroid.R
+import org.catrobat.paintroid.test.espresso.util.EspressoUtils
 import org.catrobat.paintroid.test.espresso.util.wrappers.BottomNavigationViewInteraction.Companion.onBottomNavigationView
 import org.catrobat.paintroid.tools.ToolType
 import org.hamcrest.Matchers
@@ -60,7 +61,7 @@ class ToolBarViewInteraction :
     }
 
     private val currentToolType: ToolType
-        get() = ToolType.CURSOR
+        get() = EspressoUtils.mainActivity.toolReference.tool!!.toolType
 
     fun performOpenToolOptionsView(): ToolBarViewInteraction {
         onToolOptionsView()
