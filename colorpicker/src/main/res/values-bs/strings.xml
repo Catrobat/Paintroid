@@ -18,20 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">Color Picker</string>
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
+    <string name="color_picker_title">Odabir boje</string>
+    <string name="color_picker_tab_icon">Kartica za odabir boja</string>
     <string name="color_red">Crvena</string>
     <string name="color_green">Zelena</string>
     <string name="color_blue">Plava</string>
     <string name="color_alpha">Alfa</string>
     <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Apply</string>
+    <string name="color_picker_apply">Primijeni</string>
     <string name="color_picker_cancel">Odustani</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">Trenutni</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">novi</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Pipeta</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Sačuvaj promjene?</string>
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Da li želiš sačuvati promjene?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">ne</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">da</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">Nedavno korišteno</string>
 </resources>

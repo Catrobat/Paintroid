@@ -27,12 +27,6 @@ import org.catrobat.paintroid.databinding.PocketpaintLayoutMainMenuLayerBinding
 class LayerMenuViewHolder(private val layerLayout: NavigationView) : LayerContracts.LayerMenuViewHolder {
 
 
-      var binding: PocketpaintLayoutMainMenuLayerBinding = PocketpaintLayoutMainMenuLayerBinding.bind(layerLayout)
-
-
-    val layerAddButton: View = binding.pocketpaintLayerSideNavButtonAdd
-    val layerDeleteButton: View = binding.pocketpaintLayerSideNavButtonDelete
-
     override fun isShown(): Boolean = layerLayout.isShown
 
     override fun disableAddLayerButton() {
@@ -49,5 +43,13 @@ class LayerMenuViewHolder(private val layerLayout: NavigationView) : LayerContra
 
     override fun enableRemoveLayerButton() {
         layerDeleteButton.isEnabled = true
+    }
+
+    override fun disableLayerVisibilityButton() {
+        layerVisibilityButton.isEnabled = false
+    }
+
+    override fun disableLayerOpacityButton() {
+        layerOpacityButton.isEnabled = false
     }
 }

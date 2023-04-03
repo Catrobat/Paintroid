@@ -22,12 +22,11 @@
     <string name="pocketpaint_app_name">پاکٹ پینٹ</string>
     <string name="button_brush">برش</string>
     <string name="button_cursor">کرسر</string>
-    <string name="button_set_center">سینٹر سیٹ کریں۔</string>
     <string name="button_pipette">نعمونہ</string>
     <string name="button_undo">پیچھے ے جاؤ</string>
     <string name="button_redo">واپس ے آؤ</string>
     <string name="button_info">معلومات</string>
-    <string name="button_stamp">مہر</string>
+    <string name="button_clipboard">Clipboard</string>
     <string name="button_import_image">تصویر لائیں</string>
     <string name="button_eraser">ربڑ</string>
     <string name="button_transform">تبدیل کریں</string>
@@ -39,18 +38,15 @@
     <string name="button_watercolor">رنگ</string>
     <string name="button_spray_can">اسپرے کا ڈبه</string>
     <string name="button_smudge">دھواں</string>
+    <string name="button_clip">Clip area</string>
     <string name="button_apply">لاگو کریں</string>
     <string name="button_checkmark">ٹک کا نشان</string>
-    <string name="button_plus">لائنوں کو جوڑیں</string>
     <string name="done">مکمل ہوا</string>
     <string name="gallery">گیلری</string>
-    <string name="load_sticker_error">اسٹیکر لوڈ نہیں کر سکا</string>
-    <string name="error_unknown_error">کچھ غلط ہو گیا!.</string>
-    <string name="cap_circle">دائرہ</string>
-    <string name="cap_square">مربع</string>
-    <string name="stamptool_paste">پیسٹ</string>
-    <string name="stamptool_copy">نقل بنائین</string>
-    <string name="stamptool_cut">کٹ</string>
+    <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
+    <string name="clipboard_tool_paste">Paste</string>
+    <string name="clipboard_tool_copy">نقل بنائین</string>
+    <string name="clipboard_tool_cut">Cut</string>
     <string name="stickers">اسٹیکرز</string>
     <string name="dialog_tools_title">اوزار</string>
     <string name="dialog_error_save_title">لادنے کی غلطٖی/فائل محفوظ کریں</string>
@@ -67,7 +63,7 @@
     <string name="help_content_fill">چننا ہوا رنگ سے علاقہ بھرنے کے لیے تصویر پر ٹیپ کریں۔</string>
     <string name="help_content_cursor">کرسر کواُس مقام پر لے چلیں جہاں پر آپ کھینچنا چا ہتےئیں۔ کرسر کو چالو کرنے کے لیے ٹیپ کریں۔ کھینچنے کے لیے اپنی انگلی کو حرکت دیں۔ بےعمل کرنے کے لئے دوبارہ ٹیپ کریں۔</string>
     <string name="help_content_transform">تصویر کا سائز تبدیل کرنے کے لئے استعمال ہوتی ہے۔</string>
-    <string name="help_content_stamp">مہر اورمستطیل کا احاطہ ڈھانپنے کے لیےحرکت اورسائزتبدیل کرنا چاہتے ئیں۔ علاقے کو چننے کے لئے ٹیپ کریں۔ مہر کے لئے دوبارہ حرکت اور ٹیپ کریں۔</string>
+    <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
     <string name="help_content_import_png">تصویرکوگیلری سے مہر آوزار میں درامد کریں۔</string>
     <string name="help_content_line">سیدھا لکیر کھینچے۔</string>
     <string name="help_content_text">متن لکھیں اور اسے وضع کریں۔ بعد میں متن خانے کا سائز تبدیل کریں۔ تصویر پر متن درج کرنے کے لئے اس پر کلک کریں۔</string>
@@ -77,7 +73,7 @@
     <string name="help_content_hand">کینوس منتقل کرنے کے لئے اپنی انگلی کو منتقل کریں.</string>
     <string name="help_content_spray_can">ایک سپرے بنانے کے لئے تصویر پر اپنی انگلی کو منتقل کریں.</string>
     <string name="help_content_smudge">اپنی انگلی کو تصویر پر مختلف ڈرائنگ پر گھسائیں تاکہ ان پر دھبہ ہو۔</string>
-    <string name="closing_catroid_security_question_title">پروجیکٹ پر واپس</string>
+    <string name="help_content_clip">Mark area which should not be erased.</string>
     <string name="closing_security_question_title">بندکریں</string>
     <string name="closing_security_question">سیدھا لکیر کھینچے؟</string>
     <string name="menu_new_image">نئی تصویر</string>
@@ -85,6 +81,8 @@
     <string name="no_longclick_on_hidden_layer">اگر آپ تمام تہوں کو نظر انداز کررہے ہیں تو آپ صرف ضم یا دوبارہ ترتیب دینے میں کامیاب ہیں</string>
     <string name="no_tools_on_hidden_layer">پوشیدہ پرت پر کوئی اوزار دستیاب نہیں ہیں</string>
     <string name="menu_load_image">تصویر لادنا</string>
+    <string name="menu_replace_image">Replace image</string>
+    <string name="menu_add_to_current_layer">Add to current layer</string>
     <string name="menu_save_image">تصویر محفوظ کریں</string>
     <string name="menu_save_copy">نقل محفوظ کریں.</string>
     <string name="menu_hide_menu">پورا پردہ</string>
@@ -94,6 +92,7 @@
     <string name="menu_export">برآمدکرنا</string>
     <string name="menu_feedback">فیڈبیک</string>
     <string name="menu_advanced">اعلی درجے کی ترتیبات</string>
+    <string name="menu_zoom_settings">Zoom window settings</string>
     <string name="saved_to">تصویر \n میں محفوظ</string>
     <string name="saved">تصویر محفوظ ہوئی</string>
     <string name="copy_to">\n میں محفوظ کردہ کاپی</string>
@@ -106,12 +105,9 @@
     <string name="resize_nothing_to_resize">سائز تبدیل نہیں ہوا ہے۔</string>
     <string name="resize_cannot_resize_to_this_size">اس سائز کا سائز تبدیل نہیں کر سکتے ہیں</string>
     <string name="resize_max_image_resolution_reached">زیادہ سے زیادہ تصویر کے  ریسیلیوشن  تک پہنچ گئی</string>
-    <string name="text_tool_dialog_input_title">آپ کا متن:</string>
-    <string name="text_tool_dialog_format_options">وضع کرنے کے اختیارات:</string>
     <string name="text_tool_dialog_underline_shortcut">U</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
-    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">لکھنے کے لئے یہاں کلک کریں۔</string>
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>
@@ -138,7 +134,7 @@
     <string name="transform_auto_crop_text">خودکار</string>
     <string name="transform_set_center_text">سینٹر سیٹ کریں۔</string>
     <string name="pixel">پکسلز</string>
-    <string name="stamp_tool_copy_hint">مواد کاپی کرنے کے لئے طویل دبائیں</string>
+    <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
     <string name="layers_title">تہوں</string>
     <string name="layer_new">نئی تہوں</string>
     <string name="layer_delete">    
@@ -146,7 +142,7 @@
     <string name="layer_too_many_layers">بہت سے تہوں</string>
     <string name="layer_merged">تہوں میں ضم</string>
     <string name="layer_background">پرت پس منظر</string>
-    <string name="dialog_shape_text">شکل</string>
+    <string name="layer_preview">Layer preview</string>
     <string name="dialog_loading_image_failed_title">تصویر لوڈ کرنے میں نقص</string>
     <string name="dialog_loading_image_failed_text">ایک درست تصویر نہیں</string>
     <string name="dialog_settings">ترتیبات</string>
@@ -154,6 +150,7 @@
     <string name="dialog_save_image_format">تصویری شکل</string>
     <string name="dialog_antialiasing">مخالف لقب دینا</string>
     <string name="dialog_smoothing">ہموار کرنا</string>
+    <string name="dialog_zoom_window_enabled">Enabled</string>
     <string name="dialog_save_jpg_option_quality">معیار:</string>
     <string name="pocketpaint_jpg_message_dialog">کم سے کم <b> اسٹوریج کی جگہ لیتا ہے</b>. <b>کوئی شفافیت</b> یاد نہیں ہے.</string>
     <string name="pocketpaint_png_message_dialog">نقصان دہ کمپریشن. شفافیت محفوظ ہے.</string>
@@ -206,4 +203,5 @@
     <string name="pocketpaint_tool_icon_description">موجودہ ٹول کا نشان</string>
     <string name="dialog_scale_title">تصویر لوڈ کرنے کے لیے بہت بڑی ہے۔</string>
     <string name="dialog_scale_message">تصویر لوڈ کرنے کے لیے بہت بڑی ہے۔  خود بخود سائز کم کرنے کے لیے OK کو دبائیں۔</string>
+    <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
 </resources>

@@ -22,12 +22,11 @@
     <string name="pocketpaint_app_name">口袋画板</string>
     <string name="button_brush">画笔</string>
     <string name="button_cursor">光标</string>
-    <string name="button_set_center">选择中心</string>
     <string name="button_pipette">吸管</string>
     <string name="button_undo">撤销</string>
     <string name="button_redo">重做</string>
     <string name="button_info">信息</string>
-    <string name="button_stamp">图章</string>
+    <string name="button_clipboard">剪贴板</string>
     <string name="button_import_image">导入图像</string>
     <string name="button_eraser">橡皮擦</string>
     <string name="button_transform">变形</string>
@@ -39,18 +38,15 @@
     <string name="button_watercolor">水彩</string>
     <string name="button_spray_can">喷雾罐</string>
     <string name="button_smudge">涂抹</string>
+    <string name="button_clip">裁剪区域</string>
     <string name="button_apply">申请</string>
     <string name="button_checkmark">勾选</string>
-    <string name="button_plus">连接线段</string>
     <string name="done">已完成</string>
     <string name="gallery">画廊</string>
-    <string name="load_sticker_error">无法加载贴纸</string>
-    <string name="error_unknown_error">发生未知错误。</string>
-    <string name="cap_circle">环形</string>
-    <string name="cap_square">正方型</string>
-    <string name="stamptool_paste">粘贴</string>
-    <string name="stamptool_copy">复制</string>
-    <string name="stamptool_cut"> 剪切</string>
+    <string name="no_connection_sticker">贴纸不可用，请检查您的网络连接。</string>
+    <string name="clipboard_tool_paste">粘贴</string>
+    <string name="clipboard_tool_copy">复制</string>
+    <string name="clipboard_tool_cut"> 剪切</string>
     <string name="stickers">贴纸</string>
     <string name="dialog_tools_title">工具</string>
     <string name="dialog_error_save_title">加载/保存文件时发生错误</string>
@@ -67,7 +63,7 @@
     <string name="help_content_fill">点击图像并用选定的颜色填充区域。</string>
     <string name="help_content_cursor">将光标放置在想画画的地方，点击激活光标，移动手指画画，再次点击停用。</string>
     <string name="help_content_transform">用来变换图像。</string>
-    <string name="help_content_stamp">移动和调整矩形的大小，覆盖您选作图章的区域。长按选择该区域。移动和再次点击盖章。</string>
+    <string name="help_content_clipboard">移动和调整矩形的大小，覆盖您选作图章的区域。点击复制或剪切来选择该区域。移动并点击粘贴来盖章。</string>
     <string name="help_content_import_png">将图像从库导入到图章工具。</string>
     <string name="help_content_line">画一条直线。</string>
     <string name="help_content_text">输入文字并设置其格式。随后调整文本框的大小。点击图像并插入文字。</string>
@@ -77,7 +73,7 @@
     <string name="help_content_hand">移动手指即可移动画布。</string>
     <string name="help_content_spray_can">在图像上移动手指，创建一个喷罐图案。</string>
     <string name="help_content_smudge">在图片的不同绘图上移动手指来进行涂抹。</string>
-    <string name="closing_catroid_security_question_title">返回到项目</string>
+    <string name="help_content_clip">标记不应删除的区域。</string>
     <string name="closing_security_question_title">退出</string>
     <string name="closing_security_question">是否保存修改?</string>
     <string name="menu_new_image">新建图像</string>
@@ -85,6 +81,8 @@
     <string name="no_longclick_on_hidden_layer">只有在所有图层都可见的情况下，您才能进行合并或重新排序。</string>
     <string name="no_tools_on_hidden_layer">隐藏层没有工具</string>
     <string name="menu_load_image">载入图像</string>
+    <string name="menu_replace_image">替换图像</string>
+    <string name="menu_add_to_current_layer">添加到当前图层</string>
     <string name="menu_save_image">保存图像</string>
     <string name="menu_save_copy">保存副本</string>
     <string name="menu_hide_menu">全屏</string>
@@ -94,6 +92,7 @@
     <string name="menu_export">导出</string>
     <string name="menu_feedback">意见反馈</string>
     <string name="menu_advanced">高级设置</string>
+    <string name="menu_zoom_settings">缩放窗口设置</string>
     <string name="saved_to">图像保存到\n</string>
     <string name="saved">图像已保存</string>
     <string name="copy_to">复制保存到\n</string>
@@ -106,12 +105,9 @@
     <string name="resize_nothing_to_resize">没有什么可调整大小</string>
     <string name="resize_cannot_resize_to_this_size">无法调整为此尺寸</string>
     <string name="resize_max_image_resolution_reached">达到最大图像分辨率</string>
-    <string name="text_tool_dialog_input_title">您的文本：</string>
-    <string name="text_tool_dialog_format_options">格式选项：</string>
     <string name="text_tool_dialog_underline_shortcut">你</string>
     <string name="text_tool_dialog_italic_shortcut">我</string>
     <string name="text_tool_dialog_bold_shortcut">乙</string>
-    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">点击此处添加文本</string>
     <string name="text_tool_dialog_font_monospace">等宽</string>
     <string name="text_tool_dialog_font_serif">衬线</string>
@@ -138,14 +134,14 @@
     <string name="transform_auto_crop_text">自动</string>
     <string name="transform_set_center_text">选择中心</string>
     <string name="pixel">像素</string>
-    <string name="stamp_tool_copy_hint">长按可复制内容</string>
+    <string name="clipboard_tool_copy_hint">点击复制来复制内容</string>
     <string name="layers_title">图层</string>
     <string name="layer_new">新建图层</string>
     <string name="layer_delete">删除图层</string>
     <string name="layer_too_many_layers">图层数量过多</string>
     <string name="layer_merged">合并的图层</string>
     <string name="layer_background">图层背景</string>
-    <string name="dialog_shape_text">形状</string>
+    <string name="layer_preview">图层预览</string>
     <string name="dialog_loading_image_failed_title">加载图像时出错</string>
     <string name="dialog_loading_image_failed_text">不是有效的图像</string>
     <string name="dialog_settings">设置</string>
@@ -153,6 +149,7 @@
     <string name="dialog_save_image_format">图像格式</string>
     <string name="dialog_antialiasing">抗锯齿</string>
     <string name="dialog_smoothing">抚平</string>
+    <string name="dialog_zoom_window_enabled">已启用</string>
     <string name="dialog_save_jpg_option_quality">质量。</string>
     <string name="pocketpaint_jpg_message_dialog">占用<b>最小的存储空间</b>。<b>不记得透明度</b></string>
     <string name="pocketpaint_png_message_dialog">无损压缩。保留了透明度。</string>
@@ -205,4 +202,5 @@
     <string name="pocketpaint_tool_icon_description">当前工具图标</string>
     <string name="dialog_scale_title">图片太大，无法加载</string>
     <string name="dialog_scale_message">图片太大，无法加载。单击 \"确定 \"可自动缩小图像。</string>
+    <string name="zoom_window_description">用来显示在绘图面上的缩放区域</string>
 </resources>

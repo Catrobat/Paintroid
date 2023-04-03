@@ -143,7 +143,7 @@ class WatercolorToolIntegrationTest {
             .perform(click())
 
         DrawingSurfaceInteraction.onDrawingSurfaceView()
-            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.TOP_MIDDLE))
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.HALFWAY_TOP_MIDDLE))
 
         val newFilter = launchActivityRule.activity.toolPaint.paint.maskFilter
         assertTrue("oldFilter and newFilter is the same", oldFilter != newFilter)

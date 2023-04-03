@@ -45,6 +45,8 @@ interface LayerContracts {
 
         fun refreshLayerMenuViewHolder()
 
+        fun disableVisibilityAndOpacityButtons()
+
         fun getLayerItem(position: Int): Layer
 
         fun getLayerItemId(position: Int): Long
@@ -105,6 +107,10 @@ interface LayerContracts {
         fun disableRemoveLayerButton()
 
         fun enableRemoveLayerButton()
+
+        fun disableLayerOpacityButton()
+
+        fun disableLayerVisibilityButton()
 
         fun isShown(): Boolean
     }

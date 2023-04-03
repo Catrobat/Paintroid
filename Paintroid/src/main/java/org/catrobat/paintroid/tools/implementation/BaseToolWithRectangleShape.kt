@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -248,8 +248,22 @@ abstract class BaseToolWithRectangleShape(
         workspace.invalidate()
     }
 
+    private fun hideToolSpecificLayout() {
+        toolOptionsViewController.slideDown(
+            toolOptionsViewController.toolSpecificOptionsLayout, true
+        )
+    }
+
+    private fun showToolSpecificLayout() {
+        toolOptionsViewController.slideUp(
+            toolOptionsViewController.toolSpecificOptionsLayout, false
+        )
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         movedDistance.set(0f, 0f)
+        super.handleDown(coordinate)
+        hideToolSpecificLayout()
         coordinate?.apply {
             previousEventCoordinate = PointF(x, y)
             currentAction = getAction(x, y)
@@ -284,6 +298,8 @@ abstract class BaseToolWithRectangleShape(
         if (previousEventCoordinate == null) {
             return false
         }
+        showToolSpecificLayout()
+        super.handleUp(coordinate)
         ifNotNull(coordinate, previousEventCoordinate) { (coordinate, previousEventCoordinate) ->
             movedDistance.x += abs(coordinate.x - previousEventCoordinate.x)
             movedDistance.y += abs(coordinate.y - previousEventCoordinate.y)

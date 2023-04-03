@@ -96,15 +96,17 @@ class ClippingToolIntegrationTest {
 
         onToolProperties().setColor(Color.YELLOW)
 
-        toolReference.tool?.handleDown(middleLeft)
-        toolReference.tool?.handleMove(middlePoint1)
-        toolReference.tool?.handleMove(middleTop)
-        toolReference.tool?.handleMove(middlePoint2)
-        toolReference.tool?.handleMove(middleRight)
-        toolReference.tool?.handleMove(middlePoint3)
-        toolReference.tool?.handleMove(middleBot)
-        toolReference.tool?.handleMove(middlePoint4)
-        toolReference.tool?.handleUp(middleLeft)
+        mainActivity.runOnUiThread {
+            toolReference.tool?.handleDown(middleLeft)
+            toolReference.tool?.handleMove(middlePoint1)
+            toolReference.tool?.handleMove(middleTop)
+            toolReference.tool?.handleMove(middlePoint2)
+            toolReference.tool?.handleMove(middleRight)
+            toolReference.tool?.handleMove(middlePoint3)
+            toolReference.tool?.handleMove(middleBot)
+            toolReference.tool?.handleMove(middlePoint4)
+            toolReference.tool?.handleUp(middleLeft)
+        }
 
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -112,8 +114,8 @@ class ClippingToolIntegrationTest {
         val inAreaX = middle.x - 10
         val inAreaY = middle.y - 10
 
-        val outOfAreaX = workspace.width - 10
-        val outOfAreaY = workspace.height - 10
+        val outOfAreaX = 20
+        val outOfAreaY = workspace.height / 2
 
         val colorInArea = workspace.bitmapOfCurrentLayer?.getPixel(inAreaX.toInt(), inAreaY.toInt())
         val colorOutOfArea = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
@@ -155,15 +157,17 @@ class ClippingToolIntegrationTest {
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.CLIP)
 
-        toolReference.tool?.handleDown(middleLeft)
-        toolReference.tool?.handleMove(middlePoint1)
-        toolReference.tool?.handleMove(middleTop)
-        toolReference.tool?.handleMove(middlePoint2)
-        toolReference.tool?.handleMove(middleRight)
-        toolReference.tool?.handleMove(middlePoint3)
-        toolReference.tool?.handleMove(middleBot)
-        toolReference.tool?.handleMove(middlePoint4)
-        toolReference.tool?.handleUp(middleLeft)
+        mainActivity.runOnUiThread {
+            toolReference.tool?.handleDown(middleLeft)
+            toolReference.tool?.handleMove(middlePoint1)
+            toolReference.tool?.handleMove(middleTop)
+            toolReference.tool?.handleMove(middlePoint2)
+            toolReference.tool?.handleMove(middleRight)
+            toolReference.tool?.handleMove(middlePoint3)
+            toolReference.tool?.handleMove(middleBot)
+            toolReference.tool?.handleMove(middlePoint4)
+            toolReference.tool?.handleUp(middleLeft)
+        }
 
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -171,8 +175,8 @@ class ClippingToolIntegrationTest {
         val inAreaX = middle.x - 10
         val inAreaY = middle.y - 10
 
-        val outOfAreaX = workspace.width - 10
-        val outOfAreaY = workspace.height - 10
+        val outOfAreaX = 20
+        val outOfAreaY = workspace.height / 2
 
         val colorInAreaCurrentLayer = workspace.bitmapOfCurrentLayer?.getPixel(inAreaX.toInt(), inAreaY.toInt())
         val colorOutOfAreaCurrentLayer = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
@@ -198,10 +202,12 @@ class ClippingToolIntegrationTest {
 
         onToolProperties().setStrokeWidth(20f)
 
-        toolReference.tool?.handleDown(middleTop)
-        toolReference.tool?.handleMove(middleLeft)
-        toolReference.tool?.handleMove(middleRight)
-        toolReference.tool?.handleUp(middleTop)
+        mainActivity.runOnUiThread {
+            toolReference.tool?.handleDown(middleTop)
+            toolReference.tool?.handleMove(middleLeft)
+            toolReference.tool?.handleMove(middleRight)
+            toolReference.tool?.handleUp(middleTop)
+        }
 
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
@@ -229,15 +235,17 @@ class ClippingToolIntegrationTest {
 
         onToolProperties().setColor(Color.YELLOW)
 
-        toolReference.tool?.handleDown(middleLeft)
-        toolReference.tool?.handleMove(middlePoint1)
-        toolReference.tool?.handleMove(middleTop)
-        toolReference.tool?.handleMove(middlePoint2)
-        toolReference.tool?.handleMove(middleRight)
-        toolReference.tool?.handleMove(middlePoint3)
-        toolReference.tool?.handleMove(middleBot)
-        toolReference.tool?.handleMove(middlePoint4)
-        toolReference.tool?.handleUp(middleLeft)
+        mainActivity.runOnUiThread {
+            toolReference.tool?.handleDown(middleLeft)
+            toolReference.tool?.handleMove(middlePoint1)
+            toolReference.tool?.handleMove(middleTop)
+            toolReference.tool?.handleMove(middlePoint2)
+            toolReference.tool?.handleMove(middleRight)
+            toolReference.tool?.handleMove(middlePoint3)
+            toolReference.tool?.handleMove(middleBot)
+            toolReference.tool?.handleMove(middlePoint4)
+            toolReference.tool?.handleUp(middleLeft)
+        }
 
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -245,8 +253,8 @@ class ClippingToolIntegrationTest {
         val inAreaX = middle.x - 10
         val inAreaY = middle.y - 10
 
-        val outOfAreaX = workspace.width - 10
-        val outOfAreaY = workspace.height - 10
+        val outOfAreaX = 20
+        val outOfAreaY = workspace.height / 2
 
         val colorInArea = workspace.bitmapOfCurrentLayer?.getPixel(inAreaX.toInt(), inAreaY.toInt())
         val colorOutOfArea = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)
@@ -279,15 +287,17 @@ class ClippingToolIntegrationTest {
 
         onToolProperties().setColor(Color.YELLOW)
 
-        toolReference.tool?.handleDown(middleLeft)
-        toolReference.tool?.handleMove(middlePoint1)
-        toolReference.tool?.handleMove(middleTop)
-        toolReference.tool?.handleMove(middlePoint2)
-        toolReference.tool?.handleMove(middleRight)
-        toolReference.tool?.handleMove(middlePoint3)
-        toolReference.tool?.handleMove(middleBot)
-        toolReference.tool?.handleMove(middlePoint4)
-        toolReference.tool?.handleUp(middleLeft)
+        mainActivity.runOnUiThread {
+            toolReference.tool?.handleDown(middleLeft)
+            toolReference.tool?.handleMove(middlePoint1)
+            toolReference.tool?.handleMove(middleTop)
+            toolReference.tool?.handleMove(middlePoint2)
+            toolReference.tool?.handleMove(middleRight)
+            toolReference.tool?.handleMove(middlePoint3)
+            toolReference.tool?.handleMove(middleBot)
+            toolReference.tool?.handleMove(middlePoint4)
+            toolReference.tool?.handleUp(middleLeft)
+        }
 
         TopBarViewInteraction.onTopBarView()
             .performClickCheckmark()
@@ -295,8 +305,8 @@ class ClippingToolIntegrationTest {
         val inAreaX = middle.x - 10
         val inAreaY = middle.y - 10
 
-        val outOfAreaX = workspace.width - 10
-        val outOfAreaY = workspace.height - 10
+        val outOfAreaX = 20
+        val outOfAreaY = workspace.height / 2
 
         val colorInArea = workspace.bitmapOfCurrentLayer?.getPixel(inAreaX.toInt(), inAreaY.toInt())
         val colorOutOfArea = workspace.bitmapOfCurrentLayer?.getPixel(outOfAreaX, outOfAreaY)

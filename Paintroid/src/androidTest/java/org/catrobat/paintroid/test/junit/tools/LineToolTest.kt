@@ -181,4 +181,23 @@ class LineToolTest {
         Assert.assertEquals(tool.connectedLines, true)
         Assert.assertEquals(tool.undoRecentlyClicked, false)
     }
+
+    @Test
+    fun testShouldCallHideWhenDrawing() {
+        val tap1 = PointF(7f, 7f)
+        tool.handleDown(tap1)
+
+        Mockito.verify(toolOptionsViewController).slideUp(brushToolOptions.getTopToolOptions(), true)
+        Mockito.verify(toolOptionsViewController).slideDown(brushToolOptions.getBottomToolOptions(), true)
+    }
+
+    @Test
+    fun testShouldCallUnhideWhenDrawingFinish() {
+        val tap1 = PointF(7f, 7f)
+        tool.handleDown(tap1)
+        tool.handleUp(tap1)
+
+        Mockito.verify(toolOptionsViewController).slideDown(brushToolOptions.getTopToolOptions(), false)
+        Mockito.verify(toolOptionsViewController).slideUp(brushToolOptions.getBottomToolOptions(), false)
+    }
 }

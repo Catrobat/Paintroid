@@ -162,7 +162,6 @@ class MainActivityPresenterTest {
             bottomNavigationViewHolder!!,
             commandFactory!!,
             commandManager!!,
-            perspective!!,
             toolController!!,
             sharedPreferences!!, idlingResource,
             context!!, internalMemoryPath!!, commandSerializer!!
@@ -332,23 +331,21 @@ class MainActivityPresenterTest {
 
     @Test
     fun testEnterFullscreenClicked() {
-        presenter!!.enterFullscreenClicked()
+        presenter!!.enterHideButtonsClicked()
         Mockito.verify(model)?.isFullscreen = true
         Mockito.verify(topBarViewHolder)?.hide()
         Mockito.verify(view)?.hideKeyboard()
-        Mockito.verify(view)?.enterFullscreen()
+        Mockito.verify(view)?.enterHideButtons()
         Mockito.verify(toolController)?.disableToolOptionsView()
-        Mockito.verify(perspective)?.enterFullscreen()
     }
 
     @Test
     fun testExitFullscreenClicked() {
-        presenter!!.exitFullscreenClicked()
+        presenter!!.exitHideButtonsClicked()
         Mockito.verify(model)?.isFullscreen = false
         Mockito.verify(topBarViewHolder)?.show()
-        Mockito.verify(view)?.exitFullscreen()
+        Mockito.verify(view)?.exitHideButtons()
         Mockito.verify(toolController)?.enableToolOptionsView()
-        Mockito.verify(perspective)?.exitFullscreen()
     }
 
     @Test
@@ -715,14 +712,14 @@ class MainActivityPresenterTest {
     @Test
     fun testFinishInitializeWhenNotFullscreenThenRestoreState() {
         presenter!!.finishInitialize()
-        Mockito.verify(view)?.exitFullscreen()
+        Mockito.verify(view)?.exitHideButtons()
     }
 
     @Test
     fun testFinishInitializeWhenFullscreenThenRestoreState() {
         Mockito.`when`(model!!.isFullscreen).thenReturn(true)
         presenter!!.finishInitialize()
-        Mockito.verify(view)?.enterFullscreen()
+        Mockito.verify(view)?.enterHideButtons()
     }
 
     @Test

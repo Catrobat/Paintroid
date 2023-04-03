@@ -1,6 +1,6 @@
 /*
  * Paintroid: An image manipulation application for Android.
- *  Copyright (C) 2010-2022 The Catrobat Team
+ * Copyright (C) 2010-2022 The Catrobat Team
  * (<http://developer.catrobat.org/credits>)
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@ import android.graphics.Paint
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -52,14 +53,12 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
     private val italicToggleButton: MaterialButton
     private val boldToggleButton: MaterialButton
     private val fontTypes: List<FontType>
-    private lateinit var binding: DialogPocketpaintTextToolBinding
+
 
     init {
         val inflater = LayoutInflater.from(context)
         val textToolView = inflater.inflate(R.layout.dialog_pocketpaint_text_tool, rootView)
-        binding = DialogPocketpaintTextToolBinding.bind(textToolView)
-        textEditText = binding.pocketpaintTextToolDialogInputText
-        fontList = binding.pocketpaintTextToolDialogListFont
+
         underlinedToggleButton =
             binding.pocketpaintTextToolDialogToggleUnderlined
         italicToggleButton =
@@ -180,4 +179,8 @@ class DefaultTextToolOptionsView(rootView: ViewGroup) : TextToolOptionsView {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(textEditText.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
+
+    override fun getTopLayout(): View = topLayout
+
+    override fun getBottomLayout(): View = bottomLayout
 }
