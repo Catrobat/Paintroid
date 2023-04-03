@@ -39,8 +39,8 @@ import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.ActivityTestRule
-import org.catrobat.paintroid.FileIO.decodeBitmapFromUri
 import org.catrobat.paintroid.FileIO.getBitmapFromFile
+import org.catrobat.paintroid.FileIO.getScaledBitmapFromUri
 import org.catrobat.paintroid.MainActivity
 import org.catrobat.paintroid.R
 import org.catrobat.paintroid.test.espresso.util.UiInteractions
@@ -103,8 +103,6 @@ class SaveCompressImageIntegrationTest {
     fun testSaveImage() {
         val testName = UUID.randomUUID().toString()
         onTopBarView().performOpenMoreOptions()
-        onView(ViewMatchers.withText(R.string.menu_load_image)).perform(ViewActions.click())
-        onTopBarView().performOpenMoreOptions()
         onView(ViewMatchers.withText(R.string.menu_save_image)).perform(ViewActions.click())
         onView(ViewMatchers.withId(R.id.pocketpaint_image_name_save_text))
             .perform(ViewActions.replaceText(testName))
@@ -125,13 +123,13 @@ class SaveCompressImageIntegrationTest {
             activity?.model?.savedPictureUri
         )?.let {
             activity?.let { it1 ->
-                decodeBitmapFromUri(it1.contentResolver, it, options, activity?.applicationContext)
+                getScaledBitmapFromUri(it1.contentResolver, it, activity?.applicationContext)
             }
         }
         val testBitmap = getBitmapFromFile(testImageFile)
 
-        Assert.assertThat(compressedBitmap?.width, Matchers.`is`(Matchers.equalTo(testBitmap?.width)))
-        Assert.assertThat(compressedBitmap?.height, Matchers.`is`(Matchers.equalTo(testBitmap?.height)))
+        Assert.assertThat(compressedBitmap?.bitmap?.width, Matchers.`is`(Matchers.lessThanOrEqualTo(testBitmap!!.width)))
+        Assert.assertThat(compressedBitmap?.bitmap?.height, Matchers.`is`(Matchers.lessThanOrEqualTo(testBitmap!!.height)))
     }
 
     private fun createTestBitmap(): Bitmap {

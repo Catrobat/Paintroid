@@ -124,7 +124,7 @@ public class FillToolIntegrationTest {
 
 	@Test
 	public void testNothingHappensWhenClickedOutsideDrawingArea() {
-		perspective.multiplyScale(.5f);
+		perspective.multiplyScale(.4f);
 		onToolProperties()
 				.checkMatchesColor(Color.BLACK);
 		onDrawingSurfaceView()

@@ -28,6 +28,8 @@ class DrawerLayoutViewHolder(private val drawerLayout: DrawerLayout) : MainActiv
 
     override fun isDrawerOpen(gravity: Int): Boolean = drawerLayout.isDrawerOpen(gravity)
 
+    override fun isDrawerVisible(gravity: Int): Boolean = drawerLayout.isDrawerVisible(gravity)
+
     override fun openDrawer(gravity: Int) {
         drawerLayout.openDrawer(gravity)
     }

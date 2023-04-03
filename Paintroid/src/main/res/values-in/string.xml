@@ -22,12 +22,11 @@
     <string name="pocketpaint_app_name">Pocket Paint</string>
     <string name="button_brush">Kuas</string>
     <string name="button_cursor">Kursor</string>
-    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">Pipet</string>
     <string name="button_undo">Urung</string>
     <string name="button_redo">Ulangi</string>
     <string name="button_info">Informasi</string>
-    <string name="button_stamp">Stempel</string>
+    <string name="button_clipboard">Clipboard</string>
     <string name="button_import_image">Impor Citra</string>
     <string name="button_eraser">Setip</string>
     <string name="button_transform">Mengubah</string>
@@ -39,18 +38,15 @@
     <string name="button_watercolor">Cat air</string>
     <string name="button_spray_can">Kaleng semprot</string>
     <string name="button_smudge">Smudge</string>
+    <string name="button_clip">Clip area</string>
     <string name="button_apply">Menerapkan</string>
     <string name="button_checkmark">Tanda cek</string>
-    <string name="button_plus">Hubungkan Segmen Garis</string>
     <string name="done">Selesai</string>
     <string name="gallery">Galeri</string>
-    <string name="load_sticker_error">Tidak dapat memuat Stiker</string>
-    <string name="error_unknown_error">Ada yang salah.</string>
-    <string name="cap_circle">Lingkaran</string>
-    <string name="cap_square">Kotak</string>
-    <string name="stamptool_paste">Tempel</string>
-    <string name="stamptool_copy">Salin</string>
-    <string name="stamptool_cut">Memotong</string>
+    <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
+    <string name="clipboard_tool_paste">Paste</string>
+    <string name="clipboard_tool_copy">Salin</string>
+    <string name="clipboard_tool_cut">Cut</string>
     <string name="stickers">Stiker</string>
     <string name="dialog_tools_title">Peralatan</string>
     <string name="dialog_error_save_title">Galat memuat/menyimpan berkas</string>
@@ -67,7 +63,7 @@
     <string name="help_content_fill">Ketuk pada gambar untuk mengisi suatu area dengan warna yang dipilih.</string>
     <string name="help_content_cursor">Posisikan kursor di tempat yang ingin Anda gambar. Ketuk untuk mengaktifkan kursor. Gerakkan jari Anda untuk menggambar. Ketuk lagi untuk menonaktifkan.</string>
     <string name="help_content_transform">Digunakan untuk mengubah ukuran gambar.</string>
-    <string name="help_content_stamp">Pindahkan dan ubah ukuran persegi panjang untuk menutupi area yang ingin Anda cap. Tekan lama untuk memilih area. Pindahkan, lalu ketuk tanda centang untuk mencap.</string>
+    <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
     <string name="help_content_import_png">Impor citra dari Galeri ke alat stempel.</string>
     <string name="help_content_line">Gambar garis lurus.</string>
     <string name="help_content_text">Tulis teks lalu format. Ubah ukuran kotak teks sesudahnya. Tekan untuk memasukkan teks pada gambar.</string>
@@ -77,7 +73,7 @@
     <string name="help_content_hand">Gerakkan jari Anda untuk memindahkan kanvas.</string>
     <string name="help_content_spray_can">Gerakkan jari Anda pada gambar untuk membuat pola kaleng semprot.</string>
     <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
-    <string name="closing_catroid_security_question_title">Kembali ke proyek</string>
+    <string name="help_content_clip">Mark area which should not be erased.</string>
     <string name="closing_security_question_title">Keluar</string>
     <string name="closing_security_question">Simpan Perubahan?</string>
     <string name="menu_new_image">Citra baru</string>
@@ -85,6 +81,8 @@
     <string name="no_longclick_on_hidden_layer">Anda hanya dapat menggabungkan atau menyusun ulang jika semua lapisan terlihat</string>
     <string name="no_tools_on_hidden_layer">Tidak ada alat yang tersedia di lapisan tersembunyi</string>
     <string name="menu_load_image">Muat citra</string>
+    <string name="menu_replace_image">Replace image</string>
+    <string name="menu_add_to_current_layer">Add to current layer</string>
     <string name="menu_save_image">Simpan citra</string>
     <string name="menu_save_copy">Simpan salinan</string>
     <string name="menu_hide_menu">Layar penuh</string>
@@ -94,6 +92,7 @@
     <string name="menu_export">Ekspor</string>
     <string name="menu_feedback">Umpan balik</string>
     <string name="menu_advanced">Pengaturan lanjutan</string>
+    <string name="menu_zoom_settings">Zoom window settings</string>
     <string name="saved_to">Gambar disimpan ke\n</string>
     <string name="saved">Citra tersimpan</string>
     <string name="copy_to">Salin disimpan ke\n</string>
@@ -106,12 +105,9 @@
     <string name="resize_nothing_to_resize">tidak ada yang diubah ukurannya</string>
     <string name="resize_cannot_resize_to_this_size">tidak dapat mengubah ukuran menjadi ukuran ini</string>
     <string name="resize_max_image_resolution_reached">resolusi citra maksimum tercapai</string>
-    <string name="text_tool_dialog_input_title">Teks Anda:</string>
-    <string name="text_tool_dialog_format_options">Pilihan format:</string>
     <string name="text_tool_dialog_underline_shortcut">U</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
-    <string name="text_tool_dialog_strike_through_shortcut">abc</string>
     <string name="text_tool_dialog_input_hint">Tekan di sini untuk menambahkan teks</string>
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>
@@ -138,14 +134,14 @@
     <string name="transform_auto_crop_text">Mobil</string>
     <string name="transform_set_center_text">Set center</string>
     <string name="pixel">px</string>
-    <string name="stamp_tool_copy_hint">Tekan lama untuk menyalin konten</string>
+    <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
     <string name="layers_title">Lapisan</string>
     <string name="layer_new">Lapisan baru</string>
     <string name="layer_delete">Hapus lapisan</string>
     <string name="layer_too_many_layers">Terlalu banyak lapisan</string>
     <string name="layer_merged">Lapisan digabungkan</string>
     <string name="layer_background">Latar belakang lapisan</string>
-    <string name="dialog_shape_text">Bentuk</string>
+    <string name="layer_preview">Layer preview</string>
     <string name="dialog_loading_image_failed_title">Galat saat memuat citra</string>
     <string name="dialog_loading_image_failed_text">Bukan gambar yang valid</string>
     <string name="dialog_settings">Pengaturan</string>
@@ -153,6 +149,7 @@
     <string name="dialog_save_image_format">Format gambar</string>
     <string name="dialog_antialiasing">Antialiasing</string>
     <string name="dialog_smoothing">menghaluskan</string>
+    <string name="dialog_zoom_window_enabled">Enabled</string>
     <string name="dialog_save_jpg_option_quality">Kualitas:</string>
     <string name="pocketpaint_jpg_message_dialog">Menggunakan<b>ruang penyimpanan minimal</b>. <b>Tidak ada transparansi</b> yang diingat.</string>
     <string name="pocketpaint_png_message_dialog">Kompresi lossless. Transparansi dipertahankan.</string>
@@ -205,4 +202,5 @@
     <string name="pocketpaint_tool_icon_description">Ikon alat saat ini</string>
     <string name="dialog_scale_title">Gambar terlalu besar untuk dimuat</string>
     <string name="dialog_scale_message">Gambar terlalu besar untuk dimuat. Klik OK untuk memperkecil gambar secara otomatis.</string>
+    <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
 </resources>

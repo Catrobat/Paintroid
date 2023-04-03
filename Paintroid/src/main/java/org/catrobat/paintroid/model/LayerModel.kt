@@ -20,11 +20,10 @@ package org.catrobat.paintroid.model
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Paint
 import org.catrobat.paintroid.contract.LayerContracts
-import java.util.ArrayList
-import kotlin.IndexOutOfBoundsException
 
-class LayerModel : LayerContracts.Model {
+open class LayerModel : LayerContracts.Model {
     override var currentLayer: LayerContracts.Layer? = null
     override var width = 0
     override var height = 0
@@ -63,30 +62,25 @@ class LayerModel : LayerContracts.Model {
         false
     }
 
-    companion object {
-        fun getBitmapOfAllLayersToSave(layers: List<LayerContracts.Layer>): Bitmap? {
-            if (layers.isEmpty()) {
-                return null
+    override fun getBitmapOfAllLayers(): Bitmap? {
+        if (layers.isEmpty()) {
+            return null
+        }
+        val referenceBitmap = layers[0].bitmap
+        val bitmap = Bitmap.createBitmap(referenceBitmap.width, referenceBitmap.height, Bitmap.Config.ARGB_8888)
+        val canvas = bitmap?.let { Canvas(it) }
+
+        layers.asReversed().forEach { layer ->
+            if (layer.isVisible) {
+                val alphaPaint = Paint().apply {
+                    alpha = layer.getValueForOpacityPercentage()
+                }
+                canvas?.drawBitmap(layer.bitmap, 0f, 0f, alphaPaint)
             }
-            val referenceBitmap = layers[0].bitmap
-            val bitmap = referenceBitmap?.let {
-                Bitmap.createBitmap(it.width, it.height, Bitmap.Config.ARGB_8888)
-            }
-            val canvas = bitmap?.let { Canvas(it) }
-            val layerListIterator = layers.listIterator(layers.size)
-            while (layerListIterator.hasPrevious()) {
-                val layer = layerListIterator.previous()
-                layer.bitmap?.let { canvas?.drawBitmap(it, 0f, 0f, null) }
-            }
-            return bitmap
         }
 
-        fun getBitmapListOfAllLayers(layers: List<LayerContracts.Layer>): List<Bitmap?> {
-            val bitmapList: MutableList<Bitmap?> = ArrayList()
-            for (layer in layers) {
-                bitmapList.add(layer.bitmap)
-            }
-            return bitmapList
-        }
+        return bitmap
     }
+
+    override fun getBitmapListOfAllLayers(): List<Bitmap?> = layers.map { it.bitmap }
 }

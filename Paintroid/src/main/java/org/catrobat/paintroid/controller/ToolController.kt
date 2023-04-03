@@ -54,6 +54,10 @@ interface ToolController {
 
     fun disableToolOptionsView()
 
+    fun disableHideOption()
+
+    fun enableHideOption()
+
     fun enableToolOptionsView()
 
     fun createTool()

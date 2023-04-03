@@ -23,6 +23,7 @@ import org.catrobat.paintroid.model.CommandManagerModel
 interface CommandManager {
     val isUndoAvailable: Boolean
     val isRedoAvailable: Boolean
+    val lastExecutedCommand: Command?
     val isBusy: Boolean
     val commandManagerModel: CommandManagerModel?
 

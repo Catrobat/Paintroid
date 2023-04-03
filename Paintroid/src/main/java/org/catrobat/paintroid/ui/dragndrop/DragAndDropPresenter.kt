@@ -22,8 +22,6 @@
  */
 package org.catrobat.paintroid.ui.dragndrop
 
-import android.view.View
-
 interface DragAndDropPresenter {
     fun swapItemsVisually(position: Int, swapWith: Int): Int
 
@@ -32,6 +30,4 @@ interface DragAndDropPresenter {
     fun reorderItems(position: Int, swapWith: Int)
 
     fun markMergeable(position: Int, mergeWith: Int)
-
-    fun onClickLayerAtPosition(position: Int, view: View)
 }

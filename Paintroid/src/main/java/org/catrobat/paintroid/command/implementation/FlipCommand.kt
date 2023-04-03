@@ -49,12 +49,6 @@ class FlipCommand(flipDirection: FlipDirection) : Command {
             bitmap.eraseColor(Color.TRANSPARENT)
             flipCanvas.drawBitmap(bitmapCopy, flipMatrix, Paint())
         }
-        layerModel.currentLayer?.transparentBitmap?.let { bitmap ->
-            val bitmapCopy = bitmap.copy(bitmap.config, bitmap.isMutable)
-            val flipCanvas = Canvas(bitmap)
-            bitmap.eraseColor(Color.TRANSPARENT)
-            flipCanvas.drawBitmap(bitmapCopy, flipMatrix, Paint())
-        }
     }
 
     override fun freeResources() {

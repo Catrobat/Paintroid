@@ -82,6 +82,7 @@ class LineTool(
             )
         )
         brushToolOptionsView.setCurrentPaint(toolPaint.paint)
+        brushToolOptionsView.setStrokeCapButtonChecked(toolPaint.strokeCap)
         if (topBarViewHolder != null && topBarViewHolder?.plusButton?.visibility == View.VISIBLE) {
             topBarViewHolder?.hidePlusButton()
         }
@@ -142,7 +143,7 @@ class LineTool(
             lineFinalized = false
             connectedLines = true
             undoRecentlyClicked = false
-            handleUp(newStartCoordinate)
+            handleAddedLine(newStartCoordinate)
         }
     }
 
@@ -181,8 +182,24 @@ class LineTool(
         }
     }
 
+    private fun hideToolOptions() {
+        toolOptionsViewController.slideUp(brushToolOptionsView.getTopToolOptions(), true)
+
+        toolOptionsViewController.slideDown(
+            brushToolOptionsView.getBottomToolOptions(), true
+        )
+    }
+
+    private fun showToolOptions() {
+        toolOptionsViewController.slideDown(brushToolOptionsView.getTopToolOptions(), false)
+
+        toolOptionsViewController.slideUp(brushToolOptionsView.getBottomToolOptions(), false)
+    }
+
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+        hideToolOptions()
+        super.handleDown(coordinate)
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
         previousEventCoordinate = PointF(coordinate.x, coordinate.y)
         return true
@@ -297,6 +314,12 @@ class LineTool(
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
+        showToolOptions()
+        super.handleUp(coordinate)
+        return handleAddedLine(coordinate)
+    }
+
+    fun handleAddedLine(coordinate: PointF?): Boolean {
         undoPreviousLineForConnectedLines = true
         if (changeInitialCoordinateForHandleNormalLine && initialEventCoordinate == null) {
             initialEventCoordinate = startPointToDraw?.let { PointF(it.x, it.y) }
@@ -320,6 +343,8 @@ class LineTool(
         changeInitialCoordinateForHandleNormalLine = false
         return true
     }
+
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun resetInternalState() {
         initialEventCoordinate = null
@@ -425,7 +450,6 @@ class LineTool(
             val endX = endPointToDraw?.x
             val endY = endPointToDraw?.y
             if (commandManager.isUndoAvailable) {
-                commandManager.undoIgnoringColorChanges()
                 val finalPath = SerializablePath().apply {
                     if (startX != null && startY != null && endX != null && endY != null) {
                         moveTo(startX, startY)

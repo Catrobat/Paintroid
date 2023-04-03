@@ -57,11 +57,6 @@ class DragAndDropListView : RecyclerView, ListItemDragHandler {
     private var scrollAmount = 0
     private lateinit var layerAdapter: LayerAdapter
     internal lateinit var manager: LinearLayoutManager
-    internal var listener: OnItemClickListener
-
-    interface OnItemClickListener {
-        fun onItemClick(position: Int, view: View)
-    }
 
     constructor(context: Context) : super(context)
 
@@ -74,12 +69,6 @@ class DragAndDropListView : RecyclerView, ListItemDragHandler {
     )
 
     init {
-        listener = object :
-            OnItemClickListener {
-            override fun onItemClick(position: Int, view: View) {
-                presenter?.onClickLayerAtPosition(position, view)
-            }
-        }
         setHasFixedSize(true)
         adapter?.setHasStableIds(true)
     }

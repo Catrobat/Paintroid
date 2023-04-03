@@ -22,12 +22,11 @@
     <string name="pocketpaint_app_name">พ็อกเก็ตเพ้นท์</string>
     <string name="button_brush">พู่กัน</string>
     <string name="button_cursor">เคอร์เซอร์</string>
-    <string name="button_set_center">ตั้งศูนย์</string>
     <string name="button_pipette">ดูดสี</string>
     <string name="button_undo">เลิกทำ</string>
     <string name="button_redo">ทำซ้ำ</string>
     <string name="button_info">ข้อมูล</string>
-    <string name="button_stamp">แสตมป์</string>
+    <string name="button_clipboard">Clipboard</string>
     <string name="button_import_image">นำเข้ารูปภาพ</string>
     <string name="button_eraser">ยางลบ</string>
     <string name="button_transform">แปลง</string>
@@ -39,18 +38,15 @@
     <string name="button_watercolor">สีน้ำ</string>
     <string name="button_spray_can">กระป๋องสเปรย์</string>
     <string name="button_smudge">รอยเปื้อน</string>
+    <string name="button_clip">พื้นที่คลิป</string>
     <string name="button_apply">นำไปใช้</string>
     <string name="button_checkmark">เครื่องหมายถูก</string>
-    <string name="button_plus">เชื่อมต่อส่วนสาย</string>
     <string name="done">เสร็จสิ้น</string>
     <string name="gallery">คลังภาพ</string>
-    <string name="load_sticker_error">ไม่สามารถโหลดสติกเกอร์ได้</string>
-    <string name="error_unknown_error">อะไรบางอย่างผิดปกติ.</string>
-    <string name="cap_circle">วงกลม</string>
-    <string name="cap_square">สี่เหลี่ยม</string>
-    <string name="stamptool_paste">วาง</string>
-    <string name="stamptool_copy">สำเนา</string>
-    <string name="stamptool_cut">ตัด</string>
+    <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
+    <string name="clipboard_tool_paste">Paste</string>
+    <string name="clipboard_tool_copy">คัด​ลอก</string>
+    <string name="clipboard_tool_cut">Cut</string>
     <string name="stickers">สติกเกอร์</string>
     <string name="dialog_tools_title">เครื่องมือ</string>
     <string name="dialog_error_save_title">เกิดข้อผิดพลาดในการโหลด / บันทึกไฟล์</string>
@@ -67,7 +63,7 @@
     <string name="help_content_fill">แตะรูปภาพเพื่อเติมพื้นที่ ด้วยสีที่เลือก</string>
     <string name="help_content_cursor">วางเคอร์เซอร์ในตำแหน่งที่ต้องการวาด เคาะเพื่อเปิดใช้เคอร์เซอร์ เลื่อนนิ้วเพื่อวาด เคาะอีกครั้งเพื่อปิดการใช้งาน</string>
     <string name="help_content_transform">ใช้สำหรับแปลงภาพ</string>
-    <string name="help_content_stamp">ย้ายและปรับขนาดสี่เหลี่ยมเพื่อให้ครอบคลุมพื้นที่ที่คุณต้องการประทับตรา กดค้างเพื่อเลือกพื้นที่ ย้ายและแตะอีกครั้งเพื่อประทับตรา</string>
+    <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
     <string name="help_content_import_png">นำเข้ารูปภาพจากเกเลอร์รีไปยังเครื่องมือประทับตรา</string>
     <string name="help_content_line">วาดเส้นตรง</string>
     <string name="help_content_text">เขียนข้อความและจัดรูปแบบมัน ปรับขนาดกล่องข้อความหลังจากนั้น แตะเพื่อแทรกข้อความบนภาพ</string>
@@ -77,7 +73,7 @@
     <string name="help_content_hand">เลื่อนนิ้วของคุณเพื่อย้ายผืนผ้าใบ</string>
     <string name="help_content_spray_can">เลื่อนนิ้วของคุณบนภาพเพื่อสร้างรูปแบบกระป๋องสเปรย์</string>
     <string name="help_content_smudge">เลื่อนนิ้วไปที่รูปภาพบนภาพวาดต่างๆ เพื่อทารอยเปื้อน</string>
-    <string name="closing_catroid_security_question_title">กลับไปที่โครงการ</string>
+    <string name="help_content_clip">ทำเครื่องหมายบริเวณที่ไม่ควรลบ</string>
     <string name="closing_security_question_title">ออก</string>
     <string name="closing_security_question">บันทึกการเปลี่ยนแปลง?</string>
     <string name="menu_new_image">รูปใหม่</string>
@@ -85,6 +81,8 @@
     <string name="no_longclick_on_hidden_layer">คุณจะรวมหรือเรียงลำดับใหม่ได้ก็ต่อเมื่อมองเห็นเลเยอร์ทั้งหมดเท่านั้น</string>
     <string name="no_tools_on_hidden_layer">ไม่มีเครื่องมือในเลเยอร์ที่ซ่อนอยู่</string>
     <string name="menu_load_image">โหลด​รูป​ภาพ</string>
+    <string name="menu_replace_image">แทนที่ภาพ</string>
+    <string name="menu_add_to_current_layer">เพิ่มไปยังเลเยอร์ปัจจุบัน</string>
     <string name="menu_save_image">บันทึกรูปภาพ</string>
     <string name="menu_save_copy">บันทึกสำเนา</string>
     <string name="menu_hide_menu">เต็มจอ</string>
@@ -94,6 +92,7 @@
     <string name="menu_export">ส่งออก</string>
     <string name="menu_feedback">คำติชม</string>
     <string name="menu_advanced">ตั้งค่าขั้นสูง</string>
+    <string name="menu_zoom_settings">Zoom window settings</string>
     <string name="saved_to">บันทึกภาพไปที่ \n</string>
     <string name="saved">บันทึกภาพแล้ว</string>
     <string name="copy_to">คัดลอกและบันทึกไปที่ \n</string>
@@ -106,12 +105,9 @@
     <string name="resize_nothing_to_resize">ไม่มีภาพให้ปรับขนาด</string>
     <string name="resize_cannot_resize_to_this_size">ไม่สามารถปรับขนาดเป็นขนาดนี้</string>
     <string name="resize_max_image_resolution_reached">ปรับความละเอียดภาพสูงสุดแล้ว</string>
-    <string name="text_tool_dialog_input_title">ข้อความของคุณ:</string>
-    <string name="text_tool_dialog_format_options">ตัวเลือกรูปแบบ:</string>
     <string name="text_tool_dialog_underline_shortcut">U</string>
     <string name="text_tool_dialog_italic_shortcut">I</string>
     <string name="text_tool_dialog_bold_shortcut">B</string>
-    <string name="text_tool_dialog_strike_through_shortcut">a b c</string>
     <string name="text_tool_dialog_input_hint">แตะที่นี่เพื่อเขียน</string>
     <string name="text_tool_dialog_font_monospace">Monospace</string>
     <string name="text_tool_dialog_font_serif">Serif</string>
@@ -138,14 +134,14 @@
     <string name="transform_auto_crop_text">อัตโนมัติ</string>
     <string name="transform_set_center_text">ตั้งศูนย์</string>
     <string name="pixel">พิกเซล</string>
-    <string name="stamp_tool_copy_hint">กดค้างเพื่อคัดลอกเนื้อหา</string>
+    <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
     <string name="layers_title">เลเยอร์</string>
     <string name="layer_new">เลเยอร์ใหม่</string>
     <string name="layer_delete">ลบเลเยอร์</string>
     <string name="layer_too_many_layers">เลเยอร์มากเกินไป</string>
     <string name="layer_merged">รวมเลเยอร์</string>
     <string name="layer_background">เลเยอร์พื้นกลัง</string>
-    <string name="dialog_shape_text">รูปร่าง</string>
+    <string name="layer_preview">Layer preview</string>
     <string name="dialog_loading_image_failed_title">ข้อผิดพลาดในการโหลดภาพ</string>
     <string name="dialog_loading_image_failed_text">ไม่ใช่รูปภาพที่ถูกต้อง</string>
     <string name="dialog_settings">การตั้งค่า</string>
@@ -153,6 +149,7 @@
     <string name="dialog_save_image_format">รูปแบบรูปภาพ</string>
     <string name="dialog_antialiasing">การลบรอยหยัก</string>
     <string name="dialog_smoothing">ปรับให้เรียบ</string>
+    <string name="dialog_zoom_window_enabled">Enabled</string>
     <string name="dialog_save_jpg_option_quality">คุณภาพ:</string>
     <string name="pocketpaint_jpg_message_dialog">ใช้ <b> พื้นที่จัดเก็บน้อยที่สุด </b> <b> ไม่มีความโปร่งใส </b> เป็นที่จดจำ</string>
     <string name="pocketpaint_png_message_dialog">การบีบอัดแบบไม่สูญเสีย ความโปร่งใสจะถูกรักษาไว้</string>
@@ -205,4 +202,5 @@
     <string name="pocketpaint_tool_icon_description">ไอคอนเครื่องมือปัจจุบัน</string>
     <string name="dialog_scale_title">รูปภาพใหญ่เกินไปที่จะโหลด</string>
     <string name="dialog_scale_message">รูปภาพใหญ่เกินไปที่จะโหลด คลิกตกลงเพื่อย่อขนาดภาพโดยอัตโนมัติ</string>
+    <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
 </resources>

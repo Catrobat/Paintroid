@@ -64,4 +64,6 @@ interface Tool {
     enum class StateChange {
         ALL, RESET_INTERNAL_STATE, NEW_IMAGE_LOADED, MOVE_CANCELED
     }
+
+    fun toolPositionCoordinates(coordinate: PointF): PointF
 }

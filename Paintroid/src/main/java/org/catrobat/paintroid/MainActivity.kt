@@ -60,7 +60,8 @@ import org.catrobat.paintroid.command.CommandManager.CommandListener
 import org.catrobat.paintroid.command.implementation.AsyncCommandManager
 import org.catrobat.paintroid.command.implementation.DefaultCommandFactory
 import org.catrobat.paintroid.command.implementation.DefaultCommandManager
-import org.catrobat.paintroid.command.serialization.CommandSerializationUtilities
+import org.catrobat.paintroid.command.implementation.LayerOpacityCommand
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.common.CommonFactory
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_NAME
 import org.catrobat.paintroid.common.PAINTROID_PICTURE_PATH
@@ -69,6 +70,7 @@ import org.catrobat.paintroid.contract.MainActivityContracts
 import org.catrobat.paintroid.contract.MainActivityContracts.MainView
 import org.catrobat.paintroid.controller.DefaultToolController
 import org.catrobat.paintroid.iotasks.OpenRasterFileFormatConversion
+import org.catrobat.paintroid.listener.DrawerLayoutListener
 import org.catrobat.paintroid.listener.PresenterColorPickedListener
 import org.catrobat.paintroid.model.LayerModel
 import org.catrobat.paintroid.model.MainActivityModel
@@ -102,6 +104,7 @@ import org.catrobat.paintroid.ui.viewholder.BottomNavigationViewHolder
 import org.catrobat.paintroid.ui.viewholder.DrawerLayoutViewHolder
 import org.catrobat.paintroid.ui.viewholder.LayerMenuViewHolder
 import org.catrobat.paintroid.ui.viewholder.TopBarViewHolder
+import org.catrobat.paintroid.ui.zoomwindow.DefaultZoomWindowController
 import java.io.File
 import java.util.Locale
 
@@ -128,11 +131,15 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     var idlingResource: CountingIdlingResource = CountingIdlingResource("MainIdleResource")
 
+    @VisibleForTesting
+    lateinit var zoomWindowController: DefaultZoomWindowController
+
     lateinit var commandManager: CommandManager
     lateinit var toolPaint: ToolPaint
     lateinit var bottomNavigationViewHolder: BottomNavigationViewHolder
     lateinit var model: MainActivityContracts.Model
 
+    private lateinit var commandSerializer: CommandSerializer
     private lateinit var layerPresenter: LayerPresenter
     private lateinit var drawingSurface: DrawingSurface
     private lateinit var presenterMain: MainActivityContracts.Presenter
@@ -220,20 +227,20 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         try {
             if (mimeType.equals("application/zip") || mimeType.equals("application/octet-stream")) {
                 try {
-                    val fileContent = workspace.getCommandSerializationHelper().readFromFile(receivedUri)
+                    val fileContent = commandSerializer.readFromFile(receivedUri)
                     commandManager.loadCommandsCatrobatImage(fileContent.commandModel)
                     presenterMain.setColorHistoryAfterLoadImage(fileContent.colorHistory)
                     return false
-                } catch (e: CommandSerializationUtilities.NotCatrobatImageException) {
+                } catch (e: CommandSerializer.NotCatrobatImageException) {
                     Log.e(TAG, "Image might be an ora file instead")
                     OpenRasterFileFormatConversion.mainActivity = this
                     OpenRasterFileFormatConversion.importOraFile(
                         myContentResolver,
                         receivedUri
-                    ).bitmapList?.let { bitmapList ->
+                    ).layerList?.let { layerList ->
                         commandManager.setInitialStateCommand(
                             commandFactory.createInitCommand(
-                                bitmapList
+                                layerList
                             )
                         )
                     }
@@ -303,7 +310,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
                 presenterMain.initializeFromCleanState(picturePath, pictureName)
 
                 if (!model.isOpenedFromCatroid && presenterMain.checkForTemporaryFile() && (!isRunningEspressoTests || isTemporaryFileSavingTest)) {
-                    val workspaceReturnValue = presenterMain.openTemporaryFile(workspace)
+                    val workspaceReturnValue = presenterMain.openTemporaryFile()
                     commandManager.loadCommandsCatrobatImage(workspaceReturnValue?.commandManagerModel)
                     model.colorHistory = workspaceReturnValue?.colorHistory ?: ColorHistory()
                     model.colorHistory.colors.lastOrNull()?.let {
@@ -316,8 +323,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             else -> {
                 val isFullscreen = savedInstanceState.getBoolean(IS_FULLSCREEN_KEY, false)
                 val isSaved = savedInstanceState.getBoolean(IS_SAVED_KEY, false)
-                val isOpenedFromCatroid =
-                    savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
+                val isOpenedFromCatroid = savedInstanceState.getBoolean(IS_OPENED_FROM_CATROID_KEY, false)
                 val isOpenedFromFormulaEditorInCatroid = savedInstanceState.getBoolean(
                     IS_OPENED_FROM_FORMULA_EDITOR_IN_CATROID_KEY, false
                 )
@@ -347,6 +353,13 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        this.window.decorView.apply {
+            systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_pocketpaint_more_options, menu)
         presenterMain.removeMoreOptionsItems(menu)
@@ -364,13 +377,17 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             R.id.pocketpaint_options_discard_image -> presenterMain.discardImageClicked()
             R.id.pocketpaint_options_fullscreen_mode -> {
                 perspective.mainActivity = this
-                presenterMain.enterFullscreenClicked()
+                presenterMain.enterHideButtonsClicked()
             }
             R.id.pocketpaint_options_rate_us -> presenterMain.rateUsClicked()
             R.id.pocketpaint_options_help -> presenterMain.showHelpClicked()
             R.id.pocketpaint_options_about -> presenterMain.showAboutClicked()
             R.id.pocketpaint_share_image_button -> presenterMain.shareImageClicked()
             R.id.pocketpaint_options_feedback -> presenterMain.sendFeedback()
+            R.id.pocketpaint_zoom_window_settings ->
+                presenterMain.showZoomWindowSettingsClicked(
+                    UserPreferences(getPreferences(MODE_PRIVATE))
+                )
             R.id.pocketpaint_advanced_settings -> presenterMain.showAdvancedSettingsClicked()
             android.R.id.home -> presenterMain.backToPocketCodeClicked()
             else -> return false
@@ -441,8 +458,17 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             layerModel,
             perspective,
             listener,
-            CommandSerializationUtilities(this, commandManager, model)
         )
+        commandSerializer = CommandSerializer(this, commandManager, model)
+        model = MainActivityModel()
+        zoomWindowController = DefaultZoomWindowController(
+            this,
+            layerModel,
+            workspace,
+            toolReference,
+            UserPreferences(getPreferences(MODE_PRIVATE))
+        )
+        model = MainActivityModel()
         defaultToolController = DefaultToolController(
             toolReference,
             toolOptionsViewController,
@@ -468,12 +494,12 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             bottomNavigationViewHolder,
             DefaultCommandFactory(),
             commandManager,
-            perspective,
             defaultToolController,
             preferences,
             idlingResource,
             context,
-            filesDir
+            filesDir,
+            commandSerializer
         )
         FileIO.navigator = navigator
         defaultToolController.setOnColorPickedListener(PresenterColorPickedListener(presenterMain))
@@ -487,6 +513,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     private fun onCreateLayerMenu() {
         val layerLayout = findViewById<NavigationView>(R.id.pocketpaint_nav_view_layer)
+        val drawerLayout = findViewById<DrawerLayout>(R.id.pocketpaint_drawer_layout)
         val layerListView = findViewById<DragAndDropListView>(R.id.pocketpaint_layer_side_nav_list)
         val layerMenuViewHolder = LayerMenuViewHolder(layerLayout)
         val layerNavigator = LayerNavigator(applicationContext)
@@ -497,14 +524,17 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         val layoutManager = LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
         layerListView.layoutManager = layoutManager
         layerListView.manager = layoutManager
-        val layerAdapter = LayerAdapter(layerPresenter, this, layerListView.listener)
+        val layerAdapter = LayerAdapter(layerPresenter, this)
         layerListView.setLayerAdapter(layerAdapter)
         presenterMain.setLayerAdapter(layerAdapter)
         layerPresenter.setAdapter(layerAdapter)
         layerListView.setPresenter(layerPresenter)
         layerListView.adapter = layerAdapter
         layerPresenter.refreshLayerMenuViewHolder()
+        layerPresenter.disableVisibilityAndOpacityButtons()
         setLayerMenuListeners(layerMenuViewHolder)
+        val drawerLayoutListener = DrawerLayoutListener(this, layerPresenter)
+        drawerLayout.addDrawerListener(drawerLayoutListener)
     }
 
     private fun onCreateDrawingSurface() {
@@ -515,7 +545,10 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
             toolReference,
             idlingResource,
             supportFragmentManager,
-            toolOptionsViewController
+            toolOptionsViewController,
+            drawerLayoutViewHolder,
+            zoomWindowController,
+            UserPreferences(getPreferences(MODE_PRIVATE))
         )
         layerPresenter.setDrawingSurface(drawingSurface)
         appFragment.perspective = perspective
@@ -592,7 +625,9 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     override fun commandPostExecute() {
         if (!finishing) {
-            layerPresenter.invalidate()
+            if (commandManager.lastExecutedCommand !is LayerOpacityCommand) {
+                layerPresenter.invalidate()
+            }
             presenterMain.onCommandPostExecute()
         }
     }
@@ -670,8 +705,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         drawingSurface.refreshDrawingSurface()
     }
 
-    override fun enterFullscreen() {
-        drawingSurface.disableAutoScroll()
+    override fun enterHideButtons() {
         if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())
         } else {
@@ -680,8 +714,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
         }
     }
 
-    override fun exitFullscreen() {
-        drawingSurface.enableAutoScroll()
+    override fun exitHideButtons() {
         window.addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)
         window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }

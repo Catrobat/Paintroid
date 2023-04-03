@@ -36,6 +36,8 @@ import android.util.Log;
 
 import org.catrobat.paintroid.FileIO;
 import org.catrobat.paintroid.MainActivity;
+import org.catrobat.paintroid.contract.LayerContracts;
+import org.catrobat.paintroid.model.Layer;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -45,6 +47,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -84,6 +87,7 @@ public final class OpenRasterFileFormatConversion {
 	private static final int COMPRESS_QUALITY = 100;
 	private static final int THUMBNAIL_WIDTH = 256;
 	private static final int THUMBNAIL_HEIGHT = 256;
+	private static final String ORA_VERSION = "0.0.2";
 	public static MainActivity mainActivity = null;
 
 	private OpenRasterFileFormatConversion() {
@@ -94,7 +98,7 @@ public final class OpenRasterFileFormatConversion {
 		mainActivity = toSet;
 	}
 
-	public static Uri exportToOraFile(List<Bitmap> bitmapList, String fileName, Bitmap bitmapAllLayers, ContentResolver resolver) throws IOException {
+	public static Uri exportToOraFile(List<LayerContracts.Layer> layers, String fileName, Bitmap bitmapAllLayers, ContentResolver resolver) throws IOException {
 		Uri imageUri;
 		OutputStream outputStream;
 		ContentValues contentValues = new ContentValues();
@@ -102,13 +106,16 @@ public final class OpenRasterFileFormatConversion {
 
 		String mimeType = "image/openraster";
 		byte[] mimeByteArray = mimeType.getBytes();
-		byte[] xmlByteArray = getXmlStack(bitmapList);
+		byte[] xmlByteArray = getXmlStack(layers);
 
-		for (Bitmap current: bitmapList) {
+		for (LayerContracts.Layer current: layers) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			current.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, bos);
+			current.getBitmap().compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, bos);
 			byte[] byteArray = bos.toByteArray();
 			wholeSize += byteArray.length;
+
+			byte[] alphaByteArray = BigInteger.valueOf(current.getOpacityPercentage()).toByteArray();
+			wholeSize += alphaByteArray.length;
 		}
 
 		ByteArrayOutputStream bosMerged = new ByteArrayOutputStream();
@@ -178,13 +185,18 @@ public final class OpenRasterFileFormatConversion {
 		streamZip.closeEntry();
 
 		int counter = 0;
-		for (Bitmap current: bitmapList) {
+		for (LayerContracts.Layer current: layers) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			current.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, bos);
+			current.getBitmap().compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, bos);
 			byte[] byteArray = bos.toByteArray();
 
 			streamZip.putNextEntry(new ZipEntry("data/layer" + counter + ".png"));
 			streamZip.write(byteArray, 0, byteArray.length);
+			streamZip.closeEntry();
+
+			streamZip.putNextEntry(new ZipEntry("alpha/" + counter));
+			byte[] alphaByteArray = BigInteger.valueOf(current.getOpacityPercentage()).toByteArray();
+			streamZip.write(alphaByteArray, 0, alphaByteArray.length);
 			streamZip.closeEntry();
 			counter++;
 		}
@@ -202,7 +214,7 @@ public final class OpenRasterFileFormatConversion {
 		return imageUri;
 	}
 
-	private static byte[] getXmlStack(List<Bitmap> bitmapList) {
+	private static byte[] getXmlStack(List<LayerContracts.Layer> bitmapList) {
 
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		try {
@@ -214,9 +226,9 @@ public final class OpenRasterFileFormatConversion {
 			Attr attr2 = doc.createAttribute("w");
 			Attr attr3 = doc.createAttribute("h");
 
-			attr1.setValue("0.0.1");
-			attr2.setValue(String.valueOf(bitmapList.get(0).getWidth()));
-			attr3.setValue(String.valueOf(bitmapList.get(0).getHeight()));
+			attr1.setValue(ORA_VERSION);
+			attr2.setValue(String.valueOf(bitmapList.get(0).getBitmap().getWidth()));
+			attr3.setValue(String.valueOf(bitmapList.get(0).getBitmap().getHeight()));
 
 			rootElement.setAttributeNode(attr1);
 			rootElement.setAttributeNode(attr2);
@@ -253,7 +265,7 @@ public final class OpenRasterFileFormatConversion {
 		}
 	}
 
-	public static Uri saveOraFileToUri(List<Bitmap> bitmapList, Uri uri, String fileName, Bitmap bitmapAllLayers, ContentResolver resolver) throws IOException {
+	public static Uri saveOraFileToUri(List<LayerContracts.Layer> layers, Uri uri, String fileName, Bitmap bitmapAllLayers, ContentResolver resolver) throws IOException {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
 			String[] projection = {MediaStore.Images.Media._ID};
@@ -280,26 +292,42 @@ public final class OpenRasterFileFormatConversion {
 			}
 		}
 
-		return exportToOraFile(bitmapList, fileName, bitmapAllLayers, resolver);
+		return exportToOraFile(layers, fileName, bitmapAllLayers, resolver);
 	}
 
 	public static BitmapReturnValue importOraFile(ContentResolver resolver, Uri uri) throws IOException {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		InputStream inputStream = resolver.openInputStream(uri);
 		ZipInputStream zipInput = new ZipInputStream(inputStream);
-		List<Bitmap> bitmapList = new ArrayList<>();
+		List<LayerContracts.Layer> layers = new ArrayList<>();
 		ZipEntry current = zipInput.getNextEntry();
 
 		while (current != null) {
 			if (current.getName().matches("data/(.*).png")) {
 				Bitmap layerBitmap = FileIO.enableAlpha(BitmapFactory.decodeStream(zipInput, null, options));
-				bitmapList.add(layerBitmap);
+
+				if (layerBitmap == null) {
+					throw new IOException("Cannot decode stream to bitmap!");
+				}
+
+				LayerContracts.Layer layer = new Layer(layerBitmap);
+
+				current = zipInput.getNextEntry();
+				if (current != null && current.getName().matches("alpha/(.*)")) {
+					int opacityPercentage = zipInput.read();
+					layer.setOpacityPercentage(opacityPercentage);
+					current = zipInput.getNextEntry();
+				}
+
+				layers.add(layer);
+			} else {
+				current = zipInput.getNextEntry();
 			}
-			current = zipInput.getNextEntry();
 		}
-		if (bitmapList.isEmpty() || bitmapList.size() > MAX_LAYERS) {
+
+		if (layers.isEmpty() || layers.size() > MAX_LAYERS) {
 			throw new IOException("Bitmap list is wrong!");
 		}
-		return new BitmapReturnValue(bitmapList, null, false);
+		return new BitmapReturnValue(layers, null, false);
 	}
 }

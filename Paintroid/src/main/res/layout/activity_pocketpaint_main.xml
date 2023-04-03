@@ -32,14 +32,14 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true">
 
-            <include layout="@layout/pocketpaint_layout_top_bar"
-                android:id="@+id/pocketpaint_layout_top_bar" />
+            <include
+                android:id="@+id/pocketpaint_layout_top_bar"
+                layout="@layout/pocketpaint_layout_top_bar" />
 
             <org.catrobat.paintroid.ui.DrawingSurface
                 android:id="@+id/pocketpaint_drawing_surface_view"
-                android:layout_below="@+id/pocketpaint_layout_top_bar"
+                android:layout_below="@id/pocketpaint_drawer_layout"
                 android:layout_alignParentStart="true"
-                android:layout_above="@+id/pocketpaint_main_bottom_navigation"
                 android:layout_alignParentEnd="true"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -51,6 +51,13 @@
                 android:layout_height="match_parent"
                 android:layout_above="@id/pocketpaint_main_bottom_bar"
                 android:layout_below="@+id/pocketpaint_layout_top_bar"/>
+
+            <include
+                layout="@layout/pocketpaint_layout_zoom_window"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/pocketpaint_main_bottom_bar"
+                android:layout_below="@id/pocketpaint_layout_top_bar"/>
 
             <androidx.core.widget.ContentLoadingProgressBar
                 android:id="@+id/pocketpaint_content_loading_progress_bar"
@@ -78,6 +85,7 @@
                 android:id="@+id/pocketpaint_main_bottom_navigation"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/pocketpaint_main_bottom_bar_height"
+                android:alpha="0.80"
                 android:background="?attr/colorPrimary"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true">
@@ -88,12 +96,15 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/pocketpaint_nav_view_layer"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
+            android:background="@drawable/layer_nav_view_background"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|center">
+            android:layout_gravity="end|center"
+            android:clickable="true"
+            android:focusable="true">
 
             <include layout="@layout/pocketpaint_layout_main_menu_layer"
-                android:layout_width="150dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content" />
         </com.google.android.material.navigation.NavigationView>
 

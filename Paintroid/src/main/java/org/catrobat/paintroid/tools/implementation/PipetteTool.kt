@@ -58,6 +58,8 @@ class PipetteTool(
 
     override fun handleUp(coordinate: PointF?): Boolean = setColor(coordinate)
 
+    override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
+
     override fun resetInternalState() {
         updateSurfaceBitmap()
     }

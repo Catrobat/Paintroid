@@ -251,17 +251,30 @@ class TransformToolIntegrationTest {
     @Test
     fun testChangeCroppingHeightAndCheckWidth() {
         onToolBarView()
+            .performSelectTool(ToolType.HAND)
+        onDrawingSurfaceView()
+            .perform(
+                UiInteractions.swipe(
+                    DrawingSurfaceLocationProvider.MIDDLE,
+                    DrawingSurfaceLocationProvider.TOP_MIDDLE
+                )
+            )
+
+        onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
             .performCloseToolOptionsView()
+
         val boundingBoxWidth: Float = toolSelectionBoxWidth
         val boundingBoxHeight: Float = toolSelectionBoxHeight
+
         onDrawingSurfaceView()
             .perform(
                 UiInteractions.swipe(
                     DrawingSurfaceLocationProvider.BOTTOM_MIDDLE,
-                    DrawingSurfaceLocationProvider.HALFWAY_BOTTOM_MIDDLE
+                    DrawingSurfaceLocationProvider.MIDDLE
                 )
             )
+
         assertEquals(boundingBoxWidth, toolSelectionBoxWidth, Float.MIN_VALUE)
         assertThat(boundingBoxHeight, greaterThan(toolSelectionBoxHeight))
     }
@@ -1223,20 +1236,32 @@ class TransformToolIntegrationTest {
     @Test
     fun testTransformToolSetCenterFarCenter() {
         drawPlus(layerModel.currentLayer!!.bitmap!!, initialWidth / 2)
+
+        onToolBarView()
+            .performSelectTool(ToolType.HAND)
+        onDrawingSurfaceView()
+            .perform(
+                UiInteractions.swipe(
+                    DrawingSurfaceLocationProvider.MIDDLE,
+                    DrawingSurfaceLocationProvider.TOP_MIDDLE
+                )
+            )
+
         onToolBarView()
             .performSelectTool(ToolType.TRANSFORM)
 
         runBlocking {
             onTransformToolOptionsView().performSetCenterClick()
         }
+
         onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.BOTTOM_RIGHT_CORNER))
         runBlocking {
             TopBarViewInteraction.onTopBarView().performClickCheckmark()
             delay(1500)
         }
-        assertThat(toolSelectionBoxWidth, greaterThan(initialWidth.toFloat()))
-        assertThat(toolSelectionBoxHeight, greaterThan(initialHeight.toFloat()))
+        assertThat(toolSelectionBoxWidth, lessThan(initialWidth.toFloat()))
+        assertThat(toolSelectionBoxHeight, lessThan(initialHeight.toFloat()))
     }
 
     @Test

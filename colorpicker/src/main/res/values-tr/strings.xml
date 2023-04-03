@@ -34,4 +34,5 @@
     <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Değişiklikleri kaydetmek istiyor musunuz?</string>
     <string name="color_picker_no" tools:ignore="MissingTranslation">hayır</string>
     <string name="color_picker_yes" tools:ignore="MissingTranslation">evet</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">En son kullanılanlar</string>
 </resources>

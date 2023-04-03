@@ -18,20 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="color_picker_title">Color Picker</string>
-    <string name="color_picker_tab_icon">Color Picker tab icon</string>
-    <string name="color_red">Red</string>
-    <string name="color_green">Green</string>
-    <string name="color_blue">Blue</string>
-    <string name="color_alpha">Alpha</string>
+    <string name="color_picker_title">Түс таңдаушы</string>
+    <string name="color_picker_tab_icon">Түс таңдау құралы қойындысының белгішесі</string>
+    <string name="color_red">Қызыл</string>
+    <string name="color_green">Жасыл</string>
+    <string name="color_blue">Көк</string>
+    <string name="color_alpha">Альфа</string>
     <string name="color_hex">HEX</string>
-    <string name="color_picker_apply">Apply</string>
-    <string name="color_picker_cancel">Cancel</string>
-    <string name="color_picker_current_color" tools:ignore="MissingTranslation">current</string>
-    <string name="color_picker_new_color" tools:ignore="MissingTranslation">new</string>
+    <string name="color_picker_apply">Қолдану</string>
+    <string name="color_picker_cancel">Болдырмау</string>
+    <string name="color_picker_current_color" tools:ignore="MissingTranslation">қазіргі</string>
+    <string name="color_picker_new_color" tools:ignore="MissingTranslation">жаңа</string>
     <string name="color_picker_pipette" tools:ignore="MissingTranslation">Тамшуыр</string>
     <string name="color_picker_save_dialog_title" tools:ignore="MissingTranslation">Өзгерістерді сақтау?</string>
-    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Do you want to save your changes?</string>
-    <string name="color_picker_no" tools:ignore="MissingTranslation">no</string>
-    <string name="color_picker_yes" tools:ignore="MissingTranslation">yes</string>
+    <string name="color_picker_save_dialog_msg" tools:ignore="MissingTranslation">Өзгерістерді сақтағыңыз келе ме?</string>
+    <string name="color_picker_no" tools:ignore="MissingTranslation">жоқ</string>
+    <string name="color_picker_yes" tools:ignore="MissingTranslation">ия</string>
+    <string name="color_picker_history_recently_used" tools:ignore="MissingTranslation">жақында қолданылған</string>
 </resources>

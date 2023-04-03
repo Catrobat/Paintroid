@@ -32,6 +32,9 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.net.Uri
 import android.os.CountDownTimer
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
@@ -49,6 +52,7 @@ import org.catrobat.paintroid.UserPreferences
 import org.catrobat.paintroid.colorpicker.ColorHistory
 import org.catrobat.paintroid.command.CommandFactory
 import org.catrobat.paintroid.command.CommandManager
+import org.catrobat.paintroid.command.serialization.CommandSerializer
 import org.catrobat.paintroid.common.CREATE_FILE_DEFAULT
 import org.catrobat.paintroid.common.LOAD_IMAGE_CATROID
 import org.catrobat.paintroid.common.LOAD_IMAGE_DEFAULT
@@ -94,7 +98,6 @@ import org.catrobat.paintroid.tools.implementation.ClippingTool
 import org.catrobat.paintroid.tools.implementation.LineTool
 import org.catrobat.paintroid.tools.implementation.DefaultToolPaint
 import org.catrobat.paintroid.ui.LayerAdapter
-import org.catrobat.paintroid.ui.Perspective
 import java.io.File
 
 @SuppressWarnings("LongParameterList", "LargeClass", "ThrowingExceptionsWithoutMessageOrCause")
@@ -111,12 +114,12 @@ open class MainActivityPresenter(
     private val bottomNavigationViewHolder: MainActivityContracts.BottomNavigationViewHolder,
     private val commandFactory: CommandFactory,
     private val commandManager: CommandManager,
-    private val perspective: Perspective,
     private val toolController: ToolController,
     private val sharedPreferences: UserPreferences,
     private val idlingResource: CountingIdlingResource,
     override val context: Context,
-    private val internalMemoryPath: File
+    private val internalMemoryPath: File,
+    private val commandSerializer: CommandSerializer
 ) : MainActivityContracts.Presenter, SaveImageCallback, LoadImageCallback, CreateFileCallback {
     private var downTimer: CountDownTimer? = null
     private var layerAdapter: LayerAdapter? = null
@@ -146,6 +149,7 @@ open class MainActivityPresenter(
 
     var clippingToolInUseAndUndoRedoClicked = false
     var clippingToolPaint = Paint()
+    var toolOptionsViewWasShown = false
 
     override fun replaceImageClicked() {
         checkIfClippingToolNeedsAdjustment()
@@ -257,14 +261,14 @@ open class MainActivityPresenter(
         sharedPreferences.preferenceImageNumber = imageNumber
     }
 
-    override fun enterFullscreenClicked() {
+    override fun enterHideButtonsClicked() {
         model.isFullscreen = true
-        enterFullscreen()
+        enterHideButtons()
     }
 
-    override fun exitFullscreenClicked() {
+    override fun exitHideButtonsClicked() {
         model.isFullscreen = false
-        exitFullscreen()
+        exitHideButtons()
     }
 
     override fun backToPocketCodeClicked() {
@@ -277,6 +281,10 @@ open class MainActivityPresenter(
 
     override fun showAboutClicked() {
         navigator.showAboutDialog()
+    }
+
+    override fun showZoomWindowSettingsClicked(sharedPreferences: UserPreferences) {
+        navigator.showZoomWindowSettingsDialog(sharedPreferences)
     }
 
     override fun showAdvancedSettingsClicked() {
@@ -433,7 +441,7 @@ open class MainActivityPresenter(
                     imageUri,
                     context,
                     false,
-                    workspace
+                    commandSerializer
                 )
             }
             REQUEST_CODE_LOAD_PICTURE -> {
@@ -446,7 +454,7 @@ open class MainActivityPresenter(
                     imageUri,
                     context,
                     false,
-                    workspace
+                    commandSerializer
                 )
             }
             REQUEST_CODE_INTRO -> if (resultCode == RESULT_INTRO_MW_NOT_SUPPORTED) {
@@ -539,7 +547,7 @@ open class MainActivityPresenter(
         } else if (drawerLayoutViewHolder.isDrawerOpen(GravityCompat.END)) {
             drawerLayoutViewHolder.closeDrawer(Gravity.END, true)
         } else if (model.isFullscreen) {
-            exitFullscreenClicked()
+            exitHideButtonsClicked()
         } else if (!toolController.isDefaultTool) {
             if (toolController.currentTool?.toolType == ToolType.CLIP) toolController.adjustClippingToolOnBackPressed(true)
             switchTool(ToolType.BRUSH)
@@ -551,13 +559,13 @@ open class MainActivityPresenter(
     override fun saveImageConfirmClicked(requestCode: Int, uri: Uri?) {
         checkIfClippingToolNeedsAdjustment()
         view.refreshDrawingSurface()
-        interactor.saveImage(this, requestCode, workspace, uri, context)
+        interactor.saveImage(this, requestCode, workspace.layerModel, commandSerializer, uri, context)
     }
 
     override fun saveCopyConfirmClicked(requestCode: Int, uri: Uri?) {
         checkIfClippingToolNeedsAdjustment()
         view.refreshDrawingSurface()
-        interactor.saveCopy(this, requestCode, workspace, uri, context)
+        interactor.saveCopy(this, requestCode, workspace.layerModel, commandSerializer, uri, context)
     }
 
     override fun undoClicked() {
@@ -611,7 +619,7 @@ open class MainActivityPresenter(
                 val currentHolder = getViewHolderAt(i)
                 currentHolder?.let {
                     if (it.bitmap != null) {
-                        it.updateImageView(it.bitmap)
+                        it.updateImageView(presenter.getLayerItem(i))
                     }
                 }
             }
@@ -669,7 +677,7 @@ open class MainActivityPresenter(
                     model.savedPictureUri,
                     context,
                     false,
-                    workspace
+                    commandSerializer
                 )
             } else if (extraPictureName != null) {
                 interactor.createFile(
@@ -689,9 +697,9 @@ open class MainActivityPresenter(
         toolController.toolColor?.let { bottomNavigationViewHolder.setColorButtonColor(it) }
         bottomNavigationViewHolder.showCurrentTool(toolController.toolType)
         if (model.isFullscreen) {
-            enterFullscreen()
+            enterHideButtons()
         } else {
-            exitFullscreen()
+            exitHideButtons()
         }
         view.initializeActionBar(model.isOpenedFromCatroid)
         if (commandManager.isBusy) {
@@ -708,23 +716,24 @@ open class MainActivityPresenter(
         }
     }
 
-    private fun exitFullscreen() {
-        view.exitFullscreen()
+    private fun exitHideButtons() {
+        view.exitHideButtons()
         topBarViewHolder.show()
         bottomNavigationViewHolder.show()
         toolController.enableToolOptionsView()
-        toolController.showToolOptionsView()
-        perspective.exitFullscreen()
     }
 
-    private fun enterFullscreen() {
+    private fun enterHideButtons() {
+        if (toolController.toolOptionsViewVisible()) {
+            toolOptionsViewWasShown = true
+        }
         view.hideKeyboard()
-        view.enterFullscreen()
+        view.enterHideButtons()
         topBarViewHolder.hide()
         bottomBarViewHolder.hide()
         bottomNavigationViewHolder.hide()
         toolController.disableToolOptionsView()
-        perspective.enterFullscreen()
+        toolController.disableHideOption()
     }
 
     override fun restoreState(
@@ -840,7 +849,7 @@ open class MainActivityPresenter(
                     uri,
                     context,
                     true,
-                    workspace
+                    commandSerializer
                 )
             }
             LOAD_IMAGE_CATROID, LOAD_IMAGE_DEFAULT -> interactor.loadFile(
@@ -849,7 +858,7 @@ open class MainActivityPresenter(
                 uri,
                 context,
                 true,
-                workspace
+                commandSerializer
             )
             else -> Log.e(MainActivity.TAG, "wrong request code for loading pictures")
         }
@@ -889,7 +898,7 @@ open class MainActivityPresenter(
                         commandManager.setInitialStateCommand(commandFactory.createInitCommand(it))
                     }
                 } else {
-                    result.bitmapList?.let {
+                    result.layerList?.let {
                         commandManager.setInitialStateCommand(commandFactory.createInitCommand(it))
                     }
                 }
@@ -1061,6 +1070,9 @@ open class MainActivityPresenter(
 
     override fun importStickersClicked() {
         navigator.showCatroidMediaGallery()
+        if (!checkForInternet(context)) {
+            Toast.makeText(context, context.getString(R.string.no_connection_sticker), Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun bitmapLoadedFromSource(loadedImage: Bitmap) {
@@ -1072,11 +1084,11 @@ open class MainActivityPresenter(
     }
 
     override fun saveNewTemporaryImage() {
-        FileIO.saveTemporaryPictureFile(internalMemoryPath, workspace)
+        FileIO.saveTemporaryPictureFile(internalMemoryPath, commandSerializer)
     }
 
-    override fun openTemporaryFile(workspace: Workspace): WorkspaceReturnValue? =
-        FileIO.openTemporaryPictureFile(workspace)
+    override fun openTemporaryFile(): WorkspaceReturnValue? =
+        FileIO.openTemporaryPictureFile(commandSerializer)
 
     override fun checkForTemporaryFile(): Boolean =
         FileIO.checkForTemporaryFile(internalMemoryPath)
@@ -1113,6 +1125,12 @@ open class MainActivityPresenter(
                 (toolController.currentTool as ClippingTool).wasRecentlyApplied = true
                 clippingTool.resetInternalState(Tool.StateChange.NEW_IMAGE_LOADED)
             }
+        }
+    }
+
+    fun hideBottomBarViewHolder() {
+        if (bottomBarViewHolder.isVisible) {
+            bottomBarViewHolder.hide()
         }
     }
 
@@ -1183,6 +1201,24 @@ open class MainActivityPresenter(
                 cursor?.close()
             }
             return ""
+        }
+
+        private fun checkForInternet(context: Context): Boolean {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val network = connectivityManager.activeNetwork ?: return false
+                val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+                return when {
+                    activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                    activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                    else -> false
+                }
+            } else {
+                @Suppress("DEPRECATION") val networkInfo =
+                        connectivityManager.activeNetworkInfo ?: return false
+                @Suppress("DEPRECATION")
+                return networkInfo.isConnected
+            }
         }
 
         private fun isExternalStorageDocument(uri: Uri): Boolean =

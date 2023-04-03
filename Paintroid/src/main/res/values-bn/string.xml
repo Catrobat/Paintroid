@@ -22,12 +22,11 @@
     <string name="pocketpaint_app_name">পকেট পেইন্ট</string>
     <string name="button_brush">তুলি</string>
     <string name="button_cursor">কার্সার</string>
-    <string name="button_set_center">Set Center</string>
     <string name="button_pipette">পিপেট</string>
     <string name="button_undo">পূর্বাবস্থায় ফিরুন</string>
     <string name="button_redo">পুনরায় করুন</string>
     <string name="button_info">তথ্য</string>
-    <string name="button_stamp">স্ট্যাম্প</string>
+    <string name="button_clipboard">Clipboard</string>
     <string name="button_import_image">ছবি আমদানি করুন</string>
     <string name="button_eraser">রাবার</string>
     <string name="button_transform">রুপান্তর</string>
@@ -39,18 +38,15 @@
     <string name="button_watercolor">জলরং</string>
     <string name="button_spray_can">স্প্রে করতে পারেন</string>
     <string name="button_smudge">Smudge</string>
+    <string name="button_clip">Clip area</string>
     <string name="button_apply">প্রয়োগ করুন</string>
     <string name="button_checkmark">চেক চিহ্ন</string>
-    <string name="button_plus">লাইন সংযোগ রেখাংশ</string>
     <string name="done">করা হয়েছে</string>
     <string name="gallery">গ্যালারী</string>
-    <string name="load_sticker_error">স্টিকার লোড করা যায়নি</string>
-    <string name="error_unknown_error">কিছু একটা ভুল হয়েছে</string>
-    <string name="cap_circle">বৃত্ত</string>
-    <string name="cap_square">বর্গক্ষেত্র</string>
-    <string name="stamptool_paste">আটকান</string>
-    <string name="stamptool_copy">অনুলিপি</string>
-    <string name="stamptool_cut">কাটা</string>
+    <string name="no_connection_sticker">Stickers not available, check your internet connection.</string>
+    <string name="clipboard_tool_paste">Paste</string>
+    <string name="clipboard_tool_copy">অনুলিপি</string>
+    <string name="clipboard_tool_cut">Cut</string>
     <string name="stickers">স্টিকার</string>
     <string name="dialog_tools_title">সরঞ্জামসমূহ</string>
     <string name="dialog_error_save_title">ফাইল লোড / সংরক্ষণের সময় ভুল</string>
@@ -67,7 +63,7 @@
     <string name="help_content_fill">নির্বাচিত রঙ দিয়ে কোনও অঞ্চল পূরণ করতে চিত্রটিতে আলতো চাপুন।</string>
     <string name="help_content_cursor">আপনি যেখানে আঁকতে চান সেখানে কার্সারটি অবস্থান করুন। কার্সারটি সক্রিয় করতে আলতো চাপুন। আঁকার জন্য আপনার আঙুল সরান। নিষ্ক্রিয় করতে আবার আলতো চাপুন।</string>
     <string name="help_content_transform">চিত্রটি রূপান্তর করতে ব্যবহার করুন।</string>
-    <string name="help_content_stamp">আপনি যে অঞ্চলটি স্ট্যাম্প করতে চান তা কাভার করতে আয়তক্ষেত্রটি সরান এবং পুনরায় আকার দিন। অঞ্চলটি নির্বাচন করতে দীর্ঘক্ষণ টিপুন। স্ট্যাম্প করতে আবার সরান এবং আলতো চাপুন।</string>
+    <string name="help_content_clipboard">Move and resize the rectangle to cover the area you want to stamp. Tap on copy or cut to select the area. Move it, then tap on paste to stamp.</string>
     <string name="help_content_import_png">গ্যালারী থেকে স্ট্যাম্প সরঞ্জামে একটি চিত্র নিয়ে আসুন।</string>
     <string name="help_content_line">একটি সরল রেখা আঁকুন।</string>
     <string name="help_content_text">পাঠ্য লিখুন এবং এটি ফর্ম্যাট করুন। এরপরে পাঠ্য বাক্সটিকে পুনরায় আকার দিন। চিত্রটিতে পাঠ্য যোগ করতে আলতো চাপুন।</string>
@@ -77,7 +73,7 @@
     <string name="help_content_hand">ক্যানভাসটি সরানোর জন্য আপনার আঙুলটি সরান।</string>
     <string name="help_content_spray_can">স্প্রে ক্যান প্যাটার্ন তৈরি করতে ইমেজটিতে আপনার আঙুলটি সরান।</string>
     <string name="help_content_smudge">Move your finger on the image on different drawings to smudge them.</string>
-    <string name="closing_catroid_security_question_title">প্রজেক্টে ফিরে যান</string>
+    <string name="help_content_clip">Mark area which should not be erased.</string>
     <string name="closing_security_question_title">বের হোন</string>
     <string name="closing_security_question">পরিবর্তনগুলোর সংরক্ষন?</string>
     <string name="menu_new_image">নতুন ছবি</string>
@@ -85,6 +81,8 @@
     <string name="no_longclick_on_hidden_layer">সমস্ত স্তর দৃশ্যমান থাকলে আপনি কেবল মার্জ বা পুনঃক্রম করতে সক্ষম হবেন</string>
     <string name="no_tools_on_hidden_layer">লুকানো স্তরে কোনও সরঞ্জাম উপলব্ধ নেই</string>
     <string name="menu_load_image">চিত্র লোড করুন</string>
+    <string name="menu_replace_image">Replace image</string>
+    <string name="menu_add_to_current_layer">Add to current layer</string>
     <string name="menu_save_image">চিত্র সংরক্ষণ করুন</string>
     <string name="menu_save_copy">অনুলিপি সংরক্ষণ করুন</string>
     <string name="menu_hide_menu">পূর্ণস্ক্রিন</string>
@@ -94,6 +92,7 @@
     <string name="menu_export">রপ্তানি</string>
     <string name="menu_feedback">মতামত</string>
     <string name="menu_advanced">উন্নত সেটিংস</string>
+    <string name="menu_zoom_settings">Zoom window settings</string>
     <string name="saved_to">চিত্রটি এতে সংরক্ষণ করা হয়েছে\n</string>
     <string name="saved">চিত্র সংরক্ষিত হয়েছে</string>
     <string name="copy_to">অনুলিপি এতে সংরক্ষণ করা হয়েছে\n</string>
@@ -106,12 +105,9 @@
     <string name="resize_nothing_to_resize">পুনঃস্থাপন করার মত কিছু নেই</string>
     <string name="resize_cannot_resize_to_this_size">এই আকার পরিবর্তন করতে পারে না</string>
     <string name="resize_max_image_resolution_reached">সর্বোচ্চ চিত্রের রেজোলিউশনে পৌঁছেছে</string>
-    <string name="text_tool_dialog_input_title">তোমার পাঠ</string>
-    <string name="text_tool_dialog_format_options">ফর্ম্যাট অপশন</string>
     <string name="text_tool_dialog_underline_shortcut">উ</string>
     <string name="text_tool_dialog_italic_shortcut">আমি</string>
     <string name="text_tool_dialog_bold_shortcut">খ</string>
-    <string name="text_tool_dialog_strike_through_shortcut">এবিসি</string>
     <string name="text_tool_dialog_input_hint">লিখতে এখানে আলতো চাপুন</string>
     <string name="text_tool_dialog_font_monospace">মনোস্পেস</string>
     <string name="text_tool_dialog_font_serif">সেরিফ</string>
@@ -138,14 +134,14 @@
     <string name="transform_auto_crop_text">অটো</string>
     <string name="transform_set_center_text">Set center</string>
     <string name="pixel">পিক্সেল</string>
-    <string name="stamp_tool_copy_hint">বিষয়বস্তু অনুলিপি করতে দীর্ঘ চাপুন</string>
+    <string name="clipboard_tool_copy_hint">Tap on copy to copy content</string>
     <string name="layers_title">স্তর</string>
     <string name="layer_new">নতুন স্তর</string>
     <string name="layer_delete">স্তর মুছুন</string>
     <string name="layer_too_many_layers">অনেকগুলি স্তর</string>
     <string name="layer_merged">স্তরগুলি একত্রিত হয়েছে</string>
     <string name="layer_background">স্তর ব্যাকগ্রাউন্ড</string>
-    <string name="dialog_shape_text">আকার</string>
+    <string name="layer_preview">Layer preview</string>
     <string name="dialog_loading_image_failed_title">চিত্র লোড করার সময় ভুল</string>
     <string name="dialog_loading_image_failed_text">বৈধ চিত্র নয়</string>
     <string name="dialog_settings">সেটিংস</string>
@@ -153,6 +149,7 @@
     <string name="dialog_save_image_format">চিত্র বিন্যাস</string>
     <string name="dialog_antialiasing">অ্যান্টিয়ালাইজিং</string>
     <string name="dialog_smoothing">মসৃণ</string>
+    <string name="dialog_zoom_window_enabled">Enabled</string>
     <string name="dialog_save_jpg_option_quality">গুণ:</string>
     <string name="pocketpaint_jpg_message_dialog"><b> ন্যূনতম সঞ্চয় স্থান </b>নেয় T<b>কোনও স্বচ্ছতা</b>মনে নেই।</string>
     <string name="pocketpaint_png_message_dialog">ক্ষয়হীন সংকোচনের। স্বচ্ছতা সংরক্ষণ করা হয়।</string>
@@ -205,4 +202,5 @@
     <string name="pocketpaint_tool_icon_description">বর্তমান সরঞ্জাম আইকন</string>
     <string name="dialog_scale_title">চিত্র লোড করার জন্য খুব বড় is</string>
     <string name="dialog_scale_message">চিত্রটি লোড করার জন্য খুব বড়। চিত্রটি স্বয়ংক্রিয়ভাবে স্কেল করতে ওকে ক্লিক করুন।</string>
+    <string name="zoom_window_description">Used to display a zoomed in part of the drawing surface</string>
 </resources>

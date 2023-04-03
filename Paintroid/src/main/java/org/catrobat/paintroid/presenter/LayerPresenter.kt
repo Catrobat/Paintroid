@@ -124,24 +124,15 @@ class LayerPresenter(
         this.bottomNavigationViewHolder = bottomNavigationViewHolder
     }
 
-    override fun onBindLayerViewHolderAtPosition(
-        position: Int,
-        viewHolder: LayerContracts.LayerViewHolder,
-        isOpen: Boolean
-    ) {
-        val layer = getLayerItem(position)
-        if (layer === model.currentLayer) {
-            viewHolder.setSelected(position, bottomNavigationViewHolder, defaultToolController)
-        } else {
-            viewHolder.setDeselected()
-        }
-        if (!layers[position].isVisible) {
-            viewHolder.updateImageView(layer.transparentBitmap)
-            viewHolder.setLayerVisibilityCheckbox(false)
-        } else {
-            viewHolder.updateImageView(layer.bitmap)
-            viewHolder.setLayerVisibilityCheckbox(true)
-        }
+    override fun onSelectedLayerInvisible() {
+        defaultToolController?.hideToolOptionsView()
+        defaultToolController?.switchTool(ToolType.HAND)
+        bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
+    }
+
+    override fun onSelectedLayerVisible() {
+        defaultToolController?.switchTool(ToolType.BRUSH)
+        bottomNavigationViewHolder?.showCurrentTool(ToolType.BRUSH)
     }
 
     override fun refreshLayerMenuViewHolder() {
@@ -149,6 +140,7 @@ class LayerPresenter(
         val usedMemInMB = (runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE_IN_BYTE
         val maxHeapSizeInMB = runtime.maxMemory() / MEGABYTE_IN_BYTE
         val availHeapSizeInMB = maxHeapSizeInMB - usedMemInMB
+
         if (layerCount < MAX_LAYERS && availHeapSizeInMB > MINIMUM_HEAP_SPACE_FOR_NEW_LAYER) {
             layerMenuViewHolder.enableAddLayerButton()
         } else {
@@ -159,6 +151,11 @@ class LayerPresenter(
         } else {
             layerMenuViewHolder.disableRemoveLayerButton()
         }
+    }
+
+    override fun disableVisibilityAndOpacityButtons() {
+        layerMenuViewHolder.disableLayerVisibilityButton()
+        layerMenuViewHolder.disableLayerOpacityButton()
     }
 
     override fun isShown(): Boolean = layerMenuViewHolder.isShown()
@@ -191,34 +188,49 @@ class LayerPresenter(
 
     private fun getDestinationLayer(
         position: Int,
-        isUnhide: Boolean
+        isVisible: Boolean
     ): LayerContracts.Layer? = model.getLayerAt(position)?.apply {
-        if (isUnhide) switchBitmaps(isUnhide)
-        val newBitmap = if (!isUnhide) transparentBitmap else bitmap
-        if (!isUnhide) switchBitmaps(isUnhide)
-        bitmap = newBitmap
-        isVisible = isUnhide
+        this.isVisible = isVisible
     }
 
-    override fun hideLayer(position: Int) {
-        drawingSurface?.refreshDrawingSurface()
-        getDestinationLayer(position, false)?.let { layer ->
-            if (model.currentLayer == layer) {
-                defaultToolController?.switchTool(ToolType.HAND)
-                bottomNavigationViewHolder?.showCurrentTool(ToolType.HAND)
+    override fun getSelectedLayer(): LayerContracts.Layer? = model.currentLayer
+
+    override fun setLayerSelected(position: Int) {
+        if (!isPositionValid(position)) {
+            Log.e(TAG, "onClickLayerAtPosition at invalid position")
+            return
+        }
+        if (position != model.currentLayer?.let { model.getLayerIndexOf(it) }) {
+            checkIfLineToolInUse()
+            commandManager.addCommand(commandFactory.createSelectLayerCommand(position))
+        }
+    }
+
+    override fun changeLayerOpacity(position: Int, opacityPercentage: Int) {
+        if (!isPositionValid(position)) {
+            Log.e(TAG, "invalid layer position to change opacity")
+            return
+        }
+
+        commandManager.addCommand(commandFactory.createLayerOpacityCommand(position, opacityPercentage))
+    }
+
+    override fun setLayerVisibility(position: Int, isVisible: Boolean) {
+        refreshDrawingSurface()
+        getDestinationLayer(position, isVisible)?.let { layer ->
+            layer.isVisible = isVisible
+            if (model.currentLayer === layer) {
+                if (isVisible) {
+                    onSelectedLayerVisible()
+                } else {
+                    onSelectedLayerInvisible()
+                }
             }
         }
     }
 
-    override fun unhideLayer(position: Int, viewHolder: LayerContracts.LayerViewHolder) {
+    override fun refreshDrawingSurface() {
         drawingSurface?.refreshDrawingSurface()
-        getDestinationLayer(position, true)?.let { layer ->
-            viewHolder.updateImageView(layer.bitmap)
-            if (model.currentLayer == layer) {
-                defaultToolController?.switchTool(ToolType.BRUSH)
-                bottomNavigationViewHolder?.showCurrentTool(ToolType.BRUSH)
-            }
-        }
     }
 
     override fun swapItemsVisually(position: Int, swapWith: Int): Int {
@@ -281,18 +293,6 @@ class LayerPresenter(
         }
     }
 
-    override fun onClickLayerAtPosition(position: Int, view: View) {
-        if (!isPositionValid(position)) {
-            Log.e(TAG, "onClickLayerAtPosition at invalid position")
-            return
-        }
-        if (position != model.currentLayer?.let { model.getLayerIndexOf(it) }) {
-            checkIfLineToolInUse()
-            commandManager.addCommand(commandFactory.createSelectLayerCommand(position))
-            checkIfClippingToolInUse()
-        }
-    }
-
     override fun invalidate() {
         synchronized(model) {
             layers.clear()
@@ -304,11 +304,10 @@ class LayerPresenter(
     }
 
     fun resetMergeColor(layerPosition: Int) {
-        if (adapter != null && adapter?.getViewHolderAt(layerPosition) != null) {
-            if (adapter?.getViewHolderAt(layerPosition)?.isSelected() == true) {
-                adapter?.getViewHolderAt(layerPosition)?.setSelected()
-            } else {
-                adapter?.getViewHolderAt(layerPosition)?.setDeselected()
+        adapter?.let { adapter ->
+            adapter.getViewHolderAt(layerPosition)?.let { layerViewHolder ->
+                val isSelected = layerViewHolder.isSelected()
+                adapter.getViewHolderAt(layerPosition)?.setSelected(isSelected)
             }
         }
     }

@@ -62,9 +62,28 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 			@Override
 			protected boolean matchesSafely(View view) {
 				MainActivity activity = getMainActivityFromView(view);
-				LayerContracts.Layer currentLayer = activity.layerModel.getCurrentLayer();
+				Bitmap currentBitmap = activity.layerModel.getBitmapOfAllLayers();
 				float[] coordinates = coordinateProvider.calculateCoordinates(view);
-				int actualColor = currentLayer.getBitmap().getPixel((int) coordinates[0], (int) coordinates[1]);
+				int actualColor = currentBitmap.getPixel((int) coordinates[0], (int) coordinates[1]);
+				return expectedColor == actualColor;
+			}
+		}));
+		return this;
+	}
+
+	public DrawingSurfaceInteraction checkPixelColorOnLayer(@ColorInt final int expectedColor, final CoordinatesProvider coordinateProvider) {
+		check(matches(new TypeSafeMatcher<View>() {
+			@Override
+			public void describeTo(Description description) {
+				description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
+			}
+
+			@Override
+			protected boolean matchesSafely(View view) {
+				MainActivity activity = getMainActivityFromView(view);
+				Bitmap currentBitmap = activity.layerModel.getCurrentLayer().getBitmap();
+				float[] coordinates = coordinateProvider.calculateCoordinates(view);
+				int actualColor = currentBitmap.getPixel((int) coordinates[0], (int) coordinates[1]);
 				return expectedColor == actualColor;
 			}
 		}));
@@ -81,8 +100,8 @@ public final class DrawingSurfaceInteraction extends CustomViewInteraction {
 			@Override
 			protected boolean matchesSafely(View view) {
 				MainActivity activity = getMainActivityFromView(view);
-				LayerContracts.Layer currentLayer = activity.layerModel.getCurrentLayer();
-				int actualColor = currentLayer.getBitmap().getPixel((int) x, (int) y);
+				Bitmap currentBitmap = activity.layerModel.getBitmapOfAllLayers();
+				int actualColor = currentBitmap.getPixel((int) x, (int) y);
 				return expectedColor == actualColor;
 			}
 		}));

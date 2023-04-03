@@ -181,6 +181,7 @@ class LayerIntegrationTest {
             .checkLayerCount(4)
         TopBarViewInteraction.onTopBarView()
             .performOpenMoreOptions()
+
         onView(withText(R.string.menu_new_image))
             .perform(click())
         onView(withText(R.string.discard_button_text))
@@ -445,6 +446,7 @@ class LayerIntegrationTest {
             .checkLayerWidthMatches(26)
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
+            .performScrollToPositionInLayerNavigation(3)
             .performSelectLayer(3)
             .performClose()
         TransformToolOptionsViewInteraction.onTransformToolOptionsView()
@@ -494,6 +496,7 @@ class LayerIntegrationTest {
             .checkLayerWidthMatches(bitmapHeight)
         LayerMenuViewInteraction.onLayerMenuView()
             .performOpen()
+            .performScrollToPositionInLayerNavigation(3)
             .performSelectLayer(3)
             .performClose()
         TransformToolOptionsViewInteraction.onTransformToolOptionsView()
@@ -554,6 +557,52 @@ class LayerIntegrationTest {
     }
 
     @Test
+    fun testLayerOpacity() {
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.FILL)
+
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
+
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.BLACK, BitmapLocationProvider.MIDDLE)
+
+        LayerMenuViewInteraction.onLayerMenuView()
+            .performOpen()
+            .performSetOpacityTo(50, 0)
+            .performClose()
+
+        ToolBarViewInteraction.onToolBarView()
+            .performSelectTool(ToolType.PIPETTE)
+
+        val fiftyPercentOpacityBlack = Color.argb(255 / 2, 0, 0, 0)
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(fiftyPercentOpacityBlack, BitmapLocationProvider.MIDDLE)
+
+        LayerMenuViewInteraction.onLayerMenuView()
+            .performOpen()
+            .performSetOpacityTo(0, 0)
+            .performClose()
+
+        DrawingSurfaceInteraction.onDrawingSurfaceView()
+            .checkPixelColor(Color.TRANSPARENT, BitmapLocationProvider.MIDDLE)
+    }
+
+    @Test
+    fun testOpacityAndVisibilityIconDisabled() {
+        LayerMenuViewInteraction.onLayerMenuView()
+            .performOpen()
+
+        onView(withId(R.id.pocketpaint_layer_side_nav_button_visibility))
+                .check(matches(Matchers.not(isEnabled())))
+        onView(withId(R.id.pocketpaint_layer_side_nav_button_opacity))
+                .check(matches(Matchers.not(isEnabled())))
+    }
+
+    @Test
     fun testLayerOrderUndoDelete() {
         ToolBarViewInteraction.onToolBarView()
             .performSelectTool(ToolType.FILL)
@@ -565,8 +614,8 @@ class LayerIntegrationTest {
             .checkLayerCount(2)
             .performClose()
         ToolPropertiesInteraction.onToolProperties()
-            .setColorResource(R.color.pocketpaint_color_picker_green1)
-            .checkMatchesColorResource(R.color.pocketpaint_color_picker_green1)
+            .setColorResource(R.color.pocketpaint_color_merge_layer)
+            .checkMatchesColorResource(R.color.pocketpaint_color_merge_layer)
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         LayerMenuViewInteraction.onLayerMenuView()
@@ -586,7 +635,7 @@ class LayerIntegrationTest {
         DrawingSurfaceInteraction.onDrawingSurfaceView()
             .perform(UiInteractions.touchAt(DrawingSurfaceLocationProvider.MIDDLE))
         ToolPropertiesInteraction.onToolProperties()
-            .checkMatchesColorResource(R.color.pocketpaint_color_picker_green1)
+            .checkMatchesColorResource(R.color.pocketpaint_color_merge_layer)
     }
 
     @Test
