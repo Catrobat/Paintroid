@@ -61,9 +61,11 @@ import org.junit.Assert
 
 @RunWith(AndroidJUnit4::class)
 class ToolOnBackPressedIntegrationTest {
+    @JvmField
     @Rule
     var launchActivityRule = IntentsTestRule(MainActivity::class.java, false, true)
 
+    @JvmField
     @Rule
     var screenshotOnFailRule = ScreenshotOnFailRule()
     private var saveFile: File? = null
@@ -234,7 +236,7 @@ class ToolOnBackPressedIntegrationTest {
 
     companion object {
         private const val FILE_ENDING = ".png"
-
+        @JvmField
         @ClassRule
         var grantPermissionRule = grantPermissionRulesVersionCheck()
     }
