@@ -75,12 +75,8 @@ class SprayTool(
     private var previewBitmap: Bitmap =
         Bitmap.createBitmap(workspace.width, workspace.height, Bitmap.Config.ARGB_8888)
     private val previewCanvas = Canvas(previewBitmap)
-    private val paint : Paint
 
     init {
-        paint = Paint(toolPaint.paint)
-        paint.strokeWidth = STROKE_WIDTH
-
         stampToolOptionsView.setCallback(object : SprayToolOptionsView.Callback {
             override fun radiusChanged(radius: Int) {
                 sprayRadius = DEFAULT_RADIUS + radius * 2
@@ -168,7 +164,8 @@ class SprayTool(
             pointsArray[index * 2 + 1] = point.y
         }
 
-        val command = commandFactory.createSprayCommand(pointsArray, paint)
+        val command = commandFactory.createSprayCommand(pointsArray, Paint(drawPaint).apply { strokeWidth=
+            STROKE_WIDTH })
         commandManager.addCommand(command)
     }
 
@@ -179,7 +176,8 @@ class SprayTool(
                 repeat(sprayRadius / DEFAULT_RADIUS) {
                     val point = createRandomPointInCircle()
                     if (workspace.contains(point)) {
-                        previewCanvas.drawPoint(point.x, point.y, paint)
+                        previewCanvas.drawPoint(point.x, point.y, Paint(drawPaint).apply { strokeWidth=
+                            STROKE_WIDTH })
                         sprayedPoints.add(point)
                     }
                 }
