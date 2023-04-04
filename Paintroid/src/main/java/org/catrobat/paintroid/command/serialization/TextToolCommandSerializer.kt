@@ -75,6 +75,11 @@ class TextToolCommandSerializer(version: Int, private val activityContext: Conte
                         FontType.MONOSPACE -> Typeface.create(Typeface.MONOSPACE, style)
                         FontType.STC -> ResourcesCompat.getFont(activityContext, R.font.stc_regular)
                         FontType.DUBAI -> ResourcesCompat.getFont(activityContext, R.font.dubai)
+                        FontType.ROBOTO -> ResourcesCompat.getFont(activityContext, R.font.roboto_regular)
+                        FontType.LATO -> ResourcesCompat.getFont(activityContext, R.font.lato_regular)
+                        FontType.MONTSERRAT -> ResourcesCompat.getFont(activityContext, R.font.montserrat_regular)
+                        FontType.OPENSANS -> ResourcesCompat.getFont(activityContext, R.font.opensans_regular)
+                        FontType.OSWALD -> ResourcesCompat.getFont(activityContext, R.font.oswald_regular)
                     }
                 } catch (e: Exception) {
                     Log.e("LoadImageAsync", "Typeface not supported on this mobile phone")

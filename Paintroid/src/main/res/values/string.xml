@@ -122,6 +122,11 @@
     <string name="text_tool_dialog_font_sans_serif">Sans Serif</string>
     <string name="text_tool_dialog_font_dubai">Dubai</string>
     <string name="text_tool_dialog_font_arabic_stc">STC</string>
+    <string name="text_tool_dialog_font_roboto">Roboto</string>
+    <string name="text_tool_dialog_font_lato">Lato</string>
+    <string name="text_tool_dialog_font_montserrat">Montserrat</string>
+    <string name="text_tool_dialog_font_opensans">Open Sans</string>
+    <string name="text_tool_dialog_font_oswald">Oswald</string>
 
     <string name="shape_tool_dialog_rect_title">Rectangle</string>
     <string name="shape_tool_dialog_ellipse_title">Ellipse</string>

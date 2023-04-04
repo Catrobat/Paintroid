@@ -105,6 +105,11 @@ class TextTool(
     private var textSize = DEFAULT_TEXT_SIZE
     private val stc: Typeface?
     private val dubai: Typeface?
+    private val roboto: Typeface?
+    private val lato: Typeface?
+    private val montserrat: Typeface?
+    private val opensans: Typeface?
+    private val oswald: Typeface?
     private var oldBoxWidth = 0f
     private var oldBoxHeight = 0f
     private var oldToolPosition: PointF? = null
@@ -123,6 +128,11 @@ class TextTool(
         resizePointsVisible = RESIZE_POINTS_VISIBLE
         stc = contextCallback.getFont(R.font.stc_regular)
         dubai = contextCallback.getFont(R.font.dubai)
+        roboto = contextCallback.getFont(R.font.roboto_regular)
+        lato = contextCallback.getFont(R.font.lato_regular)
+        montserrat = contextCallback.getFont(R.font.montserrat_regular)
+        opensans = contextCallback.getFont(R.font.opensans_regular)
+        oswald = contextCallback.getFont(R.font.oswald_regular)
         textPaint = Paint()
         initializePaint()
         resetPreview()
@@ -318,6 +328,36 @@ class TextTool(
                     textPaint.typeface = dubai
                 } catch (e: Exception) {
                     Log.e(TAG, "dubai")
+                }
+            FontType.ROBOTO ->
+                try {
+                    textPaint.typeface = roboto
+                } catch (e: Exception) {
+                    Log.e(TAG, "roboto")
+                }
+            FontType.LATO ->
+                try {
+                    textPaint.typeface = lato
+                } catch (e: Exception) {
+                    Log.e(TAG, "lato")
+                }
+            FontType.MONTSERRAT ->
+                try {
+                    textPaint.typeface = montserrat
+                } catch (e: Exception) {
+                    Log.e(TAG, "montserrat")
+                }
+            FontType.OPENSANS ->
+                try {
+                    textPaint.typeface = opensans
+                } catch (e: Exception) {
+                    Log.e(TAG, "opensans")
+                }
+            FontType.OSWALD ->
+                try {
+                    textPaint.typeface = oswald
+                } catch (e: Exception) {
+                    Log.e(TAG, "oswald")
                 }
         }
     }
