@@ -51,7 +51,7 @@ class DrawingSurfaceInteraction private constructor() :
             }
 
             override fun matchesSafely(view: View?): Boolean {
-                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val activity = MainActivityHelper.getMainActivityFromView(view!!)
                 val currentBitmap = activity.layerModel.getBitmapOfAllLayers()
                 val coordinates = coordinateProvider.calculateCoordinates(view)
                 val actualColor =
@@ -76,7 +76,7 @@ class DrawingSurfaceInteraction private constructor() :
             }
 
             override fun matchesSafely(view: View?): Boolean {
-                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val activity = MainActivityHelper.getMainActivityFromView(view!!)
                 val currentBitmap = activity.layerModel.currentLayer!!.bitmap
                 val coordinates = coordinateProvider.calculateCoordinates(view)
                 val actualColor =
@@ -102,7 +102,7 @@ class DrawingSurfaceInteraction private constructor() :
             }
 
             override fun matchesSafely(view: View?): Boolean {
-                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val activity = MainActivityHelper.getMainActivityFromView(view!!)
                 val currentBitmap = activity.layerModel.getBitmapOfAllLayers()
                 val actualColor = currentBitmap!!.getPixel(x.toInt(), y.toInt())
                 return expectedColor == actualColor
@@ -133,7 +133,7 @@ class DrawingSurfaceInteraction private constructor() :
             }
 
             override fun matchesSafely(view: View?): Boolean {
-                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val activity = MainActivityHelper.getMainActivityFromView(view!!)
                 val layerModel = activity.layerModel
                 val bitmap = layerModel.currentLayer!!.bitmap
                 return expectedWidth == bitmap.width && expectedHeight == bitmap.height
@@ -157,7 +157,7 @@ class DrawingSurfaceInteraction private constructor() :
             }
 
             override fun matchesSafely(view: View?): Boolean {
-                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val activity = MainActivityHelper.getMainActivityFromView(view!!)
                 val layerModel = activity.layerModel
                 for (layer: LayerContracts.Layer in layerModel.layers) {
                     val bitmap = layer.bitmap

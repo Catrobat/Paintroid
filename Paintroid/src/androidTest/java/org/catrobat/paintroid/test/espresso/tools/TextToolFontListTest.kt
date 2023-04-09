@@ -110,7 +110,7 @@ class TextToolFontListTest {
                         3,
                         ViewMatchers.hasDescendant(
                             UiMatcher.hasTypeFace(
-                                dubaiFontFace
+                                dubaiFontFace!!
                             )
                         )
                     )
@@ -123,7 +123,7 @@ class TextToolFontListTest {
                     UiMatcher.atPosition(
                         4,
                         ViewMatchers.hasDescendant(
-                            UiMatcher.hasTypeFace(stcFontFace)
+                            UiMatcher.hasTypeFace(stcFontFace!!)
                         )
                     )
                 )

@@ -89,7 +89,7 @@ class TextToolIntegrationTest {
     private var boldToggleButton: MaterialButton? = null
     private var textSize: EditText? = null
     private var layerModel: LayerContracts.Model? = null
-    private var activity: MainActivity? = null
+    private lateinit var activity: MainActivity
     private var toolReference: ToolReference? = null
 
     private val surfaceBitmapHeight = layerModel?.height
@@ -101,7 +101,7 @@ class TextToolIntegrationTest {
     fun setUp() {
         activity = launchActivityRule.activity
         activityHelper = MainActivityHelper(activity)
-        layerModel = activity?.layerModel
+        layerModel = activity.layerModel
         toolReference = activity?.toolReference
 
         onToolBarView().performSelectTool(ToolType.TEXT)

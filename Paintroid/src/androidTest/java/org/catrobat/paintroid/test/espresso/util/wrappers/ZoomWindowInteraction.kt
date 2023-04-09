@@ -14,7 +14,7 @@ class ZoomWindowInteraction private constructor() : CustomViewInteraction(Espres
     fun checkAlignment(verb: Int): ZoomWindowInteraction {
         check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
             override fun matchesSafely(view: View?): Boolean {
-                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val activity = MainActivityHelper.getMainActivityFromView(view!!)
                 val layoutParams = activity.findViewById<View>(R.id.pocketpaint_zoom_window_image).layoutParams as RelativeLayout.LayoutParams
                 val rulesFromLayout = layoutParams.getRule(verb)
                 return rulesFromLayout == -1
@@ -30,7 +30,7 @@ class ZoomWindowInteraction private constructor() : CustomViewInteraction(Espres
     fun checkAlignmentBelowM(index: Int): ZoomWindowInteraction {
         check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
             override fun matchesSafely(view: View?): Boolean {
-                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val activity = MainActivityHelper.getMainActivityFromView(view!!)
                 val layoutParams = activity.findViewById<View>(R.id.pocketpaint_zoom_window_image).layoutParams as RelativeLayout.LayoutParams
                 val rulesFromLayout = layoutParams.rules
                 return rulesFromLayout[index] == -1
