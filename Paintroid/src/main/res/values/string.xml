@@ -168,11 +168,14 @@
     <string name="dialog_antialiasing">Antialiasing</string>
     <string name="dialog_smoothing">Smoothing</string>
     <string name="dialog_use_touch_size">Use touch size for variable brush width</string>
+<<<<<<< HEAD
 
     <string name="dialog_zoom_window_enabled">Enabled</string>
     <string name="dialog_zoom_window_from_size" translatable="false">100</string>
     <string name="dialog_zoom_window_to_size" translatable="false">300</string>
     <string name="dialog_zoom_window_initial_value" translatable="false">100</string>
+=======
+>>>>>>> 07afae9aaaab8fa067bdbff54d0dc19fcfebd496
 
     <string name="dialog_save_jpg_option_quality">Quality:</string>
 

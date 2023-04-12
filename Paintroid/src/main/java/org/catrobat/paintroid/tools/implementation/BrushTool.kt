@@ -129,6 +129,7 @@ open class BrushTool(
 
     override fun handleDown(coordinate: PointF?): Boolean {
         coordinate ?: return false
+<<<<<<< HEAD
         hideBrushSpecificLayoutOnHandleDown()
         super.handleDown(coordinate)
         initialEventCoordinate = PointF(coordinate.x, coordinate.y)
@@ -137,6 +138,8 @@ open class BrushTool(
         drawToolMovedDistance.set(0f, 0f)
         pointArray.add(PointF(coordinate.x, coordinate.y))
         pathInsideBitmap = workspace.contains(coordinate)
+=======
+>>>>>>> 07afae9aaaab8fa067bdbff54d0dc19fcfebd496
 
         if (useEventDependentStrokeWidth) {
             currentPath = PathContainer()
@@ -149,6 +152,10 @@ open class BrushTool(
             pointArray.add(PointF(coordinate.x, coordinate.y))
             pathInsideBitmap = workspace.contains(coordinate)
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 07afae9aaaab8fa067bdbff54d0dc19fcfebd496
         return true
     }
 
@@ -180,13 +187,18 @@ open class BrushTool(
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
+<<<<<<< HEAD
         showBrushSpecificLayoutOnHandleUp()
         super.handleUp(coordinate)
+=======
+        if (useEventDependentStrokeWidth) {
+            if (coordinate == null) return false
+>>>>>>> 07afae9aaaab8fa067bdbff54d0dc19fcfebd496
 
-        if (!pathInsideBitmap && workspace.contains(coordinate)) {
-            pathInsideBitmap = true
-        }
+            currentPath.addEndPoint(coordinate)
+            val path = currentPath.getClosedPathFromPoints()
 
+<<<<<<< HEAD
         if (useEventDependentStrokeWidth) {
             if (coordinate == null) return false
 
@@ -197,6 +209,12 @@ open class BrushTool(
             val command = commandFactory.createPathCommand(bitmapPaint, path)
             commandManager.addCommand(command)
 
+=======
+            bitmapPaint.style = Paint.Style.FILL
+            val command = commandFactory.createPathCommand(bitmapPaint, path)
+            commandManager.addCommand(command)
+
+>>>>>>> 07afae9aaaab8fa067bdbff54d0dc19fcfebd496
             return true
         } else {
             if (eventCoordinatesAreNull() || coordinate == null) {
