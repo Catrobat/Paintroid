@@ -16,41 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.util.wrappers
 
-package org.catrobat.paintroid.test.espresso.util.wrappers;
+import androidx.test.espresso.FailureHandler
+import androidx.test.espresso.Root
+import androidx.test.espresso.ViewAssertion
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.ViewInteraction
+import org.hamcrest.Matcher
 
-import org.hamcrest.Matcher;
+abstract class CustomViewInteraction protected constructor(private var viewInteraction: ViewInteraction) {
+    fun perform(vararg viewActions: ViewAction?): ViewInteraction = viewInteraction.perform(*viewActions)
 
-import androidx.test.espresso.FailureHandler;
-import androidx.test.espresso.Root;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.ViewAssertion;
-import androidx.test.espresso.ViewInteraction;
+    fun withFailureHandler(var1: FailureHandler?): ViewInteraction = viewInteraction.withFailureHandler(var1)
 
-public abstract class CustomViewInteraction {
-	protected ViewInteraction viewInteraction;
+    fun inRoot(var1: Matcher<Root?>?): ViewInteraction = viewInteraction.inRoot(var1)
 
-	protected CustomViewInteraction(ViewInteraction viewInteraction) {
-		this.viewInteraction = viewInteraction;
-	}
+    fun noActivity(): ViewInteraction = viewInteraction.noActivity()
 
-	public final ViewInteraction perform(final ViewAction... viewActions) {
-		return viewInteraction.perform(viewActions);
-	}
+    fun check(viewAssert: ViewAssertion?): ViewInteraction = viewInteraction.check(viewAssert)
 
-	public final ViewInteraction withFailureHandler(FailureHandler var1) {
-		return viewInteraction.withFailureHandler(var1);
-	}
-
-	public final ViewInteraction inRoot(Matcher<Root> var1) {
-		return viewInteraction.inRoot(var1);
-	}
-
-	public final ViewInteraction noActivity() {
-		return viewInteraction.noActivity();
-	}
-
-	public final ViewInteraction check(final ViewAssertion viewAssert) {
-		return viewInteraction.check(viewAssert);
-	}
-}
+    }
