@@ -25,7 +25,7 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import org.hamcrest.Matcher
 
-abstract class CustomViewInteraction protected constructor(private var viewInteraction: ViewInteraction) {
+open class CustomViewInteraction protected constructor(private var viewInteraction: ViewInteraction) {
     fun perform(vararg viewActions: ViewAction?): ViewInteraction = viewInteraction.perform(*viewActions)
 
     fun withFailureHandler(var1: FailureHandler?): ViewInteraction = viewInteraction.withFailureHandler(var1)
@@ -35,5 +35,4 @@ abstract class CustomViewInteraction protected constructor(private var viewInter
     fun noActivity(): ViewInteraction = viewInteraction.noActivity()
 
     fun check(viewAssert: ViewAssertion?): ViewInteraction = viewInteraction.check(viewAssert)
-
     }
