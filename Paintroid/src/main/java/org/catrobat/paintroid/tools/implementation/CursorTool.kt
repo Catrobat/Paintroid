@@ -24,6 +24,7 @@ import android.graphics.Paint
 import android.graphics.Paint.Cap
 import android.graphics.PointF
 import android.graphics.RectF
+import android.view.View
 import androidx.annotation.VisibleForTesting
 import androidx.test.espresso.idling.CountingIdlingResource
 import org.catrobat.paintroid.R
@@ -113,27 +114,46 @@ open class CursorTool(
     }
 
     private fun hideToolOptions() {
-        toolOptionsViewController.slideUp(
-            brushToolOptionsView.getTopToolOptions(), true
-        )
+        if (toolOptionsViewController.isVisible) {
+            if (brushToolOptionsView.getTopToolOptions().visibility == View.VISIBLE) {
+                toolOptionsViewController.slideUp(
+                    brushToolOptionsView.getTopToolOptions(),
+                    willHide = true,
+                    showOptionsView = false
+                )
+            }
 
-        toolOptionsViewController.slideDown(
-            brushToolOptionsView.getBottomToolOptions(), true
-        )
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.VISIBLE) {
+                toolOptionsViewController.slideDown(
+                    brushToolOptionsView.getBottomToolOptions(),
+                    willHide = true,
+                    showOptionsView = false
+                )
+            }
+        }
     }
 
     private fun showToolOptions() {
-        toolOptionsViewController.slideDown(
-            brushToolOptionsView.getTopToolOptions(), false
-        )
+        if (!toolOptionsViewController.isVisible) {
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
+                toolOptionsViewController.slideDown(
+                    brushToolOptionsView.getTopToolOptions(),
+                    willHide = false,
+                    showOptionsView = true
+                )
+            }
 
-        toolOptionsViewController.slideUp(
-            brushToolOptionsView.getBottomToolOptions(), false
-        )
+            if (brushToolOptionsView.getBottomToolOptions().visibility == View.INVISIBLE) {
+                toolOptionsViewController.slideUp(
+                    brushToolOptionsView.getBottomToolOptions(),
+                    willHide = false,
+                    showOptionsView = true
+                )
+            }
+        }
     }
 
     override fun handleDown(coordinate: PointF?): Boolean {
-        hideToolOptions()
         super.handleDown(coordinate)
         pathToDraw.moveTo(toolPosition.x, toolPosition.y)
         coordinate?.let {
@@ -148,6 +168,8 @@ open class CursorTool(
 
     override fun handleMove(coordinate: PointF?): Boolean {
         if (coordinate != null) {
+            hideToolOptions()
+            super.handleMove(coordinate)
             previousEventCoordinate?.let {
                 val deltaX = coordinate.x - it.x
                 val deltaY = coordinate.y - it.y

@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.junit.tools
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.util.DisplayMetrics
+import android.view.ViewGroup
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.rule.ActivityTestRule
@@ -83,6 +84,7 @@ class BaseToolWithRectangleShapeToolTest {
     private val metrics: DisplayMetrics? = null
     private var toolToTest: BaseToolWithRectangleShape? = null
     private var idlingResource: CountingIdlingResource? = null
+    private val viewMock = Mockito.mock(ViewGroup::class.java)
     @Before
     fun setUp() {
         idlingResource = launchActivityRule.activity.idlingResource
@@ -116,6 +118,8 @@ class BaseToolWithRectangleShapeToolTest {
         rectHeight = (toolToTest as BaseToolWithRectangleShapeImpl).boxHeight
         rotation = (toolToTest as BaseToolWithRectangleShapeImpl).boxRotation
         symbolDistance = (toolToTest as BaseToolWithRectangleShapeImpl).rotationSymbolDistance
+        Mockito.`when`(toolOptionsViewController!!.toolSpecificOptionsLayout).thenReturn(viewMock)
+        Mockito.`when`(toolOptionsViewController.toolSpecificOptionsLayout).thenReturn(viewMock)
     }
 
     @After

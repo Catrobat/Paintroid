@@ -21,6 +21,7 @@ package org.catrobat.paintroid.test.junit.tools
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
+import android.view.View
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.rule.ActivityTestRule
@@ -173,6 +174,10 @@ class BrushToolTest {
 
     @Test
     fun testShouldMovePathOnUpEvent() {
+        val viewMock = Mockito.mock(View::class.java)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        Mockito.`when`(brushToolOptionsView!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptionsView.getBottomToolOptions()).thenReturn(viewMock)
         whenever(workspace!!.contains(any<PointF>())).thenReturn(true)
         whenever(toolPaint!!.paint).thenReturn(paint)
         val event1 = PointF(0f, 0f)
@@ -206,6 +211,11 @@ class BrushToolTest {
 
     @Test
     fun testShouldAddCommandOnUpEvent() {
+        val viewMock = Mockito.mock(View::class.java)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        Mockito.`when`(brushToolOptionsView!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptionsView.getBottomToolOptions()).thenReturn(viewMock)
+
         whenever(workspace!!.contains(any())).thenReturn(true)
         whenever(toolPaint!!.paint).thenReturn(paint)
         val event = PointF(0f, 0f)
@@ -240,6 +250,11 @@ class BrushToolTest {
 
     @Test
     fun testShouldAddCommandOnTapEvent() {
+        val viewMock = Mockito.mock(View::class.java)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        Mockito.`when`(brushToolOptionsView!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptionsView.getBottomToolOptions()).thenReturn(viewMock)
+
         Mockito.`when`(workspace!!.contains(any<PointF>())).thenReturn(true)
         Mockito.`when`(toolPaint!!.paint).thenReturn(paint)
         val tap = PointF(5f, 5f)
@@ -256,6 +271,11 @@ class BrushToolTest {
 
     @Test
     fun testShouldAddCommandOnTapWithinToleranceEvent() {
+        val viewMock = Mockito.mock(View::class.java)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        Mockito.`when`(brushToolOptionsView!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptionsView.getBottomToolOptions()).thenReturn(viewMock)
+
         val tap1 = PointF(0f, 0f)
         val tap2 = PointF(MOVE_TOLERANCE - .1f, 0f)
         val tap3 = PointF(MOVE_TOLERANCE - 0.1f, MOVE_TOLERANCE - 0.1f)
@@ -276,6 +296,11 @@ class BrushToolTest {
 
     @Test
     fun testShouldAddPathCommandOnMultipleMovesWithinToleranceEvent() {
+        val viewMock = Mockito.mock(View::class.java)
+        Mockito.`when`(viewMock.visibility).thenReturn(View.VISIBLE)
+        Mockito.`when`(brushToolOptionsView!!.getTopToolOptions()).thenReturn(viewMock)
+        Mockito.`when`(brushToolOptionsView.getBottomToolOptions()).thenReturn(viewMock)
+
         Mockito.`when`(workspace!!.contains(any<PointF>())).thenReturn(true)
         Mockito.`when`(toolPaint!!.paint).thenReturn(paint)
         val tap1 = PointF(7f, 7f)
