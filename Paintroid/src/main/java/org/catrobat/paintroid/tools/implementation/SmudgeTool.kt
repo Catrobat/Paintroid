@@ -60,6 +60,14 @@ class SmudgeTool(
 ) : BaseTool(contextCallback, toolOptionsViewController, toolPaint, workspace, idlingResource, commandManager) {
 
     override var drawTime: Long = 0
+    override fun handleUpAnimations(coordinate: PointF?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        TODO("Not yet implemented")
+    }
+
     private var currentBitmap: Bitmap? = null
     private var prevPoint: PointF? = null
     private var numOfPointsOnPath = -1

@@ -23,6 +23,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PointF
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.VisibleForTesting
 import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineScope
@@ -69,6 +70,15 @@ class SprayTool(
     var sprayActive = false
 
     override var toolType: ToolType = ToolType.SPRAY
+    override fun handleUpAnimations(coordinate: PointF?) {
+        showToolOptions()
+        toolOptionsViewController.animateBottomAndTopNavigation(false);
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        hideToolOptions()
+    }
+
     private var currentCoordinate: PointF? = null
     private var sprayRadius = DEFAULT_RADIUS
     private var previewBitmap: Bitmap =
@@ -97,15 +107,25 @@ class SprayTool(
     }
 
     private fun hideToolOptions() {
-        toolOptionsViewController.slideUp(
-            toolOptionsViewController.toolSpecificOptionsLayout, true
-        )
+        if (toolOptionsViewController.isVisible &&
+            toolOptionsViewController.toolSpecificOptionsLayout.visibility == View.VISIBLE) {
+            toolOptionsViewController.slideUp(
+                toolOptionsViewController.toolSpecificOptionsLayout,
+                willHide = true,
+                showOptionsView = false
+            )
+        }
     }
 
     private fun showToolOptions() {
-        toolOptionsViewController.slideDown(
-            toolOptionsViewController.toolSpecificOptionsLayout, false
-        )
+        if (!toolOptionsViewController.isVisible &&
+            toolOptionsViewController.toolSpecificOptionsLayout.visibility == View.INVISIBLE) {
+            toolOptionsViewController.slideDown(
+                toolOptionsViewController.toolSpecificOptionsLayout,
+                willHide = false,
+                showOptionsView = true
+            )
+        }
     }
 
     override fun handleUp(coordinate: PointF?): Boolean {
@@ -121,6 +141,8 @@ class SprayTool(
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     override fun handleMove(coordinate: PointF?): Boolean {
+        hideToolOptions()
+        super.handleMove(coordinate)
         currentCoordinate = coordinate
         return true
     }
@@ -129,7 +151,6 @@ class SprayTool(
         if (sprayActive || coordinate == null) {
             return false
         }
-        hideToolOptions()
         super.handleDown(coordinate)
         sprayActive = true
         currentCoordinate = coordinate

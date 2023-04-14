@@ -213,9 +213,13 @@ open class DrawingSurfaceListener(
                 if (callZoomWindow) zoomController.dismiss()
                 callback.getCurrentTool()?.handToolMode()
             }
-            MotionEvent.ACTION_POINTER_UP -> {
-                currentTool?.handleDown(canvasTouchPoint)
-                currentTool?.handleUp(canvasTouchPoint)
+            MotionEvent.ACTION_POINTER_UP->
+            {
+                currentTool?.handleDownAnimations(canvasTouchPoint);
+                currentTool?.handleUpAnimations(canvasTouchPoint);
+                drawingSurface.refreshDrawingSurface()
+          //      callback.convertToCanvasFromSurface(canvasTouchPoint)
+                return false;
             }
         }
         drawingSurface.refreshDrawingSurface()

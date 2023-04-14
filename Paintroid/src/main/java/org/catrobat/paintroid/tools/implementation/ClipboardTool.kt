@@ -61,6 +61,14 @@ class ClipboardTool(
     override val toolType: ToolType
         get() = ToolType.CLIPBOARD
 
+    override fun handleUpAnimations(coordinate: PointF?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleDownAnimations(coordinate: PointF?) {
+        TODO("Not yet implemented")
+    }
+
     override fun toolPositionCoordinates(coordinate: PointF): PointF = coordinate
 
     init {
