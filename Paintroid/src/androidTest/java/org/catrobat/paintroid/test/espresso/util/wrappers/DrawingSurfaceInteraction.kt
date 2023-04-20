@@ -16,149 +16,164 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.catrobat.paintroid.test.espresso.util.wrappers
 
-package org.catrobat.paintroid.test.espresso.util.wrappers;
+import android.view.View
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.CoordinatesProvider
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
+import org.catrobat.paintroid.R
+import org.catrobat.paintroid.test.espresso.util.MainActivityHelper
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.Matchers
+import org.hamcrest.TypeSafeMatcher
 
-import android.graphics.Bitmap;
-import android.view.View;
+class DrawingSurfaceInteraction private constructor() :
+    CustomViewInteraction(Espresso.onView(ViewMatchers.withId(R.id.pocketpaint_drawing_surface_view))) {
+    fun checkPixelColor(
+        @ColorInt expectedColor: Int,
+        coordinateProvider: CoordinatesProvider
+    ): DrawingSurfaceInteraction {
+        check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
+            override fun describeTo(description: Description) {
+                description.appendText(
+                    "Color at coordinates is " + Integer.toHexString(
+                        expectedColor
+                    )
+                )
+            }
 
-import org.catrobat.paintroid.MainActivity;
-import org.catrobat.paintroid.R;
-import org.catrobat.paintroid.contract.LayerContracts;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+            override fun matchesSafely(view: View?): Boolean {
+                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val currentBitmap = activity.layerModel.getBitmapOfAllLayers()
+                val coordinates = coordinateProvider.calculateCoordinates(view)
+                val actualColor =
+                    currentBitmap!!.getPixel(coordinates[0].toInt(), coordinates[1].toInt())
+                return expectedColor == actualColor
+            }
+        }))
+        return this
+    }
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
-import androidx.core.content.ContextCompat;
-import androidx.test.espresso.action.CoordinatesProvider;
-import androidx.test.platform.app.InstrumentationRegistry;
+    fun checkPixelColorOnLayer(
+        @ColorInt expectedColor: Int,
+        coordinateProvider: CoordinatesProvider
+    ): DrawingSurfaceInteraction {
+        check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
+            override fun describeTo(description: Description) {
+                description.appendText(
+                    "Color at coordinates is " + Integer.toHexString(
+                        expectedColor
+                    )
+                )
+            }
 
-import static org.catrobat.paintroid.test.espresso.util.MainActivityHelper.getMainActivityFromView;
-import static org.hamcrest.Matchers.is;
+            override fun matchesSafely(view: View?): Boolean {
+                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val currentBitmap = activity.layerModel.currentLayer!!.bitmap
+                val coordinates = coordinateProvider.calculateCoordinates(view)
+                val actualColor =
+                    currentBitmap.getPixel(coordinates[0].toInt(), coordinates[1].toInt())
+                return expectedColor == actualColor
+            }
+        }))
+        return this
+    }
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
+    fun checkPixelColor(
+        @ColorInt expectedColor: Int,
+        x: Float,
+        y: Float
+    ): DrawingSurfaceInteraction {
+        check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
+            override fun describeTo(description: Description) {
+                description.appendText(
+                    "Color at coordinates is " + Integer.toHexString(
+                        expectedColor
+                    )
+                )
+            }
 
-public final class DrawingSurfaceInteraction extends CustomViewInteraction {
+            override fun matchesSafely(view: View?): Boolean {
+                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val currentBitmap = activity.layerModel.getBitmapOfAllLayers()
+                val actualColor = currentBitmap!!.getPixel(x.toInt(), y.toInt())
+                return expectedColor == actualColor
+            }
+        }))
+        return this
+    }
 
-	private DrawingSurfaceInteraction() {
-		super(onView(withId(R.id.pocketpaint_drawing_surface_view)));
-	}
+    fun checkPixelColorResource(
+        @ColorRes expectedColorRes: Int,
+        coordinateProvider: CoordinatesProvider
+    ): DrawingSurfaceInteraction {
+        val expectedColor = ContextCompat.getColor(
+            InstrumentationRegistry.getInstrumentation().targetContext,
+            expectedColorRes
+        )
+        return checkPixelColor(expectedColor, coordinateProvider)
+    }
 
-	public static DrawingSurfaceInteraction onDrawingSurfaceView() {
-		return new DrawingSurfaceInteraction();
-	}
+    fun checkBitmapDimension(expectedWidth: Int, expectedHeight: Int): DrawingSurfaceInteraction {
+        check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
+            override fun describeTo(description: Description) {
+                description.appendText(
+                    "Bitmap has is size "
+                            + expectedWidth + "x and "
+                            + expectedHeight + "y"
+                )
+            }
 
-	public DrawingSurfaceInteraction checkPixelColor(@ColorInt final int expectedColor, final CoordinatesProvider coordinateProvider) {
-		check(matches(new TypeSafeMatcher<View>() {
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
-			}
+            override fun matchesSafely(view: View?): Boolean {
+                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val layerModel = activity.layerModel
+                val bitmap = layerModel.currentLayer!!.bitmap
+                return expectedWidth == bitmap.width && expectedHeight == bitmap.height
+            }
+        }))
+        return this
+    }
 
-			@Override
-			protected boolean matchesSafely(View view) {
-				MainActivity activity = getMainActivityFromView(view);
-				Bitmap currentBitmap = activity.layerModel.getBitmapOfAllLayers();
-				float[] coordinates = coordinateProvider.calculateCoordinates(view);
-				int actualColor = currentBitmap.getPixel((int) coordinates[0], (int) coordinates[1]);
-				return expectedColor == actualColor;
-			}
-		}));
-		return this;
-	}
+    fun checkLayerDimensions(expectedWidth: Int, expectedHeight: Int): DrawingSurfaceInteraction {
+        checkThatLayerDimensions(Matchers.`is`(expectedWidth), Matchers.`is`(expectedHeight))
+        return this
+    }
 
-	public DrawingSurfaceInteraction checkPixelColorOnLayer(@ColorInt final int expectedColor, final CoordinatesProvider coordinateProvider) {
-		check(matches(new TypeSafeMatcher<View>() {
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
-			}
+    fun checkThatLayerDimensions(
+        matchesWidth: Matcher<Int>,
+        matchesHeight: Matcher<Int>
+    ): DrawingSurfaceInteraction {
+        check(ViewAssertions.matches(object : TypeSafeMatcher<View?>() {
+            override fun describeTo(description: Description) {
+                description.appendText("All layers have expected size")
+            }
 
-			@Override
-			protected boolean matchesSafely(View view) {
-				MainActivity activity = getMainActivityFromView(view);
-				Bitmap currentBitmap = activity.layerModel.getCurrentLayer().getBitmap();
-				float[] coordinates = coordinateProvider.calculateCoordinates(view);
-				int actualColor = currentBitmap.getPixel((int) coordinates[0], (int) coordinates[1]);
-				return expectedColor == actualColor;
-			}
-		}));
-		return this;
-	}
+            override fun matchesSafely(view: View?): Boolean {
+                val activity = MainActivityHelper.getMainActivityFromView(view)
+                val layerModel = activity.layerModel
+                for (layer in layerModel.layers) {
+                    val bitmap = layer.bitmap
+                    if (!matchesWidth.matches(bitmap.width) || !matchesHeight.matches(bitmap.height)) {
+                        return false
+                    }
+                }
+                return true
+            }
+        }))
+        return this
+    }
 
-	public DrawingSurfaceInteraction checkPixelColor(@ColorInt final int expectedColor, final float x, final float y) {
-		check(matches(new TypeSafeMatcher<View>() {
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("Color at coordinates is " + Integer.toHexString(expectedColor));
-			}
-
-			@Override
-			protected boolean matchesSafely(View view) {
-				MainActivity activity = getMainActivityFromView(view);
-				Bitmap currentBitmap = activity.layerModel.getBitmapOfAllLayers();
-				int actualColor = currentBitmap.getPixel((int) x, (int) y);
-				return expectedColor == actualColor;
-			}
-		}));
-		return this;
-	}
-
-	public DrawingSurfaceInteraction checkPixelColorResource(@ColorRes int expectedColorRes, CoordinatesProvider coordinateProvider) {
-		int expectedColor = ContextCompat.getColor(InstrumentationRegistry.getInstrumentation().getTargetContext(), expectedColorRes);
-		return checkPixelColor(expectedColor, coordinateProvider);
-	}
-
-	public DrawingSurfaceInteraction checkBitmapDimension(final int expectedWidth, final int expectedHeight) {
-		check(matches(new TypeSafeMatcher<View>() {
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("Bitmap has is size "
-						+ expectedWidth + "x and "
-						+ expectedHeight + "y");
-			}
-
-			@Override
-			protected boolean matchesSafely(View view) {
-				MainActivity activity = getMainActivityFromView(view);
-				LayerContracts.Model layerModel = activity.layerModel;
-				Bitmap bitmap = layerModel.getCurrentLayer().getBitmap();
-				return expectedWidth == bitmap.getWidth() && expectedHeight == bitmap.getHeight();
-			}
-		}));
-		return this;
-	}
-
-	public DrawingSurfaceInteraction checkLayerDimensions(int expectedWidth, int expectedHeight) {
-		checkThatLayerDimensions(is(expectedWidth), is(expectedHeight));
-		return this;
-	}
-
-	public DrawingSurfaceInteraction checkThatLayerDimensions(final Matcher<Integer> matchesWidth, final Matcher<Integer> matchesHeight) {
-		check(matches(new TypeSafeMatcher<View>() {
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("All layers have expected size");
-			}
-
-			@Override
-			protected boolean matchesSafely(View view) {
-				MainActivity activity = getMainActivityFromView(view);
-				LayerContracts.Model layerModel = activity.layerModel;
-				for (LayerContracts.Layer layer : layerModel.getLayers()) {
-					Bitmap bitmap = layer.getBitmap();
-					if (!matchesWidth.matches(bitmap.getWidth()) || !matchesHeight.matches(bitmap.getHeight())) {
-						return false;
-					}
-				}
-				return true;
-			}
-		}));
-
-		return this;
-	}
+    companion object {
+        @JvmStatic
+		fun onDrawingSurfaceView(): DrawingSurfaceInteraction {
+            return DrawingSurfaceInteraction()
+        }
+    }
 }
