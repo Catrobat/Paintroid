@@ -355,6 +355,11 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
+        if (!hasFocus) {
+            presenterMain.saveNewTemporaryImage()
+            minuteTemporaryCopiesCounter = 0
+            userInteraction = false
+        }
         this.window.decorView.apply {
             systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_FULLSCREEN
         }
@@ -634,6 +639,7 @@ class MainActivity : AppCompatActivity(), MainView, CommandListener {
 
     override fun onDestroy() {
         commandManager.removeCommandListener(this)
+        presenterMain.saveNewTemporaryImage()
         if (finishing) {
             commandManager.shutdown()
             appFragment.currentTool = null
