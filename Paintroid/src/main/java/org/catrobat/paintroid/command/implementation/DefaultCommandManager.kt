@@ -335,6 +335,9 @@ class DefaultCommandManager(
     }
 
     override fun adjustUndoListForClippingTool() {
+        if (undoCommandList.first.toString().split(".", "@").size < 5){
+            return
+        }
         val commandName = undoCommandList.first.toString().split(".", "@")[FIVE]
         if (commandName == ClippingCommand::class.java.simpleName) {
             val clippingCommand = undoCommandList.pop()
